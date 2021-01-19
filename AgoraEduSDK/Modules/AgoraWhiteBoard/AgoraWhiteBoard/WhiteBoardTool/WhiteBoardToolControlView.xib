@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Daj-Ap-cry" customClass="WhiteBoardToolControlView">
+            <rect key="frame" x="0.0" y="0.0" width="46" height="214"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view alpha="0.40000000596046448" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="STr-5z-uOT">
+                    <rect key="frame" x="0.0" y="0.0" width="46" height="214"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <button opaque="NO" tag="200" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pGE-I6-kMy">
+                    <rect key="frame" x="4" y="4" width="38" height="38"/>
+                    <color key="backgroundColor" red="0.33725490200000002" green="0.33725490200000002" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="38" id="Tpe-xS-l5P"/>
+                        <constraint firstAttribute="height" constant="38" id="XbA-3x-EPb"/>
+                    </constraints>
+                    <state key="normal" image="tool-select"/>
+                    <connections>
+                        <action selector="onButtonClicked:" destination="Daj-Ap-cry" eventType="touchUpInside" id="qv6-27-cD8"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="201" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nfc-Xa-mcd">
+                    <rect key="frame" x="4" y="46" width="38" height="38"/>
+                    <color key="backgroundColor" red="0.33725490200000002" green="0.33725490200000002" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="38" id="FDM-gS-vxe"/>
+                        <constraint firstAttribute="width" constant="38" id="Qcs-be-yqD"/>
+                    </constraints>
+                    <state key="normal" image="tool-pen"/>
+                    <connections>
+                        <action selector="onButtonClicked:" destination="Daj-Ap-cry" eventType="touchUpInside" id="5iZ-0b-wLr"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="202" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PWL-u0-uyC">
+                    <rect key="frame" x="4" y="88" width="38" height="38"/>
+                    <color key="backgroundColor" red="0.33725490200000002" green="0.33725490200000002" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="38" id="pB7-U0-jGo"/>
+                        <constraint firstAttribute="width" constant="38" id="qoQ-gj-bRv"/>
+                    </constraints>
+                    <state key="normal" image="tool-text"/>
+                    <connections>
+                        <action selector="onButtonClicked:" destination="Daj-Ap-cry" eventType="touchUpInside" id="1Oe-Nu-Kut"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="203" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NM3-SN-fSc">
+                    <rect key="frame" x="4" y="130" width="38" height="38"/>
+                    <color key="backgroundColor" red="0.33725490200000002" green="0.33725490200000002" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="38" id="0gf-Kb-ngA"/>
+                        <constraint firstAttribute="height" constant="38" id="rze-r6-GfQ"/>
+                    </constraints>
+                    <state key="normal" image="tool-eraser"/>
+                    <connections>
+                        <action selector="onButtonClicked:" destination="Daj-Ap-cry" eventType="touchUpInside" id="YMG-8a-gKI"/>
+                    </connections>
+                </button>
+                <button opaque="NO" tag="204" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fhk-jl-KPx">
+                    <rect key="frame" x="4" y="172" width="38" height="38"/>
+                    <color key="backgroundColor" red="0.33725490200000002" green="0.33725490200000002" blue="0.33725490200000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="38" id="07b-Xl-MUn"/>
+                        <constraint firstAttribute="width" constant="38" id="X8C-1o-Asx"/>
+                    </constraints>
+                    <state key="normal" image="tool-color"/>
+                    <connections>
+                        <action selector="onButtonClicked:" destination="Daj-Ap-cry" eventType="touchUpInside" id="UXW-6H-3u8"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="STr-5z-uOT" firstAttribute="leading" secondItem="Daj-Ap-cry" secondAttribute="leading" id="5xB-t1-xG7"/>
+                <constraint firstItem="Nfc-Xa-mcd" firstAttribute="top" secondItem="pGE-I6-kMy" secondAttribute="bottom" constant="4" id="BxF-Bv-XjA"/>
+                <constraint firstItem="pGE-I6-kMy" firstAttribute="leading" secondItem="Daj-Ap-cry" secondAttribute="leading" constant="4" id="CqX-PA-nXS"/>
+                <constraint firstItem="fhk-jl-KPx" firstAttribute="top" secondItem="NM3-SN-fSc" secondAttribute="bottom" constant="4" id="OsD-Cp-1Yu"/>
+                <constraint firstItem="PWL-u0-uyC" firstAttribute="leading" secondItem="Daj-Ap-cry" secondAttribute="leading" constant="4" id="Ze7-y4-eXw"/>
+                <constraint firstItem="Nfc-Xa-mcd" firstAttribute="leading" secondItem="Daj-Ap-cry" secondAttribute="leading" constant="4" id="ZxD-79-Dvi"/>
+                <constraint firstItem="PWL-u0-uyC" firstAttribute="top" secondItem="Nfc-Xa-mcd" secondAttribute="bottom" constant="4" id="cCs-ct-gJ4"/>
+                <constraint firstItem="fhk-jl-KPx" firstAttribute="leading" secondItem="Daj-Ap-cry" secondAttribute="leading" constant="4" id="htv-1o-gAc"/>
+                <constraint firstAttribute="trailing" secondItem="STr-5z-uOT" secondAttribute="trailing" id="n0p-nw-2hR"/>
+                <constraint firstItem="NM3-SN-fSc" firstAttribute="top" secondItem="PWL-u0-uyC" secondAttribute="bottom" constant="4" id="p5A-iY-RPO"/>
+                <constraint firstItem="STr-5z-uOT" firstAttribute="top" secondItem="Daj-Ap-cry" secondAttribute="top" id="sYn-6G-D9b"/>
+                <constraint firstItem="pGE-I6-kMy" firstAttribute="top" secondItem="Daj-Ap-cry" secondAttribute="top" constant="4" id="uZH-9C-GQI"/>
+                <constraint firstItem="NM3-SN-fSc" firstAttribute="leading" secondItem="Daj-Ap-cry" secondAttribute="leading" constant="4" id="ywX-lR-u48"/>
+                <constraint firstAttribute="bottom" secondItem="STr-5z-uOT" secondAttribute="bottom" id="zlb-J7-XBh"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="kPR-GM-ZMX"/>
+            <connections>
+                <outlet property="bgView" destination="STr-5z-uOT" id="O6g-og-E4Y"/>
+                <outlet property="leftConstraint1" destination="CqX-PA-nXS" id="z4O-QC-fid"/>
+                <outlet property="leftConstraint2" destination="ZxD-79-Dvi" id="srP-Gp-202"/>
+                <outlet property="leftConstraint3" destination="Ze7-y4-eXw" id="clB-Tu-gb8"/>
+                <outlet property="leftConstraint4" destination="ywX-lR-u48" id="QEM-t1-U4S"/>
+                <outlet property="leftConstraint5" destination="htv-1o-gAc" id="3v2-NY-70C"/>
+                <outlet property="topConstraint1" destination="uZH-9C-GQI" id="hfc-dI-LvH"/>
+                <outlet property="topConstraint2" destination="BxF-Bv-XjA" id="HUv-vB-bEz"/>
+                <outlet property="topConstraint3" destination="cCs-ct-gJ4" id="Zxk-pX-p6W"/>
+                <outlet property="topConstraint4" destination="p5A-iY-RPO" id="zlS-K5-Ztx"/>
+                <outlet property="topConstraint5" destination="OsD-Cp-1Yu" id="UAN-2f-5HR"/>
+            </connections>
+            <point key="canvasLocation" x="-34.782608695652179" y="-88.392857142857139"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="tool-color" width="38" height="38"/>
+        <image name="tool-eraser" width="38" height="38"/>
+        <image name="tool-pen" width="38" height="38"/>
+        <image name="tool-select" width="38" height="38"/>
+        <image name="tool-text" width="38" height="38"/>
+    </resources>
+</document>

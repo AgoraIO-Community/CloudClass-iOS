@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  AgoraWhiteBoard
+
+  Created by SRS on 2020/7/14.
+  Copyright © 2020 agora. All rights reserved.
+*/
+
+ColorPickerText = " 选择颜色";

@@ -1,0 +1,41 @@
+PODS:
+  - dsBridge (3.0.6)
+  - Whiteboard (2.9.14):
+    - Whiteboard/Base (= 2.9.14)
+    - Whiteboard/Converter (= 2.9.14)
+    - Whiteboard/NativeReplayer (= 2.9.14)
+    - Whiteboard/Object (= 2.9.14)
+    - Whiteboard/Replayer (= 2.9.14)
+    - Whiteboard/Room (= 2.9.14)
+  - Whiteboard/Base (2.9.14):
+    - dsBridge (~> 3.0.2)
+    - Whiteboard/Object
+  - Whiteboard/Converter (2.9.14):
+    - Whiteboard/Object
+  - Whiteboard/NativeReplayer (2.9.14):
+    - Whiteboard/Replayer
+  - Whiteboard/Object (2.9.14):
+    - YYModel (~> 1.0.4)
+  - Whiteboard/Replayer (2.9.14):
+    - Whiteboard/Base
+  - Whiteboard/Room (2.9.14):
+    - Whiteboard/Base
+  - YYModel (1.0.4)
+
+DEPENDENCIES:
+  - Whiteboard (= 2.9.14)
+
+SPEC REPOS:
+  trunk:
+    - dsBridge
+    - Whiteboard
+    - YYModel
+
+SPEC CHECKSUMS:
+  dsBridge: 48b62ee8a411ad601a88d6f6c8cf6cb634b206b7
+  Whiteboard: edbe3ed753dc9a457a38718834d7bf16fdfd3980
+  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
+
+PODFILE CHECKSUM: eddf8e0e8f28d9f1b6e5703babd9c69a6be88aeb
+
+COCOAPODS: 1.10.1

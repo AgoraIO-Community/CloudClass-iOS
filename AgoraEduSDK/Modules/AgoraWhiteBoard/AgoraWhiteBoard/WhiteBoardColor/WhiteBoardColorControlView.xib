@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="kVh-i0-rfN" customClass="WhiteBoardColorControlView">
+            <rect key="frame" x="0.0" y="0.0" width="474" height="225"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Color Picker" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zBy-EX-Tcq">
+                    <rect key="frame" x="0.0" y="0.0" width="474" height="37"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="37" id="V0l-F7-WNX"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8KK-UA-IbF">
+                    <rect key="frame" x="0.0" y="37" width="474" height="1"/>
+                    <color key="backgroundColor" red="0.85882352939999995" green="0.8862745098" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="NIE-ma-6Qh"/>
+                    </constraints>
+                </view>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="egD-gp-PrX">
+                    <rect key="frame" x="0.0" y="38" width="474" height="80"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="9BS-pF-vFG"/>
+                    </constraints>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="dRW-kB-JVg">
+                        <size key="itemSize" width="26" height="26"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="9" minY="3.5" maxX="9" maxY="3.5"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="8KK-UA-IbF" firstAttribute="top" secondItem="zBy-EX-Tcq" secondAttribute="bottom" id="4Fv-rH-u07"/>
+                <constraint firstItem="zBy-EX-Tcq" firstAttribute="top" secondItem="kVh-i0-rfN" secondAttribute="top" id="8TN-f0-y43"/>
+                <constraint firstItem="oKp-mf-qlV" firstAttribute="trailing" secondItem="8KK-UA-IbF" secondAttribute="trailing" id="NMT-kh-gxc"/>
+                <constraint firstAttribute="trailing" secondItem="zBy-EX-Tcq" secondAttribute="trailing" id="Xz3-ZT-Ia6"/>
+                <constraint firstItem="oKp-mf-qlV" firstAttribute="trailing" secondItem="egD-gp-PrX" secondAttribute="trailing" id="adW-XC-3NY"/>
+                <constraint firstItem="egD-gp-PrX" firstAttribute="leading" secondItem="oKp-mf-qlV" secondAttribute="leading" id="auY-1u-SmS"/>
+                <constraint firstItem="8KK-UA-IbF" firstAttribute="leading" secondItem="oKp-mf-qlV" secondAttribute="leading" id="ev0-Wg-Xwu"/>
+                <constraint firstItem="egD-gp-PrX" firstAttribute="top" secondItem="8KK-UA-IbF" secondAttribute="bottom" id="f6B-J8-xS2"/>
+                <constraint firstItem="zBy-EX-Tcq" firstAttribute="leading" secondItem="kVh-i0-rfN" secondAttribute="leading" id="fYr-05-j47"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="oKp-mf-qlV"/>
+            <connections>
+                <outlet property="colorCollectionView" destination="egD-gp-PrX" id="oEH-7T-jTN"/>
+                <outlet property="colorFlowLayout" destination="dRW-kB-JVg" id="MDm-Vu-g4o"/>
+                <outlet property="pickerLabel" destination="zBy-EX-Tcq" id="rD1-E6-iwQ"/>
+            </connections>
+            <point key="canvasLocation" x="130.43478260869566" y="25.78125"/>
+        </view>
+    </objects>
+</document>
