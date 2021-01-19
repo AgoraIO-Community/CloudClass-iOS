@@ -1,0 +1,1505 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 51;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A44BE7522BF863000766274 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A44BE5722BF863000766274 /* Assets.xcassets */; };
+		1A44BE7A22BF863000766274 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE5E22BF863000766274 /* main.m */; };
+		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
+		1A70AFB22359F17500942742 /* SettingViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A70AFB12359F17500942742 /* SettingViewCell.m */; };
+		1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87571123571CFE009C55A8 /* SettingViewController.m */; };
+		75D36FB810CB94F4AEF8D9A2 /* Pods_AgoraEducation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */; };
+		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
+		7813B70523FA5A0300265830 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6FD23FA5A0300265830 /* Main.storyboard */; };
+		783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 783FB6CE240D0746007298C1 /* AlertViewUtil.m */; };
+		783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 783FB6DA240D0746007298C1 /* UIView+Toast.m */; };
+		787485F825AB155F0022329D /* KeyCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 787485F725AB155F0022329D /* KeyCenter.m */; };
+		787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 787485FE25AB176B0022329D /* UIColor+Addition.m */; };
+		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
+		7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4CD23FA735700AF1B4F /* InfoPlist.strings */; };
+		78D7313E23B38B5700D2146C /* EEClassRoomTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7313723B38B5700D2146C /* EEClassRoomTypeView.m */; };
+		78D7313F23B38B5700D2146C /* EEClassRoomTypeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78D7313823B38B5700D2146C /* EEClassRoomTypeView.xib */; };
+		78D7314023B38B5700D2146C /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7313B23B38B5700D2146C /* MainViewController.m */; };
+		78D7314123B38B5700D2146C /* MainNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7313C23B38B5700D2146C /* MainNavigationController.m */; };
+		78D7314723B3964400D2146C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 78D7314523B3964300D2146C /* README.md */; };
+		78D7314823B3964400D2146C /* README.zh.md in Resources */ = {isa = PBXBuildFile; fileRef = 78D7314623B3964400D2146C /* README.zh.md */; };
+		78DFB61525AE93C100B01906 /* AgoraEducationHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB61425AE93C000B01906 /* AgoraEducationHTTPClient.m */; };
+		78DFB67725AECAF600B01906 /* TokenBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB67625AECAF600B01906 /* TokenBuilder.m */; };
+		78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */; };
+		78DFB69925AEE20B00B01906 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68B25AEE20B00B01906 /* md5.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		1AE0D01D2283C5F40092AC5E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AE0CFFC2283C5F20092AC5E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AE0D0032283C5F20092AC5E;
+			remoteInfo = AgoraSmallClass;
+		};
+		1AE0D0282283C5F40092AC5E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1AE0CFFC2283C5F20092AC5E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1AE0D0032283C5F20092AC5E;
+			remoteInfo = AgoraSmallClass;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1A44BE3522BF863000766274 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1A44BE5722BF863000766274 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1A44BE5E22BF863000766274 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1A44BE6022BF863000766274 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1A44BE7E22BF874A00766274 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A70AFB02359F17500942742 /* SettingViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingViewCell.h; sourceTree = "<group>"; };
+		1A70AFB12359F17500942742 /* SettingViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingViewCell.m; sourceTree = "<group>"; };
+		1A87571023571CFE009C55A8 /* SettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
+		1A87571123571CFE009C55A8 /* SettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
+		1AE0D0042283C5F20092AC5E /* AgoraCloudClass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AgoraCloudClass.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AE0D01C2283C5F40092AC5E /* AgoraEducationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgoraEducationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AE0D0272283C5F40092AC5E /* AgoraEducationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgoraEducationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AE0D0A022897E9A0092AC5E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		1AE0D0A222897EA60092AC5E /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		1AE0D0A422897EC40092AC5E /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
+		1AE0D0A622897ECD0092AC5E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.devrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.devrelease.xcconfig"; sourceTree = "<group>"; };
+		40B28313D80C71B4DA8D643D /* Pods-AgoraEducation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.debug.xcconfig"; sourceTree = "<group>"; };
+		4EAA54960A24224AEAEC570D /* Pods-AgoraEducation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.release.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.release.xcconfig"; sourceTree = "<group>"; };
+		76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEducation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		78136271242C81ED00B7D1FE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		78136273242C81FF00B7D1FE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		78136274242C820700B7D1FE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		7813B6F723FA5A0300265830 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		7813B6FE23FA5A0300265830 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7813B72723FA5BDA00265830 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
+		7813B72823FA5BDA00265830 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
+		7813B72E23FA5C1200265830 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		7813B73023FA5C1600265830 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
+		783FB6CD240D0746007298C1 /* AlertViewUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertViewUtil.h; sourceTree = "<group>"; };
+		783FB6CE240D0746007298C1 /* AlertViewUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertViewUtil.m; sourceTree = "<group>"; };
+		783FB6D9240D0746007298C1 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
+		783FB6DA240D0746007298C1 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
+		785D12F224CEB24E00F7A8AB /* AgoraReplayUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraReplayUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		785D12F624CEB25200F7A8AB /* AgoraWhiteBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraWhiteBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		785D12F924CEB25700F7A8AB /* EduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		787485F625AB155F0022329D /* KeyCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyCenter.h; sourceTree = "<group>"; };
+		787485F725AB155F0022329D /* KeyCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyCenter.m; sourceTree = "<group>"; };
+		787485FD25AB176B0022329D /* UIColor+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Addition.h"; sourceTree = "<group>"; };
+		787485FE25AB176B0022329D /* UIColor+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Addition.m"; sourceTree = "<group>"; };
+		7878B4C623FA72EE00AF1B4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		7878B4C823FA72F200AF1B4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		7878B4CC23FA735700AF1B4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7878B4CE23FA735A00AF1B4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		78A3EA5E25640261003067AB /* AgoraEducation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AgoraEducation-Bridging-Header.h"; sourceTree = "<group>"; };
+		78D7305B23B35ADB00D2146C /* AgoraEducation.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEducation.pch; sourceTree = "<group>"; };
+		78D7313623B38B5700D2146C /* EEClassRoomTypeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEClassRoomTypeView.h; sourceTree = "<group>"; };
+		78D7313723B38B5700D2146C /* EEClassRoomTypeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEClassRoomTypeView.m; sourceTree = "<group>"; };
+		78D7313823B38B5700D2146C /* EEClassRoomTypeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EEClassRoomTypeView.xib; sourceTree = "<group>"; };
+		78D7313A23B38B5700D2146C /* MainNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainNavigationController.h; sourceTree = "<group>"; };
+		78D7313B23B38B5700D2146C /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		78D7313C23B38B5700D2146C /* MainNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainNavigationController.m; sourceTree = "<group>"; };
+		78D7313D23B38B5700D2146C /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		78D7314523B3964300D2146C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		78D7314623B3964400D2146C /* README.zh.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.zh.md; sourceTree = "<group>"; };
+		78DFB61325AE93C000B01906 /* AgoraEducationHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEducationHTTPClient.h; sourceTree = "<group>"; };
+		78DFB61425AE93C000B01906 /* AgoraEducationHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEducationHTTPClient.m; sourceTree = "<group>"; };
+		78DFB67525AECAF600B01906 /* TokenBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenBuilder.h; sourceTree = "<group>"; };
+		78DFB67625AECAF600B01906 /* TokenBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenBuilder.m; sourceTree = "<group>"; };
+		78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RtmTokenTool.mm; sourceTree = "<group>"; };
+		78DFB68725AEE20B00B01906 /* RtmTokenTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmTokenTool.h; sourceTree = "<group>"; };
+		78DFB68925AEE20B00B01906 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		78DFB68B25AEE20B00B01906 /* md5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = md5.cpp; sourceTree = "<group>"; };
+		78DFB68C25AEE20B00B01906 /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
+		78DFB68D25AEE20B00B01906 /* DynamicKey5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey5.h; sourceTree = "<group>"; };
+		78DFB68E25AEE20B00B01906 /* Packer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Packer.h; sourceTree = "<group>"; };
+		78DFB68F25AEE20B00B01906 /* generatorSignalToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generatorSignalToken.h; sourceTree = "<group>"; };
+		78DFB69025AEE20B00B01906 /* AccessToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccessToken.h; sourceTree = "<group>"; };
+		78DFB69125AEE20B00B01906 /* DynamicKey2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey2.h; sourceTree = "<group>"; };
+		78DFB69225AEE20B00B01906 /* RtmTokenBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmTokenBuilder.h; sourceTree = "<group>"; };
+		78DFB69325AEE20B00B01906 /* DynamicKey3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey3.h; sourceTree = "<group>"; };
+		78DFB69425AEE20B00B01906 /* generatorSignalToken-Linux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "generatorSignalToken-Linux.h"; sourceTree = "<group>"; };
+		78DFB69525AEE20B00B01906 /* RtcTokenBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtcTokenBuilder.h; sourceTree = "<group>"; };
+		78DFB69625AEE20B00B01906 /* DynamicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey.h; sourceTree = "<group>"; };
+		78DFB69725AEE20B00B01906 /* DynamicKey4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey4.h; sourceTree = "<group>"; };
+		8CD382F7BF039504C1D49C53 /* Pods-AgoraEducation.qatestrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qatestrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qatestrelease.xcconfig"; sourceTree = "<group>"; };
+		A5BFF93D50503E0756F47D98 /* Pods-AgoraEducation.qarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qarelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qarelease.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1AE0D0012283C5F20092AC5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				75D36FB810CB94F4AEF8D9A2 /* Pods_AgoraEducation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1AE0D0192283C5F40092AC5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1AE0D0242283C5F40092AC5E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1A44BE3322BF863000766274 /* AgoraEducation */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB67425AECAB700B01906 /* TokenBuilder */,
+				78DFB61225AE93C000B01906 /* HTTP */,
+				7813B6F223FA5A0300265830 /* StoryBoards */,
+				78D730C423B3853200D2146C /* Utils */,
+				1A87570F23571CC9009C55A8 /* Setting */,
+				78D7312E23B38B0A00D2146C /* Main */,
+				1A87571323581AEC009C55A8 /* Supporting Files */,
+			);
+			path = AgoraEducation;
+			sourceTree = "<group>";
+		};
+		1A70AFAF2359F15000942742 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1A70AFB02359F17500942742 /* SettingViewCell.h */,
+				1A70AFB12359F17500942742 /* SettingViewCell.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1A87570F23571CC9009C55A8 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				1AD4E992235EE15300C415BF /* Controllers */,
+				1A70AFAF2359F15000942742 /* View */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		1A87571323581AEC009C55A8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				78A3EA5E25640261003067AB /* AgoraEducation-Bridging-Header.h */,
+				78D7305B23B35ADB00D2146C /* AgoraEducation.pch */,
+				1A44BE5722BF863000766274 /* Assets.xcassets */,
+				1A44BE7E22BF874A00766274 /* Info.plist */,
+				7878B4CD23FA735700AF1B4F /* InfoPlist.strings */,
+				7878B4C723FA72EE00AF1B4F /* Localizable.strings */,
+				1A44BE5E22BF863000766274 /* main.m */,
+				1A44BE3522BF863000766274 /* AppDelegate.h */,
+				1A44BE6022BF863000766274 /* AppDelegate.m */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1AD4E992235EE15300C415BF /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1A87571023571CFE009C55A8 /* SettingViewController.h */,
+				1A87571123571CFE009C55A8 /* SettingViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		1AE0CFFB2283C5F20092AC5E = {
+			isa = PBXGroup;
+			children = (
+				78D7314523B3964300D2146C /* README.md */,
+				78D7314623B3964400D2146C /* README.zh.md */,
+				787485F625AB155F0022329D /* KeyCenter.h */,
+				787485F725AB155F0022329D /* KeyCenter.m */,
+				1A44BE3322BF863000766274 /* AgoraEducation */,
+				1AE0D0052283C5F20092AC5E /* Products */,
+				938D296AAD5470F95D0BD9D5 /* Pods */,
+				E01323DE5BE7ACD24D968F1E /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		1AE0D0052283C5F20092AC5E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1AE0D0042283C5F20092AC5E /* AgoraCloudClass.app */,
+				1AE0D01C2283C5F40092AC5E /* AgoraEducationTests.xctest */,
+				1AE0D0272283C5F40092AC5E /* AgoraEducationUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7813B6F223FA5A0300265830 /* StoryBoards */ = {
+			isa = PBXGroup;
+			children = (
+				7813B6F323FA5A0300265830 /* LaunchScreen */,
+				7813B6FA23FA5A0300265830 /* Main */,
+			);
+			path = StoryBoards;
+			sourceTree = "<group>";
+		};
+		7813B6F323FA5A0300265830 /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */,
+			);
+			path = LaunchScreen;
+			sourceTree = "<group>";
+		};
+		7813B6FA23FA5A0300265830 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				7813B6FD23FA5A0300265830 /* Main.storyboard */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		783FB6CC240D0746007298C1 /* AlertView */ = {
+			isa = PBXGroup;
+			children = (
+				783FB6CD240D0746007298C1 /* AlertViewUtil.h */,
+				783FB6CE240D0746007298C1 /* AlertViewUtil.m */,
+			);
+			path = AlertView;
+			sourceTree = "<group>";
+		};
+		783FB6D8240D0746007298C1 /* Toast */ = {
+			isa = PBXGroup;
+			children = (
+				783FB6D9240D0746007298C1 /* UIView+Toast.h */,
+				783FB6DA240D0746007298C1 /* UIView+Toast.m */,
+			);
+			path = Toast;
+			sourceTree = "<group>";
+		};
+		787485FC25AB176B0022329D /* Color */ = {
+			isa = PBXGroup;
+			children = (
+				787485FD25AB176B0022329D /* UIColor+Addition.h */,
+				787485FE25AB176B0022329D /* UIColor+Addition.m */,
+			);
+			path = Color;
+			sourceTree = "<group>";
+		};
+		78D730C423B3853200D2146C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				787485FC25AB176B0022329D /* Color */,
+				783FB6CC240D0746007298C1 /* AlertView */,
+				783FB6D8240D0746007298C1 /* Toast */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		78D7312E23B38B0A00D2146C /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				78D7313923B38B5700D2146C /* Controllers */,
+				78D7313523B38B5700D2146C /* View */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		78D7313523B38B5700D2146C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				78D7313623B38B5700D2146C /* EEClassRoomTypeView.h */,
+				78D7313723B38B5700D2146C /* EEClassRoomTypeView.m */,
+				78D7313823B38B5700D2146C /* EEClassRoomTypeView.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		78D7313923B38B5700D2146C /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				78D7313A23B38B5700D2146C /* MainNavigationController.h */,
+				78D7313C23B38B5700D2146C /* MainNavigationController.m */,
+				78D7313D23B38B5700D2146C /* MainViewController.h */,
+				78D7313B23B38B5700D2146C /* MainViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		78DFB61225AE93C000B01906 /* HTTP */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB61325AE93C000B01906 /* AgoraEducationHTTPClient.h */,
+				78DFB61425AE93C000B01906 /* AgoraEducationHTTPClient.m */,
+			);
+			path = HTTP;
+			sourceTree = "<group>";
+		};
+		78DFB67425AECAB700B01906 /* TokenBuilder */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB67525AECAF600B01906 /* TokenBuilder.h */,
+				78DFB67625AECAF600B01906 /* TokenBuilder.m */,
+				78DFB68525AEE20B00B01906 /* RtmTokenTool */,
+			);
+			path = TokenBuilder;
+			sourceTree = "<group>";
+		};
+		78DFB68525AEE20B00B01906 /* RtmTokenTool */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB68725AEE20B00B01906 /* RtmTokenTool.h */,
+				78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */,
+				78DFB68825AEE20B00B01906 /* src */,
+			);
+			path = RtmTokenTool;
+			sourceTree = "<group>";
+		};
+		78DFB68825AEE20B00B01906 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB68925AEE20B00B01906 /* utils.h */,
+				78DFB68A25AEE20B00B01906 /* md5 */,
+				78DFB68D25AEE20B00B01906 /* DynamicKey5.h */,
+				78DFB68E25AEE20B00B01906 /* Packer.h */,
+				78DFB68F25AEE20B00B01906 /* generatorSignalToken.h */,
+				78DFB69025AEE20B00B01906 /* AccessToken.h */,
+				78DFB69125AEE20B00B01906 /* DynamicKey2.h */,
+				78DFB69225AEE20B00B01906 /* RtmTokenBuilder.h */,
+				78DFB69325AEE20B00B01906 /* DynamicKey3.h */,
+				78DFB69425AEE20B00B01906 /* generatorSignalToken-Linux.h */,
+				78DFB69525AEE20B00B01906 /* RtcTokenBuilder.h */,
+				78DFB69625AEE20B00B01906 /* DynamicKey.h */,
+				78DFB69725AEE20B00B01906 /* DynamicKey4.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		78DFB68A25AEE20B00B01906 /* md5 */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB68B25AEE20B00B01906 /* md5.cpp */,
+				78DFB68C25AEE20B00B01906 /* md5.h */,
+			);
+			path = md5;
+			sourceTree = "<group>";
+		};
+		938D296AAD5470F95D0BD9D5 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				40B28313D80C71B4DA8D643D /* Pods-AgoraEducation.debug.xcconfig */,
+				4EAA54960A24224AEAEC570D /* Pods-AgoraEducation.release.xcconfig */,
+				A5BFF93D50503E0756F47D98 /* Pods-AgoraEducation.qarelease.xcconfig */,
+				3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */,
+				8CD382F7BF039504C1D49C53 /* Pods-AgoraEducation.qatestrelease.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		E01323DE5BE7ACD24D968F1E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				785D12F924CEB25700F7A8AB /* EduSDK.framework */,
+				785D12F624CEB25200F7A8AB /* AgoraWhiteBoard.framework */,
+				785D12F224CEB24E00F7A8AB /* AgoraReplayUI.framework */,
+				78136274242C820700B7D1FE /* Security.framework */,
+				78136273242C81FF00B7D1FE /* libiconv.tbd */,
+				78136271242C81ED00B7D1FE /* libz.tbd */,
+				1AE0D0A622897ECD0092AC5E /* libc++.tbd */,
+				1AE0D0A422897EC40092AC5E /* libresolv.tbd */,
+				1AE0D0A222897EA60092AC5E /* CoreTelephony.framework */,
+				1AE0D0A022897E9A0092AC5E /* SystemConfiguration.framework */,
+				76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1AE0D0032283C5F20092AC5E /* AgoraEducation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1AE0D0302283C5F40092AC5E /* Build configuration list for PBXNativeTarget "AgoraEducation" */;
+			buildPhases = (
+				CC49100FDE030D72EE28DCAE /* [CP] Check Pods Manifest.lock */,
+				1AE0D0002283C5F20092AC5E /* Sources */,
+				1AE0D0012283C5F20092AC5E /* Frameworks */,
+				1AE0D0022283C5F20092AC5E /* Resources */,
+				9CCF3ABB7D45F972FD1E62D9 /* [CP] Embed Pods Frameworks */,
+				D7692EB814029B35F7F0433C /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AgoraEducation;
+			productName = AgoraSmallClass;
+			productReference = 1AE0D0042283C5F20092AC5E /* AgoraCloudClass.app */;
+			productType = "com.apple.product-type.application";
+		};
+		1AE0D01B2283C5F40092AC5E /* AgoraEducationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1AE0D0332283C5F40092AC5E /* Build configuration list for PBXNativeTarget "AgoraEducationTests" */;
+			buildPhases = (
+				1AE0D0182283C5F40092AC5E /* Sources */,
+				1AE0D0192283C5F40092AC5E /* Frameworks */,
+				1AE0D01A2283C5F40092AC5E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1AE0D01E2283C5F40092AC5E /* PBXTargetDependency */,
+			);
+			name = AgoraEducationTests;
+			productName = AgoraSmallClassTests;
+			productReference = 1AE0D01C2283C5F40092AC5E /* AgoraEducationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1AE0D0262283C5F40092AC5E /* AgoraEducationUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1AE0D0362283C5F40092AC5E /* Build configuration list for PBXNativeTarget "AgoraEducationUITests" */;
+			buildPhases = (
+				1AE0D0232283C5F40092AC5E /* Sources */,
+				1AE0D0242283C5F40092AC5E /* Frameworks */,
+				1AE0D0252283C5F40092AC5E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1AE0D0292283C5F40092AC5E /* PBXTargetDependency */,
+			);
+			name = AgoraEducationUITests;
+			productName = AgoraSmallClassUITests;
+			productReference = 1AE0D0272283C5F40092AC5E /* AgoraEducationUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1AE0CFFC2283C5F20092AC5E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = yangmoumou;
+				TargetAttributes = {
+					1AE0D0032283C5F20092AC5E = {
+						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1200;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+					1AE0D01B2283C5F40092AC5E = {
+						CreatedOnToolsVersion = 10.2.1;
+						TestTargetID = 1AE0D0032283C5F20092AC5E;
+					};
+					1AE0D0262283C5F40092AC5E = {
+						CreatedOnToolsVersion = 10.2.1;
+						TestTargetID = 1AE0D0032283C5F20092AC5E;
+					};
+				};
+			};
+			buildConfigurationList = 1AE0CFFF2283C5F20092AC5E /* Build configuration list for PBXProject "AgoraEducation" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+			);
+			mainGroup = 1AE0CFFB2283C5F20092AC5E;
+			productRefGroup = 1AE0D0052283C5F20092AC5E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1AE0D0032283C5F20092AC5E /* AgoraEducation */,
+				1AE0D01B2283C5F40092AC5E /* AgoraEducationTests */,
+				1AE0D0262283C5F40092AC5E /* AgoraEducationUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1AE0D0022283C5F20092AC5E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7813B70523FA5A0300265830 /* Main.storyboard in Resources */,
+				7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */,
+				7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */,
+				78D7313F23B38B5700D2146C /* EEClassRoomTypeView.xib in Resources */,
+				1A44BE7522BF863000766274 /* Assets.xcassets in Resources */,
+				78D7314823B3964400D2146C /* README.zh.md in Resources */,
+				7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */,
+				78D7314723B3964400D2146C /* README.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1AE0D01A2283C5F40092AC5E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1AE0D0252283C5F40092AC5E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9CCF3ABB7D45F972FD1E62D9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CC49100FDE030D72EE28DCAE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AgoraEducation-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D7692EB814029B35F7F0433C /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1AE0D0002283C5F20092AC5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78D7313E23B38B5700D2146C /* EEClassRoomTypeView.m in Sources */,
+				78DFB61525AE93C100B01906 /* AgoraEducationHTTPClient.m in Sources */,
+				783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */,
+				787485F825AB155F0022329D /* KeyCenter.m in Sources */,
+				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
+				1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */,
+				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
+				1A70AFB22359F17500942742 /* SettingViewCell.m in Sources */,
+				78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */,
+				783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */,
+				78D7314023B38B5700D2146C /* MainViewController.m in Sources */,
+				787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */,
+				78D7314123B38B5700D2146C /* MainNavigationController.m in Sources */,
+				1A44BE7A22BF863000766274 /* main.m in Sources */,
+				78DFB67725AECAF600B01906 /* TokenBuilder.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1AE0D0182283C5F40092AC5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1AE0D0232283C5F40092AC5E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1AE0D01E2283C5F40092AC5E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1AE0D0032283C5F20092AC5E /* AgoraEducation */;
+			targetProxy = 1AE0D01D2283C5F40092AC5E /* PBXContainerItemProxy */;
+		};
+		1AE0D0292283C5F40092AC5E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1AE0D0032283C5F20092AC5E /* AgoraEducation */;
+			targetProxy = 1AE0D0282283C5F40092AC5E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7813B6F723FA5A0300265830 /* Base */,
+				7813B72723FA5BDA00265830 /* zh-Hans */,
+				7813B72E23FA5C1200265830 /* en */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		7813B6FD23FA5A0300265830 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7813B6FE23FA5A0300265830 /* Base */,
+				7813B72823FA5BDA00265830 /* zh-Hans */,
+				7813B73023FA5C1600265830 /* en */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		7878B4C723FA72EE00AF1B4F /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7878B4C623FA72EE00AF1B4F /* en */,
+				7878B4C823FA72F200AF1B4F /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		7878B4CD23FA735700AF1B4F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7878B4CC23FA735700AF1B4F /* en */,
+				7878B4CE23FA735A00AF1B4F /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1AE0D02E2283C5F40092AC5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		1AE0D02F2283C5F40092AC5E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1AE0D0312283C5F40092AC5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 40B28313D80C71B4DA8D643D /* Pods-AgoraEducation.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 173;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = GM72UGLGZW;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AgoraEducation",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AgoraEducation/Supporting Files/AgoraEducation.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraActionProcess/AgoraActionProcess.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Whiteboard/Whiteboard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYModel/YYModel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/dsBridge/dsBridge.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
+				);
+				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 6.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
+				PRODUCT_NAME = AgoraCloudClass;
+				PROVISIONING_PROFILE_SPECIFIER = App;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1AE0D0322283C5F40092AC5E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4EAA54960A24224AEAEC570D /* Pods-AgoraEducation.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 173;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 48TB6ZZL5S;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AgoraEducation",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AgoraEducation/Supporting Files/AgoraEducation.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraActionProcess/AgoraActionProcess.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Whiteboard/Whiteboard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYModel/YYModel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/dsBridge/dsBridge.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
+				);
+				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 6.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationDis;
+				PRODUCT_NAME = AgoraCloudClass;
+				PROVISIONING_PROFILE_SPECIFIER = AgoraEducationAppRelease;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		1AE0D0342283C5F40092AC5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraEducation.app/AgoraEducation";
+			};
+			name = Debug;
+		};
+		1AE0D0352283C5F40092AC5E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraEducation.app/AgoraEducation";
+			};
+			name = Release;
+		};
+		1AE0D0372283C5F40092AC5E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AgoraSmallClass;
+			};
+			name = Debug;
+		};
+		1AE0D0382283C5F40092AC5E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AgoraSmallClass;
+			};
+			name = Release;
+		};
+		78515D3223FCCDCB0015B5EC /* DevRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = DevRelease;
+		};
+		78515D3323FCCDCB0015B5EC /* DevRelease */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 173;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = GM72UGLGZW;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AgoraEducation",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AgoraEducation/Supporting Files/AgoraEducation.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraActionProcess/AgoraActionProcess.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Whiteboard/Whiteboard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYModel/YYModel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/dsBridge/dsBridge.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
+				);
+				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 6.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
+				PRODUCT_NAME = AgoraCloudClass;
+				PROVISIONING_PROFILE_SPECIFIER = App;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = DevRelease;
+		};
+		78515D3423FCCDCB0015B5EC /* DevRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraEducation.app/AgoraEducation";
+			};
+			name = DevRelease;
+		};
+		78515D3523FCCDCB0015B5EC /* DevRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AgoraSmallClass;
+			};
+			name = DevRelease;
+		};
+		78AED04623C58E5D00A24DDB /* QARelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = QARelease;
+		};
+		78AED04723C58E5D00A24DDB /* QARelease */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A5BFF93D50503E0756F47D98 /* Pods-AgoraEducation.qarelease.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 173;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = JDPG69R49Z;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AgoraEducation",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AgoraEducation/Supporting Files/AgoraEducation.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraActionProcess/AgoraActionProcess.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Whiteboard/Whiteboard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYModel/YYModel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/dsBridge/dsBridge.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
+				);
+				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 6.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQA;
+				PRODUCT_NAME = AgoraCloudClass;
+				PROVISIONING_PROFILE_SPECIFIER = AgoraLab2020;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = QARelease;
+		};
+		78AED04823C58E5D00A24DDB /* QARelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraEducation.app/AgoraEducation";
+			};
+			name = QARelease;
+		};
+		78AED04923C58E5D00A24DDB /* QARelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AgoraSmallClass;
+			};
+			name = QARelease;
+		};
+		78CFE1DC257DE5AD0044F3D5 /* QATestRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = QATestRelease;
+		};
+		78CFE1DD257DE5AD0044F3D5 /* QATestRelease */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8CD382F7BF039504C1D49C53 /* Pods-AgoraEducation.qatestrelease.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 173;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 5459N9W32M;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AgoraEducation",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/AgoraEducation/Supporting Files/AgoraEducation.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraActionProcess/AgoraActionProcess.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Whiteboard/Whiteboard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYModel/YYModel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/dsBridge/dsBridge.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
+				);
+				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 6.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATest;
+				PRODUCT_NAME = AgoraCloudClass;
+				PROVISIONING_PROFILE_SPECIFIER = AgoraTest2020;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = QATestRelease;
+		};
+		78CFE1DE257DE5AD0044F3D5 /* QATestRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraEducation.app/AgoraEducation";
+			};
+			name = QATestRelease;
+		};
+		78CFE1DF257DE5AD0044F3D5 /* QATestRelease */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AgoraSmallClass;
+			};
+			name = QATestRelease;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1AE0CFFF2283C5F20092AC5E /* Build configuration list for PBXProject "AgoraEducation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE0D02E2283C5F40092AC5E /* Debug */,
+				1AE0D02F2283C5F40092AC5E /* Release */,
+				78515D3223FCCDCB0015B5EC /* DevRelease */,
+				78AED04623C58E5D00A24DDB /* QARelease */,
+				78CFE1DC257DE5AD0044F3D5 /* QATestRelease */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1AE0D0302283C5F40092AC5E /* Build configuration list for PBXNativeTarget "AgoraEducation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE0D0312283C5F40092AC5E /* Debug */,
+				1AE0D0322283C5F40092AC5E /* Release */,
+				78515D3323FCCDCB0015B5EC /* DevRelease */,
+				78AED04723C58E5D00A24DDB /* QARelease */,
+				78CFE1DD257DE5AD0044F3D5 /* QATestRelease */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1AE0D0332283C5F40092AC5E /* Build configuration list for PBXNativeTarget "AgoraEducationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE0D0342283C5F40092AC5E /* Debug */,
+				1AE0D0352283C5F40092AC5E /* Release */,
+				78515D3423FCCDCB0015B5EC /* DevRelease */,
+				78AED04823C58E5D00A24DDB /* QARelease */,
+				78CFE1DE257DE5AD0044F3D5 /* QATestRelease */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1AE0D0362283C5F40092AC5E /* Build configuration list for PBXNativeTarget "AgoraEducationUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1AE0D0372283C5F40092AC5E /* Debug */,
+				1AE0D0382283C5F40092AC5E /* Release */,
+				78515D3523FCCDCB0015B5EC /* DevRelease */,
+				78AED04923C58E5D00A24DDB /* QARelease */,
+				78CFE1DF257DE5AD0044F3D5 /* QATestRelease */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1AE0CFFC2283C5F20092AC5E /* Project object */;
+}

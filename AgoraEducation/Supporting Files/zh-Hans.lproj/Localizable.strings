@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 yangmoumou. All rights reserved.
+*/
+
+OneToOneText = "一对一";
+SmallClassText = "小班课";
+BigClassText = "大班课";
+BreakOutClassText = "超级小班课";
+MediumClassText = "中班课";
+
+OKText = "确定";
+CancelText = "取消";
+EyeProtectionText = "护眼模式";
+SettingText = "设置";
+
+UserNameVerifyText = "教室名、用户名最多为20个字符";
+UserNameFormatVerifyText = "教室名、用户名只能是字母、数字";
+RoomTypeVerifyText = "请选择房间类型";
+
+KickOffClassroomText = "您被老师踢出了教室!";

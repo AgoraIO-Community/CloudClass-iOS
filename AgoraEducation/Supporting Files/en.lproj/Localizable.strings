@@ -1,0 +1,25 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 yangmoumou. All rights reserved.
+*/
+
+OneToOneText = "One to One Classroom";
+SmallClassText = "Small Classroom";
+BigClassText = "Lecture Hall";
+BreakOutClassText = "Break Out Classroom";
+MediumClassText = "Medium Classroom";
+
+OKText = "OK";
+CancelText = "Cancel";
+EyeProtectionText = "Eye protection";
+SettingText = "Setting";
+
+UserNameVerifyText = "class name and user name must be within 20 characters";
+UserNameFormatVerifyText = "class name and user name can only be letters and numbers";
+RoomTypeVerifyText = "please select a room type";
+
+
+KickOffClassroomText = "you were kicked out of the classroom by the teacher!";
