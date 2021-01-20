@@ -3,7 +3,7 @@
 This page introduces how to run the iOS sample project.
 ## Prerequisites 
 
-- Make sure you have made the preparations mentioned in the  [Agora e-Education Guide](https://github.com/AgoraIO-Usecase/eEducation).
+- Make sure you have made the preparations mentioned in the  [prerequisites](https://docs.agora.io/en/agora-class/agora_class_prep?platform=iOS).
 - Prepare the development environment:
   - Xcode 10.0 or later
   - CocoaPods
@@ -11,64 +11,21 @@ This page introduces how to run the iOS sample project.
 - Real iOS devices, such as iPhone or iPad.
 
 ## Run the sample project
-
-Follow these steps to run the sample project:
-
-1.Clone the repository to your local machine.
-
-```
-git clone https://github.com/AgoraIO-Usecase/eEducation
-```
-
-2.Enter the directory of the Android project.
-
-```
-cd eEducation/education_iOS
-```
-
-3.Install dependencies.
-
-```
-pod install
-```
-
-4.Open the iOS project 
-
-```
-open AgoraEducation.xcworkspace
-```
-
-5.Configure parameters
-
-Pass the following parameters in `KeyCenter.m`:
-
+1. [quick start](https://docs.agora.io/en/agora-class/agora_class_quickstart_ios?platform=iOS)
+2. Configure parameters
+Configure the following parameters in the 'keycenter. m' file:
 - The Agora App ID that you get.
-- The Agora Customer ID that you get.
-- The Agora Customer Certificate that you get.
-- The WhiteBoard AppIdentifier that you get.
-
-For details, see the [prerequisites](https://github.com/AgoraIO-Usecase/eEducation#prerequisites) in Agora E-education Guide.
+- The Agora RTM Token that you get.
 
 ```
-+ (NSString *)agoraAppid {
-     return <#Your Agora App Id#>;
++ (NSString *)appId {
+    return <#Your Agora App Id#>;
 }
 
-+ (NSString *)customerId {
-     return <#Your Agora Customer Id#>;
++ (NSString *)rtmToken {
+    return <#Your Agora RTM Token#>;
 }
-
-+ (NSString *)customerCertificate {
-     return <#Your Agora Customer Certificate#>;
-}
-
-+ (NSString *)boardAppid {
-     return <#Your Board App Id#>;
-}
-
 ```
-
-6. Run the project with `command + r`.
 
 ## Connect us
 
