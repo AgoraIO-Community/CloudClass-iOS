@@ -196,7 +196,8 @@
     // userName + roomtype
     self.roomUuid = [NSString stringWithFormat:@"%@%ld", roomName, (long)self.roomType];
 
-//    NSString *rtmToken = [TokenBuilder buildToken:KeyCenter.appId appCertificate:@"<#Your Agora Certificate Id#>" userUuid:self.userUuid];
+    // generate rtmtoken locally:
+    // NSString *rtmToken = [TokenBuilder buildToken:KeyCenter.appId appCertificate:@"<#Your Agora Certificate Id#>" userUuid:self.userUuid];
 
     [self launchClassroom:userName userUuid:self.userUuid roomName:roomName roomUuid:self.roomUuid roomType:self.roomType token:KeyCenter.rtmToken];
 }

@@ -11,10 +11,13 @@
 @implementation KeyCenter
 + (NSString *)appId {
     return <#Your Agora App Id#>;
+
 }
 
+// https://webdemo.agora.io/token-builder/
 + (NSString *)rtmToken {
     return <#Your Agora RTM Token#>;
+
 }
 
 @end
