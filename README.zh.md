@@ -4,70 +4,27 @@
 
 ## 前提条件
 
-- 准备工作：请确保你已经完成 [Agora e-Education 项目指南](https://github.com/AgoraIO-Usecase/eEducation/blob/master/README.zh.md)中的准备工作。
+- 准备工作：请确保你已经完成 [前提条件](https://docs.agora.io/cn/agora-class/agora_class_prep?platform=iOS)中的准备工作。
 - 开发环境：
   - Xcode 10.0 及以上
   - Cocoapods
 - iOS 真机（iPhone 或 iPad）
 
 ## 运行示例项目
-
-参考以下步骤编译和运行示例项目：
-
-1.将代码克隆到本地
-
-```
-git clone https://github.com/AgoraIO-Usecase/eEducation
-```
-
-2.进入项目目录
-
-```
-cd eEducation/education_iOS
-```
-
-3.安装项目依赖库
-
-```
-pod install
-```
-
-4.打开项目
-
-```
-open AgoraEducation.xcworkspace
-```
-
-5.配置相关参数
-
+1. [快速接入](https://docs.agora.io/cn/agora-class/agora_class_quickstart_ios?platform=iOS)
+2. 配置相关参数
 在 `KeyCenter.m` 文件中配置以下参数：
 - 你获取到的声网 App ID。
-- 你获取到的声网 Customer ID。
-- 你获取到的声网 Customer Certificate
-- 你获取到的白板 AppIdentifier。
-
-详见 Agora e-Education 项目指南中的[前提条件](https://github.com/AgoraIO-Usecase/eEducation/blob/master/README.zh.md#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6)。
-
+- 你获取到的声网 RTM Token。
 ```
-+ (NSString *)agoraAppid {
-     return <#Your Agora App Id#>;
++ (NSString *)appId {
+    return <#Your Agora App Id#>;
 }
 
-+ (NSString *)customerId {
-     return <#Your Agora Customer Id#>;
++ (NSString *)rtmToken {
+    return <#Your Agora RTM Token#>;
 }
-
-+ (NSString *)customerCertificate {
-     return <#Your Agora Customer Certificate#>;
-}
-
-+ (NSString *)boardAppid {
-     return <#Your Board App Id#>;
-}
-
 ```
-
-6.通过 `command + r` 运行项目
 
 ## 联系我们
 
