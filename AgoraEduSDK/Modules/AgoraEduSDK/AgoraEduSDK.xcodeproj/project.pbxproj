@@ -127,11 +127,7 @@
 		7874842525AAB5BD0022329D /* AgoraEduReplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483A325AAB5BC0022329D /* AgoraEduReplay.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7874842625AAB5BD0022329D /* AgoraEduSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483A425AAB5BC0022329D /* AgoraEduSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7874842725AAB5BD0022329D /* AgoraEduKeyCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483A525AAB5BC0022329D /* AgoraEduKeyCenter.h */; };
-		7874842825AAB5BD0022329D /* SkinCoverWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 787483A725AAB5BC0022329D /* SkinCoverWindow.m */; };
-		7874842925AAB5BD0022329D /* SkinCoverLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 787483A825AAB5BC0022329D /* SkinCoverLayer.m */; };
 		7874842A25AAB5BD0022329D /* EyeCareModeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 787483A925AAB5BC0022329D /* EyeCareModeUtil.m */; };
-		7874842B25AAB5BD0022329D /* SkinCoverWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483AA25AAB5BC0022329D /* SkinCoverWindow.h */; };
-		7874842C25AAB5BD0022329D /* SkinCoverLayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483AB25AAB5BC0022329D /* SkinCoverLayer.h */; };
 		7874842D25AAB5BD0022329D /* EyeCareModeUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483AC25AAB5BC0022329D /* EyeCareModeUtil.h */; };
 		7874842E25AAB5BD0022329D /* AgoraEduSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 787483AD25AAB5BD0022329D /* AgoraEduSDK.xcassets */; };
 		78DA43D725B4373C007F9356 /* AgoraEduReplayConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */; };
@@ -263,11 +259,7 @@
 		787483A325AAB5BC0022329D /* AgoraEduReplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduReplay.h; sourceTree = "<group>"; };
 		787483A425AAB5BC0022329D /* AgoraEduSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduSDK.h; sourceTree = "<group>"; };
 		787483A525AAB5BC0022329D /* AgoraEduKeyCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduKeyCenter.h; sourceTree = "<group>"; };
-		787483A725AAB5BC0022329D /* SkinCoverWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SkinCoverWindow.m; sourceTree = "<group>"; };
-		787483A825AAB5BC0022329D /* SkinCoverLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SkinCoverLayer.m; sourceTree = "<group>"; };
 		787483A925AAB5BC0022329D /* EyeCareModeUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EyeCareModeUtil.m; sourceTree = "<group>"; };
-		787483AA25AAB5BC0022329D /* SkinCoverWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinCoverWindow.h; sourceTree = "<group>"; };
-		787483AB25AAB5BC0022329D /* SkinCoverLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinCoverLayer.h; sourceTree = "<group>"; };
 		787483AC25AAB5BC0022329D /* EyeCareModeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyeCareModeUtil.h; sourceTree = "<group>"; };
 		787483AD25AAB5BD0022329D /* AgoraEduSDK.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AgoraEduSDK.xcassets; sourceTree = "<group>"; };
 		78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduReplayConfiguration.m; sourceTree = "<group>"; };
@@ -705,11 +697,7 @@
 		787483A625AAB5BC0022329D /* EyeCare */ = {
 			isa = PBXGroup;
 			children = (
-				787483A725AAB5BC0022329D /* SkinCoverWindow.m */,
-				787483A825AAB5BC0022329D /* SkinCoverLayer.m */,
 				787483A925AAB5BC0022329D /* EyeCareModeUtil.m */,
-				787483AA25AAB5BC0022329D /* SkinCoverWindow.h */,
-				787483AB25AAB5BC0022329D /* SkinCoverLayer.h */,
 				787483AC25AAB5BC0022329D /* EyeCareModeUtil.h */,
 			);
 			path = EyeCare;
@@ -760,7 +748,6 @@
 				787483B425AAB5BD0022329D /* HandsUpModel.h in Headers */,
 				7874842D25AAB5BD0022329D /* EyeCareModeUtil.h in Headers */,
 				7874840925AAB5BD0022329D /* UIView+AgoraEduConstraint.h in Headers */,
-				7874842C25AAB5BD0022329D /* SkinCoverLayer.h in Headers */,
 				787483C025AAB5BD0022329D /* BCSegmentedView.h in Headers */,
 				7874840025AAB5BD0022329D /* UIView+AgoraEduToast.h in Headers */,
 				787483F825AAB5BD0022329D /* AgoraEduTopVC.h in Headers */,
@@ -780,7 +767,6 @@
 				7874840725AAB5BD0022329D /* AgoraEduCustomAlertView.h in Headers */,
 				7874840E25AAB5BD0022329D /* ReplayModuleManager.h in Headers */,
 				787483E225AAB5BD0022329D /* WhiteBoardTouchView.h in Headers */,
-				7874842B25AAB5BD0022329D /* SkinCoverWindow.h in Headers */,
 				787483DD25AAB5BD0022329D /* EEMessageView.h in Headers */,
 				787483FE25AAB5BD0022329D /* UIColor+AgoraEduAddition.h in Headers */,
 				787483ED25AAB5BD0022329D /* OneToOneViewController.h in Headers */,
@@ -930,10 +916,8 @@
 				7874840F25AAB5BD0022329D /* HttpAppModel.m in Sources */,
 				7874841725AAB5BD0022329D /* AssignGroupModel.m in Sources */,
 				7874840825AAB5BD0022329D /* UIView+AgoraEduConstraint.m in Sources */,
-				7874842925AAB5BD0022329D /* SkinCoverLayer.m in Sources */,
 				787483F225AAB5BD0022329D /* OTOTeacherView.m in Sources */,
 				787483D525AAB5BD0022329D /* SmallViewController.m in Sources */,
-				7874842825AAB5BD0022329D /* SkinCoverWindow.m in Sources */,
 				7874840B25AAB5BD0022329D /* UIView+AgoraEduBadge.m in Sources */,
 				787483DB25AAB5BD0022329D /* EduStream+StreamState.m in Sources */,
 				7874841E25AAB5BD0022329D /* AgoraEduObjects.m in Sources */,

@@ -7,15 +7,13 @@
 //
 
 #import "EyeCareModeUtil.h"
-#import "SkinCoverWindow.h"
 
 static EyeCareModeUtil *eyeCareUtil = nil;
 /// NSUserDefaults存的key
 static NSString * const kAgoraEduEyeCareModeStatus = @"kAgoraEduEyeCareModeStatus";
-static NSInteger const kWeSkinCoverWindowLevel = 2099;
 
 @interface EyeCareModeUtil ()
-@property (nonatomic, strong) SkinCoverWindow *skinCoverWindow;
+@property (nonatomic, strong) UIView *maskView;
 @end
 
 
@@ -50,27 +48,22 @@ static NSInteger const kWeSkinCoverWindowLevel = 2099;
 
 - (void)switchEyeCareMode:(BOOL)on {
     if (on) {
-        if ([UIApplication sharedApplication].keyWindow != nil) {
-            self.skinCoverWindow.hidden = NO;
-        }
+        self.maskView.hidden = NO;
     }else {
-        if ([[UIApplication sharedApplication].windows containsObject:self.skinCoverWindow]) {
-            self.skinCoverWindow.hidden = YES;
-        }
+        self.maskView.hidden = YES;
     }
     [[NSUserDefaults standardUserDefaults] setBool:on forKey:kAgoraEduEyeCareModeStatus];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
-
-- (SkinCoverWindow *)skinCoverWindow {
-    if (!_skinCoverWindow) {
-        _skinCoverWindow = [[SkinCoverWindow alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-        _skinCoverWindow.windowLevel = kWeSkinCoverWindowLevel;
-        _skinCoverWindow.userInteractionEnabled = NO;
-        [_skinCoverWindow makeKeyWindow];
+- (UIView *)maskView {
+    if(!_maskView) {
+        UIWindow *window = [UIApplication sharedApplication].windows.firstObject;
+        _maskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, MAX(kScreenWidth, kScreenHeight), MAX(kScreenWidth, kScreenHeight))];
+        _maskView.backgroundColor = [UIColor colorWithHexString:@"FF9900" alpha:0.1];
+        _maskView.hidden = NO;
+        _maskView.userInteractionEnabled = NO;
+        [window addSubview:_maskView];
     }
-    return _skinCoverWindow;
+    return _maskView;
 }
-
-
 @end

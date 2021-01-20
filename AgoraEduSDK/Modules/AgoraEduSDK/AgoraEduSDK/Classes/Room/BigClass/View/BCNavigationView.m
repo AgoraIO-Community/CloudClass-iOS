@@ -46,7 +46,7 @@
 }
 
 - (void)updateSignalImageName:(NSString *)name {
-    [self.wifiSignalImage setImage:[UIImage imageNamed:name]];
+    [self.wifiSignalImage setImage:AgoraEduImageWithName(name)];
 }
 - (IBAction)colseRoom:(UIButton *)sender {
     if (self.delegate && [self.delegate respondsToSelector:@selector(closeRoom)]) {
