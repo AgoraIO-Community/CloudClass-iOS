@@ -7,7 +7,7 @@
 
 #import "AgoraEduSDK.h"
 #import "AgoraEduManager.h"
-#import "AgoraEduBaseViewController.h"
+#import "AgoraBaseViewController.h"
 #import "UIView+AgoraEduToast.h"
 #import "AgoraEduTopVC.h"
 #import "EyeCareModeUtil.h"
@@ -244,7 +244,7 @@
     EduSceneType sceneType = (EduSceneType)config.roomType;
     NSBundle *bundle = AgoraEduBundle;
     UIStoryboard *story = [UIStoryboard storyboardWithName:@"Room" bundle:bundle];
-    AgoraEduBaseViewController *vc = [story instantiateViewControllerWithIdentifier:identifier];
+    AgoraBaseViewController *vc = [story instantiateViewControllerWithIdentifier:identifier];
     vc.sceneType = sceneType;
     vc.className = roomName;
     vc.roomUuid = roomUuid;

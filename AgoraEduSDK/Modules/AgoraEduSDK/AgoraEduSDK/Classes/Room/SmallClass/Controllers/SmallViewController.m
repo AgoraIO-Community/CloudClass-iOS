@@ -92,7 +92,7 @@
         [weakself lockViewTransform:boardFollow];
         
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -345,7 +345,7 @@
         [weakself.studentListView updateStudentArray:filtes];
         
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -490,7 +490,7 @@
         }
         [weakself reloadStudentViews];
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -508,7 +508,7 @@
     } else {
         toastMessage = AgoraEduLocalizedString(@"UnlockBoardText", nil);
     }
-    [AgoraEduBaseViewController showToast:toastMessage];
+    [AgoraBaseViewController showToast:toastMessage];
     [self lockViewTransform:enable];
 }
 - (void)onBoardPermissionGranted:(NSArray<NSString *> *)grantUsers {
