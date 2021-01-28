@@ -7,36 +7,36 @@
 
 import UIKit
 
-class AgoraBaseView: UIView {
-    var x: CGFloat = 0 {
+@objcMembers public class AgoraBaseView: UIView {
+    public var x: CGFloat = 0 {
         didSet {
             assert(self.superview != nil, "can not found superview")
             self.leftAnchor.constraint(equalTo: self.superview!.leftAnchor, constant: x).isActive = true
         }
     }
-    var y: CGFloat = 0 {
+    public var y: CGFloat = 0 {
         didSet {
             assert(self.superview != nil, "can not found superview")
             self.topAnchor.constraint(equalTo: self.superview!.topAnchor, constant: y).isActive = true
         }
     }
-    var width: CGFloat = 0 {
+    public var width: CGFloat = 0 {
         didSet {
             self.widthAnchor.constraint(equalToConstant: width).isActive = true
         }
     }
-    var height: CGFloat = 0 {
+    public var height: CGFloat = 0 {
         didSet {
             self.heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
-    var right: CGFloat = 0 {
+    public var right: CGFloat = 0 {
         didSet {
             assert(self.superview != nil, "can not found superview")
             self.rightAnchor.constraint(equalTo: self.superview!.rightAnchor, constant: -right).isActive = true
         }
     }
-    var bottom: CGFloat = 0 {
+    public var bottom: CGFloat = 0 {
         didSet {
             assert(self.superview != nil, "can not found superview")
             self.bottomAnchor.constraint(equalTo: self.superview!.bottomAnchor, constant: -bottom).isActive = true
