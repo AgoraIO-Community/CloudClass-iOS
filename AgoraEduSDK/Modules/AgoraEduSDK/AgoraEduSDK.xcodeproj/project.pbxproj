@@ -132,6 +132,10 @@
 		7874842E25AAB5BD0022329D /* AgoraEduSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 787483AD25AAB5BD0022329D /* AgoraEduSDK.xcassets */; };
 		788BC7B225C106E70095998F /* AgoraBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC7B125C106E70095998F /* AgoraBaseView.swift */; };
 		788BC7EF25C11FC10095998F /* AgoraUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC7EE25C11FC10095998F /* AgoraUserView.swift */; };
+		788BC86225C1A7810095998F /* AgoraBaseImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC86125C1A7800095998F /* AgoraBaseImageView.swift */; };
+		788BC86525C1A78F0095998F /* AgoraBaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC86425C1A78F0095998F /* AgoraBaseButton.swift */; };
+		788BC86A25C1AC660095998F /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC86925C1AC650095998F /* Utils.swift */; };
+		788BC8A925C2B2CE0095998F /* AgoraBaseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC8A825C2B2CE0095998F /* AgoraBaseLabel.swift */; };
 		78DA43D725B4373C007F9356 /* AgoraEduReplayConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */; };
 		78DA43D825B4373C007F9356 /* AgoraEduReplayConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 78DA43D625B4373C007F9356 /* AgoraEduReplayConfiguration.h */; };
 		81DAA06AEDE4764FA3712154 /* Pods_AgoraEduSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 184C538EB6D076BAC3B83E36 /* Pods_AgoraEduSDK.framework */; };
@@ -266,6 +270,11 @@
 		787483AD25AAB5BD0022329D /* AgoraEduSDK.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AgoraEduSDK.xcassets; sourceTree = "<group>"; };
 		788BC7B125C106E70095998F /* AgoraBaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBaseView.swift; sourceTree = "<group>"; };
 		788BC7EE25C11FC10095998F /* AgoraUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraUserView.swift; sourceTree = "<group>"; };
+		788BC86125C1A7800095998F /* AgoraBaseImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraBaseImageView.swift; sourceTree = "<group>"; };
+		788BC86425C1A78F0095998F /* AgoraBaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraBaseButton.swift; sourceTree = "<group>"; };
+		788BC86725C1A9700095998F /* AgoraEduSDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = AgoraEduSDK.modulemap; sourceTree = "<group>"; };
+		788BC86925C1AC650095998F /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		788BC8A825C2B2CE0095998F /* AgoraBaseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBaseLabel.swift; sourceTree = "<group>"; };
 		78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduReplayConfiguration.m; sourceTree = "<group>"; };
 		78DA43D625B4373C007F9356 /* AgoraEduReplayConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduReplayConfiguration.h; sourceTree = "<group>"; };
 		8ACCDE2E28B832D1B7FE7D4D /* Pods-AgoraEduSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduSDK.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEduSDK/Pods-AgoraEduSDK.debug.xcconfig"; sourceTree = "<group>"; };
@@ -347,6 +356,7 @@
 				78DA43D425B4373C007F9356 /* Replay */,
 				7874830F25AAB5BC0022329D /* StoryBoards */,
 				7874831225AAB5BC0022329D /* AgoraEduSDK.pch */,
+				788BC86725C1A9700095998F /* AgoraEduSDK.modulemap */,
 				7874831325AAB5BC0022329D /* Room */,
 				7874836625AAB5BC0022329D /* AgoraEduKeyCenter.m */,
 				7874836725AAB5BC0022329D /* Utils */,
@@ -713,6 +723,10 @@
 				7874832B25AAB5BC0022329D /* AgoraBaseViewController.m */,
 				7874835925AAB5BC0022329D /* AgoraBaseViewController.h */,
 				788BC7B125C106E70095998F /* AgoraBaseView.swift */,
+				788BC8A825C2B2CE0095998F /* AgoraBaseLabel.swift */,
+				788BC86125C1A7800095998F /* AgoraBaseImageView.swift */,
+				788BC86425C1A78F0095998F /* AgoraBaseButton.swift */,
+				788BC86925C1AC650095998F /* Utils.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -950,9 +964,11 @@
 				7874841C25AAB5BD0022329D /* SchduleModel.m in Sources */,
 				7874841425AAB5BD0022329D /* BoardModel.m in Sources */,
 				787483DC25AAB5BD0022329D /* EEMessageViewCell.m in Sources */,
+				788BC8A925C2B2CE0095998F /* AgoraBaseLabel.swift in Sources */,
 				787483EC25AAB5BD0022329D /* OneToOneViewController.m in Sources */,
 				787483CD25AAB5BD0022329D /* MCStudentViewCell.m in Sources */,
 				787483E825AAB5BD0022329D /* WhiteBoardTouchView.m in Sources */,
+				788BC86A25C1AC660095998F /* Utils.swift in Sources */,
 				7874842A25AAB5BD0022329D /* EyeCareModeUtil.m in Sources */,
 				787483E625AAB5BD0022329D /* EENavigationView.m in Sources */,
 				788BC7B225C106E70095998F /* AgoraBaseView.swift in Sources */,
@@ -962,6 +978,7 @@
 				787483C225AAB5BD0022329D /* BigViewController.m in Sources */,
 				787483F525AAB5BD0022329D /* AgoraEduKeyCenter.m in Sources */,
 				787483B825AAB5BD0022329D /* EETeacherVideoView.m in Sources */,
+				788BC86225C1A7810095998F /* AgoraBaseImageView.swift in Sources */,
 				7874842025AAB5BD0022329D /* AgoraEduClassroom.m in Sources */,
 				78DA43D725B4373C007F9356 /* AgoraEduReplayConfiguration.m in Sources */,
 				787483C725AAB5BD0022329D /* MCStreamInfo.m in Sources */,
@@ -969,6 +986,7 @@
 				787483C925AAB5BD0022329D /* MCStudentListView.m in Sources */,
 				787483F925AAB5BD0022329D /* AgoraEduTopVC.m in Sources */,
 				7874840425AAB5BD0022329D /* AgoraEduCustomAlertView.m in Sources */,
+				788BC86525C1A78F0095998F /* AgoraBaseButton.swift in Sources */,
 				7874841A25AAB5BD0022329D /* HTTPConfiguration.m in Sources */,
 				787483FF25AAB5BD0022329D /* UIColor+AgoraEduAddition.m in Sources */,
 				7874841825AAB5BD0022329D /* AppHTTPManager.m in Sources */,

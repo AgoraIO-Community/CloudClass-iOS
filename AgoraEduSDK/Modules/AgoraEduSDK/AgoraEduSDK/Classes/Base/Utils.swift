@@ -7,6 +7,22 @@
 
 import UIKit
 
+// MARK: Constraint
+public let Constraint_Id_X = "Constraint_Id_X"
+public let Constraint_Id_Y = "Constraint_Id_Y"
+public let Constraint_Id_CenterX = "Constraint_Id_CenterX"
+public let Constraint_Id_CenterY = "Constraint_Id_CenterY"
+public let Constraint_Id_Width = "Constraint_Id_Width"
+public let Constraint_Id_Height = "Constraint_Id_Height"
+public let Constraint_Id_Right = "Constraint_Id_Right"
+public let Constraint_Id_Bottom = "Constraint_Id_Bottom"
+extension UIView {
+    func constraint(_ withIdentifier:String, _ constraints:[NSLayoutConstraint]) -> NSLayoutConstraint? {
+        return constraints.filter{ $0.identifier == withIdentifier }.first
+    }
+}
+
+// MARK: LocalResource
 public func AgoraBundle(_ aClass: AnyClass) -> Bundle? {
     let bundle = Bundle(for: aClass)
     if let url = bundle.url(forResource: "AgoraEduSDK", withExtension: "bundle") {
