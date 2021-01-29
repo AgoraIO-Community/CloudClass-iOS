@@ -1,12 +1,12 @@
 //
-//  OneToOneViewController.m
+//  Agora1V1ViewController.m
 //  AgoraEducation
 //
 //  Created by yangmoumou on 2019/10/30.
 //  Copyright © 2019 Agora. All rights reserved.
 //
 
-#import "OneToOneViewController.h"
+#import "Agora1V1ViewController.h"
 #import "EENavigationView.h"
 #import "EEChatTextFiled.h"
 #import "EEMessageView.h"
@@ -18,7 +18,16 @@
 #import <YYModel/YYModel.h>
 #import "EduStream+StreamState.h"
 
-@interface OneToOneViewController ()<UITextFieldDelegate, RoomProtocol, EduClassroomDelegate, EduStudentDelegate, EduMediaStreamDelegate>
+#import <AgoraEduSDK/AgoraEduSDK-Swift.h>
+
+@interface Agora1V1ViewController ()<UITextFieldDelegate, RoomProtocol, EduClassroomDelegate, EduStudentDelegate, EduMediaStreamDelegate>
+
+@property (weak, nonatomic) AgoraBaseImageView *bgView;
+@property (weak, nonatomic) AgoraBaseView *contentView;
+@property (weak, nonatomic) AgoraToolView *toolView;
+@property (weak, nonatomic) AgoraUserView *teaView;
+@property (weak, nonatomic) AgoraUserView *stuView;
+@property (weak, nonatomic) AgoraBaseView *boardContentView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatRoomViewWidthCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatRoomViewRightCon;
@@ -44,24 +53,42 @@
 
 @end
 
-@implementation OneToOneViewController
+@implementation Agora1V1ViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self setupView];
+    [self initView];
+    [self initLayout];
     [self initData];
     [self addNotification];
 }
 
 - (void)initData {
     
-    self.studentView.delegate = self;
-    self.navigationView.delegate = self;
-    self.chatTextFiled.contentTextFiled.delegate = self;
-    
-    [self.navigationView updateClassName:self.className];
+//    self.studentView.delegate = self;
+//    self.navigationView.delegate = self;
+//    self.chatTextFiled.contentTextFiled.delegate = self;
+//
+//    [self.navigationView updateClassName:self.className];
     
 //    AgoraEduManager.shareManager.studentService.mediaStreamDelegate = self;
+    
+    self.toolView.leftTouchBlock = ^{
+        
+    };
+    
+    self.teaView.audioTouchBlock = ^(BOOL mute) {
+        NSLog(@"Srs audio mute:%d", mute);
+    };
+    self.teaView.videoTouchBlock = ^(BOOL mute) {
+        NSLog(@"Srs video mute:%d", mute);
+    };
+    self.stuView.audioTouchBlock = ^(BOOL mute) {
+        NSLog(@"Srs audio mute:%d", mute);
+    };
+    self.stuView.videoTouchBlock = ^(BOOL mute) {
+        NSLog(@"Srs video mute:%d", mute);
+    };
 }
 
 - (void)lockViewTransform:(BOOL)lock {
@@ -70,28 +97,185 @@
     
     self.whiteBoardTouchView.hidden = !lock;
 }
-
-- (void)setupView {
+- (void)initLayout {
     
-    self.chatRoomLabel.text = AgoraEduLocalizedString(@"ChatroomText", nil);
-    [self.uiContorlBtn setImage:AgoraEduImageWithName(@"view-close") forState:UIControlStateNormal];
+    //-----
+    self.bgView.x = 0;
+    self.bgView.y = 0;
+    self.bgView.right = 0;
+    self.bgView.bottom = 0;
+    
+    // contentView
+    self.contentView.safeX = 0;
+    self.contentView.safeY = 0;
+    self.contentView.safeRight = 0;
+    self.contentView.safeBottom = 0;
+    
+    // tool
+    self.toolView.x = 0;
+    self.toolView.y = 0;
+    self.toolView.right = 0;
+    self.toolView.height = IsPad ? 77 : 40;
+
+    // teacher & student
+    CGFloat top = self.toolView.height + 5;
+    CGFloat right = 5;
+    CGFloat width = 180;
+    CGFloat height = 128;
+    CGFloat minGap = 8;
+    CGFloat minRight = 15;
+    CGFloat minBottom = 15;
+    CGFloat minHeight = 27;
+    CGFloat minWidth = 130;
+    if(IsPad) {
+        top = self.toolView.height + 9;
+        right = 20;
+        width = 319;
+        height = 228;
+        minGap = 12;
+        minRight = 30;
+        minBottom = 25;
+        minHeight = 49;
+        minWidth = 230;
+    }
+    
+    WEAK(self);
+    self.teaView.y = top;
+    self.teaView.right = right;
+    self.teaView.width = width;
+    self.teaView.height = height;
+    self.teaView.scaleTouchBlock = ^(BOOL isMin) {
+        [weakself.teaView clearConstraint];
+        if (isMin) {
+            weakself.teaView.bottom = self.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
+            weakself.teaView.right = minRight;
+            weakself.teaView.width = minWidth;
+            weakself.teaView.height = minHeight;
+            
+        } else {
+            weakself.teaView.y = top;
+            weakself.teaView.right = right;
+            weakself.teaView.width = width;
+            weakself.teaView.height = height;
+        }
+        [UIView animateWithDuration:0.35 animations:^{
+            [weakself.view layoutIfNeeded];
+        }];
+    };
+    
+    self.stuView.y = top + height + 10;
+    self.stuView.right = right;
+    self.stuView.width = width;
+    self.stuView.height = height;
+    self.stuView.scaleTouchBlock = ^(BOOL isMin) {
+        [weakself.stuView clearConstraint];
+        if (isMin) {
+            weakself.stuView.bottom = minBottom;
+            weakself.stuView.right = minRight;
+            weakself.stuView.width = minWidth;
+            weakself.stuView.height = minHeight;
+            if(weakself.teaView.isMin) {
+                weakself.teaView.bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom: minBottom;
+            }
+            
+        } else {
+            weakself.stuView.y = top + 10 + height;
+            weakself.stuView.right = right;
+            weakself.stuView.width = width;
+            weakself.stuView.height = height;
+        }
+        [UIView animateWithDuration:0.35 animations:^{
+            [weakself.view layoutIfNeeded];
+        }];
+    };
+    
+    //board
+    self.boardContentView.x = right;
+    self.boardContentView.right = IsPad ? right + width + 25 : right + width + 25;
+    self.boardContentView.y = top;
+    self.boardContentView.bottom = 0;
+    
+    // boardView
+    [self.boardView equalTo:self.boardContentView];
+}
+
+- (void)initView {
+    
+    UIImage *image = AgoraEduImageWithName(@"bg_1v1");
+    AgoraBaseImageView *imgView = [[AgoraBaseImageView alloc] initWithImage:image];
+    [self.view addSubview:imgView];
+    self.bgView = imgView;
+    
+    // contentView
+    AgoraBaseView *contentView = [[AgoraBaseView alloc] init];
+    [self.view addSubview:contentView];
+    self.contentView = contentView;
+
+    // whitboard
+    AgoraBaseView *boardContentView = [[AgoraBaseView alloc] init];
+    boardContentView.clipsToBounds = YES;
+    boardContentView.layer.cornerRadius = IsPad ? 15 : 10;
+    boardContentView.layer.borderColor = [UIColor colorWithHex:0x75C0FF].CGColor;
+    boardContentView.layer.borderWidth = IsPad ? 10 : 7;
+    [self.contentView addSubview:boardContentView];
+    self.boardContentView = boardContentView;
     
     WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
     UIView *boardView = [whiteBoardManager getBoardView];
-    [self.whiteboardBaseView addSubview:boardView];
+    [self.boardContentView addSubview:boardView];
     self.boardView = boardView;
-    [boardView equalTo:self.whiteboardBaseView];
-    self.whiteboardBaseView.backgroundColor = UIColor.whiteColor;
+    
+    // tool
+    MenuConfig *cameraSwitch = [MenuConfig new];
+    cameraSwitch.imageName = @"camera_switch";
+    cameraSwitch.touchBlock = ^{
+        NSLog(@"camera_switch");
+    };
+    MenuConfig *cs = [MenuConfig new];
+    cs.imageName = @"cs";
+    cs.touchBlock = ^{
+        NSLog(@"cs");
+    };
+    AgoraToolView *toolView = [[AgoraToolView alloc] initWithMenuConfigs:@[cameraSwitch, cs]];
+    [self.contentView addSubview:toolView];
+    self.toolView = toolView;
+    
+    // teacher & student
+    {
+        AgoraUserView *teacherView = [[AgoraUserView alloc] init];
+        [self.contentView addSubview:teacherView];
+        self.teaView = teacherView;
+        
+        AgoraUserView *studentView = [[AgoraUserView alloc] init];
+        [self.contentView addSubview:studentView];
+        self.stuView = studentView;
+    }
 
-    self.tipLabel.layer.backgroundColor = [UIColor colorWithHexString:@"000000" alpha:0.7].CGColor;
-    self.tipLabel.layer.cornerRadius = 6;
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [vv updateView];
+//        [vvv updateView];
+//    });
+    
 
-    WhiteBoardTouchView *whiteBoardTouchView = [WhiteBoardTouchView new];
-    [whiteBoardTouchView setupInView:boardView onTouchBlock:^{
-        NSString *toastMessage = AgoraEduLocalizedString(@"LockBoardTouchText", nil);
-        [AgoraBaseViewController showToast:toastMessage];
-    }];
-    self.whiteBoardTouchView = whiteBoardTouchView;
+//    self.chatRoomLabel.text = AgoraEduLocalizedString(@"ChatroomText", nil);
+//    [self.uiContorlBtn setImage:AgoraEduImageWithName(@"view-close") forState:UIControlStateNormal];
+//
+//    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+//    UIView *boardView = [whiteBoardManager getBoardView];
+//    [self.whiteboardBaseView addSubview:boardView];
+//    self.boardView = boardView;
+//    [boardView equalTo:self.whiteboardBaseView];
+//    self.whiteboardBaseView.backgroundColor = UIColor.whiteColor;
+//
+//    self.tipLabel.layer.backgroundColor = [UIColor colorWithHexString:@"000000" alpha:0.7].CGColor;
+//    self.tipLabel.layer.cornerRadius = 6;
+//
+//    WhiteBoardTouchView *whiteBoardTouchView = [WhiteBoardTouchView new];
+//    [whiteBoardTouchView setupInView:boardView onTouchBlock:^{
+//        NSString *toastMessage = AgoraEduLocalizedString(@"LockBoardTouchText", nil);
+//        [AgoraBaseViewController showToast:toastMessage];
+//    }];
+//    self.whiteBoardTouchView = whiteBoardTouchView;
 }
 
 - (void)addNotification {
@@ -327,9 +511,9 @@
 #pragma mark onSyncSuccess
 - (void)onSyncSuccess {
     [self setupWhiteBoard];
-    [self updateTimeState];
-    [self updateChatViews];
-    [self updateRoleViews: self.localUser];
+//    [self updateTimeState];
+//    [self updateChatViews];
+//    [self updateRoleViews: self.localUser];
 }
 
 #pragma mark onReconnected

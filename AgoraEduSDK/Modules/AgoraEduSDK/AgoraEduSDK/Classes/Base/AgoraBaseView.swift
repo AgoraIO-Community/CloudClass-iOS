@@ -120,6 +120,78 @@ import UIKit
             }
         }
     }
+    public var safeX: CGFloat = 0 {
+        didSet {
+            assert(self.superview != nil, "can not found superview")
+            if let constraint = self.constraint(Constraint_Id_SafeX, agoraConstraints) {
+                constraint.constant = safeX
+                constraint.isActive = true
+            } else {
+                if #available(iOS 11.0, *) {
+                    let constraint = self.leftAnchor.constraint(equalTo: self.superview!.safeAreaLayoutGuide.leftAnchor, constant: safeX)
+                    constraint.identifier = Constraint_Id_SafeX
+                    constraint.isActive = true
+                    agoraConstraints.append(constraint)
+                } else {
+                    // Fallback on earlier versions
+                }
+            }
+        }
+    }
+    public var safeY: CGFloat = 0 {
+        didSet {
+            assert(self.superview != nil, "can not found superview")
+            if let constraint = self.constraint(Constraint_Id_SafeY, agoraConstraints) {
+                constraint.constant = safeY
+                constraint.isActive = true
+            } else {
+                if #available(iOS 11.0, *) {
+                    let constraint = self.topAnchor.constraint(equalTo: self.superview!.safeAreaLayoutGuide.topAnchor, constant: safeY)
+                    constraint.identifier = Constraint_Id_SafeY
+                    constraint.isActive = true
+                    agoraConstraints.append(constraint)
+                } else {
+                    // Fallback on earlier versions
+                }
+            }
+        }
+    }
+    public var safeRight: CGFloat = 0 {
+        didSet {
+            assert(self.superview != nil, "can not found superview")
+            if let constraint = self.constraint(Constraint_Id_SafeRight, agoraConstraints) {
+                constraint.constant = -safeRight
+                constraint.isActive = true
+            } else {
+                if #available(iOS 11.0, *) {
+                    let constraint = self.rightAnchor.constraint(equalTo: self.superview!.safeAreaLayoutGuide.rightAnchor, constant: -safeRight)
+                    constraint.identifier = Constraint_Id_SafeRight
+                    constraint.isActive = true
+                    agoraConstraints.append(constraint)
+                } else {
+                    // Fallback on earlier versions
+                }
+            }
+        }
+    }
+    public var safeBottom: CGFloat = 0 {
+        didSet {
+            assert(self.superview != nil, "can not found superview")
+            if let constraint = self.constraint(Constraint_Id_SafeBottom, agoraConstraints) {
+                constraint.constant = -safeBottom
+                constraint.isActive = true
+            } else {
+                if #available(iOS 11.0, *) {
+                    let constraint = self.bottomAnchor.constraint(equalTo: self.superview!.safeAreaLayoutGuide.bottomAnchor, constant: -safeBottom)
+                    constraint.identifier = Constraint_Id_SafeBottom
+                    constraint.isActive = true
+                    agoraConstraints.append(constraint)
+                } else {
+                    // Fallback on earlier versions
+                }
+            }
+        }
+    }
     public var z : Int = 0 {
         didSet {
             assert(self.superview != nil, "can not found superview")
@@ -254,3 +326,4 @@ extension AgoraBaseView {
         self.removeFromSuperview()
     }
 }
+

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7839CCF125C3C1F600C4B08D /* AgoraDeviceAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7839CCF025C3C1F600C4B08D /* AgoraDeviceAssistant.swift */; };
+		7839CD3B25C401F300C4B08D /* AgoraToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7839CD3A25C401F300C4B08D /* AgoraToolView.swift */; };
 		784A99ED25AD5AC600B919E8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 784A99E825AD5AC600B919E8 /* Localizable.strings */; };
 		784A99EE25AD5AC600B919E8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 784A99EB25AD5AC600B919E8 /* Localizable.strings */; };
 		787483AF25AAB5BD0022329D /* Room.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7874831125AAB5BC0022329D /* Room.storyboard */; };
@@ -70,8 +72,8 @@
 		787483E925AAB5BD0022329D /* EETextMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835725AAB5BC0022329D /* EETextMessage.h */; };
 		787483EA25AAB5BD0022329D /* EEChatTextFiled.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835825AAB5BC0022329D /* EEChatTextFiled.m */; };
 		787483EB25AAB5BD0022329D /* AgoraBaseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835925AAB5BC0022329D /* AgoraBaseViewController.h */; };
-		787483EC25AAB5BD0022329D /* OneToOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835C25AAB5BC0022329D /* OneToOneViewController.m */; };
-		787483ED25AAB5BD0022329D /* OneToOneViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835D25AAB5BC0022329D /* OneToOneViewController.h */; };
+		787483EC25AAB5BD0022329D /* Agora1V1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835C25AAB5BC0022329D /* Agora1V1ViewController.m */; };
+		787483ED25AAB5BD0022329D /* Agora1V1ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835D25AAB5BC0022329D /* Agora1V1ViewController.h */; };
 		787483EE25AAB5BD0022329D /* OTOStudentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835F25AAB5BC0022329D /* OTOStudentView.m */; };
 		787483EF25AAB5BD0022329D /* OTOTeacherView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874836025AAB5BC0022329D /* OTOTeacherView.xib */; };
 		787483F025AAB5BD0022329D /* OTOTeacherView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874836125AAB5BC0022329D /* OTOTeacherView.h */; };
@@ -134,7 +136,7 @@
 		788BC7EF25C11FC10095998F /* AgoraUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC7EE25C11FC10095998F /* AgoraUserView.swift */; };
 		788BC86225C1A7810095998F /* AgoraBaseImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC86125C1A7800095998F /* AgoraBaseImageView.swift */; };
 		788BC86525C1A78F0095998F /* AgoraBaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC86425C1A78F0095998F /* AgoraBaseButton.swift */; };
-		788BC86A25C1AC660095998F /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC86925C1AC650095998F /* Utils.swift */; };
+		788BC86A25C1AC660095998F /* AgoraUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC86925C1AC650095998F /* AgoraUtils.swift */; };
 		788BC8A925C2B2CE0095998F /* AgoraBaseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC8A825C2B2CE0095998F /* AgoraBaseLabel.swift */; };
 		78DA43D725B4373C007F9356 /* AgoraEduReplayConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */; };
 		78DA43D825B4373C007F9356 /* AgoraEduReplayConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 78DA43D625B4373C007F9356 /* AgoraEduReplayConfiguration.h */; };
@@ -143,6 +145,8 @@
 
 /* Begin PBXFileReference section */
 		184C538EB6D076BAC3B83E36 /* Pods_AgoraEduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7839CCF025C3C1F600C4B08D /* AgoraDeviceAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraDeviceAssistant.swift; sourceTree = "<group>"; };
+		7839CD3A25C401F300C4B08D /* AgoraToolView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToolView.swift; sourceTree = "<group>"; };
 		784A99E925AD5AC600B919E8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = Localizable.strings; sourceTree = "<group>"; };
 		784A99EC25AD5AC600B919E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		7874817F25A884A30022329D /* AgoraEduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -208,8 +212,8 @@
 		7874835725AAB5BC0022329D /* EETextMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EETextMessage.h; sourceTree = "<group>"; };
 		7874835825AAB5BC0022329D /* EEChatTextFiled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEChatTextFiled.m; sourceTree = "<group>"; };
 		7874835925AAB5BC0022329D /* AgoraBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBaseViewController.h; sourceTree = "<group>"; };
-		7874835C25AAB5BC0022329D /* OneToOneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OneToOneViewController.m; sourceTree = "<group>"; };
-		7874835D25AAB5BC0022329D /* OneToOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OneToOneViewController.h; sourceTree = "<group>"; };
+		7874835C25AAB5BC0022329D /* Agora1V1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Agora1V1ViewController.m; sourceTree = "<group>"; };
+		7874835D25AAB5BC0022329D /* Agora1V1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Agora1V1ViewController.h; sourceTree = "<group>"; };
 		7874835F25AAB5BC0022329D /* OTOStudentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTOStudentView.m; sourceTree = "<group>"; };
 		7874836025AAB5BC0022329D /* OTOTeacherView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTOTeacherView.xib; sourceTree = "<group>"; };
 		7874836125AAB5BC0022329D /* OTOTeacherView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTOTeacherView.h; sourceTree = "<group>"; };
@@ -273,7 +277,7 @@
 		788BC86125C1A7800095998F /* AgoraBaseImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraBaseImageView.swift; sourceTree = "<group>"; };
 		788BC86425C1A78F0095998F /* AgoraBaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraBaseButton.swift; sourceTree = "<group>"; };
 		788BC86725C1A9700095998F /* AgoraEduSDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = AgoraEduSDK.modulemap; sourceTree = "<group>"; };
-		788BC86925C1AC650095998F /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		788BC86925C1AC650095998F /* AgoraUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraUtils.swift; sourceTree = "<group>"; };
 		788BC8A825C2B2CE0095998F /* AgoraBaseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBaseLabel.swift; sourceTree = "<group>"; };
 		78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduReplayConfiguration.m; sourceTree = "<group>"; };
 		78DA43D625B4373C007F9356 /* AgoraEduReplayConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduReplayConfiguration.h; sourceTree = "<group>"; };
@@ -549,8 +553,8 @@
 		7874835B25AAB5BC0022329D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7874835C25AAB5BC0022329D /* OneToOneViewController.m */,
-				7874835D25AAB5BC0022329D /* OneToOneViewController.h */,
+				7874835C25AAB5BC0022329D /* Agora1V1ViewController.m */,
+				7874835D25AAB5BC0022329D /* Agora1V1ViewController.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -726,7 +730,8 @@
 				788BC8A825C2B2CE0095998F /* AgoraBaseLabel.swift */,
 				788BC86125C1A7800095998F /* AgoraBaseImageView.swift */,
 				788BC86425C1A78F0095998F /* AgoraBaseButton.swift */,
-				788BC86925C1AC650095998F /* Utils.swift */,
+				7839CCF025C3C1F600C4B08D /* AgoraDeviceAssistant.swift */,
+				788BC86925C1AC650095998F /* AgoraUtils.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -735,6 +740,7 @@
 			isa = PBXGroup;
 			children = (
 				788BC7EE25C11FC10095998F /* AgoraUserView.swift */,
+				7839CD3A25C401F300C4B08D /* AgoraToolView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -805,7 +811,7 @@
 				787483E225AAB5BD0022329D /* WhiteBoardTouchView.h in Headers */,
 				787483DD25AAB5BD0022329D /* EEMessageView.h in Headers */,
 				787483FE25AAB5BD0022329D /* UIColor+AgoraEduAddition.h in Headers */,
-				787483ED25AAB5BD0022329D /* OneToOneViewController.h in Headers */,
+				787483ED25AAB5BD0022329D /* Agora1V1ViewController.h in Headers */,
 				787483DF25AAB5BD0022329D /* EEChatTextFiled.h in Headers */,
 				787483EB25AAB5BD0022329D /* AgoraBaseViewController.h in Headers */,
 				787483C325AAB5BD0022329D /* RoomProtocol.h in Headers */,
@@ -947,6 +953,7 @@
 				787483D825AAB5BD0022329D /* TextMessageModel.m in Sources */,
 				7874840625AAB5BD0022329D /* AgoraEduAlertViewUtil.m in Sources */,
 				787483B925AAB5BD0022329D /* BCStudentVideoView.m in Sources */,
+				7839CCF125C3C1F600C4B08D /* AgoraDeviceAssistant.swift in Sources */,
 				787483EA25AAB5BD0022329D /* EEChatTextFiled.m in Sources */,
 				787483B525AAB5BD0022329D /* RecordPropertyModel.m in Sources */,
 				787483CF25AAB5BD0022329D /* MCStudentVideoListView.m in Sources */,
@@ -965,10 +972,10 @@
 				7874841425AAB5BD0022329D /* BoardModel.m in Sources */,
 				787483DC25AAB5BD0022329D /* EEMessageViewCell.m in Sources */,
 				788BC8A925C2B2CE0095998F /* AgoraBaseLabel.swift in Sources */,
-				787483EC25AAB5BD0022329D /* OneToOneViewController.m in Sources */,
+				787483EC25AAB5BD0022329D /* Agora1V1ViewController.m in Sources */,
 				787483CD25AAB5BD0022329D /* MCStudentViewCell.m in Sources */,
 				787483E825AAB5BD0022329D /* WhiteBoardTouchView.m in Sources */,
-				788BC86A25C1AC660095998F /* Utils.swift in Sources */,
+				788BC86A25C1AC660095998F /* AgoraUtils.swift in Sources */,
 				7874842A25AAB5BD0022329D /* EyeCareModeUtil.m in Sources */,
 				787483E625AAB5BD0022329D /* EENavigationView.m in Sources */,
 				788BC7B225C106E70095998F /* AgoraBaseView.swift in Sources */,
@@ -984,6 +991,7 @@
 				787483C725AAB5BD0022329D /* MCStreamInfo.m in Sources */,
 				7874840D25AAB5BD0022329D /* AgoraEduManager.m in Sources */,
 				787483C925AAB5BD0022329D /* MCStudentListView.m in Sources */,
+				7839CD3B25C401F300C4B08D /* AgoraToolView.swift in Sources */,
 				787483F925AAB5BD0022329D /* AgoraEduTopVC.m in Sources */,
 				7874840425AAB5BD0022329D /* AgoraEduCustomAlertView.m in Sources */,
 				788BC86525C1A78F0095998F /* AgoraBaseButton.swift in Sources */,
