@@ -1,5 +1,5 @@
 //
-//  OneToOneViewController.h
+//  Agora1V1ViewController.h
 //  AgoraEducation
 //
 //  Created by yangmoumou on 2019/10/30.
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface OneToOneViewController : AgoraBaseViewController
+@interface Agora1V1ViewController : AgoraBaseViewController
 
 @end
 

@@ -16,6 +16,10 @@ public let Constraint_Id_Width = "Constraint_Id_Width"
 public let Constraint_Id_Height = "Constraint_Id_Height"
 public let Constraint_Id_Right = "Constraint_Id_Right"
 public let Constraint_Id_Bottom = "Constraint_Id_Bottom"
+public let Constraint_Id_SafeX = "Constraint_Id_SafeX"
+public let Constraint_Id_SafeY = "Constraint_Id_SafeY"
+public let Constraint_Id_SafeRight = "Constraint_Id_SafeRight"
+public let Constraint_Id_SafeBottom = "Constraint_Id_SafeBottom"
 extension UIView {
     func constraint(_ withIdentifier:String, _ constraints:[NSLayoutConstraint]) -> NSLayoutConstraint? {
         return constraints.filter{ $0.identifier == withIdentifier }.first
