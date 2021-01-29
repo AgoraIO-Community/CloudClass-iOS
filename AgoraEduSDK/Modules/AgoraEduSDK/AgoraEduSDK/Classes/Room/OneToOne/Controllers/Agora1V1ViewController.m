@@ -89,6 +89,13 @@
     self.stuView.videoTouchBlock = ^(BOOL mute) {
         NSLog(@"Srs video mute:%d", mute);
     };
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.teaView updateView];
+        [self.stuView updateView];
+        [self.toolView updateView];
+    });
+
 }
 
 - (void)lockViewTransform:(BOOL)lock {
