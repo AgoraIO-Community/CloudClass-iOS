@@ -486,7 +486,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1020;
-				ORGANIZATIONNAME = yangmoumou;
+				ORGANIZATIONNAME = Agora;
 				TargetAttributes = {
 					1AE0D0032283C5F20092AC5E = {
 						CreatedOnToolsVersion = 10.2.1;
