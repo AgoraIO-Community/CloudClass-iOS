@@ -1,12 +1,12 @@
 //
-//  AgoraEduBaseViewController.m
+//  AgoraBaseViewController.m
 //  AgoraEducation
 //
 //  Created by SRS on 2020/8/3.
 //  Copyright © 2020 yangmoumou. All rights reserved.
 //
 
-#import "AgoraEduBaseViewController.h"
+#import "AgoraBaseViewController.h"
 #import "UIView+AgoraEduToast.h"
 #import "AgoraEduKeyCenter.h"
 #import <YYModel/YYModel.h>
@@ -21,14 +21,14 @@
 #define NoNullArray(x) ([x isKindOfClass:NSArray.class] ? x : @[])
 #define NoNullDictionary(x) ([x isKindOfClass:NSDictionary.class] ? x : @{})
 
-@interface AgoraEduBaseViewController ()<EduClassroomDelegate, EduStudentDelegate, WhiteManagerDelegate>
+@interface AgoraBaseViewController ()<EduClassroomDelegate, EduStudentDelegate, WhiteManagerDelegate>
 
 @property (nonatomic, assign) BOOL hasSignalReconnect;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
 
 @end
 
-@implementation AgoraEduBaseViewController
+@implementation AgoraBaseViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -64,7 +64,7 @@
         
     } failure:^(NSString * _Nonnull errorMsg) {
         [weakself setLoadingVisible:NO];
-        [AgoraEduBaseViewController showToast:errorMsg];
+        [AgoraBaseViewController showToast:errorMsg];
     }];
 }
 
@@ -110,23 +110,23 @@
             [studentService unpublishStream:stream success:^{
                 
             } failure:^(NSError * error) {
-                [AgoraEduBaseViewController showToast:error.localizedDescription];
+                [AgoraBaseViewController showToast:error.localizedDescription];
             }];
         } else if(state == LocalStreamStateUpdate) {
             [studentService muteStream:stream success:^{
                 
             } failure:^(NSError * error) {
-                [AgoraEduBaseViewController showToast:error.localizedDescription];
+                [AgoraBaseViewController showToast:error.localizedDescription];
             }];
         } else if(state == LocalStreamStateCreate) {
             [studentService publishStream:stream success:^{
                 
             } failure:^(NSError * error) {
-                [AgoraEduBaseViewController showToast:error.localizedDescription];
+                [AgoraBaseViewController showToast:error.localizedDescription];
             }];
         }
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -141,7 +141,7 @@
     [roomManager getLocalUserWithSuccess:^(EduLocalUser * _Nonnull user) {
         weakself.localUser = user;
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -172,12 +172,12 @@
             
         } failure:^(NSError * error) {
             [weakself setLoadingVisible:NO];
-            [AgoraEduBaseViewController showToast:error.localizedDescription];
+            [AgoraBaseViewController showToast:error.localizedDescription];
         }];
         
     } failure:^(NSString * errorMsg) {
         [weakself setLoadingVisible:NO];
-        [AgoraEduBaseViewController showToast:errorMsg];
+        [AgoraBaseViewController showToast:errorMsg];
     }];
 }
 
@@ -196,7 +196,7 @@
         
     } failure:^(NSError * error) {
         [navigationView stopTimer];
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -218,11 +218,11 @@
             }
 
         } failure:^(NSError * error) {
-            [AgoraEduBaseViewController showToast:error.localizedDescription];
+            [AgoraBaseViewController showToast:error.localizedDescription];
         }];
         
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -264,7 +264,7 @@
     if(state == ConnectionStateAborted) {
         [AgoraEduManager releaseResource];
         [self dismissViewControllerAnimated:YES completion:^{
-            [AgoraEduBaseViewController showToast:AgoraEduLocalizedString(@"LoginOnAnotherDeviceText", nil)];
+            [AgoraBaseViewController showToast:AgoraEduLocalizedString(@"LoginOnAnotherDeviceText", nil)];
         }];
         return;
     }
@@ -359,7 +359,7 @@
                 [AgoraEduManager.shareManager.groupStudentService sendRoomChatMessageWithText:[model yy_modelToJSONString] success:^{
                     
                 } failure:^(NSError * error) {
-                    [AgoraEduBaseViewController showToast:error.localizedDescription];
+                    [AgoraBaseViewController showToast:error.localizedDescription];
                 }];
                 
                 [AgoraEduManager.shareManager.studentService sendRoomChatMessageWithText:[model yy_modelToJSONString] success:^{
@@ -371,11 +371,11 @@
                     [weakself onSendMessage:message];
 
                 } failure:^(NSError * error) {
-                    [AgoraEduBaseViewController showToast:error.localizedDescription];
+                    [AgoraBaseViewController showToast:error.localizedDescription];
                 }];
                 
             } failure:^(NSError * error) {
-                [AgoraEduBaseViewController showToast:error.localizedDescription];
+                [AgoraBaseViewController showToast:error.localizedDescription];
             }];
             
         } else {
@@ -397,7 +397,7 @@
                 [weakself onSendMessage:message];
                 
             } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
-                [AgoraEduBaseViewController showToast:error.localizedDescription];
+                [AgoraBaseViewController showToast:error.localizedDescription];
             }];
         }
     }

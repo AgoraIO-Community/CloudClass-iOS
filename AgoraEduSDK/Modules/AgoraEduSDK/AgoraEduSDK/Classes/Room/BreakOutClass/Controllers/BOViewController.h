@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AgoraEduBaseViewController.h"
+#import "AgoraBaseViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface BOViewController : AgoraEduBaseViewController
+@interface BOViewController : AgoraBaseViewController
 
 @end
 

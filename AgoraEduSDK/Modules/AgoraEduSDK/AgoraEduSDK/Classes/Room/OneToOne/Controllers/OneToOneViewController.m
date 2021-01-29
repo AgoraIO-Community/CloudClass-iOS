@@ -89,7 +89,7 @@
     WhiteBoardTouchView *whiteBoardTouchView = [WhiteBoardTouchView new];
     [whiteBoardTouchView setupInView:boardView onTouchBlock:^{
         NSString *toastMessage = AgoraEduLocalizedString(@"LockBoardTouchText", nil);
-        [AgoraEduBaseViewController showToast:toastMessage];
+        [AgoraBaseViewController showToast:toastMessage];
     }];
     self.whiteBoardTouchView = whiteBoardTouchView;
 }
@@ -132,7 +132,7 @@
             [weakself lockViewTransform:lock];
              
         } failure:^(NSError * error) {
-            [AgoraEduBaseViewController showToast:error.localizedDescription];
+            [AgoraBaseViewController showToast:error.localizedDescription];
         }];
     }];
 }
@@ -346,7 +346,7 @@
             [weakself updateRoleViews:user];
         }
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
     
     [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<EduStream *> * _Nonnull streams) {
@@ -354,7 +354,7 @@
             [weakself updateRoleCanvas:stream];
         }
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -372,7 +372,7 @@
     } else {
         toastMessage = AgoraEduLocalizedString(@"UnlockBoardText", nil);
     }
-    [AgoraEduBaseViewController showToast:toastMessage];
+    [AgoraBaseViewController showToast:toastMessage];
     [self lockViewTransform:enable];
 }
 - (void)onEndRecord {
@@ -411,7 +411,7 @@
         [weakself updateRoleCanvas:stream];
         
     } failure:^(NSError * _Nonnull error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -440,7 +440,7 @@
         [weakself updateRoleCanvas:stream];
         
     } failure:^(NSError * _Nonnull error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 

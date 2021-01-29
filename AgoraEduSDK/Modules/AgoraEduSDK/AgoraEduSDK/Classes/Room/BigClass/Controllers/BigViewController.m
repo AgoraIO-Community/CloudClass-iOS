@@ -240,7 +240,7 @@
                 break;
         }
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -271,7 +271,7 @@
                 }
                 
             } failure:^(NSError * error) {
-                [AgoraEduBaseViewController showToast:error.localizedDescription];
+                [AgoraBaseViewController showToast:error.localizedDescription];
             }];
 
             if (linkState == SignalLinkStateStuCancel) {
@@ -290,7 +290,7 @@
                     }
                     
                 } failure:^(NSError * error) {
-                    [AgoraEduBaseViewController showToast:error.localizedDescription];
+                    [AgoraBaseViewController showToast:error.localizedDescription];
                 }];
             }
         }
@@ -324,13 +324,13 @@
             
         if (model.data == 0) {
             //1.举手成功 0.对端不在线，举手失败
-            [AgoraEduBaseViewController showToast:AgoraEduLocalizedString(@"HandsUpFailureText", nil)];
+            [AgoraBaseViewController showToast:AgoraEduLocalizedString(@"HandsUpFailureText", nil)];
         } else {
-            [AgoraEduBaseViewController showToast:AgoraEduLocalizedString(@"HandsUpSuccessText", nil)];
+            [AgoraBaseViewController showToast:AgoraEduLocalizedString(@"HandsUpSuccessText", nil)];
         }
         
     } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 
 }
@@ -360,7 +360,7 @@
 //        }
 //
 //    } failure:^(NSError * _Nullable error) {
-//        [AgoraEduBaseViewController showToast:error.localizedDescription];
+//        [AgoraBaseViewController showToast:error.localizedDescription];
 //    }];
 }
 - (void)verticalScreenConstraints {
@@ -561,7 +561,7 @@
         localString = AgoraEduLocalizedString(@"TeaCloseCoVideoText", nil);
     }
     if (localString.length > 0) {
-        [AgoraEduBaseViewController showToast:localString];
+        [AgoraBaseViewController showToast:localString];
     }
     
     self.linkState = dataModel.type;
@@ -592,7 +592,7 @@
             [weakself updateRoleViews:user];
         }
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
     
     [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<EduStream *> * _Nonnull streams) {
@@ -600,7 +600,7 @@
             [weakself updateRoleCanvas:stream];
         }
     } failure:^(NSError * error) {
-        [AgoraEduBaseViewController showToast:error.localizedDescription];
+        [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
 
@@ -615,7 +615,7 @@
     } else {
         toastMessage = AgoraEduLocalizedString(@"UnlockBoardText", nil);
     }
-    [AgoraEduBaseViewController showToast:toastMessage];
+    [AgoraBaseViewController showToast:toastMessage];
     [self lockViewTransform:enable];
 }
 - (void)onEndRecord {

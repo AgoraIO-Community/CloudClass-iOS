@@ -1,5 +1,5 @@
 //
-//  AgoraEduBaseViewController.h
+//  AgoraBaseViewController.h
 //  AgoraEducation
 //
 //  Created by SRS on 2020/8/3.
@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, LocalStreamState) {
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AgoraEduBaseViewController : UIViewController
+@interface AgoraBaseViewController : UIViewController
 
 @property (nonatomic, assign) EduSceneType sceneType;
 @property (nonatomic, strong) NSString *userUuid;

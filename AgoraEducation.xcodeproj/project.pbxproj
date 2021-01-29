@@ -21,6 +21,7 @@
 		787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 787485FE25AB176B0022329D /* UIColor+Addition.m */; };
 		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
 		7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4CD23FA735700AF1B4F /* InfoPlist.strings */; };
+		788BC84625C1982E0095998F /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC84525C1982D0095998F /* File.swift */; };
 		78D7313E23B38B5700D2146C /* EEClassRoomTypeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7313723B38B5700D2146C /* EEClassRoomTypeView.m */; };
 		78D7313F23B38B5700D2146C /* EEClassRoomTypeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78D7313823B38B5700D2146C /* EEClassRoomTypeView.xib */; };
 		78D7314023B38B5700D2146C /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7313B23B38B5700D2146C /* MainViewController.m */; };
@@ -95,6 +96,7 @@
 		7878B4C823FA72F200AF1B4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7878B4CC23FA735700AF1B4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7878B4CE23FA735A00AF1B4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		788BC84525C1982D0095998F /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		78A3EA5E25640261003067AB /* AgoraEducation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AgoraEducation-Bridging-Header.h"; sourceTree = "<group>"; };
 		78D7305B23B35ADB00D2146C /* AgoraEducation.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEducation.pch; sourceTree = "<group>"; };
 		78D7313623B38B5700D2146C /* EEClassRoomTypeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEClassRoomTypeView.h; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 				78D7314623B3964400D2146C /* README.zh.md */,
 				787485F625AB155F0022329D /* KeyCenter.h */,
 				787485F725AB155F0022329D /* KeyCenter.m */,
+				788BC84525C1982D0095998F /* File.swift */,
 				1A44BE3322BF863000766274 /* AgoraEducation */,
 				1AE0D0052283C5F20092AC5E /* Products */,
 				938D296AAD5470F95D0BD9D5 /* Pods */,
@@ -626,6 +629,7 @@
 				783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */,
 				787485F825AB155F0022329D /* KeyCenter.m in Sources */,
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
+				788BC84625C1982E0095998F /* File.swift in Sources */,
 				1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
 				1A70AFB22359F17500942742 /* SettingViewCell.m in Sources */,
@@ -943,6 +947,7 @@
 		1AE0D0342283C5F40092AC5E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
@@ -961,6 +966,7 @@
 		1AE0D0352283C5F40092AC5E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
@@ -979,6 +985,7 @@
 		1AE0D0372283C5F40092AC5E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -996,6 +1003,7 @@
 		1AE0D0382283C5F40092AC5E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1124,6 +1132,7 @@
 		78515D3423FCCDCB0015B5EC /* DevRelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
@@ -1142,6 +1151,7 @@
 		78515D3523FCCDCB0015B5EC /* DevRelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1270,6 +1280,7 @@
 		78AED04823C58E5D00A24DDB /* QARelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
@@ -1288,6 +1299,7 @@
 		78AED04923C58E5D00A24DDB /* QARelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1416,6 +1428,7 @@
 		78CFE1DE257DE5AD0044F3D5 /* QATestRelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
@@ -1434,6 +1447,7 @@
 		78CFE1DF257DE5AD0044F3D5 /* QATestRelease */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

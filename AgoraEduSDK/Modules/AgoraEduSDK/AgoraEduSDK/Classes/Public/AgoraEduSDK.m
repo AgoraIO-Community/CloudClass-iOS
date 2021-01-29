@@ -7,13 +7,18 @@
 
 #import "AgoraEduSDK.h"
 #import "AgoraEduManager.h"
-#import "AgoraEduBaseViewController.h"
+#import "AgoraBaseViewController.h"
 #import "UIView+AgoraEduToast.h"
 #import "AgoraEduTopVC.h"
 #import "EyeCareModeUtil.h"
 #import "AgoraEduKeyCenter.h"
 #import "AgoraEduReplayConfiguration.h"
 #import <YYModel/YYModel.h>
+
+#import <AgoraEduSDK/AgoraEduSDK-Swift.h>
+
+AgoraUserView *teaView;
+AgoraUserView *stuView;
 
 #define NoNullString(x) ([x isKindOfClass:NSString.class] ? x : @"")
 #define NoNullObjectString(x) ((x == nil) ? @"" : @"NoNull")
@@ -50,6 +55,9 @@
     [[EyeCareModeUtil sharedUtil] switchEyeCareMode:config.eyeCare];
 }
 + (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate {
+    
+    [AgoraEduSDK test];
+    return nil;
     
     // 校验
     if(NoNullString(AgoraEduKeyCenter.agoraAppid).length == 0) {
@@ -244,7 +252,7 @@
     EduSceneType sceneType = (EduSceneType)config.roomType;
     NSBundle *bundle = AgoraEduBundle;
     UIStoryboard *story = [UIStoryboard storyboardWithName:@"Room" bundle:bundle];
-    AgoraEduBaseViewController *vc = [story instantiateViewControllerWithIdentifier:identifier];
+    AgoraBaseViewController *vc = [story instantiateViewControllerWithIdentifier:identifier];
     vc.sceneType = sceneType;
     vc.className = roomName;
     vc.roomUuid = roomUuid;
@@ -276,4 +284,94 @@
 + (void)showToast:(NSString *)msg {
     [[UIApplication sharedApplication].windows.firstObject makeToast:msg];
 }
+
++ (void)test {
+    UIView *view = AgoraEduTopVC.topVC.view;
+    
+    AgoraUserView *vv = [[AgoraUserView alloc] init];
+    [view addSubview:vv];
+    teaView = vv;
+    vv.y = 40;
+    vv.right = 0;
+    vv.width = 283;
+    vv.height = 205;
+
+    vv.audioTouchBlock = ^(BOOL mute) {
+        NSLog(@"Srs audio mute:%d", mute);
+    };
+    vv.videoTouchBlock = ^(BOOL mute) {
+        NSLog(@"Srs video mute:%d", mute);
+    };
+    WEAK(self);
+    vv.scaleTouchBlock = ^(BOOL isMin) {
+
+        if (isMin) {
+            [vv clearConstraint];
+            
+            vv.bottom = stuView.isMin ? 20 + 45 + 20 : 20;
+            vv.right = 30;
+            vv.width = 152;
+            vv.height = 45;
+
+        } else {
+            [vv clearConstraint];
+            vv.y = 40;
+            vv.right = 0;
+            vv.width = 283;
+            vv.height = 205;
+        }
+        
+        [UIView animateWithDuration:0.35 animations:^{
+            [view layoutIfNeeded];
+        }];
+    };
+
+    AgoraUserView *vvv = [[AgoraUserView alloc] init];
+    [view addSubview:vvv];
+    stuView = vvv;
+    vvv.y = 205 + 40 + 10;
+    vvv.right = 0;
+    vvv.width = 283;
+    vvv.height = 205;
+
+    vvv.audioTouchBlock = ^(BOOL mute) {
+        NSLog(@"Srs audio mute:%d", mute);
+    };
+    vvv.videoTouchBlock = ^(BOOL mute) {
+        NSLog(@"Srs video mute:%d", mute);
+    };
+ 
+    vvv.scaleTouchBlock = ^(BOOL isMin) {
+
+        if (isMin) {
+            [vvv clearConstraint];
+            vvv.bottom = 20;
+            vvv.right = 30;
+            vvv.width = 152;
+            vvv.height = 45;
+            
+            if(teaView.isMin) {
+                teaView.bottom = stuView.isMin ? 20 + 45 + 20 : 20;
+            }
+            
+        } else {
+            [vvv clearConstraint];
+            vvv.y = 205 + 40 + 10;
+            vvv.right = 0;
+            vvv.width = 283;
+            vvv.height = 205;
+        }
+        
+        [UIView animateWithDuration:0.35 animations:^{
+            [view layoutIfNeeded];
+        }];
+    };
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [vv updateView];
+        [vvv updateView];
+    });
+}
+
+
 @end
