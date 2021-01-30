@@ -92,17 +92,11 @@ class AgoraBoardToolsView: AgoraBaseView {
     fileprivate let titleLabel = AgoraBaseLabel()
     fileprivate let separator = AgoraBaseView()
     fileprivate let unfoldButton = AgoraBaseButton()
-//    fileprivate let popover = Popover(options: [.type(.down),
-//                                                .blackOverlayColor(.clear),
-//                                                .cornerRadius(5),
-//                                                .arrowSize(CGSize(width: 8, height: 4))])
     
     fileprivate let popover = AgoraPopover(options: [.type(.up),
                                                      .blackOverlayColor(.clear),
                                                      .cornerRadius(5),
                                                      .arrowSize(CGSize(width: 8, height: 4))])
-    
-    fileprivate var temp: UIView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -126,7 +120,7 @@ class AgoraBoardToolsView: AgoraBaseView {
         titleLabel.width = bounds.width
         titleLabel.height = bounds.width
         
-        self .layoutIfNeeded();
+        self.layoutIfNeeded();
         
         // separator
         let separatorSpace: CGFloat = 12
@@ -201,18 +195,12 @@ private extension AgoraBoardToolsView {
                                action: #selector(doUnfoldButtonPressed(_:)),
                                for: .touchUpInside)
         addSubview(unfoldButton)
-        
-        // popover
-//        popover.arrowColor = UIColor(rgb: 0x090E51)
     }
     
     func registerToolsItem() {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        view.backgroundColor = .red
-        self.temp = view
-        
-//        self.popover.popoverColor = .white
-//        self.popover.borderColor = .blue
+        self.popover.backgroundColor = .blue
+        self.popover.strokeColor = .red
+        self.popover.borderColor = .green
         
         let moveItem = AgoraBoardToolsItem(normalImage: UIImage(named: "箭头")!,
                                            selectedImage: UIImage(named: "箭头-1")!) { [unowned self] (button) in
@@ -221,6 +209,9 @@ private extension AgoraBoardToolsView {
         
         let pencilItem = AgoraBoardToolsItem(normalImage: UIImage(named: "笔")!,
                                              selectedImage: UIImage(named: "笔-1")!) { [unowned self] (button) in
+            let view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+            view.backgroundColor = .clear
+            
             self.popover.show(view,
                               fromView: button)
         }

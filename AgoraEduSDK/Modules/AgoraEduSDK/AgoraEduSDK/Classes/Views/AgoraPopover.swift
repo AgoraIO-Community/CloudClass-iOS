@@ -22,7 +22,7 @@ public enum AgoraPopoverOption {
     case blackOverlayColor(UIColor)
     case overlayBlur(UIBlurEffect.Style)
     case type(AgoraPopoverType)
-    case color(UIColor)
+    case strokeColor(UIColor)
     case dismissOnBlackOverlayTap(Bool)
     case showBlackOverlay(Bool)
     case springDamping(CGFloat)
@@ -50,7 +50,7 @@ open class AgoraPopover: UIView {
     open var blackOverlayColor: UIColor = UIColor(white: 0.0, alpha: 0.2)
     open var overlayBlur: UIBlurEffect?
     open var strokeColor: UIColor = UIColor.white
-    open var arrowColor: UIColor = UIColor.white
+    open var borderColor: UIColor = UIColor.white
     open var dismissOnBlackOverlayTap: Bool = true
     open var showBlackOverlay: Bool = true
     open var highlightFromView: Bool = false
@@ -106,7 +106,6 @@ open class AgoraPopover: UIView {
     
     override open func layoutSubviews() {
         super.layoutSubviews()
-        self.contentView.frame = self.bounds
         let distance = 1
         
         var y: CGFloat
@@ -131,13 +130,17 @@ open class AgoraPopover: UIView {
             width = self.bounds.width - arrowSize.width - CGFloat(distance * 2)
             height = self.bounds.height - CGFloat(distance * 2)
         case .right:
-            x = CGFloat(distance)
-            y = arrowSize.width + CGFloat(distance)
-            width = self.bounds.width - arrowSize.width - CGFloat(distance * 2)
+            x = arrowSize.height + CGFloat(distance)
+            y = CGFloat(distance)
+            width = self.bounds.width - arrowSize.height - CGFloat(distance * 2)
             height = self.bounds.height - CGFloat(distance * 2)
         }
         
-        self.contentView.frame = CGRect(x: x, y: y, width: width, height: height)
+        self.contentView.frame = CGRect(x: x,
+                                        y: y,
+                                        width: width,
+                                        height: height)
+        
         self.contentView.layer.cornerRadius = self.popCornerRadius
     }
     
@@ -169,16 +172,7 @@ open class AgoraPopover: UIView {
                    fromView: UIView,
                    inView: UIView) {
         let point: CGPoint
-        
-//        if self.popoverType == .auto {
-//            if let point = fromView.superview?.convert(fromView.frame.origin, to: nil),
-//               point.y + fromView.frame.height + self.arrowSize.height + contentView.frame.height > inView.frame.height {
-//                self.popoverType = .up
-//            } else {
-//                self.popoverType = .down
-//            }
-//        }
-        
+                
         switch self.popoverType {
         case .up:
             point = inView.convert(
@@ -192,16 +186,16 @@ open class AgoraPopover: UIView {
                     x: fromView.frame.origin.x + (fromView.frame.size.width / 2),
                     y: fromView.frame.origin.y + fromView.frame.size.height
             ), from: fromView.superview)
-        case .right:
-            point = inView.convert(
-                CGPoint(
-                    x: fromView.frame.origin.x + fromView.frame.size.width,
-                    y: fromView.frame.origin.y + (fromView.frame.size.height / 2)
-            ), from: fromView.superview)
         case .left:
             point = inView.convert(
                 CGPoint(
                     x: fromView.frame.origin.x,
+                    y: fromView.frame.origin.y + (fromView.frame.size.height / 2)
+            ), from: fromView.superview)
+        case .right:
+            point = inView.convert(
+                CGPoint(
+                    x: fromView.frame.origin.x + fromView.frame.size.width,
                     y: fromView.frame.origin.y + (fromView.frame.size.height / 2)
             ), from: fromView.superview)
         }
@@ -215,7 +209,8 @@ open class AgoraPopover: UIView {
                   inView: inView)
     }
     
-    open func show(_ contentView: UIView, point: CGPoint) {
+    open func show(_ contentView: UIView,
+                   point: CGPoint) {
         guard let rootView = UIApplication.shared.keyWindow else {
             return
         }
@@ -247,7 +242,9 @@ open class AgoraPopover: UIView {
             }
             
             if self.dismissOnBlackOverlayTap {
-                self.blackOverlay.addTarget(self, action: #selector(AgoraPopover.dismiss), for: .touchUpInside)
+                self.blackOverlay.addTarget(self,
+                                            action: #selector(AgoraPopover.dismiss),
+                                            for: .touchUpInside)
             }
         }
         
@@ -256,7 +253,7 @@ open class AgoraPopover: UIView {
         self.contentView.layer.cornerRadius = self.popCornerRadius
         self.contentView.layer.masksToBounds = true
         self.arrowShowPoint = point
-        self.show()
+        self.show(contentViewFrame: contentView.frame)
     }
     
     open override func accessibilityPerformEscape() -> Bool {
@@ -303,7 +300,6 @@ open class AgoraPopover: UIView {
     override open func draw(_ rect: CGRect) {
         super.draw(rect)
         let stroke = UIBezierPath()
-        let color = self.strokeColor
         let arrowPoint = self.containerView.convert(self.arrowShowPoint, to: self)
         
         let arrow = UIBezierPath()
@@ -311,18 +307,6 @@ open class AgoraPopover: UIView {
         
         switch self.popoverType {
         case .up:
-            arrow.move(to: CGPoint(x: arrowPoint.x,
-                                   y: self.bounds.height + 1))
-
-            arrow.addLine(to: CGPoint(x: arrowPoint.x + self.arrowSize.width * 0.5 - 1,
-                                      y: self.bounds.height + self.arrowSize.height + 1))
-
-            arrow.addLine(to: CGPoint(x: arrowPoint.x -  self.arrowSize.width * 0.5 + 1,
-                                      y: self.bounds.height + self.arrowSize.height + 1))
-
-            arrow.addLine(to: CGPoint(x: arrowPoint.x,
-                                      y: self.bounds.height + 1))
-            
             stroke.move(to: CGPoint(x: arrowPoint.x, y: self.bounds.height))
             stroke.addLine(
                 to: CGPoint(
@@ -381,18 +365,14 @@ open class AgoraPopover: UIView {
                     y: self.isCornerRightArrow ? self.arrowSize.height : self.bounds.height - self.arrowSize.height
                 )
             )
+            
+            stroke.addLine(
+                to: CGPoint(
+                    x: arrowPoint.x,
+                    y: self.bounds.height
+                )
+            )
         case .down:
-            arrow.move(to: CGPoint(x: arrowPoint.x,
-                                   y: 1))
-            arrow.addLine(to: CGPoint(x: arrowPoint.x + self.arrowSize.width * 0.5 - 1,
-                                      y: self.arrowSize.height + 1))
-            
-            arrow.addLine(to: CGPoint(x: arrowPoint.x -  self.arrowSize.width * 0.5 + 1,
-                                      y: self.arrowSize.height + 1))
-            
-            arrow.addLine(to: CGPoint(x: arrowPoint.x,
-                                      y: 1))
-            
             stroke.move(to: CGPoint(x: arrowPoint.x, y: 0))
             stroke.addLine(
                 to: CGPoint(
@@ -445,12 +425,90 @@ open class AgoraPopover: UIView {
                 endAngle: self.radians(270),
                 clockwise: true)
             
-            stroke.addLine(to: CGPoint(
-                x: arrowPoint.x - self.arrowSize.width * 0.5,
-                y: self.isCornerLeftArrow ? self.arrowSize.height + self.bounds.height : self.arrowSize.height))
+            stroke.addLine(
+                to: CGPoint(
+                    x: arrowPoint.x - self.arrowSize.width * 0.5,
+                    y: self.isCornerLeftArrow ? self.arrowSize.height + self.bounds.height : self.arrowSize.height)
+            )
             
+            stroke.addLine(
+                to: CGPoint(
+                    x: arrowPoint.x,
+                    y: 0
+                )
+            )
         case .left:
-            break
+            stroke.move(to: CGPoint(x: self.bounds.width, y: arrowPoint.y))
+            stroke.addLine(
+                to: CGPoint(
+                    x: self.bounds.width - self.arrowSize.height,
+                    y: arrowPoint.y - (self.arrowSize.width / 2)
+                )
+            )
+            
+            stroke.addLine(
+                to: CGPoint(
+                    x: self.bounds.width - self.arrowSize.height,
+                    y: self.popCornerRadius
+                )
+            )
+            
+            stroke.addArc(
+                withCenter: CGPoint(
+                    x: self.bounds.width - self.arrowSize.height - self.popCornerRadius,
+                    y: self.popCornerRadius
+                ),
+                radius: self.popCornerRadius,
+                startAngle: self.radians(0),
+                endAngle: self.radians(270),
+                clockwise: false)
+            
+            stroke.addLine(to: CGPoint(x: self.popCornerRadius, y: 0))
+            stroke.addArc(
+                withCenter: CGPoint(
+                    x: self.popCornerRadius,
+                    y: self.popCornerRadius
+                ),
+                radius: self.popCornerRadius,
+                startAngle: self.radians(270),
+                endAngle: self.radians(180),
+                clockwise: false)
+
+            stroke.addLine(to: CGPoint(x: 0, y: self.bounds.height - self.popCornerRadius))
+            stroke.addArc(
+                withCenter: CGPoint(
+                    x: self.popCornerRadius,
+                    y: self.bounds.height - self.popCornerRadius
+                ),
+                radius: self.popCornerRadius,
+                startAngle: self.radians(180),
+                endAngle: self.radians(90),
+                clockwise: false)
+            
+            stroke.addLine(to: CGPoint(x: self.bounds.width - self.arrowSize.height - self.popCornerRadius, y: self.bounds.height))
+            stroke.addArc(
+                withCenter: CGPoint(
+                    x: self.bounds.width - self.arrowSize.height - self.popCornerRadius,
+                    y: self.bounds.height - self.popCornerRadius
+                ),
+                radius: self.popCornerRadius,
+                startAngle: self.radians(90),
+                endAngle: self.radians(0),
+                clockwise: false)
+
+            stroke.addLine(
+                to: CGPoint(
+                    x: self.bounds.width - self.arrowSize.height,
+                    y: arrowPoint.y + (self.arrowSize.width / 2)
+                )
+            )
+            
+            stroke.addLine(
+                to: CGPoint(
+                    x: self.bounds.width,
+                    y: arrowPoint.y
+                )
+            )
         case .right:
             stroke.move(to: CGPoint(x: 0, y: arrowPoint.y))
             stroke.addLine(
@@ -510,13 +568,20 @@ open class AgoraPopover: UIView {
                     y: arrowPoint.y + (self.arrowSize.width / 2)
                 )
             )
+
+            stroke.addLine(
+                to: CGPoint(
+                    x: 0,
+                    y: arrowPoint.y
+                )
+            )
         }
         
-        color.setFill()
+        self.strokeColor.setFill()
         stroke.fill()
         
-        arrowColor.setFill()
-        arrow.fill()
+        self.borderColor.setStroke()
+        stroke.stroke()
     }
 }
 
@@ -541,7 +606,7 @@ private extension AgoraPopover {
                     self.overlayBlur = UIBlurEffect(style: style)
                 case let .type(value):
                     self.popoverType = value
-                case let .color(value):
+                case let .strokeColor(value):
                     self.strokeColor = value
                 case let .dismissOnBlackOverlayTap(value):
                     self.dismissOnBlackOverlayTap = value
@@ -556,13 +621,29 @@ private extension AgoraPopover {
         }
     }
     
-    func create() {
-        var frame = self.contentView.frame
-        frame.origin.x = self.arrowShowPoint.x - frame.size.width * 0.5
+    func create(contentViewFrame: CGRect) {
+        var frame = contentViewFrame
         
         var sideEdge: CGFloat = 0.0
         if frame.size.width < self.containerView.frame.size.width {
             sideEdge = self.sideEdge
+        }
+        
+        self.frame = frame
+        
+        switch self.popoverType {
+        case .up:
+            frame.origin.x = self.arrowShowPoint.x - frame.size.width * 0.5
+            frame.origin.y = self.arrowShowPoint.y - frame.height - self.arrowSize.height
+        case .down:
+            frame.origin.x = self.arrowShowPoint.x - frame.size.width * 0.5
+            frame.origin.y = self.arrowShowPoint.y
+        case .left:
+            frame.origin.x = self.arrowShowPoint.x - frame.width - self.arrowSize.height
+            frame.origin.y = self.arrowShowPoint.y - frame.size.height * 0.5
+        case .right:
+            frame.origin.x = self.arrowShowPoint.x
+            frame.origin.y = self.arrowShowPoint.y - frame.size.height * 0.5
         }
         
         let outerSideEdge = frame.maxX - self.containerView.bounds.size.width
@@ -573,39 +654,23 @@ private extension AgoraPopover {
                 frame.origin.x += abs(frame.minX) + sideEdge
             }
         }
-        self.frame = frame
         
-        let arrowPoint = self.containerView.convert(self.arrowShowPoint, to: self)
-        var anchorPoint: CGPoint
+        let outerSideEdgeY = frame.maxY - self.containerView.bounds.size.height
+        if outerSideEdgeY > 0 {
+            frame.origin.y -= (outerSideEdgeY + sideEdge)
+        } else {
+            if frame.minY < 0 {
+                frame.origin.y += abs(frame.minY) + sideEdge
+            }
+        }
+        
         switch self.popoverType {
-        case .up:
-            frame.origin.x = self.arrowShowPoint.x - frame.size.width * 0.5
-            frame.origin.y = self.arrowShowPoint.y - frame.height - self.arrowSize.height
-            anchorPoint = CGPoint(x: arrowPoint.x / frame.size.width, y: 1)
-        case .down:
-            frame.origin.x = self.arrowShowPoint.x - frame.size.width * 0.5
-            frame.origin.y = self.arrowShowPoint.y
-            anchorPoint = CGPoint(x: arrowPoint.x / frame.size.width, y: 0)
-        case .left:
-            frame.origin.x = self.arrowShowPoint.x + frame.width + self.arrowSize.height
-            anchorPoint = CGPoint(x: arrowPoint.x / frame.size.width, y: 0)
-        case .right:
-            frame.origin.y = self.arrowShowPoint.y - frame.size.height * 0.5
-            frame.origin.x = self.arrowShowPoint.x
-            anchorPoint = CGPoint(x: 1, y: arrowPoint.y / frame.size.height)
+        case .up, .down:
+            frame.size.height += self.arrowSize.height
+        case .right, .left:
+            frame.size.width += self.arrowSize.height
         }
         
-        if self.arrowSize == .zero {
-            anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        }
-        
-        let lastAnchor = self.layer.anchorPoint
-        self.layer.anchorPoint = anchorPoint
-        let x = self.layer.position.x + (anchorPoint.x - lastAnchor.x) * self.layer.bounds.size.width
-        let y = self.layer.position.y + (anchorPoint.y - lastAnchor.y) * self.layer.bounds.size.height
-        self.layer.position = CGPoint(x: x, y: y)
-
-        frame.size.height += self.arrowSize.height
         self.frame = frame
     }
     
@@ -623,23 +688,12 @@ private extension AgoraPopover {
         self.blackOverlay.layer.addSublayer(fillLayer)
     }
     
-    func show() {
+    func show(contentViewFrame: CGRect) {
         self.setNeedsDisplay()
-        switch self.popoverType {
-        case .up:
-            self.contentView.frame.origin.y = 0.0
-        case .down:
-            self.contentView.frame.origin.y = self.arrowSize.height
-        case .right:
-            self.contentView.frame.origin.x = self.arrowSize.height
-        case .left:
-            self.contentView.frame.origin.x = 0
-        }
-        
         self.addSubview(self.contentView)
         self.containerView.addSubview(self)
         
-        self.create()
+        self.create(contentViewFrame: contentViewFrame)
         self.transform = CGAffineTransform(scaleX: 0.0, y: 0.0)
         self.willShowHandler?()
         UIView.animate(
