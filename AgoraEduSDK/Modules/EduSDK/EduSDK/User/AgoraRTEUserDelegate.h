@@ -21,11 +21,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didChangeOfLocalVideoStream:(NSString *)streamId
         withState:(AgoraRTEStreamState)state;
 
+- (void)audioVolumeIndicationOfLocalStream:(NSString *)streamId
+                                withVolume:(NSUInteger)volume;
+
 - (void)didChangeOfRemoteAudioStream:(NSString *)streamId
         withState:(AgoraRTEStreamState)state;
 
 - (void)didChangeOfRemoteVideoStream:(NSString *)streamId
         withState:(AgoraRTEStreamState)state;
+
+- (void)audioVolumeIndicationOfRemoteStream:(NSString *)streamId
+                                withVolume:(NSUInteger)volume;
 @end
 
 @protocol AgoraRTEUserDelegate <NSObject>
