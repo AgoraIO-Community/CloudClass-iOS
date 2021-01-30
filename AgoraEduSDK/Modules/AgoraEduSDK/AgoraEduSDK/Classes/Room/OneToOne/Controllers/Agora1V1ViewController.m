@@ -7,20 +7,20 @@
 //
 
 #import "Agora1V1ViewController.h"
-#import "EENavigationView.h"
-#import "EEChatTextFiled.h"
-#import "EEMessageView.h"
-#import "OTOTeacherView.h"
-#import "OTOStudentView.h"
+#import "AgoraEENavigationView.h"
+#import "AgoraEEChatTextFiled.h"
+#import "AgoraEEMessageView.h"
+#import "AgoraOTOTeacherView.h"
+#import "AgoraOTOStudentView.h"
 #import "UIView+AgoraEduToast.h"
-#import "WhiteBoardTouchView.h"
-#import "AppHTTPManager.h"
+#import "AgoraBoardTouchView.h"
+#import "AgoraHTTPManager.h"
 #import <YYModel/YYModel.h>
-#import "EduStream+StreamState.h"
+#import "AgoraRTEStream+StreamState.h"
 
 #import <AgoraEduSDK/AgoraEduSDK-Swift.h>
 
-@interface Agora1V1ViewController ()<UITextFieldDelegate, RoomProtocol, EduClassroomDelegate, EduStudentDelegate, EduMediaStreamDelegate>
+@interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRoomProtocol, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, EduMediaStreamDelegate>
 
 @property (weak, nonatomic) AgoraBaseImageView *bgView;
 @property (weak, nonatomic) AgoraBaseView *contentView;
@@ -35,21 +35,21 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textFiledWidthCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textFiledBottomCon;
 
-@property (weak, nonatomic) IBOutlet EENavigationView *navigationView;
+@property (weak, nonatomic) IBOutlet AgoraEENavigationView *navigationView;
 @property (weak, nonatomic) IBOutlet UIView *chatRoomView;
 @property (weak, nonatomic) IBOutlet UILabel *chatRoomLabel;
 @property (weak, nonatomic) IBOutlet UIButton *uiContorlBtn;
 
-@property (weak, nonatomic) IBOutlet OTOTeacherView *teacherView;
-@property (weak, nonatomic) IBOutlet OTOStudentView *studentView;
-@property (weak, nonatomic) IBOutlet EEChatTextFiled *chatTextFiled;
-@property (weak, nonatomic) IBOutlet EEMessageView *messageListView;
+@property (weak, nonatomic) IBOutlet AgoraOTOTeacherView *teacherView;
+@property (weak, nonatomic) IBOutlet AgoraOTOStudentView *studentView;
+@property (weak, nonatomic) IBOutlet AgoraEEChatTextFiled *chatTextFiled;
+@property (weak, nonatomic) IBOutlet AgoraEEMessageView *messageListView;
 @property (weak, nonatomic) IBOutlet UIView *shareScreenView;
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
 
 @property (weak, nonatomic) IBOutlet UIView *whiteboardBaseView;
 
-@property (nonatomic, weak) WhiteBoardTouchView *whiteBoardTouchView;
+@property (nonatomic, weak) AgoraBoardTouchView *whiteBoardTouchView;
 
 @end
 
@@ -277,7 +277,7 @@
 //    self.tipLabel.layer.backgroundColor = [UIColor colorWithHexString:@"000000" alpha:0.7].CGColor;
 //    self.tipLabel.layer.cornerRadius = 6;
 //
-//    WhiteBoardTouchView *whiteBoardTouchView = [WhiteBoardTouchView new];
+//    AgoraBoardTouchView *whiteBoardTouchView = [AgoraBoardTouchView new];
 //    [whiteBoardTouchView setupInView:boardView onTouchBlock:^{
 //        NSString *toastMessage = AgoraEduLocalizedString(@"LockBoardTouchText", nil);
 //        [AgoraBaseViewController showToast:toastMessage];
@@ -349,52 +349,52 @@
     [AgoraEduManager.shareManager.whiteBoardManager refreshViewSize];
 }
 
-- (void)updateRoleViews:(EduUser *) user {
-    if(user.role == EduRoleTypeTeacher){
+- (void)updateRoleViews:(AgoraRTEUser *) user {
+    if(user.role == AgoraRTERoleTypeTeacher){
         [self.teacherView updateUserName:user.userName];
         
-    } else if(user.role == EduRoleTypeStudent){
+    } else if(user.role == AgoraRTERoleTypeStudent){
         [self.studentView updateUserName:user.userName];
     }
 }
-- (void)removeRoleViews:(EduUser *) user {
-    if (user.role == EduRoleTypeTeacher) {
+- (void)removeRoleViews:(AgoraRTEUser *) user {
+    if (user.role == AgoraRTERoleTypeTeacher) {
         [self.teacherView updateUserName:@""];
         
-    } else if(user.role == EduRoleTypeStudent) {
+    } else if(user.role == AgoraRTERoleTypeStudent) {
         [self.studentView updateUserName:@""];
     }
 }
-- (void)updateRoleCanvas:(EduStream *)stream {
+- (void)updateRoleCanvas:(AgoraRTEStream *)stream {
     
-    if(stream.userInfo.role == EduRoleTypeTeacher) {
-        if(stream.sourceType == EduVideoSourceTypeCamera) {
+    if(stream.userInfo.role == AgoraRTERoleTypeTeacher) {
+        if(stream.sourceType == AgoraRTEVideoSourceTypeCamera) {
             
             [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.teacherView.videoRenderView : nil) stream:stream];
             
             self.teacherView.defaultImageView.hidden = stream.hasVideo ? YES : NO;
             [self.teacherView updateSpeakerEnabled:stream.hasAudio];
             
-        } else if(stream.sourceType == EduVideoSourceTypeScreen) {
+        } else if(stream.sourceType == AgoraRTEVideoSourceTypeScreen) {
             EduRenderConfig *config = [EduRenderConfig new];
-            config.renderMode = EduRenderModeFit;
+            config.renderMode = AgoraRTERenderModeFit;
             [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.shareScreenView : nil) stream:stream renderConfig:config];
             self.shareScreenView.hidden = NO;
         }
-    } else if(stream.userInfo.role == EduRoleTypeStudent) {
+    } else if(stream.userInfo.role == AgoraRTERoleTypeStudent) {
         
         [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.studentView.videoRenderView : nil) stream:stream];
         [self.studentView updateVideoImageWithMuted:!stream.hasVideo];
         [self.studentView updateAudioImageWithMuted:!stream.hasAudio];
     }
 }
-- (void)removeRoleCanvas:(EduStream *)stream {
+- (void)removeRoleCanvas:(AgoraRTEStream *)stream {
     [AgoraEduManager.shareManager.studentService setStreamView:nil stream:stream];
     
-    if (stream.userInfo.role == EduRoleTypeTeacher) {
-        if (stream.sourceType == EduVideoSourceTypeScreen) {
+    if (stream.userInfo.role == AgoraRTERoleTypeTeacher) {
+        if (stream.sourceType == AgoraRTEVideoSourceTypeScreen) {
             self.shareScreenView.hidden = YES;
-        } else if (stream.sourceType == EduVideoSourceTypeCamera) {
+        } else if (stream.sourceType == AgoraRTEVideoSourceTypeCamera) {
             self.teacherView.defaultImageView.hidden = NO;
             [self.teacherView updateSpeakerEnabled:NO];
         }
@@ -404,7 +404,7 @@
     }
 }
 
-#pragma mark RoomProtocol
+#pragma mark AgoraRoomProtocol
 - (void)closeRoom {
 
     WEAK(self);
@@ -424,27 +424,27 @@
     [self setLocalStreamVideo:self.studentView.hasVideo audio:!mute streamState:LocalStreamStateUpdate];
 }
 
-#pragma mark EduClassroomDelegate
+#pragma mark AgoraRTEClassroomDelegate
 // User in or out
-- (void)classroom:(EduClassroom * _Nonnull)classroom remoteUsersInit:(NSArray<EduUser*> *)users {
-    for (EduUser *user in users) {
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteUsersInit:(NSArray<AgoraRTEUser*> *)users {
+    for (AgoraRTEUser *user in users) {
         [self updateRoleViews:user];
     }
 }
-- (void)classroom:(EduClassroom * _Nonnull)classroom remoteUsersJoined:(NSArray<EduUser*> *)users {
-    for (EduUser *user in users) {
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteUsersJoined:(NSArray<AgoraRTEUser*> *)users {
+    for (AgoraRTEUser *user in users) {
         [self updateRoleViews:user];
     }
 }
-- (void)classroom:(EduClassroom * _Nonnull)classroom remoteUsersLeft:(NSArray<EduUserEvent*> *)events leftType:(EduUserLeftType)type {
-    for (EduUserEvent *event in events) {
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteUsersLeft:(NSArray<AgoraRTEUserEvent*> *)events leftType:(AgoraRTEUserLeftType)type {
+    for (AgoraRTEUserEvent *event in events) {
         [self removeRoleViews:event.modifiedUser];
     }
 }
 
 // message
-- (void)classroom:(EduClassroom * _Nonnull)classroom roomChatMessageReceived:(EduTextMessage *)textMessage {
-    EETextMessage *message = [EETextMessage new];
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom roomChatMessageReceived:(AgoraRTETextMessage *)textMessage {
+    AgoraEETextMessage *message = [AgoraEETextMessage new];
     message.fromUser = textMessage.fromUser;
     message.message = textMessage.message;
     message.timestamp = textMessage.timestamp;
@@ -453,38 +453,38 @@
 }
 
 // stream
-- (void)classroom:(EduClassroom * _Nonnull)classroom remoteStreamsInit:(NSArray<EduStream*> *)streams {
-    for (EduStream *stream in streams) {
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteStreamsInit:(NSArray<AgoraRTEStream*> *)streams {
+    for (AgoraRTEStream *stream in streams) {
         [self updateRoleCanvas:stream];
     }
 }
-- (void)classroom:(EduClassroom * _Nonnull)classroom remoteStreamsAdded:(NSArray<EduStreamEvent*> *)events {
-    for (EduStreamEvent *event in events) {
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteStreamsAdded:(NSArray<AgoraRTEStreamEvent*> *)events {
+    for (AgoraRTEStreamEvent *event in events) {
         [self updateRoleCanvas:event.modifiedStream];
     }
 }
-- (void)classroom:(EduClassroom *)classroom remoteStreamUpdated:(NSArray<EduStreamEvent*> *)events {
-    for (EduStreamEvent *event in events) {
+- (void)classroom:(AgoraRTEClassroom *)classroom remoteStreamUpdated:(NSArray<AgoraRTEStreamEvent*> *)events {
+    for (AgoraRTEStreamEvent *event in events) {
         [self updateRoleCanvas:event.modifiedStream];
     }
 }
-- (void)classroom:(EduClassroom * _Nonnull)classroom remoteStreamsRemoved:(NSArray<EduStreamEvent*> *)events  {
-    for (EduStreamEvent *event in events) {
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
+    for (AgoraRTEStreamEvent *event in events) {
         [self removeRoleCanvas:event.modifiedStream];
     }
 }
 
-- (void)classroom:(EduClassroom * _Nonnull)classroom networkQualityChanged:(NetworkQuality)quality user:(EduBaseUser *)user {
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom networkQualityChanged:(AgoraRTENetworkQuality)quality user:(AgoraRTEBaseUser *)user {
     
     if([self.localUser.userUuid isEqualToString:user.userUuid]) {
         switch (quality) {
-            case NetworkQualityHigh:
+            case AgoraRTENetworkQualityHigh:
                 [self.navigationView updateSignalImageName:@"icon-signal3"];
                 break;
-            case NetworkQualityMiddle:
+            case AgoraRTENetworkQualityMiddle:
                 [self.navigationView updateSignalImageName:@"icon-signal2"];
                 break;
-            case NetworkQualityLow:
+            case AgoraRTENetworkQualityLow:
                 [self.navigationView updateSignalImageName:@"icon-signal1"];
                 break;
             default:
@@ -493,25 +493,25 @@
     }
 }
 
-#pragma mark EduStudentDelegate
-- (void)localStreamAdded:(EduStreamEvent*)event {
+#pragma mark AgoraRTEStudentDelegate
+- (void)localStreamAdded:(AgoraRTEStreamEvent*)event {
     self.localUser.streams = @[event.modifiedStream];
     [self updateRoleCanvas:event.modifiedStream];
 }
-- (void)localStreamUpdated:(EduStreamEvent*)event {
+- (void)localStreamUpdated:(AgoraRTEStreamEvent*)event {
     self.localUser.streams = @[event.modifiedStream];
     [self updateRoleCanvas:event.modifiedStream];
 }
-- (void)localStreamRemoved:(EduStreamEvent*)event {
+- (void)localStreamRemoved:(AgoraRTEStreamEvent*)event {
     self.localUser.streams = @[];
     [self removeRoleCanvas:event.modifiedStream];
 }
-- (void)localUserStateUpdated:(EduUserEvent*)event changeType:(EduUserStateChangeType)changeType {
+- (void)localUserStateUpdated:(AgoraRTEUserEvent*)event changeType:(AgoraRTEUserStateChangeType)changeType {
     [self updateChatViews];
 }
 
 #pragma mark UITextFieldDelegate
-- (void)onSendMessage:(EETextMessage *)message {
+- (void)onSendMessage:(AgoraEETextMessage *)message {
     [self.messageListView addMessageModel:message];
 }
 
@@ -532,16 +532,16 @@
     [self lockViewTransform:lock];
     
     WEAK(self);
-    [AgoraEduManager.shareManager.roomManager getFullUserListWithSuccess:^(NSArray<EduUser *> * _Nonnull users) {
-        for(EduUser *user in users){
+    [AgoraEduManager.shareManager.roomManager getFullUserListWithSuccess:^(NSArray<AgoraRTEUser *> * _Nonnull users) {
+        for(AgoraRTEUser *user in users){
             [weakself updateRoleViews:user];
         }
     } failure:^(NSError * error) {
         [AgoraBaseViewController showToast:error.localizedDescription];
     }];
     
-    [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<EduStream *> * _Nonnull streams) {
-        for(EduStream *stream in streams){
+    [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<AgoraRTEStream *> * _Nonnull streams) {
+        for(AgoraRTEStream *stream in streams){
             [weakself updateRoleCanvas:stream];
         }
     } failure:^(NSError * error) {
@@ -567,8 +567,8 @@
     [self lockViewTransform:enable];
 }
 - (void)onEndRecord {
-    EETextMessage *textMsg = [EETextMessage new];
-    EduUser *fromUser = [EduUser new];
+    AgoraEETextMessage *textMsg = [AgoraEETextMessage new];
+    AgoraRTEUser *fromUser = [AgoraRTEUser new];
     [fromUser setValue:@"system" forKey:@"userName"];
     textMsg.fromUser = fromUser;
     textMsg.message = AgoraEduLocalizedString(@"ReplayRecordingText", nil);
@@ -578,23 +578,23 @@
 
 #pragma mark EduMediaStreamDelegate
 //- (void)didChangeOfLocalAudioStream:(NSString *)streamId
-//                          withState:(EduStreamState)state {
+//                          withState:(AgoraRTEStreamState)state {
 //
 //}
 
 - (void)didChangeOfLocalVideoStream:(NSString *)streamId
-                          withState:(EduStreamState)state {
+                          withState:(AgoraRTEStreamState)state {
     
     WEAK(self);
-    [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<EduStream *> * _Nonnull streams) {
+    [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<AgoraRTEStream *> * _Nonnull streams) {
         
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"streamUuid == %d", streamId];
-        NSArray<EduStream*> *filtes = [streams filteredArrayUsingPredicate:predicate];
+        NSArray<AgoraRTEStream*> *filtes = [streams filteredArrayUsingPredicate:predicate];
         if (filtes.count == 0) {
             return;
         }
-        EduStream *stream = filtes.firstObject;
-        if (state == EduStreamStateStopped || state == EduStreamStateFailed) {
+        AgoraRTEStream *stream = filtes.firstObject;
+        if (state == AgoraRTEStreamStateStopped || state == AgoraRTEStreamStateFailed) {
             stream.audio = NO;
         } else {
             stream.audio = YES;
@@ -607,23 +607,23 @@
 }
 
 //- (void)didChangeOfRemoteAudioStream:(NSString *)streamId
-//                           withState:(EduStreamState)state {
+//                           withState:(AgoraRTEStreamState)state {
 //
 //}
 
 - (void)didChangeOfRemoteVideoStream:(NSString *)streamId
-                           withState:(EduStreamState)state {
+                           withState:(AgoraRTEStreamState)state {
     
     WEAK(self);
-    [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<EduStream *> * _Nonnull streams) {
+    [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<AgoraRTEStream *> * _Nonnull streams) {
         
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"streamUuid == %d", streamId];
-        NSArray<EduStream*> *filtes = [streams filteredArrayUsingPredicate:predicate];
+        NSArray<AgoraRTEStream*> *filtes = [streams filteredArrayUsingPredicate:predicate];
         if (filtes.count == 0) {
             return;
         }
-        EduStream *stream = filtes.firstObject;
-        if (state == EduStreamStateStopped || state == EduStreamStateFailed) {
+        AgoraRTEStream *stream = filtes.firstObject;
+        if (state == AgoraRTEStreamStateStopped || state == AgoraRTEStreamStateFailed) {
             stream.video = NO;
         } else {
             stream.video = YES;

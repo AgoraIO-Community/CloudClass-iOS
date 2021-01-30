@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSArray (Copy)
+@interface NSArray (AgoraCopy)
 
 - (NSArray *)deepCopy;
 
