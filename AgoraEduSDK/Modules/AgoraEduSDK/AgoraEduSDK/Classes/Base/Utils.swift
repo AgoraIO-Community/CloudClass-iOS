@@ -50,5 +50,7 @@ public func AgoraLocalizedString(_ key: String, _ aClass: AnyClass) -> String? {
     return NSLocalizedString(key, tableName: nil, bundle: bundle, value: "", comment: "")
 }
 
-
+extension TimeInterval {
+    static let animation = 0.25
+}
 
