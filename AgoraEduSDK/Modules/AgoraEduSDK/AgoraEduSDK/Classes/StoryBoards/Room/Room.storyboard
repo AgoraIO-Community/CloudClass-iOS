@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Small View Controller-->
+        <!--Agora Small View Controller-->
         <scene sceneID="wUH-SV-Qeh">
             <objects>
-                <viewController storyboardIdentifier="smallRoom" id="TUm-sE-AH2" customClass="SmallViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="smallRoom" id="TUm-sE-AH2" customClass="AgoraSmallViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CdO-8M-KYo">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZC3-I1-kGQ" customClass="EENavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="30"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZC3-I1-kGQ" customClass="AgoraEENavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="tDD-0G-Ump"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kdq-uH-xgO" customClass="MCTeacherVideoView">
-                                <rect key="frame" x="44" y="30" width="95" height="70"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kdq-uH-xgO" customClass="AgoraMCTeacherVideoView">
+                                <rect key="frame" x="0.0" y="30" width="95" height="70"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="n2i-7a-LKs"/>
@@ -33,36 +31,36 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xwj-7G-fZc">
-                                <rect key="frame" x="44" y="100" width="586" height="314"/>
+                                <rect key="frame" x="0.0" y="100" width="378" height="500"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="awo-2R-jQ0" customClass="MCStudentVideoListView">
-                                <rect key="frame" x="140" y="30" width="712" height="70"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="awo-2R-jQ0" customClass="AgoraMCStudentVideoListView">
+                                <rect key="frame" x="96" y="30" width="504" height="70"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="uXh-0a-xhb"/>
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ibz-2e-QTK">
-                                <rect key="frame" x="44" y="100" width="808" height="314"/>
+                                <rect key="frame" x="0.0" y="100" width="600" height="500"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qP8-rT-5bW">
-                                <rect key="frame" x="630" y="100" width="222" height="314"/>
+                                <rect key="frame" x="378" y="100" width="222" height="500"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZbE-c2-jxD" customClass="MCSegmentedView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZbE-c2-jxD" customClass="AgoraMCSegmentedView">
                                         <rect key="frame" x="0.0" y="0.0" width="202" height="40"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="rB5-Zv-bwT"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UhH-8E-NlU" customClass="EEMessageView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="218"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UhH-8E-NlU" customClass="AgoraEEMessageView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="404"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6jm-dZ-OEY" customClass="MCStudentListView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="274"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6jm-dZ-OEY" customClass="AgoraMCStudentListView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="460"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -83,7 +81,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MDY-GA-tjB">
-                                <rect key="frame" x="822" y="110" width="30" height="30"/>
+                                <rect key="frame" x="570" y="110" width="30" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="IXt-2s-LrT"/>
@@ -94,8 +92,8 @@
                                     <action selector="messageViewshowAndHide:" destination="TUm-sE-AH2" eventType="touchUpInside" id="aNf-Sw-V8T"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EHE-um-Y9E" customClass="EEChatTextFiled">
-                                <rect key="frame" x="630" y="358" width="222" height="56"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EHE-um-Y9E" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="378" y="544" width="222" height="56"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="222" id="Nrs-ys-7Ux"/>
@@ -103,7 +101,7 @@
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hdO-FK-fiD">
-                                <rect key="frame" x="323" y="120" width="250" height="34"/>
+                                <rect key="frame" x="175" y="120" width="250" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="2gZ-e3-gBJ"/>
@@ -171,40 +169,40 @@
             <objects>
                 <viewController storyboardIdentifier="oneToOneRoom" id="4kJ-eb-zFy" customClass="OneToOneViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0QO-SV-bcF">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BeR-4x-kaE" customClass="EENavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="30"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BeR-4x-kaE" customClass="AgoraEENavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.96078431372549022" green="0.96862745098039216" blue="0.97254901960784312" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Ahl-83-Ulx"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xny-i6-BC3">
-                                <rect key="frame" x="236" y="30" width="394" height="384"/>
+                                <rect key="frame" x="285" y="30" width="93" height="570"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7UW-EO-MKZ" customClass="OTOTeacherView">
-                                <rect key="frame" x="44" y="30" width="192" height="192"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7UW-EO-MKZ" customClass="AgoraOTOTeacherView">
+                                <rect key="frame" x="0.0" y="30" width="285" height="285"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="7UW-EO-MKZ" secondAttribute="height" multiplier="1:1" id="dv4-WY-Vao"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ie6-9R-0Rb" customClass="OTOStudentView">
-                                <rect key="frame" x="44" y="222" width="192" height="192"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ie6-9R-0Rb" customClass="AgoraOTOStudentView">
+                                <rect key="frame" x="0.0" y="315" width="285" height="285"/>
                                 <color key="backgroundColor" systemColor="tertiaryLabelColor"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VFF-yv-psL">
-                                <rect key="frame" x="236" y="30" width="616" height="384"/>
+                                <rect key="frame" x="285" y="30" width="315" height="570"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q06-0V-osc">
-                                <rect key="frame" x="630" y="30" width="222" height="363"/>
+                                <rect key="frame" x="378" y="30" width="222" height="570"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5BX-sj-rqt" customClass="EEMessageView">
-                                        <rect key="frame" x="0.0" y="41" width="222" height="266"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5BX-sj-rqt" customClass="AgoraEEMessageView">
+                                        <rect key="frame" x="0.0" y="41" width="222" height="473"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ChatRoom" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oiE-cC-ty9">
@@ -225,7 +223,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q6b-b8-ijW">
-                                        <rect key="frame" x="0.0" y="0.0" width="1" height="363"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1" height="570"/>
                                         <color key="backgroundColor" red="0.85882352939999995" green="0.8862745098" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="1" id="QCs-pE-Sls"/>
@@ -250,8 +248,8 @@
                                     <constraint firstAttribute="bottom" secondItem="q6b-b8-ijW" secondAttribute="bottom" id="zgW-T9-vpF"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bgs-EZ-Kzx" customClass="EEChatTextFiled">
-                                <rect key="frame" x="630" y="358" width="222" height="56"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bgs-EZ-Kzx" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="378" y="544" width="222" height="56"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="222" id="7Iu-Na-qtc"/>
@@ -259,7 +257,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XxH-jL-deb">
-                                <rect key="frame" x="823" y="35" width="29" height="29"/>
+                                <rect key="frame" x="571" y="35" width="29" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="7hw-26-Bq3"/>
                                     <constraint firstAttribute="width" constant="29" id="rOt-Jr-YHQ"/>
@@ -270,7 +268,7 @@
                                 </connections>
                             </button>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XJx-GU-E2o">
-                                <rect key="frame" x="323" y="50" width="250" height="34"/>
+                                <rect key="frame" x="175" y="50" width="250" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="VZF-Vi-hXY"/>
@@ -336,16 +334,16 @@
             </objects>
             <point key="canvasLocation" x="2254.6875" y="147.82608695652175"/>
         </scene>
-        <!--Big View Controller-->
+        <!--Agora Big View Controller-->
         <scene sceneID="yab-Rw-vIz">
             <objects>
-                <viewController storyboardIdentifier="bigRoom" id="9wq-TI-HdZ" customClass="BigViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="bigRoom" id="9wq-TI-HdZ" customClass="AgoraBigViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sPV-E2-eMd">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f9x-Vm-XDS" customClass="EETeacherVideoView">
-                                <rect key="frame" x="629" y="44" width="223" height="125"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f9x-Vm-XDS" customClass="AgoraEETeacherVideoView">
+                                <rect key="frame" x="0.0" y="44" width="600" height="125"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="213" id="4F4-IS-Rv2"/>
@@ -383,8 +381,8 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cHf-i5-uOr" customClass="BCNavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="44"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cHf-i5-uOr" customClass="AgoraBCNavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="FD1-F1-Kdk"/>
@@ -419,15 +417,15 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fi1-5a-0qF">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fi1-5a-0qF">
                                 <rect key="frame" x="44" y="44" width="584" height="370"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ec7-A3-q2A">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ec7-A3-q2A">
                                 <rect key="frame" x="44" y="44" width="584" height="370"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sAa-4d-5e0" customClass="BCStudentVideoView">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sAa-4d-5e0" customClass="AgoraBCStudentVideoView">
                                 <rect key="frame" x="114" y="54" width="85" height="120"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
@@ -435,8 +433,8 @@
                                     <constraint firstAttribute="width" constant="85" id="fRG-3i-haF"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUa-Gt-BRi">
-                                <rect key="frame" x="572" y="358" width="46" height="46"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUa-Gt-BRi">
+                                <rect key="frame" x="572" y="544" width="46" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="46" id="Dp4-Rb-vr8"/>
                                     <constraint firstAttribute="width" constant="46" id="Gj7-Ez-tD5"/>
@@ -446,12 +444,12 @@
                                     <action selector="handUpEvent:" destination="9wq-TI-HdZ" eventType="touchUpInside" id="WMv-mu-OxI"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UrG-kJ-ucf" customClass="EEMessageView">
-                                <rect key="frame" x="629" y="169" width="223" height="191"/>
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UrG-kJ-ucf" customClass="AgoraEEMessageView">
+                                <rect key="frame" x="0.0" y="169" width="600" height="191"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y97-lA-yO7" customClass="BCSegmentedView">
-                                <rect key="frame" x="629" y="169" width="223" height="0.0"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y97-lA-yO7" customClass="AgoraBCSegmentedView">
+                                <rect key="frame" x="0.0" y="169" width="600" height="0.0"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" id="4N7-0U-kod"/>
@@ -484,23 +482,23 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhj-dL-2RV">
-                                <rect key="frame" x="628" y="44" width="1" height="370"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vhj-dL-2RV">
+                                <rect key="frame" x="-1" y="44" width="1" height="370"/>
                                 <color key="backgroundColor" red="0.85882352939999995" green="0.8862745098" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1" id="WiJ-Px-gqZ"/>
                                 </constraints>
                                 <variation key="heightClass=regular-widthClass=compact" hidden="YES"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dyy-96-CLV" customClass="EEChatTextFiled">
-                                <rect key="frame" x="629" y="360" width="223" height="54"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dyy-96-CLV" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="0.0" y="546" width="600" height="54"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="54" id="oSu-AC-UKV"/>
                                 </constraints>
                             </view>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmR-yN-DIn">
-                                <rect key="frame" x="341" y="64" width="214" height="34"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cmR-yN-DIn">
+                                <rect key="frame" x="193" y="64" width="214" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="8gn-7n-91O"/>
@@ -620,30 +618,30 @@
             <objects>
                 <viewController storyboardIdentifier="oneToOneRoom-iPad" id="xt5-cR-lP6" customClass="OneToOneViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cBa-XC-eKK">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JE1-0u-sYY" customClass="EENavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="30"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JE1-0u-sYY" customClass="AgoraEENavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.97254901959999995" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="ati-Ck-ORM"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tYB-F6-UB0">
-                                <rect key="frame" x="44" y="30" width="516" height="384"/>
+                                <rect key="frame" x="0.0" y="30" width="308" height="570"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uNB-wk-HLc" customClass="OTOTeacherView">
-                                <rect key="frame" x="560" y="30" width="292" height="166"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uNB-wk-HLc" customClass="AgoraOTOTeacherView">
+                                <rect key="frame" x="308" y="30" width="292" height="166"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="292" id="BWd-9L-Z5e"/>
                                     <constraint firstAttribute="height" constant="166" id="uct-nA-Tyh"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aXk-SR-qDG" customClass="OTOStudentView">
-                                <rect key="frame" x="560" y="196" width="292" height="166"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aXk-SR-qDG" customClass="AgoraOTOStudentView">
+                                <rect key="frame" x="308" y="196" width="292" height="166"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="292" id="ARS-tO-egD"/>
@@ -651,14 +649,14 @@
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Fx-WM-m0W">
-                                <rect key="frame" x="44" y="30" width="516" height="384"/>
+                                <rect key="frame" x="0.0" y="30" width="308" height="570"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GCf-TF-zTS">
-                                <rect key="frame" x="560" y="362" width="292" height="31"/>
+                                <rect key="frame" x="308" y="362" width="292" height="238"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jkG-2w-wyE" customClass="EEMessageView">
-                                        <rect key="frame" x="0.0" y="0.0" width="292" height="400"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jkG-2w-wyE" customClass="AgoraEEMessageView">
+                                        <rect key="frame" x="0.0" y="0.0" width="292" height="182"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
                                 </subviews>
@@ -672,14 +670,14 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mrF-Be-ylp">
-                                <rect key="frame" x="560" y="30" width="1" height="384"/>
+                                <rect key="frame" x="308" y="30" width="1" height="570"/>
                                 <color key="backgroundColor" red="0.85882352939999995" green="0.8862745098" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1" id="rKu-ks-poX"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xQA-g3-pNH" customClass="EEChatTextFiled">
-                                <rect key="frame" x="560" y="358" width="292" height="56"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xQA-g3-pNH" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="308" y="544" width="292" height="56"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="56" id="Nyd-EX-rTn"/>
@@ -687,7 +685,7 @@
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jPU-tj-STw">
-                                <rect key="frame" x="323" y="50" width="250" height="34"/>
+                                <rect key="frame" x="175" y="50" width="250" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="250" id="mpH-7y-1fH"/>
@@ -749,23 +747,23 @@
             </objects>
             <point key="canvasLocation" x="2254.6875" y="147.82608695652175"/>
         </scene>
-        <!--Small View Controller-->
+        <!--Agora Small View Controller-->
         <scene sceneID="pAT-mG-BFB">
             <objects>
-                <viewController storyboardIdentifier="smallRoom-iPad" id="tu7-6X-8eP" customClass="SmallViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="smallRoom-iPad" id="tu7-6X-8eP" customClass="AgoraSmallViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0VY-wg-dT2">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68y-aO-CIJ" customClass="EENavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="30"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68y-aO-CIJ" customClass="AgoraEENavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="7qv-HE-DOJ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6aT-db-RZ7" customClass="MCTeacherVideoView">
-                                <rect key="frame" x="44" y="30" width="146" height="108"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6aT-db-RZ7" customClass="AgoraMCTeacherVideoView">
+                                <rect key="frame" x="0.0" y="30" width="146" height="108"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="108" id="D46-8n-ibY"/>
@@ -773,36 +771,36 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xSD-1s-Qbe">
-                                <rect key="frame" x="44" y="138" width="586" height="276"/>
+                                <rect key="frame" x="0.0" y="138" width="378" height="462"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGV-a9-rjZ" customClass="MCStudentVideoListView">
-                                <rect key="frame" x="191" y="30" width="661" height="108"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uGV-a9-rjZ" customClass="AgoraMCStudentVideoListView">
+                                <rect key="frame" x="147" y="30" width="453" height="108"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="108" id="Sp5-XR-ZjF"/>
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bsf-Xr-fGC">
-                                <rect key="frame" x="44" y="138" width="808" height="276"/>
+                                <rect key="frame" x="0.0" y="138" width="600" height="462"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="goS-CV-CPm">
-                                <rect key="frame" x="630" y="138" width="222" height="276"/>
+                                <rect key="frame" x="378" y="138" width="222" height="462"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZkV-xm-d7m" customClass="MCSegmentedView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZkV-xm-d7m" customClass="AgoraMCSegmentedView">
                                         <rect key="frame" x="0.0" y="0.0" width="202" height="40"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="yCO-Oz-BYA"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xXu-f5-Fsa" customClass="EEMessageView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="180"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xXu-f5-Fsa" customClass="AgoraEEMessageView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="366"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c3B-LE-IzD" customClass="MCStudentListView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="236"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c3B-LE-IzD" customClass="AgoraMCStudentListView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="422"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -823,7 +821,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s8h-ud-smI">
-                                <rect key="frame" x="822" y="148" width="30" height="30"/>
+                                <rect key="frame" x="570" y="148" width="30" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="cgX-bd-fIt"/>
@@ -834,8 +832,8 @@
                                     <action selector="messageViewshowAndHide:" destination="tu7-6X-8eP" eventType="touchUpInside" id="FZd-L8-xhl"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fFr-uK-Hdh" customClass="EEChatTextFiled">
-                                <rect key="frame" x="630" y="358" width="222" height="56"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fFr-uK-Hdh" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="378" y="544" width="222" height="56"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="222" id="Zkd-U8-ron"/>
@@ -843,7 +841,7 @@
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gDn-gO-wg8">
-                                <rect key="frame" x="323" y="158" width="250" height="34"/>
+                                <rect key="frame" x="175" y="158" width="250" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="250" id="2F2-kp-v3K"/>
@@ -906,16 +904,16 @@
             </objects>
             <point key="canvasLocation" x="2023.6607142857142" y="1111.5942028985507"/>
         </scene>
-        <!--Big View Controller-->
+        <!--Agora Big View Controller-->
         <scene sceneID="jNq-5i-yfM">
             <objects>
-                <viewController storyboardIdentifier="bigRoom-iPad" id="oml-zZ-3v9" customClass="BigViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="bigRoom-iPad" id="oml-zZ-3v9" customClass="AgoraBigViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="a7S-B3-qR2">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wmJ-lf-x85" customClass="EETeacherVideoView">
-                                <rect key="frame" x="560" y="44" width="292" height="166"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wmJ-lf-x85" customClass="AgoraEETeacherVideoView">
+                                <rect key="frame" x="0.0" y="44" width="600" height="166"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="166" id="2nm-N5-nnQ"/>
@@ -953,8 +951,8 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kLL-rC-bWm" customClass="BCNavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="44"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kLL-rC-bWm" customClass="AgoraBCNavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="64" id="A2M-Yw-jDF"/>
@@ -989,15 +987,15 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dmg-Pp-Vsw">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmg-Pp-Vsw">
                                 <rect key="frame" x="44" y="44" width="515" height="370"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UIw-FO-ZC6">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UIw-FO-ZC6">
                                 <rect key="frame" x="44" y="44" width="515" height="370"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ows-ie-X3V" customClass="BCStudentVideoView">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ows-ie-X3V" customClass="AgoraBCStudentVideoView">
                                 <rect key="frame" x="114" y="54" width="221" height="156"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
@@ -1005,8 +1003,8 @@
                                     <constraint firstAttribute="height" constant="156" id="PQ2-kf-JYy"/>
                                 </constraints>
                             </view>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5bO-LL-B7L">
-                                <rect key="frame" x="503" y="358" width="46" height="46"/>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5bO-LL-B7L">
+                                <rect key="frame" x="503" y="544" width="46" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="46" id="LVz-GR-mIn"/>
                                     <constraint firstAttribute="width" constant="46" id="qbR-Qz-e1q"/>
@@ -1016,12 +1014,12 @@
                                     <action selector="handUpEvent:" destination="oml-zZ-3v9" eventType="touchUpInside" id="hiQ-ZB-ynE"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hxK-M3-8gW" customClass="EEMessageView">
-                                <rect key="frame" x="560" y="210" width="292" height="150"/>
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hxK-M3-8gW" customClass="AgoraEEMessageView">
+                                <rect key="frame" x="0.0" y="210" width="600" height="150"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wN5-9h-RAW" customClass="BCSegmentedView">
-                                <rect key="frame" x="560" y="210" width="292" height="0.0"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wN5-9h-RAW" customClass="AgoraBCSegmentedView">
+                                <rect key="frame" x="0.0" y="210" width="600" height="0.0"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="wMV-eh-uIH"/>
@@ -1054,23 +1052,23 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kAj-Ju-1cO">
-                                <rect key="frame" x="559" y="44" width="1" height="370"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kAj-Ju-1cO">
+                                <rect key="frame" x="-1" y="44" width="1" height="370"/>
                                 <color key="backgroundColor" red="0.85882352939999995" green="0.8862745098" blue="0.8980392157" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1" id="3Qf-jH-Tk6"/>
                                 </constraints>
                                 <variation key="heightClass=regular-widthClass=compact" hidden="YES"/>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="alo-CH-Zmw" customClass="EEChatTextFiled">
-                                <rect key="frame" x="560" y="360" width="292" height="54"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="alo-CH-Zmw" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="0.0" y="546" width="600" height="54"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="54" id="bIY-bC-uZs"/>
                                 </constraints>
                             </view>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lXT-u6-Noa">
-                                <rect key="frame" x="341" y="64" width="214" height="34"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lXT-u6-Noa">
+                                <rect key="frame" x="193" y="64" width="214" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="6QS-SB-Oab"/>
@@ -1185,23 +1183,23 @@
             </objects>
             <point key="canvasLocation" x="1478.2608695652175" y="-1088.1696428571429"/>
         </scene>
-        <!--View Controller-->
+        <!--AgoraBO View Controller-->
         <scene sceneID="wAV-C3-Ci1">
             <objects>
-                <viewController storyboardIdentifier="boRoom" id="IKZ-li-IEk" customClass="BOViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="boRoom" id="IKZ-li-IEk" customClass="AgoraBOViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="v77-OB-wGX">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m4Z-O2-KD9" customClass="EENavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="30"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m4Z-O2-KD9" customClass="AgoraEENavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="9ta-j3-uKQ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bFG-26-jRl" customClass="MCTeacherVideoView">
-                                <rect key="frame" x="44" y="30" width="95" height="70"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bFG-26-jRl" customClass="AgoraMCTeacherVideoView">
+                                <rect key="frame" x="0.0" y="30" width="95" height="70"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="95" id="9VL-Dg-ePi"/>
@@ -1209,36 +1207,36 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eGo-bz-O9i">
-                                <rect key="frame" x="44" y="100" width="586" height="314"/>
+                                <rect key="frame" x="0.0" y="100" width="378" height="500"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kwi-eU-tAK" customClass="MCStudentVideoListView">
-                                <rect key="frame" x="140" y="30" width="490" height="70"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kwi-eU-tAK" customClass="AgoraMCStudentVideoListView">
+                                <rect key="frame" x="96" y="30" width="282" height="70"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="cSO-rg-cah"/>
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a5H-md-0CU">
-                                <rect key="frame" x="44" y="100" width="808" height="314"/>
+                                <rect key="frame" x="0.0" y="100" width="600" height="500"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LcC-r0-IWa">
-                                <rect key="frame" x="630" y="30" width="222" height="384"/>
+                                <rect key="frame" x="378" y="30" width="222" height="570"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pu2-bL-Ltb" customClass="MCSegmentedView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pu2-bL-Ltb" customClass="AgoraMCSegmentedView">
                                         <rect key="frame" x="0.0" y="0.0" width="202" height="40"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="VuX-rX-3Ic"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3e-h7-ilb" customClass="EEMessageView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="288"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3e-h7-ilb" customClass="AgoraEEMessageView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="474"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="whs-gY-7IW" customClass="MCStudentListView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="344"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="whs-gY-7IW" customClass="AgoraMCStudentListView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="530"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -1259,7 +1257,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0UP-E2-JMC">
-                                <rect key="frame" x="822" y="40" width="30" height="30"/>
+                                <rect key="frame" x="570" y="40" width="30" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="q4i-T8-eEY"/>
@@ -1270,8 +1268,8 @@
                                     <action selector="messageViewshowAndHide:" destination="IKZ-li-IEk" eventType="touchUpInside" id="Y9Y-F3-dbV"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lb8-Us-wzC" customClass="EEChatTextFiled">
-                                <rect key="frame" x="630" y="358" width="222" height="56"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lb8-Us-wzC" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="378" y="544" width="222" height="56"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="222" id="ohH-HC-cgo"/>
@@ -1279,7 +1277,7 @@
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6tx-ex-7Xz">
-                                <rect key="frame" x="323" y="120" width="250" height="34"/>
+                                <rect key="frame" x="175" y="120" width="250" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="250" id="VBE-5f-KfN"/>
@@ -1342,23 +1340,23 @@
             </objects>
             <point key="canvasLocation" x="2023.6607142857142" y="1111.5942028985507"/>
         </scene>
-        <!--View Controller-->
+        <!--AgoraBO View Controller-->
         <scene sceneID="SxJ-8Y-K80">
             <objects>
-                <viewController storyboardIdentifier="boRoom-iPad" id="8Tn-AR-mb1" customClass="BOViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="boRoom-iPad" id="8Tn-AR-mb1" customClass="AgoraBOViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="s70-0W-ImE">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="auC-hP-4NL" customClass="EENavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="30"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="auC-hP-4NL" customClass="AgoraEENavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="3L2-LJ-rEJ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WeI-AW-SLF" customClass="MCTeacherVideoView">
-                                <rect key="frame" x="44" y="30" width="146" height="108"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WeI-AW-SLF" customClass="AgoraMCTeacherVideoView">
+                                <rect key="frame" x="0.0" y="30" width="146" height="108"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="146" id="Ukd-sr-LGa"/>
@@ -1366,36 +1364,36 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="s9G-Sv-0zK">
-                                <rect key="frame" x="44" y="138" width="586" height="276"/>
+                                <rect key="frame" x="0.0" y="138" width="378" height="462"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EFN-IW-qi3" customClass="MCStudentVideoListView">
-                                <rect key="frame" x="191" y="30" width="439" height="108"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EFN-IW-qi3" customClass="AgoraMCStudentVideoListView">
+                                <rect key="frame" x="147" y="30" width="231" height="108"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="108" id="zbt-LH-VfT"/>
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tk9-Zd-fxp">
-                                <rect key="frame" x="44" y="138" width="808" height="276"/>
+                                <rect key="frame" x="0.0" y="138" width="600" height="462"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ES5-Vb-lDH">
-                                <rect key="frame" x="630" y="30" width="222" height="384"/>
+                                <rect key="frame" x="378" y="30" width="222" height="570"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c3G-RB-hek" customClass="MCSegmentedView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c3G-RB-hek" customClass="AgoraMCSegmentedView">
                                         <rect key="frame" x="0.0" y="0.0" width="202" height="40"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="9uN-Fg-2AU"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GQa-p5-7TC" customClass="EEMessageView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="288"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GQa-p5-7TC" customClass="AgoraEEMessageView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="474"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WTg-4g-mPF" customClass="MCStudentListView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="344"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WTg-4g-mPF" customClass="AgoraMCStudentListView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="530"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -1416,7 +1414,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RbG-6b-X5y">
-                                <rect key="frame" x="822" y="40" width="30" height="30"/>
+                                <rect key="frame" x="570" y="40" width="30" height="30"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="V4G-Lg-lJU"/>
@@ -1427,8 +1425,8 @@
                                     <action selector="messageViewshowAndHide:" destination="8Tn-AR-mb1" eventType="touchUpInside" id="kna-pm-DF1"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YRP-21-Oxa" customClass="EEChatTextFiled">
-                                <rect key="frame" x="630" y="358" width="222" height="56"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YRP-21-Oxa" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="378" y="544" width="222" height="56"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="222" id="6Fi-H2-ddq"/>
@@ -1436,7 +1434,7 @@
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EdM-GK-pQ2">
-                                <rect key="frame" x="323" y="158" width="250" height="34"/>
+                                <rect key="frame" x="175" y="158" width="250" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="250" id="5f0-da-Urn"/>
@@ -1504,62 +1502,62 @@
             <objects>
                 <viewController storyboardIdentifier="groupRoom" id="fXK-tN-Rbp" customClass="MediumViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Hhg-Mr-S2E">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lxq-3H-yKL" customClass="MCTeacherVideoView">
-                                <rect key="frame" x="630" y="30" width="222" height="125"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lxq-3H-yKL" customClass="AgoraMCTeacherVideoView">
+                                <rect key="frame" x="378" y="30" width="222" height="125"/>
                                 <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="222" id="E3Y-gN-QsD"/>
                                     <constraint firstAttribute="height" constant="125" id="jle-gR-Zp7"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YcP-tJ-i37" customClass="MCStudentVideoListView">
-                                <rect key="frame" x="44" y="30" width="586" height="80"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YcP-tJ-i37" customClass="AgoraMCStudentVideoListView">
+                                <rect key="frame" x="0.0" y="30" width="378" height="80"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="cPH-wG-NUM"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hOd-Cf-QNg" customClass="MCStudentVideoListView">
-                                <rect key="frame" x="44" y="313" width="586" height="80"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hOd-Cf-QNg" customClass="AgoraMCStudentVideoListView">
+                                <rect key="frame" x="0.0" y="520" width="378" height="80"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="sZU-Eb-5zR"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MHV-gw-bPy" customClass="EENavigationView">
-                                <rect key="frame" x="44" y="0.0" width="808" height="30"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MHV-gw-bPy" customClass="AgoraEENavigationView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="30"/>
                                 <color key="backgroundColor" red="0.96078431369999995" green="0.96862745100000003" blue="0.97254901959999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="L1o-xv-Tij"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U0k-dB-3xc">
-                                <rect key="frame" x="44" y="110" width="586" height="203"/>
+                                <rect key="frame" x="0.0" y="110" width="378" height="410"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u63-VI-FgH">
-                                <rect key="frame" x="44" y="110" width="586" height="203"/>
+                                <rect key="frame" x="0.0" y="110" width="378" height="410"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IPg-3f-0EU">
-                                <rect key="frame" x="630" y="155" width="222" height="259"/>
+                                <rect key="frame" x="378" y="155" width="222" height="445"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u69-BF-DZA" customClass="MCSegmentedView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u69-BF-DZA" customClass="AgoraMCSegmentedView">
                                         <rect key="frame" x="0.0" y="0.0" width="222" height="40"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="xxH-u5-0Mh"/>
                                         </constraints>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Ng-Sl-aO1" customClass="EEMessageView">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="163"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Ng-Sl-aO1" customClass="AgoraEEMessageView">
+                                        <rect key="frame" x="0.0" y="40" width="222" height="349"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dYS-LQ-xe1" customClass="GroupListView" customModule="EduApplication" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="40" width="222" height="219"/>
+                                        <rect key="frame" x="0.0" y="40" width="222" height="405"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -1579,15 +1577,15 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AAT-di-NcL">
-                                <rect key="frame" x="54" y="212" width="42" height="91"/>
+                                <rect key="frame" x="10" y="419" width="42" height="91"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="91" id="Xsf-GO-vDY"/>
                                     <constraint firstAttribute="width" constant="42" id="wwG-UB-el0"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W7g-VT-YOA" customClass="EEChatTextFiled">
-                                <rect key="frame" x="630" y="358" width="222" height="56"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="W7g-VT-YOA" customClass="AgoraEEChatTextFiled">
+                                <rect key="frame" x="378" y="544" width="222" height="56"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="56" id="DVR-jr-dxX"/>
@@ -1595,7 +1593,7 @@
                                 </constraints>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0IS-eq-Z53">
-                                <rect key="frame" x="323" y="120" width="250" height="34"/>
+                                <rect key="frame" x="175" y="120" width="250" height="34"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="250" id="O4k-V0-ZPd"/>

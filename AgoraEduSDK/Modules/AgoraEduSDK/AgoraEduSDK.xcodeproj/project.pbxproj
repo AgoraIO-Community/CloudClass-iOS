@@ -13,80 +13,80 @@
 		784A99EE25AD5AC600B919E8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 784A99EB25AD5AC600B919E8 /* Localizable.strings */; };
 		787483AF25AAB5BD0022329D /* Room.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7874831125AAB5BC0022329D /* Room.storyboard */; };
 		787483B025AAB5BD0022329D /* AgoraEduSDK.pch in Headers */ = {isa = PBXBuildFile; fileRef = 7874831225AAB5BC0022329D /* AgoraEduSDK.pch */; };
-		787483B125AAB5BD0022329D /* EduStream+StreamState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874831425AAB5BC0022329D /* EduStream+StreamState.h */; };
-		787483B225AAB5BD0022329D /* HandsUpModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831725AAB5BC0022329D /* HandsUpModel.m */; };
-		787483B325AAB5BD0022329D /* RecordPropertyModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874831825AAB5BC0022329D /* RecordPropertyModel.h */; };
-		787483B425AAB5BD0022329D /* HandsUpModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874831925AAB5BC0022329D /* HandsUpModel.h */; };
-		787483B525AAB5BD0022329D /* RecordPropertyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831A25AAB5BC0022329D /* RecordPropertyModel.m */; };
-		787483B625AAB5BD0022329D /* BCStudentVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874831C25AAB5BC0022329D /* BCStudentVideoView.xib */; };
-		787483B725AAB5BD0022329D /* BCNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831D25AAB5BC0022329D /* BCNavigationView.m */; };
-		787483B825AAB5BD0022329D /* EETeacherVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831E25AAB5BC0022329D /* EETeacherVideoView.m */; };
-		787483B925AAB5BD0022329D /* BCStudentVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831F25AAB5BC0022329D /* BCStudentVideoView.m */; };
-		787483BA25AAB5BD0022329D /* EETeacherVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874832025AAB5BC0022329D /* EETeacherVideoView.xib */; };
-		787483BB25AAB5BD0022329D /* BCSegmentedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874832125AAB5BC0022329D /* BCSegmentedView.m */; };
-		787483BC25AAB5BD0022329D /* EETeacherVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832225AAB5BC0022329D /* EETeacherVideoView.h */; };
-		787483BD25AAB5BD0022329D /* BCNavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874832325AAB5BC0022329D /* BCNavigationView.xib */; };
-		787483BE25AAB5BD0022329D /* BCNavigationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832425AAB5BC0022329D /* BCNavigationView.h */; };
-		787483BF25AAB5BD0022329D /* BCStudentVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832525AAB5BC0022329D /* BCStudentVideoView.h */; };
-		787483C025AAB5BD0022329D /* BCSegmentedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832625AAB5BC0022329D /* BCSegmentedView.h */; };
-		787483C125AAB5BD0022329D /* BigViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832825AAB5BC0022329D /* BigViewController.h */; };
-		787483C225AAB5BD0022329D /* BigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874832925AAB5BC0022329D /* BigViewController.m */; };
-		787483C325AAB5BD0022329D /* RoomProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832A25AAB5BC0022329D /* RoomProtocol.h */; };
+		787483B125AAB5BD0022329D /* AgoraRTEStream+StreamState.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874831425AAB5BC0022329D /* AgoraRTEStream+StreamState.h */; };
+		787483B225AAB5BD0022329D /* AgoraHandsUpModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831725AAB5BC0022329D /* AgoraHandsUpModel.m */; };
+		787483B325AAB5BD0022329D /* AgoraRecordPropertyModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874831825AAB5BC0022329D /* AgoraRecordPropertyModel.h */; };
+		787483B425AAB5BD0022329D /* AgoraHandsUpModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874831925AAB5BC0022329D /* AgoraHandsUpModel.h */; };
+		787483B525AAB5BD0022329D /* AgoraRecordPropertyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831A25AAB5BC0022329D /* AgoraRecordPropertyModel.m */; };
+		787483B625AAB5BD0022329D /* AgoraBCStudentVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874831C25AAB5BC0022329D /* AgoraBCStudentVideoView.xib */; };
+		787483B725AAB5BD0022329D /* AgoraBCNavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831D25AAB5BC0022329D /* AgoraBCNavigationView.m */; };
+		787483B825AAB5BD0022329D /* AgoraEETeacherVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831E25AAB5BC0022329D /* AgoraEETeacherVideoView.m */; };
+		787483B925AAB5BD0022329D /* AgoraBCStudentVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874831F25AAB5BC0022329D /* AgoraBCStudentVideoView.m */; };
+		787483BA25AAB5BD0022329D /* AgoraEETeacherVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874832025AAB5BC0022329D /* AgoraEETeacherVideoView.xib */; };
+		787483BB25AAB5BD0022329D /* AgoraBCSegmentedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874832125AAB5BC0022329D /* AgoraBCSegmentedView.m */; };
+		787483BC25AAB5BD0022329D /* AgoraEETeacherVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832225AAB5BC0022329D /* AgoraEETeacherVideoView.h */; };
+		787483BD25AAB5BD0022329D /* AgoraBCNavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874832325AAB5BC0022329D /* AgoraBCNavigationView.xib */; };
+		787483BE25AAB5BD0022329D /* AgoraBCNavigationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832425AAB5BC0022329D /* AgoraBCNavigationView.h */; };
+		787483BF25AAB5BD0022329D /* AgoraBCStudentVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832525AAB5BC0022329D /* AgoraBCStudentVideoView.h */; };
+		787483C025AAB5BD0022329D /* AgoraBCSegmentedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832625AAB5BC0022329D /* AgoraBCSegmentedView.h */; };
+		787483C125AAB5BD0022329D /* AgoraBigViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832825AAB5BC0022329D /* AgoraBigViewController.h */; };
+		787483C225AAB5BD0022329D /* AgoraBigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874832925AAB5BC0022329D /* AgoraBigViewController.m */; };
+		787483C325AAB5BD0022329D /* AgoraRoomProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832A25AAB5BC0022329D /* AgoraRoomProtocol.h */; };
 		787483C425AAB5BD0022329D /* AgoraBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874832B25AAB5BC0022329D /* AgoraBaseViewController.m */; };
-		787483C525AAB5BD0022329D /* MCStudentViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832E25AAB5BC0022329D /* MCStudentViewCell.h */; };
-		787483C625AAB5BD0022329D /* MCTeacherVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874832F25AAB5BC0022329D /* MCTeacherVideoView.m */; };
-		787483C725AAB5BD0022329D /* MCStreamInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833025AAB5BC0022329D /* MCStreamInfo.m */; };
-		787483C825AAB5BD0022329D /* MCStudentVideoListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833125AAB5BC0022329D /* MCStudentVideoListView.h */; };
-		787483C925AAB5BD0022329D /* MCStudentListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833225AAB5BC0022329D /* MCStudentListView.m */; };
-		787483CA25AAB5BD0022329D /* MCStudentVideoCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833325AAB5BC0022329D /* MCStudentVideoCell.h */; };
-		787483CB25AAB5BD0022329D /* MCStudentViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874833425AAB5BC0022329D /* MCStudentViewCell.xib */; };
-		787483CC25AAB5BD0022329D /* MCSegmentedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833525AAB5BC0022329D /* MCSegmentedView.m */; };
-		787483CD25AAB5BD0022329D /* MCStudentViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833625AAB5BC0022329D /* MCStudentViewCell.m */; };
-		787483CE25AAB5BD0022329D /* MCStudentListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833725AAB5BC0022329D /* MCStudentListView.h */; };
-		787483CF25AAB5BD0022329D /* MCStudentVideoListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833825AAB5BC0022329D /* MCStudentVideoListView.m */; };
-		787483D025AAB5BD0022329D /* MCStreamInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833925AAB5BC0022329D /* MCStreamInfo.h */; };
-		787483D125AAB5BD0022329D /* MCTeacherVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833A25AAB5BC0022329D /* MCTeacherVideoView.h */; };
-		787483D225AAB5BD0022329D /* MCStudentVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833B25AAB5BC0022329D /* MCStudentVideoCell.m */; };
-		787483D325AAB5BD0022329D /* MCTeacherVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874833C25AAB5BC0022329D /* MCTeacherVideoView.xib */; };
-		787483D425AAB5BD0022329D /* MCSegmentedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833D25AAB5BC0022329D /* MCSegmentedView.h */; };
-		787483D525AAB5BD0022329D /* SmallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833F25AAB5BC0022329D /* SmallViewController.m */; };
-		787483D625AAB5BD0022329D /* SmallViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834025AAB5BC0022329D /* SmallViewController.h */; };
-		787483D725AAB5BD0022329D /* TextMessageModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834325AAB5BC0022329D /* TextMessageModel.h */; };
-		787483D825AAB5BD0022329D /* TextMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834425AAB5BC0022329D /* TextMessageModel.m */; };
-		787483D925AAB5BD0022329D /* BOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834625AAB5BC0022329D /* BOViewController.m */; };
-		787483DA25AAB5BD0022329D /* BOViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834725AAB5BC0022329D /* BOViewController.h */; };
-		787483DB25AAB5BD0022329D /* EduStream+StreamState.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834825AAB5BC0022329D /* EduStream+StreamState.m */; };
-		787483DC25AAB5BD0022329D /* EEMessageViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834A25AAB5BC0022329D /* EEMessageViewCell.m */; };
-		787483DD25AAB5BD0022329D /* EEMessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834B25AAB5BC0022329D /* EEMessageView.h */; };
-		787483DE25AAB5BD0022329D /* EENavigationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834C25AAB5BC0022329D /* EENavigationView.h */; };
-		787483DF25AAB5BD0022329D /* EEChatTextFiled.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834D25AAB5BC0022329D /* EEChatTextFiled.h */; };
-		787483E025AAB5BD0022329D /* EETextMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834E25AAB5BC0022329D /* EETextMessage.m */; };
-		787483E125AAB5BD0022329D /* EENavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874834F25AAB5BC0022329D /* EENavigationView.xib */; };
-		787483E225AAB5BD0022329D /* WhiteBoardTouchView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835025AAB5BC0022329D /* WhiteBoardTouchView.h */; };
-		787483E325AAB5BD0022329D /* EEMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835125AAB5BC0022329D /* EEMessageView.m */; };
-		787483E425AAB5BD0022329D /* EEMessageViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874835225AAB5BC0022329D /* EEMessageViewCell.xib */; };
-		787483E525AAB5BD0022329D /* EEMessageViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835325AAB5BC0022329D /* EEMessageViewCell.h */; };
-		787483E625AAB5BD0022329D /* EENavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835425AAB5BC0022329D /* EENavigationView.m */; };
-		787483E725AAB5BD0022329D /* EEChatTextFiled.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874835525AAB5BC0022329D /* EEChatTextFiled.xib */; };
-		787483E825AAB5BD0022329D /* WhiteBoardTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835625AAB5BC0022329D /* WhiteBoardTouchView.m */; };
-		787483E925AAB5BD0022329D /* EETextMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835725AAB5BC0022329D /* EETextMessage.h */; };
-		787483EA25AAB5BD0022329D /* EEChatTextFiled.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835825AAB5BC0022329D /* EEChatTextFiled.m */; };
+		787483C525AAB5BD0022329D /* AgoraMCStudentViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874832E25AAB5BC0022329D /* AgoraMCStudentViewCell.h */; };
+		787483C625AAB5BD0022329D /* AgoraMCTeacherVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874832F25AAB5BC0022329D /* AgoraMCTeacherVideoView.m */; };
+		787483C725AAB5BD0022329D /* AgoraMCStreamInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833025AAB5BC0022329D /* AgoraMCStreamInfo.m */; };
+		787483C825AAB5BD0022329D /* AgoraMCStudentVideoListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833125AAB5BC0022329D /* AgoraMCStudentVideoListView.h */; };
+		787483C925AAB5BD0022329D /* AgoraMCStudentListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833225AAB5BC0022329D /* AgoraMCStudentListView.m */; };
+		787483CA25AAB5BD0022329D /* AgoraMCStudentVideoCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833325AAB5BC0022329D /* AgoraMCStudentVideoCell.h */; };
+		787483CB25AAB5BD0022329D /* AgoraMCStudentViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874833425AAB5BC0022329D /* AgoraMCStudentViewCell.xib */; };
+		787483CC25AAB5BD0022329D /* AgoraMCSegmentedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833525AAB5BC0022329D /* AgoraMCSegmentedView.m */; };
+		787483CD25AAB5BD0022329D /* AgoraMCStudentViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833625AAB5BC0022329D /* AgoraMCStudentViewCell.m */; };
+		787483CE25AAB5BD0022329D /* AgoraMCStudentListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833725AAB5BC0022329D /* AgoraMCStudentListView.h */; };
+		787483CF25AAB5BD0022329D /* AgoraMCStudentVideoListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833825AAB5BC0022329D /* AgoraMCStudentVideoListView.m */; };
+		787483D025AAB5BD0022329D /* AgoraMCStreamInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833925AAB5BC0022329D /* AgoraMCStreamInfo.h */; };
+		787483D125AAB5BD0022329D /* AgoraMCTeacherVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833A25AAB5BC0022329D /* AgoraMCTeacherVideoView.h */; };
+		787483D225AAB5BD0022329D /* AgoraMCStudentVideoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833B25AAB5BC0022329D /* AgoraMCStudentVideoCell.m */; };
+		787483D325AAB5BD0022329D /* AgoraMCTeacherVideoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874833C25AAB5BC0022329D /* AgoraMCTeacherVideoView.xib */; };
+		787483D425AAB5BD0022329D /* AgoraMCSegmentedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874833D25AAB5BC0022329D /* AgoraMCSegmentedView.h */; };
+		787483D525AAB5BD0022329D /* AgoraSmallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874833F25AAB5BC0022329D /* AgoraSmallViewController.m */; };
+		787483D625AAB5BD0022329D /* AgoraSmallViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834025AAB5BC0022329D /* AgoraSmallViewController.h */; };
+		787483D725AAB5BD0022329D /* AgoraTextMessageModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834325AAB5BC0022329D /* AgoraTextMessageModel.h */; };
+		787483D825AAB5BD0022329D /* AgoraTextMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834425AAB5BC0022329D /* AgoraTextMessageModel.m */; };
+		787483D925AAB5BD0022329D /* AgoraBOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834625AAB5BC0022329D /* AgoraBOViewController.m */; };
+		787483DA25AAB5BD0022329D /* AgoraBOViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834725AAB5BC0022329D /* AgoraBOViewController.h */; };
+		787483DB25AAB5BD0022329D /* AgoraRTEStream+StreamState.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834825AAB5BC0022329D /* AgoraRTEStream+StreamState.m */; };
+		787483DC25AAB5BD0022329D /* AgoraEEMessageViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834A25AAB5BC0022329D /* AgoraEEMessageViewCell.m */; };
+		787483DD25AAB5BD0022329D /* AgoraEEMessageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834B25AAB5BC0022329D /* AgoraEEMessageView.h */; };
+		787483DE25AAB5BD0022329D /* AgoraEENavigationView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834C25AAB5BC0022329D /* AgoraEENavigationView.h */; };
+		787483DF25AAB5BD0022329D /* AgoraEEChatTextFiled.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874834D25AAB5BC0022329D /* AgoraEEChatTextFiled.h */; };
+		787483E025AAB5BD0022329D /* AgoraEETextMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874834E25AAB5BC0022329D /* AgoraEETextMessage.m */; };
+		787483E125AAB5BD0022329D /* AgoraEENavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874834F25AAB5BC0022329D /* AgoraEENavigationView.xib */; };
+		787483E225AAB5BD0022329D /* AgoraBoardTouchView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835025AAB5BC0022329D /* AgoraBoardTouchView.h */; };
+		787483E325AAB5BD0022329D /* AgoraEEMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835125AAB5BC0022329D /* AgoraEEMessageView.m */; };
+		787483E425AAB5BD0022329D /* AgoraEEMessageViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874835225AAB5BC0022329D /* AgoraEEMessageViewCell.xib */; };
+		787483E525AAB5BD0022329D /* AgoraEEMessageViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835325AAB5BC0022329D /* AgoraEEMessageViewCell.h */; };
+		787483E625AAB5BD0022329D /* AgoraEENavigationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835425AAB5BC0022329D /* AgoraEENavigationView.m */; };
+		787483E725AAB5BD0022329D /* AgoraEEChatTextFiled.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874835525AAB5BC0022329D /* AgoraEEChatTextFiled.xib */; };
+		787483E825AAB5BD0022329D /* AgoraBoardTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835625AAB5BC0022329D /* AgoraBoardTouchView.m */; };
+		787483E925AAB5BD0022329D /* AgoraEETextMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835725AAB5BC0022329D /* AgoraEETextMessage.h */; };
+		787483EA25AAB5BD0022329D /* AgoraEEChatTextFiled.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835825AAB5BC0022329D /* AgoraEEChatTextFiled.m */; };
 		787483EB25AAB5BD0022329D /* AgoraBaseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835925AAB5BC0022329D /* AgoraBaseViewController.h */; };
 		787483EC25AAB5BD0022329D /* Agora1V1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835C25AAB5BC0022329D /* Agora1V1ViewController.m */; };
 		787483ED25AAB5BD0022329D /* Agora1V1ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874835D25AAB5BC0022329D /* Agora1V1ViewController.h */; };
-		787483EE25AAB5BD0022329D /* OTOStudentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835F25AAB5BC0022329D /* OTOStudentView.m */; };
-		787483EF25AAB5BD0022329D /* OTOTeacherView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874836025AAB5BC0022329D /* OTOTeacherView.xib */; };
-		787483F025AAB5BD0022329D /* OTOTeacherView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874836125AAB5BC0022329D /* OTOTeacherView.h */; };
-		787483F125AAB5BD0022329D /* OTOStudentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874836225AAB5BC0022329D /* OTOStudentView.h */; };
-		787483F225AAB5BD0022329D /* OTOTeacherView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874836325AAB5BC0022329D /* OTOTeacherView.m */; };
-		787483F325AAB5BD0022329D /* OTOStudentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874836425AAB5BC0022329D /* OTOStudentView.xib */; };
+		787483EE25AAB5BD0022329D /* AgoraOTOStudentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874835F25AAB5BC0022329D /* AgoraOTOStudentView.m */; };
+		787483EF25AAB5BD0022329D /* AgoraOTOTeacherView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874836025AAB5BC0022329D /* AgoraOTOTeacherView.xib */; };
+		787483F025AAB5BD0022329D /* AgoraOTOTeacherView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874836125AAB5BC0022329D /* AgoraOTOTeacherView.h */; };
+		787483F125AAB5BD0022329D /* AgoraOTOStudentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874836225AAB5BC0022329D /* AgoraOTOStudentView.h */; };
+		787483F225AAB5BD0022329D /* AgoraOTOTeacherView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874836325AAB5BC0022329D /* AgoraOTOTeacherView.m */; };
+		787483F325AAB5BD0022329D /* AgoraOTOStudentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7874836425AAB5BC0022329D /* AgoraOTOStudentView.xib */; };
 		787483F525AAB5BD0022329D /* AgoraEduKeyCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874836625AAB5BC0022329D /* AgoraEduKeyCenter.m */; };
 		787483F825AAB5BD0022329D /* AgoraEduTopVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874836C25AAB5BC0022329D /* AgoraEduTopVC.h */; };
 		787483F925AAB5BD0022329D /* AgoraEduTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874836D25AAB5BC0022329D /* AgoraEduTopVC.m */; };
-		787483FA25AAB5BD0022329D /* FLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874836F25AAB5BC0022329D /* FLAnimatedImage.m */; };
-		787483FB25AAB5BD0022329D /* FLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874837025AAB5BC0022329D /* FLAnimatedImageView.m */; };
-		787483FC25AAB5BD0022329D /* FLAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874837125AAB5BC0022329D /* FLAnimatedImage.h */; };
-		787483FD25AAB5BD0022329D /* FLAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874837225AAB5BC0022329D /* FLAnimatedImageView.h */; };
+		787483FA25AAB5BD0022329D /* AgoraFLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874836F25AAB5BC0022329D /* AgoraFLAnimatedImage.m */; };
+		787483FB25AAB5BD0022329D /* AgoraFLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874837025AAB5BC0022329D /* AgoraFLAnimatedImageView.m */; };
+		787483FC25AAB5BD0022329D /* AgoraFLAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874837125AAB5BC0022329D /* AgoraFLAnimatedImage.h */; };
+		787483FD25AAB5BD0022329D /* AgoraFLAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874837225AAB5BC0022329D /* AgoraFLAnimatedImageView.h */; };
 		787483FE25AAB5BD0022329D /* UIColor+AgoraEduAddition.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874837425AAB5BC0022329D /* UIColor+AgoraEduAddition.h */; };
 		787483FF25AAB5BD0022329D /* UIColor+AgoraEduAddition.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874837525AAB5BC0022329D /* UIColor+AgoraEduAddition.m */; };
 		7874840025AAB5BD0022329D /* UIView+AgoraEduToast.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874837725AAB5BC0022329D /* UIView+AgoraEduToast.h */; };
@@ -101,23 +101,23 @@
 		7874840925AAB5BD0022329D /* UIView+AgoraEduConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838325AAB5BC0022329D /* UIView+AgoraEduConstraint.h */; };
 		7874840A25AAB5BD0022329D /* UIView+AgoraEduBadge.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838525AAB5BC0022329D /* UIView+AgoraEduBadge.h */; };
 		7874840B25AAB5BD0022329D /* UIView+AgoraEduBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874838625AAB5BC0022329D /* UIView+AgoraEduBadge.m */; };
-		7874840C25AAB5BD0022329D /* ReplayModuleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874838825AAB5BC0022329D /* ReplayModuleManager.m */; };
+		7874840C25AAB5BD0022329D /* AgoraReplayModuleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874838825AAB5BC0022329D /* AgoraReplayModuleManager.m */; };
 		7874840D25AAB5BD0022329D /* AgoraEduManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874838925AAB5BC0022329D /* AgoraEduManager.m */; };
-		7874840E25AAB5BD0022329D /* ReplayModuleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838A25AAB5BC0022329D /* ReplayModuleManager.h */; };
-		7874840F25AAB5BD0022329D /* HttpAppModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874838C25AAB5BC0022329D /* HttpAppModel.m */; };
-		7874841025AAB5BD0022329D /* AssignGroupModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838D25AAB5BC0022329D /* AssignGroupModel.h */; };
-		7874841125AAB5BD0022329D /* SchduleModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838E25AAB5BC0022329D /* SchduleModel.h */; };
-		7874841225AAB5BD0022329D /* RecordModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838F25AAB5BC0022329D /* RecordModel.h */; };
-		7874841325AAB5BD0022329D /* HTTPConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839025AAB5BC0022329D /* HTTPConfiguration.h */; };
-		7874841425AAB5BD0022329D /* BoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839125AAB5BC0022329D /* BoardModel.m */; };
-		7874841525AAB5BD0022329D /* AppHTTPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839225AAB5BC0022329D /* AppHTTPManager.h */; };
-		7874841625AAB5BD0022329D /* HttpAppModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839325AAB5BC0022329D /* HttpAppModel.h */; };
-		7874841725AAB5BD0022329D /* AssignGroupModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839425AAB5BC0022329D /* AssignGroupModel.m */; };
-		7874841825AAB5BD0022329D /* AppHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839525AAB5BC0022329D /* AppHTTPManager.m */; };
-		7874841925AAB5BD0022329D /* BoardModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839625AAB5BC0022329D /* BoardModel.h */; };
-		7874841A25AAB5BD0022329D /* HTTPConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839725AAB5BC0022329D /* HTTPConfiguration.m */; };
-		7874841B25AAB5BD0022329D /* RecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839825AAB5BC0022329D /* RecordModel.m */; };
-		7874841C25AAB5BD0022329D /* SchduleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839925AAB5BC0022329D /* SchduleModel.m */; };
+		7874840E25AAB5BD0022329D /* AgoraReplayModuleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838A25AAB5BC0022329D /* AgoraReplayModuleManager.h */; };
+		7874840F25AAB5BD0022329D /* AgoraHttpModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874838C25AAB5BC0022329D /* AgoraHttpModel.m */; };
+		7874841025AAB5BD0022329D /* AgoraAssignGroupModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838D25AAB5BC0022329D /* AgoraAssignGroupModel.h */; };
+		7874841125AAB5BD0022329D /* AgoraSchduleModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838E25AAB5BC0022329D /* AgoraSchduleModel.h */; };
+		7874841225AAB5BD0022329D /* AgoraRecordModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874838F25AAB5BC0022329D /* AgoraRecordModel.h */; };
+		7874841325AAB5BD0022329D /* AgoraHTTPConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839025AAB5BC0022329D /* AgoraHTTPConfiguration.h */; };
+		7874841425AAB5BD0022329D /* AgoraBoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839125AAB5BC0022329D /* AgoraBoardModel.m */; };
+		7874841525AAB5BD0022329D /* AgoraHTTPManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839225AAB5BC0022329D /* AgoraHTTPManager.h */; };
+		7874841625AAB5BD0022329D /* AgoraHttpModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839325AAB5BC0022329D /* AgoraHttpModel.h */; };
+		7874841725AAB5BD0022329D /* AgoraAssignGroupModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839425AAB5BC0022329D /* AgoraAssignGroupModel.m */; };
+		7874841825AAB5BD0022329D /* AgoraHTTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839525AAB5BC0022329D /* AgoraHTTPManager.m */; };
+		7874841925AAB5BD0022329D /* AgoraBoardModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839625AAB5BC0022329D /* AgoraBoardModel.h */; };
+		7874841A25AAB5BD0022329D /* AgoraHTTPConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839725AAB5BC0022329D /* AgoraHTTPConfiguration.m */; };
+		7874841B25AAB5BD0022329D /* AgoraRecordModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839825AAB5BC0022329D /* AgoraRecordModel.m */; };
+		7874841C25AAB5BD0022329D /* AgoraSchduleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839925AAB5BC0022329D /* AgoraSchduleModel.m */; };
 		7874841D25AAB5BD0022329D /* AgoraEduManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 7874839A25AAB5BC0022329D /* AgoraEduManager.h */; };
 		7874841E25AAB5BD0022329D /* AgoraEduObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839C25AAB5BC0022329D /* AgoraEduObjects.m */; };
 		7874841F25AAB5BD0022329D /* AgoraEduReplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 7874839D25AAB5BC0022329D /* AgoraEduReplay.m */; };
@@ -129,8 +129,8 @@
 		7874842525AAB5BD0022329D /* AgoraEduReplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483A325AAB5BC0022329D /* AgoraEduReplay.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7874842625AAB5BD0022329D /* AgoraEduSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483A425AAB5BC0022329D /* AgoraEduSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7874842725AAB5BD0022329D /* AgoraEduKeyCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483A525AAB5BC0022329D /* AgoraEduKeyCenter.h */; };
-		7874842A25AAB5BD0022329D /* EyeCareModeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 787483A925AAB5BC0022329D /* EyeCareModeUtil.m */; };
-		7874842D25AAB5BD0022329D /* EyeCareModeUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483AC25AAB5BC0022329D /* EyeCareModeUtil.h */; };
+		7874842A25AAB5BD0022329D /* AgoraEyeCareModeUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 787483A925AAB5BC0022329D /* AgoraEyeCareModeUtil.m */; };
+		7874842D25AAB5BD0022329D /* AgoraEyeCareModeUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 787483AC25AAB5BC0022329D /* AgoraEyeCareModeUtil.h */; };
 		7874842E25AAB5BD0022329D /* AgoraEduSDK.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 787483AD25AAB5BD0022329D /* AgoraEduSDK.xcassets */; };
 		788BC7B225C106E70095998F /* AgoraBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC7B125C106E70095998F /* AgoraBaseView.swift */; };
 		788BC7EF25C11FC10095998F /* AgoraUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC7EE25C11FC10095998F /* AgoraUserView.swift */; };
@@ -153,80 +153,80 @@
 		7874818325A884A30022329D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7874831125AAB5BC0022329D /* Room.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Room.storyboard; sourceTree = "<group>"; };
 		7874831225AAB5BC0022329D /* AgoraEduSDK.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduSDK.pch; sourceTree = "<group>"; };
-		7874831425AAB5BC0022329D /* EduStream+StreamState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EduStream+StreamState.h"; sourceTree = "<group>"; };
-		7874831725AAB5BC0022329D /* HandsUpModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandsUpModel.m; sourceTree = "<group>"; };
-		7874831825AAB5BC0022329D /* RecordPropertyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordPropertyModel.h; sourceTree = "<group>"; };
-		7874831925AAB5BC0022329D /* HandsUpModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandsUpModel.h; sourceTree = "<group>"; };
-		7874831A25AAB5BC0022329D /* RecordPropertyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordPropertyModel.m; sourceTree = "<group>"; };
-		7874831C25AAB5BC0022329D /* BCStudentVideoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BCStudentVideoView.xib; sourceTree = "<group>"; };
-		7874831D25AAB5BC0022329D /* BCNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCNavigationView.m; sourceTree = "<group>"; };
-		7874831E25AAB5BC0022329D /* EETeacherVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EETeacherVideoView.m; sourceTree = "<group>"; };
-		7874831F25AAB5BC0022329D /* BCStudentVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCStudentVideoView.m; sourceTree = "<group>"; };
-		7874832025AAB5BC0022329D /* EETeacherVideoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EETeacherVideoView.xib; sourceTree = "<group>"; };
-		7874832125AAB5BC0022329D /* BCSegmentedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BCSegmentedView.m; sourceTree = "<group>"; };
-		7874832225AAB5BC0022329D /* EETeacherVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EETeacherVideoView.h; sourceTree = "<group>"; };
-		7874832325AAB5BC0022329D /* BCNavigationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BCNavigationView.xib; sourceTree = "<group>"; };
-		7874832425AAB5BC0022329D /* BCNavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCNavigationView.h; sourceTree = "<group>"; };
-		7874832525AAB5BC0022329D /* BCStudentVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCStudentVideoView.h; sourceTree = "<group>"; };
-		7874832625AAB5BC0022329D /* BCSegmentedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BCSegmentedView.h; sourceTree = "<group>"; };
-		7874832825AAB5BC0022329D /* BigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigViewController.h; sourceTree = "<group>"; };
-		7874832925AAB5BC0022329D /* BigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigViewController.m; sourceTree = "<group>"; };
-		7874832A25AAB5BC0022329D /* RoomProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomProtocol.h; sourceTree = "<group>"; };
+		7874831425AAB5BC0022329D /* AgoraRTEStream+StreamState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AgoraRTEStream+StreamState.h"; sourceTree = "<group>"; };
+		7874831725AAB5BC0022329D /* AgoraHandsUpModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraHandsUpModel.m; sourceTree = "<group>"; };
+		7874831825AAB5BC0022329D /* AgoraRecordPropertyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRecordPropertyModel.h; sourceTree = "<group>"; };
+		7874831925AAB5BC0022329D /* AgoraHandsUpModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraHandsUpModel.h; sourceTree = "<group>"; };
+		7874831A25AAB5BC0022329D /* AgoraRecordPropertyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRecordPropertyModel.m; sourceTree = "<group>"; };
+		7874831C25AAB5BC0022329D /* AgoraBCStudentVideoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraBCStudentVideoView.xib; sourceTree = "<group>"; };
+		7874831D25AAB5BC0022329D /* AgoraBCNavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBCNavigationView.m; sourceTree = "<group>"; };
+		7874831E25AAB5BC0022329D /* AgoraEETeacherVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEETeacherVideoView.m; sourceTree = "<group>"; };
+		7874831F25AAB5BC0022329D /* AgoraBCStudentVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBCStudentVideoView.m; sourceTree = "<group>"; };
+		7874832025AAB5BC0022329D /* AgoraEETeacherVideoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraEETeacherVideoView.xib; sourceTree = "<group>"; };
+		7874832125AAB5BC0022329D /* AgoraBCSegmentedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBCSegmentedView.m; sourceTree = "<group>"; };
+		7874832225AAB5BC0022329D /* AgoraEETeacherVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEETeacherVideoView.h; sourceTree = "<group>"; };
+		7874832325AAB5BC0022329D /* AgoraBCNavigationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraBCNavigationView.xib; sourceTree = "<group>"; };
+		7874832425AAB5BC0022329D /* AgoraBCNavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBCNavigationView.h; sourceTree = "<group>"; };
+		7874832525AAB5BC0022329D /* AgoraBCStudentVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBCStudentVideoView.h; sourceTree = "<group>"; };
+		7874832625AAB5BC0022329D /* AgoraBCSegmentedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBCSegmentedView.h; sourceTree = "<group>"; };
+		7874832825AAB5BC0022329D /* AgoraBigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBigViewController.h; sourceTree = "<group>"; };
+		7874832925AAB5BC0022329D /* AgoraBigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBigViewController.m; sourceTree = "<group>"; };
+		7874832A25AAB5BC0022329D /* AgoraRoomProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRoomProtocol.h; sourceTree = "<group>"; };
 		7874832B25AAB5BC0022329D /* AgoraBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBaseViewController.m; sourceTree = "<group>"; };
-		7874832E25AAB5BC0022329D /* MCStudentViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCStudentViewCell.h; sourceTree = "<group>"; };
-		7874832F25AAB5BC0022329D /* MCTeacherVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCTeacherVideoView.m; sourceTree = "<group>"; };
-		7874833025AAB5BC0022329D /* MCStreamInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCStreamInfo.m; sourceTree = "<group>"; };
-		7874833125AAB5BC0022329D /* MCStudentVideoListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCStudentVideoListView.h; sourceTree = "<group>"; };
-		7874833225AAB5BC0022329D /* MCStudentListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCStudentListView.m; sourceTree = "<group>"; };
-		7874833325AAB5BC0022329D /* MCStudentVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCStudentVideoCell.h; sourceTree = "<group>"; };
-		7874833425AAB5BC0022329D /* MCStudentViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MCStudentViewCell.xib; sourceTree = "<group>"; };
-		7874833525AAB5BC0022329D /* MCSegmentedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCSegmentedView.m; sourceTree = "<group>"; };
-		7874833625AAB5BC0022329D /* MCStudentViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCStudentViewCell.m; sourceTree = "<group>"; };
-		7874833725AAB5BC0022329D /* MCStudentListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCStudentListView.h; sourceTree = "<group>"; };
-		7874833825AAB5BC0022329D /* MCStudentVideoListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCStudentVideoListView.m; sourceTree = "<group>"; };
-		7874833925AAB5BC0022329D /* MCStreamInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCStreamInfo.h; sourceTree = "<group>"; };
-		7874833A25AAB5BC0022329D /* MCTeacherVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCTeacherVideoView.h; sourceTree = "<group>"; };
-		7874833B25AAB5BC0022329D /* MCStudentVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCStudentVideoCell.m; sourceTree = "<group>"; };
-		7874833C25AAB5BC0022329D /* MCTeacherVideoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MCTeacherVideoView.xib; sourceTree = "<group>"; };
-		7874833D25AAB5BC0022329D /* MCSegmentedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSegmentedView.h; sourceTree = "<group>"; };
-		7874833F25AAB5BC0022329D /* SmallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallViewController.m; sourceTree = "<group>"; };
-		7874834025AAB5BC0022329D /* SmallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SmallViewController.h; sourceTree = "<group>"; };
-		7874834325AAB5BC0022329D /* TextMessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextMessageModel.h; sourceTree = "<group>"; };
-		7874834425AAB5BC0022329D /* TextMessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextMessageModel.m; sourceTree = "<group>"; };
-		7874834625AAB5BC0022329D /* BOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BOViewController.m; sourceTree = "<group>"; };
-		7874834725AAB5BC0022329D /* BOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BOViewController.h; sourceTree = "<group>"; };
-		7874834825AAB5BC0022329D /* EduStream+StreamState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EduStream+StreamState.m"; sourceTree = "<group>"; };
-		7874834A25AAB5BC0022329D /* EEMessageViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEMessageViewCell.m; sourceTree = "<group>"; };
-		7874834B25AAB5BC0022329D /* EEMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEMessageView.h; sourceTree = "<group>"; };
-		7874834C25AAB5BC0022329D /* EENavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EENavigationView.h; sourceTree = "<group>"; };
-		7874834D25AAB5BC0022329D /* EEChatTextFiled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEChatTextFiled.h; sourceTree = "<group>"; };
-		7874834E25AAB5BC0022329D /* EETextMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EETextMessage.m; sourceTree = "<group>"; };
-		7874834F25AAB5BC0022329D /* EENavigationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EENavigationView.xib; sourceTree = "<group>"; };
-		7874835025AAB5BC0022329D /* WhiteBoardTouchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteBoardTouchView.h; sourceTree = "<group>"; };
-		7874835125AAB5BC0022329D /* EEMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEMessageView.m; sourceTree = "<group>"; };
-		7874835225AAB5BC0022329D /* EEMessageViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EEMessageViewCell.xib; sourceTree = "<group>"; };
-		7874835325AAB5BC0022329D /* EEMessageViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EEMessageViewCell.h; sourceTree = "<group>"; };
-		7874835425AAB5BC0022329D /* EENavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EENavigationView.m; sourceTree = "<group>"; };
-		7874835525AAB5BC0022329D /* EEChatTextFiled.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EEChatTextFiled.xib; sourceTree = "<group>"; };
-		7874835625AAB5BC0022329D /* WhiteBoardTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardTouchView.m; sourceTree = "<group>"; };
-		7874835725AAB5BC0022329D /* EETextMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EETextMessage.h; sourceTree = "<group>"; };
-		7874835825AAB5BC0022329D /* EEChatTextFiled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EEChatTextFiled.m; sourceTree = "<group>"; };
+		7874832E25AAB5BC0022329D /* AgoraMCStudentViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraMCStudentViewCell.h; sourceTree = "<group>"; };
+		7874832F25AAB5BC0022329D /* AgoraMCTeacherVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraMCTeacherVideoView.m; sourceTree = "<group>"; };
+		7874833025AAB5BC0022329D /* AgoraMCStreamInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraMCStreamInfo.m; sourceTree = "<group>"; };
+		7874833125AAB5BC0022329D /* AgoraMCStudentVideoListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraMCStudentVideoListView.h; sourceTree = "<group>"; };
+		7874833225AAB5BC0022329D /* AgoraMCStudentListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraMCStudentListView.m; sourceTree = "<group>"; };
+		7874833325AAB5BC0022329D /* AgoraMCStudentVideoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraMCStudentVideoCell.h; sourceTree = "<group>"; };
+		7874833425AAB5BC0022329D /* AgoraMCStudentViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraMCStudentViewCell.xib; sourceTree = "<group>"; };
+		7874833525AAB5BC0022329D /* AgoraMCSegmentedView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraMCSegmentedView.m; sourceTree = "<group>"; };
+		7874833625AAB5BC0022329D /* AgoraMCStudentViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraMCStudentViewCell.m; sourceTree = "<group>"; };
+		7874833725AAB5BC0022329D /* AgoraMCStudentListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraMCStudentListView.h; sourceTree = "<group>"; };
+		7874833825AAB5BC0022329D /* AgoraMCStudentVideoListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraMCStudentVideoListView.m; sourceTree = "<group>"; };
+		7874833925AAB5BC0022329D /* AgoraMCStreamInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraMCStreamInfo.h; sourceTree = "<group>"; };
+		7874833A25AAB5BC0022329D /* AgoraMCTeacherVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraMCTeacherVideoView.h; sourceTree = "<group>"; };
+		7874833B25AAB5BC0022329D /* AgoraMCStudentVideoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraMCStudentVideoCell.m; sourceTree = "<group>"; };
+		7874833C25AAB5BC0022329D /* AgoraMCTeacherVideoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraMCTeacherVideoView.xib; sourceTree = "<group>"; };
+		7874833D25AAB5BC0022329D /* AgoraMCSegmentedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraMCSegmentedView.h; sourceTree = "<group>"; };
+		7874833F25AAB5BC0022329D /* AgoraSmallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraSmallViewController.m; sourceTree = "<group>"; };
+		7874834025AAB5BC0022329D /* AgoraSmallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraSmallViewController.h; sourceTree = "<group>"; };
+		7874834325AAB5BC0022329D /* AgoraTextMessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraTextMessageModel.h; sourceTree = "<group>"; };
+		7874834425AAB5BC0022329D /* AgoraTextMessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraTextMessageModel.m; sourceTree = "<group>"; };
+		7874834625AAB5BC0022329D /* AgoraBOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBOViewController.m; sourceTree = "<group>"; };
+		7874834725AAB5BC0022329D /* AgoraBOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBOViewController.h; sourceTree = "<group>"; };
+		7874834825AAB5BC0022329D /* AgoraRTEStream+StreamState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AgoraRTEStream+StreamState.m"; sourceTree = "<group>"; };
+		7874834A25AAB5BC0022329D /* AgoraEEMessageViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEEMessageViewCell.m; sourceTree = "<group>"; };
+		7874834B25AAB5BC0022329D /* AgoraEEMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEEMessageView.h; sourceTree = "<group>"; };
+		7874834C25AAB5BC0022329D /* AgoraEENavigationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEENavigationView.h; sourceTree = "<group>"; };
+		7874834D25AAB5BC0022329D /* AgoraEEChatTextFiled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEEChatTextFiled.h; sourceTree = "<group>"; };
+		7874834E25AAB5BC0022329D /* AgoraEETextMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEETextMessage.m; sourceTree = "<group>"; };
+		7874834F25AAB5BC0022329D /* AgoraEENavigationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraEENavigationView.xib; sourceTree = "<group>"; };
+		7874835025AAB5BC0022329D /* AgoraBoardTouchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBoardTouchView.h; sourceTree = "<group>"; };
+		7874835125AAB5BC0022329D /* AgoraEEMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEEMessageView.m; sourceTree = "<group>"; };
+		7874835225AAB5BC0022329D /* AgoraEEMessageViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraEEMessageViewCell.xib; sourceTree = "<group>"; };
+		7874835325AAB5BC0022329D /* AgoraEEMessageViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEEMessageViewCell.h; sourceTree = "<group>"; };
+		7874835425AAB5BC0022329D /* AgoraEENavigationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEENavigationView.m; sourceTree = "<group>"; };
+		7874835525AAB5BC0022329D /* AgoraEEChatTextFiled.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraEEChatTextFiled.xib; sourceTree = "<group>"; };
+		7874835625AAB5BC0022329D /* AgoraBoardTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBoardTouchView.m; sourceTree = "<group>"; };
+		7874835725AAB5BC0022329D /* AgoraEETextMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEETextMessage.h; sourceTree = "<group>"; };
+		7874835825AAB5BC0022329D /* AgoraEEChatTextFiled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEEChatTextFiled.m; sourceTree = "<group>"; };
 		7874835925AAB5BC0022329D /* AgoraBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBaseViewController.h; sourceTree = "<group>"; };
 		7874835C25AAB5BC0022329D /* Agora1V1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Agora1V1ViewController.m; sourceTree = "<group>"; };
 		7874835D25AAB5BC0022329D /* Agora1V1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Agora1V1ViewController.h; sourceTree = "<group>"; };
-		7874835F25AAB5BC0022329D /* OTOStudentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTOStudentView.m; sourceTree = "<group>"; };
-		7874836025AAB5BC0022329D /* OTOTeacherView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTOTeacherView.xib; sourceTree = "<group>"; };
-		7874836125AAB5BC0022329D /* OTOTeacherView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTOTeacherView.h; sourceTree = "<group>"; };
-		7874836225AAB5BC0022329D /* OTOStudentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTOStudentView.h; sourceTree = "<group>"; };
-		7874836325AAB5BC0022329D /* OTOTeacherView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTOTeacherView.m; sourceTree = "<group>"; };
-		7874836425AAB5BC0022329D /* OTOStudentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OTOStudentView.xib; sourceTree = "<group>"; };
+		7874835F25AAB5BC0022329D /* AgoraOTOStudentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraOTOStudentView.m; sourceTree = "<group>"; };
+		7874836025AAB5BC0022329D /* AgoraOTOTeacherView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraOTOTeacherView.xib; sourceTree = "<group>"; };
+		7874836125AAB5BC0022329D /* AgoraOTOTeacherView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraOTOTeacherView.h; sourceTree = "<group>"; };
+		7874836225AAB5BC0022329D /* AgoraOTOStudentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraOTOStudentView.h; sourceTree = "<group>"; };
+		7874836325AAB5BC0022329D /* AgoraOTOTeacherView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraOTOTeacherView.m; sourceTree = "<group>"; };
+		7874836425AAB5BC0022329D /* AgoraOTOStudentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraOTOStudentView.xib; sourceTree = "<group>"; };
 		7874836625AAB5BC0022329D /* AgoraEduKeyCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduKeyCenter.m; sourceTree = "<group>"; };
 		7874836C25AAB5BC0022329D /* AgoraEduTopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduTopVC.h; sourceTree = "<group>"; };
 		7874836D25AAB5BC0022329D /* AgoraEduTopVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduTopVC.m; sourceTree = "<group>"; };
-		7874836F25AAB5BC0022329D /* FLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImage.m; sourceTree = "<group>"; };
-		7874837025AAB5BC0022329D /* FLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLAnimatedImageView.m; sourceTree = "<group>"; };
-		7874837125AAB5BC0022329D /* FLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImage.h; sourceTree = "<group>"; };
-		7874837225AAB5BC0022329D /* FLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLAnimatedImageView.h; sourceTree = "<group>"; };
+		7874836F25AAB5BC0022329D /* AgoraFLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraFLAnimatedImage.m; sourceTree = "<group>"; };
+		7874837025AAB5BC0022329D /* AgoraFLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraFLAnimatedImageView.m; sourceTree = "<group>"; };
+		7874837125AAB5BC0022329D /* AgoraFLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraFLAnimatedImage.h; sourceTree = "<group>"; };
+		7874837225AAB5BC0022329D /* AgoraFLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraFLAnimatedImageView.h; sourceTree = "<group>"; };
 		7874837425AAB5BC0022329D /* UIColor+AgoraEduAddition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+AgoraEduAddition.h"; sourceTree = "<group>"; };
 		7874837525AAB5BC0022329D /* UIColor+AgoraEduAddition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+AgoraEduAddition.m"; sourceTree = "<group>"; };
 		7874837725AAB5BC0022329D /* UIView+AgoraEduToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AgoraEduToast.h"; sourceTree = "<group>"; };
@@ -241,23 +241,23 @@
 		7874838325AAB5BC0022329D /* UIView+AgoraEduConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AgoraEduConstraint.h"; sourceTree = "<group>"; };
 		7874838525AAB5BC0022329D /* UIView+AgoraEduBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AgoraEduBadge.h"; sourceTree = "<group>"; };
 		7874838625AAB5BC0022329D /* UIView+AgoraEduBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AgoraEduBadge.m"; sourceTree = "<group>"; };
-		7874838825AAB5BC0022329D /* ReplayModuleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayModuleManager.m; sourceTree = "<group>"; };
+		7874838825AAB5BC0022329D /* AgoraReplayModuleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayModuleManager.m; sourceTree = "<group>"; };
 		7874838925AAB5BC0022329D /* AgoraEduManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduManager.m; sourceTree = "<group>"; };
-		7874838A25AAB5BC0022329D /* ReplayModuleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayModuleManager.h; sourceTree = "<group>"; };
-		7874838C25AAB5BC0022329D /* HttpAppModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HttpAppModel.m; sourceTree = "<group>"; };
-		7874838D25AAB5BC0022329D /* AssignGroupModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssignGroupModel.h; sourceTree = "<group>"; };
-		7874838E25AAB5BC0022329D /* SchduleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchduleModel.h; sourceTree = "<group>"; };
-		7874838F25AAB5BC0022329D /* RecordModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordModel.h; sourceTree = "<group>"; };
-		7874839025AAB5BC0022329D /* HTTPConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPConfiguration.h; sourceTree = "<group>"; };
-		7874839125AAB5BC0022329D /* BoardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoardModel.m; sourceTree = "<group>"; };
-		7874839225AAB5BC0022329D /* AppHTTPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppHTTPManager.h; sourceTree = "<group>"; };
-		7874839325AAB5BC0022329D /* HttpAppModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAppModel.h; sourceTree = "<group>"; };
-		7874839425AAB5BC0022329D /* AssignGroupModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssignGroupModel.m; sourceTree = "<group>"; };
-		7874839525AAB5BC0022329D /* AppHTTPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppHTTPManager.m; sourceTree = "<group>"; };
-		7874839625AAB5BC0022329D /* BoardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoardModel.h; sourceTree = "<group>"; };
-		7874839725AAB5BC0022329D /* HTTPConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPConfiguration.m; sourceTree = "<group>"; };
-		7874839825AAB5BC0022329D /* RecordModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordModel.m; sourceTree = "<group>"; };
-		7874839925AAB5BC0022329D /* SchduleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchduleModel.m; sourceTree = "<group>"; };
+		7874838A25AAB5BC0022329D /* AgoraReplayModuleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraReplayModuleManager.h; sourceTree = "<group>"; };
+		7874838C25AAB5BC0022329D /* AgoraHttpModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraHttpModel.m; sourceTree = "<group>"; };
+		7874838D25AAB5BC0022329D /* AgoraAssignGroupModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraAssignGroupModel.h; sourceTree = "<group>"; };
+		7874838E25AAB5BC0022329D /* AgoraSchduleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraSchduleModel.h; sourceTree = "<group>"; };
+		7874838F25AAB5BC0022329D /* AgoraRecordModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRecordModel.h; sourceTree = "<group>"; };
+		7874839025AAB5BC0022329D /* AgoraHTTPConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraHTTPConfiguration.h; sourceTree = "<group>"; };
+		7874839125AAB5BC0022329D /* AgoraBoardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBoardModel.m; sourceTree = "<group>"; };
+		7874839225AAB5BC0022329D /* AgoraHTTPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraHTTPManager.h; sourceTree = "<group>"; };
+		7874839325AAB5BC0022329D /* AgoraHttpModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraHttpModel.h; sourceTree = "<group>"; };
+		7874839425AAB5BC0022329D /* AgoraAssignGroupModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraAssignGroupModel.m; sourceTree = "<group>"; };
+		7874839525AAB5BC0022329D /* AgoraHTTPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraHTTPManager.m; sourceTree = "<group>"; };
+		7874839625AAB5BC0022329D /* AgoraBoardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBoardModel.h; sourceTree = "<group>"; };
+		7874839725AAB5BC0022329D /* AgoraHTTPConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraHTTPConfiguration.m; sourceTree = "<group>"; };
+		7874839825AAB5BC0022329D /* AgoraRecordModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRecordModel.m; sourceTree = "<group>"; };
+		7874839925AAB5BC0022329D /* AgoraSchduleModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraSchduleModel.m; sourceTree = "<group>"; };
 		7874839A25AAB5BC0022329D /* AgoraEduManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduManager.h; sourceTree = "<group>"; };
 		7874839C25AAB5BC0022329D /* AgoraEduObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduObjects.m; sourceTree = "<group>"; };
 		7874839D25AAB5BC0022329D /* AgoraEduReplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduReplay.m; sourceTree = "<group>"; };
@@ -269,8 +269,8 @@
 		787483A325AAB5BC0022329D /* AgoraEduReplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduReplay.h; sourceTree = "<group>"; };
 		787483A425AAB5BC0022329D /* AgoraEduSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduSDK.h; sourceTree = "<group>"; };
 		787483A525AAB5BC0022329D /* AgoraEduKeyCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduKeyCenter.h; sourceTree = "<group>"; };
-		787483A925AAB5BC0022329D /* EyeCareModeUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EyeCareModeUtil.m; sourceTree = "<group>"; };
-		787483AC25AAB5BC0022329D /* EyeCareModeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyeCareModeUtil.h; sourceTree = "<group>"; };
+		787483A925AAB5BC0022329D /* AgoraEyeCareModeUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEyeCareModeUtil.m; sourceTree = "<group>"; };
+		787483AC25AAB5BC0022329D /* AgoraEyeCareModeUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEyeCareModeUtil.h; sourceTree = "<group>"; };
 		787483AD25AAB5BD0022329D /* AgoraEduSDK.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AgoraEduSDK.xcassets; sourceTree = "<group>"; };
 		788BC7B125C106E70095998F /* AgoraBaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBaseView.swift; sourceTree = "<group>"; };
 		788BC7EE25C11FC10095998F /* AgoraUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraUserView.swift; sourceTree = "<group>"; };
@@ -391,12 +391,12 @@
 		7874831325AAB5BC0022329D /* Room */ = {
 			isa = PBXGroup;
 			children = (
-				7874831425AAB5BC0022329D /* EduStream+StreamState.h */,
+				7874831425AAB5BC0022329D /* AgoraRTEStream+StreamState.h */,
 				7874831525AAB5BC0022329D /* BigClass */,
-				7874832A25AAB5BC0022329D /* RoomProtocol.h */,
+				7874832A25AAB5BC0022329D /* AgoraRoomProtocol.h */,
 				7874832C25AAB5BC0022329D /* SmallClass */,
 				7874834125AAB5BC0022329D /* BreakOutClass */,
-				7874834825AAB5BC0022329D /* EduStream+StreamState.m */,
+				7874834825AAB5BC0022329D /* AgoraRTEStream+StreamState.m */,
 				7874834925AAB5BC0022329D /* View */,
 				7874835A25AAB5BC0022329D /* OneToOne */,
 			);
@@ -416,10 +416,10 @@
 		7874831625AAB5BC0022329D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7874831725AAB5BC0022329D /* HandsUpModel.m */,
-				7874831825AAB5BC0022329D /* RecordPropertyModel.h */,
-				7874831925AAB5BC0022329D /* HandsUpModel.h */,
-				7874831A25AAB5BC0022329D /* RecordPropertyModel.m */,
+				7874831725AAB5BC0022329D /* AgoraHandsUpModel.m */,
+				7874831825AAB5BC0022329D /* AgoraRecordPropertyModel.h */,
+				7874831925AAB5BC0022329D /* AgoraHandsUpModel.h */,
+				7874831A25AAB5BC0022329D /* AgoraRecordPropertyModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -427,17 +427,17 @@
 		7874831B25AAB5BC0022329D /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7874831C25AAB5BC0022329D /* BCStudentVideoView.xib */,
-				7874831D25AAB5BC0022329D /* BCNavigationView.m */,
-				7874831E25AAB5BC0022329D /* EETeacherVideoView.m */,
-				7874831F25AAB5BC0022329D /* BCStudentVideoView.m */,
-				7874832025AAB5BC0022329D /* EETeacherVideoView.xib */,
-				7874832125AAB5BC0022329D /* BCSegmentedView.m */,
-				7874832225AAB5BC0022329D /* EETeacherVideoView.h */,
-				7874832325AAB5BC0022329D /* BCNavigationView.xib */,
-				7874832425AAB5BC0022329D /* BCNavigationView.h */,
-				7874832525AAB5BC0022329D /* BCStudentVideoView.h */,
-				7874832625AAB5BC0022329D /* BCSegmentedView.h */,
+				7874831C25AAB5BC0022329D /* AgoraBCStudentVideoView.xib */,
+				7874831D25AAB5BC0022329D /* AgoraBCNavigationView.m */,
+				7874831E25AAB5BC0022329D /* AgoraEETeacherVideoView.m */,
+				7874831F25AAB5BC0022329D /* AgoraBCStudentVideoView.m */,
+				7874832025AAB5BC0022329D /* AgoraEETeacherVideoView.xib */,
+				7874832125AAB5BC0022329D /* AgoraBCSegmentedView.m */,
+				7874832225AAB5BC0022329D /* AgoraEETeacherVideoView.h */,
+				7874832325AAB5BC0022329D /* AgoraBCNavigationView.xib */,
+				7874832425AAB5BC0022329D /* AgoraBCNavigationView.h */,
+				7874832525AAB5BC0022329D /* AgoraBCStudentVideoView.h */,
+				7874832625AAB5BC0022329D /* AgoraBCSegmentedView.h */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -445,8 +445,8 @@
 		7874832725AAB5BC0022329D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7874832825AAB5BC0022329D /* BigViewController.h */,
-				7874832925AAB5BC0022329D /* BigViewController.m */,
+				7874832825AAB5BC0022329D /* AgoraBigViewController.h */,
+				7874832925AAB5BC0022329D /* AgoraBigViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -463,22 +463,22 @@
 		7874832D25AAB5BC0022329D /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7874832E25AAB5BC0022329D /* MCStudentViewCell.h */,
-				7874832F25AAB5BC0022329D /* MCTeacherVideoView.m */,
-				7874833025AAB5BC0022329D /* MCStreamInfo.m */,
-				7874833125AAB5BC0022329D /* MCStudentVideoListView.h */,
-				7874833225AAB5BC0022329D /* MCStudentListView.m */,
-				7874833325AAB5BC0022329D /* MCStudentVideoCell.h */,
-				7874833425AAB5BC0022329D /* MCStudentViewCell.xib */,
-				7874833525AAB5BC0022329D /* MCSegmentedView.m */,
-				7874833625AAB5BC0022329D /* MCStudentViewCell.m */,
-				7874833725AAB5BC0022329D /* MCStudentListView.h */,
-				7874833825AAB5BC0022329D /* MCStudentVideoListView.m */,
-				7874833925AAB5BC0022329D /* MCStreamInfo.h */,
-				7874833A25AAB5BC0022329D /* MCTeacherVideoView.h */,
-				7874833B25AAB5BC0022329D /* MCStudentVideoCell.m */,
-				7874833C25AAB5BC0022329D /* MCTeacherVideoView.xib */,
-				7874833D25AAB5BC0022329D /* MCSegmentedView.h */,
+				7874832E25AAB5BC0022329D /* AgoraMCStudentViewCell.h */,
+				7874832F25AAB5BC0022329D /* AgoraMCTeacherVideoView.m */,
+				7874833025AAB5BC0022329D /* AgoraMCStreamInfo.m */,
+				7874833125AAB5BC0022329D /* AgoraMCStudentVideoListView.h */,
+				7874833225AAB5BC0022329D /* AgoraMCStudentListView.m */,
+				7874833325AAB5BC0022329D /* AgoraMCStudentVideoCell.h */,
+				7874833425AAB5BC0022329D /* AgoraMCStudentViewCell.xib */,
+				7874833525AAB5BC0022329D /* AgoraMCSegmentedView.m */,
+				7874833625AAB5BC0022329D /* AgoraMCStudentViewCell.m */,
+				7874833725AAB5BC0022329D /* AgoraMCStudentListView.h */,
+				7874833825AAB5BC0022329D /* AgoraMCStudentVideoListView.m */,
+				7874833925AAB5BC0022329D /* AgoraMCStreamInfo.h */,
+				7874833A25AAB5BC0022329D /* AgoraMCTeacherVideoView.h */,
+				7874833B25AAB5BC0022329D /* AgoraMCStudentVideoCell.m */,
+				7874833C25AAB5BC0022329D /* AgoraMCTeacherVideoView.xib */,
+				7874833D25AAB5BC0022329D /* AgoraMCSegmentedView.h */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -486,8 +486,8 @@
 		7874833E25AAB5BC0022329D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7874833F25AAB5BC0022329D /* SmallViewController.m */,
-				7874834025AAB5BC0022329D /* SmallViewController.h */,
+				7874833F25AAB5BC0022329D /* AgoraSmallViewController.m */,
+				7874834025AAB5BC0022329D /* AgoraSmallViewController.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -504,8 +504,8 @@
 		7874834225AAB5BC0022329D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				7874834325AAB5BC0022329D /* TextMessageModel.h */,
-				7874834425AAB5BC0022329D /* TextMessageModel.m */,
+				7874834325AAB5BC0022329D /* AgoraTextMessageModel.h */,
+				7874834425AAB5BC0022329D /* AgoraTextMessageModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -513,8 +513,8 @@
 		7874834525AAB5BC0022329D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7874834625AAB5BC0022329D /* BOViewController.m */,
-				7874834725AAB5BC0022329D /* BOViewController.h */,
+				7874834625AAB5BC0022329D /* AgoraBOViewController.m */,
+				7874834725AAB5BC0022329D /* AgoraBOViewController.h */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -522,21 +522,21 @@
 		7874834925AAB5BC0022329D /* View */ = {
 			isa = PBXGroup;
 			children = (
-				7874834A25AAB5BC0022329D /* EEMessageViewCell.m */,
-				7874834B25AAB5BC0022329D /* EEMessageView.h */,
-				7874834C25AAB5BC0022329D /* EENavigationView.h */,
-				7874834D25AAB5BC0022329D /* EEChatTextFiled.h */,
-				7874834E25AAB5BC0022329D /* EETextMessage.m */,
-				7874834F25AAB5BC0022329D /* EENavigationView.xib */,
-				7874835025AAB5BC0022329D /* WhiteBoardTouchView.h */,
-				7874835125AAB5BC0022329D /* EEMessageView.m */,
-				7874835225AAB5BC0022329D /* EEMessageViewCell.xib */,
-				7874835325AAB5BC0022329D /* EEMessageViewCell.h */,
-				7874835425AAB5BC0022329D /* EENavigationView.m */,
-				7874835525AAB5BC0022329D /* EEChatTextFiled.xib */,
-				7874835625AAB5BC0022329D /* WhiteBoardTouchView.m */,
-				7874835725AAB5BC0022329D /* EETextMessage.h */,
-				7874835825AAB5BC0022329D /* EEChatTextFiled.m */,
+				7874834A25AAB5BC0022329D /* AgoraEEMessageViewCell.m */,
+				7874834B25AAB5BC0022329D /* AgoraEEMessageView.h */,
+				7874834C25AAB5BC0022329D /* AgoraEENavigationView.h */,
+				7874834D25AAB5BC0022329D /* AgoraEEChatTextFiled.h */,
+				7874834E25AAB5BC0022329D /* AgoraEETextMessage.m */,
+				7874834F25AAB5BC0022329D /* AgoraEENavigationView.xib */,
+				7874835025AAB5BC0022329D /* AgoraBoardTouchView.h */,
+				7874835125AAB5BC0022329D /* AgoraEEMessageView.m */,
+				7874835225AAB5BC0022329D /* AgoraEEMessageViewCell.xib */,
+				7874835325AAB5BC0022329D /* AgoraEEMessageViewCell.h */,
+				7874835425AAB5BC0022329D /* AgoraEENavigationView.m */,
+				7874835525AAB5BC0022329D /* AgoraEEChatTextFiled.xib */,
+				7874835625AAB5BC0022329D /* AgoraBoardTouchView.m */,
+				7874835725AAB5BC0022329D /* AgoraEETextMessage.h */,
+				7874835825AAB5BC0022329D /* AgoraEEChatTextFiled.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -562,12 +562,12 @@
 		7874835E25AAB5BC0022329D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7874835F25AAB5BC0022329D /* OTOStudentView.m */,
-				7874836025AAB5BC0022329D /* OTOTeacherView.xib */,
-				7874836125AAB5BC0022329D /* OTOTeacherView.h */,
-				7874836225AAB5BC0022329D /* OTOStudentView.h */,
-				7874836325AAB5BC0022329D /* OTOTeacherView.m */,
-				7874836425AAB5BC0022329D /* OTOStudentView.xib */,
+				7874835F25AAB5BC0022329D /* AgoraOTOStudentView.m */,
+				7874836025AAB5BC0022329D /* AgoraOTOTeacherView.xib */,
+				7874836125AAB5BC0022329D /* AgoraOTOTeacherView.h */,
+				7874836225AAB5BC0022329D /* AgoraOTOStudentView.h */,
+				7874836325AAB5BC0022329D /* AgoraOTOTeacherView.m */,
+				7874836425AAB5BC0022329D /* AgoraOTOStudentView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -599,10 +599,10 @@
 		7874836E25AAB5BC0022329D /* FLAnimatedImage */ = {
 			isa = PBXGroup;
 			children = (
-				7874836F25AAB5BC0022329D /* FLAnimatedImage.m */,
-				7874837025AAB5BC0022329D /* FLAnimatedImageView.m */,
-				7874837125AAB5BC0022329D /* FLAnimatedImage.h */,
-				7874837225AAB5BC0022329D /* FLAnimatedImageView.h */,
+				7874836F25AAB5BC0022329D /* AgoraFLAnimatedImage.m */,
+				7874837025AAB5BC0022329D /* AgoraFLAnimatedImageView.m */,
+				7874837125AAB5BC0022329D /* AgoraFLAnimatedImage.h */,
+				7874837225AAB5BC0022329D /* AgoraFLAnimatedImageView.h */,
 			);
 			path = FLAnimatedImage;
 			sourceTree = "<group>";
@@ -666,8 +666,8 @@
 		7874838725AAB5BC0022329D /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				7874838A25AAB5BC0022329D /* ReplayModuleManager.h */,
-				7874838825AAB5BC0022329D /* ReplayModuleManager.m */,
+				7874838A25AAB5BC0022329D /* AgoraReplayModuleManager.h */,
+				7874838825AAB5BC0022329D /* AgoraReplayModuleManager.m */,
 				7874839A25AAB5BC0022329D /* AgoraEduManager.h */,
 				7874838925AAB5BC0022329D /* AgoraEduManager.m */,
 				7874838B25AAB5BC0022329D /* HTTP */,
@@ -678,20 +678,20 @@
 		7874838B25AAB5BC0022329D /* HTTP */ = {
 			isa = PBXGroup;
 			children = (
-				7874838C25AAB5BC0022329D /* HttpAppModel.m */,
-				7874838D25AAB5BC0022329D /* AssignGroupModel.h */,
-				7874838E25AAB5BC0022329D /* SchduleModel.h */,
-				7874838F25AAB5BC0022329D /* RecordModel.h */,
-				7874839025AAB5BC0022329D /* HTTPConfiguration.h */,
-				7874839125AAB5BC0022329D /* BoardModel.m */,
-				7874839225AAB5BC0022329D /* AppHTTPManager.h */,
-				7874839325AAB5BC0022329D /* HttpAppModel.h */,
-				7874839425AAB5BC0022329D /* AssignGroupModel.m */,
-				7874839525AAB5BC0022329D /* AppHTTPManager.m */,
-				7874839625AAB5BC0022329D /* BoardModel.h */,
-				7874839725AAB5BC0022329D /* HTTPConfiguration.m */,
-				7874839825AAB5BC0022329D /* RecordModel.m */,
-				7874839925AAB5BC0022329D /* SchduleModel.m */,
+				7874838C25AAB5BC0022329D /* AgoraHttpModel.m */,
+				7874838D25AAB5BC0022329D /* AgoraAssignGroupModel.h */,
+				7874838E25AAB5BC0022329D /* AgoraSchduleModel.h */,
+				7874838F25AAB5BC0022329D /* AgoraRecordModel.h */,
+				7874839025AAB5BC0022329D /* AgoraHTTPConfiguration.h */,
+				7874839125AAB5BC0022329D /* AgoraBoardModel.m */,
+				7874839225AAB5BC0022329D /* AgoraHTTPManager.h */,
+				7874839325AAB5BC0022329D /* AgoraHttpModel.h */,
+				7874839425AAB5BC0022329D /* AgoraAssignGroupModel.m */,
+				7874839525AAB5BC0022329D /* AgoraHTTPManager.m */,
+				7874839625AAB5BC0022329D /* AgoraBoardModel.h */,
+				7874839725AAB5BC0022329D /* AgoraHTTPConfiguration.m */,
+				7874839825AAB5BC0022329D /* AgoraRecordModel.m */,
+				7874839925AAB5BC0022329D /* AgoraSchduleModel.m */,
 			);
 			path = HTTP;
 			sourceTree = "<group>";
@@ -715,8 +715,8 @@
 		787483A625AAB5BC0022329D /* EyeCare */ = {
 			isa = PBXGroup;
 			children = (
-				787483A925AAB5BC0022329D /* EyeCareModeUtil.m */,
-				787483AC25AAB5BC0022329D /* EyeCareModeUtil.h */,
+				787483A925AAB5BC0022329D /* AgoraEyeCareModeUtil.m */,
+				787483AC25AAB5BC0022329D /* AgoraEyeCareModeUtil.h */,
 			);
 			path = EyeCare;
 			sourceTree = "<group>";
@@ -774,58 +774,58 @@
 				7874842425AAB5BD0022329D /* AgoraEduClassroom.h in Headers */,
 				7874842325AAB5BD0022329D /* AgoraEduEnums.h in Headers */,
 				7874842225AAB5BD0022329D /* AgoraEduObjects.h in Headers */,
-				7874841225AAB5BD0022329D /* RecordModel.h in Headers */,
-				787483BE25AAB5BD0022329D /* BCNavigationView.h in Headers */,
+				7874841225AAB5BD0022329D /* AgoraRecordModel.h in Headers */,
+				787483BE25AAB5BD0022329D /* AgoraBCNavigationView.h in Headers */,
 				7874842725AAB5BD0022329D /* AgoraEduKeyCenter.h in Headers */,
-				7874841925AAB5BD0022329D /* BoardModel.h in Headers */,
-				787483FD25AAB5BD0022329D /* FLAnimatedImageView.h in Headers */,
-				787483D625AAB5BD0022329D /* SmallViewController.h in Headers */,
-				7874841325AAB5BD0022329D /* HTTPConfiguration.h in Headers */,
-				787483BF25AAB5BD0022329D /* BCStudentVideoView.h in Headers */,
-				787483CA25AAB5BD0022329D /* MCStudentVideoCell.h in Headers */,
-				787483FC25AAB5BD0022329D /* FLAnimatedImage.h in Headers */,
-				787483C125AAB5BD0022329D /* BigViewController.h in Headers */,
+				7874841925AAB5BD0022329D /* AgoraBoardModel.h in Headers */,
+				787483FD25AAB5BD0022329D /* AgoraFLAnimatedImageView.h in Headers */,
+				787483D625AAB5BD0022329D /* AgoraSmallViewController.h in Headers */,
+				7874841325AAB5BD0022329D /* AgoraHTTPConfiguration.h in Headers */,
+				787483BF25AAB5BD0022329D /* AgoraBCStudentVideoView.h in Headers */,
+				787483CA25AAB5BD0022329D /* AgoraMCStudentVideoCell.h in Headers */,
+				787483FC25AAB5BD0022329D /* AgoraFLAnimatedImage.h in Headers */,
+				787483C125AAB5BD0022329D /* AgoraBigViewController.h in Headers */,
 				7874840A25AAB5BD0022329D /* UIView+AgoraEduBadge.h in Headers */,
-				787483C825AAB5BD0022329D /* MCStudentVideoListView.h in Headers */,
-				787483B425AAB5BD0022329D /* HandsUpModel.h in Headers */,
-				7874842D25AAB5BD0022329D /* EyeCareModeUtil.h in Headers */,
+				787483C825AAB5BD0022329D /* AgoraMCStudentVideoListView.h in Headers */,
+				787483B425AAB5BD0022329D /* AgoraHandsUpModel.h in Headers */,
+				7874842D25AAB5BD0022329D /* AgoraEyeCareModeUtil.h in Headers */,
 				7874840925AAB5BD0022329D /* UIView+AgoraEduConstraint.h in Headers */,
-				787483C025AAB5BD0022329D /* BCSegmentedView.h in Headers */,
+				787483C025AAB5BD0022329D /* AgoraBCSegmentedView.h in Headers */,
 				7874840025AAB5BD0022329D /* UIView+AgoraEduToast.h in Headers */,
 				787483F825AAB5BD0022329D /* AgoraEduTopVC.h in Headers */,
-				787483B325AAB5BD0022329D /* RecordPropertyModel.h in Headers */,
-				787483D125AAB5BD0022329D /* MCTeacherVideoView.h in Headers */,
-				7874841125AAB5BD0022329D /* SchduleModel.h in Headers */,
-				787483D725AAB5BD0022329D /* TextMessageModel.h in Headers */,
+				787483B325AAB5BD0022329D /* AgoraRecordPropertyModel.h in Headers */,
+				787483D125AAB5BD0022329D /* AgoraMCTeacherVideoView.h in Headers */,
+				7874841125AAB5BD0022329D /* AgoraSchduleModel.h in Headers */,
+				787483D725AAB5BD0022329D /* AgoraTextMessageModel.h in Headers */,
 				7874841D25AAB5BD0022329D /* AgoraEduManager.h in Headers */,
 				787483B025AAB5BD0022329D /* AgoraEduSDK.pch in Headers */,
-				787483DA25AAB5BD0022329D /* BOViewController.h in Headers */,
-				787483DE25AAB5BD0022329D /* EENavigationView.h in Headers */,
-				787483D025AAB5BD0022329D /* MCStreamInfo.h in Headers */,
-				787483C525AAB5BD0022329D /* MCStudentViewCell.h in Headers */,
-				787483B125AAB5BD0022329D /* EduStream+StreamState.h in Headers */,
+				787483DA25AAB5BD0022329D /* AgoraBOViewController.h in Headers */,
+				787483DE25AAB5BD0022329D /* AgoraEENavigationView.h in Headers */,
+				787483D025AAB5BD0022329D /* AgoraMCStreamInfo.h in Headers */,
+				787483C525AAB5BD0022329D /* AgoraMCStudentViewCell.h in Headers */,
+				787483B125AAB5BD0022329D /* AgoraRTEStream+StreamState.h in Headers */,
 				7874840525AAB5BD0022329D /* AgoraEduAlertViewUtil.h in Headers */,
-				787483BC25AAB5BD0022329D /* EETeacherVideoView.h in Headers */,
+				787483BC25AAB5BD0022329D /* AgoraEETeacherVideoView.h in Headers */,
 				7874840725AAB5BD0022329D /* AgoraEduCustomAlertView.h in Headers */,
-				7874840E25AAB5BD0022329D /* ReplayModuleManager.h in Headers */,
-				787483E225AAB5BD0022329D /* WhiteBoardTouchView.h in Headers */,
-				787483DD25AAB5BD0022329D /* EEMessageView.h in Headers */,
+				7874840E25AAB5BD0022329D /* AgoraReplayModuleManager.h in Headers */,
+				787483E225AAB5BD0022329D /* AgoraBoardTouchView.h in Headers */,
+				787483DD25AAB5BD0022329D /* AgoraEEMessageView.h in Headers */,
 				787483FE25AAB5BD0022329D /* UIColor+AgoraEduAddition.h in Headers */,
 				787483ED25AAB5BD0022329D /* Agora1V1ViewController.h in Headers */,
-				787483DF25AAB5BD0022329D /* EEChatTextFiled.h in Headers */,
+				787483DF25AAB5BD0022329D /* AgoraEEChatTextFiled.h in Headers */,
 				787483EB25AAB5BD0022329D /* AgoraBaseViewController.h in Headers */,
-				787483C325AAB5BD0022329D /* RoomProtocol.h in Headers */,
-				7874841625AAB5BD0022329D /* HttpAppModel.h in Headers */,
-				787483F125AAB5BD0022329D /* OTOStudentView.h in Headers */,
+				787483C325AAB5BD0022329D /* AgoraRoomProtocol.h in Headers */,
+				7874841625AAB5BD0022329D /* AgoraHttpModel.h in Headers */,
+				787483F125AAB5BD0022329D /* AgoraOTOStudentView.h in Headers */,
 				78DA43D825B4373C007F9356 /* AgoraEduReplayConfiguration.h in Headers */,
-				7874841525AAB5BD0022329D /* AppHTTPManager.h in Headers */,
-				787483E525AAB5BD0022329D /* EEMessageViewCell.h in Headers */,
-				787483E925AAB5BD0022329D /* EETextMessage.h in Headers */,
+				7874841525AAB5BD0022329D /* AgoraHTTPManager.h in Headers */,
+				787483E525AAB5BD0022329D /* AgoraEEMessageViewCell.h in Headers */,
+				787483E925AAB5BD0022329D /* AgoraEETextMessage.h in Headers */,
 				7874840225AAB5BD0022329D /* NSArray+Copy.h in Headers */,
-				7874841025AAB5BD0022329D /* AssignGroupModel.h in Headers */,
-				787483D425AAB5BD0022329D /* MCSegmentedView.h in Headers */,
-				787483F025AAB5BD0022329D /* OTOTeacherView.h in Headers */,
-				787483CE25AAB5BD0022329D /* MCStudentListView.h in Headers */,
+				7874841025AAB5BD0022329D /* AgoraAssignGroupModel.h in Headers */,
+				787483D425AAB5BD0022329D /* AgoraMCSegmentedView.h in Headers */,
+				787483F025AAB5BD0022329D /* AgoraOTOTeacherView.h in Headers */,
+				787483CE25AAB5BD0022329D /* AgoraMCStudentListView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -890,19 +890,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				7874842E25AAB5BD0022329D /* AgoraEduSDK.xcassets in Resources */,
-				787483D325AAB5BD0022329D /* MCTeacherVideoView.xib in Resources */,
-				787483CB25AAB5BD0022329D /* MCStudentViewCell.xib in Resources */,
+				787483D325AAB5BD0022329D /* AgoraMCTeacherVideoView.xib in Resources */,
+				787483CB25AAB5BD0022329D /* AgoraMCStudentViewCell.xib in Resources */,
 				784A99EE25AD5AC600B919E8 /* Localizable.strings in Resources */,
-				787483E125AAB5BD0022329D /* EENavigationView.xib in Resources */,
-				787483E425AAB5BD0022329D /* EEMessageViewCell.xib in Resources */,
-				787483E725AAB5BD0022329D /* EEChatTextFiled.xib in Resources */,
+				787483E125AAB5BD0022329D /* AgoraEENavigationView.xib in Resources */,
+				787483E425AAB5BD0022329D /* AgoraEEMessageViewCell.xib in Resources */,
+				787483E725AAB5BD0022329D /* AgoraEEChatTextFiled.xib in Resources */,
 				787483AF25AAB5BD0022329D /* Room.storyboard in Resources */,
-				787483F325AAB5BD0022329D /* OTOStudentView.xib in Resources */,
-				787483BD25AAB5BD0022329D /* BCNavigationView.xib in Resources */,
+				787483F325AAB5BD0022329D /* AgoraOTOStudentView.xib in Resources */,
+				787483BD25AAB5BD0022329D /* AgoraBCNavigationView.xib in Resources */,
 				784A99ED25AD5AC600B919E8 /* Localizable.strings in Resources */,
-				787483B625AAB5BD0022329D /* BCStudentVideoView.xib in Resources */,
-				787483EF25AAB5BD0022329D /* OTOTeacherView.xib in Resources */,
-				787483BA25AAB5BD0022329D /* EETeacherVideoView.xib in Resources */,
+				787483B625AAB5BD0022329D /* AgoraBCStudentVideoView.xib in Resources */,
+				787483EF25AAB5BD0022329D /* AgoraOTOTeacherView.xib in Resources */,
+				787483BA25AAB5BD0022329D /* AgoraEETeacherVideoView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -938,68 +938,68 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				787483B225AAB5BD0022329D /* HandsUpModel.m in Sources */,
-				787483D225AAB5BD0022329D /* MCStudentVideoCell.m in Sources */,
+				787483B225AAB5BD0022329D /* AgoraHandsUpModel.m in Sources */,
+				787483D225AAB5BD0022329D /* AgoraMCStudentVideoCell.m in Sources */,
 				787483C425AAB5BD0022329D /* AgoraBaseViewController.m in Sources */,
 				7874841F25AAB5BD0022329D /* AgoraEduReplay.m in Sources */,
-				787483E025AAB5BD0022329D /* EETextMessage.m in Sources */,
-				787483FA25AAB5BD0022329D /* FLAnimatedImage.m in Sources */,
-				787483D925AAB5BD0022329D /* BOViewController.m in Sources */,
+				787483E025AAB5BD0022329D /* AgoraEETextMessage.m in Sources */,
+				787483FA25AAB5BD0022329D /* AgoraFLAnimatedImage.m in Sources */,
+				787483D925AAB5BD0022329D /* AgoraBOViewController.m in Sources */,
 				7874842125AAB5BD0022329D /* AgoraEduSDK.m in Sources */,
-				787483B725AAB5BD0022329D /* BCNavigationView.m in Sources */,
+				787483B725AAB5BD0022329D /* AgoraBCNavigationView.m in Sources */,
 				7874840325AAB5BD0022329D /* NSArray+Copy.m in Sources */,
-				787483C625AAB5BD0022329D /* MCTeacherVideoView.m in Sources */,
-				787483FB25AAB5BD0022329D /* FLAnimatedImageView.m in Sources */,
-				787483D825AAB5BD0022329D /* TextMessageModel.m in Sources */,
+				787483C625AAB5BD0022329D /* AgoraMCTeacherVideoView.m in Sources */,
+				787483FB25AAB5BD0022329D /* AgoraFLAnimatedImageView.m in Sources */,
+				787483D825AAB5BD0022329D /* AgoraTextMessageModel.m in Sources */,
 				7874840625AAB5BD0022329D /* AgoraEduAlertViewUtil.m in Sources */,
-				787483B925AAB5BD0022329D /* BCStudentVideoView.m in Sources */,
+				787483B925AAB5BD0022329D /* AgoraBCStudentVideoView.m in Sources */,
 				7839CCF125C3C1F600C4B08D /* AgoraDeviceAssistant.swift in Sources */,
-				787483EA25AAB5BD0022329D /* EEChatTextFiled.m in Sources */,
-				787483B525AAB5BD0022329D /* RecordPropertyModel.m in Sources */,
-				787483CF25AAB5BD0022329D /* MCStudentVideoListView.m in Sources */,
+				787483EA25AAB5BD0022329D /* AgoraEEChatTextFiled.m in Sources */,
+				787483B525AAB5BD0022329D /* AgoraRecordPropertyModel.m in Sources */,
+				787483CF25AAB5BD0022329D /* AgoraMCStudentVideoListView.m in Sources */,
 				788BC7EF25C11FC10095998F /* AgoraUserView.swift in Sources */,
-				7874840F25AAB5BD0022329D /* HttpAppModel.m in Sources */,
-				7874841725AAB5BD0022329D /* AssignGroupModel.m in Sources */,
+				7874840F25AAB5BD0022329D /* AgoraHttpModel.m in Sources */,
+				7874841725AAB5BD0022329D /* AgoraAssignGroupModel.m in Sources */,
 				7874840825AAB5BD0022329D /* UIView+AgoraEduConstraint.m in Sources */,
-				787483F225AAB5BD0022329D /* OTOTeacherView.m in Sources */,
-				787483D525AAB5BD0022329D /* SmallViewController.m in Sources */,
+				787483F225AAB5BD0022329D /* AgoraOTOTeacherView.m in Sources */,
+				787483D525AAB5BD0022329D /* AgoraSmallViewController.m in Sources */,
 				7874840B25AAB5BD0022329D /* UIView+AgoraEduBadge.m in Sources */,
-				787483DB25AAB5BD0022329D /* EduStream+StreamState.m in Sources */,
+				787483DB25AAB5BD0022329D /* AgoraRTEStream+StreamState.m in Sources */,
 				7874841E25AAB5BD0022329D /* AgoraEduObjects.m in Sources */,
-				7874841B25AAB5BD0022329D /* RecordModel.m in Sources */,
+				7874841B25AAB5BD0022329D /* AgoraRecordModel.m in Sources */,
 				7874840125AAB5BD0022329D /* UIView+AgoraEduToast.m in Sources */,
-				7874841C25AAB5BD0022329D /* SchduleModel.m in Sources */,
-				7874841425AAB5BD0022329D /* BoardModel.m in Sources */,
-				787483DC25AAB5BD0022329D /* EEMessageViewCell.m in Sources */,
+				7874841C25AAB5BD0022329D /* AgoraSchduleModel.m in Sources */,
+				7874841425AAB5BD0022329D /* AgoraBoardModel.m in Sources */,
+				787483DC25AAB5BD0022329D /* AgoraEEMessageViewCell.m in Sources */,
 				788BC8A925C2B2CE0095998F /* AgoraBaseLabel.swift in Sources */,
 				787483EC25AAB5BD0022329D /* Agora1V1ViewController.m in Sources */,
-				787483CD25AAB5BD0022329D /* MCStudentViewCell.m in Sources */,
-				787483E825AAB5BD0022329D /* WhiteBoardTouchView.m in Sources */,
+				787483CD25AAB5BD0022329D /* AgoraMCStudentViewCell.m in Sources */,
+				787483E825AAB5BD0022329D /* AgoraBoardTouchView.m in Sources */,
 				788BC86A25C1AC660095998F /* AgoraUtils.swift in Sources */,
-				7874842A25AAB5BD0022329D /* EyeCareModeUtil.m in Sources */,
-				787483E625AAB5BD0022329D /* EENavigationView.m in Sources */,
+				7874842A25AAB5BD0022329D /* AgoraEyeCareModeUtil.m in Sources */,
+				787483E625AAB5BD0022329D /* AgoraEENavigationView.m in Sources */,
 				788BC7B225C106E70095998F /* AgoraBaseView.swift in Sources */,
-				787483BB25AAB5BD0022329D /* BCSegmentedView.m in Sources */,
-				7874840C25AAB5BD0022329D /* ReplayModuleManager.m in Sources */,
-				787483E325AAB5BD0022329D /* EEMessageView.m in Sources */,
-				787483C225AAB5BD0022329D /* BigViewController.m in Sources */,
+				787483BB25AAB5BD0022329D /* AgoraBCSegmentedView.m in Sources */,
+				7874840C25AAB5BD0022329D /* AgoraReplayModuleManager.m in Sources */,
+				787483E325AAB5BD0022329D /* AgoraEEMessageView.m in Sources */,
+				787483C225AAB5BD0022329D /* AgoraBigViewController.m in Sources */,
 				787483F525AAB5BD0022329D /* AgoraEduKeyCenter.m in Sources */,
-				787483B825AAB5BD0022329D /* EETeacherVideoView.m in Sources */,
+				787483B825AAB5BD0022329D /* AgoraEETeacherVideoView.m in Sources */,
 				788BC86225C1A7810095998F /* AgoraBaseImageView.swift in Sources */,
 				7874842025AAB5BD0022329D /* AgoraEduClassroom.m in Sources */,
 				78DA43D725B4373C007F9356 /* AgoraEduReplayConfiguration.m in Sources */,
-				787483C725AAB5BD0022329D /* MCStreamInfo.m in Sources */,
+				787483C725AAB5BD0022329D /* AgoraMCStreamInfo.m in Sources */,
 				7874840D25AAB5BD0022329D /* AgoraEduManager.m in Sources */,
-				787483C925AAB5BD0022329D /* MCStudentListView.m in Sources */,
+				787483C925AAB5BD0022329D /* AgoraMCStudentListView.m in Sources */,
 				7839CD3B25C401F300C4B08D /* AgoraToolView.swift in Sources */,
 				787483F925AAB5BD0022329D /* AgoraEduTopVC.m in Sources */,
 				7874840425AAB5BD0022329D /* AgoraEduCustomAlertView.m in Sources */,
 				788BC86525C1A78F0095998F /* AgoraBaseButton.swift in Sources */,
-				7874841A25AAB5BD0022329D /* HTTPConfiguration.m in Sources */,
+				7874841A25AAB5BD0022329D /* AgoraHTTPConfiguration.m in Sources */,
 				787483FF25AAB5BD0022329D /* UIColor+AgoraEduAddition.m in Sources */,
-				7874841825AAB5BD0022329D /* AppHTTPManager.m in Sources */,
-				787483EE25AAB5BD0022329D /* OTOStudentView.m in Sources */,
-				787483CC25AAB5BD0022329D /* MCSegmentedView.m in Sources */,
+				7874841825AAB5BD0022329D /* AgoraHTTPManager.m in Sources */,
+				787483EE25AAB5BD0022329D /* AgoraOTOStudentView.m in Sources */,
+				787483CC25AAB5BD0022329D /* AgoraMCSegmentedView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

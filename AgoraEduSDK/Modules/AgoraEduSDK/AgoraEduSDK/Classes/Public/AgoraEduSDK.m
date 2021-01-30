@@ -8,9 +8,10 @@
 #import "AgoraEduSDK.h"
 #import "AgoraEduManager.h"
 #import "AgoraBaseViewController.h"
+#import "Agora1V1ViewController.h"
 #import "UIView+AgoraEduToast.h"
 #import "AgoraEduTopVC.h"
-#import "EyeCareModeUtil.h"
+#import "AgoraEyeCareModeUtil.h"
 #import "AgoraEduKeyCenter.h"
 #import "AgoraEduReplayConfiguration.h"
 #import <YYModel/YYModel.h>
@@ -31,12 +32,12 @@ AgoraUserView *stuView;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL sel = NSSelectorFromString(@"setBaseURL:");
-    if ([EduManager respondsToSelector:sel]) {
-        [EduManager performSelector:sel withObject:baseURL];
+    if ([AgoraRTEManager respondsToSelector:sel]) {
+        [AgoraRTEManager performSelector:sel withObject:baseURL];
     }
 #pragma clang diagnostic pop
     
-    [AppHTTPManager setBaseURL:baseURL];
+    [AgoraHTTPManager setBaseURL:baseURL];
 }
 + (void)setLogConsoleState:(NSNumber *)num {
     [AgoraEduManager.shareManager setLogConsoleState:num.boolValue];
@@ -52,12 +53,12 @@ AgoraUserView *stuView;
     }
     
     AgoraEduKeyCenter.agoraAppid = config.appId;
-    [[EyeCareModeUtil sharedUtil] switchEyeCareMode:config.eyeCare];
+    [[AgoraEyeCareModeUtil sharedUtil] switchEyeCareMode:config.eyeCare];
 }
 + (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate {
     
-    [AgoraEduSDK test];
-    return nil;
+//    [AgoraEduSDK test];
+//    return nil;
     
     // 校验
     if(NoNullString(AgoraEduKeyCenter.agoraAppid).length == 0) {
@@ -93,11 +94,11 @@ AgoraUserView *stuView;
     AgoraEduManager.shareManager.classroomDelegate = delegate;
     AgoraEduManager.shareManager.token = NoNullString(config.token);
     
-    RoomConfiguration *roomConfig = [RoomConfiguration new];
+    AgoraRoomConfiguration *roomConfig = [AgoraRoomConfiguration new];
     roomConfig.appId = AgoraEduKeyCenter.agoraAppid;
     roomConfig.userUuid = config.userUuid;
     roomConfig.token = config.token;
-    [AppHTTPManager getConfig:roomConfig success:^(AppConfigModel * _Nonnull model) {
+    [AgoraHTTPManager getConfig:roomConfig success:^(AgoraConfigModel * _Nonnull model) {
 
         AgoraEduKeyCenter.boardAppid = model.data.netless.appId;
         [AgoraEduSDK joinSDKWithConfig:config appConfigModel:model];
@@ -182,15 +183,15 @@ AgoraUserView *stuView;
 }
 
 #pragma mark joinSDKWithConfig
-+ (void)joinSDKWithConfig:(AgoraEduLaunchConfig *)config appConfigModel:(AppConfigModel *)model {
++ (void)joinSDKWithConfig:(AgoraEduLaunchConfig *)config appConfigModel:(AgoraConfigModel *)model {
     
     NSString *roomUuid = config.roomUuid;
     NSString *roomName = config.roomName;
     NSString *userUuid = config.userUuid;
     NSString *userName = config.userName;
-    EduSceneType sceneType = (EduSceneType)config.roomType;
+    AgoraRTESceneType sceneType = (AgoraRTESceneType)config.roomType;
     
-    RoomStateConfiguration *roomStateConfig = [RoomStateConfiguration new];
+    AgoraRoomStateConfiguration *roomStateConfig = [AgoraRoomStateConfiguration new];
     roomStateConfig.appId = AgoraEduKeyCenter.agoraAppid;
     
     roomStateConfig.roomName = roomName;
@@ -204,31 +205,31 @@ AgoraUserView *stuView;
         
         [AgoraEduManager.shareManager queryRoomStateWithConfig:roomStateConfig success:^{
         
-            if(sceneType == EduSceneType1V1) {
+            if(sceneType == AgoraRTESceneType1V1) {
                 if(IsPad){
                     [AgoraEduSDK joinRoomWithIdentifier:@"oneToOneRoom-iPad" config:config appConfigModel:model];
                 } else {
                     [AgoraEduSDK joinRoomWithIdentifier:@"oneToOneRoom" config:config appConfigModel:model];
                 }
-            } else if(sceneType == EduSceneTypeSmall) {
+            } else if(sceneType == AgoraRTESceneTypeSmall) {
                 if(IsPad){
                     [AgoraEduSDK joinRoomWithIdentifier:@"smallRoom-iPad" config:config appConfigModel:model];
                 } else {
                     [AgoraEduSDK joinRoomWithIdentifier:@"smallRoom" config:config appConfigModel:model];
                 }
-            } else if(sceneType == EduSceneTypeBig) {
+            } else if(sceneType == AgoraRTESceneTypeBig) {
                 if(IsPad){
                     [AgoraEduSDK joinRoomWithIdentifier:@"bigRoom-iPad" config:config appConfigModel:model];
                 } else {
                     [AgoraEduSDK joinRoomWithIdentifier:@"bigRoom" config:config appConfigModel:model];
                 }
-            } else if(sceneType == EduSceneTypeBreakout) {
+            } else if(sceneType == AgoraRTESceneTypeBreakout) {
                 if(IsPad){
                    [AgoraEduSDK joinRoomWithIdentifier:@"boRoom-iPad" config:config appConfigModel:model];
                 } else {
                    [AgoraEduSDK joinRoomWithIdentifier:@"boRoom" config:config appConfigModel:model];
                 }
-            } else if(sceneType == EduSceneTypeMedium) {
+            } else if(sceneType == AgoraRTESceneTypeMedium) {
                 [AgoraEduSDK joinRoomWithIdentifier:@"groupRoom" config:config appConfigModel:model];
             }
 
@@ -243,16 +244,18 @@ AgoraUserView *stuView;
     }];
 }
 
-+ (void)joinRoomWithIdentifier:(NSString*)identifier config:(AgoraEduLaunchConfig *)config appConfigModel:(AppConfigModel *)model {
++ (void)joinRoomWithIdentifier:(NSString*)identifier config:(AgoraEduLaunchConfig *)config appConfigModel:(AgoraConfigModel *)model {
 
     NSString *roomUuid = config.roomUuid;
     NSString *roomName = config.roomName;
     NSString *userUuid = config.userUuid;
     NSString *userName = config.userName;
-    EduSceneType sceneType = (EduSceneType)config.roomType;
-    NSBundle *bundle = AgoraEduBundle;
-    UIStoryboard *story = [UIStoryboard storyboardWithName:@"Room" bundle:bundle];
-    AgoraBaseViewController *vc = [story instantiateViewControllerWithIdentifier:identifier];
+    AgoraRTESceneType sceneType = (AgoraRTESceneType)config.roomType;
+    
+    Agora1V1ViewController *vc = [[Agora1V1ViewController alloc] init];
+//    NSBundle *bundle = AgoraEduBundle;
+//    UIStoryboard *story = [UIStoryboard storyboardWithName:@"Room" bundle:bundle];
+//    AgoraBaseViewController *vc = [story instantiateViewControllerWithIdentifier:identifier];
     vc.sceneType = sceneType;
     vc.className = roomName;
     vc.roomUuid = roomUuid;
@@ -288,13 +291,56 @@ AgoraUserView *stuView;
 + (void)test {
     UIView *view = AgoraEduTopVC.topVC.view;
     
+    MenuConfig *config1 = [MenuConfig new];
+    config1.imageName = @"camera_switch";
+    config1.touchBlock = ^{
+        NSLog(@"camera_switch");
+    };
+    
+    MenuConfig *config2 = [MenuConfig new];
+    config2.imageName = @"cs";
+    config2.touchBlock = ^{
+        NSLog(@"cs");
+    };
+    
+    AgoraToolView *toolView = [[AgoraToolView alloc] initWithMenuConfigs:@[config1, config2]];
+    [view addSubview:toolView];
+    toolView.safeX = 0;
+    toolView.safeY = 0;
+    toolView.safeRight = 0;
+    toolView.height = IsPad ? 77 : 40;
+    toolView.leftTouchBlock = ^{
+        
+    };
+    
+    CGFloat top = toolView.height + 5;
+    CGFloat right = 5;
+    CGFloat width = 180;
+    CGFloat height = 128;
+    CGFloat minGap = 8;
+    CGFloat minRight = 15;
+    CGFloat minBottom = 15;
+    CGFloat minHeight = 27;
+    CGFloat minWidth = 130;
+    if(IsPad) {
+        top = toolView.height + 9;
+        right = 20;
+        width = 319;
+        height = 228;
+        minGap = 12;
+        minRight = 30;
+        minBottom = 25;
+        minHeight = 49;
+        minWidth = 230;
+    }
+    
     AgoraUserView *vv = [[AgoraUserView alloc] init];
     [view addSubview:vv];
     teaView = vv;
-    vv.y = 40;
-    vv.right = 0;
-    vv.width = 283;
-    vv.height = 205;
+    vv.safeY = top;
+    vv.right = right;
+    vv.width = width;
+    vv.height = height;
 
     vv.audioTouchBlock = ^(BOOL mute) {
         NSLog(@"Srs audio mute:%d", mute);
@@ -308,17 +354,17 @@ AgoraUserView *stuView;
         if (isMin) {
             [vv clearConstraint];
             
-            vv.bottom = stuView.isMin ? 20 + 45 + 20 : 20;
-            vv.right = 30;
-            vv.width = 152;
-            vv.height = 45;
-
+            vv.bottom = stuView.isMin ? minGap + minHeight + minBottom : minBottom;
+            vv.right = minRight;
+            vv.width = minWidth;
+            vv.height = minHeight;
+            
         } else {
             [vv clearConstraint];
-            vv.y = 40;
-            vv.right = 0;
-            vv.width = 283;
-            vv.height = 205;
+            vv.safeY = top;
+            vv.right = right;
+            vv.width = width;
+            vv.height = height;
         }
         
         [UIView animateWithDuration:0.35 animations:^{
@@ -329,11 +375,12 @@ AgoraUserView *stuView;
     AgoraUserView *vvv = [[AgoraUserView alloc] init];
     [view addSubview:vvv];
     stuView = vvv;
-    vvv.y = 205 + 40 + 10;
-    vvv.right = 0;
-    vvv.width = 283;
-    vvv.height = 205;
 
+    vvv.safeY = top + height + 10;
+    vvv.right = right;
+    vvv.width = width;
+    vvv.height = height;
+    
     vvv.audioTouchBlock = ^(BOOL mute) {
         NSLog(@"Srs audio mute:%d", mute);
     };
@@ -345,21 +392,21 @@ AgoraUserView *stuView;
 
         if (isMin) {
             [vvv clearConstraint];
-            vvv.bottom = 20;
-            vvv.right = 30;
-            vvv.width = 152;
-            vvv.height = 45;
+            vvv.bottom = minBottom;
+            vvv.right = minRight;
+            vvv.width = minWidth;
+            vvv.height = minHeight;
             
             if(teaView.isMin) {
-                teaView.bottom = stuView.isMin ? 20 + 45 + 20 : 20;
+                teaView.bottom = stuView.isMin ? minGap + minHeight + minBottom: minBottom;
             }
             
         } else {
             [vvv clearConstraint];
-            vvv.y = 205 + 40 + 10;
-            vvv.right = 0;
-            vvv.width = 283;
-            vvv.height = 205;
+            vvv.safeY = top + 10 + height;
+            vvv.right = right;
+            vvv.width = width;
+            vvv.height = height;
         }
         
         [UIView animateWithDuration:0.35 animations:^{
@@ -370,8 +417,8 @@ AgoraUserView *stuView;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [vv updateView];
         [vvv updateView];
+        [toolView updateView];
     });
 }
-
 
 @end

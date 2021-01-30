@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EETextMessage.h"
-#import "EENavigationView.h"
-#import "EEChatTextFiled.h"
-#import "AppHTTPManager.h"
+#import "AgoraEETextMessage.h"
+#import "AgoraEENavigationView.h"
+#import "AgoraEEChatTextFiled.h"
+#import "AgoraHTTPManager.h"
 
 typedef NS_ENUM(NSInteger, LocalStreamState) {
     // enable capture
@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AgoraBaseViewController : UIViewController
 
-@property (nonatomic, assign) EduSceneType sceneType;
+@property (nonatomic, assign) AgoraRTESceneType sceneType;
 @property (nonatomic, strong) NSString *userUuid;
 @property (nonatomic, strong) NSString *userName;
 @property (nonatomic, strong) NSString *className;
@@ -37,15 +37,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString *boardToken;
 
 @property (nonatomic, strong) WhiteBoardStateModel *boardState;
-@property (nonatomic, strong) EduLocalUser *localUser;
+@property (nonatomic, strong) AgoraRTELocalUser *localUser;
 
 #pragma mark --
 @property (nonatomic, weak) UIView *boardView;
 @property (nonatomic, assign) BOOL isChatTextFieldKeyboard;
 + (void)showToast:(NSString *)title;
 - (void)setupWhiteBoard:(void (^) (void))success;
-- (void)updateTimeState:(EENavigationView *)navigationView;
-- (void)updateChatViews:(EEChatTextFiled *)chatTextFiled;
+- (void)updateTimeState:(AgoraEENavigationView *)navigationView;
+- (void)updateChatViews:(AgoraEEChatTextFiled *)chatTextFiled;
 
 - (void)setLocalStreamVideo:(BOOL)hasVideo audio:(BOOL)hasAudio streamState:(LocalStreamState)state;
 @end

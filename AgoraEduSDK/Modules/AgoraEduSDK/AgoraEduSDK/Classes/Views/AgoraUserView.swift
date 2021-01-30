@@ -112,7 +112,7 @@ import EduSDK
     
     public func updateView() {
         
-        let role = EduRoleType.student
+        let role = AgoraRTERoleType.student
         
         if (role == .student) {
             self.cupView.isHidden = false

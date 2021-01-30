@@ -1,5 +1,5 @@
 //
-//  HttpManager.m
+//  AgoraLogHttpManager.m
 //  AgoraEdu
 //
 //  Created by SRS on 2020/5/3.
