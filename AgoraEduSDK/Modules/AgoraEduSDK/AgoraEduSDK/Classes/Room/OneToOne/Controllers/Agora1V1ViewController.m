@@ -653,7 +653,7 @@
 
 #pragma mark WhiteManagerDelegate
 - (void)onWhiteBoardPageChanged:(NSInteger)pageIndex pageCount:(NSInteger)pageCount {
-    self.boardPageControlView.pageIndex = pageIndex;
+    self.boardPageControlView.pageIndex = pageIndex + 1;
     self.boardPageControlView.pageCount = pageCount;
 }
 @end
