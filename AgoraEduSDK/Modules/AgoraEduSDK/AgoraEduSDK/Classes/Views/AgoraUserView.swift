@@ -346,7 +346,7 @@ extension AgoraUserView {
             let _ = self.scaleBtn.resize(16, 16)
         }
         
-        let audioEffectViewWidth = self.audioBtn.width - 4
+        let audioEffectViewWidth = self.audioBtn.width - (AgoraDeviceAssistant.OS.isPad ? 8 : 4)
         let audioEffectImgHeight: CGFloat = AgoraDeviceAssistant.OS.isPad ? 3 : 2
         let audioEffectImgGap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 3 : 2
         for index in 0...3 {

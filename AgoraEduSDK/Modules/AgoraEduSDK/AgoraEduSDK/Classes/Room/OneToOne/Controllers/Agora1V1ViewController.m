@@ -21,7 +21,7 @@
 
 #import <AgoraEduSDK/AgoraEduSDK-Swift.h>
 
-@interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRoomProtocol, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, EduMediaStreamDelegate>
+@interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, AgoraRTEMediaStreamDelegate, AgoraPageControlProtocol, WhiteManagerDelegate>
 
 @property (weak, nonatomic) AgoraBaseImageView *bgView;
 @property (weak, nonatomic) AgoraBaseView *contentView;
@@ -29,6 +29,10 @@
 @property (weak, nonatomic) AgoraUserView *teaView;
 @property (weak, nonatomic) AgoraUserView *stuView;
 @property (weak, nonatomic) AgoraBaseView *boardContentView;
+@property (weak, nonatomic) AgoraPageControlView *boardPageControlView;
+
+@property (assign, nonatomic) CGFloat boardRight;
+@property (assign, nonatomic) BOOL boardMax;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatRoomViewWidthCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatRoomViewRightCon;
@@ -202,11 +206,17 @@
     //board
     self.boardContentView.x = right;
     self.boardContentView.right = IsPad ? right + width + 25 : right + width + 25;
+    self.boardRight = self.boardContentView.right;
     self.boardContentView.y = top;
     self.boardContentView.bottom = 0;
     
     // boardView
     [self.boardView equalTo:self.boardContentView];
+    
+    // boardPageControlView
+    self.boardPageControlView.x = right + 20;
+    self.boardPageControlView.height = IsPad ? 42 : 21;
+    self.boardPageControlView.bottom = 20;
 }
 
 - (void)initView {
@@ -260,6 +270,12 @@
         [self.contentView addSubview:studentView];
         self.stuView = studentView;
     }
+    
+    // page control
+    AgoraPageControlView *pageControlView = [[AgoraPageControlView alloc] initWithDelegate:self];
+    pageControlView.hidden = YES;
+    [self.contentView addSubview:pageControlView];
+    self.boardPageControlView = pageControlView;
 
 //    self.chatRoomLabel.text = AgoraEduLocalizedString(@"ChatroomText", nil);
 //    [self.uiContorlBtn setImage:AgoraEduImageWithName(@"view-close") forState:UIControlStateNormal];
@@ -302,6 +318,8 @@
     WEAK(self);
     [self setupWhiteBoard:^{
         [AgoraEduManager.shareManager.whiteBoardManager allowTeachingaids:YES success:^{
+            
+            weakself.boardPageControlView.hidden = NO;
             
             BOOL lock = weakself.boardState.follow;
             [weakself lockViewTransform:lock];
@@ -540,7 +558,7 @@
     [self.messageListView addMessageModel:textMsg];
 }
 
-#pragma mark EduMediaStreamDelegate
+#pragma mark AgoraRTEMediaStreamDelegate
 //- (void)didChangeOfLocalAudioStream:(NSString *)streamId
 //                          withState:(AgoraRTEStreamState)state {
 //
@@ -603,8 +621,39 @@
 - (void)audioVolumeIndicationOfLocalStream:(NSString *)streamId withVolume:(NSUInteger)volume {
     [self.stuView updateAudioWithEffect:volume];
 }
-
 - (void)audioVolumeIndicationOfRemoteStream:(NSString *)streamId withVolume:(NSUInteger)volume {
     [self.teaView updateAudioWithEffect:volume];
+}
+
+#pragma mark AgoraPageControlProtocol
+- (void)onPageLeftEvent {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager setPageIndex:self.boardPageControlView.pageIndex];
+}
+- (void)onPageRightEvent {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager setPageIndex:self.boardPageControlView.pageIndex];
+}
+- (void)onPageIncreaseEvent {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager increaseScale];
+}
+- (void)onPageDecreaseEvent {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager decreaseScale];
+}
+- (void)onPageZoomEvent {
+    self.boardMax = !self.boardMax;
+    if (self.boardMax) {
+        self.boardContentView.right = self.boardContentView.x;
+    } else {
+        self.boardContentView.right = self.boardRight;
+    }
+}
+
+#pragma mark WhiteManagerDelegate
+- (void)onWhiteBoardPageChanged:(NSInteger)pageIndex pageCount:(NSInteger)pageCount {
+    self.boardPageControlView.pageIndex = pageIndex;
+    self.boardPageControlView.pageCount = pageCount;
 }
 @end

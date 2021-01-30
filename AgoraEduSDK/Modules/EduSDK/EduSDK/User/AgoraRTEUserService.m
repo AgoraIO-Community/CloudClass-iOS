@@ -657,7 +657,7 @@ typedef NS_ENUM(NSUInteger, StreamState) {
     if ([self.mediaStreamDelegate respondsToSelector:@selector(didChangeOfLocalVideoStream:withState:)]) {
         AgoraRTEStreamState eduState = [self getAgoraRTEStreamStateWithLocalVideo:state];
         AgoraRTESyncUserModel *user = (AgoraRTESyncUserModel*)self.messageHandle.syncRoomSession.localUser;
-        [self.mediaStreamDelegate didChangeOfLocalAudioStream:user.streamUuid
+        [self.mediaStreamDelegate didChangeOfLocalVideoStream:user.streamUuid
                                   withState:eduState];
     }
 }
@@ -705,7 +705,7 @@ typedef NS_ENUM(NSUInteger, StreamState) {
     }
 }
 #pragma mark Private
-- (void)setMediaStreamDelegate:(id<EduMediaStreamDelegate>)mediaStreamDelegate {
+- (void)setMediaStreamDelegate:(id<AgoraRTEMediaStreamDelegate>)mediaStreamDelegate {
     _mediaStreamDelegate = mediaStreamDelegate;
     
     if ([_mediaStreamDelegate respondsToSelector:@selector(audioVolumeIndicationOfLocalStream:withVolume:)]) {

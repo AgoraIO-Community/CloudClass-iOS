@@ -20,7 +20,7 @@
     code:(errCode) \
 userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
-@interface WhiteBoardManager()<WhiteCommonCallbackDelegate, WhiteRoomCallbackDelegate, WhiteBoardColorControlDelegate, WihteBoardToolControlDelegate, WihteBoardPageControlDelegate>
+@interface WhiteBoardManager()<WhiteCommonCallbackDelegate, WhiteRoomCallbackDelegate, WhiteBoardColorControlDelegate, WihteBoardToolControlDelegate>
 
 @property (nonatomic, strong) WhiteSDK *whiteSDK;
 @property (nonatomic, strong) WhiteRoom *room;
@@ -63,7 +63,6 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
         
         self.boardViewManager = [AgoraWhiteBoardViewManager new];
         self.boardViewManager.boardView = whiteBoardView;
-        self.boardViewManager.pageControlView.delegate = self;
         self.boardViewManager.toolControlView.delegate = self;
         self.boardViewManager.colorControlView.delegate = self;
         
@@ -101,11 +100,15 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                 CGSize size = CGSizeMake(scene.ppt.width, scene.ppt.height);
                 [weakself moveViewToContainer:size];
             }
-            [weakself.boardViewManager.pageControlView setPageIndex:sceneIndex pageCount:scenes.count];
+
             [weakself.boardViewManager.boardView layoutIfNeeded];
             [weakself refreshViewSize];
             if(successBlock != nil){
                 successBlock();
+            }
+            
+            if([weakself.delegate respondsToSelector:@selector(onWhiteBoardPageChanged:pageCount:)]) {
+                [weakself.delegate onWhiteBoardPageChanged:sceneIndex pageCount:scenes.count];
             }
         } else {
             if(failureBlock != nil){
@@ -124,7 +127,6 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     if(!allow) {
         self.boardViewManager.colorControlView.hidden = !allow;
     }
-    self.boardViewManager.pageControlView.hidden = !allow;
     if(allow == self.isWritable) {
         if(successBlock) {
             successBlock();
@@ -202,7 +204,9 @@ The RoomState property in the room will trigger this callback when it changes.
             [self moveViewToContainer:size];
         }
         
-        [self.boardViewManager.pageControlView setPageIndex:sceneIndex pageCount:scenes.count];
+        if([self.delegate respondsToSelector:@selector(onWhiteBoardPageChanged:pageCount:)]) {
+            [self.delegate onWhiteBoardPageChanged:sceneIndex pageCount:scenes.count];
+        }
     }
 }
 /** 白板失去连接回调，附带错误信息 */
@@ -281,9 +285,28 @@ The RoomState property in the room will trigger this callback when it changes.
     self.whiteMemberState.currentApplianceName = applianceName;
     [self.room setMemberState: self.whiteMemberState];
 }
-#pragma mark WihteBoardPageControlDelegate
-- (void)selectPageIndex:(NSInteger)pageIndex completeBlock:(void (^ _Nullable)(BOOL isSuccess, NSError *error))block {
-    [self.room setSceneIndex:pageIndex completionHandler:block];
+
+- (void)setPageIndex:(NSUInteger)index {
+    [self.room setSceneIndex:index completionHandler:nil];
+}
+
+- (void)increaseScale {
+    WEAK(self);
+    [self.room getZoomScaleWithResult:^(CGFloat scale) {
+        WhiteCameraConfig *config = [WhiteCameraConfig new];
+        config.scale = @(scale + 0.1);
+        [weakself.room moveCamera:config];
+    }];
+}
+
+- (void)decreaseScale {
+    WEAK(self);
+    [self.room getZoomScaleWithResult:^(CGFloat scale) {
+        WhiteCameraConfig *config = [WhiteCameraConfig new];
+        CGFloat ss = scale - 0.1;
+        config.scale = @(ss < 0.1 ? 0.1 : ss);
+        [weakself.room moveCamera:config];
+    }];
 }
 
 @end

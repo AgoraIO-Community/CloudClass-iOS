@@ -229,13 +229,13 @@ import UIKit
 // MARK: Rect
 extension AgoraBaseLabel {
     
-    public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseLabel {
+    @discardableResult public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseLabel {
         self.x = x
         self.y = y
         return self
     }
     
-    public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseLabel {
+    @discardableResult public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseLabel {
         self.width = width
         self.height = height
         return self

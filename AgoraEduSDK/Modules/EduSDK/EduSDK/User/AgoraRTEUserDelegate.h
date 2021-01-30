@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol EduMediaStreamDelegate <NSObject>
+@protocol AgoraRTEMediaStreamDelegate <NSObject>
 @optional
 - (void)didChangeOfLocalAudioStream:(NSString *)streamId
         withState:(AgoraRTEStreamState)state;
