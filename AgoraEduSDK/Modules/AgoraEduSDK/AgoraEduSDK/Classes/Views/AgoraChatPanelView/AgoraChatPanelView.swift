@@ -15,6 +15,85 @@ import UIKit
         }
     }
     
+    public var chatModels: [AgoraChatMessageModel] = [] {
+        didSet {
+            self.chatTableView.reloadData()
+        }
+    }
+    
+    fileprivate let LabelTag = 99
+    fileprivate let ImageTag = 100
+    fileprivate let InoutCellID = "InoutCellID"
+    fileprivate let MessageCellID = "MessageCellID"
+    
+    fileprivate lazy var titleView: AgoraBaseView = {
+        let view = AgoraBaseView()
+        view.backgroundColor = UIColor.clear
+        
+        let label = AgoraBaseLabel()
+        label.textColor = UIColor(red: 254/255.0, green:254/255.0, blue: 254/255.0, alpha: 1)
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.tag = LabelTag
+        label.text = "聊天（0）"
+        view.addSubview(label)
+        label.sizeToFit()
+        
+        let labelSize = label.frame.size
+        let imgSzie = CGSize(width: 14, height: 14)
+        let offsetX = (labelSize.width + 3 + imgSzie.width) * 0.5
+        
+        let imageView = AgoraBaseImageView(image: AgoraImageWithName("chat_tag", self.classForCoder))
+        view.addSubview(imageView)
+        imageView.centerX = -(offsetX - imgSzie.width)
+        imageView.centerY = 0
+        imageView.resize(imgSzie.width, imgSzie.height)
+        
+        label.x = imageView.centerX + imgSzie.width * 0.5 + imageView.width + 3
+        label.width = labelSize.width + 1
+        label.y = 0
+        label.bottom = 0
+        
+        let btn = AgoraBaseButton(type: .custom)
+        btn.setImage(AgoraImageWithName("chat_min", self.classForCoder), for: .normal)
+        btn.addTarget(self, action: #selector(onMinTouchEvent), for: .touchUpInside)
+        view.addSubview(btn)
+        btn.centerY = 0
+        btn.right = 5
+        btn.resize(20, 20)
+        
+        return view
+    }()
+    fileprivate lazy var chatTableView: AgoraBaseTableView = {
+        let tableView = AgoraBaseTableView(frame: .zero, style: .plain)
+        tableView.backgroundColor = UIColor(red: 19/255.0, green: 25/255.0, blue: 111/255.0, alpha: 0.6)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.separatorStyle = .none
+        tableView.register(AgoraChatPanelInOutCell.self, forCellReuseIdentifier: InoutCellID)
+        tableView.register(AgoraChatPanelMessageCell.self, forCellReuseIdentifier: MessageCellID)
+        
+        return tableView
+    }()
+    fileprivate lazy var chatView: AgoraBaseView = {
+        let view = AgoraBaseView()
+        view.clipsToBounds = true
+        view.backgroundColor = UIColor(red: 19/255.0, green: 25/255.0, blue: 111/255.0, alpha: 0.6)
+        
+        view.addSubview(self.titleView)
+        self.titleView.x = 0
+        self.titleView.right = 0
+        self.titleView.y = 0
+        self.titleView.height = 30
+        
+        view.addSubview(self.chatTableView)
+        self.chatTableView.x = 0
+        self.chatTableView.right = 0
+        self.chatTableView.y = self.titleView.height
+        self.chatTableView.height = 206
+        
+        return view
+    }()
+    
     fileprivate lazy var sendView: AgoraBaseView = {
         let view = AgoraBaseView()
         view.clipsToBounds = true
@@ -52,8 +131,6 @@ import UIKit
         return view
     }()
     
-    
-
 //    convenience public init(delegate: AgoraPageControlProtocol?) {
 //        self.init(frame: CGRect.zero)
 //        self.delegate = delegate
@@ -70,18 +147,71 @@ import UIKit
     }
 }
 
+// MARK: UITableViewDelegate & UITableViewDataSource
+extension AgoraChatPanelView: UITableViewDelegate, UITableViewDataSource {
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return chatModels.count
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        let chatModel = chatModels[indexPath.row]
+        if (chatModel.type == .userInout) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: InoutCellID, for: indexPath) as! AgoraChatPanelInOutCell
+            cell.updateCell("Nancy（老师）加入教室！")
+            cell.selectionStyle = .none
+            return cell
+            
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: MessageCellID, for: indexPath) as! AgoraChatPanelMessageCell
+            cell.updateView(model: chatModel)
+            cell.selectionStyle = .none
+            return cell
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        let chatModel = chatModels[indexPath.row]
+        if (chatModel.type == .userInout) {
+            return 35
+        } else {
+            if (chatModel.cellHeight > 0) {
+                return chatModel.cellHeight
+            }
+        }
+
+        return UITableView.automaticDimension
+    }
+}
+
+
 // MARK: Rect
 extension AgoraChatPanelView {
     fileprivate func initView() {
-        self.backgroundColor = UIColor(red: 143/255.0, green: 154/255.0, blue: 208/255.0, alpha: 1)
-        self.clipsToBounds = true
-        self.layer.cornerRadius = AgoraDeviceAssistant.OS.isPad ? 21 : 11
+        self.backgroundColor = UIColor.clear
+
+        self.addSubview(self.chatView)
+        self.addSubview(self.sendView)
     }
     
     fileprivate func initLayout() {
         
-        let sideGap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 22 : 13
-
+        self.sendView.bottom = 0
+        self.sendView.x = 0
+        self.sendView.right = 0
+        self.sendView.height = 58
+        self.layer.cornerRadius = self.chatView.height * 0.1
+        
+        let gap: CGFloat = 12
+        
+        self.chatView.x = 0
+        self.chatView.right = 0
+        self.chatView.bottom = self.sendView.bottom + self.sendView.height + gap
+        self.chatView.y = 0
+        self.chatView.height = 296
+        self.layer.cornerRadius = self.chatView.height * 0.1
     }
     
     fileprivate func resizeView() {
@@ -98,6 +228,10 @@ extension AgoraChatPanelView: UITextFieldDelegate {
 extension AgoraChatPanelView {
     @objc fileprivate func onSendTouchEvent() {
         
+    }
+    
+    @objc fileprivate func onMinTouchEvent() {
+            
     }
 }
 
