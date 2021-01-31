@@ -8,20 +8,20 @@
 import UIKit
 
 // MARK: Constraint
-public let Constraint_Id_X = "Constraint_Id_X"
-public let Constraint_Id_Y = "Constraint_Id_Y"
-public let Constraint_Id_CenterX = "Constraint_Id_CenterX"
-public let Constraint_Id_CenterY = "Constraint_Id_CenterY"
-public let Constraint_Id_Width = "Constraint_Id_Width"
-public let Constraint_Id_Height = "Constraint_Id_Height"
-public let Constraint_Id_Right = "Constraint_Id_Right"
-public let Constraint_Id_Bottom = "Constraint_Id_Bottom"
-public let Constraint_Id_SafeX = "Constraint_Id_SafeX"
-public let Constraint_Id_SafeY = "Constraint_Id_SafeY"
-public let Constraint_Id_SafeRight = "Constraint_Id_SafeRight"
-public let Constraint_Id_SafeBottom = "Constraint_Id_SafeBottom"
+public let Agora_Constraint_Id_X = "Agora_Constraint_Id_X"
+public let Agora_Constraint_Id_Y = "Agora_Constraint_Id_Y"
+public let Agora_Constraint_Id_CenterX = "Agora_Constraint_Id_CenterX"
+public let Agora_Constraint_Id_CenterY = "Agora_Constraint_Id_CenterY"
+public let Agora_Constraint_Id_Width = "Agora_Constraint_Id_Width"
+public let Agora_Constraint_Id_Height = "Agora_Constraint_Id_Height"
+public let Agora_Constraint_Id_Right = "Agora_Constraint_Id_Right"
+public let Agora_Constraint_Id_Bottom = "Agora_Constraint_Id_Bottom"
+public let Agora_Constraint_Id_SafeX = "Agora_Constraint_Id_SafeX"
+public let Agora_Constraint_Id_SafeY = "Agora_Constraint_Id_SafeY"
+public let Agora_Constraint_Id_SafeRight = "Agora_Constraint_Id_SafeRight"
+public let Agora_Constraint_Id_SafeBottom = "Agora_Constraint_Id_SafeBottom"
 extension UIView {
-    func constraint(_ withIdentifier:String, _ constraints:[NSLayoutConstraint]) -> NSLayoutConstraint? {
+    func agoraConstraint(_ withIdentifier:String, _ constraints:[NSLayoutConstraint]) -> NSLayoutConstraint? {
         return constraints.filter{ $0.identifier == withIdentifier }.first
     }
 }
