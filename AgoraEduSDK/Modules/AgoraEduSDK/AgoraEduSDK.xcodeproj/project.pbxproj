@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7839CCF125C3C1F600C4B08D /* AgoraDeviceAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7839CCF025C3C1F600C4B08D /* AgoraDeviceAssistant.swift */; };
 		7839CD3B25C401F300C4B08D /* AgoraToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7839CD3A25C401F300C4B08D /* AgoraToolView.swift */; };
+		7839CEA825C55BD900C4B08D /* AgoraPageControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7839CEA725C55BD900C4B08D /* AgoraPageControlView.swift */; };
 		784A99ED25AD5AC600B919E8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 784A99E825AD5AC600B919E8 /* Localizable.strings */; };
 		784A99EE25AD5AC600B919E8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 784A99EB25AD5AC600B919E8 /* Localizable.strings */; };
 		787483AF25AAB5BD0022329D /* Room.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7874831125AAB5BC0022329D /* Room.storyboard */; };
@@ -147,6 +148,7 @@
 		184C538EB6D076BAC3B83E36 /* Pods_AgoraEduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7839CCF025C3C1F600C4B08D /* AgoraDeviceAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraDeviceAssistant.swift; sourceTree = "<group>"; };
 		7839CD3A25C401F300C4B08D /* AgoraToolView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToolView.swift; sourceTree = "<group>"; };
+		7839CEA725C55BD900C4B08D /* AgoraPageControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraPageControlView.swift; sourceTree = "<group>"; };
 		784A99E925AD5AC600B919E8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = Localizable.strings; sourceTree = "<group>"; };
 		784A99EC25AD5AC600B919E8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		7874817F25A884A30022329D /* AgoraEduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -741,6 +743,7 @@
 			children = (
 				788BC7EE25C11FC10095998F /* AgoraUserView.swift */,
 				7839CD3A25C401F300C4B08D /* AgoraToolView.swift */,
+				7839CEA725C55BD900C4B08D /* AgoraPageControlView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -984,6 +987,7 @@
 				787483E325AAB5BD0022329D /* AgoraEEMessageView.m in Sources */,
 				787483C225AAB5BD0022329D /* AgoraBigViewController.m in Sources */,
 				787483F525AAB5BD0022329D /* AgoraEduKeyCenter.m in Sources */,
+				7839CEA825C55BD900C4B08D /* AgoraPageControlView.swift in Sources */,
 				787483B825AAB5BD0022329D /* AgoraEETeacherVideoView.m in Sources */,
 				788BC86225C1A7810095998F /* AgoraBaseImageView.swift in Sources */,
 				7874842025AAB5BD0022329D /* AgoraEduClassroom.m in Sources */,

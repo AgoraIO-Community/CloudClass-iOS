@@ -234,13 +234,13 @@ import UIKit
 // MARK: Rect
 extension AgoraBaseImageView {
     
-    public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseImageView {
+    @discardableResult public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseImageView {
         self.x = x
         self.y = y
         return self
     }
     
-    public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseImageView {
+    @discardableResult public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseImageView {
         self.width = width
         self.height = height
         return self

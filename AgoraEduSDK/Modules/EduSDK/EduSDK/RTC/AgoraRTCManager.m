@@ -124,9 +124,6 @@ static AgoraRTCManager *manager = nil;
                 if (config.delegate != nil) {
                     channelInfo.config.delegate = config.delegate;
                 }
-                if (config.speakerReportDelegate != nil) {
-                    channelInfo.config.speakerReportDelegate = config.speakerReportDelegate;
-                }
                 if (config.statisticsReportDelegate != nil) {
                     channelInfo.config.statisticsReportDelegate = config.statisticsReportDelegate;
                 }
@@ -542,6 +539,14 @@ static AgoraRTCManager *manager = nil;
 }
 
 #pragma mark AudioEffect
+- (int)enableAudioVolumeIndication:(NSInteger)interval smooth:(NSInteger)smooth report_vad:(BOOL)report_vad {
+    
+    int code = [self.rtcEngineKit enableAudioVolumeIndication:interval smooth:smooth report_vad:report_vad];
+    
+    [AgoraRTELogService logMessageWithDescribe:@"enableAudioVolumeIndication:" message:@{@"interval":@(interval), @"smooth":@(smooth), @"report_vad":@(report_vad)}];
+    
+    return code;
+}
 - (int)setLocalVoiceChanger:(AgoraAudioVoiceChanger)voiceChanger {
     
     int code = [self.rtcEngineKit setLocalVoiceChanger:voiceChanger];
@@ -820,19 +825,13 @@ localAudioStateChange:(AgoraAudioLocalState)state
 
 - (void)rtcEngine:(AgoraRtcEngineKit *)engine reportAudioVolumeIndicationOfSpeakers:(NSArray<AgoraRtcAudioVolumeInfo *> *)speakers totalVolume:(NSInteger)totalVolume {
     for (AgoraRtcAudioVolumeInfo *user in speakers) {
-        for (RTCChannelInfo *channelInfo in self.rtcChannelInfos) {
-            if (!(channelInfo.config && [channelInfo.channelId isEqualToString:user.channelId])) {
-                continue;
-            }
-            
-            if (user.uid == 0 &&
-                [channelInfo.config.speakerReportDelegate respondsToSelector:@selector(rtcReportAudioVolumeIndicationOfLocalSpeaker:)]) {
-                [channelInfo.config.speakerReportDelegate rtcReportAudioVolumeIndicationOfLocalSpeaker:user];
-            } else if (user.uid != 0 &&
-                       [channelInfo.config.speakerReportDelegate respondsToSelector:@selector(rtcReportAudioVolumeIndicationOfRemoteSpeaker:)]) {
-                [channelInfo.config.speakerReportDelegate rtcReportAudioVolumeIndicationOfRemoteSpeaker:user];
-            }
-            break;
+
+        if (user.uid == 0 &&
+            [self.speakerReportDelegate respondsToSelector:@selector(rtcReportAudioVolumeIndicationOfLocalSpeaker:)]) {
+            [self.speakerReportDelegate rtcReportAudioVolumeIndicationOfLocalSpeaker:user];
+        } else if (user.uid != 0 &&
+                   [self.speakerReportDelegate respondsToSelector:@selector(rtcReportAudioVolumeIndicationOfRemoteSpeaker:)]) {
+            [self.speakerReportDelegate rtcReportAudioVolumeIndicationOfRemoteSpeaker:user];
         }
     }
 }

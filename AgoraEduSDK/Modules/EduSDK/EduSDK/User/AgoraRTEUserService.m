@@ -27,7 +27,7 @@
 #import "AgoraRTEChannelMessageHandle.h"
 #import "AgoraRTEKVCUserConfig.h"
 
-@implementation EduRenderConfig
+@implementation AgoraRTERenderConfig
 @end
 
 typedef NS_ENUM(NSUInteger, StreamState) {
@@ -36,7 +36,7 @@ typedef NS_ENUM(NSUInteger, StreamState) {
     StreamStateDelete,
 };
 
-@interface AgoraRTEUserService()<AgoraRTCStreamStateDelegate>
+@interface AgoraRTEUserService()<AgoraRTCStreamStateDelegate, AgoraRTCSpeakerReportDelegate>
 @property (nonatomic, strong) NSMutableArray<AgoraRtcVideoCanvas*> *rtcVideoCanvasList;
 
 @property (nonatomic, strong) NSString *channelId;
@@ -58,6 +58,8 @@ typedef NS_ENUM(NSUInteger, StreamState) {
         
         AgoraRTCChannelDelegateConfig *config = [AgoraRTCChannelDelegateConfig new];
         config.streamStateDelegate = self;
+        AgoraRTCManager.shareManager.speakerReportDelegate = self;
+
         [AgoraRTCManager.shareManager setChannelDelegateWithConfig:config channelId:self.channelId];
         
         self.rtcVideoCanvasList = [NSMutableArray array];
@@ -552,17 +554,17 @@ typedef NS_ENUM(NSUInteger, StreamState) {
 // render
 - (NSError * _Nullable)setStreamView:(UIView * _Nullable)view stream:(AgoraRTEStream *)stream {
     
-    EduRenderConfig *config = [EduRenderConfig new];
+    AgoraRTERenderConfig *config = [AgoraRTERenderConfig new];
     config.renderMode = AgoraRTERenderModeHidden;
     return [self setStreamView:view stream:stream renderConfig:config];
 }
-- (NSError * _Nullable)setStreamView:(UIView * _Nullable)view stream:(AgoraRTEStream *)stream renderConfig:(EduRenderConfig*)config {
+- (NSError * _Nullable)setStreamView:(UIView * _Nullable)view stream:(AgoraRTEStream *)stream renderConfig:(AgoraRTERenderConfig*)config {
 
     NSError *error;
     if (![stream isKindOfClass:AgoraRTEStream.class]) {
         error = [AgoraRTEErrorManager paramterInvalid:@"stream" code:1];
         
-    } else if (![config isKindOfClass:EduRenderConfig.class]) {
+    } else if (![config isKindOfClass:AgoraRTERenderConfig.class]) {
         error = [AgoraRTEErrorManager paramterInvalid:@"action" code:1];
         
     } else if(config.renderMode != AgoraRTERenderModeHidden && config.renderMode != AgoraRTERenderModeFit) {
@@ -655,8 +657,17 @@ typedef NS_ENUM(NSUInteger, StreamState) {
     if ([self.mediaStreamDelegate respondsToSelector:@selector(didChangeOfLocalVideoStream:withState:)]) {
         AgoraRTEStreamState eduState = [self getAgoraRTEStreamStateWithLocalVideo:state];
         AgoraRTESyncUserModel *user = (AgoraRTESyncUserModel*)self.messageHandle.syncRoomSession.localUser;
-        [self.mediaStreamDelegate didChangeOfLocalAudioStream:user.streamUuid
+        [self.mediaStreamDelegate didChangeOfLocalVideoStream:user.streamUuid
                                   withState:eduState];
+    }
+}
+- (void)rtcReportAudioVolumeIndicationOfLocalSpeaker:(AgoraRtcAudioVolumeInfo *)speaker {
+    
+    if ([self.mediaStreamDelegate respondsToSelector:@selector(audioVolumeIndicationOfLocalStream:withVolume:)]) {
+        
+        NSString *streamId = [NSString stringWithFormat:@"%lu", (unsigned long)speaker.uid];
+        
+        [self.mediaStreamDelegate audioVolumeIndicationOfLocalStream:streamId withVolume:speaker.volume];
     }
 }
 
@@ -684,7 +695,27 @@ typedef NS_ENUM(NSUInteger, StreamState) {
     }
 }
 
+- (void)rtcReportAudioVolumeIndicationOfRemoteSpeaker:(AgoraRtcAudioVolumeInfo *)speaker {
+    
+    if ([self.mediaStreamDelegate respondsToSelector:@selector(audioVolumeIndicationOfRemoteStream:withVolume:)]) {
+        
+        NSString *streamId = [NSString stringWithFormat:@"%lu", (unsigned long)speaker.uid];
+        
+        [self.mediaStreamDelegate audioVolumeIndicationOfRemoteStream:streamId withVolume:speaker.volume];
+    }
+}
 #pragma mark Private
+- (void)setMediaStreamDelegate:(id<AgoraRTEMediaStreamDelegate>)mediaStreamDelegate {
+    _mediaStreamDelegate = mediaStreamDelegate;
+    
+    if ([_mediaStreamDelegate respondsToSelector:@selector(audioVolumeIndicationOfLocalStream:withVolume:)]) {
+        [AgoraRTCManager.shareManager enableAudioVolumeIndication:300 smooth:3 report_vad:YES];
+        
+    } else if ([_mediaStreamDelegate respondsToSelector:@selector(audioVolumeIndicationOfRemoteStream:withVolume:)]) {
+        [AgoraRTCManager.shareManager enableAudioVolumeIndication:300 smooth:3 report_vad:NO];
+    }
+}
+
 - (AgoraRTEStreamState)getAgoraRTEStreamStateWithLocalVideo:(AgoraLocalVideoStreamState)rtc {
     switch (rtc) {
         case AgoraLocalVideoStreamStateStopped:

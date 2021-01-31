@@ -310,13 +310,13 @@ extension AgoraBaseView {
 // MARK: Rect
 extension AgoraBaseView {
     
-    public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseView {
+    @discardableResult public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseView {
         self.x = x
         self.y = y
         return self
     }
     
-    public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseView {
+    @discardableResult public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseView {
         self.width = width
         self.height = height
         return self

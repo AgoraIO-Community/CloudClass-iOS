@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AgoraRTCChannelDelegateConfig: NSObject
 @property (nonatomic, weak) id<AgoraRTCManagerDelegate> delegate;
-@property (nonatomic, weak) id<AgoraRTCSpeakerReportDelegate> speakerReportDelegate;
 @property (nonatomic, weak) id<AgoraRTCStatisticsReportDelegate> statisticsReportDelegate;
 @property (nonatomic, weak) id<AgoraRTCStreamStateDelegate> streamStateDelegate;
 @end
@@ -32,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<AgoraRTCRateDelegate> rateDelegate;
 @property (nonatomic, weak) id<AgoraRTCMediaDeviceDelegate> deviceDelegate;
 @property (nonatomic, weak) id<AgoraRTCAudioMixingDelegate> audioMixingDelegate;
+@property (nonatomic, weak) id<AgoraRTCSpeakerReportDelegate> speakerReportDelegate;
 
 + (instancetype)shareManager;
 + (NSString *)sdkVersion;
@@ -84,6 +84,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (int)getAudioMixingPlayoutVolume;
 
 // AudioEffect
+- (int)enableAudioVolumeIndication:(NSInteger)interval smooth:(NSInteger)smooth report_vad:(BOOL)report_vad;
 - (int)setLocalVoiceChanger:(AgoraAudioVoiceChanger)voiceChanger;
 - (int)setLocalVoiceReverbPreset:(AgoraAudioReverbPreset)reverbPreset;
 

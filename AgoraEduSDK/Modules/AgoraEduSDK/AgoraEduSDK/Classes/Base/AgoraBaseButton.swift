@@ -208,7 +208,7 @@ import UIKit
         }
     }
     
-    fileprivate let TouchRange: CGFloat = 50
+    var TouchRange: CGFloat = 50
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -232,13 +232,13 @@ import UIKit
 // MARK: Rect
 extension AgoraBaseButton {
     
-    public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseButton {
+    @discardableResult public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseButton {
         self.x = x
         self.y = y
         return self
     }
     
-    public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseButton {
+    @discardableResult public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseButton {
         self.width = width
         self.height = height
         return self

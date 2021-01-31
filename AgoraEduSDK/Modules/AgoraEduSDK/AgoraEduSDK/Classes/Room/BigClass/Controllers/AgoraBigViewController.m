@@ -109,7 +109,7 @@
             [self.teactherVideoView updateSpeakerImageWithMuted:!stream.hasAudio];
             
         } else if(stream.sourceType == AgoraRTEVideoSourceTypeScreen) {
-            EduRenderConfig *config = [EduRenderConfig new];
+            AgoraRTERenderConfig *config = [AgoraRTERenderConfig new];
             config.renderMode = AgoraRTERenderModeFit;
             [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.shareScreenView : nil) stream:stream renderConfig:config];
             self.shareScreenView.hidden = NO;

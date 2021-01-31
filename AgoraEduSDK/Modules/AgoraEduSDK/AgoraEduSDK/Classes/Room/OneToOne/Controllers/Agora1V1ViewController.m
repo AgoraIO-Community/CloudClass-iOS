@@ -17,10 +17,11 @@
 #import "AgoraHTTPManager.h"
 #import <YYModel/YYModel.h>
 #import "AgoraRTEStream+StreamState.h"
+#import <EduSDK/AgoraRTCManager.h>
 
 #import <AgoraEduSDK/AgoraEduSDK-Swift.h>
 
-@interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRoomProtocol, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, EduMediaStreamDelegate>
+@interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, AgoraRTEMediaStreamDelegate, AgoraPageControlProtocol, WhiteManagerDelegate>
 
 @property (weak, nonatomic) AgoraBaseImageView *bgView;
 @property (weak, nonatomic) AgoraBaseView *contentView;
@@ -28,6 +29,10 @@
 @property (weak, nonatomic) AgoraUserView *teaView;
 @property (weak, nonatomic) AgoraUserView *stuView;
 @property (weak, nonatomic) AgoraBaseView *boardContentView;
+@property (weak, nonatomic) AgoraPageControlView *boardPageControlView;
+
+@property (assign, nonatomic) CGFloat boardRight;
+@property (assign, nonatomic) BOOL boardMax;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatRoomViewWidthCon;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatRoomViewRightCon;
@@ -73,29 +78,31 @@
     
 //    AgoraEduManager.shareManager.studentService.mediaStreamDelegate = self;
     
+    WEAK(self);
     self.toolView.leftTouchBlock = ^{
-        
+        [AgoraEduAlertViewUtil showAlertWithController:weakself title:AgoraEduLocalizedString(@"QuitClassroomText", nil) sureHandler:^(UIAlertAction * _Nullable action) {
+
+            [weakself.navigationView stopTimer];
+            [AgoraEduManager releaseResource];
+            [weakself dismissViewControllerAnimated:YES completion:nil];
+        }];
     };
     
-    self.teaView.audioTouchBlock = ^(BOOL mute) {
-        NSLog(@"Srs audio mute:%d", mute);
-    };
-    self.teaView.videoTouchBlock = ^(BOOL mute) {
-        NSLog(@"Srs video mute:%d", mute);
-    };
     self.stuView.audioTouchBlock = ^(BOOL mute) {
-        NSLog(@"Srs audio mute:%d", mute);
+        
+        AgoraRTEStream *stream = weakself.localUser.streams.firstObject;
+        [weakself setLocalStreamVideo:stream.hasVideo audio:!mute streamState:LocalStreamStateUpdate];
     };
     self.stuView.videoTouchBlock = ^(BOOL mute) {
-        NSLog(@"Srs video mute:%d", mute);
+        AgoraRTEStream *stream = weakself.localUser.streams.firstObject;
+        [weakself setLocalStreamVideo:!mute audio:stream.hasAudio streamState:LocalStreamStateUpdate];
     };
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self.teaView updateView];
-        [self.stuView updateView];
+//        [self.teaView updateView];
+//        [self.stuView updateView];
         [self.toolView updateView];
     });
-
 }
 
 - (void)lockViewTransform:(BOOL)lock {
@@ -132,8 +139,8 @@
     CGFloat minGap = 8;
     CGFloat minRight = 15;
     CGFloat minBottom = 15;
-    CGFloat minHeight = 27;
-    CGFloat minWidth = 130;
+    CGFloat minHeight = 31;
+    CGFloat minWidth = 140;
     if(IsPad) {
         top = self.toolView.height + 9;
         right = 20;
@@ -199,11 +206,17 @@
     //board
     self.boardContentView.x = right;
     self.boardContentView.right = IsPad ? right + width + 25 : right + width + 25;
+    self.boardRight = self.boardContentView.right;
     self.boardContentView.y = top;
     self.boardContentView.bottom = 0;
     
     // boardView
     [self.boardView equalTo:self.boardContentView];
+    
+    // boardPageControlView
+    self.boardPageControlView.x = right + 20;
+    self.boardPageControlView.height = IsPad ? 42 : 21;
+    self.boardPageControlView.bottom = 20;
 }
 
 - (void)initView {
@@ -236,7 +249,7 @@
     MenuConfig *cameraSwitch = [MenuConfig new];
     cameraSwitch.imageName = @"camera_switch";
     cameraSwitch.touchBlock = ^{
-        NSLog(@"camera_switch");
+        [AgoraRTCManager.shareManager switchCamera];
     };
     MenuConfig *cs = [MenuConfig new];
     cs.imageName = @"cs";
@@ -257,32 +270,19 @@
         [self.contentView addSubview:studentView];
         self.stuView = studentView;
     }
-
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [vv updateView];
-//        [vvv updateView];
-//    });
     
+    // page control
+    AgoraPageControlView *pageControlView = [[AgoraPageControlView alloc] initWithDelegate:self];
+    pageControlView.hidden = YES;
+    [self.contentView addSubview:pageControlView];
+    self.boardPageControlView = pageControlView;
 
 //    self.chatRoomLabel.text = AgoraEduLocalizedString(@"ChatroomText", nil);
 //    [self.uiContorlBtn setImage:AgoraEduImageWithName(@"view-close") forState:UIControlStateNormal];
 //
-//    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-//    UIView *boardView = [whiteBoardManager getBoardView];
-//    [self.whiteboardBaseView addSubview:boardView];
-//    self.boardView = boardView;
-//    [boardView equalTo:self.whiteboardBaseView];
-//    self.whiteboardBaseView.backgroundColor = UIColor.whiteColor;
 //
 //    self.tipLabel.layer.backgroundColor = [UIColor colorWithHexString:@"000000" alpha:0.7].CGColor;
 //    self.tipLabel.layer.cornerRadius = 6;
-//
-//    AgoraBoardTouchView *whiteBoardTouchView = [AgoraBoardTouchView new];
-//    [whiteBoardTouchView setupInView:boardView onTouchBlock:^{
-//        NSString *toastMessage = AgoraEduLocalizedString(@"LockBoardTouchText", nil);
-//        [AgoraBaseViewController showToast:toastMessage];
-//    }];
-//    self.whiteBoardTouchView = whiteBoardTouchView;
 }
 
 - (void)addNotification {
@@ -319,6 +319,8 @@
     [self setupWhiteBoard:^{
         [AgoraEduManager.shareManager.whiteBoardManager allowTeachingaids:YES success:^{
             
+            weakself.boardPageControlView.hidden = NO;
+            
             BOOL lock = weakself.boardState.follow;
             [weakself lockViewTransform:lock];
              
@@ -350,11 +352,10 @@
 }
 
 - (void)updateRoleViews:(AgoraRTEUser *) user {
-    if(user.role == AgoraRTERoleTypeTeacher){
-        [self.teacherView updateUserName:user.userName];
-        
-    } else if(user.role == AgoraRTERoleTypeStudent){
-        [self.studentView updateUserName:user.userName];
+    if (user.role == AgoraRTERoleTypeTeacher) {
+        self.teaView.userName = user.userName;
+    } else if (user.role == AgoraRTERoleTypeStudent) {
+        self.stuView.userName = user.userName;
     }
 }
 - (void)removeRoleViews:(AgoraRTEUser *) user {
@@ -370,22 +371,21 @@
     if(stream.userInfo.role == AgoraRTERoleTypeTeacher) {
         if(stream.sourceType == AgoraRTEVideoSourceTypeCamera) {
             
-            [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.teacherView.videoRenderView : nil) stream:stream];
+            [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.teaView.videoCanvas : nil) stream:stream];
             
-            self.teacherView.defaultImageView.hidden = stream.hasVideo ? YES : NO;
-            [self.teacherView updateSpeakerEnabled:stream.hasAudio];
+            [self.teaView updateViewWithStream:stream cupNum:0];
             
         } else if(stream.sourceType == AgoraRTEVideoSourceTypeScreen) {
-            EduRenderConfig *config = [EduRenderConfig new];
+            AgoraRTERenderConfig *config = [AgoraRTERenderConfig new];
             config.renderMode = AgoraRTERenderModeFit;
             [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.shareScreenView : nil) stream:stream renderConfig:config];
             self.shareScreenView.hidden = NO;
         }
     } else if(stream.userInfo.role == AgoraRTERoleTypeStudent) {
         
-        [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.studentView.videoRenderView : nil) stream:stream];
-        [self.studentView updateVideoImageWithMuted:!stream.hasVideo];
-        [self.studentView updateAudioImageWithMuted:!stream.hasAudio];
+        [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.stuView.videoCanvas : nil) stream:stream];
+        
+        [self.stuView updateViewWithStream:stream cupNum:234];
     }
 }
 - (void)removeRoleCanvas:(AgoraRTEStream *)stream {
@@ -402,26 +402,6 @@
         [self.studentView updateVideoImageWithMuted:YES];
         [self.studentView updateAudioImageWithMuted:YES];
     }
-}
-
-#pragma mark AgoraRoomProtocol
-- (void)closeRoom {
-
-    WEAK(self);
-    [AgoraEduAlertViewUtil showAlertWithController:self title:AgoraEduLocalizedString(@"QuitClassroomText", nil) sureHandler:^(UIAlertAction * _Nullable action) {
-
-        [weakself.navigationView stopTimer];
-        [AgoraEduManager releaseResource];
-        [weakself dismissViewControllerAnimated:YES completion:nil];
-    }];
-}
-
-- (void)muteVideoStream:(BOOL)mute {
-    [self setLocalStreamVideo:!mute audio:self.studentView.hasAudio streamState:LocalStreamStateUpdate];
-}
-
-- (void)muteAudioStream:(BOOL)mute {
-    [self setLocalStreamVideo:self.studentView.hasVideo audio:!mute streamState:LocalStreamStateUpdate];
 }
 
 #pragma mark AgoraRTEClassroomDelegate
@@ -517,10 +497,12 @@
 
 #pragma mark onSyncSuccess
 - (void)onSyncSuccess {
+    AgoraEduManager.shareManager.studentService.mediaStreamDelegate = self;
+    
     [self setupWhiteBoard];
 //    [self updateTimeState];
 //    [self updateChatViews];
-//    [self updateRoleViews: self.localUser];
+    [self updateRoleViews: self.localUser];
 }
 
 #pragma mark onReconnected
@@ -576,7 +558,7 @@
     [self.messageListView addMessageModel:textMsg];
 }
 
-#pragma mark EduMediaStreamDelegate
+#pragma mark AgoraRTEMediaStreamDelegate
 //- (void)didChangeOfLocalAudioStream:(NSString *)streamId
 //                          withState:(AgoraRTEStreamState)state {
 //
@@ -585,6 +567,7 @@
 - (void)didChangeOfLocalVideoStream:(NSString *)streamId
                           withState:(AgoraRTEStreamState)state {
     
+    return;
     WEAK(self);
     [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<AgoraRTEStream *> * _Nonnull streams) {
         
@@ -614,6 +597,7 @@
 - (void)didChangeOfRemoteVideoStream:(NSString *)streamId
                            withState:(AgoraRTEStreamState)state {
     
+    return;
     WEAK(self);
     [AgoraEduManager.shareManager.roomManager getFullStreamListWithSuccess:^(NSArray<AgoraRTEStream *> * _Nonnull streams) {
         
@@ -634,5 +618,42 @@
         [AgoraBaseViewController showToast:error.localizedDescription];
     }];
 }
+- (void)audioVolumeIndicationOfLocalStream:(NSString *)streamId withVolume:(NSUInteger)volume {
+    [self.stuView updateAudioWithEffect:volume];
+}
+- (void)audioVolumeIndicationOfRemoteStream:(NSString *)streamId withVolume:(NSUInteger)volume {
+    [self.teaView updateAudioWithEffect:volume];
+}
 
+#pragma mark AgoraPageControlProtocol
+- (void)onPageLeftEvent {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager setPageIndex:self.boardPageControlView.pageIndex];
+}
+- (void)onPageRightEvent {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager setPageIndex:self.boardPageControlView.pageIndex];
+}
+- (void)onPageIncreaseEvent {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager increaseScale];
+}
+- (void)onPageDecreaseEvent {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager decreaseScale];
+}
+- (void)onPageZoomEvent {
+    self.boardMax = !self.boardMax;
+    if (self.boardMax) {
+        self.boardContentView.right = self.boardContentView.x;
+    } else {
+        self.boardContentView.right = self.boardRight;
+    }
+}
+
+#pragma mark WhiteManagerDelegate
+- (void)onWhiteBoardPageChanged:(NSInteger)pageIndex pageCount:(NSInteger)pageCount {
+    self.boardPageControlView.pageIndex = pageIndex + 1;
+    self.boardPageControlView.pageCount = pageCount;
+}
 @end

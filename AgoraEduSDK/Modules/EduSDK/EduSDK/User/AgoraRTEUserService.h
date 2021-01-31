@@ -16,7 +16,7 @@
 #import "AgoraRTEEnumerates.h"
 #import "AgoraRTEUserDelegate.h"
 
-@interface EduRenderConfig : NSObject
+@interface AgoraRTERenderConfig : NSObject
 @property (nonatomic, assign) AgoraRTERenderMode renderMode;
 @end
 
@@ -26,7 +26,7 @@ typedef void(^OnUserMediaChangedSuccessBlock)(AgoraRTEStream *stream);
 
 @interface AgoraRTEUserService : NSObject
 
-@property (nonatomic, weak, nullable) id <EduMediaStreamDelegate> mediaStreamDelegate;
+@property (nonatomic, weak, nullable) id <AgoraRTEMediaStreamDelegate> mediaStreamDelegate;
 
 // you must set Video Config before startOrUpdateLocalStream
 - (NSError * _Nullable)setVideoConfig:(AgoraRTEVideoConfig*)config;
@@ -56,7 +56,7 @@ typedef void(^OnUserMediaChangedSuccessBlock)(AgoraRTEStream *stream);
 
 // render
 - (NSError * _Nullable)setStreamView:(UIView * _Nullable)view stream:(AgoraRTEStream *)stream;
-- (NSError * _Nullable)setStreamView:(UIView * _Nullable)view stream:(AgoraRTEStream *)stream renderConfig:(EduRenderConfig*)config;
+- (NSError * _Nullable)setStreamView:(UIView * _Nullable)view stream:(AgoraRTEStream *)stream renderConfig:(AgoraRTERenderConfig*)config;
 
 - (void)destory;
 
