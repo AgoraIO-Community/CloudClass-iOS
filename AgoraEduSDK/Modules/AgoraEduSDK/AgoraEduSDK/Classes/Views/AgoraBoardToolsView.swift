@@ -79,15 +79,38 @@ private class AgoraButtonListView: AgoraBaseUIView {
 
 // MARK: - AgoraBoardToolsItem
 @objc class AgoraBoardToolsItem: NSObject {
-    var normalImage: UIImage
-    var selectedImage: UIImage
+    enum ItemType {
+        case move, pencil, text, rectangle, circle, eraser
+        
+        var image: UIImage {
+            switch self {
+            case .move:      return UIImage(named: "箭头")!
+            case .pencil:    return UIImage(named: "笔")!
+            case .text:      return UIImage(named: "文本")!
+            case .rectangle: return UIImage(named: "矩形工具")!
+            case .circle:    return UIImage(named: "圆形工具")!
+            case .eraser:    return UIImage(named: "橡皮")!
+            }
+        }
+        
+        var selectedImage: UIImage {
+            switch self {
+            case .move:      return UIImage(named: "箭头-1")!
+            case .pencil:    return UIImage(named: "笔-1")!
+            case .text:      return UIImage(named: "文本-1")!
+            case .rectangle: return UIImage(named: "矩形工具-1")!
+            case .circle:    return UIImage(named: "圆形工具")!
+            case .eraser:    return UIImage(named: "橡皮-1")!
+            }
+        }
+    }
+    
+    var itemType: ItemType
     var tap: ((UIButton) -> Void)?
     
-    init(normalImage: UIImage,
-         selectedImage: UIImage,
+    init(itemType: ItemType,
          tap: ((UIButton) -> Void)? = nil) {
-        self.normalImage = normalImage
-        self.selectedImage = selectedImage
+        self.itemType = itemType
         self.tap = tap
     }
 }
@@ -101,8 +124,8 @@ private class AgoraButtonListView: AgoraBaseUIView {
     
     fileprivate let popover = AgoraPopover(options: [.type(.right),
                                                      .blackOverlayColor(.clear),
-                                                     .cornerRadius(5),
-                                                     .arrowSize(CGSize(width: 8, height: 4))])
+                                                     .cornerRadius(10),
+                                                     .arrowSize(CGSize(width: 16, height: 8))])
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -203,38 +226,49 @@ private extension AgoraBoardToolsView {
                                            alpha: 0.3)
         self.popover.borderColor = UIColor(rgb: 0x090E51)
         
-        let moveItem = AgoraBoardToolsItem(normalImage: UIImage(named: "箭头")!,
-                                           selectedImage: UIImage(named: "箭头-1")!) { [unowned self] (button) in
+        let moveItem = AgoraBoardToolsItem(itemType: .move) { [unowned self] (button) in
             
         }
         
-        let pencilItem = AgoraBoardToolsItem(normalImage: UIImage(named: "笔")!,
-                                             selectedImage: UIImage(named: "笔-1")!) { [unowned self] (button) in
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-            view.backgroundColor = .clear
-            
+        let pencilItem = AgoraBoardToolsItem(itemType: .pencil) { [unowned self] (button) in
+            let view = AgoraPencilPopoverContent(frame: CGRect(x: 0,
+                                                               y: 0,
+                                                               width: 390,
+                                                               height: 286))
             self.popover.show(view,
                               fromView: button)
         }
         
-        let textItem = AgoraBoardToolsItem(normalImage: UIImage(named: "文本")!,
-                                           selectedImage: UIImage(named: "文本-1")!) { [unowned self] (button) in
-            
+        let textItem = AgoraBoardToolsItem(itemType: .text) { [unowned self] (button) in
+            let view = AgoraTextPopoverrContent(frame: CGRect(x: 0,
+                                                              y: 0,
+                                                              width: 390,
+                                                              height: 324))
+            self.popover.show(view,
+                              fromView: button)
         }
         
-        let rectangleItem = AgoraBoardToolsItem(normalImage: UIImage(named: "矩形工具")!,
-                                                selectedImage: UIImage(named: "矩形工具-1")!) { [unowned self] (button) in
-            
+        let rectangleItem = AgoraBoardToolsItem(itemType: .rectangle) { [unowned self] (button) in
+            let view = AgoraShapePopoverrContent(frame: CGRect(x: 0, y: 0, width: 390, height: 182),
+                                                 shape: .rectangle)
+            self.popover.show(view,
+                              fromView: button)
         }
         
-        let circleItem = AgoraBoardToolsItem(normalImage: UIImage(named: "圆形工具")!,
-                                             selectedImage: UIImage(named: "圆形工具")!) { [unowned self] (button) in
-            
+        let circleItem = AgoraBoardToolsItem(itemType: .circle) { [unowned self] (button) in
+            let view = AgoraShapePopoverrContent(frame: CGRect(x: 0, y: 0, width: 390, height: 182),
+                                                 shape: .circle)
+            self.popover.show(view,
+                              fromView: button)
         }
         
-        let eraserItem = AgoraBoardToolsItem(normalImage: UIImage(named: "橡皮")!,
-                                             selectedImage: UIImage(named: "橡皮-1")!) { [unowned self] (button) in
-            
+        let eraserItem = AgoraBoardToolsItem(itemType: .eraser) { [unowned self] (button) in
+            let view = AgoraEraserPopoverrContent(frame: CGRect(x: 0,
+                                                                y: 0,
+                                                                width: 390,
+                                                                height: 106))
+            self.popover.show(view,
+                              fromView: button)
         }
         
         let list = [moveItem,
@@ -260,7 +294,7 @@ private extension AgoraBoardToolsView {
 
 extension AgoraBoardToolsView: AgoraPopoverDelegate {
     func popoverDidDismiss(_ popover: AgoraPopover) {
-        buttonListView.buttonsUnselected()
+//        buttonListView.buttonsUnselected()
     }
 }
 
@@ -268,10 +302,10 @@ fileprivate extension AgoraBaseUIButton {
     convenience init(item: AgoraBoardToolsItem) {
         self.init(frame: CGRect.zero)
         
-        setImage(item.normalImage,
+        setImage(item.itemType.image,
                  for: .normal)
         
-        setImage(item.selectedImage,
+        setImage(item.itemType.selectedImage,
                  for: .selected)
     }
 }

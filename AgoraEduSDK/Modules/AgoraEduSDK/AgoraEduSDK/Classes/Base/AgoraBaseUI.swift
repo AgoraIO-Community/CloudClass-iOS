@@ -31,6 +31,18 @@ class AgoraBaseUILabel: UILabel {
     }
 }
 
+class AgoraBaseUIImageView: UIImageView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        agora_init_base_view()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        agora_init_base_view()
+    }
+}
+
 class AgoraBaseUIButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)

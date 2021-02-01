@@ -41,8 +41,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_X_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
-            
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             assert(self.superview != nil, "can not found superview")
             if let constraint = self.constraint(Constraint_Id_X, agora_constraints) {
@@ -74,7 +73,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Y_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             assert(self.superview != nil, "can not found superview")
             if let constraint = self.constraint(Constraint_Id_Y, agora_constraints) {
@@ -106,7 +105,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Z_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             assert(self.superview != nil, "can not found superview")
             self.superview!.insertSubview(self, at: newValue)
@@ -129,7 +128,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Center_X_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             assert(self.superview != nil, "can not found superview")
             if let constraint = self.constraint(Constraint_Id_CenterX, agora_constraints) {
@@ -161,7 +160,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Width_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             if let constraint = self.constraint(Constraint_Id_Width, agora_constraints) {
                 constraint.constant = newValue
@@ -191,7 +190,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Height_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             if let constraint = self.constraint(Constraint_Id_Height, agora_constraints) {
                 constraint.constant = newValue
@@ -221,7 +220,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Center_Y_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             assert(self.superview != nil, "can not found superview")
             if let constraint = self.constraint(Constraint_Id_CenterY, agora_constraints) {
@@ -253,7 +252,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Right_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             assert(self.superview != nil, "can not found superview")
             if let constraint = self.constraint(Constraint_Id_Right, agora_constraints) {
@@ -285,7 +284,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Bottom_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
             
             assert(self.superview != nil, "can not found superview")
             if let constraint = self.constraint(Constraint_Id_Bottom, agora_constraints) {
@@ -322,7 +321,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Is_Draggable_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
         }
         
         get {
@@ -348,7 +347,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Is_Resizable_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
         }
         
         get {
@@ -400,7 +399,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Total_Scale_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
         }
         
         get {
@@ -420,7 +419,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Pan_Gesture_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
         }
         
         get {
@@ -440,7 +439,7 @@ extension UIView {
             objc_setAssociatedObject(self,
                                      &Agora_Pinch_Gesture_Key,
                                      newValue,
-                                     .OBJC_ASSOCIATION_ASSIGN)
+                                     .OBJC_ASSOCIATION_RETAIN)
         }
         
         get {
