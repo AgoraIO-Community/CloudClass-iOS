@@ -63,7 +63,7 @@ import UIKit
         
         let label = AgoraBaseLabel()
         label.font = UIFont.boldSystemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 18 : 10)
-        label.text = "距离上课还有："
+        label.text = ""
         label.tag = LabelTag
         label.textColor = UIColor.white
         view.addSubview(label)
@@ -175,12 +175,12 @@ extension AgoraToolView {
             
             self.timeView.x = self.classInfoLabel.x + self.classInfoLabel.width + 35
             self.timeView.bottom = 17
-            self.timeView.resize(0, 42)
-            
+            self.timeView.height = 42
+
             self.signalView.x = self.timeView.x + self.timeView.width + 45
             self.signalView.bottom = 17
-            self.signalView.resize(77, 42)
-            
+            self.signalView.height = 42
+
             for (index, _) in self.menuConfigs.enumerated() {
                 let btn = self.viewWithTag(index + ButtonTagStart) as! AgoraBaseButton
                 btn.resize(40, 40)
@@ -199,12 +199,12 @@ extension AgoraToolView {
             
             self.timeView.x = self.classInfoLabel.x + self.classInfoLabel.width + 18
             self.timeView.bottom = 9
-            self.timeView.resize(0, 22)
+            self.timeView.height = 22
             
             self.signalView.x = self.timeView.x + self.timeView.width + 27
             self.signalView.bottom = 9
-            self.signalView.resize(35, 22)
-            
+            self.signalView.height = 22
+
             for (index, _) in self.menuConfigs.enumerated() {
                 let btn = self.viewWithTag(index + ButtonTagStart) as! AgoraBaseButton
                 btn.resize(20, 20)
@@ -215,6 +215,7 @@ extension AgoraToolView {
     }
     
     public func updateView() {
+        
         let classString = "课程ID: 122342"
         let timeString = "距离上课还有：10分11秒"
         
