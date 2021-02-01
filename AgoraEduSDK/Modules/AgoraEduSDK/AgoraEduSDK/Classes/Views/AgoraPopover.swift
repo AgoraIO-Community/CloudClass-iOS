@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 protocol AgoraPopoverDelegate: NSObjectProtocol {
-    func AgoraPopoverDidDismiss(_ AgoraPopover: AgoraPopover)
+    func popoverDidDismiss(_ popover: AgoraPopover)
 }
 
 public enum AgoraPopoverOption {
@@ -276,7 +276,7 @@ open class AgoraPopover: UIView {
                 self.transform = CGAffineTransform.identity
                 self.didDismissHandler?()
                 
-                self.delegate?.AgoraPopoverDidDismiss(self)
+                self.delegate?.popoverDidDismiss(self)
             }
         }
     }
@@ -293,7 +293,7 @@ open class AgoraPopover: UIView {
             self.transform = CGAffineTransform.identity
             self.didDismissHandler?()
             
-            self.delegate?.AgoraPopoverDidDismiss(self)
+            self.delegate?.popoverDidDismiss(self)
         }
     }
     

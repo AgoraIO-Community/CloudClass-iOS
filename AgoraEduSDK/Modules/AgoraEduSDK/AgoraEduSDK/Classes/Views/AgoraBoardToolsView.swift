@@ -8,8 +8,8 @@
 import UIKit
 
 // MARK: - AgoraButtonListView
-private class AgoraButtonListView: AgoraBaseView {
-    private(set) var buttons = [AgoraBaseButton]()
+private class AgoraButtonListView: AgoraBaseUIView {
+    private(set) var buttons = [AgoraBaseUIButton]()
     private var items = [AgoraBoardToolsItem]()
     
     func initList(_ buttonItems: [AgoraBoardToolsItem]) {
@@ -18,12 +18,12 @@ private class AgoraButtonListView: AgoraBaseView {
             item.removeFromSuperview()
         }
         
-        buttons = [AgoraBaseButton]()
+        buttons = [AgoraBaseUIButton]()
         items = buttonItems
         
         // add new buttons
         for item in buttonItems {
-            let button = AgoraBaseButton(item: item)
+            let button = AgoraBaseUIButton(item: item)
             button.addTarget(self,
                              action: #selector(doButtonPressed(button:)),
                              for: .touchUpInside)
@@ -37,15 +37,21 @@ private class AgoraButtonListView: AgoraBaseView {
         
         var lastButtonMaxY: CGFloat? = nil
         for button in buttons {
-            button.x = 0
-            button.y = lastButtonMaxY ?? 0
-            button.width = (bounds.height == 0) ? 0 : bounds.width
-            button.height = button.width
-            lastButtonMaxY = button.height + button.y
+            button.agora_x = 0
+            button.agora_y = lastButtonMaxY ?? 0
+            button.agora_width = (bounds.height == 0) ? 0 : bounds.width
+            button.agora_height = button.agora_width
+            lastButtonMaxY = button.agora_height + button.agora_y
         }
     }
     
-    @objc func doButtonPressed(button: AgoraBaseButton) {
+    func buttonsUnselected() {
+        for item in buttons {
+            item.isSelected = false
+        }
+    }
+    
+    @objc func doButtonPressed(button: AgoraBaseUIButton) {
         var buttonIndex: Int? = nil
         
         for (index, item) in buttons.enumerated() {
@@ -72,7 +78,7 @@ private class AgoraButtonListView: AgoraBaseView {
 }
 
 // MARK: - AgoraBoardToolsItem
-class AgoraBoardToolsItem: NSObject {
+@objc class AgoraBoardToolsItem: NSObject {
     var normalImage: UIImage
     var selectedImage: UIImage
     var tap: ((UIButton) -> Void)?
@@ -86,14 +92,14 @@ class AgoraBoardToolsItem: NSObject {
     }
 }
 
-class AgoraBoardToolsView: AgoraBaseView {
+@objc class AgoraBoardToolsView: AgoraBaseUIView {
     fileprivate let cornerRadius: CGFloat = 10
     fileprivate let buttonListView = AgoraButtonListView()
-    fileprivate let titleLabel = AgoraBaseLabel()
-    fileprivate let separator = AgoraBaseView()
-    fileprivate let unfoldButton = AgoraBaseButton()
+    fileprivate let titleLabel = AgoraBaseUILabel()
+    fileprivate let separator = AgoraBaseUIView()
+    fileprivate let unfoldButton = AgoraBaseUIButton()
     
-    fileprivate let popover = AgoraPopover(options: [.type(.up),
+    fileprivate let popover = AgoraPopover(options: [.type(.right),
                                                      .blackOverlayColor(.clear),
                                                      .cornerRadius(5),
                                                      .arrowSize(CGSize(width: 8, height: 4))])
@@ -110,53 +116,47 @@ class AgoraBoardToolsView: AgoraBaseView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.initLayout()
+        initLayout()
     }
     
     func initLayout() {
         // titleLabel
-        titleLabel.x = 0
-        titleLabel.y = 0
-        titleLabel.width = bounds.width
-        titleLabel.height = bounds.width
-        
-        self.layoutIfNeeded();
+        titleLabel.agora_x = 0
+        titleLabel.agora_y = 0
+        titleLabel.agora_width = bounds.width
+        titleLabel.agora_height = bounds.width
         
         // separator
         let separatorSpace: CGFloat = 12
         let separatorW: CGFloat = bounds.width - (separatorSpace * 2)
-        separator.x = separatorSpace
-        separator.bottom = 61
-        separator.height = 1
-        separator.width = separatorW
+        separator.agora_x = separatorSpace
+        separator.agora_bottom = 61
+        separator.agora_height = 1
+        separator.agora_width = separatorW
         
         // unfoldButton
         let unfoldButtonH: CGFloat = 60
-        let unfoldButtonY = bounds.height - unfoldButtonH - CGFloat(separator.height)
-        unfoldButton.x = 0
-        unfoldButton.y = unfoldButtonY
-        unfoldButton.width = bounds.width
-        unfoldButton.height = unfoldButtonH
+        let unfoldButtonY = bounds.height - unfoldButtonH - CGFloat(separator.agora_height)
+        unfoldButton.agora_x = 0
+        unfoldButton.agora_y = unfoldButtonY
+        unfoldButton.agora_width = bounds.width
+        unfoldButton.agora_height = unfoldButtonH
         
         // unfold status frame
         if unfoldButton.isSelected {
             // buttonListView
-            buttonListView.x = 0
-            buttonListView.y = titleLabel.height
-            buttonListView.width = bounds.width
-            buttonListView.height = CGFloat(buttonListView.buttons.count) * bounds.width
-            height = titleLabel.height + separator.height + unfoldButton.height + buttonListView.height
+            buttonListView.agora_x = 0
+            buttonListView.agora_y = titleLabel.agora_height
+            buttonListView.agora_width = bounds.width
+            buttonListView.agora_height = CGFloat(buttonListView.buttons.count) * bounds.width
+            agora_height = titleLabel.agora_height + separator.agora_height + unfoldButton.agora_height + buttonListView.agora_height
             
         // fold status frame
         } else {
             // buttonListView
-            buttonListView.height = 0
+            buttonListView.agora_height = 0
             
-            height = titleLabel.height + separator.height + unfoldButton.height
-        }
-        
-        UIView.animate(withDuration: TimeInterval.animation) {
-            self.superview?.layoutIfNeeded()
+            agora_height = titleLabel.agora_height + separator.agora_height + unfoldButton.agora_height
         }
     }
 }
@@ -198,9 +198,10 @@ private extension AgoraBoardToolsView {
     }
     
     func registerToolsItem() {
-        self.popover.backgroundColor = .blue
-        self.popover.strokeColor = .red
-        self.popover.borderColor = .green
+        self.popover.delegate = self
+        self.popover.strokeColor = UIColor(rgb: 0x13196F,
+                                           alpha: 0.3)
+        self.popover.borderColor = UIColor(rgb: 0x090E51)
         
         let moveItem = AgoraBoardToolsItem(normalImage: UIImage(named: "箭头")!,
                                            selectedImage: UIImage(named: "箭头-1")!) { [unowned self] (button) in
@@ -251,10 +252,19 @@ private extension AgoraBoardToolsView {
     @objc func doUnfoldButtonPressed(_ button: UIButton) {
         button.isSelected.toggle()
         layoutSubviews()
+        UIView.animate(withDuration: TimeInterval.animation) {
+            self.superview?.layoutIfNeeded()
+        }
     }
 }
 
-fileprivate extension AgoraBaseButton {
+extension AgoraBoardToolsView: AgoraPopoverDelegate {
+    func popoverDidDismiss(_ popover: AgoraPopover) {
+        buttonListView.buttonsUnselected()
+    }
+}
+
+fileprivate extension AgoraBaseUIButton {
     convenience init(item: AgoraBoardToolsItem) {
         self.init(frame: CGRect.zero)
         
