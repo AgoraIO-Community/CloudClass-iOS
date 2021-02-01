@@ -231,8 +231,10 @@ extension AgoraUserView {
     }
     
     @objc fileprivate func onScaleTouchEvent() {
-        self.isMin = !isMin
-        self.scaleTouchBlock?(self.isMin)
+        if self.scaleTouchBlock != nil {
+            self.isMin = !isMin
+            self.scaleTouchBlock?(self.isMin)
+        }
     }
 }
 
