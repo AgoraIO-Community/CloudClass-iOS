@@ -44,7 +44,6 @@
     [self setLoadingVisible:YES];
     AgoraEduManager.shareManager.roomManager.delegate = self;
     
-    
     WEAK(self);
     [AgoraEduManager.shareManager joinClassroomWithSceneType:self.sceneType userName:self.userName success:^{
 

@@ -132,8 +132,8 @@
     self.toolView.height = IsPad ? 77 : 40;
 
     // teacher & student
-    CGFloat top = self.toolView.height + 5;
-    CGFloat right = 5;
+    CGFloat top = self.toolView.height + 9;
+    CGFloat right = 9;
     CGFloat width = 180;
     CGFloat height = 128;
     CGFloat minGap = 8;
@@ -142,7 +142,7 @@
     CGFloat minHeight = 31;
     CGFloat minWidth = 140;
     if(IsPad) {
-        top = self.toolView.height + 9;
+        top = self.toolView.height + 15;
         right = 20;
         width = 319;
         height = 228;
@@ -161,16 +161,30 @@
     self.teaView.scaleTouchBlock = ^(BOOL isMin) {
         [weakself.teaView clearConstraint];
         if (isMin) {
-            weakself.teaView.bottom = self.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
+            weakself.teaView.bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
             weakself.teaView.right = minRight;
             weakself.teaView.width = minWidth;
             weakself.teaView.height = minHeight;
+            
+            // adjust stuview layout
+            if (!weakself.stuView.isMin) {
+                CGFloat differ = (weakself.stuView.y + weakself.stuView.height) -  (kScreenHeight - weakself.teaView.bottom - 20);
+                
+                if (differ < 0) {
+                    weakself.stuView.y -= abs(differ);
+                }
+            }
             
         } else {
             weakself.teaView.y = top;
             weakself.teaView.right = right;
             weakself.teaView.width = width;
             weakself.teaView.height = height;
+            
+            if(!weakself.stuView.isMin) {
+                CGFloat stuViewY = top + 10 + height;
+                weakself.stuView.y = stuViewY;
+            }
         }
         [UIView animateWithDuration:0.35 animations:^{
             [weakself.view layoutIfNeeded];
@@ -193,10 +207,24 @@
             }
             
         } else {
-            weakself.stuView.y = top + 10 + height;
+            if (weakself.teaView.isMin) {
+                weakself.teaView.bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
+            }
+            
+            CGFloat stuViewY = top + 10 + height;
             weakself.stuView.right = right;
             weakself.stuView.width = width;
             weakself.stuView.height = height;
+            
+            // adjust stuview layout
+            if (weakself.teaView.isMin) {
+                CGFloat differ = (weakself.stuView.y + weakself.stuView.height) -  (kScreenHeight - weakself.teaView.bottom - 20);
+                
+                if (differ < 0) {
+                    stuViewY -= abs(differ);
+                }
+            }
+            weakself.stuView.y = stuViewY;
         }
         [UIView animateWithDuration:0.35 animations:^{
             [weakself.view layoutIfNeeded];
@@ -204,10 +232,10 @@
     };
     
     //board
-    self.boardContentView.x = right;
-    self.boardContentView.right = IsPad ? right + width + 25 : right + width + 25;
+    self.boardContentView.x = 0;
+    self.boardContentView.right = IsPad ? right + width + 20 : right + width + 20;
     self.boardRight = self.boardContentView.right;
-    self.boardContentView.y = top;
+    self.boardContentView.y = self.toolView.height;
     self.boardContentView.bottom = 0;
     
     // boardView
@@ -649,6 +677,9 @@
     } else {
         self.boardContentView.right = self.boardRight;
     }
+    [UIView animateWithDuration:0.35 animations:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 #pragma mark WhiteManagerDelegate

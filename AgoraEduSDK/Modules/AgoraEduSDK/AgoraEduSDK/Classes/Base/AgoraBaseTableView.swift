@@ -1,13 +1,13 @@
 //
-//  AgoraBaseView.swift
+//  AgoraBaseTableView.swift
 //  AgoraEduSDK
 //
-//  Created by SRS on 2021/1/27.
+//  Created by SRS on 2021/1/31.
 //
 
 import UIKit
 
-@objcMembers public class AgoraBaseView: UIView {
+@objcMembers public class AgoraBaseTableView: UITableView {
     fileprivate var agoraConstraints: [NSLayoutConstraint] = []
     
     public var x: CGFloat = 0 {
@@ -198,24 +198,7 @@ import UIKit
             self.superview!.insertSubview(self, at: z)
         }
     }
-    public var isDraggable : Bool = false {
-        willSet {
-            if (newValue) {
-                self.addGestureRecognizer(self.pan)
-            } else if (isDraggable) {
-                self.removeGestureRecognizer(self.pan)
-            }
-        }
-    }
-    public var isResizable : Bool = false {
-        willSet {
-            if (newValue) {
-                self.addGestureRecognizer(self.pinch)
-            } else if (isResizable) {
-                self.removeGestureRecognizer(self.pinch)
-            }
-        }
-    }
+   
     public var id : Int {
         set {
             self.tag = newValue
@@ -225,34 +208,12 @@ import UIKit
         }
     }
     
-    fileprivate let FloatDiffer: Float = 0.001
-    fileprivate var totalScale : CGFloat = 1.0
-    fileprivate lazy var pan: UIPanGestureRecognizer = {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(onPanEvent(_ :)))
-        return panGesture
-    }()
-    fileprivate lazy var pinch: UIPinchGestureRecognizer = {
-        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(onPinchEvent(_ :)))
-        return pinchGesture
-    }()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    public override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
         self.translatesAutoresizingMaskIntoConstraints = false
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    public func hasTransformed() -> Bool {
-        return self.hasScaled() || self.hasScaled()
-    }
-    
-    public func resetTransform() {
-        self.transform = CGAffineTransform(scaleX: 1.0 / self.totalScale, y: 1.0 / self.totalScale)
-        self.totalScale = 1.0
-        
-        self.transform = CGAffineTransform(translationX: -self.transform.tx, y: -self.transform.ty)
     }
     
     public func clearConstraint() {
@@ -262,61 +223,20 @@ import UIKit
     }
 
     deinit {
-        if (self.isDraggable) {
-            self.removeGestureRecognizer(self.pan)
-        }
-        if (self.isResizable) {
-            self.removeGestureRecognizer(self.pinch)
-        }
-        
         self.agoraConstraints.removeAll()
     }
 }
 
-// MARK: GestureRecognizer
-extension AgoraBaseView {
-    @objc fileprivate func onPanEvent(_ pan: UIPanGestureRecognizer) {
-
-        let transP = pan.translation(in: self)
-        self.transform = CGAffineTransform(translationX: transP.x, y: transP.y)
-        pan.setTranslation(CGPoint.zero, in: self)
-    }
-
-    @objc fileprivate func onPinchEvent(_ pinch: UIPinchGestureRecognizer) {
-        
-        if (pinch.state == .began || pinch.state == .changed) {
-            let scale = pinch.scale
-            self.transform = CGAffineTransform(scaleX: scale, y: scale)
-            pinch.scale = 1
-            self.totalScale *= scale
-        }
-    }
-    
-    fileprivate func hasScaled() -> Bool {
-        if (abs(Float(self.totalScale - 1.0)) <= FloatDiffer) {
-            return false
-        }
-        return true
-    }
-    
-    fileprivate func hasMoved() -> Bool {
-        if (abs(Float(self.transform.tx)) <= FloatDiffer && abs(Float(self.transform.ty)) <= FloatDiffer) {
-            return false
-        }
-        return true
-    }
-}
-
 // MARK: Rect
-extension AgoraBaseView {
+extension AgoraBaseTableView {
     
-    @discardableResult public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseView {
+    @discardableResult public func move(_ x: CGFloat, _ y: CGFloat) -> AgoraBaseTableView {
         self.x = x
         self.y = y
         return self
     }
     
-    @discardableResult public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseView {
+    @discardableResult public func resize(_ width: CGFloat, _ height: CGFloat) -> AgoraBaseTableView {
         self.width = width
         self.height = height
         return self
@@ -326,4 +246,3 @@ extension AgoraBaseView {
         self.removeFromSuperview()
     }
 }
-
