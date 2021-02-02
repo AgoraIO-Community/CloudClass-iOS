@@ -27,5 +27,5 @@ import Foundation
     public var translateState: AgoraChatLoadingState = .none
     public var sendState: AgoraChatLoadingState = .none
     
-    public var cellHeight: CGFloat = 0
+    public var cellHeight: Float = 0
 }

@@ -5,7 +5,7 @@
 //  Created by SRS on 2021/1/31.
 //
 
-import Foundation
+import UIKit
 
 @objcMembers public class AgoraChatPanelInOutCell: AgoraBaseCell {
     

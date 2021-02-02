@@ -147,6 +147,8 @@
 		788BC8A925C2B2CE0095998F /* AgoraBaseLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 788BC8A825C2B2CE0095998F /* AgoraBaseLabel.swift */; };
 		78DA43D725B4373C007F9356 /* AgoraEduReplayConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */; };
 		78DA43D825B4373C007F9356 /* AgoraEduReplayConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 78DA43D625B4373C007F9356 /* AgoraEduReplayConfiguration.h */; };
+		78E0FBAA25C8EDEF0023D161 /* AgoraChatPanelVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E0FBA825C8EDEE0023D161 /* AgoraChatPanelVM.swift */; };
+		78E0FBAB25C8EDEF0023D161 /* AgoraChatPanelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E0FBA925C8EDEE0023D161 /* AgoraChatPanelModel.swift */; };
 		81DAA06AEDE4764FA3712154 /* Pods_AgoraEduSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 184C538EB6D076BAC3B83E36 /* Pods_AgoraEduSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -295,6 +297,8 @@
 		788BC8A825C2B2CE0095998F /* AgoraBaseLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBaseLabel.swift; sourceTree = "<group>"; };
 		78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduReplayConfiguration.m; sourceTree = "<group>"; };
 		78DA43D625B4373C007F9356 /* AgoraEduReplayConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduReplayConfiguration.h; sourceTree = "<group>"; };
+		78E0FBA825C8EDEE0023D161 /* AgoraChatPanelVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraChatPanelVM.swift; sourceTree = "<group>"; };
+		78E0FBA925C8EDEE0023D161 /* AgoraChatPanelModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraChatPanelModel.swift; sourceTree = "<group>"; };
 		8ACCDE2E28B832D1B7FE7D4D /* Pods-AgoraEduSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduSDK.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEduSDK/Pods-AgoraEduSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		F0B08175A3283B9083EFAA8F /* Pods-AgoraEduSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduSDK.release.xcconfig"; path = "Target Support Files/Pods-AgoraEduSDK/Pods-AgoraEduSDK.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -326,6 +330,8 @@
 				7839CF4025C6809900C4B08D /* AgoraChatPanelView.swift */,
 				7839CF4325C680E800C4B08D /* AgoraChatPanelMessageCell.swift */,
 				7839CF4625C6810C00C4B08D /* AgoraChatPanelInOutCell.swift */,
+				78E0FBA925C8EDEE0023D161 /* AgoraChatPanelModel.swift */,
+				78E0FBA825C8EDEE0023D161 /* AgoraChatPanelVM.swift */,
 			);
 			path = AgoraChatPanelView;
 			sourceTree = "<group>";
@@ -975,6 +981,7 @@
 				787483E025AAB5BD0022329D /* AgoraEETextMessage.m in Sources */,
 				787483FA25AAB5BD0022329D /* AgoraFLAnimatedImage.m in Sources */,
 				787483D925AAB5BD0022329D /* AgoraBOViewController.m in Sources */,
+				78E0FBAA25C8EDEF0023D161 /* AgoraChatPanelVM.swift in Sources */,
 				7874842125AAB5BD0022329D /* AgoraEduSDK.m in Sources */,
 				787483B725AAB5BD0022329D /* AgoraBCNavigationView.m in Sources */,
 				7874840325AAB5BD0022329D /* NSArray+Copy.m in Sources */,
@@ -984,6 +991,7 @@
 				7874840625AAB5BD0022329D /* AgoraEduAlertViewUtil.m in Sources */,
 				787483B925AAB5BD0022329D /* AgoraBCStudentVideoView.m in Sources */,
 				7839CCF125C3C1F600C4B08D /* AgoraDeviceAssistant.swift in Sources */,
+				78E0FBAB25C8EDEF0023D161 /* AgoraChatPanelModel.swift in Sources */,
 				787483EA25AAB5BD0022329D /* AgoraEEChatTextFiled.m in Sources */,
 				787483B525AAB5BD0022329D /* AgoraRecordPropertyModel.m in Sources */,
 				787483CF25AAB5BD0022329D /* AgoraMCStudentVideoListView.m in Sources */,
