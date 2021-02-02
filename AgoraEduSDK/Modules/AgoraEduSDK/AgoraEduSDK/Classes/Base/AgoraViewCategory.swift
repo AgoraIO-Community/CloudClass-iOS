@@ -7,11 +7,32 @@
 
 import UIKit
 
+public var Agora_Constraint_Id_X = "Agora_Constraint_Id_X"
+public var Agora_Constraint_Id_Y = "Agora_Constraint_Id_Y"
+public var Agora_Constraint_Id_Center_X = "Agora_Constraint_Id_Center_X"
+public var Agora_Constraint_Id_Center_Y = "Agora_Constraint_Id_Center_Y"
+public var Agora_Constraint_Id_Width = "Agora_Constraint_Id_Width"
+public var Agora_Constraint_Id_Height = "Agora_Constraint_Id_Height"
+public var Agora_Constraint_Id_Right = "Agora_Constraint_Id_Right"
+public var Agora_Constraint_Id_Bottom = "Agora_Constraint_Id_Bottom"
+
+public var Agora_Constraint_Id_Safe_X = "Agora_Constraint_Id_Safe_X"
+public var Agora_Constraint_Id_Safe_Y = "Agora_Constraint_Id_Safe_Y"
+public var Agora_Constraint_Id_Safe_Right = "Agora_Constraint_Id_Safe_Right"
+public var Agora_Constraint_Id_Safe_Bottom = "Agora_Constraint_Id_Safe_Bottom"
+
 fileprivate var Agora_Constraints_Key: NSString = "agora_constraints"
 
 fileprivate var Agora_X_Key: NSString = "agora_x"
 fileprivate var Agora_Y_Key: NSString = "agora_y"
 fileprivate var Agora_Z_Key: NSString = "agora_z"
+
+fileprivate var Agora_Safe_X_Key: NSString = "agora_safe_x"
+fileprivate var Agora_Safe_Y_Key: NSString = "agora_safe_y"
+fileprivate var Agora_Safe_Left_Key: NSString = "agora_safe_left"
+fileprivate var Agora_Safe_Right_Key: NSString = "agora_safe_right"
+fileprivate var Agora_Safe_Top_Key: NSString = "agora_safe_top"
+fileprivate var Agora_Safe_Bottom_Key: NSString = "agora_safe_bottom"
 
 fileprivate var Agora_Width_Key: NSString = "agora_width"
 fileprivate var Agora_Height_Key: NSString = "agora_height"
@@ -44,7 +65,7 @@ fileprivate let Agora_Float_Differ: Float = 0.001
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             assert(self.superview != nil, "can not found superview")
-            if let constraint = self.constraint(Agora_Constraint_Id_X, agora_constraints) {
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_X, agora_constraints) {
                 constraint.constant = newValue
                 constraint.isActive = true
             } else {
@@ -76,7 +97,7 @@ fileprivate let Agora_Float_Differ: Float = 0.001
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             assert(self.superview != nil, "can not found superview")
-            if let constraint = self.constraint(Agora_Constraint_Id_Y, agora_constraints) {
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Y, agora_constraints) {
                 constraint.constant = newValue
                 constraint.isActive = true
             } else {
@@ -123,6 +144,149 @@ fileprivate let Agora_Float_Differ: Float = 0.001
         }
     }
     
+    var agora_safe_x: CGFloat {
+        set {
+            objc_setAssociatedObject(self,
+                                     &Agora_Safe_X_Key,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            
+            assert(self.superview != nil, "can not found superview")
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Safe_X, agora_constraints) {
+                constraint.constant = newValue
+                constraint.isActive = true
+            } else {
+                if #available(iOS 11.0, *) {
+                    let constraint = self.leftAnchor.constraint(equalTo: self.superview!.safeAreaLayoutGuide.leftAnchor,
+                                                                constant: newValue)
+                    constraint.identifier = Agora_Constraint_Id_Safe_X
+                    constraint.isActive = true
+                    agora_constraints.add(constraint)
+                } else {
+                    self.agora_x = newValue
+                }
+            }
+        }
+        
+        get {
+            let v = objc_getAssociatedObject(self,
+                                             &Agora_Safe_X_Key)
+            
+            if let value = v as? CGFloat {
+                return value
+            } else {
+                return 0
+            }
+        }
+    }
+    
+    var agora_safe_y: CGFloat {
+        set {
+            objc_setAssociatedObject(self,
+                                     &Agora_Safe_Y_Key,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            
+            assert(self.superview != nil, "can not found superview")
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Safe_Y, agora_constraints) {
+                constraint.constant = newValue
+                constraint.isActive = true
+            } else {
+                if #available(iOS 11.0, *) {
+                    let constraint = self.topAnchor.constraint(equalTo: self.superview!.safeAreaLayoutGuide.topAnchor,
+                                                               constant: newValue)
+                    constraint.identifier = Agora_Constraint_Id_Safe_Y
+                    constraint.isActive = true
+                    agora_constraints.add(constraint)
+                } else {
+                    self.agora_y = newValue
+                }
+            }
+        }
+        
+        get {
+            let v = objc_getAssociatedObject(self,
+                                             &Agora_Safe_Y_Key)
+            
+            if let value = v as? CGFloat {
+                return value
+            } else {
+                return 0
+            }
+        }
+    }
+    
+    var agora_safe_right: CGFloat {
+        set {
+            objc_setAssociatedObject(self,
+                                     &Agora_Safe_Right_Key,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            
+            assert(self.superview != nil, "can not found superview")
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Safe_Right, agora_constraints) {
+                constraint.constant = -newValue
+                constraint.isActive = true
+            } else {
+                if #available(iOS 11.0, *) {
+                    let constraint = self.rightAnchor.constraint(equalTo: self.superview!.safeAreaLayoutGuide.rightAnchor,
+                                                                 constant: -newValue)
+                    constraint.identifier = Agora_Constraint_Id_Safe_Right
+                    constraint.isActive = true
+                    agora_constraints.add(constraint)
+                } else {
+                    self.agora_right = newValue
+                }
+            }
+        }
+        
+        get {
+            let v = objc_getAssociatedObject(self,
+                                             &Agora_Safe_Right_Key)
+            
+            if let value = v as? CGFloat {
+                return value
+            } else {
+                return 0
+            }
+        }
+    }
+    
+    var agora_safe_bottom: CGFloat {
+        set {
+            objc_setAssociatedObject(self,
+                                     &Agora_Safe_Bottom_Key,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            
+            assert(self.superview != nil, "can not found superview")
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Safe_Bottom, agora_constraints) {
+                constraint.constant = -newValue
+                constraint.isActive = true
+            } else {
+                if #available(iOS 11.0, *) {
+                    let constraint = self.bottomAnchor.constraint(equalTo: self.superview!.safeAreaLayoutGuide.bottomAnchor, constant: -newValue)
+                    constraint.identifier = Agora_Constraint_Id_Safe_Bottom
+                    constraint.isActive = true
+                    agora_constraints.add(constraint)
+                } else {
+                    self.agora_bottom = newValue
+                }
+            }
+        }
+        
+        get {
+            let v = objc_getAssociatedObject(self,
+                                             &Agora_Safe_Bottom_Key)
+            
+            if let value = v as? CGFloat {
+                return value
+            } else {
+                return 0
+            }
+        }
+    }
+    
     var agora_width: CGFloat {
         set {
             objc_setAssociatedObject(self,
@@ -130,7 +294,7 @@ fileprivate let Agora_Float_Differ: Float = 0.001
                                      newValue,
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            if let constraint = self.constraint(Agora_Constraint_Id_Width, agora_constraints) {
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Width, agora_constraints) {
                 constraint.constant = newValue
                 constraint.isActive = true
             } else {
@@ -160,7 +324,7 @@ fileprivate let Agora_Float_Differ: Float = 0.001
                                      newValue,
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
-            if let constraint = self.constraint(Agora_Constraint_Id_Height, agora_constraints) {
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Height, agora_constraints) {
                 constraint.constant = newValue
                 constraint.isActive = true
             } else {
@@ -191,13 +355,13 @@ fileprivate let Agora_Float_Differ: Float = 0.001
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             assert(self.superview != nil, "can not found superview")
-            if let constraint = self.constraint(Agora_Constraint_Id_CenterX, agora_constraints) {
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Center_X, agora_constraints) {
                 constraint.constant = newValue
                 constraint.isActive = true
             } else {
                 let constraint = self.centerXAnchor.constraint(equalTo: self.superview!.centerXAnchor,
                                                                constant: newValue)
-                constraint.identifier = Agora_Constraint_Id_CenterX
+                constraint.identifier = Agora_Constraint_Id_Center_X
                 constraint.isActive = true
                 agora_constraints.add(constraint)
             }
@@ -223,13 +387,13 @@ fileprivate let Agora_Float_Differ: Float = 0.001
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             assert(self.superview != nil, "can not found superview")
-            if let constraint = self.constraint(Agora_Constraint_Id_CenterY, agora_constraints) {
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Center_Y, agora_constraints) {
                 constraint.constant = newValue
                 constraint.isActive = true
             } else {
                 let constraint = self.centerYAnchor.constraint(equalTo: self.superview!.centerYAnchor,
                                                                constant: newValue)
-                constraint.identifier = Agora_Constraint_Id_CenterY
+                constraint.identifier = Agora_Constraint_Id_Center_Y
                 constraint.isActive = true
                 agora_constraints.add(constraint)
             }
@@ -255,7 +419,7 @@ fileprivate let Agora_Float_Differ: Float = 0.001
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             assert(self.superview != nil, "can not found superview")
-            if let constraint = self.constraint(Agora_Constraint_Id_Right, agora_constraints) {
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Right, agora_constraints) {
                 constraint.constant = -newValue
                 constraint.isActive = true
             } else {
@@ -287,7 +451,7 @@ fileprivate let Agora_Float_Differ: Float = 0.001
                                      .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             
             assert(self.superview != nil, "can not found superview")
-            if let constraint = self.constraint(Agora_Constraint_Id_Bottom, agora_constraints) {
+            if let constraint = self.agora_constraint(Agora_Constraint_Id_Bottom, agora_constraints) {
                 constraint.constant = -newValue
                 constraint.isActive = true
             } else {
@@ -464,16 +628,16 @@ extension UIView {
         agora_constraints = NSMutableArray()
         
         let panGesture = UIPanGestureRecognizer(target: self,
-                                                action: #selector(onPanEvent(_ :)))
+                                                action: #selector(agora_on_pan_event(_ :)))
         self.agora_pan = panGesture
         
         let pinchGesture = UIPinchGestureRecognizer(target: self,
-                                                    action: #selector(onPinchEvent(_ :)))
+                                                    action: #selector(agora_on_pinch_event(_ :)))
         self.agora_pinch = pinchGesture
     }
     
     func agora_has_transformed() -> Bool {
-        return self.hasScaled() || self.hasScaled()
+        return self.agora_has_scaled() || self.agora_has_moved()
     }
     
     func agora_reset_transform() {
@@ -491,16 +655,34 @@ extension UIView {
             obj.isActive = false
         }
     }
+    
+    @discardableResult func agora_move(_ x: CGFloat,
+                                       _ y: CGFloat) -> UIView {
+        self.agora_x = x
+        self.agora_y = y
+        return self
+    }
+    
+    @discardableResult func agora_resize(_ width: CGFloat,
+                                         _ height: CGFloat) -> UIView {
+        self.agora_width = width
+        self.agora_height = height
+        return self
+    }
+    
+    func agora_close() {
+        self.removeFromSuperview()
+    }
 }
 
 fileprivate extension UIView {
-    @objc func onPanEvent(_ pan: UIPanGestureRecognizer) {
+    @objc func agora_on_pan_event(_ pan: UIPanGestureRecognizer) {
         let transP = pan.translation(in: self)
         self.transform = CGAffineTransform(translationX: transP.x, y: transP.y)
         pan.setTranslation(CGPoint.zero, in: self)
     }
     
-    @objc func onPinchEvent(_ pinch: UIPinchGestureRecognizer) {
+    @objc func agora_on_pinch_event(_ pinch: UIPinchGestureRecognizer) {
         if (pinch.state == .began || pinch.state == .changed) {
             let scale = pinch.scale
             self.transform = CGAffineTransform(scaleX: scale, y: scale)
@@ -509,22 +691,22 @@ fileprivate extension UIView {
         }
     }
     
-    func hasScaled() -> Bool {
+    func agora_has_scaled() -> Bool {
         if (abs(Float(self.agora_total_scale - 1.0)) <= Agora_Float_Differ) {
             return false
         }
         return true
     }
     
-    func hasMoved() -> Bool {
+    func agora_has_moved() -> Bool {
         if (abs(Float(self.transform.tx)) <= Agora_Float_Differ && abs(Float(self.transform.ty)) <= Agora_Float_Differ) {
             return false
         }
         return true
     }
     
-    func constraint(_ identifier: String,
-                    _ constraints: NSMutableArray) -> NSLayoutConstraint? {
+    func agora_constraint(_ identifier: String,
+                          _ constraints: NSMutableArray) -> NSLayoutConstraint? {
         for item in constraints {
             let obj = item as! NSLayoutConstraint
             if obj.identifier == identifier {
