@@ -20,15 +20,15 @@ import UIKit
     fileprivate let ImageViewTag: Int = 100
     fileprivate let ButtonTagStart: Int = 101
     
-    fileprivate lazy var leftBtn: AgoraBaseButton = {
-        let btn = AgoraBaseButton(type: .custom)
+    fileprivate lazy var leftBtn: AgoraBaseUIButton = {
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onLeftTouchEvent), for: .touchUpInside)
         btn.setImage(AgoraImageWithName("left", self.classForCoder), for: .normal)
         return btn
     }()
     
-    fileprivate lazy var classInfoLabel: AgoraBaseLabel = {
-        let label = AgoraBaseLabel()
+    fileprivate lazy var classInfoLabel: AgoraBaseUILabel = {
+        let label = AgoraBaseUILabel()
         label.isHidden = true
     
         label.font = UIFont.boldSystemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 18 : 10)
@@ -49,19 +49,19 @@ import UIKit
         view.addSubview(redView)
         if AgoraDeviceAssistant.OS.isPad {
             redView.layer.borderWidth = 2
-            redView.x = 0
-            redView.centerY = 0
-            redView.resize(11, 11)
+            redView.agora_x = 0
+            redView.agora_center_y = 0
+            redView.agora_resize(11, 11)
             redView.layer.cornerRadius = 5
         } else {
             redView.layer.borderWidth = 1
-            redView.x = 0
-            redView.centerY = 0
-            redView.resize(6, 6)
+            redView.agora_x = 0
+            redView.agora_center_y = 0
+            redView.agora_resize(6, 6)
             redView.layer.cornerRadius = 3
         }
         
-        let label = AgoraBaseLabel()
+        let label = AgoraBaseUILabel()
         label.font = UIFont.boldSystemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 18 : 10)
         label.text = ""
         label.tag = LabelTag
@@ -69,15 +69,15 @@ import UIKit
         view.addSubview(label)
         
         if AgoraDeviceAssistant.OS.isPad {
-            label.x = 15
-            label.centerY = 0
-            label.resize(20, 17)
-            label.right = 0
+            label.agora_x = 15
+            label.agora_center_y = 0
+            label.agora_resize(20, 17)
+            label.agora_right = 0
         } else {
-            label.x = 10
-            label.centerY = 0
-            label.resize(20, 10)
-            label.right = 0
+            label.agora_x = 10
+            label.agora_center_y = 0
+            label.agora_resize(20, 10)
+            label.agora_right = 0
         }
 
         return view
@@ -87,35 +87,35 @@ import UIKit
         
         let view = AgoraBaseView()
         
-        let imageView = AgoraBaseImageView(image: AgoraImageWithName("signal_1", self.classForCoder))
+        let imageView = AgoraBaseUIImageView(image: AgoraImageWithName("signal_1", self.classForCoder))
         imageView.tag = ImageViewTag
         view.addSubview(imageView)
         if AgoraDeviceAssistant.OS.isPad {
-            imageView.x = 0
-            imageView.centerY = 0
-            imageView.resize(40, 40)
+            imageView.agora_x = 0
+            imageView.agora_center_y = 0
+            imageView.agora_resize(40, 40)
         } else {
-            imageView.x = 0
-            imageView.centerY = 0
-            imageView.resize(20, 20)
+            imageView.agora_x = 0
+            imageView.agora_center_y = 0
+            imageView.agora_resize(20, 20)
         }
         
-        let label = AgoraBaseLabel()
+        let label = AgoraBaseUILabel()
         label.font = UIFont.boldSystemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 17 : 9)
         label.textColor = UIColor(red: 205/255.0, green: 241/255.0, blue: 96/255.0, alpha: 1)
         label.tag = LabelTag
         label.text = "优"
         view.addSubview(label)
         if AgoraDeviceAssistant.OS.isPad {
-            label.x = 47
-            label.centerY = 0
-            label.resize(20, 17)
-            label.right = 5
+            label.agora_x = 47
+            label.agora_center_y = 0
+            label.agora_resize(20, 17)
+            label.agora_right = 5
         } else {
-            label.x = 23
-            label.centerY = 0
-            label.resize(9, 9)
-            label.right = 3
+            label.agora_x = 23
+            label.agora_center_y = 0
+            label.agora_resize(9, 9)
+            label.agora_right = 3
         }
 
         return view
@@ -154,7 +154,7 @@ extension AgoraToolView {
         self.menuConfigs.reverse()
         for (index, menuConfig) in self.menuConfigs.enumerated() {
             
-            let btn = AgoraBaseButton(type: .custom)
+            let btn = AgoraBaseUIButton(type: .custom)
             btn.addTarget(self, action: #selector(onConfigTouchEvent(_ :)), for: .touchUpInside)
             btn.tag = index + ButtonTagStart
             btn.setImage(AgoraImageWithName(menuConfig.imageName, self.classForCoder), for: .normal)
@@ -165,51 +165,51 @@ extension AgoraToolView {
     fileprivate func initLayout() {
         
         if AgoraDeviceAssistant.OS.isPad {
-            self.leftBtn.x = 39
-            self.leftBtn.bottom = 17
-            self.leftBtn.resize(137, 42)
+            self.leftBtn.agora_x = 39
+            self.leftBtn.agora_bottom = 17
+            self.leftBtn.agora_resize(137, 42)
             
-            self.classInfoLabel.x = self.leftBtn.x + self.leftBtn.width + 45
-            self.classInfoLabel.bottom = 17
-            self.classInfoLabel.resize(0, 42)
+            self.classInfoLabel.agora_x = self.leftBtn.agora_x + self.leftBtn.agora_width + 45
+            self.classInfoLabel.agora_bottom = 17
+            self.classInfoLabel.agora_resize(0, 42)
             
-            self.timeView.x = self.classInfoLabel.x + self.classInfoLabel.width + 35
-            self.timeView.bottom = 17
-            self.timeView.height = 42
+            self.timeView.agora_x = self.classInfoLabel.agora_x + self.classInfoLabel.agora_width + 35
+            self.timeView.agora_bottom = 17
+            self.timeView.agora_height = 42
 
-            self.signalView.x = self.timeView.x + self.timeView.width + 45
-            self.signalView.bottom = 17
-            self.signalView.height = 42
+            self.signalView.agora_x = self.timeView.agora_x + self.timeView.agora_width + 45
+            self.signalView.agora_bottom = 17
+            self.signalView.agora_height = 42
 
             for (index, _) in self.menuConfigs.enumerated() {
-                let btn = self.viewWithTag(index + ButtonTagStart) as! AgoraBaseButton
-                btn.resize(40, 40)
-                btn.right = CGFloat(39 + (Int(btn.width) + 39) * index)
-                btn.bottom = 19
+                let btn = self.viewWithTag(index + ButtonTagStart) as! AgoraBaseUIButton
+                btn.agora_resize(40, 40)
+                btn.agora_right = CGFloat(39 + (Int(btn.agora_width) + 39) * index)
+                btn.agora_bottom = 19
             }
             
         } else {
-            self.leftBtn.x = 20
-            self.leftBtn.bottom = 9
-            self.leftBtn.resize(72, 22)
+            self.leftBtn.agora_x = 20
+            self.leftBtn.agora_bottom = 9
+            self.leftBtn.agora_resize(72, 22)
             
-            self.classInfoLabel.x = self.leftBtn.x + self.leftBtn.width + 27
-            self.classInfoLabel.bottom = 9
-            self.classInfoLabel.resize(0, 22)
+            self.classInfoLabel.agora_x = self.leftBtn.agora_x + self.leftBtn.agora_width + 27
+            self.classInfoLabel.agora_bottom = 9
+            self.classInfoLabel.agora_resize(0, 22)
             
-            self.timeView.x = self.classInfoLabel.x + self.classInfoLabel.width + 18
-            self.timeView.bottom = 9
-            self.timeView.height = 22
+            self.timeView.agora_x = self.classInfoLabel.agora_x + self.classInfoLabel.agora_width + 18
+            self.timeView.agora_bottom = 9
+            self.timeView.agora_height = 22
             
-            self.signalView.x = self.timeView.x + self.timeView.width + 27
-            self.signalView.bottom = 9
-            self.signalView.height = 22
+            self.signalView.agora_x = self.timeView.agora_x + self.timeView.agora_width + 27
+            self.signalView.agora_bottom = 9
+            self.signalView.agora_height = 22
 
             for (index, _) in self.menuConfigs.enumerated() {
-                let btn = self.viewWithTag(index + ButtonTagStart) as! AgoraBaseButton
-                btn.resize(20, 20)
-                btn.right = CGFloat(15 + (Int(btn.width) + 15) * index)
-                btn.bottom = 10
+                let btn = self.viewWithTag(index + ButtonTagStart) as! AgoraBaseUIButton
+                btn.agora_resize(20, 20)
+                btn.agora_right = CGFloat(15 + (Int(btn.agora_width) + 15) * index)
+                btn.agora_bottom = 10
             }
         }
     }
@@ -223,20 +223,20 @@ extension AgoraToolView {
         self.classInfoLabel.isHidden = false
         self.classInfoLabel.sizeToFit()
         let classSize = self.classInfoLabel.frame.size
-        self.classInfoLabel.width = classSize.width + 1
-        self.timeView.x = self.classInfoLabel.x + self.classInfoLabel.width + (AgoraDeviceAssistant.OS.isPad ? 35 : 17)
+        self.classInfoLabel.agora_width = classSize.width + 1
+        self.timeView.agora_x = self.classInfoLabel.agora_x + self.classInfoLabel.agora_width + (AgoraDeviceAssistant.OS.isPad ? 35 : 17)
         
-        let timeLabel = self.timeView.viewWithTag(LabelTag) as! AgoraBaseLabel
+        let timeLabel = self.timeView.viewWithTag(LabelTag) as! AgoraBaseUILabel
         self.timeView.isHidden = false
         timeLabel.text = timeString
         timeLabel.sizeToFit()
         let timeSize = timeLabel.frame.size
-        timeLabel.width = timeSize.width + 1
-        self.signalView.x = self.timeView.x + timeLabel.width + (AgoraDeviceAssistant.OS.isPad ? 50 : 30)
+        timeLabel.agora_width = timeSize.width + 1
+        self.signalView.agora_x = self.timeView.agora_x + timeLabel.agora_width + (AgoraDeviceAssistant.OS.isPad ? 50 : 30)
         
-        let signalImgView = self.signalView.viewWithTag(ImageViewTag) as! AgoraBaseImageView
+        let signalImgView = self.signalView.viewWithTag(ImageViewTag) as! AgoraBaseUIImageView
         signalImgView.image = AgoraImageWithName("signal_3", self.classForCoder)
-        let signalLabel = self.signalView.viewWithTag(LabelTag) as! AgoraBaseLabel
+        let signalLabel = self.signalView.viewWithTag(LabelTag) as! AgoraBaseUILabel
         signalLabel.text = "差"
         signalLabel.textColor = UIColor(red: 240/255.0, green: 76/255.0, blue: 54/255.0, alpha: 1)
         

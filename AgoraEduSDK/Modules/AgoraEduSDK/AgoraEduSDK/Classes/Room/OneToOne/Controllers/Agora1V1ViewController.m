@@ -24,7 +24,7 @@
 
 @interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, AgoraRTEMediaStreamDelegate, AgoraPageControlProtocol, WhiteManagerDelegate>
 
-@property (weak, nonatomic) AgoraBaseImageView *bgView;
+@property (weak, nonatomic) AgoraBaseUIImageView *bgView;
 @property (weak, nonatomic) AgoraBaseView *contentView;
 @property (weak, nonatomic) AgoraToolView *toolView;
 @property (weak, nonatomic) AgoraUserView *teaView;
@@ -162,25 +162,25 @@
 }
 - (void)initLayout {
     //-----
-    self.bgView.x = 0;
-    self.bgView.y = 0;
-    self.bgView.right = 0;
-    self.bgView.bottom = 0;
+    self.bgView.agora_x = 0;
+    self.bgView.agora_y = 0;
+    self.bgView.agora_right = 0;
+    self.bgView.agora_bottom = 0;
     
     // contentView
-    self.contentView.safeX = 0;
-    self.contentView.safeY = 0;
-    self.contentView.safeRight = 0;
-    self.contentView.safeBottom = 0;
+    self.contentView.agora_safe_x = 0;
+    self.contentView.agora_safe_y = 0;
+    self.contentView.agora_safe_right = 0;
+    self.contentView.agora_safe_bottom = 0;
     
     // tool
-    self.toolView.x = 0;
-    self.toolView.y = 0;
-    self.toolView.right = 0;
-    self.toolView.height = IsPad ? 77 : 40;
+    self.toolView.agora_x = 0;
+    self.toolView.agora_y = 0;
+    self.toolView.agora_right = 0;
+    self.toolView.agora_height = IsPad ? 77 : 40;
 
     // teacher & student
-    CGFloat top = self.toolView.height + 9;
+    CGFloat top = self.toolView.agora_height + 9;
     CGFloat right = 9;
     CGFloat width = 180;
     CGFloat height = 128;
@@ -190,7 +190,7 @@
     CGFloat minHeight = 31;
     CGFloat minWidth = 140;
     if(IsPad) {
-        top = self.toolView.height + 15;
+        top = self.toolView.agora_height + 15;
         right = 20;
         width = 319;
         height = 228;
@@ -202,36 +202,36 @@
     }
     
     WEAK(self);
-    self.teaView.y = top;
-    self.teaView.right = right;
-    self.teaView.width = width;
-    self.teaView.height = height;
+    self.teaView.agora_y = top;
+    self.teaView.agora_right = right;
+    self.teaView.agora_width = width;
+    self.teaView.agora_height = height;
     self.teaView.scaleTouchBlock = ^(BOOL isMin) {
-        [weakself.teaView clearConstraint];
+        [weakself.teaView agora_clear_constraint];
         if (isMin) {
-            weakself.teaView.bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
-            weakself.teaView.right = minRight;
-            weakself.teaView.width = minWidth;
-            weakself.teaView.height = minHeight;
+            weakself.teaView.agora_bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
+            weakself.teaView.agora_right = minRight;
+            weakself.teaView.agora_width = minWidth;
+            weakself.teaView.agora_height = minHeight;
 
             // adjust stuview layout
             if (!weakself.stuView.isMin) {
-                CGFloat differ = (weakself.stuView.y + weakself.stuView.height) -  (kScreenHeight - weakself.teaView.bottom - 20);
+                CGFloat differ = (weakself.stuView.agora_y + weakself.stuView.agora_height) -  (kScreenHeight - weakself.teaView.agora_bottom - 20);
 
                 if (differ < 0) {
-                    weakself.stuView.y -= abs(differ);
+                    weakself.stuView.agora_y -= abs(differ);
                 }
             }
 
         } else {
-            weakself.teaView.y = top;
-            weakself.teaView.right = right;
-            weakself.teaView.width = width;
-            weakself.teaView.height = height;
+            weakself.teaView.agora_y = top;
+            weakself.teaView.agora_right = right;
+            weakself.teaView.agora_width = width;
+            weakself.teaView.agora_height = height;
 
             if(!weakself.stuView.isMin) {
                 CGFloat stuViewY = top + 10 + height;
-                weakself.stuView.y = stuViewY;
+                weakself.stuView.agora_y = stuViewY;
             }
         }
         [UIView animateWithDuration:0.35 animations:^{
@@ -239,40 +239,40 @@
         }];
     };
 
-    self.stuView.y = top + height + 10;
-    self.stuView.right = right;
-    self.stuView.width = width;
-    self.stuView.height = height;
+    self.stuView.agora_y = top + height + 10;
+    self.stuView.agora_right = right;
+    self.stuView.agora_width = width;
+    self.stuView.agora_height = height;
     self.stuView.scaleTouchBlock = ^(BOOL isMin) {
-        [weakself.stuView clearConstraint];
+        [weakself.stuView agora_clear_constraint];
         if (isMin) {
-            weakself.stuView.bottom = minBottom;
-            weakself.stuView.right = minRight;
-            weakself.stuView.width = minWidth;
-            weakself.stuView.height = minHeight;
+            weakself.stuView.agora_bottom = minBottom;
+            weakself.stuView.agora_right = minRight;
+            weakself.stuView.agora_width = minWidth;
+            weakself.stuView.agora_height = minHeight;
             if(weakself.teaView.isMin) {
-                weakself.teaView.bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom: minBottom;
+                weakself.teaView.agora_bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom: minBottom;
             }
 
         } else {
             if (weakself.teaView.isMin) {
-                weakself.teaView.bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
+                weakself.teaView.agora_bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
             }
 
             CGFloat stuViewY = top + 10 + height;
-            weakself.stuView.right = right;
-            weakself.stuView.width = width;
-            weakself.stuView.height = height;
+            weakself.stuView.agora_right = right;
+            weakself.stuView.agora_width = width;
+            weakself.stuView.agora_height = height;
 
             // adjust stuview layout
             if (weakself.teaView.isMin) {
-                CGFloat differ = (weakself.stuView.y + weakself.stuView.height) -  (kScreenHeight - weakself.teaView.bottom - 20);
+                CGFloat differ = (weakself.stuView.agora_y + weakself.stuView.agora_height) -  (kScreenHeight - weakself.teaView.agora_bottom - 20);
 
                 if (differ < 0) {
                     stuViewY -= abs(differ);
                 }
             }
-            weakself.stuView.y = stuViewY;
+            weakself.stuView.agora_y = stuViewY;
         }
         [UIView animateWithDuration:0.35 animations:^{
             [weakself.view layoutIfNeeded];
@@ -280,19 +280,19 @@
     };
     
     //board
-    self.boardContentView.x = 0;
-    self.boardContentView.right = IsPad ? right + width + 20 : right + width + 20;
-    self.boardRight = self.boardContentView.right;
-    self.boardContentView.y = self.toolView.height;
-    self.boardContentView.bottom = 0;
+    self.boardContentView.agora_x = 0;
+    self.boardContentView.agora_right = IsPad ? right + width + 20 : right + width + 20;
+    self.boardRight = self.boardContentView.agora_right;
+    self.boardContentView.agora_y = self.toolView.agora_height;
+    self.boardContentView.agora_bottom = 0;
 
     // boardView
     [self.boardView equalTo:self.boardContentView];
 
     // boardPageControlView
-    self.boardPageControlView.x = right + 20;
-    self.boardPageControlView.height = IsPad ? 42 : 21;
-    self.boardPageControlView.bottom = 20;
+    self.boardPageControlView.agora_x = right + 20;
+    self.boardPageControlView.agora_height = IsPad ? 42 : 21;
+    self.boardPageControlView.agora_bottom = 20;
 
     // chatPanelView
     CGFloat chatPanelViewMaxWidth = IsPad ? 246 : 137;
@@ -300,13 +300,13 @@
     CGFloat chatPanelViewMaxHeight = IsPad ? 362 : 203;
     CGFloat chatPanelViewMinHeight = IsPad ? 44 : 24;
 
-    self.chatPanelView.width = chatPanelViewMaxWidth;
-    self.chatPanelView.height = chatPanelViewMaxHeight;
-    self.chatPanelView.bottom = self.boardContentView.bottom + 20;
-    self.chatPanelView.right = self.boardContentView.right + 20;
+    self.chatPanelView.agora_width = chatPanelViewMaxWidth;
+    self.chatPanelView.agora_height = chatPanelViewMaxHeight;
+    self.chatPanelView.agora_bottom = self.boardContentView.agora_bottom + 20;
+    self.chatPanelView.agora_right = self.boardContentView.agora_right + 20;
     self.chatPanelView.scaleTouchBlock = ^(BOOL isMin) {
-        weakself.chatPanelView.width = isMin ? chatPanelViewMinWidth : chatPanelViewMaxWidth;
-        weakself.chatPanelView.height = isMin ? chatPanelViewMinHeight : chatPanelViewMaxHeight;
+        weakself.chatPanelView.agora_width = isMin ? chatPanelViewMinWidth : chatPanelViewMaxWidth;
+        weakself.chatPanelView.agora_height = isMin ? chatPanelViewMinHeight : chatPanelViewMaxHeight;
         [UIView animateWithDuration:0.35 animations:^{
             [weakself.view layoutIfNeeded];
         }];
@@ -320,7 +320,7 @@
 - (void)initView {
    
     UIImage *image = AgoraEduImageWithName(@"bg_1v1");
-    AgoraBaseImageView *imgView = [[AgoraBaseImageView alloc] initWithImage:image];
+    AgoraBaseUIImageView *imgView = [[AgoraBaseUIImageView alloc] initWithImage:image];
     [self.view addSubview:imgView];
     self.bgView = imgView;
     
@@ -754,9 +754,9 @@
 - (void)onPageZoomEvent {
     self.boardMax = !self.boardMax;
     if (self.boardMax) {
-        self.boardContentView.right = self.boardContentView.x;
+        self.boardContentView.agora_right = self.boardContentView.agora_x;
     } else {
-        self.boardContentView.right = self.boardRight;
+        self.boardContentView.agora_right = self.boardRight;
     }
     [UIView animateWithDuration:0.35 animations:^{
         [self.view layoutIfNeeded];

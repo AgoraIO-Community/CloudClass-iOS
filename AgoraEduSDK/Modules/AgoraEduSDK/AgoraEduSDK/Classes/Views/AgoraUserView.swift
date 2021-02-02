@@ -29,23 +29,23 @@ import EduSDK
         view.layer.cornerRadius = AgoraDeviceAssistant.OS.isPad ? 15 : 10
         return view
     }()
-    fileprivate lazy var audioBtn: AgoraBaseButton = {
-        let btn = AgoraBaseButton(type: .custom)
+    fileprivate lazy var audioBtn: AgoraBaseUIButton = {
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onAudioTouchEvent), for: .touchUpInside)
         btn.setImage(AgoraImageWithName("audio", self.classForCoder), for: .normal)
         btn.setImage(AgoraImageWithName("audio_mute", self.classForCoder), for: .selected)
         return btn
     }()
-    fileprivate lazy var videoBtn: AgoraBaseButton = {
-        let btn = AgoraBaseButton(type: .custom)
+    fileprivate lazy var videoBtn: AgoraBaseUIButton = {
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onVideoTouchEvent), for: .touchUpInside)
         btn.setImage(AgoraImageWithName("video", self.classForCoder), for: .normal)
         btn.setImage(AgoraImageWithName("video_mute", self.classForCoder), for: .selected)
         btn.isHidden = true
         return btn
     }()
-    fileprivate lazy var scaleBtn: AgoraBaseButton = {
-        let btn = AgoraBaseButton(type: .custom)
+    fileprivate lazy var scaleBtn: AgoraBaseUIButton = {
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onScaleTouchEvent), for: .touchUpInside)
         btn.setImage(AgoraImageWithName("scale", self.classForCoder), for: .normal)
         return btn
@@ -59,7 +59,7 @@ import EduSDK
             
             var imgName = "audio_tag_0"
 
-            let imgView = AgoraBaseImageView(image:AgoraImageWithName(imgName, self.classForCoder))
+            let imgView = AgoraBaseUIImageView(image:AgoraImageWithName(imgName, self.classForCoder))
             imgView.tag = index + AudioEffectImageTagStart
             view.addSubview(imgView)
         }
@@ -67,42 +67,42 @@ import EduSDK
         return view
     }()
     
-    fileprivate weak var defaultLabel: AgoraBaseLabel?
-    fileprivate weak var defaultImageView: AgoraBaseImageView?
+    fileprivate weak var defaultLabel: AgoraBaseUILabel?
+    fileprivate weak var defaultImageView: AgoraBaseUIImageView?
     fileprivate lazy var defaultView: AgoraBaseView = {
         let view = AgoraBaseView()
         view.backgroundColor = UIColor(red: 222/255.0, green: 244/255.0, blue: 255/255.0, alpha: 1)
         
-        let imgView = AgoraBaseImageView(image: nil)
+        let imgView = AgoraBaseUIImageView(image: nil)
         view.addSubview(imgView)
         if AgoraDeviceAssistant.OS.isPad {
-            imgView.resize(70, 70)
-            imgView.centerX = 0
-            imgView.centerY = -23
+            imgView.agora_resize(70, 70)
+            imgView.agora_center_x = 0
+            imgView.agora_center_y = -23
         } else {
-            imgView.resize(40, 40)
-            imgView.centerX = 0
-            imgView.centerY = -13
+            imgView.agora_resize(40, 40)
+            imgView.agora_center_x = 0
+            imgView.agora_center_y = -13
         }
         self.defaultImageView = imgView
         
-        let label = AgoraBaseLabel()
+        let label = AgoraBaseUILabel()
         label.text = ""
         label.textAlignment = .center
         label.textColor = UIColor(red: 0/255.0, green: 37/255.0, blue: 145/255.0, alpha: 1)
         view.addSubview(label)
         
         if AgoraDeviceAssistant.OS.isPad {
-            label.x = 0
-            label.right = 0
-            label.height = 12
-            label.centerY = 38
+            label.agora_x = 0
+            label.agora_right = 0
+            label.agora_height = 12
+            label.agora_center_y = 38
             label.font = UIFont.systemFont(ofSize: 17)
         } else {
-            label.x = 0
-            label.right = 0
-            label.height = 10
-            label.centerY = 15
+            label.agora_x = 0
+            label.agora_right = 0
+            label.agora_height = 10
+            label.agora_center_y = 15
             label.font = UIFont.systemFont(ofSize: 10)
         }
         
@@ -160,11 +160,11 @@ import EduSDK
         let role = stream.userInfo.role
         if (role == .student) {
             self.cupView.isHidden = false
-            let cupLabel = self.cupView.viewWithTag(RoundLabelTag) as! AgoraBaseLabel
+            let cupLabel = self.cupView.viewWithTag(RoundLabelTag) as! AgoraBaseUILabel
             cupLabel.text = cupNum > 99 ? "x99+" : ("x" + String(cupNum))
             cupLabel.sizeToFit()
             let cupSize = cupLabel.frame.size
-            let _ = cupLabel.resize(cupSize.width + 1, cupSize.height + 1)
+            let _ = cupLabel.agora_resize(cupSize.width + 1, cupSize.height + 1)
 
             self.audioBtn.isUserInteractionEnabled = true
             self.videoBtn.isHidden = false
@@ -182,12 +182,12 @@ import EduSDK
     
     fileprivate func updateUserName(name: String?) {
         
-        let nameLabel = self.nameView.viewWithTag(RoundLabelTag) as! AgoraBaseLabel
+        let nameLabel = self.nameView.viewWithTag(RoundLabelTag) as! AgoraBaseUILabel
         nameLabel.text = name
         
         nameLabel.sizeToFit()
         let nameSize = nameLabel.frame.size
-        let _ = nameLabel.resize(nameSize.width + 1, nameSize.height + 1)
+        let _ = nameLabel.agora_resize(nameSize.width + 1, nameSize.height + 1)
     }
     
     public func updateAudio(effect: Int) {
@@ -202,7 +202,7 @@ import EduSDK
                 imgName = "audio_tag_1"
             }
             
-            let imgView = self.audioEffectView.viewWithTag(index + AudioEffectImageTagStart) as! AgoraBaseImageView
+            let imgView = self.audioEffectView.viewWithTag(index + AudioEffectImageTagStart) as! AgoraBaseUIImageView
             imgView.image = AgoraImageWithName(imgName, self.classForCoder)
         
         }
@@ -297,71 +297,71 @@ extension AgoraUserView {
         self.addSubview(self.audioEffectView)
     }
     fileprivate func initLayout() {
-        self.defaultView.move(0, 0)
-        self.defaultView.right = 0
-        self.defaultView.bottom = 0
+        self.defaultView.agora_move(0, 0)
+        self.defaultView.agora_right = 0
+        self.defaultView.agora_bottom = 0
         
-        self.videoCanvas.move(0, 0)
-        self.videoCanvas.right = 0
-        self.videoCanvas.bottom = 0
+        self.videoCanvas.agora_move(0, 0)
+        self.videoCanvas.agora_right = 0
+        self.videoCanvas.agora_bottom = 0
         
         if AgoraDeviceAssistant.OS.isPad {
-            self.cupView.x = 10
-            self.cupView.y = 10
-            self.cupView.height = 33
+            self.cupView.agora_x = 10
+            self.cupView.agora_y = 10
+            self.cupView.agora_height = 33
 
-            self.nameView.x = 10
-            self.nameView.bottom = 10
-            self.nameView.height = 33
+            self.nameView.agora_x = 10
+            self.nameView.agora_bottom = 10
+            self.nameView.agora_height = 33
             
-            self.audioBtn.right = 10
-            self.audioBtn.bottom = 10
-            let _ = self.audioBtn.resize(33, 33)
+            self.audioBtn.agora_right = 10
+            self.audioBtn.agora_bottom = 10
+            let _ = self.audioBtn.agora_resize(33, 33)
                 
-            self.videoBtn.right = 57
-            self.videoBtn.bottom = 10
-            let _ = self.videoBtn.resize(33, 33)
+            self.videoBtn.agora_right = 57
+            self.videoBtn.agora_bottom = 10
+            let _ = self.videoBtn.agora_resize(33, 33)
             
-            self.scaleBtn.y = 10
-            self.scaleBtn.right = 10
-            let _ = self.scaleBtn.resize(28, 28)
+            self.scaleBtn.agora_y = 10
+            self.scaleBtn.agora_right = 10
+            let _ = self.scaleBtn.agora_resize(28, 28)
             
         } else {
-            self.cupView.x = 9
-            self.cupView.y = 9
-            self.cupView.height = 19
+            self.cupView.agora_x = 9
+            self.cupView.agora_y = 9
+            self.cupView.agora_height = 19
 
-            self.nameView.x = 9
-            self.nameView.bottom = 7
-            self.nameView.height = 19
+            self.nameView.agora_x = 9
+            self.nameView.agora_bottom = 7
+            self.nameView.agora_height = 19
             
-            self.audioBtn.right = 9
-            self.audioBtn.bottom = 8
-            let _ = self.audioBtn.resize(19, 19)
+            self.audioBtn.agora_right = 9
+            self.audioBtn.agora_bottom = 8
+            let _ = self.audioBtn.agora_resize(19, 19)
                 
-            self.videoBtn.right = 37
-            self.videoBtn.bottom = 8
-            let _ = self.videoBtn.resize(19, 19)
+            self.videoBtn.agora_right = 37
+            self.videoBtn.agora_bottom = 8
+            let _ = self.videoBtn.agora_resize(19, 19)
             
-            self.scaleBtn.y = 8
-            self.scaleBtn.right = 9
-            let _ = self.scaleBtn.resize(16, 16)
+            self.scaleBtn.agora_y = 8
+            self.scaleBtn.agora_right = 9
+            let _ = self.scaleBtn.agora_resize(16, 16)
         }
         
-        let audioEffectViewWidth = self.audioBtn.width - (AgoraDeviceAssistant.OS.isPad ? 8 : 4)
+        let audioEffectViewWidth = self.audioBtn.agora_width - (AgoraDeviceAssistant.OS.isPad ? 8 : 4)
         let audioEffectImgHeight: CGFloat = AgoraDeviceAssistant.OS.isPad ? 3 : 2
         let audioEffectImgGap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 3 : 2
         for index in 0...3 {
-            let imgView = self.audioEffectView.viewWithTag(index + AudioEffectImageTagStart) as! AgoraBaseImageView
+            let imgView = self.audioEffectView.viewWithTag(index + AudioEffectImageTagStart) as! AgoraBaseUIImageView
             
-            imgView.resize(audioEffectViewWidth, audioEffectImgHeight)
-            imgView.x = 0
-            imgView.right = 0
-            imgView.bottom = audioEffectImgGap + CGFloat(index * (Int(imgView.height + audioEffectImgGap)))
+            imgView.agora_resize(audioEffectViewWidth, audioEffectImgHeight)
+            imgView.agora_x = 0
+            imgView.agora_right = 0
+            imgView.agora_bottom = audioEffectImgGap + CGFloat(index * (Int(imgView.agora_height + audioEffectImgGap)))
             if(index == 3) {
-                imgView.y = 0
-                self.audioEffectView.bottom = self.audioBtn.bottom + self.audioBtn.height + audioEffectImgGap
-                self.audioEffectView.right = self.audioBtn.right + (self.audioBtn.width - imgView.width) * 0.5
+                imgView.agora_y = 0
+                self.audioEffectView.agora_bottom = self.audioBtn.agora_bottom + self.audioBtn.agora_height + audioEffectImgGap
+                self.audioEffectView.agora_right = self.audioBtn.agora_right + (self.audioBtn.agora_width - imgView.agora_width) * 0.5
             }
         }
     }
@@ -376,18 +376,18 @@ extension AgoraUserView {
 
         let img = AgoraImageWithName(imgName, self.classForCoder)
         if (img != nil) {
-            let tag = AgoraBaseImageView(image: img)
+            let tag = AgoraBaseUIImageView(image: img)
             bg.addSubview(tag)
-            tag.x = 7
-            tag.centerY = 0
-            let _ = tag.resize(imgSize.width, imgSize.height)
+            tag.agora_x = 7
+            tag.agora_center_y = 0
+            let _ = tag.agora_resize(imgSize.width, imgSize.height)
             labelX = imgSize.width + 10
 
         } else {
             labelX = 7
         }
 
-        let label = AgoraBaseLabel()
+        let label = AgoraBaseUILabel()
         label.text = text
         label.textColor = textColor
         label.tag = RoundLabelTag
@@ -397,10 +397,10 @@ extension AgoraUserView {
         label.sizeToFit()
         let size = label.frame.size
         
-        label.x = labelX
-        label.centerY = 0
-        label.right = 7
-        let _ = label.resize(size.width + 1, size.height + 1)
+        label.agora_x = labelX
+        label.agora_center_y = 0
+        label.agora_right = 7
+        let _ = label.agora_resize(size.width + 1, size.height + 1)
     
         return bg
     }

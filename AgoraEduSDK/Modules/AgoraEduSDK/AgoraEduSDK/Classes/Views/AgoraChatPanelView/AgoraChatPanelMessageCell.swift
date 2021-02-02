@@ -8,28 +8,28 @@
 import Foundation
 import EduSDK
 
-@objcMembers public class AgoraChatPanelMessageCell: AgoraBaseCell {
+@objcMembers public class AgoraChatPanelMessageCell: AgoraBaseUITableViewCell {
     
     fileprivate let LoadingBtnTag = 101
     fileprivate let LoadingViewTag = 102
     
-    fileprivate lazy var mineLabel: AgoraBaseLabel = {
+    fileprivate lazy var mineLabel: AgoraBaseUILabel = {
         let label = self.nickLabel()
         label.text = ""
         return label
     }()
-    fileprivate lazy var remoteLabel: AgoraBaseLabel = {
+    fileprivate lazy var remoteLabel: AgoraBaseUILabel = {
         let label = self.nickLabel()
         label.text = ""
         return label
     }()
-    fileprivate lazy var messageSourceLabel: AgoraBaseLabel = {
+    fileprivate lazy var messageSourceLabel: AgoraBaseUILabel = {
         let label = self.messageLabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byCharWrapping
         return label
     }()
-    fileprivate lazy var messageTargetLabel: AgoraBaseLabel = {
+    fileprivate lazy var messageTargetLabel: AgoraBaseUILabel = {
         let label = self.messageLabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byCharWrapping
@@ -38,7 +38,7 @@ import EduSDK
     }()
     fileprivate lazy var translateView: AgoraBaseView = {
         let view = self.loadingView()
-        let btn = view.viewWithTag(LoadingBtnTag) as! AgoraBaseButton
+        let btn = view.viewWithTag(LoadingBtnTag) as! AgoraBaseUIButton
         btn.addTarget(self, action: #selector(onTranslateTouchEvent), for: .touchUpInside)
         btn.setImage(AgoraImageWithName("chat_translate", self.classForCoder), for: .normal)
         btn.setImage(AgoraImageWithName("chat_translate_forbid", self.classForCoder), for: .selected)
@@ -53,7 +53,7 @@ import EduSDK
     }()
     fileprivate lazy var failView: AgoraBaseView = {
         let view = self.loadingView()
-        let btn = view.viewWithTag(LoadingBtnTag) as! AgoraBaseButton
+        let btn = view.viewWithTag(LoadingBtnTag) as! AgoraBaseUIButton
         btn.addTarget(self, action: #selector(onFailTouchEvent), for: .touchUpInside)
         btn.setImage(AgoraImageWithName("chat_tag", self.classForCoder), for: .normal)
         view.isHidden = true
@@ -85,7 +85,7 @@ import EduSDK
     }
     
     public func updateCell(_ text: String) {
-//        let label = self.inoutView.viewWithTag(LabelTag) as! AgoraBaseLabel
+//        let label = self.inoutView.viewWithTag(LabelTag) as! AgoraBaseUILabel
 //        label.text = "text"
 //        label.sizeToFit()
 //        let size = label.frame.size
@@ -110,40 +110,40 @@ extension AgoraChatPanelMessageCell {
     }
     fileprivate func initLayout() {
         
-        self.chatContentView.x = 0
-        self.chatContentView.right = 0
-        self.chatContentView.y = 0
-        self.chatContentView.bottom = 0
+        self.chatContentView.agora_x = 0
+        self.chatContentView.agora_right = 0
+        self.chatContentView.agora_y = 0
+        self.chatContentView.agora_bottom = 0
 
-        self.mineLabel.right = AgoraDeviceAssistant.OS.isPad ? 11 : 7
-        self.mineLabel.y = self.mineLabel.right
-        self.mineLabel.width = 0
-        self.mineLabel.height = 0
+        self.mineLabel.agora_right = AgoraDeviceAssistant.OS.isPad ? 11 : 7
+        self.mineLabel.agora_y = self.mineLabel.agora_right
+        self.mineLabel.agora_width = 0
+        self.mineLabel.agora_height = 0
 
-        self.remoteLabel.x = AgoraDeviceAssistant.OS.isPad ? 11 : 7
-        self.remoteLabel.y = self.remoteLabel.x
-        self.remoteLabel.width = 0
-        self.remoteLabel.height = 0
+        self.remoteLabel.agora_x = AgoraDeviceAssistant.OS.isPad ? 11 : 7
+        self.remoteLabel.agora_y = self.remoteLabel.agora_x
+        self.remoteLabel.agora_width = 0
+        self.remoteLabel.agora_height = 0
 
-        self.translateView.x = self.mineLabel.right
-        self.translateView.y = 0
-        self.translateView.width = AgoraDeviceAssistant.OS.isPad ? 22 : 13
-        self.translateView.height = self.translateView.width
+        self.translateView.agora_x = self.mineLabel.agora_right
+        self.translateView.agora_y = 0
+        self.translateView.agora_width = AgoraDeviceAssistant.OS.isPad ? 22 : 13
+        self.translateView.agora_height = self.translateView.agora_width
 
-        self.translateLineView.x = self.mineLabel.right
-        self.translateLineView.y = 0
-        self.translateLineView.right = self.mineLabel.right
-        self.translateLineView.height = 1
+        self.translateLineView.agora_x = self.mineLabel.agora_right
+        self.translateLineView.agora_y = 0
+        self.translateLineView.agora_right = self.mineLabel.agora_right
+        self.translateLineView.agora_height = 1
 
-        self.failView.bottom = 0
-        self.failView.x = 0
-        self.failView.resize(AgoraDeviceAssistant.OS.isPad ? 15 : 10, AgoraDeviceAssistant.OS.isPad ? 15 : 10)
+        self.failView.agora_bottom = 0
+        self.failView.agora_x = 0
+        self.failView.agora_resize(AgoraDeviceAssistant.OS.isPad ? 15 : 10, AgoraDeviceAssistant.OS.isPad ? 15 : 10)
     }
 
     func updateView(model: AgoraChatMessageInfoModel) {
         
         // translateView
-        let translateBtn = self.translateView.viewWithTag(LoadingBtnTag) as! AgoraBaseButton
+        let translateBtn = self.translateView.viewWithTag(LoadingBtnTag) as! AgoraBaseUIButton
         let translateLoading = self.translateView.viewWithTag(LoadingViewTag) as! UIActivityIndicatorView
         if (model.translateState == .loading) {
             translateBtn.isHidden = true
@@ -166,7 +166,7 @@ extension AgoraChatPanelMessageCell {
         // ---
         let sizeGap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 8 : 7
         let translateViewSize = AgoraDeviceAssistant.OS.isPad ? CGSize(width: 22, height:22) : CGSize(width: 13, height:13)
-        let maxWidth = self.frame.width - sizeGap * 2 - self.failView.width - (AgoraDeviceAssistant.OS.isPad ? 10 : 8)
+        let maxWidth = self.frame.width - sizeGap * 2 - self.failView.agora_width - (AgoraDeviceAssistant.OS.isPad ? 10 : 8)
         let translateLineViewGap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 10 : 8
         
         var nickSize = CGSize(width: 0, height:0)
@@ -177,8 +177,8 @@ extension AgoraChatPanelMessageCell {
             self.mineLabel.text = " : " + (model.fromUser?.userName ?? "")
             self.mineLabel.sizeToFit()
             nickSize = self.mineLabel.frame.size;
-            self.mineLabel.width = nickSize.width + 1
-            self.mineLabel.height = nickSize.height + 1
+            self.mineLabel.agora_width = nickSize.width + 1
+            self.mineLabel.agora_height = nickSize.height + 1
         } else {
             // remoteLabel
             self.mineLabel.isHidden = true
@@ -186,30 +186,30 @@ extension AgoraChatPanelMessageCell {
             self.remoteLabel.text = (model.fromUser?.userName ?? "") + " : "
             self.remoteLabel.sizeToFit()
             nickSize = self.remoteLabel.frame.size;
-            self.remoteLabel.width = nickSize.width + 1
-            self.remoteLabel.height = nickSize.height + 1
+            self.remoteLabel.agora_width = nickSize.width + 1
+            self.remoteLabel.agora_height = nickSize.height + 1
         }
         
         // sourceMessage
-        let maxSourceWidth = maxWidth - translateViewSize.width - nickSize.width - self.mineLabel.right * 3;
+        let maxSourceWidth = maxWidth - translateViewSize.width - nickSize.width - self.mineLabel.agora_right * 3;
         // messageSource
         self.messageSourceLabel.text = model.message
         let sourceSize = self.messageSourceLabel.sizeThatFits(CGSize(width: maxSourceWidth, height: CGFloat(MAXFLOAT)))
 
-        self.messageSourceLabel.clearConstraint()
-        self.messageSourceLabel.width = sourceSize.width + 1
-        self.messageSourceLabel.height = sourceSize.height + 1
-        self.messageSourceLabel.y = self.mineLabel.y
+        self.messageSourceLabel.agora_clear_constraint()
+        self.messageSourceLabel.agora_width = sourceSize.width + 1
+        self.messageSourceLabel.agora_height = sourceSize.height + 1
+        self.messageSourceLabel.agora_y = self.mineLabel.agora_y
         if (model.isSelf) {
-            self.messageSourceLabel.right = self.mineLabel.right + self.mineLabel.width + 2
+            self.messageSourceLabel.agora_right = self.mineLabel.agora_right + self.mineLabel.agora_width + 2
         } else {
-            self.messageSourceLabel.x = self.remoteLabel.width + 2
+            self.messageSourceLabel.agora_x = self.remoteLabel.agora_width + 2
         }
         
-        var cellHeight = sourceSize.height + self.mineLabel.y + translateLineViewGap
+        var cellHeight = sourceSize.height + self.mineLabel.agora_y + translateLineViewGap
         
         // targetMessage
-        let maxTargetWidth = maxWidth - self.mineLabel.right * 2;
+        let maxTargetWidth = maxWidth - self.mineLabel.agora_right * 2;
         var targetSize = CGSize(width: 0, height: 0)
         self.messageTargetLabel.isHidden = true
         self.translateLineView.isHidden = true
@@ -220,31 +220,31 @@ extension AgoraChatPanelMessageCell {
 
             self.messageTargetLabel.isHidden = false
             self.translateLineView.isHidden = false
-            self.translateLineView.y = self.messageSourceLabel.y + self.messageSourceLabel.height + translateLineViewGap
+            self.translateLineView.agora_y = self.messageSourceLabel.agora_y + self.messageSourceLabel.agora_height + translateLineViewGap
             
-            self.messageTargetLabel.clearConstraint()
-            self.messageTargetLabel.width = targetSize.width + 1
-            self.messageTargetLabel.height = targetSize.height + 1
-            self.messageTargetLabel.y = translateLineViewGap + self.translateLineView.y
+            self.messageTargetLabel.agora_clear_constraint()
+            self.messageTargetLabel.agora_width = targetSize.width + 1
+            self.messageTargetLabel.agora_height = targetSize.height + 1
+            self.messageTargetLabel.agora_y = translateLineViewGap + self.translateLineView.agora_y
             if (model.isSelf) {
-                self.messageTargetLabel.right = self.mineLabel.right
+                self.messageTargetLabel.agora_right = self.mineLabel.agora_right
             } else {
-                self.messageTargetLabel.x = self.mineLabel.right
+                self.messageTargetLabel.agora_x = self.mineLabel.agora_right
             }
             
-            cellHeight += targetSize.height + self.mineLabel.y + translateLineViewGap
+            cellHeight += targetSize.height + self.mineLabel.agora_y + translateLineViewGap
         }
         
         // chatContentView
-        let firstLineWidth = sourceSize.width + self.mineLabel.right * 3 + translateViewSize.width + nickSize.width
-        let secondLineWidth = targetSize.width + self.mineLabel.right * 2
+        let firstLineWidth = sourceSize.width + self.mineLabel.agora_right * 3 + translateViewSize.width + nickSize.width
+        let secondLineWidth = targetSize.width + self.mineLabel.agora_right * 2
         let contentWidth = firstLineWidth > secondLineWidth ? firstLineWidth : secondLineWidth
         if (model.isSelf) {
-            self.chatContentView.right = sizeGap
-            self.chatContentView.x = self.frame.width - contentWidth - sizeGap
+            self.chatContentView.agora_right = sizeGap
+            self.chatContentView.agora_x = self.frame.width - contentWidth - sizeGap
         } else {
-            self.chatContentView.right = self.frame.width - contentWidth - sizeGap
-            self.chatContentView.x = sizeGap
+            self.chatContentView.agora_right = self.frame.width - contentWidth - sizeGap
+            self.chatContentView.agora_x = sizeGap
         }
         self.chatContentView.layer.cornerRadius = contentWidth * 0.06
         
@@ -253,7 +253,7 @@ extension AgoraChatPanelMessageCell {
         if (model.isSelf) {
             self.failView.isHidden = false
             
-            let failBtn = self.failView.viewWithTag(LoadingBtnTag) as! AgoraBaseButton
+            let failBtn = self.failView.viewWithTag(LoadingBtnTag) as! AgoraBaseUIButton
             let failLoading = self.failView.viewWithTag(LoadingViewTag) as! UIActivityIndicatorView
             if (model.sendState == .success) {
                 self.failView.isHidden = true
@@ -267,21 +267,21 @@ extension AgoraChatPanelMessageCell {
                 failLoading.startAnimating()
             }
             if (model.isSelf) {
-                self.failView.x = self.chatContentView.x - self.failView.width - 4
+                self.failView.agora_x = self.chatContentView.agora_x - self.failView.agora_width - 4
             } else {
-                self.failView.x = sizeGap * 2 + contentWidth + 4
+                self.failView.agora_x = sizeGap * 2 + contentWidth + 4
             }
         }
         
         // translateView
-        self.translateView.clearConstraint()
-        self.translateView.resize(translateViewSize.width, translateViewSize.height)
+        self.translateView.agora_clear_constraint()
+        self.translateView.agora_resize(translateViewSize.width, translateViewSize.height)
         if (model.isSelf) {
-            self.translateView.x = 8
-            self.translateView.y = self.messageSourceLabel.y + self.messageSourceLabel.height - translateViewSize.height - 2
+            self.translateView.agora_x = 8
+            self.translateView.agora_y = self.messageSourceLabel.agora_y + self.messageSourceLabel.agora_height - translateViewSize.height - 2
         } else {
-            self.translateView.x = contentWidth - translateViewSize.width - self.mineLabel.right
-            self.translateView.y = self.messageSourceLabel.y + self.messageSourceLabel.height - translateViewSize.height - 2
+            self.translateView.agora_x = contentWidth - translateViewSize.width - self.mineLabel.agora_right
+            self.translateView.agora_y = self.messageSourceLabel.agora_y + self.messageSourceLabel.agora_height - translateViewSize.height - 2
         }
         model.cellHeight = Float(cellHeight)
     }
@@ -299,14 +299,14 @@ extension AgoraChatPanelMessageCell {
 
 // MARK: Private
 extension AgoraChatPanelMessageCell {
-    fileprivate func nickLabel() -> AgoraBaseLabel {
-        let label = AgoraBaseLabel()
+    fileprivate func nickLabel() -> AgoraBaseUILabel {
+        let label = AgoraBaseUILabel()
         label.textColor = UIColor(red: 233/255.0, green: 190/255.0, blue: 54/255.0, alpha: 1)
         label.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 17 : 9)
         return label
     }
-    fileprivate func messageLabel() -> AgoraBaseLabel {
-        let label = AgoraBaseLabel()
+    fileprivate func messageLabel() -> AgoraBaseUILabel {
+        let label = AgoraBaseUILabel()
         label.text = ""
         label.textColor = UIColor.white
         label.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 17 : 9)
@@ -317,12 +317,12 @@ extension AgoraChatPanelMessageCell {
         let view = AgoraBaseView()
         view.backgroundColor = UIColor.clear
         
-        let btn = AgoraBaseButton(type: .custom)
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.tag = LoadingBtnTag
         view.addSubview(btn)
-        btn.move(0, 0)
-        btn.right = 0
-        btn.bottom = 0
+        btn.agora_move(0, 0)
+        btn.agora_right = 0
+        btn.agora_bottom = 0
     
         let indicatorView = UIActivityIndicatorView()
         if !AgoraDeviceAssistant.OS.isPad {

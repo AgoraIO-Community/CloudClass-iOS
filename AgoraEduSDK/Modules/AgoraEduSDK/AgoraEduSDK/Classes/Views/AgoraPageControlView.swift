@@ -19,7 +19,7 @@ import UIKit
     
     public var pageIndex = 1 {
         didSet {
-            let label = self.labelView.viewWithTag(PageIndexLabelTag) as! AgoraBaseLabel
+            let label = self.labelView.viewWithTag(PageIndexLabelTag) as! AgoraBaseUILabel
             label.text = String(pageIndex)
             
             if (pageIndex <= 1) {
@@ -43,18 +43,18 @@ import UIKit
     }
     public var pageCount = 1 {
         didSet {
-            let label = self.labelView.viewWithTag(PageCountLabelTag) as! AgoraBaseLabel
+            let label = self.labelView.viewWithTag(PageCountLabelTag) as! AgoraBaseUILabel
             label.text = String(pageCount)
         }
     }
     
     fileprivate var delegate: AgoraPageControlProtocol?
     
-    fileprivate lazy var leftBtn: AgoraBaseButton = {
-        let btn = AgoraBaseButton(type: .custom)
+    fileprivate lazy var leftBtn: AgoraBaseUIButton = {
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onLeftTouchEvent), for: .touchUpInside)
         if !AgoraDeviceAssistant.OS.isPad {
-            btn.TouchRange = TouchRange
+            btn.touchRange = TouchRange
         }
         btn.setImage(AgoraImageWithName("board_left", self.classForCoder), for: .normal)
         btn.setImage(AgoraImageWithName("board_left_forbid", self.classForCoder), for: .selected)
@@ -62,11 +62,11 @@ import UIKit
         btn.isUserInteractionEnabled = false
         return btn
     }()
-    fileprivate lazy var rightBtn: AgoraBaseButton = {
-        let btn = AgoraBaseButton(type: .custom)
+    fileprivate lazy var rightBtn: AgoraBaseUIButton = {
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onRightTouchEvent), for: .touchUpInside)
         if !AgoraDeviceAssistant.OS.isPad {
-            btn.TouchRange = TouchRange
+            btn.touchRange = TouchRange
         }
         btn.setImage(AgoraImageWithName("board_right", self.classForCoder), for: .normal)
         btn.setImage(AgoraImageWithName("board_right_forbid", self.classForCoder), for: .selected)
@@ -74,30 +74,30 @@ import UIKit
         btn.isUserInteractionEnabled = false
         return btn
     }()
-    fileprivate lazy var increaseBtn: AgoraBaseButton = {
-        let btn = AgoraBaseButton(type: .custom)
+    fileprivate lazy var increaseBtn: AgoraBaseUIButton = {
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onIncreaseTouchEvent), for: .touchUpInside)
         if !AgoraDeviceAssistant.OS.isPad {
-            btn.TouchRange = TouchRange
+            btn.touchRange = TouchRange
         }
         btn.setImage(AgoraImageWithName("board_increase", self.classForCoder), for: .normal)
         return btn
     }()
-    fileprivate lazy var decreaseBtn: AgoraBaseButton = {
+    fileprivate lazy var decreaseBtn: AgoraBaseUIButton = {
         
-        let btn = AgoraBaseButton(type: .custom)
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onDecreaseTouchEvent), for: .touchUpInside)
         if !AgoraDeviceAssistant.OS.isPad {
-            btn.TouchRange = TouchRange
+            btn.touchRange = TouchRange
         }
         btn.setImage(AgoraImageWithName("board_decrease", self.classForCoder), for: .normal)
         return btn
     }()
-    fileprivate lazy var zoomBtn: AgoraBaseButton = {
-        let btn = AgoraBaseButton(type: .custom)
+    fileprivate lazy var zoomBtn: AgoraBaseUIButton = {
+        let btn = AgoraBaseUIButton(type: .custom)
         btn.addTarget(self, action: #selector(onZoomTouchEvent), for: .touchUpInside)
         if !AgoraDeviceAssistant.OS.isPad {
-            btn.TouchRange = TouchRange
+            btn.touchRange = TouchRange
         }
         btn.setImage(AgoraImageWithName("board_scale", self.classForCoder), for: .normal)
         return btn
@@ -106,7 +106,7 @@ import UIKit
         let view = AgoraBaseView()
         view.backgroundColor = UIColor.clear
         
-        let indexLabel = AgoraBaseLabel()
+        let indexLabel = AgoraBaseUILabel()
         indexLabel.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 13 : 9)
         indexLabel.backgroundColor = UIColor(red: 112/255.0, green: 125/255.0, blue: 188/255.0, alpha: 1)
         indexLabel.textColor = UIColor.white
@@ -116,24 +116,24 @@ import UIKit
         indexLabel.clipsToBounds = true
         indexLabel.layer.cornerRadius =  AgoraDeviceAssistant.OS.isPad ? 8 : 5
         view.addSubview(indexLabel)
-        indexLabel.x = 0
-        indexLabel.centerY = 0
-        indexLabel.height = AgoraDeviceAssistant.OS.isPad ? 20 : 11
-        indexLabel.width = AgoraDeviceAssistant.OS.isPad ? 25 : 14
+        indexLabel.agora_x = 0
+        indexLabel.agora_center_y = 0
+        indexLabel.agora_height = AgoraDeviceAssistant.OS.isPad ? 20 : 11
+        indexLabel.agora_width = AgoraDeviceAssistant.OS.isPad ? 25 : 14
         
-        let gapLabel = AgoraBaseLabel()
+        let gapLabel = AgoraBaseUILabel()
         gapLabel.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 13 : 9)
         gapLabel.text = "/"
         gapLabel.backgroundColor = UIColor.clear
         gapLabel.textColor = UIColor.white
         gapLabel.textAlignment = .center
         view.addSubview(gapLabel)
-        gapLabel.x = indexLabel.x + indexLabel.width
-        gapLabel.y = 0
-        gapLabel.bottom = 0
-        gapLabel.width = AgoraDeviceAssistant.OS.isPad ? 30 : 18
+        gapLabel.agora_x = indexLabel.agora_x + indexLabel.agora_width
+        gapLabel.agora_y = 0
+        gapLabel.agora_bottom = 0
+        gapLabel.agora_width = AgoraDeviceAssistant.OS.isPad ? 30 : 18
         
-        let countLabel = AgoraBaseLabel()
+        let countLabel = AgoraBaseUILabel()
         countLabel.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 13 : 9)
         countLabel.backgroundColor = UIColor.clear
         countLabel.textColor = UIColor.white
@@ -143,10 +143,10 @@ import UIKit
         countLabel.clipsToBounds = true
         countLabel.layer.cornerRadius =  AgoraDeviceAssistant.OS.isPad ? 5 : 5
         view.addSubview(countLabel)
-        countLabel.x = gapLabel.x + gapLabel.width
-        countLabel.y = 0
-        countLabel.bottom = 0
-        countLabel.width = AgoraDeviceAssistant.OS.isPad ? 25 : 14
+        countLabel.agora_x = gapLabel.agora_x + gapLabel.agora_width
+        countLabel.agora_y = 0
+        countLabel.agora_bottom = 0
+        countLabel.agora_width = AgoraDeviceAssistant.OS.isPad ? 25 : 14
     
         return view
     }()
@@ -195,31 +195,31 @@ extension AgoraPageControlView {
         let buttonGap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 24 : 13
         let buttonSize: CGSize = AgoraDeviceAssistant.OS.isPad ? CGSize(width: 20, height: 20) : CGSize(width: 11, height: 11)
         
-        self.leftBtn.x = sideGap
-        self.leftBtn.centerY = 0
-        self.leftBtn.resize(arrowSize.width, arrowSize.height)
+        self.leftBtn.agora_x = sideGap
+        self.leftBtn.agora_center_y = 0
+        self.leftBtn.agora_resize(arrowSize.width, arrowSize.height)
         
-        self.labelView.x = self.leftBtn.x + self.leftBtn.width + arrowGap
-        self.labelView.y = 0
-        self.labelView.bottom = 0
-        self.labelView.width = lableViewWidth
+        self.labelView.agora_x = self.leftBtn.agora_x + self.leftBtn.agora_width + arrowGap
+        self.labelView.agora_y = 0
+        self.labelView.agora_bottom = 0
+        self.labelView.agora_width = lableViewWidth
         
-        self.rightBtn.x = self.labelView.x + self.labelView.width + arrowGap
-        self.rightBtn.centerY = 0
-        self.rightBtn.resize(arrowSize.width, arrowSize.height)
+        self.rightBtn.agora_x = self.labelView.agora_x + self.labelView.agora_width + arrowGap
+        self.rightBtn.agora_center_y = 0
+        self.rightBtn.agora_resize(arrowSize.width, arrowSize.height)
         
-        self.increaseBtn.x = self.rightBtn.x + self.rightBtn.width + buttonGap
-        self.increaseBtn.centerY = 0
-        self.increaseBtn.resize(buttonSize.width, buttonSize.height)
+        self.increaseBtn.agora_x = self.rightBtn.agora_x + self.rightBtn.agora_width + buttonGap
+        self.increaseBtn.agora_center_y = 0
+        self.increaseBtn.agora_resize(buttonSize.width, buttonSize.height)
         
-        self.decreaseBtn.x = self.increaseBtn.x + self.increaseBtn.width + buttonGap
-        self.decreaseBtn.centerY = 0
-        self.decreaseBtn.resize(buttonSize.width, buttonSize.height)
+        self.decreaseBtn.agora_x = self.increaseBtn.agora_x + self.increaseBtn.agora_width + buttonGap
+        self.decreaseBtn.agora_center_y = 0
+        self.decreaseBtn.agora_resize(buttonSize.width, buttonSize.height)
         
-        self.zoomBtn.x = self.decreaseBtn.x + self.decreaseBtn.width + buttonGap
-        self.zoomBtn.centerY = 0
-        self.zoomBtn.resize(buttonSize.width, buttonSize.height)
-        self.zoomBtn.right = sideGap
+        self.zoomBtn.agora_x = self.decreaseBtn.agora_x + self.decreaseBtn.agora_width + buttonGap
+        self.zoomBtn.agora_center_y = 0
+        self.zoomBtn.agora_resize(buttonSize.width, buttonSize.height)
+        self.zoomBtn.agora_right = sideGap
     }
 }
 
