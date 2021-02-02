@@ -10,8 +10,8 @@
 #import "UIView+AgoraEduToast.h"
 #import "AgoraEduKeyCenter.h"
 #import <YYModel/YYModel.h>
-#import "RecordPropertyModel.h"
-#import "TextMessageModel.h"
+#import "AgoraRecordPropertyModel.h"
+#import "AgoraTextMessageModel.h"
 #import "AgoraEduTopVC.h"
 
 #define ROOM_PROPERTY_KEY_RECORD @"record"
@@ -21,7 +21,7 @@
 #define NoNullArray(x) ([x isKindOfClass:NSArray.class] ? x : @[])
 #define NoNullDictionary(x) ([x isKindOfClass:NSDictionary.class] ? x : @{})
 
-@interface AgoraBaseViewController ()<EduClassroomDelegate, EduStudentDelegate, WhiteManagerDelegate>
+@interface AgoraBaseViewController ()<AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, WhiteManagerDelegate>
 
 @property (nonatomic, assign) BOOL hasSignalReconnect;
 @property (nonatomic, weak) UIActivityIndicatorView *activityIndicator;
@@ -44,7 +44,6 @@
     [self setLoadingVisible:YES];
     AgoraEduManager.shareManager.roomManager.delegate = self;
     
-    
     WEAK(self);
     [AgoraEduManager.shareManager joinClassroomWithSceneType:self.sceneType userName:self.userName success:^{
 
@@ -52,7 +51,7 @@
         
         // delegate
         AgoraEduManager.shareManager.studentService.delegate = weakself;
-        if (weakself.sceneType == EduSceneTypeBreakout) {
+        if (weakself.sceneType == AgoraRTESceneTypeBreakout) {
             AgoraEduManager.shareManager.groupRoomManager.delegate = weakself;
             AgoraEduManager.shareManager.groupStudentService.delegate = weakself;
         }
@@ -94,17 +93,17 @@
 
 - (void)setLocalStreamVideo:(BOOL)hasVideo audio:(BOOL)hasAudio streamState:(LocalStreamState)state {
 
-    EduStreamConfig *config = [EduStreamConfig new];
+    AgoraRTEStreamConfig *config = [AgoraRTEStreamConfig new];
     config.streamUuid = self.localUser.streamUuid;
     config.streamName = @"";
     config.enableCamera = hasVideo;
     config.enableMicrophone = hasAudio;
   
-    EduStudentService *studentService = AgoraEduManager.shareManager.studentService;
-    if(self.sceneType == EduSceneTypeBreakout) {
+    AgoraRTEStudentService *studentService = AgoraEduManager.shareManager.studentService;
+    if(self.sceneType == AgoraRTESceneTypeBreakout) {
         studentService = AgoraEduManager.shareManager.groupStudentService;
     }
-    [studentService startOrUpdateLocalStream:config success:^(EduStream * _Nonnull stream) {
+    [studentService startOrUpdateLocalStream:config success:^(AgoraRTEStream * _Nonnull stream) {
         
         if (state == LocalStreamStateRemove) {
             [studentService unpublishStream:stream success:^{
@@ -132,13 +131,13 @@
 
 - (void)initLocalUser {
     
-    EduClassroomManager *roomManager = AgoraEduManager.shareManager.roomManager;
-    if(self.sceneType == EduSceneTypeBreakout) {
+    AgoraRTEClassroomManager *roomManager = AgoraEduManager.shareManager.roomManager;
+    if(self.sceneType == AgoraRTESceneTypeBreakout) {
         roomManager = AgoraEduManager.shareManager.groupRoomManager;
     }
     
     WEAK(self);
-    [roomManager getLocalUserWithSuccess:^(EduLocalUser * _Nonnull user) {
+    [roomManager getLocalUserWithSuccess:^(AgoraRTELocalUser * _Nonnull user) {
         weakself.localUser = user;
     } failure:^(NSError * error) {
         [AgoraBaseViewController showToast:error.localizedDescription];
@@ -181,11 +180,11 @@
     }];
 }
 
-- (void)updateTimeState:(EENavigationView *)navigationView {
+- (void)updateTimeState:(AgoraEENavigationView *)navigationView {
     
-    [AgoraEduManager.shareManager.roomManager getClassroomInfoWithSuccess:^(EduClassroom * _Nonnull room) {
+    [AgoraEduManager.shareManager.roomManager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
         
-        if(room.roomState.courseState == EduCourseStateStart) {
+        if(room.roomState.courseState == AgoraRTECourseStateStart) {
             NSDate *currentDate = [NSDate dateWithTimeIntervalSinceNow:0];
             NSTimeInterval currenTimeInterval = [currentDate timeIntervalSince1970];
             [navigationView initTimerCount:(NSInteger)((currenTimeInterval * 1000 - room.roomState.startTime) * 0.001)];
@@ -200,11 +199,11 @@
     }];
 }
 
-- (void)updateChatViews:(EEChatTextFiled *)chatTextFiled {
+- (void)updateChatViews:(AgoraEEChatTextFiled *)chatTextFiled {
     WEAK(self);
-    [AgoraEduManager.shareManager.roomManager getClassroomInfoWithSuccess:^(EduClassroom * _Nonnull room) {
+    [AgoraEduManager.shareManager.roomManager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
         
-        [AgoraEduManager.shareManager.roomManager getLocalUserWithSuccess:^(EduLocalUser * _Nonnull user) {
+        [AgoraEduManager.shareManager.roomManager getLocalUserWithSuccess:^(AgoraRTELocalUser * _Nonnull user) {
             weakself.localUser = user;
 
             BOOL muteChat = !room.roomState.isStudentChatAllowed;
@@ -259,9 +258,9 @@
 
 
 #pragma mark ConnectionState
-- (void)classroom:(EduClassroom *)classroom connectionStateChanged:(ConnectionState)state {
+- (void)classroom:(AgoraRTEClassroom *)classroom connectionStateChanged:(AgoraRTEConnectionState)state {
     
-    if(state == ConnectionStateAborted) {
+    if(state == AgoraRTEConnectionStateAborted) {
         [AgoraEduManager releaseResource];
         [self dismissViewControllerAnimated:YES completion:^{
             [AgoraBaseViewController showToast:AgoraEduLocalizedString(@"LoginOnAnotherDeviceText", nil)];
@@ -269,24 +268,24 @@
         return;
     }
     
-    if(state == ConnectionStateConnected) {
+    if(state == AgoraRTEConnectionStateConnected) {
         if(self.hasSignalReconnect) {
             self.hasSignalReconnect = NO;
             [self onReconnected];
         }
-    } else if(state == ConnectionStateReconnecting) {
+    } else if(state == AgoraRTEConnectionStateReconnecting) {
         self.hasSignalReconnect = YES;
     }
 }
 
 #pragma mark onClassroomPropertyUpdated
-- (void)classroom:(EduClassroom *)classroom stateUpdated:(EduClassroomChangeType)changeType operatorUser:(EduBaseUser *)user {
+- (void)classroom:(AgoraRTEClassroom *)classroom stateUpdated:(AgoraRTEClassroomChangeType)changeType operatorUser:(AgoraRTEBaseUser *)user {
     
-    if (changeType == EduClassroomChangeTypeAllStudentsChat) {
+    if (changeType == AgoraRTEClassroomChangeTypeAllStudentsChat) {
         [self onUpdateChatViews];
-    } else if (changeType == EduClassroomChangeTypeCourseState) {
+    } else if (changeType == AgoraRTEClassroomChangeTypeCourseState) {
         
-        if(classroom.roomState.courseState == EduCourseStateStop) {
+        if(classroom.roomState.courseState == AgoraRTECourseStateStop) {
             // dismiss
             id<AgoraEduClassroomDelegate> delegate = AgoraEduManager.shareManager.classroomDelegate;
             AgoraEduClassroom *classroom = AgoraEduManager.shareManager.classroom;
@@ -309,7 +308,7 @@
     }
 }
 
-- (void)classroomPropertyUpdated:(EduClassroom *)classroom cause:(EduObject *)cause {
+- (void)classroomPropertyUpdated:(AgoraRTEClassroom *)classroom cause:(AgoraRTEObject *)cause {
      
     if(classroom.roomProperties == nil) {
         return;
@@ -318,7 +317,7 @@
     // record
     NSInteger cmd = [NoNullNumber(NoNullDictionary(cause)[@"cmd"]) intValue];
     if(cmd == 1){
-        RecordPropertyModel *model = [RecordPropertyModel yy_modelWithDictionary:classroom.roomProperties[ROOM_PROPERTY_KEY_RECORD]];
+        AgoraRecordPropertyModel *model = [AgoraRecordPropertyModel yy_modelWithDictionary:classroom.roomProperties[ROOM_PROPERTY_KEY_RECORD]];
         
         // record over
         if(model.state == 0) {
@@ -346,15 +345,15 @@
     if (content.length > 0) {
         WEAK(self);
 
-        if (self.sceneType == EduSceneTypeBreakout) {
+        if (self.sceneType == AgoraRTESceneTypeBreakout) {
             // send big class room
-            [AgoraEduManager.shareManager.groupRoomManager getClassroomInfoWithSuccess:^(EduClassroom * _Nonnull room) {
+            [AgoraEduManager.shareManager.groupRoomManager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
                 
-                TextMessageModel *model = [TextMessageModel new];
+                AgoraTextMessageModel *model = [AgoraTextMessageModel new];
                 model.content = content;
                 model.fromRoomUuid = room.roomInfo.roomUuid;
                 model.fromRoomName = room.roomInfo.roomName;
-                model.role = EduRoleTypeStudent;
+                model.role = AgoraRTERoleTypeStudent;
 
                 [AgoraEduManager.shareManager.groupStudentService sendRoomChatMessageWithText:[model yy_modelToJSONString] success:^{
                     
@@ -364,7 +363,7 @@
                 
                 [AgoraEduManager.shareManager.studentService sendRoomChatMessageWithText:[model yy_modelToJSONString] success:^{
                     
-                    EETextMessage *message = [EETextMessage new];
+                    AgoraEETextMessage *message = [AgoraEETextMessage new];
                     message.fromUser = weakself.localUser;
                     message.message = content;
                     message.timestamp = [[NSDate date] timeIntervalSince1970] * 1000;
@@ -380,7 +379,7 @@
             
         } else {
             
-            RoomChatConfiguration *config = [RoomChatConfiguration new];
+            AgoraRoomChatConfiguration *config = [AgoraRoomChatConfiguration new];
             config.appId = AgoraEduKeyCenter.agoraAppid;
             config.roomUuid = self.roomUuid;
             config.userUuid = self.userUuid;
@@ -388,9 +387,9 @@
             config.message = content;
             config.type = 1;
             config.token = AgoraEduManager.shareManager.token;
-            [AppHTTPManager roomChatWithConfig:config success:^(AppBaseModel * _Nonnull model) {
+            [AgoraHTTPManager roomChatWithConfig:config success:^(AgoraBaseModel * _Nonnull model) {
                     
-                EETextMessage *message = [EETextMessage new];
+                AgoraEETextMessage *message = [AgoraEETextMessage new];
                 message.fromUser = weakself.localUser;
                 message.message = content;
                 message.timestamp = [[NSDate date] timeIntervalSince1970] * 1000;
@@ -431,7 +430,7 @@
 #pragma mark Subclass implementation
 - (void)onSyncSuccess {
 }
-- (void)onSendMessage:(EETextMessage *)message {
+- (void)onSendMessage:(AgoraEETextMessage *)message {
 }
 - (void)onReconnected {
 }
@@ -454,7 +453,7 @@
 //record
 - (void)onEndRecord {
 }
-- (void)onUnknownPropertyUpdated:(EduClassroom *)classroom cause:(EduObject *)cause {
+- (void)onUnknownPropertyUpdated:(AgoraRTEClassroom *)classroom cause:(AgoraRTEObject *)cause {
 }
 
 @end

@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <AgoraWhiteBoard/AgoraWhiteBoard.h>
 #import <EduSDK/EduSDK.h>
-#import "EduConfiguration.h"
-#import "HTTPConfiguration.h"
+#import "AgoraRTEConfiguration.h"
+#import "AgoraHTTPConfiguration.h"
 #import <AgoraLog/AgoraLog.h>
 #import "AgoraEduSDK.h"
 
@@ -28,15 +28,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) id<AgoraEduReplayDelegate> replayDelegate;
 
 #pragma mark --
-@property (nonatomic, strong) EduManager *eduManager;
+@property (nonatomic, strong) AgoraRTEManager *eduManager;
 @property (nonatomic, strong) WhiteBoardManager *whiteBoardManager;
 
-@property (nonatomic, strong) EduClassroomManager * _Nullable roomManager;
-@property (nonatomic, strong) EduStudentService * _Nullable studentService;
+@property (nonatomic, strong) AgoraRTEClassroomManager * _Nullable roomManager;
+@property (nonatomic, strong) AgoraRTEStudentService * _Nullable studentService;
 
 // 用于超小的组频道
-@property (nonatomic, strong) EduClassroomManager * _Nullable groupRoomManager;
-@property (nonatomic, strong) EduStudentService * _Nullable groupStudentService;
+@property (nonatomic, strong) AgoraRTEClassroomManager * _Nullable groupRoomManager;
+@property (nonatomic, strong) AgoraRTEStudentService * _Nullable groupStudentService;
 
 + (instancetype)shareManager;
 
@@ -44,14 +44,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)initWithUserUuid:(NSString *)userUuid userName:(NSString *)userName tag:(NSInteger)tag success:(void (^) (void))successBlock failure:(void (^) (NSString *errorMsg))failureBlock;
 
-- (void)queryRoomStateWithConfig:(RoomStateConfiguration *)config success:(void (^) (void))successBlock failure:(void (^) (NSString * _Nonnull errorMsg))failureBlock;
+- (void)queryRoomStateWithConfig:(AgoraRoomStateConfiguration *)config success:(void (^) (void))successBlock failure:(void (^) (NSString * _Nonnull errorMsg))failureBlock;
 
-- (void)joinClassroomWithSceneType:(EduSceneType)sceneType userName:(NSString*)userName success:(void (^) (void))successBlock failure:(void (^) (NSString * _Nonnull errorMsg))failureBlock;
+- (void)joinClassroomWithSceneType:(AgoraRTESceneType)sceneType userName:(NSString*)userName success:(void (^) (void))successBlock failure:(void (^) (NSString * _Nonnull errorMsg))failureBlock;
 
 - (void)getWhiteBoardInfoWithSuccess:(void (^) (NSString *boardId, NSString *boardToken))successBlock failure:(void (^) (NSString *errorMsg))failureBlock;
 
-- (void)logMessage:(NSString *)message level:(EduLogLevel)level;
-- (void)uploadDebugItemSuccess:(OnDebugItemUploadSuccessBlock) successBlock failure:(EduFailureBlock _Nullable)failureBlock;
+- (void)logMessage:(NSString *)message level:(AgoraRTELogLevel)level;
+- (void)uploadDebugItemSuccess:(OnDebugItemUploadSuccessBlock) successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
 
 + (void)releaseResource;
 

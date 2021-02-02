@@ -18,6 +18,9 @@
 
 @optional
 - (void)onWhiteBoardError:(NSError *)error;
+
+- (void)onWhiteBoardPageChanged:(NSInteger)pageIndex pageCount:(NSInteger)pageCount;
+
 @end
 
 NS_ASSUME_NONNULL_BEGIN
@@ -43,6 +46,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 // when board view size changed, must call refreshViewSize
 - (void)refreshViewSize;
+
+// pageindex
+- (void)setPageIndex:(NSUInteger)index;
+
+// scale
+- (void)increaseScale;
+- (void)decreaseScale;
 
 // move courseware
 - (void)moveViewToContainer:(CGSize)size;

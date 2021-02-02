@@ -9,7 +9,7 @@
 #import "NSArray+Copy.h"
 #import <YYModel/YYModel.h>
 
-@implementation NSArray (Copy)
+@implementation NSArray (AgoraCopy)
 - (NSArray *)deepCopy {
     NSMutableArray *array = [NSMutableArray array];
     for (NSObject *obj in self) {

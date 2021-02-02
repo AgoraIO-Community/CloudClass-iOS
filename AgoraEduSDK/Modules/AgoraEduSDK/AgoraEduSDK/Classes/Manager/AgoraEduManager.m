@@ -8,9 +8,9 @@
 
 #import "AgoraEduManager.h"
 #import "AgoraEduKeyCenter.h"
-#import "AppHTTPManager.h"
+#import "AgoraHTTPManager.h"
 #import <YYModel/YYModel.h>
-#import <EduSDK/EduConstants.h>
+#import <EduSDK/AgoraRTEConstants.h>
 #import "UIView+AgoraEduToast.h"
 
 #define USER_PROPERTY_KEY_GROUP @"group"
@@ -58,33 +58,33 @@ static AgoraEduManager *manager = nil;
 
 - (void)initWithUserUuid:(NSString *)userUuid userName:(NSString *)userName tag:(NSInteger)tag success:(void (^) (void))successBlock failure:(void (^) (NSString *errorMsg))failureBlock {
     
-    EduConfiguration *config = [[EduConfiguration alloc] initWithAppId:AgoraEduKeyCenter.agoraAppid userUuid:userUuid token:AgoraEduManager.shareManager.token userName:userName];
+    AgoraRTEConfiguration *config = [[AgoraRTEConfiguration alloc] initWithAppId:AgoraEduKeyCenter.agoraAppid userUuid:userUuid token:AgoraEduManager.shareManager.token userName:userName];
     config.logLevel = self.logLevel;
     config.logDirectoryPath = self.logDirectoryPath;
     config.tag = tag;
     config.logConsoleState = self.consoleState;
-    self.eduManager = [[EduManager alloc] initWithConfig:config success:successBlock failure:^(NSError * _Nonnull error) {
+    self.eduManager = [[AgoraRTEManager alloc] initWithConfig:config success:successBlock failure:^(NSError * _Nonnull error) {
         failureBlock(error.localizedDescription);
     }];
     
     self.whiteBoardManager = [WhiteBoardManager new];
 }
 
-- (void)queryRoomStateWithConfig:(RoomStateConfiguration *)config success:(void (^) (void))successBlock failure:(void (^) (NSString * _Nonnull errorMsg))failureBlock {
+- (void)queryRoomStateWithConfig:(AgoraRoomStateConfiguration *)config success:(void (^) (void))successBlock failure:(void (^) (NSString * _Nonnull errorMsg))failureBlock {
     
     WEAK(self);
     
-    [AppHTTPManager roomStateWithConfig:config success:^(AppRoomStateModel * _Nonnull model) {
+    [AgoraHTTPManager roomStateWithConfig:config success:^(AgoraRoomStateModel * _Nonnull model) {
             
         if (model.data && model.data.state == 2) {// end
             failureBlock(AgoraEduLocalizedString(@"ClassroomEndText", nil));
         } else {
-            EduClassroomConfig *classroomConfig = [EduClassroomConfig new];
+            AgoraRTEClassroomConfig *classroomConfig = [AgoraRTEClassroomConfig new];
             classroomConfig.roomUuid = config.roomUuid;
             classroomConfig.sceneType = config.roomType;
             // 超小学生会加入2个房间： 老师的房间(大班课)和小组的房间（小班课）
-            if (config.roomType == EduSceneTypeBreakout) {
-                classroomConfig.sceneType = EduSceneTypeBig;
+            if (config.roomType == AgoraRTESceneTypeBreakout) {
+                classroomConfig.sceneType = AgoraRTESceneTypeBig;
             }
             weakself.roomManager = [weakself.eduManager createClassroomWithConfig:classroomConfig];
         
@@ -99,20 +99,20 @@ static AgoraEduManager *manager = nil;
     }];
 }
 
-- (void)joinClassroomWithSceneType:(EduSceneType)sceneType userName:(NSString*)userName success:(void (^) (void))successBlock failure:(void (^) (NSString * _Nonnull errorMsg))failureBlock {
+- (void)joinClassroomWithSceneType:(AgoraRTESceneType)sceneType userName:(NSString*)userName success:(void (^) (void))successBlock failure:(void (^) (NSString * _Nonnull errorMsg))failureBlock {
     
     WEAK(self);
-    EduClassroomJoinOptions *options = [[EduClassroomJoinOptions alloc] initWithUserName:userName role:EduRoleTypeStudent];
+    AgoraRTEClassroomJoinOptions *options = [[AgoraRTEClassroomJoinOptions alloc] initWithUserName:userName role:AgoraRTERoleTypeStudent];
     // 大班课不自动发流
-    if (sceneType == EduSceneTypeBig || sceneType == EduSceneTypeBreakout || sceneType == EduSceneTypeMedium) {
+    if (sceneType == AgoraRTESceneTypeBig || sceneType == AgoraRTESceneTypeBreakout || sceneType == AgoraRTESceneTypeMedium) {
         options.mediaOption.autoPublish = NO;
     } else {
         options.mediaOption.autoPublish = YES;
     }
-    [self.roomManager joinClassroom:options success:^(EduUserService * _Nonnull studentService) {
+    [self.roomManager joinClassroom:options success:^(AgoraRTEUserService * _Nonnull studentService) {
         
-        weakself.studentService = (EduStudentService*)studentService;
-        if(sceneType != EduSceneTypeBreakout) {
+        weakself.studentService = (AgoraRTEStudentService*)studentService;
+        if(sceneType != AgoraRTESceneTypeBreakout) {
             successBlock();
             return;
         }
@@ -120,14 +120,14 @@ static AgoraEduManager *manager = nil;
         // 超小学生会加入2个房间： 老师的房间(大班课)和小组的房间（小班课）
         [weakself getGroupClassInfoWithSuccess:^(NSString *roomUuid, NSString *roomName) {
 
-            EduClassroomConfig *classroomConfig = [EduClassroomConfig new];
+            AgoraRTEClassroomConfig *classroomConfig = [AgoraRTEClassroomConfig new];
             classroomConfig.roomUuid = roomUuid;
-            classroomConfig.sceneType = EduSceneTypeSmall;
+            classroomConfig.sceneType = AgoraRTESceneTypeSmall;
             weakself.groupRoomManager = [weakself.eduManager createClassroomWithConfig:classroomConfig];
             
-            EduClassroomJoinOptions *options = [[EduClassroomJoinOptions alloc] initWithUserName:userName role:EduRoleTypeStudent];
-            [weakself.groupRoomManager joinClassroom:options success:^(EduUserService * _Nonnull userService) {
-                weakself.groupStudentService = (EduStudentService*)userService;
+            AgoraRTEClassroomJoinOptions *options = [[AgoraRTEClassroomJoinOptions alloc] initWithUserName:userName role:AgoraRTERoleTypeStudent];
+            [weakself.groupRoomManager joinClassroom:options success:^(AgoraRTEUserService * _Nonnull userService) {
+                weakself.groupStudentService = (AgoraRTEStudentService*)userService;
                 successBlock();
             } failure:^(NSError * error) {
                 failureBlock(error.localizedDescription);
@@ -143,29 +143,29 @@ static AgoraEduManager *manager = nil;
 - (void)getWhiteBoardInfoWithSuccess:(void (^) (NSString *boardId, NSString *boardToken))successBlock failure:(void (^) (NSString *errorMsg))failureBlock {
     
     WEAK(self);
-    [self.roomManager getClassroomInfoWithSuccess:^(EduClassroom * _Nonnull room) {
+    [self.roomManager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
         
         if(room.roomProperties && room.roomProperties[ROOM_PROPERTY_KEY_BOARD]) {
             
-            BoardDataModel *boardDataModel =
-            [BoardDataModel yy_modelWithDictionary:room.roomProperties[ROOM_PROPERTY_KEY_BOARD]];
+            AgoraBoardDataModel *boardDataModel =
+            [AgoraBoardDataModel yy_modelWithDictionary:room.roomProperties[ROOM_PROPERTY_KEY_BOARD]];
             
             successBlock(boardDataModel.info.boardId, boardDataModel.info.boardToken);
             return;
             
         } else {
-            [weakself.roomManager getLocalUserWithSuccess:^(EduLocalUser * _Nonnull user) {
+            [weakself.roomManager getLocalUserWithSuccess:^(AgoraRTELocalUser * _Nonnull user) {
                 
-                BoardInfoConfiguration *config = [BoardInfoConfiguration new];
+                AgoraBoardInfoConfiguration *config = [AgoraBoardInfoConfiguration new];
                 config.appId = AgoraEduKeyCenter.agoraAppid;
                 config.roomUuid = room.roomInfo.roomUuid;
                 config.userToken = user.userToken;
                 config.userUuid = user.userUuid;
                 config.token = AgoraEduManager.shareManager.token;
                 
-                [AppHTTPManager getBoardInfoWithConfig:config success:^(BoardModel * _Nonnull boardModel) {
+                [AgoraHTTPManager getBoardInfoWithConfig:config success:^(AgoraBoardModel * _Nonnull boardModel) {
                     
-                    BoardInfoModel *boardInfoModel = boardModel.data.info;
+                    AgoraBoardInfoModel *boardInfoModel = boardModel.data.info;
                     successBlock(boardInfoModel.boardId, boardInfoModel.boardToken);
                     
                 } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
@@ -195,13 +195,13 @@ static AgoraEduManager *manager = nil;
     }
 }
 
-- (void)uploadDebugItemSuccess:(OnDebugItemUploadSuccessBlock)successBlock failure:(EduFailureBlock _Nullable)failureBlock {
+- (void)uploadDebugItemSuccess:(OnDebugItemUploadSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
     
     WEAK(self);
-    [self.roomManager getLocalUserWithSuccess:^(EduLocalUser * _Nonnull user) {
+    [self.roomManager getLocalUserWithSuccess:^(AgoraRTELocalUser * _Nonnull user) {
        
         if (weakself.eduManager != nil) {
-            EduDebugItem item = EduDebugItemLog;
+            AgoraRTEDebugItem item = AgoraRTEDebugItemLog;
             [weakself.eduManager uploadDebugItem:item uid:user.userUuid token:weakself.token success:successBlock failure:failureBlock];
             
         } else {
@@ -238,18 +238,18 @@ static AgoraEduManager *manager = nil;
 - (void)getGroupClassInfoWithSuccess:(void (^) (NSString *groupRoomUuid, NSString *groupRoomName))successBlock failure:(void (^) (NSString *errorMsg))failureBlock {
     
     WEAK(self);
-    [self.roomManager getLocalUserWithSuccess:^(EduLocalUser * _Nonnull user) {
+    [self.roomManager getLocalUserWithSuccess:^(AgoraRTELocalUser * _Nonnull user) {
         
         if(user.userProperties && user.userProperties[USER_PROPERTY_KEY_GROUP]) {
-            AssignGroupDataModel *model =
-            [AssignGroupDataModel yy_modelWithDictionary:user.userProperties[USER_PROPERTY_KEY_GROUP]];
+            AgoraAssignGroupDataModel *model =
+            [AgoraAssignGroupDataModel yy_modelWithDictionary:user.userProperties[USER_PROPERTY_KEY_GROUP]];
             successBlock(model.roomUuid, model.roomName);
             
         } else {
             
-            [weakself.roomManager getClassroomInfoWithSuccess:^(EduClassroom * _Nonnull room) {
+            [weakself.roomManager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
                 
-                AssignGroupInfoConfiguration *assignConfig = [AssignGroupInfoConfiguration new];
+                AgoraAssignGroupInfoConfiguration *assignConfig = [AgoraAssignGroupInfoConfiguration new];
                 assignConfig.memberLimit = BREAKOUT_GROUP_MEMBER_LIMIT;
                 assignConfig.appId = AgoraEduKeyCenter.agoraAppid;
                 assignConfig.userToken = user.userToken;
@@ -259,22 +259,22 @@ static AgoraEduManager *manager = nil;
                 
                 // role config
                 {
-                    RoleConfiguration *host = [RoleConfiguration new];
+                    AgoraRoleConfiguration *host = [AgoraRoleConfiguration new];
                     host.limit = 1;
                     assignConfig.host = host;
                     
-                    RoleConfiguration *assistant = [RoleConfiguration new];
+                    AgoraRoleConfiguration *assistant = [AgoraRoleConfiguration new];
                     assistant.limit = 1;
                     assignConfig.assistant = assistant;
                     
-                    RoleConfiguration *broadcaster = [RoleConfiguration new];
+                    AgoraRoleConfiguration *broadcaster = [AgoraRoleConfiguration new];
                     broadcaster.limit = 4;
                     assignConfig.broadcaster = broadcaster;
                 }
                 
-                [AppHTTPManager assignBreakOutGroupWithConfig:assignConfig success:^(AssignGroupModel * _Nonnull assignGroupModel) {
+                [AgoraHTTPManager assignBreakOutGroupWithConfig:assignConfig success:^(AgoraAssignGroupModel * _Nonnull assignGroupModel) {
 
-                    AssignGroupDataModel *model = assignGroupModel.data;
+                    AgoraAssignGroupDataModel *model = assignGroupModel.data;
                     model.memberLimit = BREAKOUT_GROUP_MEMBER_LIMIT;
                     successBlock(model.roomUuid, model.roomName);
                     

@@ -9,12 +9,12 @@
 #import "AgoraEduAlertViewUtil.h"
 
 @implementation AgoraEduAlertViewUtil
-+ (UIAlertController *)showAlertWithController:(UIViewController *)viewController title:(NSString *)title cancelHandler:(KAlertHandler)cancelHandler sureHandler:(KAlertHandler)sureHandler {
++ (UIAlertController *)showAlertWithController:(UIViewController *)viewController title:(NSString *)title cancelHandler:(KAgoraAlertHandler)cancelHandler sureHandler:(KAgoraAlertHandler)sureHandler {
     
     return [AgoraEduAlertViewUtil showAlertWithController:viewController title:title message:nil cancelText:AgoraEduLocalizedString(@"CancelText", nil) sureText:AgoraEduLocalizedString(@"OKText", nil) cancelHandler:cancelHandler sureHandler:sureHandler];
 }
 
-+ (UIAlertController *)showAlertWithController:(UIViewController *)viewController title:(NSString *)title sureHandler:(KAlertHandler)sureHandler {
++ (UIAlertController *)showAlertWithController:(UIViewController *)viewController title:(NSString *)title sureHandler:(KAgoraAlertHandler)sureHandler {
     
     return [AgoraEduAlertViewUtil showAlertWithController:viewController title:title message:nil cancelText:AgoraEduLocalizedString(@"CancelText", nil) sureText:AgoraEduLocalizedString(@"OKText", nil) cancelHandler:nil sureHandler:sureHandler];
 }
@@ -24,7 +24,7 @@
     return [AgoraEduAlertViewUtil showAlertWithController:viewController title:title message:nil cancelText:AgoraEduLocalizedString(@"CancelText", nil) sureText:nil cancelHandler:nil sureHandler:nil];
 }
 
-+ (UIAlertController *)showAlertWithController:(UIViewController *)viewController title:(NSString *)title message:(NSString * _Nullable)message cancelText:(NSString * _Nullable)cancelText sureText:(NSString * _Nullable)sureText cancelHandler:(KAlertHandler _Nullable)cancelHandler sureHandler:(KAlertHandler _Nullable)sureHandler {
++ (UIAlertController *)showAlertWithController:(UIViewController *)viewController title:(NSString *)title message:(NSString * _Nullable)message cancelText:(NSString * _Nullable)cancelText sureText:(NSString * _Nullable)sureText cancelHandler:(KAgoraAlertHandler _Nullable)cancelHandler sureHandler:(KAgoraAlertHandler _Nullable)sureHandler {
 
     UIAlertController *alertVc = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
     

@@ -18,11 +18,7 @@
 - (void)initControlView {
     
     NSBundle *baseBundle = [NSBundle bundleForClass:AgoraWhiteBoardViewManager.class];
-    WhiteBoardPageControlView *pageView = [baseBundle loadNibNamed:@"WhiteBoardPageControlView" owner:self options:nil].firstObject;
-    pageView.hidden = YES;
-    [self.boardView addSubview:pageView];
-    self.pageControlView = pageView;
-    
+
     WhiteBoardToolControlView *toolView = [baseBundle loadNibNamed:@"WhiteBoardToolControlView" owner:self options:nil].firstObject;
     toolView.hidden = YES;
     [self.boardView addSubview:toolView];
@@ -37,21 +33,6 @@
 }
 
 - (void)updateSubviewLayouts {
-
-    {
-        self.pageControlView.translatesAutoresizingMaskIntoConstraints = NO;
-        NSLayoutConstraint *widthConstraint = [NSLayoutConstraint constraintWithItem:self.pageControlView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:224];
-        [self.pageControlView addConstraint:widthConstraint];
-        
-        NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.pageControlView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0 constant:46];
-        [self.pageControlView addConstraint:heightConstraint];
-        
-        [self.boardView addConstraints:@[
-            [NSLayoutConstraint constraintWithItem:self.pageControlView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.boardView attribute:NSLayoutAttributeRight multiplier:1.0 constant:-10],
-            
-            [NSLayoutConstraint constraintWithItem:self.pageControlView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.boardView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-10],
-        ]];
-    }
 
     {
         self.toolControlView.translatesAutoresizingMaskIntoConstraints = NO;
