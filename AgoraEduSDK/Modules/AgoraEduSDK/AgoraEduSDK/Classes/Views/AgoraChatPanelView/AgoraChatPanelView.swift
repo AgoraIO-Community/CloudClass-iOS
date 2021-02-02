@@ -37,7 +37,7 @@ import UIKit
                 label.isHidden = false
                 label.text = "\(unreadNum)"
                 
-                let rect: CGRect = ("\(unreadNum)").boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: label.height), options: .usesLineFragmentOrigin , attributes: [NSAttributedString.Key.font:label.font], context: nil)
+                let rect: CGRect = ("\(unreadNum)").boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: label.height), options: .usesLineFragmentOrigin , attributes: [NSAttributedString.Key.font:label.font!], context: nil)
                 
                 label.width = rect.size.width + (AgoraDeviceAssistant.OS.isPad ? 8 : 4)
             }
@@ -257,7 +257,7 @@ extension AgoraChatPanelView: UITableViewDelegate, UITableViewDataSource {
             return AgoraDeviceAssistant.OS.isPad ? 35 : 20
         }
         
-        return chatModel.cellHeight
+        return CGFloat(chatModel.cellHeight)
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

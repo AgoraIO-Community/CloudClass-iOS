@@ -283,7 +283,7 @@ extension AgoraChatPanelMessageCell {
             self.translateView.x = contentWidth - translateViewSize.width - self.mineLabel.right
             self.translateView.y = self.messageSourceLabel.y + self.messageSourceLabel.height - translateViewSize.height - 2
         }
-        model.cellHeight = cellHeight
+        model.cellHeight = Float(cellHeight)
     }
 }
 
