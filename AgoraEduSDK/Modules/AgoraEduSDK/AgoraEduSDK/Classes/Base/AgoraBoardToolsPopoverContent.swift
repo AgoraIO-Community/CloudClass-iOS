@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - AgoraPencilPopoverContent
-class AgoraPencilPopoverContent: AgoraBaseUIView {
+class AgoraPencilPopoverContent: AgoraBaseView {
     private(set) var colorCollection = AgoraColorCollection(frame: .zero,
                                                             demandSide: .pencil)
     
@@ -111,7 +111,7 @@ class AgoraPencilPopoverContent: AgoraBaseUIView {
 }
 
 // MARK: - AgoraShapePopoverContent
-class AgoraShapePopoverrContent: AgoraBaseUIView {
+class AgoraShapePopoverrContent: AgoraBaseView {
     enum Shape {
         case rectangle, circle
     }
@@ -197,7 +197,7 @@ class AgoraShapePopoverrContent: AgoraBaseUIView {
 }
 
 // MARK: - AgoraShapePopoverContent
-class AgoraEraserPopoverrContent: AgoraBaseUIView {
+class AgoraEraserPopoverrContent: AgoraBaseView {
     private(set) lazy var lineWidthCollection = AgoraLineWidthCollection(frame: .zero,
                                                                          demandSide: .eraser)
     
@@ -244,7 +244,7 @@ class AgoraEraserPopoverrContent: AgoraBaseUIView {
 }
 
 // MARK: - AgoraTextPopoverContent
-class AgoraTextPopoverrContent: AgoraBaseUIView {
+class AgoraTextPopoverrContent: AgoraBaseView {
     let colorCollection = AgoraColorCollection(frame: .zero,
                                                demandSide: .text)
     

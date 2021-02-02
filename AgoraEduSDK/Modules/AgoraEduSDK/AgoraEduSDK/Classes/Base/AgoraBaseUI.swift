@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AgoraBaseView: UIView {
+@objc public class AgoraBaseView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         agora_init_base_view()
@@ -19,7 +19,7 @@ class AgoraBaseView: UIView {
     }
 }
 
-class AgoraBaseUILabel: UILabel {
+@objc public class AgoraBaseUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         agora_init_base_view()
@@ -31,7 +31,24 @@ class AgoraBaseUILabel: UILabel {
     }
 }
 
-class AgoraBaseUIImageView: UIImageView {
+@objcMembers public class AgoraBaseUIImageView: UIImageView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        agora_init_base_view()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        agora_init_base_view()
+    }
+    
+    public override init(image: UIImage?) {
+        super.init(image: image)
+        agora_init_base_view()
+    }
+}
+
+@objc public class AgoraBaseUITextField: UITextField {
     override init(frame: CGRect) {
         super.init(frame: frame)
         agora_init_base_view()
@@ -43,7 +60,7 @@ class AgoraBaseUIImageView: UIImageView {
     }
 }
 
-class AgoraBaseUIButton: UIButton {
+@objc public class AgoraBaseUIButton: UIButton {
     static var Agora_Base_Button_Edge_Insets = "agora_base_button_edge_insets"
     
     var hitTestEdgeInsets : UIEdgeInsets {
@@ -98,7 +115,7 @@ class AgoraBaseUIButton: UIButton {
     }
 }
 
-class AgoraBaseUICollectionView: UICollectionView {
+@objc public class AgoraBaseUICollectionView: UICollectionView {
     override init(frame: CGRect,
                   collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame,
@@ -137,7 +154,7 @@ class AgoraBaseUITableView: UITableView {
     }
 }
 
-class AgoraBaseUITableViewCell: UITableViewCell {
+public class AgoraBaseUITableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)

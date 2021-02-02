@@ -56,7 +56,7 @@ fileprivate var Agora_Pinch_Gesture_Key: NSString = "agora_pinch"
 fileprivate let Agora_Float_Differ: Float = 0.001
 
 // MARK: - Properties
-@objc extension UIView {
+@objc public extension UIView {
     var agora_x: CGFloat {
         set {
             objc_setAssociatedObject(self,
@@ -621,7 +621,7 @@ extension UIView {
 }
 
 // MARK: - Functions
-extension UIView {
+@objc public extension UIView {
     func agora_init_base_view() {
         translatesAutoresizingMaskIntoConstraints = false
         

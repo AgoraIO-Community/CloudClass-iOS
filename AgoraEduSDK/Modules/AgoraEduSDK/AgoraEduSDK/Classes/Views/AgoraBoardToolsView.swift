@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - AgoraButtonListView
-private class AgoraButtonListView: AgoraBaseUIView {
+private class AgoraButtonListView: AgoraBaseView {
     private(set) var buttons = [AgoraBaseUIButton]()
     private var items = [AgoraBoardToolsItem]()
     
@@ -115,11 +115,11 @@ private class AgoraButtonListView: AgoraBaseUIView {
     }
 }
 
-@objc class AgoraBoardToolsView: AgoraBaseUIView {
+@objc class AgoraBoardToolsView: AgoraBaseView {
     fileprivate let cornerRadius: CGFloat = 10
     fileprivate let buttonListView = AgoraButtonListView()
     fileprivate let titleLabel = AgoraBaseUILabel()
-    fileprivate let separator = AgoraBaseUIView()
+    fileprivate let separator = AgoraBaseView()
     fileprivate let unfoldButton = AgoraBaseUIButton()
     
     fileprivate let popover = AgoraPopover(options: [.type(.right),

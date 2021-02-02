@@ -7,8 +7,8 @@
 
 import UIKit
 
-@objcMembers public class AgoraChatPanelInOutCell: AgoraBaseCell {
-    
+@objcMembers class AgoraChatPanelInOutCell: AgoraBaseUITableViewCell {
+
     fileprivate let LabelTag = 99
     
     fileprivate lazy var inoutView: AgoraBaseView = {
@@ -16,16 +16,16 @@ import UIKit
         view.clipsToBounds = true
         view.backgroundColor = UIColor(red: 19/255.0, green: 25/255.0, blue: 111/255.0, alpha: 0.7)
         
-        let label = AgoraBaseLabel()
+        let label = AgoraBaseUILabel()
         label.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 12 : 8)
         label.textColor = UIColor(red: 155/255.0, green: 157/255.0, blue: 194/255.0, alpha: 1)
         label.textAlignment = .center
         label.tag = LabelTag
         view.addSubview(label)
-        label.x = AgoraDeviceAssistant.OS.isPad ? 13 : 9
-        label.right = AgoraDeviceAssistant.OS.isPad ? 13 : 9
-        label.y = 0
-        label.bottom = 0
+        label.agora_x = AgoraDeviceAssistant.OS.isPad ? 13 : 9
+        label.agora_right = AgoraDeviceAssistant.OS.isPad ? 13 : 9
+        label.agora_y = 0
+        label.agora_bottom = 0
         
         return view
     }()
@@ -47,13 +47,17 @@ import UIKit
     }
     
     public func updateCell(_ text: String) {
-        let label = self.inoutView.viewWithTag(LabelTag) as! AgoraBaseLabel
+        let label = self.inoutView.viewWithTag(LabelTag) as! AgoraBaseUILabel
         label.text = text
         
-        let rect: CGRect = (text).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: self.inoutView.height), options: .usesLineFragmentOrigin , attributes: [NSAttributedString.Key.font:label.font], context: nil)
-        label.width = rect.size.width + 1
+        let rect: CGRect = (text).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT),
+                                                            height: self.inoutView.agora_height),
+                                               options: .usesLineFragmentOrigin ,
+                                               attributes: [NSAttributedString.Key.font:label.font],
+                                               context: nil)
+        label.agora_width = rect.size.width + 1
 
-        self.inoutView.layer.cornerRadius = (label.width + label.x + label.right) * 0.06
+        self.inoutView.layer.cornerRadius = (label.agora_width + label.agora_x + label.agora_right) * 0.06
     }
 }
 
@@ -66,9 +70,9 @@ extension AgoraChatPanelInOutCell {
     }
     
     fileprivate func initLayout() {
-        self.inoutView.height = AgoraDeviceAssistant.OS.isPad ? 35 : 20
-        self.inoutView.centerX = 0
-        self.inoutView.centerY = 0
+        self.inoutView.agora_height = AgoraDeviceAssistant.OS.isPad ? 35 : 20
+        self.inoutView.agora_center_x = 0
+        self.inoutView.agora_center_y = 0
     }
 }
 
