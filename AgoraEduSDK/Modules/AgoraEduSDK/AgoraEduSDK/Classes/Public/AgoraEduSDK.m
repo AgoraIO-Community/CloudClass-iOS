@@ -305,15 +305,15 @@ AgoraUserView *stuView;
     
     AgoraToolView *toolView = [[AgoraToolView alloc] initWithMenuConfigs:@[config1, config2]];
     [view addSubview:toolView];
-    toolView.safeX = 0;
-    toolView.safeY = 0;
-    toolView.safeRight = 0;
-    toolView.height = IsPad ? 77 : 40;
+    toolView.agora_safe_x = 0;
+    toolView.agora_safe_y = 0;
+    toolView.agora_right = 0;
+    toolView.agora_height = IsPad ? 77 : 40;
     toolView.leftTouchBlock = ^{
         
     };
     
-    CGFloat top = toolView.height + 5;
+    CGFloat top = toolView.agora_height + 5;
     CGFloat right = 5;
     CGFloat width = 180;
     CGFloat height = 128;
@@ -323,7 +323,7 @@ AgoraUserView *stuView;
     CGFloat minHeight = 27;
     CGFloat minWidth = 130;
     if(IsPad) {
-        top = toolView.height + 9;
+        top = toolView.agora_height + 9;
         right = 20;
         width = 319;
         height = 228;
@@ -337,10 +337,10 @@ AgoraUserView *stuView;
     AgoraUserView *vv = [[AgoraUserView alloc] init];
     [view addSubview:vv];
     teaView = vv;
-    vv.safeY = top;
-    vv.right = right;
-    vv.width = width;
-    vv.height = height;
+    vv.agora_safe_y = top;
+    vv.agora_right = right;
+    vv.agora_width = width;
+    vv.agora_height = height;
 
     vv.audioTouchBlock = ^(BOOL mute) {
         NSLog(@"Srs audio mute:%d", mute);
@@ -352,19 +352,19 @@ AgoraUserView *stuView;
     vv.scaleTouchBlock = ^(BOOL isMin) {
 
         if (isMin) {
-            [vv clearConstraint];
+            [vv agora_clear_constraint];
             
-            vv.bottom = stuView.isMin ? minGap + minHeight + minBottom : minBottom;
-            vv.right = minRight;
-            vv.width = minWidth;
-            vv.height = minHeight;
+            vv.agora_bottom = stuView.isMin ? minGap + minHeight + minBottom : minBottom;
+            vv.agora_right = minRight;
+            vv.agora_width = minWidth;
+            vv.agora_height = minHeight;
             
         } else {
-            [vv clearConstraint];
-            vv.safeY = top;
-            vv.right = right;
-            vv.width = width;
-            vv.height = height;
+            [vv agora_clear_constraint];
+            vv.agora_safe_y = top;
+            vv.agora_right = right;
+            vv.agora_width = width;
+            vv.agora_height = height;
         }
         
         [UIView animateWithDuration:0.35 animations:^{
@@ -376,10 +376,10 @@ AgoraUserView *stuView;
     [view addSubview:vvv];
     stuView = vvv;
 
-    vvv.safeY = top + height + 10;
-    vvv.right = right;
-    vvv.width = width;
-    vvv.height = height;
+    vvv.agora_safe_y = top + height + 10;
+    vvv.agora_right = right;
+    vvv.agora_width = width;
+    vvv.agora_height = height;
     
     vvv.audioTouchBlock = ^(BOOL mute) {
         NSLog(@"Srs audio mute:%d", mute);
@@ -391,22 +391,22 @@ AgoraUserView *stuView;
     vvv.scaleTouchBlock = ^(BOOL isMin) {
 
         if (isMin) {
-            [vvv clearConstraint];
-            vvv.bottom = minBottom;
-            vvv.right = minRight;
-            vvv.width = minWidth;
-            vvv.height = minHeight;
+            [vvv agora_clear_constraint];
+            vvv.agora_bottom = minBottom;
+            vvv.agora_right = minRight;
+            vvv.agora_width = minWidth;
+            vvv.agora_height = minHeight;
             
             if(teaView.isMin) {
-                teaView.bottom = stuView.isMin ? minGap + minHeight + minBottom: minBottom;
+                teaView.agora_bottom = stuView.isMin ? minGap + minHeight + minBottom: minBottom;
             }
             
         } else {
-            [vvv clearConstraint];
-            vvv.safeY = top + 10 + height;
-            vvv.right = right;
-            vvv.width = width;
-            vvv.height = height;
+            [vvv agora_clear_constraint];
+            vvv.agora_safe_y = top + 10 + height;
+            vvv.agora_right = right;
+            vvv.agora_width = width;
+            vvv.agora_height = height;
         }
         
         [UIView animateWithDuration:0.35 animations:^{

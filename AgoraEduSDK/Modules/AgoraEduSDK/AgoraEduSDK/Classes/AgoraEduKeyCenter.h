@@ -3,7 +3,7 @@
 //  AgoraEducation
 //
 //  Created by SRS on 2020/3/26.
-//  Copyright © 2020 yangmoumou. All rights reserved.
+//  Copyright © 2020 Agora. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
