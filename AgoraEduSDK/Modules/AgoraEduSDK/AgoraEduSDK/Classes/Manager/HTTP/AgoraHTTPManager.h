@@ -7,13 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AFNetworking/AFNetworking.h>
 #import "AgoraHTTPConfiguration.h"
 #import "AgoraBoardModel.h"
 #import "AgoraRecordModel.h"
 #import "AgoraAssignGroupModel.h"
 #import "AgoraSchduleModel.h"
 #import "AgoraHttpModel.h"
+
+typedef NS_ENUM(NSInteger, HttpType) {
+    HttpTypeGet            = 0,
+    HttpTypePost,
+    HttpTypePut,
+    HttpTypeDelete,
+};
 
 // GET /edu/apps/{appId}/v2/configs
 #define HTTP_APP_CONFIG @"%@/edu/apps/%@/v2/configs"
@@ -57,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AgoraHTTPManager : NSObject
 #pragma mark Config
 + (void)setBaseURL:(NSString *)url;
++ (NSString *)getBaseURL;
 
 #pragma mark App
 + (void)getConfig:(AgoraRoomConfiguration *)config success:(OnConfigSuccessBlock)successBlock failure:(OnHttpFailureBlock)failureBlock;
@@ -71,6 +78,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)assignBreakOutGroupWithConfig:(AgoraAssignGroupInfoConfiguration *)config  success:(OnAssignBreakOutGroupSuccessBlock)successBlock failure:(OnHttpFailureBlock)failureBlock;
 
+
+#pragma mark Common
++ (NSDictionary *)headersWithUId:(NSString *)uId userToken:(NSString *)userToken token:(NSString *)token;
++ (void)fetchDispatch:(HttpType)type url:(NSString *)url parameters:parameters headers:headers parseClass:(Class)classType success:(OnHttpSuccessBlock)successBlock failure:(OnHttpFailureBlock)failureBlock;
 @end
 
 NS_ASSUME_NONNULL_END

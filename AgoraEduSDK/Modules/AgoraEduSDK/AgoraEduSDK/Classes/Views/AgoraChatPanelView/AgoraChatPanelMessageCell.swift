@@ -140,7 +140,7 @@ extension AgoraChatPanelMessageCell {
         self.failView.resize(AgoraDeviceAssistant.OS.isPad ? 15 : 10, AgoraDeviceAssistant.OS.isPad ? 15 : 10)
     }
 
-    public func updateView(model: AgoraChatMessageModel) {
+    func updateView(model: AgoraChatMessageInfoModel) {
         
         // translateView
         let translateBtn = self.translateView.viewWithTag(LoadingBtnTag) as! AgoraBaseButton
@@ -174,7 +174,7 @@ extension AgoraChatPanelMessageCell {
             // mineLabel
             self.mineLabel.isHidden = false
             self.remoteLabel.isHidden = true
-            self.mineLabel.text = " : " + model.userName
+            self.mineLabel.text = " : " + (model.fromUser?.userName ?? "")
             self.mineLabel.sizeToFit()
             nickSize = self.mineLabel.frame.size;
             self.mineLabel.width = nickSize.width + 1
@@ -183,7 +183,7 @@ extension AgoraChatPanelMessageCell {
             // remoteLabel
             self.mineLabel.isHidden = true
             self.remoteLabel.isHidden = false
-            self.remoteLabel.text = model.userName + " : "
+            self.remoteLabel.text = (model.fromUser?.userName ?? "") + " : "
             self.remoteLabel.sizeToFit()
             nickSize = self.remoteLabel.frame.size;
             self.remoteLabel.width = nickSize.width + 1

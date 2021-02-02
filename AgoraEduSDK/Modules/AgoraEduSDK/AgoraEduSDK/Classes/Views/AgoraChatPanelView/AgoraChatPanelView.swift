@@ -17,7 +17,7 @@ import UIKit
         }
     }
     
-    public var chatModels: [AgoraChatMessageModel] = [] {
+    fileprivate var chatModels: [AgoraChatMessageInfoModel] = [] {
         didSet {
             let label = self.titleView.viewWithTag(LabelTag) as! AgoraBaseLabel
             label.text = "聊天（\(chatModels.count)）"
@@ -205,7 +205,20 @@ import UIKit
         textField.bottom = 0
         return view
     }()
+    
+    fileprivate var vm: AgoraChatPanelVM?
 
+    public convenience init(httpConfig: AgoraHTTPConfig) {
+        self.init(frame: .zero)
+        
+        vm = AgoraChatPanelVM(httpConfig: httpConfig)
+        vm?.getMessageList(successBlock: {[weak self] (models) in
+            self?.chatModels = models
+        }, failureBlock: { (errMsg) in
+            // errToast
+        })
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.initView()

@@ -7,6 +7,7 @@
 //
 
 #import "AgoraHTTPManager.h"
+#import <AFNetworking/AFNetworking.h>
 #import <YYModel/YYModel.h>
 #import "AgoraRTEConfiguration.h"
 
@@ -17,12 +18,6 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
 static NSString *AGORA_EDU_SDK_BASE_URL = @"https://api.agora.io";
 
-typedef NS_ENUM(NSInteger, HttpType) {
-    HttpTypeGet            = 0,
-    HttpTypePost,
-    HttpTypePut,
-    HttpTypeDelete,
-};
 #define HttpTypeStrings  (@[@"GET",@"POST",@"PUT",@"DELETE"])
 
 @interface AgoraHTTPManager ()
@@ -46,6 +41,9 @@ typedef NS_ENUM(NSInteger, HttpType) {
 
 + (void)setBaseURL:(NSString *)url {
     AGORA_EDU_SDK_BASE_URL = url;
+}
++ (NSString *)getBaseURL {
+    return AGORA_EDU_SDK_BASE_URL;
 }
 
 + (void)getConfig:(AgoraRoomConfiguration *)config success:(OnConfigSuccessBlock)successBlock failure:(OnHttpFailureBlock)failureBlock {

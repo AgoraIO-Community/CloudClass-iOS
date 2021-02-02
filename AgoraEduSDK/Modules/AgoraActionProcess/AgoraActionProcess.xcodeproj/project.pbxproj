@@ -10,7 +10,7 @@
 		78A072F725749BD200FFC4DE /* AgoraActionProcessManagerOC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A072F625749BD200FFC4DE /* AgoraActionProcessManagerOC.swift */; };
 		78A072FA25749BD900FFC4DE /* AgoraActionProcessManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A072F925749BD900FFC4DE /* AgoraActionProcessManager.swift */; };
 		78A073082574BD0F00FFC4DE /* AgoraActionHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A073062574BD0F00FFC4DE /* AgoraActionHTTPClient.m */; };
-		78A073092574BD0F00FFC4DE /* AgoraActionHTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 78A073072574BD0F00FFC4DE /* AgoraActionHTTPClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		78A073092574BD0F00FFC4DE /* AgoraActionHTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 78A073072574BD0F00FFC4DE /* AgoraActionHTTPClient.h */; };
 		78A073552574F0CB00FFC4DE /* AgoraActionObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A073542574F0CB00FFC4DE /* AgoraActionObject.swift */; };
 		78A0737A2574FBC300FFC4DE /* AgoraActionObjectOC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A073792574FBC300FFC4DE /* AgoraActionObjectOC.swift */; };
 		E9C6F6D2306798E1A28C8C5B /* Pods_AgoraActionProcess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A785EC0CDEFAA317E7D5BF1C /* Pods_AgoraActionProcess.framework */; };

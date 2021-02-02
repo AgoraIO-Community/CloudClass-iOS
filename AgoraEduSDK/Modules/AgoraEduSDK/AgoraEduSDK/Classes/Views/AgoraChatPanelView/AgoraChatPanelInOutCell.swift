@@ -50,7 +50,7 @@ import UIKit
         let label = self.inoutView.viewWithTag(LabelTag) as! AgoraBaseLabel
         label.text = text
         
-        let rect: CGRect = (text).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: self.inoutView.height), options: .usesLineFragmentOrigin , attributes: [NSAttributedString.Key.font:label.font], context: nil)
+        let rect: CGRect = (text).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: self.inoutView.height), options: .usesLineFragmentOrigin , attributes: [NSAttributedString.Key.font:label.font!], context: nil)
         label.width = rect.size.width + 1
 
         self.inoutView.layer.cornerRadius = (label.width + label.x + label.right) * 0.06
