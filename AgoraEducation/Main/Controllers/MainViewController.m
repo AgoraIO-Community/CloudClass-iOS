@@ -13,8 +13,10 @@
 #import "KeyCenter.h"
 #import <AgoraEduSDK/AgoraEduSDK.h>
 #import "TokenBuilder.h"
+#import "ViewDebugVC.h"
 
 #define ALPHANUM @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+#define BASE_URL @"http://api-solutions-dev.bj2.agoralab.co"
 
 @interface MainViewController ()<EEClassRoomTypeDelegate, UITextFieldDelegate, AgoraEduClassroomDelegate, AgoraEduReplayDelegate>
 
@@ -31,6 +33,7 @@
 @property (nonatomic, strong) NSString *userUuid;
 @property (nonatomic, strong) NSString *roomUuid;
 @property (nonatomic, assign) AgoraEduRoomType roomType;
+
 @end
 
 @implementation MainViewController
@@ -46,6 +49,18 @@
     BOOL eyeCare = [[NSUserDefaults standardUserDefaults] boolForKey:USER_DEFAULT_EYE_CARE];
     AgoraEduSDKConfig *defaultConfig = [[AgoraEduSDKConfig alloc] initWithAppId:KeyCenter.appId eyeCare:eyeCare];
     [AgoraEduSDK setConfig:defaultConfig];
+    
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    SEL sel = NSSelectorFromString(@"setBaseURL:");
+    if ([AgoraEduSDK respondsToSelector:sel]) {
+        [AgoraEduSDK performSelector:sel withObject:BASE_URL];
+    }
+    
+    SEL sel1 = NSSelectorFromString(@"setLogConsoleState:");
+    if ([AgoraEduSDK respondsToSelector:sel1]) {
+        [AgoraEduSDK performSelector:sel1 withObject:@(1)];
+    }
+#pragma clang diagnostic pop
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -70,7 +85,7 @@
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
+    return UIInterfaceOrientationMaskAll;
 }
 
 - (void)dealloc {
@@ -261,5 +276,12 @@
 - (void)replay:(AgoraEduReplay *)replay didReceivedEvent:(AgoraEduEvent)event {
     NSLog(@"replay:%@ event:%d", replay, event);
 }
+
+#ifdef DEBUG
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    ViewDebugVC *vc = [ViewDebugVC new];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+#endif
 
 @end
