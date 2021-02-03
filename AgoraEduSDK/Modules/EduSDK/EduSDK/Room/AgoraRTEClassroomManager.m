@@ -563,7 +563,7 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     } else if(self.sceneType == AgoraRTESceneTypeSmall) {
         videoConfig.videoDimensionWidth = 320;
         videoConfig.videoDimensionHeight = 240;
-        
+    
     } else if(self.sceneType == AgoraRTESceneTypeBig) {
         videoConfig.videoDimensionWidth = 320;
         videoConfig.videoDimensionHeight = 240;
