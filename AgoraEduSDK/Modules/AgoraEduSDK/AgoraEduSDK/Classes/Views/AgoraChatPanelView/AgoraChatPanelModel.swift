@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EduSDK
 
 enum AgoraChatLoadingState: Int {
     case none = 1, loading, success, failure
@@ -31,7 +32,7 @@ enum AgoraChatMessageType: Int {
 //}
 
 class AgoraChatUserInfoModel: NSObject {
-    var role: String = ""
+    var role: AgoraRTERoleType = .invalid
     var userName: String = ""
     var userUuid: String = ""
 }

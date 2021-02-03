@@ -22,6 +22,11 @@
 
 #import <AgoraEduSDK/AgoraEduSDK-Swift.h>
 
+#define AgoraVideoPhoneWScale 0.29
+#define AgoraVideoPhoneWHScale 1.46
+#define AgoraVideoPhonePageWMax 228
+#define AgoraVideoPhoneChatWScale 0.25
+
 @interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, AgoraRTEMediaStreamDelegate, AgoraPageControlProtocol, WhiteManagerDelegate>
 
 @property (weak, nonatomic) AgoraBaseUIImageView *bgView;
@@ -69,6 +74,11 @@
     [self initLayout];
     [self initData];
     [self addNotification];
+}
+
+- (void)dealloc
+{
+    NSLog(@"srs===> vc delloc");
 }
 
 - (void)initData {
@@ -178,13 +188,14 @@
     self.toolView.agora_x = 0;
     self.toolView.agora_y = 0;
     self.toolView.agora_right = 0;
-    self.toolView.agora_height = IsPad ? 77 : 40;
+    self.toolView.agora_height = IsPad ? 77 : 44;
 
     // teacher & student
-    CGFloat top = self.toolView.agora_height + 9;
-    CGFloat right = 9;
-    CGFloat width = 180;
-    CGFloat height = 128;
+    CGFloat top = self.toolView.agora_height + 10;
+    CGFloat topGap = 5;
+    CGFloat right = 10;
+    CGFloat width = MAX(kScreenWidth, kScreenHeight) * AgoraVideoPhoneWScale;
+    CGFloat height = width / AgoraVideoPhoneWHScale;
     CGFloat minGap = 8;
     CGFloat minRight = 15;
     CGFloat minBottom = 15;
@@ -192,6 +203,7 @@
     CGFloat minWidth = 140;
     if(IsPad) {
         top = self.toolView.agora_height + 15;
+        topGap = 10;
         right = 20;
         width = 319;
         height = 228;
@@ -200,6 +212,12 @@
         minBottom = 25;
         minHeight = 49;
         minWidth = 230;
+    }
+    
+    CGFloat maxVideoHeight = (MIN(kScreenWidth, kScreenHeight) - 25 - topGap - top) * 0.5;
+    if(height > maxVideoHeight) {
+        height = maxVideoHeight;
+        width = height * AgoraVideoPhoneWHScale;
     }
     
     WEAK(self);
@@ -240,7 +258,7 @@
         }];
     };
 
-    self.stuView.agora_y = top + height + 10;
+    self.stuView.agora_y = top + height + topGap;
     self.stuView.agora_right = right;
     self.stuView.agora_width = width;
     self.stuView.agora_height = height;
@@ -282,9 +300,9 @@
     
     //board
     self.boardContentView.agora_x = 0;
-    self.boardContentView.agora_right = IsPad ? right + width + 20 : right + width + 20;
+    self.boardContentView.agora_right = IsPad ? right + width + 20 : right + width + 10;
     self.boardRight = self.boardContentView.agora_right;
-    self.boardContentView.agora_y = self.toolView.agora_height;
+    self.boardContentView.agora_y = self.teaView.agora_y;
     self.boardContentView.agora_bottom = 0;
 
     // boardView
@@ -296,19 +314,27 @@
     self.boardToolsView.agora_width = 100;
     
     // boardPageControlView
-    self.boardPageControlView.agora_x = right + 20;
-    self.boardPageControlView.agora_height = IsPad ? 42 : 21;
-    self.boardPageControlView.agora_bottom = 20;
+    self.boardPageControlView.agora_x = IsPad ? 20 : 10;
+    self.boardPageControlView.agora_height = IsPad ? 42 : 27;
+    self.boardPageControlView.agora_bottom = IsPad ? 20 : 10;
+    self.boardPageControlView.agora_width = IsPad ? AgoraVideoPhonePageWMax + 50 : AgoraVideoPhonePageWMax;
 
     // chatPanelView
-    CGFloat chatPanelViewMaxWidth = IsPad ? 246 : 137;
+    CGFloat chatPanelViewMaxWidth = IsPad ? 246 : MAX(kScreenWidth, kScreenHeight) * AgoraVideoPhoneChatWScale;
     CGFloat chatPanelViewMinWidth = IsPad ? 44 : 24;
-    CGFloat chatPanelViewMaxHeight = IsPad ? 362 : 203;
+    CGFloat chatPanelViewMaxHeight = IsPad ? 362 : MIN(kScreenWidth, kScreenHeight) - top - 30;
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets safeAreaInsets =  UIApplication.sharedApplication.keyWindow.safeAreaInsets;
+        if (safeAreaInsets.left > 0.0 || safeAreaInsets.top > 0.0 || safeAreaInsets.right > 0.0 || safeAreaInsets.bottom > 0.0) {
+            chatPanelViewMaxHeight -= 34;
+        }
+    }
+    
     CGFloat chatPanelViewMinHeight = IsPad ? 44 : 24;
 
     self.chatPanelView.agora_width = chatPanelViewMaxWidth;
     self.chatPanelView.agora_height = chatPanelViewMaxHeight;
-    self.chatPanelView.agora_bottom = self.boardContentView.agora_bottom + 20;
+    self.chatPanelView.agora_bottom = self.boardPageControlView.agora_bottom;
     self.chatPanelView.agora_right = self.boardContentView.agora_right + 20;
     self.chatPanelView.scaleTouchBlock = ^(BOOL isMin) {
         weakself.chatPanelView.agora_width = isMin ? chatPanelViewMinWidth : chatPanelViewMaxWidth;
@@ -321,6 +347,12 @@
             weakself.chatPanelView.unreadNum = 8;
         });
     };
+    
+    // reset page controle
+    CGFloat pageControlMaxWidth = MAX(kScreenWidth, kScreenHeight) - (self.chatPanelView.agora_right + self.chatPanelView.agora_width) - 20;
+    if (pageControlMaxWidth < self.boardPageControlView.agora_width) {
+        self.boardPageControlView.agora_width = pageControlMaxWidth;
+    }
 }
 
 - (void)initView {

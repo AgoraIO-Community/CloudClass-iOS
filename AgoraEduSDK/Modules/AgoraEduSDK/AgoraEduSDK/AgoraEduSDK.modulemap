@@ -12,5 +12,17 @@ framework module AgoraEduSDK {
             link "AgoraHTTP"
             export *
         }
+        
+        module AgoraManager {
+            requires objc
+            header "AgoraEduEnums.h"
+            header "AgoraEduObjects.h"
+            header "AgoraEduClassroom.h"
+            header "AgoraEduReplay.h"
+            header "AgoraEduSDK.h"
+            header "AgoraEduManager.h"
+            link "AgoraManager"
+            export *
+        }
     }
 }

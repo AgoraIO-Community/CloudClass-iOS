@@ -232,6 +232,7 @@ import UIKit
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+        print("srs===> chatPanelView delloc")
     }
 }
 
@@ -310,10 +311,6 @@ extension AgoraChatPanelView {
 
         self.maxView.addSubview(self.sendView)
         self.maxView.addSubview(self.chatView)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.onMinTouchEvent()
-        }
     }
     
     fileprivate func initLayout() {
@@ -352,9 +349,7 @@ extension AgoraChatPanelView {
             self.maxView.isHidden = true
             self.textField?.agora_right = 0
             self.chatView.agora_bottom = 0
-
-//            self.chatTableView.clearConstraint()
-            
+  
         } else {
             self.minView.isHidden = true
             
@@ -370,15 +365,7 @@ extension AgoraChatPanelView {
 // MARK: UITextFieldDelegate
 extension AgoraChatPanelView: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        let content = textField.text ?? ""
-        if content.count > 0 {
-            self.onSendTouchEvent()
-            
-        } else {
-            textField.text = nil
-            textField.resignFirstResponder()
-        }
+        self.onSendTouchEvent()
         return true
     }
 }
@@ -386,7 +373,27 @@ extension AgoraChatPanelView: UITextFieldDelegate {
 // MARK: TouchEvent
 extension AgoraChatPanelView {
     @objc fileprivate func onSendTouchEvent() {
-        //
+        
+        vm?.agoraChatMessageInfoModel(msg: self.textField?.text, block: { [weak self] (messageInfoModel) in
+            
+            guard let `self` = self else {
+                return
+            }
+            
+            let model = self.vm?.sendMessage(model: messageInfoModel, successBlock: {[weak self] in
+                
+                self?.chatTableView.reloadData()
+                
+            }, failureBlock: {[weak self] (msgError) in
+                //
+                self?.chatTableView.reloadData()
+            })
+            
+            if(model != nil) {
+                self.chatModels = self.vm?.models ?? []
+            }
+        })
+
         self.textField?.text = nil
         self.textField?.resignFirstResponder()
     }

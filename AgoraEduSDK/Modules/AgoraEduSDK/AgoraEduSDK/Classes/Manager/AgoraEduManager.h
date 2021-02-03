@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <AgoraWhiteBoard/AgoraWhiteBoard.h>
 #import <EduSDK/EduSDK.h>
-#import "AgoraRTEConfiguration.h"
 #import "AgoraHTTPConfiguration.h"
 #import <AgoraLog/AgoraLog.h>
 #import "AgoraEduSDK.h"

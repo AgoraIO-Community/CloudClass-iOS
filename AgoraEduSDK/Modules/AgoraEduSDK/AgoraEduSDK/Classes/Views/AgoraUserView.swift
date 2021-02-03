@@ -113,6 +113,7 @@ import EduSDK
     
     fileprivate let RoundLabelTag: Int = 99
     fileprivate let AudioEffectImageTagStart: Int = 100
+
     fileprivate var stream: AgoraRTEStream?
 
     public var userName: String? {
@@ -307,48 +308,48 @@ extension AgoraUserView {
         
         if AgoraDeviceAssistant.OS.isPad {
             self.cupView.agora_x = 10
-            self.cupView.agora_y = 10
-            self.cupView.agora_height = 33
+            self.cupView.agora_y = self.cupView.agora_x
+            self.cupView.agora_height = 35
 
-            self.nameView.agora_x = 10
-            self.nameView.agora_bottom = 10
+            self.nameView.agora_x = self.cupView.agora_x
+            self.nameView.agora_bottom = self.nameView.agora_x
             self.nameView.agora_height = 33
             
-            self.audioBtn.agora_right = 10
-            self.audioBtn.agora_bottom = 10
-            let _ = self.audioBtn.agora_resize(33, 33)
+            self.audioBtn.agora_right = self.nameView.agora_x
+            self.audioBtn.agora_bottom = self.nameView.agora_x
+            self.audioBtn.agora_resize(33, 33)
                 
-            self.videoBtn.agora_right = 57
-            self.videoBtn.agora_bottom = 10
-            let _ = self.videoBtn.agora_resize(33, 33)
+            self.videoBtn.agora_right = self.audioBtn.agora_right + self.audioBtn.agora_width + 15
+            self.videoBtn.agora_bottom = self.nameView.agora_bottom
+            self.videoBtn.agora_resize(self.audioBtn.agora_width, self.audioBtn.agora_height)
             
-            self.scaleBtn.agora_y = 10
-            self.scaleBtn.agora_right = 10
-            let _ = self.scaleBtn.agora_resize(28, 28)
+            self.scaleBtn.agora_y = self.cupView.agora_x
+            self.scaleBtn.agora_right = self.cupView.agora_x
+            self.scaleBtn.agora_resize(self.cupView.agora_height, self.cupView.agora_height)
             
         } else {
-            self.cupView.agora_x = 9
-            self.cupView.agora_y = 9
-            self.cupView.agora_height = 19
+            self.cupView.agora_x = 13
+            self.cupView.agora_y = self.cupView.agora_x
+            self.cupView.agora_height = 25
 
-            self.nameView.agora_x = 9
+            self.nameView.agora_x = self.cupView.agora_x
             self.nameView.agora_bottom = 7
-            self.nameView.agora_height = 19
+            self.nameView.agora_height = 21
             
-            self.audioBtn.agora_right = 9
-            self.audioBtn.agora_bottom = 8
-            let _ = self.audioBtn.agora_resize(19, 19)
+            self.audioBtn.agora_right = self.cupView.agora_x
+            self.audioBtn.agora_bottom = self.nameView.agora_bottom
+            self.audioBtn.agora_resize(25, 25)
                 
-            self.videoBtn.agora_right = 37
-            self.videoBtn.agora_bottom = 8
-            let _ = self.videoBtn.agora_resize(19, 19)
+            self.videoBtn.agora_right = self.audioBtn.agora_right + self.audioBtn.agora_width + 6
+            self.videoBtn.agora_bottom = self.nameView.agora_bottom
+            self.videoBtn.agora_resize(self.audioBtn.agora_width, self.audioBtn.agora_height)
             
-            self.scaleBtn.agora_y = 8
-            self.scaleBtn.agora_right = 9
-            let _ = self.scaleBtn.agora_resize(16, 16)
+            self.scaleBtn.agora_y = self.cupView.agora_x
+            self.scaleBtn.agora_right = self.cupView.agora_x
+            self.scaleBtn.agora_resize(self.cupView.agora_height, self.cupView.agora_height)
         }
         
-        let audioEffectViewWidth = self.audioBtn.agora_width - (AgoraDeviceAssistant.OS.isPad ? 8 : 4)
+        let audioEffectViewWidth = self.audioBtn.agora_width * 0.6
         let audioEffectImgHeight: CGFloat = AgoraDeviceAssistant.OS.isPad ? 3 : 2
         let audioEffectImgGap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 3 : 2
         for index in 0...3 {
