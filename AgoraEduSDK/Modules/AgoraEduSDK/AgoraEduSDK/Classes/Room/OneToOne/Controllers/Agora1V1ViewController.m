@@ -76,11 +76,6 @@
     [self addNotification];
 }
 
-- (void)dealloc
-{
-    NSLog(@"srs===> vc delloc");
-}
-
 - (void)initData {
     self.studentView.delegate = self;
     self.navigationView.delegate = self;
@@ -235,9 +230,8 @@
 
             // adjust stuview layout
             if (!weakself.stuView.isMin) {
-                CGFloat differ = (weakself.stuView.agora_y + weakself.stuView.agora_height) -  (kScreenHeight - weakself.teaView.agora_bottom - 20);
-
-                if (differ < 0) {
+                CGFloat differ = [weakself getStudentDiffer:minBottom];
+                if (differ > 0) {
                     weakself.stuView.agora_y -= abs(differ);
                 }
             }
@@ -248,7 +242,7 @@
             weakself.teaView.agora_width = width;
             weakself.teaView.agora_height = height;
 
-            if(!weakself.stuView.isMin) {
+            if (!weakself.stuView.isMin) {
                 CGFloat stuViewY = top + 10 + height;
                 weakself.stuView.agora_y = stuViewY;
             }
@@ -269,10 +263,9 @@
             weakself.stuView.agora_right = minRight;
             weakself.stuView.agora_width = minWidth;
             weakself.stuView.agora_height = minHeight;
-            if(weakself.teaView.isMin) {
+            if (weakself.teaView.isMin) {
                 weakself.teaView.agora_bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom: minBottom;
             }
-
         } else {
             if (weakself.teaView.isMin) {
                 weakself.teaView.agora_bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
@@ -282,16 +275,15 @@
             weakself.stuView.agora_right = right;
             weakself.stuView.agora_width = width;
             weakself.stuView.agora_height = height;
-
+            weakself.stuView.agora_y = top + height + topGap;
+            
             // adjust stuview layout
             if (weakself.teaView.isMin) {
-                CGFloat differ = (weakself.stuView.agora_y + weakself.stuView.agora_height) -  (kScreenHeight - weakself.teaView.agora_bottom - 20);
-
-                if (differ < 0) {
-                    stuViewY -= abs(differ);
+                CGFloat differ = [weakself getStudentDiffer:minBottom];
+                if (differ > 0) {
+                    weakself.stuView.agora_y -= abs(differ);
                 }
             }
-            weakself.stuView.agora_y = stuViewY;
         }
         [UIView animateWithDuration:0.35 animations:^{
             [weakself.view layoutIfNeeded];
@@ -555,6 +547,20 @@
         [self.studentView updateAudioImageWithMuted:YES];
     }
 }
+
+- (CGFloat)getStudentDiffer:(CGFloat)minBottom {
+    CGFloat maxHeight = MIN(kScreenWidth, kScreenHeight) - self.teaView.agora_bottom - minBottom - 20;
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets safeAreaInsets =  UIApplication.sharedApplication.keyWindow.safeAreaInsets;
+        if (safeAreaInsets.left > 0.0 || safeAreaInsets.top > 0.0 || safeAreaInsets.right > 0.0 || safeAreaInsets.bottom > 0.0) {
+            maxHeight -= 34;
+        }
+    }
+    
+    CGFloat differ = (self.stuView.agora_y + self.stuView.agora_height) - maxHeight;
+    return differ;
+}
+
 
 #pragma mark AgoraRTEClassroomDelegate
 // User in or out
