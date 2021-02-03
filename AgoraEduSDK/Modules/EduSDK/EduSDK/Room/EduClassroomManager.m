@@ -564,7 +564,7 @@ typedef void (^OnJoinRoomSuccessBlock)(EduUserService *userService);
         videoConfig.videoDimensionWidth = 320;
         videoConfig.videoDimensionHeight = 240;
         
-    } else if(self.sceneType == EduSceneTypeSmall) {
+    } else if(self.sceneType == EduSceneTypeBig) {
         videoConfig.videoDimensionWidth = 320;
         videoConfig.videoDimensionHeight = 240;
     }
