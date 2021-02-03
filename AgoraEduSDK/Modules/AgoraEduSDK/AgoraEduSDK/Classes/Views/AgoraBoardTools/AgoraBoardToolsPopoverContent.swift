@@ -9,22 +9,36 @@ import UIKit
 
 // MARK: - AgoraPencilPopoverContent
 class AgoraPencilPopoverContent: AgoraBaseView {
-    private(set) var colorCollection = AgoraColorCollection(frame: .zero,
-                                                            demandSide: .pencil)
+    let colorCollection: AgoraColorCollection
     
-    private(set) var lineWidthCollection = AgoraLineWidthCollection(frame: .zero,
-                                                                    demandSide: .pencil)
+    let lineWidthCollection: AgoraLineWidthCollection
     
-    private(set) var pencilTypeCollection = AgoraPencilTypeCollection(frame: .zero)
+    let pencilTypeCollection: AgoraPencilTypeCollection
     
-    override init(frame: CGRect) {
+    init(frame: CGRect,
+         color: AgoraBoardToolsColor,
+         lineWidth: AgoraBoardToolsLineWidth,
+         pencil: AgoraBoardToolsPencilType) {
+        
+        colorCollection = AgoraColorCollection(frame: .zero,
+                                               demandSide: .pencil,
+                                               color: color)
+        
+        lineWidthCollection = AgoraLineWidthCollection(frame: .zero,
+                                                       demandSide: .pencil,
+                                                       lineWidth: lineWidth)
+        
+        pencilTypeCollection = AgoraPencilTypeCollection(frame: .zero,
+                                                         pencil: pencil)
+        
         super.init(frame: frame)
+        
+        
         initViews()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        initViews()
+        fatalError()
     }
     
     override func layoutSubviews() {
@@ -118,22 +132,30 @@ class AgoraShapePopoverrContent: AgoraBaseView {
     
     var shape: Shape
     
-    private(set) lazy var colorCollection = AgoraColorCollection(frame: .zero,
-                                                                 demandSide: (shape == .rectangle ? .rectangle : .circle))
+    let colorCollection: AgoraColorCollection
     
-    private(set) lazy var lineWidthCollection = AgoraLineWidthCollection(frame: .zero,
-                                                                    demandSide: (shape == .rectangle ? .rectangle : .circle))
+    let lineWidthCollection: AgoraLineWidthCollection
     
-    init(frame: CGRect, shape: Shape) {
+    init(frame: CGRect,
+         shape: Shape,
+         color: AgoraBoardToolsColor,
+         lineWidth: AgoraBoardToolsLineWidth) {
         self.shape = shape
+        
+        colorCollection = AgoraColorCollection(frame: .zero,
+                                               demandSide: (shape == .rectangle ? .rectangle : .circle),
+                                               color: color)
+        
+        lineWidthCollection = AgoraLineWidthCollection(frame: .zero,
+                                                       demandSide: (shape == .rectangle ? .rectangle : .circle),
+                                                       lineWidth: lineWidth)
+        
         super.init(frame: frame)
         initViews()
     }
     
     required init?(coder: NSCoder) {
-        self.shape = .rectangle
-        super.init(coder: coder)
-        initViews()
+        fatalError()
     }
     
     override func layoutSubviews() {
@@ -198,17 +220,21 @@ class AgoraShapePopoverrContent: AgoraBaseView {
 
 // MARK: - AgoraShapePopoverContent
 class AgoraEraserPopoverrContent: AgoraBaseView {
-    private(set) lazy var lineWidthCollection = AgoraLineWidthCollection(frame: .zero,
-                                                                         demandSide: .eraser)
+    let lineWidthCollection: AgoraLineWidthCollection
     
-    override init(frame: CGRect) {
+    init(frame: CGRect,
+         lineWidth: AgoraBoardToolsLineWidth) {
+        
+        lineWidthCollection = AgoraLineWidthCollection(frame: .zero,
+                                                       demandSide: .eraser,
+                                                       lineWidth: lineWidth)
+        
         super.init(frame: frame)
         initViews()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        initViews()
+        fatalError()
     }
     
     override func layoutSubviews() {
@@ -245,21 +271,25 @@ class AgoraEraserPopoverrContent: AgoraBaseView {
 
 // MARK: - AgoraTextPopoverContent
 class AgoraTextPopoverrContent: AgoraBaseView {
-    let colorCollection = AgoraColorCollection(frame: .zero,
-                                               demandSide: .text)
-    
     let fontTitleLabel = AgoraBaseUILabel(frame: .zero)
+    let colorCollection: AgoraColorCollection
+    let fontCollection: AgoraFontCollection
     
-    let fontCollection = AgoraFontCollection(frame: .zero)
-    
-    override init(frame: CGRect) {
+    init(frame: CGRect,
+         color: AgoraBoardToolsColor,
+         font: AgoraBoardToolsFont) {
+        colorCollection = AgoraColorCollection(frame: .zero,
+                                               demandSide: .text,
+                                               color: color)
+        
+        fontCollection = AgoraFontCollection(frame: .zero,font: font)
+        
         super.init(frame: frame)
         initViews()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        initViews()
+        fatalError()
     }
     
     override func layoutSubviews() {

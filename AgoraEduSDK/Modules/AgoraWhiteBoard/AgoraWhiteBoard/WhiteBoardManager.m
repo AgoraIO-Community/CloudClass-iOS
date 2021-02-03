@@ -255,7 +255,74 @@ The RoomState property in the room will trigger this callback when it changes.
     self.whiteMemberState.strokeColor = array;
     [self.room setMemberState: self.whiteMemberState];
 }
-//#pragma mark WihteBoardToolControlDelegate
+
+#pragma mark - Update tools properties
+- (void)setMoveOperation {
+    [self setApplianceNameWithToolType:WihteBoardToolTypeSelector];
+    [self.room setMemberState:self.whiteMemberState];
+}
+
+- (void)setStrokeColor:(UIColor *)color
+          withToolType:(WihteBoardToolType)type {
+    [self setApplianceNameWithToolType:type];
+    CGFloat red = 0;
+    CGFloat green = 0;
+    CGFloat blue = 0;
+    CGFloat alpha = 0;
+    [color getRed:&red
+            green:&green
+             blue:&blue
+            alpha:&alpha];
+    
+    NSInteger redValue = red * 255;
+    NSInteger greenValue = green * 255;
+    NSInteger blueValue = blue * 255;
+    
+    self.whiteMemberState.strokeColor = @[@(redValue),
+                                          @(green),
+                                          @(blueValue)];
+    [self.room setMemberState: self.whiteMemberState];
+}
+
+- (void)setStrokeWidth:(NSInteger)strokeWidth
+          withToolType:(WihteBoardToolType)type {
+    [self setApplianceNameWithToolType:type];
+    self.whiteMemberState.strokeWidth = @(strokeWidth);
+    [self.room setMemberState:self.whiteMemberState];
+}
+
+- (void)setTextSize:(NSInteger)textSize
+       withToolType:(WihteBoardToolType)type {
+    [self setApplianceNameWithToolType:type];
+    self.whiteMemberState.textSize = @(textSize);
+    [self.room setMemberState:self.whiteMemberState];
+}
+
+- (void)setApplianceNameWithToolType:(WihteBoardToolType)type {
+    NSString *applianceName = @"";
+    switch (type) {
+        case WihteBoardToolTypeSelector:
+            applianceName = ApplianceSelector;
+            break;
+        case WihteBoardToolTyperPencil:
+            applianceName = AppliancePencil;
+            break;
+        case WihteBoardToolTyperText:
+            applianceName = ApplianceText;
+            break;
+        case WihteBoardToolTyperEraser:
+            applianceName = ApplianceEraser;
+            break;
+        case WihteBoardToolTyperColor:
+            return;
+        default:
+            break;
+    }
+    
+    self.whiteMemberState.currentApplianceName = applianceName;
+}
+
+#pragma mark WihteBoardToolControlDelegate
 - (void)onSelectToolType:(WihteBoardToolType)type {
     NSString *applianceName = @"";
     switch (type) {

@@ -7,26 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WhiteBoardToolEnums.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_ENUM(NSInteger, WihteBoardToolDirectionType) {
-    WihteBoardToolDirectionTypePortrait,
-    WihteBoardToolDirectionTypeLandscape,
-};
-
-typedef NS_ENUM(NSInteger, WihteBoardToolStyle) {
-    WihteBoardToolStyleDark,
-    WihteBoardToolStyleWhite,
-};
-
-typedef NS_ENUM(NSInteger, WihteBoardToolType) {
-    WihteBoardToolTypeSelector  = 0,
-    WihteBoardToolTyperPencil,
-    WihteBoardToolTyperText,
-    WihteBoardToolTyperEraser,
-    WihteBoardToolTyperColor,
-};
 
 @protocol WihteBoardToolControlDelegate <NSObject>
 - (void)onSelectToolType:(WihteBoardToolType)type;
