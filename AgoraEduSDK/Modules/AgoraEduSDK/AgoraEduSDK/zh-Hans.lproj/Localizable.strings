@@ -17,6 +17,8 @@ CancelText = "取消";
 SettingText = "设置";
 ReplayRecordingText = "录制回放";
 
+UserFullText = "加入教室失败，教室人数已满";
+
 ProhibitedPostText = " 禁言中";
 InputMessageText = " 说点什么";
 
@@ -69,10 +71,10 @@ QuaryReplayFailedText = "生成回放还没有完成，过会儿再来看下";
 ReplayListFailedText = "没有找到回放数据!";
 
 // handsup
-HandsUpTimeOutText = "举手超时！";
-HandsUpSuccessText = "举手成功！";
-HandsDownSuccessText = "取消举手成功！";
-HandsUpFailureText = "举手失败！";
+HandsUpTimeOutText = "举手超时";
+HandsUpSuccessText = "已发送举手请求给老师";
+HandsDownSuccessText = "取消举手成功";
+HandsUpFailureText = "举手失败";
 
 MuteBoardText = "老师已回收了你的白板权限";
 UnMuteBoardText = "老师已授权了你的白板权限";

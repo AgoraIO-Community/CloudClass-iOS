@@ -17,6 +17,8 @@ CancelText = "Cancel";
 SettingText = "Setting";
 ReplayRecordingText = "replay recording";
 
+UserFullText = "The classroom is full";
+
 ProhibitedPostText = " prohibited post";
 InputMessageText = " input message";
 QuitClassroomText = "quit classroom?";
@@ -69,10 +71,10 @@ QuaryReplayFailedText = "generated playback is not complete yet. Check back late
 ReplayListFailedText = "cannot find replay data!";
 
 // handsup
-HandsUpTimeOutText = "hands up timeout！";
-HandsUpSuccessText = "hands up success！";
-HandsDownSuccessText = "cancel hands up success！";
-HandsUpFailureText = "hands up failure！";
+HandsUpTimeOutText = "HandsUp timeout";
+HandsUpSuccessText = "HandsUp request has been sent to teacher";
+HandsDownSuccessText = "Cancel handsUp success";
+HandsUpFailureText = "HandsUp failure";
 
 MuteBoardText = "teacher has revoked your whiteboard permissions";
 UnMuteBoardText = "teacher has authorized your whiteboard permissions";

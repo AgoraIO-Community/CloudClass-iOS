@@ -95,7 +95,11 @@ static AgoraEduManager *manager = nil;
         }
             
     } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
-        failureBlock(error.localizedDescription);
+        if (error.code ==  20403001) {
+            failureBlock(AgoraEduLocalizedString(@"UserFullText", nil));
+        } else {
+            failureBlock(error.localizedDescription);
+        }
     }];
 }
 

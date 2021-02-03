@@ -328,7 +328,6 @@ typedef void (^OnJoinRoomSuccessBlock)(EduUserService *userService);
         return;
     }
     
-    
     [self.syncRoomSession getUsersInQueue:^(NSArray<EduSyncUserModel *> *users) {
         
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:users.count];
@@ -555,8 +554,22 @@ typedef void (^OnJoinRoomSuccessBlock)(EduUserService *userService);
     [RTCManager.shareManager setLogFile:self.logDirectoryPath];
     
     [RTCManager.shareManager setChannelProfile:AgoraChannelProfileLiveBroadcasting];
-    [self.userService setVideoConfig:[EduVideoConfig defaultVideoConfig]];
     
+    EduVideoConfig *videoConfig = [EduVideoConfig defaultVideoConfig];
+    if (self.sceneType == EduSceneType1V1) {
+        videoConfig.videoDimensionWidth = 640;
+        videoConfig.videoDimensionHeight = 480;
+        
+    } else if(self.sceneType == EduSceneTypeSmall) {
+        videoConfig.videoDimensionWidth = 320;
+        videoConfig.videoDimensionHeight = 240;
+        
+    } else if(self.sceneType == EduSceneTypeSmall) {
+        videoConfig.videoDimensionWidth = 320;
+        videoConfig.videoDimensionHeight = 240;
+    }
+    [self.userService setVideoConfig: videoConfig];
+
     if (self.mediaOption.autoPublish) {
         [RTCManager.shareManager setClientRole:AgoraClientRoleBroadcaster channelId:self.roomUuid];
     }
