@@ -70,33 +70,33 @@
 #pragma mark -- show
 
 - (void)showAlertType1 {
-    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
-    NSInteger type = AgoraCourseComfirAlertView.type1;
-    [v setTypeWithType:type];
-    v.didTapAction = ^(NSInteger actionValue) {
-        NSLog(@"%ld", actionValue);
-    };
-    [v showIn:UIApplication.sharedApplication.keyWindow];
+//    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
+//    NSInteger type = AgoraCourseComfirAlertView.type1;
+//    [v setTypeWithType:type];
+//    v.didTapAction = ^(NSInteger actionValue) {
+//        NSLog(@"%ld", actionValue);
+//    };
+//    [v showIn:UIApplication.sharedApplication.keyWindow];
 }
 
 - (void)showAlertType2 {
-    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
-    NSInteger type = AgoraCourseComfirAlertView.type2;
-    [v setTypeWithType:type];
-    v.didTapAction = ^(NSInteger actionValue) {
-        NSLog(@"%ld", actionValue);
-    };
-    [v showIn:UIApplication.sharedApplication.keyWindow];
+//    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
+//    NSInteger type = AgoraCourseComfirAlertView.type2;
+//    [v setTypeWithType:type];
+//    v.didTapAction = ^(NSInteger actionValue) {
+//        NSLog(@"%ld", actionValue);
+//    };
+//    [v showIn:UIApplication.sharedApplication.keyWindow];
 }
 
 - (void)showAlertType3 {
-    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
-    NSInteger type = AgoraCourseComfirAlertView.type3;
-    [v setTypeWithType:type];
-    v.didTapAction = ^(NSInteger actionValue) {
-        NSLog(@"%ld", actionValue);
-    };
-    [v showIn:UIApplication.sharedApplication.keyWindow];
+//    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
+//    NSInteger type = AgoraCourseComfirAlertView.type3;
+//    [v setTypeWithType:type];
+//    v.didTapAction = ^(NSInteger actionValue) {
+//        NSLog(@"%ld", actionValue);
+//    };
+//    [v showIn:UIApplication.sharedApplication.keyWindow];
 }
 
 @end

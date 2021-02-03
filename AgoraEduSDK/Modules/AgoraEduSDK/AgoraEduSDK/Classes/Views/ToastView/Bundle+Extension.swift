@@ -5,7 +5,7 @@
 //  Created by ZYP on 2021/1/13.
 //
 
-import Foundation
+import UIKit
 
 class AgoraEduBundleEmptyClass {}
 extension Bundle {

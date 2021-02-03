@@ -327,8 +327,7 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         }
         return;
     }
-    
-    
+
     [self.syncRoomSession getUsersInQueue:^(NSArray<AgoraRTESyncUserModel *> *users) {
         
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:users.count];
@@ -555,8 +554,22 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     [AgoraRTCManager.shareManager setLogFile:self.logDirectoryPath];
     
     [AgoraRTCManager.shareManager setChannelProfile:AgoraChannelProfileLiveBroadcasting];
-    [self.userService setVideoConfig:[AgoraRTEVideoConfig defaultVideoConfig]];
     
+    AgoraRTEVideoConfig *videoConfig = [AgoraRTEVideoConfig defaultVideoConfig];
+    if (self.sceneType == AgoraRTESceneType1V1) {
+        videoConfig.videoDimensionWidth = 640;
+        videoConfig.videoDimensionHeight = 480;
+        
+    } else if(self.sceneType == AgoraRTESceneTypeSmall) {
+        videoConfig.videoDimensionWidth = 320;
+        videoConfig.videoDimensionHeight = 240;
+    
+    } else if(self.sceneType == AgoraRTESceneTypeBig) {
+        videoConfig.videoDimensionWidth = 320;
+        videoConfig.videoDimensionHeight = 240;
+    }
+    [self.userService setVideoConfig: videoConfig];
+
     if (self.mediaOption.autoPublish) {
         [AgoraRTCManager.shareManager setClientRole:AgoraClientRoleBroadcaster channelId:self.roomUuid];
     }

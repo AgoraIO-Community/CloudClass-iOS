@@ -68,13 +68,13 @@ public class AgoraCourseComfirAlertView: AgoraBaseView {
         }
         
         highlightButton.setTitle(highlightButtonTitle, for: .normal)
-        highlightButton.backgroundColor = UIColor(hex: 0xDFB635)
+        highlightButton.backgroundColor = UIColor(rgb: 0xDFB635)
         highlightButton.layer.cornerRadius = 10
         highlightButton.layer.masksToBounds = true
         highlightButton.titleLabel?.font = UIFont.systemFont(ofSize: 10)
         
         nonHighlightButton.setTitle(nonHighlightButtonTitle, for: .normal)
-        nonHighlightButton.backgroundColor = UIColor(hex: 0xA7A7A7)
+        nonHighlightButton.backgroundColor = UIColor(rgb: 0xA7A7A7)
         nonHighlightButton.layer.cornerRadius = 10
         nonHighlightButton.layer.masksToBounds = true
         nonHighlightButton.titleLabel?.font = UIFont.systemFont(ofSize: 10)
@@ -83,7 +83,7 @@ public class AgoraCourseComfirAlertView: AgoraBaseView {
         backgroundColor = .clear
         bgView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         
-        contentView.backgroundColor = UIColor(hex: 0x75C0FF)
+        contentView.backgroundColor = UIColor(rgb: 0x75C0FF)
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
         
@@ -94,7 +94,7 @@ public class AgoraCourseComfirAlertView: AgoraBaseView {
         imageView.image = Bundle.agoraEduBundle.image(name: "alertLogo")
         
         tipsLabel.text = tipText
-        tipsLabel.textColor = UIColor(hex: 0x002591)
+        tipsLabel.textColor = UIColor(rgb: 0x002591)
         tipsLabel.font = UIFont.systemFont(ofSize: 10)
         
         closeButton.setTitle("", for: .normal)
@@ -188,14 +188,14 @@ public class AgoraCourseComfirAlertView: AgoraBaseView {
         }
         
         highlightButton.setTitle(highlightButtonTitle, for: .normal)
-        highlightButton.backgroundColor = UIColor(hex: 0xDFB635)
+        highlightButton.backgroundColor = UIColor(rgb: 0xDFB635)
         highlightButton.layer.cornerRadius = 35/2
         highlightButton.layer.masksToBounds = true
         highlightButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         highlightButton.tag = AgoraCourseComfirAlertView.actionHighlight
         
         nonHighlightButton.setTitle(nonHighlightButtonTitle, for: .normal)
-        nonHighlightButton.backgroundColor = UIColor(hex: 0xA7A7A7)
+        nonHighlightButton.backgroundColor = UIColor(rgb: 0xA7A7A7)
         nonHighlightButton.layer.cornerRadius = 35/2
         nonHighlightButton.layer.masksToBounds = true
         nonHighlightButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
@@ -205,7 +205,7 @@ public class AgoraCourseComfirAlertView: AgoraBaseView {
         backgroundColor = .clear
         bgView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         
-        contentView.backgroundColor = UIColor(hex: 0x75C0FF)
+        contentView.backgroundColor = UIColor(rgb: 0x75C0FF)
         contentView.layer.cornerRadius = 10
         contentView.layer.masksToBounds = true
         
@@ -216,7 +216,7 @@ public class AgoraCourseComfirAlertView: AgoraBaseView {
         imageView.image = Bundle.agoraEduBundle.image(name: "alertLogo")
         
         tipsLabel.text = tipText
-        tipsLabel.textColor = UIColor(hex: 0x002591)
+        tipsLabel.textColor = UIColor(rgb: 0x002591)
         tipsLabel.font = UIFont.systemFont(ofSize: 15)
         
         closeButton.setTitle("", for: .normal)
