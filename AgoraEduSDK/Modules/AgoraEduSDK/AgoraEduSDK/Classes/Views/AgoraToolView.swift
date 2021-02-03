@@ -189,27 +189,28 @@ extension AgoraToolView {
             }
             
         } else {
-            self.leftBtn.agora_x = 20
+            self.leftBtn.agora_x = 25
             self.leftBtn.agora_bottom = 9
-            self.leftBtn.agora_resize(72, 22)
+            self.leftBtn.agora_resize(83, 26)
             
-            self.classInfoLabel.agora_x = self.leftBtn.agora_x + self.leftBtn.agora_width + 27
-            self.classInfoLabel.agora_bottom = 9
-            self.classInfoLabel.agora_resize(0, 22)
+            self.classInfoLabel.agora_x = self.leftBtn.agora_x + self.leftBtn.agora_width + 40
+            self.classInfoLabel.agora_y = 0
+            self.classInfoLabel.agora_bottom = 0
+            self.classInfoLabel.agora_width = 0
             
-            self.timeView.agora_x = self.classInfoLabel.agora_x + self.classInfoLabel.agora_width + 18
-            self.timeView.agora_bottom = 9
-            self.timeView.agora_height = 22
+            self.timeView.agora_x = self.classInfoLabel.agora_x + self.classInfoLabel.agora_width + 15
+            self.timeView.agora_y = 0
+            self.timeView.agora_bottom = 0
             
-            self.signalView.agora_x = self.timeView.agora_x + self.timeView.agora_width + 27
-            self.signalView.agora_bottom = 9
-            self.signalView.agora_height = 22
+            self.signalView.agora_x = self.timeView.agora_x + self.timeView.agora_width + 32
+            self.signalView.agora_bottom = self.leftBtn.agora_bottom
+            self.signalView.agora_height = 26
 
             for (index, _) in self.menuConfigs.enumerated() {
                 let btn = self.viewWithTag(index + ButtonTagStart) as! AgoraBaseUIButton
-                btn.agora_resize(20, 20)
-                btn.agora_right = CGFloat(15 + (Int(btn.agora_width) + 15) * index)
-                btn.agora_bottom = 10
+                btn.agora_resize(32, 32)
+                btn.agora_right = CGFloat(28 + (Int(btn.agora_width) + 9) * index)
+                btn.agora_bottom = 6
             }
         }
     }

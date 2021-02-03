@@ -33,7 +33,7 @@
 
 #define AgoraEduBundle \
 ^(){ \
-    NSBundle *mainBundle = [NSBundle bundleForClass:self.class]; \
+    NSBundle *mainBundle = [NSBundle bundleForClass:AgoraEduManager.self]; \
     NSURL *url = [mainBundle URLForResource:@"AgoraEduSDK" withExtension:@"bundle"]; \
     NSBundle *bundle = [NSBundle bundleWithURL:url]; \
     return bundle; \

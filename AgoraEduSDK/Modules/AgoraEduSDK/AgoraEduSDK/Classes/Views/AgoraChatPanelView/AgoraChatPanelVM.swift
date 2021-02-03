@@ -7,6 +7,7 @@
 
 import Foundation
 import AgoraEduSDK.AgoraFiles.AgoraHTTP
+import AgoraEduSDK.AgoraFiles.AgoraManager
 
 @objcMembers public class AgoraHTTPConfig: NSObject {
     public var appId: String = ""
@@ -69,7 +70,62 @@ class AgoraChatPanelVM {
             failureBlock(error.localizedDescription)
         }
     }
+    
+    func agoraChatMessageInfoModel(msg: String?, block:@escaping (AgoraChatMessageInfoModel?) -> Void) {
+        
+        if (msg == nil || msg?.count == 0) {
+            return block(nil)
+        }
+        
+        AgoraEduManager.share().roomManager?.getLocalUser(success: { (localUser) in
+            
+            let user = AgoraChatUserInfoModel()
+            user.role = .student
+            user.userName = localUser.userName
+            user.userUuid = localUser.userUuid
+            
+            let model = AgoraChatMessageInfoModel()
+            model.message = msg!
+            model.type = .text
+            model.fromUser = user
+            model.isSelf = true
+            block(model)
+            
+        }, failure: { (error) in
+            block(nil)
+        })
+    }
 
     // send
+    func sendMessage(model: AgoraChatMessageInfoModel?, successBlock: @escaping () -> Void, failureBlock: @escaping (_ errorMsg: String) -> Void) -> AgoraChatMessageInfoModel? {
+        
+        guard let messagModel = model else {
+            return nil
+        }
+
+        messagModel.sendState = .loading
+        self.models.append(messagModel)
+        
+        let chatConfig = AgoraRoomChatConfiguration()
+        chatConfig.appId = self.httpConfig.appId
+        chatConfig.roomUuid = self.httpConfig.roomUuid
+        chatConfig.userUuid = self.httpConfig.userUuid
+        chatConfig.userToken = self.httpConfig.userToken
+        chatConfig.token = self.httpConfig.token
+        chatConfig.type = 1
+        chatConfig.message = messagModel.message
+        AgoraHTTPManager.roomChat(withConfig: chatConfig) { (model) in
+            messagModel.sendState = .success
+//            messagModel.sendTime = 234ll
+            
+            successBlock()
+            
+        } failure: { (error, code) in
+            messagModel.sendState = .failure
+            failureBlock(error.localizedDescription)
+        }
+
+        return messagModel
+    }
 }
 
