@@ -143,23 +143,23 @@ extension AgoraColorCollection.Color {
     
     var image: UIImage {
         switch self {
-        case .blue:   return UIImage(named: "蓝色-未选")!
-        case .yellow: return UIImage(named: "黄色-未选")!
-        case .red:    return UIImage(named: "红色-未选")!
-        case .green:  return UIImage(named: "绿色-未选")!
-        case .black:  return UIImage(named: "黑色-未选")!
-        case .white:  return UIImage(named: "白色-未选")!
+        case .blue:   return AgoraImgae(name: "蓝色-未选")
+        case .yellow: return AgoraImgae(name: "黄色-未选")
+        case .red:    return AgoraImgae(name: "红色-未选")
+        case .green:  return AgoraImgae(name: "绿色-未选")
+        case .black:  return AgoraImgae(name: "黑色-未选")
+        case .white:  return AgoraImgae(name: "白色-未选")
         }
     }
     
     var selectedImage: UIImage {
         switch self {
-        case .blue:   return UIImage(named: "蓝色-已选")!
-        case .yellow: return UIImage(named: "黄色-已选")!
-        case .red:    return UIImage(named: "红色-已选")!
-        case .green:  return UIImage(named: "绿色-已选")!
-        case .black:  return UIImage(named: "黑色-已选")!
-        case .white:  return UIImage(named: "白色-已选")!
+        case .blue:   return AgoraImgae(name: "蓝色-已选")
+        case .yellow: return AgoraImgae(name: "黄色-已选")
+        case .red:    return AgoraImgae(name: "红色-已选")
+        case .green:  return AgoraImgae(name: "绿色-已选")
+        case .black:  return AgoraImgae(name: "黑色-已选")
+        case .white:  return AgoraImgae(name: "白色-已选")
         }
     }
 }
@@ -266,10 +266,10 @@ class AgoraLineWidthCollection: AgoraBaseUICollectionView,
 extension AgoraLineWidthCollection.LineWidth {
     var image: UIImage {
         switch self {
-        case .width1: return UIImage(named: "形状 1148")!
-        case .width2: return UIImage(named: "形状 1148 拷贝 2")!
-        case .width3: return UIImage(named: "形状 1148 拷贝 3")!
-        case .width4: return UIImage(named: "形状 1148 拷贝 4")!
+        case .width1: return AgoraImgae(name: "形状 1148")
+        case .width2: return AgoraImgae(name: "形状 1148 拷贝 2")
+        case .width3: return AgoraImgae(name: "形状 1148 拷贝 3")
+        case .width4: return AgoraImgae(name: "形状 1148 拷贝 4")
         }
     }
 }
@@ -364,10 +364,10 @@ class AgoraPencilTypeCollection: AgoraBaseUICollectionView,
 extension AgoraPencilTypeCollection.PencilType {
     var image: UIImage {
         switch self {
-        case .pencil1: return UIImage(named: "箭头")!
-        case .pencil2: return UIImage(named: "线条")!
-        case .pencil3: return UIImage(named: "记号笔")!
-        case .pencil4: return UIImage(named: "画笔 拷贝 2")!
+        case .pencil1: return AgoraImgae(name: "箭头")
+        case .pencil2: return AgoraImgae(name: "线条")
+        case .pencil3: return AgoraImgae(name: "记号笔")
+        case .pencil4: return AgoraImgae(name: "画笔 拷贝 2")
         }
     }
 }

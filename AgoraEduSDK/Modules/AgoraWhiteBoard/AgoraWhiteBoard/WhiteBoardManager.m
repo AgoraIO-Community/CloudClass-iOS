@@ -63,8 +63,8 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
         
         self.boardViewManager = [AgoraWhiteBoardViewManager new];
         self.boardViewManager.boardView = whiteBoardView;
-        self.boardViewManager.toolControlView.delegate = self;
-        self.boardViewManager.colorControlView.delegate = self;
+//        self.boardViewManager.toolControlView.delegate = self;
+//        self.boardViewManager.colorControlView.delegate = self;
         
         WhiteSdkConfiguration *_config = [[WhiteSdkConfiguration alloc] initWithApp:config.appId];
         if(config) {
@@ -123,10 +123,10 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     
     [self.room disableDeviceInputs:!allow];
     
-    self.boardViewManager.toolControlView.hidden = !allow;
-    if(!allow) {
-        self.boardViewManager.colorControlView.hidden = !allow;
-    }
+//    self.boardViewManager.toolControlView.hidden = !allow;
+//    if(!allow) {
+//        self.boardViewManager.colorControlView.hidden = !allow;
+//    }
     if(allow == self.isWritable) {
         if(successBlock) {
             successBlock();
@@ -255,7 +255,7 @@ The RoomState property in the room will trigger this callback when it changes.
     self.whiteMemberState.strokeColor = array;
     [self.room setMemberState: self.whiteMemberState];
 }
-#pragma mark WihteBoardToolControlDelegate
+//#pragma mark WihteBoardToolControlDelegate
 - (void)onSelectToolType:(WihteBoardToolType)type {
     NSString *applianceName = @"";
     switch (type) {
@@ -272,16 +272,11 @@ The RoomState property in the room will trigger this callback when it changes.
             applianceName = ApplianceEraser;
             break;
         case WihteBoardToolTyperColor:
-        {
-            BOOL hidden = self.boardViewManager.colorControlView.hidden;
-            self.boardViewManager.colorControlView.hidden = !hidden;
             return;
-        }
-            break;
         default:
             break;
     }
-    
+
     self.whiteMemberState.currentApplianceName = applianceName;
     [self.room setMemberState: self.whiteMemberState];
 }

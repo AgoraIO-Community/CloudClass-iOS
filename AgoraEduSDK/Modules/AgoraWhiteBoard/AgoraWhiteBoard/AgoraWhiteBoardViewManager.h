@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AgoraWhiteBoardViewManager : NSObject
 
 @property (nonatomic, weak) WhiteBoardView *boardView;
-@property (nonatomic, weak) WhiteBoardToolControlView *toolControlView;
-@property (nonatomic, weak) WhiteBoardColorControlView *colorControlView;
 
 @end
 
