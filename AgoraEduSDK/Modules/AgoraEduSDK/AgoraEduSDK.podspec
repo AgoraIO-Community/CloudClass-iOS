@@ -31,8 +31,10 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '10.0'
 
   s.source_files  = "AgoraEduSDK/**/*.{swift,h,m}"
-  s.public_header_files = "AgoraEduSDK/Classes/Public/*.h"
-  s.prefix_header_file = 'AgoraEduSDK/Classes/AgoraEduSDK.pch'
+  s.public_header_files = "AgoraEduSDK/Classes/Public/*.h", "AgoraEduSDK/Classes/Manager/HTTP/*.h"
+  s.prefix_header_file = 'AgoraEduSDK/AgoraEduSDK.pch'
+  s.preserve_path = 'AgoraEduSDK/AgoraEduSDK.modulemap'
+  s.module_map = 'AgoraEduSDK/AgoraEduSDK.modulemap'
   s.static_framework = true
 
   s.resource_bundles = {

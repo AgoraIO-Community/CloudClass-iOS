@@ -70,9 +70,7 @@ static OSSManager *manager = nil;
         @"callbackBodyType": callbackBodyType};
 
     request.uploadProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
-        if(progressBlock != nil) {
-            progressBlock((float)totalBytesSent / (float)totalBytesExpectedToSend);
-        }
+        
     };
     
     OSSTask *putTask = [[OSSManager shareManager].ossClient putObject:request];

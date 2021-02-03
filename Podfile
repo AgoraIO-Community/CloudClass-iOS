@@ -29,6 +29,8 @@ target 'AgoraEducation' do
   pod "AFNetworking", "4.0.1"
   pod 'OpenSSL-Universal', '1.0.2.17'
   
+  
+  #pod 'AgoraEduSDK', :path => 'AgoraEduSDK/AgoraEduSDK.podspec'
   sourcePod
   
 end

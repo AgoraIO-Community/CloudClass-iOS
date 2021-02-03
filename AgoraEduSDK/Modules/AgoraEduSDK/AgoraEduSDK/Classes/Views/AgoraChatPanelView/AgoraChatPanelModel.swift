@@ -7,25 +7,54 @@
 
 import Foundation
 
-@objc public enum AgoraChatLoadingState: Int {
+enum AgoraChatLoadingState: Int {
     case none = 1, loading, success, failure
 }
 
-@objc public enum AgoraChatMessageType: Int {
+enum AgoraChatMessageType: Int {
     case text = 0, userInout
 }
 
-@objcMembers public class AgoraChatMessageModel: NSObject {
-    public var messageId = 0
-    public var message = ""
-    public var translateMessage = ""
-    public var userName = ""
+//@objcMembers public class AgoraChatMessageModel: NSObject {
+//    public var messageId = 0
+//    public var message = ""
+//
+//    public var userName = ""
+//
+//    public var type:AgoraChatMessageType = .text
+//
+//    public var isSelf = false
+//    public var translateState: AgoraChatLoadingState = .none
+//    public var sendState: AgoraChatLoadingState = .none
+//    public var translateMessage = ""
+//    public var cellHeight: Float = 0
+//}
+
+class AgoraChatUserInfoModel: NSObject {
+    var role: String = ""
+    var userName: String = ""
+    var userUuid: String = ""
+}
+class AgoraChatMessageInfoModel: NSObject {
+    var sequence: Int = 0
+    var message: String = ""
+    var type: AgoraChatMessageType = .text
+    var fromUser : AgoraChatUserInfoModel?
+    var sendTime: Int = 0
     
-    public var type:AgoraChatMessageType = .text
+    var isSelf = false
+    var translateState: AgoraChatLoadingState = .none
+    var sendState: AgoraChatLoadingState = .none
+    var translateMessage = ""
     
-    public var isSelf = false
-    public var translateState: AgoraChatLoadingState = .none
-    public var sendState: AgoraChatLoadingState = .none
-    
-    public var cellHeight: Float = 0
+    var cellHeight: Float = 0
+}
+class AgoraChatMessageInfosModel: NSObject {
+    var total: Int = 0
+    var list: [AgoraChatMessageInfoModel] = []
+    var nextId: Int?
+    var count: Int = 0
+}
+class AgoraChatMessageModel: AgoraBaseModel {
+    var data: AgoraChatMessageInfosModel?
 }

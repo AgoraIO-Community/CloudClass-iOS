@@ -18,6 +18,7 @@
 #import <YYModel/YYModel.h>
 #import "AgoraRTEStream+StreamState.h"
 #import <EduSDK/AgoraRTCManager.h>
+#import "AgoraEduKeyCenter.h"
 
 #import <AgoraEduSDK/AgoraEduSDK-Swift.h>
 
@@ -104,40 +105,40 @@
         [self.toolView updateView];
     });
     
-    NSMutableArray *array = [NSMutableArray array];
-    {
-        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
-        model.isSelf = YES;
-        model.message = @"过年过年过年123";
-        model.userName = @"我";
-        model.type = AgoraChatMessageTypeText;
-        model.translateState = AgoraChatLoadingStateSuccess;
-        model.sendState = AgoraChatLoadingStateLoading;
-        model.translateMessage = @"asjdfjlasljdasjdfjlasljdasjdfjlasljdasjdfdasjdfjlasljdasjdfjlasljdasjdfjlasljd";
-        [array addObject:model];
-    }
+//    NSMutableArray *array = [NSMutableArray array];
+//    {
+//        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
+//        model.isSelf = YES;
+//        model.message = @"过年过年过年123";
+//        model.userName = @"我";
+//        model.type = AgoraChatMessageTypeText;
+//        model.translateState = AgoraChatLoadingStateSuccess;
+//        model.sendState = AgoraChatLoadingStateLoading;
+//        model.translateMessage = @"asjdfjlasljdasjdfjlasljdasjdfjlasljdasjdfdasjdfjlasljdasjdfjlasljdasjdfjlasljd";
+//        [array addObject:model];
+//    }
     
-    {
-        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
-        model.isSelf = NO;
-        model.message = @"过年过年过年123";
-        model.userName = @"老师";
-        model.type = AgoraChatMessageTypeText;
-        model.translateState = AgoraChatLoadingStateNone;
-        model.sendState = AgoraChatLoadingStateLoading;
-
-        [array addObject:model];
-    }
-    
-    {
-        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
-        model.isSelf = NO;
-        model.message = @"Jerry（老师）加入教室";
-        model.type = AgoraChatMessageTypeUserInout;
-        [array addObject:model];
-    }
-
-    self.chatPanelView.chatModels = array;
+//    {
+//        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
+//        model.isSelf = NO;
+//        model.message = @"过年过年过年123";
+//        model.userName = @"老师";
+//        model.type = AgoraChatMessageTypeText;
+//        model.translateState = AgoraChatLoadingStateNone;
+//        model.sendState = AgoraChatLoadingStateLoading;
+//
+//        [array addObject:model];
+//    }
+//
+//    {
+//        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
+//        model.isSelf = NO;
+//        model.message = @"Jerry（老师）加入教室";
+//        model.type = AgoraChatMessageTypeUserInout;
+//        [array addObject:model];
+//    }
+//
+//    self.chatPanelView.chatModels = array;
     
 //    public var messageId = 0
 //    public var message = ""
@@ -375,7 +376,13 @@
     self.boardPageControlView = pageControlView;
 
     // chat view
-    AgoraChatPanelView *chatPanelView = [[AgoraChatPanelView alloc] init];
+    AgoraHTTPConfig *config = [AgoraHTTPConfig new];
+    config.appId = AgoraEduKeyCenter.agoraAppid;
+    config.roomUuid = self.roomUuid;
+    config.userToken = self.localUser.userToken;
+    config.userUuid = self.userUuid;
+    config.token = AgoraEduManager.shareManager.token;
+    AgoraChatPanelView *chatPanelView = [[AgoraChatPanelView alloc] initWithHttpConfig:config];
     [self.contentView addSubview:chatPanelView];
     self.chatPanelView = chatPanelView;
     
