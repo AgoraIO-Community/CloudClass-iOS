@@ -35,6 +35,24 @@ public func AgoraLocalizedString(_ key: String, _ aClass: AnyClass) -> String? {
     return NSLocalizedString(key, tableName: nil, bundle: bundle, value: "", comment: "")
 }
 
+public func AgoraImgae(name: String) -> UIImage {
+    guard let bundle = AgoraBundle(AgoraLocationAssistant.shared().classForCoder) else {
+        fatalError()
+    }
+    
+    return UIImage(named: name,
+                   in: bundle,
+                   compatibleWith: nil)!
+}
+
+class AgoraLocationAssistant: NSObject {
+    static let object = AgoraLocationAssistant()
+    
+    static func shared() -> AgoraLocationAssistant {
+        return object
+    }
+}
+
 extension TimeInterval {
     static let animation = 0.25
 }

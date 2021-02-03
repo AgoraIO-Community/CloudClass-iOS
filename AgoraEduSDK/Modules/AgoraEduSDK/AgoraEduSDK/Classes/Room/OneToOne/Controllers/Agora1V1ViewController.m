@@ -32,6 +32,7 @@
 @property (weak, nonatomic) AgoraBaseView *boardContentView;
 @property (weak, nonatomic) AgoraPageControlView *boardPageControlView;
 @property (weak, nonatomic) AgoraChatPanelView *chatPanelView;
+@property (weak, nonatomic) AgoraBoardToolsView *boardToolsView;
 
 @property (assign, nonatomic) CGFloat boardRight;
 @property (assign, nonatomic) BOOL boardMax;
@@ -289,6 +290,11 @@
     // boardView
     [self.boardView equalTo:self.boardContentView];
 
+    // boardToolsView
+    self.boardToolsView.agora_x = 10;
+    self.boardToolsView.agora_y = self.toolView.agora_height;
+    self.boardToolsView.agora_width = 100;
+    
     // boardPageControlView
     self.boardPageControlView.agora_x = right + 20;
     self.boardPageControlView.agora_height = IsPad ? 42 : 21;
@@ -369,12 +375,17 @@
         self.stuView = studentView;
     }
 
+    // boardToolsView
+    AgoraBoardToolsView *boardToolsView = [[AgoraBoardToolsView alloc] initWithFrame:CGRectZero];
+    [self.contentView addSubview:boardToolsView];
+    self.boardToolsView = boardToolsView;
+    
     // page control
     AgoraPageControlView *pageControlView = [[AgoraPageControlView alloc] initWithDelegate:self];
     pageControlView.hidden = YES;
     [self.contentView addSubview:pageControlView];
     self.boardPageControlView = pageControlView;
-
+    
     // chat view
     AgoraHTTPConfig *config = [AgoraHTTPConfig new];
     config.appId = AgoraEduKeyCenter.agoraAppid;
