@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) AgoraEduReplay *replay;
 @property (nonatomic, weak, nullable) id<AgoraEduClassroomDelegate> classroomDelegate;
 @property (nonatomic, weak, nullable) id<AgoraEduReplayDelegate> replayDelegate;
-
+@property (nonatomic, copy) AgoraEduChatTranslationLan lan;
 #pragma mark --
 @property (nonatomic, strong) AgoraRTEManager *eduManager;
 @property (nonatomic, strong) WhiteBoardManager *whiteBoardManager;

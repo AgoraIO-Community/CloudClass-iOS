@@ -143,6 +143,10 @@ import EduSDK
         
         self.stream = stream
         
+        if !stream.hasAudio {
+            self.audioEffectView.isHidden = true
+        }
+
         if !stream.hasVideo {
             self.defaultView.isHidden = false
             self.defaultLabel?.text = "已关闭摄像头"
@@ -276,12 +280,15 @@ extension AgoraUserView {
             self.layer.cornerRadius = AgoraDeviceAssistant.OS.isPad ? 10 : 5
 
         } else {
+            
+            let role = self.stream?.userInfo.role ?? .invalid
+            
             // check defaultView & cupView & videoBtn
             self.videoCanvas.isHidden = false
             self.defaultView.isHidden = self.stream?.hasVideo ?? false
-            self.cupView.isHidden = false
+            self.cupView.isHidden = !(role == .student)
             self.audioBtn.isHidden = !(self.stream?.hasAudio ?? false)
-            self.videoBtn.isHidden = !(self.stream?.hasVideo ?? false)
+            self.videoBtn.isHidden = (!(role == .student) || (self.stream?.hasVideo ?? false))
             
             self.scaleBtn.setImage(AgoraImageWithName("scale", self.classForCoder), for: .normal)
             

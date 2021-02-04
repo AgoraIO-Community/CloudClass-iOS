@@ -70,3 +70,19 @@
     return self;
 }
 @end
+
+
+NSString * const AgoraEduChatTranslationLanAUTO = @"auto";
+NSString * const AgoraEduChatTranslationLanCN = @"zh-CHS";
+NSString * const AgoraEduChatTranslationLanEN = @"en";
+NSString * const AgoraEduChatTranslationLanJA = @"ja";
+NSString * const AgoraEduChatTranslationLanKO = @"ko";
+NSString * const AgoraEduChatTranslationLanFR = @"fr";
+NSString * const AgoraEduChatTranslationLanES = @"es";
+NSString * const AgoraEduChatTranslationLanPT = @"pt";
+NSString * const AgoraEduChatTranslationLanIT = @"it";
+NSString * const AgoraEduChatTranslationLanRU = @"ru";
+NSString * const AgoraEduChatTranslationLanVI = @"vi";
+NSString * const AgoraEduChatTranslationLanDE = @"de";
+NSString * const AgoraEduChatTranslationLanAR = @"ar";
+

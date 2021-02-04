@@ -8,54 +8,51 @@
 import Foundation
 import EduSDK
 
-enum AgoraChatLoadingState: Int {
+@objc public enum AgoraChatLoadingState: Int {
     case none = 1, loading, success, failure
 }
 
-enum AgoraChatMessageType: Int {
-    case text = 0, userInout
+@objc public enum AgoraChatMessageType: Int {
+    case text = 1, userInout
 }
 
-//@objcMembers public class AgoraChatMessageModel: NSObject {
-//    public var messageId = 0
-//    public var message = ""
-//
-//    public var userName = ""
-//
-//    public var type:AgoraChatMessageType = .text
-//
-//    public var isSelf = false
-//    public var translateState: AgoraChatLoadingState = .none
-//    public var sendState: AgoraChatLoadingState = .none
-//    public var translateMessage = ""
-//    public var cellHeight: Float = 0
-//}
-
-class AgoraChatUserInfoModel: NSObject {
-    var role: AgoraRTERoleType = .invalid
-    var userName: String = ""
-    var userUuid: String = ""
+@objcMembers public class AgoraChatUserInfoModel: NSObject {
+    public var role: AgoraRTERoleType = .invalid
+    public var userName: String = ""
+    public var userUuid: String = ""
 }
-class AgoraChatMessageInfoModel: NSObject {
-    var sequence: Int = 0
-    var message: String = ""
-    var type: AgoraChatMessageType = .text
-    var fromUser : AgoraChatUserInfoModel?
-    var sendTime: Int = 0
+@objcMembers public class AgoraChatMessageInfoModel: NSObject {
+    public var sequence: Int = 0
+    public var message: String = ""
+    public var type: AgoraChatMessageType = .text
+    public var fromUser : AgoraChatUserInfoModel?
+    public var sendTime: Int64 = 0
     
-    var isSelf = false
-    var translateState: AgoraChatLoadingState = .none
-    var sendState: AgoraChatLoadingState = .none
-    var translateMessage = ""
+    public var isSelf = false
+    public var translateState: AgoraChatLoadingState = .none
+    public var sendState: AgoraChatLoadingState = .none
+    public var translateMessage = ""
     
-    var cellHeight: Float = 0
+    public var cellHeight: CGFloat = 0
 }
-class AgoraChatMessageInfosModel: NSObject {
+@objcMembers class AgoraChatMessageInfosModel: NSObject {
     var total: Int = 0
     var list: [AgoraChatMessageInfoModel] = []
-    var nextId: Int?
+    var nextId: String?
     var count: Int = 0
+    
+    static func modelContainerPropertyGenericClass() -> [String: Any] {
+        return ["list" : AgoraChatMessageInfoModel.self]
+    }
 }
-class AgoraChatMessageModel: AgoraBaseModel {
+@objcMembers class AgoraChatMessageModel: AgoraBaseModel {
     var data: AgoraChatMessageInfosModel?
+}
+
+// translate
+@objcMembers class AgoraChatTranslateInfoModel: NSObject {
+    var translation = ""
+}
+@objcMembers class AgoraChatTranslateModel: AgoraBaseModel {
+    var data: AgoraChatTranslateInfoModel?
 }
