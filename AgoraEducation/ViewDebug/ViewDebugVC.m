@@ -8,6 +8,7 @@
 
 #import "ViewDebugVC.h"
 #import "AgoraEduSDK-swift.h"
+#import "CourseTipsViewDebugVC.h"
 
 @interface ViewDebugVC ()
 
@@ -22,7 +23,8 @@
     [self.tableView registerClass:UITableViewCell.class forCellReuseIdentifier:@"cell"];
     _dataList = @[@"教室：未到下课时间",
                   @"教室：已到下课时间",
-                  @"教室：课程结束"];
+                  @"教室：课程结束",
+                  @"教室：提示View"];
     
 }
 
@@ -61,8 +63,11 @@
         case 1:
             [self showAlertType2];
             break;
-        default:
+        case 2:
             [self showAlertType3];
+            break;
+        default:
+            [self showTipsView];
             break;
     }
 }
@@ -70,33 +75,38 @@
 #pragma mark -- show
 
 - (void)showAlertType1 {
-//    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
-//    NSInteger type = AgoraCourseComfirAlertView.type1;
-//    [v setTypeWithType:type];
-//    v.didTapAction = ^(NSInteger actionValue) {
-//        NSLog(@"%ld", actionValue);
-//    };
-//    [v showIn:UIApplication.sharedApplication.keyWindow];
+    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
+    NSInteger type = AgoraCourseComfirAlertView.type1;
+    [v setTypeWithType:type];
+    v.didTapAction = ^(NSInteger actionValue) {
+        NSLog(@"%ld", actionValue);
+    };
+    [v showIn:UIApplication.sharedApplication.keyWindow];
 }
 
 - (void)showAlertType2 {
-//    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
-//    NSInteger type = AgoraCourseComfirAlertView.type2;
-//    [v setTypeWithType:type];
-//    v.didTapAction = ^(NSInteger actionValue) {
-//        NSLog(@"%ld", actionValue);
-//    };
-//    [v showIn:UIApplication.sharedApplication.keyWindow];
+    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
+    NSInteger type = AgoraCourseComfirAlertView.type2;
+    [v setTypeWithType:type];
+    v.didTapAction = ^(NSInteger actionValue) {
+        NSLog(@"%ld", actionValue);
+    };
+    [v showIn:UIApplication.sharedApplication.keyWindow];
 }
 
 - (void)showAlertType3 {
-//    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
-//    NSInteger type = AgoraCourseComfirAlertView.type3;
-//    [v setTypeWithType:type];
-//    v.didTapAction = ^(NSInteger actionValue) {
-//        NSLog(@"%ld", actionValue);
-//    };
-//    [v showIn:UIApplication.sharedApplication.keyWindow];
+    AgoraCourseComfirAlertView *v = [AgoraCourseComfirAlertView new];
+    NSInteger type = AgoraCourseComfirAlertView.type3;
+    [v setTypeWithType:type];
+    v.didTapAction = ^(NSInteger actionValue) {
+        NSLog(@"%ld", actionValue);
+    };
+    [v showIn:UIApplication.sharedApplication.keyWindow];
+}
+
+- (void)showTipsView {
+    CourseTipsViewDebugVC *vc = [CourseTipsViewDebugVC new];
+    [self.navigationController pushViewController:vc animated:true];
 }
 
 @end
