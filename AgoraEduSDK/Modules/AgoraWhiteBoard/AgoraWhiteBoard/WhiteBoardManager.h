@@ -49,15 +49,15 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshViewSize;
 
 // update tools properties
-- (void)setMoveOperation;
+- (void)setTool:(WhiteBoardToolType)type;
 - (void)setStrokeColor:(UIColor *)color
-          withToolType:(WihteBoardToolType)type;
+          withToolType:(WhiteBoardToolType)type;
 
 - (void)setStrokeWidth:(NSInteger)strokeWidth
-          withToolType:(WihteBoardToolType)type;
+          withToolType:(WhiteBoardToolType)type;
 
 - (void)setTextSize:(NSInteger)textSize
-       withToolType:(WihteBoardToolType)type;
+       withToolType:(WhiteBoardToolType)type;
 
 // pageindex
 - (void)setPageIndex:(NSUInteger)index;

@@ -12,7 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol WihteBoardToolControlDelegate <NSObject>
-- (void)onSelectToolType:(WihteBoardToolType)type;
+- (void)onSelectToolType:(WhiteBoardToolType)type;
 @end
 
 @interface WhiteBoardToolControlView : UIView

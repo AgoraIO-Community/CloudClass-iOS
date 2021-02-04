@@ -8,10 +8,25 @@
 import UIKit
 
 // MARK: - AgoraButtonListView
-private class AgoraButtonListView: AgoraBaseView {
+private class AgoraButtonListView: AgoraBaseUIScrollView {
     private(set) var buttons = [AgoraBaseUIButton]()
     private var items = [AgoraBoardToolsItem]()
     private var selectedItemIndex = 0
+    let buttonLeftSpace: CGFloat = 5
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initViews()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        initViews()
+    }
+    
+    private func initViews() {
+        showsVerticalScrollIndicator = false
+    }
     
     func initList(_ buttonItems: [AgoraBoardToolsItem],
                   selectedItemIndex: Int) {
@@ -43,9 +58,9 @@ private class AgoraButtonListView: AgoraBaseView {
         
         var lastButtonMaxY: CGFloat? = nil
         for button in buttons {
-            button.agora_x = 0
+            button.agora_x = buttonLeftSpace
             button.agora_y = lastButtonMaxY ?? 0
-            button.agora_width = (bounds.height == 0) ? 0 : bounds.width
+            button.agora_width = (bounds.height == 0) ? 0 : (bounds.width - (buttonLeftSpace * 2))
             button.agora_height = button.agora_width
             lastButtonMaxY = button.agora_height + button.agora_y
         }
@@ -100,12 +115,15 @@ private class AgoraButtonListView: AgoraBaseView {
     fileprivate let separator = AgoraBaseView()
     fileprivate let unfoldButton = AgoraBaseUIButton()
     
-    fileprivate let popover = AgoraPopover(options: [.type(.right),
-                                                     .blackOverlayColor(.clear),
-                                                     .cornerRadius(10),
-                                                     .arrowSize(CGSize(width: 16, height: 8))])
+    fileprivate let arrowSize = CGSize(width: 16, height: 8)
+    fileprivate lazy var popover = AgoraPopover(options: [.type(.right),
+                                                          .blackOverlayColor(.clear),
+                                                          .cornerRadius(10),
+                                                          .arrowSize(arrowSize),
+                                                          .arrowPointerOffset(CGPoint(x: 10, y: 0))])
     
     public var vm: AgoraBoardToolsVM
+    public var maxHeight: CGFloat = 0
     
     public init(frame: CGRect,
                 vm: AgoraBoardToolsVM) {
@@ -115,7 +133,9 @@ private class AgoraButtonListView: AgoraBaseView {
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        fatalError()
+        self.vm = AgoraBoardToolsVM()
+        super.init(coder: aDecoder)
+        initViews()
     }
     
     public override func layoutSubviews() {
@@ -131,7 +151,7 @@ private class AgoraButtonListView: AgoraBaseView {
         titleLabel.agora_height = bounds.width
         
         // separator
-        let separatorSpace: CGFloat = 12
+        let separatorSpace: CGFloat = 7
         let separatorW: CGFloat = bounds.width - (separatorSpace * 2)
         separator.agora_x = separatorSpace
         separator.agora_bottom = 31
@@ -151,15 +171,19 @@ private class AgoraButtonListView: AgoraBaseView {
         
         // unfold status frame
         if unfoldButton.isSelected {
+            agora_height = maxHeight
+            
             // buttonListView
+            let buttonListViewContentHeight: CGFloat = CGFloat(buttonListView.buttons.count) * (bounds.width - 10)
+            buttonListView.contentSize = CGSize(width: 0,
+                                                height: buttonListViewContentHeight)
+            
             buttonListView.agora_x = 0
             buttonListView.agora_y = titleLabel.agora_height
             buttonListView.agora_width = bounds.width
-            buttonListView.agora_height = CGFloat(buttonListView.buttons.count) * bounds.width
             
-//            let maxHeight =
-            
-            agora_height = titleLabel.agora_height + separator.agora_height + unfoldButton.agora_height + buttonListView.agora_height
+            let buttonListViewHeight = maxHeight - titleLabel.agora_height - separator.agora_height - unfoldButton.agora_height
+            buttonListView.agora_height = buttonListViewHeight
             
         // fold status frame
         } else {
@@ -205,6 +229,7 @@ private extension AgoraBoardToolsView {
                                action: #selector(doUnfoldButtonPressed(_:)),
                                for: .touchUpInside)
         unfoldButton.contentMode = .scaleAspectFit
+        unfoldButton.isSelected = true
         addSubview(unfoldButton)
     }
     
@@ -225,12 +250,11 @@ private extension AgoraBoardToolsView {
             
             let view = AgoraPencilPopoverContent(frame: CGRect(x: 0,
                                                                y: 0,
-                                                               width: 390,
-                                                               height: 286),
+                                                               width: 199 + arrowSize.height,
+                                                               height: 114),
                                                  color: color,
                                                  lineWidth: lineWidth,
                                                  pencil: pencil)
-            
             view.colorCollection.colorDelegate = self
             view.lineWidthCollection.lineWidthDelegate = self
             view.pencilTypeCollection.pencilTypeDelegate = self
@@ -250,8 +274,8 @@ private extension AgoraBoardToolsView {
             
             let view = AgoraTextPopoverrContent(frame: CGRect(x: 0,
                                                               y: 0,
-                                                              width: 390,
-                                                              height: 324),
+                                                              width: 199 + arrowSize.height,
+                                                              height: 148),
                                                 color: color,
                                                 font: font)
             view.colorCollection.colorDelegate = self
@@ -270,8 +294,8 @@ private extension AgoraBoardToolsView {
             
             let view = AgoraShapePopoverrContent(frame: CGRect(x: 0,
                                                                y: 0,
-                                                               width: 390,
-                                                               height: 182),
+                                                               width: 199 + arrowSize.height,
+                                                               height: 78),
                                                  shape: .rectangle,
                                                  color: color,
                                                  lineWidth: lineWidth)
@@ -292,8 +316,8 @@ private extension AgoraBoardToolsView {
             
             let view = AgoraShapePopoverrContent(frame: CGRect(x: 0,
                                                                y: 0,
-                                                               width: 390,
-                                                               height: 182),
+                                                               width: 199 + arrowSize.height,
+                                                               height: 78),
                                                  shape: .circle,
                                                  color: color,
                                                  lineWidth: lineWidth)
@@ -313,8 +337,8 @@ private extension AgoraBoardToolsView {
             
             let view = AgoraEraserPopoverrContent(frame: CGRect(x: 0,
                                                                 y: 0,
-                                                                width: 390,
-                                                                height: 106),
+                                                                width: 199 + arrowSize.height,
+                                                                height: 49),
                                                   lineWidth: lineWidth)
             view.lineWidthCollection.lineWidthDelegate = self
             self.popover.show(view,

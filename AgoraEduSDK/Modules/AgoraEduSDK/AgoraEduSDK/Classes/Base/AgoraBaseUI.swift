@@ -19,6 +19,18 @@ import UIKit
     }
 }
 
+@objc public class AgoraBaseUIScrollView: UIScrollView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        agora_init_base_view()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        agora_init_base_view()
+    }
+}
+
 @objc public class AgoraBaseUILabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)

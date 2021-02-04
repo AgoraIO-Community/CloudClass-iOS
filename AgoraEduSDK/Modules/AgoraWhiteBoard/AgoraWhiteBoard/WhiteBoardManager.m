@@ -257,13 +257,13 @@ The RoomState property in the room will trigger this callback when it changes.
 }
 
 #pragma mark - Update tools properties
-- (void)setMoveOperation {
-    [self setApplianceNameWithToolType:WihteBoardToolTypeSelector];
+- (void)setTool:(WhiteBoardToolType)type; {
+    [self setApplianceNameWithToolType:type];
     [self.room setMemberState:self.whiteMemberState];
 }
 
 - (void)setStrokeColor:(UIColor *)color
-          withToolType:(WihteBoardToolType)type {
+          withToolType:(WhiteBoardToolType)type {
     [self setApplianceNameWithToolType:type];
     CGFloat red = 0;
     CGFloat green = 0;
@@ -279,66 +279,80 @@ The RoomState property in the room will trigger this callback when it changes.
     NSInteger blueValue = blue * 255;
     
     self.whiteMemberState.strokeColor = @[@(redValue),
-                                          @(green),
+                                          @(greenValue),
                                           @(blueValue)];
-    [self.room setMemberState: self.whiteMemberState];
+    [self.room setMemberState:self.whiteMemberState];
 }
 
 - (void)setStrokeWidth:(NSInteger)strokeWidth
-          withToolType:(WihteBoardToolType)type {
+          withToolType:(WhiteBoardToolType)type {
     [self setApplianceNameWithToolType:type];
     self.whiteMemberState.strokeWidth = @(strokeWidth);
     [self.room setMemberState:self.whiteMemberState];
 }
 
 - (void)setTextSize:(NSInteger)textSize
-       withToolType:(WihteBoardToolType)type {
+       withToolType:(WhiteBoardToolType)type {
     [self setApplianceNameWithToolType:type];
     self.whiteMemberState.textSize = @(textSize);
     [self.room setMemberState:self.whiteMemberState];
 }
 
-- (void)setApplianceNameWithToolType:(WihteBoardToolType)type {
+- (void)setApplianceNameWithToolType:(WhiteBoardToolType)type {
     NSString *applianceName = @"";
+    
     switch (type) {
-        case WihteBoardToolTypeSelector:
+        case WhiteBoardToolTypeSelector:
             applianceName = ApplianceSelector;
             break;
-        case WihteBoardToolTyperPencil:
+        case WhiteBoardToolTypePencil:
             applianceName = AppliancePencil;
             break;
-        case WihteBoardToolTyperText:
+        case WhiteBoardToolTypeText:
             applianceName = ApplianceText;
             break;
-        case WihteBoardToolTyperEraser:
+        case WhiteBoardToolTypeEraser:
             applianceName = ApplianceEraser;
             break;
-        case WihteBoardToolTyperColor:
-            return;
-        default:
+        case WhiteBoardToolTypeRectangle:
+            applianceName = ApplianceRectangle;
             break;
+        case WhiteBoardToolTypeEllipse:
+            applianceName = ApplianceEllipse;
+            break;
+        case WhiteBoardToolTypeArrow:
+            applianceName = ApplianceArrow;
+            break;
+        case WhiteBoardToolTypeStraight:
+            applianceName = ApplianceStraight;
+            break;
+        case WhiteBoardToolTypePointer:
+            applianceName = ApplianceLaserPointer;
+            break;
+        case WhiteBoardToolTypeColor:
+            return;
     }
     
     self.whiteMemberState.currentApplianceName = applianceName;
 }
 
 #pragma mark WihteBoardToolControlDelegate
-- (void)onSelectToolType:(WihteBoardToolType)type {
+- (void)onSelectToolType:(WhiteBoardToolType)type {
     NSString *applianceName = @"";
     switch (type) {
-        case WihteBoardToolTypeSelector:
+        case WhiteBoardToolTypeSelector:
             applianceName = ApplianceSelector;
             break;
-        case WihteBoardToolTyperPencil:
+        case WhiteBoardToolTypePencil:
             applianceName = AppliancePencil;
             break;
-        case WihteBoardToolTyperText:
+        case WhiteBoardToolTypeText:
             applianceName = ApplianceText;
             break;
-        case WihteBoardToolTyperEraser:
+        case WhiteBoardToolTypeEraser:
             applianceName = ApplianceEraser;
             break;
-        case WihteBoardToolTyperColor:
+        case WhiteBoardToolTypeColor:
             return;
         default:
             break;

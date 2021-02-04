@@ -351,7 +351,7 @@ class AgoraPencilTypeCollection: AgoraBaseUICollectionView,
 fileprivate extension AgoraBoardToolsPencilType {
     var image: UIImage {
         switch self {
-        case .pencil1: return AgoraImgae(name: "箭头")
+        case .pencil1: return AgoraImgae(name: "箭头p")
         case .pencil2: return AgoraImgae(name: "线条")
         case .pencil3: return AgoraImgae(name: "记号笔")
         case .pencil4: return AgoraImgae(name: "画笔 拷贝 2")
@@ -391,7 +391,7 @@ class AgoraFontCollection: AgoraBaseUICollectionView,
             fontLabel.layer.borderColor = UIColor(rgb: 0x002591).cgColor
             fontLabel.layer.masksToBounds = true
             fontLabel.textAlignment = .center
-            fontLabel.font = UIFont.systemFont(ofSize: 22)
+            fontLabel.font = UIFont.systemFont(ofSize: 12)
             addSubview(fontLabel)
         }
         
@@ -401,7 +401,7 @@ class AgoraFontCollection: AgoraBaseUICollectionView,
             fontLabel.agora_y = 0
             fontLabel.agora_width = bounds.width
             fontLabel.agora_height = bounds.height
-            fontLabel.layer.cornerRadius = 4
+            fontLabel.layer.cornerRadius = 6
         }
         
         var isBySelected: Bool = false {

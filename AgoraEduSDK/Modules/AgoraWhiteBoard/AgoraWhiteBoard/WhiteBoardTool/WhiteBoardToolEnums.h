@@ -19,12 +19,18 @@ typedef NS_ENUM(NSInteger, WihteBoardToolStyle) {
     WihteBoardToolStyleWhite,
 };
 
-typedef NS_ENUM(NSInteger, WihteBoardToolType) {
-    WihteBoardToolTypeSelector  = 0,
-    WihteBoardToolTyperPencil,
-    WihteBoardToolTyperText,
-    WihteBoardToolTyperEraser,
-    WihteBoardToolTyperColor,
+typedef NS_ENUM(NSInteger, WhiteBoardToolType) {
+    WhiteBoardToolTypeSelector  = 0,
+    WhiteBoardToolTypeText,
+    WhiteBoardToolTypeRectangle,
+    WhiteBoardToolTypeEllipse,
+    WhiteBoardToolTypeEraser,
+    WhiteBoardToolTypeColor,
+    
+    WhiteBoardToolTypePencil,
+    WhiteBoardToolTypeArrow,
+    WhiteBoardToolTypeStraight,
+    WhiteBoardToolTypePointer,
 };
 
 NS_ASSUME_NONNULL_END

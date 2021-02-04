@@ -295,17 +295,28 @@
 
     // boardView
     [self.boardView equalTo:self.boardContentView];
-
-    // boardToolsView
-    self.boardToolsView.agora_x = 33;
-    self.boardToolsView.agora_y = self.toolView.agora_height;
-    self.boardToolsView.agora_width = 44;
     
     // boardPageControlView
     self.boardPageControlView.agora_x = right + 20;
     self.boardPageControlView.agora_height = IsPad ? 42 : 21;
     self.boardPageControlView.agora_bottom = 20;
-
+    
+    // boardToolsView
+    [self.contentView setNeedsLayout];
+    [self.contentView layoutIfNeeded];
+    
+    CGFloat screenHeight = MIN(kScreenWidth,
+                               kScreenHeight);
+    CGFloat safeAreaTop = 0;
+    CGFloat safeAreaBottom = IsNotchScreen ? 21 : 0;
+    CGFloat contentViewHeight = screenHeight - safeAreaTop - safeAreaBottom;
+    CGFloat pageViewBottom = 16;
+    CGFloat pageViewSpace = self.boardPageControlView.agora_bottom + self.boardPageControlView.agora_height;
+    self.boardToolsView.agora_x = 33;
+    self.boardToolsView.agora_y = self.toolView.agora_height;
+    self.boardToolsView.agora_width = 44;
+    self.boardToolsView.maxHeight = contentViewHeight - self.toolView.agora_height - pageViewSpace - pageViewBottom;
+    
     // chatPanelView
     CGFloat chatPanelViewMaxWidth = IsPad ? 246 : 137;
     CGFloat chatPanelViewMinWidth = IsPad ? 44 : 24;
@@ -452,7 +463,7 @@
             [weakself lockViewTransform:lock];
             
             WhiteBoardManager *manager = AgoraEduManager.shareManager.whiteBoardManager;
-            [manager setMoveOperation];
+            [manager setTool:WhiteBoardToolTypeSelector];
         } failure:^(NSError * error) {
             [AgoraBaseViewController showToast:error.localizedDescription];
         }];
@@ -757,14 +768,14 @@
 #pragma mark - AgoraBoardToolsVMDelegate
 - (void)boardToolsVMDidSelectMove:(AgoraBoardToolsVM *)vm {
     WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    [whiteBoardManager setMoveOperation];
+    [whiteBoardManager setTool:WhiteBoardToolTypeSelector];
 }
 
 - (void)boardToolsVM:(AgoraBoardToolsVM *)vm
         didSelectColor:(UIColor *)color
                     of:(enum AgoraBoardToolsItemType)type {
     WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    WihteBoardToolType toolType = [self getBoardTypeWithToolsItemType:type];
+    WhiteBoardToolType toolType = [self getBoardTypeWithToolsItemType:type];
     [whiteBoardManager setStrokeColor:color
                          withToolType:toolType];
 }
@@ -772,7 +783,7 @@
 - (void)boardToolsVM:(AgoraBoardToolsVM *)vm
          didSelectFont:(NSInteger)font {
     WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    WihteBoardToolType toolType = [self getBoardTypeWithToolsItemType:AgoraBoardToolsItemTypeText];
+    WhiteBoardToolType toolType = [self getBoardTypeWithToolsItemType:AgoraBoardToolsItemTypeText];
     [whiteBoardManager setTextSize:font
                       withToolType:toolType];
 }
@@ -781,27 +792,41 @@
     didSelectLineWidth:(NSInteger)width
                     of:(enum AgoraBoardToolsItemType)type {
     WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    WihteBoardToolType toolType = [self getBoardTypeWithToolsItemType:type];
+    WhiteBoardToolType toolType = [self getBoardTypeWithToolsItemType:type];
     [whiteBoardManager setStrokeWidth:width
                          withToolType:toolType];
 }
 
 - (void)boardToolsVM:(AgoraBoardToolsVM *)vm
        didSelectPencil:(NSInteger)pencil {
-//    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-//    WihteBoardToolType toolType = [self getBoardTypeWithToolsItemType:type];
-//    [whiteBoardManager setStrokeColor:color
-//                         withToolType:toolType];
+    
+    WhiteBoardToolType type;
+    
+    switch (pencil) {
+        case 1:
+            type = WhiteBoardToolTypeArrow;
+            break;
+        case 2:
+            type = WhiteBoardToolTypeStraight;
+            break;
+        case 3:
+            type = WhiteBoardToolTypePointer;
+        default:
+            break;
+    }
+    
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager setTool:type];
 }
 
-- (WihteBoardToolType)getBoardTypeWithToolsItemType:(AgoraBoardToolsItemType)itemType {
+- (WhiteBoardToolType)getBoardTypeWithToolsItemType:(AgoraBoardToolsItemType)itemType {
     switch (itemType) {
-        case AgoraBoardToolsItemTypeMove:      return  WihteBoardToolTypeSelector;
-        case AgoraBoardToolsItemTypeText:      return  WihteBoardToolTyperText;
-        case AgoraBoardToolsItemTypeCircle:    return  WihteBoardToolTyperText;
-        case AgoraBoardToolsItemTypeRectangle: return  WihteBoardToolTyperText;
-        case AgoraBoardToolsItemTypePencil:    return  WihteBoardToolTyperPencil;
-        case AgoraBoardToolsItemTypeEraser:    return  WihteBoardToolTyperEraser;
+        case AgoraBoardToolsItemTypeMove:      return  WhiteBoardToolTypeSelector;
+        case AgoraBoardToolsItemTypeText:      return  WhiteBoardToolTypeText;
+        case AgoraBoardToolsItemTypeCircle:    return  WhiteBoardToolTypeEllipse;
+        case AgoraBoardToolsItemTypeRectangle: return  WhiteBoardToolTypeRectangle;
+        case AgoraBoardToolsItemTypePencil:    return  WhiteBoardToolTypePencil;
+        case AgoraBoardToolsItemTypeEraser:    return  WhiteBoardToolTypeEraser;
     }
 }
 

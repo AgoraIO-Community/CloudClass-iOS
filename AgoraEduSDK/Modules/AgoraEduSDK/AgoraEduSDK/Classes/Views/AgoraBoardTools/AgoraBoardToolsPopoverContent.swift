@@ -33,7 +33,6 @@ class AgoraPencilPopoverContent: AgoraBaseView {
         
         super.init(frame: frame)
         
-        
         initViews()
     }
     
@@ -43,11 +42,11 @@ class AgoraPencilPopoverContent: AgoraBaseView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let topSpace: CGFloat = 13
-        let bottomSpace: CGFloat = 13
+        let topSpace: CGFloat = 8
+        let bottomSpace: CGFloat = 8
         
         // colorCollection
-        let colorCollectionSpace: CGFloat = 13.0
+        let colorCollectionSpace: CGFloat = 12.0
         let colorCollectionWidth: CGFloat = bounds.width - (colorCollectionSpace * 2)
         let colorCollectionItemSpaceSum: CGFloat = colorCollectionSpace * CGFloat(colorCollection.colorDataSource.count - 1)
         let colorCollectionItemWidth: CGFloat = (colorCollectionWidth - colorCollectionItemSpaceSum) / CGFloat(colorCollection.colorDataSource.count)
@@ -68,9 +67,9 @@ class AgoraPencilPopoverContent: AgoraBaseView {
                                                 animated: false)
         
         // lineWidthCollection
-        let lineWidthCollectionSpace: CGFloat = 13.0
+        let lineWidthCollectionSpace: CGFloat = 12.0
         let lineWidthCollectionWidth: CGFloat = bounds.width - (lineWidthCollectionSpace * 2)
-        let lineWidthCollectionItemWidth: CGFloat = 61
+        let lineWidthCollectionItemWidth: CGFloat = 25
         let lineWidthCollectionItemHeight: CGFloat = lineWidthCollectionItemWidth
         let lineWidthCollectionItemSpaceSum: CGFloat = lineWidthCollectionWidth - (lineWidthCollectionItemWidth * CGFloat(lineWidthCollection.lineDataSource.count))
         let lineWidthCollectionItemSpace: CGFloat = lineWidthCollectionItemSpaceSum / CGFloat(lineWidthCollection.lineDataSource.count - 1)
@@ -89,9 +88,9 @@ class AgoraPencilPopoverContent: AgoraBaseView {
                                                     animated: false)
         
         // pencilTypeCollection
-        let pencilTypeCollectionSpace: CGFloat = 13.0
+        let pencilTypeCollectionSpace: CGFloat = 12.0
         let pencilTypeCollectionWidth: CGFloat = bounds.width - (pencilTypeCollectionSpace * 2)
-        let pencilTypeCollectionItemWidth: CGFloat = 64
+        let pencilTypeCollectionItemWidth: CGFloat = 25
         let pencilTypeCollectionItemHeight: CGFloat = pencilTypeCollectionItemWidth
         let pencilTypeCollectionItemSpaceSum: CGFloat = pencilTypeCollectionWidth - (pencilTypeCollectionItemWidth * CGFloat(pencilTypeCollection.pencilTypeDataSource.count))
         let pencilTypeCollectionItemSpace: CGFloat = pencilTypeCollectionItemSpaceSum / CGFloat(pencilTypeCollection.pencilTypeDataSource.count - 1)
@@ -160,11 +159,11 @@ class AgoraShapePopoverrContent: AgoraBaseView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let topSpace: CGFloat = 13
-        let bottomSpace: CGFloat = 13
+        let topSpace: CGFloat = 8
+        let bottomSpace: CGFloat = 8
         
         // colorCollection
-        let colorCollectionSpace: CGFloat = 13.0
+        let colorCollectionSpace: CGFloat = 12.0
         let colorCollectionWidth: CGFloat = bounds.width - (colorCollectionSpace * 2)
         let colorCollectionItemSpaceSum: CGFloat = colorCollectionSpace * CGFloat(colorCollection.colorDataSource.count - 1)
         let colorCollectionItemWidth: CGFloat = (colorCollectionWidth - colorCollectionItemSpaceSum) / CGFloat(colorCollection.colorDataSource.count)
@@ -185,9 +184,9 @@ class AgoraShapePopoverrContent: AgoraBaseView {
                                                 animated: false)
         
         // lineWidthCollection
-        let lineWidthCollectionSpace: CGFloat = 13.0
+        let lineWidthCollectionSpace: CGFloat = 12.0
         let lineWidthCollectionWidth: CGFloat = bounds.width - (lineWidthCollectionSpace * 2)
-        let lineWidthCollectionItemWidth: CGFloat = 61
+        let lineWidthCollectionItemWidth: CGFloat = 25
         let lineWidthCollectionItemHeight: CGFloat = lineWidthCollectionItemWidth
         let lineWidthCollectionItemSpaceSum: CGFloat = lineWidthCollectionWidth - (lineWidthCollectionItemWidth * CGFloat(lineWidthCollection.lineDataSource.count))
         let lineWidthCollectionItemSpace: CGFloat = lineWidthCollectionItemSpaceSum / CGFloat(lineWidthCollection.lineDataSource.count - 1)
@@ -239,12 +238,13 @@ class AgoraEraserPopoverrContent: AgoraBaseView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let topSpace: CGFloat = 23
+        let topSpace: CGFloat = 10
+        let bottomSpace: CGFloat = 10
         
         // lineWidthCollection
-        let lineWidthCollectionSpace: CGFloat = 13.0
+        let lineWidthCollectionSpace: CGFloat = 12.0
         let lineWidthCollectionWidth: CGFloat = bounds.width - (lineWidthCollectionSpace * 2)
-        let lineWidthCollectionItemWidth: CGFloat = 61
+        let lineWidthCollectionItemWidth: CGFloat = 25
         let lineWidthCollectionItemHeight: CGFloat = lineWidthCollectionItemWidth
         let lineWidthCollectionItemSpaceSum: CGFloat = lineWidthCollectionWidth - (lineWidthCollectionItemWidth * CGFloat(lineWidthCollection.lineDataSource.count))
         let lineWidthCollectionItemSpace: CGFloat = lineWidthCollectionItemSpaceSum / CGFloat(lineWidthCollection.lineDataSource.count - 1)
@@ -252,7 +252,7 @@ class AgoraEraserPopoverrContent: AgoraBaseView {
         lineWidthCollection.agora_x = lineWidthCollectionSpace
         lineWidthCollection.agora_y = topSpace
         lineWidthCollection.agora_width = lineWidthCollectionWidth
-        lineWidthCollection.agora_height = lineWidthCollectionItemHeight
+        lineWidthCollection.agora_height = bounds.height - topSpace - bottomSpace
         
         let lineWidthCollectionLayout = UICollectionViewFlowLayout()
         lineWidthCollectionLayout.itemSize = CGSize(width: lineWidthCollectionItemWidth,
@@ -271,7 +271,6 @@ class AgoraEraserPopoverrContent: AgoraBaseView {
 
 // MARK: - AgoraTextPopoverContent
 class AgoraTextPopoverrContent: AgoraBaseView {
-    let fontTitleLabel = AgoraBaseUILabel(frame: .zero)
     let colorCollection: AgoraColorCollection
     let fontCollection: AgoraFontCollection
     
@@ -294,11 +293,11 @@ class AgoraTextPopoverrContent: AgoraBaseView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let topSpace: CGFloat = 13
-        let bottomSpace: CGFloat = 13
+        let topSpace: CGFloat = 8
+        let bottomSpace: CGFloat = 8
         
         // colorCollection
-        let colorCollectionSpace: CGFloat = 13.0
+        let colorCollectionSpace: CGFloat = 12.0
         let colorCollectionWidth: CGFloat = bounds.width - (colorCollectionSpace * 2)
         let colorCollectionItemSpaceSum: CGFloat = colorCollectionSpace * CGFloat(colorCollection.colorDataSource.count - 1)
         let colorCollectionItemWidth: CGFloat = (colorCollectionWidth - colorCollectionItemSpaceSum) / CGFloat(colorCollection.colorDataSource.count)
@@ -318,25 +317,18 @@ class AgoraTextPopoverrContent: AgoraBaseView {
         colorCollection.setCollectionViewLayout(colorCollectionLayout,
                                                 animated: false)
         
-        // fontTitleLabel
-        let fontTitleLabelTop: CGFloat = 30
-        fontTitleLabel.agora_center_x = bounds.width * 0.5
-        fontTitleLabel.agora_y = colorCollection.agora_y + colorCollection.agora_height + fontTitleLabelTop
-        fontTitleLabel.agora_width = bounds.width
-        fontTitleLabel.agora_height = 23
-        
         // fontCollection
         let fontCellPerRow: CGFloat = 3
-        let fontCollectionTop: CGFloat = 19
-        let fontCollectionSpace: CGFloat = 15
+        let fontCollectionTop: CGFloat = 11
+        let fontCollectionSpace: CGFloat = 12
         let fontCollectionWidth: CGFloat = bounds.width - (fontCollectionSpace * 2)
-        let fontCollectionItemSpace: CGFloat = 10
+        let fontCollectionItemSpace: CGFloat = 6
         let fontCollectionItemSpaceSum: CGFloat = fontCollectionItemSpace * CGFloat(fontCellPerRow + 1)
         let fontCollectionItemWidth: CGFloat = (fontCollectionWidth - fontCollectionItemSpaceSum) / fontCellPerRow
-        let fontCollectionItemHeight: CGFloat = 43
+        let fontCollectionItemHeight: CGFloat = 25
         
         fontCollection.agora_x = fontCollectionSpace
-        fontCollection.agora_y = fontTitleLabel.agora_y + fontTitleLabel.agora_height + fontCollectionTop
+        fontCollection.agora_y = colorCollection.agora_y + colorCollection.agora_height + fontCollectionTop
         fontCollection.agora_width = fontCollectionWidth
         fontCollection.agora_height = bounds.height - fontCollection.agora_y - bottomSpace
         fontCollection.contentInset = UIEdgeInsets(top: fontCollectionItemSpace,
@@ -347,8 +339,9 @@ class AgoraTextPopoverrContent: AgoraBaseView {
         let fontCollectionLayout = UICollectionViewFlowLayout()
         fontCollectionLayout.itemSize = CGSize(width: fontCollectionItemWidth,
                                                 height: fontCollectionItemHeight)
-        fontCollectionLayout.scrollDirection = .horizontal
+        fontCollectionLayout.scrollDirection = .vertical
         fontCollectionLayout.minimumLineSpacing = fontCollectionItemSpace
+        fontCollectionLayout.minimumInteritemSpacing = 4
     
         
         fontCollection.setCollectionViewLayout(fontCollectionLayout,
@@ -357,12 +350,6 @@ class AgoraTextPopoverrContent: AgoraBaseView {
     
     func initViews() {
         addSubview(colorCollection)
-        
-        fontTitleLabel.text = "字体大小"
-        fontTitleLabel.font = UIFont.systemFont(ofSize: 24)
-        fontTitleLabel.textColor = .white
-        fontTitleLabel.textAlignment = .center
-        addSubview(fontTitleLabel)
         
         fontCollection.layer.cornerRadius = 6
         fontCollection.backgroundColor = .white
