@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraEduSDK.AgoraFiles.AgoraRefresh
 
 @objcMembers public class AgoraChatPanelView: AgoraBaseView {
     
@@ -37,9 +38,8 @@ import UIKit
             label.text = "聊天（\(chatModels.count)）"
             
             // fix Constraint warning
-            self.chatView.layoutIfNeeded()
-            self.chatTableView.frame = CGRect(x: 0, y: self.titleView.agora_height, width: self.chatView.frame.width, height: self.chatView.frame.height - self.titleView.agora_height)
-            self.scrollToBottom()
+            self.initTabelViewFrame()
+            self.chatTableView.reloadData()
         }
     }
     
@@ -93,6 +93,7 @@ import UIKit
         label.text = "聊天（100）"
         view.addSubview(label)
         label.sizeToFit()
+        label.adjustsFontSizeToFitWidth = true
 
         let labelSize = label.frame.size
         let imgSzie = AgoraDeviceAssistant.OS.isPad ? CGSize(width: 14, height: 14) : CGSize(width: 13, height: 13)
@@ -137,6 +138,22 @@ import UIKit
         tableView.register(AgoraChatPanelInOutCell.self, forCellReuseIdentifier: InoutCellID)
         tableView.register(AgoraChatPanelMessageCell.self, forCellReuseIdentifier: MessageCellID)
         tableView.backgroundColor = UIColor.clear
+        
+        tableView.agora_header = AgoraRefreshNormalHeader(refreshingBlock: {
+            self.vm?.getMessageList(successBlock: {[weak self] (models) in
+                self?.chatModels = models
+                self?.chatTableView.agora_header?.endRefreshing()
+                
+            }, failureBlock: {[weak self] (errMsg) in
+                //
+                self?.chatTableView.agora_header?.endRefreshing()
+            })
+        })
+        
+        let header = tableView.agora_header as? AgoraRefreshNormalHeader
+        header?.stateLabel?.isHidden = true
+        header?.loadingView?.style = .white
+        
         return tableView
     }()
     fileprivate lazy var chatView: AgoraBaseView = {
@@ -213,6 +230,7 @@ import UIKit
         vm = AgoraChatPanelVM(httpConfig: httpConfig)
         vm?.getMessageList(successBlock: {[weak self] (models) in
             self?.chatModels = models
+            self?.scrollToBottom()
         }, failureBlock: { (errMsg) in
             // errToast
         })
@@ -245,11 +263,16 @@ import UIKit
         
         self.vm?.models.append(model)
         self.chatModels = self.vm?.models ?? []
+        self.scrollToBottom()
     }
     
     public func receivedChatMessage(_ model: AgoraChatMessageInfoModel) {
         self.vm?.models.append(model)
         self.chatModels = self.vm?.models ?? []
+        self.scrollToBottom()
+        if (self.isMin) {
+            self.unreadNum += 1
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -409,6 +432,20 @@ extension AgoraChatPanelView: UITextFieldDelegate {
     }
 }
 
+// MARK: Private
+extension AgoraChatPanelView {
+    fileprivate func initTabelViewFrame() {
+        let width = Int(self.chatTableView.frame.width)
+        let height = Int(self.chatTableView.frame.height)
+        
+        if (width == 0 || height == 0) {
+            // fix Constraint warning
+            self.chatView.layoutIfNeeded()
+            self.chatTableView.frame = CGRect(x: 0, y: self.titleView.agora_height, width: self.chatView.frame.width, height: self.chatView.frame.height - self.titleView.agora_height)
+        }
+    }
+}
+
 // MARK: TouchEvent
 extension AgoraChatPanelView {
     @objc fileprivate func onSendTouchEvent() {
@@ -430,6 +467,7 @@ extension AgoraChatPanelView {
             
             if(model != nil) {
                 self.chatModels = self.vm?.models ?? []
+                self.scrollToBottom()
             }
         })
 
@@ -438,8 +476,7 @@ extension AgoraChatPanelView {
     }
     
     fileprivate func scrollToBottom() {
-        self.chatTableView.reloadData()
-        
+
         if (self.chatModels.count <= 1) {
             return
         }

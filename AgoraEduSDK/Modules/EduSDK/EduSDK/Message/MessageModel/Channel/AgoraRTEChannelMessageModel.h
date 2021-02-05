@@ -29,7 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) AgoraRTEChannelMessageCmd cmd;
 @property (nonatomic, assign) NSInteger version;
-@property (nonatomic, assign) NSInteger ts;
 @property (nonatomic, assign) NSInteger sequence;
 @property (nonatomic, strong) NSDictionary *data;
 

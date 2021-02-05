@@ -222,7 +222,7 @@ extension AgoraToolView {
         let signalLabel = self.signalView.viewWithTag(LabelTag) as! AgoraBaseUILabel
         switch quality {
         case .high:
-            signalImgView.image = AgoraImageWithName("signal_3", self.classForCoder)
+            signalImgView.image = AgoraImageWithName("signal_1", self.classForCoder)
             signalLabel.text = "优"
             signalLabel.textColor = UIColor(red: 205/255.0, green: 241/255.0, blue: 96/255.0, alpha: 1)
         case .middle:
@@ -230,11 +230,11 @@ extension AgoraToolView {
             signalLabel.text = "良"
             signalLabel.textColor = UIColor(red: 241/255.0, green: 167/255.0, blue: 62/255.0, alpha: 1)
         case .low:
-            signalImgView.image = AgoraImageWithName("signal_1", self.classForCoder)
+            signalImgView.image = AgoraImageWithName("signal_3", self.classForCoder)
             signalLabel.text = "差"
             signalLabel.textColor = UIColor(red: 240/255.0, green: 76/255.0, blue: 54/255.0, alpha: 1)
         default:
-            signalImgView.image = AgoraImageWithName("signal_1", self.classForCoder)
+            signalImgView.image = AgoraImageWithName("signal_3", self.classForCoder)
             signalLabel.text = "差"
             signalLabel.textColor = UIColor(red: 240/255.0, green: 76/255.0, blue: 54/255.0, alpha: 1)
         }

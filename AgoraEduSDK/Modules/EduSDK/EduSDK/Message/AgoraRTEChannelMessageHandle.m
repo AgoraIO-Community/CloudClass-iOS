@@ -568,7 +568,7 @@
                 return;
             }
         
-            AgoraRTETextMessage *textMessage = [[AgoraRTETextMessage alloc] initWithUser:model.fromUser message:model.message timestamp:channelMsgModel.ts];
+            AgoraRTETextMessage *textMessage = [[AgoraRTETextMessage alloc] initWithUser:model.fromUser message:model.message timestamp:model.sendTime];
             
             if (channelMsgModel.cmd == AgoraRTEChannelMessageCmdChat && [self.roomDelegate respondsToSelector:@selector(classroom:roomChatMessageReceived:)]) {
                 

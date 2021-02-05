@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)uploadDebugItem:(AgoraRTEDebugItem)item appId:(NSString *)appId uid:(NSString *)uid token:(NSString *)token success:(void (^)(NSString *serialNumber)) successBlock failure:(void (^)(NSError *error))failureBlock;
 
++ (void)destory;
+
 @end
 
 NS_ASSUME_NONNULL_END

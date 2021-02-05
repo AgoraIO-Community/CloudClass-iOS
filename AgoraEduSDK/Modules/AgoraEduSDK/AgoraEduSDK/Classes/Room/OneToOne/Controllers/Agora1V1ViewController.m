@@ -256,10 +256,6 @@
         [UIView animateWithDuration:0.35 animations:^{
             [weakself.view layoutIfNeeded];
         }];
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            weakself.chatPanelView.unreadNum = 8;
-        });
     };
     
     // reset page controle

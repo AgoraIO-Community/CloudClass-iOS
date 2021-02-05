@@ -141,6 +141,54 @@
 		78D7D0F425CC18410045B52F /* AgoraCourseTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D0F325CC18400045B52F /* AgoraCourseTipsView.swift */; };
 		78D7D0F925CC18500045B52F /* AgoraCourseComfirAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D0F725CC18500045B52F /* AgoraCourseComfirAlertView.swift */; };
 		78D7D0FA25CC18500045B52F /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D0F825CC18500045B52F /* Bundle+Extension.swift */; };
+		78D7D16325CCFD780045B52F /* UIScrollView+AgoraRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D12C25CCFD770045B52F /* UIScrollView+AgoraRefresh.m */; };
+		78D7D16425CCFD780045B52F /* AgoraRefreshConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D12D25CCFD770045B52F /* AgoraRefreshConst.m */; };
+		78D7D16525CCFD780045B52F /* AgoraRefreshConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D12E25CCFD780045B52F /* AgoraRefreshConfig.m */; };
+		78D7D16625CCFD780045B52F /* UIScrollView+AgoraExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D12F25CCFD780045B52F /* UIScrollView+AgoraExtension.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D16725CCFD780045B52F /* AgoraRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13025CCFD780045B52F /* AgoraRefresh.h */; };
+		78D7D16825CCFD780045B52F /* NSBundle+AgoraRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13125CCFD780045B52F /* NSBundle+AgoraRefresh.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D16925CCFD780045B52F /* AgoraRefresh.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 78D7D13225CCFD780045B52F /* AgoraRefresh.bundle */; };
+		78D7D16A25CCFD780045B52F /* UIView+AgoraExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13325CCFD780045B52F /* UIView+AgoraExtension.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D16B25CCFD780045B52F /* UIScrollView+AgoraExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D13425CCFD780045B52F /* UIScrollView+AgoraExtension.m */; };
+		78D7D16C25CCFD780045B52F /* AgoraRefreshConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13525CCFD780045B52F /* AgoraRefreshConfig.h */; };
+		78D7D16D25CCFD780045B52F /* AgoraRefreshConst.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13625CCFD780045B52F /* AgoraRefreshConst.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D16E25CCFD780045B52F /* UIScrollView+AgoraRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13725CCFD780045B52F /* UIScrollView+AgoraRefresh.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D16F25CCFD780045B52F /* NSBundle+AgoraRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D13825CCFD780045B52F /* NSBundle+AgoraRefresh.m */; };
+		78D7D17025CCFD780045B52F /* UIView+AgoraExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D13925CCFD780045B52F /* UIView+AgoraExtension.m */; };
+		78D7D17125CCFD780045B52F /* AgoraRefreshBackGifFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13D25CCFD780045B52F /* AgoraRefreshBackGifFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D17225CCFD780045B52F /* AgoraRefreshBackStateFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13E25CCFD780045B52F /* AgoraRefreshBackStateFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D17325CCFD780045B52F /* AgoraRefreshBackNormalFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D13F25CCFD780045B52F /* AgoraRefreshBackNormalFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D17425CCFD780045B52F /* AgoraRefreshBackGifFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D14025CCFD780045B52F /* AgoraRefreshBackGifFooter.m */; };
+		78D7D17525CCFD780045B52F /* AgoraRefreshBackStateFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D14125CCFD780045B52F /* AgoraRefreshBackStateFooter.m */; };
+		78D7D17625CCFD780045B52F /* AgoraRefreshBackNormalFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D14225CCFD780045B52F /* AgoraRefreshBackNormalFooter.m */; };
+		78D7D17725CCFD780045B52F /* AgoraRefreshAutoStateFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D14425CCFD780045B52F /* AgoraRefreshAutoStateFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D17825CCFD780045B52F /* AgoraRefreshAutoNormalFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D14525CCFD780045B52F /* AgoraRefreshAutoNormalFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D17925CCFD780045B52F /* AgoraRefreshAutoGifFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D14625CCFD780045B52F /* AgoraRefreshAutoGifFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D17A25CCFD780045B52F /* AgoraRefreshAutoStateFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D14725CCFD780045B52F /* AgoraRefreshAutoStateFooter.m */; };
+		78D7D17B25CCFD780045B52F /* AgoraRefreshAutoGifFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D14825CCFD780045B52F /* AgoraRefreshAutoGifFooter.m */; };
+		78D7D17C25CCFD780045B52F /* AgoraRefreshAutoNormalFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D14925CCFD780045B52F /* AgoraRefreshAutoNormalFooter.m */; };
+		78D7D17D25CCFD780045B52F /* AgoraRefreshNormalTrailer.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D14B25CCFD780045B52F /* AgoraRefreshNormalTrailer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D17E25CCFD780045B52F /* AgoraRefreshStateTrailer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D14C25CCFD780045B52F /* AgoraRefreshStateTrailer.m */; };
+		78D7D17F25CCFD780045B52F /* AgoraRefreshNormalTrailer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D14D25CCFD780045B52F /* AgoraRefreshNormalTrailer.m */; };
+		78D7D18025CCFD780045B52F /* AgoraRefreshStateTrailer.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D14E25CCFD780045B52F /* AgoraRefreshStateTrailer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D18125CCFD780045B52F /* AgoraRefreshNormalHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D15025CCFD780045B52F /* AgoraRefreshNormalHeader.m */; };
+		78D7D18225CCFD780045B52F /* AgoraRefreshStateHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D15125CCFD780045B52F /* AgoraRefreshStateHeader.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D18325CCFD780045B52F /* AgoraRefreshGifHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D15225CCFD780045B52F /* AgoraRefreshGifHeader.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D18425CCFD780045B52F /* AgoraRefreshNormalHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D15325CCFD780045B52F /* AgoraRefreshNormalHeader.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D18525CCFD780045B52F /* AgoraRefreshStateHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D15425CCFD780045B52F /* AgoraRefreshStateHeader.m */; };
+		78D7D18625CCFD780045B52F /* AgoraRefreshGifHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D15525CCFD780045B52F /* AgoraRefreshGifHeader.m */; };
+		78D7D18725CCFD780045B52F /* AgoraRefreshFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D15725CCFD780045B52F /* AgoraRefreshFooter.m */; };
+		78D7D18825CCFD780045B52F /* AgoraRefreshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D15825CCFD780045B52F /* AgoraRefreshComponent.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D18925CCFD780045B52F /* AgoraRefreshHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D15925CCFD780045B52F /* AgoraRefreshHeader.m */; };
+		78D7D18A25CCFD780045B52F /* AgoraRefreshAutoFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D15A25CCFD780045B52F /* AgoraRefreshAutoFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D18B25CCFD780045B52F /* AgoraRefreshTrailer.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D15B25CCFD780045B52F /* AgoraRefreshTrailer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D18C25CCFD780045B52F /* AgoraRefreshBackFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D15C25CCFD780045B52F /* AgoraRefreshBackFooter.m */; };
+		78D7D18D25CCFD780045B52F /* AgoraRefreshAutoFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D15D25CCFD780045B52F /* AgoraRefreshAutoFooter.m */; };
+		78D7D18E25CCFD780045B52F /* AgoraRefreshHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D15E25CCFD780045B52F /* AgoraRefreshHeader.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D18F25CCFD780045B52F /* AgoraRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D15F25CCFD780045B52F /* AgoraRefreshComponent.m */; };
+		78D7D19025CCFD780045B52F /* AgoraRefreshFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D16025CCFD780045B52F /* AgoraRefreshFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D19125CCFD780045B52F /* AgoraRefreshBackFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D7D16125CCFD780045B52F /* AgoraRefreshBackFooter.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		78D7D19225CCFD780045B52F /* AgoraRefreshTrailer.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D16225CCFD780045B52F /* AgoraRefreshTrailer.m */; };
 		78DA43D725B4373C007F9356 /* AgoraEduReplayConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */; };
 		78DA43D825B4373C007F9356 /* AgoraEduReplayConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 78DA43D625B4373C007F9356 /* AgoraEduReplayConfiguration.h */; };
 		78E0FBAA25C8EDEF0023D161 /* AgoraChatPanelVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78E0FBA825C8EDEE0023D161 /* AgoraChatPanelVM.swift */; };
@@ -293,6 +341,54 @@
 		78D7D0F325CC18400045B52F /* AgoraCourseTipsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraCourseTipsView.swift; sourceTree = "<group>"; };
 		78D7D0F725CC18500045B52F /* AgoraCourseComfirAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraCourseComfirAlertView.swift; sourceTree = "<group>"; };
 		78D7D0F825CC18500045B52F /* Bundle+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+Extension.swift"; sourceTree = "<group>"; };
+		78D7D12C25CCFD770045B52F /* UIScrollView+AgoraRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+AgoraRefresh.m"; sourceTree = "<group>"; };
+		78D7D12D25CCFD770045B52F /* AgoraRefreshConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshConst.m; sourceTree = "<group>"; };
+		78D7D12E25CCFD780045B52F /* AgoraRefreshConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshConfig.m; sourceTree = "<group>"; };
+		78D7D12F25CCFD780045B52F /* UIScrollView+AgoraExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+AgoraExtension.h"; sourceTree = "<group>"; };
+		78D7D13025CCFD780045B52F /* AgoraRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefresh.h; sourceTree = "<group>"; };
+		78D7D13125CCFD780045B52F /* NSBundle+AgoraRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+AgoraRefresh.h"; sourceTree = "<group>"; };
+		78D7D13225CCFD780045B52F /* AgoraRefresh.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AgoraRefresh.bundle; sourceTree = "<group>"; };
+		78D7D13325CCFD780045B52F /* UIView+AgoraExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AgoraExtension.h"; sourceTree = "<group>"; };
+		78D7D13425CCFD780045B52F /* UIScrollView+AgoraExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+AgoraExtension.m"; sourceTree = "<group>"; };
+		78D7D13525CCFD780045B52F /* AgoraRefreshConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshConfig.h; sourceTree = "<group>"; };
+		78D7D13625CCFD780045B52F /* AgoraRefreshConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshConst.h; sourceTree = "<group>"; };
+		78D7D13725CCFD780045B52F /* UIScrollView+AgoraRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+AgoraRefresh.h"; sourceTree = "<group>"; };
+		78D7D13825CCFD780045B52F /* NSBundle+AgoraRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+AgoraRefresh.m"; sourceTree = "<group>"; };
+		78D7D13925CCFD780045B52F /* UIView+AgoraExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AgoraExtension.m"; sourceTree = "<group>"; };
+		78D7D13D25CCFD780045B52F /* AgoraRefreshBackGifFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshBackGifFooter.h; sourceTree = "<group>"; };
+		78D7D13E25CCFD780045B52F /* AgoraRefreshBackStateFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshBackStateFooter.h; sourceTree = "<group>"; };
+		78D7D13F25CCFD780045B52F /* AgoraRefreshBackNormalFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshBackNormalFooter.h; sourceTree = "<group>"; };
+		78D7D14025CCFD780045B52F /* AgoraRefreshBackGifFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshBackGifFooter.m; sourceTree = "<group>"; };
+		78D7D14125CCFD780045B52F /* AgoraRefreshBackStateFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshBackStateFooter.m; sourceTree = "<group>"; };
+		78D7D14225CCFD780045B52F /* AgoraRefreshBackNormalFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshBackNormalFooter.m; sourceTree = "<group>"; };
+		78D7D14425CCFD780045B52F /* AgoraRefreshAutoStateFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshAutoStateFooter.h; sourceTree = "<group>"; };
+		78D7D14525CCFD780045B52F /* AgoraRefreshAutoNormalFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshAutoNormalFooter.h; sourceTree = "<group>"; };
+		78D7D14625CCFD780045B52F /* AgoraRefreshAutoGifFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshAutoGifFooter.h; sourceTree = "<group>"; };
+		78D7D14725CCFD780045B52F /* AgoraRefreshAutoStateFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshAutoStateFooter.m; sourceTree = "<group>"; };
+		78D7D14825CCFD780045B52F /* AgoraRefreshAutoGifFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshAutoGifFooter.m; sourceTree = "<group>"; };
+		78D7D14925CCFD780045B52F /* AgoraRefreshAutoNormalFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshAutoNormalFooter.m; sourceTree = "<group>"; };
+		78D7D14B25CCFD780045B52F /* AgoraRefreshNormalTrailer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshNormalTrailer.h; sourceTree = "<group>"; };
+		78D7D14C25CCFD780045B52F /* AgoraRefreshStateTrailer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshStateTrailer.m; sourceTree = "<group>"; };
+		78D7D14D25CCFD780045B52F /* AgoraRefreshNormalTrailer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshNormalTrailer.m; sourceTree = "<group>"; };
+		78D7D14E25CCFD780045B52F /* AgoraRefreshStateTrailer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshStateTrailer.h; sourceTree = "<group>"; };
+		78D7D15025CCFD780045B52F /* AgoraRefreshNormalHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshNormalHeader.m; sourceTree = "<group>"; };
+		78D7D15125CCFD780045B52F /* AgoraRefreshStateHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshStateHeader.h; sourceTree = "<group>"; };
+		78D7D15225CCFD780045B52F /* AgoraRefreshGifHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshGifHeader.h; sourceTree = "<group>"; };
+		78D7D15325CCFD780045B52F /* AgoraRefreshNormalHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshNormalHeader.h; sourceTree = "<group>"; };
+		78D7D15425CCFD780045B52F /* AgoraRefreshStateHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshStateHeader.m; sourceTree = "<group>"; };
+		78D7D15525CCFD780045B52F /* AgoraRefreshGifHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshGifHeader.m; sourceTree = "<group>"; };
+		78D7D15725CCFD780045B52F /* AgoraRefreshFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshFooter.m; sourceTree = "<group>"; };
+		78D7D15825CCFD780045B52F /* AgoraRefreshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshComponent.h; sourceTree = "<group>"; };
+		78D7D15925CCFD780045B52F /* AgoraRefreshHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshHeader.m; sourceTree = "<group>"; };
+		78D7D15A25CCFD780045B52F /* AgoraRefreshAutoFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshAutoFooter.h; sourceTree = "<group>"; };
+		78D7D15B25CCFD780045B52F /* AgoraRefreshTrailer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshTrailer.h; sourceTree = "<group>"; };
+		78D7D15C25CCFD780045B52F /* AgoraRefreshBackFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshBackFooter.m; sourceTree = "<group>"; };
+		78D7D15D25CCFD780045B52F /* AgoraRefreshAutoFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshAutoFooter.m; sourceTree = "<group>"; };
+		78D7D15E25CCFD780045B52F /* AgoraRefreshHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshHeader.h; sourceTree = "<group>"; };
+		78D7D15F25CCFD780045B52F /* AgoraRefreshComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshComponent.m; sourceTree = "<group>"; };
+		78D7D16025CCFD780045B52F /* AgoraRefreshFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshFooter.h; sourceTree = "<group>"; };
+		78D7D16125CCFD780045B52F /* AgoraRefreshBackFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshBackFooter.h; sourceTree = "<group>"; };
+		78D7D16225CCFD780045B52F /* AgoraRefreshTrailer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshTrailer.m; sourceTree = "<group>"; };
 		78DA43D525B4373C007F9356 /* AgoraEduReplayConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduReplayConfiguration.m; sourceTree = "<group>"; };
 		78DA43D625B4373C007F9356 /* AgoraEduReplayConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduReplayConfiguration.h; sourceTree = "<group>"; };
 		78E0FBA825C8EDEE0023D161 /* AgoraChatPanelVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraChatPanelVM.swift; sourceTree = "<group>"; };
@@ -611,6 +707,7 @@
 		7874836725AAB5BC0022329D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				78D7D12B25CCFD770045B52F /* AgoraRefresh */,
 				7874836B25AAB5BC0022329D /* TopVC */,
 				7874836E25AAB5BC0022329D /* FLAnimatedImage */,
 				7874837325AAB5BC0022329D /* Color */,
@@ -795,6 +892,117 @@
 			path = AlertView;
 			sourceTree = "<group>";
 		};
+		78D7D12B25CCFD770045B52F /* AgoraRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				78D7D12C25CCFD770045B52F /* UIScrollView+AgoraRefresh.m */,
+				78D7D12D25CCFD770045B52F /* AgoraRefreshConst.m */,
+				78D7D12E25CCFD780045B52F /* AgoraRefreshConfig.m */,
+				78D7D12F25CCFD780045B52F /* UIScrollView+AgoraExtension.h */,
+				78D7D13025CCFD780045B52F /* AgoraRefresh.h */,
+				78D7D13125CCFD780045B52F /* NSBundle+AgoraRefresh.h */,
+				78D7D13225CCFD780045B52F /* AgoraRefresh.bundle */,
+				78D7D13325CCFD780045B52F /* UIView+AgoraExtension.h */,
+				78D7D13425CCFD780045B52F /* UIScrollView+AgoraExtension.m */,
+				78D7D13525CCFD780045B52F /* AgoraRefreshConfig.h */,
+				78D7D13625CCFD780045B52F /* AgoraRefreshConst.h */,
+				78D7D13725CCFD780045B52F /* UIScrollView+AgoraRefresh.h */,
+				78D7D13825CCFD780045B52F /* NSBundle+AgoraRefresh.m */,
+				78D7D13925CCFD780045B52F /* UIView+AgoraExtension.m */,
+				78D7D13A25CCFD780045B52F /* Custom */,
+				78D7D15625CCFD780045B52F /* Base */,
+			);
+			path = AgoraRefresh;
+			sourceTree = "<group>";
+		};
+		78D7D13A25CCFD780045B52F /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				78D7D13B25CCFD780045B52F /* Footer */,
+				78D7D14A25CCFD780045B52F /* Trailer */,
+				78D7D14F25CCFD780045B52F /* Header */,
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
+		78D7D13B25CCFD780045B52F /* Footer */ = {
+			isa = PBXGroup;
+			children = (
+				78D7D13C25CCFD780045B52F /* Back */,
+				78D7D14325CCFD780045B52F /* Auto */,
+			);
+			path = Footer;
+			sourceTree = "<group>";
+		};
+		78D7D13C25CCFD780045B52F /* Back */ = {
+			isa = PBXGroup;
+			children = (
+				78D7D13D25CCFD780045B52F /* AgoraRefreshBackGifFooter.h */,
+				78D7D13E25CCFD780045B52F /* AgoraRefreshBackStateFooter.h */,
+				78D7D13F25CCFD780045B52F /* AgoraRefreshBackNormalFooter.h */,
+				78D7D14025CCFD780045B52F /* AgoraRefreshBackGifFooter.m */,
+				78D7D14125CCFD780045B52F /* AgoraRefreshBackStateFooter.m */,
+				78D7D14225CCFD780045B52F /* AgoraRefreshBackNormalFooter.m */,
+			);
+			path = Back;
+			sourceTree = "<group>";
+		};
+		78D7D14325CCFD780045B52F /* Auto */ = {
+			isa = PBXGroup;
+			children = (
+				78D7D14425CCFD780045B52F /* AgoraRefreshAutoStateFooter.h */,
+				78D7D14525CCFD780045B52F /* AgoraRefreshAutoNormalFooter.h */,
+				78D7D14625CCFD780045B52F /* AgoraRefreshAutoGifFooter.h */,
+				78D7D14725CCFD780045B52F /* AgoraRefreshAutoStateFooter.m */,
+				78D7D14825CCFD780045B52F /* AgoraRefreshAutoGifFooter.m */,
+				78D7D14925CCFD780045B52F /* AgoraRefreshAutoNormalFooter.m */,
+			);
+			path = Auto;
+			sourceTree = "<group>";
+		};
+		78D7D14A25CCFD780045B52F /* Trailer */ = {
+			isa = PBXGroup;
+			children = (
+				78D7D14B25CCFD780045B52F /* AgoraRefreshNormalTrailer.h */,
+				78D7D14C25CCFD780045B52F /* AgoraRefreshStateTrailer.m */,
+				78D7D14D25CCFD780045B52F /* AgoraRefreshNormalTrailer.m */,
+				78D7D14E25CCFD780045B52F /* AgoraRefreshStateTrailer.h */,
+			);
+			path = Trailer;
+			sourceTree = "<group>";
+		};
+		78D7D14F25CCFD780045B52F /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				78D7D15025CCFD780045B52F /* AgoraRefreshNormalHeader.m */,
+				78D7D15125CCFD780045B52F /* AgoraRefreshStateHeader.h */,
+				78D7D15225CCFD780045B52F /* AgoraRefreshGifHeader.h */,
+				78D7D15325CCFD780045B52F /* AgoraRefreshNormalHeader.h */,
+				78D7D15425CCFD780045B52F /* AgoraRefreshStateHeader.m */,
+				78D7D15525CCFD780045B52F /* AgoraRefreshGifHeader.m */,
+			);
+			path = Header;
+			sourceTree = "<group>";
+		};
+		78D7D15625CCFD780045B52F /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				78D7D15725CCFD780045B52F /* AgoraRefreshFooter.m */,
+				78D7D15825CCFD780045B52F /* AgoraRefreshComponent.h */,
+				78D7D15925CCFD780045B52F /* AgoraRefreshHeader.m */,
+				78D7D15A25CCFD780045B52F /* AgoraRefreshAutoFooter.h */,
+				78D7D15B25CCFD780045B52F /* AgoraRefreshTrailer.h */,
+				78D7D15C25CCFD780045B52F /* AgoraRefreshBackFooter.m */,
+				78D7D15D25CCFD780045B52F /* AgoraRefreshAutoFooter.m */,
+				78D7D15E25CCFD780045B52F /* AgoraRefreshHeader.h */,
+				78D7D15F25CCFD780045B52F /* AgoraRefreshComponent.m */,
+				78D7D16025CCFD780045B52F /* AgoraRefreshFooter.h */,
+				78D7D16125CCFD780045B52F /* AgoraRefreshBackFooter.h */,
+				78D7D16225CCFD780045B52F /* AgoraRefreshTrailer.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
 		78DA43D425B4373C007F9356 /* Replay */ = {
 			isa = PBXGroup;
 			children = (
@@ -838,10 +1046,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				7874841325AAB5BD0022329D /* AgoraHTTPConfiguration.h in Headers */,
+				78D7D16C25CCFD780045B52F /* AgoraRefreshConfig.h in Headers */,
 				7874842625AAB5BD0022329D /* AgoraEduSDK.h in Headers */,
 				7874842525AAB5BD0022329D /* AgoraEduReplay.h in Headers */,
 				7874842425AAB5BD0022329D /* AgoraEduClassroom.h in Headers */,
 				7874842325AAB5BD0022329D /* AgoraEduEnums.h in Headers */,
+				78D7D16A25CCFD780045B52F /* UIView+AgoraExtension.h in Headers */,
+				78D7D17325CCFD780045B52F /* AgoraRefreshBackNormalFooter.h in Headers */,
+				78D7D17825CCFD780045B52F /* AgoraRefreshAutoNormalFooter.h in Headers */,
+				78D7D19125CCFD780045B52F /* AgoraRefreshBackFooter.h in Headers */,
+				78D7D19025CCFD780045B52F /* AgoraRefreshFooter.h in Headers */,
+				78D7D18325CCFD780045B52F /* AgoraRefreshGifHeader.h in Headers */,
+				78D7D16D25CCFD780045B52F /* AgoraRefreshConst.h in Headers */,
+				78D7D18B25CCFD780045B52F /* AgoraRefreshTrailer.h in Headers */,
+				78D7D18425CCFD780045B52F /* AgoraRefreshNormalHeader.h in Headers */,
+				78D7D17725CCFD780045B52F /* AgoraRefreshAutoStateFooter.h in Headers */,
+				78D7D18225CCFD780045B52F /* AgoraRefreshStateHeader.h in Headers */,
+				78D7D18025CCFD780045B52F /* AgoraRefreshStateTrailer.h in Headers */,
+				78D7D18A25CCFD780045B52F /* AgoraRefreshAutoFooter.h in Headers */,
+				78D7D17125CCFD780045B52F /* AgoraRefreshBackGifFooter.h in Headers */,
+				78D7D17225CCFD780045B52F /* AgoraRefreshBackStateFooter.h in Headers */,
+				78D7D17D25CCFD780045B52F /* AgoraRefreshNormalTrailer.h in Headers */,
+				78D7D18825CCFD780045B52F /* AgoraRefreshComponent.h in Headers */,
+				78D7D16825CCFD780045B52F /* NSBundle+AgoraRefresh.h in Headers */,
+				78D7D18E25CCFD780045B52F /* AgoraRefreshHeader.h in Headers */,
+				78D7D17925CCFD780045B52F /* AgoraRefreshAutoGifFooter.h in Headers */,
+				78D7D16625CCFD780045B52F /* UIScrollView+AgoraExtension.h in Headers */,
+				78D7D16E25CCFD780045B52F /* UIScrollView+AgoraRefresh.h in Headers */,
 				7874842225AAB5BD0022329D /* AgoraEduObjects.h in Headers */,
 				7874841D25AAB5BD0022329D /* AgoraEduManager.h in Headers */,
 				7874841625AAB5BD0022329D /* AgoraHttpModel.h in Headers */,
@@ -850,6 +1081,7 @@
 				7874841025AAB5BD0022329D /* AgoraAssignGroupModel.h in Headers */,
 				7874841225AAB5BD0022329D /* AgoraRecordModel.h in Headers */,
 				7874841925AAB5BD0022329D /* AgoraBoardModel.h in Headers */,
+				78D7D16725CCFD780045B52F /* AgoraRefresh.h in Headers */,
 				7874840E25AAB5BD0022329D /* AgoraReplayModuleManager.h in Headers */,
 				7874842725AAB5BD0022329D /* AgoraEduKeyCenter.h in Headers */,
 				787483BE25AAB5BD0022329D /* AgoraBCNavigationView.h in Headers */,
@@ -965,6 +1197,7 @@
 				787483E425AAB5BD0022329D /* AgoraEEMessageViewCell.xib in Resources */,
 				787483E725AAB5BD0022329D /* AgoraEEChatTextFiled.xib in Resources */,
 				787483AF25AAB5BD0022329D /* Room.storyboard in Resources */,
+				78D7D16925CCFD780045B52F /* AgoraRefresh.bundle in Resources */,
 				787483F325AAB5BD0022329D /* AgoraOTOStudentView.xib in Resources */,
 				787483BD25AAB5BD0022329D /* AgoraBCNavigationView.xib in Resources */,
 				784A99ED25AD5AC600B919E8 /* Localizable.strings in Resources */,
@@ -1007,11 +1240,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				787483B225AAB5BD0022329D /* AgoraHandsUpModel.m in Sources */,
+				78D7D18725CCFD780045B52F /* AgoraRefreshFooter.m in Sources */,
 				7839CF4725C6810C00C4B08D /* AgoraChatPanelInOutCell.swift in Sources */,
+				78D7D17525CCFD780045B52F /* AgoraRefreshBackStateFooter.m in Sources */,
+				78D7D16525CCFD780045B52F /* AgoraRefreshConfig.m in Sources */,
 				787483D225AAB5BD0022329D /* AgoraMCStudentVideoCell.m in Sources */,
+				78D7D17F25CCFD780045B52F /* AgoraRefreshNormalTrailer.m in Sources */,
 				787483C425AAB5BD0022329D /* AgoraBaseViewController.m in Sources */,
+				78D7D18F25CCFD780045B52F /* AgoraRefreshComponent.m in Sources */,
 				7874841F25AAB5BD0022329D /* AgoraEduReplay.m in Sources */,
 				787483E025AAB5BD0022329D /* AgoraEETextMessage.m in Sources */,
+				78D7D18925CCFD780045B52F /* AgoraRefreshHeader.m in Sources */,
 				787483FA25AAB5BD0022329D /* AgoraFLAnimatedImage.m in Sources */,
 				787483D925AAB5BD0022329D /* AgoraBOViewController.m in Sources */,
 				78E0FBAA25C8EDEF0023D161 /* AgoraChatPanelVM.swift in Sources */,
@@ -1024,6 +1263,7 @@
 				787483FB25AAB5BD0022329D /* AgoraFLAnimatedImageView.m in Sources */,
 				787483D825AAB5BD0022329D /* AgoraTextMessageModel.m in Sources */,
 				7874840625AAB5BD0022329D /* AgoraEduAlertViewUtil.m in Sources */,
+				78D7D16F25CCFD780045B52F /* NSBundle+AgoraRefresh.m in Sources */,
 				787483B925AAB5BD0022329D /* AgoraBCStudentVideoView.m in Sources */,
 				7839CCF125C3C1F600C4B08D /* AgoraDeviceAssistant.swift in Sources */,
 				78E0FBAB25C8EDEF0023D161 /* AgoraChatPanelModel.swift in Sources */,
@@ -1033,24 +1273,32 @@
 				787483CF25AAB5BD0022329D /* AgoraMCStudentVideoListView.m in Sources */,
 				7839CF4125C6809900C4B08D /* AgoraChatPanelView.swift in Sources */,
 				788BC7EF25C11FC10095998F /* AgoraUserView.swift in Sources */,
+				78D7D17625CCFD780045B52F /* AgoraRefreshBackNormalFooter.m in Sources */,
 				78E0FE4725C9900D0023D161 /* AgoraViewCategory.swift in Sources */,
 				7874840F25AAB5BD0022329D /* AgoraHttpModel.m in Sources */,
 				78E0FF6125CA6AC90023D161 /* AgoraBoardToolsView.swift in Sources */,
 				7874841725AAB5BD0022329D /* AgoraAssignGroupModel.m in Sources */,
 				7874840825AAB5BD0022329D /* UIView+AgoraEduConstraint.m in Sources */,
 				787483F225AAB5BD0022329D /* AgoraOTOTeacherView.m in Sources */,
+				78D7D18625CCFD780045B52F /* AgoraRefreshGifHeader.m in Sources */,
 				787483D525AAB5BD0022329D /* AgoraSmallViewController.m in Sources */,
 				7874840B25AAB5BD0022329D /* UIView+AgoraEduBadge.m in Sources */,
 				787483DB25AAB5BD0022329D /* AgoraRTEStream+StreamState.m in Sources */,
 				78E0FE4625C9900D0023D161 /* UIColor+Agora.swift in Sources */,
 				7874841E25AAB5BD0022329D /* AgoraEduObjects.m in Sources */,
+				78D7D17425CCFD780045B52F /* AgoraRefreshBackGifFooter.m in Sources */,
+				78D7D16325CCFD780045B52F /* UIScrollView+AgoraRefresh.m in Sources */,
+				78D7D17A25CCFD780045B52F /* AgoraRefreshAutoStateFooter.m in Sources */,
 				7874841B25AAB5BD0022329D /* AgoraRecordModel.m in Sources */,
 				7874840125AAB5BD0022329D /* UIView+AgoraEduToast.m in Sources */,
 				7874841C25AAB5BD0022329D /* AgoraSchduleModel.m in Sources */,
 				7874841425AAB5BD0022329D /* AgoraBoardModel.m in Sources */,
 				78E0FF5F25CA6AC90023D161 /* AgoraToolsPopoverContentSubs.swift in Sources */,
 				787483DC25AAB5BD0022329D /* AgoraEEMessageViewCell.m in Sources */,
+				78D7D19225CCFD780045B52F /* AgoraRefreshTrailer.m in Sources */,
 				787483EC25AAB5BD0022329D /* Agora1V1ViewController.m in Sources */,
+				78D7D18C25CCFD780045B52F /* AgoraRefreshBackFooter.m in Sources */,
+				78D7D17B25CCFD780045B52F /* AgoraRefreshAutoGifFooter.m in Sources */,
 				78D7D0FA25CC18500045B52F /* Bundle+Extension.swift in Sources */,
 				787483CD25AAB5BD0022329D /* AgoraMCStudentViewCell.m in Sources */,
 				787483E825AAB5BD0022329D /* AgoraBoardTouchView.m in Sources */,
@@ -1058,6 +1306,8 @@
 				7874842A25AAB5BD0022329D /* AgoraEyeCareModeUtil.m in Sources */,
 				787483E625AAB5BD0022329D /* AgoraEENavigationView.m in Sources */,
 				787483BB25AAB5BD0022329D /* AgoraBCSegmentedView.m in Sources */,
+				78D7D18D25CCFD780045B52F /* AgoraRefreshAutoFooter.m in Sources */,
+				78D7D18125CCFD780045B52F /* AgoraRefreshNormalHeader.m in Sources */,
 				7874840C25AAB5BD0022329D /* AgoraReplayModuleManager.m in Sources */,
 				787483E325AAB5BD0022329D /* AgoraEEMessageView.m in Sources */,
 				787483C225AAB5BD0022329D /* AgoraBigViewController.m in Sources */,
@@ -1065,17 +1315,23 @@
 				7839CEA825C55BD900C4B08D /* AgoraPageControlView.swift in Sources */,
 				787483B825AAB5BD0022329D /* AgoraEETeacherVideoView.m in Sources */,
 				7874842025AAB5BD0022329D /* AgoraEduClassroom.m in Sources */,
+				78D7D16425CCFD780045B52F /* AgoraRefreshConst.m in Sources */,
 				78DA43D725B4373C007F9356 /* AgoraEduReplayConfiguration.m in Sources */,
 				787483C725AAB5BD0022329D /* AgoraMCStreamInfo.m in Sources */,
 				7874840D25AAB5BD0022329D /* AgoraEduManager.m in Sources */,
 				787483C925AAB5BD0022329D /* AgoraMCStudentListView.m in Sources */,
+				78D7D17E25CCFD780045B52F /* AgoraRefreshStateTrailer.m in Sources */,
+				78D7D16B25CCFD780045B52F /* UIScrollView+AgoraExtension.m in Sources */,
 				7839CD3B25C401F300C4B08D /* AgoraToolView.swift in Sources */,
 				787483F925AAB5BD0022329D /* AgoraEduTopVC.m in Sources */,
 				7874840425AAB5BD0022329D /* AgoraEduCustomAlertView.m in Sources */,
+				78D7D17025CCFD780045B52F /* UIView+AgoraExtension.m in Sources */,
 				7839CF4425C680E800C4B08D /* AgoraChatPanelMessageCell.swift in Sources */,
 				78D7D0F425CC18410045B52F /* AgoraCourseTipsView.swift in Sources */,
+				78D7D17C25CCFD780045B52F /* AgoraRefreshAutoNormalFooter.m in Sources */,
 				7874841A25AAB5BD0022329D /* AgoraHTTPConfiguration.m in Sources */,
 				787483FF25AAB5BD0022329D /* UIColor+AgoraEduAddition.m in Sources */,
+				78D7D18525CCFD780045B52F /* AgoraRefreshStateHeader.m in Sources */,
 				7874841825AAB5BD0022329D /* AgoraHTTPManager.m in Sources */,
 				78D7D0F925CC18500045B52F /* AgoraCourseComfirAlertView.swift in Sources */,
 				787483EE25AAB5BD0022329D /* AgoraOTOStudentView.m in Sources */,

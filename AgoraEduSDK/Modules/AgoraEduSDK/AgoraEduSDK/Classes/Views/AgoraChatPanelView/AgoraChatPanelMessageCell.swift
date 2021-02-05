@@ -59,7 +59,7 @@ class AgoraChatPanelMessageCell: AgoraBaseUITableViewCell {
         let view = self.loadingView()
         let btn = view.viewWithTag(LoadingBtnTag) as! AgoraBaseUIButton
         btn.addTarget(self, action: #selector(onFailTouchEvent), for: .touchUpInside)
-        btn.setImage(AgoraImageWithName("chat_tag", self.classForCoder), for: .normal)
+        btn.setImage(AgoraImageWithName("chat_error", self.classForCoder), for: .normal)
         view.isHidden = true
         return view
     }()
@@ -170,7 +170,7 @@ class AgoraChatPanelMessageCell: AgoraBaseUITableViewCell {
         
         // chatContentView
         let firstLineWidth = self.messageSourceLabel.agora_width + sizeGap * 2.5 + translateViewSize.width
-        let secondLineWidth = self.messageTargetLabel.agora_width + sizeGap * 2
+        let secondLineWidth = (self.messageTargetLabel.isHidden ? 0 : self.messageTargetLabel.agora_width) + sizeGap * 2
         let contentWidth = firstLineWidth > secondLineWidth ? firstLineWidth : secondLineWidth
         if (model.isSelf) {
             self.chatContentView.agora_right = sizeGap
@@ -253,7 +253,7 @@ extension AgoraChatPanelMessageCell {
 
         self.failView.agora_bottom = 0
         self.failView.agora_x = 0
-        self.failView.agora_resize(AgoraDeviceAssistant.OS.isPad ? 15 : 15, AgoraDeviceAssistant.OS.isPad ? 15 : 15)
+        self.failView.agora_resize(AgoraDeviceAssistant.OS.isPad ? 15 : 15, AgoraDeviceAssistant.OS.isPad ? 14 : 14)
     }
 }
 
@@ -335,6 +335,7 @@ extension AgoraChatPanelMessageCell {
         if !AgoraDeviceAssistant.OS.isPad {
             indicatorView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
         }
+        indicatorView.style = .white
         indicatorView.tag = LoadingViewTag
         indicatorView.isHidden = true
         view.addSubview(indicatorView)
@@ -386,16 +387,15 @@ extension AgoraChatPanelMessageCell {
         if (model.sendState == .success) {
             self.failView.isHidden = true
         } else if (model.sendState == .failure) {
-            self.failView.isHidden = false
             failBtn.isHidden = false
+            failLoading.isHidden = true
             failLoading.stopAnimating()
         } else if (model.sendState == .loading) {
-            self.failView.isHidden = false
             failBtn.isHidden = true
+            failLoading.isHidden = false
             failLoading.startAnimating()
         }
     }
-    
 }
     
 

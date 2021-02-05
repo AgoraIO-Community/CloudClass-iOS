@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AgoraRTEMsgChat : NSObject
 @property (nonatomic, assign) NSInteger type;
 @property (nonatomic, strong) NSString *message;
+@property (nonatomic, assign) NSInteger sendTime;
 @property (nonatomic, strong) AgoraRTEUser *fromUser;
 @property (nonatomic, strong) AgoraRTEClassroomInfo *fromRoom;
 @end

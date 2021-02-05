@@ -126,6 +126,10 @@ static AgoraRTELogService *manager = nil;
     }
 }
 
++ (void)destory {
+    manager = nil;
+}
+
 #pragma mark ---
 + (void)logMessageWithLevel:(AgoraLogLevel)logLevel describe:(NSString *)describe message:(id _Nullable)messageObj {
     

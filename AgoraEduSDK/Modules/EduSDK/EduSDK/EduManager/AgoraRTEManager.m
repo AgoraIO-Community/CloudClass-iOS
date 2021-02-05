@@ -185,6 +185,8 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     }
     [self.classrooms removeAllObjects];
     
+    [AgoraRTELogService destory];
+    
     [AgoraRTMManager.shareManager destory];
     [AgoraRTCManager.shareManager destory];
 }

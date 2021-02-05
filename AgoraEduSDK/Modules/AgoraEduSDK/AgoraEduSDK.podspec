@@ -33,8 +33,9 @@ TODO: Add long description of the pod here.
   s.source_files  = "AgoraEduSDK/**/*.{swift,h,m}"
   s.public_header_files = [
     "AgoraEduSDK/Classes/Public/*.h", 
-    "AgoraEduSDK/Classes/Manager/HTTP/*.h",
-    "AgoraEduSDK/Classes/Manager/{AgoraEduManager}.h"
+    "AgoraEduSDK/**/HTTP/*.h",
+    "AgoraEduSDK/**/Manager/{AgoraEduManager}.h",
+    "AgoraEduSDK/**/AgoraRefresh/**/*.h"
   ]
   s.prefix_header_file = 'AgoraEduSDK/AgoraEduSDK.pch'
   s.preserve_path = 'AgoraEduSDK/AgoraEduSDK.modulemap'

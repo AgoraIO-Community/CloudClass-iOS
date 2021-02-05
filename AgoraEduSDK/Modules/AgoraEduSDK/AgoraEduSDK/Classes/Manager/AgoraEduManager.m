@@ -306,6 +306,7 @@ static AgoraEduManager *manager = nil;
     AgoraEduManager.shareManager.eduManager = nil;
     AgoraEduManager.shareManager.roomManager = nil;
     AgoraEduManager.shareManager.groupRoomManager = nil;
+    AgoraEduManager.shareManager.logManager = nil;
 
     AgoraEduManager.shareManager.studentService = nil;
     AgoraEduManager.shareManager.groupStudentService = nil;

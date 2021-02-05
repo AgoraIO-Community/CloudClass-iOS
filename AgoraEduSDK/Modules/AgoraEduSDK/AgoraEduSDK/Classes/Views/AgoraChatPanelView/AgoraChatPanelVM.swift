@@ -55,6 +55,7 @@ class AgoraChatPanelVM {
                     $0.isSelf = ($0.fromUser?.userUuid == self.httpConfig.userUuid)
                     $0.sendState = .success
                 })
+                model.data?.list.reverse()
 
                 self.models.append(contentsOf: model.data?.list ?? [])
                 successBlock(self.models)
