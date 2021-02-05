@@ -6,6 +6,7 @@
 build/
 DerivedData
 xcshareddata
+Podfile.lock
 
 ## Various settings
 *.pbxuser

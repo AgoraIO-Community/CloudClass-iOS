@@ -37,7 +37,7 @@ public func AgoraLocalizedString(_ key: String, _ aClass: AnyClass) -> String? {
 
 public func AgoraImgae(name: String) -> UIImage {
     guard let bundle = AgoraBundle(AgoraLocationAssistant.shared().classForCoder) else {
-        fatalError()
+        return UIImage(named: name)!
     }
     
     return UIImage(named: name,

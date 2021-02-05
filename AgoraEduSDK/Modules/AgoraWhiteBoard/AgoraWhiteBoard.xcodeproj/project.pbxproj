@@ -36,6 +36,7 @@
 		78D25C6A24ACBB1600229882 /* AgoraWhiteBoard.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C6824ACBB1600229882 /* AgoraWhiteBoard.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78FEE19C24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FEE19A24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.m */; };
 		78FEE19D24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78FEE19B24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.h */; };
+		868919C625CA7A9B0054363B /* WhiteBoardToolEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 868919C525CA7A9B0054363B /* WhiteBoardToolEnums.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		78D25C6924ACBB1600229882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78FEE19A24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraWhiteBoardViewManager.m; sourceTree = "<group>"; };
 		78FEE19B24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraWhiteBoardViewManager.h; sourceTree = "<group>"; };
+		868919C525CA7A9B0054363B /* WhiteBoardToolEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteBoardToolEnums.h; sourceTree = "<group>"; };
 		BC32BA6D0DF218252ABADF20 /* Pods-AgoraWhiteBoard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraWhiteBoard.release.xcconfig"; path = "../Modules/AgoraWhiteBoard/Pods/Target Support Files/Pods-AgoraWhiteBoard/Pods-AgoraWhiteBoard.release.xcconfig"; sourceTree = "<group>"; };
 		BD285F176EFBFA5750EF2776 /* Pods_AgoraWhiteBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraWhiteBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -99,6 +101,7 @@
 		788CFE3D24BD70390022439A /* WhiteBoardTool */ = {
 			isa = PBXGroup;
 			children = (
+				868919C525CA7A9B0054363B /* WhiteBoardToolEnums.h */,
 				788CFE3E24BD727C0022439A /* WhiteBoardToolControlView.h */,
 				788CFE3F24BD727C0022439A /* WhiteBoardToolControlView.m */,
 				788CFE4224BD72930022439A /* WhiteBoardToolControlView.xib */,
@@ -193,6 +196,7 @@
 				788CFE3424BD4A980022439A /* WhiteBoardConfiguration.h in Headers */,
 				788CFE3024BD4A670022439A /* WhiteBoardManager.h in Headers */,
 				7829C3622500FB740003BF5E /* WhiteBoardStateModel.h in Headers */,
+				868919C625CA7A9B0054363B /* WhiteBoardToolEnums.h in Headers */,
 				788CFE4C24BD73C50022439A /* WhiteBoardPageControlView.h in Headers */,
 				7829C3632500FB740003BF5E /* WhiteGlobalStateModel.h in Headers */,
 				788CFE4024BD727C0022439A /* WhiteBoardToolControlView.h in Headers */,

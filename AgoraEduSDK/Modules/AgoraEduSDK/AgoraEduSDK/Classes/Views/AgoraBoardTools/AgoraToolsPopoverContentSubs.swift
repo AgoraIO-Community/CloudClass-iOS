@@ -42,15 +42,12 @@ class AgoraImageViewCell: AgoraBaseUICollectionCell {
 // MARK: - AgoraColorCollection
 protocol AgoraColorSelected: NSObjectProtocol {
     func demandSide(_ demandSide: AgoraColorCollection.DemandSide,
-              didSelectColor color: UIColor)
+              didSelectColor color: AgoraBoardToolsColor)
 }
 
 class AgoraColorCollection: AgoraBaseUICollectionView,
                             UICollectionViewDataSource,
                             UICollectionViewDelegate {
-    @objc enum Color: Int {
-        case blue, yellow, red, green, black, white
-    }
     
     enum DemandSide {
         case pencil, text, rectangle, circle
@@ -60,27 +57,29 @@ class AgoraColorCollection: AgoraBaseUICollectionView,
         
     }
     
-    let colorDataSource: [Color] = [.blue,
-                                    .yellow,
-                                    .red,
-                                    .green,
-                                    .black,
-                                    .white]
+    let colorDataSource: [AgoraBoardToolsColor] = [.blue,
+                                                   .yellow,
+                                                   .red,
+                                                   .green,
+                                                   .black,
+                                                   .white]
     
     weak var colorDelegate: AgoraColorSelected?
     
-    var selectedColor: Color = .black {
+    var selectedColor: AgoraBoardToolsColor = .black {
         didSet {
             colorDelegate?.demandSide(demandSide,
-                                      didSelectColor: selectedColor.value)
+                                      didSelectColor: selectedColor)
         }
     }
     
     var demandSide: DemandSide
     
     init(frame: CGRect,
-         demandSide: DemandSide) {
+         demandSide: DemandSide,
+         color: AgoraBoardToolsColor) {
         self.demandSide = demandSide
+        self.selectedColor = color
         super.init(frame: frame,
                    collectionViewLayout: UICollectionViewLayout())
         initViews()
@@ -129,18 +128,7 @@ class AgoraColorCollection: AgoraBaseUICollectionView,
     }
 }
 
-extension AgoraColorCollection.Color {
-    var value: UIColor {
-        switch self {
-        case .blue:   return .blue
-        case .yellow: return .yellow
-        case .red:    return .red
-        case .green:  return .green
-        case .black:  return .black
-        case .white:  return .white
-        }
-    }
-    
+fileprivate extension AgoraBoardToolsColor {
     var image: UIImage {
         switch self {
         case .blue:   return AgoraImgae(name: "蓝色-未选")
@@ -167,16 +155,12 @@ extension AgoraColorCollection.Color {
 // MARK: - AgoraLineWidthCollection
 protocol AgoraLineWidthSelected: NSObjectProtocol {
     func demandSide(_ demandSide: AgoraLineWidthCollection.DemandSide,
-                    didSelectLineWidth width: AgoraLineWidthCollection.LineWidth)
+                    didSelectLineWidth width: AgoraBoardToolsLineWidth)
 }
 
 class AgoraLineWidthCollection: AgoraBaseUICollectionView,
                                 UICollectionViewDataSource,
                                 UICollectionViewDelegate {
-    enum LineWidth {
-        case width1, width2, width3, width4
-    }
-    
     enum DemandSide {
         case pencil, rectangle, circle, eraser
     }
@@ -199,16 +183,16 @@ class AgoraLineWidthCollection: AgoraBaseUICollectionView,
         }
     }
     
-    let lineDataSource: [LineWidth] = [.width1,
-                                       .width2,
-                                       .width3,
-                                       .width4]
+    let lineDataSource: [AgoraBoardToolsLineWidth] = [.width1,
+                                                      .width2,
+                                                      .width3,
+                                                      .width4]
     
     weak var lineWidthDelegate: AgoraLineWidthSelected?
     
     var demandSide: DemandSide
     
-    var selectedLineWidth: LineWidth = .width1 {
+    var selectedLineWidth: AgoraBoardToolsLineWidth {
         didSet {
             lineWidthDelegate?.demandSide(demandSide,
                                           didSelectLineWidth: selectedLineWidth)
@@ -216,8 +200,10 @@ class AgoraLineWidthCollection: AgoraBaseUICollectionView,
     }
     
     init(frame: CGRect,
-         demandSide: DemandSide) {
+         demandSide: DemandSide,
+         lineWidth: AgoraBoardToolsLineWidth) {
         self.demandSide = demandSide
+        self.selectedLineWidth = lineWidth
         super.init(frame: frame,
                    collectionViewLayout: UICollectionViewLayout())
         initViews()
@@ -225,6 +211,7 @@ class AgoraLineWidthCollection: AgoraBaseUICollectionView,
     
     required init?(coder: NSCoder) {
         self.demandSide = .pencil
+        self.selectedLineWidth = .width1
         super.init(coder: coder)
         initViews()
     }
@@ -263,7 +250,7 @@ class AgoraLineWidthCollection: AgoraBaseUICollectionView,
     }
 }
 
-extension AgoraLineWidthCollection.LineWidth {
+fileprivate extension AgoraBoardToolsLineWidth {
     var image: UIImage {
         switch self {
         case .width1: return AgoraImgae(name: "形状 1148")
@@ -276,15 +263,12 @@ extension AgoraLineWidthCollection.LineWidth {
 
 // MARK: - AgoraColorCollection
 protocol AgoraPencilTypeSelected: NSObjectProtocol {
-    func didSelectPencilType(pencil: AgoraPencilTypeCollection.PencilType)
+    func didSelectPencilType(pencil: AgoraBoardToolsPencilType)
 }
 
 class AgoraPencilTypeCollection: AgoraBaseUICollectionView,
                                  UICollectionViewDataSource,
                                  UICollectionViewDelegate {
-    enum PencilType {
-        case pencil1, pencil2, pencil3, pencil4
-    }
     
     class PencilTypeCell: AgoraImageViewCell {
         override func layoutSubviews() {
@@ -304,26 +288,29 @@ class AgoraPencilTypeCollection: AgoraBaseUICollectionView,
         }
     }
     
-    let pencilTypeDataSource: [PencilType] = [.pencil1,
-                                              .pencil2,
-                                              .pencil3,
-                                              .pencil4]
+    let pencilTypeDataSource: [AgoraBoardToolsPencilType] = [.pencil1,
+                                                             .pencil2,
+                                                             .pencil3,
+                                                             .pencil4]
     
-    weak var pencilTypeDelegate: AgoraColorSelected?
+    weak var pencilTypeDelegate: AgoraPencilTypeSelected?
     
-    var selectedPencilType: PencilType = .pencil1 {
+    var selectedPencilType: AgoraBoardToolsPencilType {
         didSet {
-           
+            pencilTypeDelegate?.didSelectPencilType(pencil: selectedPencilType)
         }
     }
     
-    init(frame: CGRect) {
+    init(frame: CGRect,
+         pencil: AgoraBoardToolsPencilType) {
+        self.selectedPencilType = pencil
         super.init(frame: frame,
                    collectionViewLayout: UICollectionViewLayout())
         initViews()
     }
     
     required init?(coder: NSCoder) {
+        self.selectedPencilType = .pencil1
         super.init(coder: coder)
         initViews()
     }
@@ -361,10 +348,10 @@ class AgoraPencilTypeCollection: AgoraBaseUICollectionView,
     }
 }
 
-extension AgoraPencilTypeCollection.PencilType {
+fileprivate extension AgoraBoardToolsPencilType {
     var image: UIImage {
         switch self {
-        case .pencil1: return AgoraImgae(name: "箭头")
+        case .pencil1: return AgoraImgae(name: "-s-箭头")
         case .pencil2: return AgoraImgae(name: "线条")
         case .pencil3: return AgoraImgae(name: "记号笔")
         case .pencil4: return AgoraImgae(name: "画笔 拷贝 2")
@@ -374,15 +361,13 @@ extension AgoraPencilTypeCollection.PencilType {
 
 // MARK: - AgoraColorCollection
 protocol AgoraFontSelected: NSObjectProtocol {
-    func didSelectFont(font: Int)
+    func didSelectFont(font: AgoraBoardToolsFont)
 }
 
 class AgoraFontCollection: AgoraBaseUICollectionView,
                                  UICollectionViewDataSource,
                                  UICollectionViewDelegate {
-    enum Font {
-        case font22, font24, font26, font30, font36, font42, font60, font72
-    }
+    
     
     class FontCell: AgoraBaseUICollectionCell {
         static var className: String {
@@ -406,7 +391,7 @@ class AgoraFontCollection: AgoraBaseUICollectionView,
             fontLabel.layer.borderColor = UIColor(rgb: 0x002591).cgColor
             fontLabel.layer.masksToBounds = true
             fontLabel.textAlignment = .center
-            fontLabel.font = UIFont.systemFont(ofSize: 22)
+            fontLabel.font = UIFont.systemFont(ofSize: 12)
             addSubview(fontLabel)
         }
         
@@ -416,7 +401,7 @@ class AgoraFontCollection: AgoraBaseUICollectionView,
             fontLabel.agora_y = 0
             fontLabel.agora_width = bounds.width
             fontLabel.agora_height = bounds.height
-            fontLabel.layer.cornerRadius = 4
+            fontLabel.layer.cornerRadius = 6
         }
         
         var isBySelected: Bool = false {
@@ -427,30 +412,33 @@ class AgoraFontCollection: AgoraBaseUICollectionView,
         }
     }
     
-    let fontDataSource: [Font] = [.font22,
-                                  .font24,
-                                  .font26,
-                                  .font30,
-                                  .font36,
-                                  .font42,
-                                  .font60,
-                                  .font72]
+    let fontDataSource: [AgoraBoardToolsFont] = [.font22,
+                                                 .font24,
+                                                 .font26,
+                                                 .font30,
+                                                 .font36,
+                                                 .font42,
+                                                 .font60,
+                                                 .font72]
     
     weak var fontDelegate: AgoraFontSelected?
     
-    var selectedFont: Font = .font22 {
+    var selectedFont: AgoraBoardToolsFont {
         didSet {
-            fontDelegate?.didSelectFont(font: selectedFont.value)
+            fontDelegate?.didSelectFont(font: selectedFont)
         }
     }
     
-    init(frame: CGRect) {
+    init(frame: CGRect,
+         font: AgoraBoardToolsFont) {
+        self.selectedFont = font
         super.init(frame: frame,
                    collectionViewLayout: UICollectionViewLayout())
         initViews()
     }
     
     required init?(coder: NSCoder) {
+        self.selectedFont = .font22
         super.init(coder: coder)
         initViews()
     }
@@ -484,20 +472,5 @@ class AgoraFontCollection: AgoraBaseUICollectionView,
         let font = fontDataSource[indexPath.item]
         selectedFont = font
         collectionView.reloadData()
-    }
-}
-
-extension AgoraFontCollection.Font {
-    var value: Int {
-        switch self {
-        case .font22: return 22
-        case .font24: return 24
-        case .font26: return 26
-        case .font30: return 30
-        case .font36: return 36
-        case .font42: return 42
-        case .font60: return 60
-        case .font72: return 72
-        }
     }
 }
