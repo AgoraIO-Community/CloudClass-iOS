@@ -11,6 +11,7 @@
 #import "WhiteBoardConfiguration.h"
 #import "WhiteBoardJoinOptions.h"
 #import "WhiteBoardStateModel.h"
+#import "WhiteBoardToolEnums.h"
 
 @protocol WhiteManagerDelegate <NSObject>
 
@@ -46,6 +47,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 // when board view size changed, must call refreshViewSize
 - (void)refreshViewSize;
+
+// update tools properties
+- (void)setTool:(WhiteBoardToolType)type;
+- (void)setStrokeColor:(UIColor *)color
+          withToolType:(WhiteBoardToolType)type;
+
+- (void)setStrokeWidth:(NSInteger)strokeWidth
+          withToolType:(WhiteBoardToolType)type;
+
+- (void)setTextSize:(NSInteger)textSize
+       withToolType:(WhiteBoardToolType)type;
 
 // pageindex
 - (void)setPageIndex:(NSUInteger)index;

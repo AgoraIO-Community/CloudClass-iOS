@@ -49,7 +49,6 @@ framework module AgoraEduSDK {
             header "NSBundle+AgoraRefresh.h"
             header "UIScrollView+AgoraRefresh.h"
             header "UIScrollView+AgoraExtension.h"
-            header "UIView+AgoraExtension.h"
             link "AgoraRefresh"
             export *
         }

@@ -27,6 +27,7 @@ public enum AgoraPopoverOption {
     case showBlackOverlay(Bool)
     case springDamping(CGFloat)
     case initialSpringVelocity(CGFloat)
+    case arrowPointerOffset(CGPoint)
 }
 
 @objc public enum AgoraPopoverType: Int {
@@ -57,6 +58,7 @@ open class AgoraPopover: UIView {
     open var highlightCornerRadius: CGFloat = 0
     open var springDamping: CGFloat = 0.7
     open var initialSpringVelocity: CGFloat = 3
+    open var arrowPointerOffset: CGPoint = CGPoint(x: 0, y: 0)
     
     // custom closure
     open var willShowHandler: (() -> ())?
@@ -171,7 +173,7 @@ open class AgoraPopover: UIView {
     open func show(_ contentView: UIView,
                    fromView: UIView,
                    inView: UIView) {
-        let point: CGPoint
+        var point: CGPoint
                 
         switch self.popoverType {
         case .up:
@@ -203,6 +205,9 @@ open class AgoraPopover: UIView {
         if self.highlightFromView {
             self.createHighlightLayer(fromView: fromView, inView: inView)
         }
+        
+        point = CGPoint(x: point.x + arrowPointerOffset.x,
+                        y: point.y + arrowPointerOffset.y)
         
         self.show(contentView,
                   point: point,
@@ -510,6 +515,8 @@ open class AgoraPopover: UIView {
                 )
             )
         case .right:
+            let distance: CGFloat = 1
+            
             stroke.move(to: CGPoint(x: 0, y: arrowPoint.y))
             stroke.addLine(
                 to: CGPoint(
@@ -518,46 +525,50 @@ open class AgoraPopover: UIView {
                 )
             )
             
-            stroke.addLine(to: CGPoint(x: self.arrowSize.height, y: self.popCornerRadius))
+            stroke.addLine(to: CGPoint(x: self.arrowSize.height,
+                                       y: self.popCornerRadius))
             stroke.addArc(
                 withCenter: CGPoint(
-                    x: self.arrowSize.height + self.popCornerRadius,
+                    x: self.arrowSize.height + self.popCornerRadius - distance,
                     y: self.popCornerRadius
                 ),
-                radius: self.popCornerRadius,
+                radius: self.popCornerRadius - distance,
                 startAngle: self.radians(180),
                 endAngle: self.radians(270),
                 clockwise: true)
             
-            stroke.addLine(to: CGPoint(x: self.bounds.width - self.popCornerRadius, y: 0))
+            stroke.addLine(to: CGPoint(x: self.bounds.width - self.popCornerRadius,
+                                       y: distance))
             stroke.addArc(
                 withCenter: CGPoint(
                     x: self.bounds.width - self.popCornerRadius,
                     y: self.popCornerRadius
                 ),
-                radius: self.popCornerRadius,
+                radius: self.popCornerRadius - distance,
                 startAngle: self.radians(270),
                 endAngle: self.radians(0),
                 clockwise: true)
             
-            stroke.addLine(to: CGPoint(x: self.bounds.width, y: self.bounds.height - self.popCornerRadius))
+            stroke.addLine(to: CGPoint(x: self.bounds.width - distance,
+                                       y: self.bounds.height - self.popCornerRadius))
             stroke.addArc(
                 withCenter: CGPoint(
                     x: self.bounds.width - self.popCornerRadius,
                     y: self.bounds.height - self.popCornerRadius
                 ),
-                radius: self.popCornerRadius,
+                radius: self.popCornerRadius - distance,
                 startAngle: self.radians(0),
                 endAngle: self.radians(90),
                 clockwise: true)
             
-            stroke.addLine(to: CGPoint(x: self.arrowSize.height + self.popCornerRadius, y: self.bounds.height))
+            stroke.addLine(to: CGPoint(x: self.arrowSize.height + self.popCornerRadius - distance,
+                                       y: self.bounds.height - distance))
             stroke.addArc(
                 withCenter: CGPoint(
-                    x: self.arrowSize.height + self.popCornerRadius,
+                    x: self.arrowSize.height + self.popCornerRadius - distance,
                     y: self.bounds.height - self.popCornerRadius
                 ),
-                radius: self.popCornerRadius,
+                radius: self.popCornerRadius - distance,
                 startAngle: self.radians(90),
                 endAngle: self.radians(180),
                 clockwise: true)
@@ -616,6 +627,8 @@ private extension AgoraPopover {
                     self.springDamping = value
                 case let .initialSpringVelocity(value):
                     self.initialSpringVelocity = value
+                case let .arrowPointerOffset(value):
+                    self.arrowPointerOffset = value
                 }
             }
         }
@@ -671,6 +684,7 @@ private extension AgoraPopover {
             frame.size.width += self.arrowSize.height
         }
         
+        frame.size.height += 2 // for board width
         self.frame = frame
     }
     

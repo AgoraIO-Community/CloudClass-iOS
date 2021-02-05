@@ -27,7 +27,7 @@
 #define AgoraVideoPhonePageWMax 228
 #define AgoraVideoPhoneChatWScale 0.25
 
-@interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, AgoraRTEMediaStreamDelegate, AgoraPageControlProtocol, WhiteManagerDelegate>
+@interface Agora1V1ViewController ()<UITextFieldDelegate, AgoraRTEClassroomDelegate, AgoraRTEStudentDelegate, AgoraRTEMediaStreamDelegate, AgoraPageControlProtocol, WhiteManagerDelegate, AgoraBoardToolsVMDelegate>
 
 @property (weak, nonatomic) AgoraBaseUIImageView *bgView;
 @property (weak, nonatomic) AgoraBaseView *contentView;
@@ -43,15 +43,15 @@
 @property (assign, nonatomic) CGFloat boardRight;
 @property (assign, nonatomic) BOOL boardMax;
 
-
 @property (nonatomic, weak) AgoraBoardTouchView *whiteBoardTouchView;
 
+@property (nonatomic, strong) AgoraBoardToolsVM *boardToolsVM;
 @end
 
 @implementation Agora1V1ViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    [self initVM];
     [self initView];
     [self initLayout];
     [self initData];
@@ -80,6 +80,11 @@
         AgoraRTEStream *stream = weakself.localUser.streams.firstObject;
         [weakself setLocalStreamVideo:!mute audio:stream.hasAudio streamState:LocalStreamStateUpdate];
     };
+}
+
+- (void)initVM {
+    self.boardToolsVM = [[AgoraBoardToolsVM alloc] init];
+    self.boardToolsVM.delegate = self;
 }
 
 - (void)lockViewTransform:(BOOL)lock {
@@ -221,18 +226,31 @@
 
     // boardView
     [self.boardView equalTo:self.boardContentView];
-
-    // boardToolsView
-    self.boardToolsView.agora_x = 10;
-    self.boardToolsView.agora_y = self.toolView.agora_height;
-    self.boardToolsView.agora_width = 100;
     
     // boardPageControlView
     self.boardPageControlView.agora_x = IsPad ? 20 : 10;
     self.boardPageControlView.agora_height = IsPad ? 42 : 27;
     self.boardPageControlView.agora_bottom = IsPad ? 20 : 10;
     self.boardPageControlView.agora_width = IsPad ? AgoraVideoPhonePageWMax + 50 : AgoraVideoPhonePageWMax;
-
+    
+    // boardToolsView
+    CGFloat screenHeight = MIN(kScreenWidth,
+                               kScreenHeight);
+    CGFloat safeAreaTop = 0;
+    CGFloat safeAreaBottom = IsNotchScreen ? 21 : 0;
+    CGFloat contentViewHeight = screenHeight - safeAreaTop - safeAreaBottom;
+    CGFloat pageViewBottom = 16;
+    CGFloat pageViewSpace = self.boardPageControlView.agora_bottom + self.boardPageControlView.agora_height;
+    self.boardToolsView.agora_x = 33;
+    self.boardToolsView.agora_y = self.toolView.agora_height;
+    self.boardToolsView.agora_width = 44;
+    
+    if (IsPad) {
+        self.boardToolsView.maxHeight = 267;
+    } else {
+        self.boardToolsView.maxHeight = contentViewHeight - self.toolView.agora_height - pageViewSpace - pageViewBottom;
+    }
+    
     // chatPanelView
     CGFloat chatPanelViewMaxWidth = IsPad ? 246 : MAX(kScreenWidth, kScreenHeight) * AgoraVideoPhoneChatWScale;
     CGFloat chatPanelViewMinWidth = IsPad ? 44 : 28;
@@ -318,7 +336,8 @@
     }
 
     // boardToolsView
-    AgoraBoardToolsView *boardToolsView = [[AgoraBoardToolsView alloc] initWithFrame:CGRectZero];
+    AgoraBoardToolsView *boardToolsView = [[AgoraBoardToolsView alloc] initWithFrame:CGRectZero
+                                                                                  vm:self.boardToolsVM];
     [self.contentView addSubview:boardToolsView];
     self.boardToolsView = boardToolsView;
     
@@ -353,7 +372,9 @@
             
             BOOL lock = weakself.boardState.follow;
             [weakself lockViewTransform:lock];
-             
+            
+            WhiteBoardManager *manager = AgoraEduManager.shareManager.whiteBoardManager;
+            [manager setTool:WhiteBoardToolTypeSelector];
         } failure:^(NSError * error) {
             [AgoraBaseViewController showToast:error.localizedDescription];
         }];
@@ -635,6 +656,95 @@
 }
 - (void)audioVolumeIndicationOfRemoteStream:(NSString *)streamId withVolume:(NSUInteger)volume {
     [self.teaView updateAudioWithEffect:volume];
+}
+
+#pragma mark - AgoraBoardToolsVMDelegate
+- (void)boardToolsVMDidSelectMove:(AgoraBoardToolsVM *)vm {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager setTool:WhiteBoardToolTypeSelector];
+}
+
+- (void)boardToolsVM:(AgoraBoardToolsVM *)vm
+        didSelectColor:(UIColor *)color
+                    of:(enum AgoraBoardToolsItemType)type {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    WhiteBoardToolType toolType;
+    
+    if (type == AgoraBoardToolsItemTypePencil) {
+        toolType = [self getBoardTypeWithPencilIndex:vm.pencilVM.selectedPencilType];
+    } else {
+        toolType = [self getBoardTypeWithToolsItemType:type];
+    }
+    
+    [whiteBoardManager setStrokeColor:color
+                         withToolType:toolType];
+}
+
+- (void)boardToolsVM:(AgoraBoardToolsVM *)vm
+         didSelectFont:(NSInteger)font {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    WhiteBoardToolType toolType = [self getBoardTypeWithToolsItemType:AgoraBoardToolsItemTypeText];
+    [whiteBoardManager setTextSize:font
+                      withToolType:toolType];
+}
+
+- (void)boardToolsVM:(AgoraBoardToolsVM *)vm
+    didSelectLineWidth:(NSInteger)width
+                    of:(enum AgoraBoardToolsItemType)type {
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    WhiteBoardToolType toolType;
+    
+    if (type == AgoraBoardToolsItemTypePencil) {
+        toolType = [self getBoardTypeWithPencilIndex:vm.pencilVM.selectedPencilType];
+    } else {
+        toolType = [self getBoardTypeWithToolsItemType:type];
+    }
+    
+    [whiteBoardManager setStrokeWidth:width
+                         withToolType:toolType];
+}
+
+- (void)boardToolsVM:(AgoraBoardToolsVM *)vm
+       didSelectPencil:(NSInteger)pencil {
+    WhiteBoardToolType type = [self getBoardTypeWithPencilIndex:pencil];
+    
+    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
+    [whiteBoardManager setTool:type];
+}
+
+- (WhiteBoardToolType)getBoardTypeWithToolsItemType:(AgoraBoardToolsItemType)itemType {
+    switch (itemType) {
+        case AgoraBoardToolsItemTypeMove:      return  WhiteBoardToolTypeSelector;
+        case AgoraBoardToolsItemTypeText:      return  WhiteBoardToolTypeText;
+        case AgoraBoardToolsItemTypeCircle:    return  WhiteBoardToolTypeEllipse;
+        case AgoraBoardToolsItemTypeRectangle: return  WhiteBoardToolTypeRectangle;
+        case AgoraBoardToolsItemTypePencil:    assert("use getBoardTypeWithPencilIndex");
+        case AgoraBoardToolsItemTypeEraser:    return  WhiteBoardToolTypeEraser;
+    }
+}
+
+- (WhiteBoardToolType)getBoardTypeWithPencilIndex:(NSInteger)pencil {
+    WhiteBoardToolType type;
+    
+    switch (pencil) {
+        case 1:
+            type = WhiteBoardToolTypeArrow;
+            break;
+        case 2:
+            type = WhiteBoardToolTypeStraight;
+            break;
+        case 3:
+            type = WhiteBoardToolTypePointer;
+            break;
+        case 4:
+            type = WhiteBoardToolTypePencil;
+            break;
+        default:
+            assert("use getBoardTypeWithToolsItemType");
+            break;
+    }
+    
+    return type;
 }
 
 #pragma mark AgoraPageControlProtocol
