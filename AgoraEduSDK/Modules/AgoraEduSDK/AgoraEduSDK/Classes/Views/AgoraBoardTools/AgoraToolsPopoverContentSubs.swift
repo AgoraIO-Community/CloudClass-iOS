@@ -351,7 +351,7 @@ class AgoraPencilTypeCollection: AgoraBaseUICollectionView,
 fileprivate extension AgoraBoardToolsPencilType {
     var image: UIImage {
         switch self {
-        case .pencil1: return AgoraImgae(name: "箭头p")
+        case .pencil1: return AgoraImgae(name: "-s-箭头")
         case .pencil2: return AgoraImgae(name: "线条")
         case .pencil3: return AgoraImgae(name: "记号笔")
         case .pencil4: return AgoraImgae(name: "画笔 拷贝 2")

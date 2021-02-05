@@ -422,7 +422,7 @@ private extension AgoraBoardToolsView {
         vm.selectedItem = .pencil
         vm.pencilVM.selectedPencilType = pencil
         vm.delegate?.boardToolsVM(vm,
-                                  didSelectPencil: pencil.value)
+                                  didSelectPencil: pencil.rawValue)
     }
     
     func vmFontCallBack(font: AgoraBoardToolsFont) {

@@ -34,7 +34,7 @@ import UIKit
     }
 }
 
-@objc enum AgoraBoardToolsColor: Int {
+@objc public enum AgoraBoardToolsColor: Int {
     case blue, yellow, red, green, black, white
     
     var value: UIColor {
@@ -49,8 +49,8 @@ import UIKit
     }
 }
 
-enum AgoraBoardToolsLineWidth {
-    case width1, width2, width3, width4
+@objc public enum AgoraBoardToolsLineWidth: Int {
+    case width1 = 1, width2, width3, width4
     
     var value: Int {
         switch self {
@@ -62,20 +62,11 @@ enum AgoraBoardToolsLineWidth {
     }
 }
 
-enum AgoraBoardToolsPencilType {
-    case pencil1, pencil2, pencil3, pencil4
-    
-    var value: Int {
-        switch self {
-        case .pencil1: return 1
-        case .pencil2: return 2
-        case .pencil3: return 3
-        case .pencil4: return 4
-        }
-    }
+@objc public enum AgoraBoardToolsPencilType: Int {
+    case pencil1 = 1, pencil2, pencil3, pencil4
 }
 
-enum AgoraBoardToolsFont {
+@objc public enum AgoraBoardToolsFont: Int {
     case font22, font24, font26, font30, font36, font42, font60, font72
     
     var value: Int {

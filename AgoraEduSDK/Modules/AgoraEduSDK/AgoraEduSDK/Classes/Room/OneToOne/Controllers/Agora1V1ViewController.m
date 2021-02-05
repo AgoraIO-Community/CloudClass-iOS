@@ -315,7 +315,12 @@
     self.boardToolsView.agora_x = 33;
     self.boardToolsView.agora_y = self.toolView.agora_height;
     self.boardToolsView.agora_width = 44;
-    self.boardToolsView.maxHeight = contentViewHeight - self.toolView.agora_height - pageViewSpace - pageViewBottom;
+    
+    if (IsPad) {
+        self.boardToolsView.maxHeight = 267;
+    } else {
+        self.boardToolsView.maxHeight = contentViewHeight - self.toolView.agora_height - pageViewSpace - pageViewBottom;
+    }
     
     // chatPanelView
     CGFloat chatPanelViewMaxWidth = IsPad ? 246 : 137;
@@ -775,7 +780,14 @@
         didSelectColor:(UIColor *)color
                     of:(enum AgoraBoardToolsItemType)type {
     WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    WhiteBoardToolType toolType = [self getBoardTypeWithToolsItemType:type];
+    WhiteBoardToolType toolType;
+    
+    if (type == AgoraBoardToolsItemTypePencil) {
+        toolType = [self getBoardTypeWithPencilIndex:vm.pencilVM.selectedPencilType];
+    } else {
+        toolType = [self getBoardTypeWithToolsItemType:type];
+    }
+    
     [whiteBoardManager setStrokeColor:color
                          withToolType:toolType];
 }
@@ -792,28 +804,21 @@
     didSelectLineWidth:(NSInteger)width
                     of:(enum AgoraBoardToolsItemType)type {
     WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    WhiteBoardToolType toolType = [self getBoardTypeWithToolsItemType:type];
+    WhiteBoardToolType toolType;
+    
+    if (type == AgoraBoardToolsItemTypePencil) {
+        toolType = [self getBoardTypeWithPencilIndex:vm.pencilVM.selectedPencilType];
+    } else {
+        toolType = [self getBoardTypeWithToolsItemType:type];
+    }
+    
     [whiteBoardManager setStrokeWidth:width
                          withToolType:toolType];
 }
 
 - (void)boardToolsVM:(AgoraBoardToolsVM *)vm
        didSelectPencil:(NSInteger)pencil {
-    
-    WhiteBoardToolType type;
-    
-    switch (pencil) {
-        case 1:
-            type = WhiteBoardToolTypeArrow;
-            break;
-        case 2:
-            type = WhiteBoardToolTypeStraight;
-            break;
-        case 3:
-            type = WhiteBoardToolTypePointer;
-        default:
-            break;
-    }
+    WhiteBoardToolType type = [self getBoardTypeWithPencilIndex:pencil];
     
     WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
     [whiteBoardManager setTool:type];
@@ -825,9 +830,33 @@
         case AgoraBoardToolsItemTypeText:      return  WhiteBoardToolTypeText;
         case AgoraBoardToolsItemTypeCircle:    return  WhiteBoardToolTypeEllipse;
         case AgoraBoardToolsItemTypeRectangle: return  WhiteBoardToolTypeRectangle;
-        case AgoraBoardToolsItemTypePencil:    return  WhiteBoardToolTypePencil;
+        case AgoraBoardToolsItemTypePencil:    assert("use getBoardTypeWithPencilIndex");
         case AgoraBoardToolsItemTypeEraser:    return  WhiteBoardToolTypeEraser;
     }
+}
+
+- (WhiteBoardToolType)getBoardTypeWithPencilIndex:(NSInteger)pencil {
+    WhiteBoardToolType type;
+    
+    switch (pencil) {
+        case 1:
+            type = WhiteBoardToolTypeArrow;
+            break;
+        case 2:
+            type = WhiteBoardToolTypeStraight;
+            break;
+        case 3:
+            type = WhiteBoardToolTypePointer;
+            break;
+        case 4:
+            type = WhiteBoardToolTypePencil;
+            break;
+        default:
+            assert("use getBoardTypeWithToolsItemType");
+            break;
+    }
+    
+    return type;
 }
 
 #pragma mark AgoraPageControlProtocol
