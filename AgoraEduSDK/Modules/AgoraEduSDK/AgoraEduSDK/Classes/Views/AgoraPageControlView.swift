@@ -6,13 +6,10 @@
 //
 
 import UIKit
+import AgoraWhiteBoard
 
 @objc public protocol AgoraPageControlProtocol : NSObjectProtocol {
-    func onPageLeftEvent()
-    func onPageRightEvent()
-    func onPageIncreaseEvent()
-    func onPageDecreaseEvent()
-    func onPageZoomEvent()
+    func onPageZoomEvent(complete: () -> Void)
 }
 
 @objcMembers public class AgoraPageControlView: AgoraBaseView {
@@ -282,19 +279,29 @@ extension AgoraPageControlView {
 extension AgoraPageControlView {
     @objc fileprivate func onLeftTouchEvent() {
         self.pageIndex -= 1
-        self.delegate?.onPageLeftEvent()
+        
+        let whiteBoardManager = AgoraEduManager.share().whiteBoardManager
+        whiteBoardManager.setPageIndex(UInt(self.pageIndex))
     }
     @objc fileprivate func onRightTouchEvent() {
         self.pageIndex += 1
-        self.delegate?.onPageRightEvent()
+        
+        let whiteBoardManager = AgoraEduManager.share().whiteBoardManager
+        whiteBoardManager.setPageIndex(UInt(self.pageIndex))
     }
     @objc fileprivate func onIncreaseTouchEvent() {
-        self.delegate?.onPageIncreaseEvent()
+        let whiteBoardManager = AgoraEduManager.share().whiteBoardManager
+        whiteBoardManager.increaseScale()
     }
     @objc fileprivate func onDecreaseTouchEvent() {
-        self.delegate?.onPageDecreaseEvent()
+        let whiteBoardManager = AgoraEduManager.share().whiteBoardManager
+        whiteBoardManager.decreaseScale()
     }
     @objc fileprivate func onZoomTouchEvent() {
-        self.delegate?.onPageZoomEvent()
+        self.delegate?.onPageZoomEvent {[weak self] in
+            
+            let whiteBoardManager = AgoraEduManager.share().whiteBoardManager
+            whiteBoardManager.refreshViewSize()
+        }
     }
 }

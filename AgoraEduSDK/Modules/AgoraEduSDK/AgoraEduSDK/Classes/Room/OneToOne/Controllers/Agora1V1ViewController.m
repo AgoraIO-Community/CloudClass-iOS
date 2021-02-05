@@ -39,28 +39,10 @@
 @property (weak, nonatomic) AgoraChatPanelView *chatPanelView;
 @property (weak, nonatomic) AgoraBoardToolsView *boardToolsView;
 
+// cache
 @property (assign, nonatomic) CGFloat boardRight;
 @property (assign, nonatomic) BOOL boardMax;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatRoomViewWidthCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatRoomViewRightCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textFiledRightCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textFiledWidthCon;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textFiledBottomCon;
-
-@property (weak, nonatomic) IBOutlet AgoraEENavigationView *navigationView;
-@property (weak, nonatomic) IBOutlet UIView *chatRoomView;
-@property (weak, nonatomic) IBOutlet UILabel *chatRoomLabel;
-@property (weak, nonatomic) IBOutlet UIButton *uiContorlBtn;
-
-@property (weak, nonatomic) IBOutlet AgoraOTOTeacherView *teacherView;
-@property (weak, nonatomic) IBOutlet AgoraOTOStudentView *studentView;
-@property (weak, nonatomic) IBOutlet AgoraEEChatTextFiled *chatTextFiled;
-@property (weak, nonatomic) IBOutlet AgoraEEMessageView *messageListView;
-@property (weak, nonatomic) IBOutlet UIView *shareScreenView;
-@property (weak, nonatomic) IBOutlet UILabel *tipLabel;
-
-@property (weak, nonatomic) IBOutlet UIView *whiteboardBaseView;
 
 @property (nonatomic, weak) AgoraBoardTouchView *whiteBoardTouchView;
 
@@ -73,28 +55,17 @@
     [self initView];
     [self initLayout];
     [self initData];
-    [self addNotification];
-}
-
-- (void)dealloc
-{
-    NSLog(@"srs===> vc delloc");
 }
 
 - (void)initData {
-    self.studentView.delegate = self;
-    self.navigationView.delegate = self;
-    self.chatTextFiled.contentTextFiled.delegate = self;
 
-    [self.navigationView updateClassName:self.className];
-    
     AgoraEduManager.shareManager.studentService.mediaStreamDelegate = self;
     
     WEAK(self);
+    [self.toolView updateClassID: self.roomUuid];
     self.toolView.leftTouchBlock = ^{
         [AgoraEduAlertViewUtil showAlertWithController:weakself title:AgoraEduLocalizedString(@"QuitClassroomText", nil) sureHandler:^(UIAlertAction * _Nullable action) {
-
-            [weakself.navigationView stopTimer];
+ 
             [AgoraEduManager releaseResource];
             [weakself dismissViewControllerAnimated:YES completion:nil];
         }];
@@ -109,60 +80,6 @@
         AgoraRTEStream *stream = weakself.localUser.streams.firstObject;
         [weakself setLocalStreamVideo:!mute audio:stream.hasAudio streamState:LocalStreamStateUpdate];
     };
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self.teaView updateView];
-//        [self.stuView updateView];
-        [self.toolView updateView];
-    });
-    
-//    NSMutableArray *array = [NSMutableArray array];
-//    {
-//        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
-//        model.isSelf = YES;
-//        model.message = @"过年过年过年123";
-//        model.userName = @"我";
-//        model.type = AgoraChatMessageTypeText;
-//        model.translateState = AgoraChatLoadingStateSuccess;
-//        model.sendState = AgoraChatLoadingStateLoading;
-//        model.translateMessage = @"asjdfjlasljdasjdfjlasljdasjdfjlasljdasjdfdasjdfjlasljdasjdfjlasljdasjdfjlasljd";
-//        [array addObject:model];
-//    }
-    
-//    {
-//        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
-//        model.isSelf = NO;
-//        model.message = @"过年过年过年123";
-//        model.userName = @"老师";
-//        model.type = AgoraChatMessageTypeText;
-//        model.translateState = AgoraChatLoadingStateNone;
-//        model.sendState = AgoraChatLoadingStateLoading;
-//
-//        [array addObject:model];
-//    }
-//
-//    {
-//        AgoraChatMessageModel *model = [[AgoraChatMessageModel alloc] init];
-//        model.isSelf = NO;
-//        model.message = @"Jerry（老师）加入教室";
-//        model.type = AgoraChatMessageTypeUserInout;
-//        [array addObject:model];
-//    }
-//
-//    self.chatPanelView.chatModels = array;
-    
-//    public var messageId = 0
-//    public var message = ""
-//    public var translateMessage = ""
-//    public var userName = ""
-//
-//    public var type:AgoraChatMessageType = .text
-//
-//    public var isSelf = false
-//    public var translateState: AgoraChatLoadingState = .none
-//    public var sendState: AgoraChatLoadingState = .none
-//
-//    public var cellHeight: CGFloat = 0
 }
 
 - (void)lockViewTransform:(BOOL)lock {
@@ -235,9 +152,8 @@
 
             // adjust stuview layout
             if (!weakself.stuView.isMin) {
-                CGFloat differ = (weakself.stuView.agora_y + weakself.stuView.agora_height) -  (kScreenHeight - weakself.teaView.agora_bottom - 20);
-
-                if (differ < 0) {
+                CGFloat differ = [weakself getStudentDiffer:minBottom];
+                if (differ > 0) {
                     weakself.stuView.agora_y -= abs(differ);
                 }
             }
@@ -248,7 +164,7 @@
             weakself.teaView.agora_width = width;
             weakself.teaView.agora_height = height;
 
-            if(!weakself.stuView.isMin) {
+            if (!weakself.stuView.isMin) {
                 CGFloat stuViewY = top + 10 + height;
                 weakself.stuView.agora_y = stuViewY;
             }
@@ -269,10 +185,9 @@
             weakself.stuView.agora_right = minRight;
             weakself.stuView.agora_width = minWidth;
             weakself.stuView.agora_height = minHeight;
-            if(weakself.teaView.isMin) {
+            if (weakself.teaView.isMin) {
                 weakself.teaView.agora_bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom: minBottom;
             }
-
         } else {
             if (weakself.teaView.isMin) {
                 weakself.teaView.agora_bottom = weakself.stuView.isMin ? minGap + minHeight + minBottom : minBottom;
@@ -282,16 +197,15 @@
             weakself.stuView.agora_right = right;
             weakself.stuView.agora_width = width;
             weakself.stuView.agora_height = height;
-
+            weakself.stuView.agora_y = top + height + topGap;
+            
             // adjust stuview layout
             if (weakself.teaView.isMin) {
-                CGFloat differ = (weakself.stuView.agora_y + weakself.stuView.agora_height) -  (kScreenHeight - weakself.teaView.agora_bottom - 20);
-
-                if (differ < 0) {
-                    stuViewY -= abs(differ);
+                CGFloat differ = [weakself getStudentDiffer:minBottom];
+                if (differ > 0) {
+                    weakself.stuView.agora_y -= abs(differ);
                 }
             }
-            weakself.stuView.agora_y = stuViewY;
         }
         [UIView animateWithDuration:0.35 animations:^{
             [weakself.view layoutIfNeeded];
@@ -321,7 +235,7 @@
 
     // chatPanelView
     CGFloat chatPanelViewMaxWidth = IsPad ? 246 : MAX(kScreenWidth, kScreenHeight) * AgoraVideoPhoneChatWScale;
-    CGFloat chatPanelViewMinWidth = IsPad ? 44 : 24;
+    CGFloat chatPanelViewMinWidth = IsPad ? 44 : 28;
     CGFloat chatPanelViewMaxHeight = IsPad ? 362 : MIN(kScreenWidth, kScreenHeight) - top - 30;
     if (@available(iOS 11.0, *)) {
         UIEdgeInsets safeAreaInsets =  UIApplication.sharedApplication.keyWindow.safeAreaInsets;
@@ -330,7 +244,7 @@
         }
     }
     
-    CGFloat chatPanelViewMinHeight = IsPad ? 44 : 24;
+    CGFloat chatPanelViewMinHeight = IsPad ? 44 : 28;
 
     self.chatPanelView.agora_width = chatPanelViewMaxWidth;
     self.chatPanelView.agora_height = chatPanelViewMaxHeight;
@@ -428,41 +342,9 @@
     AgoraChatPanelView *chatPanelView = [[AgoraChatPanelView alloc] initWithHttpConfig:config];
     [self.contentView addSubview:chatPanelView];
     self.chatPanelView = chatPanelView;
-    
-//    self.chatRoomLabel.text = AgoraEduLocalizedString(@"ChatroomText", nil);
-//    [self.uiContorlBtn setImage:AgoraEduImageWithName(@"view-close") forState:UIControlStateNormal];
 
-//
 //    self.tipLabel.layer.backgroundColor = [UIColor colorWithHexString:@"000000" alpha:0.7].CGColor;
 //    self.tipLabel.layer.cornerRadius = 6;
-}
-
-- (void)addNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHidden:) name:UIKeyboardWillHideNotification object:nil];
-}
-
-- (void)keyboardDidShow:(NSNotification *)notification {
-    if (self.isChatTextFieldKeyboard) {
-        CGRect frame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        float bottom = frame.size.height;
-        if(IsPad){
-            self.textFiledWidthCon.constant = kScreenWidth;
-        } else {
-            BOOL isIphoneX = (MAX(kScreenHeight, kScreenWidth) / MIN(kScreenHeight, kScreenWidth) > 1.78) ? YES : NO;
-            self.textFiledWidthCon.constant = isIphoneX ? kScreenWidth - 44 : kScreenWidth;
-        }
-        self.textFiledBottomCon.constant = bottom;
-    }
-}
-
-- (void)keyboardWillHidden:(NSNotification *)notification {
-    if(IsPad){
-        self.textFiledWidthCon.constant = 292;
-    } else {
-        self.textFiledWidthCon.constant = 222;
-    }
-    self.textFiledBottomCon.constant = 0;
 }
 
 - (void)setupWhiteBoard {
@@ -483,24 +365,11 @@
 }
 
 - (void)updateTimeState  {
-    [self updateTimeState:self.navigationView];
+    
 }
 
 - (void)updateChatViews {
-    [self updateChatViews:self.chatTextFiled];
-}
-
-- (IBAction)chatRoomViewShowAndHide:(UIButton *)sender {
-    self.chatRoomViewRightCon.constant = sender.isSelected ? 0.f : 222.f;
-    self.textFiledRightCon.constant = sender.isSelected ? 0.f : 222.f;
-    self.chatRoomView.hidden = sender.isSelected ? NO : YES;
-    self.chatTextFiled.hidden = sender.isSelected ? NO : YES;
-    NSString *imageName = sender.isSelected ? @"view-close" : @"view-open";
-    [sender setImage:AgoraEduImageWithName(imageName) forState:(UIControlStateNormal)];
-    sender.selected = !sender.selected;
-    
-    [self.boardView layoutIfNeeded];
-    [AgoraEduManager.shareManager.whiteBoardManager refreshViewSize];
+//    [self updateChatViews:self.chatTextFiled];
 }
 
 - (void)updateRoleViews:(AgoraRTEUser *) user {
@@ -512,26 +381,18 @@
 }
 - (void)removeRoleViews:(AgoraRTEUser *) user {
     if (user.role == AgoraRTERoleTypeTeacher) {
-        [self.teacherView updateUserName:@""];
-        
-    } else if(user.role == AgoraRTERoleTypeStudent) {
-        [self.studentView updateUserName:@""];
+        self.teaView.userName = @"";
+    } else if (user.role == AgoraRTERoleTypeStudent) {
+        self.stuView.userName = @"";
     }
 }
 - (void)updateRoleCanvas:(AgoraRTEStream *)stream {
     
     if(stream.userInfo.role == AgoraRTERoleTypeTeacher) {
         if(stream.sourceType == AgoraRTEVideoSourceTypeCamera) {
-            
             [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.teaView.videoCanvas : nil) stream:stream];
             
             [self.teaView updateViewWithStream:stream cupNum:0];
-            
-        } else if(stream.sourceType == AgoraRTEVideoSourceTypeScreen) {
-            AgoraRTERenderConfig *config = [AgoraRTERenderConfig new];
-            config.renderMode = AgoraRTERenderModeFit;
-            [AgoraEduManager.shareManager.studentService setStreamView:(stream.hasVideo ? self.shareScreenView : nil) stream:stream renderConfig:config];
-            self.shareScreenView.hidden = NO;
         }
     } else if(stream.userInfo.role == AgoraRTERoleTypeStudent) {
         
@@ -544,20 +405,31 @@
     [AgoraEduManager.shareManager.studentService setStreamView:nil stream:stream];
     
     if (stream.userInfo.role == AgoraRTERoleTypeTeacher) {
-        if (stream.sourceType == AgoraRTEVideoSourceTypeScreen) {
-            self.shareScreenView.hidden = YES;
-        } else if (stream.sourceType == AgoraRTEVideoSourceTypeCamera) {
-            self.teacherView.defaultImageView.hidden = NO;
-            [self.teacherView updateSpeakerEnabled:NO];
+        if (stream.sourceType == AgoraRTEVideoSourceTypeCamera) {
+//            self.teacherView.defaultImageView.hidden = NO;
+//            [self.teacherView updateSpeakerEnabled:NO];
         }
     } else {
-        [self.studentView updateVideoImageWithMuted:YES];
-        [self.studentView updateAudioImageWithMuted:YES];
+//        [self.stuView updateVideoImageWithMuted:YES];
+//        [self.studentView updateAudioImageWithMuted:YES];
     }
 }
 
+- (CGFloat)getStudentDiffer:(CGFloat)minBottom {
+    CGFloat maxHeight = MIN(kScreenWidth, kScreenHeight) - self.teaView.agora_bottom - minBottom - 20;
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets safeAreaInsets =  UIApplication.sharedApplication.keyWindow.safeAreaInsets;
+        if (safeAreaInsets.left > 0.0 || safeAreaInsets.top > 0.0 || safeAreaInsets.right > 0.0 || safeAreaInsets.bottom > 0.0) {
+            maxHeight -= 34;
+        }
+    }
+    
+    CGFloat differ = (self.stuView.agora_y + self.stuView.agora_height) - maxHeight;
+    return differ;
+}
+
+
 #pragma mark AgoraRTEClassroomDelegate
-// User in or out
 - (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteUsersInit:(NSArray<AgoraRTEUser*> *)users {
     for (AgoraRTEUser *user in users) {
         [self updateRoleViews:user];
@@ -566,22 +438,45 @@
 - (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteUsersJoined:(NSArray<AgoraRTEUser*> *)users {
     for (AgoraRTEUser *user in users) {
         [self updateRoleViews:user];
+        
+        if (user.role == AgoraRTERoleTypeTeacher) {
+            AgoraChatUserInfoModel *userModel = [AgoraChatUserInfoModel new];
+            userModel.role = user.role;
+            userModel.userName = user.userName;
+            userModel.userUuid = user.userUuid;
+            [self.chatPanelView inoutChatMessage:userModel left:NO];
+        }
     }
 }
 - (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteUsersLeft:(NSArray<AgoraRTEUserEvent*> *)events leftType:(AgoraRTEUserLeftType)type {
     for (AgoraRTEUserEvent *event in events) {
         [self removeRoleViews:event.modifiedUser];
+        
+        AgoraRTEUser *user = event.modifiedUser;
+        if (user.role == AgoraRTERoleTypeTeacher) {
+            AgoraChatUserInfoModel *userModel = [AgoraChatUserInfoModel new];
+            userModel.role = user.role;
+            userModel.userName = user.userName;
+            userModel.userUuid = user.userUuid;
+            [self.chatPanelView inoutChatMessage:userModel left:YES];
+        }
     }
 }
 
 // message
 - (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom roomChatMessageReceived:(AgoraRTETextMessage *)textMessage {
-    AgoraEETextMessage *message = [AgoraEETextMessage new];
-    message.fromUser = textMessage.fromUser;
-    message.message = textMessage.message;
-    message.timestamp = textMessage.timestamp;
-
-    [self.messageListView addMessageModel:message];
+    AgoraChatUserInfoModel *userModel = [AgoraChatUserInfoModel new];
+    userModel.role = textMessage.fromUser.role;
+    userModel.userName = textMessage.fromUser.userName;
+    userModel.userUuid = textMessage.fromUser.userUuid;
+    
+    AgoraChatMessageInfoModel *model = [AgoraChatMessageInfoModel new];
+    model.message = textMessage.message;
+    model.type = AgoraChatMessageTypeText;
+    model.fromUser = userModel;
+    model.sendTime = textMessage.timestamp;
+    model.isSelf = NO;
+    [self.chatPanelView receivedChatMessage:model];
 }
 
 // stream
@@ -607,22 +502,7 @@
 }
 
 - (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom networkQualityChanged:(AgoraRTENetworkQuality)quality user:(AgoraRTEBaseUser *)user {
-    
-    if([self.localUser.userUuid isEqualToString:user.userUuid]) {
-        switch (quality) {
-            case AgoraRTENetworkQualityHigh:
-                [self.navigationView updateSignalImageName:@"icon-signal3"];
-                break;
-            case AgoraRTENetworkQualityMiddle:
-                [self.navigationView updateSignalImageName:@"icon-signal2"];
-                break;
-            case AgoraRTENetworkQualityLow:
-                [self.navigationView updateSignalImageName:@"icon-signal1"];
-                break;
-            default:
-                break;
-        }
-    }
+    [self.toolView updateSignal:quality];
 }
 
 #pragma mark AgoraRTEStudentDelegate
@@ -642,18 +522,11 @@
     [self updateChatViews];
 }
 
-#pragma mark UITextFieldDelegate
-- (void)onSendMessage:(AgoraEETextMessage *)message {
-    [self.messageListView addMessageModel:message];
-}
-
 #pragma mark onSyncSuccess
 - (void)onSyncSuccess {
-    AgoraEduManager.shareManager.studentService.mediaStreamDelegate = self;
-
     [self setupWhiteBoard];
-//    [self updateTimeState];
-//    [self updateChatViews];
+    [self updateTimeState];
+    [self updateChatViews];
     [self updateRoleViews: self.localUser];
 }
 
@@ -699,15 +572,6 @@
     }
     [AgoraBaseViewController showToast:toastMessage];
     [self lockViewTransform:enable];
-}
-- (void)onEndRecord {
-    AgoraEETextMessage *textMsg = [AgoraEETextMessage new];
-    AgoraRTEUser *fromUser = [AgoraRTEUser new];
-    [fromUser setValue:@"system" forKey:@"userName"];
-    textMsg.fromUser = fromUser;
-    textMsg.message = AgoraEduLocalizedString(@"ReplayRecordingText", nil);
-    textMsg.recordRoomUuid = self.roomUuid;
-    [self.messageListView addMessageModel:textMsg];
 }
 
 #pragma mark AgoraRTEMediaStreamDelegate
@@ -778,23 +642,7 @@
 }
 
 #pragma mark AgoraPageControlProtocol
-- (void)onPageLeftEvent {
-    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    [whiteBoardManager setPageIndex:self.boardPageControlView.pageIndex];
-}
-- (void)onPageRightEvent {
-    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    [whiteBoardManager setPageIndex:self.boardPageControlView.pageIndex];
-}
-- (void)onPageIncreaseEvent {
-    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    [whiteBoardManager increaseScale];
-}
-- (void)onPageDecreaseEvent {
-    WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-    [whiteBoardManager decreaseScale];
-}
-- (void)onPageZoomEvent {
+- (void)onPageZoomEventWithComplete:(void (^)(void))complete {
     self.boardMax = !self.boardMax;
     if (self.boardMax) {
         self.boardContentView.agora_right = self.boardContentView.agora_x;
@@ -806,8 +654,7 @@
     }];
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        WhiteBoardManager *whiteBoardManager = AgoraEduManager.shareManager.whiteBoardManager;
-        [whiteBoardManager refreshViewSize];
+        complete();
     });
 }
 
