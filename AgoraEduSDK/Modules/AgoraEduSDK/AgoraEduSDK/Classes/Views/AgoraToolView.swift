@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import EduSDK
 
 @objcMembers public class MenuConfig: NSObject {
     public var imageName = ""
@@ -189,36 +190,57 @@ extension AgoraToolView {
             }
             
         } else {
-            self.leftBtn.agora_x = 20
+            self.leftBtn.agora_x = 25
             self.leftBtn.agora_bottom = 9
-            self.leftBtn.agora_resize(72, 22)
+            self.leftBtn.agora_resize(83, 26)
             
-            self.classInfoLabel.agora_x = self.leftBtn.agora_x + self.leftBtn.agora_width + 27
-            self.classInfoLabel.agora_bottom = 9
-            self.classInfoLabel.agora_resize(0, 22)
+            self.classInfoLabel.agora_x = self.leftBtn.agora_x + self.leftBtn.agora_width + 40
+            self.classInfoLabel.agora_y = 0
+            self.classInfoLabel.agora_bottom = 0
+            self.classInfoLabel.agora_width = 0
             
-            self.timeView.agora_x = self.classInfoLabel.agora_x + self.classInfoLabel.agora_width + 18
-            self.timeView.agora_bottom = 9
-            self.timeView.agora_height = 22
+            self.timeView.agora_x = self.classInfoLabel.agora_x + self.classInfoLabel.agora_width + 15
+            self.timeView.agora_y = 0
+            self.timeView.agora_bottom = 0
             
-            self.signalView.agora_x = self.timeView.agora_x + self.timeView.agora_width + 27
-            self.signalView.agora_bottom = 9
-            self.signalView.agora_height = 22
+            self.signalView.agora_x = self.timeView.agora_x + self.timeView.agora_width + 32
+            self.signalView.agora_bottom = self.leftBtn.agora_bottom
+            self.signalView.agora_height = 26
 
             for (index, _) in self.menuConfigs.enumerated() {
                 let btn = self.viewWithTag(index + ButtonTagStart) as! AgoraBaseUIButton
-                btn.agora_resize(20, 20)
-                btn.agora_right = CGFloat(15 + (Int(btn.agora_width) + 15) * index)
-                btn.agora_bottom = 10
+                btn.agora_resize(32, 32)
+                btn.agora_right = CGFloat(28 + (Int(btn.agora_width) + 9) * index)
+                btn.agora_bottom = 6
             }
         }
     }
     
-    public func updateView() {
-        
-        let classString = "课程ID: 122342"
-        let timeString = "距离上课还有：10分11秒"
-        
+    public func updateSignal(_ quality: AgoraRTENetworkQuality) {
+        let signalImgView = self.signalView.viewWithTag(ImageViewTag) as! AgoraBaseUIImageView
+        signalImgView.image = AgoraImageWithName("signal_3", self.classForCoder)
+        let signalLabel = self.signalView.viewWithTag(LabelTag) as! AgoraBaseUILabel
+        switch quality {
+        case .high:
+            signalImgView.image = AgoraImageWithName("signal_3", self.classForCoder)
+            signalLabel.text = "优"
+            signalLabel.textColor = UIColor(red: 205/255.0, green: 241/255.0, blue: 96/255.0, alpha: 1)
+        case .middle:
+            signalImgView.image = AgoraImageWithName("signal_2", self.classForCoder)
+            signalLabel.text = "良"
+            signalLabel.textColor = UIColor(red: 241/255.0, green: 167/255.0, blue: 62/255.0, alpha: 1)
+        case .low:
+            signalImgView.image = AgoraImageWithName("signal_1", self.classForCoder)
+            signalLabel.text = "差"
+            signalLabel.textColor = UIColor(red: 240/255.0, green: 76/255.0, blue: 54/255.0, alpha: 1)
+        default:
+            signalImgView.image = AgoraImageWithName("signal_1", self.classForCoder)
+            signalLabel.text = "差"
+            signalLabel.textColor = UIColor(red: 240/255.0, green: 76/255.0, blue: 54/255.0, alpha: 1)
+        }
+    }
+    public func updateClassID(_ classID: String) {
+        let classString = "课程ID: \(classID)"
         self.classInfoLabel.text = classString
         self.classInfoLabel.isHidden = false
         self.classInfoLabel.sizeToFit()
@@ -226,6 +248,13 @@ extension AgoraToolView {
         self.classInfoLabel.agora_width = classSize.width + 1
         self.timeView.agora_x = self.classInfoLabel.agora_x + self.classInfoLabel.agora_width + (AgoraDeviceAssistant.OS.isPad ? 35 : 17)
         
+        self.updateTime()
+    }
+    
+    public func updateTime() {
+        
+        let timeString = "距离上课还有：10分11秒"
+   
         let timeLabel = self.timeView.viewWithTag(LabelTag) as! AgoraBaseUILabel
         self.timeView.isHidden = false
         timeLabel.text = timeString
@@ -233,15 +262,6 @@ extension AgoraToolView {
         let timeSize = timeLabel.frame.size
         timeLabel.agora_width = timeSize.width + 1
         self.signalView.agora_x = self.timeView.agora_x + timeLabel.agora_width + (AgoraDeviceAssistant.OS.isPad ? 50 : 30)
-        
-        let signalImgView = self.signalView.viewWithTag(ImageViewTag) as! AgoraBaseUIImageView
-        signalImgView.image = AgoraImageWithName("signal_3", self.classForCoder)
-        let signalLabel = self.signalView.viewWithTag(LabelTag) as! AgoraBaseUILabel
-        signalLabel.text = "差"
-        signalLabel.textColor = UIColor(red: 240/255.0, green: 76/255.0, blue: 54/255.0, alpha: 1)
-        
-        //UIColor(red: 205/255.0, green: 241/255.0, blue: 96/255.0, alpha: 1)
-        //UIColor(red: 241/255.0, green: 167/255.0, blue: 62/255.0, alpha: 1)
     }
 }
 

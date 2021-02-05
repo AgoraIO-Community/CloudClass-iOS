@@ -17,18 +17,6 @@ import UIKit
         }
     }
     
-    fileprivate var chatModels: [AgoraChatMessageInfoModel] = [] {
-        didSet {
-            let label = self.titleView.viewWithTag(LabelTag) as! AgoraBaseUILabel
-            label.text = "聊天（\(chatModels.count)）"
-            
-            // fix Constraint warning
-            self.chatView.layoutIfNeeded()
-            self.chatTableView.frame = CGRect(x: 0, y: self.titleView.agora_height, width: self.chatView.frame.width, height: self.chatView.frame.height - self.titleView.agora_height)
-            self.chatTableView.reloadData()
-        }
-    }
-    
     public var unreadNum: Int = 0 {
         didSet {
             let label = self.minView.viewWithTag(LabelTag) as! AgoraBaseUILabel
@@ -41,6 +29,17 @@ import UIKit
                 
                 label.agora_width = rect.size.width + (AgoraDeviceAssistant.OS.isPad ? 8 : 4)
             }
+        }
+    }
+    fileprivate var chatModels: [AgoraChatMessageInfoModel] = [] {
+        didSet {
+            let label = self.titleView.viewWithTag(LabelTag) as! AgoraBaseUILabel
+            label.text = "聊天（\(chatModels.count)）"
+            
+            // fix Constraint warning
+            self.chatView.layoutIfNeeded()
+            self.chatTableView.frame = CGRect(x: 0, y: self.titleView.agora_height, width: self.chatView.frame.width, height: self.chatView.frame.height - self.titleView.agora_height)
+            self.scrollToBottom()
         }
     }
     
@@ -89,14 +88,14 @@ import UIKit
         
         let label = AgoraBaseUILabel()
         label.textColor = UIColor(red: 254/255.0, green:254/255.0, blue: 254/255.0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 14 : 9)
+        label.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 14 : 12)
         label.tag = LabelTag
-        label.text = "聊天（0）"
+        label.text = "聊天（100）"
         view.addSubview(label)
         label.sizeToFit()
 
         let labelSize = label.frame.size
-        let imgSzie = AgoraDeviceAssistant.OS.isPad ? CGSize(width: 14, height: 14) : CGSize(width: 9, height: 9)
+        let imgSzie = AgoraDeviceAssistant.OS.isPad ? CGSize(width: 14, height: 14) : CGSize(width: 13, height: 13)
         let offsetX = (labelSize.width + 3 + imgSzie.width) * 0.5
 
         let imageView = AgoraBaseUIImageView(image: AgoraImageWithName("chat_tag", self.classForCoder))
@@ -122,7 +121,7 @@ import UIKit
         } else {
             btn.agora_center_y = 0
             btn.agora_right = 5
-            btn.agora_resize(13, 13)
+            btn.agora_resize(20, 20)
         }
         return view
     }()
@@ -131,7 +130,7 @@ import UIKit
         tableView.backgroundColor = UIColor(red: 19/255.0, green: 25/255.0, blue: 111/255.0, alpha: 0.6)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.estimatedRowHeight = 0
+        tableView.estimatedRowHeight = 59
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         tableView.separatorStyle = .none
@@ -149,7 +148,7 @@ import UIKit
         self.titleView.agora_x = 0
         self.titleView.agora_right = 0
         self.titleView.agora_y = 0
-        self.titleView.agora_height = AgoraDeviceAssistant.OS.isPad ? 30 : 23
+        self.titleView.agora_height = AgoraDeviceAssistant.OS.isPad ? 30 : 34
         
         view.addSubview(self.chatTableView)
 //        self.chatTableView.x = 0
@@ -170,10 +169,10 @@ import UIKit
         sendContentView.clipsToBounds = true
         sendContentView.backgroundColor = UIColor.white
         view.addSubview(sendContentView)
-        sendContentView.agora_x = AgoraDeviceAssistant.OS.isPad ? 8 : 6
-        sendContentView.agora_right = AgoraDeviceAssistant.OS.isPad ? 8 : 6
-        sendContentView.agora_height = AgoraDeviceAssistant.OS.isPad ? 28 : 19
-        sendContentView.agora_bottom = AgoraDeviceAssistant.OS.isPad ? 12 : 7
+        sendContentView.agora_x = AgoraDeviceAssistant.OS.isPad ? 8 : 8
+        sendContentView.agora_right = AgoraDeviceAssistant.OS.isPad ? 8 : 8
+        sendContentView.agora_height = AgoraDeviceAssistant.OS.isPad ? 28 : 21
+        sendContentView.agora_bottom = AgoraDeviceAssistant.OS.isPad ? 12 : 6
         sendContentView.layer.cornerRadius = sendContentView.agora_height * 0.3
         
         let btn = AgoraBaseUIButton(type: .custom)
@@ -187,13 +186,13 @@ import UIKit
             btn.agora_center_y = 0
         } else {
             btn.agora_right = 3
-            btn.agora_resize(15, 15)
+            btn.agora_resize(17, 17)
             btn.agora_center_y = 0
         }
 
         let textField = AgoraBaseUITextField()
         textField.attributedPlaceholder = NSAttributedString(string:" 请输入你想说的话",attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 194/255.0, green: 213/255.0, blue: 229/255.0, alpha: 1)])
-        textField.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 14 : 9)
+        textField.font = UIFont.systemFont(ofSize: AgoraDeviceAssistant.OS.isPad ? 14 : 10)
         textField.returnKeyType = .send
         textField.delegate = self
         sendContentView.addSubview(textField)
@@ -224,6 +223,33 @@ import UIKit
         self.initView()
         self.initLayout()
         self.keyboardNotification()
+    }
+    
+    public func inoutChatMessage(_ user: AgoraChatUserInfoModel, left: Bool = true) {
+        var roleStr = ""
+        if (user.role == .student) {
+            roleStr = "（学生）"
+        } else if (user.role == .teacher) {
+            roleStr = "（老师）"
+        } else if (user.role == .assistant) {
+            roleStr = "（助教）"
+        }
+        var endStr = "进入教室"
+        if left {
+            endStr = "离开教室"
+        }
+        
+        let model = AgoraChatMessageInfoModel()
+        model.type = .userInout
+        model.message = "\(user.userName)\(roleStr)\(endStr)"
+        
+        self.vm?.models.append(model)
+        self.chatModels = self.vm?.models ?? []
+    }
+    
+    public func receivedChatMessage(_ model: AgoraChatMessageInfoModel) {
+        self.vm?.models.append(model)
+        self.chatModels = self.vm?.models ?? []
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -258,6 +284,20 @@ extension AgoraChatPanelView: UITableViewDelegate, UITableViewDataSource {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: MessageCellID, for: indexPath) as! AgoraChatPanelMessageCell
             cell.updateView(model: chatModel)
+            cell.translateTouchBlock = {[weak self] (infoModel: AgoraChatMessageInfoModel?) -> Void in
+                self?.vm?.translateMessage(model: infoModel, successBlock: {[weak self] in
+                    self?.chatTableView.reloadData()
+                }, failureBlock: {[weak self] (errMsg) in
+                    self?.chatTableView.reloadData()
+                })
+            }
+            cell.retryTouchBlock = {[weak self] (infoModel: AgoraChatMessageInfoModel?) -> Void in
+                self?.vm?.sendMessage(model: infoModel, successBlock: {[weak self] in
+                    self?.chatTableView.reloadData()
+                }, failureBlock: {[weak self] (errMsg) in
+                    self?.chatTableView.reloadData()
+                })
+            }
             cell.selectionStyle = .none
             return cell
         }
@@ -269,8 +309,8 @@ extension AgoraChatPanelView: UITableViewDelegate, UITableViewDataSource {
         if (chatModel.type == .userInout) {
             return AgoraDeviceAssistant.OS.isPad ? 35 : 20
         }
-        
-        return CGFloat(chatModel.cellHeight)
+                
+        return chatModel.cellHeight
     }
     
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -310,10 +350,6 @@ extension AgoraChatPanelView {
 
         self.maxView.addSubview(self.sendView)
         self.maxView.addSubview(self.chatView)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            self.onMinTouchEvent()
-        }
     }
     
     fileprivate func initLayout() {
@@ -326,7 +362,7 @@ extension AgoraChatPanelView {
         self.sendView.agora_bottom = 0
         self.sendView.agora_x = 0
         self.sendView.agora_right = 0
-        self.sendView.agora_height = AgoraDeviceAssistant.OS.isPad ? 54 : 32
+        self.sendView.agora_height = AgoraDeviceAssistant.OS.isPad ? 54 : 35
         self.sendView.layer.cornerRadius = self.sendView.agora_height * 0.2
 
         let gap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 12 : 8
@@ -352,9 +388,7 @@ extension AgoraChatPanelView {
             self.maxView.isHidden = true
             self.textField?.agora_right = 0
             self.chatView.agora_bottom = 0
-
-//            self.chatTableView.clearConstraint()
-            
+  
         } else {
             self.minView.isHidden = true
             
@@ -370,15 +404,7 @@ extension AgoraChatPanelView {
 // MARK: UITextFieldDelegate
 extension AgoraChatPanelView: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        let content = textField.text ?? ""
-        if content.count > 0 {
-            self.onSendTouchEvent()
-            
-        } else {
-            textField.text = nil
-            textField.resignFirstResponder()
-        }
+        self.onSendTouchEvent()
         return true
     }
 }
@@ -386,9 +412,43 @@ extension AgoraChatPanelView: UITextFieldDelegate {
 // MARK: TouchEvent
 extension AgoraChatPanelView {
     @objc fileprivate func onSendTouchEvent() {
-        //
+        
+        vm?.agoraChatMessageInfoModel(msg: self.textField?.text, block: { [weak self] (messageInfoModel) in
+            
+            guard let `self` = self else {
+                return
+            }
+            
+            let model = self.vm?.sendMessage(model: messageInfoModel, successBlock: {[weak self] in
+                
+                self?.chatTableView.reloadData()
+                
+            }, failureBlock: {[weak self] (msgError) in
+                //
+                self?.chatTableView.reloadData()
+            })
+            
+            if(model != nil) {
+                self.chatModels = self.vm?.models ?? []
+            }
+        })
+
         self.textField?.text = nil
         self.textField?.resignFirstResponder()
+    }
+    
+    fileprivate func scrollToBottom() {
+        self.chatTableView.reloadData()
+        
+        if (self.chatModels.count <= 1) {
+            return
+        }
+        
+        let indexPath = IndexPath(row: 0, section: self.chatModels.count - 1)
+        self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
+        }
     }
     
     @objc fileprivate func onMinTouchEvent() {

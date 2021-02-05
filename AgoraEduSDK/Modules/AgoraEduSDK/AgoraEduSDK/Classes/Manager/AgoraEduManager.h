@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <AgoraWhiteBoard/AgoraWhiteBoard.h>
 #import <EduSDK/EduSDK.h>
-#import "AgoraRTEConfiguration.h"
 #import "AgoraHTTPConfiguration.h"
 #import <AgoraLog/AgoraLog.h>
 #import "AgoraEduSDK.h"
@@ -26,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) AgoraEduReplay *replay;
 @property (nonatomic, weak, nullable) id<AgoraEduClassroomDelegate> classroomDelegate;
 @property (nonatomic, weak, nullable) id<AgoraEduReplayDelegate> replayDelegate;
-
+@property (nonatomic, copy) AgoraEduChatTranslationLan lan;
 #pragma mark --
 @property (nonatomic, strong) AgoraRTEManager *eduManager;
 @property (nonatomic, strong) WhiteBoardManager *whiteBoardManager;

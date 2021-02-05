@@ -7,7 +7,7 @@
 
 import UIKit
 
-@objcMembers class AgoraChatPanelInOutCell: AgoraBaseUITableViewCell {
+class AgoraChatPanelInOutCell: AgoraBaseUITableViewCell {
 
     fileprivate let LabelTag = 99
     
@@ -30,7 +30,7 @@ import UIKit
         return view
     }()
     
-    public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         initView()
         initLayout()
@@ -40,13 +40,13 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
-    public override func awakeFromNib() {
+    override func awakeFromNib() {
         super.awakeFromNib()
         initView()
         initLayout()
     }
     
-    public func updateCell(_ text: String) {
+    func updateCell(_ text: String) {
         let label = self.inoutView.viewWithTag(LabelTag) as! AgoraBaseUILabel
         label.text = text
         

@@ -429,7 +429,7 @@ typedef NS_ENUM(NSUInteger, StreamState) {
 
     NSMutableDictionary *param = [NSMutableDictionary dictionary];
     param[@"message"] = text;
-    param[@"type"] = @1;;
+    param[@"type"] = @1;
     [AgoraRTEHttpManager roomChatWithRoomUuid:self.channelId userToken:self.userToken param:param apiVersion:APIVersion1 analysisClass:AgoraRTECommonModel.class success:^(id<AgoraRTEBaseModel>  _Nullable objModel) {
         if(successBlock){
             successBlock();

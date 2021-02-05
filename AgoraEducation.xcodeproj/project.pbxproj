@@ -12,6 +12,7 @@
 		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
 		1A70AFB22359F17500942742 /* SettingViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A70AFB12359F17500942742 /* SettingViewCell.m */; };
 		1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87571123571CFE009C55A8 /* SettingViewController.m */; };
+		26054A8925CAA26C00A01D80 /* CourseTipsViewDebugVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26054A8825CAA26C00A01D80 /* CourseTipsViewDebugVC.m */; };
 		26A454D425C94FA400D04730 /* ViewDebugVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A454D325C94FA400D04730 /* ViewDebugVC.m */; };
 		75D36FB810CB94F4AEF8D9A2 /* Pods_AgoraEducation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */; };
 		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
@@ -69,6 +70,8 @@
 		1AE0D0A222897EA60092AC5E /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		1AE0D0A422897EC40092AC5E /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		1AE0D0A622897ECD0092AC5E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		26054A8725CAA26C00A01D80 /* CourseTipsViewDebugVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CourseTipsViewDebugVC.h; sourceTree = "<group>"; };
+		26054A8825CAA26C00A01D80 /* CourseTipsViewDebugVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CourseTipsViewDebugVC.m; sourceTree = "<group>"; };
 		26A454D225C94FA400D04730 /* ViewDebugVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewDebugVC.h; sourceTree = "<group>"; };
 		26A454D325C94FA400D04730 /* ViewDebugVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewDebugVC.m; sourceTree = "<group>"; };
 		3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.devrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.devrelease.xcconfig"; sourceTree = "<group>"; };
@@ -249,6 +252,8 @@
 			children = (
 				26A454D225C94FA400D04730 /* ViewDebugVC.h */,
 				26A454D325C94FA400D04730 /* ViewDebugVC.m */,
+				26054A8725CAA26C00A01D80 /* CourseTipsViewDebugVC.h */,
+				26054A8825CAA26C00A01D80 /* CourseTipsViewDebugVC.m */,
 			);
 			path = ViewDebug;
 			sourceTree = "<group>";
@@ -653,6 +658,7 @@
 				787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */,
 				78D7314123B38B5700D2146C /* MainNavigationController.m in Sources */,
 				1A44BE7A22BF863000766274 /* main.m in Sources */,
+				26054A8925CAA26C00A01D80 /* CourseTipsViewDebugVC.m in Sources */,
 				78DFB67725AECAF600B01906 /* TokenBuilder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

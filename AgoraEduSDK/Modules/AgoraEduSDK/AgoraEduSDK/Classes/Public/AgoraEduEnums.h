@@ -32,5 +32,4 @@ typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
     AgoraEduRoomTypeBig = 2,
 };
 
-
 NS_ASSUME_NONNULL_END

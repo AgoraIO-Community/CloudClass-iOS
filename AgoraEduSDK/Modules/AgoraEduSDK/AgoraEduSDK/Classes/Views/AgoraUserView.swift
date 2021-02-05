@@ -113,6 +113,7 @@ import EduSDK
     
     fileprivate let RoundLabelTag: Int = 99
     fileprivate let AudioEffectImageTagStart: Int = 100
+
     fileprivate var stream: AgoraRTEStream?
 
     public var userName: String? {
@@ -142,6 +143,10 @@ import EduSDK
         
         self.stream = stream
         
+        if !stream.hasAudio {
+            self.audioEffectView.isHidden = true
+        }
+
         if !stream.hasVideo {
             self.defaultView.isHidden = false
             self.defaultLabel?.text = "已关闭摄像头"
@@ -254,24 +259,57 @@ extension AgoraUserView {
             
             self.nameView.backgroundColor = UIColor.clear
             self.nameView.layer.cornerRadius = 0
-    
+
+            let nameX = self.nameView.agora_x
+            let nameH = self.nameView.agora_height
+            self.nameView.agora_clear_constraint()
+            self.nameView.agora_x = nameX
+            self.nameView.agora_center_y = 0
+            self.nameView.agora_height = nameH
+            
+            let scaleW = self.scaleBtn.agora_width
+            let scaleH = self.scaleBtn.agora_height
+            let scaleR = self.scaleBtn.agora_right
+            self.scaleBtn.agora_clear_constraint()
+            self.scaleBtn.agora_center_y = 0
+            self.scaleBtn.agora_right = scaleR
+            self.scaleBtn.agora_resize(scaleW, scaleH)
+            
             self.backgroundColor = UIColor(red: 117/255.0, green: 192/255.0, blue: 255/255.0, alpha: 1)
             self.layer.borderColor = UIColor(red: 73/255.0, green: 146/255.0, blue: 207/255.0, alpha: 1).cgColor
             self.layer.cornerRadius = AgoraDeviceAssistant.OS.isPad ? 10 : 5
 
         } else {
+            
+            let role = self.stream?.userInfo.role ?? .invalid
+            
             // check defaultView & cupView & videoBtn
             self.videoCanvas.isHidden = false
             self.defaultView.isHidden = self.stream?.hasVideo ?? false
-            self.cupView.isHidden = false
+            self.cupView.isHidden = !(role == .student)
             self.audioBtn.isHidden = !(self.stream?.hasAudio ?? false)
-            self.videoBtn.isHidden = !(self.stream?.hasVideo ?? false)
+            self.videoBtn.isHidden = (!(role == .student) || (self.stream?.hasVideo ?? false))
             
             self.scaleBtn.setImage(AgoraImageWithName("scale", self.classForCoder), for: .normal)
             
             let bgColor = UIColor(red: 78/255.0, green: 78/255.0, blue: 78/255.0, alpha: 0.5)
             self.nameView.backgroundColor = bgColor
             self.nameView.layer.cornerRadius = AgoraDeviceAssistant.OS.isPad ? 15 : 10
+            
+            let nameX = self.nameView.agora_x
+            let nameH = self.nameView.agora_height
+            self.nameView.agora_clear_constraint()
+            self.nameView.agora_x = nameX
+            self.nameView.agora_height = nameH
+            self.nameView.agora_bottom = self.cupView.agora_x
+            
+            let scaleW = self.scaleBtn.agora_width
+            let scaleH = self.scaleBtn.agora_height
+            let scaleR = self.scaleBtn.agora_right
+            self.scaleBtn.agora_clear_constraint()
+            self.scaleBtn.agora_right = scaleR
+            self.scaleBtn.agora_resize(scaleW, scaleH)
+            self.scaleBtn.agora_y = self.cupView.agora_x
 
             self.backgroundColor = UIColor.clear
             self.layer.borderColor = UIColor(red: 117/255.0, green: 192/255.0, blue: 255/255.0, alpha: 1).cgColor
@@ -307,48 +345,48 @@ extension AgoraUserView {
         
         if AgoraDeviceAssistant.OS.isPad {
             self.cupView.agora_x = 10
-            self.cupView.agora_y = 10
-            self.cupView.agora_height = 33
+            self.cupView.agora_y = self.cupView.agora_x
+            self.cupView.agora_height = 35
 
-            self.nameView.agora_x = 10
-            self.nameView.agora_bottom = 10
+            self.nameView.agora_x = self.cupView.agora_x
+            self.nameView.agora_bottom = self.nameView.agora_x
             self.nameView.agora_height = 33
             
-            self.audioBtn.agora_right = 10
-            self.audioBtn.agora_bottom = 10
-            let _ = self.audioBtn.agora_resize(33, 33)
+            self.audioBtn.agora_right = self.nameView.agora_x
+            self.audioBtn.agora_bottom = self.nameView.agora_x
+            self.audioBtn.agora_resize(33, 33)
                 
-            self.videoBtn.agora_right = 57
-            self.videoBtn.agora_bottom = 10
-            let _ = self.videoBtn.agora_resize(33, 33)
+            self.videoBtn.agora_right = self.audioBtn.agora_right + self.audioBtn.agora_width + 15
+            self.videoBtn.agora_bottom = self.nameView.agora_bottom
+            self.videoBtn.agora_resize(self.audioBtn.agora_width, self.audioBtn.agora_height)
             
-            self.scaleBtn.agora_y = 10
-            self.scaleBtn.agora_right = 10
-            let _ = self.scaleBtn.agora_resize(28, 28)
+            self.scaleBtn.agora_y = self.cupView.agora_x
+            self.scaleBtn.agora_right = self.cupView.agora_x
+            self.scaleBtn.agora_resize(self.cupView.agora_height, self.cupView.agora_height)
             
         } else {
-            self.cupView.agora_x = 9
-            self.cupView.agora_y = 9
-            self.cupView.agora_height = 19
+            self.cupView.agora_x = 7
+            self.cupView.agora_y = self.cupView.agora_x
+            self.cupView.agora_height = 25
 
-            self.nameView.agora_x = 9
-            self.nameView.agora_bottom = 7
-            self.nameView.agora_height = 19
+            self.nameView.agora_x = self.cupView.agora_x
+            self.nameView.agora_bottom = self.cupView.agora_x
+            self.nameView.agora_height = 21
             
-            self.audioBtn.agora_right = 9
-            self.audioBtn.agora_bottom = 8
-            let _ = self.audioBtn.agora_resize(19, 19)
+            self.audioBtn.agora_right = self.cupView.agora_x
+            self.audioBtn.agora_bottom = self.nameView.agora_bottom
+            self.audioBtn.agora_resize(25, 25)
                 
-            self.videoBtn.agora_right = 37
-            self.videoBtn.agora_bottom = 8
-            let _ = self.videoBtn.agora_resize(19, 19)
+            self.videoBtn.agora_right = self.audioBtn.agora_right + self.audioBtn.agora_width + 6
+            self.videoBtn.agora_bottom = self.nameView.agora_bottom
+            self.videoBtn.agora_resize(self.audioBtn.agora_width, self.audioBtn.agora_height)
             
-            self.scaleBtn.agora_y = 8
-            self.scaleBtn.agora_right = 9
-            let _ = self.scaleBtn.agora_resize(16, 16)
+            self.scaleBtn.agora_y = self.cupView.agora_x
+            self.scaleBtn.agora_right = self.cupView.agora_x
+            self.scaleBtn.agora_resize(self.cupView.agora_height, self.cupView.agora_height)
         }
         
-        let audioEffectViewWidth = self.audioBtn.agora_width - (AgoraDeviceAssistant.OS.isPad ? 8 : 4)
+        let audioEffectViewWidth = self.audioBtn.agora_width * 0.6
         let audioEffectImgHeight: CGFloat = AgoraDeviceAssistant.OS.isPad ? 3 : 2
         let audioEffectImgGap: CGFloat = AgoraDeviceAssistant.OS.isPad ? 3 : 2
         for index in 0...3 {
