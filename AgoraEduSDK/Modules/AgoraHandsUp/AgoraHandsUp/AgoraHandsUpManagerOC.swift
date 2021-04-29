@@ -3,7 +3,7 @@
 //  AgoraEducation
 //
 //  Created by SRS on 2020/11/17.
-//  Copyright © 2020 yangmoumou. All rights reserved.
+//  Copyright © 2020 Agora. All rights reserved.
 //
 
 import UIKit
@@ -48,7 +48,7 @@ public class AgoraHandsUpManagerOC: NSObject {
     
     @objc public func updateHandsUp(state: AgoraHandsUpOCState) {
         
-        var swiftState = AgoraHandsUpState.none
+        var swiftState = AgoraEduContextHandsUpState.none
         if (state == .handsUp) {
             swiftState = .handsUp
         } else if(state == .handsDown) {
@@ -61,7 +61,7 @@ public class AgoraHandsUpManagerOC: NSObject {
 }
 
 extension AgoraHandsUpManagerOC: AgoraHandsUpDelegate {
-    public func onHandsClicked(currentState: AgoraHandsUpState) {
+    public func onHandsClicked(currentState: AgoraEduContextHandsUpState) {
         
         var ocState = AgoraHandsUpOCState.none
         if (currentState == .handsUp) {

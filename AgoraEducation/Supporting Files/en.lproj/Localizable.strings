@@ -3,7 +3,7 @@
   AgoraEducation
 
   Created by SRS on 2020/2/17.
-  Copyright © 2020 yangmoumou. All rights reserved.
+  Copyright © 2020 Agora. All rights reserved.
 */
 
 OneToOneText = "One to One Classroom";
@@ -23,3 +23,44 @@ RoomTypeVerifyText = "please select a room type";
 
 
 KickOffClassroomText = "you were kicked out of the classroom by the teacher!";
+
+
+// Login
+Login_title = "Agora Flexible Classroom";
+Login_room_title = "Room";
+Login_room_holder = "Please input classroom name";
+Login_user_title = "Name";
+Login_user_holder = "Please input your name";
+Login_class_type_title = "Type";
+Login_region_title = "Region";
+Login_type_holder = "Please select class type";
+Login_enter = "Enter";
+Login_version = "Version: Flexible Classroom_1.1.0";
+Login_onetoone = "One to One Classroom";
+Login_small = "Smart Classroom";
+Login_lecture = "Lecture Hall";
+Login_warn = "Letter or number only";
+Login_duration_title = "Duration";
+Login_duration_holder = "30mins";
+
+About_title = "About";
+About_close = "Close";
+About_privacy = "Privacy Policy";
+About_disclaimer = "Product Disclaimer";
+About_register = "Sign up Agora.io";
+About_version_time = "Version Time";
+About_sdk_version = "SDK Version";
+About_class_version = "Flexible Classroom Version";
+About_url = "www.agora.io";
+
+Privacy_url = "https://www.agora.io/en/privacy-policy/";
+Signup_url = "https://sso.agora.io/en/signup";
+
+Disclaimer_title = "Product disclaimer";
+Disclaimer_detail = "Agora Live (\"this product\") is a product provided by Agora . Agora enjoys the copyright and ownership of this product. It is hereby granted free of charge to anyone who obtains a copy of this product and related documentation (hereinafter referred to as \"software\") to try the software without limitation, including but not limited to trial, copy, modify, merge, publish, distribute, but this product shall not be used For any commercial use, you may not sublicense and / or sell copies of the software.
+
+
+This product is provided \"as is\" without any express warranty, including but not limited to guarantees of suitability, suitability for specific purposes, and non-infringement. Whether it is due to any contract, infringement or other forms of conduct related to this product or the trial of this product or other methods, Agora will not be responsible for any claims, damages or other liabilities.
+
+
+You are free to choose whether to try the services provided by this product. If you download, install, or try the services provided in this product, it means that you trust the owner of the product, and Agora shall not be responsible for any form of loss or injury caused by yourself or others when you try the services provided in this product for any reason.";

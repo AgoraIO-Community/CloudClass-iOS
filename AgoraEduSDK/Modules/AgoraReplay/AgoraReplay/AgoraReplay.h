@@ -7,6 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ReplayManager.h"
-#import "ReplayDelegate.h"
-#import "ReplayConfiguration.h"
+#import "AgoraReplayManager.h"
+#import "AgoraReplayDelegate.h"
+#import "AgoraReplayConfiguration.h"

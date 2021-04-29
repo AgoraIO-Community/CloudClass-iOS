@@ -37,7 +37,7 @@
     contentLabel.text = NSLocalizedString(@"EyeProtectionText", nil);
 
     UISwitch *switchButton = [[UISwitch alloc] init];
-    switchButton.frame = CGRectMake(kScreenWidth - 65, 13, 50, 32);
+    switchButton.frame = CGRectMake([UIScreen mainScreen].bounds.size.width - 65, 13, 50, 32);
     [self.contentView addSubview:switchButton];
     self.switchButton = switchButton;
     [switchButton addTarget:self action:@selector(switchClick:) forControlEvents:(UIControlEventTouchUpInside)];

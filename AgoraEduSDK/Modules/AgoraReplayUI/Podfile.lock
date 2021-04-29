@@ -14,44 +14,47 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - AFNetworking/UIKit (4.0.1):
     - AFNetworking/NSURLSession
-  - AgoraLog (0.0.2):
+  - AgoraLog (1.0.0):
     - AFNetworking (= 4.0.1)
     - AliyunOSSiOS (= 2.10.8)
     - CocoaLumberjack (= 3.6.1)
-  - AgoraReplay (0.0.1):
+  - AgoraReplay (1.0.0):
     - AgoraLog
-    - Whiteboard (= 2.9.14)
+    - Whiteboard (= 2.12.15)
   - AliyunOSSiOS (2.10.8)
   - CocoaLumberjack (3.6.1):
     - CocoaLumberjack/Core (= 3.6.1)
   - CocoaLumberjack/Core (3.6.1)
   - dsBridge (3.0.6)
-  - Whiteboard (2.9.14):
-    - Whiteboard/Base (= 2.9.14)
-    - Whiteboard/Converter (= 2.9.14)
-    - Whiteboard/NativeReplayer (= 2.9.14)
-    - Whiteboard/Object (= 2.9.14)
-    - Whiteboard/Replayer (= 2.9.14)
-    - Whiteboard/Room (= 2.9.14)
-  - Whiteboard/Base (2.9.14):
+  - Whiteboard (2.12.15):
+    - Whiteboard/Base (= 2.12.15)
+    - Whiteboard/Converter (= 2.12.15)
+    - Whiteboard/Model (= 2.12.15)
+    - Whiteboard/NativeReplayer (= 2.12.15)
+    - Whiteboard/Object (= 2.12.15)
+    - Whiteboard/Replayer (= 2.12.15)
+    - Whiteboard/Room (= 2.12.15)
+  - Whiteboard/Base (2.12.15):
     - dsBridge (~> 3.0.2)
     - Whiteboard/Object
-  - Whiteboard/Converter (2.9.14):
+  - Whiteboard/Converter (2.12.15):
     - Whiteboard/Object
-  - Whiteboard/NativeReplayer (2.9.14):
-    - Whiteboard/Replayer
-  - Whiteboard/Object (2.9.14):
+  - Whiteboard/Model (2.12.15):
     - YYModel (~> 1.0.4)
-  - Whiteboard/Replayer (2.9.14):
+  - Whiteboard/NativeReplayer (2.12.15):
+    - Whiteboard/Replayer
+  - Whiteboard/Object (2.12.15):
+    - Whiteboard/Model
+  - Whiteboard/Replayer (2.12.15):
     - Whiteboard/Base
-  - Whiteboard/Room (2.9.14):
+  - Whiteboard/Room (2.12.15):
     - Whiteboard/Base
   - YYModel (1.0.4)
 
 DEPENDENCIES:
   - AgoraLog (from `../AgoraLog/AgoraLog.podspec`)
   - AgoraReplay (from `../AgoraReplay/AgoraReplay.podspec`)
-  - Whiteboard (= 2.9.14)
+  - Whiteboard (= 2.12.15)
 
 SPEC REPOS:
   trunk:
@@ -70,14 +73,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
-  AgoraLog: d0819a3d25ba7b77b7b17760ab87ad2834d535d6
-  AgoraReplay: 401918ed219aee6c52e6f7153e4ef9e6d52d7f66
+  AgoraLog: ee4d6ee301e02add0e031ad2e33281d20169bc27
+  AgoraReplay: 886432029a5fc8539a5aefea7027a88420177dbe
   AliyunOSSiOS: 8db92936545593b9e5c66d680ef2ac0738946651
   CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
   dsBridge: 48b62ee8a411ad601a88d6f6c8cf6cb634b206b7
-  Whiteboard: edbe3ed753dc9a457a38718834d7bf16fdfd3980
+  Whiteboard: 922fb9bc6b3db2708e10efccecb96e8b2c39b3f0
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: ffec718dd1fc70835851e677b28f0be99ed8f97a
+PODFILE CHECKSUM: e7ae69777c01d7c997324344d4ff2712a43dd830
 
 COCOAPODS: 1.10.1

@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		788CFEA924C539C10022439A /* ReplayManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEA724C539C10022439A /* ReplayManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		788CFEAA24C539C10022439A /* ReplayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEA824C539C10022439A /* ReplayManager.m */; };
-		788CFEAD24C53A7B0022439A /* ReplayConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEAB24C53A7B0022439A /* ReplayConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		788CFEAE24C53A7B0022439A /* ReplayConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEAC24C53A7B0022439A /* ReplayConfiguration.m */; };
-		788CFEB124C53AB60022439A /* ReplayDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEAF24C53AB60022439A /* ReplayDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		788CFEB624C56F260022439A /* VideoReplayService.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEB424C56F260022439A /* VideoReplayService.h */; };
-		788CFEB724C56F260022439A /* VideoReplayService.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEB524C56F260022439A /* VideoReplayService.m */; };
-		788CFEBF24C5702D0022439A /* BoardReplayService.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEBD24C5702D0022439A /* BoardReplayService.h */; };
-		788CFEC024C5702D0022439A /* BoardReplayService.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEBE24C5702D0022439A /* BoardReplayService.m */; };
+		788CFEA924C539C10022439A /* AgoraReplayManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEA724C539C10022439A /* AgoraReplayManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		788CFEAA24C539C10022439A /* AgoraReplayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEA824C539C10022439A /* AgoraReplayManager.m */; };
+		788CFEAD24C53A7B0022439A /* AgoraReplayConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEAB24C53A7B0022439A /* AgoraReplayConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		788CFEAE24C53A7B0022439A /* AgoraReplayConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEAC24C53A7B0022439A /* AgoraReplayConfiguration.m */; };
+		788CFEB124C53AB60022439A /* AgoraReplayDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEAF24C53AB60022439A /* AgoraReplayDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		788CFEB624C56F260022439A /* AgoraReplayVideoService.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEB424C56F260022439A /* AgoraReplayVideoService.h */; };
+		788CFEB724C56F260022439A /* AgoraReplayVideoService.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEB524C56F260022439A /* AgoraReplayVideoService.m */; };
+		788CFEBF24C5702D0022439A /* AgoraReplayBoardService.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEBD24C5702D0022439A /* AgoraReplayBoardService.h */; };
+		788CFEC024C5702D0022439A /* AgoraReplayBoardService.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEBE24C5702D0022439A /* AgoraReplayBoardService.m */; };
 		78D25C5524ACBAFF00229882 /* AgoraReplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C5324ACBAFF00229882 /* AgoraReplay.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C24883820969F35998059CE8 /* Pods_AgoraReplay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2816265ED2BD4B84E4EE51B2 /* Pods_AgoraReplay.framework */; };
 /* End PBXBuildFile section */
@@ -23,16 +23,16 @@
 /* Begin PBXFileReference section */
 		09856D04B45894D33886C07C /* Pods-AgoraReplay.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraReplay.debug.xcconfig"; path = "../Modules/AgoraReplay/Pods/Target Support Files/Pods-AgoraReplay/Pods-AgoraReplay.debug.xcconfig"; sourceTree = "<group>"; };
 		2816265ED2BD4B84E4EE51B2 /* Pods_AgoraReplay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraReplay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		788CFEA724C539C10022439A /* ReplayManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReplayManager.h; sourceTree = "<group>"; };
-		788CFEA824C539C10022439A /* ReplayManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReplayManager.m; sourceTree = "<group>"; };
-		788CFEAB24C53A7B0022439A /* ReplayConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReplayConfiguration.h; sourceTree = "<group>"; };
-		788CFEAC24C53A7B0022439A /* ReplayConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReplayConfiguration.m; sourceTree = "<group>"; };
-		788CFEAF24C53AB60022439A /* ReplayDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReplayDelegate.h; sourceTree = "<group>"; };
-		788CFEB424C56F260022439A /* VideoReplayService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoReplayService.h; sourceTree = "<group>"; };
-		788CFEB524C56F260022439A /* VideoReplayService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoReplayService.m; sourceTree = "<group>"; };
+		788CFEA724C539C10022439A /* AgoraReplayManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraReplayManager.h; sourceTree = "<group>"; };
+		788CFEA824C539C10022439A /* AgoraReplayManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayManager.m; sourceTree = "<group>"; };
+		788CFEAB24C53A7B0022439A /* AgoraReplayConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraReplayConfiguration.h; sourceTree = "<group>"; };
+		788CFEAC24C53A7B0022439A /* AgoraReplayConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayConfiguration.m; sourceTree = "<group>"; };
+		788CFEAF24C53AB60022439A /* AgoraReplayDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraReplayDelegate.h; sourceTree = "<group>"; };
+		788CFEB424C56F260022439A /* AgoraReplayVideoService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraReplayVideoService.h; sourceTree = "<group>"; };
+		788CFEB524C56F260022439A /* AgoraReplayVideoService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayVideoService.m; sourceTree = "<group>"; };
 		788CFEB824C56F810022439A /* AgoraLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		788CFEBD24C5702D0022439A /* BoardReplayService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoardReplayService.h; sourceTree = "<group>"; };
-		788CFEBE24C5702D0022439A /* BoardReplayService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoardReplayService.m; sourceTree = "<group>"; };
+		788CFEBD24C5702D0022439A /* AgoraReplayBoardService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraReplayBoardService.h; sourceTree = "<group>"; };
+		788CFEBE24C5702D0022439A /* AgoraReplayBoardService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayBoardService.m; sourceTree = "<group>"; };
 		78D25C5024ACBAFF00229882 /* AgoraReplay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraReplay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78D25C5324ACBAFF00229882 /* AgoraReplay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraReplay.h; sourceTree = "<group>"; };
 		78D25C5424ACBAFF00229882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -73,8 +73,8 @@
 		788CFEB324C56EFD0022439A /* VideoReplay */ = {
 			isa = PBXGroup;
 			children = (
-				788CFEB424C56F260022439A /* VideoReplayService.h */,
-				788CFEB524C56F260022439A /* VideoReplayService.m */,
+				788CFEB424C56F260022439A /* AgoraReplayVideoService.h */,
+				788CFEB524C56F260022439A /* AgoraReplayVideoService.m */,
 			);
 			path = VideoReplay;
 			sourceTree = "<group>";
@@ -82,8 +82,8 @@
 		788CFEBC24C570190022439A /* BoardReplay */ = {
 			isa = PBXGroup;
 			children = (
-				788CFEBD24C5702D0022439A /* BoardReplayService.h */,
-				788CFEBE24C5702D0022439A /* BoardReplayService.m */,
+				788CFEBD24C5702D0022439A /* AgoraReplayBoardService.h */,
+				788CFEBE24C5702D0022439A /* AgoraReplayBoardService.m */,
 			);
 			path = BoardReplay;
 			sourceTree = "<group>";
@@ -110,11 +110,11 @@
 			isa = PBXGroup;
 			children = (
 				78D25C5324ACBAFF00229882 /* AgoraReplay.h */,
-				788CFEA724C539C10022439A /* ReplayManager.h */,
-				788CFEA824C539C10022439A /* ReplayManager.m */,
-				788CFEAB24C53A7B0022439A /* ReplayConfiguration.h */,
-				788CFEAC24C53A7B0022439A /* ReplayConfiguration.m */,
-				788CFEAF24C53AB60022439A /* ReplayDelegate.h */,
+				788CFEA724C539C10022439A /* AgoraReplayManager.h */,
+				788CFEA824C539C10022439A /* AgoraReplayManager.m */,
+				788CFEAB24C53A7B0022439A /* AgoraReplayConfiguration.h */,
+				788CFEAC24C53A7B0022439A /* AgoraReplayConfiguration.m */,
+				788CFEAF24C53AB60022439A /* AgoraReplayDelegate.h */,
 				788CFEBC24C570190022439A /* BoardReplay */,
 				788CFEB324C56EFD0022439A /* VideoReplay */,
 				78D25C5424ACBAFF00229882 /* Info.plist */,
@@ -129,12 +129,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				788CFEBF24C5702D0022439A /* BoardReplayService.h in Headers */,
-				788CFEAD24C53A7B0022439A /* ReplayConfiguration.h in Headers */,
-				788CFEB124C53AB60022439A /* ReplayDelegate.h in Headers */,
-				788CFEA924C539C10022439A /* ReplayManager.h in Headers */,
+				788CFEBF24C5702D0022439A /* AgoraReplayBoardService.h in Headers */,
+				788CFEAD24C53A7B0022439A /* AgoraReplayConfiguration.h in Headers */,
+				788CFEB124C53AB60022439A /* AgoraReplayDelegate.h in Headers */,
+				788CFEA924C539C10022439A /* AgoraReplayManager.h in Headers */,
 				78D25C5524ACBAFF00229882 /* AgoraReplay.h in Headers */,
-				788CFEB624C56F260022439A /* VideoReplayService.h in Headers */,
+				788CFEB624C56F260022439A /* AgoraReplayVideoService.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,10 +232,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				788CFEB724C56F260022439A /* VideoReplayService.m in Sources */,
-				788CFEC024C5702D0022439A /* BoardReplayService.m in Sources */,
-				788CFEAE24C53A7B0022439A /* ReplayConfiguration.m in Sources */,
-				788CFEAA24C539C10022439A /* ReplayManager.m in Sources */,
+				788CFEB724C56F260022439A /* AgoraReplayVideoService.m in Sources */,
+				788CFEC024C5702D0022439A /* AgoraReplayBoardService.m in Sources */,
+				788CFEAE24C53A7B0022439A /* AgoraReplayConfiguration.m in Sources */,
+				788CFEAA24C539C10022439A /* AgoraReplayManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		789825C02564C56A00A1F98D /* AgoraHandsUpManagerOC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 789825BF2564C56A00A1F98D /* AgoraHandsUpManagerOC.swift */; };
 		78A3EA352563BF41003067AB /* AgoraHandsUpManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A3EA342563BF41003067AB /* AgoraHandsUpManager.swift */; };
-		78A3EA492563CBE3003067AB /* HandsUp.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78A3EA482563CBE2003067AB /* HandsUp.xcassets */; };
+		78A3EA492563CBE3003067AB /* AgoraHandsUp.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78A3EA482563CBE2003067AB /* AgoraHandsUp.xcassets */; };
 		FAE78FC0EAE4845315AF1619 /* Pods_AgoraHandsUp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 82CC37B201DCA943A932C75A /* Pods_AgoraHandsUp.framework */; };
 /* End PBXBuildFile section */
 
@@ -20,7 +20,7 @@
 		78A3EA282563BF14003067AB /* AgoraHandsUp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraHandsUp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78A3EA2C2563BF14003067AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78A3EA342563BF41003067AB /* AgoraHandsUpManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraHandsUpManager.swift; sourceTree = "<group>"; };
-		78A3EA482563CBE2003067AB /* HandsUp.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = HandsUp.xcassets; sourceTree = "<group>"; };
+		78A3EA482563CBE2003067AB /* AgoraHandsUp.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AgoraHandsUp.xcassets; sourceTree = "<group>"; };
 		82CC37B201DCA943A932C75A /* Pods_AgoraHandsUp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraHandsUp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -59,7 +59,7 @@
 			children = (
 				78A3EA342563BF41003067AB /* AgoraHandsUpManager.swift */,
 				789825BF2564C56A00A1F98D /* AgoraHandsUpManagerOC.swift */,
-				78A3EA482563CBE2003067AB /* HandsUp.xcassets */,
+				78A3EA482563CBE2003067AB /* AgoraHandsUp.xcassets */,
 				78A3EA2C2563BF14003067AB /* Info.plist */,
 			);
 			path = AgoraHandsUp;
@@ -151,7 +151,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78A3EA492563CBE3003067AB /* HandsUp.xcassets in Resources */,
+				78A3EA492563CBE3003067AB /* AgoraHandsUp.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

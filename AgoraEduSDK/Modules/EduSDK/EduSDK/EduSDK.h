@@ -8,31 +8,31 @@
 
 #import <Foundation/Foundation.h>
 
-#import "EduManager.h"
-#import "EduBaseTypes.h"
-#import "EduConfiguration.h"
-#import "EduTextMessage.h"
+#import "AgoraRTEManager.h"
+#import "AgoraRTEBaseTypes.h"
+#import "AgoraRTEConfiguration.h"
+#import "AgoraRTETextMessage.h"
 
 // classroom
-#import "EduClassroomManager.h"
-#import "EduClassroomDelegate.h"
+#import "AgoraRTEClassroomManager.h"
+#import "AgoraRTEClassroomDelegate.h"
 
-#import "EduClassroomMediaOptions.h"
-#import "EduClassroomJoinOptions.h"
-#import "EduClassroomConfig.h"
-#import "EduClassroom.h"
+#import "AgoraRTEClassroomMediaOptions.h"
+#import "AgoraRTEClassroomJoinOptions.h"
+#import "AgoraRTEClassroomConfig.h"
+#import "AgoraRTEClassroom.h"
 
 // user
-#import "EduUserService.h"
-#import "EduTeacherService.h"
-#import "EduAssistantService.h"
-#import "EduStudentService.h"
-#import "EduUserDelegate.h"
+#import "AgoraRTEUserService.h"
+#import "AgoraRTETeacherService.h"
+#import "AgoraRTEAssistantService.h"
+#import "AgoraRTEStudentService.h"
+#import "AgoraRTEUserDelegate.h"
 
-#import "EduUser.h"
+#import "AgoraRTEUser.h"
 
 // stream
-#import "EduStream.h"
-#import "EduStreamConfig.h"
-#import "EduVideoConfig.h"
+#import "AgoraRTEStream.h"
+#import "AgoraRTEStreamConfig.h"
+#import "AgoraRTEVideoConfig.h"
 

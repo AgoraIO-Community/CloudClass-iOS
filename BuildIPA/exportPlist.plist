@@ -14,6 +14,8 @@
 		<string>AgoraLab2020</string>
 		<key>io.agora.AgoraEducationQATest</key>
 		<string>AgoraTest2020</string>
+		<key>io.agora.AgoraEducationQATestNew</key>
+		<string>AgoraQA2021</string>
 	</dict>
 </dict>
 </plist>

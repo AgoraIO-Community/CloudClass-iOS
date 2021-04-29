@@ -8,68 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		4482B4192BCCEC3B2CE6EFE2 /* Pods_AgoraWhiteBoard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD285F176EFBFA5750EF2776 /* Pods_AgoraWhiteBoard.framework */; };
-		7829C3612500FB740003BF5E /* WhiteBoardStateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7829C35D2500FB740003BF5E /* WhiteBoardStateModel.m */; };
-		7829C3622500FB740003BF5E /* WhiteBoardStateModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7829C35E2500FB740003BF5E /* WhiteBoardStateModel.h */; };
-		7829C3632500FB740003BF5E /* WhiteGlobalStateModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7829C35F2500FB740003BF5E /* WhiteGlobalStateModel.h */; };
-		7829C3642500FB740003BF5E /* WhiteGlobalStateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7829C3602500FB740003BF5E /* WhiteGlobalStateModel.m */; };
-		788CFE3024BD4A670022439A /* WhiteBoardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE2E24BD4A670022439A /* WhiteBoardManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		788CFE3124BD4A670022439A /* WhiteBoardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE2F24BD4A670022439A /* WhiteBoardManager.m */; };
-		788CFE3424BD4A980022439A /* WhiteBoardConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE3224BD4A980022439A /* WhiteBoardConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		788CFE3524BD4A980022439A /* WhiteBoardConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE3324BD4A980022439A /* WhiteBoardConfiguration.m */; };
-		788CFE3824BD4AAC0022439A /* WhiteBoardJoinOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE3624BD4AAC0022439A /* WhiteBoardJoinOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		788CFE3924BD4AAC0022439A /* WhiteBoardJoinOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE3724BD4AAC0022439A /* WhiteBoardJoinOptions.m */; };
-		788CFE4024BD727C0022439A /* WhiteBoardToolControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE3E24BD727C0022439A /* WhiteBoardToolControlView.h */; };
-		788CFE4124BD727C0022439A /* WhiteBoardToolControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE3F24BD727C0022439A /* WhiteBoardToolControlView.m */; };
-		788CFE4324BD72930022439A /* WhiteBoardToolControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFE4224BD72930022439A /* WhiteBoardToolControlView.xib */; };
-		788CFE4524BD72FD0022439A /* WhiteBoard.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 788CFE4424BD72FD0022439A /* WhiteBoard.xcassets */; };
-		788CFE4C24BD73C50022439A /* WhiteBoardPageControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE4A24BD73C50022439A /* WhiteBoardPageControlView.h */; };
-		788CFE4D24BD73C50022439A /* WhiteBoardPageControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE4B24BD73C50022439A /* WhiteBoardPageControlView.m */; };
-		788CFE5124BD73DE0022439A /* WhiteBoardColorControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE4F24BD73DE0022439A /* WhiteBoardColorControlView.h */; };
-		788CFE5224BD73DE0022439A /* WhiteBoardColorControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE5024BD73DE0022439A /* WhiteBoardColorControlView.m */; };
-		788CFE5424BD8B0D0022439A /* WhiteBoardColorControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFE5324BD8B0D0022439A /* WhiteBoardColorControlView.xib */; };
-		788CFE5724BD8B440022439A /* WhiteBoardColorCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE5524BD8B440022439A /* WhiteBoardColorCell.h */; };
-		788CFE5824BD8B440022439A /* WhiteBoardColorCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE5624BD8B440022439A /* WhiteBoardColorCell.m */; };
-		788CFE7E24BD98680022439A /* WhiteBoard.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 788CFE7D24BD98680022439A /* WhiteBoard.bundle */; };
-		788CFE8224BD98F00022439A /* WhiteBoardUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE8024BD98F00022439A /* WhiteBoardUtil.h */; };
-		788CFE8324BD98F00022439A /* WhiteBoardUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE8124BD98F00022439A /* WhiteBoardUtil.m */; };
-		788CFE8524BD9FB30022439A /* WhiteBoardPageControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFE8424BD9FB30022439A /* WhiteBoardPageControlView.xib */; };
+		78417F8825DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 78417F8625DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.m */; };
+		78417F8925DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 78417F8725DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		788CFE3024BD4A670022439A /* AgoraWhiteBoardManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFE2E24BD4A670022439A /* AgoraWhiteBoardManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		788CFE3124BD4A670022439A /* AgoraWhiteBoardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFE2F24BD4A670022439A /* AgoraWhiteBoardManager.m */; };
 		78D25C6A24ACBB1600229882 /* AgoraWhiteBoard.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C6824ACBB1600229882 /* AgoraWhiteBoard.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78FEE19C24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FEE19A24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.m */; };
-		78FEE19D24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78FEE19B24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.h */; };
+		865F95ED260449E700CCF229 /* AgoraWhiteBoardModels.h in Headers */ = {isa = PBXBuildFile; fileRef = 865F95EB260449E700CCF229 /* AgoraWhiteBoardModels.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		865F95EE260449E700CCF229 /* AgoraWhiteBoardModels.m in Sources */ = {isa = PBXBuildFile; fileRef = 865F95EC260449E700CCF229 /* AgoraWhiteBoardModels.m */; };
+		865F962F26044B8A00CCF229 /* AgoraWhiteBoardEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 865F962E26044B8A00CCF229 /* AgoraWhiteBoardEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		603A492D288E4F0B43AD2635 /* Pods-AgoraWhiteBoard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraWhiteBoard.debug.xcconfig"; path = "../Modules/AgoraWhiteBoard/Pods/Target Support Files/Pods-AgoraWhiteBoard/Pods-AgoraWhiteBoard.debug.xcconfig"; sourceTree = "<group>"; };
-		7829C35D2500FB740003BF5E /* WhiteBoardStateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardStateModel.m; sourceTree = "<group>"; };
-		7829C35E2500FB740003BF5E /* WhiteBoardStateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteBoardStateModel.h; sourceTree = "<group>"; };
-		7829C35F2500FB740003BF5E /* WhiteGlobalStateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhiteGlobalStateModel.h; sourceTree = "<group>"; };
-		7829C3602500FB740003BF5E /* WhiteGlobalStateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhiteGlobalStateModel.m; sourceTree = "<group>"; };
-		788CFE2E24BD4A670022439A /* WhiteBoardManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardManager.h; sourceTree = "<group>"; };
-		788CFE2F24BD4A670022439A /* WhiteBoardManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardManager.m; sourceTree = "<group>"; };
-		788CFE3224BD4A980022439A /* WhiteBoardConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardConfiguration.h; sourceTree = "<group>"; };
-		788CFE3324BD4A980022439A /* WhiteBoardConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardConfiguration.m; sourceTree = "<group>"; };
-		788CFE3624BD4AAC0022439A /* WhiteBoardJoinOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardJoinOptions.h; sourceTree = "<group>"; };
-		788CFE3724BD4AAC0022439A /* WhiteBoardJoinOptions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardJoinOptions.m; sourceTree = "<group>"; };
-		788CFE3E24BD727C0022439A /* WhiteBoardToolControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardToolControlView.h; sourceTree = "<group>"; };
-		788CFE3F24BD727C0022439A /* WhiteBoardToolControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardToolControlView.m; sourceTree = "<group>"; };
-		788CFE4224BD72930022439A /* WhiteBoardToolControlView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhiteBoardToolControlView.xib; sourceTree = "<group>"; };
-		788CFE4424BD72FD0022439A /* WhiteBoard.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = WhiteBoard.xcassets; sourceTree = "<group>"; };
-		788CFE4A24BD73C50022439A /* WhiteBoardPageControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardPageControlView.h; sourceTree = "<group>"; };
-		788CFE4B24BD73C50022439A /* WhiteBoardPageControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardPageControlView.m; sourceTree = "<group>"; };
-		788CFE4F24BD73DE0022439A /* WhiteBoardColorControlView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardColorControlView.h; sourceTree = "<group>"; };
-		788CFE5024BD73DE0022439A /* WhiteBoardColorControlView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardColorControlView.m; sourceTree = "<group>"; };
-		788CFE5324BD8B0D0022439A /* WhiteBoardColorControlView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhiteBoardColorControlView.xib; sourceTree = "<group>"; };
-		788CFE5524BD8B440022439A /* WhiteBoardColorCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardColorCell.h; sourceTree = "<group>"; };
-		788CFE5624BD8B440022439A /* WhiteBoardColorCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardColorCell.m; sourceTree = "<group>"; };
-		788CFE7D24BD98680022439A /* WhiteBoard.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = WhiteBoard.bundle; sourceTree = "<group>"; };
-		788CFE8024BD98F00022439A /* WhiteBoardUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardUtil.h; sourceTree = "<group>"; };
-		788CFE8124BD98F00022439A /* WhiteBoardUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardUtil.m; sourceTree = "<group>"; };
-		788CFE8424BD9FB30022439A /* WhiteBoardPageControlView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WhiteBoardPageControlView.xib; sourceTree = "<group>"; };
+		78417F8625DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraWhiteURLSchemeHandler.m; sourceTree = "<group>"; };
+		78417F8725DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraWhiteURLSchemeHandler.h; sourceTree = "<group>"; };
+		788CFE2E24BD4A670022439A /* AgoraWhiteBoardManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraWhiteBoardManager.h; sourceTree = "<group>"; };
+		788CFE2F24BD4A670022439A /* AgoraWhiteBoardManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraWhiteBoardManager.m; sourceTree = "<group>"; };
 		78D25C6524ACBB1600229882 /* AgoraWhiteBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraWhiteBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78D25C6824ACBB1600229882 /* AgoraWhiteBoard.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraWhiteBoard.h; sourceTree = "<group>"; };
 		78D25C6924ACBB1600229882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		78FEE19A24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraWhiteBoardViewManager.m; sourceTree = "<group>"; };
-		78FEE19B24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraWhiteBoardViewManager.h; sourceTree = "<group>"; };
+		865F95EB260449E700CCF229 /* AgoraWhiteBoardModels.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraWhiteBoardModels.h; sourceTree = "<group>"; };
+		865F95EC260449E700CCF229 /* AgoraWhiteBoardModels.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraWhiteBoardModels.m; sourceTree = "<group>"; };
+		865F962E26044B8A00CCF229 /* AgoraWhiteBoardEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraWhiteBoardEnums.h; sourceTree = "<group>"; };
 		BC32BA6D0DF218252ABADF20 /* Pods-AgoraWhiteBoard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraWhiteBoard.release.xcconfig"; path = "../Modules/AgoraWhiteBoard/Pods/Target Support Files/Pods-AgoraWhiteBoard/Pods-AgoraWhiteBoard.release.xcconfig"; sourceTree = "<group>"; };
 		BD285F176EFBFA5750EF2776 /* Pods_AgoraWhiteBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraWhiteBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -86,38 +46,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		788CFE3C24BD70360022439A /* WhiteBoardPage */ = {
-			isa = PBXGroup;
-			children = (
-				788CFE4A24BD73C50022439A /* WhiteBoardPageControlView.h */,
-				788CFE4B24BD73C50022439A /* WhiteBoardPageControlView.m */,
-				788CFE8424BD9FB30022439A /* WhiteBoardPageControlView.xib */,
-			);
-			path = WhiteBoardPage;
-			sourceTree = "<group>";
-		};
-		788CFE3D24BD70390022439A /* WhiteBoardTool */ = {
-			isa = PBXGroup;
-			children = (
-				788CFE3E24BD727C0022439A /* WhiteBoardToolControlView.h */,
-				788CFE3F24BD727C0022439A /* WhiteBoardToolControlView.m */,
-				788CFE4224BD72930022439A /* WhiteBoardToolControlView.xib */,
-			);
-			path = WhiteBoardTool;
-			sourceTree = "<group>";
-		};
-		788CFE4E24BD73CB0022439A /* WhiteBoardColor */ = {
-			isa = PBXGroup;
-			children = (
-				788CFE4F24BD73DE0022439A /* WhiteBoardColorControlView.h */,
-				788CFE5024BD73DE0022439A /* WhiteBoardColorControlView.m */,
-				788CFE5324BD8B0D0022439A /* WhiteBoardColorControlView.xib */,
-				788CFE5524BD8B440022439A /* WhiteBoardColorCell.h */,
-				788CFE5624BD8B440022439A /* WhiteBoardColorCell.m */,
-			);
-			path = WhiteBoardColor;
-			sourceTree = "<group>";
-		};
 		78D25C5B24ACBB1600229882 = {
 			isa = PBXGroup;
 			children = (
@@ -139,27 +67,15 @@
 		78D25C6724ACBB1600229882 /* AgoraWhiteBoard */ = {
 			isa = PBXGroup;
 			children = (
+				865F962E26044B8A00CCF229 /* AgoraWhiteBoardEnums.h */,
 				78D25C6824ACBB1600229882 /* AgoraWhiteBoard.h */,
-				788CFE2E24BD4A670022439A /* WhiteBoardManager.h */,
-				788CFE2F24BD4A670022439A /* WhiteBoardManager.m */,
-				78FEE19B24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.h */,
-				78FEE19A24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.m */,
-				788CFE3224BD4A980022439A /* WhiteBoardConfiguration.h */,
-				788CFE3324BD4A980022439A /* WhiteBoardConfiguration.m */,
-				788CFE3624BD4AAC0022439A /* WhiteBoardJoinOptions.h */,
-				788CFE3724BD4AAC0022439A /* WhiteBoardJoinOptions.m */,
-				788CFE8024BD98F00022439A /* WhiteBoardUtil.h */,
-				788CFE8124BD98F00022439A /* WhiteBoardUtil.m */,
-				7829C35E2500FB740003BF5E /* WhiteBoardStateModel.h */,
-				7829C35D2500FB740003BF5E /* WhiteBoardStateModel.m */,
-				7829C35F2500FB740003BF5E /* WhiteGlobalStateModel.h */,
-				7829C3602500FB740003BF5E /* WhiteGlobalStateModel.m */,
-				788CFE4E24BD73CB0022439A /* WhiteBoardColor */,
-				788CFE3D24BD70390022439A /* WhiteBoardTool */,
-				788CFE3C24BD70360022439A /* WhiteBoardPage */,
+				788CFE2E24BD4A670022439A /* AgoraWhiteBoardManager.h */,
+				788CFE2F24BD4A670022439A /* AgoraWhiteBoardManager.m */,
+				865F95EB260449E700CCF229 /* AgoraWhiteBoardModels.h */,
+				865F95EC260449E700CCF229 /* AgoraWhiteBoardModels.m */,
+				78417F8725DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.h */,
+				78417F8625DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.m */,
 				78D25C6924ACBB1600229882 /* Info.plist */,
-				788CFE4424BD72FD0022439A /* WhiteBoard.xcassets */,
-				788CFE7D24BD98680022439A /* WhiteBoard.bundle */,
 			);
 			path = AgoraWhiteBoard;
 			sourceTree = "<group>";
@@ -189,18 +105,11 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				788CFE3824BD4AAC0022439A /* WhiteBoardJoinOptions.h in Headers */,
-				788CFE3424BD4A980022439A /* WhiteBoardConfiguration.h in Headers */,
-				788CFE3024BD4A670022439A /* WhiteBoardManager.h in Headers */,
-				7829C3622500FB740003BF5E /* WhiteBoardStateModel.h in Headers */,
-				788CFE4C24BD73C50022439A /* WhiteBoardPageControlView.h in Headers */,
-				7829C3632500FB740003BF5E /* WhiteGlobalStateModel.h in Headers */,
-				788CFE4024BD727C0022439A /* WhiteBoardToolControlView.h in Headers */,
-				788CFE5724BD8B440022439A /* WhiteBoardColorCell.h in Headers */,
-				788CFE5124BD73DE0022439A /* WhiteBoardColorControlView.h in Headers */,
-				78FEE19D24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.h in Headers */,
+				78417F8925DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.h in Headers */,
+				865F95ED260449E700CCF229 /* AgoraWhiteBoardModels.h in Headers */,
+				788CFE3024BD4A670022439A /* AgoraWhiteBoardManager.h in Headers */,
+				865F962F26044B8A00CCF229 /* AgoraWhiteBoardEnums.h in Headers */,
 				78D25C6A24ACBB1600229882 /* AgoraWhiteBoard.h in Headers */,
-				788CFE8224BD98F00022439A /* WhiteBoardUtil.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +146,7 @@
 				TargetAttributes = {
 					78D25C6424ACBB1600229882 = {
 						CreatedOnToolsVersion = 11.2.1;
+						LastSwiftMigration = 1220;
 					};
 				};
 			};
@@ -264,11 +174,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				788CFE4524BD72FD0022439A /* WhiteBoard.xcassets in Resources */,
-				788CFE7E24BD98680022439A /* WhiteBoard.bundle in Resources */,
-				788CFE5424BD8B0D0022439A /* WhiteBoardColorControlView.xib in Resources */,
-				788CFE8524BD9FB30022439A /* WhiteBoardPageControlView.xib in Resources */,
-				788CFE4324BD72930022439A /* WhiteBoardToolControlView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,17 +209,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7829C3612500FB740003BF5E /* WhiteBoardStateModel.m in Sources */,
-				7829C3642500FB740003BF5E /* WhiteGlobalStateModel.m in Sources */,
-				788CFE4124BD727C0022439A /* WhiteBoardToolControlView.m in Sources */,
-				78FEE19C24D3C3800020BFB6 /* AgoraWhiteBoardViewManager.m in Sources */,
-				788CFE3124BD4A670022439A /* WhiteBoardManager.m in Sources */,
-				788CFE8324BD98F00022439A /* WhiteBoardUtil.m in Sources */,
-				788CFE3924BD4AAC0022439A /* WhiteBoardJoinOptions.m in Sources */,
-				788CFE3524BD4A980022439A /* WhiteBoardConfiguration.m in Sources */,
-				788CFE4D24BD73C50022439A /* WhiteBoardPageControlView.m in Sources */,
-				788CFE5824BD8B440022439A /* WhiteBoardColorCell.m in Sources */,
-				788CFE5224BD73DE0022439A /* WhiteBoardColorControlView.m in Sources */,
+				788CFE3124BD4A670022439A /* AgoraWhiteBoardManager.m in Sources */,
+				78417F8825DA5C1900735E95 /* AgoraWhiteURLSchemeHandler.m in Sources */,
+				865F95EE260449E700CCF229 /* AgoraWhiteBoardModels.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +338,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 603A492D288E4F0B43AD2635 /* Pods-AgoraWhiteBoard.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -458,6 +356,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -466,6 +366,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BC32BA6D0DF218252ABADF20 /* Pods-AgoraWhiteBoard.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -483,6 +384,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

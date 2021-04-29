@@ -6,10 +6,11 @@ target 'EduSDK' do
   use_frameworks!
 
   pod 'AgoraLog', :path => '../AgoraLog/AgoraLog.podspec'
+  pod 'AgoraReport', :path => '../AgoraReport/AgoraReport.podspec'
   pod "YYModel", "1.0.4"
   pod "AgoraRtm_iOS", "1.4.1"
-  pod "AgoraRtcEngine_iOS", "2.9.0.107"
   pod "AFNetworking", "4.0.1"
+  pod "AgoraRtcEngine_Special_iOS", "2.9.107.136"
 
   post_install do |installer|
      installer.pods_project.targets.each do |target|

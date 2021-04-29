@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "AgoraLog"
-  spec.version      = "0.0.2"
+  spec.version      = "1.0.0"
   spec.summary      = "Agora Log Module."
   spec.description  = "Log component, support writing, compression upload"
 

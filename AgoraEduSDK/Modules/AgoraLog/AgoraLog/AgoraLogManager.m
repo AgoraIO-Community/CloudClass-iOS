@@ -8,7 +8,7 @@
 
 #import "AgoraLogManager.h"
 #import <CocoaLumberjack/CocoaLumberjack.h>
-#import "OSSManager.h"
+#import "AgoraLogOSSManager.h"
 #import "SSZipArchive.h"
 #import "AgoraLogHttpManager.h"
 #import "AgoraLogHttpClient.h"
@@ -199,13 +199,18 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
     NSString *zipPath = [NSString stringWithFormat:@"%@/%@", zipDirectoryPath, zipName];
     
     [AgoraLogHttpClient setAgoraLogManager:self];
+    
+    AgoraLogErrorType errType = [self checkUploadOptions:options];
+    if (errType != AgoraLogErrorTypeNone) {
+        return errType;
+    }
 
     [AgoraLogManager zipFilesWithSourceDirectory:logDirectoryPath zipdirectoryPath:zipDirectoryPath zipPath:zipPath  completeBlock:^(ZipStateType zipCode) {
         
         if(zipCode != ZipStateTypeOK){
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSString *errMsg = [@"error during compressing file：" stringByAppendingString:@(zipCode).stringValue];
-                NSError *error = LocalError(AgoraLogErrorTypeInternalError, errMsg);
+                NSError *error = AgoraLogLocalError(AgoraLogErrorTypeInternalError, errMsg);
                 if(failureBlock != nil) {
                     failureBlock(error);
                 }
@@ -216,7 +221,7 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
         [AgoraLogManager checkZipCodeAndUploadWithZipCode:zipCode zipPath:zipPath logParams:options progress:progressBlock success:successBlock fail:^(NSError *error) {
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                NSError *sdkError = LocalError(AgoraLogErrorTypeNetworkError, error.localizedDescription);
+                NSError *sdkError = AgoraLogLocalError(AgoraLogErrorTypeNetworkError, error.localizedDescription);
                 if(failureBlock != nil) {
                     failureBlock(sdkError);
                 }
@@ -246,7 +251,7 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
     switch (zipCode) {
         case ZipStateTypeOnNotFound:
             if(failBlock != nil) {
-                NSError *error = LocalError(LocalAgoraLogErrorCode, @"no log files found");
+                NSError *error = AgoraLogLocalError(LocalAgoraLogErrorCode, @"no log files found");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     failBlock(error);
                 });
@@ -255,7 +260,7 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
             break;
         case ZipStateTypeOnRemoveError:
             if(failBlock != nil) {
-                NSError *error = LocalError(LocalAgoraLogErrorCode, @"failed to clear log files");
+                NSError *error = AgoraLogLocalError(LocalAgoraLogErrorCode, @"failed to clear log files");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     failBlock(error);
                 });
@@ -264,7 +269,7 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
             break;
         case ZipStateTypeOnZipError:
             if(failBlock != nil) {
-                NSError *error = LocalError(LocalAgoraLogErrorCode, @"log file compression failed");
+                NSError *error = AgoraLogLocalError(LocalAgoraLogErrorCode, @"log file compression failed");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     failBlock(error);
                 });
@@ -276,29 +281,30 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
     }
     if (zipCode != ZipStateTypeOK){
         if(failBlock != nil) {
-            NSError *error = LocalError(LocalAgoraLogErrorCode, @"log file compression failed");
+            NSError *error = AgoraLogLocalError(LocalAgoraLogErrorCode, @"log file compression failed");
             dispatch_async(dispatch_get_main_queue(), ^{
                 failBlock(error);
             });
         }
         return;
     }
-
-    [AgoraLogHttpManager getLogInfoWithAppId:logParams.appId baseURL:AGORA_EDU_HTTP_LOG_BASE_URL appSecret:AGORA_EDU_HTTP_LOG_SECRET uid:logParams.uid token:logParams.rtmToken ext:logParams.ext apiVersion:APIVersion1 completeSuccessBlock:^(LogModel * _Nonnull logModel) {
-        
-        if(logModel.code != 0){
+    
+    [AgoraLogHttpManager getLogInfoWithOptions:logParams
+                          completeSuccessBlock:^(AgoraLogModel * _Nonnull agoraLogModel) {
+        if(agoraLogModel.code != 0){
             if(failBlock != nil) {
-                NSError *error = LocalError(logModel.code, logModel.msg);
+                NSError *error = AgoraLogLocalError(agoraLogModel.code, agoraLogModel.msg);
                 dispatch_async(dispatch_get_main_queue(), ^{
                     failBlock(error);
                 });
             }
             return;
+            
         }
         
-        LogInfoModel *model = logModel.data;
+        AgoraLogInfoModel *model = agoraLogModel.data;
         
-        [OSSManager uploadOSSWithAppId:logParams.appId access:model.accessKeyId secret:model.accessKeySecret token:model.securityToken bucketName:model.bucketName objectKey:model.ossKey callbackBody:model.callbackBody callbackBodyType:model.callbackContentType endpoint:model.ossEndpoint fileURL:[NSURL URLWithString:zipPath] progress:^(float progress) {
+        [AgoraLogOSSManager uploadOSSWithAppId:logParams.appId access:model.accessKeyId secret:model.accessKeySecret token:model.securityToken bucketName:model.bucketName objectKey:model.ossKey callbackBody:model.callbackBody callbackBodyType:model.callbackContentType endpoint:model.ossEndpoint fileURL:[NSURL URLWithString:zipPath] progress:^(float progress) {
 
             if(progressBlock != nil) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -379,6 +385,26 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
     NSString *currentTimeString = [formatter stringFromDate:datenow];
     NSString *zipName = [NSString stringWithFormat:@"%@.zip", currentTimeString];
     return zipName;
+}
+
+- (AgoraLogErrorType)checkUploadOptions:(AgoraLogUploadOptions *)options {
+    if (!options.appId ||
+        !options.rtmToken||
+        !options.userUuid) {
+        return AgoraLogErrorTypeInvalidParemeter;
+    }
+    
+    options.role = options.role ? options.role : @"";
+    options.userName = options.userName ? options.userName : @"";
+    options.roomUuid = options.roomUuid ? options.roomUuid : @"";
+    options.roomName = options.roomName ? options.roomName : @"";
+    options.roomType = options.roomType ? options.roomType : @"";
+    
+    options.baseURL = AGORA_EDU_HTTP_LOG_BASE_URL;
+    options.appSecret = AGORA_EDU_HTTP_LOG_SECRET;
+    options.apiVersion = APIVersion1;
+    
+    return AgoraLogErrorTypeNone;
 }
 
 @end

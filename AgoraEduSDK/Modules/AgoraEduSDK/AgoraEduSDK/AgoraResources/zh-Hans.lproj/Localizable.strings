@@ -1,0 +1,68 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+NoEmptyText = " 参数不能为空";
+ParamErrorText = " 参数错误";
+NeedCallText = "你需要先调用";
+DismissVCText = "页面上层还有其他页面";
+
+UserFullText = "加入教室失败，教室人数已满";
+
+DuplicateLaunchText = "已经启动了";
+UnInitializedText = " 没有初始化完成";
+
+// ------------------------------------------------
+ClassTimeHourText = "时";
+ClassTimeMinuteText = "分";
+ClassTimeMinute2Text = "分钟";
+ClassTimeSecondText = "秒";
+ClassBeforeStartText = "距离上课还有：";
+ClassAfterStartText = "已开始上课：";
+ClassAfterStopText = "课程已结束：";
+
+// toast
+ClassEndWarningStartText = "课程还有";
+ClassEndWarningEndText = "分钟结束";
+ClassCloseWarningStartText = "课程结束咯，还有";
+ClassCloseWarningEndText = "关闭教室";
+ClassCloseWarningStart2Text = "距离教室关闭还有";
+ClassCloseWarningEnd2Text = "分钟";
+//CoursewareFullOnText = "老师开启了课件全屏";
+//CoursewareFullOffText = "老师关闭了课件全屏";
+
+// chat
+ChatDisableToastText = "禁言模式开启";
+ChatEnableToastText = "禁言模式关闭";
+
+// canvas
+CameraMuteText = "摄像头被关闭";
+MicrophoneMuteText = "你暂时不能发言了";
+CameraUnMuteText = "摄像头被打开";
+MicrophoneUnMuteText = "你可以发言了";
+
+// loading
+BoardWareProcessText = "课件加载中，请稍后...";
+BoardWareJumpText = "跳过";
+BoardWareFailTitleText = "课件加载失败!";
+BoardWareFailMsgText = "课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件";
+BoardWareCloseText = "关闭";
+BoardWareRetryText = "重新加载";
+LoaingText = "加载中...";
+
+// CoHost
+HandsUpTimeOutText = "举手超时";
+RejectedCoHostText = "老师拒绝了你的举手申请";
+AcceptedCoHostText = "你已被老师邀请上台，请积极互动哦";
+RemovedCoHostText = "你已下台，暂时不能进行互动了哦";
+HandsUpSuccessText = "举手成功";
+HandsDownSuccessText = "取消举手成功";
+CloseHandsUpText = "老师关闭了举手功能";
+OpenHandsUpText = "老师开启了举手功能";
+
+// screenshare
+ScreensharedBySb = "发起了屏幕共享";
+ScreenshareStoppedBySb = "停止了屏幕共享";

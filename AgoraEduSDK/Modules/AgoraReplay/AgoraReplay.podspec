@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraReplay"
-  spec.version      = "0.0.1"
+  spec.version      = "1.0.0"
   spec.summary      = "A short description of AgoraReplay."
   spec.description  = "description of AgoraReplay"
   spec.homepage     = "https://github.com/AgoraIO-Usecase/eEducation"
@@ -13,6 +13,6 @@ Pod::Spec.new do |spec|
   spec.public_header_files = "AgoraReplay/**/*.h"
 
   spec.dependency "AgoraLog"
-  spec.dependency "Whiteboard", "2.9.14"
+  spec.dependency "Whiteboard", "2.12.22"
 
 end

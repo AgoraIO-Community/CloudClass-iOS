@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '9.0'
+platform :ios, '10.0'
 
 target 'AgoraReplay' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -7,7 +7,7 @@ target 'AgoraReplay' do
 
   # Pods for AgoraReplay
   pod 'AgoraLog', :path => '../AgoraLog/AgoraLog.podspec'
-  pod "Whiteboard", "2.9.14"
+  pod "Whiteboard", "2.12.22"
 
   post_install do |installer|
      installer.pods_project.targets.each do |target|

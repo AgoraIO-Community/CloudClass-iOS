@@ -8,36 +8,42 @@
 #import "AgoraEduTopVC.h"
 
 @implementation AgoraEduTopVC
-
 + (UIViewController *)topVC {
-    UIWindow *kW = nil;
+    NSArray<UIWindow *> *windows = @[];
+    UIWindow *kW = [UIApplication sharedApplication].delegate.window;
     if (@available(iOS 13.0, *)) {
-        for (UIWindowScene* windowScene in [UIApplication sharedApplication].connectedScenes)
-        {
-            if (windowScene.activationState == UISceneActivationStateForegroundActive)
-            {
-                kW = windowScene.windows.firstObject;
-                
+        for (UIWindowScene* windowScene in [UIApplication sharedApplication].connectedScenes) {
+            if (windowScene.activationState == UISceneActivationStateForegroundActive) {
+                windows = windowScene.windows;
                 break;
             }
         }
-    }else{
-        kW = [UIApplication sharedApplication].windows.firstObject;
+    } else {
+        windows = [UIApplication sharedApplication].windows;
     }
     
-    UIViewController *topViewController = [kW rootViewController];
+    for (UIWindow *window in windows.reverseObjectEnumerator) {
+        if (window.hidden == YES || window.opaque == NO) {
+            continue;
+        }
+        if (CGRectEqualToRect(window.bounds, UIScreen.mainScreen.bounds) == NO) {
+            continue;
+        }
+        kW = window;
+        break;
+    }
+
     
+    UIViewController *topViewController = [kW rootViewController];
+
     while (true) {
-        if (topViewController.presentedViewController)
-        {
+        if (topViewController.presentedViewController) {
             topViewController = topViewController.presentedViewController;
             
-        } else if ([topViewController isKindOfClass:[UINavigationController class]] && [(UINavigationController*)topViewController topViewController])
-        {
+        } else if ([topViewController isKindOfClass:[UINavigationController class]] && [(UINavigationController*)topViewController topViewController]) {
             topViewController = [(UINavigationController *)topViewController topViewController];
             
-        } else if ([topViewController isKindOfClass:[UITabBarController class]])
-        {
+        } else if ([topViewController isKindOfClass:[UITabBarController class]]) {
             UITabBarController *tab = (UITabBarController *)topViewController;
             topViewController = tab.selectedViewController;
             

@@ -1,0 +1,70 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+// Chat
+ChatText = "Message";
+ChatEmptyText = "No Message";
+ChatSendText = "Send";
+ChatPlaceholderText = "Input";
+ChatDisableToastText = "Turn on mute mode";
+ChatEnableToastText = "Turn off mute mode";
+ChatDisableText = "mute chat";
+
+// User List
+UserListMainTitle = "Member List";
+UserListTeacherName = "Teacher:";
+UserListName = "Student";
+UserListCoVideo = "Stage";
+UserListBoard = "Auth";
+UserListCamera = "Camera";
+UserListMicro = "Mute";
+UserListReward = "Rewards";
+
+ChatMuteTagText = "You are not allowed to send messages in the chat box";
+
+// board
+MuteBoardText = "Your cannot use the whiteboard tools.";
+UnMuteBoardText = "You can now use the whiteboard tools.";
+
+// Set
+SetText = "Set";
+CameraText = "Camera";
+DirectionText = "Direction";
+FrontText = "Front";
+BackText = "Back";
+MicrophoneText = "Microphone";
+SpeakerText = "Speaker";
+LeaveText = "Leave Classroom";
+
+// Toast
+LoaingText = "Loading...";
+
+CloseText = "Close";
+CancelText = "Cancel";
+SureText = "Sure";
+
+LeaveClassTitleText = "Leave Class";
+ClassOverNoticeText = "Over Notification";
+ClassOverText = "Class is end!";
+LeaveClassText = "Are you sure you want to end get out of class?";
+
+KickOutNoticeText = "Remove Notification";
+KickOutText = "You have been kicked out of the classroom.";
+
+ForbidNoticeText = "Disable Notification";
+ForbidText = "You have been banned from entering this classroom!";
+
+BoardWareProcessText = "Courseware is loading, please wait...";
+BoardWareFailTitleText = "Failed load!";
+BoardWareJumpText = "Cancel";
+BoardWareFailMsgText = "Failed load, you can retry or cancel";
+BoardWareCloseText = "Close";
+BoardWareRetryText = "Retry";
+
+LoginOnAnotherDeviceText = "Account was logged in from remote device";
+

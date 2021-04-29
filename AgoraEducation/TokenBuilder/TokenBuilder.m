@@ -9,9 +9,11 @@
 #import "TokenBuilder.h"
 #import "RtmTokenTool.h"
 #import "AgoraEducationHTTPClient.h"
+#import <YYModel/YYModel.h>
 
 #define NoNullString(x) ([x isKindOfClass:NSString.class] ? x : @"")
 #define NoNullDictionary(x) ([x isKindOfClass:NSDictionary.class] ? x : @{})
+#define NoNullArray(x) ([x isKindOfClass:NSArray.class] ? x : @[])
 
 @implementation TokenBuilder
 // 本地生成token。用于本地快速演示使用， 我们建议你使用服务器生成token( buildToken:success:failure:)
@@ -35,6 +37,39 @@
             failure(error);
         }
     }];
+}
+
++ (void)boardResources:(NSString *)url token:(NSString *)token success:(void (^)(NSArray<WhiteScene *> *models, NSString *resourceName, NSString *scenePath, NSString *downURL))success failure:(void (^)(NSError *error))failure {
     
+    [AgoraEducationHTTPClient get:url params:@{} headers:@{@"token":token} success:^(id  _Nonnull responseObj) {
+        
+        NSDictionary *data = NoNullDictionary(NoNullDictionary(responseObj)[@"data"]);
+        NSDictionary *big = NoNullDictionary(data[@"large"]);
+        
+        NSString *type = NoNullString(NoNullDictionary(big[@"conversion"])[@"type"]);
+        NSString *taskUuid = NoNullString(big[@"taskUuid"]);
+        NSString *resourceName = [NSString stringWithFormat:@"/%@", NoNullString(big[@"resourceName"])];
+        
+        NSDictionary *taskProgress = NoNullDictionary(big[@"taskProgress"]);
+        NSArray *convertedFileList = NoNullArray(taskProgress[@"convertedFileList"]);
+        
+        NSMutableArray<WhiteScene *> *models = [NSMutableArray array];
+        for (id dic in convertedFileList) {
+            WhiteScene *model = [WhiteScene.class yy_modelWithDictionary:NoNullDictionary(dic)];
+            [models addObject:model];
+        }
+        
+        NSString *scenePath = [NSString stringWithFormat:@"%@/%@", resourceName, [models.firstObject name]];
+        
+        NSString *downURL = [NSString stringWithFormat:@"%@%@%@", @"https://convertcdn.netless.link/dynamicConvert/", taskUuid, @".zip"];    
+        if(success != nil) {
+            success(models, resourceName, scenePath, downURL);
+        }
+    
+    } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
+        if(failure != nil) {
+            failure(error);
+        }
+    }];
 }
 @end

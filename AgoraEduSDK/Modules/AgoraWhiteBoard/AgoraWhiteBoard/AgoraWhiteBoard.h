@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "WhiteBoardManager.h"
-#import "WhiteBoardConfiguration.h"
-#import "WhiteBoardJoinOptions.h"
-#import "WhiteBoardStateModel.h"
+#import "AgoraWhiteBoardManager.h"
+#import "AgoraWhiteBoardModels.h"
+#import "AgoraWhiteBoardEnums.h"
+#import "AgoraWhiteURLSchemeHandler.h"

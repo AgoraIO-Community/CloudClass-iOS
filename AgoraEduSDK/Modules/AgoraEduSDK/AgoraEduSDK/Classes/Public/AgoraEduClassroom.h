@@ -13,13 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 @class AgoraEduClassroom;
 @protocol AgoraEduClassroomDelegate <NSObject>
 @optional
-- (void)classroom:(AgoraEduClassroom *)classroom didReceivedEvent:(AgoraEduEvent)event;
+- (void)classroom:(AgoraEduClassroom *)classroom
+ didReceivedEvent:(AgoraEduEvent)event;
 @end
 
 @interface AgoraEduClassroom : NSObject
-
-- (void)destory;
-
+- (void)destroy;
 @end
 
 NS_ASSUME_NONNULL_END

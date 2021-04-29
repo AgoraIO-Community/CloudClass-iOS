@@ -50,8 +50,17 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AgoraLogUploadOptions : NSObject
 // rtc/rtm AppId
 @property(nonatomic, copy) NSString *appId;
-@property(nonatomic, copy) NSString *uid;
 @property(nonatomic, copy) NSString *rtmToken;
+@property(nonatomic, copy) NSString *baseURL;
+@property(nonatomic, copy) NSString *appSecret;
+@property(nonatomic, copy) NSString *apiVersion;
+@property(nonatomic, copy) NSString *userUuid;
+
+@property(nonatomic, copy, nullable) NSNumber *role;
+@property(nonatomic, copy, nullable) NSString *userName;
+@property(nonatomic, copy, nullable) NSString *roomUuid;
+@property(nonatomic, copy, nullable) NSString *roomName;
+@property(nonatomic, copy, nullable) NSString *roomType;
 
 // 自定义参数
 @property(nonatomic, copy) NSDictionary<NSString *, NSString *> *ext;

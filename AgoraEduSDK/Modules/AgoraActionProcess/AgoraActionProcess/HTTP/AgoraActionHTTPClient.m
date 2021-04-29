@@ -3,7 +3,7 @@
 //  AgoraEducation
 //
 //  Created by SRS on 2020/8/2.
-//  Copyright © 2020 yangmoumou. All rights reserved.
+//  Copyright © 2020 Agora. All rights reserved.
 //
 
 #import "AgoraActionHTTPClient.h"
@@ -15,12 +15,6 @@
 #define AgoraActionLog(...)
 #endif
 
-typedef NS_ENUM(NSInteger, AgoraActionHttpType) {
-    AgoraActionHttpTypeGet            = 0,
-    AgoraActionHttpTypePost,
-    AgoraActionHttpTypePut,
-    AgoraActionHttpTypeDelete,
-};
 #define AgoraActionHttpTypeStrings  (@[@"GET",@"POST",@"PUT",@"DELETE"])
 
 @implementation AgoraActionHTTPClient

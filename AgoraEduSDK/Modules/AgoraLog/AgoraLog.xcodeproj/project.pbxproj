@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2346C69581ECD6654E445457 /* Pods_AgoraLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 982A2D9FF0E4684E38858C24 /* Pods_AgoraLog.framework */; };
-		780555FB25A5EF7700CE4E74 /* LogModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 780555F425A5EF7600CE4E74 /* LogModel.m */; };
-		780555FC25A5EF7700CE4E74 /* LogModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 780555F525A5EF7600CE4E74 /* LogModel.h */; };
+		780555FB25A5EF7700CE4E74 /* AgoraLogModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 780555F425A5EF7600CE4E74 /* AgoraLogModel.m */; };
+		780555FC25A5EF7700CE4E74 /* AgoraLogModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 780555F525A5EF7600CE4E74 /* AgoraLogModel.h */; };
 		780E2BDE24DD4FB500F7B930 /* AgoraLogBaseTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 780E2BDA24DD4FB400F7B930 /* AgoraLogBaseTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		780E2BDF24DD4FB500F7B930 /* AgoraLogManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 780E2BDB24DD4FB400F7B930 /* AgoraLogManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		780E2BE024DD4FB500F7B930 /* AgoraLogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 780E2BDC24DD4FB400F7B930 /* AgoraLogManager.m */; };
@@ -21,10 +21,10 @@
 		787484CB25AAC8630022329D /* AgoraLogFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = 787484C925AAC8630022329D /* AgoraLogFormatter.h */; };
 		787484CC25AAC8630022329D /* AgoraLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 787484CA25AAC8630022329D /* AgoraLogFormatter.m */; };
 		78D25C4024ACBAE700229882 /* AgoraLog.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C3E24ACBAE700229882 /* AgoraLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78D25C9224AD795C00229882 /* OSSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C9024AD795C00229882 /* OSSManager.h */; };
-		78D25C9324AD795C00229882 /* OSSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25C9124AD795C00229882 /* OSSManager.m */; };
-		78D25C9624AD7BA200229882 /* OSSModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C9424AD7BA200229882 /* OSSModel.h */; };
-		78D25C9724AD7BA200229882 /* OSSModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25C9524AD7BA200229882 /* OSSModel.m */; };
+		78D25C9224AD795C00229882 /* AgoraLogOSSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C9024AD795C00229882 /* AgoraLogOSSManager.h */; };
+		78D25C9324AD795C00229882 /* AgoraLogOSSManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25C9124AD795C00229882 /* AgoraLogOSSManager.m */; };
+		78D25C9624AD7BA200229882 /* AgoraLogOSSModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C9424AD7BA200229882 /* AgoraLogOSSModel.h */; };
+		78D25C9724AD7BA200229882 /* AgoraLogOSSModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25C9524AD7BA200229882 /* AgoraLogOSSModel.m */; };
 		78D25CCB24AD84A500229882 /* ZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25CA324AD84A500229882 /* ZipArchive.h */; };
 		78D25CCC24AD84A500229882 /* crypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 78D25CA524AD84A500229882 /* crypt.c */; };
 		78D25CCD24AD84A500229882 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 78D25CA624AD84A500229882 /* unzip.c */; };
@@ -63,10 +63,10 @@
 		78D25CEE24AD84A500229882 /* SSZipArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25CC824AD84A500229882 /* SSZipArchive.h */; };
 		78D25CEF24AD84A500229882 /* SSZipCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25CC924AD84A500229882 /* SSZipCommon.h */; };
 		78D25CF024AD84A500229882 /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25CCA24AD84A500229882 /* SSZipArchive.m */; };
-		78D25D3924AD926600229882 /* DeviceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25D3724AD926600229882 /* DeviceManager.h */; };
-		78D25D3A24AD926600229882 /* DeviceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25D3824AD926600229882 /* DeviceManager.m */; };
-		78D25D3E24AD977C00229882 /* StringMD5.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25D3C24AD977C00229882 /* StringMD5.h */; };
-		78D25D3F24AD977C00229882 /* StringMD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25D3D24AD977C00229882 /* StringMD5.m */; };
+		78D25D3924AD926600229882 /* AgoraLogDeviceManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25D3724AD926600229882 /* AgoraLogDeviceManager.h */; };
+		78D25D3A24AD926600229882 /* AgoraLogDeviceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25D3824AD926600229882 /* AgoraLogDeviceManager.m */; };
+		78D25D3E24AD977C00229882 /* AgoraLogStringMD5.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25D3C24AD977C00229882 /* AgoraLogStringMD5.h */; };
+		78D25D3F24AD977C00229882 /* AgoraLogStringMD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D25D3D24AD977C00229882 /* AgoraLogStringMD5.m */; };
 		78DFB73925AF04DC00B01906 /* AgoraLogHttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 78DFB73725AF04DC00B01906 /* AgoraLogHttpClient.h */; };
 		78DFB73A25AF04DC00B01906 /* AgoraLogHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB73825AF04DC00B01906 /* AgoraLogHttpClient.m */; };
 /* End PBXBuildFile section */
@@ -74,8 +74,8 @@
 /* Begin PBXFileReference section */
 		1A13A1268A84942557EAC6D2 /* Pods-AgoraLog.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraLog.release.xcconfig"; path = "../Modules/AgoraLog/Pods/Target Support Files/Pods-AgoraLog/Pods-AgoraLog.release.xcconfig"; sourceTree = "<group>"; };
 		1F453B809B0F6555C07CE4A6 /* Pods-AgoraLog.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraLog.debug.xcconfig"; path = "../Modules/AgoraLog/Pods/Target Support Files/Pods-AgoraLog/Pods-AgoraLog.debug.xcconfig"; sourceTree = "<group>"; };
-		780555F425A5EF7600CE4E74 /* LogModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogModel.m; sourceTree = "<group>"; };
-		780555F525A5EF7600CE4E74 /* LogModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogModel.h; sourceTree = "<group>"; };
+		780555F425A5EF7600CE4E74 /* AgoraLogModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraLogModel.m; sourceTree = "<group>"; };
+		780555F525A5EF7600CE4E74 /* AgoraLogModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraLogModel.h; sourceTree = "<group>"; };
 		780E2BDA24DD4FB400F7B930 /* AgoraLogBaseTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraLogBaseTypes.h; sourceTree = "<group>"; };
 		780E2BDB24DD4FB400F7B930 /* AgoraLogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraLogManager.h; sourceTree = "<group>"; };
 		780E2BDC24DD4FB400F7B930 /* AgoraLogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraLogManager.m; sourceTree = "<group>"; };
@@ -89,10 +89,10 @@
 		78D25C3B24ACBAE700229882 /* AgoraLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78D25C3E24ACBAE700229882 /* AgoraLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraLog.h; sourceTree = "<group>"; };
 		78D25C3F24ACBAE700229882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		78D25C9024AD795C00229882 /* OSSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSManager.h; sourceTree = "<group>"; };
-		78D25C9124AD795C00229882 /* OSSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSManager.m; sourceTree = "<group>"; };
-		78D25C9424AD7BA200229882 /* OSSModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSSModel.h; sourceTree = "<group>"; };
-		78D25C9524AD7BA200229882 /* OSSModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OSSModel.m; sourceTree = "<group>"; };
+		78D25C9024AD795C00229882 /* AgoraLogOSSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraLogOSSManager.h; sourceTree = "<group>"; };
+		78D25C9124AD795C00229882 /* AgoraLogOSSManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraLogOSSManager.m; sourceTree = "<group>"; };
+		78D25C9424AD7BA200229882 /* AgoraLogOSSModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraLogOSSModel.h; sourceTree = "<group>"; };
+		78D25C9524AD7BA200229882 /* AgoraLogOSSModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraLogOSSModel.m; sourceTree = "<group>"; };
 		78D25CA324AD84A500229882 /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
 		78D25CA524AD84A500229882 /* crypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crypt.c; sourceTree = "<group>"; };
 		78D25CA624AD84A500229882 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
@@ -131,10 +131,10 @@
 		78D25CC824AD84A500229882 /* SSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
 		78D25CC924AD84A500229882 /* SSZipCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipCommon.h; sourceTree = "<group>"; };
 		78D25CCA24AD84A500229882 /* SSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
-		78D25D3724AD926600229882 /* DeviceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceManager.h; sourceTree = "<group>"; };
-		78D25D3824AD926600229882 /* DeviceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceManager.m; sourceTree = "<group>"; };
-		78D25D3C24AD977C00229882 /* StringMD5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringMD5.h; sourceTree = "<group>"; };
-		78D25D3D24AD977C00229882 /* StringMD5.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StringMD5.m; sourceTree = "<group>"; };
+		78D25D3724AD926600229882 /* AgoraLogDeviceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraLogDeviceManager.h; sourceTree = "<group>"; };
+		78D25D3824AD926600229882 /* AgoraLogDeviceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraLogDeviceManager.m; sourceTree = "<group>"; };
+		78D25D3C24AD977C00229882 /* AgoraLogStringMD5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraLogStringMD5.h; sourceTree = "<group>"; };
+		78D25D3D24AD977C00229882 /* AgoraLogStringMD5.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraLogStringMD5.m; sourceTree = "<group>"; };
 		78DFB73725AF04DC00B01906 /* AgoraLogHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraLogHttpClient.h; sourceTree = "<group>"; };
 		78DFB73825AF04DC00B01906 /* AgoraLogHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraLogHttpClient.m; sourceTree = "<group>"; };
 		982A2D9FF0E4684E38858C24 /* Pods_AgoraLog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraLog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,8 +163,8 @@
 		780555F325A5EF7600CE4E74 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				780555F425A5EF7600CE4E74 /* LogModel.m */,
-				780555F525A5EF7600CE4E74 /* LogModel.h */,
+				780555F425A5EF7600CE4E74 /* AgoraLogModel.m */,
+				780555F525A5EF7600CE4E74 /* AgoraLogModel.h */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -229,10 +229,10 @@
 		78D25C8F24AD785900229882 /* OSS */ = {
 			isa = PBXGroup;
 			children = (
-				78D25C9024AD795C00229882 /* OSSManager.h */,
-				78D25C9124AD795C00229882 /* OSSManager.m */,
-				78D25C9424AD7BA200229882 /* OSSModel.h */,
-				78D25C9524AD7BA200229882 /* OSSModel.m */,
+				78D25C9024AD795C00229882 /* AgoraLogOSSManager.h */,
+				78D25C9124AD795C00229882 /* AgoraLogOSSManager.m */,
+				78D25C9424AD7BA200229882 /* AgoraLogOSSModel.h */,
+				78D25C9524AD7BA200229882 /* AgoraLogOSSModel.m */,
 			);
 			path = OSS;
 			sourceTree = "<group>";
@@ -312,8 +312,8 @@
 		78D25D3624AD925400229882 /* Device */ = {
 			isa = PBXGroup;
 			children = (
-				78D25D3724AD926600229882 /* DeviceManager.h */,
-				78D25D3824AD926600229882 /* DeviceManager.m */,
+				78D25D3724AD926600229882 /* AgoraLogDeviceManager.h */,
+				78D25D3824AD926600229882 /* AgoraLogDeviceManager.m */,
 			);
 			path = Device;
 			sourceTree = "<group>";
@@ -321,8 +321,8 @@
 		78D25D3B24AD976700229882 /* MD5 */ = {
 			isa = PBXGroup;
 			children = (
-				78D25D3C24AD977C00229882 /* StringMD5.h */,
-				78D25D3D24AD977C00229882 /* StringMD5.m */,
+				78D25D3C24AD977C00229882 /* AgoraLogStringMD5.h */,
+				78D25D3D24AD977C00229882 /* AgoraLogStringMD5.m */,
 			);
 			path = MD5;
 			sourceTree = "<group>";
@@ -345,7 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				780E2BDF24DD4FB500F7B930 /* AgoraLogManager.h in Headers */,
-				780555FC25A5EF7700CE4E74 /* LogModel.h in Headers */,
+				780555FC25A5EF7700CE4E74 /* AgoraLogModel.h in Headers */,
 				780E2BDE24DD4FB500F7B930 /* AgoraLogBaseTypes.h in Headers */,
 				78D25CE924AD84A500229882 /* aes.h in Headers */,
 				78D25CEF24AD84A500229882 /* SSZipCommon.h in Headers */,
@@ -353,7 +353,7 @@
 				78D25CD324AD84A500229882 /* crypt.h in Headers */,
 				78D25CDF24AD84A500229882 /* pwd2key.h in Headers */,
 				78D25CDA24AD84A500229882 /* prng.h in Headers */,
-				78D25C9624AD7BA200229882 /* OSSModel.h in Headers */,
+				78D25C9624AD7BA200229882 /* AgoraLogOSSModel.h in Headers */,
 				787484CB25AAC8630022329D /* AgoraLogFormatter.h in Headers */,
 				78D25CD124AD84A500229882 /* ioapi_mem.h in Headers */,
 				78D25CE524AD84A500229882 /* hmac.h in Headers */,
@@ -362,14 +362,14 @@
 				78D25C4024ACBAE700229882 /* AgoraLog.h in Headers */,
 				782165A82545C4790025435D /* AgoraOSLogger.h in Headers */,
 				78D25CE224AD84A500229882 /* aesopt.h in Headers */,
-				78D25D3924AD926600229882 /* DeviceManager.h in Headers */,
+				78D25D3924AD926600229882 /* AgoraLogDeviceManager.h in Headers */,
 				78DFB73925AF04DC00B01906 /* AgoraLogHttpClient.h in Headers */,
-				78D25D3E24AD977C00229882 /* StringMD5.h in Headers */,
+				78D25D3E24AD977C00229882 /* AgoraLogStringMD5.h in Headers */,
 				784A98EB25AC4D6900B919E8 /* AgoraLogHttpManager.h in Headers */,
 				78D25CD924AD84A500229882 /* ioapi_buf.h in Headers */,
 				78D25CCB24AD84A500229882 /* ZipArchive.h in Headers */,
 				78D25CCF24AD84A500229882 /* minishared.h in Headers */,
-				78D25C9224AD795C00229882 /* OSSManager.h in Headers */,
+				78D25C9224AD795C00229882 /* AgoraLogOSSManager.h in Headers */,
 				78D25CD524AD84A500229882 /* unzip.h in Headers */,
 				78D25CE424AD84A500229882 /* brg_types.h in Headers */,
 				78D25CD424AD84A500229882 /* zip.h in Headers */,
@@ -485,18 +485,18 @@
 				78D25CE124AD84A500229882 /* fileenc.c in Sources */,
 				78D25CE324AD84A500229882 /* sha1.c in Sources */,
 				78D25CD024AD84A500229882 /* ioapi.c in Sources */,
-				78D25D3F24AD977C00229882 /* StringMD5.m in Sources */,
-				78D25D3A24AD926600229882 /* DeviceManager.m in Sources */,
-				780555FB25A5EF7700CE4E74 /* LogModel.m in Sources */,
+				78D25D3F24AD977C00229882 /* AgoraLogStringMD5.m in Sources */,
+				78D25D3A24AD926600229882 /* AgoraLogDeviceManager.m in Sources */,
+				780555FB25A5EF7700CE4E74 /* AgoraLogModel.m in Sources */,
 				78DFB73A25AF04DC00B01906 /* AgoraLogHttpClient.m in Sources */,
 				780E2BE024DD4FB500F7B930 /* AgoraLogManager.m in Sources */,
 				78D25CDC24AD84A500229882 /* aeskey.c in Sources */,
 				78D25CD224AD84A500229882 /* ioapi_buf.c in Sources */,
 				78D25CD624AD84A500229882 /* ioapi_mem.c in Sources */,
-				78D25C9324AD795C00229882 /* OSSManager.m in Sources */,
+				78D25C9324AD795C00229882 /* AgoraLogOSSManager.m in Sources */,
 				78D25CCE24AD84A500229882 /* zip.c in Sources */,
 				78D25CD724AD84A500229882 /* minishared.c in Sources */,
-				78D25C9724AD7BA200229882 /* OSSModel.m in Sources */,
+				78D25C9724AD7BA200229882 /* AgoraLogOSSModel.m in Sources */,
 				78D25CEA24AD84A500229882 /* pwd2key.c in Sources */,
 				78D25CE024AD84A500229882 /* aescrypt.c in Sources */,
 				78D25CCC24AD84A500229882 /* crypt.c in Sources */,

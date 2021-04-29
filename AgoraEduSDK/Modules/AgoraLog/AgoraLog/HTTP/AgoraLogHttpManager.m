@@ -1,5 +1,5 @@
 //
-//  HttpManager.m
+//  AgoraLogHttpManager.m
 //  AgoraEdu
 //
 //  Created by SRS on 2020/5/3.
@@ -9,29 +9,31 @@
 #import "AgoraLogHttpManager.h"
 #import <UIKit/UIKit.h>
 #import "AgoraLogHttpClient.h"
-#import "DeviceManager.h"
-#import "StringMD5.h"
+#import "AgoraLogDeviceManager.h"
+#import "AgoraLogStringMD5.h"
 
 NSString *AGORA_EDU_HTTP_LOG_INFO = @"";
 
 @implementation AgoraLogHttpManager
-+ (void)getLogInfoWithAppId:(NSString *)appId baseURL:(NSString *)baseURL appSecret:(NSString *)appSecret uid:(NSString *)uid token:(NSString *)token ext:(NSDictionary *)ext apiVersion:(NSString *)apiVersion completeSuccessBlock:(void (^ _Nullable) (LogModel * model))successBlock completeFailBlock:(void (^ _Nullable) (NSError *error))failBlock {
 
++ (void)getLogInfoWithOptions:(AgoraLogUploadOptions *)options
+         completeSuccessBlock:(void (^)(AgoraLogModel * _Nonnull))successBlock
+            completeFailBlock:(void (^)(NSError * _Nonnull))failBlock {
     if (AGORA_EDU_HTTP_LOG_INFO.length == 0) {
-        NSString *hostString = [NSString stringWithFormat:@"/monitor/apps/%@/v1/log/oss/policy", appId];
-        AGORA_EDU_HTTP_LOG_INFO = [baseURL stringByAppendingString:hostString];
+        NSString *hostString = [NSString stringWithFormat:@"/monitor/apps/%@/v1/log/oss/policy", options.appId];
+        AGORA_EDU_HTTP_LOG_INFO = [options.baseURL stringByAppendingString:hostString];
     }
     
-    AGORA_EDU_HTTP_LOG_INFO = [AGORA_EDU_HTTP_LOG_INFO stringByReplacingOccurrencesOfString:@"v1" withString:apiVersion];
+    AGORA_EDU_HTTP_LOG_INFO = [AGORA_EDU_HTTP_LOG_INFO stringByReplacingOccurrencesOfString:@"v1" withString:options.apiVersion];
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"appId"] = appId;
-    if(ext != nil) {
-        params[@"ext"] = ext;
+    params[@"appId"] = options.appId;
+    if(options.ext != nil) {
+        params[@"ext"] = options.ext;
     }
     
     params[@"platform"] = [UIDevice currentDevice].systemName;
-    params[@"deviceName"] = [DeviceManager getDeviceIdentifier];
+    params[@"deviceName"] = [AgoraLogDeviceManager getDeviceIdentifier];
     params[@"deviceVersion"] = [UIDevice currentDevice].systemVersion;
     
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -39,12 +41,22 @@ NSString *AGORA_EDU_HTTP_LOG_INFO = @"";
     params[@"appVersion"] = app_Version;
     
     params[@"fileExt"] = @"zip";
+    params[@"tag"] = @{@"userUuid":options.userUuid,
+                       @"userName":options.userName,
+                       @"role":options.role,
+                       @"roomUuid":options.roomUuid,
+                       @"roomName":options.roomName,
+                       @"roomType":options.roomType
+    };
     
-    NSDictionary *headers = [AgoraLogHttpManager httpHeader:params appSecret:appSecret uid:uid token:token];
+    NSDictionary *headers = [AgoraLogHttpManager httpHeader:params
+                                                  appSecret:options.appSecret
+                                                        uid:options.userUuid
+                                                      token:options.rtmToken];
     
     [AgoraLogHttpClient post:AGORA_EDU_HTTP_LOG_INFO params:params headers:headers success:^(id _Nonnull responseObj) {
         
-        LogModel *model = [LogModel initWithObject:responseObj];
+        AgoraLogModel *model = [AgoraLogModel initWithObject:responseObj];
         if(successBlock != nil){
             successBlock(model);
         }
@@ -65,7 +77,7 @@ NSString *AGORA_EDU_HTTP_LOG_INFO = @"";
     signStr = [signStr stringByAppendingString:appSecret];
     signStr = [signStr stringByAppendingString:paramsStr];
     signStr = [signStr stringByAppendingString:timestamp];
-    signStr = [StringMD5 MD5:signStr];
+    signStr = [AgoraLogStringMD5 MD5:signStr];
     
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     headers[@"sign"] = signStr;

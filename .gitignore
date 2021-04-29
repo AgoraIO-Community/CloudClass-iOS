@@ -3,8 +3,12 @@
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
 ## Build generated
-build/
+#build/
 DerivedData
+xcshareddata
+Podfile.lock
+*.xcworkspace
+Pods
 
 ## Various settings
 *.pbxuser
@@ -62,11 +66,13 @@ Pods/
 IPADEV/
 IPAQA/
 IPAQATEST/
+IPAQATESTNEW/
 IPA/
 *.ipa
 *.xcarchive
 *.framework
 
-buildFrameworks.sh
-AgoraEduSDK.podspec
 Frameworks/
+derived_data/
+*.log
+Podfile.lock

@@ -8,20 +8,31 @@
 #import <Foundation/Foundation.h>
 #import "AgoraEduObjects.h"
 #import "AgoraEduClassroom.h"
-#import "AgoraEduReplay.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AgoraEduSDK : NSObject
+@protocol AgoraEduCoursewareDelegate <NSObject>
+@optional
+- (void)courseware:(AgoraEduCourseware *)courseware
+ didProcessChanged:(float)process;
+- (void)courseware:(AgoraEduCourseware *)courseware
+      didCompleted:(NSError * _Nullable)error;
+@end
 
+@interface AgoraEduSDK : NSObject
 + (void)setConfig:(AgoraEduSDKConfig *)config;
 
-+ (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate;
++ (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config
+                               delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate;
 
-+ (AgoraEduReplay * _Nullable)replay:(AgoraEduReplayConfig *)config delegate:(id<AgoraEduReplayDelegate> _Nullable)delegate;
+// 配置白板课件
++ (void)configCoursewares:(NSArray<AgoraEduCourseware *> *)coursewares;
+// 下载白板课件
++ (void)downloadCoursewares:(id<AgoraEduCoursewareDelegate> _Nullable)delegate;
+// 注册容器App
++ (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)apps;
 
 + (NSString *)version;
-
 @end
 
 NS_ASSUME_NONNULL_END

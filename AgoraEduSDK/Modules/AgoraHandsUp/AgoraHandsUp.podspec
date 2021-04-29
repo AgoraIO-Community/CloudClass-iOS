@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraHandsUp"
-  spec.version      = "0.0.1"
+  spec.version      = "1.0.0"
   spec.summary      = "Agora HandsUp Module."
   spec.description  = "Log component, support writing, compression upload"
   spec.homepage     = "https://github.com/AgoraIO-Usecase/eEducation"

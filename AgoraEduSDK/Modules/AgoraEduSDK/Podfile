@@ -11,12 +11,22 @@ target 'AgoraEduSDK' do
 
   pod 'AgoraReplay', :path => '../AgoraReplay/AgoraReplay.podspec'
   pod 'AgoraReplayUI', :path => '../AgoraReplayUI/AgoraReplayUI.podspec'
+  pod 'AgoraReport', :path => '../AgoraReport/AgoraReport.podspec'
 
-#  # if you use swift project, you just only change 'OC' to 'Swift'
-#  pod 'AgoraHandsUp', :path => '../AgoraHandsUp/AgoraHandsUp.podspec', :subspecs => ['OC']
-#
-#  # if you use swift project, you just only change 'OC' to 'Swift'
-#  pod 'AgoraActionProcess', :path => '../AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
+  pod 'AgoraUIBaseViews', :path => '../AgoraUIBaseViews/AgoraUIBaseViews.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
+  pod 'AgoraUIEduAppViews', :path => '../AgoraUIEduAppViews/AgoraUIEduAppViews.podspec'
+
+  pod 'AgoraExtApp', :path => '../AgoraExtApp/AgoraExtApp.podspec'
+
+  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec'
+  
+  # if you use swift project, you just only change 'OC' to 'Swift'
+  pod 'AgoraHandsUp', :path => '../AgoraHandsUp/AgoraHandsUp.podspec', :subspecs => ['OC']
+
+  # if you use swift project, you just only change 'OC' to 'Swift'
+  pod 'AgoraActionProcess', :path => '../AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
+  
 
   post_install do |installer|
      installer.pods_project.targets.each do |target|

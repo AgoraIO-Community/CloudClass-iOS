@@ -8,51 +8,51 @@
 
 /* Begin PBXBuildFile section */
 		714DB8EA608486078D7E8CE5 /* Pods_AgoraReplayUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 848F2FDC6CECDC15DE709B3C /* Pods_AgoraReplayUI.framework */; };
-		7849A5D724E3B45600774A79 /* ReplayVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7849A5D524E3B45600774A79 /* ReplayVideoView.m */; };
-		7849A5D824E3B45600774A79 /* ReplayVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7849A5D624E3B45600774A79 /* ReplayVideoView.h */; };
+		7849A5D724E3B45600774A79 /* AgoraReplayVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7849A5D524E3B45600774A79 /* AgoraReplayVideoView.m */; };
+		7849A5D824E3B45600774A79 /* AgoraReplayVideoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 7849A5D624E3B45600774A79 /* AgoraReplayVideoView.h */; };
 		788CFEDC24C57C4F0022439A /* UIView+AgoraConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFEC824C57C4F0022439A /* UIView+AgoraConstraint.m */; };
-		788CFEDD24C57C4F0022439A /* TouchButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEC924C57C4F0022439A /* TouchButton.h */; };
+		788CFEDD24C57C4F0022439A /* AgoraReplayTouchButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEC924C57C4F0022439A /* AgoraReplayTouchButton.h */; };
 		788CFEDE24C57C4F0022439A /* UIView+AgoraConstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFECA24C57C4F0022439A /* UIView+AgoraConstraint.h */; };
-		788CFEDF24C57C4F0022439A /* TouchButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFECB24C57C4F0022439A /* TouchButton.m */; };
-		788CFEE224C57C4F0022439A /* ReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFED024C57C4F0022439A /* ReplayViewController.m */; };
-		788CFEE324C57C4F0022439A /* ReplayViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFED124C57C4F0022439A /* ReplayViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		788CFEE424C57C4F0022439A /* ReplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFED224C57C4F0022439A /* ReplayViewController.xib */; };
-		788CFEE524C57C4F0022439A /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFED424C57C4F0022439A /* LoadingView.m */; };
-		788CFEE624C57C4F0022439A /* ReplayControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFED524C57C4F0022439A /* ReplayControlView.m */; };
-		788CFEE724C57C4F0022439A /* SliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFED624C57C4F0022439A /* SliderView.m */; };
-		788CFEE824C57C4F0022439A /* ReplayControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFED724C57C4F0022439A /* ReplayControlView.xib */; };
-		788CFEE924C57C4F0022439A /* SliderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFED824C57C4F0022439A /* SliderView.h */; };
-		788CFEEA24C57C4F0022439A /* LoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFED924C57C4F0022439A /* LoadingView.xib */; };
-		788CFEEB24C57C4F0022439A /* LoadingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEDA24C57C4F0022439A /* LoadingView.h */; };
-		788CFEEC24C57C4F0022439A /* ReplayControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEDB24C57C4F0022439A /* ReplayControlView.h */; };
+		788CFEDF24C57C4F0022439A /* AgoraReplayTouchButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFECB24C57C4F0022439A /* AgoraReplayTouchButton.m */; };
+		788CFEE224C57C4F0022439A /* AgoraReplayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFED024C57C4F0022439A /* AgoraReplayViewController.m */; };
+		788CFEE324C57C4F0022439A /* AgoraReplayViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFED124C57C4F0022439A /* AgoraReplayViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		788CFEE424C57C4F0022439A /* AgoraReplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFED224C57C4F0022439A /* AgoraReplayViewController.xib */; };
+		788CFEE524C57C4F0022439A /* AgoraReplayLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFED424C57C4F0022439A /* AgoraReplayLoadingView.m */; };
+		788CFEE624C57C4F0022439A /* AgoraReplayControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFED524C57C4F0022439A /* AgoraReplayControlView.m */; };
+		788CFEE724C57C4F0022439A /* AgoraReplaySliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 788CFED624C57C4F0022439A /* AgoraReplaySliderView.m */; };
+		788CFEE824C57C4F0022439A /* AgoraReplayControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFED724C57C4F0022439A /* AgoraReplayControlView.xib */; };
+		788CFEE924C57C4F0022439A /* AgoraReplaySliderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFED824C57C4F0022439A /* AgoraReplaySliderView.h */; };
+		788CFEEA24C57C4F0022439A /* AgoraReplayLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 788CFED924C57C4F0022439A /* AgoraReplayLoadingView.xib */; };
+		788CFEEB24C57C4F0022439A /* AgoraReplayLoadingView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEDA24C57C4F0022439A /* AgoraReplayLoadingView.h */; };
+		788CFEEC24C57C4F0022439A /* AgoraReplayControlView.h in Headers */ = {isa = PBXBuildFile; fileRef = 788CFEDB24C57C4F0022439A /* AgoraReplayControlView.h */; };
 		78D25C7F24ACBB6700229882 /* AgoraReplayUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D25C7D24ACBB6700229882 /* AgoraReplayUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78ED3FFE24E2C0A700931F50 /* Replay.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78ED3FFD24E2C0A700931F50 /* Replay.xcassets */; };
+		78ED3FFE24E2C0A700931F50 /* AgoraReplayUI.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78ED3FFD24E2C0A700931F50 /* AgoraReplayUI.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5B6F42591B20006F4E381869 /* Pods-AgoraReplayUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraReplayUI.release.xcconfig"; path = "Target Support Files/Pods-AgoraReplayUI/Pods-AgoraReplayUI.release.xcconfig"; sourceTree = "<group>"; };
-		7849A5D524E3B45600774A79 /* ReplayVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayVideoView.m; sourceTree = "<group>"; };
-		7849A5D624E3B45600774A79 /* ReplayVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayVideoView.h; sourceTree = "<group>"; };
+		7849A5D524E3B45600774A79 /* AgoraReplayVideoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayVideoView.m; sourceTree = "<group>"; };
+		7849A5D624E3B45600774A79 /* AgoraReplayVideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraReplayVideoView.h; sourceTree = "<group>"; };
 		788CFEC324C57A3B0022439A /* AgoraReplay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraReplay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		788CFEC824C57C4F0022439A /* UIView+AgoraConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AgoraConstraint.m"; sourceTree = "<group>"; };
-		788CFEC924C57C4F0022439A /* TouchButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchButton.h; sourceTree = "<group>"; };
+		788CFEC924C57C4F0022439A /* AgoraReplayTouchButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraReplayTouchButton.h; sourceTree = "<group>"; };
 		788CFECA24C57C4F0022439A /* UIView+AgoraConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AgoraConstraint.h"; sourceTree = "<group>"; };
-		788CFECB24C57C4F0022439A /* TouchButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TouchButton.m; sourceTree = "<group>"; };
-		788CFED024C57C4F0022439A /* ReplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayViewController.m; sourceTree = "<group>"; };
-		788CFED124C57C4F0022439A /* ReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayViewController.h; sourceTree = "<group>"; };
-		788CFED224C57C4F0022439A /* ReplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReplayViewController.xib; sourceTree = "<group>"; };
-		788CFED424C57C4F0022439A /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
-		788CFED524C57C4F0022439A /* ReplayControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplayControlView.m; sourceTree = "<group>"; };
-		788CFED624C57C4F0022439A /* SliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SliderView.m; sourceTree = "<group>"; };
-		788CFED724C57C4F0022439A /* ReplayControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReplayControlView.xib; sourceTree = "<group>"; };
-		788CFED824C57C4F0022439A /* SliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SliderView.h; sourceTree = "<group>"; };
-		788CFED924C57C4F0022439A /* LoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoadingView.xib; sourceTree = "<group>"; };
-		788CFEDA24C57C4F0022439A /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
-		788CFEDB24C57C4F0022439A /* ReplayControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplayControlView.h; sourceTree = "<group>"; };
+		788CFECB24C57C4F0022439A /* AgoraReplayTouchButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayTouchButton.m; sourceTree = "<group>"; };
+		788CFED024C57C4F0022439A /* AgoraReplayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayViewController.m; sourceTree = "<group>"; };
+		788CFED124C57C4F0022439A /* AgoraReplayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraReplayViewController.h; sourceTree = "<group>"; };
+		788CFED224C57C4F0022439A /* AgoraReplayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraReplayViewController.xib; sourceTree = "<group>"; };
+		788CFED424C57C4F0022439A /* AgoraReplayLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayLoadingView.m; sourceTree = "<group>"; };
+		788CFED524C57C4F0022439A /* AgoraReplayControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraReplayControlView.m; sourceTree = "<group>"; };
+		788CFED624C57C4F0022439A /* AgoraReplaySliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraReplaySliderView.m; sourceTree = "<group>"; };
+		788CFED724C57C4F0022439A /* AgoraReplayControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraReplayControlView.xib; sourceTree = "<group>"; };
+		788CFED824C57C4F0022439A /* AgoraReplaySliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraReplaySliderView.h; sourceTree = "<group>"; };
+		788CFED924C57C4F0022439A /* AgoraReplayLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AgoraReplayLoadingView.xib; sourceTree = "<group>"; };
+		788CFEDA24C57C4F0022439A /* AgoraReplayLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraReplayLoadingView.h; sourceTree = "<group>"; };
+		788CFEDB24C57C4F0022439A /* AgoraReplayControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraReplayControlView.h; sourceTree = "<group>"; };
 		78D25C7A24ACBB6700229882 /* AgoraReplayUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraReplayUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		78D25C7D24ACBB6700229882 /* AgoraReplayUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraReplayUI.h; sourceTree = "<group>"; };
 		78D25C7E24ACBB6700229882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		78ED3FFD24E2C0A700931F50 /* Replay.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Replay.xcassets; sourceTree = "<group>"; };
+		78ED3FFD24E2C0A700931F50 /* AgoraReplayUI.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AgoraReplayUI.xcassets; sourceTree = "<group>"; };
 		848F2FDC6CECDC15DE709B3C /* Pods_AgoraReplayUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraReplayUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A73681B26BE04B9D80534419 /* Pods-AgoraReplayUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraReplayUI.debug.xcconfig"; path = "Target Support Files/Pods-AgoraReplayUI/Pods-AgoraReplayUI.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,8 +74,8 @@
 			children = (
 				788CFECA24C57C4F0022439A /* UIView+AgoraConstraint.h */,
 				788CFEC824C57C4F0022439A /* UIView+AgoraConstraint.m */,
-				788CFEC924C57C4F0022439A /* TouchButton.h */,
-				788CFECB24C57C4F0022439A /* TouchButton.m */,
+				788CFEC924C57C4F0022439A /* AgoraReplayTouchButton.h */,
+				788CFECB24C57C4F0022439A /* AgoraReplayTouchButton.m */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -83,9 +83,9 @@
 		788CFECF24C57C4F0022439A /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				788CFED124C57C4F0022439A /* ReplayViewController.h */,
-				788CFED024C57C4F0022439A /* ReplayViewController.m */,
-				788CFED224C57C4F0022439A /* ReplayViewController.xib */,
+				788CFED124C57C4F0022439A /* AgoraReplayViewController.h */,
+				788CFED024C57C4F0022439A /* AgoraReplayViewController.m */,
+				788CFED224C57C4F0022439A /* AgoraReplayViewController.xib */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -93,16 +93,16 @@
 		788CFED324C57C4F0022439A /* Widget */ = {
 			isa = PBXGroup;
 			children = (
-				7849A5D624E3B45600774A79 /* ReplayVideoView.h */,
-				7849A5D524E3B45600774A79 /* ReplayVideoView.m */,
-				788CFEDA24C57C4F0022439A /* LoadingView.h */,
-				788CFED424C57C4F0022439A /* LoadingView.m */,
-				788CFED924C57C4F0022439A /* LoadingView.xib */,
-				788CFED824C57C4F0022439A /* SliderView.h */,
-				788CFED624C57C4F0022439A /* SliderView.m */,
-				788CFEDB24C57C4F0022439A /* ReplayControlView.h */,
-				788CFED524C57C4F0022439A /* ReplayControlView.m */,
-				788CFED724C57C4F0022439A /* ReplayControlView.xib */,
+				7849A5D624E3B45600774A79 /* AgoraReplayVideoView.h */,
+				7849A5D524E3B45600774A79 /* AgoraReplayVideoView.m */,
+				788CFEDA24C57C4F0022439A /* AgoraReplayLoadingView.h */,
+				788CFED424C57C4F0022439A /* AgoraReplayLoadingView.m */,
+				788CFED924C57C4F0022439A /* AgoraReplayLoadingView.xib */,
+				788CFED824C57C4F0022439A /* AgoraReplaySliderView.h */,
+				788CFED624C57C4F0022439A /* AgoraReplaySliderView.m */,
+				788CFEDB24C57C4F0022439A /* AgoraReplayControlView.h */,
+				788CFED524C57C4F0022439A /* AgoraReplayControlView.m */,
+				788CFED724C57C4F0022439A /* AgoraReplayControlView.xib */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -133,7 +133,7 @@
 				788CFECF24C57C4F0022439A /* ViewController */,
 				788CFED324C57C4F0022439A /* Widget */,
 				78D25C7E24ACBB6700229882 /* Info.plist */,
-				78ED3FFD24E2C0A700931F50 /* Replay.xcassets */,
+				78ED3FFD24E2C0A700931F50 /* AgoraReplayUI.xcassets */,
 			);
 			path = AgoraReplayUI;
 			sourceTree = "<group>";
@@ -153,7 +153,6 @@
 				A73681B26BE04B9D80534419 /* Pods-AgoraReplayUI.debug.xcconfig */,
 				5B6F42591B20006F4E381869 /* Pods-AgoraReplayUI.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -164,13 +163,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				788CFEE924C57C4F0022439A /* SliderView.h in Headers */,
-				788CFEE324C57C4F0022439A /* ReplayViewController.h in Headers */,
-				788CFEEB24C57C4F0022439A /* LoadingView.h in Headers */,
-				788CFEEC24C57C4F0022439A /* ReplayControlView.h in Headers */,
-				788CFEDD24C57C4F0022439A /* TouchButton.h in Headers */,
+				788CFEE924C57C4F0022439A /* AgoraReplaySliderView.h in Headers */,
+				788CFEE324C57C4F0022439A /* AgoraReplayViewController.h in Headers */,
+				788CFEEB24C57C4F0022439A /* AgoraReplayLoadingView.h in Headers */,
+				788CFEEC24C57C4F0022439A /* AgoraReplayControlView.h in Headers */,
+				788CFEDD24C57C4F0022439A /* AgoraReplayTouchButton.h in Headers */,
 				78D25C7F24ACBB6700229882 /* AgoraReplayUI.h in Headers */,
-				7849A5D824E3B45600774A79 /* ReplayVideoView.h in Headers */,
+				7849A5D824E3B45600774A79 /* AgoraReplayVideoView.h in Headers */,
 				788CFEDE24C57C4F0022439A /* UIView+AgoraConstraint.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,10 +233,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78ED3FFE24E2C0A700931F50 /* Replay.xcassets in Resources */,
-				788CFEEA24C57C4F0022439A /* LoadingView.xib in Resources */,
-				788CFEE424C57C4F0022439A /* ReplayViewController.xib in Resources */,
-				788CFEE824C57C4F0022439A /* ReplayControlView.xib in Resources */,
+				78ED3FFE24E2C0A700931F50 /* AgoraReplayUI.xcassets in Resources */,
+				788CFEEA24C57C4F0022439A /* AgoraReplayLoadingView.xib in Resources */,
+				788CFEE424C57C4F0022439A /* AgoraReplayViewController.xib in Resources */,
+				788CFEE824C57C4F0022439A /* AgoraReplayControlView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,12 +273,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				788CFEDC24C57C4F0022439A /* UIView+AgoraConstraint.m in Sources */,
-				788CFEE524C57C4F0022439A /* LoadingView.m in Sources */,
-				788CFEE224C57C4F0022439A /* ReplayViewController.m in Sources */,
-				7849A5D724E3B45600774A79 /* ReplayVideoView.m in Sources */,
-				788CFEE724C57C4F0022439A /* SliderView.m in Sources */,
-				788CFEDF24C57C4F0022439A /* TouchButton.m in Sources */,
-				788CFEE624C57C4F0022439A /* ReplayControlView.m in Sources */,
+				788CFEE524C57C4F0022439A /* AgoraReplayLoadingView.m in Sources */,
+				788CFEE224C57C4F0022439A /* AgoraReplayViewController.m in Sources */,
+				7849A5D724E3B45600774A79 /* AgoraReplayVideoView.m in Sources */,
+				788CFEE724C57C4F0022439A /* AgoraReplaySliderView.m in Sources */,
+				788CFEDF24C57C4F0022439A /* AgoraReplayTouchButton.m in Sources */,
+				788CFEE624C57C4F0022439A /* AgoraReplayControlView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

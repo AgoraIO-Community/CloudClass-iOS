@@ -5,268 +5,311 @@
 //  Created by SRS on 2021/1/5.
 //
 
+#import <AgoraWhiteBoard/AgoraWhiteURLSchemeHandler.h>
+#import <AgoraReport/AgoraReport-Swift.h>
+#import <AgoraEduSDK/AgoraEduSDK-Swift.h>
+#import <YYModel/YYModel.h>
 #import "AgoraEduSDK.h"
 #import "AgoraEduManager.h"
-#import "AgoraEduBaseViewController.h"
-#import "UIView+AgoraEduToast.h"
+#import "Agora1V1ViewController.h"
+#import "AgoraSmallViewController.h"
 #import "AgoraEduTopVC.h"
-#import "EyeCareModeUtil.h"
-#import "AgoraEduKeyCenter.h"
+#import "AgoraEyeCareModeUtil.h"
 #import "AgoraEduReplayConfiguration.h"
-#import <YYModel/YYModel.h>
+#import "AgoraManagerCache.h"
+#import "AgoraHTTPManager.h"
 
 #define NoNullString(x) ([x isKindOfClass:NSString.class] ? x : @"")
 #define NoNullObjectString(x) ((x == nil) ? @"" : @"NoNull")
 
-@interface AgoraEduSDK ()
+@interface AgoraEduSDK ()<AgoraDownloadProtocol>
+@property (weak, nonatomic) id<AgoraEduCoursewareDelegate> coursewareDelegate;
 @end
 
+static AgoraEduSDK *manager = nil;
+
 @implementation AgoraEduSDK
++ (instancetype)share {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        manager = [[AgoraEduSDK alloc] init];
+    });
+    return manager;
+}
+
 + (void)setBaseURL:(NSString *)baseURL {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL sel = NSSelectorFromString(@"setBaseURL:");
-    if ([EduManager respondsToSelector:sel]) {
-        [EduManager performSelector:sel withObject:baseURL];
+    if ([AgoraRTEManager respondsToSelector:sel]) {
+        [AgoraRTEManager performSelector:sel
+                              withObject:baseURL];
     }
 #pragma clang diagnostic pop
     
-    [AppHTTPManager setBaseURL:baseURL];
+    [AgoraHTTPManager setBaseURL:baseURL];
+    if ([baseURL containsString:@"dev"]) {
+        AgoraApaasReportor.apaasShared.BASE_URL = @"http://api-test.agora.io";
+    }
 }
+
 + (void)setLogConsoleState:(NSNumber *)num {
     [AgoraEduManager.shareManager setLogConsoleState:num.boolValue];
 }
 
+#pragma mark - Public
 + (void)setConfig:(AgoraEduSDKConfig *)config {
     // 校验
-    NSString *msg = [AgoraEduSDK validateEmptyMsg:@{@"config":NoNullObjectString(config),
-                        @"appId":NoNullString([config appId])}];
-    if(msg.length > 0){
+    NSString *msg = [AgoraEduSDK validateEmptyMsg:@{@"config": NoNullObjectString(config),
+                                                    @"appId": NoNullString([config appId])}];
+    if (msg.length > 0) {
         [AgoraEduSDK showToast:msg];
         return;
     }
     
-    AgoraEduKeyCenter.agoraAppid = config.appId;
-    [[EyeCareModeUtil sharedUtil] switchEyeCareMode:config.eyeCare];
+    AgoraManagerCache.share.appId = config.appId;
+    [[AgoraEyeCareModeUtil sharedUtil] switchEyeCareMode:config.eyeCare];
 }
-+ (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate {
+
++ (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config
+                               delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate {
+    AgoraManagerCache.share.classroomDelegate = delegate;
     
     // 校验
-    if(NoNullString(AgoraEduKeyCenter.agoraAppid).length == 0) {
-        NSString *msg = [NSString stringWithFormat:@"%@%@", AgoraEduLocalizedString(@"NeedCallText", nil), @"`setConfig:`"];
+    if (NoNullString(AgoraManagerCache.share.appId).length == 0) {
+        NSString *msg = [NSString stringWithFormat:@"%@%@", AgoraLocalizedString(@"NeedCallText", nil), @"`setConfig:`"];
         [AgoraEduSDK showToast:msg];
+        [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
         return nil;
     }
 
-    NSString *msg = [AgoraEduSDK validateEmptyMsg:@{@"config":NoNullObjectString(config),
-                        @"userName":NoNullString([config userName]),
-                        @"userUuid":NoNullString([config userUuid]),
-                        @"roomName":NoNullString([config roomName]),
-                        @"roomName":NoNullString([config roomUuid])}];
-    if(msg.length > 0){
+    NSString *msg = [AgoraEduSDK validateEmptyMsg:@{@"config": NoNullObjectString(config),
+                                                    @"userName": NoNullString([config userName]),
+                                                    @"userUuid": NoNullString([config userUuid]),
+                                                    @"roomName": NoNullString([config roomName]),
+                                                    @"roomName": NoNullString([config roomUuid])}];
+    if (msg.length > 0) {
         [AgoraEduSDK showToast:msg];
+        [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
         return nil;
     }
     
     if (config.roomType != AgoraEduRoomType1V1 &&
         config.roomType != AgoraEduRoomTypeSmall &&
-        config.roomType != AgoraEduRoomTypeBig) {
-        NSString *msg = [NSString stringWithFormat:@"%@%@", @"roomType", AgoraEduLocalizedString(@"ParamErrorText", nil)];
+        config.roleType != AgoraEduRoomTypeLecture) {
+        NSString *msg = [NSString stringWithFormat:@"%@%@", @"roomType", AgoraLocalizedString(@"ParamErrorText", nil)];
         [AgoraEduSDK showToast:msg];
+        [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
         return nil;
     }
     
     // 只能调用一次
-    if (AgoraEduManager.shareManager.classroom != nil) {
-        [AgoraEduSDK showToast:AgoraEduLocalizedString(@"DuplicateLaunchText", nil)];
+    if (AgoraManagerCache.share.classroom != nil) {
+        [AgoraEduSDK showToast:AgoraLocalizedString(@"DuplicateLaunchText", nil)];
+        [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
         return nil;
     }
-    AgoraEduManager.shareManager.classroom = [AgoraEduClassroom new];
-    AgoraEduManager.shareManager.classroomDelegate = delegate;
-    AgoraEduManager.shareManager.token = NoNullString(config.token);
     
-    RoomConfiguration *roomConfig = [RoomConfiguration new];
-    roomConfig.appId = AgoraEduKeyCenter.agoraAppid;
+    AgoraManagerCache.share.classroom = [AgoraEduClassroom new];
+    AgoraManagerCache.share.token = NoNullString(config.token);
+    
+    // Report
+    AgoraReportorContext *context = [[AgoraReportorContext alloc] initWithSource:@"apaas"
+                                                                      clientType:@"flexible_class"
+                                                                        platform:@"iOS"
+                                                                           appId:AgoraManagerCache.share.appId
+                                                                         version:AgoraEduSDK.version
+                                                                           token:NoNullString(config.token)
+                                                                        userUuid: NoNullString(config.userUuid)];
+    [[AgoraApaasReportor apaasShared] setWithContext:context];
+    [[AgoraApaasReportor apaasShared] startJoinRoom];
+    
+    AgoraRoomConfiguration *roomConfig = [AgoraRoomConfiguration new];
+    roomConfig.appId = AgoraManagerCache.share.appId;
     roomConfig.userUuid = config.userUuid;
     roomConfig.token = config.token;
-    [AppHTTPManager getConfig:roomConfig success:^(AppConfigModel * _Nonnull model) {
-
-        AgoraEduKeyCenter.boardAppid = model.data.netless.appId;
-        [AgoraEduSDK joinSDKWithConfig:config appConfigModel:model];
-
+        
+    [AgoraHTTPManager getConfig:roomConfig
+                        success:^(AgoraConfigModel * _Nonnull model) {
+        AgoraManagerCache.share.boardAppId = model.data.netless.appId;
+        [AgoraEduSDK joinSDKWithConfig:config
+                        appConfigModel:model];
     } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
+        [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
         [AgoraEduManager releaseResource];
         [AgoraEduSDK showToast:error.localizedDescription];
     }];
     
-    return AgoraEduManager.shareManager.classroom;
+    return AgoraManagerCache.share.classroom;
 }
 
-+ (AgoraEduReplay * _Nullable)replay:(AgoraEduReplayConfig *)config delegate:(id<AgoraEduReplayDelegate> _Nullable)delegate {
-    
-    Class class = Agora_Replay_Class;
-    if (class == nil) {
-        return nil;
-    }
-    
++ (void)configCoursewares:(NSArray<AgoraEduCourseware *> *)coursewares {
+    AgoraManagerCache.share.coursewares = coursewares;
+}
 
-    NSString *msg = [AgoraEduSDK validateEmptyMsg:@{@"config":NoNullObjectString(config),
-                        @"whiteBoardAppId":NoNullString([config whiteBoardAppId]),
-                        @"whiteBoardId":NoNullString([config whiteBoardId]),
-                        @"whiteBoardToken":NoNullString([config whiteBoardToken]),
-                        @"videoUrl":NoNullString([config videoUrl])}];
-    if(msg.length > 0){
++ (void)downloadCoursewares:(id<AgoraEduCoursewareDelegate> _Nullable)delegate {
+    NSString *directory = AgoraWhiteCoursewareDirectory;
+    
+    NSURL *publicURL = [NSURL URLWithString:@"https://convertcdn.netless.link/publicFiles.zip"];
+    [AgoraDownloadManager.shared downloadWithUrls:@[publicURL]
+                                    fileDirectory:directory
+                                              key:nil
+                                         delegate:nil];
+    
+    NSArray<AgoraEduCourseware *> *config = AgoraManagerCache.share.coursewares;
+    
+    if (config == nil || config.count == 0) {
+        NSString *msg = [NSString stringWithFormat:@"%@%@", AgoraLocalizedString(@"NeedCallText", nil), @"`configCoursewares:`"];
         [AgoraEduSDK showToast:msg];
-        return nil;
-    }
-    if (@(config.beginTime).stringValue.length != 13) {
-        NSString *msg = [NSString stringWithFormat:@"%@%@", @"beginTime", AgoraEduLocalizedString(@"ParamErrorText", nil)];
-        [AgoraEduSDK showToast:msg];
-        return nil;
-    }
-    if (@(config.endTime).stringValue.length != 13) {
-        NSString *msg = [NSString stringWithFormat:@"%@%@", @"endTime", AgoraEduLocalizedString(@"ParamErrorText", nil)];
-        [AgoraEduSDK showToast:msg];
-        return nil;
+        return;
     }
     
-    // 只能调用一次
-    if (AgoraEduManager.shareManager.replay != nil) {
-        [AgoraEduSDK showToast:AgoraEduLocalizedString(@"DuplicateLaunchText", nil)];
-        return nil;
-    }
-    AgoraEduManager.shareManager.replay = [AgoraEduReplay new];
-    AgoraEduManager.shareManager.replayDelegate = delegate;
-
-    /// ReplayConfiguration
-    AgoraEduBoardConfiguration *boardConfig = [AgoraEduBoardConfiguration new];
-    boardConfig.boardId = config.whiteBoardId;
-    boardConfig.boardToken = config.whiteBoardToken;
-    boardConfig.boardAppid = config.whiteBoardAppId;
-
-    AgoraEduVideoConfiguration *videoConfig = [AgoraEduVideoConfiguration new];
-    videoConfig.urlString = config.videoUrl;
-    
-    AgoraEduReplayConfiguration *replayConfig = [AgoraEduReplayConfiguration new];
-    replayConfig.boardConfig = boardConfig;
-    replayConfig.videoConfig = videoConfig;
-    replayConfig.startTime = @(config.beginTime).stringValue;
-    replayConfig.endTime = @(config.endTime).stringValue;
-    
-    NSBundle *replayBundle = [NSBundle bundleForClass:class];
-    UIViewController *vc = [[class alloc] initWithNibName:@"ReplayViewController" bundle:replayBundle];
-    id obj = [replayConfig yy_modelToJSONObject];
-    [vc setValue:obj forKey:@"configParams"];
-    [vc setValue:AgoraEduManager.shareManager.replay forKey:@"replayDelegate"];
-    vc.modalPresentationStyle = UIModalPresentationFullScreen;
-
-    [AgoraEduTopVC.topVC presentViewController:vc animated:YES completion:^{
-        
-        if ([AgoraEduManager.shareManager.replayDelegate respondsToSelector:@selector(replay:didReceivedEvent:)]) {
-            [AgoraEduManager.shareManager.replayDelegate replay:AgoraEduManager.shareManager.replay didReceivedEvent:AgoraEduEventReady];
+    for (AgoraEduCourseware *courseware in config) {
+        if (NoNullString(courseware.resourceUrl).length == 0) {
+            continue;
         }
-    }];
-    return AgoraEduManager.shareManager.replay;
+        NSURL *url = [NSURL URLWithString:courseware.resourceUrl];
+        NSString *key = [NSString stringWithFormat:@"%lu", courseware.resourceUrl.hash];
+        [AgoraDownloadManager.shared downloadWithUrls:@[url]
+                                        fileDirectory:directory
+                                                  key:key
+                                             delegate:AgoraEduSDK.share];
+    }
+    
+    AgoraEduSDK.share.coursewareDelegate = delegate;
+    AgoraManagerCache.share.coursewares = config;
+}
+
++ (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)apps {
+    if ([AgoraEduTopVC.topVC isKindOfClass:[AgoraBaseViewController class]]) {
+        AgoraBaseViewController *vc = (AgoraBaseViewController *)AgoraEduTopVC.topVC;
+        [vc registerExtApps:apps];
+    } else {
+        AgoraManagerCache.share.extApps = apps;
+    }
 }
 
 + (NSString *)version {
-    return @"1.0.0";
+    return @"1.1.0";
 }
 
+#pragma mark - Private
 #pragma mark joinSDKWithConfig
-+ (void)joinSDKWithConfig:(AgoraEduLaunchConfig *)config appConfigModel:(AppConfigModel *)model {
-    
++ (void)joinSDKWithConfig:(AgoraEduLaunchConfig *)config
+           appConfigModel:(AgoraConfigModel *)model {
     NSString *roomUuid = config.roomUuid;
     NSString *roomName = config.roomName;
     NSString *userUuid = config.userUuid;
     NSString *userName = config.userName;
-    EduSceneType sceneType = (EduSceneType)config.roomType;
+    AgoraRTESceneType sceneType = (AgoraRTESceneType)config.roomType;
     
-    RoomStateConfiguration *roomStateConfig = [RoomStateConfiguration new];
-    roomStateConfig.appId = AgoraEduKeyCenter.agoraAppid;
+    AgoraRoomStateConfiguration *roomStateConfig = [AgoraRoomStateConfiguration new];
+    roomStateConfig.appId = AgoraManagerCache.share.appId;
     
     roomStateConfig.roomName = roomName;
     roomStateConfig.roomUuid = roomUuid;
     roomStateConfig.roomType = sceneType;
-    roomStateConfig.role = config.roleType;
+    roomStateConfig.role = (AgoraRTERoleType)config.roleType;
     roomStateConfig.userUuid = userUuid;
-    roomStateConfig.token = AgoraEduManager.shareManager.token;
-
-    [AgoraEduManager.shareManager initWithUserUuid:userUuid userName:userName tag:sceneType success:^{
-        
-        [AgoraEduManager.shareManager queryRoomStateWithConfig:roomStateConfig success:^{
-        
-            if(sceneType == EduSceneType1V1) {
-                if(IsPad){
-                    [AgoraEduSDK joinRoomWithIdentifier:@"oneToOneRoom-iPad" config:config appConfigModel:model];
-                } else {
-                    [AgoraEduSDK joinRoomWithIdentifier:@"oneToOneRoom" config:config appConfigModel:model];
-                }
-            } else if(sceneType == EduSceneTypeSmall) {
-                if(IsPad){
-                    [AgoraEduSDK joinRoomWithIdentifier:@"smallRoom-iPad" config:config appConfigModel:model];
-                } else {
-                    [AgoraEduSDK joinRoomWithIdentifier:@"smallRoom" config:config appConfigModel:model];
-                }
-            } else if(sceneType == EduSceneTypeBig) {
-                if(IsPad){
-                    [AgoraEduSDK joinRoomWithIdentifier:@"bigRoom-iPad" config:config appConfigModel:model];
-                } else {
-                    [AgoraEduSDK joinRoomWithIdentifier:@"bigRoom" config:config appConfigModel:model];
-                }
-            } else if(sceneType == EduSceneTypeBreakout) {
-                if(IsPad){
-                   [AgoraEduSDK joinRoomWithIdentifier:@"boRoom-iPad" config:config appConfigModel:model];
-                } else {
-                   [AgoraEduSDK joinRoomWithIdentifier:@"boRoom" config:config appConfigModel:model];
-                }
-            } else if(sceneType == EduSceneTypeMedium) {
-                [AgoraEduSDK joinRoomWithIdentifier:@"groupRoom" config:config appConfigModel:model];
-            }
-
-        } failure:^(NSString * _Nonnull errorMsg) {
-            [AgoraEduManager releaseResource];
-            [AgoraEduSDK showToast:errorMsg];
-        }];
+    roomStateConfig.token = AgoraManagerCache.share.token;
+    roomStateConfig.startTime = config.startTime;
+    roomStateConfig.duration = config.duration;
+    roomStateConfig.userName = config.userName;
     
-    } failure:^(NSString * _Nonnull errorMsg) {
+    [AgoraEduManager.shareManager initWithUserUuid:userUuid
+                                          userName:userName
+                                            roomId:roomUuid
+                                               tag:sceneType
+                                           success:^{
+        // Report
+        NSString *subEvent = @"http-preflight";
+        NSString *httpApi = @"preflight";
+        [[AgoraApaasReportor apaasShared] startJoinRoomSubEventWithSubEvent:subEvent];
+        
+        [AgoraEduManager.shareManager queryRoomStateWithConfig:roomStateConfig
+                                                       success:^{
+            // Report
+            [[AgoraApaasReportor apaasShared] endJoinRoomSubEventWithSubEvent:subEvent
+                                                                         type:AgoraReportEndCategoryHttp
+                                                                    errorCode:0
+                                                                     httpCode:200
+                                                                          api:httpApi];
+            AgoraVMConfig *vmConfig = [AgoraVMConfig new];
+            vmConfig.appId = AgoraManagerCache.share.appId;
+            vmConfig.sceneType = config.roomType;
+            vmConfig.roomUuid = config.roomUuid;
+            vmConfig.className = config.roomName;
+            vmConfig.userUuid = config.userUuid;
+            vmConfig.userName = config.userName;
+            vmConfig.token = AgoraManagerCache.share.token;
+            vmConfig.baseURL = [AgoraHTTPManager getBaseURL];
+            [AgoraEduSDK joinRoomWithConfig:vmConfig];
+
+        } failure:^(NSError *error, NSInteger statusCode) {
+            // Report
+            [[AgoraApaasReportor apaasShared] endJoinRoomSubEventWithSubEvent:subEvent
+                                                                         type:AgoraReportEndCategoryHttp
+                                                                    errorCode:error.code
+                                                                     httpCode:statusCode
+                                                                          api:httpApi];
+            
+            [[AgoraApaasReportor apaasShared] endJoinRoomWithErrorCode:error.code
+                                                              httpCode:statusCode];
+            
+            if (error.code == 30403100) {
+                [AgoraEduSDK launchCompleteEvent:AgoraEduEventForbidden];
+            } else {
+                [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
+                [AgoraEduSDK showToast:error.localizedDescription];
+            }
+            
+            [AgoraEduManager releaseResource];
+        }];
+        
+    } failure:^(NSError * error) {
+        [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
+        
+        // Report
+        [[AgoraApaasReportor apaasShared] endJoinRoomWithErrorCode:error.code
+                                                          httpCode:0];
+        
         [AgoraEduManager releaseResource];
-        [AgoraEduSDK showToast:errorMsg];
+        [AgoraEduSDK showToast:error.localizedDescription];
     }];
 }
 
-+ (void)joinRoomWithIdentifier:(NSString*)identifier config:(AgoraEduLaunchConfig *)config appConfigModel:(AppConfigModel *)model {
-
-    NSString *roomUuid = config.roomUuid;
-    NSString *roomName = config.roomName;
-    NSString *userUuid = config.userUuid;
-    NSString *userName = config.userName;
-    EduSceneType sceneType = (EduSceneType)config.roomType;
-    NSBundle *bundle = AgoraEduBundle;
-    UIStoryboard *story = [UIStoryboard storyboardWithName:@"Room" bundle:bundle];
-    AgoraEduBaseViewController *vc = [story instantiateViewControllerWithIdentifier:identifier];
-    vc.sceneType = sceneType;
-    vc.className = roomName;
-    vc.roomUuid = roomUuid;
-    vc.userUuid = userUuid;
-    vc.userName = userName;
-    vc.boardId = model.data.netless.appId;
-    vc.boardToken = model.data.netless.token;
++ (void)joinRoomWithConfig:(AgoraVMConfig *)config  {
+    AgoraBaseViewController *vc;
+    if (config.sceneType == AgoraEduRoomType1V1) {
+        vc = [[Agora1V1ViewController alloc] init];
+    } else {
+        vc = [[AgoraSmallViewController alloc] init];
+    }
+    vc.vmConfig = config;
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
     
-    [AgoraEduTopVC.topVC presentViewController:vc animated:YES completion:^{
-        
-        if ([AgoraEduManager.shareManager.classroomDelegate respondsToSelector:@selector(classroom:didReceivedEvent:)]) {
-            [AgoraEduManager.shareManager.classroomDelegate classroom:AgoraEduManager.shareManager.classroom didReceivedEvent:AgoraEduEventReady];
-        }
+    [AgoraEduTopVC.topVC presentViewController:vc
+                                      animated:YES
+                                    completion:^{
+        [AgoraEduSDK launchCompleteEvent:AgoraEduEventReady];
     }];
 }
 
-#pragma mark Private
++ (void)launchCompleteEvent:(AgoraEduEvent)event {
+    if ([AgoraManagerCache.share.classroomDelegate respondsToSelector:@selector(classroom:didReceivedEvent:)]) {
+        [AgoraManagerCache.share.classroomDelegate classroom:AgoraManagerCache.share.classroom
+                                            didReceivedEvent:event];
+    }
+    
+    if (event == AgoraEduEventFailed || event == AgoraEduEventDestroyed || event == AgoraEduEventForbidden) {
+        AgoraManagerCache.share.classroomDelegate = nil;
+    }
+}
+
 + (NSString *)validateEmptyMsg:(NSDictionary<NSString *,NSString *> *)dictionary {
-    for(NSString *key in dictionary.allKeys) {
-        if(dictionary[key].length == 0) {
-            NSString *msg = [NSString stringWithFormat:@"%@%@", key, AgoraEduLocalizedString(@"NoEmptyText", nil)];
+    for (NSString *key in dictionary.allKeys) {
+        if (dictionary[key].length == 0) {
+            NSString *msg = [NSString stringWithFormat:@"%@%@", key, AgoraLocalizedString(@"NoEmptyText", nil)];
             return msg;
         }
     }
@@ -274,6 +317,50 @@
 }
 
 + (void)showToast:(NSString *)msg {
-    [[UIApplication sharedApplication].windows.firstObject makeToast:msg];
+    [AgoraUtils showToastWithMessage:msg];
+}
+
+#pragma mark AgoraDownloadProtocol
+- (void)onProcessChanged:(NSString *)key
+                     url:(NSURL *)url
+                 process:(float)process {
+    if (NoNullString(key).length == 0) {
+        return;
+    }
+    
+    if (![self.coursewareDelegate respondsToSelector:@selector(courseware:didProcessChanged:)]) {
+        return;
+    }
+    
+    for (AgoraEduCourseware *courseware in AgoraManagerCache.share.coursewares) {
+        NSUInteger hash = courseware.resourceUrl.hash;
+        NSString *hashKey = [NSString stringWithFormat:@"%lu", hash];
+        if ([key isEqualToString:hashKey]) {
+            [self.coursewareDelegate courseware:courseware
+                              didProcessChanged:process];
+            return;
+        }
+    }
+}
+
+- (void)onDownloadCompleted:(NSString *)key
+                       urls:(NSArray<NSURL *> *)urls
+                      error:(NSError *)error
+                  errorCode:(NSInteger)errorCode {
+    if (NoNullString(key).length == 0) {
+        return;
+    }
+    
+    if (![self.coursewareDelegate respondsToSelector:@selector(courseware:didCompleted:)]) {
+        return;
+    }
+    
+    for (AgoraEduCourseware *courseware in AgoraManagerCache.share.coursewares) {
+        NSString *hashKey = [NSString stringWithFormat:@"%lu", (long)courseware.resourceUrl.hash];
+        if ([key isEqualToString:hashKey]) {
+            [self.coursewareDelegate courseware:courseware didCompleted:error];
+            return;
+        }
+    }
 }
 @end

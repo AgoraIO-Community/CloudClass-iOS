@@ -25,7 +25,7 @@
 }
 
 - (void)setUpView {
-    UITableView *settingTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight) style:(UITableViewStylePlain)];
+    UITableView *settingTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height) style:(UITableViewStylePlain)];
     settingTableView.dataSource = self;
     settingTableView.delegate = self;
     [self.view addSubview:settingTableView];
@@ -35,7 +35,7 @@
     CGRect rectStatus = [[UIApplication sharedApplication] statusBarFrame];
     CGRect rectNav = self.navigationController.navigationBar.frame;
     
-    UILabel *footView = [[UILabel alloc] initWithFrame:CGRectMake(0, kScreenHeight - rectStatus.size.height - rectNav.size.height - 50, kScreenWidth, 20)];
+    UILabel *footView = [[UILabel alloc] initWithFrame:CGRectMake(0, [UIScreen mainScreen].bounds.size.height - rectStatus.size.height - rectNav.size.height - 50, [UIScreen mainScreen].bounds.size.width, 20)];
     footView.textAlignment = NSTextAlignmentCenter;
     
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];

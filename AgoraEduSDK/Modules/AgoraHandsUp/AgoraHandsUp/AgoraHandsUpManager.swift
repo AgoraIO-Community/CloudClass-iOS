@@ -7,7 +7,7 @@
 
 import UIKit
 
-public enum AgoraHandsUpState {
+public enum AgoraEduContextHandsUpState {
     case none   // 没有举手
     case handsUp
     case handsDown
@@ -20,7 +20,7 @@ enum AgoraHandsUpType {
 }
 
 public protocol AgoraHandsUpDelegate: class {
-    func onHandsClicked(currentState: AgoraHandsUpState)
+    func onHandsClicked(currentState: AgoraEduContextHandsUpState)
     func onHandsUpTimeOut()
 }
 
@@ -32,7 +32,7 @@ public class AgoraHandsUpManager {
         }
     }
     
-    var handsUpState: AgoraHandsUpState = .none {
+    var handsUpState: AgoraEduContextHandsUpState = .none {
         didSet {
             self.updateHandsup()
             
@@ -48,7 +48,7 @@ public class AgoraHandsUpManager {
     fileprivate weak var delegate: AgoraHandsUpDelegate?
     
     fileprivate let MAXCOUNT = 3
-    fileprivate var state = AgoraHandsUpState.none
+    fileprivate var state = AgoraEduContextHandsUpState.none
 
     fileprivate lazy var timeCountLabel: UILabel = {
         

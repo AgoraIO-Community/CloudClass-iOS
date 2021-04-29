@@ -15,10 +15,14 @@
     }
     return self;
 }
+
 - (instancetype)initWithAppId:(NSString *)appId {
-    return [self initWithAppId:appId eyeCare:NO];
+    return [self initWithAppId:appId
+                       eyeCare:NO];
 }
-- (instancetype)initWithAppId:(NSString *)appId eyeCare:(BOOL)eyeCare {
+
+- (instancetype)initWithAppId:(NSString *)appId
+                      eyeCare:(BOOL)eyeCare {
     self = [super init];
     if (self) {
         self.appId = appId;
@@ -28,7 +32,20 @@
 }
 @end
 
-@interface AgoraEduLaunchConfig ()
+@implementation AgoraEduCourseware
+- (instancetype)initWithResourceName:(NSString *)resourceName
+                           scenePath:(NSString *)scenePath
+                              scenes:(NSArray<WhiteScene *> *)scenes
+                         resourceUrl:(NSString *)resourceUrl {
+    self = [super init];
+    if (self) {
+        self.resourceName = resourceName;
+        self.scenePath = scenePath;
+        self.resourceUrl = resourceUrl;
+        self.scenes = scenes;
+    }
+    return self;
+}
 @end
 
 @implementation AgoraEduLaunchConfig
@@ -39,34 +56,47 @@
     }
     return self;
 }
-- (instancetype)initWithUserName:(NSString *)userName userUuid:(NSString *)userUuid roleType:(AgoraEduRoleType)roleType roomName:(NSString *)roomName roomUuid:(NSString *)roomUuid roomType:(AgoraEduRoomType)roomType token:(NSString *)token {
-    
+
+- (instancetype)initWithUserName:(NSString *)userName
+                        userUuid:(NSString *)userUuid
+                        roleType:(AgoraEduRoleType)roleType
+                        roomName:(NSString *)roomName
+                        roomUuid:(NSString *)roomUuid
+                        roomType:(AgoraEduRoomType)roomType
+                           token:(NSString *)token
+                       startTime:(NSNumber * _Nullable)startTime
+                        duration:(NSNumber * _Nullable)duration
+                     boardRegion:(NSString * _Nullable)boardRegion{
     self = [self init];
     self.userName = userName;
     self.userUuid = userUuid;
     self.roomName = roomName;
     self.roomUuid = roomUuid;
     self.roomType = roomType;
-    if (token != nil) {
-        self.token = token;
+    self.token = token;
+    if (startTime != nil) {
+        self.startTime = startTime;
     }
-    
-    return self;
-}
-@end
-
-@implementation AgoraEduReplayConfig
-- (instancetype)initWithBoardAppId:(NSString *)whiteBoardAppId boardId:(NSString *)whiteBoardId boardToken:(NSString *)whiteBoardToken videoUrl:(NSString *)videoUrl beginTime:(NSInteger)beginTime endTime:(NSInteger)endTime {
-
-    self = [super init];
-    if (self) {
-        self.whiteBoardAppId = whiteBoardAppId;
-        self.whiteBoardId = whiteBoardId;
-        self.whiteBoardToken = whiteBoardToken;
-        self.videoUrl = videoUrl;
-        self.beginTime = beginTime;
-        self.endTime = endTime;
+    if (duration != nil) {
+        self.duration = duration;
+    }
+    if (boardRegion != nil) {
+        self.boardRegion = boardRegion;
     }
     return self;
 }
 @end
+
+NSString * const AgoraEduChatTranslationLanAUTO = @"auto";
+NSString * const AgoraEduChatTranslationLanCN = @"zh-CHS";
+NSString * const AgoraEduChatTranslationLanEN = @"en";
+NSString * const AgoraEduChatTranslationLanJA = @"ja";
+NSString * const AgoraEduChatTranslationLanKO = @"ko";
+NSString * const AgoraEduChatTranslationLanFR = @"fr";
+NSString * const AgoraEduChatTranslationLanES = @"es";
+NSString * const AgoraEduChatTranslationLanPT = @"pt";
+NSString * const AgoraEduChatTranslationLanIT = @"it";
+NSString * const AgoraEduChatTranslationLanRU = @"ru";
+NSString * const AgoraEduChatTranslationLanVI = @"vi";
+NSString * const AgoraEduChatTranslationLanDE = @"de";
+NSString * const AgoraEduChatTranslationLanAR = @"ar";

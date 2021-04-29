@@ -14,9 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // For Agora SDK APP id，you can refer to [https://docs.agora.io/en/Agora%20Platform/terms?platform=All%20Platforms#a-nameappidaapp-id]
 + (NSString *)appId;
-
-+ (NSString *)rtmToken;
-
++ (NSString *)appCertificate;
++ (NSString *)hostURL;
++ (NSString *)rtcVersion;
++ (NSString *)publishDate;
 @end
 
 NS_ASSUME_NONNULL_END
