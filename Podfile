@@ -3,33 +3,6 @@
 platform :ios, '10.0'
 inhibit_all_warnings!
 
-def sourcePod
-  pod 'AgoraEduSDK', :path => 'AgoraEduSDK/Modules/AgoraEduSDK/AgoraEduSDK.podspec'
-  
-  pod 'AgoraLog', :path => 'AgoraEduSDK/Modules/AgoraLog/AgoraLog.podspec'
-  pod 'EduSDK', :path => 'AgoraEduSDK/Modules/EduSDK/EduSDK.podspec'
-  pod 'AgoraWhiteBoard', :path => 'AgoraEduSDK/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
-
-  pod 'AgoraReport', :path => 'AgoraEduSDK/Modules/AgoraReport/AgoraReport.podspec'
-  
-  pod 'AgoraUIBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
-  pod 'AgoraUIEduAppViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduAppViews/AgoraUIEduAppViews.podspec', :subspecs => ['SOURCE']
-  pod 'AgoraUIEduBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SOURCE']
-
-  pod 'AgoraExtApp', :path => 'AgoraEduSDK/Modules/AgoraExtApp/AgoraExtApp.podspec'
-  pod 'AgoraEduContext', :path => 'AgoraEduSDK/Modules/AgoraEduContext/AgoraEduContext.podspec'
-
-  # if you use swift project, you just only change 'OC' to 'Swift'
-  pod 'AgoraHandsUp', :path => 'AgoraEduSDK/Modules/AgoraHandsUp/AgoraHandsUp.podspec', :subspecs => ['OC']
-
-  # if you use swift project, you just only change 'OC' to 'Swift'
-  pod 'AgoraActionProcess', :path => 'AgoraEduSDK/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
-end
-
-def binaryPod
-  pod 'AgoraEduSDK', :path => 'AgoraEduSDK/AgoraEduSDK.podspec'
-end
-
 workspace 'AgoraEducation.xcworkspace'
 install! 'cocoapods', :deterministic_uuids => false, :warn_for_unused_master_specs_repo => false
 
@@ -39,6 +12,11 @@ target 'AgoraEducation' do
   pod "AFNetworking", "4.0.1"
   pod 'OpenSSL-Universal', '1.0.2.17'
 
-  sourcePod
-  #binaryPod
+# AgoraEduSDK
+  pod "AgoraEduSDK/Core"
+  
+#  UIKIT
+  pod 'AgoraUIBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
+  pod 'AgoraUIEduAppViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduAppViews/AgoraUIEduAppViews.podspec', :subspecs => ['BINARY']
+  pod 'AgoraUIEduBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['BINARY']
 end
