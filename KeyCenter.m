@@ -9,6 +9,7 @@
 #import "KeyCenter.h"
 
 @implementation KeyCenter
+
 + (NSString *)appId {
     return <#Your Agora AppID#>;
 }
@@ -26,7 +27,7 @@
 }
 
 + (NSString *)publishDate {
-    return @"2021.04.28";
+    return @"2021.04.30";
 }
 
 @end

@@ -62,15 +62,15 @@ buildFunc() {
 }
 
 # compile
-# iphone
-rm -rf $Derived_Data_Path/*
-buildFunc "iphoneos"
-cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/$SDK_Name.framework $iPhone_Product_Path
-
 # simulator
 rm -rf $Derived_Data_Path/*
 buildFunc "iphonesimulator"
 cp -r $Derived_Data_Path/Build/Products/Release-iphonesimulator/$SDK_Name.framework $Simulator_Product_Path
+
+# iphone
+rm -rf $Derived_Data_Path/*
+buildFunc "iphoneos"
+cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/$SDK_Name.framework $iPhone_Product_Path
 
 # merge
 if [ -d $Simulator_Modules_Path ]; then

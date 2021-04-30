@@ -913,6 +913,7 @@
 				PRODUCT_NAME = AgoraEduSDK;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "";
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
@@ -930,6 +931,7 @@
 				PRODUCT_NAME = AgoraEduSDK;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "";
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;

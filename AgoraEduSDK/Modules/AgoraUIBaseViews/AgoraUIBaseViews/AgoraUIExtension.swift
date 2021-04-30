@@ -107,9 +107,9 @@ public extension Bundle {
     static func agora_bundle(object: NSObject,
                              resource: String) -> Bundle? {
         let bundle = Bundle(for: object.classForCoder)
-        if let url = bundle.url(forResource: resource,
-                                withExtension: "bundle") {
-            return Bundle(url: url)
+        if let path = bundle.path(forResource: resource,
+                                  ofType: "bundle") {
+            return Bundle(path: path)
         } else {
             return nil
         }

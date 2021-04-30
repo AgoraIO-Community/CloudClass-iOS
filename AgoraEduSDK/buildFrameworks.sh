@@ -50,14 +50,7 @@ buildItem() {
 
 # copy special bundle to frameworks folder
 cd $Root_Path
-
-rm -rf Frameworks/AgoraEduSDK.bundle
-mkdir Frameworks/AgoraEduSDK.bundle
-cp -r  Modules/AgoraEduSDK/Build/product/derived_data/Build/Products/Release-iphonesimulator/AgoraEduSDK.bundle/{en.lproj,zh-Hans.lproj} Frameworks/AgoraEduSDK.bundle
-
-rm Frameworks/AgoraUIEduBaseViews.framework/AgoraUIEduBaseViews.bundle/{AgoraUIEduBaseViews,Info.plist}
-rm Frameworks/AgoraUIEduAppViews.framework/AgoraUIEduAppViews.bundle/{AgoraUIEduAppViews,Info.plist}
-
+cp -r  Modules/AgoraEduSDK/Build/product/derived_data/Build/Products/Release-iphoneos/AgoraEduSDK.bundle Frameworks
 
 # 运行项目 demo
 

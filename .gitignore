@@ -75,4 +75,4 @@ IPA/
 Frameworks/
 derived_data/
 *.log
-Podfile.lock
+*Podfile.lock
