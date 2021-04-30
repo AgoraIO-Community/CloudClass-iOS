@@ -12,8 +12,8 @@ target 'AgoraEducation' do
   pod "AFNetworking", "4.0.1"
   pod 'OpenSSL-Universal', '1.0.2.17'
 
-# AgoraEduSDK
-  pod "AgoraEduSDK/Core"
+# AgoraClassroomSDK
+  pod "AgoraClassroomSDK/Core"
   
 #  UIKIT
   pod 'AgoraUIBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
