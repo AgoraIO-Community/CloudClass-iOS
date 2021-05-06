@@ -18,10 +18,6 @@
     return <#Your Agora Certificate#>;
 }
 
-+ (NSString *)hostURL {
-    return <#Your Agora Host#>;
-}
-
 + (NSString *)rtcVersion {
     return @"2.9.107.136";
 }

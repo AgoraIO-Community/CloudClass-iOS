@@ -33,7 +33,7 @@ Pod::Spec.new do |spec|
     binary.source_files = "AgoraUIEduAppViews/**/*.{h,m,swift}"
     binary.public_header_files = "AgoraUIEduAppViews/**/*.h"
     binary.dependency "AgoraUIEduBaseViews/BINARY" 
-    binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => '$(SRCROOT)/../AgoraEduSDK/Frameworks/' }
+    binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => ['$(SRCROOT)/AgoraClassroomSDK/Frameworks/', '$(SRCROOT)/../AgoraEduSDK/Frameworks/'] }
     
     binary.resource_bundles = {
       'AgoraUIEduAppViews' => [
@@ -42,6 +42,6 @@ Pod::Spec.new do |spec|
     }
   end
 
-  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3']
-  spec.default_subspec = 'SOURCE'
+  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
+  spec.default_subspec = 'BINARY'
 end
