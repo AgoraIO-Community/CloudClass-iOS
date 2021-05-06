@@ -37,8 +37,7 @@ Pod::Spec.new do |spec|
         'AgoraUIEduBaseViews/**/*.{png,xib,gif,wav,strings}', 
         'AgoraUIEduBaseViews/*.xcassets']
     }
-
-    binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => '$(SRCROOT)/../AgoraEduSDK/Frameworks/' }
+    binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => ['$(SRCROOT)/AgoraClassroomSDK/Frameworks/', '$(SRCROOT)/../AgoraEduSDK/Frameworks/'] }
   end
 
   spec.subspec 'SUMBINARY' do |sub_binary|
@@ -53,6 +52,6 @@ Pod::Spec.new do |spec|
     sub_binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => '$(SRCROOT)/../../../Frameworks/' }
   end
 
-  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3']
-  spec.default_subspec = 'SOURCE'
+  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
+  spec.default_subspec = 'BINARY'
 end
