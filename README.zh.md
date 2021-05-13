@@ -11,20 +11,7 @@
 - iOS 真机（iPhone 或 iPad）
 
 ## 运行示例项目
-1. [快速接入](https://docs.agora.io/cn/agora-class/agora_class_quickstart_ios?platform=iOS)
-2. 配置相关参数
-在 `KeyCenter.m` 文件中配置以下参数：
-- 你获取到的声网 App ID。
-- 你获取到的声网 RTM Token。
-```
-+ (NSString *)appId {
-    return <#Your Agora App Id#>;
-}
-
-+ (NSString *)rtmToken {
-    return <#Your Agora RTM Token#>;
-}
-```
+- [快速接入](https://docs.agora.io/cn/agora-class/agora_class_quickstart_ios?platform=iOS)
 
 ## 联系我们
 
