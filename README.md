@@ -11,7 +11,21 @@ This page introduces how to run the iOS sample project.
 - Real iOS devices, such as iPhone or iPad.
 
 ## Run the sample project
-- [quick start](https://docs.agora.io/en/agora-class/agora_class_quickstart_ios?platform=iOS)
+1. [quick start](https://docs.agora.io/en/agora-class/agora_class_quickstart_ios?platform=iOS)
+2. Configure parameters
+Configure the following parameters in the 'keycenter. m' file:
+- The Agora App ID that you get.
+- The Agora App Certificate that you get.
+
+```
++ (NSString *)appId {
+    return <#Your Agora App Id#>;
+}
+
++ (NSString *)appCertificate {
+    return <#Your Agora Certificate#>;
+}
+```
 
 ## Connect us
 
