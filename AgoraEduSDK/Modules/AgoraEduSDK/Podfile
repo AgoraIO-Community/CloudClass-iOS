@@ -14,8 +14,8 @@ target 'AgoraEduSDK' do
   pod 'AgoraReport', :path => '../AgoraReport/AgoraReport.podspec'
 
   pod 'AgoraUIBaseViews', :path => '../AgoraUIBaseViews/AgoraUIBaseViews.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
-  pod 'AgoraUIEduAppViews', :path => '../AgoraUIEduAppViews/AgoraUIEduAppViews.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SOURCE']
+  pod 'AgoraUIEduAppViews', :path => '../AgoraUIEduAppViews/AgoraUIEduAppViews.podspec', :subspecs => ['SOURCE']
 
   pod 'AgoraExtApp', :path => '../AgoraExtApp/AgoraExtApp.podspec'
 
