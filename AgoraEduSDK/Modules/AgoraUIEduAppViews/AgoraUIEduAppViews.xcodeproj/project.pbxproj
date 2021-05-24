@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		41BC853959BCAD48640DAF7D /* Pods_AgoraUIEduAppViews.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D397612F4339DD6F456D66A /* Pods_AgoraUIEduAppViews.framework */; };
-		784DAD78261C8B41007AA317 /* reward.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 784DAD77261C8B41007AA317 /* reward.mp3 */; };
 		786AE1D9262C7EF7002E50F0 /* AgoraBoardStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786AE1D8262C7EF7002E50F0 /* AgoraBoardStates.swift */; };
+		7889B2FF265BF83E00F5D181 /* reward.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 784DAD77261C8B41007AA317 /* reward.mp3 */; };
 		78C44D62262DCC78006BDC7E /* AgoraWhiteBoardUIController+UIEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C44D5F262DCC78006BDC7E /* AgoraWhiteBoardUIController+UIEvent.swift */; };
 		78C44D63262DCC78006BDC7E /* AgoraWhiteBoardController+EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C44D60262DCC78006BDC7E /* AgoraWhiteBoardController+EventHandler.swift */; };
 		78C44D64262DCC78006BDC7E /* AgoraWhiteBoardUIController+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C44D61262DCC78006BDC7E /* AgoraWhiteBoardUIController+State.swift */; };
@@ -319,7 +319,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				86A3D2082609F21E0066BA1E /* AgoraUIEduAppViews.bundle in Resources */,
-				784DAD78261C8B41007AA317 /* reward.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +326,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7889B2FF265BF83E00F5D181 /* reward.mp3 in Resources */,
 				86A3D2032609F2040066BA1E /* AgoraUIEduAppViews.xcassets in Resources */,
 				86A3D1FE2609F1F20066BA1E /* Localizable.strings in Resources */,
 				86A3D1FF2609F1F20066BA1E /* reward.gif in Resources */,
