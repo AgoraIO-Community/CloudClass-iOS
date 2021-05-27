@@ -35,6 +35,8 @@ extension AgoraWhiteBoardUIController: AgoraBoardToolsStateDelegate {
             boardToolContext?.applianceSelected(state.selectedPencilType.applianceType)
         case .eraser:
             boardToolContext?.applianceSelected(.eraser)
+        case .clicker:
+            boardToolContext?.applianceSelected(.clicker)
         default:
             break
         }
@@ -95,9 +97,10 @@ fileprivate extension AgoraBoardToolsPencilType {
 fileprivate extension AgoraBoardToolsItemType {
     var applianceType: AgoraEduContextApplianceType {
         switch self {
-        case .pencil: return .pen
-        case .eraser: return .eraser
-        case .select: return .select
+        case .pencil:  return .pen
+        case .eraser:  return .eraser
+        case .select:  return .select
+        case .clicker: return .clicker
         case .color:  fatalError()
         case .text:   fatalError()
         }

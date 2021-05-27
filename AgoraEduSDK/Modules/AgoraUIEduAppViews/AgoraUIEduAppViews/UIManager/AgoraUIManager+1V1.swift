@@ -24,6 +24,7 @@ extension AgoraUIManager {
         appView.addSubview(render1V1.containerView)
         appView.addSubview(whiteBoard.containerView)
         whiteBoard.containerView.addSubview(shareScreen.containerView)
+        whiteBoard.containerView.sendSubviewToBack(shareScreen.containerView)
         appView.addSubview(chat.containerView)
     }
 

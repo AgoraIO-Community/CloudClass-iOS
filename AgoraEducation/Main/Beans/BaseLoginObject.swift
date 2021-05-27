@@ -9,8 +9,9 @@
 import Foundation
 import AgoraEduSDK
 
-enum Device_type: String {
-    case iPhone
+enum Device: String {
+    case iPhone_Big
+    case iPhone_Small
     case iPad
 }
 
@@ -77,41 +78,108 @@ class LoginConfig {
     static let RegionList: Array<String> = Region_Type.allTypes()
     
     static let sdk_version: String = KeyCenter.rtcVersion()
-    static let class_version: String = "Ver \(AgoraEduSDK.version())"
+    static let class_version: String = "Ver \(AgoraClassroomSDK.version())"
     
-    static let device: Device_type = Device_type.init(rawValue: UIDevice.current.model) ?? .iPhone
+    static var device: Device {
+        if UIDevice.current.model == "iPhone" {
+            if UIScreen.main.bounds.size.height < 700 {
+                return .iPhone_Small
+            }
+            return .iPhone_Big
+        }
+        return .iPad
+    }
     
-    static let login_icon_y: CGFloat = (device == .iPhone) ? 115 : 88
-    static let login_about_y: CGFloat = (device == .iPhone) ? 46 : 32
-    static let login_first_group_y: CGFloat = (device == .iPhone) ? 225 : 270
-    static let login_about_right: CGFloat = (device == .iPhone) ? 15 : 17
+    static var login_icon_y: CGFloat {
+        switch device {
+        case .iPhone_Big: return 115
+        case .iPhone_Small: return 98
+        case .iPad: return 88
+        }
+    }
+    
+    static var login_about_y: CGFloat {
+        switch device {
+        case .iPhone_Big: return 46
+        case .iPhone_Small: return 98
+        case .iPad: return 32
+        }
+    }
+    
+    static var login_first_group_y: CGFloat {
+        switch device {
+        case .iPhone_Big: return 225
+        case .iPhone_Small: return 163
+        case .iPad: return 270
+        }
+    }
+    static var login_about_right: CGFloat {
+        switch device {
+        case .iPhone_Big: fallthrough
+        case .iPhone_Small: return 15
+        case .iPad: return 17
+        }
+    }
+    
     static let login_choose_cell_height: CGFloat = 44
     static let login_class_types_width: CGFloat = 310
-    static let login_class_types_y: CGFloat = (device == .iPhone) ? 382 : 430
-    static let login_regions_types_y: CGFloat = (device == .iPhone) ? 445 : 491
+    static var login_class_types_y: CGFloat {
+        switch device {
+        case .iPhone_Big: return 382
+        case .iPhone_Small: return 343
+        case .iPad: return 430
+        }
+    }
+    
+    static var login_regions_types_y: CGFloat {
+        switch device {
+        case .iPhone_Big: return 445
+        case .iPhone_Small: return 403
+        case .iPad: return 491
+        }
+    }
+    
     static let login_group_title_width : CGFloat = 58
-    static let login_group_width : CGFloat = 280
+    static let login_group_width : CGFloat = (device == .iPhone_Small) ? 260 : 280
     static let login_group_height : CGFloat = 40
-    static let login_bottom_bottom : CGFloat = (device == .iPhone) ? 64 : 30
+    static var login_bottom_bottom : CGFloat {
+        switch device {
+        case .iPhone_Big: return 64
+        case .iPhone_Small: return 14
+        case .iPad: return 30
+        }
+    }
     
-    static let about_enter_right: CGFloat = (device == .iPhone) ? 15 : 21
-    static let about_title_height: CGFloat = (device == .iPhone) ? 89 : 44
-    static let about_title_font: UIFont = (device == .iPhone) ? UIFont.systemFont(ofSize: 17) : UIFont.systemFont(ofSize: 16)
-    static let about_title_sep: CGFloat = (device == .iPhone) ? 10 : 0
-    static let about_cell_title_x: CGFloat = (device == .iPhone) ? 15 : 20
-    static let about_cell_height: CGFloat = (device == .iPhone) ? 48 : 44
-    static let about_cell_info_right: CGFloat = (device == .iPhone) ? 15 : 21
-    static let about_bottom_line_x: CGFloat = (device == .iPhone) ? 10 : 20
-    static let about_line_length: CGFloat = (device == .iPhone) ? UIScreen.main.bounds.width : 380
-    static let about_label_font: UIFont = (device == .iPhone) ? UIFont.systemFont(ofSize: 16) : UIFont.systemFont(ofSize: 14)
+    static var about_enter_right: CGFloat = (device == .iPad) ? 21 : 15
+    static var about_title_height : CGFloat {
+        switch device {
+        case .iPhone_Big: return 89
+        case .iPhone_Small: return 69
+        case .iPad: return 44
+        }
+    }
+    static var about_title_font: UIFont = (device == .iPad) ? UIFont.systemFont(ofSize: 16) : UIFont.systemFont(ofSize: 17)
+    static var about_title_sep: CGFloat = (device == .iPad) ? 0 : 10
+    static var about_cell_title_x: CGFloat = (device == .iPad) ? 20 : 15
+    static var about_cell_height: CGFloat = (device == .iPad) ? 44 : 48
+    static var about_cell_info_right: CGFloat = (device == .iPad) ? 21 : 15
+    static var about_bottom_line_x: CGFloat = (device == .iPad) ? 20 : 10
+    static var about_line_length: CGFloat = (device == .iPad) ? 380 : UIScreen.main.bounds.width
+    static var about_label_font: UIFont = (device == .iPad) ? UIFont.systemFont(ofSize: 14) : UIFont.systemFont(ofSize: 16)
     
-    static let dis_title_height: CGFloat = (device == .iPhone) ? 89 : 44
-    static let dis_line_x: CGFloat = (device == .iPhone) ? 0 : 10
-    static let dis_back_x: CGFloat = (device == .iPhone) ? 15 : 10
-    static let dis_back_bottom: CGFloat = (device == .iPhone) ? 1 : 0
-    static let dis_label_width: CGFloat = (device == .iPhone) ? 345 : 380
+    static var dis_title_height : CGFloat {
+        switch device {
+        case .iPhone_Big: return 89
+        case .iPhone_Small: return 69
+        case .iPad: return 44
+        }
+    }
+    static var dis_line_x: CGFloat = (device == .iPad) ? 10 : 0
+    static var dis_back_x: CGFloat = (device == .iPad) ? 10 : 15
+    static var dis_back_bottom: CGFloat = (device == .iPad) ? 0 : 1
+    static var dis_label_x: CGFloat = (device == .iPad) ? 20 : 15
     
-    static let dis_title_sep: CGFloat = (device == .iPhone) ? 15 : 10
+    static var dis_title_sep: CGFloat = (device == .iPad) ? 10 : 15
     
     
     static let class_cell_id: String = "ClassTypeCell"

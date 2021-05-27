@@ -17,6 +17,7 @@ import AgoraUIEduBaseViews
     
     public override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
+        self.view.backgroundColor = UIColor.white
     }
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -31,7 +32,7 @@ import AgoraUIEduBaseViews
     public override func viewDidLoad() {
         let eyeCare = UserDefaults.standard.bool(forKey: LoginConfig.USER_DEFAULT_EYE_CARE)
         let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(), eyeCare: eyeCare)
-        AgoraEduSDK.setConfig(defaultConfig)
+        AgoraClassroomSDK.setConfig(defaultConfig)
 
     }
     

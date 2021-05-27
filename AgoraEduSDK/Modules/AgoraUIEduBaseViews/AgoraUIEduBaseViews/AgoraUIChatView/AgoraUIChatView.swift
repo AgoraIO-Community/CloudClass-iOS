@@ -9,14 +9,16 @@ import AgoraEduContext
 import AgoraUIEduBaseViews.AgoraFiles.AgoraRefresh
 import AgoraUIBaseViews
 
-@objcMembers public class AgoraUIChatView: AgoraBaseUIView {
-    
-    public var scaleTouchBlock: ((_ min: Bool) -> Void)?
-    public weak var context: AgoraEduMessageContext? {
-        didSet {
-            context?.fetchHistoryMessages(self.chatModels.first?.id ?? 0, count: PerPageCount)
-        }
+@objcMembers public class AgoraUIChatView: AgoraBaseUIView,
+                                           UIGestureRecognizerDelegate,
+                                           UITableViewDelegate,
+                                           UITableViewDataSource {
+    enum ChatType {
+        case roomMessage, conversation
     }
+        
+    public var scaleTouchBlock: ((_ min: Bool) -> Void)?
+    public weak var context: AgoraEduMessageContext?
     
     public var showMinBtn = true {
         didSet {
@@ -25,6 +27,7 @@ import AgoraUIBaseViews
             }
         }
     }
+    
     public var showDefaultText = true {
         didSet {
             if let label = self.defaultTableView.viewWithTag(LabelTag) as? AgoraBaseUILabel {
@@ -34,7 +37,8 @@ import AgoraUIBaseViews
     }
     
     @objc lazy public var resignFirstResponderGesture: UITapGestureRecognizer = {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapRecognized(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self,
+                                                action: #selector(tapRecognized(_:)))
         tapGesture.cancelsTouchesInView = false
         tapGesture.isEnabled = true
         tapGesture.delegate = self
@@ -47,7 +51,25 @@ import AgoraUIBaseViews
         }
     }
     
-    fileprivate var unreadNum: Int = 0 {
+    public var hasConversation: Bool = false {
+        didSet {
+            if hasConversation {
+                titleViewHasConversation()
+                fetchAllTypeHistoryMessage()
+            } else {
+                titleViewWithoutConversation()
+                fetchHistoryMessage()
+            }
+        }
+    }
+    
+    public var peerHasPermissiom: Bool = false {
+        didSet {
+            checkPeerHasPermission(peerHasPermissiom)
+        }
+    }
+    
+    private var unreadNum: Int = 0 {
         didSet {
             let label = self.minView.viewWithTag(LabelTag) as! AgoraBaseUILabel
             label.isHidden = true
@@ -58,16 +80,33 @@ import AgoraUIBaseViews
                 label.isHidden = false
                 label.text = "\(num)"
                 
-                let rect: CGRect = ("\(num)").boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: label.agora_height), options: .usesLineFragmentOrigin , attributes: [NSAttributedString.Key.font:label.font!], context: nil)
+                let rect: CGRect = ("\(num)").boundingRect(with: CGSize(width: CGFloat(MAXFLOAT),
+                                                                        height: label.agora_height),
+                                                           options: .usesLineFragmentOrigin ,
+                                                           attributes: [NSAttributedString.Key.font:label.font!],
+                                                           context: nil)
                 
                 label.agora_width = (rect.width > label.agora_width) ? rect.size.width + 4 : label.agora_width
             }
         }
     }
-    fileprivate var chatModels: [AgoraEduContextChatInfo] = [] {
+    
+    private var chatModels: [AgoraEduContextChatInfo] = [] {
         didSet {
-            self.chatTableView.reloadData()
-            self.defaultTableView.isHidden = !(chatModels.count == 0)
+            updateChatTableView()
+        }
+    }
+    
+    private var conversationModels: [AgoraEduContextChatInfo] = [] {
+        didSet {
+            updateChatTableView()
+        }
+    }
+    
+    private var chatType: ChatType = .roomMessage {
+        didSet {
+            updateChatTableView()
+            checkPeerHasPermission(peerHasPermissiom)
         }
     }
     
@@ -83,13 +122,17 @@ import AgoraUIBaseViews
     fileprivate lazy var maxView: AgoraBaseUIView = {
         let view = AgoraBaseUIView()
         view.backgroundColor = UIColor.white
-        view.layer.shadowColor = UIColor(red: 0.18, green: 0.25, blue: 0.57, alpha: 0.15).cgColor
+        view.layer.shadowColor = UIColor(red: 0.18,
+                                         green: 0.25,
+                                         blue: 0.57,
+                                         alpha: 0.15).cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 6
 
         return view
     }()
+    
     fileprivate lazy var minView: AgoraBaseUIButton = {
         let btn = AgoraBaseUIButton(type: .custom)
         btn.setImage(AgoraKitImage("chat_toast"), for: .normal)
@@ -119,30 +162,6 @@ import AgoraUIBaseViews
     fileprivate lazy var titleView: AgoraBaseUIView = {
         let view = AgoraBaseUIView()
         view.backgroundColor = UIColor.clear
-        
-        let label = AgoraBaseUILabel()
-        label.textColor = UIColor(red: 25/255.0, green:25/255.0, blue: 25/255.0, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 13)
-        label.tag = LabelTag
-    
-        let chatMsg = AgoraKitLocalizedString("ChatText")
-        label.text = chatMsg
-        view.addSubview(label)
-        
-        label.agora_x = 15
-        label.agora_y = 0
-        label.agora_bottom = 0
-        label.agora_width = 100
-
-        let btn = AgoraBaseUIButton(type: .custom)
-        btn.setImage(AgoraKitImage("chat_min"), for: .normal)
-        btn.addTarget(self, action: #selector(onMinTouchEvent), for: .touchUpInside)
-        view.addSubview(btn)
-        btn.tag = ButtonTag
-        
-        btn.agora_center_y = 0
-        btn.agora_right = 15
-        btn.agora_resize(24, 24)
         
         let lineV = AgoraBaseUIView()
         lineV.backgroundColor = UIColor(red: 236/255.0, green:236/255.0, blue: 241/255.0, alpha: 1)
@@ -179,6 +198,7 @@ import AgoraUIBaseViews
         
         return v
     }()
+    
     fileprivate lazy var chatPermissionStateView: AgoraBaseUIView = {
         let v = AgoraBaseUIView()
         v.backgroundColor = UIColor(rgb: 0xF9F9FC)
@@ -217,6 +237,7 @@ import AgoraUIBaseViews
 
         return v
     }()
+    
     fileprivate lazy var chatTableView: AgoraBaseUITableView = {
         let tableView = AgoraBaseUITableView(frame: .zero, style: .grouped)
         tableView.backgroundColor = UIColor.white
@@ -229,18 +250,20 @@ import AgoraUIBaseViews
         tableView.register(AgoraChatPanelMessageCell.self, forCellReuseIdentifier: MessageCellID)
                         
         tableView.agora_header = AgoraRefreshNormalHeader(refreshingBlock: {[weak self] in
-            
             guard let `self` = self else {
                 return
             }
-            self.context?.fetchHistoryMessages(self.chatModels.first?.id ?? 0, count: self.PerPageCount)
+            
+            self.fetchHistoryMessage()
         })
+        
         let header = tableView.agora_header as? AgoraRefreshNormalHeader
         header?.stateLabel?.isHidden = true
         header?.loadingView?.style = .gray
         
         return tableView
     }()
+    
     fileprivate lazy var chatView: AgoraBaseUIView = {
         let view = AgoraBaseUIView()
         view.clipsToBounds = true
@@ -295,7 +318,10 @@ import AgoraUIBaseViews
 
         let textField = AgoraBaseUITextField()
         textField.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatPlaceholderText"),
-                                                             attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125/255.0, green: 135/255.0, blue: 152/255.0, alpha: 1)])
+                                                             attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125/255.0,
+                                                                                                                         green: 135/255.0,
+                                                                                                                         blue: 152/255.0,
+                                                                                                                         alpha: 1)])
         textField.font = UIFont.systemFont(ofSize: 13)
         textField.returnKeyType = .send
         textField.delegate = self
@@ -309,6 +335,8 @@ import AgoraUIBaseViews
         
         return view
     }()
+    
+    private weak var tabSelectView: AgoraTabSelectView?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -332,55 +360,16 @@ import AgoraUIBaseViews
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-}
-
-// MARK: UITableViewDelegate & UITableViewDataSource
-extension AgoraUIChatView: UITableViewDelegate, UITableViewDataSource {
     
-    public func numberOfSections(in tableView: UITableView) -> Int {
-        return chatModels.count
-    }
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let chatModel = chatModels[indexPath.section]
-        let cell = tableView.dequeueReusableCell(withIdentifier: MessageCellID, for: indexPath) as! AgoraChatPanelMessageCell
-        cell.updateView(model: chatModel)
-        cell.retryTouchBlock = {[weak self] (infoModel: AgoraEduContextChatInfo?) -> Void in
-            guard let `self` = self, let model = infoModel else {
-                return
-            }
-            self.context?.resendRoomMessage(model.message, messageId: model.id)
+    // MARK: UIGestureRecognizerDelegate
+    @objc internal func tapRecognized(_ gesture: UITapGestureRecognizer) {
+        if gesture.state == .ended {
+            self.window?.resignFirstResponder()
+            self.window?.endEditing(true)
         }
-        cell.selectionStyle = .none
-        return cell
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let chatModel = chatModels[indexPath.section]
-        return chatModel.cellHeight
-    }
-    
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 1
-    }
-
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 7
-    }
-}
-
-// MARK: Keyboard
-extension AgoraUIChatView {
-    fileprivate func keyboardNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidShow(_ :)), name: UIResponder.keyboardDidShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHidden(_ :)), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
+    // MARK: keyboard action
     @objc fileprivate func keyboardDidShow(_ notification: NSNotification) {
         if let rect = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             if (self.originalBottom == nil) {
@@ -394,11 +383,123 @@ extension AgoraUIChatView {
             self.agora_safe_bottom = bottom
         }
     }
+    
+    // MARK: touch event
+    @objc fileprivate func onSendTouchEvent() {
+        
+        let message = self.textField?.text ?? ""
+        
+        if message.count > 0 {
+            switch chatType {
+            case .roomMessage:
+                context?.sendRoomMessage(message)
+            case .conversation:
+                context?.sendConversationMessage(message)
+            }
+        }
+        
+        self.textField?.text = nil
+        self.textField?.resignFirstResponder()
+    }
+    
+    @objc fileprivate func onMinTouchEvent() {
+        if self.scaleTouchBlock != nil {
+            self.isMin = true
+            self.scaleTouchBlock?(self.isMin)
+        }
+    }
+    @objc fileprivate func onMaxTouchEvent() {
+        if self.scaleTouchBlock != nil {
+            self.isMin = false
+            self.scaleTouchBlock?(self.isMin)
+        }
+    }
+    
+    // MARK: UITableViewDelegate & UITableViewDataSource
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        switch chatType {
+        case .roomMessage:  return chatModels.count
+        case .conversation: return conversationModels.count
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView,
+                          numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    public func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var chatModel: AgoraEduContextChatInfo
+        
+        switch chatType {
+        case .roomMessage:  chatModel = chatModels[indexPath.section]
+        case .conversation: chatModel = conversationModels[indexPath.section]
+        }
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: MessageCellID,
+                                                 for: indexPath) as! AgoraChatPanelMessageCell
+        cell.updateView(model: chatModel)
+        cell.retryTouchBlock = { [weak self] (infoModel: AgoraEduContextChatInfo?) -> Void in
+            guard let `self` = self,
+                  let model = infoModel else {
+                return
+            }
+            
+            switch self.chatType {
+            case .roomMessage:
+                self.context?.resendRoomMessage(model.message,
+                                                messageId: model.id)
+            case .conversation:
+                self.context?.resendConversationMessage(model.message,
+                                                        messageId: model.id)
+            }
+        }
+        
+        cell.selectionStyle = .none
+        return cell
+    }
+    
+    public func tableView(_ tableView: UITableView,
+                          heightForRowAt indexPath: IndexPath) -> CGFloat {
+        var chatModel: AgoraEduContextChatInfo
+        
+        switch chatType {
+        case .roomMessage:  chatModel = chatModels[indexPath.section]
+        case .conversation: chatModel = conversationModels[indexPath.section]
+        }
+        
+        return chatModel.cellHeight
+    }
+    
+    public func tableView(_ tableView: UITableView,
+                          heightForHeaderInSection section: Int) -> CGFloat {
+        return 1
+    }
+
+    public func tableView(_ tableView: UITableView,
+                          heightForFooterInSection section: Int) -> CGFloat {
+        return 7
+    }
+}
+
+// MARK: Keyboard
+private extension AgoraUIChatView {
+    func keyboardNotification() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardDidShow(_ :)),
+                                               name: UIResponder.keyboardDidShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHidden(_ :)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+    }
 }
 
 // MARK: Rect
-extension AgoraUIChatView {
-    fileprivate func initView() {
+private extension AgoraUIChatView {
+    func initView() {
         self.backgroundColor = UIColor.clear
         self.addSubview(self.maxView)
         self.addSubview(self.minView)
@@ -408,14 +509,14 @@ extension AgoraUIChatView {
         self.maxView.addSubview(self.chatPermissionStateView)
     }
     
-    fileprivate func updateSendViewBezier() {
-
+    func updateSendViewBezier() {
         if self.isMin {
             return
         }
         
         let maskPath = UIBezierPath(roundedRect: self.sendView.bounds,
-                                    byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight], cornerRadii: self.sendView.bounds.size)
+                                    byRoundingCorners: [UIRectCorner.topLeft, UIRectCorner.topRight],
+                                    cornerRadii: self.sendView.bounds.size)
         
         let roundLayer = CAShapeLayer()
         roundLayer.frame = self.sendView.bounds
@@ -431,8 +532,7 @@ extension AgoraUIChatView {
         self.sendView.layer.addSublayer(lineLayer)
     }
     
-    fileprivate func initLayout() {
-        
+    func initLayout() {
         self.maxView.agora_x = 0
         self.maxView.agora_y = 0
         self.maxView.agora_bottom = 0
@@ -460,7 +560,7 @@ extension AgoraUIChatView {
         self.chatPermissionStateView.agora_height = 32
     }
     
-    fileprivate func resizeView() {
+    func resizeView() {
         if (self.isMin) {
             self.minView.isHidden = false
        
@@ -483,12 +583,177 @@ extension AgoraUIChatView {
     }
 }
 
+// MARK: Title view
+private extension AgoraUIChatView {
+    func titleViewWithoutConversation() {
+        let label = AgoraBaseUILabel()
+        label.textColor = UIColor(red: 25/255.0,
+                                  green:25/255.0,
+                                  blue: 25/255.0,
+                                  alpha: 1)
+        label.font = UIFont.systemFont(ofSize: 13)
+        label.tag = LabelTag
+    
+        let chatMsg = AgoraKitLocalizedString("ChatText")
+        label.text = chatMsg
+        titleView.addSubview(label)
+        
+        label.agora_x = 15
+        label.agora_y = 0
+        label.agora_bottom = 0
+        label.agora_width = 100
+
+        let btn = AgoraBaseUIButton(type: .custom)
+        btn.setImage(AgoraKitImage("chat_min"), for: .normal)
+        btn.addTarget(self,
+                      action: #selector(onMinTouchEvent),
+                      for: .touchUpInside)
+        titleView.addSubview(btn)
+        btn.tag = ButtonTag
+        
+        btn.agora_center_y = 0
+        btn.agora_right = 15
+        btn.agora_resize(24, 24)
+    }
+    
+    func titleViewHasConversation() {
+        let view = AgoraTabSelectView(frame: .zero)
+        view.selectDelegate = self
+        view.alignment = .left
+        view.underlineColor = UIColor(rgb: 0x357BF6)
+        
+        view.selectedTitle = AgoraTabSelectView.TitleProperty(color: UIColor(rgb: 0x191919),
+                                                              font: UIFont.systemFont(ofSize: 13, weight: .bold))
+        view.unselectedTitle = AgoraTabSelectView.TitleProperty(color: UIColor(rgb: 0x7B88A0),
+                                                                font: UIFont.systemFont(ofSize: 13))
+        
+        view.underlineHeight = 2
+        view.underlineExtralWidth = 10
+        view.insets = UIEdgeInsets(top: 0,
+                                   left: 14,
+                                   bottom: 0,
+                                   right: 14)
+        
+        titleView.addSubview(view)
+        
+        view.agora_x = 0
+        view.agora_y = 0
+        view.agora_right = 0
+        view.agora_bottom = 0
+        
+        let chat = AgoraKitLocalizedString("ChatText")
+        let conversation = AgoraKitLocalizedString("ChatConversation")
+        view.update([chat, conversation])
+        
+        tabSelectView = view
+        
+        let btn = AgoraBaseUIButton(type: .custom)
+        btn.setImage(AgoraKitImage("chat_min"),
+                     for: .normal)
+        btn.addTarget(self,
+                      action: #selector(onMinTouchEvent),
+                      for: .touchUpInside)
+        titleView.addSubview(btn)
+        btn.tag = ButtonTag
+        
+        btn.agora_center_y = 0
+        btn.agora_right = 15
+        btn.agora_resize(24, 24)
+    }
+}
+
+private extension AgoraUIChatView {
+    func fetchHistoryMessage() {
+        switch chatType {
+        case .roomMessage:
+            context?.fetchHistoryMessages(self.chatModels.first?.id ?? "0",
+                                          count: self.PerPageCount)
+        case .conversation:
+            context?.fetchConversationHistoryMessages(self.conversationModels.first?.id ?? "0",
+                                                      count: self.PerPageCount)
+        }
+    }
+    
+    func fetchAllTypeHistoryMessage() {
+        context?.fetchHistoryMessages(self.chatModels.first?.id ?? "0",
+                                      count: self.PerPageCount)
+        
+        context?.fetchConversationHistoryMessages(self.conversationModels.first?.id ?? "0",
+                                                  count: self.PerPageCount)
+    }
+    
+    func updateChatTableView() {
+        chatTableView.reloadData()
+        
+        switch chatType {
+        case .roomMessage:
+            defaultTableView.isHidden = !(chatModels.count == 0)
+        case .conversation:
+            defaultTableView.isHidden = !(conversationModels.count == 0)
+        }
+    }
+    
+    func checkPeerHasPermission(_ permission: Bool) {
+        guard chatType == .roomMessage else {
+            let sendBtn = sendView.viewWithTag(ButtonTag) as? AgoraBaseUIButton
+            sendBtn?.isEnabled = true
+            textField?.isUserInteractionEnabled = true
+            
+            
+            textField?.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatPlaceholderText"),
+                                                                  attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125/255.0,
+                                                                                                                              green: 135/255.0,
+                                                                                                                              blue: 152/255.0,
+                                                                                                                              alpha: 1)])
+            chatPermissionStateView.isHidden = true
+            return
+        }
+        
+        textField?.isUserInteractionEnabled = permission
+        chatPermissionStateView.isHidden = permission
+        let sendBtn = sendView.viewWithTag(ButtonTag) as? AgoraBaseUIButton
+        sendBtn?.isEnabled = permission
+        
+        if permission {
+            textField?.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatPlaceholderText"),
+                                                                  attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125/255.0,
+                                                                                                                              green: 135/255.0,
+                                                                                                                              blue: 152/255.0,
+                                                                                                                              alpha: 1)])
+        } else {
+            textField?.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatSilencedPlaceholderText"),
+                                                                  attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125/255.0,
+                                                                                                                              green: 135/255.0,
+                                                                                                                              blue: 152/255.0,
+                                                                                                                              alpha: 1)])
+        }
+    }
+}
+
+extension AgoraUIChatView: AgoraTabSelectViewDelegate {
+    public func view(_ view: AgoraTabSelectView,
+                     didSelectTab index: Int) {
+        let roomMessage = 0
+        let conversation = 1
+        
+        switch index {
+        case roomMessage:
+            chatType = .roomMessage
+        case conversation:
+            chatType = .conversation
+        default:
+            break
+        }
+    }
+}
+
 // MARK: UITextFieldDelegate
 extension AgoraUIChatView: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.onSendTouchEvent()
         return true
     }
+    
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         self.window?.becomeFirstResponder()
         self.window?.addGestureRecognizer(self.resignFirstResponderGesture)
@@ -502,7 +767,6 @@ extension AgoraUIChatView: UITextFieldDelegate {
 // MARK: Private
 extension AgoraUIChatView {
     public func resizeChatViewFrame() {
-
         chatView.layoutIfNeeded()
         chatTableView.frame = CGRect(x: 0,
                                      y: self.titleView.agora_height,
@@ -511,63 +775,79 @@ extension AgoraUIChatView {
     }
 }
 
-// MARK: TouchEvent
-extension AgoraUIChatView {
-    @objc fileprivate func onSendTouchEvent() {
-
-        let message = self.textField?.text ?? ""
-        if message.count > 0 {
-            self.context?.sendRoomMessage(message)
+private extension AgoraUIChatView {
+    func scrollToBottom() {
+        var section: Int
+        
+        switch chatType {
+        case .roomMessage:
+            if chatModels.count <= 1 {
+                return
+            }
+            section = chatModels.count - 1
+        case .conversation:
+            if conversationModels.count <= 1 {
+                return
+            }
+            section = conversationModels.count - 1
         }
         
-        self.textField?.text = nil
-        self.textField?.resignFirstResponder()
-    }
-    
-    fileprivate func scrollToBottom() {
-
-        if (self.chatModels.count <= 1) {
-            return
-        }
+        let indexPath = IndexPath(row: 0,
+                                  section: section)
+//        chatTableView.scrollToRow(at: indexPath,
+//                                  at: .bottom,
+//                                  animated: false)
         
-        let indexPath = IndexPath(row: 0, section: self.chatModels.count - 1)
-        self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            self.chatTableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-        }
-    }
-    
-    @objc fileprivate func onMinTouchEvent() {
-        if self.scaleTouchBlock != nil {
-            self.isMin = true
-            self.scaleTouchBlock?(self.isMin)
-        }
-    }
-    @objc fileprivate func onMaxTouchEvent() {
-        if self.scaleTouchBlock != nil {
-            self.isMin = false
-            self.scaleTouchBlock?(self.isMin)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            self.chatTableView.scrollToRow(at: indexPath,
+                                           at: .bottom,
+                                           animated: false)
         }
     }
 }
 
 // MARK: AgoraEduMessageHandler
-extension AgoraUIChatView {
-    
-    public func onAddRoomMessage(_ info: AgoraEduContextChatInfo) {
+public extension AgoraUIChatView {
+    func onAddRoomMessage(_ info: AgoraEduContextChatInfo) {
         if info.from == .remote {
-            self.chatModels.append(info)
-            self.scrollToBottom()
+            chatModels.append(info)
+            scrollToBottom()
             if (self.isMin) {
                 self.unreadNum += 1
             }
+            
+            if hasConversation,
+               chatType == .conversation {
+                tabSelectView?.needRemind(true,
+                                          index: 0)
+            }
         } else {
-            self.onSendRoomMessageResult(nil, info: info)
+            onSendRoomMessageResult(nil,
+                                    info: info)
         }
     }
     
-    public func onSendRoomMessageResult(_ error: AgoraEduContextError?, info: AgoraEduContextChatInfo?) {
-        
+    func onAddConversationMessage(_ info: AgoraEduContextChatInfo) {
+        if info.from == .remote {
+            conversationModels.append(info)
+            scrollToBottom()
+            
+            if (self.isMin) {
+                self.unreadNum += 1
+            }
+            
+            if chatType == .roomMessage {
+                tabSelectView?.needRemind(true,
+                                          index: 1)
+            }
+        } else {
+            onSendConversationMessageResult(nil,
+                                            info: info)
+        }
+    }
+    
+    func onSendRoomMessageResult(_ error: AgoraEduContextError?,
+                                 info: AgoraEduContextChatInfo?) {
         if let err = error {
             AgoraUtils.showToast(message: err.message)
             return
@@ -583,7 +863,8 @@ extension AgoraUIChatView {
         }) {
             let indexPath = IndexPath(row: 0, section: index)
             self.chatModels[index] = messageInfo
-            self.chatTableView.reloadSections(IndexSet(indexPath), with: .automatic)
+            self.chatTableView.reloadSections(IndexSet(indexPath),
+                                              with: .automatic)
         } else {
             self.chatModels.append(messageInfo)
             // 第一次接受到自己发送的数据，需要滚动下最下面
@@ -593,9 +874,37 @@ extension AgoraUIChatView {
         }
     }
     
-    // 1/2
-    public func onFetchHistoryMessagesResult(_ error: AgoraEduContextError?, list: [AgoraEduContextChatInfo]?) {
+    func onSendConversationMessageResult(_ error: AgoraEduContextError?,
+                                         info: AgoraEduContextChatInfo?) {
+        if let `error` = error {
+            AgoraUtils.showToast(message: error.message)
+            return
+        }
         
+        guard let messageInfo = info else {
+            return
+        }
+        
+        // 更新对应的cell
+        if let index = try? self.conversationModels.firstIndex(where: { (chatInfo) -> Bool in
+            return chatInfo.id == messageInfo.id
+        }) {
+            let indexPath = IndexPath(row: 0, section: index)
+            self.conversationModels[index] = messageInfo
+            self.chatTableView.reloadSections(IndexSet(indexPath),
+                                              with: .automatic)
+        } else {
+            self.conversationModels.append(messageInfo)
+            // 第一次接受到自己发送的数据，需要滚动下最下面
+            if info!.sendState == .inProgress {
+                self.scrollToBottom()
+            }
+        }
+    }
+    
+    // 1/2
+    func onFetchHistoryMessagesResult(_ error: AgoraEduContextError?,
+                                      list: [AgoraEduContextChatInfo]?) {
         self.chatTableView.agora_header?.endRefreshing()
         
         if let err = error {
@@ -608,25 +917,22 @@ extension AgoraUIChatView {
         }
     }
     
-    public func onUpdateChatPermission(_ allow: Bool) {
+    func onFetchConversationHistoryMessagesResult(_ error: AgoraEduContextError?,
+                                                  list: [AgoraEduContextChatInfo]?) {
+        chatTableView.agora_header?.endRefreshing()
         
-        let sendBtn = self.sendView.viewWithTag(ButtonTag) as? AgoraBaseUIButton
-        sendBtn?.isEnabled = allow
-        
-        self.textField?.text = ""
-        self.textField?.placeholder = allow ? AgoraKitLocalizedString("ChatPlaceholderText") : AgoraKitLocalizedString("ChatDisableText")
-        self.textField?.isEnabled = allow
-
-        self.chatPermissionStateView.isHidden = allow
-    }
-}
-
-// MARK: UIGestureRecognizerDelegate
-extension AgoraUIChatView: UIGestureRecognizerDelegate {
-    @objc internal func tapRecognized(_ gesture: UITapGestureRecognizer) {
-        if gesture.state == .ended {
-            self.window?.resignFirstResponder()
-            self.window?.endEditing(true)
+        if let err = error {
+            AgoraUtils.showToast(message: err.message)
+            return
         }
+        
+        if let infos = list {
+            conversationModels.insert(contentsOf: infos,
+                                      at: 0)
+        }
+    }
+    
+    func onUpdateChatPermission(_ allow: Bool) {
+        peerHasPermissiom = allow
     }
 }

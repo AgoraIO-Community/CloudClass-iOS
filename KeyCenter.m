@@ -9,6 +9,14 @@
 #import "KeyCenter.h"
 
 @implementation KeyCenter
++ (NSString *)rtcVersion {
+    return @"2.9.107.136";
+}
+
++ (NSString *)publishDate {
+    return @"2021.05.12";
+}
+
 + (NSString *)appId {
     return <#Your Agora AppID#>;
 }
@@ -17,12 +25,7 @@
     return <#Your Agora Certificate#>;
 }
 
-+ (NSString *)rtcVersion {
-    return @"2.9.107.136";
++ (NSString *)hostURL {
+    return <#Your Agora Host#>;
 }
-
-+ (NSString *)publishDate {
-    return @"2021.04.28";
-}
-
 @end

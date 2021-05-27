@@ -10,6 +10,7 @@ import UIKit
 import AgoraEduSDK
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
+import AgoraWidget
 
 @objcMembers class DebugViewController: UIViewController {
     private var alertView: AgoraAlertView?
@@ -28,6 +29,7 @@ import AgoraUIBaseViews
 
     fileprivate var scenes: [WhiteScene] = []
     fileprivate var resourceName: String = ""
+    fileprivate var resourceUuid: String = ""
     fileprivate var scenePath: String = ""
     fileprivate var downURL: String = ""
     
@@ -112,15 +114,15 @@ import AgoraUIBaseViews
             alertView = AgoraUtils.showLoading(message: "")
         }
         
-        AgoraEduSDK.launch(config,
+        AgoraClassroomSDK.launch(config,
                            delegate: self)
         
 //        let countDown = AgoraExtAppConfiguration(appIdentifier: "io.agora.countdown",
 //                                              extAppClass: CountDownExtApp.self,
-//                                              frame: UIEdgeInsets(top: 10,
-//                                                                  left: 50,
-//                                                                  bottom: 10,
-//                                                                  right: 50),
+//                                              frame: UIEdgeInsets(top: 0,
+//                                                                  left: 0,
+//                                                                  bottom: 0,
+//                                                                  right: 0),
 //                                              language: "zh")
 //        let apps = [countDown]
 //        AgoraEduSDK.registerExtApps(apps)
@@ -144,7 +146,7 @@ import AgoraUIBaseViews
         
         self.updateListLabel.text = "更新中"
         
-        TokenBuilder.boardResources(url, token: token) {[weak self] (scenes, resourceName, scenePath, downURL) in
+        TokenBuilder.boardResources(url, token: token) {[weak self] (scenes, resourceName, resourceUuid, scenePath, downURL) in
             
             self?.scenes = scenes
             self?.resourceName = resourceName
@@ -152,8 +154,8 @@ import AgoraUIBaseViews
             self?.downURL = downURL
             self?.updateListLabel.text = "更新完成"
             
-            let courseware = AgoraEduCourseware(resourceName: resourceName, scenePath: scenePath, scenes: scenes, resourceUrl: downURL)
-            AgoraEduSDK.configCoursewares([courseware])
+            let courseware = AgoraEduCourseware(resourceName: resourceName, resourceUuid: resourceUuid, scenePath: scenePath, scenes: scenes, resourceUrl: downURL)
+            AgoraClassroomSDK.configCoursewares([courseware])
 
         } failure: {[weak self] (error) in
             self?.updateListLabel.text = "更新失败"
@@ -163,7 +165,7 @@ import AgoraUIBaseViews
         
         self.downLabel.text = "下载中"
     
-        AgoraEduSDK.downloadCoursewares(self)
+        AgoraClassroomSDK.downloadCoursewares(self)
     }
     @IBAction func clearWareList(_ sender: Any) {
         

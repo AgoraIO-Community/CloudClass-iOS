@@ -1,0 +1,62 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+NoEmptyText = " parameter cannot be empty";
+ParamErrorText = " parameter error";
+NeedCallText = "you need to call ";
+DismissVCText = "there are other pages on the top of the page";
+
+UserFullText = "The classroom is full";
+
+DuplicateLaunchText = "already launched";
+UnInitializedText = " not initialized";
+
+// ------------------------------------------------
+ClassTimeHourText = "h";
+ClassTimeMinuteText = "m";
+ClassTimeMinute2Text = "m";
+ClassTimeSecondText = "s";
+ClassBeforeStartText = "Class will begin after：";
+ClassAfterStartText = "Class begins：";
+ClassAfterStopText = "Class ends：";
+
+// toast
+ClassEndWarningStartText = "The course has ";
+ClassEndWarningEndText = "m to end";
+ClassCloseWarningStartText = "The class is over, there are ";
+ClassCloseWarningEndText = " to close the classroom";
+ClassCloseWarningStart2Text = " ";
+ClassCloseWarningEnd2Text = "m before the classroom is closed";
+//CoursewareFullOnText = "The teacher turned on the full screen of the courseware";
+//CoursewareFullOffText = "The teacher turned off the full screen of the courseware";
+
+// chat
+ChatDisableToastText = "Turn on mute mode";
+ChatEnableToastText = "Turn off mute mode";
+
+// canvas
+CameraMuteText = "Your camera has been turned off";
+MicrophoneMuteText = "Your mic has been turned off";
+CameraUnMuteText = "Your camera has been turned on";
+MicrophoneUnMuteText = "Your mic has been turned on";
+
+// Device
+TeacherVideoFailText = "There may be a problem with the teacher's video";
+
+// CoHost
+HandsUpTimeOutText = "Hands up timeout";
+RejectedCoHostText = "Teacher rejected your application";
+AcceptedCoHostText = "The teacher has invited you to stage，you can interact with others now";
+RemovedCoHostText = "You are not on stage now and you can not interact with others";
+HandsUpSuccessText = "Hands up successfully";
+HandsDownSuccessText = "Hands down successfully";
+CloseHandsUpText = "Teacher closed hands up mode";
+OpenHandsUpText = "Teacher opened hands up mode";
+
+// screenshare
+ScreensharedBySb = " starts to the screenshare";
+ScreenshareStoppedBySb = " stops the screenshare";

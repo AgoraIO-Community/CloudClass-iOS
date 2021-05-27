@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - AgoraBoardToolsItem
 @objc public enum AgoraBoardToolsItemType: Int {
-    case select = 0, pencil, text, eraser, color
+    case select = 0, pencil, text, eraser, color, clicker
 }
 
 @objc public enum AgoraBoardToolsColor: Int {

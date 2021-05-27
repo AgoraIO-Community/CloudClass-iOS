@@ -1,0 +1,15 @@
+
+framework module AgoraActionProcess {
+    explicit module OCFile {
+            
+        module HTTP {
+            requires objc
+            header "AgoraActionHTTPClient.h"
+            link "HTTP"
+            export *
+        }
+    }
+}
+
+
+

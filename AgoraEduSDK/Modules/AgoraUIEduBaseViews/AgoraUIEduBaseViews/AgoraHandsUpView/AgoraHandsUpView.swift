@@ -5,13 +5,12 @@
 //  Created by LYY on 2021/3/12.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 
 fileprivate let MAXCOUNT = 3
 
-@objcMembers public class AgoraHandsUpView : AgoraBaseUIView {
+@objcMembers public class AgoraHandsUpView : AgoraBaseUIView,AgoraEduHandsUpHandler {
     
     public weak var context: AgoraEduHandsUpContext?
     public var isEnable: Bool = false {
@@ -99,10 +98,7 @@ fileprivate let MAXCOUNT = 3
     deinit {
         self.stopTimer()
     }
-}
-
-// MARK: UI action
-extension AgoraHandsUpView {
+    
     @objc func onButtonClick(_ btn: UIButton) {
         self.startTimer()
     }
@@ -110,6 +106,27 @@ extension AgoraHandsUpView {
     @objc func onButtonCancel(_ btn: UIButton) {
         self.stopTimer()
     }
+    
+    public func onSetHandsUpEnable(_ enable: Bool) {
+        self.isEnable = enable
+    }
+    public func onSetHandsUpState(_ state: AgoraEduContextHandsUpState) {
+        self.state = state
+    }
+    
+    public func onUpdateHandsUpStateResult(_ error: AgoraEduContextError?) {
+        if let err = error {
+            AgoraUtils.showToast(message: err.message)
+        }
+    }
+
+    public func onShowHandsUpTips(_ message: String) {
+        AgoraUtils.showToast(message: message)
+    }
+}
+
+// MARK: UI action
+extension AgoraHandsUpView {
 
     fileprivate func startTimer() {
  
@@ -169,26 +186,5 @@ extension AgoraHandsUpView {
         let imageString = self.state == .handsUp ? "hands_up_waiting" : "hands_down_default"
         handsUpBtn.setImage(AgoraKitImage(imageString), for: .normal)
         handsUpBtn.isUserInteractionEnabled = true
-    }
-}
-
-// MARK: - AgoraEduHandsUpHandler
-@objc extension AgoraHandsUpView : AgoraEduHandsUpHandler {
-
-    public func onSetHandsUpEnable(_ enable: Bool) {
-        self.isEnable = enable
-    }
-    public func onSetHandsUpState(_ state: AgoraEduContextHandsUpState) {
-        self.state = state
-    }
-    
-    public func onUpdateHandsUpStateResult(_ error: AgoraEduContextError?) {
-        if let err = error {
-            AgoraUtils.showToast(message: err.message)
-        }
-    }
-
-    public func onShowHandsUpTips(_ message: String) {
-        AgoraUtils.showToast(message: message)
     }
 }

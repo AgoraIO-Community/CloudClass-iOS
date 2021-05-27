@@ -167,6 +167,19 @@ public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
     func setVideoButtonHidden(hidden: Bool) {
         isVideoButtonHidden = hidden
     }
+    
+    // MARK: touch event
+    @objc  func onAudioTouchEvent(_ button: AgoraBaseUIButton) {
+        delegate?.userView(self,
+                           didPressAudioButton: button,
+                           indexOfUserList: index)
+    }
+    
+    @objc func onVideoTouchEvent(_ button: AgoraBaseUIButton) {
+        delegate?.userView(self,
+                           didPressVideoButton: button,
+                           indexOfUserList: index)
+    }
 }
 
 // MARK: - Private
@@ -240,21 +253,6 @@ private extension AgoraUIUserView {
     }
 }
 
-// MARK: - UIButton Event
-private extension AgoraUIUserView {
-    @objc  func onAudioTouchEvent(_ button: AgoraBaseUIButton) {
-        delegate?.userView(self,
-                           didPressAudioButton: button,
-                           indexOfUserList: index)
-    }
-    
-    @objc func onVideoTouchEvent(_ button: AgoraBaseUIButton) {
-        delegate?.userView(self,
-                           didPressVideoButton: button,
-                           indexOfUserList: index)
-    }
-}
-
 // MARK: - Update views
 private extension AgoraUIUserView {
     func updateUserName(userInfo: AgoraEduContextUserDetailInfo?) {
@@ -322,7 +320,11 @@ private extension AgoraUIUserView {
         }
         
         // 摄像头状态
-        if info.cameraState == .notAvailable {
+        if info.cameraState == .close {
+            self.defaultView.isHidden = false
+            self.defaultImageView?.image = AgoraKitImage("default_close")
+            
+        } else if info.cameraState == .notAvailable {
             self.defaultView.isHidden = false
             self.defaultImageView?.image = AgoraKitImage("default_baddevice")
             

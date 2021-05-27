@@ -8,7 +8,7 @@
 
 #import "SettingViewController.h"
 #import "SettingViewCell.h"
-#import <AgoraEduSDK/AgoraEduSDK.h>
+#import <AgoraEduSDK/AgoraClassroomSDK.h>
 #import "KeyCenter.h"
 
 @interface SettingViewController ()<UITableViewDelegate,UITableViewDataSource,SettingCellDelegate>
@@ -40,7 +40,7 @@
     
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
     NSString *app_Version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    footView.text = [NSString stringWithFormat:@"App:v%@  SDK:v%@", app_Version, [AgoraEduSDK version]];
+    footView.text = [NSString stringWithFormat:@"App:v%@  SDK:v%@", app_Version, [AgoraClassroomSDK version]];
     
     footView.font = [UIFont systemFontOfSize:16];
     [settingTableView addSubview:footView];
@@ -88,7 +88,7 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
    
     AgoraEduSDKConfig *config = [[AgoraEduSDKConfig alloc] initWithAppId:KeyCenter.appId eyeCare:sender.on];
-    [AgoraEduSDK setConfig:config];
+    [AgoraClassroomSDK setConfig:config];
 }
 
 - (BOOL)shouldAutorotate {

@@ -9,10 +9,12 @@
 import Foundation
 import AgoraUIBaseViews
 
-public class AboutView: AgoraBaseUIView {
+@objcMembers public class AboutView: AgoraBaseUIView,
+                                     UITableViewDataSource,
+                                     UITableViewDelegate{
     private lazy var contentView: AgoraBaseUIView = {
         var contentView = AgoraBaseUIView()
-        contentView.backgroundColor = LoginConfig.device == .iPhone ? UIColor(hexString: "F9F9FC") : .white
+        contentView.backgroundColor = LoginConfig.device == .iPad ? .white : UIColor(hexString: "F9F9FC")
         
         contentView.layer.cornerRadius = 8
         //        contentView.layer.backgroundColor = UIColor.white.cgColor
@@ -44,7 +46,20 @@ public class AboutView: AgoraBaseUIView {
         
         titleView.addSubview(titleLabel)
         
-        if LoginConfig.device == .iPhone {
+        if LoginConfig.device == .iPad {
+            titleLabel.agora_center_x = 0
+            titleLabel.agora_center_y = 0
+            
+            backBtn.setTitle(NSLocalizedString("About_close", comment: ""), for: .normal)
+            backBtn.setTitleColor(UIColor(hexString: "357BF6"), for: .normal)
+            backBtn.titleLabel?.font = LoginConfig.about_title_font
+            titleView.addSubview(backBtn)
+            
+            backBtn.agora_x = 20
+            backBtn.agora_center_y = 0
+            
+            titleView.addBottomLine()
+        } else {
             titleView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).cgColor
             titleView.layer.shadowOffset = CGSize(width: 0, height: 1)
             titleView.layer.shadowOpacity = 1
@@ -58,19 +73,6 @@ public class AboutView: AgoraBaseUIView {
             
             backBtn.agora_x = 15
             backBtn.agora_bottom = 1
-        } else {
-            titleLabel.agora_center_x = 0
-            titleLabel.agora_center_y = 0
-            
-            backBtn.setTitle(NSLocalizedString("About_close", comment: ""), for: .normal)
-            backBtn.setTitleColor(UIColor(hexString: "357BF6"), for: .normal)
-            backBtn.titleLabel?.font = LoginConfig.about_title_font
-            titleView.addSubview(backBtn)
-            
-            backBtn.agora_x = 20
-            backBtn.agora_center_y = 0
-            
-            titleView.addBottomLine()
         }
         
         return titleView
@@ -109,60 +111,12 @@ public class AboutView: AgoraBaseUIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-// MARK: UI
-extension AboutView {
-    private func initView(){
-        
-        switch LoginConfig.device {
-        case .iPhone:
-            backgroundColor = .clear
-            contentView.addSubview(bottomLabel)
-        case .iPad:
-            backgroundColor = UIColor.init(white: 1, alpha: 0.7)
-        }
-        addSubview(contentView)
-        
-        contentView.addSubview(titleView)
-        contentView.addSubview(infoTable)
-        contentView.addSubview(bottomLabel)
-        
-    }
     
-    private func initLayout(){
-        switch LoginConfig.device {
-        case .iPhone:
-            contentView.agora_x = 0
-            contentView.agora_y = 0
-            contentView.agora_right = 0
-            contentView.agora_bottom = 0
-            
-            bottomLabel.agora_bottom = 31
-            bottomLabel.agora_center_x = 0
-        case .iPad:
-            contentView.agora_center_x = 0
-            contentView.agora_center_y = 0
-            contentView.agora_width = 420
-            contentView.agora_height = 320
-        }
-        
-        titleView.agora_x = 0
-        titleView.agora_y = 0
-        titleView.agora_right = 0
-        titleView.agora_height = LoginConfig.about_title_height
-        
-        infoTable.agora_x = 0
-        infoTable.agora_y = titleView.agora_height + LoginConfig.about_title_sep
-        infoTable.agora_right = 0
-        infoTable.agora_height = LoginConfig.about_cell_height * CGFloat(LoginConfig.AboutInfoList.count)
-        
-        bottomLabel.agora_bottom = 31
-        bottomLabel.agora_center_x = 0
-    }
-    
+    // MARK: touch event
     @objc func onTouchBack() {
-        if LoginConfig.device == .iPhone {
+        if LoginConfig.device == .iPad {
+            removeFromSuperview()
+        } else {
             UIView.animate(withDuration: TimeInterval.agora_animation) {[weak self] in
                     self?.agora_x = self?.frame.width ?? 0
 
@@ -175,20 +129,16 @@ extension AboutView {
                 }
                 self?.removeFromSuperview()
             }
-        } else {
-            removeFromSuperview()
         }
     }
-}
-
-
-// MARK: UITableViewDataSource & UITableViewDelegate
-extension AboutView: UITableViewDataSource,UITableViewDelegate {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    
+    // MARK: UITableViewDataSource & UITableViewDelegate
+    @objc public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return LoginConfig.AboutInfoList.count
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    @objc public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let tabCell = tableView.dequeueReusableCell(withIdentifier: LoginConfig.About_cell_id, for: indexPath) as! AboutTableCell
         if indexPath.row == (LoginConfig.AboutInfoList.count - 1) &&
             LoginConfig.device == .iPad {
@@ -208,11 +158,11 @@ extension AboutView: UITableViewDataSource,UITableViewDelegate {
         return tabCell
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    @objc public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return LoginConfig.about_cell_height
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    @objc public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let detail = LoginConfig.AboutInfoList[indexPath.row].1 else {
             return
         }
@@ -227,7 +177,8 @@ extension AboutView: UITableViewDataSource,UITableViewDelegate {
         } else if let detailView = detail as? AgoraBaseUIView {
             addSubview(detailView)
             switch LoginConfig.device {
-            case .iPhone:
+            case .iPhone_Big: fallthrough
+            case .iPhone_Small:
                 detailView.alpha = 1
                 detailView.agora_x = 0
                 detailView.agora_y = 0
@@ -271,6 +222,60 @@ extension AboutView: UITableViewDataSource,UITableViewDelegate {
             
         }
     }
+}
+
+// MARK: UI
+extension AboutView {
+    private func initView(){
+        
+        switch LoginConfig.device {
+        case .iPhone_Big: fallthrough
+        case .iPhone_Small:
+            backgroundColor = .clear
+            contentView.addSubview(bottomLabel)
+        case .iPad:
+            backgroundColor = UIColor.init(white: 1, alpha: 0.7)
+        }
+        addSubview(contentView)
+        
+        contentView.addSubview(titleView)
+        contentView.addSubview(infoTable)
+        contentView.addSubview(bottomLabel)
+        
+    }
+    
+    private func initLayout(){
+        switch LoginConfig.device {
+        case .iPhone_Big: fallthrough
+        case .iPhone_Small: 
+            contentView.agora_x = 0
+            contentView.agora_y = 0
+            contentView.agora_right = 0
+            contentView.agora_bottom = 0
+            
+            bottomLabel.agora_bottom = 31
+            bottomLabel.agora_center_x = 0
+        case .iPad:
+            contentView.agora_center_x = 0
+            contentView.agora_center_y = 0
+            contentView.agora_width = 420
+            contentView.agora_height = 320
+        }
+        
+        titleView.agora_x = 0
+        titleView.agora_y = 0
+        titleView.agora_right = 0
+        titleView.agora_height = LoginConfig.about_title_height
+        
+        infoTable.agora_x = 0
+        infoTable.agora_y = titleView.agora_height + LoginConfig.about_title_sep
+        infoTable.agora_right = 0
+        infoTable.agora_height = LoginConfig.about_cell_height * CGFloat(LoginConfig.AboutInfoList.count)
+        
+        bottomLabel.agora_bottom = 31
+        bottomLabel.agora_center_x = 0
+    }
+    
 }
 
 extension AgoraBaseUIView {

@@ -1,0 +1,21 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '10.0'
+
+target 'AgoraLog' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  pod "AFNetworking", "4.0.1"
+  pod "CocoaLumberjack", "3.6.1"
+  pod "AliyunOSSiOS", "2.10.8"
+  
+  post_install do |installer|
+     installer.pods_project.targets.each do |target|
+         target.build_configurations.each do |config|
+             config.build_settings['BITCODE_GENERATION_MODE'] = 'bitcode'
+             config.build_settings['ENABLE_BITCODE'] = 'YES'
+         end
+     end
+  end
+
+end

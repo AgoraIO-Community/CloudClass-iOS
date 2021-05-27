@@ -279,6 +279,11 @@ private class AgoraButtonListView: AgoraBaseUIScrollView {
             buttonListView.isScrollEnabled = (buttonListViewContentHeight > buttonListViewHeight)
         }
     }
+    
+    // MARK: action
+    @objc func doFoldButtonPressed(_ button: UIButton) {
+        isFold.toggle()
+    }
 }
 
 public extension AgoraBoardToolsView {
@@ -317,12 +322,6 @@ private extension AgoraBoardToolsView {
     }
 }
 
-private extension AgoraBoardToolsView {
-    @objc func doFoldButtonPressed(_ button: UIButton) {
-        isFold.toggle()
-    }
-}
-
 extension AgoraBoardToolsView: AgoraPopoverDelegate {
     public func popoverDidDismiss(_ popover: AgoraPopover) {
         
@@ -351,6 +350,7 @@ fileprivate extension AgoraBoardToolsItemType {
         case .text:      return AgoraKitImage("icon-text-more")!
         case .eraser:    return AgoraKitImage("icon-eraser-more")!
         case .color:     return AgoraKitImage("icon-color-more")!
+        case .clicker:   return AgoraKitImage("icon-h5")!
         }
     }
 
@@ -361,6 +361,7 @@ fileprivate extension AgoraBoardToolsItemType {
         case .text:      return AgoraKitImage("icon-text-more_actived")!
         case .eraser:    return AgoraKitImage("icon-eraser-more_actived")!
         case .color:     return AgoraKitImage("icon-color-more_actived")!
+        case .clicker:   return AgoraKitImage("icon-h5-actived")!
         }
     }
 }

@@ -14,6 +14,9 @@
 		1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87571123571CFE009C55A8 /* SettingViewController.m */; };
 		683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683622D5262AC4620028F7F5 /* DisclaimerView.swift */; };
 		68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68362356262D30C20028F7F5 /* BaseLoginObject.swift */; };
+		687AFBAF2646BBAD004E5A34 /* CountDownContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AFBAE2646BBAD004E5A34 /* CountDownContainerView.swift */; };
+		687AFBB22646BC2C004E5A34 /* SingleTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AFBB12646BC2C004E5A34 /* SingleTimeView.swift */; };
+		687AFC2A264AA84A004E5A34 /* SingleTimeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AFC29264AA84A004E5A34 /* SingleTimeGroup.swift */; };
 		6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68880999262825FC00B5FB2A /* LoginViewController.swift */; };
 		6888099F2628383700B5FB2A /* ChooseTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6888099E2628383700B5FB2A /* ChooseTableView.swift */; };
 		688809E82629358800B5FB2A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688809E72629358800B5FB2A /* MainViewController.swift */; };
@@ -79,6 +82,9 @@
 		4EAA54960A24224AEAEC570D /* Pods-AgoraEducation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.release.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.release.xcconfig"; sourceTree = "<group>"; };
 		683622D5262AC4620028F7F5 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		68362356262D30C20028F7F5 /* BaseLoginObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLoginObject.swift; sourceTree = "<group>"; };
+		687AFBAE2646BBAD004E5A34 /* CountDownContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownContainerView.swift; sourceTree = "<group>"; };
+		687AFBB12646BC2C004E5A34 /* SingleTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTimeView.swift; sourceTree = "<group>"; };
+		687AFC29264AA84A004E5A34 /* SingleTimeGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTimeGroup.swift; sourceTree = "<group>"; };
 		68880999262825FC00B5FB2A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		6888099E2628383700B5FB2A /* ChooseTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseTableView.swift; sourceTree = "<group>"; };
 		688809E72629358800B5FB2A /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -258,6 +264,18 @@
 			path = Beans;
 			sourceTree = "<group>";
 		};
+		687AFBB02646BC19004E5A34 /* CountDownExtApp */ = {
+			isa = PBXGroup;
+			children = (
+				86F80250262589AF00364FFE /* CountDownExtApp.h */,
+				86F80251262589AF00364FFE /* CountDownExtApp.m */,
+				687AFBAE2646BBAD004E5A34 /* CountDownContainerView.swift */,
+				687AFBB12646BC2C004E5A34 /* SingleTimeView.swift */,
+				687AFC29264AA84A004E5A34 /* SingleTimeGroup.swift */,
+			);
+			path = CountDownExtApp;
+			sourceTree = "<group>";
+		};
 		7801A89925DB7D7100C63ABF /* Debug */ = {
 			isa = PBXGroup;
 			children = (
@@ -411,10 +429,9 @@
 		8654871A261EDF830025ADCB /* ExtApps */ = {
 			isa = PBXGroup;
 			children = (
+				687AFBB02646BC19004E5A34 /* CountDownExtApp */,
 				8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */,
 				8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */,
-				86F80250262589AF00364FFE /* CountDownExtApp.h */,
-				86F80251262589AF00364FFE /* CountDownExtApp.m */,
 			);
 			path = ExtApps;
 			sourceTree = "<group>";
@@ -462,9 +479,9 @@
 				1AE0D0002283C5F20092AC5E /* Sources */,
 				1AE0D0012283C5F20092AC5E /* Frameworks */,
 				1AE0D0022283C5F20092AC5E /* Resources */,
+				9CCF3ABB7D45F972FD1E62D9 /* [CP] Embed Pods Frameworks */,
+				FC5F4F0CECF1871AF366D755 /* [CP] Copy Pods Resources */,
 				68A5E3F02636770B00E3C37E /* Write Publish Date */,
-				66178DA231BCF66B63FD09B3 /* [CP] Embed Pods Frameworks */,
-				28A36CA48ECB8F104F36D6E2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -517,7 +534,7 @@
 		1AE0CFFC2283C5F20092AC5E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = Agora;
 				TargetAttributes = {
 					1AE0D0032283C5F20092AC5E = {
@@ -592,40 +609,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		28A36CA48ECB8F104F36D6E2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		66178DA231BCF66B63FD09B3 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		68A5E3F02636770B00E3C37E /* Write Publish Date */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -643,6 +626,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ntime=$(date \"+%Y.%m.%d\")\npublishLine=`grep -n \"publishDate\" $SRCROOT/KeyCenter.m | cut -d \":\" -f 1`\nsed -i '' \"$(($publishLine+1))s/@\\\".*\\\"/@\\\"$time\\\"/g\"  $SRCROOT/KeyCenter.m\n";
+		};
+		9CCF3ABB7D45F972FD1E62D9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		CC49100FDE030D72EE28DCAE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -666,6 +666,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		FC5F4F0CECF1871AF366D755 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -676,6 +693,7 @@
 				688809E82629358800B5FB2A /* MainViewController.swift in Sources */,
 				78DFB61525AE93C100B01906 /* AgoraEducationHTTPClient.m in Sources */,
 				783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */,
+				687AFBB22646BC2C004E5A34 /* SingleTimeView.swift in Sources */,
 				68A5E2F12635557B00E3C37E /* AboutView.swift in Sources */,
 				6888099F2628383700B5FB2A /* ChooseTableView.swift in Sources */,
 				787485F825AB155F0022329D /* KeyCenter.m in Sources */,
@@ -683,9 +701,11 @@
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
 				1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
+				687AFBAF2646BBAD004E5A34 /* CountDownContainerView.swift in Sources */,
 				683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */,
 				6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */,
 				1A70AFB22359F17500942742 /* SettingViewCell.m in Sources */,
+				687AFC2A264AA84A004E5A34 /* SingleTimeGroup.swift in Sources */,
 				78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */,
 				8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */,
 				783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */,
@@ -786,6 +806,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -846,6 +867,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -869,6 +891,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -881,7 +904,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GM72UGLGZW;
@@ -920,11 +943,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = App;
+				STRIP_STYLE = "non-global";
+				STRIP_SWIFT_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
@@ -942,7 +967,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 48TB6ZZL5S;
 				ENABLE_BITCODE = NO;
@@ -980,11 +1005,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraFlexEduDis;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = FlexiableClassroom_AppStore;
+				STRIP_STYLE = "non-global";
+				STRIP_SWIFT_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
@@ -1094,6 +1121,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1117,6 +1145,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = DevRelease;
@@ -1129,7 +1158,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GM72UGLGZW;
 				ENABLE_BITCODE = NO;
@@ -1167,11 +1196,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = App;
+				STRIP_STYLE = "non-global";
+				STRIP_SWIFT_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
@@ -1244,6 +1275,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1267,6 +1299,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = QATestNewRelease;
@@ -1279,7 +1312,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = PV44H27855;
 				ENABLE_BITCODE = NO;
@@ -1317,11 +1350,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATestNew;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = AgoraQA2021;
+				STRIP_STYLE = "non-global";
+				STRIP_SWIFT_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
@@ -1394,6 +1429,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1417,6 +1453,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = QARelease;
@@ -1429,7 +1466,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = JDPG69R49Z;
 				ENABLE_BITCODE = NO;
@@ -1467,11 +1504,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQA;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = AgoraLab2020;
+				STRIP_STYLE = "non-global";
+				STRIP_SWIFT_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
@@ -1544,6 +1583,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1567,6 +1607,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = QATestRelease;
@@ -1579,7 +1620,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 6;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = 5459N9W32M;
 				ENABLE_BITCODE = NO;
@@ -1617,11 +1658,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATest;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = AgoraTest2020;
+				STRIP_STYLE = "non-global";
+				STRIP_SWIFT_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";

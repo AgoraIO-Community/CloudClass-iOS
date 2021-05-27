@@ -87,9 +87,9 @@ extension AgoraWhiteBoardUIController {
             
             var list = [studentListItem]
             
-            if let extApps = extAppItems() {
-                list.append(contentsOf: extApps)
-            }
+//            if let extApps = extAppItems() {
+//                list.append(contentsOf: extApps)
+//            }
             
             boardToolsView.registerToolItems(list,
                                               selectedIndex: 0)
@@ -181,11 +181,16 @@ extension AgoraWhiteBoardUIController {
                                    fromView: button)
         }
         
+        let clicker = AgoraBoardToolsItem(itemType: .clicker) { [unowned self] (button) in
+            self.boardToolsState.selectedItem = .clicker
+        }
+        
         var list = [moveItem,
                     pencilItem,
                     textItem,
                     eraserItem,
-                    colorItem]
+                    colorItem,
+                    clicker]
         
         if viewType != .oneToOne {
             let studentListImage = getImage("icon-花名册-default")
@@ -199,9 +204,9 @@ extension AgoraWhiteBoardUIController {
             list.append(studentListItem)
         }
         
-        if let extApps = extAppItems() {
-            list.append(contentsOf: extApps)
-        }
+//        if let extApps = extAppItems() {
+//            list.append(contentsOf: extApps)
+//        }
         
         boardToolsView.isHidden = false
         
