@@ -280,7 +280,7 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         chat.containerView.agora_y = y
         chat.containerView.agora_right = 250
         chat.containerView.agora_width = 500
-        chat.containerView.agora_height = 300
+        chat.containerView.agora_safe_bottom = 0
         
         self.hxChat = chat
     }
