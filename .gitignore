@@ -9,6 +9,7 @@ xcshareddata
 Podfile.lock
 *.xcworkspace
 Pods
+*.xcworkspace
 
 ## Various settings
 *.pbxuser
