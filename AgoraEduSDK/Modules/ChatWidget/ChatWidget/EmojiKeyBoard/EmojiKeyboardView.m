@@ -126,6 +126,12 @@
     return self;
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.collectionView.frame = self.frame;
+}
+
 - (void)deleteAction
 {
     if (self.delegate) {

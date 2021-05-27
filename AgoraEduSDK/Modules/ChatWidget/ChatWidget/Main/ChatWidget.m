@@ -337,18 +337,25 @@ static const NSString* kChatRoomId = @"chatroomId";
     CGFloat duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
 
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    //self.keyView.frame = keyboardFrame;
+    self.emojiKeyBoardView.frame = keyboardFrame;
     //执行动画
     [UIView animateWithDuration:duration animations:^{
-        self.containView.frame = CGRectMake(0, self.containerView.bounds.size.height - CONTAINVIEW_HEIGHT - keyboardFrame.size.height, self.containerView.bounds.size.width, CONTAINVIEW_HEIGHT);
-        self.inputField.frame = CGRectMake(20, 10, self.containView.bounds.size.width - 80, CONTAINVIEW_HEIGHT-10);
-        self.giftButton.hidden = YES;
-        self.sendButton.hidden = NO;
-        self.emojiButton.hidden = NO;
+        UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
+        CGRect rect=[self.containView convertRect: self.containView.bounds toView:window];    //获取控件view的相对坐标
+        {
+            CGRect oldFrame = self.containView.frame;
+            self.containView.frame = CGRectMake(0, oldFrame.origin.y - (rect.origin.y - keyboardFrame.origin.y) - CONTAINVIEW_HEIGHT, oldFrame.size.width, CONTAINVIEW_HEIGHT);
+            self.inputField.frame = CGRectMake(20, 10, self.containView.bounds.size.width - 80, CONTAINVIEW_HEIGHT-10);
+            self.giftButton.hidden = YES;
+            self.sendButton.hidden = NO;
+            self.emojiButton.hidden = NO;
+        }
+        
     }];
     
     
 }
+
 
 #pragma mark --键盘收回
 - (void)keyboardDidHide:(NSNotification *)notification{
