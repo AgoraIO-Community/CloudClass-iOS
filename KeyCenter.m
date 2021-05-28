@@ -26,8 +26,13 @@
 }
 
 + (NSString *)hostURL {
-    return <#Your Agora Host#>;
+    return @"http://api-solutions-dev.bj2.agoralab.co";
 }
+
+// Dev
+//+ (NSString *)hostURL {
+//    return @"http://api-solutions-dev.bj2.agoralab.co";
+//}
 
 // PreProduct
 //+ (NSString *)hostURL {
