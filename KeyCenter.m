@@ -26,13 +26,8 @@
 }
 
 + (NSString *)hostURL {
-    return @"http://api-solutions-dev.bj2.agoralab.co";
+    return @"https://api-test.agora.io/preview";
 }
-
-// Dev
-//+ (NSString *)hostURL {
-//    return @"http://api-solutions-dev.bj2.agoralab.co";
-//}
 
 // PreProduct
 //+ (NSString *)hostURL {
