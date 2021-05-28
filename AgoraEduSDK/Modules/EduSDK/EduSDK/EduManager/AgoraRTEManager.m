@@ -232,6 +232,27 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     return @"1.0.0";
 }
 
+- (void)reportAppScenario:(NSInteger)appScenario
+              serviceType:(NSInteger)serviceType
+               appVersion:(NSString *)appVersion {
+    NSDictionary *dic = @{
+        @"rtc.report_app_scenario":@{
+            @"appScenario":@(appScenario),
+            @"serviceType":@(serviceType),
+            @"appVersion":appVersion
+        }
+    };
+    NSError *rtcError;
+    NSData *jsonRtcData = [NSJSONSerialization dataWithJSONObject:dic
+                                                          options:NSJSONWritingPrettyPrinted
+                                                            error:&rtcError];
+    if (jsonRtcData != nil) {
+        NSString *jsonString = [[NSString alloc]initWithData:jsonRtcData
+                                                    encoding:NSUTF8StringEncoding];
+        [AgoraRTCManager.shareManager setParameters:jsonString];
+    }
+}
+
 - (void)setDelegate:(id<AgoraRTEManagerDelegate>)delegate {
     _delegate = delegate;
     self.messageHandle.agoraDelegate = delegate;

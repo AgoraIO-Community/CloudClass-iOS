@@ -252,8 +252,14 @@ static const NSString* kChatRoomId = @"chatroomId";
     
     kChatRoomId =  properties[@"chatRoomId"];
     
+    NSString *appKey = properties[@"appkey"];
+    NSString *password = properties[@"password"];
+    
     ChatManager *manager = [[ChatManager alloc] initWithUserConfig:user
+                                                            appKey:appKey
+                                                          password:password
                                                         chatRoomId:kChatRoomId];
+    
     manager.delegate = self;
     self.chatManager = manager;
     

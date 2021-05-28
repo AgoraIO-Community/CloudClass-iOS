@@ -185,12 +185,12 @@ extension AgoraWhiteBoardUIController {
             self.boardToolsState.selectedItem = .clicker
         }
         
-        var list = [moveItem,
+        var list = [clicker,
+                    moveItem,
                     pencilItem,
                     textItem,
                     eraserItem,
-                    colorItem,
-                    clicker]
+                    colorItem]
         
         if viewType != .oneToOne {
             let studentListImage = getImage("icon-花名册-default")

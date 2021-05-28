@@ -14,7 +14,7 @@
 }
 
 + (NSString *)publishDate {
-    return @"2021.05.12";
+    return @"2021.05.28";
 }
 
 + (NSString *)appId {
@@ -28,4 +28,15 @@
 + (NSString *)hostURL {
     return <#Your Agora Host#>;
 }
+
+// PreProduct
+//+ (NSString *)hostURL {
+//    return @"https://api-test.agora.io/preview";
+//}
+
+// Product
+//+ (NSString *)hostURL {
+//    return @"https://api.agora.io";
+//}
+
 @end

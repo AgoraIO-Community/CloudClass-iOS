@@ -108,7 +108,7 @@ import AgoraUIEduBaseViews
         }
     }
     
-    public var selectedItem: AgoraBoardToolsItemType = .pencil  {
+    public var selectedItem: AgoraBoardToolsItemType = .clicker  {
         didSet {
             delegate?.toolsState(self,
                                  didUpdateSelectedItem: selectedItem)

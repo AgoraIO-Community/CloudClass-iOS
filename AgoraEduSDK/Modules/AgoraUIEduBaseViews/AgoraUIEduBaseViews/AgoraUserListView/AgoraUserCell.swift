@@ -80,6 +80,7 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
         if let videoTap = self.videoTap,
            isSelf {
             cameraImg.removeGestureRecognizer(videoTap)
+            self.videoTap = nil
         }
         
         if imgNameMid == "_enable" && isSelf {
@@ -110,9 +111,10 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
 
         audioImg.image = AgoraKitImage(imgNameStart + imgNameMid + imgNameEnd)
         
-        if let videoTap = self.videoTap ,
+        if let audioTap = self.audioTap ,
            isSelf {
-            audioImg.removeGestureRecognizer(videoTap)
+            audioImg.removeGestureRecognizer(audioTap)
+            self.audioTap = nil
         }
         
         if imgNameMid == "_enable" && isSelf {

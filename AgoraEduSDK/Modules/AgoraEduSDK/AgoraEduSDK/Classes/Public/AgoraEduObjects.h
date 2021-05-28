@@ -68,6 +68,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 白板区域
 @property (nonatomic, copy) NSString *boardRegion;
 
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> * userProperties;
+
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
                         roleType:(AgoraEduRoleType)roleType
@@ -77,7 +79,8 @@ NS_ASSUME_NONNULL_BEGIN
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     boardRegion:(NSString *_Nullable)boardRegion;
+                     boardRegion:(NSString *_Nullable)boardRegion
+                  userProperties:(NSDictionary * _Nullable)userProperties;
 @end
 
 // 聊天翻译

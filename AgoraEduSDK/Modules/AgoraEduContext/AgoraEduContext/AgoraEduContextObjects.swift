@@ -67,6 +67,8 @@ import Foundation
     public var userName: String = ""
     // 用户角色
     public var role: AgoraEduContextUserRole = .student
+    // 用户属性
+    public var userProperties: [String : String]?
 }
 
 @objc public enum AgoraEduContextUserRole: Int {

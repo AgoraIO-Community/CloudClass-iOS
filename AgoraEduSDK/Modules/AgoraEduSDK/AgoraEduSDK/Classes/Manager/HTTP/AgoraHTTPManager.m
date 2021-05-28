@@ -87,6 +87,7 @@ static NSString *AGORA_EDU_SDK_BASE_URL = @"https://api.agora.io";
     parameters[@"roomType"] = @(config.roomType);
     parameters[@"role"] = @(config.role);
     parameters[@"userName"] = config.userName;
+    parameters[@"userProperties"] = config.userProperties;
     
     if (config.startTime != nil) {
         parameters[@"startTime"] = config.startTime;

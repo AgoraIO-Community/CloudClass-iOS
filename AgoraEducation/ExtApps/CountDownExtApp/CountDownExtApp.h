@@ -17,10 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @protocol CountDownProtocol <NSObject>
-- (void)setCountDownWithTotalSeconds:(NSInteger)totalSeconds;
-- (void)invokeCountDown;
+- (void)invokeCountDownWithTotalSeconds:(NSInteger)totalSeconds
+                              ifExecute:(BOOL)ifExecute;
 - (void)pauseCountDown;
-- (void)continueCountDown;
 - (void)cancelCountDown;
 @end
 

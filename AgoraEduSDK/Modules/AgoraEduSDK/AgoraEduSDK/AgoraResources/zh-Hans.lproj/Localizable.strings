@@ -55,6 +55,7 @@ BoardWareFailMsgText = "课件未能加载成功，您可以点击重新加载�
 BoardWareCloseText = "关闭";
 BoardWareRetryText = "重新加载";
 LoaingText = "加载中...";
+ReconnectingText = "重连中...";
 
 // CoHost
 HandsUpTimeOutText = "举手超时";

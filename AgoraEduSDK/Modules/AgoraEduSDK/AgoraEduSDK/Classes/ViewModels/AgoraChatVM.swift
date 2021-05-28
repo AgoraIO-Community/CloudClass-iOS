@@ -84,7 +84,7 @@ import EduSDK
             if let teacher = rteUsers.first(where: {$0.role == .teacher}) {
                 byUser = self.kitUserInfo(teacher)
             } else {
-                let rteTeacher = AgoraRTEBaseUser(userUuid: "")
+                let rteTeacher = AgoraRTEUser(userUuid: "")
                 rteTeacher.role = .invalid
                 rteTeacher.userName = ""
                 byUser = self.kitUserInfo(rteTeacher)

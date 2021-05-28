@@ -10,8 +10,6 @@
 		1A44BE7522BF863000766274 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A44BE5722BF863000766274 /* Assets.xcassets */; };
 		1A44BE7A22BF863000766274 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE5E22BF863000766274 /* main.m */; };
 		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
-		1A70AFB22359F17500942742 /* SettingViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A70AFB12359F17500942742 /* SettingViewCell.m */; };
-		1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87571123571CFE009C55A8 /* SettingViewController.m */; };
 		683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683622D5262AC4620028F7F5 /* DisclaimerView.swift */; };
 		68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68362356262D30C20028F7F5 /* BaseLoginObject.swift */; };
 		687AFBAF2646BBAD004E5A34 /* CountDownContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AFBAE2646BBAD004E5A34 /* CountDownContainerView.swift */; };
@@ -66,10 +64,6 @@
 		1A44BE5E22BF863000766274 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1A44BE6022BF863000766274 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1A44BE7E22BF874A00766274 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1A70AFB02359F17500942742 /* SettingViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingViewCell.h; sourceTree = "<group>"; };
-		1A70AFB12359F17500942742 /* SettingViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingViewCell.m; sourceTree = "<group>"; };
-		1A87571023571CFE009C55A8 /* SettingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SettingViewController.h; sourceTree = "<group>"; };
-		1A87571123571CFE009C55A8 /* SettingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SettingViewController.m; sourceTree = "<group>"; };
 		1AE0D0042283C5F20092AC5E /* AgoraCloudClass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AgoraCloudClass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AE0D01C2283C5F40092AC5E /* AgoraEducationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgoraEducationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AE0D0272283C5F40092AC5E /* AgoraEducationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgoraEducationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,29 +177,10 @@
 				78DFB61225AE93C000B01906 /* HTTP */,
 				7813B6F223FA5A0300265830 /* StoryBoards */,
 				78D730C423B3853200D2146C /* Utils */,
-				1A87570F23571CC9009C55A8 /* Setting */,
 				78D7312E23B38B0A00D2146C /* Main */,
 				1A87571323581AEC009C55A8 /* Supporting Files */,
 			);
 			path = AgoraEducation;
-			sourceTree = "<group>";
-		};
-		1A70AFAF2359F15000942742 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				1A70AFB02359F17500942742 /* SettingViewCell.h */,
-				1A70AFB12359F17500942742 /* SettingViewCell.m */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		1A87570F23571CC9009C55A8 /* Setting */ = {
-			isa = PBXGroup;
-			children = (
-				1AD4E992235EE15300C415BF /* Controllers */,
-				1A70AFAF2359F15000942742 /* View */,
-			);
-			path = Setting;
 			sourceTree = "<group>";
 		};
 		1A87571323581AEC009C55A8 /* Supporting Files */ = {
@@ -221,15 +196,6 @@
 				1A44BE6022BF863000766274 /* AppDelegate.m */,
 			);
 			path = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		1AD4E992235EE15300C415BF /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				1A87571023571CFE009C55A8 /* SettingViewController.h */,
-				1A87571123571CFE009C55A8 /* SettingViewController.m */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 		1AE0CFFB2283C5F20092AC5E = {
@@ -699,12 +665,10 @@
 				787485F825AB155F0022329D /* KeyCenter.m in Sources */,
 				68A5E2AB2635143400E3C37E /* AboutTableCell.swift in Sources */,
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
-				1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
 				687AFBAF2646BBAD004E5A34 /* CountDownContainerView.swift in Sources */,
 				683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */,
 				6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */,
-				1A70AFB22359F17500942742 /* SettingViewCell.m in Sources */,
 				687AFC2A264AA84A004E5A34 /* SingleTimeGroup.swift in Sources */,
 				78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */,
 				8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */,

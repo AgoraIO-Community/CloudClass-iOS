@@ -149,9 +149,15 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
             loadingView?.removeFromSuperview()
             AgoraUtils.showToast(message: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
             context?.leaveRoom()
-        case .disconnected, .connecting, .reconnecting:
+        case .connecting:
             if loadingView?.superview == nil {
                 self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("LoaingText"))
+                
+                
+            }
+        case .disconnected, .reconnecting:
+            if loadingView?.superview == nil {
+                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("ReconnectingText"))
             }
         case .connected:
             loadingView?.removeFromSuperview()

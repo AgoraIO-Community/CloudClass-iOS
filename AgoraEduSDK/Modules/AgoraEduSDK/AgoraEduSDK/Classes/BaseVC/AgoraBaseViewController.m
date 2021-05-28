@@ -150,13 +150,23 @@
 
     self.userVM = [[AgoraUserVM alloc] initWithConfig:self.vmConfig];
     self.chatVM = [[AgoraChatVM alloc] initWithConfig:self.vmConfig];
-
+    
     AgoraEduManager.shareManager.eduManager.delegate = self;
     AgoraEduManager.shareManager.roomManager.delegate = self;
     
     __weak AgoraBaseViewController *weakSelf = self;
     
     [self.roomVM joinClassroomWithSuccessBlock:^(AgoraRTELocalUser *localUser) {
+        
+        // apaas的小班课是4， 上报rtc也是4
+        NSInteger appScenario = weakself.vmConfig.sceneType;
+        // 0代表aPaaS， 1代表PaaS
+        NSInteger serviceType = 0;
+        NSString *appVersion = AgoraClassroomSDK.version;
+        [AgoraEduManager.shareManager.eduManager reportAppScenario:appScenario
+                                                       serviceType:serviceType
+                                                        appVersion:appVersion];
+        
         // Report
         AgoraRTEClassroomManager *manager = AgoraEduManager.shareManager.roomManager;
         AgoraReportor *report = [ApaasReporterWrapper getApaasReportor];
@@ -297,15 +307,25 @@
                                                                    delegate:self];
     
     AgoraWEAK(self);
-    self.userVM.onStreamStatesChangedBlock = ^(NSDictionary<NSString *,AgoraDeviceStreamState *> * _Nonnull streamStates, AgoraDeviceStateType deviceType) {
-        [weakself.deviceController updateRteStreamStates:streamStates deviceType:deviceType];
+    self.userVM.onStreamStatesChangedBlock = ^(NSDictionary<NSString *,AgoraDeviceStreamState *> * _Nonnull streamStates,
+                                               AgoraDeviceStateType deviceType) {
+        [weakself.deviceController updateRteStreamStates:streamStates
+                                              deviceType:deviceType];
     };
-    self.userVM.userDeviceStateBlock = ^enum AgoraEduContextDeviceState(enum AgoraDeviceStateType deviceStateType, AgoraRTEUser * _Nonnull user, AgoraRTEStream * _Nullable stream) {
-        
-        if (deviceStateType == AgoraDeviceStateTypeCamera) {
-            return [weakself.deviceController getCameraStateWithUser:user stream:stream];
-        } else {
-            return [weakself.deviceController getMicroStateWithUser:user stream:stream];
+    
+    self.userVM.userDeviceStateBlock = ^enum AgoraEduContextDeviceState(enum AgoraDeviceStateType deviceStateType,
+                                                                        AgoraRTEUser * _Nonnull user,
+                                                                        AgoraRTEStream * _Nullable stream) {
+        switch (deviceStateType) {
+            case AgoraDeviceStateTypeCamera:
+                return [weakself.deviceController getCameraStateWithUser:user
+                                                                  stream:stream];
+                break;
+            case AgoraDeviceStateTypeMicrophone:
+                return [weakself.deviceController getMicroStateWithUser:user
+                                                                 stream:stream];
+            default:
+                break;
         }
     };
 //    self.userVM.userDeviceStateBlock
@@ -354,8 +374,6 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
         if (!extAppDic) {
             extAppDic = [NSDictionary dictionary];
         }
-//        NSMutableDictionary *extAppWholeDic = [NSMutableDictionary dictionaryWithDictionary:extAppDic];
-//        [extAppWholeDic setValue:extAppState forKey:@"commonState"];
 
         if (properties && extAppDic) {
             properties(extAppDic);
@@ -403,12 +421,18 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
 }
 
 #pragma mark - AgoraDeviceControllerDelegate
-- (void)deviceController:(AgoraDeviceController *)controller didOccurError:(AgoraEduContextError *)error {
+- (void)deviceController:(AgoraDeviceController *)controller
+           didOccurError:(AgoraEduContextError *)error {
     [self onShowErrorInfo:error];
 }
-- (void)deviceController:(AgoraDeviceController *)controller didCameraStateChanged:(enum AgoraEduContextDeviceState)cameraState didMicroStateChanged:(enum AgoraEduContextDeviceState)microState fromUser:(AgoraRTEUser *)user {
+
+- (void)deviceController:(AgoraDeviceController *)controller
+   didCameraStateChanged:(enum AgoraEduContextDeviceState)cameraState
+    didMicroStateChanged:(enum AgoraEduContextDeviceState)microState fromUser:(AgoraRTEUser *)user {
     
-    [self.userVM updateKitUserDeviceWithRteUser:user cameraState:cameraState microState:microState];
+    [self.userVM updateKitUserDeviceWithRteUser:user
+                                    cameraState:cameraState
+                                     microState:microState];
     [self updateAllList];
 }
 
@@ -421,13 +445,16 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
         [weakself updateAllList];
     }];
 }
-- (void)boardController:(AgoraBoardController *)controller didScenePathChanged:(NSString *)path {
+
+- (void)boardController:(AgoraBoardController *)controller
+    didScenePathChanged:(NSString *)path {
     [self.screenShareController updateScenePath:path];
 }
+
 - (void)boardController:(AgoraBoardController *)controller
           didOccurError:(NSError *)error {
     AgoraEduContextError *kitError = [[AgoraEduContextError alloc] initWithCode:error.code
-                                                          message:error.localizedDescription];
+                                                                        message:error.localizedDescription];
     [self onShowErrorInfo:kitError];
 }
 
@@ -468,33 +495,43 @@ roomChatMessageReceived:(AgoraRTETextMessage *)textMessage {
      stateUpdated:(AgoraRTEClassroomChangeType)changeType
      operatorUser:(AgoraRTEBaseUser *)user {
     AgoraWEAK(self);
-    if (changeType == AgoraRTEClassroomChangeTypeAllStudentsChat) {
+    
+    switch (changeType) {
+        case AgoraRTEClassroomChangeTypeAllStudentsChat: {
+            [self.roomVM getRoomMuteChatWithSuccessBlock:^(BOOL muteChat) {
 
-        [self.roomVM getRoomMuteChatWithSuccessBlock:^(BOOL muteChat) {
+                if ([weakself respondsToSelector:@selector(updateRoomChatState:)]) {
+                    [weakself updateRoomChatState:muteChat];
+                }
 
-            if ([weakself respondsToSelector:@selector(updateRoomChatState:)]) {
-                [weakself updateRoomChatState:muteChat];
-            }
+                if ([weakself respondsToSelector:@selector(onShowChatTips:)]) {
+                    NSString *message = [weakself.chatVM getRoomChatTipMessage:muteChat];
+                    [weakself onShowChatTips:message];
+                }
 
-            if ([weakself respondsToSelector:@selector(onShowChatTips:)]) {
-                NSString *message = [weakself.chatVM getRoomChatTipMessage:muteChat];
-                [weakself onShowChatTips:message];
-            }
-
-        } failureBlock:^(AgoraEduContextError *error) {
-            [weakself onShowErrorInfo:error];
-        }];
-
-    } else if (changeType == AgoraRTEClassroomChangeTypeCourseState) {
-        [self updateClassState];
+            } failureBlock:^(AgoraEduContextError *error) {
+                [weakself onShowErrorInfo:error];
+            }];
+            break;
+        }
+        case AgoraRTEClassroomChangeTypeCourseState:
+            [self updateClassState];
+            break;
+        default:
+            break;
     }
 }
 
-- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteRTCJoinedOfStreamId:(nonnull NSString *)streamId {
-    [self.screenShareController rtcStreamChanged:streamId rtcState:AgoraScreenShareRTCStateOnLine];
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom
+remoteRTCJoinedOfStreamId:(nonnull NSString *)streamId {
+    [self.screenShareController rtcStreamChanged:streamId
+                                        rtcState:AgoraScreenShareRTCStateOnLine];
 }
-- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom remoteRTCOfflineOfStreamId:(nonnull NSString *)streamId {
-    [self.screenShareController rtcStreamChanged:streamId rtcState:AgoraScreenShareRTCStateOffLine];
+
+- (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom
+remoteRTCOfflineOfStreamId:(nonnull NSString *)streamId {
+    [self.screenShareController rtcStreamChanged:streamId
+                                        rtcState:AgoraScreenShareRTCStateOffLine];
 }
 
 - (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom
@@ -513,12 +550,17 @@ remoteUserPropertyUpdated:(AgoraRTEUser *)user
     [self.deviceController updateDeviceStateWithUser:user cause:cause];
     
     AgoraWEAK(self);
-    [self.chatVM updateUserChat:user cause:cause completeBlock:^(BOOL muteChat,
-                                                                 AgoraEduContextUserInfo *toUser,
-                                                                 AgoraEduContextUserInfo *byUser) {
-        [weakself updateRemoteChatState:muteChat to:toUser by:byUser];
+    [self.chatVM updateUserChat:user
+                          cause:cause
+                  completeBlock:^(BOOL muteChat,
+                                  AgoraEduContextUserInfo *toUser,
+                                  AgoraEduContextUserInfo *byUser) {
+        [weakself updateRemoteChatState:muteChat
+                                     to:toUser
+                                     by:byUser];
         
-        [weakself.userVM updateUserMuteChat:toUser.userUuid muteChat:muteChat];
+        [weakself.userVM updateUserMuteChat:toUser.userUuid
+                                   muteChat:muteChat];
         [weakself updateAllList];
     }];
 }
@@ -568,7 +610,8 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 }
 
 #pragma mark - AgoraRTEStudentDelegate
-- (void)localUserLeft:(AgoraRTEUserEvent*)event leftType:(AgoraRTEUserLeftType)type {
+- (void)localUserLeft:(AgoraRTEUserEvent*)event
+             leftType:(AgoraRTEUserLeftType)type {
     if (type == AgoraRTEUserLeftTypeKickOff) {
         [self releaseVM];
         [AgoraEduManager releaseResource];
@@ -587,7 +630,8 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     
     // 更新设备流， 来流了，但是设备状态关闭着的。
     AgoraWEAK(self);
-    [self.deviceController updateDeviceStateWithRteLocalUserStream:event.modifiedStream successBlock:^{
+    [self.deviceController updateLocalDeviceState:event.modifiedStream
+                                                      successBlock:^{
         
     } failureBlock:^(AgoraEduContextError * error) {
         [weakself onShowErrorInfo:error];
@@ -595,7 +639,8 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 }
 
 - (void)localStreamRemoved:(AgoraRTEStreamEvent*)event {
-    [self.userVM updateLocalStream:event type: AgoraInfoChangeTypeRemove];
+    [self.userVM updateLocalStream:event
+                              type:AgoraInfoChangeTypeRemove];
     [self updateStreamEvents:@[event]
                   changeType:AgoraInfoChangeTypeRemove];
 }
@@ -609,7 +654,8 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
         [self onShowUserTips:message];
     }
 
-    [self.userVM updateLocalStream:event type: AgoraInfoChangeTypeUpdate];
+    [self.userVM updateLocalStream:event
+                              type:AgoraInfoChangeTypeUpdate];
 }
 
 - (void)localUserStateUpdated:(AgoraRTEUserEvent*)event
@@ -622,12 +668,16 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 //    [self.deviceController updateDeviceStateWithUser:user cause:cause];
 
     AgoraWEAK(self);
-    [self.chatVM updateUserChat:user cause:cause completeBlock:^(BOOL muteChat,
-                                                                 AgoraEduContextUserInfo *toUser,
-                                                                 AgoraEduContextUserInfo *byUser) {
-        [weakself updateLocalChatState:muteChat to:toUser by:byUser];
+    [self.chatVM updateUserChat:user cause:cause
+                  completeBlock:^(BOOL muteChat,
+                                  AgoraEduContextUserInfo *toUser,
+                                  AgoraEduContextUserInfo *byUser) {
+        [weakself updateLocalChatState:muteChat
+                                    to:toUser
+                                    by:byUser];
         
-        [weakself.userVM updateUserMuteChat:toUser.userUuid muteChat:muteChat];
+        [weakself.userVM updateUserMuteChat:toUser.userUuid
+                                   muteChat:muteChat];
         [weakself updateAllList];
     }];
 }
@@ -700,7 +750,11 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 - (void)updateClassState {
     AgoraWEAK(self);
     [self.roomVM getClassStateWithSuccessBlock:^(AgoraEduContextClassState state) {
-
+        
+        NSString *message = [NSString stringWithFormat:@"%@%d", @"class state:", state];
+        [AgoraEduManager.shareManager logMessage:message
+                                           level:AgoraRTELogLevelInfo];
+        
         if (state == AgoraEduContextClassStateClose) {
             [weakself releaseVM];
             [AgoraEduManager releaseResource];
@@ -758,12 +812,15 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     [self.userVM updateKitStreamsWithRteStreams:rteStreams
                                            type:changeType
                                    successBlock:^{
-        [weakself updateAllList];
+        // 更新下设备
+        [weakself.deviceController updateDeviceStateWithRteStreams:rteStreams
+                                                        changeType:changeType];
     } failureBlock:^(AgoraEduContextError *error) {
         [weakself onShowErrorInfo:error];
     }];
     
-    [self.screenShareController updateStreams:rteStreams changeType:changeType];
+    [self.screenShareController updateStreams:rteStreams
+                                   changeType:changeType];
 }
 
 - (void)updateStreamEvents:(NSArray<AgoraRTEStreamEvent *> *)rteStreamEvents
@@ -772,12 +829,15 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     [self.userVM updateKitStreamsWithRteStreamEvents:rteStreamEvents
                                                 type:changeType
                                         successBlock:^{
-        [weakself updateAllList];
+        // 更新下设备
+        [weakself.deviceController updateDeviceStateWithRteStreamEvents:rteStreamEvents
+                                                             changeType:changeType];
     } failureBlock:^(AgoraEduContextError *error) {
         [weakself onShowErrorInfo:error];
     }];
 
-    [self.screenShareController updateStreamEvents:rteStreamEvents changeType:changeType];
+    [self.screenShareController updateStreamEvents:rteStreamEvents
+                                        changeType:changeType];
 }
 
 #pragma mark - Private--Update UserList & CoHostList

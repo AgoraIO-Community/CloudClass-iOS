@@ -40,7 +40,6 @@ import AgoraEduContext
     
     public func initDeviceState() {
         self.vm?.initDeviceState(successBlock: { [weak self] (deviceConfig) in
-            
             guard let `self` = self else {
                 return
             }
@@ -54,16 +53,57 @@ import AgoraEduContext
         })
     }
     
-    public func updateRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState], deviceType: AgoraDeviceStateType) {
+    public func updateRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState],
+                                      deviceType: AgoraDeviceStateType) {
         self.vm?.updateRteStreamStates(rteStreamStates, deviceType: deviceType)
     }
     
-    public func updateDeviceState(rteLocalUserStream: AgoraRTEStream,
-                                  successBlock: (() -> Void)?,
-                                  failureBlock: ((_ error: AgoraEduContextError) -> Void)?) {
+    // 更新本地rtc设备
+    public func updateLocalDeviceState(_ rteLocalUserStream: AgoraRTEStream,
+                                       successBlock: (() -> Void)?,
+                                       failureBlock: ((_ error: AgoraEduContextError) -> Void)?) {
         self.vm?.updateDeviceState(rteLocalUserStream: rteLocalUserStream,
                                    successBlock: nil,
                                    failureBlock: nil)
+    }
+    // 流变化的时候 更新本地设备状态值
+    public func updateDeviceState(rteStreamEvents: [AgoraRTEStreamEvent],
+                                  changeType: AgoraInfoChangeType) {
+        var rteStreams = [AgoraRTEStream]()
+        rteStreamEvents.map({rteStreams.append($0.modifiedStream)})
+        self.updateDeviceState(rteStreams: rteStreams,
+                               changeType: changeType)
+    }
+    public func updateDeviceState(rteStreams: [AgoraRTEStream],
+                                  changeType: AgoraInfoChangeType) {
+        
+        AgoraEduManager.share().roomManager?.getFullUserList(success: { [weak self] (rteUsers) in
+            
+            guard let `self` = self, let vm = self.vm else {
+                return
+            }
+            
+            for rteStream in rteStreams {
+                let rteBaseUser = rteStream.userInfo
+                guard let rteUser = rteUsers.first(where: {$0.userUuid == rteBaseUser.userUuid}) else {
+                    continue
+                }
+                
+                let stream = changeType == .remove ? nil : rteStream
+                let cameraState = vm.getUserDeviceState(.camera,
+                                                        rteUser: rteUser,
+                                                        rteStream: stream)
+                let microState = vm.getUserDeviceState(.microphone,
+                                                       rteUser: rteUser,
+                                                       rteStream: stream)
+                self.deviceStateChanged(cameraState: cameraState,
+                                        microState: microState,
+                                        fromUser: rteUser)
+            }
+            
+        }, failure: { (error) in
+            
+        })
     }
     
     public func updateDeviceState(user: AgoraRTEUser,
@@ -87,6 +127,7 @@ import AgoraEduContext
                                            rteUser: user,
                                            rteStream: stream) ?? .available
     }
+    
     public func getMicroState(user: AgoraRTEUser, stream: AgoraRTEStream?) -> AgoraEduContextDeviceState {
         return self.vm?.getUserDeviceState(.microphone,
                                            rteUser: user,
@@ -96,9 +137,12 @@ import AgoraEduContext
 
 // MARK: - Private
 extension AgoraDeviceController {
-    private func deviceStateChanged(cameraState: AgoraEduContextDeviceState, microState: AgoraEduContextDeviceState, fromUser: AgoraRTEUser) {
-        
-        if let message = self.vm?.getDeviceTipMessage(user: fromUser, state: cameraState, type: .camera) {
+    private func deviceStateChanged(cameraState: AgoraEduContextDeviceState,
+                                    microState: AgoraEduContextDeviceState,
+                                    fromUser: AgoraRTEUser) {
+        if let message = self.vm?.getDeviceTipMessage(user: fromUser,
+                                                      state: cameraState,
+                                                      type: .camera) {
             self.eventDispatcher.onDeviceTips(message: message)
         }
         
@@ -157,6 +201,7 @@ extension AgoraDeviceController: AgoraEduDeviceContext {
                                         self?.occurError(error: error)
                                        })
     }
+    
     public func switchCameraFacing() {
         self.vm?.switchCameraFacing(successBlock: {
             
@@ -167,6 +212,7 @@ extension AgoraDeviceController: AgoraEduDeviceContext {
             }
         })
     }
+    
     public func setMicDeviceEnable(enable: Bool) {
         // 直接更新本地状态
         self.vm?.updateLocalDeviceState(.microphone,
@@ -191,6 +237,7 @@ extension AgoraDeviceController: AgoraEduDeviceContext {
                                         self?.occurError(error: error)
                                     })
     }
+    
     public func setSpeakerEnable(enable: Bool) {
         self.vm?.setSpeakerEnable(enable: enable,
                                   successBlock: {
@@ -200,6 +247,7 @@ extension AgoraDeviceController: AgoraEduDeviceContext {
                                     self?.occurError(error: error)
                                   })
     }
+    
     public func registerDeviceEventHandler(_ handler: AgoraEduDeviceHandler) {
         eventDispatcher.register(object: handler)
     }

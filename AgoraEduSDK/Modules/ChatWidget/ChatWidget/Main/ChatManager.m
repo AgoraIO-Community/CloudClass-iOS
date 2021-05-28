@@ -49,7 +49,8 @@ static BOOL isSDKInited = NO;
 @end
 
 @interface ChatManager ()<EMClientDelegate,EMChatManagerDelegate,EMChatroomManagerDelegate>
-@property (nonatomic,strong) NSString* appkey;
+@property (nonatomic, copy) NSString* appkey;
+@property (nonatomic, copy) NSString* password;
 @property (nonatomic) BOOL isLogin;
 @property (nonatomic,copy) NSMutableArray<BarrageMsgInfo*>* dataArray;
 @property (nonatomic,strong) NSLock* dataLock;
@@ -59,21 +60,15 @@ static BOOL isSDKInited = NO;
 @end
 
 @implementation ChatManager
-
-- (NSString*)appkey
-{
-    return @"easemob-demo#cloudclass";
-}
-
-- (NSString*)password
-{
-    return @"123456";
-}
-
-- (instancetype)initWithUserConfig:(ChatUserConfig*)aUserConfig chatRoomId:(NSString*)aChatRoomId
+- (instancetype)initWithUserConfig:(ChatUserConfig*)aUserConfig
+                            appKey:(NSString *)appKey
+                          password:(NSString *)password
+                        chatRoomId:(NSString*)aChatRoomId;
 {
     self = [super init];
     if(self) {
+        self.appkey = appKey;
+        self.password = password;
         self.user = aUserConfig;
         self.chatRoomId = aChatRoomId;
         self.isLogin = NO;

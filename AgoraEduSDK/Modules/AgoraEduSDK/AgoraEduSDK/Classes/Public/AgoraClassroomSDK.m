@@ -243,6 +243,9 @@ static AgoraClassroomSDK *manager = nil;
     roomStateConfig.startTime = config.startTime;
     roomStateConfig.duration = config.duration;
     roomStateConfig.userName = config.userName;
+    if (config.userProperties) {
+        roomStateConfig.userProperties = config.userProperties;
+    }
 
     [AgoraEduManager.shareManager initWithUserUuid:userUuid
                                           userName:userName

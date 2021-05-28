@@ -41,7 +41,7 @@ extension AgoraSmallRenderUIController: UICollectionViewDataSource {
         userView.index = indexPath.item
         userView.update(with: userInfo)
         
-        if userInfo.enableAudio {
+        if userInfo.enableAudio && userInfo.microState != .close {
             userView.updateAudio(effect: item.volume)
         }
         

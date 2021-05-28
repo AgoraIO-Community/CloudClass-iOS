@@ -44,7 +44,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ChatManager : NSObject
 
 // 初始化
-- (instancetype)initWithUserConfig:(ChatUserConfig*)aUserConfig chatRoomId:(NSString*)aChatRoomId;
+- (instancetype)initWithUserConfig:(ChatUserConfig*)aUserConfig
+                            appKey:(NSString *)appKey
+                          password:(NSString *)password
+                        chatRoomId:(NSString*)aChatRoomId;
 // 启动
 - (void)launch;
 // 退出

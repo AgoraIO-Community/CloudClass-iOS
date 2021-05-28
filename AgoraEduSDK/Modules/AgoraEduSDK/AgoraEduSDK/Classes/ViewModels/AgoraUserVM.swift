@@ -42,12 +42,22 @@ struct AgoraStudentInfo {
                                        _ rteStream: AgoraRTEStream?) -> AgoraEduContextDeviceState)?
     public var onStreamStatesChangedBlock: ((_ rteStreamStates: [String: AgoraDeviceStreamState], _ deviceType: AgoraDeviceStateType) -> Void)?
     
-    public var localBaseUserInfo: AgoraEduContextUserInfo
+    public var localBaseUserInfo: AgoraEduContextUserInfo {
+        let userInfo = AgoraEduContextUserInfo()
+        
+        if let info = localUserInfo {
+            userInfo.userUuid = info.userUuid
+            userInfo.userName = info.userName
+            
+            if let userProperties = info.userProperties["flexProps"] as? [String: String] {
+                userInfo.userProperties = userProperties
+            }
+        }
+        
+        return userInfo
+    }
     
     public override init(config: AgoraVMConfig) {
-        self.localBaseUserInfo = AgoraEduContextUserInfo()
-        self.localBaseUserInfo.userUuid = config.userUuid
-        self.localBaseUserInfo.userName = config.userName
         super.init(config: config)
     }
     

@@ -42,10 +42,13 @@ import ChatWidget
     private var region: String?
     
     private lazy var titleBg: AgoraBaseUIImageView = {
-        var titleBg = AgoraBaseUIImageView(image: UIImage(named: LoginConfig.device == .iPhone_Small ? "title_bg_small" : "title_bg"))
+        let image = UIImage(named: LoginConfig.device == .iPhone_Small ? "title_bg_small" : "title_bg")
         
-        var label = AgoraBaseUILabel()
-        label.text = NSLocalizedString("Login_title",comment: "")
+        let titleBg = AgoraBaseUIImageView(image: image)
+        
+        let label = AgoraBaseUILabel()
+        label.text = NSLocalizedString("Login_title",
+                                       comment: "")
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 20)
         
@@ -60,10 +63,14 @@ import ChatWidget
     private lazy var iconImgView = AgoraBaseUIImageView(image: UIImage(named: "icon_\(LoginConfig.device.rawValue)"))
     
     private lazy var aboutBtn: AgoraBaseUIButton = {
-        var aboutBtn = AgoraBaseUIButton()
-        aboutBtn.setBackgroundImage(UIImage(named: "about_tag_\(UIDevice.current.model)"), for: .normal)
+        let aboutBtn = AgoraBaseUIButton()
+        let image = UIImage(named: "about_tag_\(UIDevice.current.model)")
+        aboutBtn.setBackgroundImage(image,
+                                    for: .normal)
         aboutBtn.alpha = 0.7
-        aboutBtn.addTarget(self, action: #selector(onTouchAbout), for: .touchUpInside)
+        aboutBtn.addTarget(self,
+                           action: #selector(onTouchAbout),
+                           for: .touchUpInside)
         return aboutBtn
     }()
 
@@ -75,56 +82,67 @@ import ChatWidget
     private lazy var userLine = createGroupLine()
     private lazy var durationLine = createGroupLine()
      
-    private lazy var classTypeHolderLabel = createHolderLabel(str: NSLocalizedString("Login_type_holder",comment: ""))
+    private lazy var classTypeHolderLabel = createHolderLabel(str: NSLocalizedString("Login_type_holder",
+                                                                                     comment: ""))
     private lazy var regionHolderLabel = createHolderLabel(str: LoginConfig.RegionList.first ?? "")
     
-    private lazy var classTypeGroup = createChooseGroup(title: NSLocalizedString("Login_class_type_title",comment: ""),
+    private lazy var classTypeGroup = createChooseGroup(title: NSLocalizedString("Login_class_type_title",
+                                                                                 comment: ""),
                                                         defaultLabel: classTypeHolderLabel,
                                                         action: #selector(onTouchShowClassTypes))
     
-    private lazy var regionTypeGroup = createChooseGroup(title: NSLocalizedString("Login_region_title",comment: ""),
+    private lazy var regionTypeGroup = createChooseGroup(title: NSLocalizedString("Login_region_title",
+                                                                                  comment: ""),
                                                         defaultLabel: regionHolderLabel,
                                                         action: #selector(onTouchShowRegions))
     
     private lazy var classTypesView: ChooseTableView = {
         var arr: Array<String> = []
-        LoginConfig.ClassTypes.forEach { (type,str) in
+        LoginConfig.ClassTypes.forEach { (type, str) in
             arr.append(str)
         }
-        var classTypeView = ChooseTableView(cell_id: LoginConfig.class_cell_id,
-                                            list: arr) {[weak self] (row) in
-            self?.classType = LoginConfig.ClassTypes[row].0
-            self?.classTypesView.isHidden = true
-            guard let (type,str) =  LoginConfig.ClassTypes.first(where: {$0.0 == LoginConfig.ClassTypes[row].0}) else {
+        let classTypeView = ChooseTableView(cell_id: LoginConfig.class_cell_id,
+                                            list: arr) { [weak self] (row) in
+            guard let strongSelf = self else {
                 return
             }
-            self?.classTypeHolderLabel.text = str
-            self?.classTypeHolderLabel.textColor = UIColor(hexString: "191919")
+            
+            strongSelf.classType = LoginConfig.ClassTypes[row].0
+            strongSelf.classTypesView.isHidden = true
+            guard let (type, str) = LoginConfig.ClassTypes.first(where: { $0.0 == LoginConfig.ClassTypes[row].0 }) else {
+                return
+            }
+            strongSelf.classTypeHolderLabel.text = str
+            strongSelf.classTypeHolderLabel.textColor = UIColor(hexString: "191919")
         }
         classTypeView.isHidden = true
         return classTypeView
     }()
     
     private lazy var regionTypeView: ChooseTableView = {
-        var regionTypeView = ChooseTableView(cell_id: LoginConfig.region_cell_id,
-                                             list: LoginConfig.RegionList) {[weak self] (row) in
-            self?.region = Region_Type(rawValue: LoginConfig.RegionList[row])?.regionStr
-            self?.regionTypeView.isHidden = true
-            self?.regionHolderLabel.text = LoginConfig.RegionList[row]
-            self?.regionHolderLabel.textColor = UIColor(hexString: "191919")
+        let regionTypeView = ChooseTableView(cell_id: LoginConfig.region_cell_id,
+                                             list: LoginConfig.RegionList) { [weak self] (row) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.region = Region_Type(rawValue: LoginConfig.RegionList[row])?.regionStr
+            strongSelf.regionTypeView.isHidden = true
+            strongSelf.regionHolderLabel.text = LoginConfig.RegionList[row]
+            strongSelf.regionHolderLabel.textColor = UIColor(hexString: "191919")
         }
         regionTypeView.isHidden = true
         return regionTypeView
     }()
     
     private lazy var aboutView: AboutView = {
-        var about = AboutView(frame: .zero)
+        let about = AboutView(frame: .zero)
         about.alpha = 0
         return about
     }()
 
     private lazy var enterBtn: AgoraBaseUIButton = {
-        var enterBtn = AgoraBaseUIButton()
+        let enterBtn = AgoraBaseUIButton()
         enterBtn.setTitle(NSLocalizedString("Login_enter",comment: ""), for: .normal)
         enterBtn.setTitleColor(.white, for: .normal)
         enterBtn.backgroundColor = UIColor(hexString: "C0D6FF")
@@ -135,18 +153,60 @@ import ChatWidget
     }()
     
     private lazy var bottomLabel: AgoraBaseUIButton = {
-        var bottom = AgoraBaseUIButton()
-        bottom.setTitle(NSLocalizedString("Login_version",comment: ""), for: .normal)
-        bottom.setTitleColor(UIColor(hexString: "7D8798"), for: .normal)
+        let bottom = AgoraBaseUIButton()
+        
+        let infoDictionary = Bundle.main.infoDictionary
+        var appVersion = infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        if appVersion.count > 0 {
+            appVersion = "_" + appVersion
+        }
+
+        let loginVersion = NSLocalizedString("Login_version",
+                                             comment: "") + appVersion
+        bottom.setTitle(loginVersion,
+                        for: .normal)
+        bottom.setTitleColor(UIColor(hexString: "7D8798"),
+                             for: .normal)
         bottom.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        bottom.addTarget(self, action: #selector(onPushDebugVC), for: .touchUpInside)
+        bottom.addTarget(self,
+                         action: #selector(onPushDebugVC),
+                         for: .touchUpInside)
         return bottom
     }()
 }
 
-// MARK: private
+// MARK: - override
 extension LoginViewController {
-    private func checkConfig(){
+    public override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
+    }
+    
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
+    }
+    
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        initView()
+        initLayout()
+        setSDKConfig()
+    }
+    
+    public override func touchesBegan(_ touches: Set<UITouch>,
+                                      with event: UIEvent?) {
+        super.touchesBegan(touches,
+                           with: event)
+        touchesBegan()
+    }
+}
+
+// MARK: private
+private extension LoginViewController {
+    func checkConfig(){
         guard roomName != nil,
               userName != nil,
               classType != nil else {
@@ -158,15 +218,14 @@ extension LoginViewController {
         enterBtn.isUserInteractionEnabled = true
     }
     
-    private func checkInputLegality(text: String) -> Bool {
+    func checkInputLegality(text: String) -> Bool {
         let pattern = "[a-zA-Z0-9]*$"
         let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
         return pred.evaluate(with: text)
     }
     
-    private func handleWithTextfield(field: AgoraBaseUITextField,
-                                     ifLegal: Bool) {
-        
+    func handleWithTextfield(field: AgoraBaseUITextField,
+                             ifLegal: Bool) {
         guard ifLegal else {
             
             enterBtn.backgroundColor = UIColor(hexString: "C0D6FF")
@@ -205,21 +264,21 @@ extension LoginViewController {
         }
     }
     
-    private func setSDKConfig() {
-    
+    func setSDKConfig() {
         let eyeCare = UserDefaults.standard.bool(forKey: LoginConfig.USER_DEFAULT_EYE_CARE)
-        let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(), eyeCare: eyeCare)
+        let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(),
+                                                   eyeCare: eyeCare)
         AgoraClassroomSDK.setConfig(defaultConfig)
     }
     
-    private func registerExtApps() {
+    func registerExtApps() {
         let countDown = AgoraExtAppConfiguration(appIdentifier: "io.agora.countdown",
-                                              extAppClass: CountDownExtApp.self,
-                                              frame: UIEdgeInsets(top: 0,
-                                                                  left: 0,
-                                                                  bottom: 0,
-                                                                  right: 0),
-                                              language: "zh")
+                                                 extAppClass: CountDownExtApp.self,
+                                                 frame: UIEdgeInsets(top: 0,
+                                                                     left: 0,
+                                                                     bottom: 0,
+                                                                     right: 0),
+                                                 language: "zh")
         countDown.image = UIImage(named: "countdown")
         let apps = [countDown]
         AgoraClassroomSDK.registerExtApps(apps)
@@ -227,34 +286,24 @@ extension LoginViewController {
 }
 
 // MARK: UI
-extension LoginViewController {
-    
-    public override func viewDidLoad() {
-        super.viewDidLoad()
-        initView()
-        initLayout()
-        setSDKConfig()
-    }
-
-    private func addWarnLabel(group: AgoraBaseUIView) -> AgoraBaseUILabel {
-
+private extension LoginViewController {
+     func addWarnLabel(group: AgoraBaseUIView) -> AgoraBaseUILabel {
         let warn = AgoraBaseUILabel()
-        warn.text = NSLocalizedString("Login_warn", comment: "")
+        warn.text = NSLocalizedString("Login_warn",
+                                      comment: "")
         warn.font = UIFont.systemFont(ofSize: 10)
-        
         warn.textColor = UIColor(hexString: "F04C36")
+        warn.isHidden = true
         
         view.addSubview(warn)
         
         warn.agora_center_x = 0
         warn.agora_y = group.frame.origin.y + group.frame.size.height + 3
         
-        warn.isHidden = true
-        
         return warn
     }
     
-    private func createFieldGroup(fieldType: FIELD_TYPE) -> AgoraBaseUIView {
+    func createFieldGroup(fieldType: FIELD_TYPE) -> AgoraBaseUIView {
         let group = AgoraBaseUIView()
         
         let titleLabel = AgoraBaseUILabel()
@@ -297,22 +346,22 @@ extension LoginViewController {
         return group
     }
     
-    private func createGroupLine() -> AgoraBaseUIView {
+    func createGroupLine() -> AgoraBaseUIView {
         let line = AgoraBaseUIView()
         line.backgroundColor = UIColor(rgb: 0xE3E3EC)
         return line
     }
     
-    private func setLineLayout(line: AgoraBaseUIView) {
+    func setLineLayout(line: AgoraBaseUIView) {
         line.agora_safe_x = 0
         line.agora_width = LoginConfig.login_group_width
         line.agora_height = 1
         line.agora_bottom = 0
     }
     
-    private func createChooseGroup(title: String,
-                                   defaultLabel: AgoraBaseUILabel,
-                                   action: Selector?) -> AgoraBaseUIView {
+    func createChooseGroup(title: String,
+                           defaultLabel: AgoraBaseUILabel,
+                           action: Selector?) -> AgoraBaseUIView {
         let group = AgoraBaseUIView()
         
         let titleLabel = AgoraBaseUILabel()
@@ -355,7 +404,7 @@ extension LoginViewController {
         return group
     }
     
-    private func createHolderLabel(str: String) -> AgoraBaseUILabel {
+    func createHolderLabel(str: String) -> AgoraBaseUILabel {
         let label = AgoraBaseUILabel()
         label.text = str
         label.font = UIFont.systemFont(ofSize: 14)
@@ -364,15 +413,15 @@ extension LoginViewController {
         return label
     }
     
-    private func moveView(move: CGFloat) {
+    func moveView(move: CGFloat) {
         UIView.animate(withDuration: TimeInterval.agora_animation) { [weak self] in
             self?.view.frame.origin.y -= move
         }
     }
     
-    private func initView() {
-
+    func initView() {
         view.backgroundColor = .white
+        
         if LoginConfig.device != .iPad{
             view.addSubview(titleBg)
         }
@@ -394,9 +443,8 @@ extension LoginViewController {
         view.addSubview(aboutView)
     }
     
-    fileprivate func initLayout() {
-        
-        if LoginConfig.device != .iPad{
+    func initLayout() {
+        if LoginConfig.device != .iPad {
             titleBg.agora_x = 0
             titleBg.agora_right = 0
             titleBg.agora_y = 0
@@ -456,7 +504,8 @@ extension LoginViewController {
         if LoginConfig.device == .iPad {
             bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
         } else {
-            let height: CGFloat = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+            let height: CGFloat = max(UIScreen.main.bounds.width,
+                                      UIScreen.main.bounds.height)
 
             if enterBtn.agora_y > height - LoginConfig.login_bottom_bottom - 30 - enterBtn.agora_height {
                 bottomLabel.agora_y = enterBtn.agora_y + enterBtn.agora_height + 30
@@ -465,37 +514,23 @@ extension LoginViewController {
             }
         }
     }
-
-    public override var shouldAutorotate: Bool {
-        return true
-    }
-    
-    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
-    }
-    
-    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
-    }
-
 }
 
 // MARK: action
-extension LoginViewController{
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches,
-                           with: event)
+private extension LoginViewController{
+    func touchesBegan() {
         classTypesView.isHidden = true
         regionTypeView.isHidden = true
         UIApplication.shared.keyWindow?.endEditing(true)
     }
     
-    @objc private func onTouchAbout() {
+    @objc func onTouchAbout() {
         view.addSubview(aboutView)
         aboutView.agora_x = 0
         aboutView.agora_y = 0
         aboutView.agora_right = 0
         aboutView.agora_bottom = 0
+        
         switch LoginConfig.device {
         case .iPhone_Big: fallthrough
         case .iPhone_Small:
@@ -507,50 +542,58 @@ extension LoginViewController{
                            delay: 0,
                            options: .transitionFlipFromLeft,
                            animations: { [weak self] in
-                            self?.aboutView.agora_x = 0
-                            self?.aboutView.agora_y = 0
-                            self?.aboutView.agora_right = 0
-                            self?.aboutView.agora_bottom = 0
+                            guard let strongSelf = self else {
+                                return
+                            }
+                            
+                            strongSelf.aboutView.agora_x = 0
+                            strongSelf.aboutView.agora_y = 0
+                            strongSelf.aboutView.agora_right = 0
+                            strongSelf.aboutView.agora_bottom = 0
 
-                            self?.aboutView.transform = CGAffineTransform(translationX: 0,
-                                                                          y: 0)
-                            self?.aboutView.layoutIfNeeded()
+                            strongSelf.aboutView.transform = CGAffineTransform(translationX: 0,
+                                                                               y: 0)
+                            strongSelf.aboutView.layoutIfNeeded()
                            }, completion: nil)
         case .iPad:
             aboutView.alpha = 0
-            aboutView.transform = CGAffineTransform(scaleX: 0.3, y: 0.3)
+            aboutView.transform = CGAffineTransform(scaleX: 0.3,
+                                                    y: 0.3)
             UIView.animate(withDuration: TimeInterval.agora_animation,
                            delay: 0,
                            usingSpringWithDamping: 0.5,
                            initialSpringVelocity: 0,
                            options: .curveEaseInOut,
                            animations: { [weak self] in
-                            self?.aboutView.agora_x = 0
-                            self?.aboutView.agora_y = 0
-                            self?.aboutView.agora_right = 0
-                            self?.aboutView.agora_bottom = 0
-                            self?.aboutView.alpha = 1
-                            self?.aboutView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                            guard let strongSelf = self else {
+                                return
+                            }
                             
-                            self?.aboutView.layoutIfNeeded()
+                            strongSelf.aboutView.agora_x = 0
+                            strongSelf.aboutView.agora_y = 0
+                            strongSelf.aboutView.agora_right = 0
+                            strongSelf.aboutView.agora_bottom = 0
+                            strongSelf.aboutView.alpha = 1
+                            strongSelf.aboutView.transform = CGAffineTransform(scaleX: 1.0,
+                                                                               y: 1.0)
+                            strongSelf.aboutView.layoutIfNeeded()
                            }, completion: nil)
         }
     }
     
-    @objc private func onTouchShowClassTypes() {
+    @objc func onTouchShowClassTypes() {
         regionTypeView.isHidden = true
         classTypesView.isHidden = false
         view.bringSubviewToFront(classTypesView)
     }
     
-    @objc private func onTouchShowRegions() {
+    @objc func onTouchShowRegions() {
         classTypesView.isHidden = true
         regionTypeView.isHidden = false
         view.bringSubviewToFront(regionTypeView)
     }
     
-    @objc private func onTouchJoinRoom() {
-        
+    @objc func onTouchJoinRoom() {
         guard let room = roomName,
               let user = userName,
               let type = classType else {
@@ -572,9 +615,11 @@ extension LoginViewController{
                                                userUuid: userUuid)
         
         let sel = NSSelectorFromString("setBaseURL:");
-        let url = "http://api-solutions-dev.bj2.agoralab.co"
+        let url = KeyCenter.hostURL()
         AgoraClassroomSDK.perform(sel,
                             with: url)
+        
+        let avatarurl = "https://image.baidu.com/search/detail?ct=503316480&z=1&ipn=d&word=%E5%AE%B6%E8%BE%89%E5%9F%B9%E4%BC%98&step_word=&hs=0&pn=0&spn=0&di=4180&pi=0&rn=1&tn=baiduimagedetail&is=0%2C0&istype=0&ie=utf-8&oe=utf-8&in=&cl=2&lm=-1&st=undefined&cs=1237126975%2C2001019500&os=2332624552%2C3941347092&simid=3415651148%2C346922647&adpicid=0&lpn=0&ln=255&fr=&fmq=1622031016324_R&fm=&ic=undefined&s=undefined&hd=undefined&latest=undefined&copyright=undefined&se=&sme=&tab=0&width=0&height=0&face=undefined&ist=&jit=&cg=&bdtype=0&oriquery=&objurl=https%3A%2F%2Fgimg2.baidu.com%2Fimage_search%2Fsrc%3Dhttp%3A%2F%2Fhiphotos.baidu.com%2Fdoc%2Fpic%2Fitem%2Fb8389b504fc2d562d2b0c3ceee1190ef76c66c5c.jpg%26refer%3Dhttp%3A%2F%2Fhiphotos.baidu.com%26app%3D2002%26size%3Df9999%2C10000%26q%3Da80%26n%3D0%26g%3D0n%26fmt%3Djpeg%3Fsec%3D1624623030%26t%3D940fb50962a66774a1187b56b16cecba&fromurl=ippr_z2C%24qAzdH3FAzdH3F6jpyrj_z%26e3Bojgh7_z%26e3Bkwt17_z%26e3Bv54AzdH3F5AzdH3F3iry%3Fpwk%3D8%2651%3D8%26etjo%3Da%26rwy%3Da%26vt1%3D80%26rg%3Dda&gsm=1&rpstart=0&rpnum=0&islist=&querylist=&force=undefined"
         
         let config = AgoraEduLaunchConfig(userName: user,
                                           userUuid: userUuid,
@@ -585,7 +630,8 @@ extension LoginViewController{
                                           token: rtmToken,
                                           startTime: startTime,
                                           duration: duration,
-                                          boardRegion: region)
+                                          boardRegion: region,
+                                          userProperties: ["avatarurl": avatarurl])
         
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")
@@ -599,13 +645,15 @@ extension LoginViewController{
                                             widgetId: "Chat")
         
         AgoraClassroomSDK.registerWidgets([chat])
+
+        AgoraClassroomSDK.launch(config,
+                                 delegate: self)
     }
     
-    @objc private func onPushDebugVC() {
-        self.navigationController?.pushViewController(DebugViewController(),
-                                                      animated: true)
+    @objc func onPushDebugVC() {
+        navigationController?.pushViewController(DebugViewController(),
+                                                 animated: true)
     }
-    
 }
 
 // MARK: UITextFieldDelegate
@@ -661,7 +709,6 @@ extension LoginViewController: UITextFieldDelegate {
     public func textField(_ textField: UITextField,
                           shouldChangeCharactersIn range: NSRange,
                           replacementString string: String) -> Bool {
-        
         guard let field = textField as? AgoraBaseUITextField else {
             return false
         }
@@ -691,30 +738,33 @@ extension LoginViewController: UITextFieldDelegate {
         }
         
         guard string.count != 1 else {
-            handleWithTextfield(field: field,ifLegal: oriLegality && newCharLegality)
+            handleWithTextfield(field: field,
+                                ifLegal: oriLegality && newCharLegality)
             return true
         }
         
         // legality check & handle
         if let markedRange = field.markedTextRange,
            let wholeRange = field.textRange(from: field.beginningOfDocument,
-                                        to: field.endOfDocument) {
+                                            to: field.endOfDocument) {
             // 输入法联想
             if wholeRange.start == markedRange.start,
                wholeRange.end == markedRange.end {
-                handleWithTextfield(field: field,ifLegal: newCharLegality)
+                handleWithTextfield(field: field,
+                                    ifLegal: newCharLegality)
             } else {
-                handleWithTextfield(field: field,ifLegal: oriLegality)
+                handleWithTextfield(field: field,
+                                    ifLegal: oriLegality)
             }
         }
         return true
     }
-    
 }
 
 // MARK: AgoraEduClassroomDelegate
 extension LoginViewController: AgoraEduClassroomDelegate {
-    public func classroom(_ classroom: AgoraEduClassroom, didReceivedEvent event: AgoraEduEvent) {
+    public func classroom(_ classroom: AgoraEduClassroom,
+                          didReceivedEvent event: AgoraEduEvent) {
         if alertView != nil {
             alertView?.removeFromSuperview()
         }
@@ -725,28 +775,34 @@ extension LoginViewController: AgoraEduClassroomDelegate {
     }
 }
 
-extension AgoraBaseUITextField {
-    fileprivate func getType() -> FIELD_TYPE {
+fileprivate extension AgoraBaseUITextField {
+    func getType() -> FIELD_TYPE {
         return FIELD_TYPE(rawValue: self.id) ?? .default
     }
     
-    fileprivate func getLengthLimit() -> Int  {
+    func getLengthLimit() -> Int  {
         return 20
     }
-    
 }
 
-extension String {
+fileprivate extension String {
     /// NSRange转化为range
     func getSubString(nsRange: NSRange) -> String? {
         var strRange: Range<String.Index>
         
-        guard let from16 = utf16.index(utf16.startIndex, offsetBy: nsRange.location, limitedBy: utf16.endIndex),
-            let to16 = utf16.index(from16, offsetBy: nsRange.length, limitedBy: utf16.endIndex),
-            let from = String.Index(from16, within: self),
-            let to = String.Index(to16, within: self) else {
+        guard let from16 = utf16.index(utf16.startIndex,
+                                       offsetBy: nsRange.location,
+                                       limitedBy: utf16.endIndex),
+            let to16 = utf16.index(from16,
+                                   offsetBy: nsRange.length,
+                                   limitedBy: utf16.endIndex),
+            let from = String.Index(from16,
+                                    within: self),
+            let to = String.Index(to16,
+                                  within: self) else {
             return nil
         }
+        
         strRange = from ..< to
         var newStr = String(self)
         newStr.removeSubrange(strRange)

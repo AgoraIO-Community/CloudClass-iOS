@@ -31,26 +31,40 @@ typedef void (^OnGetStreamListSuccessBlock)(NSArray<AgoraRTEStream*> *streams);
 
 @property (nonatomic, weak) id<AgoraRTEClassroomDelegate> delegate;
 
-- (void)joinClassroom:(AgoraRTEClassroomJoinOptions*)options success:(OnJoinRoomSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+- (void)joinClassroom:(AgoraRTEClassroomJoinOptions*)options
+              success:(OnJoinRoomSuccessBlock)successBlock
+              failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
 
-- (void)getLocalUserWithSuccess:(OnGetLocalUserSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+- (void)getLocalUserWithSuccess:(OnGetLocalUserSuccessBlock)successBlock
+                        failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
  
-- (void)getClassroomInfoWithSuccess:(OnGetClassroomInfoSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+- (void)getClassroomInfoWithSuccess:(OnGetClassroomInfoSuccessBlock)successBlock
+                            failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
 
-- (void)getUserCountWithRole:(AgoraRTERoleType)role success:(OnGetUserCountSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
-- (void)getUserListWithRole:(AgoraRTERoleType)role from:(NSUInteger)fromIndex to:(NSUInteger)endIndex success:(OnGetUserListSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
-- (void)getFullUserListWithSuccess:(OnGetUserListSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+- (void)getUserCountWithRole:(AgoraRTERoleType)role
+                     success:(OnGetUserCountSuccessBlock)successBlock
+                     failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
 
-- (void)getFullStreamListWithSuccess:(OnGetStreamListSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+- (void)getUserListWithRole:(AgoraRTERoleType)role
+                       from:(NSUInteger)fromIndex
+                         to:(NSUInteger)endIndex
+                    success:(OnGetUserListSuccessBlock)successBlock
+                    failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
 
-- (void)leaveClassroomWithSuccess:(AgoraRTESuccessBlock _Nullable)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+- (void)getFullUserListWithSuccess:(OnGetUserListSuccessBlock)successBlock
+                           failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+
+- (void)getFullStreamListWithSuccess:(OnGetStreamListSuccessBlock)successBlock
+                             failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+
+- (void)leaveClassroomWithSuccess:(AgoraRTESuccessBlock _Nullable)successBlock
+                          failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
 
 - (void)destory;
 
 #pragma mark Unavailable Initializers
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
-
 @end
 
 NS_ASSUME_NONNULL_END

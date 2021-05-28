@@ -33,6 +33,7 @@ end
 
 def binaryPod
   pod 'AgoraEduSDK', :path => 'AgoraEduSDK/AgoraEduSDK.podspec'
+  pod 'ChatWidget', :path => 'AgoraEduSDK/Modules/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
 end
 
 workspace 'AgoraEducation.xcworkspace'

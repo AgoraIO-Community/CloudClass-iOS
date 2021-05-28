@@ -17,7 +17,8 @@ extension AgoraWhiteBoardUIController: AgoraBoardToolsStateDelegate {
                     userInteractionEnabled: Bool) {
         if hasPermission {
             boardPermissionTools(viewType)
-            boardToolsState.selectedItem = .pencil
+            // 默认选择clicker
+            boardToolsState.selectedItem = .clicker
             boardToolsState.selectedColor = boardToolsState.selectedColor
         } else {
             noBoardPermissionTools(viewType)

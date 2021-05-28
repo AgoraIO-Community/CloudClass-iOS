@@ -71,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSNumber *duration;//s
 
 @property (nonatomic, copy) NSString *token;
+@property (nonatomic, copy,nullable) NSDictionary<NSString *,NSString *> *userProperties;
 @end
 
 // RoomState

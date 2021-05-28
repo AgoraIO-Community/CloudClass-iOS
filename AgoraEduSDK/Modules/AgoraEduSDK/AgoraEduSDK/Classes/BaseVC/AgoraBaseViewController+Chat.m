@@ -13,9 +13,11 @@
 - (void)onAddRoomMessage:(AgoraEduContextChatInfo *)chatInfo {
     [self.eventDispatcher onAddRoomMessage:chatInfo];
 }
+
 - (void)onAddConversationMessage:(AgoraEduContextChatInfo *)chatInfo {
     [self.eventDispatcher onAddConversationMessage:chatInfo];
 }
+
 - (void)updateRoomChatState:(BOOL)muteChat {
     [self.eventDispatcher onUpdateChatPermission:!muteChat];
 }
@@ -35,9 +37,12 @@
                                                 toUser:userInfo
                                           operatorUser:operator];
 }
-- (void)updatePeerChatStateFrom:(AgoraEduContextUserDetailInfo *)userInfo state:(BOOL)muteChat {
+
+- (void)updatePeerChatStateFrom:(AgoraEduContextUserDetailInfo *)userInfo
+                          state:(BOOL)muteChat {
     [self.eventDispatcher onUpdateChatPermission:!muteChat];
 }
+
 - (void)onShowChatTips:(NSString *)message {
     if (message == nil || message.length == 0) {
         return;
@@ -94,6 +99,7 @@
     
     [self.eventDispatcher onAddRoomMessage:chatInfo];
 }
+
 - (void)resendConversationMessage:(NSString *)message
                 messageId:(NSString *)messageId {
     AgoraWEAK(self);
@@ -148,7 +154,6 @@
     //添加数组里面
     [self.eventDispatcher registerWithObject:handler];
 }
-
 @end
 
 

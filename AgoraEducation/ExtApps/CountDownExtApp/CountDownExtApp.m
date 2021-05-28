@@ -29,14 +29,7 @@ typedef enum : NSInteger {
 @implementation CountDownExtApp
 #pragma mark - Data callback
 - (void)propertiesDidUpdate:(NSDictionary *)properties {
-    /*
-     * startTime,duration,stop
-     */
-    if ([properties isEqualToDictionary:self.properties]) {
-        [self.view setHidden:YES];
-        return;
-    }
-    
+
     [super propertiesDidUpdate:properties];
     
     if (properties.allValues.count <= 0) {
@@ -53,7 +46,8 @@ typedef enum : NSInteger {
 }
 
 - (void)extAppWillUnload {
-    
+    printf("");
+    [self.countDown cancelCountDown];
 }
 
 #pragma mark - private
@@ -61,13 +55,15 @@ typedef enum : NSInteger {
     [self.view setUserInteractionEnabled:YES];
     self.view.backgroundColor = UIColor.clearColor;
 
-    AgoraBaseUIView *containerView = [CountDownWrapper getViewWithDelegate:self];
-    self.countDown = [CountDownWrapper getCountDwon];
+    CountDownWrapper *wrapper = [[CountDownWrapper alloc] init];
+    AgoraBaseUIView *containerView = [wrapper getViewWithDelegate:self];
+    self.countDown = [wrapper getCountDwon];
     
     [self.view addSubview:containerView];
     
     BOOL isPad = [UIDevice.currentDevice.model isEqualToString:@"iPad"] ? YES : NO;
     [self.view agora_clear_constraint];
+    [containerView agora_clear_constraint];
     self.view.agora_center_x = 0;
     self.view.agora_center_y = 0;
     self.view.agora_width = isPad ? 260 : 184;
@@ -84,6 +80,12 @@ typedef enum : NSInteger {
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
                                                                           action:@selector(drag:)];
     [self.view addGestureRecognizer:pan];
+}
+
+- (NSInteger)getCurrentTime {
+    NSDate *date = [NSDate date];
+    return [date timeIntervalSince1970];
+    
 }
 
 - (void)drag:(UIPanGestureRecognizer *)recognizer {
@@ -112,6 +114,14 @@ typedef enum : NSInteger {
                                 inView:recognizer.view];
         }];
     }
+}
+
+- (void)setProperties:(NSDictionary *)properties {
+    if ([properties isEqualToDictionary:self.properties]) {
+        [self.view setHidden:YES];
+        return;
+    }
+    [super setProperties:properties];
 }
 
 - (void)setLocalState:(CountdownState)localState {
@@ -144,23 +154,25 @@ typedef enum : NSInteger {
 }
 
 - (void)startTimer {
-    [self stopTimer];
-    
     self.localState = CountdownStateStart;
     NSString *startTimeStr = (NSString *)self.properties[@"startTime"];
     NSString *durationStr = (NSString *)self.properties[@"duration"];
     
-    NSDate *date = [NSDate date];
-    NSInteger current = [date timeIntervalSince1970];
-    
-    NSInteger totalSeconds = (startTimeStr.integerValue + durationStr.integerValue) - current;
-    
-    if (totalSeconds <= 0) {
+    if (!startTimeStr ||
+        !durationStr ||
+        startTimeStr.integerValue == 0 ||
+        durationStr.integerValue == 0) {
         return;
     }
     
-    [self.countDown setCountDownWithTotalSeconds:totalSeconds];
-    [self.countDown invokeCountDown];
+    NSInteger totalSeconds = (startTimeStr.integerValue + durationStr.integerValue) - [self getCurrentTime];
+    
+    if (totalSeconds <= 0) {
+        totalSeconds = 0;
+        self.localState = CountdownStateStop;
+    }
+    
+    [self.countDown invokeCountDownWithTotalSeconds:totalSeconds ifExecute:YES];
 }
 
 - (void)stopTimer {
@@ -172,14 +184,25 @@ typedef enum : NSInteger {
     
     NSString *startTimeStr = (NSString *)self.properties[@"startTime"];
     NSString *pauseTimeStr = (NSString *)self.properties[@"pauseTime"];
+    NSString *durationStr = (NSString *)self.properties[@"duration"];
     
-    if (pauseTimeStr.integerValue < startTimeStr.integerValue) {
+    if (!startTimeStr ||
+        !pauseTimeStr ||
+        startTimeStr.integerValue == 0 ||
+        pauseTimeStr.integerValue == 0 ||
+        (pauseTimeStr.integerValue < startTimeStr.integerValue)) {
         return;
     }
     
+    NSInteger time = 0;
+    
+    if (startTimeStr.integerValue + durationStr.integerValue >= [self getCurrentTime]) {
+        time = pauseTimeStr.integerValue - startTimeStr.integerValue;
+    }
     switch (self.localState) {
         case CountdownStateDefault:
-            [self.countDown setCountDownWithTotalSeconds:(pauseTimeStr.integerValue - startTimeStr.integerValue)];
+            [self.countDown invokeCountDownWithTotalSeconds:time ifExecute:NO];
+            self.localState = CountdownStatePause;
             break;
         case CountdownStateStart: {
             self.localState = CountdownStatePause;
@@ -188,6 +211,9 @@ typedef enum : NSInteger {
         }
         case CountdownStateStop:
             self.localState = CountdownStatePause;
+            break;
+        case CountdownStatePause:
+            [self.countDown invokeCountDownWithTotalSeconds:time ifExecute:NO];
             break;
         default:
             break;

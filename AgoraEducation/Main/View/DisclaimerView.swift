@@ -10,7 +10,6 @@ import Foundation
 import AgoraUIBaseViews
 
 public class DisclaimerView: AgoraBaseUIView {
-    
     public override init(frame: CGRect) {
         super.init(frame: .zero)
         initView()
@@ -21,7 +20,6 @@ public class DisclaimerView: AgoraBaseUIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    
     private lazy var contentView: AgoraBaseUIView = {
         var contentView = AgoraBaseUIView()
         contentView.backgroundColor = LoginConfig.device == .iPad ? .white : UIColor(hexString: "F9F9FC")
@@ -31,8 +29,12 @@ public class DisclaimerView: AgoraBaseUIView {
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = UIColor(hexString: "ECECF1").cgColor
         
-        contentView.layer.shadowColor = UIColor(red: 0.18, green: 0.25, blue: 0.57, alpha: 0.15).cgColor
-        contentView.layer.shadowOffset = CGSize(width: 0, height: 1.5)
+        contentView.layer.shadowColor = UIColor(red: 0.18,
+                                                green: 0.25,
+                                                blue: 0.57,
+                                                alpha: 0.15).cgColor
+        contentView.layer.shadowOffset = CGSize(width: 0,
+                                                height: 1.5)
         contentView.layer.shadowOpacity = 1
         contentView.layer.shadowRadius = 5
         
@@ -40,22 +42,26 @@ public class DisclaimerView: AgoraBaseUIView {
     }()
     
     private lazy var titleView: AgoraBaseUIView = {
-        var titleView = AgoraBaseUIView()
+        let titleView = AgoraBaseUIView()
         titleView.backgroundColor = .white
         titleView.layer.cornerRadius = 8
         
-        var titleLabel = AgoraBaseUILabel()
-        titleLabel.text = NSLocalizedString("About_disclaimer", comment: "")
+        let titleLabel = AgoraBaseUILabel()
+        titleLabel.text = NSLocalizedString("About_disclaimer",
+                                            comment: "")
         titleLabel.backgroundColor = .white
         titleLabel.textAlignment = .center
         titleLabel.font = UIFont.systemFont(ofSize: 17)
         titleLabel.textColor = UIColor(hexString: "191919")
         
-        var backBtn = AgoraBaseUIButton()
-        backBtn.setBackgroundImage(UIImage(named: "about_back"), for: .normal)
-        backBtn.addTarget(self, action: #selector(onTouchBack), for: .touchUpInside)
+        let backBtn = AgoraBaseUIButton()
+        backBtn.setBackgroundImage(UIImage(named: "about_back"),
+                                   for: .normal)
+        backBtn.addTarget(self,
+                          action: #selector(onTouchBack),
+                          for: .touchUpInside)
         
-        var line = AgoraBaseUIView()
+        let line = AgoraBaseUIView()
         line.backgroundColor = UIColor(hexString: "EEEEF7")
         
         titleView.addSubview(titleLabel)
@@ -69,6 +75,7 @@ public class DisclaimerView: AgoraBaseUIView {
             titleLabel.agora_center_x = 0
             titleLabel.agora_bottom = 9
         }
+        
         line.agora_x = LoginConfig.dis_line_x
         line.agora_right = LoginConfig.dis_line_x
         line.agora_height = 1
@@ -81,17 +88,20 @@ public class DisclaimerView: AgoraBaseUIView {
     }()
     
     private lazy var disclaLabel: AgoraBaseUILabel = {
-        var label = AgoraBaseUILabel()
+        let label = AgoraBaseUILabel()
         label.numberOfLines = 0
         
-        let attrString = NSMutableAttributedString(string: NSLocalizedString("Disclaimer_detail", comment: ""))
+        let attrString = NSMutableAttributedString(string: NSLocalizedString("Disclaimer_detail",
+                                                                             comment: ""))
         let paraStyle = NSMutableParagraphStyle()
         paraStyle.paragraphSpacing = 21
         let attr: [NSAttributedString.Key : Any] = [.font: UIFont.systemFont(ofSize: 14),
                                                     .foregroundColor: UIColor(hexString: "586376"),
                                                     .paragraphStyle: paraStyle]
 
-        attrString.addAttributes(attr, range: NSRange(location: 0, length: attrString.length))
+        attrString.addAttributes(attr,
+                                 range: NSRange(location: 0,
+                                                length: attrString.length))
         label.attributedText = attrString
         self.addSubview(label)
         
@@ -99,8 +109,9 @@ public class DisclaimerView: AgoraBaseUIView {
     }()
     
     private lazy var bottomLabel: AgoraBaseUILabel = {
-        var label = AgoraBaseUILabel()
-        label.text = NSLocalizedString("About_url", comment: "")
+        let label = AgoraBaseUILabel()
+        label.text = NSLocalizedString("About_url",
+                                       comment: "")
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = UIColor(hexString: "7D8798")
         label.textAlignment = .center
@@ -112,40 +123,45 @@ public class DisclaimerView: AgoraBaseUIView {
         if LoginConfig.device == .iPad {
             removeFromSuperview()
         } else {
-            UIView.animate(withDuration: TimeInterval.agora_animation) {[weak self] in
-                    self?.agora_x = self?.frame.width ?? 0
-
-                    self?.transform = CGAffineTransform(translationX: self?.frame.width ?? 0,
-                                                        y: 0)
-                    self?.layoutIfNeeded()
-            } completion: {[weak self] (complete) in
-                guard complete else {
+            UIView.animate(withDuration: TimeInterval.agora_animation) { [weak self] in
+                guard let strongSelf = self else {
                     return
                 }
-                self?.removeFromSuperview()
+                
+                strongSelf.agora_x = strongSelf.frame.width
+                
+                strongSelf.transform = CGAffineTransform(translationX: strongSelf.frame.width,
+                                                         y: 0)
+                strongSelf.layoutIfNeeded()
+            } completion: { [weak self] (complete) in
+                guard let strongSelf = self,
+                      complete else {
+                    return
+                }
+                strongSelf.removeFromSuperview()
             }
         }
     }
 }
 
 // MARK: UI
-extension DisclaimerView {
-    private func initView() {
-        
+private extension DisclaimerView {
+    func initView() {
         switch LoginConfig.device {
         case .iPhone_Big: fallthrough
         case .iPhone_Small:
             contentView.addSubview(bottomLabel)
         case .iPad:
-            self.backgroundColor = UIColor.init(white: 1, alpha: 0.7)
+            backgroundColor = UIColor.init(white: 1, alpha: 0.7)
         }
-        self.addSubview(contentView)
+        
+        addSubview(contentView)
         
         contentView.addSubview(titleView)
         contentView.addSubview(disclaLabel)
     }
     
-    private func initLayout() {
+    func initLayout() {
         var width: CGFloat = 0
         var height: CGFloat = 0
         

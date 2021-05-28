@@ -50,6 +50,7 @@ UploadLog = "发送成功!";
 
 // Toast
 LoaingText = "加载中...";
+ReconnectingText = "重连中...";
 
 CloseText = "关闭";
 CancelText = "取消";

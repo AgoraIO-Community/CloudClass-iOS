@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onKickedOut;
 - (void)onUpdateAudioVolumeIndication:(NSInteger)value streamUuid:(NSString *)streamUuid;
 - (void)onShowUserTips:(NSString *)message;
-
 @end
-
 
 NS_ASSUME_NONNULL_END

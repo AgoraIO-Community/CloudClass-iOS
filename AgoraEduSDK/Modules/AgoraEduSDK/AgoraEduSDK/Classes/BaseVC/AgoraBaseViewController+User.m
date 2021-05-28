@@ -92,6 +92,7 @@
         [weakself onShowErrorInfo:error];
     }];
 }
+
 - (void)registerEventHandler:(id<AgoraEduUserHandler>)handler {
     [self.eventDispatcher registerWithObject:handler];
 }

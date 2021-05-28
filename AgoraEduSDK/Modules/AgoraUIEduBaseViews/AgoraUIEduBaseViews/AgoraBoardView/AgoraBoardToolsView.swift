@@ -350,18 +350,18 @@ fileprivate extension AgoraBoardToolsItemType {
         case .text:      return AgoraKitImage("icon-text-more")!
         case .eraser:    return AgoraKitImage("icon-eraser-more")!
         case .color:     return AgoraKitImage("icon-color-more")!
-        case .clicker:   return AgoraKitImage("icon-h5")!
+        case .clicker:   return AgoraKitImage("icon-clicker")!
         }
     }
 
     var selectedImage: UIImage? {
         switch self {
-        case .select:    return AgoraKitImage("iocn-select_actived_actived")!
+        case .select:    return AgoraKitImage("iocn-select_actived")!
         case .pencil:    return AgoraKitImage("icon-pen-more_actived")!
         case .text:      return AgoraKitImage("icon-text-more_actived")!
         case .eraser:    return AgoraKitImage("icon-eraser-more_actived")!
         case .color:     return AgoraKitImage("icon-color-more_actived")!
-        case .clicker:   return AgoraKitImage("icon-h5-actived")!
+        case .clicker:   return AgoraKitImage("icon-clicker-actived")!
         }
     }
 }

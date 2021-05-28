@@ -15,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AgoraEduManager : NSObject
 @property (nonatomic, strong) AgoraRTEManager *eduManager;
-@property (nonatomic, strong) AgoraWhiteBoardManager *whiteBoardManager;
-
 @property (nonatomic, strong) AgoraRTEClassroomManager * _Nullable roomManager;
 @property (nonatomic, strong) AgoraRTEStudentService * _Nullable studentService;
 

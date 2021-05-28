@@ -12,13 +12,13 @@ import AgoraUIBaseViews
 
 
 @objc public class CountDownWrapper: NSObject {
-    public static let countdownView = CountDownContainerView(frame: .zero)
-    @objc public class func getView(delegate: CountDownDelegate) -> AgoraBaseUIView {
+    private var countdownView = CountDownContainerView(frame: .zero)
+    @objc public func getView(delegate: CountDownDelegate) -> AgoraBaseUIView {
         countdownView.delegate = delegate
         return countdownView
     }
     
-    @objc public class func getCountDwon() -> CountDownProtocol {
+    @objc public func getCountDwon() -> CountDownProtocol {
         return countdownView
     }
 }
@@ -30,6 +30,8 @@ import AgoraUIBaseViews
     
     private var timer: DispatchSourceTimer?
     
+    private var isSuspend: Bool = true
+    
     fileprivate var delegate: CountDownDelegate?
     
     private var timeArr: Array<SingleTimeGroup> = []
@@ -39,7 +41,7 @@ import AgoraUIBaseViews
             timeArr.forEach { group in
                 group.turnColor(color: (totalTime <= 3) ? .red : UIColor(hexString: "4D6277"))
             }
-            let newTimeStrArr = secondsToTimeStrArr(seconds: totalTime)
+            let newTimeStrArr = totalTime.secondsToTimeStrArr()
             for i in 0..<timeArr.count {
                 guard i <= newTimeStrArr.count else {
                     return
@@ -102,12 +104,11 @@ import AgoraUIBaseViews
     }
     
     // MARK: CountDownProtocol
-    public func setCountDownWithTotalSeconds(_ totalSeconds: NSInteger) {
-        guard timer == nil else {
+    public func invokeCountDown(withTotalSeconds totalSeconds: NSInteger, ifExecute: Bool) {
+        totalTime = totalSeconds
+        if !ifExecute {
             return
         }
-        
-        totalTime = totalSeconds
         
         timer = DispatchSource.makeTimerSource(flags: [],
                                                queue: DispatchQueue.global())
@@ -116,64 +117,48 @@ import AgoraUIBaseViews
         
         timer?.setEventHandler { [weak self] in
             DispatchQueue.main.async {
-                guard let `self` = self else {
-                    return
+                if let `self` = self {
+                    if self.totalTime > 0 {
+                        self.totalTime -= 1
+                        self.delegate?.countDownUp(to: self.totalTime)
+                    } else {
+                        self.delegate?.countDownDidStop()
+                        self.timer?.cancel()
+                        self.timer = nil
+                    }
+                } else {
+                    self?.timer?.cancel()
+                    self?.timer = nil
                 }
-                guard self.totalTime > 0 else {
-                    self.delegate?.countDownDidStop()
-                    self.timer?.cancel()
-                    return
-                }
-                self.totalTime -= 1
-                self.delegate?.countDownUp(to: self.totalTime)
             }
         }
-    }
-    
-    public func invokeCountDown() {
-        timer?.resume()
+        isSuspend = true
+        
+        startTimer()
     }
     
     public func pauseCountDown() {
-        timer?.cancel()
-        timer = nil
-    }
-    
-    public func continueCountDown() {
-        guard let countDownTimer = timer else {
-            return
-        }
-        countDownTimer.activate()
+        stopTimer()
     }
     
     public func cancelCountDown() {
+        stopTimer()
+    }
+    
+    private func startTimer() {
+        if isSuspend {
+            timer?.resume()
+        }
+        isSuspend = false
+    }
+    
+    private func stopTimer() {
+        if isSuspend {
+            timer?.resume()
+        }
+        isSuspend = false
         timer?.cancel()
         timer = nil
-    }
-
-}
-
-// MARK: private
-extension CountDownContainerView {
-    private func secondsToTimeStrArr(seconds: NSInteger) -> Array<String> {
-        guard seconds > 0 else {
-            return ["0","0","0","0"]
-        }
-        
-        let minsInt = seconds / 60
-        let min0Str = String(minsInt / 10)
-        let min1Str = String(minsInt % 10)
-        
-        var sec0Str = "0"
-        var sec1Str = "0"
-        
-        if seconds % 60 != 0 {
-            let remainder = seconds % 60
-            sec0Str = remainder > 9 ? String(remainder / 10) : "0"
-            sec1Str = remainder > 9 ? String(remainder % 10) : String(remainder)
-        }
-        
-        return [min0Str,min1Str,sec0Str,sec1Str]
     }
 }
 
@@ -236,5 +221,28 @@ extension CountDownContainerView {
             timeArr[i].agora_y = isPad ? 57 : 44
             timeArr[i].agora_bottom = isPad ? 15 : 10
         }
+    }
+}
+
+extension NSInteger {
+    fileprivate func secondsToTimeStrArr() -> Array<String> {
+        guard self > 0 else {
+            return ["0","0","0","0"]
+        }
+        
+        let minsInt = self / 60
+        let min0Str = String(minsInt / 10)
+        let min1Str = String(minsInt % 10)
+        
+        var sec0Str = "0"
+        var sec1Str = "0"
+        
+        if self % 60 != 0 {
+            let remainder = self % 60
+            sec0Str = remainder > 9 ? String(remainder / 10) : "0"
+            sec1Str = remainder > 9 ? String(remainder % 10) : String(remainder)
+        }
+        
+        return [min0Str,min1Str,sec0Str,sec1Str]
     }
 }

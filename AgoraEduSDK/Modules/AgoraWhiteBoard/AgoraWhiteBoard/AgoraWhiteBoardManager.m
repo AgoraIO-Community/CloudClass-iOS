@@ -391,7 +391,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 The RoomState property in the room will trigger this callback when it changes.
 */
 - (void)fireRoomStateChanged:(WhiteRoomState *_Nullable)modifyState {
-    // TODO: 啥意思
+    // 老师离开
     if (modifyState.broadcastState && modifyState.broadcastState.broadcasterId == nil) {
         [self.room scalePptToFit:WhiteAnimationModeContinuous];
         [self.room scaleIframeToFit];

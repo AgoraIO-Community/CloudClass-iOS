@@ -39,7 +39,6 @@ enum AgoraCauseType: Int, Decodable {
     public var userName: String = ""
     public var token: String = ""
     public var baseURL: String = ""
-
 }
 
 @objcMembers public class AgoraBaseVM: NSObject {
@@ -93,11 +92,12 @@ extension AgoraBaseVM {
         return userInfo
     }
     
-    func kitUserInfo(_ rteUser: AgoraRTEBaseUser) -> AgoraEduContextUserInfo {
+    func kitUserInfo(_ rteUser: AgoraRTEUser) -> AgoraEduContextUserInfo {
         let userInfo = AgoraEduContextUserInfo()
         userInfo.role = AgoraEduContextUserRole(rawValue: rteUser.role.rawValue) ?? .student
         userInfo.userUuid = rteUser.userUuid
         userInfo.userName = rteUser.userName
+        userInfo.userProperties = rteUser.userProperties["flexProps"] as? Dictionary<String,String>
         return userInfo
     }
     

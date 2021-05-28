@@ -12,16 +12,40 @@ Pod::Spec.new do |s|
     s.frameworks = 'UIKit'
     s.libraries = 'stdc++'
     s.ios.deployment_target = '9.0'
-    s.source_files = 'ChatWidget/**/*.{h,m}'
-    s.public_header_files = [
-      'ChatWidget/Main/ChatWidget.h',
-    ]
-    s.resources = 'ChatWidget/ChatWidget.bundle'
+    
     s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES','EXCLUDED_ARCHS[sdk=iphonesimulator*]'=>'i386,arm64','VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
-    s.dependency 'Masonry'
-    s.dependency 'HyphenateChat'
-    s.dependency 'SDWebImage'
-    s.dependency 'BarrageRenderer'
-    s.dependency 'WHToast'
-    s.dependency 'AgoraWidget'
+    
+    s.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => ['$(SRCROOT)/AgoraClassroomSDK/Frameworks/', '$(SRCROOT)/../AgoraEduSDK/Frameworks/'] }
+
+    s.subspec 'BINARY' do |binary|
+      binary.resources = 'ChatWidget/ChatWidget.bundle'
+      binary.source_files = 'ChatWidget/**/*.{h,m}'
+      binary.public_header_files = [
+        'ChatWidget/Main/ChatWidget.h',
+      ]
+
+      binary.dependency 'Masonry'
+      binary.dependency 'HyphenateChat'
+      binary.dependency 'SDWebImage'
+      binary.dependency 'BarrageRenderer'
+      binary.dependency 'WHToast'
+      binary.vendored_framework = '../../Frameworks/AgoraWidget.framework'
+      binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => ['$(SRCROOT)/AgoraClassroomSDK/Frameworks/', '$(SRCROOT)/../AgoraEduSDK/Frameworks/'] }
+    end
+    
+    s.subspec 'SOURCE' do |source|
+      source.dependency 'Masonry'
+      source.dependency 'HyphenateChat'
+      source.dependency 'SDWebImage'
+      source.dependency 'BarrageRenderer'
+      source.dependency 'WHToast'
+      source.dependency "AgoraWidget"
+      source.resources = 'ChatWidget/ChatWidget.bundle'
+      source.source_files = 'ChatWidget/**/*.{h,m}'
+      source.public_header_files = [
+        'ChatWidget/Main/ChatWidget.h',
+      ]
+    end
+
+    s.default_subspec = 'SOURCE'
 end

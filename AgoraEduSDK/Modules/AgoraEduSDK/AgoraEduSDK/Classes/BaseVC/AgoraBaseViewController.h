@@ -43,8 +43,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onAddRoomMessage:(AgoraEduContextChatInfo *)chatInfo;
 - (void)onAddConversationMessage:(AgoraEduContextChatInfo *)chatInfo;
 - (void)updateRoomChatState:(BOOL)muteChat;
-- (void)updateLocalChatState:(BOOL)muteChat to:(AgoraEduContextUserInfo *)userInfo by:(AgoraEduContextUserInfo *)operator;
-- (void)updateRemoteChatState:(BOOL)muteChat to:(AgoraEduContextUserInfo *)userInfo by:(AgoraEduContextUserInfo *)operator;
+- (void)updateLocalChatState:(BOOL)muteChat
+                          to:(AgoraEduContextUserInfo *)userInfo
+                          by:(AgoraEduContextUserInfo *)operator;
+- (void)updateRemoteChatState:(BOOL)muteChat
+                           to:(AgoraEduContextUserInfo *)userInfo
+                           by:(AgoraEduContextUserInfo *)operator;
 - (void)onShowChatTips:(NSString *)message;
 
 // handsup

@@ -45,7 +45,7 @@ import AgoraEduContext
             var speakerEnabled = false
             
             if let properties = rteLocalUser.userProperties as? Dictionary<String, Any>,
-                  let device = properties["device"] as? Dictionary<String, Any> {
+               let device = properties["device"] as? Dictionary<String, Any> {
                 
                 let camera = device[AgoraDeviceType.camera.rawValue] as? Int ?? 1
                 let mic = device[AgoraDeviceType.microphone.rawValue] as? Int ?? 1
@@ -60,8 +60,10 @@ import AgoraEduContext
                 speakerEnabled = (speaker == 1)
             }
             
-            self.deviceConfig = AgoraEduContextDeviceConfig(cameraEnabled: cameraEnabled, cameraFacing: cameraFacing, micEnabled: micEnabled, speakerEnabled: speakerEnabled)
-            
+            self.deviceConfig = AgoraEduContextDeviceConfig(cameraEnabled: cameraEnabled,
+                                                            cameraFacing: cameraFacing,
+                                                            micEnabled: micEnabled,
+                                                            speakerEnabled: speakerEnabled)
             // rtc只有switch 要单独处理
             if cameraFacing == .back {
                 self.switchCamera()
@@ -111,11 +113,10 @@ import AgoraEduContext
         })
     }
     
-    public func updateRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState], deviceType: AgoraDeviceStateType) {
-        
+    public func updateRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState],
+                                      deviceType: AgoraDeviceStateType) {
         // 判断是否上报
         self.rteStreamStates = rteStreamStates
-    
         
         // TODO：添加同步锁， 保证不上传多次
         AgoraEduManager.share().roomManager?.getLocalUser(success: { [weak self] (rteLocalUser) in
@@ -204,6 +205,7 @@ import AgoraEduContext
             }
         })
     }
+    
     public func updateLocalDeviceState(_ deviceType: AgoraDeviceStateType,
                                        enable: Bool,
                                        successBlock: ((AgoraRTEUser,
@@ -211,6 +213,13 @@ import AgoraEduContext
                                                        AgoraEduContextDeviceState) -> Void)?,
                                        failureBlock: ((_ error: AgoraEduContextError) -> Void)?) {
 
+        switch deviceType {
+        case .camera:
+            self.deviceConfig?.cameraEnabled = enable
+        case .microphone:
+            self.deviceConfig?.micEnabled = enable
+        }
+        
         AgoraEduManager.share().roomManager?.getLocalUser(success: { (rteLocalUser) in
             AgoraEduManager.share().roomManager?.getFullStreamList(success: { [weak self] (rteStreams) in
 
@@ -219,20 +228,14 @@ import AgoraEduContext
                 }
                 
                 let rteStream = rteStreams.first(where: {$0.streamUuid == rteLocalUser.streamUuid})
-                
-                var cameraState: AgoraEduContextDeviceState = .available
-                var microState: AgoraEduContextDeviceState = .available
-                if deviceType == .camera {
-                    cameraState = enable ? .available : .close
-                    microState = self.getUserDeviceState(.microphone,
+
+                let cameraState = self.getUserDeviceState(.camera,
+                                                          rteUser: rteLocalUser,
+                                                          rteStream: rteStream)
+                let microState = self.getUserDeviceState(.microphone,
                                                          rteUser: rteLocalUser,
                                                          rteStream: rteStream)
-                } else {
-                    microState = enable ? .available : .close
-                    cameraState = self.getUserDeviceState(.camera,
-                                                         rteUser: rteLocalUser,
-                                                         rteStream: rteStream)
-                }
+
                 successBlock?(rteLocalUser,
                               cameraState,
                               microState)
@@ -247,26 +250,41 @@ import AgoraEduContext
             }
         })
     }
+    
     public func getUserDeviceState(_ type: AgoraDeviceType,
                                    rteUser: AgoraRTEUser,
                                    rteStream: AgoraRTEStream?) -> AgoraEduContextDeviceState {
         
-        // 0和1 不能来修改2
-        if let deviceConfig = self.deviceConfig {
-            if type == .camera && !deviceConfig.cameraEnabled {
-                return .close
-            } else if type == .microphone && !deviceConfig.micEnabled {
-                return .close
-            }
-        }
-        
         var deviceStreamState: AgoraEduContextDeviceState = .available
-        if let properties = rteUser.userProperties as? Dictionary<String, Any>,
-              let device = properties["device"] as? Dictionary<String, Any>,
-              let value = device[type.rawValue] as? Int {
-            
-            if let state = AgoraEduContextDeviceState(rawValue: value) {
-                deviceStreamState = state
+        
+        // 只有自己的时候需要deviceConfig判断
+        if rteUser.userUuid == self.config.userUuid {
+            // 0和1 不能来修改2
+            if let deviceConfig = self.deviceConfig {
+                if type == .camera && !deviceConfig.cameraEnabled {
+                    return .close
+                } else if type == .microphone && !deviceConfig.micEnabled {
+                    return .close
+                }
+                
+                switch type {
+                case .camera:
+                    deviceStreamState = deviceConfig.cameraEnabled ? .available : .close
+                case .microphone:
+                    deviceStreamState = deviceConfig.micEnabled ? .available : .close
+                default:
+                    break
+                }
+            }
+        } else {
+            // 不是自己的时候，从property里面获取
+            if let properties = rteUser.userProperties as? Dictionary<String, Any>,
+                  let device = properties["device"] as? Dictionary<String, Any>,
+                  let value = device[type.rawValue] as? Int {
+                
+                if let state = AgoraEduContextDeviceState(rawValue: value) {
+                    deviceStreamState = state
+                }
             }
         }
         
@@ -287,9 +305,9 @@ import AgoraEduContext
         }
         
         // 是否frozen或者stop
-        // 默认frozen， 有可能远端设备坏的， 而且网络不好
+        // 默认正常， 有可能远端设备坏的， 而且网络不好
         let deviceStreamStates = self.rteStreamStates[rteUser.streamUuid]
-        let streamStates = (type == .camera ? deviceStreamStates?.camera : deviceStreamStates?.microphone) ?? .frozen
+        let streamStates = (type == .camera ? deviceStreamStates?.camera : deviceStreamStates?.microphone) ?? .running
         
         // local
         if rteUser.userUuid == self.config.userUuid {
@@ -352,6 +370,7 @@ import AgoraEduContext
             failureBlock(error)
         }
     }
+    
     public func setMicDeviceEnable(enable: Bool,
                                    successBlock: @escaping () -> Void,
                                    failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
@@ -370,6 +389,7 @@ import AgoraEduContext
             failureBlock(error)
         }
     }
+    
     public func switchCameraFacing(successBlock: @escaping () -> Void,
                                    failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
         
@@ -391,6 +411,7 @@ import AgoraEduContext
             failureBlock(error)
         }
     }
+    
     public func setSpeakerEnable(enable: Bool,
                                  successBlock: @escaping () -> Void,
                                  failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
@@ -412,9 +433,9 @@ import AgoraEduContext
 }
 
 // MARK: Private
-extension AgoraDeviceVM {
-    private func updateDeviceState(successBlock: @escaping () -> Void,
-                                   failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
+private extension AgoraDeviceVM {
+    func updateDeviceState(successBlock: @escaping () -> Void,
+                           failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
         
         AgoraEduManager.share().roomManager?.getLocalUser(success: { [weak self] (rteLocalUser) in
             guard let `self` = self else {
@@ -424,7 +445,7 @@ extension AgoraDeviceVM {
             self.updateDeviceState(rteLocalUserStream: rteLocalUser.streams.first,
                                    successBlock: nil,
                                    failureBlock: nil)
-
+            
             successBlock()
             
         }, failure: { [weak self] (error) in
@@ -434,15 +455,16 @@ extension AgoraDeviceVM {
         })
     }
     
-    private func switchCamera() {
+    func switchCamera() {
         AgoraEduManager.share().studentService?.switchCamera()
     }
-    private func speakerEnabled(_ enable: Bool) {
+    
+    func speakerEnabled(_ enable: Bool) {
         AgoraEduManager.share().studentService?.setEnableSpeakerphone(enable)
     }
     
-    private func updateLocalStream(successBlock: (() -> Void)? = nil,
-                                  failureBlock: ((_ error: AgoraEduContextError) -> Void)? = nil) {
+    func updateLocalStream(successBlock: (() -> Void)? = nil,
+                           failureBlock: ((_ error: AgoraEduContextError) -> Void)? = nil) {
         
         AgoraEduManager.share().studentService?.startOrUpdateLocalStream(self.streamConfig, success: { (rteStream) in
             successBlock?()
@@ -455,10 +477,9 @@ extension AgoraDeviceVM {
 }
 
 // MARK: HTTP
-extension AgoraDeviceVM {
-    
+private extension AgoraDeviceVM {
     // 1可用 0 不可用
-    private func updateDevices(camera:Int?,
+    func updateDevices(camera:Int?,
                               micro:Int?,
                               speaker:Int?,
                               facing:Int?,

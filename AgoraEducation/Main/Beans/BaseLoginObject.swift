@@ -62,9 +62,9 @@ enum Region_Type: String,CaseIterable {
 }
 
 class LoginConfig {
-    static let ClassTypes: Array<(AgoraEduRoomType,String)> = [(AgoraEduRoomType.type1V1, NSLocalizedString("Login_onetoone", comment: "")),
-                                                               (AgoraEduRoomType.typeSmall, NSLocalizedString("Login_small", comment: "")),
-                                                               (AgoraEduRoomType.typeLecture, NSLocalizedString("Login_lecture", comment: ""))]
+    static let ClassTypes: Array<(AgoraEduRoomType, String)> = [(AgoraEduRoomType.type1V1, NSLocalizedString("Login_onetoone", comment: "")),
+                                                                (AgoraEduRoomType.typeSmall, NSLocalizedString("Login_small", comment: "")),
+                                                                (AgoraEduRoomType.typeLecture, NSLocalizedString("Login_lecture", comment: ""))]
     
     static let AboutInfoList: Array<(String,Any?)> =
         [(NSLocalizedString("About_privacy", comment: ""), URL(string: NSLocalizedString("Privacy_url", comment: ""))),

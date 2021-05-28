@@ -50,6 +50,7 @@ UploadLog = "Logs sent succcesfully!";
 
 // Toast
 LoaingText = "Loading...";
+ReconnectingText = "reconnecting...";
 
 CloseText = "Close";
 CancelText = "Cancel";
