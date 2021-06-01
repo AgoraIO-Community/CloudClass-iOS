@@ -10,22 +10,7 @@ import AgoraUIBaseViews
 
 @objc public class AgroaExtAppWrapper: NSObject {
     @objc public class func getView() -> AgoraBaseUIView {
-        return AgroaExtAppContainer()
-    }
-}
-
-public class AgroaExtAppContainer: AgoraBaseUIView {
-    public override func hitTest(_ point: CGPoint,
-                          with event: UIEvent?) -> UIView? {
-        for subView in subviews {
-            let subViewPoint = convert(point,
-                                       to: subView)
-            let view = subView.hitTest(subViewPoint,
-                                       with: event)
-            return view
-        }
-        
-        return nil
+        return AgoraBaseUIContainer()
     }
 }
 

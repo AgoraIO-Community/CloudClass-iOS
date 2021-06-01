@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <AgoraWidget/AgoraWidget.h>
 
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface ChatWidget : AgoraBaseWidget

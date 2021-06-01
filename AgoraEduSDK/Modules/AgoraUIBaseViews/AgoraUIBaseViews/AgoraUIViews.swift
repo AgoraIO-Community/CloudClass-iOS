@@ -40,6 +40,24 @@ import UIKit
         super.layoutSubviews()
         delegate?.containerLayoutSubviews()
     }
+    
+    public override func hitTest(_ point: CGPoint,
+                          with event: UIEvent?) -> UIView? {
+        if alpha != 0 || backgroundColor != .clear {
+            return super.hitTest(point,
+                                 with: event)
+        }
+        
+        for subView in subviews {
+            let subViewPoint = convert(point,
+                                       to: subView)
+            let view = subView.hitTest(subViewPoint,
+                                       with: event)
+            return view
+        }
+        
+        return nil
+    }
 }
 
 @objcMembers open class AgoraBaseUIScrollView: UIScrollView, AgoraUIElement {
