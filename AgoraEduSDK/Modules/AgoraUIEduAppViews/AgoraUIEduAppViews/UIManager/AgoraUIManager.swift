@@ -293,7 +293,7 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         chat.containerView.agora_equal_to_superView(attribute: .left)
         chat.containerView.agora_equal_to_superView(attribute: .right)
         chat.containerView.agora_equal_to_superView(attribute: .bottom,
-                                                      constant: -90)
+                                                    constant: -90)
         
         self.hxChat = chat
     }
