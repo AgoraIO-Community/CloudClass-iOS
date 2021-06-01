@@ -43,7 +43,9 @@ import UIKit
     
     public override func hitTest(_ point: CGPoint,
                           with event: UIEvent?) -> UIView? {
-        if alpha != 0 || backgroundColor != .clear {
+        if alpha != 0 ||
+            backgroundColor != .clear ||
+            isHidden {
             return super.hitTest(point,
                                  with: event)
         }
