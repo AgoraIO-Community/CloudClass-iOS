@@ -639,8 +639,6 @@ private extension LoginViewController{
             alertView?.show(in: self.view)
         }
         
-        AgoraClassroomSDK.launch(config, delegate: self)
-        
         let chat = AgoraWidgetConfiguration(with: ChatWidget.self,
                                             widgetId: "Chat")
         

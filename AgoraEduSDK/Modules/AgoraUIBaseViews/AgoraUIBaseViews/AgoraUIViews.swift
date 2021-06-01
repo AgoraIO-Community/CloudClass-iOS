@@ -40,6 +40,31 @@ import UIKit
         super.layoutSubviews()
         delegate?.containerLayoutSubviews()
     }
+    
+    public override func hitTest(_ point: CGPoint,
+                          with event: UIEvent?) -> UIView? {
+
+        // 当前view显示  并且 透明度为0或背景为0 的时候 需要遍历subview。  否则传递父类
+        if (alpha == 0 ||
+            backgroundColor == .clear ||
+            backgroundColor == nil) &&
+            !isHidden {
+            
+            for subView in subviews {
+                let subViewPoint = convert(point,
+                                           to: subView)
+                let view = subView.hitTest(subViewPoint,
+                                           with: event)
+                if view != nil {
+                    return view
+                }
+            }
+            return nil
+          }
+              
+        return super.hitTest(point,
+                             with: event)
+    }
 }
 
 @objcMembers open class AgoraBaseUIScrollView: UIScrollView, AgoraUIElement {

@@ -111,12 +111,13 @@ import AgoraWidget
             case "AgoraChatWidget":
                 let chat = contextPool.widget.createWidget(info: info,
                                                        contextPool: contextPool)
-                chat.addMessageObserver(self)
-                
-                if let message = ["hasConversation": (viewType != .oneToOne ? 1 : 0)].jsonString() {
-                    chat.widgetDidReceiveMessage(message)
-                }
-                
+//                chat.addMessageObserver(self)
+//
+//                if let message = ["hasConversation": (viewType != .oneToOne ? 1 : 0)].jsonString() {
+//                    chat.widgetDidReceiveMessage(message)
+//                }
+//
+                chat.containerView.isHidden = true
                 self.chat = chat
             default:
                 break
@@ -258,7 +259,8 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         let roomInfo = contextPool.room.getRoomInfo()
         
         guard let y = room?.containerView.frame.maxY,
-              let userProperties = userInfo.userProperties else {
+              let userProperties = userInfo.userProperties,
+              let `whiteBoard` = self.whiteBoard else {
             return
         }
         
@@ -285,12 +287,13 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         
         let chat = contextPool.widget.createWidget(with: info)
         chat.addMessageObserver(self)
-        appView.addSubview(chat.containerView)
+        whiteBoard.containerView.addSubview(chat.containerView)
         
-        chat.containerView.agora_y = y
-        chat.containerView.agora_right = 250
-        chat.containerView.agora_width = 500
-        chat.containerView.agora_safe_bottom = 0
+        chat.containerView.agora_equal_to_superView(attribute: .top)
+        chat.containerView.agora_equal_to_superView(attribute: .left)
+        chat.containerView.agora_equal_to_superView(attribute: .right)
+        chat.containerView.agora_equal_to_superView(attribute: .bottom,
+                                                      constant: -90)
         
         self.hxChat = chat
     }

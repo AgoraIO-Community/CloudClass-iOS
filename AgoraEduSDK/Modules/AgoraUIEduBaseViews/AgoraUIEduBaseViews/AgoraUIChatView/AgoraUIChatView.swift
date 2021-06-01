@@ -12,7 +12,8 @@ import AgoraUIBaseViews
 @objcMembers public class AgoraUIChatView: AgoraBaseUIView,
                                            UIGestureRecognizerDelegate,
                                            UITableViewDelegate,
-                                           UITableViewDataSource {
+                                           UITableViewDataSource,
+                                           UITextFieldDelegate {
     enum ChatType {
         case roomMessage, conversation
     }
@@ -481,6 +482,21 @@ import AgoraUIBaseViews
                           heightForFooterInSection section: Int) -> CGFloat {
         return 7
     }
+    
+    // MARK: UITextFieldDelegate
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.onSendTouchEvent()
+        return true
+    }
+    
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.window?.becomeFirstResponder()
+        self.window?.addGestureRecognizer(self.resignFirstResponderGesture)
+    }
+    
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        self.window?.removeGestureRecognizer(self.resignFirstResponderGesture)
+    }
 }
 
 // MARK: Keyboard
@@ -744,23 +760,6 @@ extension AgoraUIChatView: AgoraTabSelectViewDelegate {
         default:
             break
         }
-    }
-}
-
-// MARK: UITextFieldDelegate
-extension AgoraUIChatView: UITextFieldDelegate {
-    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.onSendTouchEvent()
-        return true
-    }
-    
-    public func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.window?.becomeFirstResponder()
-        self.window?.addGestureRecognizer(self.resignFirstResponderGesture)
-    }
-    
-    public func textFieldDidEndEditing(_ textField: UITextField) {
-        self.window?.removeGestureRecognizer(self.resignFirstResponderGesture)
     }
 }
 

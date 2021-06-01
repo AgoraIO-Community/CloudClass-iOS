@@ -624,21 +624,18 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 }
 
 - (void)localStreamAdded:(AgoraRTEStreamEvent*)event {
-    [self updateStreamEvents:@[event]
-                  changeType:AgoraInfoChangeTypeAdd];
+    // 先更新本地流状态
     [self.userVM updateLocalStream:event type: AgoraInfoChangeTypeAdd];
     
-    // 更新设备流， 来流了，但是设备状态关闭着的。
-    AgoraWEAK(self);
-    [self.deviceController updateLocalDeviceState:event.modifiedStream
-                                                      successBlock:^{
-        
-    } failureBlock:^(AgoraEduContextError * error) {
-        [weakself onShowErrorInfo:error];
-    }];
+    [self updateStreamEvents:@[event]
+                  changeType:AgoraInfoChangeTypeAdd];
+    
+    // 流状态更新后，RTE会先更新状态，需要重置下
+    [self.deviceController updateLocalDeviceState:event.modifiedStream];
 }
 
 - (void)localStreamRemoved:(AgoraRTEStreamEvent*)event {
+    // 先更新本地流状态
     [self.userVM updateLocalStream:event
                               type:AgoraInfoChangeTypeRemove];
     [self updateStreamEvents:@[event]
@@ -646,6 +643,10 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 }
 
 - (void)localStreamUpdated:(AgoraRTEStreamEvent*)event {
+    // 先更新本地流状态
+    [self.userVM updateLocalStream:event
+                              type:AgoraInfoChangeTypeUpdate];
+    
     [self updateStreamEvents:@[event]
                   changeType:AgoraInfoChangeTypeUpdate];
 
@@ -653,9 +654,9 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     if (message && [self respondsToSelector:@selector(onShowUserTips:)]) {
         [self onShowUserTips:message];
     }
-
-    [self.userVM updateLocalStream:event
-                              type:AgoraInfoChangeTypeUpdate];
+    
+    // 流状态更新后，RTE会先更新状态，需要重置下
+    [self.deviceController updateLocalDeviceState:event.modifiedStream];
 }
 
 - (void)localUserStateUpdated:(AgoraRTEUserEvent*)event

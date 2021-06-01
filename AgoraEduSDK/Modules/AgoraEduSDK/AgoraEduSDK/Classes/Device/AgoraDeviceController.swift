@@ -59,9 +59,7 @@ import AgoraEduContext
     }
     
     // 更新本地rtc设备
-    public func updateLocalDeviceState(_ rteLocalUserStream: AgoraRTEStream,
-                                       successBlock: (() -> Void)?,
-                                       failureBlock: ((_ error: AgoraEduContextError) -> Void)?) {
+    public func updateLocalDeviceState(_ rteLocalUserStream: AgoraRTEStream) {
         self.vm?.updateDeviceState(rteLocalUserStream: rteLocalUserStream,
                                    successBlock: nil,
                                    failureBlock: nil)

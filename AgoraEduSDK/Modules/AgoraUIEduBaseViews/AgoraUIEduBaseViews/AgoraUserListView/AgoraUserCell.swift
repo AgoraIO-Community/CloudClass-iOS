@@ -62,7 +62,7 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
                                            coHost: Bool,
                                            enableVideo: Bool,
                                            isSelf: Bool) {
-        var imgNameStart = "camera"
+        let imgNameStart = "camera"
         var imgNameMid = "_enable"
         var imgNameEnd = "_off"
         
@@ -96,7 +96,7 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
                                           coHost: Bool,
                                           enableAudio: Bool,
                                           isSelf: Bool) {
-        var imgNameStart = "micro"
+        let imgNameStart = "micro"
         var imgNameMid = "_enable"
         var imgNameEnd = "_off"
         

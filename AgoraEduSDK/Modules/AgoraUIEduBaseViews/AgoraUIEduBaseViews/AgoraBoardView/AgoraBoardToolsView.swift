@@ -221,8 +221,6 @@ private class AgoraButtonListView: AgoraBaseUIScrollView {
     }
     
     func initLayout() {
-        let isPad = AgoraKitDeviceAssistant.OS.isPad
-        
         // foldButton
         foldButton.agora_x = foldButtonLeftSpace
         foldButton.agora_y = foldButtonTopSpace

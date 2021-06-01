@@ -38,6 +38,8 @@ extension AgoraWhiteBoardUIController: AgoraBoardToolsStateDelegate {
             boardToolContext?.applianceSelected(.eraser)
         case .clicker:
             boardToolContext?.applianceSelected(.clicker)
+        case .text:
+            boardToolContext?.fontSizeSelected(boardToolsState.selectedFont.value)
         default:
             break
         }

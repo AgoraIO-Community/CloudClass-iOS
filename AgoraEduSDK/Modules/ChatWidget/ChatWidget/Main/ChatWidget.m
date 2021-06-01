@@ -9,6 +9,7 @@
 #import "ChatWidget.h"
 #import "ChatManager+SendGift.h"
 #import <BarrageRenderer/BarrageRenderer.h>
+#import <AgoraUIBaseViews/AgoraUIBaseViews-Swift.h>
 #import "AvatarBarrageView.h"
 #import "EmojiKeyboardView.h"
 #import "GiftView.h"
@@ -34,7 +35,7 @@ static const NSString* kChatRoomId = @"chatroomId";
                           AgoraUIContainerDelegate>
 @property (nonatomic,strong) ChatManager* chatManager;
 @property (nonatomic,strong) UITextField* inputField;
-@property (nonatomic,strong) UIView* containView;
+@property (nonatomic,strong) AgoraBaseUIContainer* containView;
 @property (nonatomic,strong) UIButton* emojiButton;
 @property (nonatomic,strong) UIButton* sendButton;
 @property (nonatomic,strong) UIButton* giftButton;
@@ -73,11 +74,9 @@ static const NSString* kChatRoomId = @"chatroomId";
 - (void)initViews {
     self.isShowBarrage = YES;
     
-    self.containView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.containView.backgroundColor = [UIColor whiteColor];
-    self.containerView.backgroundColor = [UIColor whiteColor];
-    self.containView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.containerView.layer.borderWidth = 1;
+    self.containView = [[AgoraBaseUIContainer alloc] initWithFrame:CGRectZero];
+    self.containView.backgroundColor = [UIColor clearColor];
+    self.containerView.backgroundColor = [UIColor clearColor];
     [self.containerView addSubview:self.containView];
     
     self.inputField = [[UITextField alloc] initWithFrame:CGRectZero];
