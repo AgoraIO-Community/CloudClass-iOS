@@ -41,9 +41,11 @@ buildItem() {
  buildItem "AgoraHandsUp"
  buildItem "AgoraActionProcess"
  
+ buildItem "AgoraUIBaseViews"
+
  buildItem "AgoraWidget"
 
- buildItem "AgoraUIBaseViews"
+ 
  buildItem "AgoraUIEduBaseViews"
  buildItem "AgoraUIEduAppViews"
 

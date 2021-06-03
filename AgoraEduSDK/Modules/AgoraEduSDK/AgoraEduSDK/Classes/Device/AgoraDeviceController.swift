@@ -26,9 +26,9 @@ import AgoraEduContext
 @objcMembers public class AgoraDeviceController: NSObject, AgoraController {
     
     private var vm: AgoraDeviceVM?
-    private var delegate: AgoraDeviceControllerDelegate?
+    private weak var delegate: AgoraDeviceControllerDelegate?
     
-    private var eventDispatcher: AgoraUIEventDispatcher = AgoraUIEventDispatcher()
+    private var eventDispatcher: AgoraUIEventDispatcher
     
     public init(vmConfig: AgoraVMConfig,
                 delegate: AgoraDeviceControllerDelegate) {
