@@ -146,15 +146,15 @@ static BOOL isSDKInited = NO;
             }];
         }
         EMUserInfo* userInfo = [[EMUserInfo alloc] init];
+        userInfo.ext = @"2";
         if(self.user.avatarurl.length > 0)
             userInfo.avatarUrl = [self.user.avatarurl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
         if(self.user.nickname.length > 0)
             userInfo.nickName = [self.user.nickname stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
-        if(self.user.avatarurl.length > 0 || self.user.nickname.length > 0){
-            [[[EMClient sharedClient] userInfoManager] updateOwnUserInfo:userInfo completion:^(EMUserInfo *aUserInfo, EMError *aError) {
-                            
-            }];
-        }
+        
+        [[[EMClient sharedClient] userInfoManager] updateOwnUserInfo:userInfo completion:^(EMUserInfo *aUserInfo, EMError *aError) {
+                        
+        }];
     }
 }
 
@@ -166,24 +166,20 @@ static BOOL isSDKInited = NO;
         if(!aError)
         {
             weakself.chatRoom = aChatroom;
-            weakself.isAllMuted = aChatroom.isMuteAllMembers;
-            if(weakself.isAllMuted) {
-                [self.delegate mutedStateDidChanged];
-            }
         }
     }];
-    // 获取禁言列表
-//    [[[EMClient sharedClient] roomManager] getChatroomMuteListFromServerWithId:self.chatRoomId pageNumber:0 pageSize:500 completion:^(NSArray *aList, EMError *aError) {
-//        if([aList containsObject:self.user.username]) {
-//            weakself.isMuted = YES;
-//            if(weakself.delegate)
-//                [weakself.delegate mutedStateDidChanged];
-//        }
-//    }];
+    // 获取是否被禁言
+    [[[EMClient sharedClient] roomManager] isMemberInWhiteListFromServerWithChatroomId:self.chatRoomId completion:^(BOOL inWhiteList, EMError *aError) {
+        if(!aError) {
+            weakself.isMuted = inWhiteList;
+            if(weakself.isMuted)
+                [weakself.delegate mutedStateDidChanged];
+        }
+    }];
     // 获取公告
     [[[EMClient sharedClient] roomManager] getChatroomAnnouncementWithId:self.chatRoomId completion:^(NSString *aAnnouncement, EMError *aError) {
         if(!aError)
-            weakself.chatroomAnnouncement = aAnnouncement;
+            [weakself _parseAnnouncement:aAnnouncement];
     }];
 }
 
@@ -477,8 +473,20 @@ static BOOL isSDKInited = NO;
                 addedMutedMembers:(NSArray *)aMutes
                        muteExpire:(NSInteger)aMuteExpire
 {
+    
+}
+
+- (void)chatroomMuteListDidUpdate:(EMChatroom *)aChatroom
+              removedMutedMembers:(NSArray *)aMutes
+{
+    
+}
+
+- (void)chatroomWhiteListDidUpdate:(EMChatroom *)aChatroom
+             addedWhiteListMembers:(NSArray *)aMembers
+{
     if([aChatroom.chatroomId isEqualToString:self.chatRoomId]) {
-        if(aMutes.count > 0 && [aMutes containsObject:self.user.username]) {
+        if(aMembers.count > 0 && [aMembers containsObject:self.user.username]) {
             self.isMuted = YES;
             if(self.delegate)
                 [self.delegate mutedStateDidChanged];
@@ -486,11 +494,11 @@ static BOOL isSDKInited = NO;
     }
 }
 
-- (void)chatroomMuteListDidUpdate:(EMChatroom *)aChatroom
-              removedMutedMembers:(NSArray *)aMutes
+- (void)chatroomWhiteListDidUpdate:(EMChatroom *)aChatroom
+           removedWhiteListMembers:(NSArray *)aMembers
 {
     if([aChatroom.chatroomId isEqualToString:self.chatRoomId]){
-        if(aMutes.count > 0 && [aMutes containsObject:self.user.username]) {
+        if(aMembers.count > 0 && [aMembers containsObject:self.user.username]) {
             self.isMuted = NO;
             if(self.delegate)
                 [self.delegate mutedStateDidChanged];
@@ -498,20 +506,9 @@ static BOOL isSDKInited = NO;
     }
 }
 
-- (void)chatroomWhiteListDidUpdate:(EMChatroom *)aChatroom
-             addedWhiteListMembers:(NSArray *)aMembers
-{
-    
-}
-
 - (void)chatroomAllMemberMuteChanged:(EMChatroom *)aChatroom
                     isAllMemberMuted:(BOOL)aMuted
 {
-    if([aChatroom.chatroomId isEqualToString:self.chatRoomId]) {
-        self.isMuted = aMuted;
-        if(self.delegate)
-            [self.delegate mutedStateDidChanged];
-    }
     
 }
 
@@ -519,7 +516,16 @@ static BOOL isSDKInited = NO;
                          announcement:(NSString *)aAnnouncement
 {
     if([aChatroom.chatroomId isEqualToString:self.chatRoomId]) {
-        self.chatroomAnnouncement = aAnnouncement;
+        [self _parseAnnouncement:aAnnouncement];
+    }
+}
+
+- (void)_parseAnnouncement:(NSString*)aAnnouncement
+{
+    if(aAnnouncement.length > 0) {
+        NSString* strAllMute = [aAnnouncement substringToIndex:1];
+        self.isAllMuted = [strAllMute boolValue];
+        [self.delegate mutedStateDidChanged];
     }
 }
 @end
