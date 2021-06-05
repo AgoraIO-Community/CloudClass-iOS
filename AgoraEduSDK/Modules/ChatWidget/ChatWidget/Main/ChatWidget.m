@@ -342,7 +342,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     CGFloat duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
 
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    self.emojiKeyBoardView.frame = keyboardFrame;
+    //self.emojiKeyBoardView.frame = keyboardFrame;
     //执行动画
     [UIView animateWithDuration:duration animations:^{
         UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
