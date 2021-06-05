@@ -160,7 +160,7 @@ static const NSString* kChatRoomId = @"chatroomId";
                                        GIFTBUTTON_WIDTH,
                                        GIFTBUTTON_WIDTH);
     
-    self.emojiButton.frame = CGRectMake(self.containView.bounds.size.width - 100,
+    self.emojiButton.frame = CGRectMake(self.containView.bounds.size.width - SENDBUTTON_WIDTH - EMOJIBUTTON_WIDTH-5,
                                         CONTAINVIEW_HEIGHT-EMOJIBUTTON_WIDTH-5,
                                         EMOJIBUTTON_WIDTH,
                                         EMOJIBUTTON_WIDTH);
@@ -282,6 +282,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 - (void)sendGiftAction
 {
     self.giftView.hidden = NO;
+    self.inputField.enabled = NO;
 }
 
 - (void)emojiButtonAction
@@ -342,7 +343,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     CGFloat duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
 
     CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    self.emojiKeyBoardView.frame = keyboardFrame;
+    //self.emojiKeyBoardView.frame = keyboardFrame;
     //执行动画
     [UIView animateWithDuration:duration animations:^{
         UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
@@ -350,7 +351,7 @@ static const NSString* kChatRoomId = @"chatroomId";
         {
             CGRect oldFrame = self.containView.frame;
             self.containView.frame = CGRectMake(0, oldFrame.origin.y - (rect.origin.y - keyboardFrame.origin.y) - CONTAINVIEW_HEIGHT, oldFrame.size.width, CONTAINVIEW_HEIGHT);
-            self.inputField.frame = CGRectMake(20, 10, self.containView.bounds.size.width - 80, CONTAINVIEW_HEIGHT-10);
+            self.inputField.frame = CGRectMake(20, 10, self.containView.bounds.size.width - SENDBUTTON_WIDTH - EMOJIBUTTON_WIDTH - 30, CONTAINVIEW_HEIGHT-10);
             self.giftButton.hidden = YES;
             self.sendButton.hidden = NO;
             self.emojiButton.hidden = NO;
@@ -469,6 +470,11 @@ static const NSString* kChatRoomId = @"chatroomId";
     if(giftView) {
         [self.chatManager sendGiftMsg:giftView.giftType];
     }
+}
+
+- (void)giftViewHidden
+{
+    [self mutedStateDidChanged];
 }
 
 @end

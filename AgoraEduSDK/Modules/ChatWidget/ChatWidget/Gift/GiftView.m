@@ -113,6 +113,8 @@
 - (void)closeAction
 {
     self.hidden = YES;
+    if(self.delegate)
+        [self.delegate giftViewHidden];
 }
 
 - (void)aboutAction
