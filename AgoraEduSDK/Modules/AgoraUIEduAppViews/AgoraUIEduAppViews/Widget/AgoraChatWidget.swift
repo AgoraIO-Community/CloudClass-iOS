@@ -266,11 +266,3 @@ private extension AgoraChatWidget {
        }
     }
 }
-
-extension AgoraChatWidget: AgoraEduUserHandler {
-    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        if let userInfo = list.first(where: {$0.isSelf == true}) {
-            self.chatView.selfHasPermission = userInfo.enableChat
-        }
-    }
-}
