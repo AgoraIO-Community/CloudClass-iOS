@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol GiftViewDelegate <NSObject>
 
 - (void)sendGift:(GiftCellView*)giftView;
+- (void)giftViewHidden;
 
 @end
 

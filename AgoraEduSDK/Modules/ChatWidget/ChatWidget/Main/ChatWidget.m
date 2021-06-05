@@ -282,6 +282,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 - (void)sendGiftAction
 {
     self.giftView.hidden = NO;
+    self.inputField.enabled = NO;
 }
 
 - (void)emojiButtonAction
@@ -469,6 +470,11 @@ static const NSString* kChatRoomId = @"chatroomId";
     if(giftView) {
         [self.chatManager sendGiftMsg:giftView.giftType];
     }
+}
+
+- (void)giftViewHidden
+{
+    [self mutedStateDidChanged];
 }
 
 @end

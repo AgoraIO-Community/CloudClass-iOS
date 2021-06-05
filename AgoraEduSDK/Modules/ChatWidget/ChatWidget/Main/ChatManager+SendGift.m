@@ -16,6 +16,9 @@ const static NSString* kRoomUuid = @"roomUuid";
 
 - (void)sendGiftMsg:(GiftType)aGiftType
 {
+    if(self.isMuted || self.isAllMuted){
+        return;
+    }
     NSNumber* credit = [[GiftCellView giftCredits] objectAtIndex:aGiftType];
     NSString* des = [[GiftCellView giftDescriptions] objectAtIndex:aGiftType];
     NSString* url = [[GiftCellView giftUrls] objectAtIndex:aGiftType];
