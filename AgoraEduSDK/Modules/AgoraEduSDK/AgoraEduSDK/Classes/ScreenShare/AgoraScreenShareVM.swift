@@ -60,7 +60,8 @@ public class AgoraScreenShareVM: AgoraBaseVM {
             
             // 如果是屏幕分享的RTC流变化才处理
             if let rteStream = rteStreams.first(where: {$0.streamUuid == streamUuid}), rteStream.sourceType == .screen {
-                
+                 
+                self.screenRTCState = rtcState
                 self.updateScreenShareState(successBlock: successBlock, failureBlock: failureBlock)
             }
         }, failure: { [weak self] (error) in

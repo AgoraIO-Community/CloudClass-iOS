@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSNumber *duration;
 // 白板区域
 @property (nonatomic, copy) NSString *boardRegion;
-
+// 用户自定义属性
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> * userProperties;
 
 - (instancetype)initWithUserName:(NSString *)userName
@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                      boardRegion:(NSString *_Nullable)boardRegion
-                  userProperties:(NSDictionary * _Nullable)userProperties;
+                  userProperties:(NSDictionary<NSString *, NSString *> * _Nullable)userProperties;
 @end
 
 // 聊天翻译

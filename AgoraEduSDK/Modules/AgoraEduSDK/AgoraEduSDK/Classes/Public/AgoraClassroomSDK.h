@@ -31,9 +31,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)configCoursewares:(NSArray<AgoraEduCourseware *> *)coursewares;
 // 下载白板课件
 + (void)downloadCoursewares:(id<AgoraEduCoursewareDelegate> _Nullable)delegate;
-// 注册容器App
+// 注册容器App， ExtApp更倾向于独立的模块， 不太和外部其他UI交互
 + (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)apps;
-
+// 注册组件， Widget倾向于UI层的一个独立组件，会和外部其他UI交互。
 + (void)registerWidgets:(NSArray<AgoraWidgetConfiguration *> *)widgets;
 
 + (NSString *)version;

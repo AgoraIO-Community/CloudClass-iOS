@@ -167,8 +167,17 @@
 }
 
 #pragma mark AgoraRTESyncRoomSessionProtocol
-- (void)onRoomUpdateFrom:(AgoraRTESyncRoomModel *)originalRoom to:(AgoraRTESyncRoomModel *)currentRoom cause:(NSDictionary * _Nullable)cause {
+- (void)onRoomUpdateFrom:(AgoraRTESyncRoomModel *)originalRoom
+                      to:(AgoraRTESyncRoomModel *)currentRoom
+                   model:(id)model {
 
+    AgoraRTESyncRoomPropertiesModel *propertiesModel = nil;
+    NSDictionary *cause = nil;
+    if ([model isKindOfClass:AgoraRTESyncRoomPropertiesModel.class]) {
+        propertiesModel = model;
+        cause = propertiesModel.cause;
+    }
+    
     // check room state
     AgoraRTEClassroom *_originalRoom = [originalRoom mapAgoraRTEClassroom:self.syncRoomSession.users.count];
     AgoraRTEClassroom *_currentRoom = [currentRoom mapAgoraRTEClassroom:self.syncRoomSession.users.count];
@@ -195,10 +204,10 @@
         }
     }
     
-    if (![_originalRoom.roomProperties yy_modelIsEqual:_currentRoom.roomProperties]) {
+    if (propertiesModel != nil) {
         
-        if ([self.roomDelegate respondsToSelector:@selector(classroomPropertyUpdated:cause:)]) {
-            [self.roomDelegate classroomPropertyUpdated:_currentRoom cause:cause];
+        if ([self.roomDelegate respondsToSelector:@selector(classroomPropertyUpdated:classroom:cause:operatorUser:)]) {
+            [self.roomDelegate classroomPropertyUpdated:propertiesModel.changeProperties classroom:_currentRoom cause:cause operatorUser:propertiesModel.operator];
         }
     }
 }
@@ -237,7 +246,10 @@
     }
     
 }
-- (void)onRemoteUserUpdateFrom:(AgoraRTESyncUserModel *)originalUser to:(AgoraRTESyncUserModel *)currentUser {
+
+- (void)onRemoteUserUpdateFrom:(AgoraRTESyncUserModel *)originalUser
+                            to:(AgoraRTESyncUserModel *)currentUser
+                         model:(AgoraRTEChannelMsgUsersProperty *)model {
     
     AgoraRTEClassroom *room = [self eduClassroom];
     
@@ -252,8 +264,8 @@
     
     if(![originalUser.userProperties yy_modelIsEqual: currentUser.userProperties]) {
         NSArray<AgoraRTEUser *> *events = [self eduUsers:@[currentUser]];
-        if ([self.roomDelegate respondsToSelector:@selector(classroom:remoteUserPropertyUpdated:cause:)]) {
-            [self.roomDelegate classroom:room remoteUserPropertyUpdated:events.firstObject cause:currentUser.cause];
+        if ([self.roomDelegate respondsToSelector:@selector(classroom:remoteUserPropertyUpdated:user:cause:operatorUser:)]) {
+            [self.roomDelegate classroom:room remoteUserPropertyUpdated:model.changeProperties user:events.firstObject cause:model.cause operatorUser:model.operator];
         }
     }
 }
@@ -269,7 +281,10 @@
         }
     }
 }
-- (void)onLocalUserUpdateFrom:(AgoraRTESyncUserModel *)originalUser to:(AgoraRTESyncUserModel *)currentUser {
+
+- (void)onLocalUserUpdateFrom:(AgoraRTESyncUserModel *)originalUser
+                            to:(AgoraRTESyncUserModel *)currentUser
+                         model:(id)model {
     
     AgoraRTEClassroom *room = [self eduClassroom];
     [AgoraRTELogService logMessageWithDescribe:@"MessageHandle onLocalUserUpdateFrom:" message:@{@"roomUuid":(room != nil && room.roomInfo != nil) ? AgoraRTENoNullString(room.roomInfo.roomUuid) : @"nil", @"originalUser":originalUser == nil ? @"nil" : originalUser, @"currentUser":currentUser == nil ? @"nil" : currentUser}];
@@ -281,10 +296,11 @@
         }
     }
     
-    if(![originalUser.userProperties yy_modelIsEqual: currentUser.userProperties]) {
+    if ([model isKindOfClass:AgoraRTEChannelMsgUsersProperty.class]) {
+        AgoraRTEChannelMsgUsersProperty *propertyModel = (AgoraRTEChannelMsgUsersProperty*)model;
         NSArray<AgoraRTEUser *> *events = [self eduUsers:@[currentUser]];
-        if ([self.userDelegate respondsToSelector:@selector(localUserPropertyUpdated:cause:)]) {
-            [self.userDelegate localUserPropertyUpdated:events.firstObject cause:currentUser.cause];
+        if ([self.userDelegate respondsToSelector:@selector(localUserPropertyUpdated:user:cause:operatorUser:)]) {
+            [self.userDelegate localUserPropertyUpdated:propertyModel.changeProperties user:events.firstObject cause:propertyModel.cause operatorUser:propertyModel.operator];
         }
     }
 }

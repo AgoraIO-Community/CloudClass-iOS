@@ -134,7 +134,7 @@ static AgoraClassroomSDK *manager = nil;
     [AgoraHTTPManager getConfig:roomConfig
                         success:^(AgoraConfigModel * _Nonnull model) {
         // TODO: switch to release url
-        NSString *hostV2 = @"https://test-rest-argus.bj2.agoralab.co/v2/report";
+        NSString *hostV2 = @"https://rest-argus-ad.agoralab.co";
         
         AgoraReportorContextV2 *contextV2 = [[AgoraReportorContextV2 alloc] initWithSource:@"apaas"
                                                                                       host:hostV2

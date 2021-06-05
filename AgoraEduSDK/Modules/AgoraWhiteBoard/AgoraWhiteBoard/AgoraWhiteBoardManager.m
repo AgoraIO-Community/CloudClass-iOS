@@ -34,7 +34,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     self = [super init];
     if (self) {
         self.isWritable = YES;
-        self.scenePath = @"";
+        self.boardScenePath = @"";
         
         if (@available(iOS 11.0, *)) {
             // 在初始化 sdk 时，配置 PPTParams 的 scheme，保证与此处传入的 scheme 一致。
@@ -409,10 +409,30 @@ The RoomState property in the room will trigger this callback when it changes.
     }
     
     WhiteSceneState *sceneState = self.room.sceneState;
-    if (sceneState != NULL && ![sceneState.scenePath isEqualToString:self.boardScenePath]) {
-        self.boardScenePath = sceneState.scenePath;
-        if ([self.delegate respondsToSelector:@selector(onWhiteBoardSceneChanged:)]) {
-            [self.delegate onWhiteBoardSceneChanged:self.boardScenePath];
+    if (sceneState != NULL) {
+        
+        BOOL isEqualScenePath = NO;
+        if ([sceneState.scenePath isEqualToString:self.boardScenePath]) {
+            isEqualScenePath = YES;
+        } else {
+            // 不等于的时候 要判断前面的path是否一样
+            NSArray<NSString *> *boardPaths1 =  [self.boardScenePath componentsSeparatedByString:@"/"];
+            NSArray<NSString *> *boardPaths2 =  [sceneState.scenePath componentsSeparatedByString:@"/"];
+            if (boardPaths1.count >= 2 &&
+                boardPaths2.count >= 2) {
+                NSString *path1 = [NSString stringWithFormat:@"%@%@", boardPaths1[0], boardPaths1[1]];
+                NSString *path2 = [NSString stringWithFormat:@"%@%@", boardPaths2[0], boardPaths2[1]];
+                if ([path1 isEqualToString:path2]) {
+                    isEqualScenePath = YES;
+                }
+            }
+        }
+
+        if (!isEqualScenePath) {
+            self.boardScenePath = sceneState.scenePath;
+            if ([self.delegate respondsToSelector:@selector(onWhiteBoardSceneChanged:)]) {
+                [self.delegate onWhiteBoardSceneChanged:self.boardScenePath];
+            }
         }
     }
     

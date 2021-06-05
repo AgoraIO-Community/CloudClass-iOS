@@ -11,6 +11,9 @@
 #import "ApaasUser.pbobjc.h"
 #import <EduSDK/AgoraRTCManager.h>
 
+#define FlexPropsKey @"flexProps"
+#define FlexPropsCauseDataKey @"data"
+
 @interface AgoraBaseViewController () <AgoraRTEManagerDelegate,
                                        AgoraRTEClassroomDelegate,
                                        AgoraRTEStudentDelegate,
@@ -178,6 +181,7 @@
         [ApaasReporterWrapper localUserJoin];
         
         [manager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
+            [weakself flexRoomPropsInitialize:room];
             [weakself updateExtApps:room];
             [weakself.widgetsController updateRoomProperties:room.roomProperties];
             
@@ -474,12 +478,19 @@ connectionStateChanged:(AgoraRTEConnectionState)state {
     }
 }
 
-- (void)classroomPropertyUpdated:(AgoraRTEClassroom *)classroom
-                           cause:(AgoraRTEObject *)cause {
+- (void)classroomPropertyUpdated:(NSDictionary *)changedProperties
+                       classroom:(AgoraRTEClassroom *)classroom
+                           cause:(NSDictionary * _Nullable)cause
+                    operatorUser:(AgoraRTEBaseUser *)operatorUser {
     [self updateExtApps:classroom];
-    
     [self.screenShareController updateScreenSelectedProperties:cause];
+
     [self.widgetsController updateRoomProperties:classroom.roomProperties];
+        
+    [self flexRoomPropsChanged:changedProperties
+                     classroom:classroom
+                         cause:cause
+                  operatorUser:operatorUser];
 }
 
 // message
@@ -545,8 +556,10 @@ networkQualityChanged:(AgoraRTENetworkQuality)quality
 }
 
 - (void)classroom:(AgoraRTEClassroom *)classroom
-remoteUserPropertyUpdated:(AgoraRTEUser *)user
-            cause:(NSDictionary *)cause {
+remoteUserPropertyUpdated:(NSDictionary *)changedProperties
+             user:(AgoraRTEUser *)user
+            cause:(NSDictionary * _Nullable)cause
+     operatorUser:(AgoraRTEBaseUser *)operatorUser {
     [self.deviceController updateDeviceStateWithUser:user cause:cause];
     
     AgoraWEAK(self);
@@ -563,6 +576,11 @@ remoteUserPropertyUpdated:(AgoraRTEUser *)user
                                    muteChat:muteChat];
         [weakself updateAllList];
     }];
+    
+    [self flexUserPropsChanged:changedProperties
+                          user:user
+                         cause:cause
+                  operatorUser:operatorUser];
 }
 
 - (void)classroom:(AgoraRTEClassroom * _Nonnull)classroom
@@ -664,9 +682,10 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     // 没有单禁音视频
 }
 
-- (void)localUserPropertyUpdated:(AgoraRTEUser*)user
-                           cause:(NSDictionary * _Nullable)cause {
-//    [self.deviceController updateDeviceStateWithUser:user cause:cause];
+- (void)localUserPropertyUpdated:(NSDictionary *)changedProperties
+                            user:(AgoraRTEUser *)user
+                           cause:(NSDictionary * _Nullable)cause
+                    operatorUser:(AgoraRTEBaseUser *)operatorUser {
 
     AgoraWEAK(self);
     [self.chatVM updateUserChat:user cause:cause
@@ -681,6 +700,11 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
                                    muteChat:muteChat];
         [weakself updateAllList];
     }];
+    
+    [self flexUserPropsChanged:changedProperties
+                          user:user
+                         cause:cause
+                  operatorUser:operatorUser];
 }
 
 #pragma mark - AgoraRTEManagerDelegate
@@ -848,6 +872,68 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     }
     if ([self respondsToSelector:@selector(onUpdateCoHostList:)]) {
         [self onUpdateCoHostList:self.userVM.kitCoHostInfos];
+    }
+}
+
+#pragma mark - FlexPropsChanged
+- (void)flexUserPropsChanged:(NSDictionary *)changedProperties
+                        user:(AgoraRTEUser *)user
+                       cause:(NSDictionary * _Nullable)cause
+                operatorUser:(AgoraRTEBaseUser *)operatorUser {
+    
+    // 确认properties 里面是不是flex
+    if ([self.userVM isFlexPropsChangedWithCause:cause]) {
+        if ([self respondsToSelector:@selector(onFlexUserPropertiesChanged:properties:cause:fromUser:operatorUser:)]) {
+            AgoraEduContextUserInfo *baseUserInfo = [self.userVM getContextBaseUserInfo:operatorUser];
+            AgoraEduContextUserDetailInfo *detailUserInfo = [self.userVM getContextDetailUserInfo:user];
+            NSDictionary *fixChangedProperties = [self fixFlexPropsChangedPropertyKeys:changedProperties];
+            
+            [self onFlexUserPropertiesChanged:fixChangedProperties
+                                   properties:user.userProperties[FlexPropsKey]
+                                        cause:cause[FlexPropsCauseDataKey]
+                                     fromUser:detailUserInfo
+                                 operatorUser:baseUserInfo];
+        }
+    }
+}
+- (NSDictionary *)fixFlexPropsChangedPropertyKeys:(NSDictionary *)changedProperties {
+    NSMutableDictionary *mapChangedProperties = [NSMutableDictionary dictionary];
+    for (NSString *key in changedProperties.allKeys) {
+        NSString *subString = [NSString stringWithFormat:@"%@.", FlexPropsKey];
+        if (key.length <= subString.length) {
+            continue;
+        }
+        NSString *newKey = [key substringFromIndex:subString.length];
+        [mapChangedProperties setValue:changedProperties[key] forKey:newKey];
+    }
+    return mapChangedProperties;
+}
+- (void)flexRoomPropsChanged:(NSDictionary *)changedProperties
+                   classroom:(AgoraRTEClassroom *)classroom
+                       cause:(NSDictionary * _Nullable)cause
+                operatorUser:(AgoraRTEBaseUser *)operatorUser {
+    
+    // 确认properties 里面是不是flex
+    if ([self.userVM isFlexPropsChangedWithCause:cause]) {
+        if ([self respondsToSelector:@selector(onFlexRoomPropertiesChanged:properties:cause:operatorUser:)]) {
+
+            AgoraEduContextUserInfo *baseUserInfo = [self.userVM getContextBaseUserInfo:operatorUser];
+            NSDictionary *fixChangedProperties = [self fixFlexPropsChangedPropertyKeys:changedProperties];
+            [self onFlexRoomPropertiesChanged:fixChangedProperties
+                                   properties:classroom.roomProperties[FlexPropsKey]
+                                        cause:cause[FlexPropsCauseDataKey]
+                                 operatorUser:baseUserInfo];
+        }
+    }
+}
+- (void)flexRoomPropsInitialize:(AgoraRTEClassroom *)classroom {
+    
+    if (classroom.roomProperties == nil || classroom.roomProperties[FlexPropsKey] == nil) {
+        return;
+    }
+    NSDictionary *properties = classroom.roomProperties[FlexPropsKey];
+    if ([self respondsToSelector:@selector(onFlexRoomPropertiesInitialize:)]) {
+        [self onFlexRoomPropertiesInitialize:properties];
     }
 }
 

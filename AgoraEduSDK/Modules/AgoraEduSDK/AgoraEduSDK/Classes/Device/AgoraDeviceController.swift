@@ -247,6 +247,6 @@ extension AgoraDeviceController: AgoraEduDeviceContext {
     }
     
     public func registerDeviceEventHandler(_ handler: AgoraEduDeviceHandler) {
-        eventDispatcher.register(object: handler)
+        eventDispatcher.register(event: .device(object: handler))
     }
 }

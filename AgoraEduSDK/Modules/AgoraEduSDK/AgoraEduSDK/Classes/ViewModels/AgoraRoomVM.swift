@@ -300,5 +300,42 @@ private extension AgoraRoomVM {
     }
 }
 
+// HTTP
+extension AgoraRoomVM {
+    public func updateRoomProperties(_ properties: [String: String],
+                                     cause: [String: String]?,
+                                     successBlock: @escaping () -> Void,
+                                     failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
 
+        let baseURL = AgoraHTTPManager.getBaseURL()
+        var url = "\(baseURL)/edu/apps/\(config.appId)/v2/rooms/\(config.roomUuid)/properties"
+        let headers = AgoraHTTPManager.headers(withUId: config.userUuid, userToken: "", token: config.token)
+        var parameters = [String: Any]()
+        parameters["properties"] = properties
+        if let causeParameters = cause {
+            parameters["cause"] = causeParameters
+        }
+
+        AgoraHTTPManager.fetchDispatch(.put,
+                                       url: url,
+                                       parameters: parameters,
+                                       headers: headers,
+                                       parseClass: AgoraBaseModel.self) { [weak self] (any) in
+            guard let `self` = self else {
+                return
+            }
+
+            if let model = any as? AgoraBaseModel, model.code == 0 {
+                successBlock()
+            } else {
+//                failureBlock("network error")
+            }
+            
+        } failure: {[weak self] (error, code) in
+            if let `self` = self {
+                failureBlock(self.kitError(error))
+            }
+        }
+    }
+}
 

@@ -31,18 +31,32 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onSetNetworkQuality:(AgoraEduContextNetworkQuality)quality;
 - (void)onSetConnectionState:(AgoraEduContextConnectionState)state;
 - (void)onShowErrorInfo:(AgoraEduContextError *)error;
+- (void)onFlexRoomPropertiesInitialize:(NSDictionary *) properties;
+- (void)onFlexRoomPropertiesChanged:(NSDictionary *)changedProperties
+                         properties:(NSDictionary *)properties
+                              cause:(NSDictionary *)cause
+                       operatorUser:(AgoraEduContextUserInfo *)operatorUser;
 
 // user
 - (void)onUpdateUserList:(NSArray<AgoraEduContextUserDetailInfo*> *)list;
 - (void)onUpdateCoHostList:(NSArray<AgoraEduContextUserDetailInfo*> *)list;
 - (void)onKickedOut;
-- (void)onUpdateAudioVolumeIndication:(NSInteger)value streamUuid:(NSString *)streamUuid;
+- (void)onUpdateAudioVolumeIndication:(NSInteger)value
+                           streamUuid:(NSString *)streamUuid;
 - (void)onShowUserTips:(NSString *)message;
+- (void)onFlexUserPropertiesChanged:(NSDictionary *)changedProperties
+                         properties:(NSDictionary *)properties
+                              cause:(NSDictionary *)cause
+                           fromUser:(AgoraEduContextUserDetailInfo *)fromUser
+                       operatorUser:(AgoraEduContextUserInfo *)operatorUser;
 
 // chat
 - (void)onAddRoomMessage:(AgoraEduContextChatInfo *)chatInfo;
 - (void)onAddConversationMessage:(AgoraEduContextChatInfo *)chatInfo;
 - (void)updateRoomChatState:(BOOL)muteChat;
+- (void)onLocalChatState:(BOOL)muteChat
+                          to:(AgoraEduContextUserInfo *)userInfo
+                          by:(AgoraEduContextUserInfo *)operator;
 - (void)updateLocalChatState:(BOOL)muteChat
                           to:(AgoraEduContextUserInfo *)userInfo
                           by:(AgoraEduContextUserInfo *)operator;
@@ -89,8 +103,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)registerWidgets:(NSArray<AgoraWidgetConfiguration *> *)widgets;
 
-- (void)classroomPropertyUpdated:(AgoraRTEClassroom *)classroom
-                           cause:(AgoraRTEObject *)cause;
+- (void)classroomPropertyUpdated:(NSDictionary *)changedProperties
+                       classroom:(AgoraRTEClassroom *)classroom
+                           cause:(NSDictionary * _Nullable)cause
+                    operatorUser:(AgoraRTEBaseUser *)operatorUser;
 
 // init controllers
 - (void)initChildren;

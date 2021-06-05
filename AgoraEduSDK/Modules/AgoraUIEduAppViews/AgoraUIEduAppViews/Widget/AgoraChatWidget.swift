@@ -11,7 +11,7 @@ import AgoraUIBaseViews
 import AgoraWidget
 import AgoraEduContext
 
-public class AgoraChatWidget: AgoraEduWidget, AgoraEduMessageHandler {
+public class AgoraChatWidget: AgoraEduWidget, AgoraEduMessageHandler, AgoraEduUserHandler {
     // 距离上面的值， 等于navView的高度
     var renderTop: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 44 : 34
     
@@ -118,8 +118,7 @@ public class AgoraChatWidget: AgoraEduWidget, AgoraEduMessageHandler {
         }
         
         AgoraUtils.showToast(message: info.message)
-        
-        chatView.peerHasPermissiom = allow
+        chatView.selfHasPermission = allow
     }
     
     @objc public func onUpdateRemoteChatPermission(_ allow: Bool,
@@ -140,6 +139,12 @@ public class AgoraChatWidget: AgoraEduWidget, AgoraEduMessageHandler {
         }
         
         AgoraUtils.showToast(message: info.message)
+    }
+    
+    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
+        if let userInfo = list.first(where: {$0.isSelf == true}) {
+            self.chatView.selfHasPermission = userInfo.enableChat
+        }
     }
 }
 
@@ -188,6 +193,7 @@ private extension AgoraChatWidget {
     
     func initData() {
         contextPool?.chat.registerEventHandler(self)
+        contextPool?.user.registerEventHandler(self)
         chatView.context = contextPool?.chat
         
         initChatViewBehavior()
@@ -258,5 +264,13 @@ private extension AgoraChatWidget {
        } else {
            return "you were allowed to chat by \(operatorUser)."
        }
+    }
+}
+
+extension AgoraChatWidget: AgoraEduUserHandler {
+    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
+        if let userInfo = list.first(where: {$0.isSelf == true}) {
+            self.chatView.selfHasPermission = userInfo.enableChat
+        }
     }
 }

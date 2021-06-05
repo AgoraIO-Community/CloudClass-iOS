@@ -36,6 +36,26 @@ struct AgoraStudentInfo {
     // 白板状态
     fileprivate var usersBoardGranted: [String] = []
     
+    public func getContextBaseUserInfo(_ rteUser: AgoraRTEBaseUser) -> AgoraEduContextUserInfo {
+        
+        if let kitUserInfo = self.kitUserInfos.first(where: {$0.user.userUuid == rteUser.userUuid}) {
+            return kitUserInfo.user
+        }
+        
+        let userInfo = AgoraEduContextUserInfo()
+        userInfo.role = AgoraEduContextUserRole(rawValue: rteUser.role.rawValue) ?? .student
+        userInfo.userUuid = rteUser.userUuid
+        userInfo.userName = rteUser.userName
+        return userInfo
+    }
+    public func getContextDetailUserInfo(_ rteUser: AgoraRTEUser) -> AgoraEduContextUserDetailInfo {
+        if let kitUserInfo = self.kitUserInfos.first(where: {$0.user.userUuid == rteUser.userUuid}) {
+            return kitUserInfo
+        }
+        
+        return self.getKitUserInfo(rteUser, nil)
+    }
+    
     // 获取用户设备状态block
     public var userDeviceStateBlock: ((_ deviceType: AgoraDeviceStateType,
                                        _ rteUser: AgoraRTEUser,
@@ -744,7 +764,14 @@ extension AgoraUserVM {
         kitUserInfo.microState = self.getUserDeviceState(.microphone,
                                                          rteUser: rteUser,
                                                          rteStream: rteStream)
-        kitUserInfo.enableChat = rteUser.isChatAllowed
+        
+        kitUserInfo.enableChat = true
+        if let userProperties = rteUser.userProperties as? [String: Any],
+           let mute = userProperties["mute"] as? [String: Any],
+           let muteChat = mute["muteChat"] as? Int {
+            kitUserInfo.enableChat = muteChat == 0 ? true : false
+        }
+        
         if self.usersBoardGranted.contains(rteUser.userUuid) {
             kitUserInfo.boardGranted = true
         } else {
@@ -882,5 +909,59 @@ extension AgoraUserVM {
             }
         }
         return nil
+    }
+}
+
+// MARK: Flex Props
+extension AgoraUserVM {
+    // Property changed
+    public func isFlexPropsChanged(cause: Any?) -> Bool {
+        
+        guard let `cause` = cause as? Dictionary<String, Any>,
+              let cmd = cause["cmd"] as? Int,
+              let causeCmd = AgoraCauseType(rawValue: cmd),
+              causeCmd == .flexPropsChanged else {
+            return false
+        }
+        
+        return true
+    }
+    
+    public func updateUserProperties(_ userUuid: String,
+                                     properties: [String: String],
+                                     cause: [String: String]?,
+                                     successBlock: @escaping () -> Void,
+                                     failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
+        
+        let baseURL = AgoraHTTPManager.getBaseURL()
+        var url = "\(baseURL)/edu/apps/\(config.appId)/v2/rooms/\(config.roomUuid)/users/\(userUuid)/properties"
+  
+        let headers = AgoraHTTPManager.headers(withUId: config.userUuid, userToken: "", token: config.token)
+        var parameters = [String: Any]()
+        parameters["properties"] = properties
+        if let causeParameters = cause {
+            parameters["cause"] = causeParameters
+        }
+
+        AgoraHTTPManager.fetchDispatch(.put,
+                                       url: url,
+                                       parameters: parameters,
+                                       headers: headers,
+                                       parseClass: AgoraBaseModel.self) { [weak self] (any) in
+            guard let `self` = self else {
+                return
+            }
+
+            if let model = any as? AgoraBaseModel, model.code == 0 {
+                successBlock()
+            } else {
+//                failureBlock("network error")
+            }
+            
+        } failure: {[weak self] (error, code) in
+            if let `self` = self {
+                failureBlock(self.kitError(error))
+            }
+        }
     }
 }

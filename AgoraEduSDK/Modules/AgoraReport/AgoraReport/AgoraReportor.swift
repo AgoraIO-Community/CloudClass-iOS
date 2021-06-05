@@ -352,7 +352,7 @@ private extension AgoraReportor {
         
         let parameters: [String: Any] = ["id": eventId,
                                          "payload": payload,
-                                         "qos": 101,
+                                         "qos": 1,
                                          "sign": sign,
                                          "src": context.source,
                                          "ts": timestamp]

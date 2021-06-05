@@ -118,6 +118,14 @@ import AgoraEduContext
         // 判断是否上报
         self.rteStreamStates = rteStreamStates
         
+        if let deviceConfig = self.deviceConfig {
+            if deviceType == .camera && !deviceConfig.cameraEnabled {
+                return
+            } else if deviceType == .microphone && !deviceConfig.micEnabled {
+                return
+            }
+        }
+        
         // TODO：添加同步锁， 保证不上传多次
         AgoraEduManager.share().roomManager?.getLocalUser(success: { [weak self] (rteLocalUser) in
             
@@ -358,7 +366,7 @@ import AgoraEduContext
         
         self.deviceConfig?.cameraEnabled = enable
         self.updateDeviceState { [weak self] in
-            self?.updateDevices(camera: enable ? 0:2,
+            self?.updateDevices(camera: enable ? 1:2,
                                 micro: nil,
                                 speaker: nil,
                                 facing: nil) {
@@ -378,7 +386,7 @@ import AgoraEduContext
         self.deviceConfig?.micEnabled = enable
         self.updateDeviceState { [weak self] in
             self?.updateDevices(camera: nil,
-                                micro: enable ? 0:2,
+                                micro: enable ? 1:2,
                                 speaker: nil,
                                 facing: nil) {
                 successBlock()

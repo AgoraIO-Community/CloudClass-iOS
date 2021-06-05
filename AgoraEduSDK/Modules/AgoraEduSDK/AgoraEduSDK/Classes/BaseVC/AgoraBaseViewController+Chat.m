@@ -152,7 +152,7 @@
 // 事件监听
 - (void)registerEventHandler:(id<AgoraEduMessageHandler>)handler {
     //添加数组里面
-    [self.eventDispatcher registerWithObject:handler];
+    [self.eventDispatcher registerWithObject:handler eventType:AgoraUIEventTypeMessage];
 }
 @end
 

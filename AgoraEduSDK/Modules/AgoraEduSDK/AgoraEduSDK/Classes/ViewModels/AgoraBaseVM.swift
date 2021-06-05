@@ -21,8 +21,13 @@ enum AgoraCauseType: Int, Decodable {
     case streamGroupsAdd = 600
     case streamGroupsDel = 601
 
+    // 私聊
     case peerChatEnable = 6
+    
+    // flexProps
+    case flexPropsChanged = 8
 
+    // 带标注的屏幕分享 选择的tab
     case screenSelectChanged = 1301
 
     case reward = 1101

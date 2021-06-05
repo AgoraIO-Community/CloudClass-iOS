@@ -64,9 +64,15 @@ import AgoraUIBaseViews
         }
     }
     
-    public var peerHasPermissiom: Bool = false {
+    public var roomHasPermissiom: Bool = false {
         didSet {
-            checkPeerHasPermission(peerHasPermissiom)
+            checkPeerHasPermission()
+        }
+    }
+    
+    public var selfHasPermission: Bool = false {
+        didSet {
+            checkPeerHasPermission()
         }
     }
     
@@ -107,7 +113,7 @@ import AgoraUIBaseViews
     private var chatType: ChatType = .roomMessage {
         didSet {
             updateChatTableView()
-            checkPeerHasPermission(peerHasPermissiom)
+            checkPeerHasPermission()
         }
     }
     
@@ -709,12 +715,12 @@ private extension AgoraUIChatView {
         }
     }
     
-    func checkPeerHasPermission(_ permission: Bool) {
+    func checkPeerHasPermission() {
         guard chatType == .roomMessage else {
             let sendBtn = sendView.viewWithTag(ButtonTag) as? AgoraBaseUIButton
+            sendBtn?.backgroundColor = UIColor(red: 0.21, green: 0.48, blue: 0.96, alpha: 1)
             sendBtn?.isEnabled = true
             textField?.isUserInteractionEnabled = true
-            
             
             textField?.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatPlaceholderText"),
                                                                   attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125/255.0,
@@ -725,12 +731,17 @@ private extension AgoraUIChatView {
             return
         }
         
-        textField?.isUserInteractionEnabled = permission
-        chatPermissionStateView.isHidden = permission
+        textField?.isUserInteractionEnabled = (roomHasPermissiom && selfHasPermission)
+        chatPermissionStateView.isHidden = roomHasPermissiom
         let sendBtn = sendView.viewWithTag(ButtonTag) as? AgoraBaseUIButton
-        sendBtn?.isEnabled = permission
+        sendBtn?.isEnabled = (roomHasPermissiom || selfHasPermission)
+        if (roomHasPermissiom && selfHasPermission) {
+            sendBtn?.backgroundColor = UIColor(red: 0.21, green: 0.48, blue: 0.96, alpha: 1)
+        } else {
+            sendBtn?.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.93, alpha: 1)
+        }
         
-        if permission {
+        if (roomHasPermissiom && selfHasPermission) {
             textField?.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatPlaceholderText"),
                                                                   attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125/255.0,
                                                                                                                               green: 135/255.0,
@@ -932,6 +943,6 @@ public extension AgoraUIChatView {
     }
     
     func onUpdateChatPermission(_ allow: Bool) {
-        peerHasPermissiom = allow
+        roomHasPermissiom = allow
     }
 }

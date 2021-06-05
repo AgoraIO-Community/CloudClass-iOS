@@ -41,6 +41,20 @@
     [self.eventDispatcher onShowErrorInfo:error];
 }
 
+- (void)onFlexRoomPropertiesInitialize:(NSDictionary *)properties {
+    [self.eventDispatcher onFlexRoomPropertiesInitialize:properties];
+}
+
+- (void)onFlexRoomPropertiesChanged:(NSDictionary *)changedProperties
+                         properties:(NSDictionary *)properties
+                              cause:(NSDictionary *)cause
+                       operatorUser:(AgoraEduContextUserInfo *)operatorUser {
+    [self.eventDispatcher onFlexRoomPropertiesChanged:changedProperties
+                                           properties:properties
+                                                cause:cause
+                                             operator:operatorUser];
+}
+
 #pragma mark AgoraEduRoomContext
 - (AgoraEduContextRoomInfo *)getRoomInfo {
     return self.roomVM.roomInfo;
@@ -57,7 +71,13 @@
         [weakSelf.eventDispatcher onShowErrorInfo:eduError];
     }];
 }
-
+- (void)updateFlexRoomProperties:(NSDictionary<NSString *,NSString *> *)properties
+                           cause:(NSDictionary<NSString *,NSString *> *)cause {
+    [self.roomVM updateRoomProperties:properties
+                                cause:cause
+                         successBlock:^{}
+                         failureBlock:^(AgoraEduContextError * _Nonnull error) {}];
+}
 - (void)leaveRoom {
     // Report
     [ApaasReporterWrapper localUserLeave];
@@ -77,6 +97,6 @@
 
 // 事件监听
 - (void)registerEventHandler:(id<AgoraEduRoomHandler>)handler {
-    [self.eventDispatcher registerWithObject:handler];
+    [self.eventDispatcher registerWithObject:handler eventType:AgoraUIEventTypeRoom];
 }
 @end

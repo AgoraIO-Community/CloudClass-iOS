@@ -65,9 +65,14 @@
 }
 
 #pragma mark AgoraRTEClassroomDelegate
-- (void)classroomPropertyUpdated:(AgoraRTEClassroom *)classroom cause:(AgoraRTEObject *)cause {
-    [super classroomPropertyUpdated:classroom
-                              cause:cause];
+- (void)classroomPropertyUpdated:(NSDictionary *)changedProperties
+                       classroom:(AgoraRTEClassroom *)classroom
+                           cause:(NSDictionary * _Nullable)cause
+                    operatorUser:(AgoraRTEBaseUser *)operatorUser {
+    [super classroomPropertyUpdated:changedProperties
+                          classroom:classroom
+                              cause:cause
+                       operatorUser:operatorUser];
     
     AgoraWEAK(self);
     NSDictionary<NSString*, AgoraEduContextUserDetailInfo*> *userDetailInfos = [self.userVM getChangedRewardsWithCause:cause];

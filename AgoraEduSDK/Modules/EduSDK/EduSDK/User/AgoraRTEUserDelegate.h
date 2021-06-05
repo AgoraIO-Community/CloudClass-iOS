@@ -48,7 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
 // state
 - (void)localUserStateUpdated:(AgoraRTEUserEvent*)event changeType:(AgoraRTEUserStateChangeType)changeType;
 // property
-- (void)localUserPropertyUpdated:(AgoraRTEUser*)user cause:(NSDictionary * _Nullable)cause;
+- (void)localUserPropertyUpdated:(NSDictionary *)changedProperties
+                            user:(AgoraRTEUser *)user
+                           cause:(NSDictionary * _Nullable)cause
+                    operatorUser:(AgoraRTEBaseUser *)operatorUser;
+
 @end
 
 @protocol AgoraRTEStudentDelegate <AgoraRTEUserDelegate>

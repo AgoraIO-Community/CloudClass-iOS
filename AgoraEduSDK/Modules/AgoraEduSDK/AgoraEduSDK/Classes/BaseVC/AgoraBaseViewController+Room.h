@@ -17,6 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)onShowClassTips:(NSString *)message;
 - (void)onSetNetworkQuality:(AgoraEduContextNetworkQuality)quality;
 - (void)onSetConnectionState:(AgoraEduContextConnectionState)state;
+- (void)onFlexRoomPropertiesInitialize:(NSDictionary *)properties;
+- (void)onFlexRoomPropertiesChanged:(NSDictionary *)changedProperties
+                         properties:(NSDictionary *)properties
+                              cause:(NSDictionary *)cause
+                       operatorUser:(AgoraEduContextUserInfo *)operatorUser;
 @end
 
 NS_ASSUME_NONNULL_END

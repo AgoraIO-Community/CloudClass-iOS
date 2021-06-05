@@ -35,9 +35,31 @@
     [self.eventDispatcher onShowUserTips:message];
 }
 
+- (void)onFlexUserPropertiesChanged:(NSDictionary *)changedProperties
+                         properties:(NSDictionary *)properties
+                              cause:(NSDictionary *)cause
+                           fromUser:(AgoraEduContextUserDetailInfo *)fromUser
+                       operatorUser:(AgoraEduContextUserInfo *)operatorUser {
+    [self.eventDispatcher onFlexUserPropertiesChanged:changedProperties
+                                           properties:properties
+                                                cause:cause
+                                             fromUser:fromUser
+                                             operator:operatorUser];
+}
+
 #pragma mark AgoraEduUserContext
 - (AgoraEduContextUserInfo *)getLocalUserInfo {
     return self.userVM.localBaseUserInfo;
+}
+
+- (void)updateFlexUserProperties:(NSString *)userUuid
+                      properties:(NSDictionary<NSString *,NSString *> *)properties
+                           cause:(NSDictionary<NSString *,NSString *> *)cause {
+    [self.userVM updateUserProperties:userUuid
+                           properties:properties
+                                cause:cause
+                         successBlock:^{}
+                         failureBlock:^(AgoraEduContextError * _Nonnull error) {}];
 }
 
 - (void)muteVideo:(BOOL)mute {
@@ -94,6 +116,6 @@
 }
 
 - (void)registerEventHandler:(id<AgoraEduUserHandler>)handler {
-    [self.eventDispatcher registerWithObject:handler];
+    [self.eventDispatcher registerWithObject:handler eventType:AgoraUIEventTypeUser];
 }
 @end

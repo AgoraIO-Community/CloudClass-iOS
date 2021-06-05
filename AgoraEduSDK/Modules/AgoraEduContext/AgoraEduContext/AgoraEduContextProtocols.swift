@@ -132,13 +132,30 @@ import AgoraWidget
     @objc optional func onUploadLogSuccess(_ logId: String)
     // 上课过程中，错误信息
     @objc optional func onShowErrorInfo(_ error: AgoraEduContextError)
-    
+
     @objc optional func onClassroomJoined()
+    
+    // 房间属性初始化
+    // properties：用户自定义全量房间属性
+    @objc optional func onFlexRoomPropertiesInitialize(_ properties: [String: Any])
+    // 房间属性变化
+    // properties：用户自定义全量房间属性
+    // server更新的时候operator为空
+    @objc optional func onFlexRoomPropertiesChanged(_ changedProperties: [String: Any],
+                                                    properties: [String: Any],
+                                                    cause: [String: Any]?,
+                                                    operator:AgoraEduContextUserInfo?)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
     // 房间信息
     func getRoomInfo() -> AgoraEduContextRoomInfo
+    // 更新自定义房间属性，如果没有就增加
+    // 支持path修改和整体修改
+    // properties: {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
+    // cause: 修改的原因，可为空
+    func updateFlexRoomProperties(_ properties:[String: String],
+                                  cause:[String: String]?)
     // 离开教室
     func leaveRoom()
     // 上传日志
@@ -235,12 +252,25 @@ import AgoraWidget
     @objc optional func onShowUserTips(_ message: String)
     // 收到奖励（自己或者其他学生）
     @objc optional func onShowUserReward(_ user: AgoraEduContextUserInfo)
+    // 人员属性变化
+    // properties：人员全量自定义属性信息返回
+    @objc optional func onFlexUserPropertiesChanged(_ changedProperties:[String : Any],
+                                                    properties: [String: Any],
+                                                    cause:[String : Any]?,
+                                                    fromUser:AgoraEduContextUserDetailInfo,
+                                                    operator:AgoraEduContextUserInfo?)
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
     // 获取本地用户信息
     func getLocalUserInfo() -> AgoraEduContextUserInfo
-    
+
+    // 人员属性变化
+    // 支持path修改和整体修改
+    // {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
+    func updateFlexUserProperties(_ userUuid: String,
+                                  properties: [String: String],
+                                  cause:[String: String]?)
     // mute本地视频
     func muteVideo(_ mute: Bool)
     // mute本地音频
@@ -302,26 +332,41 @@ import AgoraWidget
 
 // MARK: - Device
 @objc public protocol AgoraEduDeviceHandler: NSObjectProtocol {
+    // 摄像头开关的事件
     @objc optional func onCameraDeviceEnableChanged(enabled: Bool)
+    // 摄像头切换的事件
     @objc optional func onCameraFacingChanged(facing: EduContextCameraFacing)
+    // 麦克风开关的事件
     @objc optional func onMicDeviceEnabledChanged(enabled: Bool)
+    // 扬声器开启/关闭的事件
     @objc optional func onSpeakerEnabledChanged(enabled: Bool)
+    /* 设备设置相关消息
+     * 老师视频可能出现问题
+     */
     @objc optional func onDeviceTips(message: String)
 }
 
 @objc public protocol AgoraEduDeviceContext: NSObjectProtocol {
+    // 开关摄像头
     func setCameraDeviceEnable(enable: Bool)
+    // 切换前后摄像头
     func switchCameraFacing()
+    // 开关麦克风
     func setMicDeviceEnable(enable: Bool)
+    // 开启/关闭扬声器
     func setSpeakerEnable(enable: Bool)
-
     // 事件监听
     func registerDeviceEventHandler(_ handler: AgoraEduDeviceHandler)
 }
 
 @objc public protocol AgoraEduWidgetContext: AgoraWidgetProtocol {
+    // 创建组件
+    // info:组件配置信息
+    // contextPool:给组件传递实现了协议的接口对象
     func createWidget(info: AgoraWidgetInfo,
                       contextPool: AgoraEduContextPool) -> AgoraEduWidget
+
+    // 获取组件信息
     func getWidgetInfos() -> [AgoraWidgetInfo]?
     func getAgoraWidgetProperties(type: EduContextWidgetType) -> [String: Any]?
 }

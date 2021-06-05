@@ -72,16 +72,15 @@ class Agora1V1RenderUIController: AgoraRenderUIController {
         
         // view hide
         if fullScreen {
+            self.studentView.alpha = 1
+            self.teacherView.alpha = 1
             UIView.animate(withDuration: TimeInterval.agora_animation) {
                 self.studentView.alpha = 0
                 self.teacherView.alpha = 0
-            } completion: { (_) in
-                self.studentView.isHidden = true
-                self.teacherView.isHidden = true
             }
         } else {
-            self.studentView.isHidden = false
-            self.teacherView.isHidden = false
+            self.studentView.alpha = 0
+            self.teacherView.alpha = 0
             UIView.animate(withDuration: TimeInterval.agora_animation) {
                 self.studentView.alpha = 1
                 self.teacherView.alpha = 1
