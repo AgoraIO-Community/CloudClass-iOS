@@ -20,6 +20,8 @@ import AgoraUIEduBaseViews
         }
     }
     
+    public var downloadingCourseURL: String?
+    
     public weak var delegate: AgoraWhiteBoardStateDelegate?
     
     private func callDelegateFunc() {

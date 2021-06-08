@@ -98,6 +98,8 @@ class AgoraWhiteBoardUIController: NSObject, AgoraUIController, AgoraUIControlle
         containerView.addSubview(boardPageControl)
         containerView.addSubview(unfoldButton)
         
+        boardView.delegate = self
+        
         boardToolsView.backgroundColor = .white
         boardToolsView.didFoldCompletion = { [unowned self] (isFold) in
             guard isFold else {

@@ -69,9 +69,7 @@ static AgoraClassroomSDK *manager = nil;
 }
 
 + (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config
-                               delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate {
-    [AgoraEduManager.shareManager setLogConsoleState:AgoraLogConsoleStateOpen];
-    
+                               delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate {    
     AgoraManagerCache.share.classroomDelegate = delegate;
 
     // 校验

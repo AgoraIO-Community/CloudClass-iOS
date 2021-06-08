@@ -48,6 +48,7 @@ Pod::Spec.new do |s|
       "Frameworks/AgoraWhiteBoard.framework",
       "Frameworks/AgoraWidget.framework",
       "Frameworks/EduSDK.framework",
+      "Frameworks/AgoraLog.framework",
     ]
     cSpec.resource = "Frameworks/AgoraEduSDK.bundle"
   end

@@ -47,6 +47,32 @@ extension AgoraWhiteBoardUIController: AgoraToolsViewLineWidthSelected {
     }
 }
 
+extension AgoraWhiteBoardUIController: AgoraBoardViewDelegate {
+    func didCancelDownloadPressed() {
+        guard let url = boardState.downloadingCourseURL else {
+            return
+        }
+        
+        boardContext?.cancelDownload(url)
+    }
+    
+    func didCloseDownloadPressed() {
+        guard let url = boardState.downloadingCourseURL else {
+            return
+        }
+        
+        boardContext?.cancelDownload(url)
+    }
+    
+    func didRetryDownloadPressed() {
+        guard let url = boardState.downloadingCourseURL else {
+            return
+        }
+        
+        boardContext?.retryDownload(url)
+    }
+}
+
 // MARK: - Page control click
 extension AgoraWhiteBoardUIController: AgoraBoardPageControlDelegate {
     public func didFullScreenEvent(isFullScreen: Bool) {

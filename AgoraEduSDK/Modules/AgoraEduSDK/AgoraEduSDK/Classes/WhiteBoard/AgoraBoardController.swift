@@ -137,10 +137,6 @@ private extension AgoraBoardController {
         contentView.agora_equal_to_superView(attribute: .top)
         contentView.agora_equal_to_superView(attribute: .bottom)
         
-        if let view = boardView as? AgoraBoardView {
-            view.delegate = self
-        }
-        
         viewsEnable(false)
     }
 }
@@ -215,21 +211,6 @@ extension AgoraBoardController: AgoraEduWhiteBoardPageControlContext {
     
     public func registerPageControlEventHandler(_ handler: AgoraEduWhiteBoardPageControlHandler) {
         eventDispatcher.register(event: .whiteBoardPageControl(object: handler))
-    }
-}
-
-// MARK: - AgoraBoardViewDelegate
-extension AgoraBoardController: AgoraBoardViewDelegate {
-    public func didCancelDownloadPressed() {
-        download.stopAllTasks()
-    }
-    
-    public func didCloseDownloadPressed() {
-        download.stopAllTasks()
-    }
-    
-    public func didRetryDownloadPressed() {
-        download.reDownload(delegate: self)
     }
 }
 

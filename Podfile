@@ -36,6 +36,14 @@ def binaryPod
   pod 'ChatWidget', :path => 'AgoraEduSDK/Modules/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
 end
 
+def uiSourcePod
+  pod 'AgoraEduSDK', :path => 'AgoraEduSDK/AgoraEduSDK.podspec', :subspecs => ['Core']  
+
+  pod 'AgoraUIBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
+  pod 'AgoraUIEduBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['BINARY']
+  pod 'AgoraUIEduAppViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduAppViews/AgoraUIEduAppViews.podspec', :subspecs => ['BINARY']
+end
+
 workspace 'AgoraEducation.xcworkspace'
 install! 'cocoapods', :deterministic_uuids => false, :warn_for_unused_master_specs_repo => false
 
@@ -47,4 +55,5 @@ target 'AgoraEducation' do
 
   sourcePod
   #binaryPod
+  #uiSourcePod
 end
