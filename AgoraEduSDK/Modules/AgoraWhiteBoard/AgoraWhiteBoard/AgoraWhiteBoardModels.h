@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface AgoraWhiteBoardTaskModel : NSObject
-@property (nonatomic, strong, readonly) NSString *resourceName;
+//@property (nonatomic, strong, readonly) NSString *resourceName;
+@property (nonatomic, strong, readonly) NSString *resourceUuid;
 @property (nonatomic, strong, readonly) NSString *taskUuid;
 @property (nonatomic, strong, readonly) NSString *ext;
 @end
@@ -37,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface AgoraWhiteGlobalStateTaskModel : NSObject
-@property (nonatomic, strong) NSString *resourceName;
+@property (nonatomic, strong) NSString *resourceUuid;
 @property (nonatomic, strong) NSString *taskUuid;
 @property (nonatomic, strong) NSString *ext;
 @end

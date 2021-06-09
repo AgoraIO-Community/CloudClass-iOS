@@ -26,14 +26,17 @@ extension AgoraWhiteBoardUIController: AgoraEduWhiteBoardHandler {
     // progress 0-100
     @objc public func onSetDownloadProgress(_ url: String,
                                             progress: Float) {
+        boardState.downloadingCourseURL = url
         boardView.setDownloadProgress(progress: progress)
     }
     
     @objc public func onSetDownloadTimeOut(_ url: String) {
+        boardState.downloadingCourseURL = url
         boardView.downloadTimeOut()
     }
     
     @objc public func onSetDownloadComplete(_ url: String) {
+        boardState.downloadingCourseURL = url
         boardView.downloadComplete()
     }
     

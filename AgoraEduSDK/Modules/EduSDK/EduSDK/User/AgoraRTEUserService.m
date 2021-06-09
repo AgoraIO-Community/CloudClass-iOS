@@ -205,7 +205,6 @@ typedef NS_ENUM(NSUInteger, AgoraRTESyncStreamState) {
 }
 
 - (NSError * _Nullable)switchCamera {
-    
     int errCode = [AgoraRTCManager.shareManager switchCamera];
     if(errCode == 0) {
         return nil;
@@ -213,6 +212,12 @@ typedef NS_ENUM(NSUInteger, AgoraRTESyncStreamState) {
         NSError *error = [AgoraRTEErrorManager mediaError:errCode codeMsg:[AgoraRTCManager getErrorDescription:errCode] code:201];
         return error;
     }
+}
+- (int)setEnableSpeakerphone:(BOOL)enable {
+    return [AgoraRTCManager.shareManager setEnableSpeakerphone:enable];
+}
+- (BOOL)isSpeakerphoneEnabled {
+    return [AgoraRTCManager.shareManager isSpeakerphoneEnabled];
 }
 
 // stream

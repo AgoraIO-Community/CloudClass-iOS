@@ -8,7 +8,13 @@
 import UIKit
 import AgoraUIBaseViews
 
-@objc public class AgroaExtAppContainer: AgoraBaseUIView {
+@objc public class AgroaExtAppWrapper: NSObject {
+    @objc public class func getView() -> AgoraBaseUIView {
+        return AgroaExtAppContainer()
+    }
+}
+
+public class AgroaExtAppContainer: AgoraBaseUIView {
     public override func hitTest(_ point: CGPoint,
                           with event: UIEvent?) -> UIView? {
         for subView in subviews {

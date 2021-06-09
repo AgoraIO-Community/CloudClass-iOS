@@ -24,16 +24,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol AgoraRTESyncRoomSessionProtocol <NSObject>
 // classroom
-- (void)onRoomUpdateFrom:(id)originalRoom to:(id)currentRoom cause:(NSDictionary * _Nullable)cause;
+- (void)onRoomUpdateFrom:(AgoraRTESyncRoomModel *)originalRoom
+                      to:(AgoraRTESyncRoomModel *)currentRoom
+                   model:(id)model;
 
 // remote user
 - (void)onRemoteUserInit:(NSArray *)users;
 - (void)onRemoteUserInOut:(NSArray *)users state:(AgoraRTESessionState)state;
-- (void)onRemoteUserUpdateFrom:(id)originalUser to:(id)currentUser;
+- (void)onRemoteUserUpdateFrom:(id)originalUser
+                            to:(id)currentUser
+                         model:(AgoraRTEChannelMsgUsersProperty *)model;
 
 // local user
 - (void)onLocalUserInOut:(id)user state:(AgoraRTESessionState)state;
-- (void)onLocalUserUpdateFrom:(id)originalUser to:(id)currentUser;
+- (void)onLocalUserUpdateFrom:(id)originalUser
+                           to:(id)currentUser
+                        model:(id)model;
 
 // remote stream
 - (void)onRemoteStreamInit:(NSArray *)streams;

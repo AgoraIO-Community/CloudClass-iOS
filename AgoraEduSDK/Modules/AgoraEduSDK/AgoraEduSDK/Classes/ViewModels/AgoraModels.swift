@@ -8,6 +8,7 @@
 import Foundation
 import EduSDK
 
+
 @objc public enum AgoraChatLoadingState: Int {
     case none = 1, loading, success, failure
 }
@@ -23,6 +24,7 @@ import EduSDK
 }
 @objcMembers public class AgoraChatMessageInfoModel: NSObject {
     public var messageId: Int = 0
+    public var peerMessageId: String = ""
     public var message: String = ""
     public var type: AgoraChatMessageType = .text
     public var fromUser : AgoraChatUserInfoModel?

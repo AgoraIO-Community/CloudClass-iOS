@@ -7,108 +7,113 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		409D775881242698453EC1A6 /* Pods_AgoraEduContext.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E79F8A56FAE16C0C01C13A9A /* Pods_AgoraEduContext.framework */; };
-		783EF8A926299C38006082AC /* AgoraEduContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 783EF8A726299C38006082AC /* AgoraEduContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783EF8B326299C5C006082AC /* AgoraEduContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783EF8B026299C5C006082AC /* AgoraEduContext.swift */; };
-		783EF8B426299C5C006082AC /* AgoraEduContextProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783EF8B126299C5C006082AC /* AgoraEduContextProtocols.swift */; };
-		783EF8B526299C5C006082AC /* AgoraEduContextObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783EF8B226299C5C006082AC /* AgoraEduContextObjects.swift */; };
+		86485A2826479AD700E80613 /* AgoraEduContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 86485A2626479AD700E80613 /* AgoraEduContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		86485A3226479B6700E80613 /* AgoraEduContextObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86485A2E26479B6700E80613 /* AgoraEduContextObjects.swift */; };
+		86485A3326479B6700E80613 /* AgoraEduContextProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86485A2F26479B6700E80613 /* AgoraEduContextProtocols.swift */; };
+		86485A3426479B6700E80613 /* AgoraEduWidgetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86485A3026479B6700E80613 /* AgoraEduWidgetController.swift */; };
+		86485A3526479B6700E80613 /* AgoraEduContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86485A3126479B6700E80613 /* AgoraEduContext.swift */; };
+		86485A422648C41E00E80613 /* AgoraEduWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86485A412648C41E00E80613 /* AgoraEduWidget.swift */; };
+		B6B1CF183A4CD78CBB957D1A /* Pods_AgoraEduContext.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22F0EFEA32AA66CAA88E6C15 /* Pods_AgoraEduContext.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		783EF8A426299C38006082AC /* AgoraEduContext.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduContext.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		783EF8A726299C38006082AC /* AgoraEduContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraEduContext.h; sourceTree = "<group>"; };
-		783EF8A826299C38006082AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		783EF8B026299C5C006082AC /* AgoraEduContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduContext.swift; sourceTree = "<group>"; };
-		783EF8B126299C5C006082AC /* AgoraEduContextProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduContextProtocols.swift; sourceTree = "<group>"; };
-		783EF8B226299C5C006082AC /* AgoraEduContextObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduContextObjects.swift; sourceTree = "<group>"; };
-		912A41DB5988F1A319B619C3 /* Pods-AgoraEduContext.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduContext.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEduContext/Pods-AgoraEduContext.debug.xcconfig"; sourceTree = "<group>"; };
-		BD7E95B09FB13B55F9ECB563 /* Pods-AgoraEduContext.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduContext.release.xcconfig"; path = "Target Support Files/Pods-AgoraEduContext/Pods-AgoraEduContext.release.xcconfig"; sourceTree = "<group>"; };
-		E79F8A56FAE16C0C01C13A9A /* Pods_AgoraEduContext.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEduContext.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		22F0EFEA32AA66CAA88E6C15 /* Pods_AgoraEduContext.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEduContext.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		65B0CAB3EA88D2389DC96C4E /* Pods-AgoraEduContext.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduContext.release.xcconfig"; path = "Target Support Files/Pods-AgoraEduContext/Pods-AgoraEduContext.release.xcconfig"; sourceTree = "<group>"; };
+		86485A2326479AD700E80613 /* AgoraEduContext.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduContext.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		86485A2626479AD700E80613 /* AgoraEduContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraEduContext.h; sourceTree = "<group>"; };
+		86485A2726479AD700E80613 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		86485A2E26479B6700E80613 /* AgoraEduContextObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduContextObjects.swift; sourceTree = "<group>"; };
+		86485A2F26479B6700E80613 /* AgoraEduContextProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduContextProtocols.swift; sourceTree = "<group>"; };
+		86485A3026479B6700E80613 /* AgoraEduWidgetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduWidgetController.swift; sourceTree = "<group>"; };
+		86485A3126479B6700E80613 /* AgoraEduContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduContext.swift; sourceTree = "<group>"; };
+		86485A412648C41E00E80613 /* AgoraEduWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraEduWidget.swift; sourceTree = "<group>"; };
+		E3880199745CD2A2CE1A59BF /* Pods-AgoraEduContext.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduContext.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEduContext/Pods-AgoraEduContext.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		783EF8A126299C38006082AC /* Frameworks */ = {
+		86485A2026479AD700E80613 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				409D775881242698453EC1A6 /* Pods_AgoraEduContext.framework in Frameworks */,
+				B6B1CF183A4CD78CBB957D1A /* Pods_AgoraEduContext.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		783EF89A26299C38006082AC = {
+		07C88FCF2B2932602129AEA6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				783EF8A626299C38006082AC /* AgoraEduContext */,
-				783EF8A526299C38006082AC /* Products */,
-				BFA4E7248D67F9C7165D95EE /* Pods */,
-				DC2ECF8B13A715F5EC7EDA1E /* Frameworks */,
+				22F0EFEA32AA66CAA88E6C15 /* Pods_AgoraEduContext.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4511ACFF77D0EB77EC0A623B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E3880199745CD2A2CE1A59BF /* Pods-AgoraEduContext.debug.xcconfig */,
+				65B0CAB3EA88D2389DC96C4E /* Pods-AgoraEduContext.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		86485A1926479AD700E80613 = {
+			isa = PBXGroup;
+			children = (
+				86485A2526479AD700E80613 /* AgoraEduContext */,
+				86485A2426479AD700E80613 /* Products */,
+				4511ACFF77D0EB77EC0A623B /* Pods */,
+				07C88FCF2B2932602129AEA6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		783EF8A526299C38006082AC /* Products */ = {
+		86485A2426479AD700E80613 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				783EF8A426299C38006082AC /* AgoraEduContext.framework */,
+				86485A2326479AD700E80613 /* AgoraEduContext.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		783EF8A626299C38006082AC /* AgoraEduContext */ = {
+		86485A2526479AD700E80613 /* AgoraEduContext */ = {
 			isa = PBXGroup;
 			children = (
-				783EF8A726299C38006082AC /* AgoraEduContext.h */,
-				783EF8B026299C5C006082AC /* AgoraEduContext.swift */,
-				783EF8B226299C5C006082AC /* AgoraEduContextObjects.swift */,
-				783EF8B126299C5C006082AC /* AgoraEduContextProtocols.swift */,
-				783EF8A826299C38006082AC /* Info.plist */,
+				86485A2626479AD700E80613 /* AgoraEduContext.h */,
+				86485A3126479B6700E80613 /* AgoraEduContext.swift */,
+				86485A2E26479B6700E80613 /* AgoraEduContextObjects.swift */,
+				86485A2F26479B6700E80613 /* AgoraEduContextProtocols.swift */,
+				86485A3026479B6700E80613 /* AgoraEduWidgetController.swift */,
+				86485A412648C41E00E80613 /* AgoraEduWidget.swift */,
+				86485A2726479AD700E80613 /* Info.plist */,
 			);
 			path = AgoraEduContext;
-			sourceTree = "<group>";
-		};
-		BFA4E7248D67F9C7165D95EE /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				912A41DB5988F1A319B619C3 /* Pods-AgoraEduContext.debug.xcconfig */,
-				BD7E95B09FB13B55F9ECB563 /* Pods-AgoraEduContext.release.xcconfig */,
-			);
-			name = Pods;
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		DC2ECF8B13A715F5EC7EDA1E /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				E79F8A56FAE16C0C01C13A9A /* Pods_AgoraEduContext.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		783EF89F26299C38006082AC /* Headers */ = {
+		86485A1E26479AD700E80613 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				783EF8A926299C38006082AC /* AgoraEduContext.h in Headers */,
+				86485A2826479AD700E80613 /* AgoraEduContext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		783EF8A326299C38006082AC /* AgoraEduContext */ = {
+		86485A2226479AD700E80613 /* AgoraEduContext */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 783EF8AC26299C38006082AC /* Build configuration list for PBXNativeTarget "AgoraEduContext" */;
+			buildConfigurationList = 86485A2B26479AD700E80613 /* Build configuration list for PBXNativeTarget "AgoraEduContext" */;
 			buildPhases = (
-				9C506A28C1329D7DC42017B4 /* [CP] Check Pods Manifest.lock */,
-				783EF89F26299C38006082AC /* Headers */,
-				783EF8A026299C38006082AC /* Sources */,
-				783EF8A126299C38006082AC /* Frameworks */,
-				783EF8A226299C38006082AC /* Resources */,
+				F5DF2E36D054461EB45569A6 /* [CP] Check Pods Manifest.lock */,
+				86485A1E26479AD700E80613 /* Headers */,
+				86485A1F26479AD700E80613 /* Sources */,
+				86485A2026479AD700E80613 /* Frameworks */,
+				86485A2126479AD700E80613 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -116,24 +121,24 @@
 			);
 			name = AgoraEduContext;
 			productName = AgoraEduContext;
-			productReference = 783EF8A426299C38006082AC /* AgoraEduContext.framework */;
+			productReference = 86485A2326479AD700E80613 /* AgoraEduContext.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		783EF89B26299C38006082AC /* Project object */ = {
+		86485A1A26479AD700E80613 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 1250;
 				TargetAttributes = {
-					783EF8A326299C38006082AC = {
-						CreatedOnToolsVersion = 12.4;
-						LastSwiftMigration = 1240;
+					86485A2226479AD700E80613 = {
+						CreatedOnToolsVersion = 12.5;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
-			buildConfigurationList = 783EF89E26299C38006082AC /* Build configuration list for PBXProject "AgoraEduContext" */;
+			buildConfigurationList = 86485A1D26479AD700E80613 /* Build configuration list for PBXProject "AgoraEduContext" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -141,18 +146,18 @@
 				en,
 				Base,
 			);
-			mainGroup = 783EF89A26299C38006082AC;
-			productRefGroup = 783EF8A526299C38006082AC /* Products */;
+			mainGroup = 86485A1926479AD700E80613;
+			productRefGroup = 86485A2426479AD700E80613 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				783EF8A326299C38006082AC /* AgoraEduContext */,
+				86485A2226479AD700E80613 /* AgoraEduContext */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		783EF8A226299C38006082AC /* Resources */ = {
+		86485A2126479AD700E80613 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -162,7 +167,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		9C506A28C1329D7DC42017B4 /* [CP] Check Pods Manifest.lock */ = {
+		F5DF2E36D054461EB45569A6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -187,20 +192,22 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		783EF8A026299C38006082AC /* Sources */ = {
+		86485A1F26479AD700E80613 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				783EF8B326299C5C006082AC /* AgoraEduContext.swift in Sources */,
-				783EF8B426299C5C006082AC /* AgoraEduContextProtocols.swift in Sources */,
-				783EF8B526299C5C006082AC /* AgoraEduContextObjects.swift in Sources */,
+				86485A3226479B6700E80613 /* AgoraEduContextObjects.swift in Sources */,
+				86485A3526479B6700E80613 /* AgoraEduContext.swift in Sources */,
+				86485A3326479B6700E80613 /* AgoraEduContextProtocols.swift in Sources */,
+				86485A3426479B6700E80613 /* AgoraEduWidgetController.swift in Sources */,
+				86485A422648C41E00E80613 /* AgoraEduWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		783EF8AA26299C38006082AC /* Debug */ = {
+		86485A2926479AD700E80613 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -257,14 +264,12 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
-		783EF8AB26299C38006082AC /* Release */ = {
+		86485A2A26479AD700E80613 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -314,18 +319,17 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
-		783EF8AD26299C38006082AC /* Debug */ = {
+		86485A2C26479AD700E80613 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 912A41DB5988F1A319B619C3 /* Pods-AgoraEduContext.debug.xcconfig */;
+			baseConfigurationReference = E3880199745CD2A2CE1A59BF /* Pods-AgoraEduContext.debug.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -340,6 +344,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MODULEMAP_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEduContext;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -350,10 +355,11 @@
 			};
 			name = Debug;
 		};
-		783EF8AE26299C38006082AC /* Release */ = {
+		86485A2D26479AD700E80613 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BD7E95B09FB13B55F9ECB563 /* Pods-AgoraEduContext.release.xcconfig */;
+			baseConfigurationReference = 65B0CAB3EA88D2389DC96C4E /* Pods-AgoraEduContext.release.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -368,6 +374,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MODULEMAP_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEduContext;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -380,25 +387,25 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		783EF89E26299C38006082AC /* Build configuration list for PBXProject "AgoraEduContext" */ = {
+		86485A1D26479AD700E80613 /* Build configuration list for PBXProject "AgoraEduContext" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				783EF8AA26299C38006082AC /* Debug */,
-				783EF8AB26299C38006082AC /* Release */,
+				86485A2926479AD700E80613 /* Debug */,
+				86485A2A26479AD700E80613 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		783EF8AC26299C38006082AC /* Build configuration list for PBXNativeTarget "AgoraEduContext" */ = {
+		86485A2B26479AD700E80613 /* Build configuration list for PBXNativeTarget "AgoraEduContext" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				783EF8AD26299C38006082AC /* Debug */,
-				783EF8AE26299C38006082AC /* Release */,
+				86485A2C26479AD700E80613 /* Debug */,
+				86485A2D26479AD700E80613 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 783EF89B26299C38006082AC /* Project object */;
+	rootObject = 86485A1A26479AD700E80613 /* Project object */;
 }

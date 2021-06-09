@@ -7,7 +7,6 @@
 
 import Foundation
 import AgoraUIEduBaseViews
-import AgoraEduSDK.AgoraFiles.AgoraManager
 import AgoraActionProcess
 import AgoraEduContext
 

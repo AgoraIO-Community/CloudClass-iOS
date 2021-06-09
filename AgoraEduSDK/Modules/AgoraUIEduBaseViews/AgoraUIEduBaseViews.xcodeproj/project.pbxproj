@@ -11,6 +11,7 @@
 		1531CCA925F8757A00FDF2D1 /* AgoraUserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1531CCA725F8757A00FDF2D1 /* AgoraUserListView.swift */; };
 		68E91ED925FB1FDE0018403B /* AgoraHandsUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E91ED825FB1FDE0018403B /* AgoraHandsUpView.swift */; };
 		68E91F0725FB62AE0018403B /* Pods_AgoraUIEduBaseViews.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9B7D6A09F4D4289060CB12 /* Pods_AgoraUIEduBaseViews.framework */; };
+		7804A91B2649921500CCCC79 /* AgoraTabSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7804A91A2649921500CCCC79 /* AgoraTabSelectView.swift */; };
 		783AAE9B25F4D05700957598 /* AgoraRefreshConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE5825F4D05700957598 /* AgoraRefreshConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		783AAE9C25F4D05700957598 /* UIScrollView+AgoraExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE5925F4D05700957598 /* UIScrollView+AgoraExtension.m */; };
 		783AAE9D25F4D05700957598 /* AgoraRefreshConst.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE5A25F4D05700957598 /* AgoraRefreshConst.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -105,6 +106,7 @@
 		3BADD57796697298A3ADBCA1 /* Pods-AgoraUIEduBaseViews.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraUIEduBaseViews.debug.xcconfig"; path = "Target Support Files/Pods-AgoraUIEduBaseViews/Pods-AgoraUIEduBaseViews.debug.xcconfig"; sourceTree = "<group>"; };
 		535D56CE66CC7E51E466FB0E /* Pods-AgoraUIEduBaseViews.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraUIEduBaseViews.release.xcconfig"; path = "Target Support Files/Pods-AgoraUIEduBaseViews/Pods-AgoraUIEduBaseViews.release.xcconfig"; sourceTree = "<group>"; };
 		68E91ED825FB1FDE0018403B /* AgoraHandsUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraHandsUpView.swift; sourceTree = "<group>"; };
+		7804A91A2649921500CCCC79 /* AgoraTabSelectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraTabSelectView.swift; sourceTree = "<group>"; };
 		783AAE5625F4D05700957598 /* AgoraUIEduBaseViews.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = AgoraUIEduBaseViews.modulemap; sourceTree = "<group>"; };
 		783AAE5825F4D05700957598 /* AgoraRefreshConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshConfig.h; sourceTree = "<group>"; };
 		783AAE5925F4D05700957598 /* UIScrollView+AgoraExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+AgoraExtension.m"; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 			isa = PBXGroup;
 			children = (
 				783AAE9725F4D05700957598 /* AgoraUIChatView.swift */,
+				7804A91A2649921500CCCC79 /* AgoraTabSelectView.swift */,
 				783AAE9625F4D05700957598 /* AgoraChatPanelMessageCell.swift */,
 			);
 			path = AgoraUIChatView;
@@ -702,6 +705,7 @@
 				783AAEAD25F4D05700957598 /* AgoraRefreshAutoGifFooter.m in Sources */,
 				783AAEBA25F4D05700957598 /* AgoraRefreshGifHeader.m in Sources */,
 				783AAEC825F4D05700957598 /* AgoraRefreshTrailer.m in Sources */,
+				7804A91B2649921500CCCC79 /* AgoraTabSelectView.swift in Sources */,
 				8683140826005886009C78A3 /* AgoraBoardView.swift in Sources */,
 				78A0A27F26047E1500503C17 /* AgoraKitExtension.swift in Sources */,
 				1531CCA925F8757A00FDF2D1 /* AgoraUserListView.swift in Sources */,
@@ -874,6 +878,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3BADD57796697298A3ADBCA1 /* Pods-AgoraUIEduBaseViews.debug.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
@@ -907,6 +912,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 535D56CE66CC7E51E466FB0E /* Pods-AgoraUIEduBaseViews.release.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;

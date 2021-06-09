@@ -40,6 +40,8 @@ buildItem() {
  # 中班课
  buildItem "AgoraHandsUp"
  buildItem "AgoraActionProcess"
+ 
+ buildItem "AgoraWidget"
 
  buildItem "AgoraUIBaseViews"
  buildItem "AgoraUIEduBaseViews"

@@ -15,15 +15,15 @@ This page introduces how to run the iOS sample project.
 2. Configure parameters
 Configure the following parameters in the 'keycenter. m' file:
 - The Agora App ID that you get.
-- The Agora App Certificate that you get.
+- The Agora RTM Token that you get.
 
 ```
 + (NSString *)appId {
     return <#Your Agora App Id#>;
 }
 
-+ (NSString *)appCertificate {
-    return <#Your Agora Certificate#>;
++ (NSString *)rtmToken {
+    return <#Your Agora RTM Token#>;
 }
 ```
 

@@ -43,7 +43,7 @@ public struct AgoraActionConfig {
     case applyTimeOut       = 7
 }
 
-public struct AgoraActionStartOptions {
+@objcMembers public class AgoraActionStartOptions: NSObject {
     public var toUserUuid: String = ""
     public var actionType: AgoraActionStateType = .handsUp
     
@@ -54,7 +54,7 @@ public struct AgoraActionStartOptions {
     }
 }
 
-public struct AgoraActionResponse: Decodable {
+@objcMembers public class AgoraActionResponse:NSObject, Decodable {
     public var code: Int = AgoraActionHTTPOK
     public var msg: String = ""
 }
@@ -63,7 +63,7 @@ public enum AgoraActionProcessUuid: String, Decodable {
     case handsUp          = "handsUp"
 }
 
-public struct AgoraActionProperties: Decodable {
+@objcMembers public class AgoraActionProperties:NSObject, Decodable {
     public var enabled: Int = 0 // 是否开启 1开 0关
     public var type: Int = 1  // 1申请 2邀请
     public var timeout: Int = 60 // 超时时间，单位秒
@@ -73,12 +73,12 @@ public struct AgoraActionProperties: Decodable {
     public var accepted: [AgoraAcceptedInfo] = []
 }
 
-public struct AgoraProgressInfo: Decodable {
+@objcMembers public class AgoraProgressInfo:NSObject, Decodable {
     public var userUuid: String?
     public var ts: Int64?
 }
 
-public struct AgoraAcceptedInfo: Decodable {
+@objcMembers public class AgoraAcceptedInfo:NSObject, Decodable {
     public var userUuid: String = ""
 }
 

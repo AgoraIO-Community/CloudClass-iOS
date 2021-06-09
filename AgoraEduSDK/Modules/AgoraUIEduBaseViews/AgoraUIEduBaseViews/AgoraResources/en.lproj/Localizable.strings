@@ -6,11 +6,16 @@
   Copyright © 2020 Agora. All rights reserved.
 */
 
+// Common
+OK = "OK";
+
 // Chat
 ChatText = "Message";
 ChatEmptyText = "No Message";
+ChatConversation = "Quiz";
 ChatSendText = "Send";
 ChatPlaceholderText = "Input";
+ChatSilencedPlaceholderText = "Banned to chat";
 ChatDisableToastText = "Turn on mute mode";
 ChatEnableToastText = "Turn off mute mode";
 ChatDisableText = "mute chat";
@@ -23,6 +28,7 @@ UserListCoVideo = "Stage";
 UserListBoard = "Auth";
 UserListCamera = "Camera";
 UserListMicro = "Mute";
+UserListChat = "Silence";
 UserListReward = "Rewards";
 
 ChatMuteTagText = "You are not allowed to send messages in the chat box";
@@ -40,9 +46,11 @@ BackText = "Back";
 MicrophoneText = "Microphone";
 SpeakerText = "Speaker";
 LeaveText = "Leave Classroom";
+UploadLog = "Logs sent succcesfully!";
 
 // Toast
 LoaingText = "Loading...";
+ReconnectingText = "reconnecting...";
 
 CloseText = "Close";
 CancelText = "Cancel";

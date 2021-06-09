@@ -628,6 +628,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1F453B809B0F6555C07CE4A6 /* Pods-AgoraLog.debug.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -654,6 +655,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1A13A1268A84942557EAC6D2 /* Pods-AgoraLog.release.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;

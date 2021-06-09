@@ -7,6 +7,7 @@ target 'AgoraEduContext' do
 
   pod 'AgoraUIBaseViews', :path => '../AgoraUIBaseViews/AgoraUIBaseViews.podspec'
   pod 'AgoraExtApp', :path => '../AgoraExtApp/AgoraExtApp.podspec'
+  pod 'AgoraWidget', :path => '../AgoraWidget/AgoraWidget.podspec'
 
   # Pods for AgoraEduContext
   post_install do |installer|

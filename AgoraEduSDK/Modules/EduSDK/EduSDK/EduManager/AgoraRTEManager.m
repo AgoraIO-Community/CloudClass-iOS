@@ -47,23 +47,28 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
 + (void)setBaseURL:(NSString *)baseURL {
     NSString *url = [NSString stringWithFormat:@"%@/scene", baseURL];
     AGORA_EDU_BASE_URL = url;
-    
-    if ([baseURL containsString:@"dev"]) {
-        AgoraRteReportor.rteShared.BASE_URL = @"http://api-test.agora.io";
-    }
 }
 
-- (instancetype)initWithConfig:(AgoraRTEConfiguration *)config success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
-    
+- (instancetype)initWithConfig:(AgoraRTEConfiguration *)config
+                       success:(AgoraRTESuccessBlock)successBlock
+                       failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
     NSError *error;
+    
     if (![config isKindOfClass:AgoraRTEConfiguration.class]) {
-        error = [AgoraRTEErrorManager paramterInvalid:@"config" code:1];
+        error = [AgoraRTEErrorManager paramterInvalid:@"config"
+                                                 code:1];
     } else {
-        error = [AgoraRTEErrorManager paramterEmptyError:@"appId" value:config.appId code:1];
+        error = [AgoraRTEErrorManager paramterEmptyError:@"appId"
+                                                   value:config.appId
+                                                    code:1];
     }
+    
     if (error == nil) {
-        error = [AgoraRTEErrorManager paramterEmptyError:@"userUuid" value:config.userUuid code:1];
+        error = [AgoraRTEErrorManager paramterEmptyError:@"userUuid"
+                                                   value:config.userUuid
+                                                    code:1];
     }
+    
     if (error != nil) {
         if(failureBlock != nil){
             failureBlock(error);
@@ -83,14 +88,23 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     [AgoraRTELogService setupLog:logConfig];
 
     // Report
+    NSString *host = @"https://api.agora.io";
+    
+    if ([AGORA_EDU_BASE_URL containsString:@"dev"]) {
+        host = @"http://api-test.agora.io";
+    } else {
+        host = @"https://api.agora.io";
+    }
+    
     AgoraReportorContext *context = [[AgoraReportorContext alloc] initWithSource:@"rte"
                                                                       clientType:@"flexibleClass"
                                                                         platform:@"iOS"
                                                                            appId:config.appId
                                                                          version:AgoraRTEManager.version
                                                                            token:config.token
-                                                                        userUuid:config.userUuid];
-    [[AgoraRteReportor rteShared] setWithContext:context];
+                                                                        userUuid:config.userUuid
+                                                                            host:host];
+    [[AgoraRteReportorWrapper getRteReporter] setWithContext:context];
     
     if (self = [super init]) {
         self.appId = AgoraRTENoNullString(config.appId);
@@ -111,7 +125,10 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
                         success:successBlock
                         failure:failureBlock];
         
-        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onRoomDestory:) name:AgoraRTE_NOTICE_KEY_ROOM_DESTORY object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(onRoomDestory:)
+                                                   name:AgoraRTE_NOTICE_KEY_ROOM_DESTORY
+                                                 object:nil];
     }
 
     return self;
@@ -146,7 +163,7 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     AgoraRTMManager.shareManager.connectDelegate = self;
     
     // Report
-    [[AgoraRteReportor rteShared] startLogin];
+    [AgoraRteReportorWrapper startLogin];
     
     AgoraRTEWEAK(self);
     [AgoraRTMManager.shareManager initSignalWithAppid:self.appId appToken:AgoraRTENoNullString(rtmToken) userId:userUuid completeSuccessBlock:^{
@@ -158,7 +175,7 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
         }
         
         // Report
-        [[AgoraRteReportor rteShared] endLoginWithErrorCode:0];
+        [AgoraRteReportorWrapper endLoginWithErrorCode:0];
     } completeFailBlock:^(NSInteger errorCode) {
         NSError *error = [AgoraRTEErrorManager communicationError:errorCode code:101];
         if (failureBlock != nil) {
@@ -166,7 +183,7 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
         }
         
         // Report
-        [[AgoraRteReportor rteShared] endLoginWithErrorCode:errorCode];
+        [AgoraRteReportorWrapper endLoginWithErrorCode:errorCode];
     }];
 }
 
@@ -213,6 +230,27 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
 + (NSString *)version {
 //    NSString *string = [[AgoraRTCManager sdkVersion] stringByAppendingString:@".1"];
     return @"1.0.0";
+}
+
+- (void)reportAppScenario:(NSInteger)appScenario
+              serviceType:(NSInteger)serviceType
+               appVersion:(NSString *)appVersion {
+    NSDictionary *dic = @{
+        @"rtc.report_app_scenario":@{
+            @"appScenario":@(appScenario),
+            @"serviceType":@(serviceType),
+            @"appVersion":appVersion
+        }
+    };
+    NSError *rtcError;
+    NSData *jsonRtcData = [NSJSONSerialization dataWithJSONObject:dic
+                                                          options:NSJSONWritingPrettyPrinted
+                                                            error:&rtcError];
+    if (jsonRtcData != nil) {
+        NSString *jsonString = [[NSString alloc]initWithData:jsonRtcData
+                                                    encoding:NSUTF8StringEncoding];
+        [AgoraRTCManager.shareManager setParameters:jsonString];
+    }
 }
 
 - (void)setDelegate:(id<AgoraRTEManagerDelegate>)delegate {

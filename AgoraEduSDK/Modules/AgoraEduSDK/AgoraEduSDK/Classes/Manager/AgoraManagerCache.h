@@ -6,8 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AgoraEduManager.h"
-#import "AgoraHttpModel.h"
+#import "AgoraEduClassroom.h"
+#import "AgoraEduObjects.h"
+#import <AgoraWidget/AgoraWidget.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,10 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)share;
 
 @property (nonatomic, strong, nullable) AgoraEduClassroom *classroom;
-//@property (nonatomic, strong, nullable) AgoraEduReplay *replay;
 @property (nonatomic, assign) float differTime;
 @property (nonatomic, weak, nullable) id<AgoraEduClassroomDelegate> classroomDelegate;
-//@property (nonatomic, weak, nullable) id<AgoraEduReplayDelegate> replayDelegate;
 
 @property (nonatomic, assign) BOOL sdkReady;
 @property (nonatomic, copy) NSString *token;
@@ -29,9 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *boardAppId;
 @property (nonatomic, copy) NSString *userUuid;
 @property (nonatomic, copy) NSString *roomUuid;
-@property (nonatomic, strong) AgoraRoomStateInfoModel *roomStateInfoModel;
+@property (nonatomic, strong) id roomStateInfoModel;
 @property (nonatomic, strong) NSArray<AgoraEduCourseware*> *coursewares;
 @property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *extApps;
+@property (nonatomic, strong) NSArray<AgoraWidgetConfiguration *> *components;
 
 + (void)releaseResource;
 

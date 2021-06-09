@@ -7,6 +7,7 @@
 //
 
 #import "AgoraBaseViewController+Room.h"
+#import "ApaasUser.pbobjc.h"
 
 @implementation AgoraBaseViewController (Room)
 
@@ -39,8 +40,43 @@
     [self.eventDispatcher onShowErrorInfo:error];
 }
 
+- (void)onFlexRoomPropertiesInitialize:(NSDictionary *)properties {
+    [self.eventDispatcher onFlexRoomPropertiesInitialize:properties];
+}
+
+- (void)onFlexRoomPropertiesChanged:(NSDictionary *)changedProperties
+                         properties:(NSDictionary *)properties
+                              cause:(NSDictionary *)cause
+                       operatorUser:(AgoraEduContextUserInfo *)operatorUser {
+    [self.eventDispatcher onFlexRoomPropertiesChanged:changedProperties
+                                           properties:properties
+                                                cause:cause
+                                             operator:operatorUser];
+}
+
 #pragma mark AgoraEduRoomContext
+- (void)uploadLog {
+    __weak AgoraBaseViewController *weakSelf = self;
+    
+    [AgoraEduManager.shareManager uploadDebugItemSuccess:^(NSString * _Nonnull serialNumber) {
+        [weakSelf.eventDispatcher onUploadLogSuccess:serialNumber];
+    } failure:^(NSError * _Nonnull error) {
+        AgoraEduContextError *eduError = [[AgoraEduContextError alloc] initWithCode:error.code
+                                                                            message:error.localizedDescription];
+        [weakSelf.eventDispatcher onShowErrorInfo:eduError];
+    }];
+}
+- (void)updateFlexRoomProperties:(NSDictionary<NSString *,NSString *> *)properties
+                           cause:(NSDictionary<NSString *,NSString *> *)cause {
+    [self.roomVM updateRoomProperties:properties
+                                cause:cause
+                         successBlock:^{}
+                         failureBlock:^(AgoraEduContextError * _Nonnull error) {}];
+}
 - (void)leaveRoom {
+    // Report
+    [ApaasReporterWrapper localUserLeave];
+    
     id<AgoraEduClassroomDelegate> delegate = AgoraManagerCache.share.classroomDelegate;
     AgoraEduClassroom *classroom = AgoraManagerCache.share.classroom;
 #pragma clang diagnostic push
@@ -56,6 +92,6 @@
 
 // 事件监听
 - (void)registerEventHandler:(id<AgoraEduRoomHandler>)handler {
-    [self.eventDispatcher registerWithObject:handler];
+    [self.eventDispatcher registerWithObject:handler eventType:AgoraUIEventTypeRoom];
 }
 @end

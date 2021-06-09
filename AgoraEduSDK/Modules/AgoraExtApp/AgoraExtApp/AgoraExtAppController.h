@@ -37,10 +37,10 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
 @property (nonatomic, strong, readonly) AgoraBaseUIView *containerView;
 
 - (void)registerApps:(NSArray<AgoraExtAppConfiguration *> *)apps;
-- (void)updatePerExtAppProperties:(NSDictionary *)properties;
-- (void)updateLocalUserInfo:(AgoraExtAppUserInfo *)userInfo;
-- (void)updateRoomInfo:(AgoraExtAppRoomInfo *)roomInfo;
-
+- (void)perExtAppPropertiesDidUpdate:(NSDictionary *)properties;
+- (void)userInfoDidUpdate:(AgoraExtAppUserInfo *)userInfo;
+- (void)roomInfoDidUpdate:(AgoraExtAppRoomInfo *)roomInfo;
+- (void)appsCommonDidUpdate:(NSDictionary<NSString *, id> *)appsCommonDic;
 - (NSInteger)willLaunchExtApp:(NSString *)appIdentifier;
 - (NSArray<AgoraExtAppInfo *> *)getExtAppInfos;
 @end

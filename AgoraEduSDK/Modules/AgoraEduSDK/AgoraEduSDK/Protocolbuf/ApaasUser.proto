@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+message AgoraApaasUserJoin {
+  optional int64 lts = 1; // 时间戳，必须存在
+  optional int32 vid = 2; // vid
+  optional string ver = 3; // apaas版本号
+  optional string scenario = 4; // apaas场景，如education/meeting/entertainment
+  optional int32 errorCode = 5; // 异常码，若有
+  optional string uid = 6; // apaas用户id，同RTM uid
+  optional string userName = 7; // 用户名，用于显示
+  optional int64 streamUid = 8; // rtc流id
+  optional string streamSuid = 9; // rtc流id
+  optional string role = 10; // apaas角色
+  optional string streamSid = 11; // rtc sid
+  optional string rtmSid = 12; // rtm sid
+  optional string roomId = 13; // apaas房间id，与rtc/rtm channelName相同
+}
+
+message AgoraApaasUserLeave {
+  optional int64 lts = 1; // 时间戳，必须存在
+  optional int32 vid = 2; // vid
+  optional string ver = 3; // apaas版本号
+  optional string scenario = 4; // apaas场景，如education/meeting/entertainment
+  optional int32 errorCode = 5; // 异常码，若有
+  optional string uid = 6; // apaas用户id，同RTM uid
+  optional string userName = 7; // 用户名，用于显示
+  optional int64 streamUid = 8; // rtc流id
+  optional string streamSuid = 9; // rtc流id
+  optional string role = 10; // apaas角色
+  optional string streamSid = 11; // rtc sid
+  optional string rtmSid = 12; // rtm sid
+  optional string roomId = 13; // apaas房间id，与rtc/rtm channelName相同
+}

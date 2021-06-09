@@ -11,7 +11,7 @@
 
 #define AgoraWhiteCoursewareDirectory [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject stringByAppendingString:@"/AgoraDownload/"]
 
-#define AgoraWhiteCoursewareScheme @"agora-netless"
+#define AgoraWhiteCoursewareScheme @"agoranetless"
 
 NS_ASSUME_NONNULL_BEGIN
 

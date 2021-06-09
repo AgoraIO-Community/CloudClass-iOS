@@ -10,6 +10,13 @@ import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 
+protocol AgoraScreenUIControllerDelegate: NSObjectProtocol {
+    func screenController(_ controller: AgoraScreenUIController,
+                         didUpdateState state: AgoraEduContextScreenShareState)
+    func screenController(_ controller: AgoraScreenUIController,
+                         didSelectScreen selected: Bool)
+}
+
 class AgoraScreenUIController: NSObject, AgoraUIController {
     private var context: AgoraEduUserContext? {
         return contextProvider?.controllerNeedUserContext()
@@ -18,15 +25,18 @@ class AgoraScreenUIController: NSObject, AgoraUIController {
     private let screenView = AgoraBaseUIView(frame: .zero)
 
     private(set) var viewType: AgoraEduContextAppType
+    private weak var delegate: AgoraScreenUIControllerDelegate?
     private weak var contextProvider: AgoraControllerContextProvider?
     private weak var eventRegister: AgoraControllerEventRegister?
     
     var containerView = AgoraUIControllerContainer(frame: .zero)
     
     init(viewType: AgoraEduContextAppType,
+         delegate: AgoraScreenUIControllerDelegate,
          contextProvider: AgoraControllerContextProvider,
          eventRegister: AgoraControllerEventRegister) {
         self.viewType = viewType
+        self.delegate = delegate
         self.contextProvider = contextProvider
         self.eventRegister = eventRegister
         
@@ -57,11 +67,12 @@ class AgoraScreenUIController: NSObject, AgoraUIController {
 // MARK: - AgoraEduScreenShareHandler
 extension AgoraScreenUIController: AgoraEduScreenShareHandler {
     // 开启或者关闭屏幕分享
-    public func onUpdateScreenShareState(_ sharing: Bool,
-                                       streamUuid: String) {
-        if sharing {
+    func onUpdateScreenShareState(_ state: AgoraEduContextScreenShareState, streamUuid: String) {
+        
+        self.delegate?.screenController(self, didUpdateState: state)
+        
+        if state != .stop {
             containerView.isHidden = false
-            containerView.superview?.bringSubviewToFront(self.containerView)
             context?.renderView(screenView,
                                 streamUuid: streamUuid)
         } else {
@@ -70,12 +81,17 @@ extension AgoraScreenUIController: AgoraEduScreenShareHandler {
                                 streamUuid: streamUuid)
         }
     }
+    func onSelectScreenShare(_ selected: Bool) {
+        containerView.isHidden = !selected
+
+        self.delegate?.screenController(self, didSelectScreen: selected)
+    }
 
     /* 屏幕分享相关消息
      * XXX开启了屏幕分享
      * XXX关闭了屏幕分享
      */
-    public func onShowScreenShareTips(_ message: String) {
+    func onShowScreenShareTips(_ message: String) {
         AgoraUtils.showToast(message: message)
     }
 }

@@ -11,11 +11,15 @@ import AgoraReport
 import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 import AgoraEduContext
+import EduSDK
 
 @objc public protocol AgoraBoardControllerDelegate: NSObjectProtocol {
     func boardController(_ controller: AgoraBoardController,
                          didUpdateUsers userId: [String])
     
+    func boardController(_ controller: AgoraBoardController,
+                         didScenePathChanged path: String)
+
     func boardController(_ controller: AgoraBoardController,
                          didOccurError error: Error)
 }
@@ -133,10 +137,6 @@ private extension AgoraBoardController {
         contentView.agora_equal_to_superView(attribute: .top)
         contentView.agora_equal_to_superView(attribute: .bottom)
         
-        if let view = boardView as? AgoraBoardView {
-            view.delegate = self
-        }
-        
         viewsEnable(false)
     }
 }
@@ -214,21 +214,6 @@ extension AgoraBoardController: AgoraEduWhiteBoardPageControlContext {
     }
 }
 
-// MARK: - AgoraBoardViewDelegate
-extension AgoraBoardController: AgoraBoardViewDelegate {
-    public func didCancelDownloadPressed() {
-        download.stopAllTasks()
-    }
-    
-    public func didCloseDownloadPressed() {
-        download.stopAllTasks()
-    }
-    
-    public func didRetryDownloadPressed() {
-        download.reDownload(delegate: self)
-    }
-}
-
 // MARK: - AgoraBoardVMDelegate
 extension AgoraBoardController: AgoraBoardVMDelegate {
     func didBoardFullScreenMode(_ fullScreen: Bool) {
@@ -294,9 +279,13 @@ extension AgoraBoardController: AgoraBoardVMDelegate {
                           delegate: self)
         afterWork.cancel()
         afterWork.perform(after: 15,
-                          on: .main) { [unowned self] in
-            self.eventDispatcher.onSetDownloadTimeOut(url.absoluteString)
+                          on: .main) { [weak self] in
+            self?.eventDispatcher.onSetDownloadTimeOut(url.absoluteString)
         }
+    }
+    
+    func didScenePathChanged(path: String) {
+        delegate?.boardController(self, didScenePathChanged: path)
     }
 }
 
@@ -320,11 +309,11 @@ extension AgoraBoardController: AgoraDownloadProtocol {
         
             eventDispatcher.onDownloadError(urlString)
             afterWork.cancel()
-            viewsEnable(false)
+//            viewsEnable(false)
         } else {
             eventDispatcher.onSetDownloadComplete(urlString)
             afterWork.cancel()
-            viewsEnable(true)
+//            viewsEnable(true)
         }
     }
     
@@ -348,12 +337,13 @@ extension AgoraBoardController {
 extension AgoraEduContextApplianceType {
     var boardToolType: AgoraWhiteBoardToolType {
         switch self {
-        case .circle: return .WhiteBoardToolTypeEllipse
-        case .eraser: return .WhiteBoardToolTypeEraser
-        case .line:   return .WhiteBoardToolTypeStraight
-        case .pen:    return .WhiteBoardToolTypePencil
-        case .rect:   return .WhiteBoardToolTypeRectangle
-        case .select: return .WhiteBoardToolTypeSelector
+        case .circle:  return .WhiteBoardToolTypeEllipse
+        case .eraser:  return .WhiteBoardToolTypeEraser
+        case .line:    return .WhiteBoardToolTypeStraight
+        case .pen:     return .WhiteBoardToolTypePencil
+        case .rect:    return .WhiteBoardToolTypeRectangle
+        case .select:  return .WhiteBoardToolTypeSelector
+        case .clicker: return .WhiteBoardToolTypeClicker
         }
     }
 }

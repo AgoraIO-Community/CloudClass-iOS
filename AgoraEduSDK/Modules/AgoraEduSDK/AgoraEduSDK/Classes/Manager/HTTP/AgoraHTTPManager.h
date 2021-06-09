@@ -31,6 +31,9 @@ typedef NS_ENUM(NSInteger, HttpType) {
 // POST /edu/apps/{appId}/v2/rooms/{roomUuid}/from/{userUuid}/chat
 #define HTTP_APP_ROOM_CHAT @"%@/edu/apps/%@/v2/rooms/%@/from/%@/chat"
 
+// POST /edu/apps/{appId}/v2/rooms/{roomUuid}/conversation/students/{studentUuid}/messages
+#define HTTP_APP_CONVERSATION_CHAT @"%@/edu/apps/%@/v2/rooms/%@/conversation/students/%@/messages"
+
 // POST /edu/apps/{appId}/v2/rooms/{roomUuid}/handup/{toUserUuid}
 #define HTTP_APP_HANDUP @"%@/edu/apps/%@/v2/rooms/%@/handup/%@"
 
@@ -78,6 +81,10 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)roomChatWithConfig:(AgoraRoomChatConfiguration *)config
                    success:(OnRoomChatSuccessBlock)successBlock
                    failure:(OnHttpFailureBlock)failureBlock;
+
++ (void)conversationChatWithConfig:(AgoraRoomChatConfiguration *)config
+                           success:(OnRoomChatSuccessBlock)successBlock
+                           failure:(OnHttpFailureBlock)failureBlock;
 
 + (void)handUpWithConfig:(AgoraHandUpConfiguration *)config
                  success:(OnHandUpSuccessBlock)successBlock

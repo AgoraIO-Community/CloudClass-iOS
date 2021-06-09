@@ -15,11 +15,69 @@ fileprivate let AgoraRTEEventKeyTimerOnline = "online_user"
 
 fileprivate struct AgoraRTETimerEventItem {
     var event: String
-    var initTimestamp: Int
-    var timeInterval: Int
+    var initTimestamp: Int64
+    var timeInterval: Int64
 }
 
-public class AgoraRteReportor: AgoraReportor {
+@objc public class AgoraRteReportorWrapper: NSObject {
+    @objc public class func getRteReporter() -> AgoraReportor {
+        return AgoraRteReportor.rteShared
+    }
+    
+    @objc public class func startLogin(){
+        AgoraRteReportor.rteShared.startLogin()
+    }
+    
+    @objc public class func endLogin(errorCode: Int) {
+        AgoraRteReportor.rteShared.endLogin(errorCode: errorCode)
+    }
+    
+    @objc public class func startJoinRoom() {
+        AgoraRteReportor.rteShared.startJoinRoom()
+    }
+    
+    @objc public class func endJoinRoom(errorCode: Int, httpCode: Int) {
+        AgoraRteReportor.rteShared.endJoinRoom(errorCode: errorCode,
+                                               httpCode: httpCode)
+    }
+    
+    @objc public class func startJoinRoomSubEvent(subEvent: String) {
+        AgoraRteReportor.rteShared.startJoinRoomSubEvent(subEvent: subEvent)
+    }
+    
+    @objc public class func endJoinRoomSubEvent(subEvent: String,
+                                   type: AgoraReportEndCategory,
+                                   errorCode: Int,
+                                   api: String?) {
+        AgoraRteReportor.rteShared.endJoinRoomSubEvent(subEvent: subEvent,
+                                                       type: type,
+                                                       errorCode: errorCode,
+                                                       api: api)
+    }
+    
+    @objc public class func endJoinRoomSubEvent(subEvent: String,
+                                   type: AgoraReportEndCategory,
+                                   errorCode: Int,
+                                   httpCode: Int,
+                                   api: String?) {
+        AgoraRteReportor.rteShared.endJoinRoomSubEvent(subEvent: subEvent,
+                                                       type: type,
+                                                       errorCode: errorCode,
+                                                       httpCode: httpCode,
+                                                       api: api)
+    }
+    
+    @objc public class func startTimerOnline() {
+        AgoraRteReportor.rteShared.startTimerOnline()
+    }
+    
+    @objc public class func stopTimerOnline() {
+        AgoraRteReportor.rteShared.stopTimerOnline()
+    }
+}
+
+public class AgoraRteReportor: AgoraReportor,
+                               AgoraSubThreadTimerDelegate{
     public static let rteShared = AgoraRteReportor()
     
     private lazy var timer = AgoraSubThreadTimer(threadName: "io.agora.timer.event",
@@ -34,9 +92,23 @@ public class AgoraRteReportor: AgoraReportor {
             }
         }
     }
+    
+    // MARK: AgoraSubThreadTimerDelegate
+    public func perLoop() {
+        let current = Date().agora_rte_timestamp()
+        for (event, item) in timerEvents {
+            let interval = current - item.initTimestamp
+            let value = Int64(interval % item.timeInterval)
+            
+            // 1000 ms
+            guard value <= 1000 else {
+                continue
+            }
+            timerEventHttpRequest(event: event,
+                                  count: 1)
+        }
+    }
 }
-
-
 
 public extension AgoraRteReportor {
     func startLogin() {
@@ -89,6 +161,7 @@ public extension AgoraRteReportor {
             httpCode: nil,
             api: api)
     }
+    
     func endJoinRoomSubEvent(subEvent: String,
                              type: AgoraReportEndCategory,
                              errorCode: Int,
@@ -108,8 +181,8 @@ public extension AgoraRteReportor {
     func startTimerOnline() {
         let event = AgoraRTEEventKeyTimerOnline
         let item = AgoraRTETimerEventItem(event: event,
-                                       initTimestamp: Date().agora_rte_timestamp(),
-                                       timeInterval: 10 * 1000)
+                                          initTimestamp: Date().agora_rte_timestamp(),
+                                          timeInterval: 10 * 1000)
         timerEvents[event] = item
         timer.delegate = self
     }
@@ -120,26 +193,8 @@ public extension AgoraRteReportor {
     }
 }
 
-extension AgoraRteReportor: AgoraSubThreadTimerDelegate {
-    
-    public func perLoop() {
-        let current = Date().agora_rte_timestamp()
-        for (event, item) in timerEvents {
-            let interval = current - item.initTimestamp
-            let value = Int(interval % item.timeInterval)
-            
-            // 1000 ms
-            guard value <= 1000 else {
-                continue
-            }
-            timerEventHttpRequest(event: event,
-                                  count: 1)
-        }
-    }
-}
-
 fileprivate extension Date {
-    func agora_rte_timestamp() -> Int {
-        return Int(timeIntervalSince1970 * 1000)
+    func agora_rte_timestamp() -> Int64 {
+        return Int64(timeIntervalSince1970 * 1000)
     }
 }

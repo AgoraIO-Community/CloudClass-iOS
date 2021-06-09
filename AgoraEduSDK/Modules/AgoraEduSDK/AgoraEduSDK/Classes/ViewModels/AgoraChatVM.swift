@@ -7,15 +7,20 @@
 
 import Foundation
 import AgoraUIEduBaseViews
-import AgoraEduSDK.AgoraFiles.AgoraHTTP
-import AgoraEduSDK.AgoraFiles.AgoraManager
+import AgoraEduSDK.AgoraEduSDKFiles
 import AgoraEduContext
+import EduSDK
+
+@objc public enum AgoraChatMode: Int {
+    case room, conversation
+}
 
 @objcMembers public class AgoraChatVM: AgoraBaseVM {
     
     // ServerId:LocalId
-    fileprivate var msgsIdMapping = [Int : Int]()
+    fileprivate var msgsIdMapping = [String : String]()
     fileprivate var chatInfos: [AgoraEduContextChatInfo] = []
+    fileprivate var conversationInfos: [AgoraEduContextChatInfo] = []
 
     public func kitChatInfo(rteMessage: AgoraRTETextMessage) -> AgoraEduContextChatInfo? {
         
@@ -31,7 +36,20 @@ import AgoraEduContext
         let form: AgoraEduContextChatFrom = (user.userUuid == rteUser.userUuid) ? .local : .remote
         
         let chatInfo = AgoraEduContextChatInfo()
-        chatInfo.id = self.msgsIdMapping[rteMessage.messageId] ?? rteMessage.messageId
+        
+        var messageId = "0"
+        if rteMessage.peerMessageId != nil {
+            messageId = rteMessage.peerMessageId
+        } else {
+            messageId = "\(rteMessage.messageId)"
+        }
+        
+        if let id = self.msgsIdMapping[messageId] {
+            chatInfo.id = id
+        } else {
+            chatInfo.id = messageId
+        }
+    
         chatInfo.message = rteMessage.message
         chatInfo.user = user
         chatInfo.sendState = .success
@@ -41,11 +59,55 @@ import AgoraEduContext
         
         return chatInfo
     }
+    
+    // MARK: 单禁言
+    public func updateUserChat(_ rteUser: AgoraRTEUser,
+                                    cause: Any?,
+                                    completeBlock: @escaping (_ muteChat: Bool, _ toUser: AgoraEduContextUserInfo, _ byUser:AgoraEduContextUserInfo) -> Void) {
+        guard let `cause` = cause as? Dictionary<String, Any>,
+              (cause["cmd"] as? Int ?? 0) == AgoraCauseType.peerChatEnable.rawValue,
+              let data = cause["data"] as? Dictionary<String, Any> else {
+            return
+        }
+        
+        AgoraEduManager.share().roomManager?.getFullUserList(success: { [weak self] (rteUsers) in
+            
+            guard let `self` = self else {
+                return
+            }
+            
+            let muteChat = (data["muteChat"] as? Int) ?? 0
+            
+            let toUser = self.kitUserInfo(rteUser)
+            
+            var byUser: AgoraEduContextUserInfo?
+            if let teacher = rteUsers.first(where: {$0.role == .teacher}) {
+                byUser = self.kitUserInfo(teacher)
+            } else {
+                let rteTeacher = AgoraRTEUser(userUuid: "")
+                rteTeacher.role = .invalid
+                rteTeacher.userName = ""
+                byUser = self.kitUserInfo(rteTeacher)
+            }
+
+            completeBlock(muteChat == 1, toUser, byUser!)
+            
+        }, failure: { (error) in
+            
+        })
+    }
 }
 
 extension AgoraChatVM {
-
-    @discardableResult public func sendRoomMessage(_ message: String, messageId: Int, successBlock: @escaping (_ info: AgoraEduContextChatInfo) -> Void, failureBlock: @escaping (_ error: AgoraEduContextError, _ info: AgoraEduContextChatInfo) -> Void) -> AgoraEduContextChatInfo {
+    fileprivate func extractedFunc() -> AgoraEduContextChatInfo {
+        return AgoraEduContextChatInfo()
+    }
+    
+    @discardableResult public func sendMessage(_ message: String,
+                                               messageId: String,
+                                               mode: AgoraChatMode,
+                                               successBlock: @escaping (_ info: AgoraEduContextChatInfo) -> Void,
+                                               failureBlock: @escaping (_ error: AgoraEduContextError, _ info: AgoraEduContextChatInfo) -> Void) -> AgoraEduContextChatInfo {
         
         var kitChatInfo: AgoraEduContextChatInfo!
         for chatInfo in self.chatInfos {
@@ -56,10 +118,10 @@ extension AgoraChatVM {
             }
         }
         
-        let sendTime = Int(Date().timeIntervalSince1970)
+        let sendTime = Int64(Date().timeIntervalSince1970)
         if kitChatInfo == nil {
-            let kitInfo = AgoraEduContextChatInfo()
-            kitInfo.id = sendTime
+            let kitInfo = extractedFunc()
+            kitInfo.id = "\(sendTime)"
             kitInfo.message = message
             kitInfo.user = self.kitLocalUserInfo()
             kitInfo.type = .text
@@ -78,57 +140,107 @@ extension AgoraChatVM {
         chatConfig.token = self.config.token
         chatConfig.type = 1
         chatConfig.message = message
-        AgoraHTTPManager.roomChat(withConfig: chatConfig) {[weak self] (model) in
-            kitChatInfo.sendState = .success
-            self?.msgsIdMapping[model.messageId] = kitChatInfo.id
-            successBlock(kitChatInfo)
-        } failure: {[weak self] (error, code) in
-            if let `self` = self {
-                kitChatInfo.sendState = .failure
-                failureBlock(self.kitError(error), kitChatInfo)
+        
+        if mode == .room {
+            AgoraHTTPManager.roomChat(withConfig: chatConfig) {[weak self] (model) in
+                kitChatInfo.sendState = .success
+                self?.msgsIdMapping["\(model.messageId)"] = kitChatInfo.id
+                successBlock(kitChatInfo)
+            } failure: {[weak self] (error, code) in
+                if let `self` = self {
+                    kitChatInfo.sendState = .failure
+                    failureBlock(self.kitError(error), kitChatInfo)
+                }
+            }
+        } else {
+            AgoraHTTPManager.conversationChat(withConfig: chatConfig) {[weak self] (model) in
+                kitChatInfo.sendState = .success
+                self?.msgsIdMapping[model.peerMessageId] = kitChatInfo.id
+                successBlock(kitChatInfo)
+            } failure: {[weak self] (error, code) in
+                if let `self` = self {
+                    kitChatInfo.sendState = .failure
+                    failureBlock(self.kitError(error), kitChatInfo)
+                }
             }
         }
+        
         return kitChatInfo
     }
     
-    @discardableResult public func resendRoomMessage(_ message: String, messageId: Int, successBlock: @escaping (_ info: AgoraEduContextChatInfo) -> Void, failureBlock: @escaping (_ error: AgoraEduContextError, _ info: AgoraEduContextChatInfo) -> Void) -> AgoraEduContextChatInfo {
-        
-        return self.sendRoomMessage(message, messageId: messageId, successBlock: successBlock, failureBlock: failureBlock)
+    @discardableResult public func resendMessage(_ message: String,
+                                                 messageId: String,
+                                                 mode: AgoraChatMode,
+                                                 successBlock: @escaping (_ info: AgoraEduContextChatInfo) -> Void,
+                                                 failureBlock: @escaping (_ error: AgoraEduContextError, _ info: AgoraEduContextChatInfo) -> Void) -> AgoraEduContextChatInfo {
+        return self.sendMessage(message,
+                                messageId: messageId,
+                                mode: mode,
+                                successBlock: successBlock,
+                                failureBlock: failureBlock)
     }
     
-    public func fetchHistoryMessages(_ startId: Int, count: Int, sort:Int = 0, successBlock: @escaping (_ models: [AgoraEduContextChatInfo]) -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
-        
+    public func fetchHistoryMessages(_ startId: String,
+                                     count: Int,
+                                     sort:Int = 0,
+                                     mode: AgoraChatMode,
+                                     successBlock: @escaping (_ models: [AgoraEduContextChatInfo]) -> Void,
+                                     failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
         let baseURL = AgoraHTTPManager.getBaseURL()
-        let url = "\(baseURL)/edu/apps/\(config.appId)/v2/rooms/\(config.roomUuid)/chat/messages"
-
+        var url = ""
         let headers = AgoraHTTPManager.headers(withUId: config.userUuid, userToken: "", token: config.token)
-
-        var nextId: Int = startId
-        for key in self.msgsIdMapping.keys {
-            if self.msgsIdMapping[key] == startId {
-                nextId = key
+        var parameters = [String: Any]()
+        
+        if mode == .room {
+            url = "\(baseURL)/edu/apps/\(config.appId)/v2/rooms/\(config.roomUuid)/chat/messages"
+            
+            var nextId = Int(startId) ?? 0
+            for key in self.msgsIdMapping.keys {
+                if self.msgsIdMapping[key] == startId {
+                    nextId = Int(key) ?? 0
+                }
+            }
+            nextId = sort == 0 ? nextId - 1 : nextId + 1
+            
+            parameters = ["sort": sort, "nextId": nextId, "count": 100]
+            if nextId <= 0 {
+                parameters = ["sort": sort, "count": 100]
+            }
+            
+        } else {
+            url = "\(baseURL)/edu/apps/\(config.appId)/v2/rooms/\(config.roomUuid)/conversation/students/\(config.userUuid)/messages"
+            
+            parameters = ["sort": sort, "nextId": startId, "count": 100]
+            if startId.count == 0 || startId == "0" {
+                parameters = ["sort": sort, "count": 100]
             }
         }
-        nextId = sort == 0 ? nextId - 1 : nextId + 1
         
-        var parameters = ["sort": sort, "nextId": nextId, "count": 100]
-        if nextId <= 0 {
-            parameters = ["sort": sort, "count": 100]
-        }
-        AgoraHTTPManager.fetchDispatch(.get, url: url, parameters: parameters, headers: headers, parseClass: AgoraChatMessageModel.self) {[weak self] (any) in
-            
+        AgoraHTTPManager.fetchDispatch(.get,
+                                       url: url,
+                                       parameters: parameters,
+                                       headers: headers,
+                                       parseClass: AgoraChatMessageModel.self) { [weak self] (any) in
             guard let `self` = self else {
                 return
             }
             
             var kitChatInfos = [AgoraEduContextChatInfo]()
-            if let model = any as? AgoraChatMessageModel, let list = model.data?.list {
+            if let model = any as? AgoraChatMessageModel,
+               let list = model.data?.list {
                 for info in list {
                     if let chatInfo = self.kitChatInfo(info) {
                         kitChatInfos.append(chatInfo)
                     }
                 }
-                self.chatInfos.insert(contentsOf: kitChatInfos.reversed(), at: 0)
+                
+                if mode == .room {
+                    self.chatInfos.insert(contentsOf: kitChatInfos.reversed(), at: 0)
+                } else {
+                    self.conversationInfos.insert(contentsOf: kitChatInfos.reversed(), at: 0)
+                }
+                
+                
                 successBlock(kitChatInfos)
             } else {
 //                failureBlock("network error")
@@ -168,7 +280,11 @@ extension AgoraChatVM {
 //        }
         
         let chatInfo = AgoraEduContextChatInfo()
-        chatInfo.id = self.msgsIdMapping[model.messageId] ?? model.messageId
+        if model.peerMessageId != nil && model.peerMessageId.count > 0 {
+            chatInfo.id = model.peerMessageId
+        } else {
+            chatInfo.id = "\(model.messageId)"
+        }
         chatInfo.message = msg
         chatInfo.user = user
         chatInfo.sendState = .success

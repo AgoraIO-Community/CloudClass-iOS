@@ -9,7 +9,7 @@ import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 
-class AgoraRenderUIController: NSObject, AgoraUIController {
+@objcMembers class AgoraRenderUIController: NSObject, AgoraUIController {
     private(set) var viewType: AgoraEduContextAppType
     
     var roomContext: AgoraEduRoomContext? {

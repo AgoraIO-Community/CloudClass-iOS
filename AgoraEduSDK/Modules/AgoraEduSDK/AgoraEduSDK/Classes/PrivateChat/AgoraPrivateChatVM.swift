@@ -8,12 +8,12 @@
 
 import Foundation
 import AgoraUIEduBaseViews
-import AgoraEduSDK.AgoraFiles.AgoraHTTP
-import AgoraEduSDK.AgoraFiles.AgoraManager
 import AgoraEduContext
+import EduSDK
+import AgoraEduSDK.AgoraEduSDKFiles
 
 @objcMembers public class AgoraPrivateChatVM: AgoraBaseVM {
-    //
+    
     public var kitPrivateChatInfo: AgoraEduContextPrivateChatInfo?
     
     private var subscribeStreams = [AgoraRTEStream]()
@@ -21,12 +21,12 @@ import AgoraEduContext
     
     // MARK:
     public func updatePrivateChat(cause: Any?, successBlock: @escaping () -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
-        
+
         guard let `cause` = cause as? Dictionary<String, Any>,
               let data = try? JSONSerialization.data(withJSONObject: cause, options: []) else {
             return
         }
-        
+
         guard let state = try? JSONDecoder().decode(AgoraPrivateChat.self, from: data),
            state.cmd == .streamGroupsAdd || state.cmd == .streamGroupsDel else {
             return
@@ -38,19 +38,19 @@ import AgoraEduContext
     public func initPrivateChat(_ successBlock: @escaping () -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
 
         AgoraEduManager.share().roomManager?.getClassroomInfo(success: {(rteRoom) in
-            
+
             AgoraEduManager.share().roomManager?.getFullUserList(success: { (rteUsers) in
-                
+
                 AgoraEduManager.share().roomManager?.getFullStreamList(success: {[weak self] (rteStreams) in
-                    
+
                     guard let `self` = self else {
                         return
                     }
-                    
+
                     self.initKitPrivateChatInfo(rteRoom, rteUsers: rteUsers, rteStreams: rteStreams)
-                    
+
                     successBlock()
-                    
+
                 }, failure: {[weak self] (error) in
                     if let err = self?.kitError(error) {
                         failureBlock(err)
@@ -75,7 +75,7 @@ extension AgoraPrivateChatVM {
         
         let baseURL = AgoraHTTPManager.getBaseURL()
         let headers = AgoraHTTPManager.headers(withUId: config.userUuid, userToken: "", token: config.token)
-        
+
         var userUuid: String = ""
         var type: HttpType = .put
 
@@ -92,16 +92,16 @@ extension AgoraPrivateChatVM {
             failureBlock(error)
             return
         }
-        
+
         let url = "\(baseURL)/edu/apps/\(config.appId)/v2/rooms/\(config.roomUuid)/users/\(userUuid)/privateSpeech"
 
         let parameters = [String:Any]()
         AgoraHTTPManager.fetchDispatch(type, url: url, parameters: parameters, headers: headers, parseClass: AgoraBaseModel.self) {[weak self] (any) in
-            
+
             guard let `self` = self else {
                 return
             }
-            
+
             successBlock()
 
         } failure: {[weak self] (error, code) in
@@ -116,7 +116,7 @@ extension AgoraPrivateChatVM {
 extension AgoraPrivateChatVM {
     // 更新流订阅
     func addRemoteStream(_ rteStream: AgoraRTEStream, successBlock: (() -> Void)? = nil, failureBlock: ((_ error: AgoraEduContextError) -> Void)? = nil) {
-        
+
         let localUserUuid = self.config.userUuid
         let userUuid = rteStream.userInfo.userUuid
         let fUserUuid = self.kitPrivateChatInfo?.fromUser.userUuid
@@ -126,17 +126,17 @@ extension AgoraPrivateChatVM {
         if userUuid == localUserUuid {
             return
         }
-        
+
         // 没有私聊， 需要订阅
         if fUserUuid == nil || tUserUuid == nil {
             self.subscribeStream(rteStream)
             self.subscribeStreams.append(rteStream)
             return
         }
-        
+
         // 私聊里面没有我， 来的流在里面=》不订阅，否则订阅
         if fUserUuid != localUserUuid && tUserUuid != localUserUuid {
-            
+
             if userUuid == fUserUuid || userUuid == tUserUuid {
                 self.unsubscribeStream(rteStream)
                 self.unsubscribeStreams.append(rteStream)
@@ -146,10 +146,10 @@ extension AgoraPrivateChatVM {
             }
             return
         }
-        
+
         // 私聊里面有我， 来的流在里面=》订阅，否则不订阅
         if fUserUuid == localUserUuid || tUserUuid == localUserUuid {
-            
+
             if userUuid == fUserUuid || userUuid == tUserUuid {
                 self.subscribeStream(rteStream)
                 self.subscribeStreams.append(rteStream)
@@ -266,10 +266,10 @@ extension AgoraPrivateChatVM {
     }
 }
 
-// MARK: Private
+//// MARK: Private
 extension AgoraPrivateChatVM {
     private func initKitPrivateChatInfo(_ rteRoom: AgoraRTEClassroom, rteUsers: [AgoraRTEUser], rteStreams: [AgoraRTEStream]) {
-        
+
         self.kitPrivateChatInfo = nil
 
         guard let streamGroups = rteRoom.roomProperties["streamGroups"] as? Dictionary<String, Any>,
@@ -277,34 +277,34 @@ extension AgoraPrivateChatVM {
             let value = streamGroups[key] as? Dictionary<String, Any>,
             let data = try? JSONSerialization.data(withJSONObject: value, options: []),
             let privateChatInfo = try? JSONDecoder().decode(AgoraPrivateChatInfo.self, from: data) else {
-            
+
             self.updateAllSubscribeStreams()
             return
         }
-        
+
         guard privateChatInfo.users.count <= 2 else {
             self.updateAllSubscribeStreams()
             return
         }
-        
+
         var fromUser: AgoraEduContextUserInfo?
         var toUser: AgoraEduContextUserInfo?
         for rteUser in rteUsers {
             if rteUser.userUuid == privateChatInfo.users[0].userUuid {
                 fromUser = self.kitUserInfo(rteUser)
-                
+
             } else if rteUser.userUuid == privateChatInfo.users[1].userUuid {
                 toUser = self.kitUserInfo(rteUser)
             }
         }
-        
+
         guard let fUser = fromUser, let tUser = toUser else {
             self.updateAllSubscribeStreams()
             return
         }
-        
+
         self.kitPrivateChatInfo = AgoraEduContextPrivateChatInfo(fromUser: fUser, toUser: tUser)
-        
+
         self.updateAllSubscribeStreams()
     }
 }

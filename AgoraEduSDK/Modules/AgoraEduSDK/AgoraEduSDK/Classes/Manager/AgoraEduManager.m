@@ -81,10 +81,8 @@ static AgoraEduManager *manager = nil;
                          failure:(void (^) ( NSError * _Nonnull error, NSInteger statusCode))failureBlock {
     AgoraWEAK(self);
     
-    
     [AgoraHTTPManager roomStateWithConfig:config
                                   success:^(AgoraRoomStateModel * _Nonnull model) {
-        
         if (model.data == nil) {
             NSError *error = [[NSError alloc] initWithDomain:@"AgoraEdu"
                                                         code:model.data.state
@@ -267,13 +265,15 @@ static AgoraEduManager *manager = nil;
 }
 
 + (void)releaseResource {
-    [AgoraEduManager.shareManager.eduManager destory];
-    AgoraEduManager.shareManager.eduManager = nil;
-    AgoraEduManager.shareManager.roomManager = nil;
-    AgoraEduManager.shareManager.logManager = nil;
+    dispatch_async(dispatch_queue_create(0, 0), ^{
+        [AgoraEduManager.shareManager.eduManager destory];
+        AgoraEduManager.shareManager.eduManager = nil;
+        AgoraEduManager.shareManager.roomManager = nil;
+        AgoraEduManager.shareManager.logManager = nil;
 
-    AgoraEduManager.shareManager.studentService = nil;
-    
-    [AgoraManagerCache releaseResource];
+        AgoraEduManager.shareManager.studentService = nil;
+        
+        [AgoraManagerCache releaseResource];
+    });
 }
 @end

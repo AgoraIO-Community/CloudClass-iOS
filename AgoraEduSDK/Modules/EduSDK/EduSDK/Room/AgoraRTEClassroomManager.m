@@ -45,8 +45,7 @@
 
 typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 
-@interface AgoraRTEClassroomManager()<AgoraRTMChannelDelegate, AgoraRTCManagerDelegate>
-
+@interface AgoraRTEClassroomManager() <AgoraRTMChannelDelegate, AgoraRTCManagerDelegate>
 @property (nonatomic, strong) NSString *appId;
 @property (nonatomic, strong) NSString *roomUuid;
 @property (nonatomic, strong) NSString *defaultUserName;
@@ -64,12 +63,10 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 
 // state
 @property (nonatomic, assign) BOOL increaseSyncing;
-
 @end
 
 @implementation AgoraRTEClassroomManager
 - (instancetype)initWithConfig:(AgoraRTEKVCClassroomConfig *)config {
-    
     if (self = [super init]) {
         self.increaseSyncing = NO;
         
@@ -80,15 +77,23 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         self.logDirectoryPath = httpConfig.logDirectoryPath;
         self.sceneType = config.sceneType;
         
-        self.syncRoomSession = [[AgoraRTESyncRoomSession alloc] initWithUserUuid:httpConfig.userUuid roomClass:AgoraRTESyncRoomModel.class useClass:AgoraRTESyncUserModel.class streamClass:AgoraRTESyncStreamModel.class];
+        self.syncRoomSession = [[AgoraRTESyncRoomSession alloc] initWithUserUuid:httpConfig.userUuid
+                                                                       roomClass:AgoraRTESyncRoomModel.class
+                                                                        useClass:AgoraRTESyncUserModel.class
+                                                                     streamClass:AgoraRTESyncStreamModel.class];
         AgoraRTEWEAK(self);
         self.syncRoomSession.fetchMessageList = ^(NSInteger nextId, NSInteger count) {
-            [weakself syncIncreaseWithStartIndex:nextId count:count success:nil];
+            [weakself syncIncreaseWithStartIndex:nextId
+                                           count:count
+                                         success:nil];
         };
         self.messageHandle = [[AgoraRTEChannelMessageHandle alloc] initWithSyncSession:self.syncRoomSession];
         self.messageHandle.roomUuid = self.roomUuid;
         
-        [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onReconnecting) name:NOTICE_KEY_START_RECONNECT object:nil];
+        [NSNotificationCenter.defaultCenter addObserver:self
+                                               selector:@selector(onReconnecting)
+                                                   name:NOTICE_KEY_START_RECONNECT
+                                                 object:nil];
     }
 
     return self;
@@ -96,14 +101,19 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 
 - (void)onReconnecting {
     NSInteger nextId = self.syncRoomSession.currentMaxSeq + 1;
-    [self syncIncreaseWithStartIndex:nextId count:0 success:^{
+    [self syncIncreaseWithStartIndex:nextId
+                               count:0
+                             success:^{
     }];
-    [NSNotificationCenter.defaultCenter postNotificationName:NOTICE_KEY_END_RECONNECT object:nil];
+    [NSNotificationCenter.defaultCenter postNotificationName:NOTICE_KEY_END_RECONNECT
+                                                      object:nil];
 }
 
-- (void)joinClassroom:(AgoraRTEClassroomJoinOptions*)options success:(OnJoinRoomSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
-    
+- (void)joinClassroom:(AgoraRTEClassroomJoinOptions*)options
+              success:(OnJoinRoomSuccessBlock)successBlock
+              failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
     NSString *userName = self.defaultUserName;
+    
     if ([options isKindOfClass:AgoraRTEClassroomJoinOptions.class] && options.userName != nil) {
         userName = options.userName;
     }
@@ -112,14 +122,18 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     
     NSError *error;
     if (![options isKindOfClass:AgoraRTEClassroomJoinOptions.class]) {
-        error = [AgoraRTEErrorManager paramterInvalid:@"options" code:1];
+        error = [AgoraRTEErrorManager paramterInvalid:@"options"
+                                                 code:1];
     } else {
-        error = [AgoraRTEErrorManager paramterEmptyError:@"userName" value:userName code:1];
+        error = [AgoraRTEErrorManager paramterEmptyError:@"userName"
+                                                   value:userName
+                                                    code:1];
     }
 
     if (error == nil) {
         if (options.role != AgoraRTERoleTypeStudent && options.role != AgoraRTERoleTypeTeacher && options.role != AgoraRTERoleTypeAssistant) {
-            error = [AgoraRTEErrorManager paramterInvalid:@"role" code:1];
+            error = [AgoraRTEErrorManager paramterInvalid:@"role"
+                                                     code:1];
         }
     }
     if (error != nil) {
@@ -162,26 +176,35 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     
     // Report
     HttpManagerConfig *httpConfig = [AgoraRTEHttpManager getHttpManagerConfig];
+    NSString *host = [AgoraRteReportorWrapper getRteReporter].context.host;
     AgoraReportorContext *context = [[AgoraReportorContext alloc] initWithSource:@"rte"
                                                                       clientType:@"flexibleClass"
                                                                         platform:@"iOS"
                                                                            appId:self.appId
                                                                          version:AgoraRTEManager.version
                                                                            token:httpConfig.token
-                                                                        userUuid:httpConfig.userUuid];
+                                                                        userUuid:httpConfig.userUuid
+                                                                            host:host];
     
-    [[AgoraRteReportor rteShared] setWithContext:context];
-    [[AgoraRteReportor rteShared] startJoinRoom];;
+    [[AgoraRteReportorWrapper getRteReporter] setWithContext:context];
+    [AgoraRteReportorWrapper startJoinRoom];;
     
     NSString *subEvent = @"http-entry";
     NSString *httpApi = @"entry";
-    [[AgoraRteReportor rteShared] startJoinRoomSubEventWithSubEvent:subEvent];
+    [AgoraRteReportorWrapper startJoinRoomSubEventWithSubEvent:subEvent];
     
     // entry-》初始化RTM&RTC => sync => auto
-    [AgoraRTEHttpManager joinRoomWithRoomUuid:self.roomUuid param:params apiVersion:APIVersion1 analysisClass:AgoraRTEJoinRoomModel.class success:^(id<AgoraRTEBaseModel> objModel) {
-        
+    [AgoraRTEHttpManager joinRoomWithRoomUuid:self.roomUuid
+                                        param:params
+                                   apiVersion:APIVersion1
+                                analysisClass:AgoraRTEJoinRoomModel.class
+                                      success:^(id<AgoraRTEBaseModel> objModel) {
         // Report
-        [[AgoraRteReportor rteShared] endJoinRoomSubEventWithSubEvent:subEvent type:AgoraReportEndCategoryHttp errorCode:0 httpCode:200 api:httpApi];
+        [AgoraRteReportorWrapper endJoinRoomSubEventWithSubEvent:subEvent
+                                                            type:AgoraReportEndCategoryHttp
+                                                       errorCode:0
+                                                        httpCode:200
+                                                             api:httpApi];
          
         AgoraRTEJoinRoomInfoModel *model = ((AgoraRTEJoinRoomModel*)objModel).data;
         weakself.userToken = model.user.userToken;
@@ -212,35 +235,43 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         // local
         id userObj = [model.user yy_modelToJSONObject];
         weakself.syncRoomSession.localUser = [AgoraRTESyncUserModel new];
-        [weakself.syncRoomSession.localUser yy_modelSetWithJSON:userObj];        weakself.syncRoomSession.localUser.state = 1;
-        [AgoraRTELogService logMessageWithDescribe:@"classroom:" message:@{@"roomUuid":AgoraRTENoNullString(weakself.roomUuid), @"localuser":weakself.syncRoomSession.localUser}];
+        [weakself.syncRoomSession.localUser yy_modelSetWithJSON:userObj];
+        weakself.syncRoomSession.localUser.state = 1;
         
+        [AgoraRTELogService logMessageWithDescribe:@"classroom:"
+                                           message:@{@"roomUuid":AgoraRTENoNullString(weakself.roomUuid),
+                                                     @"localuser":weakself.syncRoomSession.localUser}];
         // media
         weakself.userService = userService;
-        [weakself initMediaDispatchGroup:model success:^{
-            
-            [AgoraRTELogService logMessageWithDescribe:@"classroom initMedia success:" message:@{@"roomUuid":AgoraRTENoNullString( weakself.roomUuid)}];
+        [weakself initMediaDispatchGroup:model
+                                 success:^{
+            [AgoraRTELogService logMessageWithDescribe:@"classroom initMedia success:"
+                                               message:@{@"roomUuid":AgoraRTENoNullString(weakself.roomUuid)}];
             
             [weakself syncTotalSuccess:^{
-                                
-                [AgoraRTELogService logMessageWithDescribe:@"classroom initMedia success:" message:@{@"roomUuid":AgoraRTENoNullString(weakself.roomUuid), @"users":weakself.syncRoomSession.users, @"streams":weakself.syncRoomSession.streams}];
+                [AgoraRTELogService logMessageWithDescribe:@"classroom initMedia success:"
+                                                   message:@{@"roomUuid": AgoraRTENoNullString(weakself.roomUuid),
+                                                             @"users": weakself.syncRoomSession.users,
+                                                             @"streams": weakself.syncRoomSession.streams}];
                 
                 // auto
                 [weakself setupPublishOptionsSuccess:^{
-
                     // Report
-                    [[AgoraRteReportor rteShared] endJoinRoomWithErrorCode:0 httpCode:200];
-                    [[AgoraRteReportor rteShared] startTimerOnline];
+                    [AgoraRteReportorWrapper endJoinRoomWithErrorCode:0
+                                                             httpCode:200];
+                    [AgoraRteReportorWrapper startTimerOnline];
                     
                     if(successBlock){
                         successBlock(userService);
                     }
                 } failure:^(NSError * error) {
                     // Report
-                    [[AgoraRteReportor rteShared] endJoinRoomWithErrorCode:error.code httpCode:nil];
+                    [AgoraRteReportorWrapper endJoinRoomWithErrorCode:error.code
+                                                             httpCode:nil];
                     
                     [weakself releaseResource];
-                    NSError *eduError = [AgoraRTEErrorManager internalError:@"" code:2];
+                    NSError *eduError = [AgoraRTEErrorManager internalError:@""
+                                                                       code:2];
                     if(failureBlock != nil) {
                         failureBlock(eduError);
                     }
@@ -253,7 +284,8 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
             }
             
             // Report
-            [[AgoraRteReportor rteShared] endJoinRoomWithErrorCode:error.code httpCode:nil];
+            [AgoraRteReportorWrapper endJoinRoomWithErrorCode:error.code
+                                                     httpCode:nil];
         }];
         
     } failure:^(NSError * error, NSInteger statusCode) {
@@ -265,23 +297,31 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         }
         
         // Report
-        [[AgoraRteReportor rteShared] endJoinRoomSubEventWithSubEvent:subEvent type:AgoraReportEndCategoryHttp errorCode:error.code httpCode:statusCode api:httpApi];
+        [AgoraRteReportorWrapper endJoinRoomSubEventWithSubEvent:subEvent
+                                                            type:AgoraReportEndCategoryHttp
+                                                       errorCode:error.code
+                                                        httpCode:statusCode
+                                                             api:httpApi];
         
-        [[AgoraRteReportor rteShared] endJoinRoomWithErrorCode:error.code httpCode:statusCode];
+        [AgoraRteReportorWrapper endJoinRoomWithErrorCode:error.code
+                                                 httpCode:statusCode];
     }];
 }
 
-- (void)getLocalUserWithSuccess:(OnGetLocalUserSuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
-        
+- (void)getLocalUserWithSuccess:(OnGetLocalUserSuccessBlock)successBlock
+                        failure:(AgoraRTEFailureBlock)failureBlock {
     if (self.syncRoomSession.localUser != nil) {
         if (successBlock) {
             AgoraRTELocalUser *localUser = [self.syncRoomSession.localUser mapAgoraRTELocalUser];
             successBlock(localUser);
         }
     } else {
-        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room" code:1];
+        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room"
+                                                        code:1];
         
-        [AgoraRTELogService logErrMessageWithDescribe:@"classroom getLocalUser error:" message:@{@"roomUuid":AgoraRTENoNullString(self.roomUuid), @"errMsg":error.localizedDescription}];
+        [AgoraRTELogService logErrMessageWithDescribe:@"classroom getLocalUser error:"
+                                              message:@{@"roomUuid": AgoraRTENoNullString(self.roomUuid),
+                                                        @"errMsg": error.localizedDescription}];
         
         if(failureBlock != nil) {
             failureBlock(error);
@@ -289,12 +329,11 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }
 }
 
-- (void)getClassroomInfoWithSuccess:(OnGetClassroomInfoSuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
-    
+- (void)getClassroomInfoWithSuccess:(OnGetClassroomInfoSuccessBlock)successBlock
+                            failure:(AgoraRTEFailureBlock)failureBlock {
     if (self.syncRoomSession.room != nil) {
         AgoraRTEWEAK(self);
         [self.syncRoomSession getRoomInQueue:^(AgoraRTEBaseSnapshotRoomModel *room) {
-            
             AgoraRTESyncRoomModel *model = room;
             
             NSInteger count = weakself.syncRoomSession.users.count;
@@ -306,21 +345,25 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
             });
         }];
     } else {
-        
-        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room" code:1];
+        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room"
+                                                        code:1];
 
-        [AgoraRTELogService logErrMessageWithDescribe:@"classroom getClassroomInfo error:" message:@{@"roomUuid":AgoraRTENoNullString(self.roomUuid), @"errMsg":error.localizedDescription}];
+        [AgoraRTELogService logErrMessageWithDescribe:@"classroom getClassroomInfo error:"
+                                              message:@{@"roomUuid":AgoraRTENoNullString(self.roomUuid),
+                                                        @"errMsg":error.localizedDescription}];
         
-        if(failureBlock != nil) {
+        if (failureBlock) {
             failureBlock(error);
         }
     }
 }
 
-- (void)getUserCountWithRole:(AgoraRTERoleType)role success:(OnGetUserCountSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
- 
+- (void)getUserCountWithRole:(AgoraRTERoleType)role
+                     success:(OnGetUserCountSuccessBlock)successBlock
+                     failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
     if (self.syncRoomSession.localUser == nil) {
-        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room" code:1];
+        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room"
+                                                        code:1];
         if(failureBlock != nil) {
             failureBlock(error);
         }
@@ -328,7 +371,8 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }
     
     if (role != AgoraRTERoleTypeStudent && role != AgoraRTERoleTypeTeacher && role != AgoraRTERoleTypeAssistant) {
-        NSError *error = [AgoraRTEErrorManager paramterInvalid:@"role" code:2];
+        NSError *error = [AgoraRTEErrorManager paramterInvalid:@"role"
+                                                          code:2];
         if(failureBlock != nil) {
             failureBlock(error);
         }
@@ -336,7 +380,6 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }
 
     [self.syncRoomSession getUsersInQueue:^(NSArray<AgoraRTESyncUserModel *> *users) {
-        
         NSInteger count = 0;
         for (AgoraRTESyncUserModel *user in users) {
             if([user mapAgoraRTEUser].role == role) {
@@ -351,10 +394,14 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }];
 }
 
-- (void)getUserListWithRole:(AgoraRTERoleType)role from:(NSUInteger)fromIndex to:(NSUInteger)endIndex success:(OnGetUserListSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
-
+- (void)getUserListWithRole:(AgoraRTERoleType)role
+                       from:(NSUInteger)fromIndex
+                         to:(NSUInteger)endIndex
+                    success:(OnGetUserListSuccessBlock)successBlock
+                    failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
     if (self.syncRoomSession.localUser == nil) {
-        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room" code:1];
+        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room"
+                                                        code:1];
         if(failureBlock != nil) {
             failureBlock(error);
         }
@@ -362,18 +409,20 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }
     
     if (fromIndex > endIndex) {
-        NSError *error = [AgoraRTEErrorManager paramterInvalid:@"fromIndex or endIndex" code:2];
+        NSError *error = [AgoraRTEErrorManager paramterInvalid:@"fromIndex or endIndex"
+                                                          code:2];
 
-        [AgoraRTELogService logErrMessageWithDescribe:@"classroom getUserList error:" message:@{@"roomUuid":AgoraRTENoNullString(self.roomUuid), @"errMsg":@"endIndex must big then fromIndex"}];
+        [AgoraRTELogService logErrMessageWithDescribe:@"classroom getUserList error:"
+                                              message:@{@"roomUuid": AgoraRTENoNullString(self.roomUuid),
+                                                        @"errMsg": @"endIndex must big then fromIndex"}];
         
-        if(failureBlock != nil) {
+        if (failureBlock) {
             failureBlock(error);
         }
         return;
     }
 
     [self.syncRoomSession getUsersInQueue:^(NSArray<AgoraRTESyncUserModel *> *users) {
-        
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:users.count];
         for (AgoraRTESyncUserModel *user in users) {
             AgoraRTEUser *userModel = [user mapAgoraRTEUser];
@@ -383,12 +432,17 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         }
         
         if (endIndex > array.count) {
-            NSError *error = [AgoraRTEErrorManager paramterInvalid:@"endIndex" code:2];
+            NSError *error = [AgoraRTEErrorManager paramterInvalid:@"endIndex"
+                                                              code:2];
         
-            [AgoraRTELogService logErrMessageWithDescribe:@"classroom getUserList error:" message:@{@"roomUuid":AgoraRTENoNullString(self.roomUuid), @"role":@(role), @"fromIndex":@(fromIndex), @"toIndex":@(endIndex), @"errMsg":@"endIndex outsize the total number of current users"}];
-    
+            [AgoraRTELogService logErrMessageWithDescribe:@"classroom getUserList error:"
+                                                  message:@{@"roomUuid":AgoraRTENoNullString(self.roomUuid),
+                                                            @"role":@(role),
+                                                            @"fromIndex":@(fromIndex),
+                                                            @"toIndex":@(endIndex),
+                                                            @"errMsg":@"endIndex outsize the total number of current users"}];
             dispatch_async(dispatch_get_main_queue(), ^{
-                if(failureBlock != nil) {
+                if (failureBlock) {
                     failureBlock(error);
                 }
             });
@@ -397,18 +451,20 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if(successBlock) {
-                 NSRange range = NSMakeRange(fromIndex, endIndex - fromIndex);
+            if (successBlock) {
+                 NSRange range = NSMakeRange(fromIndex,
+                                             endIndex - fromIndex);
                  successBlock([array subarrayWithRange:range]);
              }
         });
     }];
 }
 
-- (void)getFullUserListWithSuccess:(OnGetUserListSuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
-    
+- (void)getFullUserListWithSuccess:(OnGetUserListSuccessBlock)successBlock
+                           failure:(AgoraRTEFailureBlock)failureBlock {
     if (self.syncRoomSession.localUser == nil) {
-        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room" code:1];
+        NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room"
+                                                        code:1];
         if(failureBlock != nil) {
             failureBlock(error);
         }
@@ -416,7 +472,6 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }
     
     [self.syncRoomSession getUsersInQueue:^(NSArray<AgoraRTESyncUserModel *> *users) {
-        
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:users.count];
         for (AgoraRTESyncUserModel *user in users) {
             AgoraRTEUser *userModel = [user mapAgoraRTEUser];
@@ -431,8 +486,8 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }];
 }
 
-- (void)getFullStreamListWithSuccess:(OnGetStreamListSuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
-    
+- (void)getFullStreamListWithSuccess:(OnGetStreamListSuccessBlock)successBlock
+                             failure:(AgoraRTEFailureBlock)failureBlock {
     if (self.syncRoomSession.localUser == nil) {
         NSError *error = [AgoraRTEErrorManager internalError:@"you haven't joined the room" code:1];
         if(failureBlock != nil) {
@@ -442,7 +497,6 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }
     
     [self.syncRoomSession getStreamsInQueue:^(NSArray<AgoraRTESyncStreamModel *> *streams) {
-       
         NSMutableArray *array = [NSMutableArray arrayWithCapacity:streams.count];
         for (AgoraRTESyncStreamModel *stream in streams) {
             AgoraRTEStream *streamModel = [stream mapAgoraRTEStream];
@@ -454,13 +508,13 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
                 successBlock(array);
             }
         });
-        
     }];
 }
 
-- (void)leaveClassroomWithSuccess:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
+- (void)leaveClassroomWithSuccess:(AgoraRTESuccessBlock)successBlock
+                          failure:(AgoraRTEFailureBlock)failureBlock {
     // Report
-    [[AgoraRteReportor rteShared] stopTimerOnline];
+    [AgoraRteReportorWrapper stopTimerOnline];
     
     [self releaseResource];
     if (successBlock) {
@@ -473,17 +527,17 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 }
 
 #pragma mark Private
-- (void)setupPublishOptionsSuccess:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
-    
+- (void)setupPublishOptionsSuccess:(AgoraRTESuccessBlock)successBlock
+                           failure:(AgoraRTEFailureBlock)failureBlock {
     if (self.mediaOption.autoPublish) {
         AgoraRTESyncUserModel *userModel = self.syncRoomSession.localUser;
         AgoraRTEStreamConfig *config = [[AgoraRTEStreamConfig alloc] initWithStreamUuid:userModel.streamUuid];
 
-        [self.userService startOrUpdateLocalStream:config success:^(AgoraRTEStream * _Nonnull stream) {
+        [self.userService startOrUpdateLocalStream:config
+                                           success:^(AgoraRTEStream * _Nonnull stream) {
             if(successBlock) {
                 successBlock();
             }
-            
         } failure:failureBlock];
     } else if(successBlock) {
         successBlock();
@@ -497,23 +551,30 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 }
 
 - (void)syncTotalSuccess:(AgoraRTESuccessBlock)successBlock {
-    
     AgoraRTEWEAK(self);
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    [AgoraRTEHttpManager syncTotalWithRoomUuid:self.roomUuid userToken:self.userToken param:params apiVersion:APIVersion1 analysisClass:AgoraRTECommonModel.class success:^(id<AgoraRTEBaseModel>  _Nonnull objModel) {
+    [AgoraRTEHttpManager syncTotalWithRoomUuid:self.roomUuid
+                                     userToken:self.userToken
+                                         param:params
+                                    apiVersion:APIVersion1
+                                 analysisClass:AgoraRTECommonModel.class
+                                       success:^(id<AgoraRTEBaseModel>  _Nonnull objModel) {
         AgoraRTECommonModel *model = objModel;
         [weakself.syncRoomSession syncSnapshot:AgoraRTENoNullDictionary(model.data) complete:^{
             successBlock();
         }];
     } failure:^(NSError * _Nullable error, NSInteger statusCode) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                     (int64_t)(3 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
             [weakself syncTotalSuccess:successBlock];
         });
     }];
 }
 
-- (void)syncIncreaseWithStartIndex:(NSInteger)nextId count:(NSInteger)count success:(AgoraRTESuccessBlock)block {
-
+- (void)syncIncreaseWithStartIndex:(NSInteger)nextId
+                             count:(NSInteger)count
+                           success:(AgoraRTESuccessBlock)block {
     if (self.increaseSyncing) {
         return;
     }
@@ -526,15 +587,19 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     if(count > 0) {
         params[@"count"] = @(count);
     }
-    [AgoraRTEHttpManager syncIncreaseWithRoomUuid:self.roomUuid userToken:self.userToken param:params apiVersion:APIVersion1 analysisClass:AgoraRTESyncIncreaseModel.class success:^(id<AgoraRTEBaseModel>  _Nonnull objModel) {
-
+    [AgoraRTEHttpManager syncIncreaseWithRoomUuid:self.roomUuid
+                                        userToken:self.userToken
+                                            param:params
+                                       apiVersion:APIVersion1
+                                    analysisClass:AgoraRTESyncIncreaseModel.class
+                                          success:^(id<AgoraRTEBaseModel>  _Nonnull objModel) {
         weakself.increaseSyncing = NO;
-        if(block){
+        if (block) {
             block();
         }
         
         AgoraRTESyncIncreaseModel *model = objModel;
-        for(id obj in AgoraRTENoNullArray(model.data.list)) {
+        for (id obj in AgoraRTENoNullArray(model.data.list)) {
             [weakself.messageHandle didReceivedChannelMsg:obj];
         }
     } failure:^(NSError * _Nullable error, NSInteger statusCode) {
@@ -545,10 +610,11 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 }
 
 - (void)releaseResource {
+    [AgoraRTELogService logMessageWithDescribe:@"AgoraRTEClassroomManager destory:"
+                                       message:@{@"roomUuid": AgoraRTENoNullString(self.roomUuid)}];
     
-    [AgoraRTELogService logMessageWithDescribe:@"AgoraRTEClassroomManager destory:" message:@{@"roomUuid": AgoraRTENoNullString(self.roomUuid)}];
-    
-    [NSNotificationCenter.defaultCenter postNotificationName:AgoraRTE_NOTICE_KEY_ROOM_DESTORY object:self.roomUuid];
+    [NSNotificationCenter.defaultCenter postNotificationName:AgoraRTE_NOTICE_KEY_ROOM_DESTORY
+                                                      object:self.roomUuid];
     
     [self.userService destory];
     self.userService = nil;
@@ -564,23 +630,28 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 - (void)initMediaDispatchGroup:(AgoraRTEJoinRoomInfoModel *)model
                        success:(AgoraRTESuccessBlock)successBlock
                        failure:(AgoraRTEFailureBlock)failureBlock {
-    
     dispatch_group_t group = dispatch_group_create();
     __block NSError *groupError;
 
     // Report
     NSString *subRtcEvent = @"rtc-join-channel";
     NSString *rtcApi = @"joinChannel";
-    [[AgoraRteReportor rteShared] startJoinRoomSubEventWithSubEvent:subRtcEvent];
+    [AgoraRteReportorWrapper startJoinRoomSubEventWithSubEvent:subRtcEvent];
     
     dispatch_group_enter(group);
     [self initRTCWithModel:model success:^{
         // Report
-        [[AgoraRteReportor rteShared] endJoinRoomSubEventWithSubEvent:subRtcEvent type:AgoraReportEndCategoryRtc errorCode:0 api:rtcApi];
+        [AgoraRteReportorWrapper endJoinRoomSubEventWithSubEvent:subRtcEvent
+                                                            type:AgoraReportEndCategoryRtc
+                                                       errorCode:0
+                                                             api:rtcApi];
         
         dispatch_group_leave(group);
     } failure:^(NSError * error) {
-        [[AgoraRteReportor rteShared] endJoinRoomSubEventWithSubEvent:subRtcEvent type:AgoraReportEndCategoryHttp errorCode:error.code api:rtcApi];
+        [AgoraRteReportorWrapper endJoinRoomSubEventWithSubEvent:subRtcEvent
+                                                            type:AgoraReportEndCategoryHttp
+                                                       errorCode:error.code
+                                                             api:rtcApi];
         
         groupError = error;
         dispatch_group_leave(group);
@@ -589,17 +660,23 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     // Report
     NSString *subRtmEvent = @"rtm-join-channel";
     NSString *rtmApi = @"joinChannel";
-    [[AgoraRteReportor rteShared] startJoinRoomSubEventWithSubEvent:subRtmEvent];
+    [AgoraRteReportorWrapper startJoinRoomSubEventWithSubEvent:subRtmEvent];
     
     dispatch_group_enter(group);
     [self initRTMWithModel:model success:^{
         // Report
-        [[AgoraRteReportor rteShared] endJoinRoomSubEventWithSubEvent:subRtmEvent type:AgoraReportEndCategoryRtm errorCode:0 api:rtmApi];
+        [AgoraRteReportorWrapper endJoinRoomSubEventWithSubEvent:subRtmEvent
+                                                            type:AgoraReportEndCategoryRtm
+                                                       errorCode:0
+                                                             api:rtmApi];
         
         dispatch_group_leave(group);
     } failure:^(NSError * error) {
         // Report
-        [[AgoraRteReportor rteShared] endJoinRoomSubEventWithSubEvent:subRtmEvent type:AgoraReportEndCategoryHttp errorCode:error.code api:rtmApi];
+        [AgoraRteReportorWrapper endJoinRoomSubEventWithSubEvent:subRtmEvent
+                                                            type:AgoraReportEndCategoryHttp
+                                                       errorCode:error.code
+                                                             api:rtmApi];
         
         groupError = error;
         dispatch_group_leave(group);
@@ -613,27 +690,15 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         }
     });
 }
-- (void)initRTCWithModel:(AgoraRTEJoinRoomInfoModel *)model success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
-    
-    
-    if(successBlock != nil) {
+
+- (void)initRTCWithModel:(AgoraRTEJoinRoomInfoModel *)model
+                 success:(AgoraRTESuccessBlock)successBlock
+                 failure:(AgoraRTEFailureBlock)failureBlock {
+    if (successBlock != nil) {
         self.joinRTCSuccessBlock = successBlock;
     }
     
     [AgoraRTCManager.shareManager initEngineKitWithAppid:self.appId];
-    NSDictionary *dic = @{
-        @"rtc.report_app_scenario":@{
-            @"appScenario":@(0),
-            @"serviceType":@(0),
-            @"appVersion":@"1.1.0-offiicial"
-        }
-    };
-    NSError *rtcError;
-    NSData *jsonRtcData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&rtcError];
-    if (jsonRtcData != nil) {
-        NSString *jsonString = [[NSString alloc]initWithData:jsonRtcData encoding:NSUTF8StringEncoding];
-        [AgoraRTCManager.shareManager setParameters:jsonString];
-    }
 
     [AgoraRTCManager.shareManager setLogFile:self.logDirectoryPath];
     
@@ -653,11 +718,15 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     } else if(self.sceneType == AgoraRTESceneTypeBig) {
         videoConfig.videoDimensionWidth = 320;
         videoConfig.videoDimensionHeight = 240;
+    } else {
+        videoConfig.videoDimensionWidth = 320;
+        videoConfig.videoDimensionHeight = 240;
     }
     [self.userService setVideoConfig: videoConfig];
 
     if (self.mediaOption.autoPublish) {
-        [AgoraRTCManager.shareManager setClientRole:AgoraClientRoleBroadcaster channelId:self.roomUuid];
+        [AgoraRTCManager.shareManager setClientRole:AgoraClientRoleBroadcaster
+                                          channelId:self.roomUuid];
     }
     
     NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
@@ -683,63 +752,96 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }
     
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:infoDic options:NSJSONWritingPrettyPrinted error:&error];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:infoDic
+                                                       options:NSJSONWritingPrettyPrinted
+                                                         error:&error];
     NSString *info = @"";
     if (jsonData) {
-        info = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+        info = [[NSString alloc] initWithData:jsonData
+                                     encoding:NSUTF8StringEncoding];
     }
     
     NSString *rtcToken = model.user.rtcToken;
     NSString *roomUuid = model.room.roomInfo.roomUuid;
-    NSInteger uid = model.user.streamUuid.integerValue;
-    int errorCode = [AgoraRTCManager.shareManager joinChannelByToken:rtcToken channelId:roomUuid info:info uid:uid autoSubscribeAudio:self.mediaOption.autoSubscribe autoSubscribeVideo:self.mediaOption.autoSubscribe];
+    NSInteger uid = model.user.streamUuid.longLongValue;
+    int errorCode = [AgoraRTCManager.shareManager joinChannelByToken:rtcToken
+                                                           channelId:roomUuid
+                                                                info:info
+                                                                 uid:uid
+                                                  autoSubscribeAudio:self.mediaOption.autoSubscribe
+                                                  autoSubscribeVideo:self.mediaOption.autoSubscribe];
     if (errorCode != 0) {
         if (failureBlock) {
-            NSError *eduError = [AgoraRTEErrorManager mediaError:errorCode codeMsg:[AgoraRTCManager getErrorDescription:errorCode] code:201];
+            NSError *eduError = [AgoraRTEErrorManager mediaError:errorCode
+                                                         codeMsg:[AgoraRTCManager getErrorDescription:errorCode]
+                                                            code:201];
             failureBlock(eduError);
         }
     } else {
         AgoraRTCChannelDelegateConfig *config = [AgoraRTCChannelDelegateConfig new];
         config.delegate = self;
-        [AgoraRTCManager.shareManager setChannelDelegateWithConfig:config channelId:roomUuid];
+        [AgoraRTCManager.shareManager setChannelDelegateWithConfig:config
+                                                         channelId:roomUuid];
     }
 }
-- (void)initRTMWithModel:(AgoraRTEJoinRoomInfoModel *)model success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
-    
+- (void)initRTMWithModel:(AgoraRTEJoinRoomInfoModel *)model
+                 success:(AgoraRTESuccessBlock)successBlock
+                 failure:(AgoraRTEFailureBlock)failureBlock {
     NSString *roomUuid = model.room.roomInfo.roomUuid;
 
     AgoraRTEWEAK(self);
-    [AgoraRTMManager.shareManager joinSignalWithChannelName:roomUuid completeSuccessBlock:^{
+    [AgoraRTMManager.shareManager joinSignalWithChannelName:roomUuid
+                                       completeSuccessBlock:^{
         AgoraRTMChannelDelegateConfig *config = [AgoraRTMChannelDelegateConfig new];
         config.channelDelegate = weakself;
-        [AgoraRTMManager.shareManager setChannelDelegateWithConfig:config channelName:roomUuid];
+        [AgoraRTMManager.shareManager setChannelDelegateWithConfig:config
+                                                       channelName:roomUuid];
         successBlock();
     } completeFailBlock:^(NSInteger errorCode) {
-        NSError *eduError = [AgoraRTEErrorManager communicationError:errorCode code:101];
+        NSError *eduError = [AgoraRTEErrorManager communicationError:errorCode
+                                                                code:101];
         failureBlock(eduError);
     }];
     [AgoraRTMManager.shareManager setLogFile:self.logDirectoryPath];
 }
 
 #pragma mark AgoraRTMManagerDelegate
-- (void)didReceivedSignal:(NSString *)signalText fromChannel: (AgoraRtmChannel *)channel {
+- (void)didReceivedSignal:(NSString *)signalText
+              fromChannel:(AgoraRtmChannel *)channel {
     [self.messageHandle didReceivedChannelMsg:signalText];
 }
 
 #pragma mark AgoraRTCManagerDelegate
 - (void)rtcChannelDidJoinChannel:(NSString *)channelId
                          withUid:(NSUInteger)uid {
-    
-    if([channelId isEqualToString:self.roomUuid]){
+    if ([channelId isEqualToString:self.roomUuid]) {
         if(self.joinRTCSuccessBlock != nil){
             self.joinRTCSuccessBlock();
         }
     }
-    
 }
-- (void)rtcChannel:(NSString *)channelId networkQuality:(NSUInteger)uid txQuality:(AgoraNetworkQuality)txQuality rxQuality:(AgoraNetworkQuality)rxQuality {
-    
-    if(![self.delegate respondsToSelector:@selector(classroom:networkQualityChanged:user:)]) {
+
+- (void)rtcChannel:(NSString *)channelId
+    didJoinedOfUid:(NSUInteger)uid {
+    if([self.delegate respondsToSelector:@selector(classroom:remoteRTCJoinedOfStreamId:)]) {
+        AgoraRTESyncRoomModel *room = self.syncRoomSession.room;
+        [self.delegate classroom:room remoteRTCJoinedOfStreamId:@(uid).stringValue];
+    }
+}
+- (void)rtcChannel:(NSString *)channelId
+   didOfflineOfUid:(NSUInteger)uid {
+    if([self.delegate respondsToSelector:@selector(classroom:remoteRTCOfflineOfStreamId:)]) {
+        AgoraRTESyncRoomModel *room = self.syncRoomSession.room;
+        [self.delegate classroom:room
+      remoteRTCOfflineOfStreamId:@(uid).stringValue];
+    }
+}
+
+- (void)rtcChannel:(NSString *)channelId
+    networkQuality:(NSUInteger)uid
+         txQuality:(AgoraNetworkQuality)txQuality
+         rxQuality:(AgoraNetworkQuality)rxQuality {
+    if (![self.delegate respondsToSelector:@selector(classroom:networkQualityChanged:user:)]) {
         return;
     }
     
@@ -781,8 +883,9 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     }
     
     AgoraRTESyncRoomModel *room = self.syncRoomSession.room;
-    [self.delegate classroom:[room mapAgoraRTEClassroom:self.syncRoomSession.users.count] networkQualityChanged:grade user:user];
+    [self.delegate classroom:[room mapAgoraRTEClassroom:self.syncRoomSession.users.count]
+       networkQualityChanged:grade
+                        user:user];
 }
-
 @end
 

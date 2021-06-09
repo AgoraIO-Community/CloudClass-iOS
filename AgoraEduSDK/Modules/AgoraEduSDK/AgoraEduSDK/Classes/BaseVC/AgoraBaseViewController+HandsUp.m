@@ -35,9 +35,9 @@
         [weakself.eventDispatcher onUpdateHandsUpStateResult:error];
     }];
 }
+
 // 事件监听
 - (void)registerEventHandler:(id<AgoraEduHandsUpHandler>)handler {
-    [self.eventDispatcher registerWithObject:handler];
+    [self.eventDispatcher registerWithObject:handler eventType:AgoraUIEventTypeHandsup];
 }
-
 @end

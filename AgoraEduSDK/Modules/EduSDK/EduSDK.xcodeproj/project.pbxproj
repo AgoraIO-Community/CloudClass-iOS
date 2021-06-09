@@ -946,6 +946,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2EFA320B38CA1D0EF3F2208B /* Pods-EduSDK.debug.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -981,6 +982,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 39F2E5428A7734BCF7E5C259 /* Pods-EduSDK.release.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;

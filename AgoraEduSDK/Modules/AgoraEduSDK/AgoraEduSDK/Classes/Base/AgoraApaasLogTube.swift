@@ -7,7 +7,7 @@
 
 import Foundation
 
-@objc public protocol AgoraApaasLogTube {
+@objc public protocol AgoraApaasLogTube: NSObjectProtocol {
     func log(content: String,
              extra: String?,
              type: AgoraApaasLogType,
@@ -18,11 +18,7 @@ import Foundation
     case info, warning, error
 }
 
-@objcMembers public class AgoraApaasLogCollection: NSObject {
-    
-}
-
-extension AgoraApaasLogCollection: AgoraApaasLogTube {
+@objcMembers public class AgoraApaasLogCollection: NSObject,AgoraApaasLogTube {
     public func log(content: String,
                     extra: String? = nil,
                     type: AgoraApaasLogType,

@@ -7,7 +7,6 @@
 //
 
 #import <AgoraWhiteBoard/AgoraWhiteBoard.h>
-#import <AgoraEduSDK/AgoraEduSDK.h>
 #import <AgoraLog/AgoraLog.h>
 #import <EduSDK/EduSDK.h>
 #import "AgoraHTTPConfiguration.h"
@@ -16,8 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AgoraEduManager : NSObject
 @property (nonatomic, strong) AgoraRTEManager *eduManager;
-@property (nonatomic, strong) AgoraWhiteBoardManager *whiteBoardManager;
-
 @property (nonatomic, strong) AgoraRTEClassroomManager * _Nullable roomManager;
 @property (nonatomic, strong) AgoraRTEStudentService * _Nullable studentService;
 

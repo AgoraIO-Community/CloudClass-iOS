@@ -53,7 +53,7 @@ import Foundation
         self.thread = nil
     }
 
-    @objc fileprivate func run() {
+    @objc private func run() {
         let subRunLoop =  RunLoop.current
         let timer = Timer(timeInterval: self.interval,
                           target: self,
@@ -72,7 +72,7 @@ import Foundation
         self.timer = timer
     }
     
-    @objc fileprivate func loop() {
+    @objc private func loop() {
         self.delegate?.perLoop()
     }
     

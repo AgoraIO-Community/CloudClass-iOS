@@ -8,6 +8,19 @@
 import UIKit
 import AgoraEduContext
 
+/// For OC
+@objc public enum AgoraUIEventType : Int {
+    case whiteBoard
+    case whiteBoardPageControl
+    case privateChat
+    case room
+    case message
+    case user
+    case handsup
+    case shareScreen
+    case device
+}
+
 public enum AgoraUIEvent {
     case whiteBoard(object: AgoraEduWhiteBoardHandler)
     case whiteBoardPageControl(object: AgoraEduWhiteBoardPageControlHandler)
@@ -17,7 +30,8 @@ public enum AgoraUIEvent {
     case user(object: AgoraEduUserHandler)
     case handsup(object: AgoraEduHandsUpHandler)
     case shareScreen(object: AgoraEduScreenShareHandler)
-    
+    case device(object: AgoraEduDeviceHandler)
+
     static let WhiteBoardId = "WhiteBoardId"
     static let WhiteBoardPageControlId = "WhiteBoardPageControlId"
     static let PrivateChatId = "PrivateChatId"
@@ -26,7 +40,8 @@ public enum AgoraUIEvent {
     static let UserId = "UserId"
     static let HandsupId = "HandsupId"
     static let ShareScreenId = "ShareScreenId"
-    
+    static let DeviceId = "DeviceId"
+
     var id: String {
         switch self {
         case .whiteBoard:               return AgoraUIEvent.WhiteBoardId
@@ -37,61 +52,71 @@ public enum AgoraUIEvent {
         case .user:                     return AgoraUIEvent.UserId
         case .handsup:                  return AgoraUIEvent.HandsupId
         case .shareScreen:              return AgoraUIEvent.ShareScreenId
+        case .device:                   return AgoraUIEvent.DeviceId
         }
     }
 }
 
 @objcMembers public class AgoraUIEventDispatcher: NSObject {
     var observerGroup = [String: NSPointerArray]() // UIEvent description
-    
-    public func register(object: NSObjectProtocol) {
+
+    public func register(object: NSObjectProtocol, eventType: AgoraUIEventType) {
         
         var event: AgoraUIEvent?
+        
         if let `object` = object as? AgoraEduWhiteBoardHandler {
             event = .whiteBoard(object: object)
-            
-        } else if let `object` = object as? AgoraEduWhiteBoardPageControlHandler {
-            event = .whiteBoardPageControl(object: object)
-            
-        } else if let `object` = object as? AgoraEduPrivateChatHandler {
-            event = .privateChat(object: object)
-            
-        } else if let `object` = object as? AgoraEduRoomHandler {
-            event = .room(object: object)
-            
-        } else if let `object` = object as? AgoraEduMessageHandler {
-            event = .message(object: object)
-            
-        } else if let `object` = object as? AgoraEduUserHandler {
-            event = .user(object: object)
-            
-        } else if let `object` = object as? AgoraEduHandsUpHandler {
-            event = .handsup(object: object)
-            
-        } else if let `object` = object as? AgoraEduScreenShareHandler {
-            event = .shareScreen(object: object)
-            
-        } else {
-            return
+            self.register(event: event!)
         }
-        
-        self.register(event: event!)
+        if let `object` = object as? AgoraEduWhiteBoardPageControlHandler {
+            event = .whiteBoardPageControl(object: object)
+            self.register(event: event!)
+        }
+        if let `object` = object as? AgoraEduPrivateChatHandler {
+            event = .privateChat(object: object)
+            self.register(event: event!)
+        }
+        if let `object` = object as? AgoraEduRoomHandler {
+            event = .room(object: object)
+            self.register(event: event!)
+        }
+        if let `object` = object as? AgoraEduMessageHandler {
+            event = .message(object: object)
+            self.register(event: event!)
+        }
+        if let `object` = object as? AgoraEduUserHandler {
+            event = .user(object: object)
+            self.register(event: event!)
+        }
+        if let `object` = object as? AgoraEduHandsUpHandler {
+            event = .handsup(object: object)
+            self.register(event: event!)
+        }
+        if let `object` = object as? AgoraEduScreenShareHandler {
+            event = .shareScreen(object: object)
+            self.register(event: event!)
+        }
+        if let `object` = object as? AgoraEduDeviceHandler {
+            event = .device(object: object)
+            self.register(event: event!)
+        }
     }
     
     public func register(event: AgoraUIEvent) {
+   
         var observers: NSPointerArray
-        
+
         if let array = observerGroup[event.id] {
             observers = array
         } else {
             observers = NSPointerArray.weakObjects()
             observerGroup[event.id] = observers
         }
-        
+
         let size = MemoryLayout<NSObject>.size
-        
+
         var tObject: NSObjectProtocol
-        
+
         switch event {
         case .whiteBoard(let object):            tObject = object
         case .whiteBoardPageControl(let object): tObject = object
@@ -101,13 +126,15 @@ public enum AgoraUIEvent {
         case .user(let object):                  tObject = object
         case .handsup(let object):               tObject = object
         case .shareScreen(let object):           tObject = object
+        case .device(let object):                tObject = object
         }
-        
+
         let pointer = Unmanaged.passUnretained(tObject).toOpaque()
-        
-        observers.addPointer(pointer)
+        if !observers.contains(pointer) {
+            observers.addPointer(pointer)
+        }
     }
-    
+
     func observerse(eventId: String) -> NSPointerArray? {
         return observerGroup[eventId]
     }
@@ -119,95 +146,95 @@ extension AgoraUIEventDispatcher {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return nil
         }
-        
+
         return observers.object(at: 0, type: AgoraEduWhiteBoardHandler.self)?.onGetBoardContainer?()
     }
-    
+
     // 设置是否可以画
     @objc public func onSetDrawingEnabled(_ enabled: Bool) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
             object.onSetDrawingEnabled?(enabled)
         }
     }
-    
+
     // 白板加载状态
     @objc public func onSetLoadingVisible(_ visible: Bool) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
             object.onSetLoadingVisible?(visible)
         }
     }
-    
+
     // 课件下载进度，url是课件地址，progress:0-100
     @objc public func onSetDownloadProgress(_ url: String,
                                    progress: Float) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
             object.onSetDownloadProgress?(url,
                                         progress: progress)
         }
     }
-    
+
     // 课件下载时间过长，一次课件下载超过了15秒，会有该调用
     @objc public func onSetDownloadTimeOut(_ url: String) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
             object.onSetDownloadTimeOut?(url)
         }
     }
-    
+
     // 课件下载完成
     @objc public func onSetDownloadComplete(_ url: String) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
             object.onSetDownloadComplete?(url)
         }
     }
-    
+
     // 课件下载失败
     @objc public func onDownloadError(_ url: String) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
             object.onDownloadError?(url)
         }
     }
-    
+
     // 课件下载取消
     @objc public func onCancelCurDownload() {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
             object.onCancelCurDownload?()
         }
     }
-    
+
     // 显示白板权限信息
     @objc public func onShowPermissionTips(_ granted: Bool) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
             object.onShowPermissionTips?(granted)
         }
@@ -220,53 +247,53 @@ extension AgoraUIEventDispatcher: AgoraEduWhiteBoardPageControlHandler {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardPageControlId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardPageControlHandler.self) { (object) in
             object.onSetPageIndex?(pageIndex, pageCount: pageCount)
         }
     }
-    
+
     // 设置是否全屏，注意和onSetResizeFullScreenEnable的区别
     @objc public func onSetFullScreen(_ fullScreen: Bool) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardPageControlId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardPageControlHandler.self) { (object) in
             object.onSetFullScreen?(fullScreen)
         }
     }
-    
+
     // 是否可以翻页
     @objc public func onSetPagingEnable(_ enable: Bool) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardPageControlId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardPageControlHandler.self) { (object) in
             object.onSetPagingEnable?(enable)
         }
     }
-    
+
     // 是否可以放大、缩小
     @objc public func onSetZoomEnable(_ zoomOutEnable: Bool,
-                             zoomInEnable: Bool) {
+                                      zoomInEnable: Bool) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardPageControlId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardPageControlHandler.self) { (object) in
             object.onSetZoomEnable?(zoomOutEnable,
                                   zoomInEnable: zoomInEnable)
         }
     }
-    
+
     // 是否可以全屏，注意和onSetFullScreen的区别
     @objc public func onSetResizeFullScreenEnable(_ enable: Bool) {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardPageControlId) else {
             return
         }
-        
+
         observers.traverse(type: AgoraEduWhiteBoardPageControlHandler.self) { (object) in
             object.onSetResizeFullScreenEnable?(enable)
         }
@@ -322,22 +349,52 @@ extension AgoraUIEventDispatcher: AgoraEduRoomHandler {
             object.onShowClassTips?(message)
         }
     }
+    
     // 网络状态
     @objc public func onSetNetworkQuality(_ quality: AgoraEduContextNetworkQuality) {
         observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduRoomHandler.self) { (object) in
             object.onSetNetworkQuality?(quality)
         }
     }
+    
     // 连接状态
     @objc public func onSetConnectionState(_ state: AgoraEduContextConnectionState) {
         observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduRoomHandler.self) { (object) in
             object.onSetConnectionState?(state)
         }
     }
+    
+    // 日志上传成功
+    @objc public func onUploadLogSuccess(_ logId: String) {
+        observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduRoomHandler.self) { (object) in
+            object.onUploadLogSuccess?(logId)
+        }
+    }
+    
     // 上课过程中，错误信息
     @objc public func onShowErrorInfo(_ error: AgoraEduContextError) {
         observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduRoomHandler.self) { (object) in
             object.onShowErrorInfo?(error)
+        }
+    }
+    
+    // 自定义房间属性更新
+    @objc public func onFlexRoomPropertiesInitialize(_ properties: [String: Any]) {
+        observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduRoomHandler.self) { (object) in
+            object.onFlexRoomPropertiesInitialize?(properties)
+        }
+    }
+    
+    // 自定义房间属性更新
+    @objc public func onFlexRoomPropertiesChanged(_ changedProperties: [String: Any],
+                                                  properties: [String: Any],
+                                                  cause: [String: Any]?,
+                                                  operator:AgoraEduContextUserInfo?) {
+        observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduRoomHandler.self) { (object) in
+            object.onFlexRoomPropertiesChanged?(changedProperties,
+                                                properties: properties,
+                                                cause: cause,
+                                                operator: `operator`)
         }
     }
 }
@@ -349,24 +406,72 @@ extension AgoraUIEventDispatcher: AgoraEduMessageHandler {
             object.onAddRoomMessage?(info)
         }
     }
+    // 收到提问消息
+    @objc public func onAddConversationMessage(_ info: AgoraEduContextChatInfo) {
+        observerse(eventId: AgoraUIEvent.MessageId)?.traverse(type: AgoraEduMessageHandler.self) { (object) in
+            object.onAddConversationMessage?(info)
+        }
+    }
     // 收到聊天权限变化
     @objc public func onUpdateChatPermission(_ allow: Bool) {
         observerse(eventId: AgoraUIEvent.MessageId)?.traverse(type: AgoraEduMessageHandler.self) { (object) in
             object.onUpdateChatPermission?(allow)
         }
     }
+    
+    @objc public func onUpdateLocalChatPermission(_ allow: Bool,
+                                                  toUser:AgoraEduContextUserInfo,
+                                                  operatorUser:AgoraEduContextUserInfo) {
+        observerse(eventId: AgoraUIEvent.MessageId)?.traverse(type: AgoraEduMessageHandler.self) { (object) in
+            object.onUpdateLocalChatPermission?(allow,
+                                                toUser:toUser,
+                                                operatorUser: operatorUser)
+        }
+    }
+    
+    @objc public func onUpdateRemoteChatPermission(_ allow: Bool,
+                                                   toUser:AgoraEduContextUserInfo,
+                                                   operatorUser:AgoraEduContextUserInfo) {
+        observerse(eventId: AgoraUIEvent.MessageId)?.traverse(type: AgoraEduMessageHandler.self) { (object) in
+            object.onUpdateRemoteChatPermission?(allow,
+                                                 toUser:toUser,
+                                                 operatorUser: operatorUser)
+        }
+    }
+    
     // 本地发送消息结果（包含首次和后面重发），如果error不为空，代表失败
-    @objc public func onSendRoomMessageResult(_ error: AgoraEduContextError?, info: AgoraEduContextChatInfo?) {
+    @objc public func onSendRoomMessageResult(_ error: AgoraEduContextError?,
+                                              info: AgoraEduContextChatInfo?) {
         observerse(eventId: AgoraUIEvent.MessageId)?.traverse(type: AgoraEduMessageHandler.self) { (object) in
-            object.onSendRoomMessageResult?(error, info: info)
+            object.onSendRoomMessageResult?(error,
+                                            info: info)
         }
     }
+    @objc public func onSendConversationMessageResult(_ error: AgoraEduContextError?,
+                                                        info: AgoraEduContextChatInfo?) {
+        observerse(eventId: AgoraUIEvent.MessageId)?.traverse(type: AgoraEduMessageHandler.self) { (object) in
+            object.onSendConversationMessageResult?(error,
+                                                    info: info)
+        }
+    }
+    
     // 查询历史消息结果，如果error不为空，代表失败
-    @objc public func onFetchHistoryMessagesResult(_ error: AgoraEduContextError?, list: [AgoraEduContextChatInfo]?) {
+    @objc public func onFetchHistoryMessagesResult(_ error: AgoraEduContextError?,
+                                                   list: [AgoraEduContextChatInfo]?) {
         observerse(eventId: AgoraUIEvent.MessageId)?.traverse(type: AgoraEduMessageHandler.self) { (object) in
-            object.onFetchHistoryMessagesResult?(error, list: list)
+            object.onFetchHistoryMessagesResult?(error,
+                                                 list: list)
         }
     }
+
+    @objc public func onFetchConversationHistoryMessagesResult(_ error: AgoraEduContextError?,
+                                                               list: [AgoraEduContextChatInfo]?) {
+        observerse(eventId: AgoraUIEvent.MessageId)?.traverse(type: AgoraEduMessageHandler.self) { (object) in
+            object.onFetchConversationHistoryMessagesResult?(error,
+                                                             list: list)
+        }
+    }
+    
     /* 显示聊天过程中提示信息
      * 禁言模式开启
      * 禁言模式关闭
@@ -398,7 +503,8 @@ extension AgoraUIEventDispatcher: AgoraEduUserHandler {
         }
     }
     // 音量提示
-    @objc public func onUpdateAudioVolumeIndication(_ value: Int, streamUuid: String) {
+    @objc public func onUpdateAudioVolumeIndication(_ value: Int,
+                                                    streamUuid: String) {
         observerse(eventId: AgoraUIEvent.UserId)?.traverse(type: AgoraEduUserHandler.self) { (object) in
             object.onUpdateAudioVolumeIndication?(value, streamUuid: streamUuid)
         }
@@ -418,6 +524,20 @@ extension AgoraUIEventDispatcher: AgoraEduUserHandler {
     @objc public func onShowUserReward(_ user: AgoraEduContextUserInfo) {
         observerse(eventId: AgoraUIEvent.UserId)?.traverse(type: AgoraEduUserHandler.self) { (object) in
             object.onShowUserReward?(user)
+        }
+    }
+    // 自定义房间属性更新
+    @objc public func onFlexUserPropertiesChanged(_ changedProperties: [String: Any],
+                                                  properties: [String: Any],
+                                                  cause: [String: Any]?,
+                                                  fromUser:AgoraEduContextUserDetailInfo,
+                                                  operator:AgoraEduContextUserInfo?) {
+        observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduUserHandler.self) { (object) in
+            object.onFlexUserPropertiesChanged?(changedProperties,
+                                                properties: properties,
+                                                cause: cause,
+                                                fromUser: fromUser,
+                                                operator: `operator`)
         }
     }
 }
@@ -460,10 +580,16 @@ extension AgoraUIEventDispatcher: AgoraEduHandsUpHandler {
 
 extension AgoraUIEventDispatcher: AgoraEduScreenShareHandler {
     // 开启或者关闭屏幕分享
-    @objc public func onUpdateScreenShareState(_ sharing: Bool,
-                                               streamUuid: String) {
+    @objc public func onUpdateScreenShareState(_ state: AgoraEduContextScreenShareState, streamUuid: String) {
         observerse(eventId: AgoraUIEvent.ShareScreenId)?.traverse(type: AgoraEduScreenShareHandler.self) { (object) in
-            object.onUpdateScreenShareState?(sharing, streamUuid: streamUuid)
+            object.onUpdateScreenShareState?(state, streamUuid: streamUuid)
+        }
+    }
+
+    // 切换屏幕课件Tab
+    @objc public func onSelectedScreenShareState(_ selected: Bool) {
+        observerse(eventId: AgoraUIEvent.ShareScreenId)?.traverse(type: AgoraEduScreenShareHandler.self) { (object) in
+            object.onSelectScreenShare?(selected)
         }
     }
 
@@ -478,10 +604,53 @@ extension AgoraUIEventDispatcher: AgoraEduScreenShareHandler {
     }
 }
 
+extension AgoraUIEventDispatcher: AgoraEduDeviceHandler {
+    @objc public func onCameraDeviceEnableChanged(enabled: Bool) {
+        observerse(eventId: AgoraUIEvent.DeviceId)?.traverse(type: AgoraEduDeviceHandler.self) { (object) in
+            object.onCameraDeviceEnableChanged?(enabled: enabled)
+        }
+    }
+    @objc public func onCameraFacingChanged(facing: EduContextCameraFacing) {
+        observerse(eventId: AgoraUIEvent.DeviceId)?.traverse(type: AgoraEduDeviceHandler.self) { (object) in
+            object.onCameraFacingChanged?(facing: facing)
+        }
+    }
+    @objc public func onMicDeviceEnabledChanged(enabled: Bool) {
+        observerse(eventId: AgoraUIEvent.DeviceId)?.traverse(type: AgoraEduDeviceHandler.self) { (object) in
+            object.onMicDeviceEnabledChanged?(enabled: enabled)
+        }
+    }
+    @objc public func onSpeakerEnabledChanged(enabled: Bool) {
+        observerse(eventId: AgoraUIEvent.DeviceId)?.traverse(type: AgoraEduDeviceHandler.self) { (object) in
+            object.onSpeakerEnabledChanged?(enabled: enabled)
+        }
+    }
+    @objc public func onDeviceTips(message: String) {
+        observerse(eventId: AgoraUIEvent.DeviceId)?.traverse(type: AgoraEduDeviceHandler.self) { (object) in
+            object.onDeviceTips?(message: message)
+        }
+    }
+}
+
 fileprivate extension NSPointerArray {
     func add(object: NSObject) {
         let pointer = Unmanaged.passUnretained(object).toOpaque()
         addPointer(pointer)
+    }
+
+    func contains(_ pointer: UnsafeMutableRawPointer) -> Bool {
+        guard count > 0  else {
+            return false
+        }
+        
+        for index in 0...(count - 1) {
+            let value = self.pointer(at: index)
+            if pointer == value {
+                return true
+            }
+        }
+        
+        return false
     }
     
     func object<T: Any>(at index: Int,
@@ -491,16 +660,16 @@ fileprivate extension NSPointerArray {
               let pointer = pointer(at: index) else {
             return nil
         }
-        
+
         let object = Unmanaged<NSObject>.fromOpaque(pointer).takeUnretainedValue()
-        
+
         if let obj = object as? T {
             return obj
         } else {
             return nil
         }
     }
-    
+
     func traverse<T>(type: T.Type,
                      perObject: (T) -> Void) {
         for index in 0...(count - 1) {
@@ -508,7 +677,7 @@ fileprivate extension NSPointerArray {
                                    type: type) else {
                 continue
             }
-            
+
             perObject(obj)
         }
     }

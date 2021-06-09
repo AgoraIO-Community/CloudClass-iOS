@@ -10,6 +10,11 @@ import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 
+protocol AgoraRoomUIControllerDelegate: NSObjectProtocol {
+    func roomController(_ controller: AgoraRoomUIController,
+                         didClicked button: AgoraBaseUIButton)
+}
+
 class AgoraRoomUIController: NSObject, AgoraUIController {
     // Contexts
     private var context: AgoraEduRoomContext? {
@@ -21,13 +26,16 @@ class AgoraRoomUIController: NSObject, AgoraUIController {
     
     private weak var contextProvider: AgoraControllerContextProvider?
     private weak var eventRegister: AgoraControllerEventRegister?
+    private weak var delegate: AgoraRoomUIControllerDelegate?
     
     var containerView = AgoraUIControllerContainer(frame: .zero)
-    
+
     public init(contextProvider: AgoraControllerContextProvider,
-                eventRegister: AgoraControllerEventRegister) {
+                eventRegister: AgoraControllerEventRegister,
+                delegate: AgoraRoomUIControllerDelegate) {
         self.contextProvider = contextProvider
         self.eventRegister = eventRegister
+        self.delegate = delegate
         
         super.init()
         initViews()
@@ -55,34 +63,21 @@ private extension AgoraRoomUIController {
     }
     
     func observeUI() {
-        navigationBar.leaveButton.tap { [unowned self] (button) in
-            self.existClassAlert()
+        navigationBar.setButton.tap { [unowned self] (button) in
+            self.delegate?.roomController(self, didClicked: button)
         }
+        
+        navigationBar.logButton.tap { [unowned self] (button) in
+            self.context?.uploadLog()
+        }
+    }
+    
+    public func updateSetInteraction(enabled: Bool) {
+        navigationBar.setButton.isUserInteractionEnabled = enabled
     }
 }
 
 private extension AgoraRoomUIController {
-    func existClassAlert() {
-        let leftButtonLabel = AgoraAlertLabelModel()
-        leftButtonLabel.text = AgoraKitLocalizedString("CancelText")
-        
-        let leftButton = AgoraAlertButtonModel()
-        leftButton.titleLabel = leftButtonLabel
-        
-        let rightButtonLabel = AgoraAlertLabelModel()
-        rightButtonLabel.text = AgoraKitLocalizedString("SureText")
-        
-        let rightButton = AgoraAlertButtonModel()
-        rightButton.titleLabel = rightButtonLabel
-        rightButton.tapActionBlock = { [unowned self] (index) -> Void in
-            self.context?.leaveRoom()
-        }
-        
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: AgoraKitLocalizedString("LeaveClassTitleText"),
-                             message: AgoraKitLocalizedString("LeaveClassText"),
-                             btnModels: [leftButton, rightButton])
-    }
     
     func classOverAlert() {
         let ButtonLabel = AgoraAlertLabelModel()
@@ -154,9 +149,15 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
             loadingView?.removeFromSuperview()
             AgoraUtils.showToast(message: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
             context?.leaveRoom()
-        case .disconnected, .connecting, .reconnecting:
+        case .connecting:
             if loadingView?.superview == nil {
                 self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("LoaingText"))
+                
+                
+            }
+        case .disconnected, .reconnecting:
+            if loadingView?.superview == nil {
+                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("ReconnectingText"))
             }
         case .connected:
             loadingView?.removeFromSuperview()
@@ -166,6 +167,20 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
     // 上课过程中，错误信息
     public func onShowErrorInfo(_ error: AgoraEduContextError) {
         AgoraUtils.showToast(message: error.message ?? "")
+    }
+    
+    public func onUploadLogSuccess(_ logId: String) {
+        let title = AgoraKitLocalizedString("UploadLog")
+        
+        let button = AgoraAlertButtonModel()
+        let buttonTitleProperties = AgoraAlertLabelModel()
+        buttonTitleProperties.text = AgoraKitLocalizedString("OK")
+        button.titleLabel = buttonTitleProperties
+        
+        AgoraUtils.showAlert(imageModel: nil,
+                             title: title,
+                             message: logId,
+                             btnModels: [button])
     }
 }
 

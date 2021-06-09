@@ -166,6 +166,15 @@ import EduSDK
         if fileDirectory.last != "/" {
             fileLocalPath = fileDirectory + "/" +  url.lastPathComponent
         }
+        
+//        // 拼接文件名路径， 现在解压后， 直接是解压内容到这个文件夹中
+//        if let fileName = url.lastPathComponent.components(separatedBy: ".").first {
+//            if fileDirectory.last != "/" {
+//                fileDirectory = fileDirectory + "/"
+//            }
+//            fileDirectory = fileDirectory + fileName
+//        }
+        
         if let _ = self.fileExists(fileLocalPath) {
             success()
             return nil

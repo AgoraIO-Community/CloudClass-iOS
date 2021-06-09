@@ -17,7 +17,7 @@
 @end
 
 @interface AgoraWhiteBoardTaskModel()
-@property (nonatomic, strong) NSString *resourceName;
+@property (nonatomic, strong) NSString *resourceUuid;
 @property (nonatomic, strong) NSString *taskUuid;
 @property (nonatomic, strong) NSString *ext;
 @end

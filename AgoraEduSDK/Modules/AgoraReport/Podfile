@@ -6,7 +6,7 @@ target 'AgoraReport' do
   use_frameworks!
 
   pod "AFNetworking", "4.0.1"
-
+  
   post_install do |installer|
      installer.pods_project.targets.each do |target|
          target.build_configurations.each do |config|
@@ -15,5 +15,4 @@ target 'AgoraReport' do
          end
      end
   end
-  
 end

@@ -7,20 +7,29 @@
 
 import Foundation
 import AgoraUIEduBaseViews
-import AgoraEduSDK.AgoraFiles.AgoraManager
+import EduSDK
 import AgoraEduContext
 
 enum AgoraCauseType: Int, Decodable {
     case device = 4
-    
+
     // handsUpmanager
     case handsUpEnable = 5
     case handsupProgress = 501
-    
+
     // streamGroups
     case streamGroupsAdd = 600
     case streamGroupsDel = 601
+
+    // 私聊
+    case peerChatEnable = 6
     
+    // flexProps
+    case flexPropsChanged = 8
+
+    // 带标注的屏幕分享 选择的tab
+    case screenSelectChanged = 1301
+
     case reward = 1101
 }
 
@@ -89,11 +98,12 @@ extension AgoraBaseVM {
         return userInfo
     }
     
-    func kitUserInfo(_ rteUser: AgoraRTEBaseUser) -> AgoraEduContextUserInfo {
+    func kitUserInfo(_ rteUser: AgoraRTEUser) -> AgoraEduContextUserInfo {
         let userInfo = AgoraEduContextUserInfo()
         userInfo.role = AgoraEduContextUserRole(rawValue: rteUser.role.rawValue) ?? .student
         userInfo.userUuid = rteUser.userUuid
         userInfo.userName = rteUser.userName
+        userInfo.userProperties = rteUser.userProperties["flexProps"] as? Dictionary<String,String>
         return userInfo
     }
     
@@ -101,7 +111,7 @@ extension AgoraBaseVM {
         let error = err as NSError
         
         let kitError = AgoraEduContextError(code: error.code,
-                                     message: error.localizedDescription)
+                                            message: error.localizedDescription)
         return kitError
     }
 }

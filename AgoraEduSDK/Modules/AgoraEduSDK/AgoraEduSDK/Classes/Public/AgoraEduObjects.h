@@ -27,8 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AgoraEduCourseware : NSObject
 // 资源名称，必须要"/"开头
 @property (nonatomic, copy) NSString *resourceName;
+// 资源Id
+@property (nonatomic, copy) NSString *resourceUuid;
 // 场景路径，必须要"/"开头，相当于文件目录
-// 建议这样拼接：resourceName + "/" + convertedFileList里面第一个对象的name
+// 建议这样拼接：resourceUuid + "/" + convertedFileList里面第一个对象的name
 @property (nonatomic, copy) NSString *scenePath;
 // 课件下载地址
 // 参考： "https://convertcdn.netless.link/dynamicConvert/{taskUuid}.zip"
@@ -37,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 对应convertedFileList对象
 @property (nonatomic, strong) NSArray<WhiteScene *> *scenes;
 - (instancetype)initWithResourceName:(NSString *)resourceName
+                        resourceUuid:(NSString *)resourceUuid
                            scenePath:(NSString *)scenePath
                               scenes:(NSArray<WhiteScene *> *)scenes
                          resourceUrl:(NSString *)resourceUrl;
@@ -64,6 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSNumber *duration;
 // 白板区域
 @property (nonatomic, copy) NSString *boardRegion;
+// 用户自定义属性
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> * userProperties;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
@@ -74,7 +79,8 @@ NS_ASSUME_NONNULL_BEGIN
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     boardRegion:(NSString *_Nullable)boardRegion;
+                     boardRegion:(NSString *_Nullable)boardRegion
+                  userProperties:(NSDictionary<NSString *, NSString *> * _Nullable)userProperties;
 @end
 
 // 聊天翻译

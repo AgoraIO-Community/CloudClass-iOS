@@ -22,6 +22,7 @@ protocol AgoraBoardVMDelegate: NSObjectProtocol {
     
     func didBoardPageChange(pageIndex: Int, pageCount: Int)
     func didSceneChange(urls: [URL])
+    func didScenePathChanged(path: String)
 }
 
 public class AgoraBoardVM: AgoraBaseVM {
@@ -96,7 +97,7 @@ public class AgoraBoardVM: AgoraBaseVM {
             // 预加载第一个课件
 //            if let courseware = self.cache.coursewares.first,
 //               !teacherFirstLogin {
-//                self.manager.putScenes(courseware.resourceName,
+//                self.manager.putScenes(courseware.resourceUuid,
 //                                  scenes: courseware.scenes,
 //                                  index: 0)
 //                self.manager.setScenePath(courseware.scenePath)
@@ -280,11 +281,15 @@ extension AgoraBoardVM: AgoraWhiteManagerDelegate {
 
     // 老师切换场景，根据课件
     public func onWhiteBoardSceneChanged(_ scenePath: String) {
+        
+        delegate?.didScenePathChanged(path: scenePath)
+        
         var taskUuid: String? = nil
         
         // 任务列表
         if let tasks = self.boardState.materialList {
-            for task in tasks where (task.ext == "pptx" && scenePath.contains(task.resourceName as String)) {
+
+            for task in tasks where (task.ext == "pptx" && scenePath.contains(task.resourceUuid as String)) {
                 taskUuid = task.taskUuid as String
                 break
             }
@@ -300,7 +305,7 @@ extension AgoraBoardVM: AgoraWhiteManagerDelegate {
             
         // 判断之前下载列表中是否有 scenePath，如果有也需要下载，
         } else {
-            for courseware in cache.coursewares where courseware.scenePath == scenePath  {
+            for courseware in cache.coursewares where scenePath.contains(courseware.resourceUuid) {
                 if let url = URL(string: courseware.resourceUrl) {
                     delegate?.didSceneChange(urls: [url])
                 }

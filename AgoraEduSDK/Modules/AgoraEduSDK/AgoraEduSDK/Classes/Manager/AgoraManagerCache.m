@@ -24,14 +24,13 @@ static AgoraManagerCache *manager = nil;
 
 + (void)releaseResource {
     AgoraManagerCache.share.classroom = nil;
-//    AgoraManagerCache.share.replay = nil;
     AgoraManagerCache.share.classroomDelegate = nil;
-//    AgoraManagerCache.share.replayDelegate = nil;
-    
+    AgoraManagerCache.share.token = nil;
     AgoraManagerCache.share.sdkReady = NO;
     
     AgoraManagerCache.share.boardAppId = @"";
     AgoraManagerCache.share.coursewares = @[];
     AgoraManagerCache.share.extApps = nil;
+    AgoraManagerCache.share.components = nil;
 }
 @end

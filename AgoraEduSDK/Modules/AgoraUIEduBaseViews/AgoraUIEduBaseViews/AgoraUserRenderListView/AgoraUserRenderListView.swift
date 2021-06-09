@@ -33,6 +33,29 @@ import AgoraEduContext
         initLayout()
         observeUI()
     }
+    
+    // MARK: touch event
+    @objc func buttonTap(btn: AgoraBaseUIButton) {
+        let width = collectionView.bounds.width
+        let height = collectionView.bounds.height
+        var x: CGFloat = 0
+        
+        if btn == leftButton {
+            x = collectionView.contentOffset.x - width
+            x = max(x,
+                    0)
+        } else {
+            x = collectionView.contentOffset.x + width
+            x = min(x,
+                    collectionView.contentSize.width)
+        }
+        
+        collectionView.scrollRectToVisible(CGRect(x: x,
+                                                  y: 0,
+                                                  width: width,
+                                                  height: height),
+                                           animated: true)
+    }
 }
 
 // MARK: - Private
@@ -93,27 +116,5 @@ private extension AgoraUserRenderListView {
         rightButton.addTarget(self,
                               action: #selector(buttonTap(btn:)),
                               for: .touchUpInside)
-    }
-    
-    @objc func buttonTap(btn: AgoraBaseUIButton) {
-        let width = collectionView.bounds.width
-        let height = collectionView.bounds.height
-        var x: CGFloat = 0
-        
-        if btn == leftButton {
-            x = collectionView.contentOffset.x - width
-            x = max(x,
-                    0)
-        } else {
-            x = collectionView.contentOffset.x + width
-            x = min(x,
-                    collectionView.contentSize.width)
-        }
-        
-        collectionView.scrollRectToVisible(CGRect(x: x,
-                                                  y: 0,
-                                                  width: width,
-                                                  height: height),
-                                           animated: true)
     }
 }

@@ -16,7 +16,7 @@ import UIKit
     func viewDidDisappear()
 }
 
-@objc public protocol AgoraRootController where Self: UIViewController {
+@objc public protocol AgoraRootController: NSObjectProtocol {
     var children: NSMutableArray {set get}
     
     func addChild(child: AgoraController)

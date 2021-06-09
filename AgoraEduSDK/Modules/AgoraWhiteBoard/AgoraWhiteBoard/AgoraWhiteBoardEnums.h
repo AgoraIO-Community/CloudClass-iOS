@@ -31,6 +31,7 @@ typedef NS_ENUM(NSInteger, AgoraWhiteBoardToolType) {
     WhiteBoardToolTypeArrow,
     WhiteBoardToolTypeStraight,
     WhiteBoardToolTypePointer,
+    WhiteBoardToolTypeClicker
 };
 
 NS_ASSUME_NONNULL_END

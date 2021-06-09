@@ -91,6 +91,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // MediaDevice
 - (int)switchCamera;
+- (int)setEnableSpeakerphone:(BOOL)enable;
+- (BOOL)isSpeakerphoneEnabled;
 - (int)enableInEarMonitoring:(BOOL)enabled;
 
 // Private Parameters

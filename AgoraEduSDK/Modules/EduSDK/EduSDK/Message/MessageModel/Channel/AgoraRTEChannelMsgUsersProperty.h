@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger action;//1 upsert 2 delete
 @property (nonatomic, strong) NSDictionary *changeProperties;
 @property (nonatomic, strong) NSDictionary *cause;
-//@property (nonatomic, strong) AgoraRTEObject *operator;
+@property (nonatomic, strong) AgoraRTEBaseUser *operator;
 @end
 
 NS_ASSUME_NONNULL_END

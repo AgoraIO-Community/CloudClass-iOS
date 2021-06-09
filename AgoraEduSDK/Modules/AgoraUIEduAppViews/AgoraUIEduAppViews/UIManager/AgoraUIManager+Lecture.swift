@@ -25,6 +25,7 @@ extension AgoraUIManager {
         appView.addSubview(renderSmall.containerView)
         appView.addSubview(whiteBoard.containerView)
         whiteBoard.containerView.addSubview(shareScreen.containerView)
+        whiteBoard.containerView.sendSubviewToBack(shareScreen.containerView)
         appView.addSubview(chat.containerView)
         appView.addSubview(handsUp.containerView)
         appView.addSubview(userList.containerView)
@@ -106,15 +107,17 @@ extension AgoraUIManager {
         whiteBoard.containerView.agora_safe_right = whiteBoardRight
         
         userlist.containerView.agora_safe_y = isPad ? (whiteBoard.containerView.agora_safe_y + 50.5) : (top - ViewGap)
-
+        
+        if let message = ["isFullScreen": (isFullScreen ? 1 : 0)].jsonString() {
+            chat.widgetDidReceiveMessage(message)
+        }
+        
         self.resetLectureChatLayout(isFullScreen)
         self.resetLectureHandsUpLayout(isFullScreen)
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
             self.appView.layoutSubviews()
         }
-        
-        chat.updateChatStyle(isFullScreen)
     }
         
     private func resetLectureChatLayout(_ isFullScreen: Bool) {
@@ -155,5 +158,4 @@ extension AgoraUIManager {
         handsUp.containerView.agora_safe_right = right
     }
 }
-
 

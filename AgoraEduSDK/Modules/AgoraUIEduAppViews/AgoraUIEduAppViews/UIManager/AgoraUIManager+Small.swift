@@ -25,6 +25,7 @@ extension AgoraUIManager {
         appView.addSubview(renderSmall.containerView)
         appView.addSubview(whiteBoard.containerView)
         whiteBoard.containerView.addSubview(shareScreen.containerView)
+        whiteBoard.containerView.sendSubviewToBack(shareScreen.containerView)
         appView.addSubview(chat.containerView)
         appView.addSubview(handsUp.containerView)
         appView.addSubview(userList.containerView)
@@ -109,14 +110,16 @@ extension AgoraUIManager {
         whiteBoard.containerView.agora_safe_y = whiteBoardY
         whiteBoard.containerView.agora_safe_right = whiteBoardRight
 
+        if let message = ["isFullScreen": (isFullScreen ? 1 : 0)].jsonString() {
+            chat.widgetDidReceiveMessage(message)
+        }
+        
         self.resetSmallChatLayout(isFullScreen)
         self.resetSmallHandsUpLayout(isFullScreen)
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
             self.appView.layoutSubviews()
         }
-        
-        chat.updateChatStyle(isFullScreen)
     }
         
     private func resetSmallChatLayout(_ isFullScreen: Bool) {

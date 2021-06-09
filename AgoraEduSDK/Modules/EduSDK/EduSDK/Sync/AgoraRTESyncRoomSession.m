@@ -223,7 +223,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
 }
 - (void)_updateRoom:(id)obj sequence:(NSInteger)sequence cause:(NSDictionary *)cause {
         
-    if(sequence <= self.currentMaxSeq){
+    if (sequence <= self.currentMaxSeq) {
         return;
     }
     
@@ -265,10 +265,9 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
             return;
         }
         
-        if ([self.delegate respondsToSelector:@selector(onRoomUpdateFrom:to:cause:)]) {
+        if ([self.delegate respondsToSelector:@selector(onRoomUpdateFrom:to:model:)]) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                
-                [self.delegate onRoomUpdateFrom:originalRoom to:self.room cause:cause];
+                [self.delegate onRoomUpdateFrom:originalRoom to:self.room model:obj];
             });
         }
         [self checkCacheRoomSession];
@@ -298,8 +297,12 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
     NSInteger gap = sequence - self.currentMaxSeq;
     if (gap == 1 && self.currentMaxSeq != -1) {
         
+        // 更新的users
+        NSArray<AgoraRTESyncUserModel *> *users = obj;
+        
         if ([obj isKindOfClass:AgoraRTEChannelMsgUsersProperty.class] || [obj isKindOfClass:AgoraRTEChannelMsgUserInfo.class]) {
             
+            // 找到userUuid
             NSString *userUuid = @"";
             if ([obj isKindOfClass:AgoraRTEChannelMsgUsersProperty.class] ) {
                 userUuid = ((AgoraRTEChannelMsgUsersProperty*)obj).fromUser.userUuid;
@@ -309,6 +312,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                 }
             }
 
+            // 没有找到这个人，忽略这条数据。
             NSPredicate *userPredicate = [NSPredicate predicateWithFormat:@"userUuid = %@", AgoraRTENoNullString(userUuid)];
             NSArray<AgoraRTESyncUserModel *> *userFilters = [self.users filteredArrayUsingPredicate:userPredicate];
             if (userFilters.count == 0) {
@@ -317,6 +321,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                 return;
             }
 
+            // 更新用户数据
             AgoraRTESyncUserModel *userModel = [self.userClass new];
             id originalObj = [userFilters.firstObject yy_modelToJSONObject];
             [userModel yy_modelSetWithJSON:originalObj];
@@ -333,13 +338,11 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
             userModel.cause = cause;
 //            [AgoraRTELogService logMessageWithDescribe:@"Srs updateUserState:" message:@{ @"sequence":@(sequence), @"currentMaxSeq":@(self.currentMaxSeq), @"obj":obj}];
             
-            [self _updateUser:@[userModel] sequence:sequence cause:cause];
-            return;
+            users = @[userModel];
         }
         
         self.currentMaxSeq = sequence;
-        
-        NSArray<AgoraRTESyncUserModel *> *users = obj;
+
         if (users == nil || ![users isKindOfClass:NSArray.class] || users.count == 0 || ![users.firstObject isKindOfClass:self.userClass]) {
             [self checkCacheRoomSession];
             return;
@@ -394,9 +397,9 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                     }
                 } else if (userModel.state == 1) {
                     // update
-                    AgoraRTEBaseSnapshotUserModel *originalObj = [self.userClass new];
-                    id obj = [filterUser yy_modelToJSONObject];
-                    [originalObj yy_modelSetWithJSON:obj];
+                    AgoraRTEBaseSnapshotUserModel *originalUser = [self.userClass new];
+                    id originalObj = [filterUser yy_modelToJSONObject];
+                    [originalUser yy_modelSetWithJSON:originalObj];
 
                     id userObj = [userModel yy_modelToJSONObject];
                     [filterUser yy_modelSetWithJSON:userObj];
@@ -405,15 +408,17 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                         
                         [self.localUser yy_modelSetWithJSON: userObj];
 
-                        if ([self.delegate respondsToSelector:@selector(onLocalUserUpdateFrom:to:)]) {
+                        if ([self.delegate respondsToSelector:@selector(onLocalUserUpdateFrom:to:model:)]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [self.delegate onLocalUserUpdateFrom:originalObj to:filterUser];
+                                
+                                [self.delegate onLocalUserUpdateFrom:originalUser to:filterUser model:(AgoraRTEChannelMsgUsersProperty*)obj];
                             });
                         }
                     } else {
-                        if ([self.delegate respondsToSelector:@selector(onRemoteUserUpdateFrom:to:)]) {
+                        if ([self.delegate respondsToSelector:@selector(onRemoteUserUpdateFrom:to:model:)]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [self.delegate onRemoteUserUpdateFrom:originalObj to:filterUser];
+                                
+                                [self.delegate onRemoteUserUpdateFrom:originalUser to:filterUser model:(AgoraRTEChannelMsgUsersProperty*)obj];
                             });
                         }
                     }

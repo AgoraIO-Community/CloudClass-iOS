@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) AgoraRTEUser *fromUser;
 @property (nonatomic, strong) NSString *message;
 @property (nonatomic, assign) NSInteger messageId;
+@property (nonatomic, strong) NSString *peerMessageId;
 @property (nonatomic, strong) NSArray<NSString *> *sensitiveWords;
 @property (nonatomic, assign) NSInteger timestamp;
 @end

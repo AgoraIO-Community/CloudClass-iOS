@@ -34,7 +34,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     self = [super init];
     if (self) {
         self.isWritable = YES;
-        self.scenePath = @"";
+        self.boardScenePath = @"";
         
         if (@available(iOS 11.0, *)) {
             // 在初始化 sdk 时，配置 PPTParams 的 scheme，保证与此处传入的 scheme 一致。
@@ -103,6 +103,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
             
             if (scene.ppt) {
                 [self.room scalePptToFit:WhiteAnimationModeContinuous];
+                [self.room scaleIframeToFit];
             }
             
             [weakself refreshViewSize];
@@ -172,6 +173,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     WhiteScene *scene = scenes[sceneIndex];
     if (scene.ppt) {
         [self.room scalePptToFit:WhiteAnimationModeContinuous];
+        [self.room scaleIframeToFit];
     } else {
         WhiteCameraConfig *config = [WhiteCameraConfig new];
         config.scale = @(1);
@@ -325,6 +327,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 - (void)initContentViewWithAppId:(NSString *)appId
                            fonts:(NSDictionary *)fonts {
     WhiteSdkConfiguration *config = [[WhiteSdkConfiguration alloc] initWithApp:appId];
+    config.enableIFramePlugin = YES;
     
     if (@available(iOS 11.0, *)) {
         WhitePptParams *pptParams = [[WhitePptParams alloc] init];
@@ -373,6 +376,9 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
         case WhiteBoardToolTypePointer:
             applianceName = ApplianceLaserPointer;
             break;
+        case WhiteBoardToolTypeClicker:
+            applianceName = ApplianceClicker;
+            break;
         case WhiteBoardToolTypeColor:
             return;
     }
@@ -385,9 +391,10 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 The RoomState property in the room will trigger this callback when it changes.
 */
 - (void)fireRoomStateChanged:(WhiteRoomState *_Nullable)modifyState {
-    // TODO: 啥意思
+    // 老师离开
     if (modifyState.broadcastState && modifyState.broadcastState.broadcasterId == nil) {
         [self.room scalePptToFit:WhiteAnimationModeContinuous];
+        [self.room scaleIframeToFit];
     }
     
     // 全局状态 WhiteGlobalState 修改时
@@ -401,27 +408,48 @@ The RoomState property in the room will trigger this callback when it changes.
         }
     }
     
+    WhiteSceneState *sceneState = self.room.sceneState;
+    if (sceneState != NULL) {
+        
+        BOOL isEqualScenePath = NO;
+        if ([sceneState.scenePath isEqualToString:self.boardScenePath]) {
+            isEqualScenePath = YES;
+        } else {
+            // 不等于的时候 要判断前面的path是否一样
+            NSArray<NSString *> *boardPaths1 =  [self.boardScenePath componentsSeparatedByString:@"/"];
+            NSArray<NSString *> *boardPaths2 =  [sceneState.scenePath componentsSeparatedByString:@"/"];
+            if (boardPaths1.count >= 2 &&
+                boardPaths2.count >= 2) {
+                NSString *path1 = [NSString stringWithFormat:@"%@%@", boardPaths1[0], boardPaths1[1]];
+                NSString *path2 = [NSString stringWithFormat:@"%@%@", boardPaths2[0], boardPaths2[1]];
+                if ([path1 isEqualToString:path2]) {
+                    isEqualScenePath = YES;
+                }
+            }
+        }
+
+        if (!isEqualScenePath) {
+            self.boardScenePath = sceneState.scenePath;
+            if ([self.delegate respondsToSelector:@selector(onWhiteBoardSceneChanged:)]) {
+                [self.delegate onWhiteBoardSceneChanged:self.boardScenePath];
+            }
+        }
+    }
+    
     // 场景状态 WhiteSceneState 修改时
     if (modifyState.sceneState) {
-        WhiteSceneState *sceneState = self.room.sceneState;
         NSArray<WhiteScene *> *scenes = sceneState.scenes;
         NSInteger sceneIndex = sceneState.index;
         WhiteScene *scene = scenes[sceneIndex];
         
         if (scene.ppt) {
             [self.room scalePptToFit:WhiteAnimationModeContinuous];
+            [self.room scaleIframeToFit];
         }
         
         if ([self.delegate respondsToSelector:@selector(onWhiteBoardPageChanged:pageCount:)]) {
             [self.delegate onWhiteBoardPageChanged:sceneIndex
                                          pageCount:scenes.count];
-        }
-        
-        if (![sceneState.scenePath isEqualToString:self.boardScenePath]) {
-            self.boardScenePath = sceneState.scenePath;
-            if ([self.delegate respondsToSelector:@selector(onWhiteBoardSceneChanged:)]) {
-                [self.delegate onWhiteBoardSceneChanged:self.boardScenePath];
-            }
         }
     }
 }

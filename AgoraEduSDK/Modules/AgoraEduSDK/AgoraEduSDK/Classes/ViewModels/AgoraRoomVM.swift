@@ -8,51 +8,48 @@
 
 import EduSDK
 import AgoraUIEduBaseViews
-import AgoraEduSDK.AgoraFiles.AgoraManager
 import AgoraEduContext
+import AgoraEduSDK.AgoraEduSDKFiles
 
 @objcMembers public class AgoraRoomVM: AgoraBaseVM {
-    
-    fileprivate var hasSignalReconnect: Bool = false
     public var classOverBlock: (() -> Void)?
-    fileprivate var hasClassOver: Bool = false
+    private var hasSignalReconnect: Bool = false
+    private var hasClassOver: Bool = false
     
     // time
     public var timerToastBlock: ((_ message: String) -> Void)?
     public var updateTimerBlock: ((_ timerString: String) -> Void)?
-    fileprivate var hasStop: Bool = false
-    fileprivate var timer: DispatchSourceTimer?
+    private var hasStop: Bool = false
+    private var timer: DispatchSourceTimer?
 
-    public func joinClassroom(successBlock: @escaping (_ userInfo: AgoraRTELocalUser) -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
-        
-        AgoraEduManager.share().joinClassroom(with: self.config.sceneType, userName: self.config.userName) {[weak self] in
-            
+    public func joinClassroom(successBlock: @escaping (_ userInfo: AgoraRTELocalUser) -> Void,
+                              failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
+        AgoraEduManager.share().joinClassroom(with: self.config.sceneType,
+                                              userName: self.config.userName) { [weak self] in
             guard let `self` = self else {
                 return
             }
             
             self.hasSignalReconnect = false
             let roomManager = AgoraEduManager.share().roomManager
-            roomManager?.getLocalUser(success: {[weak self] (userInfo) in
+            roomManager?.getLocalUser(success: { [weak self] (userInfo) in
                 successBlock(userInfo)
                 self?.startTimer()
                 self?.updateTime()
-                
-            }, failure: {[weak self] (error) in
+            }, failure: { [weak self] (error) in
                 if let err = self?.kitError(error) {
                     failureBlock(err)
                 }
             })
-
-        } failure: {[weak self] (error) in
+        } failure: { [weak self] (error) in
             if let err = self?.kitError(error) {
                 failureBlock(err)
             }
         }
     }
     
-    public func getClassState(successBlock: @escaping (_ state: AgoraEduContextClassState) -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
-        
+    public func getClassState(successBlock: @escaping (_ state: AgoraEduContextClassState) -> Void,
+                              failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
         // 教室关闭
         if self.hasClassOver {
             successBlock(AgoraEduContextClassState.close)
@@ -60,7 +57,6 @@ import AgoraEduContext
         }
         
         AgoraEduManager.share().roomManager?.getClassroomInfo(success: { (classroom) in
-             
             switch classroom.roomState.courseState {
             case .start:
                 successBlock(AgoraEduContextClassState.start)
@@ -71,8 +67,7 @@ import AgoraEduContext
             @unknown default:
                 successBlock(AgoraEduContextClassState.default)
             }
-
-        }, failure: {[weak self] (error) in
+        }, failure: { [weak self] (error) in
             if let err = self?.kitError(error) {
                 failureBlock(err)
             }
@@ -127,8 +122,8 @@ import AgoraEduContext
         return false
     }
     
-    public func getRoomMuteChat(successBlock: @escaping (_ muteChat: Bool) -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
-        
+    public func getRoomMuteChat(successBlock: @escaping (_ muteChat: Bool) -> Void,
+                                failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
         AgoraEduManager.share().roomManager?.getClassroomInfo(success: { (room) in
             let muteChat = !room.roomState.isStudentChatAllowed
             successBlock(muteChat)
@@ -144,36 +139,38 @@ import AgoraEduContext
     }
 }
 
-// MARK: Timer
-extension AgoraRoomVM {
-    fileprivate func updateTime(successBlock: (() -> Void)? = nil, failureBlock: ((_ error: AgoraEduContextError) -> Void)? = nil) {
-        
+// MARK: - Timer
+private extension AgoraRoomVM {
+    func updateTime(successBlock: (() -> Void)? = nil,
+                    failureBlock: ((_ error: AgoraEduContextError) -> Void)? = nil) {
         AgoraEduManager.share().roomManager?.getClassroomInfo(success: {[weak self] (room) in
-            guard let `self` = self else {
+            guard let `self` = self,
+                  let roomStateInfoModel = AgoraManagerCache.share().roomStateInfoModel as? AgoraRoomStateInfoModel else {
                 return
             }
             
-            AgoraManagerCache.share().roomStateInfoModel.state = room.roomState.courseState.rawValue
-            let state = AgoraRTECourseState(rawValue: AgoraManagerCache.share().roomStateInfoModel.state)
-            let closeDelay = AgoraManagerCache.share().roomStateInfoModel.closeDelay
+            roomStateInfoModel.state = room.roomState.courseState.rawValue
+            let state = AgoraRTECourseState(rawValue: roomStateInfoModel.state)
+            let closeDelay = roomStateInfoModel.closeDelay
             
             let interval = Date().timeIntervalSince1970 * 1000
-            let currentRealTime = Int(interval - Double(AgoraManagerCache.share().differTime))
-            let model = AgoraManagerCache.share().roomStateInfoModel
+            let currentRealTime = Int64(interval - Double(AgoraManagerCache.share().differTime))
+
+            let startTime = Int64(roomStateInfoModel.startTime)
             
             var time: Int = 0
             if state == AgoraRTECourseState.default {
-                time = Int(Double((model.startTime - currentRealTime)) * 0.001)
+                time = Int(Double((startTime - currentRealTime)) * 0.001)
                 if time < 0 {
                     time = 0
                 }
             } else if state == AgoraRTECourseState.start {
-                time = Int(Double((currentRealTime - model.startTime)) * 0.001)
+                time = Int(Double((currentRealTime - startTime)) * 0.001)
                 if time < 0 {
                     time = 0
                 }
                 
-                if model.duration - time == 5 * 60 {
+                if roomStateInfoModel.duration - time == 5 * 60 {
                     // 5分钟
                     let strStart = self.localizedString("ClassEndWarningStartText")
                     let strMidden = "5"
@@ -184,12 +181,12 @@ extension AgoraRoomVM {
                 }
             } else if state == AgoraRTECourseState.stop {
                 
-                time = Int(Double((currentRealTime - model.startTime)) * 0.001)
+                time = Int(Double((currentRealTime - startTime)) * 0.001)
                 if time < 0 {
                     time = 0
                 }
                 
-                let countdown = closeDelay + AgoraManagerCache.share().roomStateInfoModel.duration - time
+                let countdown = closeDelay + roomStateInfoModel.duration - time
                 
                 if countdown == 60 {
                     let strStart = self.localizedString("ClassCloseWarningStart2Text")
@@ -273,7 +270,8 @@ extension AgoraRoomVM {
             }
         })
     }
-    fileprivate func startTimer() {
+    
+    func startTimer() {
         self.stopTimer()
 
         timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global())
@@ -286,12 +284,50 @@ extension AgoraRoomVM {
         }
         timer?.resume()
     }
-    fileprivate func stopTimer() {
+    
+    func stopTimer() {
         if !(timer?.isCancelled ?? true) {
             timer?.cancel()
         }
     }
 }
 
+// HTTP
+extension AgoraRoomVM {
+    public func updateRoomProperties(_ properties: [String: String],
+                                     cause: [String: String]?,
+                                     successBlock: @escaping () -> Void,
+                                     failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
 
+        let baseURL = AgoraHTTPManager.getBaseURL()
+        var url = "\(baseURL)/edu/apps/\(config.appId)/v2/rooms/\(config.roomUuid)/properties"
+        let headers = AgoraHTTPManager.headers(withUId: config.userUuid, userToken: "", token: config.token)
+        var parameters = [String: Any]()
+        parameters["properties"] = properties
+        if let causeParameters = cause {
+            parameters["cause"] = causeParameters
+        }
+
+        AgoraHTTPManager.fetchDispatch(.put,
+                                       url: url,
+                                       parameters: parameters,
+                                       headers: headers,
+                                       parseClass: AgoraBaseModel.self) { [weak self] (any) in
+            guard let `self` = self else {
+                return
+            }
+
+            if let model = any as? AgoraBaseModel, model.code == 0 {
+                successBlock()
+            } else {
+//                failureBlock("network error")
+            }
+            
+        } failure: {[weak self] (error, code) in
+            if let `self` = self {
+                failureBlock(self.kitError(error))
+            }
+        }
+    }
+}
 

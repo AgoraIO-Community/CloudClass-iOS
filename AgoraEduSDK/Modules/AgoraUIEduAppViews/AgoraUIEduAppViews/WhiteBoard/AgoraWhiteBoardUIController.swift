@@ -77,12 +77,28 @@ class AgoraWhiteBoardUIController: NSObject, AgoraUIController, AgoraUIControlle
         register.controllerRegisterWhiteBoardPageControlEvent(self)
     }
     
+    func updateBoardViewOpaque(sharing: Bool) {
+        if sharing {
+            boardView.backgroundColor = UIColor.clear
+            boardView.isOpaque = false
+            for v in boardView.subviews {
+                v.isOpaque = false
+            }
+        } else {
+            boardView.backgroundColor = UIColor.white
+        }
+        
+        self.boardPageControl.isScreenVisible = sharing
+    }
+    
     func initViews() {
         containerView.delegate = self
         containerView.addSubview(boardView)
         containerView.addSubview(boardToolsView)
         containerView.addSubview(boardPageControl)
         containerView.addSubview(unfoldButton)
+        
+        boardView.delegate = self
         
         boardToolsView.backgroundColor = .white
         boardToolsView.didFoldCompletion = { [unowned self] (isFold) in

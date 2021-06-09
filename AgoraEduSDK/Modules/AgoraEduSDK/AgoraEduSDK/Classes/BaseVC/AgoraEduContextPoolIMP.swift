@@ -1,4 +1,4 @@
-//
+//1
 //  AgoraEduContextImp.swift
 //  AgoraEduSDK
 //
@@ -16,12 +16,14 @@ import AgoraUIEduAppViews
     public weak var whiteBoardToolIMP: AgoraEduWhiteBoardToolContext?
     public weak var whiteBoardPageControlIMP: AgoraEduWhiteBoardPageControlContext?
     public weak var roomIMP: AgoraEduRoomContext?
+    public weak var deviceIMP: AgoraEduDeviceContext?
     public weak var chatIMP: AgoraEduMessageContext?
     public weak var userIMP: AgoraEduUserContext?
     public weak var handsUpIMP: AgoraEduHandsUpContext?
     public weak var privateChatIMP: AgoraEduPrivateChatContext?
     public weak var shareScreenIMP: AgoraEduScreenShareContext?
     public weak var extAppIMP: AgoraEduExtAppContext?
+    public weak var widgetIMP: AgoraEduWidgetContext?
 
     public override init() {
         super.init()
@@ -44,9 +46,10 @@ extension AgoraEduContextPoolIMP {
 }
 
 // MARK: - AgoraEduContextPoolTmp
-@objcMembers public class AgoraEduContextPoolTmp: AgoraEduContextPool {
+@objcMembers public class AgoraEduContextPoolTmp: NSObject, AgoraEduContextPool {
     
     private weak var imp: AgoraEduContextPoolIMP?
+    
     init(_ imp: AgoraEduContextPoolIMP) {
         self.imp = imp
     }
@@ -91,6 +94,14 @@ extension AgoraEduContextPoolIMP {
         }
     }
     
+    public var device: AgoraEduDeviceContext {
+        get {
+            let deviceIMP = self.imp?.deviceIMP
+            assert(deviceIMP != nil, "must init contextPool.deviceIMP")
+            return deviceIMP!
+        }
+    }
+    
     public var chat: AgoraEduMessageContext {
         get {
             let chatIMP = self.imp?.chatIMP
@@ -128,6 +139,14 @@ extension AgoraEduContextPoolIMP {
             let shareScreenIMP = self.imp?.shareScreenIMP
             assert(shareScreenIMP != nil, "must init contextPool.shareScreenIMP")
             return shareScreenIMP!
+        }
+    }
+    
+    public var widget: AgoraEduWidgetContext {
+        get {
+            let widgetIMP = self.imp?.widgetIMP
+            assert(widgetIMP != nil, "must init contextPool.widgetIMP")
+            return widgetIMP!
         }
     }
 }

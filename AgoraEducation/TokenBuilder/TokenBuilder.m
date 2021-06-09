@@ -39,7 +39,7 @@
     }];
 }
 
-+ (void)boardResources:(NSString *)url token:(NSString *)token success:(void (^)(NSArray<WhiteScene *> *models, NSString *resourceName, NSString *scenePath, NSString *downURL))success failure:(void (^)(NSError *error))failure {
++ (void)boardResources:(NSString *)url token:(NSString *)token success:(void (^)(NSArray<WhiteScene *> *models, NSString *resourceName, NSString *resourceUuid, NSString *scenePath, NSString *downURL))success failure:(void (^)(NSError *error))failure {
     
     [AgoraEducationHTTPClient get:url params:@{} headers:@{@"token":token} success:^(id  _Nonnull responseObj) {
         
@@ -48,6 +48,7 @@
         
         NSString *type = NoNullString(NoNullDictionary(big[@"conversion"])[@"type"]);
         NSString *taskUuid = NoNullString(big[@"taskUuid"]);
+        NSString *resourceUuid = NoNullString(big[@"resourceUuid"]);
         NSString *resourceName = [NSString stringWithFormat:@"/%@", NoNullString(big[@"resourceName"])];
         
         NSDictionary *taskProgress = NoNullDictionary(big[@"taskProgress"]);
@@ -63,7 +64,7 @@
         
         NSString *downURL = [NSString stringWithFormat:@"%@%@%@", @"https://convertcdn.netless.link/dynamicConvert/", taskUuid, @".zip"];    
         if(success != nil) {
-            success(models, resourceName, scenePath, downURL);
+            success(models, resourceName, resourceUuid, scenePath, downURL);
         }
     
     } failure:^(NSError * _Nonnull error, NSInteger statusCode) {

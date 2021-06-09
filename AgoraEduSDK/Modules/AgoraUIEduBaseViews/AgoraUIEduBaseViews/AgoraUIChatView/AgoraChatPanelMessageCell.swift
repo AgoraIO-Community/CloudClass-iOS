@@ -153,6 +153,11 @@ class AgoraChatPanelMessageCell: AgoraBaseUITableViewCell {
         
         model.cellHeight = cellHeight
     }
+    
+    // MARK: action
+    @objc fileprivate func onFailTouchEvent() {
+        self.retryTouchBlock?(self.infoModel)
+    }
 }
 
 // MARK: Rect
@@ -191,13 +196,6 @@ extension AgoraChatPanelMessageCell {
         self.failView.agora_bottom = 0
         self.failView.agora_x = 0
         self.failView.agora_resize(15, 14)
-    }
-}
-
-// MARK: TouchEvent
-extension AgoraChatPanelMessageCell {
-    @objc fileprivate func onFailTouchEvent() {
-        self.retryTouchBlock?(self.infoModel)
     }
 }
 

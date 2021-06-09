@@ -38,12 +38,19 @@ import AgoraUIBaseViews
         label.font = UIFont.systemFont(ofSize: 13)
         return label
     }()
-    
-    public private(set) lazy var leaveButton: AgoraBaseUIButton = {
+
+    public private(set) lazy var setButton: AgoraBaseUIButton = {
         let btn = AgoraBaseUIButton()
-        btn.setImage(AgoraKitImage("leave"),
+        btn.setImage(AgoraKitImage("set"),
                      for: .normal)
         return btn
+    }()
+    
+    public private(set) lazy var logButton: AgoraBaseUIButton = {
+        let button = AgoraBaseUIButton()
+        button.setImage(AgoraKitImage("log"),
+                     for: .normal)
+        return button
     }()
     
     private lazy var lineView: AgoraBaseUIView = {
@@ -135,13 +142,14 @@ public extension AgoraUINavigationBar {
 
 private extension AgoraUINavigationBar {
     func initView() {
-        self.backgroundColor = UIColor.white
-        self.addSubview(signalImgView)
-        self.addSubview(roomNameLabel)
-        self.addSubview(gridLineView)
-        self.addSubview(timeLabel)
-        self.addSubview(leaveButton)
-        self.addSubview(lineView)
+        backgroundColor = UIColor.white
+        addSubview(signalImgView)
+        addSubview(roomNameLabel)
+        addSubview(gridLineView)
+        addSubview(timeLabel)
+        addSubview(setButton)
+        addSubview(lineView)
+        addSubview(logButton)
     }
 
     func initLayout() {
@@ -150,10 +158,15 @@ private extension AgoraUINavigationBar {
         signalImgView.agora_height = 20
         signalImgView.agora_center_y = 0
         
-        leaveButton.agora_safe_right = 10
-        leaveButton.agora_width = 24
-        leaveButton.agora_height = 24
-        leaveButton.agora_center_y = 0
+        setButton.agora_safe_right = 10
+        setButton.agora_width = 24
+        setButton.agora_height = 24
+        setButton.agora_center_y = 0
+        
+        logButton.agora_safe_right = 56
+        logButton.agora_width = 24
+        logButton.agora_height = 24
+        logButton.agora_center_y = 0
             
         lineView.agora_x = -50
         lineView.agora_height = 1

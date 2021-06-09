@@ -14,7 +14,7 @@ import UIKit
 }
 
 @objcMembers public class AgoraURLGroup: NSObject {
-    private let host = "https://api.agora.io"
+    public var host = "https://api.agora.io"
     private let apps = "edu/apps"
     private let version = "v2"
     private let rooms = "rooms"

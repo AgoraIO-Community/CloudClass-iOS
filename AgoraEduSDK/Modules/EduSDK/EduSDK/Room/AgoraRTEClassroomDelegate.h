@@ -45,9 +45,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)classroom:(AgoraRTEClassroom *)classroom connectionStateChanged:(AgoraRTEConnectionState)state;
 
+// rtc
+- (void)classroom:(AgoraRTEClassroom *)classroom remoteRTCJoinedOfStreamId:(NSString *)streamId;
+- (void)classroom:(AgoraRTEClassroom *)classroom remoteRTCOfflineOfStreamId:(NSString *)streamId;
+
 // property
-- (void)classroomPropertyUpdated:(AgoraRTEClassroom *)classroom cause:(NSDictionary * _Nullable)cause;
-- (void)classroom:(AgoraRTEClassroom *)classroom remoteUserPropertyUpdated:(AgoraRTEUser *)user cause:(NSDictionary * _Nullable)cause;
+- (void)classroomPropertyUpdated:(NSDictionary *)changedProperties
+                       classroom:(AgoraRTEClassroom *)classroom
+                           cause:(NSDictionary * _Nullable)cause
+                    operatorUser:(AgoraRTEBaseUser *)operatorUser;
+
+- (void)classroom:(AgoraRTEClassroom *)classroom
+remoteUserPropertyUpdated:(NSDictionary *)changedProperties
+             user:(AgoraRTEUser *)user
+            cause:(NSDictionary * _Nullable)cause
+     operatorUser:(AgoraRTEBaseUser *)operatorUser;
+
 @end
 
 NS_ASSUME_NONNULL_END

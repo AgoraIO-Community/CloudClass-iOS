@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraWidget
 
 // MARK: - PrivateChat
 @objc public protocol AgoraEduPrivateChatHandler: NSObjectProtocol {
@@ -127,12 +128,34 @@ import UIKit
     @objc optional func onSetNetworkQuality(_ quality: AgoraEduContextNetworkQuality)
     // 连接状态
     @objc optional func onSetConnectionState(_ state: AgoraEduContextConnectionState)
+    // 日志上传成功
+    @objc optional func onUploadLogSuccess(_ logId: String)
     // 上课过程中，错误信息
     @objc optional func onShowErrorInfo(_ error: AgoraEduContextError)
+    
+    // 房间属性初始化
+    // properties：用户自定义全量房间属性
+    @objc optional func onFlexRoomPropertiesInitialize(_ properties: [String: Any])
+    // 房间属性变化
+    // properties：用户自定义全量房间属性
+    // server更新的时候operator为空
+    @objc optional func onFlexRoomPropertiesChanged(_ changedProperties: [String: Any],
+                                                    properties: [String: Any],
+                                                    cause: [String: Any]?,
+                                                    operator:AgoraEduContextUserInfo?)
 }
+
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
+    // 更新自定义房间属性，如果没有就增加
+    // 支持path修改和整体修改
+    // properties: {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
+    // cause: 修改的原因，可为空
+    func updateFlexRoomProperties(_ properties:[String: String],
+                                  cause:[String: String]?)
     // 离开教室
     func leaveRoom()
+    // 上传日志
+    func uploadLog()
     // 事件监听
     func registerEventHandler(_ handler: AgoraEduRoomHandler)
 }
@@ -141,30 +164,67 @@ import UIKit
 @objc public protocol AgoraEduMessageHandler: NSObjectProtocol {
     // 收到房间消息
     @objc optional func onAddRoomMessage(_ info: AgoraEduContextChatInfo)
+    // 收到提问消息
+    @objc optional func onAddConversationMessage(_ info: AgoraEduContextChatInfo)
     // 收到聊天权限变化
     @objc optional func onUpdateChatPermission(_ allow: Bool)
+    @objc optional func onUpdateLocalChatPermission(_ allow: Bool,
+                                                    toUser: AgoraEduContextUserInfo,
+                                                    operatorUser: AgoraEduContextUserInfo)
+    @objc optional func onUpdateRemoteChatPermission(_ allow: Bool,
+                                                    toUser: AgoraEduContextUserInfo,
+                                                    operatorUser: AgoraEduContextUserInfo)
     // 本地发送消息结果（包含首次和后面重发），如果error不为空，代表失败
-    @objc optional func onSendRoomMessageResult(_ error: AgoraEduContextError?, info: AgoraEduContextChatInfo?)
+    @objc optional func onSendRoomMessageResult(_ error: AgoraEduContextError?,
+                                                info: AgoraEduContextChatInfo?)
+    // 本地发送提问消息结果（包含首次和后面重发），如果error不为空，代表失败
+    @objc optional func onSendConversationMessageResult(_ error: AgoraEduContextError?,
+                                                        info: AgoraEduContextChatInfo?)
+    
     // 查询历史消息结果，如果error不为空，代表失败
-    @objc optional func onFetchHistoryMessagesResult(_ error: AgoraEduContextError?, list: [AgoraEduContextChatInfo]?)
+    @objc optional func onFetchHistoryMessagesResult(_ error: AgoraEduContextError?,
+                                                     list: [AgoraEduContextChatInfo]?)
+
+    @objc optional func onFetchConversationHistoryMessagesResult(_ error: AgoraEduContextError?,
+                                                                 list: [AgoraEduContextChatInfo]?)
+    
     /* 显示聊天过程中提示信息
      * 禁言模式开启
      * 禁言模式关闭
      */
     @objc optional func onShowChatTips(_ message: String)
 }
+
 @objc public protocol AgoraEduMessageContext: NSObjectProtocol {
     // 发送房间信息
     func sendRoomMessage(_ message: String)
+    // 发送提问信息
+    func sendConversationMessage(_ message: String)
     /* 重发房间信息
      * messageId: AgoraEduContextChatInfo内id
      */
-    func resendRoomMessage(_ message: String, messageId: Int)
+    func resendRoomMessage(_ message: String,
+                           messageId: String)
+    
+    /* 重发提问信息
+     * messageId: AgoraEduContextChatInfo内id
+     */
+    func resendConversationMessage(_ message: String,
+                                   messageId: String)
     /* 获取历史消息
      * startId: 从哪个开始获取，AgoraEduContextChatInfo内id
      * count: 要获取多少条数据
      */
-    func fetchHistoryMessages(_ startId: Int, count: Int)
+    func fetchHistoryMessages(_ startId: String,
+                              count: Int)
+    
+    /* 获取提问历史消息
+     * startId: 从哪个开始获取，AgoraEduContextChatInfo内id
+     * count: 要获取多少条数据
+     */
+    func fetchConversationHistoryMessages(_ startId: String,
+                                          count: Int)
+    
     // 事件监听
     func registerEventHandler(_ handler: AgoraEduMessageHandler)
 }
@@ -188,9 +248,22 @@ import UIKit
     @objc optional func onShowUserTips(_ message: String)
     // 收到奖励（自己或者其他学生）
     @objc optional func onShowUserReward(_ user: AgoraEduContextUserInfo)
+    // 人员属性变化
+    // properties：人员全量自定义属性信息返回
+    @objc optional func onFlexUserPropertiesChanged(_ changedProperties:[String : Any],
+                                                    properties: [String: Any],
+                                                    cause:[String : Any]?,
+                                                    fromUser:AgoraEduContextUserDetailInfo,
+                                                    operator:AgoraEduContextUserInfo?)
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
+    // 人员属性变化
+    // 支持path修改和整体修改
+    // {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
+    func updateFlexUserProperties(_ userUuid: String,
+                                  properties: [String: String],
+                                  cause:[String: String]?)
     // mute本地视频
     func muteVideo(_ mute: Bool)
     // mute本地音频
@@ -232,16 +305,61 @@ import UIKit
 // MARK: - ScreenShare
 @objc public protocol AgoraEduScreenShareHandler: NSObjectProtocol {
     // 开启或者关闭屏幕分享
-    @objc optional func onUpdateScreenShareState(_ sharing: Bool,
+    @objc optional func onUpdateScreenShareState(_ state: AgoraEduContextScreenShareState,
                                                streamUuid: String)
 
+    // 切换屏幕课件Tab
+    @objc optional func onSelectScreenShare(_ selected: Bool)
+    
     /* 屏幕分享相关消息
      * XXX开启了屏幕分享
      * XXX关闭了屏幕分享
      */
     @objc optional func onShowScreenShareTips(_ message: String)
 }
+
 @objc public protocol AgoraEduScreenShareContext: NSObjectProtocol {
     // 事件监听
     func registerEventHandler(_ handler: AgoraEduScreenShareHandler)
+}
+
+// MARK: - Device
+@objc public protocol AgoraEduDeviceHandler: NSObjectProtocol {
+    // 摄像头开关的事件
+    @objc optional func onCameraDeviceEnableChanged(enabled: Bool)
+    // 摄像头切换的事件
+    @objc optional func onCameraFacingChanged(facing: EduContextCameraFacing)
+    // 麦克风开关的事件
+    @objc optional func onMicDeviceEnabledChanged(enabled: Bool)
+    // 扬声器开启/关闭的事件
+    @objc optional func onSpeakerEnabledChanged(enabled: Bool)
+    /* 设备设置相关消息
+     * 老师视频可能出现问题
+     */
+    @objc optional func onDeviceTips(message: String)
+}
+
+@objc public protocol AgoraEduDeviceContext: NSObjectProtocol {
+    // 开关摄像头
+    func setCameraDeviceEnable(enable: Bool)
+    // 切换前后摄像头
+    func switchCameraFacing()
+    // 开关麦克风
+    func setMicDeviceEnable(enable: Bool)
+    // 开启/关闭扬声器
+    func setSpeakerEnable(enable: Bool)
+    // 事件监听
+    func registerDeviceEventHandler(_ handler: AgoraEduDeviceHandler)
+}
+
+// 教育组件
+@objc public protocol AgoraEduWidgetContext {
+    // 创建组件
+    // info:组件配置信息
+    // contextPool:给组件传递实现了协议的接口对象
+    func createWidget(info: AgoraWidgetInfo,
+                      contextPool: AgoraEduContextPool) -> AgoraEduWidget
+
+    // 获取组件信息
+    func getWidgetInfos() -> [AgoraWidgetInfo]?
 }

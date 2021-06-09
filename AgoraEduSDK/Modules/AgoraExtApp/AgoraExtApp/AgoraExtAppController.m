@@ -21,7 +21,7 @@
     self = [super init];
     
     if (self) {
-        self.containerView = [[AgroaExtAppContainer alloc] initWithFrame:CGRectZero];
+        self.containerView = [AgroaExtAppWrapper getView];
         [self.containerView setHidden:YES];
     }
     
@@ -52,7 +52,7 @@
     }
 }
 
-- (void)updatePerExtAppProperties:(NSDictionary *)properties {
+- (void)perExtAppPropertiesDidUpdate:(NSDictionary *)properties {
     if (self.extApps.count <= 0) {
         return;
     }
@@ -60,21 +60,21 @@
     for (NSString *appIdentifier in properties.allKeys) {
         NSDictionary *appProperties = properties[appIdentifier];
         
-        for (AgoraExtAppItem *item in self.extApps.allValues) {
-            if (item.instance == nil) {
-                continue;
-            }
-            
-            NSString *appId = [self extAppIdentifierFormat:item.instance.appIdentifier];
-            
-            if ([appId isEqualToString:appIdentifier]) {
-                [item.instance propertiesDidUpdate:appProperties];
-            }
+        AgoraExtAppInfo *info = [self getAppInfoWithIdentifier:appIdentifier];
+        if (!info) {
+            continue;
         }
+        
+        AgoraExtAppItem *item = self.extApps[info.appIdentifier];
+        if (!item.instance) {
+            continue;
+        }
+        
+        [item.instance propertiesDidUpdate:appProperties];
     }
 }
 
-- (void)updateLocalUserInfo:(AgoraExtAppUserInfo *)userInfo {
+- (void)userInfoDidUpdate:(AgoraExtAppUserInfo *)userInfo {
     if (self.extApps.count <= 0) {
         return;
     }
@@ -88,7 +88,7 @@
     }
 }
 
-- (void)updateRoomInfo:(AgoraExtAppRoomInfo *)roomInfo {
+- (void)roomInfoDidUpdate:(AgoraExtAppRoomInfo *)roomInfo {
     if (self.extApps.count <= 0) {
         return;
     }
@@ -99,6 +99,35 @@
         }
         
         [item.instance roomInfoDidUpdate:roomInfo];
+    }
+}
+
+- (void)appsCommonDidUpdate:(NSDictionary<NSString *,id> *)appsCommonDic {
+    if (appsCommonDic.count == 0) {
+        return;
+    }
+
+    for (NSString *appId in appsCommonDic.allKeys) {
+        NSDictionary *value = appsCommonDic[appId];
+        NSNumber *commonState = (NSNumber *)[value valueForKey:@"state"];
+        
+        AgoraExtAppInfo *info = [self getAppInfoWithIdentifier:appId];
+        if (!info) {
+            continue;
+        }
+        
+        switch (commonState.integerValue) {
+            case 0: {
+                AgoraExtAppItem *item = self.extApps[info.appIdentifier];
+                [item.instance unload];
+                break;
+            }
+            case 1:
+                [self willLaunchExtApp:info.appIdentifier];
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -223,6 +252,18 @@ updateProperties:(NSDictionary *)properties
     self.extAppDirtyTags[appIdentifier] = dirty;
     
     return dirty;
+}
+
+- (AgoraExtAppInfo * _Nullable)getAppInfoWithIdentifier:(NSString *)identifier {
+    for (AgoraExtAppInfo *item in self.extAppInfos) {
+        NSString *appId = [self extAppIdentifierFormat:item.appIdentifier];
+        
+        if ([appId isEqualToString:identifier]) {
+            return item;
+        }
+    }
+    
+    return nil;
 }
 
 - (void)removeDirtyTag:(NSString *)appIdentifier {

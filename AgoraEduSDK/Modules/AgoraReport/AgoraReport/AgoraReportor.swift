@@ -25,13 +25,14 @@ import AFNetworking
 }
 
 @objcMembers public class AgoraReportorContext: NSObject {
-    var source: String
-    var clientType: String
-    var platform: String
-    var appId: String
-    var version: String
-    var token: String
-    var userUuid: String
+    public let source: String
+    public let clientType: String
+    public let platform: String
+    public let appId: String
+    public let version: String
+    public let token: String
+    public let userUuid: String
+    public let host: String
     
     @objc public init(source: String,
                       clientType: String,
@@ -39,7 +40,8 @@ import AFNetworking
                       appId: String,
                       version: String,
                       token: String,
-                      userUuid: String) {
+                      userUuid: String,
+                      host: String) {
         self.source = source
         self.clientType = clientType
         self.platform = platform
@@ -47,14 +49,61 @@ import AFNetworking
         self.version = version
         self.token = token
         self.userUuid = userUuid
+        self.host = host
     }
 }
 
+@objcMembers public class AgoraReportorContextV2: NSObject {
+    public var source: String
+    public var host: String
+    public var vid: Int32
+    public var version: String
+    public var scenario: String
+    public var userUuid: String
+    public var userName: String
+    public var userRole: String
+    public var streamUuid: String
+    public var streamSessionId: String
+    public var roomUuid: String
+    
+    @objc public init(source: String,
+                      host: String,
+                      vid: Int32,
+                      version: String,
+                      scenario: String,
+                      userUuid: String,
+                      userName: String,
+                      userRole: String,
+                      streamUuid: String,
+                      streamSessionId: String,
+                      roomUuid: String) {
+        self.source = source
+        self.host = host
+        self.vid = vid
+        self.version = version
+        self.scenario = scenario
+        self.userUuid = userUuid
+        self.userName = userName
+        self.userRole = userRole
+        self.streamUuid = streamUuid
+        self.streamSessionId = streamSessionId
+        self.roomUuid = roomUuid
+    }
+}
+
+@objc public protocol AgoraReportorLogTube: NSObjectProtocol {
+    func reportor(_ reportor: AgoraReportor,
+                  didOutputInfo log: String)
+    func reportor(_ reportor: AgoraReportor,
+                  didOutputError log: String)
+}
+
 @objcMembers open class AgoraReportor: NSObject {
+    public weak var logTube: AgoraReportorLogTube?
     
-    static let Tag = "AgoraReportor"
+    public private(set) var context: AgoraReportorContext?
+    public private(set) var contextV2: AgoraReportorContextV2?
     
-    public var BASE_URL = "https://api.agora.io"
     private lazy var httpSession: AFHTTPSessionManager = {
         let session = AFHTTPSessionManager()
         session.requestSerializer = AFJSONRequestSerializer()
@@ -63,16 +112,18 @@ import AFNetworking
         return session
     }()
     
-    private var context: AgoraReportorContext?
-    
     // Duration event
-    private var startEvents = [String: Int]()
-    private var startSubEvents = [String: Int]()
+    private var startEvents = [String: Int64]()
+    private var startSubEvents = [String: Int64]()
     
     private let startEvnetsMaxCount = 10000
     
     public func set(context: AgoraReportorContext) {
         self.context = context
+    }
+    
+    public func setV2(context: AgoraReportorContextV2) {
+        self.contextV2 = context
     }
 }
 
@@ -83,7 +134,7 @@ public extension AgoraReportor {
             return false
         }
         
-        let timestamp = Date().agora_report_timestamp()
+        let timestamp = Date().timestamp()
         startEvents[event] = timestamp
         return true
     }
@@ -97,7 +148,7 @@ public extension AgoraReportor {
             return
         }
         
-        let elapse = Date().agora_report_timestamp() - startTime
+        let elapse = Date().timestamp() - startTime
         startEvents.removeValue(forKey: event)
         
         processEventHttpRequest(event: event,
@@ -115,7 +166,7 @@ public extension AgoraReportor {
         }
         
         let key = event + "-" + subEvent
-        let timestamp = Date().agora_report_timestamp()
+        let timestamp = Date().timestamp()
         startSubEvents[key] = timestamp
         return true
     }
@@ -131,7 +182,7 @@ public extension AgoraReportor {
             return
         }
         
-        let elapse = Date().agora_report_timestamp() - startTime
+        let elapse = Date().timestamp() - startTime
         startSubEvents.removeValue(forKey: key)
         
         processEventHttpRequest(event: event,
@@ -141,6 +192,24 @@ public extension AgoraReportor {
                                 httpCode: httpCode,
                                 elapse: elapse,
                                 count: nil)
+    }
+}
+
+// MARK: - Timer event
+public extension AgoraReportor {
+    func timerEvent(event: String,
+                    count: Int? = nil) {
+        timerEventHttpRequest(event: event,
+                              count: count)
+    }
+}
+
+// MARK: - Point event
+public extension AgoraReportor {
+    func pointEvent(eventId: Int,
+                    payload: String) {
+        htttpRequestV2(eventId: eventId,
+                       payload: payload)
     }
 }
 
@@ -157,7 +226,7 @@ public extension AgoraReportor {
                                  api: String? = nil,
                                  errorCode: Int? = nil,
                                  httpCode: Int? = nil,
-                                 elapse: Int? = nil,
+                                 elapse: Int64? = nil,
                                  count: Int? = nil) {
         httpRequest(event: event,
                     category: category,
@@ -177,13 +246,13 @@ private extension AgoraReportor {
                      api: String? = nil,
                      errorCode: Int? = nil,
                      httpCode: Int? = nil,
-                     elapse: Int? = nil,
+                     elapse: Int64? = nil,
                      count: Int? = nil) {
         guard let context = self.context else {
             fatalError("call ‘set(context: AgoraReportorContext)’ before")
         }
         
-        let timestamp = Date().agora_report_timestamp()
+        let timestamp = Date().timestamp()
         
         let sign = "src=\(context.source)&ts=\(timestamp)"
         
@@ -206,13 +275,15 @@ private extension AgoraReportor {
         }
         
         ls["result"] = "1"
+        
         if let tHttpCode = httpCode {
             ls["httpCode"] = String(tHttpCode)
-            ls["result"] = tHttpCode == 200 ? "1" : "0"
+            ls["result"] = (tHttpCode == 200 ? "1" : "0")
         }
+        
         if let tErrorCode = errorCode {
             ls["errCode"] = String(tErrorCode)
-            ls["result"] = tErrorCode == 0 ? "1" : "0"
+            ls["result"] = (tErrorCode == 0 ? "1" : "0")
         }
         
         // vs
@@ -234,47 +305,98 @@ private extension AgoraReportor {
         
         let parameters: [String: Any] = ["ts": timestamp,
                                          "src": context.source,
-                                         "sign": sign.agora_md5.lowercased(),
+                                         "sign": sign.md5.lowercased(),
                                          "pts": points]
         
-        let url = ("\(BASE_URL)/cn/v1.0/projects/\(context.appId)/app-dev-report/v1/report")
+        let url = ("\(context.host)/cn/v1.0/projects/\(context.appId)/app-dev-report/v1/report")
         
-        let headers = ["x-agora-token" : context.token, "x-agora-uid" : context.userUuid]
+        let headers = ["x-agora-token": context.token,
+                       "x-agora-uid": context.userUuid]
 
-        #if AGORADEBUG
-        print("\(AgoraReportor.Tag) url:\(url)")
-        print("\(AgoraReportor.Tag) headers:\(headers)")
-        print("\(AgoraReportor.Tag) parameters:\(try! parameters.agora_json())")
-        #endif
+        log(info: "url: \(url)")
+        log(info: "headers: \(headers)")
+        log(info: "parameters: \(try! parameters.json())")
     
         httpSession.post(url,
                          parameters: parameters,
                          headers: headers,
-                         progress: nil) { (task, responseObject) in
-            
-            #if AGORADEBUG
-            guard let _ = responseObject as? [String: Any] else {
-                print("\(AgoraReportor.Tag) failure: josn parse error")
+                         progress: nil) { [weak self] (task, responseObject) in
+            guard let strongSelf = self else {
                 return
             }
-            print("\(AgoraReportor.Tag) success:\(responseObject.debugDescription)")
-            #endif
-        } failure: { (task, error) in
-            #if AGORADEBUG
-            print("\(AgoraReportor.Tag) failure:\(error.localizedDescription)")
-            #endif
+            
+            guard let _ = responseObject as? [String: Any] else {
+                strongSelf.log(error: "josn parse error")
+                return
+            }
+            
+            strongSelf.log(info: "request success: \(responseObject.debugDescription)")
+        } failure: { [weak self] (task, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.log(error: "request fail: \(error.localizedDescription)")
+        }
+    }
+    
+    func htttpRequestV2(eventId: Int,
+                        payload: String) {
+        guard let context = self.contextV2 else {
+            fatalError("call ‘setV2(context: AgoraReportorContext)’ before")
+        }
+        
+        let timestamp = Date().timestamp()
+        let signString = "payload=\(payload)&src=\(context.source)&ts=\(timestamp)"
+        let sign = signString.md5.lowercased()
+        
+        let parameters: [String: Any] = ["id": eventId,
+                                         "payload": payload,
+                                         "qos": 1,
+                                         "sign": sign,
+                                         "src": context.source,
+                                         "ts": timestamp]
+        let url = context.host
+        
+        httpSession.post(url,
+                         parameters: parameters,
+                         headers: nil,
+                         progress: nil) { [weak self] (task, responseObject) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.log(info: "success: \(responseObject.debugDescription)")
+        } failure: { [weak self] (task, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            strongSelf.log(error: "fail: \(error.localizedDescription)")
         }
     }
 }
 
+private extension AgoraReportor {
+    func log(info: String) {
+        logTube?.reportor(self,
+                          didOutputInfo: info)
+    }
+    
+    func log(error: String) {
+        logTube?.reportor(self,
+                          didOutputError: error)
+    }
+}
+
 fileprivate extension Date {
-    func agora_report_timestamp() -> Int {
-        return Int(timeIntervalSince1970 * 1000)
+    func timestamp() -> Int64 {
+        return Int64(timeIntervalSince1970 * 1000)
     }
 }
 
 fileprivate extension String {
-    var agora_md5: String {
+    var md5: String {
         let utf8 = cString(using: .utf8)
         var digest = [UInt8](repeating: 0,
                              count: Int(CC_MD5_DIGEST_LENGTH))
@@ -286,7 +408,7 @@ fileprivate extension String {
 }
 
 fileprivate extension Dictionary {
-    func agora_json() throws -> String {
+    func json() throws -> String {
         let data = try JSONSerialization.data(withJSONObject: self,
                                               options: [])
         guard let string = String(data: data,

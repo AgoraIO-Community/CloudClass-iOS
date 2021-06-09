@@ -13,6 +13,6 @@ Pod::Spec.new do |spec|
   spec.public_header_files = "AgoraReplay/**/*.h"
 
   spec.dependency "AgoraLog"
-  spec.dependency "Whiteboard", "2.12.22"
+  spec.dependency "Whiteboard", "2.12.26"
 
 end

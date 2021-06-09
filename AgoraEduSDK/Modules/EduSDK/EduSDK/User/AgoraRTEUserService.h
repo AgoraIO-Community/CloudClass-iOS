@@ -44,6 +44,8 @@ typedef void(^OnUserMediaChangedSuccessBlock)(AgoraRTEStream *stream);
 - (void)startOrUpdateLocalStream:(AgoraRTEStreamConfig*)config success:(OnUserMediaChangedSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
 
 - (NSError * _Nullable)switchCamera;
+- (int)setEnableSpeakerphone:(BOOL)enable;
+- (BOOL)isSpeakerphoneEnabled;
 
 // stream
 - (void)subscribeStream:(AgoraRTEStream*)stream options:(AgoraRTESubscribeOptions*)options success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;

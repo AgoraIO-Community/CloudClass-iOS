@@ -20,4 +20,6 @@ Pod::Spec.new do |spec|
   spec.dependency "YYModel", "1.0.4"
   spec.dependency "AgoraRtm_iOS", "1.4.1"
   spec.dependency "AgoraReport"
+
+  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
 end

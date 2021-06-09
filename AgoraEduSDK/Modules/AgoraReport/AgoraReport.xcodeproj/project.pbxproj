@@ -321,6 +321,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AA1485AE1CF4721ED8719C79 /* Pods-AgoraReport.debug.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -349,6 +350,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EB9272C97038F9222157CA32 /* Pods-AgoraReport.release.xcconfig */;
 			buildSettings = {
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;

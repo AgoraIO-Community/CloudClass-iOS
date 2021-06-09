@@ -44,6 +44,9 @@ MicrophoneMuteText = "Your mic has been turned off";
 CameraUnMuteText = "Your camera has been turned on";
 MicrophoneUnMuteText = "Your mic has been turned on";
 
+// Device
+TeacherVideoFailText = "There may be a problem with the teacher's video";
+
 // CoHost
 HandsUpTimeOutText = "Hands up timeout";
 RejectedCoHostText = "Teacher rejected your application";

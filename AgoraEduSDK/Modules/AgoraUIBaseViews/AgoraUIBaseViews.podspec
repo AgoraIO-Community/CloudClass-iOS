@@ -16,5 +16,5 @@ Pod::Spec.new do |spec|
   spec.source_files  = "AgoraUIBaseViews/*.{h,m,swift}"
   spec.public_header_files = "AgoraUIBaseViews/*.h"
   spec.module_name   = 'AgoraUIBaseViews'
-  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3']
+  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
 end

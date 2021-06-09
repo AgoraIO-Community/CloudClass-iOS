@@ -7,7 +7,7 @@ target 'AgoraReplay' do
 
   # Pods for AgoraReplay
   pod 'AgoraLog', :path => '../AgoraLog/AgoraLog.podspec'
-  pod "Whiteboard", "2.12.22"
+  pod "Whiteboard", "2.12.23"
 
   post_install do |installer|
      installer.pods_project.targets.each do |target|

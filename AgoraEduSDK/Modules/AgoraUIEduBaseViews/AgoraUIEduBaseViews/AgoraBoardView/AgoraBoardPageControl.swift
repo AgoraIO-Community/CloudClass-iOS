@@ -26,6 +26,14 @@ import AgoraUIBaseViews
         }
     }
     
+    // 屏幕分享是否显示
+    public var isScreenVisible = false {
+        didSet {
+            self.containerView.isHidden = isScreenVisible
+            self.fullScreenAloneButton.isHidden = !isScreenVisible
+        }
+    }
+    
     private var pageCount = 1 {
         didSet {
             let text = "\(pageIndex + 1) / \(pageCount)"
@@ -97,6 +105,12 @@ import AgoraUIBaseViews
         return button
     }()
     
+    fileprivate lazy var containerView: AgoraBaseUIView = {
+        let v = AgoraBaseUIView()
+        v.backgroundColor = .white
+        return v
+    }()
+    
     fileprivate lazy var fullScreenButton: AgoraBaseUIButton = {
         let button = AgoraBaseUIButton(frame: .zero)
         button.setImage(AgoraKitImage("icon-max"),
@@ -112,6 +126,25 @@ import AgoraUIBaseViews
             button.touchRange = TouchRange
         }
         
+        return button
+    }()
+    
+    // 单个全屏按钮，标注屏幕使用
+    fileprivate lazy var fullScreenAloneButton: AgoraBaseUIButton = {
+        let button = AgoraBaseUIButton(frame: .zero)
+        button.setImage(AgoraKitImage("icon-alone-max"),
+                        for: .normal)
+        button.setImage(AgoraKitImage("icon-alone-min"),
+                        for: .selected)
+        
+        button.addTarget(self,
+                         action: #selector(doFullScreenPressed),
+                         for: .touchUpInside)
+        
+        if !AgoraKitDeviceAssistant.OS.isPad {
+            button.touchRange = TouchRange
+        }
+        button.isHidden = true
         return button
     }()
     
@@ -148,9 +181,28 @@ import AgoraUIBaseViews
         super.layoutSubviews()
         pageIndexLabel.layer.cornerRadius = pageIndexLabel.bounds.size.height * 0.5
     }
-}
+    
+    func doFullScreenPressed(_ sender: AgoraBaseUIButton) {
+        let fullScreen = !sender.isSelected
+        delegate?.didFullScreenEvent(isFullScreen: fullScreen)
+    }
 
-extension AgoraBoardPageControlView {
+    func doDecreaseScalePressed(_ sender: AgoraBaseUIButton) {
+        delegate?.didDecreaseTouchEvent()
+    }
+
+    func doIncreaseScalePressed(_ sender: AgoraBaseUIButton) {
+        delegate?.didIncreaseTouchEvent()
+    }
+
+    func doPrePagePressed(_ sender: AgoraBaseUIButton) {
+        delegate?.didPrePageTouchEvent(pageIndex - 1)
+    }
+
+    func doNextPagePressed(_ sender: AgoraBaseUIButton) {
+        delegate?.didNextPageTouchEvent(pageIndex + 1)
+    }
+    
     @objc public func setPageIndex(_ pageIndex: Int,
                                      pageCount: Int) {
         self.pageIndex = pageIndex
@@ -161,6 +213,7 @@ extension AgoraBoardPageControlView {
     @objc public func setFullScreen(_ fullScreen: Bool) {
 
         fullScreenButton.isSelected = fullScreen
+        fullScreenAloneButton.isSelected = fullScreen
     }
     
     // 切页面
@@ -180,25 +233,35 @@ extension AgoraBoardPageControlView {
     // 能否最大、最小
     @objc  public func setResizeFullScreenEnable(_ enable: Bool) {
         fullScreenButton.isUserInteractionEnabled = enable
+        fullScreenAloneButton.isUserInteractionEnabled = enable
     }
 }
 
+
 fileprivate extension AgoraBoardPageControlView {
      func initView() {
-        backgroundColor = .white
         
-        addSubview(fullScreenButton)
-        addSubview(increaseButton)
-        addSubview(decreaseButton)
-        addSubview(speratorLine)
-        addSubview(prePageButton)
-        addSubview(pageIndexLabel)
-        addSubview(nextPageButton)
+        addSubview(containerView)
+        addSubview(fullScreenAloneButton)
+        
+        containerView.addSubview(fullScreenButton)
+        containerView.addSubview(increaseButton)
+        containerView.addSubview(decreaseButton)
+        containerView.addSubview(speratorLine)
+        containerView.addSubview(prePageButton)
+        containerView.addSubview(pageIndexLabel)
+        containerView.addSubview(nextPageButton)
         
         pageIndex = 0
     }
     
     func initLayout() {
+        
+        containerView.agora_x = 0
+        containerView.agora_right = 0
+        containerView.agora_y = 0
+        containerView.agora_bottom = 0
+        
         let buttonY: CGFloat = 6
         let buttonWidth: CGFloat = 28
         let buttonHeight: CGFloat = 28
@@ -208,6 +271,11 @@ fileprivate extension AgoraBoardPageControlView {
         fullScreenButton.agora_y = buttonY
         fullScreenButton.agora_width = buttonWidth
         fullScreenButton.agora_height = buttonHeight
+        
+        fullScreenAloneButton.agora_x = 13
+        fullScreenAloneButton.agora_y = 0
+        fullScreenAloneButton.agora_width = 53
+        fullScreenAloneButton.agora_height = 53
         
         decreaseButton.agora_x = fullScreenButton.agora_x + buttonWidth + subViewInterSpace
         decreaseButton.agora_y = buttonY
@@ -247,24 +315,5 @@ fileprivate extension AgoraBoardPageControlView {
 
 // MARK: - Touch events
 @objc extension AgoraBoardPageControlView {
-    func doFullScreenPressed(_ sender: AgoraBaseUIButton) {
-        let fullScreen = !sender.isSelected
-        delegate?.didFullScreenEvent(isFullScreen: fullScreen)
-    }
 
-    func doDecreaseScalePressed(_ sender: AgoraBaseUIButton) {
-        delegate?.didDecreaseTouchEvent()
-    }
-
-    func doIncreaseScalePressed(_ sender: AgoraBaseUIButton) {
-        delegate?.didIncreaseTouchEvent()
-    }
-
-    func doPrePagePressed(_ sender: AgoraBaseUIButton) {
-        delegate?.didPrePageTouchEvent(pageIndex - 1)
-    }
-
-    func doNextPagePressed(_ sender: AgoraBaseUIButton) {
-        delegate?.didNextPageTouchEvent(pageIndex + 1)
-    }
 }

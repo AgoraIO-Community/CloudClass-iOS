@@ -17,6 +17,7 @@ def sourcePod
   pod 'AgoraUIEduBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SOURCE']
 
   pod 'AgoraExtApp', :path => 'AgoraEduSDK/Modules/AgoraExtApp/AgoraExtApp.podspec'
+  pod 'AgoraWidget', :path => 'AgoraEduSDK/Modules/AgoraWidget/AgoraWidget.podspec'
   pod 'AgoraEduContext', :path => 'AgoraEduSDK/Modules/AgoraEduContext/AgoraEduContext.podspec'
 
   # if you use swift project, you just only change 'OC' to 'Swift'
@@ -24,10 +25,20 @@ def sourcePod
 
   # if you use swift project, you just only change 'OC' to 'Swift'
   pod 'AgoraActionProcess', :path => 'AgoraEduSDK/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
+
+  pod 'Protobuf'
 end
 
 def binaryPod
   pod 'AgoraEduSDK', :path => 'AgoraEduSDK/AgoraEduSDK.podspec'
+end
+
+def uiSourcePod
+  pod 'AgoraEduSDK', :path => 'AgoraEduSDK/AgoraEduSDK.podspec', :subspecs => ['Core']  
+
+  pod 'AgoraUIBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
+  pod 'AgoraUIEduBaseViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['BINARY']
+  pod 'AgoraUIEduAppViews', :path => 'AgoraEduSDK/Modules/AgoraUIEduAppViews/AgoraUIEduAppViews.podspec', :subspecs => ['BINARY']
 end
 
 workspace 'AgoraEducation.xcworkspace'
@@ -41,4 +52,5 @@ target 'AgoraEducation' do
 
   sourcePod
   #binaryPod
+  #uiSourcePod
 end

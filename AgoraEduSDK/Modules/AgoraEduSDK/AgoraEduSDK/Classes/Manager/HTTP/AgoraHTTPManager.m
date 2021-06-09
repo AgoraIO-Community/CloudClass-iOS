@@ -63,7 +63,7 @@ static NSString *AGORA_EDU_SDK_BASE_URL = @"https://api.agora.io";
                             headers:headers
                          parseClass:AgoraConfigModel.class
                             success:^(id _Nonnull model) {
-        if(successBlock){
+        if (successBlock) {
             successBlock(model);
         }
     } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
@@ -87,6 +87,7 @@ static NSString *AGORA_EDU_SDK_BASE_URL = @"https://api.agora.io";
     parameters[@"roomType"] = @(config.roomType);
     parameters[@"role"] = @(config.role);
     parameters[@"userName"] = config.userName;
+    parameters[@"userProperties"] = config.userProperties;
     
     if (config.startTime != nil) {
         parameters[@"startTime"] = config.startTime;
@@ -116,6 +117,43 @@ static NSString *AGORA_EDU_SDK_BASE_URL = @"https://api.agora.io";
                    success:(OnRoomChatSuccessBlock)successBlock
                    failure:(OnHttpFailureBlock)failureBlock {
     NSString *url = [NSString stringWithFormat:HTTP_APP_ROOM_CHAT, AGORA_EDU_SDK_BASE_URL, config.appId, config.roomUuid, config.userUuid];
+    
+    NSDictionary *headers = [AgoraHTTPManager headersWithUId:config.userUuid
+                                                   userToken:@""
+                                                       token:config.token];
+
+    NSDictionary *parameters = @{
+        @"message":config.message,
+        @"type":@(config.type)
+    };
+    
+    [AgoraHTTPManager fetchDispatch:HttpTypePost
+                                url:url
+                         parameters:parameters
+                            headers:headers
+                         parseClass:AgoraChatModel.class
+                            success:^(id _Nonnull model) {
+        if(successBlock){
+            successBlock(model);
+        }
+    } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
+        if (failureBlock) {
+            failureBlock(error, statusCode);
+        }
+    }];
+}
+
++ (void)conversationChatWithConfig:(AgoraRoomChatConfiguration *)config
+                           success:(OnRoomChatSuccessBlock)successBlock
+                           failure:(OnHttpFailureBlock)failureBlock {
+    
+    // @"%@/edu/apps/%@/v2/rooms/%@/conversation/students/%@/messages"
+    
+    NSString *url = [NSString stringWithFormat:HTTP_APP_CONVERSATION_CHAT,
+                                               AGORA_EDU_SDK_BASE_URL,
+                                               config.appId,
+                                               config.roomUuid,
+                                               config.userUuid];
     
     NSDictionary *headers = [AgoraHTTPManager headersWithUId:config.userUuid
                                                    userToken:@""

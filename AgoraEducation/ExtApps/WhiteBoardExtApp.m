@@ -31,7 +31,6 @@
 
 #pragma mark - WhiteBoardExtApp
 - (void)initViews {
-    self.view.backgroundColor = UIColor.redColor;
     
     self.boardContainer = [[UIView alloc] initWithFrame:CGRectZero];
     [self.view addSubview:self.boardContainer];

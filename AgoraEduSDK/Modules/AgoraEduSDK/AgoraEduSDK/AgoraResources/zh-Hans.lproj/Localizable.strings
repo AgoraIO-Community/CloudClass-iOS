@@ -44,6 +44,9 @@ MicrophoneMuteText = "你暂时不能发言了";
 CameraUnMuteText = "摄像头被打开";
 MicrophoneUnMuteText = "你可以发言了";
 
+// Device
+TeacherVideoFailText = "老师视频可能出现问题";
+
 // loading
 BoardWareProcessText = "课件加载中，请稍后...";
 BoardWareJumpText = "跳过";
@@ -52,6 +55,7 @@ BoardWareFailMsgText = "课件未能加载成功，您可以点击重新加载�
 BoardWareCloseText = "关闭";
 BoardWareRetryText = "重新加载";
 LoaingText = "加载中...";
+ReconnectingText = "重连中...";
 
 // CoHost
 HandsUpTimeOutText = "举手超时";

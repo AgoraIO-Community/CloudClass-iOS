@@ -22,7 +22,7 @@ import Foundation
 
 @objc public enum AgoraEduContextApplianceType: Int {
     // 选择、笔、矩形、圆形、线形、橡皮擦
-    case select, pen, rect, circle, line, eraser
+    case select, pen, rect, circle, line, eraser, clicker
 }
 
 /// Room
@@ -67,6 +67,8 @@ import Foundation
     public var userName: String = ""
     // 用户角色
     public var role: AgoraEduContextUserRole = .student
+    // 用户属性
+    public var userProperties: [String : Any]?
 }
 
 @objc public enum AgoraEduContextUserRole: Int {
@@ -89,7 +91,7 @@ import Foundation
 /// Chat
 @objcMembers public class AgoraEduContextChatInfo: NSObject {
     // 消息Id
-    public var id: Int = 0
+    public var id: String = ""
     // 消息内容
     public var message: String = ""
     // 消息所属人员信息
@@ -121,8 +123,8 @@ import Foundation
 
 /// list
 @objc public enum AgoraEduContextDeviceState: Int {
-    // 设备状态：不可用、可用
-    case notAvailable, available
+    // 设备状态：不可用、可用, 关闭
+    case notAvailable, available, close
 }
 
 @objcMembers public class AgoraEduContextUserDetailInfo: NSObject {
@@ -146,6 +148,8 @@ import Foundation
     public var enableVideo: Bool = false
     // 流：是否有音频
     public var enableAudio: Bool = false
+    // 是否可以聊天
+    public var enableChat: Bool = true
     // 奖励数量
     public var rewardCount: Int = 0
     
@@ -162,3 +166,36 @@ import Foundation
     case handsUp
     case handsDown
 }
+
+/// ScreenShare
+@objc public enum AgoraEduContextScreenShareState : Int {
+    // 屏幕分享状态：开始、暂停、停止
+    case start, pause, stop
+}
+
+/// Device
+@objc public enum EduContextCameraFacing : Int {
+    // 摄像头方向：前置、后置
+    case front, back
+}
+
+@objcMembers public class AgoraEduContextDeviceConfig: NSObject {
+    // 是否开启摄像头
+    public var cameraEnabled: Bool = true
+    // 摄像头方向
+    public var cameraFacing: EduContextCameraFacing = .front
+    // 是否开启麦克风
+    public var micEnabled: Bool = true
+    // 是否开启扬声器
+    public var speakerEnabled: Bool = true
+    
+    public init(cameraEnabled: Bool, cameraFacing: EduContextCameraFacing, micEnabled: Bool, speakerEnabled: Bool) {
+        super.init()
+        
+        self.cameraEnabled = cameraEnabled
+        self.cameraFacing = cameraFacing
+        self.micEnabled = micEnabled
+        self.speakerEnabled = speakerEnabled
+    }
+}
+

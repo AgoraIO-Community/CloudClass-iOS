@@ -10,7 +10,6 @@
 #import "AgoraBaseViewController+Room.h"
 #import "AgoraBaseViewController+User.h"
 #import "AgoraBaseViewController+HandsUp.h"
-#import "AgoraBaseViewController+Screen.h"
 
 @interface AgoraLectureViewController () <AgoraRTEClassroomDelegate, AgoraPrivateChatControllerDelegate>
 @property (nonatomic, strong) AgoraPrivateChatController *privateChatController;
@@ -19,8 +18,7 @@
 @implementation AgoraLectureViewController
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self bindProtocols];
-    
+
     AgoraWEAK(self);
     self.handsUpVM = [[AgoraHandsUpVM alloc] initWithConfig:self.vmConfig];
     self.handsUpVM.updateEnableBlock = ^(BOOL enable) {
@@ -38,14 +36,6 @@
             [weakself onShowHandsUpTips:message];
         }
     };
-}
-
-- (void)bindProtocols {
-//    [self bindRoomProtocol];
-//    [self bindUserProtocol];
-//    [self bindChatProtocol];
-//    [self bindHandsUpProtocol];
-//    [self bindScreenProtocol];
 }
 
 - (void)onJoinClassroomSuccess {
@@ -75,9 +65,14 @@
 }
 
 #pragma mark AgoraRTEClassroomDelegate
-- (void)classroomPropertyUpdated:(AgoraRTEClassroom *)classroom cause:(AgoraRTEObject *)cause {
-    [super classroomPropertyUpdated:classroom
-                              cause:cause];
+- (void)classroomPropertyUpdated:(NSDictionary *)changedProperties
+                       classroom:(AgoraRTEClassroom *)classroom
+                           cause:(NSDictionary * _Nullable)cause
+                    operatorUser:(AgoraRTEBaseUser *)operatorUser {
+    [super classroomPropertyUpdated:changedProperties
+                          classroom:classroom
+                              cause:cause
+                       operatorUser:operatorUser];
     
     AgoraWEAK(self);
     NSDictionary<NSString*, AgoraEduContextUserDetailInfo*> *userDetailInfos = [self.userVM getChangedRewardsWithCause:cause];

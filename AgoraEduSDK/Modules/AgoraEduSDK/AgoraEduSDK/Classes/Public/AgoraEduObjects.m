@@ -34,12 +34,14 @@
 
 @implementation AgoraEduCourseware
 - (instancetype)initWithResourceName:(NSString *)resourceName
+                        resourceUuid:(NSString *)resourceUuid
                            scenePath:(NSString *)scenePath
                               scenes:(NSArray<WhiteScene *> *)scenes
                          resourceUrl:(NSString *)resourceUrl {
     self = [super init];
     if (self) {
         self.resourceName = resourceName;
+        self.resourceUuid = resourceUuid;
         self.scenePath = scenePath;
         self.resourceUrl = resourceUrl;
         self.scenes = scenes;
@@ -66,7 +68,8 @@
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     boardRegion:(NSString * _Nullable)boardRegion{
+                     boardRegion:(NSString * _Nullable)boardRegion
+                  userProperties:(NSDictionary * _Nullable)userProperties{
     self = [self init];
     self.userName = userName;
     self.userUuid = userUuid;
@@ -82,6 +85,9 @@
     }
     if (boardRegion != nil) {
         self.boardRegion = boardRegion;
+    }
+    if (userProperties != nil) {
+        self.userProperties = userProperties;
     }
     return self;
 }
