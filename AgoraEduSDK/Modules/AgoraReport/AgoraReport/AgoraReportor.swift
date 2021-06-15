@@ -32,6 +32,7 @@ import AFNetworking
     var version: String
     var token: String
     var userUuid: String
+    var region: String
     
     @objc public init(source: String,
                       clientType: String,
@@ -39,7 +40,8 @@ import AFNetworking
                       appId: String,
                       version: String,
                       token: String,
-                      userUuid: String) {
+                      userUuid: String,
+                      region: String) {
         self.source = source
         self.clientType = clientType
         self.platform = platform
@@ -47,6 +49,7 @@ import AFNetworking
         self.version = version
         self.token = token
         self.userUuid = userUuid
+        self.region = region
     }
 }
 
@@ -66,8 +69,8 @@ import AFNetworking
     private var context: AgoraReportorContext?
     
     // Duration event
-    private var startEvents = [String: Int]()
-    private var startSubEvents = [String: Int]()
+    private var startEvents = [String: Int64]()
+    private var startSubEvents = [String: Int64]()
     
     private let startEvnetsMaxCount = 10000
     
@@ -83,7 +86,7 @@ public extension AgoraReportor {
             return false
         }
         
-        let timestamp = Date().agora_report_timestamp()
+        let timestamp = Date().timestamp()
         startEvents[event] = timestamp
         return true
     }
@@ -97,7 +100,7 @@ public extension AgoraReportor {
             return
         }
         
-        let elapse = Date().agora_report_timestamp() - startTime
+        let elapse = Date().timestamp() - startTime
         startEvents.removeValue(forKey: event)
         
         processEventHttpRequest(event: event,
@@ -115,7 +118,7 @@ public extension AgoraReportor {
         }
         
         let key = event + "-" + subEvent
-        let timestamp = Date().agora_report_timestamp()
+        let timestamp = Date().timestamp()
         startSubEvents[key] = timestamp
         return true
     }
@@ -131,7 +134,7 @@ public extension AgoraReportor {
             return
         }
         
-        let elapse = Date().agora_report_timestamp() - startTime
+        let elapse = Date().timestamp() - startTime
         startSubEvents.removeValue(forKey: key)
         
         processEventHttpRequest(event: event,
@@ -157,7 +160,7 @@ public extension AgoraReportor {
                                  api: String? = nil,
                                  errorCode: Int? = nil,
                                  httpCode: Int? = nil,
-                                 elapse: Int? = nil,
+                                 elapse: Int64? = nil,
                                  count: Int? = nil) {
         httpRequest(event: event,
                     category: category,
@@ -177,13 +180,13 @@ private extension AgoraReportor {
                      api: String? = nil,
                      errorCode: Int? = nil,
                      httpCode: Int? = nil,
-                     elapse: Int? = nil,
+                     elapse: Int64? = nil,
                      count: Int? = nil) {
         guard let context = self.context else {
             fatalError("call ‘set(context: AgoraReportorContext)’ before")
         }
         
-        let timestamp = Date().agora_report_timestamp()
+        let timestamp = Date().timestamp()
         
         let sign = "src=\(context.source)&ts=\(timestamp)"
         
@@ -237,7 +240,7 @@ private extension AgoraReportor {
                                          "sign": sign.agora_md5.lowercased(),
                                          "pts": points]
         
-        let url = ("\(BASE_URL)/cn/v1.0/projects/\(context.appId)/app-dev-report/v1/report")
+        let url = ("\(BASE_URL)/\(context.region)/v1.0/projects/\(context.appId)/app-dev-report/v1/report")
         
         let headers = ["x-agora-token" : context.token, "x-agora-uid" : context.userUuid]
 
@@ -268,8 +271,8 @@ private extension AgoraReportor {
 }
 
 fileprivate extension Date {
-    func agora_report_timestamp() -> Int {
-        return Int(timeIntervalSince1970 * 1000)
+    func timestamp() -> Int64 {
+        return Int64(timeIntervalSince1970 * 1000)
     }
 }
 

@@ -24,7 +24,7 @@ public class DisclaimerView: AgoraBaseUIView {
     
     private lazy var contentView: AgoraBaseUIView = {
         var contentView = AgoraBaseUIView()
-        contentView.backgroundColor = LoginConfig.device == .iPhone ? UIColor(hexString: "F9F9FC") : .white
+        contentView.backgroundColor = LoginConfig.device == .iPad ? .white : UIColor(hexString: "F9F9FC")
 
         contentView.layer.cornerRadius = 8
         contentView.layer.backgroundColor = UIColor.white.cgColor
@@ -62,12 +62,12 @@ public class DisclaimerView: AgoraBaseUIView {
         titleView.addSubview(backBtn)
         titleView.addSubview(line)
         
-        if LoginConfig.device == .iPhone {
-            titleLabel.agora_center_x = 0
-            titleLabel.agora_bottom = 9
-        } else {
+        if LoginConfig.device == .iPad {
             titleLabel.agora_center_x = 0
             titleLabel.agora_center_y = 0
+        } else {
+            titleLabel.agora_center_x = 0
+            titleLabel.agora_bottom = 9
         }
         line.agora_x = LoginConfig.dis_line_x
         line.agora_right = LoginConfig.dis_line_x
@@ -113,7 +113,8 @@ extension DisclaimerView {
     private func initView() {
         
         switch LoginConfig.device {
-        case .iPhone:
+        case .iPhone_Big: fallthrough
+        case .iPhone_Small:
             contentView.addSubview(bottomLabel)
         case .iPad:
             self.backgroundColor = UIColor.init(white: 1, alpha: 0.7)
@@ -129,7 +130,8 @@ extension DisclaimerView {
         var height: CGFloat = 0
         
         switch LoginConfig.device {
-        case .iPhone:
+        case .iPhone_Big: fallthrough
+        case .iPhone_Small:
             width = UIScreen.main.bounds.width
             height = UIScreen.main.bounds.height
             
@@ -151,15 +153,17 @@ extension DisclaimerView {
         titleView.agora_height = LoginConfig.dis_title_height
         
         disclaLabel.agora_center_x = 0
-        disclaLabel.agora_width = LoginConfig.dis_label_width
+        disclaLabel.agora_width = width - LoginConfig.dis_label_x * 2
         disclaLabel.agora_y = LoginConfig.dis_title_height + LoginConfig.dis_title_sep   
     }
 }
 
-// MARK: action
+// MARK: touch event
 extension DisclaimerView {
     @objc private func onTouchBack() {
-        if LoginConfig.device == .iPhone {
+        if LoginConfig.device == .iPad {
+            removeFromSuperview()
+        } else {
             UIView.animate(withDuration: TimeInterval.agora_animation) {[weak self] in
                     self?.agora_x = self?.frame.width ?? 0
 
@@ -172,8 +176,6 @@ extension DisclaimerView {
                 }
                 self?.removeFromSuperview()
             }
-        } else {
-            removeFromSuperview()
         }
     }
 }

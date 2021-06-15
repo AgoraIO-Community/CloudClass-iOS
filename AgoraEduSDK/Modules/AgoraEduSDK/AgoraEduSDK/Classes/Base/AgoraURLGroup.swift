@@ -14,7 +14,7 @@ import UIKit
 }
 
 @objcMembers public class AgoraURLGroup: NSObject {
-    private let host = "https://api.agora.io"
+    private var host = "https://api.agora.io"
     private let apps = "edu/apps"
     private let version = "v2"
     private let rooms = "rooms"
@@ -22,6 +22,12 @@ import UIKit
     private let properties = "properties"
     
     public weak var dataSource: AgoraURLGroupDataSource?
+    
+    public var urlRegion: String = "" {
+        didSet {
+            host = host + "/" + urlRegion
+        }
+    }
     
     private var agoraAppId: String {
         if let id = dataSource?.needAgoraAppId(),

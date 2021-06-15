@@ -37,34 +37,33 @@ import AgoraEduSDK
     
     private var duration: NSNumber = NSNumber(value: 1800)
     
-    private var region: String?
+    private var region: String = LoginConfig.RegionList[0]
     
     private lazy var titleBg: AgoraBaseUIImageView = {
-        var titleBg = AgoraBaseUIImageView(image: UIImage(named: "title_bg"))
+        var titleBg = AgoraBaseUIImageView(image: UIImage(named: LoginConfig.device == .iPhone_Small ? "title_bg_small" : "title_bg"))
+        
+        var label = AgoraBaseUILabel()
+        label.text = NSLocalizedString("Login_title",comment: "")
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 20)
+        
+        titleBg.addSubview(label)
+        
+        label.agora_center_x = 0
+        label.agora_center_y = -2
+        
         return titleBg
     }()
     
     private lazy var aboutBtn: AgoraBaseUIButton = {
         var aboutBtn = AgoraBaseUIButton()
-        aboutBtn.setBackgroundImage(UIImage(named: "about_tag_\(LoginConfig.device.rawValue)"), for: .normal)
+        aboutBtn.setBackgroundImage(UIImage(named: "about_tag_\(UIDevice.current.model)"), for: .normal)
         aboutBtn.alpha = 0.7
         aboutBtn.addTarget(self, action: #selector(onTouchAbout), for: .touchUpInside)
         return aboutBtn
     }()
     
-    private lazy var titleLabel: AgoraBaseUILabel = {
-        var label = AgoraBaseUILabel()
-        label.text = NSLocalizedString("Login_title",comment: "")
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 20)
-        return label
-    }()
-    
-    private lazy var iconImgView: AgoraBaseUIImageView = {
-        var iconImgView = AgoraBaseUIImageView(image: UIImage(named: "icon_\(LoginConfig.device.rawValue)"))
-        return iconImgView
-    }()
-    
+    private lazy var iconImgView = AgoraBaseUIImageView(image: UIImage(named: "icon_\(LoginConfig.device.rawValue)"))
 
     private lazy var roomGroup = createFieldGroup(fieldType: .room)
     private lazy var userGroup = createFieldGroup(fieldType: .user)
@@ -107,7 +106,7 @@ import AgoraEduSDK
     private lazy var regionTypeView: ChooseTableView = {
         var regionTypeView = ChooseTableView(cell_id: LoginConfig.region_cell_id,
                                              list: LoginConfig.RegionList) {[weak self] (row) in
-            self?.region = Region_Type(rawValue: LoginConfig.RegionList[row])?.regionStr
+            self?.region = LoginConfig.RegionList[row]
             self?.regionTypeView.isHidden = true
             self?.regionHolderLabel.text = LoginConfig.RegionList[row]
             self?.regionHolderLabel.textColor = UIColor(hexString: "191919")
@@ -205,7 +204,6 @@ extension LoginViewController {
     }
     
     private func setSDKConfig() {
-    
         let eyeCare = UserDefaults.standard.bool(forKey: LoginConfig.USER_DEFAULT_EYE_CARE)
         let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(), eyeCare: eyeCare)
         AgoraEduSDK.setConfig(defaultConfig)
@@ -359,12 +357,8 @@ extension LoginViewController {
     private func initView() {
 
         view.backgroundColor = .white
-        switch LoginConfig.device {
-        case .iPhone:
+        if LoginConfig.device != .iPad{
             view.addSubview(titleBg)
-            view.addSubview(titleLabel)
-        case .iPad:
-            print("")
         }
         
         view.addSubview(iconImgView)
@@ -385,19 +379,12 @@ extension LoginViewController {
     }
     
     fileprivate func initLayout() {
-        
-        switch LoginConfig.device {
-        case .iPhone:
+        if LoginConfig.device != .iPad{
             titleBg.agora_x = 0
             titleBg.agora_right = 0
             titleBg.agora_y = 0
-            
-            titleLabel.agora_center_x = 0
-            titleLabel.agora_y = 62
-        case .iPad:
-            print("")
         }
-        
+
         iconImgView.agora_center_x = 0
         iconImgView.agora_y = LoginConfig.login_icon_y
         
@@ -409,57 +396,69 @@ extension LoginViewController {
         roomGroup.agora_center_x = 0
         roomGroup.agora_width = LoginConfig.login_group_width
         roomGroup.agora_height = LoginConfig.login_group_height
-        roomGroup.agora_safe_y = LoginConfig.login_first_group_y
+        roomGroup.agora_y = LoginConfig.login_first_group_y
         
         userGroup.agora_center_x = 0
         userGroup.agora_width = roomGroup.agora_width
         userGroup.agora_height = roomGroup.agora_height
-        userGroup.agora_safe_y = roomGroup.agora_safe_y + roomGroup.agora_height + 21
+        userGroup.agora_y = roomGroup.agora_y + roomGroup.agora_height + 20
         
         classTypeGroup.agora_center_x = 0
         classTypeGroup.agora_width = roomGroup.agora_width
         classTypeGroup.agora_height = roomGroup.agora_height
-        classTypeGroup.agora_safe_y = userGroup.agora_safe_y + userGroup.agora_height + 21
+        classTypeGroup.agora_y = userGroup.agora_y + userGroup.agora_height + 20
         
         regionTypeGroup.agora_center_x = 0
         regionTypeGroup.agora_width = roomGroup.agora_width
         regionTypeGroup.agora_height = roomGroup.agora_height
-        regionTypeGroup.agora_safe_y = classTypeGroup.agora_safe_y + classTypeGroup.agora_height + 21
+        regionTypeGroup.agora_y = classTypeGroup.agora_y + classTypeGroup.agora_height + 20
         
         durationGroup.agora_center_x = 0
         durationGroup.agora_width = roomGroup.agora_width
         durationGroup.agora_height = roomGroup.agora_height
-        durationGroup.agora_safe_y = regionTypeGroup.agora_safe_y + regionTypeGroup.agora_height + 21
+        durationGroup.agora_y = regionTypeGroup.agora_y + regionTypeGroup.agora_height + 20
         
         classTypesView.agora_center_x = 0
         classTypesView.agora_width = LoginConfig.login_class_types_width
-        classTypesView.agora_safe_y = classTypeGroup.agora_safe_y + classTypeGroup.agora_height + 1
+        classTypesView.agora_y = classTypeGroup.agora_y + classTypeGroup.agora_height + 1
         classTypesView.agora_height = classTypesView.getTotalHeight()
 
         regionTypeView.agora_center_x = 0
-        regionTypeView.agora_safe_y = regionTypeGroup.agora_safe_y + regionTypeGroup.agora_height + 1
+        regionTypeView.agora_y = regionTypeGroup.agora_y + regionTypeGroup.agora_height + 1
         regionTypeView.agora_width = classTypesView.agora_width
         regionTypeView.agora_height = regionTypeView.getTotalHeight()
+        
+        let enter_gap: CGFloat = LoginConfig.device == .iPhone_Small ? 30 : 40
         
         enterBtn.agora_center_x = 0
         enterBtn.agora_height = 44
         enterBtn.agora_width = 280
-        enterBtn.agora_safe_y = durationGroup.agora_safe_y + durationGroup.agora_height + 40
+        enterBtn.agora_y = durationGroup.agora_y + durationGroup.agora_height + enter_gap
 
         bottomLabel.agora_center_x = 0
-        bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
+        if LoginConfig.device == .iPad {
+            bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
+        } else {
+            let height: CGFloat = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+
+            if enterBtn.agora_y > height - LoginConfig.login_bottom_bottom - 30 - enterBtn.agora_height {
+                bottomLabel.agora_y = enterBtn.agora_y + enterBtn.agora_height + 30
+            } else {
+                bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
+            }
+        }
     }
 
     public override var shouldAutorotate: Bool {
-        return false
+        return true
     }
     
     public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return LoginConfig.device == .iPhone ? .portrait : .landscapeRight
+        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
     }
     
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return LoginConfig.device == .iPhone ? .portrait : .landscapeRight
+        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
     }
 
 }
@@ -481,7 +480,8 @@ extension LoginViewController{
         aboutView.agora_right = 0
         aboutView.agora_bottom = 0
         switch LoginConfig.device {
-        case .iPhone:    
+        case .iPhone_Big: fallthrough
+        case .iPhone_Small:
             aboutView.alpha = 1
             aboutView.layoutIfNeeded()
             aboutView.transform = CGAffineTransform(translationX: view.frame.width,
@@ -532,6 +532,10 @@ extension LoginViewController{
         view.bringSubviewToFront(regionTypeView)
     }
     
+    private func getServiceId() {
+        
+    }
+    
     @objc private func onTouchJoinRoom() {
         guard let room = roomName,
               let user = userName,
@@ -543,17 +547,17 @@ extension LoginViewController{
         let roomUuid = "\(room)\(type.rawValue)"
         
         // userUuid = userName + roleType
-        let userUuid = "\(user)\(AgoraEduRoleType.student.rawValue)"
+        let userId = "\(user)\(AgoraEduRoleType.student.rawValue)"
         
         // class time
         let startTime:NSNumber = NSNumber(value: NSDate().timeIntervalSince1970 * 1000)
         
         let rtmToken = TokenBuilder.buildToken(KeyCenter.appId(),
                                                appCertificate: KeyCenter.appCertificate(),
-                                               userUuid: userUuid)
-        
+                                               userUuid: userId)
+
         let config = AgoraEduLaunchConfig(userName: user,
-                                          userUuid: userUuid,
+                                          userUuid: userId,
                                           roleType: .student,
                                           roomName: room,
                                           roomUuid: roomUuid,
@@ -561,7 +565,7 @@ extension LoginViewController{
                                           token: rtmToken,
                                           startTime: startTime,
                                           duration: duration,
-                                          boardRegion: region)
+                                          region: region)
         
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")

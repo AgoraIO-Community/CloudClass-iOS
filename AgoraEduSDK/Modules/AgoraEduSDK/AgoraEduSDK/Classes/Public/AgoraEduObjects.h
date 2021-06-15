@@ -62,8 +62,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSNumber *startTime;
 // 课程时间（秒）
 @property (nonatomic, copy, nullable) NSNumber *duration;
-// 白板区域
-@property (nonatomic, copy) NSString *boardRegion;
+// 区域
+@property (nonatomic, copy) NSString *region;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     boardRegion:(NSString *_Nullable)boardRegion;
+                     region:(NSString *_Nullable)region;
 @end
 
 // 聊天翻译

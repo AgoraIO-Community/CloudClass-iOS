@@ -13,6 +13,8 @@
     self = [super init];
     if (self) {
         self.code = -1;
+        self.msg = nil;
+        self.message = nil;
     }
     return self;
 }

@@ -39,9 +39,9 @@ typedef NS_ENUM(NSInteger, ZipStateType) {
     ZipStateTypeOnZipError      = 3,
 };
 
-NSString *AGORA_EDU_HTTP_LOG_BASE_URL = @"https://api.agora.io";
-NSString *AGORA_EDU_HTTP_LOG_OSS_BASE_URL = @"https://api-solutions.agoralab.co";
-NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
+NSString *AGORA_EDU_HTTP_LOG_BASE_URL = @"";
+NSString *AGORA_EDU_HTTP_LOG_OSS_BASE_URL = @"";
+NSString *AGORA_EDU_HTTP_LOG_SECRET = @"";
 
 @interface AgoraLogManager ()
 @property (nonatomic, copy) NSString *logDirectoryPath;
@@ -54,11 +54,11 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
 
 @implementation AgoraLogManager
 + (void)setAppSecret:(NSString *)appSecret {
-    AGORA_EDU_HTTP_LOG_SECRET = appSecret;
+//    AGORA_EDU_HTTP_LOG_SECRET = appSecret;
 }
 
 + (void)setBaseURL:(NSString *)baseURL {
-    AGORA_EDU_HTTP_LOG_BASE_URL = baseURL;
+//    AGORA_EDU_HTTP_LOG_BASE_URL = baseURL;
 }
 
 - (instancetype)init

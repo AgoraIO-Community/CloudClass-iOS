@@ -66,7 +66,7 @@
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     boardRegion:(NSString * _Nullable)boardRegion{
+                     region:(NSString * _Nullable)region{
     self = [self init];
     self.userName = userName;
     self.userUuid = userUuid;
@@ -80,8 +80,10 @@
     if (duration != nil) {
         self.duration = duration;
     }
-    if (boardRegion != nil) {
-        self.boardRegion = boardRegion;
+    if (region != nil) {
+        self.region = [region lowercaseString];
+    } else {
+        self.region = [@"CN" lowercaseString];
     }
     return self;
 }

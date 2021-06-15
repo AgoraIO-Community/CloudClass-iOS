@@ -50,7 +50,7 @@ static NSString *AGORA_EDU_SDK_BASE_URL = @"https://api.agora.io";
 + (void)getConfig:(AgoraRoomConfiguration *)config
           success:(OnConfigSuccessBlock)successBlock
           failure:(OnHttpFailureBlock)failureBlock {
-    
+    [AgoraHTTPManager setBaseURL:[NSString stringWithFormat:@"https://api.agora.io/%@",config.region]];
     NSString *url = [NSString stringWithFormat:HTTP_APP_CONFIG, AGORA_EDU_SDK_BASE_URL, config.appId];
     
     NSDictionary *headers = [AgoraHTTPManager headersWithUId:config.userUuid
@@ -274,11 +274,10 @@ static NSString *AGORA_EDU_SDK_BASE_URL = @"https://api.agora.io";
         
     } else if (model.code == -1) {
         NSString *msg = model.message;
-        if(msg == nil) {
-            return LocalError(model.code, @"unknown error");
-        } else{
+        if (msg != nil && [msg isKindOfClass:[NSString class]] && msg.length > 0) {
             return LocalError(model.code, msg);
         }
+        return LocalError(model.code, @"unknown error");
     } else {
         return LocalError(model.code, model.msg);
     }

@@ -38,7 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)sdkVersion;
 
 // Init
-- (void)initEngineKitWithAppid:(NSString *)appid;
+- (void)initEngineKitWithAppid:(NSString *)appid
+                     rtcRegion:(NSString *)rtcRegion;
 
 // JoinChannel
 - (int)joinChannelByToken:(NSString * _Nullable)token channelId:(NSString * _Nonnull)channelId info:(NSString * _Nullable)info uid:(NSUInteger)uid;

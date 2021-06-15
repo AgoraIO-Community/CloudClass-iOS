@@ -21,7 +21,9 @@
 #import <objc/runtime.h>
 #import <EduSDK/EduSDK-Swift.h>
 
-static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
+static NSString *AGORA_EDU_BASE_URL = @"";
+
+#define AGORA_EDU_BASE_URL_SET(region) [NSString stringWithFormat:@"https://api.agora.io/%@/scene",region]
 
 #define AgoraRTE_APP_CODE @"edu-demo"
 #define AgoraRTE_LOG_PATH @"/AgoraEducation/"
@@ -45,16 +47,17 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
 
 @implementation AgoraRTEManager
 + (void)setBaseURL:(NSString *)baseURL {
-    NSString *url = [NSString stringWithFormat:@"%@/scene", baseURL];
-    AGORA_EDU_BASE_URL = url;
+    AGORA_EDU_BASE_URL = baseURL;
     
     if ([baseURL containsString:@"dev"]) {
         AgoraRteReportor.rteShared.BASE_URL = @"http://api-test.agora.io";
     }
 }
 
-- (instancetype)initWithConfig:(AgoraRTEConfiguration *)config success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
-    
+- (instancetype)initWithConfig:(AgoraRTEConfiguration *)config
+                       success:(AgoraRTESuccessBlock)successBlock
+                       failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
+    [AgoraRTEManager setBaseURL:AGORA_EDU_BASE_URL_SET(config.urlRegion)];
     NSError *error;
     if (![config isKindOfClass:AgoraRTEConfiguration.class]) {
         error = [AgoraRTEErrorManager paramterInvalid:@"config" code:1];
@@ -89,7 +92,8 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
                                                                            appId:config.appId
                                                                          version:AgoraRTEManager.version
                                                                            token:config.token
-                                                                        userUuid:config.userUuid];
+                                                                        userUuid:config.userUuid
+                                                                          region:config.urlRegion];
     [[AgoraRteReportor rteShared] setWithContext:context];
     
     if (self = [super init]) {
@@ -107,6 +111,7 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     
         [self loginWithUserUuid:config.userUuid
                        userName:AgoraRTENoNullString(config.userName)
+                      rtmRegion:config.rtmRegion
                             tag:config.tag
                         success:successBlock
                         failure:failureBlock];
@@ -130,7 +135,12 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
 }
 
 // login
-- (void)loginWithUserUuid:(NSString *)userUuid userName:(NSString *)userName tag:(NSInteger)tag success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
+- (void)loginWithUserUuid:(NSString *)userUuid
+                 userName:(NSString *)userName
+                rtmRegion:(NSString *)rtmRegion
+                      tag:(NSInteger)tag
+                  success:(AgoraRTESuccessBlock)successBlock
+                  failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
     
     self.userUuid = userUuid;
     self.userName = userName;
@@ -149,10 +159,26 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     [[AgoraRteReportor rteShared] startLogin];
     
     AgoraRTEWEAK(self);
-    [AgoraRTMManager.shareManager initSignalWithAppid:self.appId appToken:AgoraRTENoNullString(rtmToken) userId:userUuid completeSuccessBlock:^{
+    [AgoraRTMManager.shareManager initSignalWithAppid:self.appId
+                                             appToken:AgoraRTENoNullString(rtmToken)
+                                            rtmRegion:rtmRegion
+                                               userId:userUuid
+                                 completeSuccessBlock:^{
         
         weakself.messageHandle = [[AgoraRTECommonMessageHandle alloc] init];
         weakself.messageHandle.agoraDelegate = weakself.delegate;
+        
+//        AgoraRTEClassroomConfig *classroomConfig = [AgoraRTEClassroomConfig new];
+//        classroomConfig.roomUuid = roomId;
+//        classroomConfig.sceneType = config.roomType;
+//        // 超小学生会加入2个房间： 老师的房间(大班课)和小组的房间（小班课）
+//        if (config.roomType == AgoraRTESceneTypeBreakout) {
+//            classroomConfig.sceneType = AgoraRTESceneTypeBig;
+//        }
+//
+//        weakself.roomManager = [weakself createClassroomWithConfig:classroomConfig];
+        
+        
         if (successBlock != nil) {
             successBlock();
         }

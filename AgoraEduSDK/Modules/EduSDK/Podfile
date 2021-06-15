@@ -10,7 +10,7 @@ target 'EduSDK' do
   pod "YYModel", "1.0.4"
   pod "AgoraRtm_iOS", "1.4.1"
   pod "AFNetworking", "4.0.1"
-  pod "AgoraRtcEngine_Special_iOS", "2.9.107.136"
+  pod "AgoraRtcEngine_iOS", "3.4.2"
 
   post_install do |installer|
      installer.pods_project.targets.each do |target|

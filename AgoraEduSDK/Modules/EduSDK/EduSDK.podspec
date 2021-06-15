@@ -15,9 +15,11 @@ Pod::Spec.new do |spec|
   spec.public_header_files = "EduSDK/**/*.h"
   spec.static_framework = true
 
-  spec.dependency "AgoraRtcEngine_Special_iOS", "2.9.107.136"
+  spec.dependency "AgoraRtcEngine_iOS", "3.4.2"
   spec.dependency "AgoraLog"
   spec.dependency "YYModel", "1.0.4"
   spec.dependency "AgoraRtm_iOS", "1.4.1"
   spec.dependency "AgoraReport"
+
+  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
 end

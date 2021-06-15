@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *boardAppId;
 @property (nonatomic, copy) NSString *userUuid;
 @property (nonatomic, copy) NSString *roomUuid;
+@property (nonatomic, copy) NSString *urlRegion;
 @property (nonatomic, strong) AgoraRoomStateInfoModel *roomStateInfoModel;
 @property (nonatomic, strong) NSArray<AgoraEduCourseware*> *coursewares;
 @property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *extApps;

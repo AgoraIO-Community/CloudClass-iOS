@@ -9,7 +9,10 @@
 #import "AgoraRTEClassroomJoinOptions.h"
 
 @implementation AgoraRTEClassroomJoinOptions
-- (instancetype)initWithUserName:(NSString *)userName role:(AgoraRTERoleType)role {
+- (instancetype)initWithUserName:(NSString *)userName
+                       urlRegion:(NSString *)urlRegion
+                       rtcRegion:(NSString *)rtcRegion
+                            role:(AgoraRTERoleType)role {
     
     if (self = [super init]) {
         AgoraRTEClassroomMediaOptions *option = [AgoraRTEClassroomMediaOptions new];
@@ -19,6 +22,8 @@
         }
         self.role = role;
         self.mediaOption = option;
+        self.urlRegion = urlRegion;
+        self.rtcRegion = rtcRegion;
     }
     return self;
 }

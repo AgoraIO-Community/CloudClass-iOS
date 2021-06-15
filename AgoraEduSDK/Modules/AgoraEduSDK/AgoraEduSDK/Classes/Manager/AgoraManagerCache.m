@@ -22,6 +22,19 @@ static AgoraManagerCache *manager = nil;
     return manager;
 }
 
+- (void)setRoomStateInfoModel:(AgoraRoomStateInfoModel *)roomStateInfoModel {
+    if (!roomStateInfoModel.board.boardRegion) {
+        roomStateInfoModel.board.boardRegion = @"cn-hz";
+    }
+    if (!roomStateInfoModel.rtcRegion) {
+        roomStateInfoModel.rtcRegion = @"AREA_GLOBAL";
+    }
+    if (!roomStateInfoModel.rtmRegion) {
+        roomStateInfoModel.rtmRegion = @"AREA_GLOBAL";
+    }
+    _roomStateInfoModel = roomStateInfoModel;
+}
+
 + (void)releaseResource {
     AgoraManagerCache.share.classroom = nil;
 //    AgoraManagerCache.share.replay = nil;

@@ -12,10 +12,9 @@ import AgoraUIBaseViews
 public class AboutView: AgoraBaseUIView {
     private lazy var contentView: AgoraBaseUIView = {
         var contentView = AgoraBaseUIView()
-        contentView.backgroundColor = LoginConfig.device == .iPhone ? UIColor(hexString: "F9F9FC") : .white
+        contentView.backgroundColor = LoginConfig.device == .iPad ? .white : UIColor(hexString: "F9F9FC")
         
         contentView.layer.cornerRadius = 8
-        //        contentView.layer.backgroundColor = UIColor.white.cgColor
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = UIColor(hexString: "ECECF1").cgColor
         
@@ -44,7 +43,20 @@ public class AboutView: AgoraBaseUIView {
         
         titleView.addSubview(titleLabel)
         
-        if LoginConfig.device == .iPhone {
+        if LoginConfig.device == .iPad {
+            titleLabel.agora_center_x = 0
+            titleLabel.agora_center_y = 0
+            
+            backBtn.setTitle(NSLocalizedString("About_close", comment: ""), for: .normal)
+            backBtn.setTitleColor(UIColor(hexString: "357BF6"), for: .normal)
+            backBtn.titleLabel?.font = LoginConfig.about_title_font
+            titleView.addSubview(backBtn)
+            
+            backBtn.agora_x = 20
+            backBtn.agora_center_y = 0
+            
+            titleView.addBottomLine()
+        } else {
             titleView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).cgColor
             titleView.layer.shadowOffset = CGSize(width: 0, height: 1)
             titleView.layer.shadowOpacity = 1
@@ -58,19 +70,6 @@ public class AboutView: AgoraBaseUIView {
             
             backBtn.agora_x = 15
             backBtn.agora_bottom = 1
-        } else {
-            titleLabel.agora_center_x = 0
-            titleLabel.agora_center_y = 0
-            
-            backBtn.setTitle(NSLocalizedString("About_close", comment: ""), for: .normal)
-            backBtn.setTitleColor(UIColor(hexString: "357BF6"), for: .normal)
-            backBtn.titleLabel?.font = LoginConfig.about_title_font
-            titleView.addSubview(backBtn)
-            
-            backBtn.agora_x = 20
-            backBtn.agora_center_y = 0
-            
-            titleView.addBottomLine()
         }
         
         return titleView
@@ -114,9 +113,9 @@ public class AboutView: AgoraBaseUIView {
 // MARK: UI
 extension AboutView {
     private func initView(){
-        
         switch LoginConfig.device {
-        case .iPhone:
+        case .iPhone_Big: fallthrough
+        case .iPhone_Small:
             backgroundColor = .clear
             contentView.addSubview(bottomLabel)
         case .iPad:
@@ -127,12 +126,12 @@ extension AboutView {
         contentView.addSubview(titleView)
         contentView.addSubview(infoTable)
         contentView.addSubview(bottomLabel)
-        
     }
     
     private func initLayout(){
         switch LoginConfig.device {
-        case .iPhone:
+        case .iPhone_Big: fallthrough
+        case .iPhone_Small:
             contentView.agora_x = 0
             contentView.agora_y = 0
             contentView.agora_right = 0
@@ -145,7 +144,8 @@ extension AboutView {
             contentView.agora_center_y = 0
             contentView.agora_width = 420
             contentView.agora_height = 320
-        }
+                }
+
         
         titleView.agora_x = 0
         titleView.agora_y = 0
@@ -161,22 +161,23 @@ extension AboutView {
         bottomLabel.agora_center_x = 0
     }
     
+// MARK: touch event
     @objc func onTouchBack() {
-        if LoginConfig.device == .iPhone {
+        if LoginConfig.device == .iPad {
+            removeFromSuperview()
+        } else {
             UIView.animate(withDuration: TimeInterval.agora_animation) {[weak self] in
-                    self?.agora_x = self?.frame.width ?? 0
-
-                    self?.transform = CGAffineTransform(translationX: self?.frame.width ?? 0,
-                                                        y: 0)
-                    self?.layoutIfNeeded()
+                self?.agora_x = self?.frame.width ?? 0
+                
+                self?.transform = CGAffineTransform(translationX: self?.frame.width ?? 0,
+                                                    y: 0)
+                self?.layoutIfNeeded()
             } completion: {[weak self] (complete) in
                 guard complete else {
                     return
                 }
                 self?.removeFromSuperview()
             }
-        } else {
-            removeFromSuperview()
         }
     }
 }
@@ -227,7 +228,8 @@ extension AboutView: UITableViewDataSource,UITableViewDelegate {
         } else if let detailView = detail as? AgoraBaseUIView {
             addSubview(detailView)
             switch LoginConfig.device {
-            case .iPhone:
+            case .iPhone_Big: fallthrough
+            case .iPhone_Small:
                 detailView.alpha = 1
                 detailView.agora_x = 0
                 detailView.agora_y = 0
@@ -245,7 +247,7 @@ extension AboutView: UITableViewDataSource,UITableViewDelegate {
                                 detailView.agora_y = 0
                                 detailView.agora_right = 0
                                 detailView.agora_bottom = 0
-
+                                
                                 detailView.transform = CGAffineTransform(translationX: 0,
                                                                          y: 0)
                                 detailView.layoutIfNeeded()

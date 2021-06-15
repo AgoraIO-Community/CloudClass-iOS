@@ -30,6 +30,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 @implementation AgoraWhiteBoardManager
 #pragma mark - Public
 - (instancetype)initWithCoursewareDirectory:(NSString *)directory
+                                boardRegion:(NSString *)boardRegion
                                      config:(AgoraWhiteBoardConfiguration *)config {
     self = [super init];
     if (self) {
@@ -43,6 +44,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
         }
         
         [self initContentViewWithAppId:config.appId
+                           boardRegion:boardRegion
                                  fonts:config.fonts];
     }
     return self;
@@ -323,6 +325,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
 #pragma mark - Private
 - (void)initContentViewWithAppId:(NSString *)appId
+                     boardRegion:(NSString *)boardRegion
                            fonts:(NSDictionary *)fonts {
     WhiteSdkConfiguration *config = [[WhiteSdkConfiguration alloc] initWithApp:appId];
     
@@ -334,12 +337,27 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     
     config.fonts = fonts;
     config.userCursor = YES;
+    config.region = [self getBoardRegionKey:boardRegion];
     
     self.whiteSDK = [[WhiteSDK alloc] initWithWhiteBoardView:self.contentView
                                                       config:config
                                       commonCallbackDelegate:self];
     
     [WhiteDisplayerState setCustomGlobalStateClass:AgoraWhiteGlobalStateModel.class];
+}
+
+- (WhiteRegionKey)getBoardRegionKey:(NSString *)boardRegion {
+    if ([boardRegion isEqualToString:WhiteRegionUS]) {
+        return WhiteRegionUS;
+    }else if ([boardRegion isEqualToString:WhiteRegionGB]) {
+        return WhiteRegionGB;
+    }else if ([boardRegion isEqualToString:WhiteRegionSG]) {
+        return WhiteRegionSG;
+    } else if ([boardRegion isEqualToString:WhiteRegionCN]){
+        return WhiteRegionCN;
+    } else {
+        return WhiteRegionUS; // default
+    }
 }
 
 - (void)setApplianceNameWithToolType:(AgoraWhiteBoardToolType)type {

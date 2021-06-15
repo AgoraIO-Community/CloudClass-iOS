@@ -74,6 +74,7 @@ static AgoraEduSDK *manager = nil;
 + (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config
                                delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate {
     AgoraManagerCache.share.classroomDelegate = delegate;
+    AgoraManagerCache.share.urlRegion = config.region;
     
     // 校验
     if (NoNullString(AgoraManagerCache.share.appId).length == 0) {
@@ -120,7 +121,8 @@ static AgoraEduSDK *manager = nil;
                                                                            appId:AgoraManagerCache.share.appId
                                                                          version:AgoraEduSDK.version
                                                                            token:NoNullString(config.token)
-                                                                        userUuid: NoNullString(config.userUuid)];
+                                                                        userUuid: NoNullString(config.userUuid)
+                                                                          region:config.region];
     [[AgoraApaasReportor apaasShared] setWithContext:context];
     [[AgoraApaasReportor apaasShared] startJoinRoom];
     
@@ -128,6 +130,7 @@ static AgoraEduSDK *manager = nil;
     roomConfig.appId = AgoraManagerCache.share.appId;
     roomConfig.userUuid = config.userUuid;
     roomConfig.token = config.token;
+    roomConfig.region = config.region;
         
     [AgoraHTTPManager getConfig:roomConfig
                         success:^(AgoraConfigModel * _Nonnull model) {
@@ -136,8 +139,8 @@ static AgoraEduSDK *manager = nil;
                         appConfigModel:model];
     } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
         [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
-        [AgoraEduManager releaseResource];
         [AgoraEduSDK showToast:error.localizedDescription];
+        [AgoraEduManager releaseResource];
     }];
     
     return AgoraManagerCache.share.classroom;
@@ -216,24 +219,36 @@ static AgoraEduSDK *manager = nil;
     roomStateConfig.duration = config.duration;
     roomStateConfig.userName = config.userName;
     
-    [AgoraEduManager.shareManager initWithUserUuid:userUuid
-                                          userName:userName
-                                            roomId:roomUuid
-                                               tag:sceneType
-                                           success:^{
-        // Report
-        NSString *subEvent = @"http-preflight";
-        NSString *httpApi = @"preflight";
-        [[AgoraApaasReportor apaasShared] startJoinRoomSubEventWithSubEvent:subEvent];
+    // 预检开始事件上报
+    NSString *subEvent = @"http-preflight";
+    NSString *httpApi = @"preflight";
+    [[AgoraApaasReportor apaasShared] startJoinRoomSubEventWithSubEvent:subEvent];
+    
+    [AgoraEduManager.shareManager queryRoomStateWithConfig:roomStateConfig
+                                                   success:^{
+        // 预检成功事件上报
+        [[AgoraApaasReportor apaasShared] endJoinRoomSubEventWithSubEvent:subEvent
+                                                                     type:AgoraReportEndCategoryHttp
+                                                                errorCode:0
+                                                                 httpCode:200
+                                                                      api:httpApi];
         
-        [AgoraEduManager.shareManager queryRoomStateWithConfig:roomStateConfig
-                                                       success:^{
-            // Report
-            [[AgoraApaasReportor apaasShared] endJoinRoomSubEventWithSubEvent:subEvent
-                                                                         type:AgoraReportEndCategoryHttp
-                                                                    errorCode:0
-                                                                     httpCode:200
-                                                                          api:httpApi];
+        [AgoraEduManager.shareManager initWithUserUuid:userUuid
+                                              userName:userName
+                                                roomId:roomUuid
+                                                   tag:sceneType
+                                               success:^{
+            
+            AgoraRTEClassroomConfig *classroomConfig = [AgoraRTEClassroomConfig new];
+            classroomConfig.roomUuid = config.roomUuid;
+            classroomConfig.sceneType = config.roomType;
+            // 超小学生会加入2个房间： 老师的房间(大班课)和小组的房间（小班课）
+            if (config.roomType == AgoraRTESceneTypeBreakout) {
+                classroomConfig.sceneType = AgoraRTESceneTypeBig;
+            }
+            AgoraEduManager.shareManager.roomManager = [AgoraEduManager.shareManager.eduManager
+                                                        createClassroomWithConfig:classroomConfig];
+            
             AgoraVMConfig *vmConfig = [AgoraVMConfig new];
             vmConfig.appId = AgoraManagerCache.share.appId;
             vmConfig.sceneType = config.roomType;
@@ -244,38 +259,39 @@ static AgoraEduSDK *manager = nil;
             vmConfig.token = AgoraManagerCache.share.token;
             vmConfig.baseURL = [AgoraHTTPManager getBaseURL];
             [AgoraEduSDK joinRoomWithConfig:vmConfig];
-
-        } failure:^(NSError *error, NSInteger statusCode) {
-            // Report
-            [[AgoraApaasReportor apaasShared] endJoinRoomSubEventWithSubEvent:subEvent
-                                                                         type:AgoraReportEndCategoryHttp
-                                                                    errorCode:error.code
-                                                                     httpCode:statusCode
-                                                                          api:httpApi];
             
+        } failure:^(NSError * error) {
+            [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
+            
+            // 加入房间失败事件上报
             [[AgoraApaasReportor apaasShared] endJoinRoomWithErrorCode:error.code
-                                                              httpCode:statusCode];
-            
-            if (error.code == 30403100) {
-                [AgoraEduSDK launchCompleteEvent:AgoraEduEventForbidden];
-            } else {
-                [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
-                [AgoraEduSDK showToast:error.localizedDescription];
-            }
+                                                              httpCode:0];
             
             [AgoraEduManager releaseResource];
+            [AgoraEduSDK showToast:error.localizedDescription];
         }];
-        
-    } failure:^(NSError * error) {
-        [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
-        
+
+    } failure:^(NSError *error, NSInteger statusCode) {
         // Report
+        [[AgoraApaasReportor apaasShared] endJoinRoomSubEventWithSubEvent:subEvent
+                                                                     type:AgoraReportEndCategoryHttp
+                                                                errorCode:error.code
+                                                                 httpCode:statusCode
+                                                                      api:httpApi];
+        
         [[AgoraApaasReportor apaasShared] endJoinRoomWithErrorCode:error.code
-                                                          httpCode:0];
+                                                          httpCode:statusCode];
+        
+        if (error.code == 30403100) {
+            [AgoraEduSDK launchCompleteEvent:AgoraEduEventForbidden];
+        } else {
+            [AgoraEduSDK launchCompleteEvent:AgoraEduEventFailed];
+            [AgoraEduSDK showToast:error.localizedDescription];
+        }
         
         [AgoraEduManager releaseResource];
-        [AgoraEduSDK showToast:error.localizedDescription];
     }];
+    
 }
 
 + (void)joinRoomWithConfig:(AgoraVMConfig *)config  {

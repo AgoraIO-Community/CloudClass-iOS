@@ -53,6 +53,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *appId;
 @property (nonatomic, copy) NSString *userUuid;
 @property (nonatomic, copy) NSString *token;
+@property (nonatomic, copy) NSString *region;
+
 @end
 
 // RoomState

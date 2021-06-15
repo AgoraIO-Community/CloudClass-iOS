@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 服务器生成token。
 + (void)buildToken:(NSString *)url success:(void (^)(NSString *token))success failure:(void (^)(NSError *error))failure;
 
+// 服务器生成token。
++ (void)serverInfo:(NSString *)region success:(void (^)(NSString *appid, NSString *userId, NSString *rtmToken))success failure:(void (^)(NSError *error))failure;
+
 // 获取白板课件
 + (void)boardResources:(NSString *)url token:(NSString *)token success:(void (^)(NSArray<WhiteScene *> *models, NSString *resourceName, NSString *scenePath, NSString *downURL))success failure:(void (^)(NSError *error))failure;
 @end

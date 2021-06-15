@@ -37,4 +37,6 @@ TODO: Add long description of the pod here.
 
   s.dependency "AgoraUIBaseViews"
   s.dependency "AgoraExtApp"
+
+  s.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
 end

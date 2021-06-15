@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *contentView;
 
 - (instancetype)initWithCoursewareDirectory:(NSString *)directory
+                                boardRegion:(NSString *)boardRegion
                                      config:(AgoraWhiteBoardConfiguration *)config;
 
 - (AgoraWhiteBoardStateModel *)getWhiteBoardStateModel;

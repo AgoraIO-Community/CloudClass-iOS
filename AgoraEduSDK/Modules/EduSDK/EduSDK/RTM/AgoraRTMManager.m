@@ -41,13 +41,22 @@ static AgoraRTMManager *manager = nil;
     return manager;
 }
 
-- (void)initSignalWithAppid:(NSString *)appId appToken:(NSString *)appToken userId:(NSString *)uid completeSuccessBlock:(void (^ _Nullable) (void))successBlock completeFailBlock:(void (^ _Nullable) (NSInteger errorCode))failBlock {
+- (void)initSignalWithAppid:(NSString *)appId
+                   appToken:(NSString *)appToken
+                  rtmRegion:(NSString *)rtmRegion
+                     userId:(NSString *)uid
+       completeSuccessBlock:(void (^ _Nullable) (void))successBlock
+          completeFailBlock:(void (^ _Nullable) (NSInteger errorCode))failBlock {
  
     NSString *logStr = [NSString stringWithFormat:@"init signal appid:%@ apptoken:%@ uid:%@", AgoraRTMNoNullString(appId), AgoraRTMNoNullString(appToken), AgoraRTMNoNullString(uid)];
     [AgoraRTELogService logMessage:logStr level:AgoraLogLevelInfo];
     
     self.uid = AgoraRTMNoNullString(uid);
-
+    
+    AgoraRtmServiceContext *context = [[AgoraRtmServiceContext alloc] init];
+    context.areaCode = [self getAreaCode:rtmRegion];
+    [AgoraRtmKit setRtmServiceContext:context];
+    
     self.agoraRtmKit = [[AgoraRtmKit alloc] initWithAppId:appId delegate:self];
     [self.agoraRtmKit loginByToken:appToken user:uid completion:^(AgoraRtmLoginErrorCode errorCode) {
         if (errorCode == AgoraRtmLoginErrorOk) {
@@ -244,6 +253,19 @@ static AgoraRTMManager *manager = nil;
             }
             break;
         }
+    }
+}
+
+#pragma mark - region
+- (AgoraRtmAreaCode)getAreaCode:(NSString *)areaStr {
+    if ([areaStr isEqualToString:@"AREA_NA"]) {
+        return AgoraAreaCodeNA;
+    } else if ([areaStr isEqualToString:@"AREA_EUR"]) {
+        return AgoraAreaCodeEU;
+    } else if ([areaStr isEqualToString:@"AREA_AS"]) {
+        return AgoraAreaCodeAS;
+    }  else {
+        return AgoraAreaCodeGLOB;
     }
 }
 @end

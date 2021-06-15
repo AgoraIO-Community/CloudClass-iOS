@@ -101,7 +101,9 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     [NSNotificationCenter.defaultCenter postNotificationName:NOTICE_KEY_END_RECONNECT object:nil];
 }
 
-- (void)joinClassroom:(AgoraRTEClassroomJoinOptions*)options success:(OnJoinRoomSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
+- (void)joinClassroom:(AgoraRTEClassroomJoinOptions*)options
+              success:(OnJoinRoomSuccessBlock)successBlock
+              failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
     
     NSString *userName = self.defaultUserName;
     if ([options isKindOfClass:AgoraRTEClassroomJoinOptions.class] && options.userName != nil) {
@@ -168,7 +170,8 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
                                                                            appId:self.appId
                                                                          version:AgoraRTEManager.version
                                                                            token:httpConfig.token
-                                                                        userUuid:httpConfig.userUuid];
+                                                                        userUuid:httpConfig.userUuid
+                                                                          region:options.urlRegion];
     
     [[AgoraRteReportor rteShared] setWithContext:context];
     [[AgoraRteReportor rteShared] startJoinRoom];;
@@ -178,7 +181,11 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     [[AgoraRteReportor rteShared] startJoinRoomSubEventWithSubEvent:subEvent];
     
     // entry-》初始化RTM&RTC => sync => auto
-    [AgoraRTEHttpManager joinRoomWithRoomUuid:self.roomUuid param:params apiVersion:APIVersion1 analysisClass:AgoraRTEJoinRoomModel.class success:^(id<AgoraRTEBaseModel> objModel) {
+    [AgoraRTEHttpManager joinRoomWithRoomUuid:self.roomUuid
+                                        param:params
+                                   apiVersion:APIVersion1
+                                analysisClass:AgoraRTEJoinRoomModel.class
+                                      success:^(id<AgoraRTEBaseModel> objModel) {
         
         // Report
         [[AgoraRteReportor rteShared] endJoinRoomSubEventWithSubEvent:subEvent type:AgoraReportEndCategoryHttp errorCode:0 httpCode:200 api:httpApi];
@@ -212,12 +219,15 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         // local
         id userObj = [model.user yy_modelToJSONObject];
         weakself.syncRoomSession.localUser = [AgoraRTESyncUserModel new];
-        [weakself.syncRoomSession.localUser yy_modelSetWithJSON:userObj];        weakself.syncRoomSession.localUser.state = 1;
+        [weakself.syncRoomSession.localUser yy_modelSetWithJSON:userObj];
+        weakself.syncRoomSession.localUser.state = 1;
         [AgoraRTELogService logMessageWithDescribe:@"classroom:" message:@{@"roomUuid":AgoraRTENoNullString(weakself.roomUuid), @"localuser":weakself.syncRoomSession.localUser}];
         
         // media
         weakself.userService = userService;
-        [weakself initMediaDispatchGroup:model success:^{
+        [weakself initMediaDispatchGroup:model
+                               rtcRegion:options.rtcRegion
+                                 success:^{
             
             [AgoraRTELogService logMessageWithDescribe:@"classroom initMedia success:" message:@{@"roomUuid":AgoraRTENoNullString( weakself.roomUuid)}];
             
@@ -562,6 +572,7 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 }
 
 - (void)initMediaDispatchGroup:(AgoraRTEJoinRoomInfoModel *)model
+                     rtcRegion:(NSString *)rtcRegion
                        success:(AgoraRTESuccessBlock)successBlock
                        failure:(AgoraRTEFailureBlock)failureBlock {
     
@@ -574,7 +585,9 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     [[AgoraRteReportor rteShared] startJoinRoomSubEventWithSubEvent:subRtcEvent];
     
     dispatch_group_enter(group);
-    [self initRTCWithModel:model success:^{
+    [self initRTCWithModel:model
+                 rtcRegion:rtcRegion
+                   success:^{
         // Report
         [[AgoraRteReportor rteShared] endJoinRoomSubEventWithSubEvent:subRtcEvent type:AgoraReportEndCategoryRtc errorCode:0 api:rtcApi];
         
@@ -613,17 +626,24 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         }
     });
 }
-- (void)initRTCWithModel:(AgoraRTEJoinRoomInfoModel *)model success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
+- (void)initRTCWithModel:(AgoraRTEJoinRoomInfoModel *)model
+               rtcRegion:(NSString *)rtcRegion
+                 success:(AgoraRTESuccessBlock)successBlock
+                 failure:(AgoraRTEFailureBlock)failureBlock {
     
     
     if(successBlock != nil) {
         self.joinRTCSuccessBlock = successBlock;
     }
     
-    [AgoraRTCManager.shareManager initEngineKitWithAppid:self.appId];
+    [AgoraRTCManager.shareManager initEngineKitWithAppid:self.appId
+                                               rtcRegion:rtcRegion];
+    
+    
+    
     NSDictionary *dic = @{
         @"rtc.report_app_scenario":@{
-            @"appScenario":@(0),
+            @"appScenario":@(self.sceneType),
             @"serviceType":@(0),
             @"appVersion":@"1.1.0-offiicial"
         }
@@ -651,6 +671,9 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         videoConfig.videoDimensionHeight = 240;
     
     } else if(self.sceneType == AgoraRTESceneTypeBig) {
+        videoConfig.videoDimensionWidth = 320;
+        videoConfig.videoDimensionHeight = 240;
+    } else {
         videoConfig.videoDimensionWidth = 320;
         videoConfig.videoDimensionHeight = 240;
     }
@@ -691,8 +714,12 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     
     NSString *rtcToken = model.user.rtcToken;
     NSString *roomUuid = model.room.roomInfo.roomUuid;
-    NSInteger uid = model.user.streamUuid.integerValue;
-    int errorCode = [AgoraRTCManager.shareManager joinChannelByToken:rtcToken channelId:roomUuid info:info uid:uid autoSubscribeAudio:self.mediaOption.autoSubscribe autoSubscribeVideo:self.mediaOption.autoSubscribe];
+    NSInteger uid = model.user.streamUuid.longLongValue;
+    int errorCode = [AgoraRTCManager.shareManager joinChannelByToken:rtcToken
+                                                           channelId:roomUuid
+                                                                info:info
+                                                                 uid:uid
+                                                  autoSubscribeAudio:self.mediaOption.autoSubscribe autoSubscribeVideo:self.mediaOption.autoSubscribe];
     if (errorCode != 0) {
         if (failureBlock) {
             NSError *eduError = [AgoraRTEErrorManager mediaError:errorCode codeMsg:[AgoraRTCManager getErrorDescription:errorCode] code:201];
@@ -704,7 +731,9 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         [AgoraRTCManager.shareManager setChannelDelegateWithConfig:config channelId:roomUuid];
     }
 }
-- (void)initRTMWithModel:(AgoraRTEJoinRoomInfoModel *)model success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock)failureBlock {
+- (void)initRTMWithModel:(AgoraRTEJoinRoomInfoModel *)model
+                 success:(AgoraRTESuccessBlock)successBlock
+                 failure:(AgoraRTEFailureBlock)failureBlock {
     
     NSString *roomUuid = model.room.roomInfo.roomUuid;
 

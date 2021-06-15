@@ -58,7 +58,12 @@ static HttpManagerConfig *config;
     }];
 }
 
-+ (void)joinRoomWithRoomUuid:(NSString *)roomUuid param:(NSDictionary *)param apiVersion:(NSString *)apiVersion analysisClass:(Class)classType success:(void (^ _Nullable) (id<AgoraRTEBaseModel> objModel))successBlock failure:(void (^ _Nullable) (NSError * _Nullable error, NSInteger statusCode))failureBlock {
++ (void)joinRoomWithRoomUuid:(NSString *)roomUuid
+                       param:(NSDictionary *)param
+                  apiVersion:(NSString *)apiVersion
+               analysisClass:(Class)classType
+                     success:(void (^ _Nullable) (id<AgoraRTEBaseModel> objModel))successBlock
+                     failure:(void (^ _Nullable) (NSError * _Nullable error, NSInteger statusCode))failureBlock {
     
     NSString *urlStr = [NSString stringWithFormat:HTTP_JOIN_ROOM, config.baseURL, config.appid, roomUuid, config.userUuid];
     

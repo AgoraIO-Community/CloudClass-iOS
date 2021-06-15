@@ -87,12 +87,17 @@ static AgoraRTCManager *manager = nil;
     self.threadTimer.delegate = self;
 }
 
-- (void)initEngineKitWithAppid:(NSString *)appid {
+- (void)initEngineKitWithAppid:(NSString *)appid
+                     rtcRegion:(NSString *)rtcRegion{
     
     [AgoraRTELogService logMessageWithDescribe:@"init rtcEngineKit appid:" message:AgoraRTCNoNullString(appid)];
     
     if(self.rtcEngineKit == nil){
-        self.rtcEngineKit = [AgoraRtcEngineKit sharedEngineWithAppId:appid delegate:self];
+        AgoraRtcEngineConfig *config = [[AgoraRtcEngineConfig alloc] init];
+        config.appId = appid;
+        config.areaCode = [self getRtcAreaCode:rtcRegion];
+        self.rtcEngineKit = [AgoraRtcEngineKit sharedEngineWithConfig:config
+                                                             delegate:self];
     }
     [self.rtcEngineKit disableLastmileTest];
 }
@@ -102,7 +107,11 @@ static AgoraRTCManager *manager = nil;
     return [self joinChannelByToken:token channelId:channelId info:info uid:uid autoSubscribeAudio:YES autoSubscribeVideo:YES];
 }
 
-- (int)joinChannelByToken:(NSString * _Nullable)token channelId:(NSString * _Nonnull)channelId info:(NSString * _Nullable)info uid:(NSUInteger)uid autoSubscribeAudio:(BOOL)autoSubscribeAudio autoSubscribeVideo:(BOOL)autoSubscribeVideo {
+- (int)joinChannelByToken:(NSString * _Nullable)token
+                channelId:(NSString * _Nonnull)channelId
+                     info:(NSString * _Nullable)info
+                      uid:(NSUInteger)uid
+       autoSubscribeAudio:(BOOL)autoSubscribeAudio autoSubscribeVideo:(BOOL)autoSubscribeVideo {
     
     [AgoraRTELogService logMessageWithDescribe:@"join channel:" message:@{@"roomUuid":AgoraRTCNoNullString(channelId), @"token":AgoraRTCNoNullString(token), @"uid":@(uid)}];
     
@@ -224,6 +233,18 @@ static AgoraRTCManager *manager = nil;
         }
     }
     return 0;
+}
+
+- (AgoraAreaCode)getRtcAreaCode:(NSString *)areaStr {
+    if ([areaStr isEqualToString:@"AREA_NA"]) {
+        return AgoraAreaCodeNA;
+    } else if ([areaStr isEqualToString:@"AREA_EUR"]) {
+        return AgoraAreaCodeEU;
+    } else if ([areaStr isEqualToString:@"AREA_AS"]) {
+        return AgoraAreaCodeAS;
+    }  else {
+        return AgoraAreaCodeGLOB;
+    }
 }
 
 #pragma mark Enable
@@ -420,7 +441,7 @@ static AgoraRTCManager *manager = nil;
 - (int)setupLocalVideo:(AgoraRtcVideoCanvas * _Nullable)local {
     
     int code =  [self.rtcEngineKit setupLocalVideo:local];
-    [AgoraRTELogService logMessageWithDescribe:@"setupLocalVideo:" message:@{@"roomUuid":local.channel, @"uid": @(local.uid), @"code":@(code)}];
+    [AgoraRTELogService logMessageWithDescribe:@"setupLocalVideo:" message:@{@"roomUuid":local.channelId, @"uid": @(local.uid), @"code":@(code)}];
     
     return code;
 }
@@ -428,7 +449,7 @@ static AgoraRTCManager *manager = nil;
 - (int)setupRemoteVideo:(AgoraRtcVideoCanvas * _Nonnull)remote {
     
     int code =  [self.rtcEngineKit setupRemoteVideo:remote];
-    [AgoraRTELogService logMessageWithDescribe:@"setupRemoteVideo:" message:@{@"roomUuid":remote.channel, @"uid": @(remote.uid), @"code":@(code)}];
+    [AgoraRTELogService logMessageWithDescribe:@"setupRemoteVideo:" message:@{@"roomUuid":remote.channelId, @"uid": @(remote.uid), @"code":@(code)}];
     
     return code;
 }

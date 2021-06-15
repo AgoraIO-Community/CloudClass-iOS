@@ -85,6 +85,7 @@
     configuration.appId = self.properties[@"boardAppId"];
     
     self.manager = [[AgoraWhiteBoardManager alloc] initWithCoursewareDirectory:directory
+                                                                   boardRegion:@"cn-hz"
                                                                         config:configuration];
     [self.manager setTool:WhiteBoardToolTypePencil];
 }

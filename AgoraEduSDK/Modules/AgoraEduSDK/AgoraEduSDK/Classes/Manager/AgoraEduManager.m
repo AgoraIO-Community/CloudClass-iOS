@@ -61,9 +61,13 @@ static AgoraEduManager *manager = nil;
                      tag:(NSInteger)tag
                  success:(void (^) (void))successBlock
                  failure:(void (^) (NSError * _Nonnull error))failureBlock {
+
     AgoraRTEConfiguration *config = [[AgoraRTEConfiguration alloc] initWithAppId:AgoraManagerCache.share.appId
                                                                         userUuid:userUuid
                                                                            token:AgoraManagerCache.share.token
+                                                                       urlRegion:AgoraManagerCache.share.urlRegion
+                                                                       rtcRegion:AgoraManagerCache.share.roomStateInfoModel.rtcRegion
+                                                                       rtmRegion:AgoraManagerCache.share.roomStateInfoModel.rtmRegion
                                                                         userName:userName];
     config.logLevel = self.logLevel;
     config.logDirectoryPath = self.logDirectoryPath;
@@ -74,6 +78,7 @@ static AgoraEduManager *manager = nil;
                                                       failure:^(NSError * _Nonnull error) {
         failureBlock(error);
     }];
+    
 }
 
 - (void)queryRoomStateWithConfig:(AgoraRoomStateConfiguration *)config
@@ -94,16 +99,7 @@ static AgoraEduManager *manager = nil;
         } else {
             self.roomName = config.roomName ? config.roomName : @"";
             self.roomType = config.roomType;
-            
-            AgoraRTEClassroomConfig *classroomConfig = [AgoraRTEClassroomConfig new];
-            classroomConfig.roomUuid = config.roomUuid;
-            classroomConfig.sceneType = config.roomType;
-            // 超小学生会加入2个房间： 老师的房间(大班课)和小组的房间（小班课）
-            if (config.roomType == AgoraRTESceneTypeBreakout) {
-                classroomConfig.sceneType = AgoraRTESceneTypeBig;
-            }
-            weakself.roomManager = [weakself.eduManager createClassroomWithConfig:classroomConfig];
-            
+
             AgoraManagerCache.share.roomStateInfoModel = model.data;
             AgoraManagerCache.share.userUuid = config.userUuid;
             AgoraManagerCache.share.roomUuid = config.roomUuid;
@@ -111,7 +107,7 @@ static AgoraEduManager *manager = nil;
             NSTimeInterval interval = [datenow timeIntervalSince1970];
             AgoraManagerCache.share.differTime = interval * 1000 - model.ts;
             
-            successBlock();
+            successBlock(); // 加入房间 初始化rtc
         }
     } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
         if (error.code == 20403001) {
@@ -134,6 +130,8 @@ static AgoraEduManager *manager = nil;
     
     AgoraWEAK(self);
     AgoraRTEClassroomJoinOptions *options = [[AgoraRTEClassroomJoinOptions alloc] initWithUserName:userName
+                                                                                         urlRegion:AgoraManagerCache.share.urlRegion
+                                                                                         rtcRegion:AgoraManagerCache.share.roomStateInfoModel.rtcRegion
                                                                                               role:AgoraRTERoleTypeStudent];
     // 大班课不自动发流
     if (sceneType == AgoraRTESceneTypeBig || sceneType == AgoraRTESceneTypeBreakout || sceneType == AgoraRTESceneTypeMedium) {
@@ -267,13 +265,15 @@ static AgoraEduManager *manager = nil;
 }
 
 + (void)releaseResource {
-    [AgoraEduManager.shareManager.eduManager destory];
-    AgoraEduManager.shareManager.eduManager = nil;
-    AgoraEduManager.shareManager.roomManager = nil;
-    AgoraEduManager.shareManager.logManager = nil;
+    dispatch_async(dispatch_queue_create(0, 0), ^{
+        [AgoraEduManager.shareManager.eduManager destory];
+        AgoraEduManager.shareManager.eduManager = nil;
+        AgoraEduManager.shareManager.roomManager = nil;
+        AgoraEduManager.shareManager.logManager = nil;
 
-    AgoraEduManager.shareManager.studentService = nil;
-    
-    [AgoraManagerCache releaseResource];
+        AgoraEduManager.shareManager.studentService = nil;
+        
+        [AgoraManagerCache releaseResource];
+    });
 }
 @end

@@ -15,8 +15,8 @@ fileprivate let AgoraRTEEventKeyTimerOnline = "online_user"
 
 fileprivate struct AgoraRTETimerEventItem {
     var event: String
-    var initTimestamp: Int
-    var timeInterval: Int
+    var initTimestamp: Int64
+    var timeInterval: Int64
 }
 
 public class AgoraRteReportor: AgoraReportor {
@@ -126,7 +126,7 @@ extension AgoraRteReportor: AgoraSubThreadTimerDelegate {
         let current = Date().agora_rte_timestamp()
         for (event, item) in timerEvents {
             let interval = current - item.initTimestamp
-            let value = Int(interval % item.timeInterval)
+            let value = Int64(interval % item.timeInterval)
             
             // 1000 ms
             guard value <= 1000 else {
@@ -139,7 +139,7 @@ extension AgoraRteReportor: AgoraSubThreadTimerDelegate {
 }
 
 fileprivate extension Date {
-    func agora_rte_timestamp() -> Int {
-        return Int(timeIntervalSince1970 * 1000)
+    func agora_rte_timestamp() -> Int64 {
+        return Int64(timeIntervalSince1970 * 1000)
     }
 }

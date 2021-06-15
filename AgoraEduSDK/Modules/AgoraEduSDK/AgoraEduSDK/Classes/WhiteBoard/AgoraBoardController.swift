@@ -57,6 +57,7 @@ import AgoraEduContext
         let config = AgoraWhiteBoardConfiguration()
         config.appId = boardAppId
         let manager = AgoraWhiteBoardManager(coursewareDirectory: coursewareDirectory,
+                                             boardRegion: AgoraManagerCache.share().roomStateInfoModel.board.boardRegion,
                                              config: config)
         boardContentView = manager.contentView
         boardVM = AgoraBoardVM(boardAppId: boardAppId,

@@ -735,6 +735,7 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 - (AgoraURLGroup *)urlGroup {
     if (!_urlGroup) {
         _urlGroup = [[AgoraURLGroup alloc] init];
+        _urlGroup.urlRegion = AgoraManagerCache.share.urlRegion;
         _urlGroup.dataSource = self;
     }
     

@@ -16,10 +16,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *userName;
 @property (nonatomic, assign) AgoraRTERoleType role;
+@property (nonatomic, copy) NSString *urlRegion;
+@property (nonatomic, copy) NSString *rtcRegion;
 
 @property (nonatomic, strong) AgoraRTEClassroomMediaOptions *mediaOption;
 
-- (instancetype)initWithUserName:(NSString *)userName role:(AgoraRTERoleType)role;
+- (instancetype)initWithUserName:(NSString *)userName
+                       urlRegion:(NSString *)urlRegion
+                       rtcRegion:(NSString *)rtcRegion
+                            role:(AgoraRTERoleType)role;
 - (instancetype)initWithRole:(AgoraRTERoleType)role;
 
 @end

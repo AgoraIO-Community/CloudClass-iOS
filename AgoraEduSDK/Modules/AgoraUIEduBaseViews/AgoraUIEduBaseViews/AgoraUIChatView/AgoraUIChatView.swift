@@ -9,12 +9,16 @@ import AgoraEduContext
 import AgoraUIEduBaseViews.AgoraFiles.AgoraRefresh
 import AgoraUIBaseViews
 
-@objcMembers public class AgoraUIChatView: AgoraBaseUIView {
+@objcMembers public class AgoraUIChatView: AgoraBaseUIView,
+                                           UIGestureRecognizerDelegate,
+                                           UITableViewDelegate,
+                                           UITableViewDataSource {
     
     public var scaleTouchBlock: ((_ min: Bool) -> Void)?
     public weak var context: AgoraEduMessageContext? {
         didSet {
-            context?.fetchHistoryMessages(self.chatModels.first?.id ?? 0, count: PerPageCount)
+            context?.fetchHistoryMessages(self.chatModels.first?.id ?? 0,
+                                          count: PerPageCount)
         }
     }
     
@@ -34,7 +38,8 @@ import AgoraUIBaseViews
     }
     
     @objc lazy public var resignFirstResponderGesture: UITapGestureRecognizer = {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.tapRecognized(_:)))
+        let tapGesture = UITapGestureRecognizer(target: self,
+                                                action: #selector(self.tapRecognized(_:)))
         tapGesture.cancelsTouchesInView = false
         tapGesture.isEnabled = true
         tapGesture.delegate = self
@@ -58,7 +63,11 @@ import AgoraUIBaseViews
                 label.isHidden = false
                 label.text = "\(num)"
                 
-                let rect: CGRect = ("\(num)").boundingRect(with: CGSize(width: CGFloat(MAXFLOAT), height: label.agora_height), options: .usesLineFragmentOrigin , attributes: [NSAttributedString.Key.font:label.font!], context: nil)
+                let rect: CGRect = ("\(num)").boundingRect(with: CGSize(width: CGFloat(MAXFLOAT),
+                                                                        height: label.agora_height),
+                                                           options: .usesLineFragmentOrigin ,
+                                                           attributes: [NSAttributedString.Key.font:label.font!],
+                                                           context: nil)
                 
                 label.agora_width = (rect.width > label.agora_width) ? rect.size.width + 4 : label.agora_width
             }
@@ -332,11 +341,16 @@ import AgoraUIBaseViews
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-}
-
-// MARK: UITableViewDelegate & UITableViewDataSource
-extension AgoraUIChatView: UITableViewDelegate, UITableViewDataSource {
     
+    // MARK: UIGestureRecognizerDelegate
+    @objc internal func tapRecognized(_ gesture: UITapGestureRecognizer) {
+        if gesture.state == .ended {
+            self.window?.resignFirstResponder()
+            self.window?.endEditing(true)
+        }
+    }
+    
+    // MARK: UITableViewDelegate & UITableViewDataSource
     public func numberOfSections(in tableView: UITableView) -> Int {
         return chatModels.count
     }
@@ -618,15 +632,5 @@ extension AgoraUIChatView {
         self.textField?.isEnabled = allow
 
         self.chatPermissionStateView.isHidden = allow
-    }
-}
-
-// MARK: UIGestureRecognizerDelegate
-extension AgoraUIChatView: UIGestureRecognizerDelegate {
-    @objc internal func tapRecognized(_ gesture: UITapGestureRecognizer) {
-        if gesture.state == .ended {
-            self.window?.resignFirstResponder()
-            self.window?.endEditing(true)
-        }
     }
 }

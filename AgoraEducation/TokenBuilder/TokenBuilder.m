@@ -39,6 +39,27 @@
     }];
 }
 
++ (void)serverInfo:(NSString *)region success:(void (^)(NSString *appid, NSString *userId, NSString *rtmToken))success failure:(void (^)(NSError *error))failure {
+    
+    NSString *url = @"";
+    
+    [AgoraEducationHTTPClient get:url params:@{} headers:@{} success:^(id  _Nonnull responseObj) {
+    
+        NSDictionary *data = NoNullDictionary(NoNullDictionary(responseObj)[@"data"]);
+        NSString *rtmToken = NoNullString(data[@"rtmToken"]);
+        NSString *appId = NoNullString(data[@"appId"]);
+        NSString *userUuid = NoNullString(data[@"userUuid"]);
+        if(success != nil) {
+            success(appId, userUuid, rtmToken);
+        }
+    
+    } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
+        if(failure != nil) {
+            failure(error);
+        }
+    }];
+}
+
 + (void)boardResources:(NSString *)url token:(NSString *)token success:(void (^)(NSArray<WhiteScene *> *models, NSString *resourceName, NSString *scenePath, NSString *downURL))success failure:(void (^)(NSError *error))failure {
     
     [AgoraEducationHTTPClient get:url params:@{} headers:@{@"token":token} success:^(id  _Nonnull responseObj) {

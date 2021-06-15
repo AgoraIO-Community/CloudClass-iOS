@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, HttpType) {
 };
 
 // GET /edu/apps/{appId}/v2/configs
-#define HTTP_APP_CONFIG @"%@/edu/apps/%@/v2/configs"
+#define HTTP_APP_CONFIG @"%@/edu/apps/%@/v2/client/configs"
 
 // PUT /edu/apps/{appId}/v2/rooms/{roomUuid}/users/{userUuid}
 #define HTTP_APP_ROOM_STATE @"%@/edu/apps/%@/v2/rooms/%@/users/%@"

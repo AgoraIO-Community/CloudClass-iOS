@@ -24,6 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *userUuid;
 @property (nonatomic, copy, nullable) NSString *userName;
 @property (nonatomic, assign) NSInteger tag;
+@property (nonatomic, copy) NSString *urlRegion;
+@property (nonatomic, copy) NSString *rtcRegion;
+@property (nonatomic, copy) NSString *rtmRegion;
 
 // default AgoraRTELogLevelInfo
 @property (nonatomic, assign) AgoraRTELogLevel logLevel;
@@ -32,9 +35,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSInteger logConsoleState;
 
-- (instancetype)initWithAppId:(NSString *)appId userUuid:(NSString *)userUuid token:(NSString *)token;
+- (instancetype)initWithAppId:(NSString *)appId
+                     userUuid:(NSString *)userUuid
+                        token:(NSString *)token;
 
-- (instancetype)initWithAppId:(NSString *)appId userUuid:(NSString *)userUuid  token:(NSString *)token userName:(NSString *)userName;
+- (instancetype)initWithAppId:(NSString *)appId
+                     userUuid:(NSString *)userUuid
+                        token:(NSString *)token
+                    urlRegion:(NSString *)urlRegion
+                    rtcRegion:(NSString *)rtcRegion
+                    rtmRegion:(NSString *)rtmRegion
+                     userName:(NSString *)userName;
 
 @end
 

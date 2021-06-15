@@ -18,9 +18,9 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.dependency "AgoraRtm_iOS", "1.4.1"
-  s.dependency "AgoraRtcEngine_Special_iOS", "2.9.107.136"
+  s.dependency "AgoraRtcEngine_iOS", "3.4.2"
   s.dependency "AFNetworking", "4.0.1"
-  s.dependency "Whiteboard", "2.12.22"
+  s.dependency "Whiteboard", "2.13.2"
   s.dependency "CocoaLumberjack", "3.6.1"
   s.dependency "AliyunOSSiOS", "2.10.8"
   

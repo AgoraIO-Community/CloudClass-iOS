@@ -106,7 +106,7 @@ import AgoraUIBaseViews
                                           token: rtmToken,
                                           startTime: __startTime,
                                           duration: __duration,
-                                          boardRegion: nil)
+                                          region: nil)
 
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")

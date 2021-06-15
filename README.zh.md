@@ -15,14 +15,14 @@
 2. 配置相关参数
 在 `KeyCenter.m` 文件中配置以下参数：
 - 你获取到的声网 App ID。
-- 你获取到的声网 App Certificate。
+- 你获取到的声网 RTM Token。
 ```
 + (NSString *)appId {
     return <#Your Agora App Id#>;
 }
 
-+ (NSString *)appCertificate {
-    return <#Your Agora Certificate#>;
++ (NSString *)rtmToken {
+    return <#Your Agora RTM Token#>;
 }
 ```
 

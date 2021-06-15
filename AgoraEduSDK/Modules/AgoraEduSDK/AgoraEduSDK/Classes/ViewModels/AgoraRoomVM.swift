@@ -23,7 +23,8 @@ import AgoraEduContext
     fileprivate var hasStop: Bool = false
     fileprivate var timer: DispatchSourceTimer?
 
-    public func joinClassroom(successBlock: @escaping (_ userInfo: AgoraRTELocalUser) -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
+    public func joinClassroom(successBlock: @escaping (_ userInfo: AgoraRTELocalUser) -> Void,
+                              failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
         
         AgoraEduManager.share().joinClassroom(with: self.config.sceneType, userName: self.config.userName) {[weak self] in
             

@@ -23,7 +23,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)shareManager;
 
-- (void)initSignalWithAppid:(NSString *)appId appToken:(NSString *)appToken userId:(NSString *)uid completeSuccessBlock:(void (^ _Nullable) (void))successBlock completeFailBlock:(void (^ _Nullable) (NSInteger errorCode))failBlock;
+- (void)initSignalWithAppid:(NSString *)appId
+                   appToken:(NSString *)appToken
+                  rtmRegion:(NSString *)rtmRegion
+                     userId:(NSString *)uid
+       completeSuccessBlock:(void (^ _Nullable) (void))successBlock
+          completeFailBlock:(void (^ _Nullable) (NSInteger errorCode))failBlock;
 
 - (void)setLogFile:(NSString *)logDirPath;
 

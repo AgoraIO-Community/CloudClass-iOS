@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AgoraRoomStateAgoraBoardModel : NSObject
 @property (nonatomic, strong) NSString *boardId;
 @property (nonatomic, strong) NSString *boardToken;
+@property (nonatomic, strong) NSString *boardRegion;
 @end
 @interface AgoraRoomStateInfoModel : NSObject
 @property (nonatomic, assign) NSInteger state;//0未开始 1开始 2结束
@@ -30,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger lastMessageId;//历史消息最新的lastMessageId
 @property (nonatomic, assign) NSInteger muteChat;//禁用聊天 1是 0否
 @property (nonatomic, strong) AgoraRoomStateAgoraBoardModel *board;
+@property (nonatomic, strong) NSString *rtcRegion;
+@property (nonatomic, strong) NSString *rtmRegion;
 @end
 @interface AgoraRoomStateModel : AgoraBaseModel
 @property (nonatomic, strong) AgoraRoomStateInfoModel *data;
