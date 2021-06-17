@@ -26,7 +26,7 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
             nameLabel.agora_width = userName.agoraKitSize(font: .boldSystemFont(ofSize: 13),
                                                           width: 65,
                                                           height: CGFloat(MAXFLOAT)).width
-            
+            chatBanImg.image = AgoraKitImage(info.enableChat ? "chat_enable" : "chat_disable")
             updateSpecificCameraState(deviceState: info.cameraState,
                                       coHost: info.coHost,
                                       enableVideo: info.enableVideo,
@@ -53,6 +53,7 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
     private var stageImg: AgoraBaseUIImageView = AgoraBaseUIImageView(frame: .zero)
     private var authImg : AgoraBaseUIImageView = AgoraBaseUIImageView(frame: .zero)
     private var rewardImg : AgoraBaseUIImageView = AgoraBaseUIImageView(image: AgoraKitImage("reward"))
+    private var chatBanImg : AgoraBaseUIImageView = AgoraBaseUIImageView(frame: .zero)
     
     private var audioTap: UITapGestureRecognizer?
     private var videoTap: UITapGestureRecognizer?
@@ -61,12 +62,12 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
                                            coHost: Bool,
                                            enableVideo: Bool,
                                            isSelf: Bool) {
-        var imgNameStart = "camera"
+        let imgNameStart = "camera"
         var imgNameMid = "_enable"
         var imgNameEnd = "_off"
         
-        // 设备坏的或者不在台上
-        if deviceState == .notAvailable || !coHost {
+        // 设备关闭或者设备坏的或者不在台上
+        if deviceState == .close || deviceState == .notAvailable || !coHost {
             imgNameMid = "_disable"
             imgNameEnd = "_off"
         } else {
@@ -79,6 +80,7 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
         if let videoTap = self.videoTap,
            isSelf {
             cameraImg.removeGestureRecognizer(videoTap)
+            self.videoTap = nil
         }
         
         if imgNameMid == "_enable" && isSelf {
@@ -94,12 +96,12 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
                                           coHost: Bool,
                                           enableAudio: Bool,
                                           isSelf: Bool) {
-        var imgNameStart = "micro"
+        let imgNameStart = "micro"
         var imgNameMid = "_enable"
         var imgNameEnd = "_off"
         
-        // 设备坏的或者不在台上
-        if deviceState == .notAvailable || !coHost {
+        // 设备关闭或者设备坏的或者不在台上
+        if deviceState == .close || deviceState == .notAvailable || !coHost {
             imgNameMid = "_disable"
             imgNameEnd = "_off"
         } else {
@@ -109,9 +111,10 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
 
         audioImg.image = AgoraKitImage(imgNameStart + imgNameMid + imgNameEnd)
         
-        if let videoTap = self.videoTap ,
+        if let audioTap = self.audioTap ,
            isSelf {
-            audioImg.removeGestureRecognizer(videoTap)
+            audioImg.removeGestureRecognizer(audioTap)
+            self.audioTap = nil
         }
         
         if imgNameMid == "_enable" && isSelf {
@@ -183,6 +186,17 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
         imgView.isHidden = true
         return imgView
     }()
+    
+    // MARK: touch event
+    func onTapVideo() {
+        delegate?.userCell(self,
+                           didPresseVideoMuteAt: index)
+    }
+    
+    func onTapAudio() {
+        delegate?.userCell(self,
+                           didPresseAudioMuteAt: index)
+    }
 }
 
 // MARK: - UI
@@ -193,6 +207,7 @@ private extension AgoraUserCell {
         contentView.addSubview(authImg)
         contentView.addSubview(cameraImg)
         contentView.addSubview(audioImg)
+        contentView.addSubview(chatBanImg)
         contentView.addSubview(rewardImg)
         contentView.addSubview(rewardLabel)
         selectionStyle = .none
@@ -203,23 +218,27 @@ private extension AgoraUserCell {
         nameLabel.agora_center_y = 0
         nameLabel.agora_width = 65
         
-        stageImg.agora_x = 115
+        stageImg.agora_x = 114
         stageImg.agora_center_y = 0
         stageImg.agora_width = 22
         
-        authImg.agora_x = 204
+        authImg.agora_x = stageImg.agora_x + stageImg.agora_width + 50
         authImg.agora_center_y = 0
         authImg.agora_width = 22
         
-        cameraImg.agora_x = 292
+        cameraImg.agora_x = authImg.agora_x + authImg.agora_width + 51
         cameraImg.agora_center_y = 0
         cameraImg.agora_width = 22
         
-        audioImg.agora_x = 389
+        audioImg.agora_x = cameraImg.agora_x + cameraImg.agora_width + 56
         audioImg.agora_center_y = 0
         audioImg.agora_width = 22
         
-        rewardImg.agora_x = 470
+        chatBanImg.agora_x = audioImg.agora_x + audioImg.agora_width + 51
+        chatBanImg.agora_center_y = 0
+        chatBanImg.agora_width = 22
+        
+        rewardImg.agora_x = chatBanImg.agora_x + chatBanImg.agora_width + 36
         rewardImg.agora_center_y = 0
         rewardImg.agora_width = 22
         
@@ -233,6 +252,7 @@ private extension AgoraUserCell {
         contentView.addSubview(bigOnStageImg)
         contentView.addSubview(cameraImg)
         contentView.addSubview(audioImg)
+        contentView.addSubview(chatBanImg)
         selectionStyle = .none
     }
     
@@ -246,23 +266,14 @@ private extension AgoraUserCell {
         bigOnStageImg.agora_x = nameLabel.agora_x + nameLabel.agora_width + 6
         bigOnStageImg.agora_center_y = 0
 
-        cameraImg.agora_x = 117
+        cameraImg.agora_x = 114
         cameraImg.agora_center_y = 0
         
         audioImg.agora_x = 183
         audioImg.agora_center_y = 0
-    }
-}
-
-// MARK: - Touch Event
-@objc fileprivate extension AgoraUserCell {
-    func onTapVideo() {
-        delegate?.userCell(self,
-                           didPresseVideoMuteAt: index)
-    }
-    
-    func onTapAudio() {
-        delegate?.userCell(self,
-                           didPresseAudioMuteAt: index)
+        
+        chatBanImg.agora_x = 245
+        chatBanImg.agora_center_y = 0
+        
     }
 }

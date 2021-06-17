@@ -20,6 +20,8 @@ import AgoraUIEduBaseViews
         }
     }
     
+    public var downloadingCourseURL: String?
+    
     public weak var delegate: AgoraWhiteBoardStateDelegate?
     
     private func callDelegateFunc() {
@@ -108,7 +110,7 @@ import AgoraUIEduBaseViews
         }
     }
     
-    public var selectedItem: AgoraBoardToolsItemType = .pencil  {
+    public var selectedItem: AgoraBoardToolsItemType = .clicker  {
         didSet {
             delegate?.toolsState(self,
                                  didUpdateSelectedItem: selectedItem)

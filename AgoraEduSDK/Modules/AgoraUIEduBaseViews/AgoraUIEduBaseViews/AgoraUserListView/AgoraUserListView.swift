@@ -125,15 +125,17 @@ public class AgoraUserListView : AgoraBaseUIView {
         let smallTextArr: [String : CGFloat] = [
             AgoraKitLocalizedString("UserListName") : 22,
             AgoraKitLocalizedString("UserListCoVideo") : 105,
-            AgoraKitLocalizedString("UserListBoard") : 201,
-            AgoraKitLocalizedString("UserListCamera") : 284,
-            AgoraKitLocalizedString("UserListMicro") : 379,
-            AgoraKitLocalizedString("UserListReward") : 475];
+            AgoraKitLocalizedString("UserListBoard") : 184,
+            AgoraKitLocalizedString("UserListCamera") : 250,
+            AgoraKitLocalizedString("UserListMicro") : 329,
+            AgoraKitLocalizedString("UserListChat") : 408,
+            AgoraKitLocalizedString("UserListReward") : 474];
         
         let bigTextArr: [String : CGFloat] = [
             AgoraKitLocalizedString("UserListName") : 22,
             AgoraKitLocalizedString("UserListCamera") : 104,
-            AgoraKitLocalizedString("UserListMicro") : 173];
+            AgoraKitLocalizedString("UserListMicro") : 173,
+            AgoraKitLocalizedString("UserListChat") : 242];
         
         var textArr: [String : CGFloat]?
         
@@ -212,6 +214,11 @@ public class AgoraUserListView : AgoraBaseUIView {
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
+    
+    // MARK: touch event
+    @objc fileprivate func onCloseTouchEvent() {
+        self.closeTouchBlock?()
+    }
 }
 
 // MARK: - private
@@ -260,12 +267,5 @@ private extension AgoraUserListView {
         boarderView.agora_right = 0
         boarderView.agora_y = 0
         boarderView.agora_bottom = 0
-    }
-}
-
-// MARK: TouchEvent
-extension AgoraUserListView {
-    @objc fileprivate func onCloseTouchEvent() {
-        self.closeTouchBlock?()
     }
 }

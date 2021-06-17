@@ -10,7 +10,9 @@ import Foundation
 import AgoraUIBaseViews
 import AgoraEduSDK
 
-public class ChooseTableView: AgoraBaseUIView {
+@objcMembers public class ChooseTableView: AgoraBaseUIView,
+                                           UITableViewDataSource,
+                                           UITableViewDelegate{
     private var cellId: String = ""
     private var dataList: Array<String> = []
     
@@ -78,18 +80,17 @@ public class ChooseTableView: AgoraBaseUIView {
         tableView.agora_bottom = 11
         tableView.agora_width = 280
     }
-}
-
-extension ChooseTableView: UITableViewDataSource {
-    public func numberOfSections(in tableView: UITableView) -> Int {
+    
+    // MARK: UITableViewDataSource & UITableViewDelegate
+    @objc public func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    @objc public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataList.count
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    @objc public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! AgoraBaseUITableViewCell
         cell.backgroundColor = .white
@@ -120,14 +121,12 @@ extension ChooseTableView: UITableViewDataSource {
         return cell
     }
     
-    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    @objc public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return LoginConfig.login_choose_cell_height
     }
     
-}
-
-extension ChooseTableView: UITableViewDelegate {
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    @objc public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectTypeBlock(indexPath.row)
     }
+    
 }

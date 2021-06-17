@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import UIKit.UIColor
+import UIKit
 
 extension UIColor {
     // MARK: - Integer/Hex Conversions

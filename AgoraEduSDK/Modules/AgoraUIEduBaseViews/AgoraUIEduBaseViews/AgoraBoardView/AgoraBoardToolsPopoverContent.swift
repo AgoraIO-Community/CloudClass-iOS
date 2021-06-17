@@ -122,11 +122,11 @@ public protocol AgoraToolsViewLineWidthSelected: NSObjectProtocol {
     func didSelectLineWidth(_ width: Int)
 }
 
-public class AgoraLineWidthSlider: AgoraBaseUISlider {
+@objcMembers public class AgoraLineWidthSlider: AgoraBaseUISlider {
     public weak var lineWidthSelected: AgoraToolsViewLineWidthSelected?
 }
 
-public class AgoraColorPopoverrContent: AgoraBaseUIView, AgoraToolsViewColorSelected {
+@objcMembers public class AgoraColorPopoverrContent: AgoraBaseUIView, AgoraToolsViewColorSelected {
     public let colorCollection: AgoraColorCollection
     public let lineWidthSlider: AgoraLineWidthSlider
     
@@ -203,7 +203,7 @@ public class AgoraColorPopoverrContent: AgoraBaseUIView, AgoraToolsViewColorSele
         lineWidthSlider.setTrackImage(color: color)
     }
     
-    @objc func doLineWidthValueChanged(sender: AgoraLineWidthSlider) {
+    @objc func doLineWidthValueChanged(sender: UISlider) {
         lineWidthSlider.lineWidthSelected?.didSelectLineWidth(Int(sender.value))
     }
     

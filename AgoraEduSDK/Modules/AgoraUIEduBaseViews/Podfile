@@ -6,6 +6,7 @@ def sourcePod
   pod 'AgoraUIBaseViews', :path => '../AgoraUIBaseViews/AgoraUIBaseViews.podspec'
   pod 'AgoraExtApp', :path => '../AgoraExtApp/AgoraExtApp.podspec'
   pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec'
+  pod 'AgoraWidget', :path => '../AgoraWidget/AgoraWidget.podspec'
 end
 
 def binaryPod

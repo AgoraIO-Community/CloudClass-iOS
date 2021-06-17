@@ -29,6 +29,19 @@ import UIKit
     }
 }
 
+@objc public protocol AgoraUIContainerDelegate: NSObjectProtocol {
+    func containerLayoutSubviews()
+}
+
+@objcMembers open class AgoraBaseUIContainer: AgoraBaseUIView {
+    public weak var delegate: AgoraUIContainerDelegate?
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        delegate?.containerLayoutSubviews()
+    }
+}
+
 @objcMembers open class AgoraBaseUIScrollView: UIScrollView, AgoraUIElement {
     public var id: String
     
@@ -230,6 +243,11 @@ import UIKit
     @objc private func do_tap_event(_ button: AgoraBaseUIButton) {
         if let `tapBlock` = tapBlock {
             tapBlock(self)
+            isUserInteractionEnabled = false
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [unowned self] in
+                self.isUserInteractionEnabled = true
+            }
         }
     }
 }

@@ -10,8 +10,7 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = "10.0"
   spec.source       = { :git => "ssh://git@git.agoralab.co/aduc/cloudclass-ios.git", :tag => "#{spec.version}" }
   
-  spec.module_name   = 'AgoraUIEduAppViews'
-
+  spec.module_name  = 'AgoraUIEduAppViews'
 
   spec.dependency "AgoraUIBaseViews"
 
@@ -27,6 +26,7 @@ Pod::Spec.new do |spec|
     source.dependency "AgoraUIEduBaseViews/SOURCE"
     source.dependency "AgoraExtApp"
     source.dependency "AgoraEduContext"
+    source.dependency "AgoraWidget"
   end
 
   spec.subspec 'BINARY' do |binary|

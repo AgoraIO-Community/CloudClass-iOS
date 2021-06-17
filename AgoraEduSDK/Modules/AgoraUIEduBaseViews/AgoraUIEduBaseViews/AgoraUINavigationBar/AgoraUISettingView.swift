@@ -7,6 +7,7 @@
 
 import Foundation
 import AgoraUIBaseViews
+import AgoraEduContext
 
 @objcMembers public class AgoraUISettingView: AgoraBaseUIView {
     public var cameraStateBlock: ((_ open: Bool) -> Void)?
@@ -125,7 +126,10 @@ import AgoraUIBaseViews
     
     fileprivate lazy var speakerView: AgoraBaseUIView = {
         let view = self.tagSwitchView(AgoraKitLocalizedString("SpeakerText"))
-        
+        if let switchButton = view.viewWithTag(SwitchTag) as? AgoraBaseUISwitch {
+            switchButton.isOn = false
+        }
+
         let line = AgoraBaseUIView()
         line.backgroundColor = UIColor(rgb: 0xE3E3EC)
         view.addSubview(line)
@@ -179,7 +183,7 @@ import AgoraUIBaseViews
 
     fileprivate let SwitchTag = 100
 
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         self.initView()
         self.initLayout()
@@ -188,10 +192,8 @@ import AgoraUIBaseViews
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-// MARK: TouchEvent
-extension AgoraUISettingView {
+    
+    // MARK: touch event
     @objc func onTouchSwitch(_ switchBtn: AgoraBaseUISwitch) {
         if switchBtn == self.cameraView.viewWithTag(SwitchTag) {
             self.cameraStateBlock?(switchBtn.isOn)
@@ -204,7 +206,7 @@ extension AgoraUISettingView {
         }
     }
     
-    @objc func onTouchDirection(_ btn: AgoraBaseUIButton) {
+    private func switchDirectionUI(_ btn: AgoraBaseUIButton) {
         if btn.isSelected {
             return
         }
@@ -217,6 +219,14 @@ extension AgoraUISettingView {
             otherBtn.isSelected = !btn.isSelected
             otherBtn.backgroundColor = btn.isSelected ? UIColor(rgb:0xF4F4F8) : UIColor(rgb:0x7B88A0)
         }
+    }
+    
+    @objc func onTouchDirection(_ btn: AgoraBaseUIButton) {
+        if btn.isSelected {
+            return
+        }
+        
+        self.switchDirectionUI(btn)
         
         self.switchCameraBlock?()
     }
@@ -279,6 +289,26 @@ extension AgoraUISettingView {
         self.boarderView.agora_right = 0
         self.boarderView.agora_y = 0
         self.boarderView.agora_bottom = -5
+    }
+    
+    public func updateCameraState(_ enable: Bool) {
+        if let switchBtn = self.cameraView.viewWithTag(SwitchTag) as? AgoraBaseUISwitch {
+            switchBtn.isOn = enable
+        }
+    }
+    public func updateCameraFacing(_ facing: EduContextCameraFacing) {
+        let btn = (facing == EduContextCameraFacing.back) ? self.backBtn : self.frontBtn
+        self.switchDirectionUI(btn!)
+    }
+    public func updateMicroState(_ enable: Bool) {
+        if let switchBtn = self.micView.viewWithTag(SwitchTag) as? AgoraBaseUISwitch {
+            switchBtn.isOn = enable
+        }
+    }
+    public func updateSpeakerState(_ enable: Bool) {
+        if let switchBtn = self.speakerView.viewWithTag(SwitchTag) as? AgoraBaseUISwitch {
+            switchBtn.isOn = enable
+        }
     }
     
     fileprivate func tagSwitchView(_ tag: String) -> AgoraBaseUIView {

@@ -12,26 +12,30 @@ import AgoraEduSDK
 import AgoraUIEduBaseViews
 
 @objc public class MainViewController: UINavigationController {
-    
     private var alertView: AgoraAlertView?
     
     public override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
+        self.view.backgroundColor = UIColor.white
     }
     
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    public override init(nibName nibNameOrNil: String?,
+                         bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil,
+                   bundle: nibBundleOrNil)
     }
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.setNavigationBarHidden(true, animated: false)
+        self.setNavigationBarHidden(true,
+                                    animated: false)
     }
     
     public override func viewDidLoad() {
         let eyeCare = UserDefaults.standard.bool(forKey: LoginConfig.USER_DEFAULT_EYE_CARE)
-        let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(), eyeCare: eyeCare)
-        AgoraEduSDK.setConfig(defaultConfig)
+        let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(),
+                                                   eyeCare: eyeCare)
+        AgoraClassroomSDK.setConfig(defaultConfig)
 
     }
     

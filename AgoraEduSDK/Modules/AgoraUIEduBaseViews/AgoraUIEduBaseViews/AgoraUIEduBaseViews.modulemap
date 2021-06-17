@@ -25,7 +25,6 @@ framework module AgoraUIEduBaseViews {
             header "NSBundle+AgoraRefresh.h"
             header "UIScrollView+AgoraRefresh.h"
             header "UIScrollView+AgoraExtension.h"
-            link "AgoraRefresh"
             export *
         }
         
@@ -33,7 +32,6 @@ framework module AgoraUIEduBaseViews {
             requires objc
             header "AgoraFLAnimatedImageView.h"
             header "AgoraFLAnimatedImage.h"
-            link "AgoraAnimatedImage"
             export *
         }
     }
