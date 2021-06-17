@@ -7,11 +7,11 @@
  #define GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS 0
 #endif
 
-#if GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS
+//#if GPB_USE_PROTOBUF_FRAMEWORK_IMPORTS
  #import <Protobuf/GPBProtocolBuffers_RuntimeSupport.h>
-#else
- #import "GPBProtocolBuffers_RuntimeSupport.h"
-#endif
+//#else
+// #import "GPBProtocolBuffers_RuntimeSupport.h"
+//#endif
 
 #import "ApaasUser.pbobjc.h"
 // @@protoc_insertion_point(imports)

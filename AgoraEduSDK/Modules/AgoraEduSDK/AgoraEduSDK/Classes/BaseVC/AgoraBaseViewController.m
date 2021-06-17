@@ -182,6 +182,7 @@
         [manager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
             [weakself flexRoomPropsInitialize:room];
             [weakself updateExtApps:room];
+            [weakself updateClassState];
         } failure:nil];
         
         AgoraEduManager.shareManager.studentService.delegate = weakself;

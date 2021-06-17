@@ -204,7 +204,7 @@ private extension AgoraRoomVM {
                 
                 if !self.hasStop {
                     self.hasStop = true
-                    
+                                        
                     // 还有几分钟关闭
                     let strStart = self.localizedString("ClassCloseWarningStartText")
                     let strEnd = self.localizedString("ClassCloseWarningEndText")
@@ -236,7 +236,12 @@ private extension AgoraRoomVM {
                     }
                     
                     // 还有5分钟关闭
-                    self.timerToastBlock?(string + strEnd)
+                    // 当前开始多少时间 > 持续的时间  return
+                    if time > roomStateInfoModel.duration {
+                        
+                    } else {
+                        self.timerToastBlock?(string + strEnd)
+                    }
                 }
             }
 

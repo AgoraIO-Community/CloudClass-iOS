@@ -103,7 +103,6 @@ static AgoraClassroomSDK *manager = nil;
     // 只能调用一次
     if (AgoraManagerCache.share.classroom != nil) {
         [AgoraClassroomSDK showToast:AgoraLocalizedString(@"DuplicateLaunchText", nil)];
-        [AgoraClassroomSDK launchCompleteEvent:AgoraEduEventFailed];
         return nil;
     }
 
