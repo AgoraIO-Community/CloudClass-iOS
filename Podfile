@@ -21,9 +21,6 @@ def sourcePod
   pod 'AgoraEduContext', :path => 'AgoraEduSDK/Modules/AgoraEduContext/AgoraEduContext.podspec'
 
   # if you use swift project, you just only change 'OC' to 'Swift'
-  pod 'AgoraHandsUp', :path => 'AgoraEduSDK/Modules/AgoraHandsUp/AgoraHandsUp.podspec', :subspecs => ['OC']
-
-  # if you use swift project, you just only change 'OC' to 'Swift'
   pod 'AgoraActionProcess', :path => 'AgoraEduSDK/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
 
   pod 'Protobuf'

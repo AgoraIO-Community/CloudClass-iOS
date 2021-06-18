@@ -37,8 +37,6 @@ buildItem() {
 
  buildItem "AgoraWhiteBoard"
 
- # 中班课
- buildItem "AgoraHandsUp"
  buildItem "AgoraActionProcess"
  
  buildItem "AgoraWidget"

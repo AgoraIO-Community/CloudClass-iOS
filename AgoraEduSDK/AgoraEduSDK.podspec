@@ -43,7 +43,6 @@ Pod::Spec.new do |s|
       "Frameworks/AgoraEduContext.framework",
       "Frameworks/AgoraEduSDK.framework",
       "Frameworks/AgoraExtApp.framework",
-      "Frameworks/AgoraHandsUp.framework",
       "Frameworks/AgoraReport.framework",
       "Frameworks/AgoraWhiteBoard.framework",
       "Frameworks/AgoraWidget.framework",
