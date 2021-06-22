@@ -316,6 +316,13 @@ extension AgoraUIEventDispatcher: AgoraEduPrivateChatHandler {
 }
 
 extension AgoraUIEventDispatcher: AgoraEduRoomHandler {
+    // 加入房间
+    @objc public func onJoinedClassroom() {
+        observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduRoomHandler.self) { (object) in
+            object.onJoinedClassroom?()
+        }
+    }
+    
     // 设置课程名称
     @objc public func onSetClassroomName(_ name: String) {
         observerse(eventId: AgoraUIEvent.RoomId)?.traverse(type: AgoraEduRoomHandler.self) { (object) in

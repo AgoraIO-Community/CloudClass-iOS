@@ -12,6 +12,7 @@
 #import "AgoraRTEConfiguration.h"
 #import "AgoraRTEBaseTypes.h"
 #import "AgoraRTEManagerDelegate.h"
+#import "AgoraRTEMediaControl.h"
 @import AgoraLog.AgoraLogBaseTypes;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -24,6 +25,8 @@ typedef void(^OnDebugItemUploadSuccessBlock)(NSString *serialNumber);
 
 // init AgoraRTEManager
 - (instancetype)initWithConfig:(AgoraRTEConfiguration *)config success:(AgoraRTESuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+
+- (AgoraRTEMediaControl *)getAgoraMediaControl;
 
 // generate AgoraRTEClassroomManager
 - (AgoraRTEClassroomManager *)createClassroomWithConfig:(AgoraRTEClassroomConfig *)config;

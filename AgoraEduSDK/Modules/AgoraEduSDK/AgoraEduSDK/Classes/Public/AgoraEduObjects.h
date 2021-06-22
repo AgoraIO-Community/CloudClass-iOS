@@ -61,14 +61,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) AgoraEduRoomType roomType;
 // 声网RESTfule API token, 是RTMToken
 @property (nonatomic, copy) NSString *token;
+
 // 上课开始时间（毫秒）
-@property (nonatomic, copy) NSNumber *startTime;
+@property (nonatomic, copy, nullable) NSNumber *startTime;
 // 课程时间（秒）
 @property (nonatomic, copy, nullable) NSNumber *duration;
 // 白板区域
-@property (nonatomic, copy) NSString *boardRegion;
+@property (nonatomic, copy, nullable) NSString *boardRegion;
 // 用户自定义属性
-@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> * userProperties;
+@property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *userProperties;
+
+- (instancetype)initWithUserName:(NSString *)userName
+                        userUuid:(NSString *)userUuid
+                        roleType:(AgoraEduRoleType)roleType
+                        roomName:(NSString *)roomName
+                        roomUuid:(NSString *)roomUuid
+                        roomType:(AgoraEduRoomType)roomType
+                           token:(NSString *)token;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid

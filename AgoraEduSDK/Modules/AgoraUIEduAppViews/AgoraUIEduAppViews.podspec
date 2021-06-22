@@ -19,9 +19,10 @@ Pod::Spec.new do |spec|
     source.public_header_files = "AgoraUIEduAppViews/**/*.h"
     source.resource_bundles = {
       'AgoraUIEduAppViews' => [
-        'AgoraUIEduAppViews/**/*.{png,xib,gif,wav,mp3,strings}',
+        'AgoraUIEduAppViews/**/*.{png,gif,wav,mp3,strings}',
         'AgoraUIEduAppViews/*.xcassets']
     }
+    source.resources = "AgoraUIEduAppViews/**/*.{xib}"
 
     source.dependency "AgoraUIEduBaseViews/SOURCE"
     source.dependency "AgoraExtApp"
@@ -34,10 +35,10 @@ Pod::Spec.new do |spec|
     binary.public_header_files = "AgoraUIEduAppViews/**/*.h"
     binary.dependency "AgoraUIEduBaseViews/BINARY" 
     binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => ['$(SRCROOT)/AgoraClassroomSDK/Frameworks/', '$(SRCROOT)/../AgoraEduSDK/Frameworks/'] }
-    
+    binary.resources = "AgoraUIEduAppViews/**/*.{xib}"
     binary.resource_bundles = {
       'AgoraUIEduAppViews' => [
-        'AgoraUIEduAppViews/**/*.{png,xib,gif,wav,mp3,strings}',
+        'AgoraUIEduAppViews/**/*.{png,gif,wav,mp3,strings}',
         'AgoraUIEduAppViews/*.xcassets']
     }
   end

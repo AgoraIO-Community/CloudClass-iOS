@@ -17,6 +17,7 @@ import AgoraUIEduAppViews
     public weak var whiteBoardPageControlIMP: AgoraEduWhiteBoardPageControlContext?
     public weak var roomIMP: AgoraEduRoomContext?
     public weak var deviceIMP: AgoraEduDeviceContext?
+    public weak var mediaIMP: AgoraEduMediaContext?
     public weak var chatIMP: AgoraEduMessageContext?
     public weak var userIMP: AgoraEduUserContext?
     public weak var handsUpIMP: AgoraEduHandsUpContext?
@@ -99,6 +100,14 @@ extension AgoraEduContextPoolIMP {
             let deviceIMP = self.imp?.deviceIMP
             assert(deviceIMP != nil, "must init contextPool.deviceIMP")
             return deviceIMP!
+        }
+    }
+    
+    public var media: AgoraEduMediaContext {
+        get {
+            let mediaIMP = self.imp?.mediaIMP
+            assert(mediaIMP != nil, "must init contextPool.mediaIMP")
+            return mediaIMP!
         }
     }
     

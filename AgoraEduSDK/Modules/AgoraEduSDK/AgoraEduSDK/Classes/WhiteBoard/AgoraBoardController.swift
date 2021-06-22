@@ -279,8 +279,8 @@ extension AgoraBoardController: AgoraBoardVMDelegate {
                           delegate: self)
         afterWork.cancel()
         afterWork.perform(after: 15,
-                          on: .main) { [unowned self] in
-            self.eventDispatcher.onSetDownloadTimeOut(url.absoluteString)
+                          on: .main) { [weak self] in
+            self?.eventDispatcher.onSetDownloadTimeOut(url.absoluteString)
         }
     }
     

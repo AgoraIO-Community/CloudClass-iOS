@@ -14,7 +14,7 @@ class AgoraAfterWorker {
                  on queue: DispatchQueue,
                  _ block: @escaping (() -> Void)) {
         // Cancel the currently pending item
-        pendingRequestWorkItem?.cancel()
+        cancel()
         
         // Wrap our request in a work item
         let requestWorkItem = DispatchWorkItem(block: block)
@@ -24,5 +24,9 @@ class AgoraAfterWorker {
     
     func cancel() {
         pendingRequestWorkItem?.cancel()
+    }
+    
+    deinit {
+        cancel()
     }
 }

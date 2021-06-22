@@ -176,7 +176,7 @@ public extension AgoraApaasReportor {
         payload.errorCode = 0
         payload.uid = context.userUuid;
         payload.userName = context.userName;
-        payload.streamUid = Int64(context.streamUuid)!
+        payload.streamUid = Int64(context.streamUuid) ?? 0
         payload.streamSuid = context.streamUuid
         payload.role = context.userRole
         payload.streamSid = context.streamSessionId

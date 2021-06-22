@@ -39,7 +39,7 @@ import AgoraUIBaseViews
     
     @objc lazy public var resignFirstResponderGesture: UITapGestureRecognizer = {
         let tapGesture = UITapGestureRecognizer(target: self,
-                                                action: #selector(tapRecognized(_:)))
+                                                action: #selector(agoraTapRecognized(_:)))
         tapGesture.cancelsTouchesInView = false
         tapGesture.isEnabled = true
         tapGesture.delegate = self
@@ -369,7 +369,7 @@ import AgoraUIBaseViews
     }
     
     // MARK: UIGestureRecognizerDelegate
-    @objc internal func tapRecognized(_ gesture: UITapGestureRecognizer) {
+    @objc internal func agoraTapRecognized(_ gesture: UITapGestureRecognizer) {
         if gesture.state == .ended {
             self.window?.resignFirstResponder()
             self.window?.endEditing(true)
@@ -377,7 +377,7 @@ import AgoraUIBaseViews
     }
     
     // MARK: keyboard action
-    @objc fileprivate func keyboardDidShow(_ notification: NSNotification) {
+    @objc fileprivate func agoraKeyboardDidShow(_ notification: NSNotification) {
         if let rect = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             if (self.originalBottom == nil) {
                 self.originalBottom = max(self.agora_bottom, self.agora_safe_bottom)
@@ -385,7 +385,7 @@ import AgoraUIBaseViews
             self.agora_safe_bottom = rect.size.height + 5
         }
     }
-    @objc fileprivate func keyboardWillHidden(_ notification: NSNotification) {
+    @objc fileprivate func agoraKeyboardWillHidden(_ notification: NSNotification) {
         if let bottom = self.originalBottom {
             self.agora_safe_bottom = bottom
         }
@@ -509,11 +509,11 @@ import AgoraUIBaseViews
 private extension AgoraUIChatView {
     func keyboardNotification() {
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardDidShow(_ :)),
+                                               selector: #selector(agoraKeyboardDidShow(_ :)),
                                                name: UIResponder.keyboardDidShowNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillHidden(_ :)),
+                                               selector: #selector(agoraKeyboardWillHidden(_ :)),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
     }

@@ -53,10 +53,8 @@
 		78141605250A270A0098B297 /* AgoraRTECommonMessageHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 7814158F250A270A0098B297 /* AgoraRTECommonMessageHandle.m */; };
 		78141609250A270A0098B297 /* AgoraRTEAssistantService.h in Headers */ = {isa = PBXBuildFile; fileRef = 78141596250A270A0098B297 /* AgoraRTEAssistantService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7814160A250A270A0098B297 /* AgoraRTEAssistantService.m in Sources */ = {isa = PBXBuildFile; fileRef = 78141597250A270A0098B297 /* AgoraRTEAssistantService.m */; };
-		7814160B250A270A0098B297 /* AgoraRTEVideoConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 78141599250A270A0098B297 /* AgoraRTEVideoConfig.m */; };
 		7814160C250A270A0098B297 /* AgoraRTEStreamConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7814159A250A270A0098B297 /* AgoraRTEStreamConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7814160D250A270A0098B297 /* AgoraRTEStreamConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 7814159B250A270A0098B297 /* AgoraRTEStreamConfig.m */; };
-		7814160E250A270A0098B297 /* AgoraRTEVideoConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 7814159C250A270A0098B297 /* AgoraRTEVideoConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7814160F250A270A0098B297 /* AgoraRTEStudentService.h in Headers */ = {isa = PBXBuildFile; fileRef = 7814159E250A270A0098B297 /* AgoraRTEStudentService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78141610250A270A0098B297 /* AgoraRTEUserDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7814159F250A270A0098B297 /* AgoraRTEUserDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		78141611250A270A0098B297 /* AgoraRTEStudentService.m in Sources */ = {isa = PBXBuildFile; fileRef = 781415A0250A270A0098B297 /* AgoraRTEStudentService.m */; };
@@ -114,6 +112,12 @@
 		78478A37253C4E0D009EC1CA /* AgoraRTEKVCClassroomConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 78478A35253C4E0D009EC1CA /* AgoraRTEKVCClassroomConfig.m */; };
 		78478A3B253C4E19009EC1CA /* AgoraRTEKVCUserConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 78478A39253C4E19009EC1CA /* AgoraRTEKVCUserConfig.h */; };
 		78478A3C253C4E19009EC1CA /* AgoraRTEKVCUserConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 78478A3A253C4E19009EC1CA /* AgoraRTEKVCUserConfig.m */; };
+		7870AD0E26664B52002E2168 /* AgoraRTEMediaControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 7870AD0A26664B52002E2168 /* AgoraRTEMediaControl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7870AD0F26664B52002E2168 /* AgoraRTEMediaTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 7870AD0B26664B52002E2168 /* AgoraRTEMediaTrack.m */; };
+		7870AD1026664B52002E2168 /* AgoraRTEMediaControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 7870AD0C26664B52002E2168 /* AgoraRTEMediaControl.m */; };
+		7870AD1126664B52002E2168 /* AgoraRTEMediaTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 7870AD0D26664B52002E2168 /* AgoraRTEMediaTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7870AD1526664B68002E2168 /* AgoraRTEObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 7870AD1326664B68002E2168 /* AgoraRTEObjects.m */; };
+		7870AD1626664B68002E2168 /* AgoraRTEObjects.h in Headers */ = {isa = PBXBuildFile; fileRef = 7870AD1426664B68002E2168 /* AgoraRTEObjects.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7871C794251C42F6007A050C /* AgoraRTEMsgAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 7871C792251C42F6007A050C /* AgoraRTEMsgAction.h */; };
 		7871C795251C42F6007A050C /* AgoraRTEMsgAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7871C793251C42F6007A050C /* AgoraRTEMsgAction.m */; };
 		7871C799251C432C007A050C /* AgoraRTEActionMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 7871C797251C432B007A050C /* AgoraRTEActionMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -176,10 +180,8 @@
 		7814158F250A270A0098B297 /* AgoraRTECommonMessageHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTECommonMessageHandle.m; sourceTree = "<group>"; };
 		78141596250A270A0098B297 /* AgoraRTEAssistantService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEAssistantService.h; sourceTree = "<group>"; };
 		78141597250A270A0098B297 /* AgoraRTEAssistantService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEAssistantService.m; sourceTree = "<group>"; };
-		78141599250A270A0098B297 /* AgoraRTEVideoConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEVideoConfig.m; sourceTree = "<group>"; };
 		7814159A250A270A0098B297 /* AgoraRTEStreamConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEStreamConfig.h; sourceTree = "<group>"; };
 		7814159B250A270A0098B297 /* AgoraRTEStreamConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEStreamConfig.m; sourceTree = "<group>"; };
-		7814159C250A270A0098B297 /* AgoraRTEVideoConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEVideoConfig.h; sourceTree = "<group>"; };
 		7814159E250A270A0098B297 /* AgoraRTEStudentService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEStudentService.h; sourceTree = "<group>"; };
 		7814159F250A270A0098B297 /* AgoraRTEUserDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEUserDelegate.h; sourceTree = "<group>"; };
 		781415A0250A270A0098B297 /* AgoraRTEStudentService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEStudentService.m; sourceTree = "<group>"; };
@@ -237,6 +239,12 @@
 		78478A35253C4E0D009EC1CA /* AgoraRTEKVCClassroomConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEKVCClassroomConfig.m; sourceTree = "<group>"; };
 		78478A39253C4E19009EC1CA /* AgoraRTEKVCUserConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraRTEKVCUserConfig.h; sourceTree = "<group>"; };
 		78478A3A253C4E19009EC1CA /* AgoraRTEKVCUserConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEKVCUserConfig.m; sourceTree = "<group>"; };
+		7870AD0A26664B52002E2168 /* AgoraRTEMediaControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEMediaControl.h; sourceTree = "<group>"; };
+		7870AD0B26664B52002E2168 /* AgoraRTEMediaTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEMediaTrack.m; sourceTree = "<group>"; };
+		7870AD0C26664B52002E2168 /* AgoraRTEMediaControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEMediaControl.m; sourceTree = "<group>"; };
+		7870AD0D26664B52002E2168 /* AgoraRTEMediaTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEMediaTrack.h; sourceTree = "<group>"; };
+		7870AD1326664B68002E2168 /* AgoraRTEObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEObjects.m; sourceTree = "<group>"; };
+		7870AD1426664B68002E2168 /* AgoraRTEObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEObjects.h; sourceTree = "<group>"; };
 		7871C792251C42F6007A050C /* AgoraRTEMsgAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEMsgAction.h; sourceTree = "<group>"; };
 		7871C793251C42F6007A050C /* AgoraRTEMsgAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRTEMsgAction.m; sourceTree = "<group>"; };
 		7871C797251C432B007A050C /* AgoraRTEActionMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRTEActionMessage.h; sourceTree = "<group>"; };
@@ -429,8 +437,6 @@
 		78141598250A270A0098B297 /* Bean */ = {
 			isa = PBXGroup;
 			children = (
-				7814159C250A270A0098B297 /* AgoraRTEVideoConfig.h */,
-				78141599250A270A0098B297 /* AgoraRTEVideoConfig.m */,
 				7814159A250A270A0098B297 /* AgoraRTEStreamConfig.h */,
 				7814159B250A270A0098B297 /* AgoraRTEStreamConfig.m */,
 			);
@@ -527,6 +533,8 @@
 				781415DC250A270A0098B297 /* AgoraRTEConstants.h */,
 				781415D9250A270A0098B297 /* AgoraRTEConstants.m */,
 				78F9CCF9253BF5350024679B /* AgoraRTEEnumerates.h */,
+				7870AD1426664B68002E2168 /* AgoraRTEObjects.h */,
+				7870AD1326664B68002E2168 /* AgoraRTEObjects.m */,
 				86AD829A25D4FA1100379126 /* AgoraRteReportor.swift */,
 			);
 			path = EduManager;
@@ -564,6 +572,17 @@
 			path = Category;
 			sourceTree = "<group>";
 		};
+		7870AD0926664B52002E2168 /* MediaControl */ = {
+			isa = PBXGroup;
+			children = (
+				7870AD0A26664B52002E2168 /* AgoraRTEMediaControl.h */,
+				7870AD0C26664B52002E2168 /* AgoraRTEMediaControl.m */,
+				7870AD0D26664B52002E2168 /* AgoraRTEMediaTrack.h */,
+				7870AD0B26664B52002E2168 /* AgoraRTEMediaTrack.m */,
+			);
+			path = MediaControl;
+			sourceTree = "<group>";
+		};
 		78D25C0724ACB8F500229882 = {
 			isa = PBXGroup;
 			children = (
@@ -585,6 +604,7 @@
 		78D25C1324ACB8F500229882 /* EduSDK */ = {
 			isa = PBXGroup;
 			children = (
+				7870AD0926664B52002E2168 /* MediaControl */,
 				781415CB250A270A0098B297 /* EduManager */,
 				7814155F250A270A0098B297 /* Room */,
 				78141594250A270A0098B297 /* User */,
@@ -607,6 +627,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7870AD1626664B68002E2168 /* AgoraRTEObjects.h in Headers */,
+				7870AD1126664B52002E2168 /* AgoraRTEMediaTrack.h in Headers */,
+				7870AD0E26664B52002E2168 /* AgoraRTEMediaControl.h in Headers */,
 				7871C799251C432C007A050C /* AgoraRTEActionMessage.h in Headers */,
 				7814163B250A270B0098B297 /* AgoraRTEClassroomConfig.h in Headers */,
 				781415DE250A270A0098B297 /* AgoraRTEClassroomJoinOptions.h in Headers */,
@@ -627,7 +650,6 @@
 				7814160C250A270A0098B297 /* AgoraRTEStreamConfig.h in Headers */,
 				7814163D250A270B0098B297 /* AgoraRTEUser.h in Headers */,
 				78141609250A270A0098B297 /* AgoraRTEAssistantService.h in Headers */,
-				7814160E250A270A0098B297 /* AgoraRTEVideoConfig.h in Headers */,
 				7814163E250A270B0098B297 /* AgoraRTEStream.h in Headers */,
 				78F9CCFA253BF5360024679B /* AgoraRTEEnumerates.h in Headers */,
 				78D25C1624ACB8F500229882 /* EduSDK.h in Headers */,
@@ -774,6 +796,7 @@
 				782166262546A6020025435D /* AgoraRTEUser+ConvenientInit.m in Sources */,
 				7814161D250A270A0098B297 /* AgoraRTECommonModel.m in Sources */,
 				78141639250A270B0098B297 /* AgoraRTEStream.m in Sources */,
+				7870AD0F26664B52002E2168 /* AgoraRTEMediaTrack.m in Sources */,
 				7871C79A251C432C007A050C /* AgoraRTEActionMessage.m in Sources */,
 				781415E9250A270A0098B297 /* AgoraRTESyncRoomModel.m in Sources */,
 				78141640250A270B0098B297 /* AgoraRTEClassroomConfig.m in Sources */,
@@ -789,7 +812,6 @@
 				86AD829B25D4FA1100379126 /* AgoraRteReportor.swift in Sources */,
 				7839CE0225C5073600C4B08D /* AgoraRTEHttpManager.m in Sources */,
 				781415E1250A270A0098B297 /* AgoraRTEClassroomJoinOptions.m in Sources */,
-				7814160B250A270A0098B297 /* AgoraRTEVideoConfig.m in Sources */,
 				78141612250A270A0098B297 /* AgoraRTEUserService.m in Sources */,
 				78141611250A270A0098B297 /* AgoraRTEStudentService.m in Sources */,
 				78141603250A270A0098B297 /* AgoraRTEMsgChat.m in Sources */,
@@ -797,6 +819,7 @@
 				7814161F250A270A0098B297 /* AgoraRTEJoinRoomModel.m in Sources */,
 				781415F5250A270A0098B297 /* AgoraRTEPeerMessageModel.m in Sources */,
 				781415E8250A270A0098B297 /* AgoraRTESyncUserModel.m in Sources */,
+				7870AD1026664B52002E2168 /* AgoraRTEMediaControl.m in Sources */,
 				78141638250A270B0098B297 /* AgoraRTETextMessage.m in Sources */,
 				7814161C250A270A0098B297 /* AgoraRTESyncIncreaseModel.m in Sources */,
 				781415F0250A270A0098B297 /* AgoraRTEMessageHandle.m in Sources */,
@@ -808,6 +831,7 @@
 				7839CE0A25C5074500C4B08D /* AgoraRTMManager.m in Sources */,
 				78DFB76B25AF05DF00B01906 /* AgoraRTEHttpClient.m in Sources */,
 				782166272546A6020025435D /* AgoraRTEStream+ConvenientInit.m in Sources */,
+				7870AD1526664B68002E2168 /* AgoraRTEObjects.m in Sources */,
 				782165EF254697260025435D /* AgoraRTEErrorManager.m in Sources */,
 				781415DD250A270A0098B297 /* AgoraRTEClassroomManager.m in Sources */,
 				781415FD250A270A0098B297 /* AgoraRTEChannelMsgRoomCourse.m in Sources */,

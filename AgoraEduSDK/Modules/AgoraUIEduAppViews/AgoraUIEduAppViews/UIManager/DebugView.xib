@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="landscape" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DebugView" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CgA-Rz-1Fu">
+                    <rect key="frame" x="44" y="0.0" width="300" height="393"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q2f-b2-xZE">
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="393"/>
+                            <subviews>
+                                <button autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A7W-JN-2U7" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="121" y="13" width="80" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="关闭摄像头">
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Pk-5b-TA7" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="22" y="15" width="80" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="开启摄像头">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iYc-96-jV2" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="118" y="53" width="90" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="关闭Preview">
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="afm-cc-Bgb" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="21" y="53" width="90" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="开启Preview">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d2r-cg-QkD" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="118" y="91" width="80" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="关闭麦克风">
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZRZ-XU-3g9" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="21" y="91" width="80" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="开启麦克风">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IbL-6g-YLl" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="119" y="133" width="80" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="退出房间">
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="chq-BR-FGi" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="23" y="133" width="80" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="加入房间">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="imx-dF-u8T" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="120" y="171" width="90" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="不推流Video">
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="moT-oc-pO3" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="22" y="171" width="80" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="推流Video">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5f8-qQ-loJ" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="118" y="209" width="90" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="不推流Audio">
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cXF-KH-LJh" customClass="DebugButton" customModule="AgoraUIEduAppViews" customModuleProvider="target">
+                                    <rect key="frame" x="23" y="209" width="80" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" systemColor="labelColor"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <state key="normal" title="推流Audio">
+                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small"/>
+                                    </state>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="q2f-b2-xZE" firstAttribute="centerY" secondItem="CgA-Rz-1Fu" secondAttribute="centerY" id="7B3-EG-bN7"/>
+                        <constraint firstItem="q2f-b2-xZE" firstAttribute="top" secondItem="CgA-Rz-1Fu" secondAttribute="top" id="9nd-kd-uiI"/>
+                        <constraint firstAttribute="width" constant="300" id="CJM-Z7-8mj"/>
+                        <constraint firstItem="q2f-b2-xZE" firstAttribute="leading" secondItem="CgA-Rz-1Fu" secondAttribute="leading" id="Heg-FL-DAD"/>
+                        <constraint firstAttribute="trailing" secondItem="q2f-b2-xZE" secondAttribute="trailing" id="nam-0s-joo"/>
+                        <constraint firstItem="q2f-b2-xZE" firstAttribute="centerX" secondItem="CgA-Rz-1Fu" secondAttribute="centerX" id="oY7-LF-hcw"/>
+                        <constraint firstAttribute="bottom" secondItem="q2f-b2-xZE" secondAttribute="bottom" id="vxJ-32-JYe"/>
+                    </constraints>
+                </scrollView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="skd-e7-At6">
+                    <rect key="frame" x="344" y="0.0" width="508" height="160"/>
+                    <subviews>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hg4-oE-ZhS">
+                            <rect key="frame" x="0.0" y="0.0" width="508" height="160"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8K2-6a-o2W">
+                                    <rect key="frame" x="0.0" y="0.0" width="508" height="160"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8WL-bg-8jO">
+                                            <rect key="frame" x="10" y="30" width="120" height="120"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="120" id="1Sc-mP-YES"/>
+                                                <constraint firstAttribute="height" constant="120" id="Z0G-CH-bms"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstItem="8WL-bg-8jO" firstAttribute="leading" secondItem="8K2-6a-o2W" secondAttribute="leading" constant="10" id="RS9-rZ-JaD"/>
+                                        <constraint firstAttribute="bottom" secondItem="8WL-bg-8jO" secondAttribute="bottom" constant="10" id="uuC-xY-Cff"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="8K2-6a-o2W" firstAttribute="top" secondItem="Hg4-oE-ZhS" secondAttribute="top" id="2ip-SC-71u"/>
+                                <constraint firstItem="8K2-6a-o2W" firstAttribute="centerY" secondItem="Hg4-oE-ZhS" secondAttribute="centerY" id="Fbz-GS-bFv"/>
+                                <constraint firstItem="8K2-6a-o2W" firstAttribute="leading" secondItem="Hg4-oE-ZhS" secondAttribute="leading" id="Ldp-sh-MxN"/>
+                                <constraint firstItem="8K2-6a-o2W" firstAttribute="centerX" secondItem="Hg4-oE-ZhS" secondAttribute="centerX" id="N3R-Ka-hPA"/>
+                                <constraint firstAttribute="bottom" secondItem="8K2-6a-o2W" secondAttribute="bottom" id="SxM-pO-Rrb"/>
+                                <constraint firstAttribute="trailing" secondItem="8K2-6a-o2W" secondAttribute="trailing" id="ZGD-K2-Hce"/>
+                            </constraints>
+                        </scrollView>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="2Ny-rm-H97"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="Hg4-oE-ZhS" firstAttribute="bottom" secondItem="2Ny-rm-H97" secondAttribute="bottom" id="0yU-pf-q6r"/>
+                        <constraint firstItem="Hg4-oE-ZhS" firstAttribute="top" secondItem="2Ny-rm-H97" secondAttribute="top" id="6Kl-Zg-N99"/>
+                        <constraint firstAttribute="height" constant="160" id="QWp-fc-eUo"/>
+                        <constraint firstItem="Hg4-oE-ZhS" firstAttribute="leading" secondItem="2Ny-rm-H97" secondAttribute="leading" id="Ziz-v9-brd"/>
+                        <constraint firstItem="Hg4-oE-ZhS" firstAttribute="trailing" secondItem="2Ny-rm-H97" secondAttribute="trailing" id="ybC-hc-NbZ"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="加入房间成功" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U33-0c-MfG">
+                    <rect key="frame" x="499" y="204" width="120" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="CgA-Rz-1Fu" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="8rI-JS-7Gm"/>
+                <constraint firstItem="CgA-Rz-1Fu" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="RoZ-Ne-yzz"/>
+                <constraint firstItem="skd-e7-At6" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="SD3-dF-zke"/>
+                <constraint firstItem="CgA-Rz-1Fu" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="Yr3-lv-qCK"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="skd-e7-At6" secondAttribute="trailing" id="qEY-6k-IEA"/>
+                <constraint firstItem="skd-e7-At6" firstAttribute="leading" secondItem="CgA-Rz-1Fu" secondAttribute="trailing" id="sgH-pH-ZDR"/>
+            </constraints>
+            <connections>
+                <outlet property="closeCameraBtn" destination="A7W-JN-2U7" id="iC1-qc-THe"/>
+                <outlet property="closeMicroBtn" destination="d2r-cg-QkD" id="cbq-2v-XNY"/>
+                <outlet property="joinRoomBtn" destination="chq-BR-FGi" id="6P5-Fe-S5c"/>
+                <outlet property="leftRoomBtn" destination="IbL-6g-YLl" id="W5l-cA-Ru5"/>
+                <outlet property="localRenderView" destination="8WL-bg-8jO" id="qaY-n8-20g"/>
+                <outlet property="logLabel" destination="U33-0c-MfG" id="Y0E-CP-yVP"/>
+                <outlet property="openCameraBtn" destination="1Pk-5b-TA7" id="o6L-ci-F4c"/>
+                <outlet property="openMicroBtn" destination="ZRZ-XU-3g9" id="Aup-qY-jYo"/>
+                <outlet property="publishAudioBtn" destination="cXF-KH-LJh" id="bZ0-LU-7sO"/>
+                <outlet property="publishVideoBtn" destination="moT-oc-pO3" id="eda-Gt-Kzl"/>
+                <outlet property="startPreviewBtn" destination="afm-cc-Bgb" id="MRv-G7-kDl"/>
+                <outlet property="stopPreviewBtn" destination="iYc-96-jV2" id="NgX-hi-luC"/>
+                <outlet property="unpublishAudioBtn" destination="5f8-qQ-loJ" id="cT1-cE-Bkh"/>
+                <outlet property="unpublishVideoBtn" destination="imx-dF-u8T" id="lGg-QM-jvW"/>
+            </connections>
+            <point key="canvasLocation" x="-226.33928571428569" y="134.78260869565219"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="opaqueSeparatorColor">
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tertiarySystemGroupedBackgroundColor">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

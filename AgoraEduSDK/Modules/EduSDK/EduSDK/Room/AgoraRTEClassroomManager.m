@@ -50,7 +50,6 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 @property (nonatomic, strong) NSString *roomUuid;
 @property (nonatomic, strong) NSString *defaultUserName;
 @property (nonatomic, strong) NSString *userToken;
-@property (nonatomic, strong) NSString *logDirectoryPath;
 @property (nonatomic, assign) AgoraRTESceneType sceneType;
 @property (nonatomic, strong) AgoraRTEClassroomMediaOptions *mediaOption;
 
@@ -74,7 +73,6 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         self.appId = httpConfig.appid;
         self.roomUuid = config.roomUuid;
         self.defaultUserName = config.dafaultUserName;
-        self.logDirectoryPath = httpConfig.logDirectoryPath;
         self.sceneType = config.sceneType;
         
         self.syncRoomSession = [[AgoraRTESyncRoomSession alloc] initWithUserUuid:httpConfig.userUuid
@@ -268,7 +266,7 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
                     // Report
                     [AgoraRteReportorWrapper endJoinRoomWithErrorCode:error.code
                                                              httpCode:nil];
-                    
+
                     [weakself releaseResource];
                     NSError *eduError = [AgoraRTEErrorManager internalError:@""
                                                                        code:2];
@@ -697,11 +695,7 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     if (successBlock != nil) {
         self.joinRTCSuccessBlock = successBlock;
     }
-    
-    [AgoraRTCManager.shareManager initEngineKitWithAppid:self.appId];
-
-    [AgoraRTCManager.shareManager setLogFile:self.logDirectoryPath];
-    
+        
     [AgoraRTCManager.shareManager setChannelProfile:AgoraChannelProfileLiveBroadcasting];
     
     AgoraRTEVideoConfig *videoConfig = [AgoraRTEVideoConfig defaultVideoConfig];
@@ -802,7 +796,6 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
                                                                 code:101];
         failureBlock(eduError);
     }];
-    [AgoraRTMManager.shareManager setLogFile:self.logDirectoryPath];
 }
 
 #pragma mark AgoraRTMManagerDelegate

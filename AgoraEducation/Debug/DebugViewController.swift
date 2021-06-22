@@ -9,6 +9,7 @@
 import UIKit
 import AgoraEduSDK
 import AgoraUIEduBaseViews
+import AgoraUIEduAppViews
 import AgoraUIBaseViews
 import AgoraWidget
 
@@ -24,7 +25,7 @@ import AgoraWidget
     @IBOutlet weak var updateListLabel: UILabel!
     @IBOutlet weak var downLabel: UILabel!
     @IBOutlet weak var clearLabel: UILabel!
-    
+
     fileprivate var startTime: Int?
 
     fileprivate var scenes: [WhiteScene] = []
@@ -73,7 +74,13 @@ import AgoraWidget
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         UIDevice.current.setValue(UIDeviceOrientation.landscapeRight.rawValue, forKey: "orientation")
+        isDebug = true
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        isDebug = false
     }
     
     fileprivate func joinRoom(_ type: AgoraEduRoomType) {
@@ -110,7 +117,8 @@ import AgoraWidget
                                           duration: __duration,
                                           boardRegion: nil,
                                           userProperties: nil)
-
+        
+        
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")
         }
@@ -136,7 +144,7 @@ import AgoraWidget
     @IBAction func joinSmallRoom(_ sender: Any) {
         self.joinRoom(AgoraEduRoomType.typeSmall)
     }
-    
+
     @IBAction func joinLectureRoom(_ sender: UIButton) {
         self.joinRoom(AgoraEduRoomType.typeLecture)
     }

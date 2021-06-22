@@ -46,7 +46,6 @@ typedef enum : NSInteger {
 }
 
 - (void)extAppWillUnload {
-    printf("");
     [self.countDown cancelCountDown];
 }
 

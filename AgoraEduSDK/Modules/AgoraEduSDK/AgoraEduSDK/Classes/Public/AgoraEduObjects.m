@@ -38,8 +38,7 @@
                            scenePath:(NSString *)scenePath
                               scenes:(NSArray<WhiteScene *> *)scenes
                          resourceUrl:(NSString *)resourceUrl {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         self.resourceName = resourceName;
         self.resourceUuid = resourceUuid;
         self.scenePath = scenePath;
@@ -65,29 +64,51 @@
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
+                           token:(NSString *)token {
+    return [self initWithUserName:userName
+                         userUuid:userUuid
+                         roleType:roleType
+                         roomName:roomName
+                         roomUuid:roomUuid
+                         roomType:roomType
+                            token:token
+                        startTime:nil
+                         duration:nil
+                      boardRegion:nil
+                   userProperties:nil];
+}
+
+- (instancetype)initWithUserName:(NSString *)userName
+                        userUuid:(NSString *)userUuid
+                        roleType:(AgoraEduRoleType)roleType
+                        roomName:(NSString *)roomName
+                        roomUuid:(NSString *)roomUuid
+                        roomType:(AgoraEduRoomType)roomType
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     boardRegion:(NSString * _Nullable)boardRegion
-                  userProperties:(NSDictionary * _Nullable)userProperties{
-    self = [self init];
-    self.userName = userName;
-    self.userUuid = userUuid;
-    self.roomName = roomName;
-    self.roomUuid = roomUuid;
-    self.roomType = roomType;
-    self.token = token;
-    if (startTime != nil) {
-        self.startTime = startTime;
-    }
-    if (duration != nil) {
-        self.duration = duration;
-    }
-    if (boardRegion != nil) {
-        self.boardRegion = boardRegion;
-    }
-    if (userProperties != nil) {
-        self.userProperties = userProperties;
+                     boardRegion:(NSString *_Nullable)boardRegion
+                  userProperties:(NSDictionary * _Nullable)userProperties {
+    
+    if (self = [super init]) {
+        self.userName = userName;
+        self.userUuid = userUuid;
+        self.roomName = roomName;
+        self.roomUuid = roomUuid;
+        self.roomType = roomType;
+        self.token = token;
+        if (startTime != nil) {
+            self.startTime = startTime;
+        }
+        if (duration != nil) {
+            self.duration = duration;
+        }
+        if (boardRegion != nil) {
+            self.boardRegion = boardRegion;
+        }
+        if (userProperties != nil) {
+            self.userProperties = userProperties;
+        }
     }
     return self;
 }
