@@ -116,8 +116,8 @@ import AgoraWidget
                                           startTime: __startTime,
                                           duration: __duration,
                                           boardRegion: nil,
-                                          userProperties: nil)
-        
+                                          userProperties: nil,
+                                          boardFitMode: .retain)
         
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")

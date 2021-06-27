@@ -44,6 +44,7 @@ enum AgoraCauseType: Int, Decodable {
     public var userName: String = ""
     public var token: String = ""
     public var baseURL: String = ""
+    public var boardAutoFitMode: Bool = true
 }
 
 @objcMembers public class AgoraBaseVM: NSObject {

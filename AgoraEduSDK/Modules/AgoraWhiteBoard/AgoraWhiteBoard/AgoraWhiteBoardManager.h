@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol AgoraWhiteManagerDelegate <NSObject>
 - (void)onWhiteBoardStateChanged:(AgoraWhiteBoardStateModel *)state;
+- (void)onWhiteBoardCameraConfigChange:(AgoraWhiteBoardCameraConfig *)config;
 
 @optional
 - (void)onWhiteBoardError:(NSError *)error;
@@ -46,6 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setFollowMode:(BOOL)follow;
 
+- (AgoraWhiteBoardCameraConfig *)getBoardCameraConfig;
+- (void)setBoardCameraConfig:(AgoraWhiteBoardCameraConfig *)config;
+
 // when board view size changed, must call refreshViewSize
 - (void)refreshViewSize;
 - (void)resetViewSize;
@@ -75,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
        withToolType:(AgoraWhiteBoardToolType)type;
 
 // pageindex
-- (void)onSetPageIndex:(NSUInteger)index;
+- (void)setPageIndex:(NSUInteger)index;
 
 // scale
 - (void)increaseScale;
@@ -85,8 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)lockViewTransform:(BOOL)lock;
 
 // leave
-- (void)leaveWithSuccess:(void (^ _Nullable) (void))successBlock
-                 failure:(void (^ _Nullable) (void))failureBlock;
+- (void)leave;
 @end
 
 NS_ASSUME_NONNULL_END

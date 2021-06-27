@@ -36,6 +36,13 @@ typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
     AgoraEduRoomTypeSmall = 4,
 };
 
+typedef NS_ENUM(NSUInteger, AgoraBoardFitMode) {
+    // 默认值, 切换课件的时候，会自动sizeToFit
+    AgoraBoardFitModeAuto,
+    // 记录之前的状态， 切换课件的时候，记录之前的课件比例
+    AgoraBoardFitModeRetain,
+};
+
 //
 //typedef NS_ENUM(NSInteger, AgoraExtAppProvider) {
 //    // 1V1

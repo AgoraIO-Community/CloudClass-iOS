@@ -55,3 +55,18 @@
     return @{@"materialList" : [AgoraWhiteGlobalStateTaskModel class]};
 }
 @end
+
+@implementation AgoraWhiteBoardCameraConfig
+- (instancetype)init {
+    self = [super init];
+    
+    if (self) {
+        self.centerX = 0;
+        self.centerY = 0;
+        self.scale = 1;
+    }
+    
+    return self;
+}
+
+@end

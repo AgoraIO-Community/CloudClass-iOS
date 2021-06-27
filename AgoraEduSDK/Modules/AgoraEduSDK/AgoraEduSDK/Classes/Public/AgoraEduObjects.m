@@ -65,6 +65,7 @@
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
                            token:(NSString *)token {
+
     return [self initWithUserName:userName
                          userUuid:userUuid
                          roleType:roleType
@@ -75,7 +76,8 @@
                         startTime:nil
                          duration:nil
                       boardRegion:nil
-                   userProperties:nil];
+                   userProperties:nil
+                     boardFitMode:AgoraBoardFitModeAuto];
 }
 
 - (instancetype)initWithUserName:(NSString *)userName
@@ -87,9 +89,9 @@
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     boardRegion:(NSString *_Nullable)boardRegion
-                  userProperties:(NSDictionary * _Nullable)userProperties {
-    
+                     boardRegion:(NSString * _Nullable)boardRegion
+                  userProperties:(NSDictionary * _Nullable)userProperties
+                    boardFitMode:(AgoraBoardFitMode)boardFitMode {
     if (self = [super init]) {
         self.userName = userName;
         self.userUuid = userUuid;
@@ -97,6 +99,8 @@
         self.roomUuid = roomUuid;
         self.roomType = roomType;
         self.token = token;
+        self.boardFitMode = boardFitMode;
+        
         if (startTime != nil) {
             self.startTime = startTime;
         }

@@ -305,6 +305,7 @@
                                                                    download:self.download
                                                                    reportor:reportor
                                                                       cache:self.cache
+                                                              boardAutoMode:self.vmConfig.boardAutoFitMode
                                                                    delegate:self];
     return self.boardController;
 }

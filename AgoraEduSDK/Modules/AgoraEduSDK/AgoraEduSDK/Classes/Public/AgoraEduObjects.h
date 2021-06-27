@@ -79,6 +79,16 @@ NS_ASSUME_NONNULL_BEGIN
                         roomType:(AgoraEduRoomType)roomType
                            token:(NSString *)token;
 
+@property (nonatomic, assign) AgoraBoardFitMode boardFitMode;
+
+- (instancetype)initWithUserName:(NSString *)userName
+                        userUuid:(NSString *)userUuid
+                        roleType:(AgoraEduRoleType)roleType
+                        roomName:(NSString *)roomName
+                        roomUuid:(NSString *)roomUuid
+                        roomType:(AgoraEduRoomType)roomType
+                           token:(NSString *)token;
+
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
                         roleType:(AgoraEduRoleType)roleType
@@ -89,7 +99,8 @@ NS_ASSUME_NONNULL_BEGIN
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                      boardRegion:(NSString *_Nullable)boardRegion
-                  userProperties:(NSDictionary<NSString *, NSString *> * _Nullable)userProperties;
+                  userProperties:(NSDictionary<NSString *, NSString *> * _Nullable)userProperties
+                    boardFitMode:(AgoraBoardFitMode)boardFitMode;
 @end
 
 // 聊天翻译

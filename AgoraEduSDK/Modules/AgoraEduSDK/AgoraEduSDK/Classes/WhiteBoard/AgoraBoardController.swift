@@ -44,6 +44,12 @@ import EduSDK
     private var boardToken: String
     private var userId: String
     
+    private var boardAutoMode: Bool
+    private var localGranted = false
+    
+    private var currentScenePath: String!
+    private var localCameraConfigs = [String: AgoraWhiteBoardCameraConfig]()
+    
     public init(boardAppId: String,
                 boardId: String,
                 boardToken: String,
@@ -51,10 +57,13 @@ import EduSDK
                 download: AgoraDownloadManager,
                 reportor: AgoraApaasReportorEventTube,
                 cache: AgoraManagerCache,
+                boardAutoMode: Bool,
                 delegate: AgoraBoardControllerDelegate?) {
         self.boardAppId = boardAppId
         self.boardId = boardId
         self.boardToken = boardToken
+        self.boardAutoMode = boardAutoMode
+        
         self.userId = userUuid
         self.delegate = delegate
         
@@ -139,6 +148,29 @@ private extension AgoraBoardController {
         
         viewsEnable(false)
     }
+    
+    @discardableResult func ifUseLocalCameraConfig() -> Bool {
+        guard !boardAutoMode,
+              localGranted,
+              let camera = getLocalCameraConfig() else {
+            return false
+        }
+        
+        boardVM.setCameraConfig(camera)
+        return true
+    }
+    
+    func getLocalCameraConfig() -> AgoraWhiteBoardCameraConfig? {
+        return localCameraConfigs[currentScenePath]
+    }
+    
+    func updateLocalCameraConfig(_ camera: AgoraWhiteBoardCameraConfig) {
+        guard localGranted else {
+            return
+        }
+        
+        localCameraConfigs[currentScenePath] = camera
+    }
 }
 
 // MARK: - AgoraKitWhiteBoardListener
@@ -222,39 +254,59 @@ extension AgoraBoardController: AgoraBoardVMDelegate {
     }
     
     func didBoardLocalPermissionGranted(_ grantUsers: [String]) {
-        boardVM.operationPermission(true) {[weak self] in
+        localGranted = true
+        
+        boardVM.lockViewTransform(false)
+        
+        boardVM.setFollow(true)
+        boardVM.setFollow(false)
+        
+        ifUseLocalCameraConfig()
+        
+        boardVM.operationPermission(true) { [weak self] in
             guard let `self` = self else {
                 return
             }
+            
             self.viewsEnable(true)
-            self.boardVM.lockViewTransform(false)
-            self.boardVM.setFollow(false)
+           
             self.eventDispatcher.onShowPermissionTips(true)
             self.eventDispatcher.onSetDrawingEnabled(true)
-        } fail: {[weak self] (error) in
+        } fail: { [weak self] (error) in
             guard let `self` = self else {
                 return
             }
-            self.delegate?.boardController(self, didOccurError: error)
+            self.delegate?.boardController(self,
+                                           didOccurError: error)
         }
     }
     
     func didBoardLocalPermissionRevoked(_ grantUsers: [String]?) {
-        boardVM.operationPermission(false) {[weak self] in
+        localGranted = false
+        
+        boardVM.lockViewTransform(true)
+        boardVM.setFollow(true)
+        
+        boardVM.operationPermission(false) { [weak self] in
             guard let `self` = self else {
                 return
             }
+            
             self.viewsEnable(false)
-            self.boardVM.lockViewTransform(true)
-            self.boardVM.setFollow(true)
+            
             self.eventDispatcher.onShowPermissionTips(false)
             self.eventDispatcher.onSetDrawingEnabled(false)
-        } fail: {[weak self] (error) in
+        } fail: { [weak self] (error) in
             guard let `self` = self else {
                 return
             }
-            self.delegate?.boardController(self, didOccurError: error)
+            self.delegate?.boardController(self,
+                                           didOccurError: error)
         }
+    }
+    
+    func didCameraConfigChanged(camera: AgoraWhiteBoardCameraConfig) {
+        updateLocalCameraConfig(camera)
     }
     
     func didBoardPermissionUpdated(_ grantUsers: [String]) {
@@ -264,6 +316,8 @@ extension AgoraBoardController: AgoraBoardVMDelegate {
     
     func didBoardPageChange(pageIndex: Int,
                             pageCount: Int) {
+        ifUseLocalCameraConfig()
+        
         eventDispatcher.onSetPageIndex(pageIndex,
                                      pageCount: pageCount)
     }
@@ -285,16 +339,25 @@ extension AgoraBoardController: AgoraBoardVMDelegate {
     }
     
     func didScenePathChanged(path: String) {
-        delegate?.boardController(self, didScenePathChanged: path)
+        if path.isBoardPath() {
+            currentScenePath = "/init"
+        } else {
+            currentScenePath = path
+        }
+        
+        ifUseLocalCameraConfig()
+        
+        delegate?.boardController(self,
+                                  didScenePathChanged: path)
     }
 }
 
 // MARK: - AgoraDownloadProtocol
 extension AgoraBoardController: AgoraDownloadProtocol {
     public func onDownloadCompleted(_ key: String?,
-                             urls: [URL],
-                             error: Error?,
-                             errorCode: Int) {
+                                    urls: [URL],
+                                    error: Error?,
+                                    errorCode: Int) {
         guard let urlString = urls.first?.absoluteString else {
             return
         }
@@ -316,8 +379,8 @@ extension AgoraBoardController: AgoraDownloadProtocol {
     }
     
     public func onProcessChanged(_ key: String?,
-                          url: URL,
-                          process: Float) {
+                                 url: URL,
+                                 process: Float) {
         eventDispatcher.onSetDownloadProgress(url.absoluteString,
                                              progress: process)
     }
@@ -327,7 +390,7 @@ extension AgoraBoardController {
     func viewsEnable(_ enable: Bool) {
         eventDispatcher.onSetPagingEnable(enable)
         eventDispatcher.onSetZoomEnable(enable,
-                                      zoomInEnable: enable)
+                                        zoomInEnable: enable)
         eventDispatcher.onSetDrawingEnabled(enable)
     }
 }
@@ -343,5 +406,11 @@ extension AgoraEduContextApplianceType {
         case .select:  return .WhiteBoardToolTypeSelector
         case .clicker: return .WhiteBoardToolTypeClicker
         }
+    }
+}
+
+fileprivate extension String {
+    func isBoardPath() -> Bool {
+        return (count < 32)
     }
 }
