@@ -9,6 +9,7 @@
 #import "AgoraRTMManager.h"
 #import <AgoraLog/AgoraLog.h>
 #import "AgoraRTELogService.h"
+#import "RtmPrivateKit.h"
 
 #define AgoraRTMNoNullString(x) ([x isKindOfClass:NSString.class] ? x : @"")
 
@@ -64,6 +65,10 @@ static AgoraRTMManager *manager = nil;
             }
         }
     }];
+}
+
+- (NSString *)getSessionId {
+    return [RtmPrivateKit GetSessionId:self.agoraRtmKit];
 }
 
 - (void)setLogFile:(NSString *)logDirPath {

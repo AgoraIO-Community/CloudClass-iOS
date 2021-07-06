@@ -451,12 +451,15 @@ static AgoraRTCManager *manager = nil;
 }
 
 #pragma mark Rate
-- (NSString *)getCallId {
-    NSString *callid = [self.rtcEngineKit getCallId];
+- (NSString *)getCallIdWithChannelId:(NSString *)channelId {
     
-    [AgoraRTELogService logMessageWithDescribe:@"callId:" message:callid];
+    AgoraRtcChannel *channel = [self getRtcChannelWithChannelId:channelId];
     
-    return callid;
+    NSString *callId = [channel getCallId];
+    
+    [AgoraRTELogService logMessageWithDescribe:@"callId:" message:callId];
+    
+    return callId;
 }
 
 - (int)rate:(NSString *)callId rating:(NSInteger)rating description:(NSString *)description {
@@ -963,6 +966,16 @@ localAudioStateChange:(AgoraAudioLocalState)state
             [channelInfo.config.statisticsReportDelegate rtcVideoSizeChangedOfUid:uid size:size rotation:rotation];
         }
     }
+}
+
+- (AgoraRtcChannel *)getRtcChannelWithChannelId:(NSString *)channelId {
+    for (RTCChannelInfo *info in self.rtcChannelInfos) {
+        if (info.channelId == channelId) {
+            return info.agoraRtcChannel;
+        }
+    }
+    
+    return nil;
 }
 
 #pragma mark AgoraSubThreadTimerDelegate

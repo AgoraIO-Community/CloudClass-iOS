@@ -59,6 +59,7 @@ static GPBFileDescriptor *ApaasUserRoot_FileDescriptor(void) {
 @dynamic hasStreamSid, streamSid;
 @dynamic hasRtmSid, rtmSid;
 @dynamic hasRoomId, roomId;
+@dynamic hasRoomCreateTs, roomCreateTs;
 
 typedef struct AgoraApaasUserJoin__storage_ {
   uint32_t _has_storage_[1];
@@ -75,6 +76,7 @@ typedef struct AgoraApaasUserJoin__storage_ {
   NSString *roomId;
   int64_t lts;
   int64_t streamUid;
+  int64_t roomCreateTs;
 } AgoraApaasUserJoin__storage_;
 
 // This method is threadsafe because it is initially called
@@ -200,6 +202,15 @@ typedef struct AgoraApaasUserJoin__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "roomCreateTs",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserJoin_FieldNumber_RoomCreateTs,
+        .hasIndex = 13,
+        .offset = (uint32_t)offsetof(AgoraApaasUserJoin__storage_, roomCreateTs),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[AgoraApaasUserJoin class]
@@ -211,7 +222,7 @@ typedef struct AgoraApaasUserJoin__storage_ {
                                          flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\007\005\t\000\007\010\000\010\t\000\t\n\000\013\t\000\014\006\000\r\006\000";
+        "\010\005\t\000\007\010\000\010\t\000\t\n\000\013\t\000\014\006\000\r\006\000\016\014\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     #if defined(DEBUG) && DEBUG
@@ -241,6 +252,7 @@ typedef struct AgoraApaasUserJoin__storage_ {
 @dynamic hasStreamSid, streamSid;
 @dynamic hasRtmSid, rtmSid;
 @dynamic hasRoomId, roomId;
+@dynamic hasRoomCreateTs, roomCreateTs;
 
 typedef struct AgoraApaasUserLeave__storage_ {
   uint32_t _has_storage_[1];
@@ -257,6 +269,7 @@ typedef struct AgoraApaasUserLeave__storage_ {
   NSString *roomId;
   int64_t lts;
   int64_t streamUid;
+  int64_t roomCreateTs;
 } AgoraApaasUserLeave__storage_;
 
 // This method is threadsafe because it is initially called
@@ -382,6 +395,15 @@ typedef struct AgoraApaasUserLeave__storage_ {
         .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
         .dataType = GPBDataTypeString,
       },
+      {
+        .name = "roomCreateTs",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserLeave_FieldNumber_RoomCreateTs,
+        .hasIndex = 13,
+        .offset = (uint32_t)offsetof(AgoraApaasUserLeave__storage_, roomCreateTs),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
     };
     GPBDescriptor *localDescriptor =
         [GPBDescriptor allocDescriptorForClass:[AgoraApaasUserLeave class]
@@ -393,7 +415,200 @@ typedef struct AgoraApaasUserLeave__storage_ {
                                          flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
 #if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     static const char *extraTextFormatInfo =
-        "\007\005\t\000\007\010\000\010\t\000\t\n\000\013\t\000\014\006\000\r\006\000";
+        "\010\005\t\000\007\010\000\010\t\000\t\n\000\013\t\000\014\006\000\r\006\000\016\014\000";
+    [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
+#endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    #if defined(DEBUG) && DEBUG
+      NSAssert(descriptor == nil, @"Startup recursed!");
+    #endif  // DEBUG
+    descriptor = localDescriptor;
+  }
+  return descriptor;
+}
+
+@end
+
+#pragma mark - AgoraApaasUserReconnect
+
+@implementation AgoraApaasUserReconnect
+
+@dynamic hasLts, lts;
+@dynamic hasVid, vid;
+@dynamic hasVer, ver;
+@dynamic hasScenario, scenario;
+@dynamic hasErrorCode, errorCode;
+@dynamic hasUid, uid;
+@dynamic hasUserName, userName;
+@dynamic hasStreamUid, streamUid;
+@dynamic hasStreamSuid, streamSuid;
+@dynamic hasRole, role;
+@dynamic hasStreamSid, streamSid;
+@dynamic hasRtmSid, rtmSid;
+@dynamic hasRoomId, roomId;
+@dynamic hasRoomCreateTs, roomCreateTs;
+
+typedef struct AgoraApaasUserReconnect__storage_ {
+  uint32_t _has_storage_[1];
+  int32_t vid;
+  int32_t errorCode;
+  NSString *ver;
+  NSString *scenario;
+  NSString *uid;
+  NSString *userName;
+  NSString *streamSuid;
+  NSString *role;
+  NSString *streamSid;
+  NSString *rtmSid;
+  NSString *roomId;
+  int64_t lts;
+  int64_t streamUid;
+  int64_t roomCreateTs;
+} AgoraApaasUserReconnect__storage_;
+
+// This method is threadsafe because it is initially called
+// in +initialize for each subclass.
++ (GPBDescriptor *)descriptor {
+  static GPBDescriptor *descriptor = nil;
+  if (!descriptor) {
+    static GPBMessageFieldDescription fields[] = {
+      {
+        .name = "lts",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_Lts,
+        .hasIndex = 0,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, lts),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "vid",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_Vid,
+        .hasIndex = 1,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, vid),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "ver",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_Ver,
+        .hasIndex = 2,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, ver),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "scenario",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_Scenario,
+        .hasIndex = 3,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, scenario),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "errorCode",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_ErrorCode,
+        .hasIndex = 4,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, errorCode),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt32,
+      },
+      {
+        .name = "uid",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_Uid,
+        .hasIndex = 5,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, uid),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "userName",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_UserName,
+        .hasIndex = 6,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, userName),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "streamUid",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_StreamUid,
+        .hasIndex = 7,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, streamUid),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+      {
+        .name = "streamSuid",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_StreamSuid,
+        .hasIndex = 8,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, streamSuid),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "role",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_Role,
+        .hasIndex = 9,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, role),
+        .flags = GPBFieldOptional,
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "streamSid",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_StreamSid,
+        .hasIndex = 10,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, streamSid),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "rtmSid",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_RtmSid,
+        .hasIndex = 11,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, rtmSid),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "roomId",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_RoomId,
+        .hasIndex = 12,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, roomId),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeString,
+      },
+      {
+        .name = "roomCreateTs",
+        .dataTypeSpecific.clazz = Nil,
+        .number = AgoraApaasUserReconnect_FieldNumber_RoomCreateTs,
+        .hasIndex = 13,
+        .offset = (uint32_t)offsetof(AgoraApaasUserReconnect__storage_, roomCreateTs),
+        .flags = (GPBFieldFlags)(GPBFieldOptional | GPBFieldTextFormatNameCustom),
+        .dataType = GPBDataTypeInt64,
+      },
+    };
+    GPBDescriptor *localDescriptor =
+        [GPBDescriptor allocDescriptorForClass:[AgoraApaasUserReconnect class]
+                                     rootClass:[ApaasUserRoot class]
+                                          file:ApaasUserRoot_FileDescriptor()
+                                        fields:fields
+                                    fieldCount:(uint32_t)(sizeof(fields) / sizeof(GPBMessageFieldDescription))
+                                   storageSize:sizeof(AgoraApaasUserReconnect__storage_)
+                                         flags:(GPBDescriptorInitializationFlags)(GPBDescriptorInitializationFlag_UsesClassRefs | GPBDescriptorInitializationFlag_Proto3OptionalKnown)];
+#if !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
+    static const char *extraTextFormatInfo =
+        "\010\005\t\000\007\010\000\010\t\000\t\n\000\013\t\000\014\006\000\r\006\000\016\014\000";
     [localDescriptor setupExtraTextInfo:extraTextFormatInfo];
 #endif  // !GPBOBJC_SKIP_MESSAGE_TEXTFORMAT_EXTRAS
     #if defined(DEBUG) && DEBUG

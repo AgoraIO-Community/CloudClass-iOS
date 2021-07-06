@@ -20,7 +20,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
+typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService, UInt64 timestamp);
 typedef void (^OnGetLocalUserSuccessBlock)(AgoraRTELocalUser *user);
 typedef void (^OnGetClassroomInfoSuccessBlock)(AgoraRTEClassroom *room);
 typedef void (^OnGetUserCountSuccessBlock)(NSUInteger count);

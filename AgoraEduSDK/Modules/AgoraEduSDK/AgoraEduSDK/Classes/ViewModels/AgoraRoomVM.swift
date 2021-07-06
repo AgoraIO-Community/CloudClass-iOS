@@ -30,10 +30,10 @@ import AgoraEduSDK.AgoraEduSDKFiles
         super.init(config: config)
     }
 
-    public func joinClassroom(successBlock: @escaping (_ userInfo: AgoraRTELocalUser) -> Void,
+    public func joinClassroom(successBlock: @escaping (_ userInfo: AgoraRTELocalUser, _ timestamp: UInt64) -> Void,
                               failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
         AgoraEduManager.share().joinClassroom(with: self.config.sceneType,
-                                              userName: self.config.userName) { [weak self] in
+                                              userName: self.config.userName) { [weak self] (timestamp) in
             guard let `self` = self else {
                 return
             }
@@ -41,7 +41,7 @@ import AgoraEduSDK.AgoraEduSDKFiles
             self.hasSignalReconnect = false
             let roomManager = AgoraEduManager.share().roomManager
             roomManager?.getLocalUser(success: { [weak self] (userInfo) in
-                successBlock(userInfo)
+                successBlock(userInfo, timestamp)
                 self?.startTimer()
                 self?.updateTime()
             }, failure: { [weak self] (error) in
@@ -212,7 +212,7 @@ private extension AgoraRoomVM {
                 
                 if !self.hasStop {
                     self.hasStop = true
-                    
+                                        
                     // 还有几分钟关闭
                     let strStart = self.localizedString("ClassCloseWarningStartText")
                     let strEnd = self.localizedString("ClassCloseWarningEndText")
@@ -244,7 +244,12 @@ private extension AgoraRoomVM {
                     }
                     
                     // 还有5分钟关闭
-                    self.timerToastBlock?(string + strEnd)
+                    // 当前开始多少时间 > 持续的时间  return
+                    if time > roomStateInfoModel.duration {
+                        
+                    } else {
+                        self.timerToastBlock?(string + strEnd)
+                    }
                 }
             }
 

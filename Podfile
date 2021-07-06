@@ -21,19 +21,14 @@ def sourcePod
   pod 'AgoraEduContext', :path => 'AgoraEduSDK/Modules/AgoraEduContext/AgoraEduContext.podspec'
 
   # if you use swift project, you just only change 'OC' to 'Swift'
-  pod 'AgoraHandsUp', :path => 'AgoraEduSDK/Modules/AgoraHandsUp/AgoraHandsUp.podspec', :subspecs => ['OC']
-
-  # if you use swift project, you just only change 'OC' to 'Swift'
   pod 'AgoraActionProcess', :path => 'AgoraEduSDK/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
 
   pod 'Protobuf'
 
-  pod 'ChatWidget', :path => 'AgoraEduSDK/Modules/ChatWidget/ChatWidget.podspec'
 end
 
 def binaryPod
   pod 'AgoraEduSDK', :path => 'AgoraEduSDK/AgoraEduSDK.podspec'
-  pod 'ChatWidget', :path => 'AgoraEduSDK/Modules/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
 end
 
 def uiSourcePod

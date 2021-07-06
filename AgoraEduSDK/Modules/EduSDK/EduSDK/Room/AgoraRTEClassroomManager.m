@@ -43,7 +43,7 @@
 
 #define AgoraRTE_NOTICE_KEY_ROOM_DESTORY @"AgoraRTE_NOTICE_KEY_ROOM_DESTORY"
 
-typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
+typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService, UInt64 timestamp);
 
 @interface AgoraRTEClassroomManager() <AgoraRTMChannelDelegate, AgoraRTCManagerDelegate>
 @property (nonatomic, strong) NSString *appId;
@@ -260,7 +260,7 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
                     [AgoraRteReportorWrapper startTimerOnline];
                     
                     if(successBlock){
-                        successBlock(userService);
+                        successBlock(userService, model.room.roomState.createTime);
                     }
                 } failure:^(NSError * error) {
                     // Report

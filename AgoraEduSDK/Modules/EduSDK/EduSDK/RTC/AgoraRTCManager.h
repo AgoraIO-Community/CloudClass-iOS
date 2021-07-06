@@ -102,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (int)startLastmileProbeTest:(NSString *)appid dataSourceDelegate:(id<AgoraRTCRateDelegate> _Nullable)rtcDelegate;
 
 // Rate
-- (NSString *)getCallId;
+- (NSString *)getCallIdWithChannelId:(NSString *)channelId;
 - (int)rate:(NSString *)callId rating:(NSInteger)rating description:(NSString *)description;
 
 + (NSString *_Nullable)getErrorDescription:(NSInteger)code;

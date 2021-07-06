@@ -132,7 +132,7 @@ class DebugView: UIView {
 }
 
 extension DebugView: AgoraEduRoomHandler {
-    func onJoinedClassroom() {
+    func onClassroomJoined() {
         self.logLabel.isHidden = false
         self.logLabel.text = "加入房间成功1"
     }

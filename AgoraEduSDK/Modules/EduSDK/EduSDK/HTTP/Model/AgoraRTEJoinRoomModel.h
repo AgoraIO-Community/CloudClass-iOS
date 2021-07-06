@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AgoraRTEJoinRoomModel : NSObject <AgoraRTEBaseModel>
 @property (nonatomic, strong) AgoraRTEJoinRoomInfoModel *data;
+@property (nonatomic, assign) UInt64 ts;
 @end
 
 NS_ASSUME_NONNULL_END

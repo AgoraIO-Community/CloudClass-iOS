@@ -65,6 +65,8 @@ import AFNetworking
     public var streamUuid: String
     public var streamSessionId: String
     public var roomUuid: String
+    public var rtmSid: String
+    public var roomCreatTs: Int64
     
     @objc public init(source: String,
                       host: String,
@@ -76,7 +78,9 @@ import AFNetworking
                       userRole: String,
                       streamUuid: String,
                       streamSessionId: String,
-                      roomUuid: String) {
+                      roomUuid: String,
+                      rtmSid: String,
+                      roomCreatTs: Int64) {
         self.source = source
         self.host = host
         self.vid = vid
@@ -88,6 +92,8 @@ import AFNetworking
         self.streamUuid = streamUuid
         self.streamSessionId = streamSessionId
         self.roomUuid = roomUuid
+        self.rtmSid = rtmSid
+        self.roomCreatTs = roomCreatTs
     }
 }
 

@@ -21,9 +21,6 @@ target 'AgoraEduSDK' do
   pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec'
   
   # if you use swift project, you just only change 'OC' to 'Swift'
-  pod 'AgoraHandsUp', :path => '../AgoraHandsUp/AgoraHandsUp.podspec', :subspecs => ['OC']
-
-  # if you use swift project, you just only change 'OC' to 'Swift'
   pod 'AgoraActionProcess', :path => '../AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
   
   pod 'Protobuf'

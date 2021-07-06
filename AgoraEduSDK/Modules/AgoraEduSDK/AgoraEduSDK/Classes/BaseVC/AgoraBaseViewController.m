@@ -134,8 +134,8 @@
 // 加入房间
 - (void)joinClassroom {
     __weak AgoraBaseViewController *weakself = self;
-    [self.roomVM joinClassroomWithSuccessBlock:^(AgoraRTELocalUser *localUser) {
-        
+    [self.roomVM joinClassroomWithSuccessBlock:^(AgoraRTELocalUser *localUser, uint64_t timestamp) {
+
         // apaas的小班课是4， 上报rtc也是4
         NSInteger appScenario = weakself.vmConfig.sceneType;
         // 0代表aPaaS， 1代表PaaS
@@ -150,17 +150,23 @@
         AgoraReportor *report = [ApaasReporterWrapper getApaasReportor];
         AgoraReportorContextV2 *context = report.contextV2;
         context.streamUuid = localUser.streamUuid;
-        context.streamSessionId = [[AgoraRTCManager shareManager] getCallId];
+        context.streamSessionId = [[AgoraRTCManager shareManager] getCallIdWithChannelId:self.vmConfig.roomUuid];
+        context.rtmSid = [[AgoraRTMManager shareManager] getSessionId];
+        context.roomCreatTs = timestamp;
         [report setV2WithContext:context];
        
+        NSLog(@"context.streamSessionId: %@", context.streamSessionId);
+        
         [ApaasReporterWrapper localUserJoin];
         
         [manager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
             [weakself flexRoomPropsInitialize:room];
             [weakself updateExtApps:room];
+            [weakself updateClassState];
             [weakself.widgetsController updateRoomProperties:room.roomProperties];
             
             [weakself.eventDispatcher onClassroomJoined];
+            
         } failure:nil];
         
         AgoraEduManager.shareManager.studentService.delegate = weakself;
@@ -185,8 +191,7 @@
         } failureBlock:^(AgoraEduContextError *error) {
             [weakself onShowErrorInfo:error];
         }];
-        
-        [weakself.eventDispatcher onJoinedClassroom];
+
     } failureBlock:^(AgoraEduContextError *error) {
         [weakself onShowErrorInfo:error];
     }];
@@ -492,6 +497,10 @@ connectionStateChanged:(AgoraRTEConnectionState)state {
 
     if ([self respondsToSelector:@selector(onSetConnectionState:)]) {
         [self onSetConnectionState:[self.roomVM getConnectionState:state]];
+    }
+    
+    if (state == AgoraRTEConnectionStateReconnecting) {
+        [ApaasReporterWrapper localUserReconnect];
     }
 }
 

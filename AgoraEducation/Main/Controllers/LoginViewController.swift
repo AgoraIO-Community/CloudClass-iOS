@@ -12,7 +12,6 @@ import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 import AgoraEduSDK
 import AgoraWidget
-import ChatWidget
 
 @objcMembers public class LoginViewController: UIViewController {
     private var alertView: AgoraAlertView?
@@ -643,11 +642,6 @@ private extension LoginViewController{
         } else {
             alertView?.show(in: self.view)
         }
-        
-        let chat = AgoraWidgetConfiguration(with: ChatWidget.self,
-                                            widgetId: "Chat")
-        
-        AgoraClassroomSDK.registerWidgets([chat])
 
         AgoraClassroomSDK.launch(config,
                                  delegate: self)

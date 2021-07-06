@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AgoraRTERoomStateModel : NSObject
 @property (nonatomic, assign) NSInteger state;//0未开始 1开始 2结束
 @property (nonatomic, assign) NSInteger startTime;
+@property (nonatomic, assign) UInt64 createTime;
 @property (nonatomic, strong) AgoraRTERoomMuteStateModel *muteChat;
 @property (nonatomic, strong) AgoraRTERoomMuteStateModel *muteAudio;
 @property (nonatomic, strong) AgoraRTERoomMuteStateModel *muteVideo;

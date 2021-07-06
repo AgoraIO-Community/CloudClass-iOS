@@ -25,7 +25,6 @@ public var isDebug = false
     var whiteBoard: AgoraWhiteBoardUIController?
     var chat: AgoraEduWidget?
     var shareScreen: AgoraScreenUIController?
-    var hxChat: AgoraBaseWidget?
     
     // 1v1
     var render1V1: Agora1V1RenderUIController?
@@ -63,7 +62,6 @@ public var isDebug = false
         initControllers()
         addContainerViews()
         layoutContainerViews()
-        observeEvents()
     }
     
     func loadView() {
@@ -159,10 +157,6 @@ public var isDebug = false
             layoutLectureContainerViews()
         }
     }
-    
-    func observeEvents() {
-        contextPool.room.registerEventHandler(self)
-    }
 }
 
 // MARK: - AgoraControllerContextProvider
@@ -248,67 +242,6 @@ extension AgoraUIManager: AgoraControllerEventRegister {
     
     func controllerRegisterScreenEvent(_ handler: AgoraEduScreenShareHandler) {
         contextPool.shareScreen.registerEventHandler(handler)
-    }
-}
-
-extension AgoraUIManager: AgoraEduRoomHandler {
-    public func onClassroomJoined() {
-        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
-            return
-        }
-        
-        for info in widgetInfos {
-            switch info.widgetId {
-            case "Chat":
-                createHxChat(info: info)
-            default:
-                break
-            }
-        }
-    }
-    
-    func createHxChat(info: AgoraWidgetInfo) {
-        let userInfo = contextPool.user.getLocalUserInfo()
-        let roomInfo = contextPool.room.getRoomInfo()
-        
-        guard let y = room?.containerView.frame.maxY,
-              let userProperties = userInfo.userProperties,
-              let `whiteBoard` = self.whiteBoard else {
-            return
-        }
-        
-        let avatarurl = userProperties["avatarurl"]
-        
-        var properties = [String: Any]()
-        
-        properties["userName"] = userInfo.userName
-        properties["userUuid"] = userInfo.userUuid
-        properties["roomUuid"] = roomInfo.roomUuid
-        properties["roomName"] = roomInfo.roomName
-        properties["password"] = userInfo.userUuid
-        properties["avatarurl"] = avatarurl
-        
-        if let imProperties = contextPool.widget.getAgoraWidgetProperties(type: .im),
-           let hxProperties = imProperties["huanxin"] as? [String: Any],
-           let appKey = hxProperties["appKey"] as? String,
-           let chatRoomId = hxProperties["chatRoomId"] as? String {
-            properties["appkey"] = appKey
-            properties["chatRoomId"] = chatRoomId
-        }
-        
-        info.properties = properties
-        
-        let chat = contextPool.widget.createWidget(with: info)
-        chat.addMessageObserver(self)
-        whiteBoard.containerView.addSubview(chat.containerView)
-        
-        chat.containerView.agora_equal_to_superView(attribute: .top)
-        chat.containerView.agora_equal_to_superView(attribute: .left)
-        chat.containerView.agora_equal_to_superView(attribute: .right)
-        chat.containerView.agora_equal_to_superView(attribute: .bottom,
-                                                      constant: -90)
-        
-        self.hxChat = chat
     }
 }
 

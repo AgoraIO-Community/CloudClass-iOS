@@ -12,10 +12,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol AgoraRTEBaseModel <NSObject>
-
 @property (nonatomic, strong) NSString *msg;
 @property (nonatomic, assign) NSInteger code;
-
+@property (nonatomic, assign) UInt64 ts;
 @end
 
 NS_ASSUME_NONNULL_END

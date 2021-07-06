@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)joinClassroomWithSceneType:(AgoraRTESceneType)sceneType
                           userName:(NSString*)userName
-                           success:(void (^) (void))successBlock
+                           success:(void (^) (UInt64 timestamp))successBlock
                            failure:(void (^) (NSError * _Nonnull error))failureBlock;
 
 - (void)logMessage:(NSString *)message

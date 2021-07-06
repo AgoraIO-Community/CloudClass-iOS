@@ -152,6 +152,8 @@ public extension AgoraApaasReportor {
         payload.role = context.userRole
         payload.streamSid = context.streamSessionId
         payload.roomId = context.roomUuid
+        payload.rtmSid = context.rtmSid
+        payload.roomCreateTs = context.roomCreatTs
         
         guard let payloadString = payload.data()?.base64EncodedString() else {
             return
@@ -181,6 +183,37 @@ public extension AgoraApaasReportor {
         payload.role = context.userRole
         payload.streamSid = context.streamSessionId
         payload.roomId = context.roomUuid
+        payload.roomCreateTs = context.roomCreatTs
+        
+        guard let payloadString = payload.data()?.base64EncodedString() else {
+            return
+        }
+        
+        pointEvent(eventId: eventId,
+                   payload: payloadString)
+    }
+    
+    func localUserReconnect() {
+        guard let context = contextV2 else {
+            return
+        }
+        
+        let eventId = 9014
+        let payload = AgoraApaasUserReconnect()
+        
+        payload.lts = Date().timestamp()
+        payload.vid = context.vid
+        payload.ver = context.version
+        payload.scenario = context.scenario
+        payload.errorCode = 0
+        payload.uid = context.userUuid;
+        payload.userName = context.userName;
+        payload.streamUid = Int64(context.streamUuid)!
+        payload.streamSuid = context.streamUuid
+        payload.role = context.userRole
+        payload.streamSid = context.streamSessionId
+        payload.roomId = context.roomUuid
+        payload.roomCreateTs = context.roomCreatTs
         
         guard let payloadString = payload.data()?.base64EncodedString() else {
             return
@@ -246,5 +279,9 @@ fileprivate extension Date {
     
     @objc public class func localUserLeave() {
         apaasShared.localUserLeave()
+    }
+    
+    @objc public class func localUserReconnect() {
+        apaasShared.localUserReconnect()
     }
 }

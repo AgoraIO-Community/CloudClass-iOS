@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)initSignalWithAppid:(NSString *)appId appToken:(NSString *)appToken userId:(NSString *)uid completeSuccessBlock:(void (^ _Nullable) (void))successBlock completeFailBlock:(void (^ _Nullable) (NSInteger errorCode))failBlock;
 
+- (NSString *)getSessionId;
+
 - (void)setLogFile:(NSString *)logDirPath;
 
 - (void)joinSignalWithChannelName:(NSString *)channelName completeSuccessBlock:(void (^ _Nullable) (void))successBlock completeFailBlock:(void (^ _Nullable) (NSInteger errorCode))failBlock;

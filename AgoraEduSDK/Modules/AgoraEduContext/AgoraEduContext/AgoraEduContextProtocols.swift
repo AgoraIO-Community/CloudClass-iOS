@@ -107,8 +107,6 @@ import AgoraWidget
 
 // MARK: - Room
 @objc public protocol AgoraEduRoomHandler: NSObjectProtocol {
-    // 加入了房间事件
-    @objc optional func onJoinedClassroom()
     // 设置课程名称
     @objc optional func onSetClassroomName(_ name: String)
     // 设置课程状态

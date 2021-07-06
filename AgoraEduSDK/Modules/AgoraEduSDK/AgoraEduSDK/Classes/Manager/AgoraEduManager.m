@@ -127,7 +127,7 @@ static AgoraEduManager *manager = nil;
 
 - (void)joinClassroomWithSceneType:(AgoraRTESceneType)sceneType
                           userName:(NSString*)userName
-                           success:(void (^) (void))successBlock
+                           success:(void (^) (UInt64 timestamp))successBlock
                            failure:(void (^) (NSError * _Nonnull error))failureBlock {
     
     AgoraWEAK(self);
@@ -141,9 +141,9 @@ static AgoraEduManager *manager = nil;
     }
     
     [self.roomManager joinClassroom:options
-                            success:^(AgoraRTEUserService * _Nonnull studentService) {
+                            success:^(AgoraRTEUserService * _Nonnull studentService, UInt64 timestamp) {
         weakself.studentService = (AgoraRTEStudentService*)studentService;
-        successBlock();
+        successBlock(timestamp);
     } failure:^(NSError * error) {
         failureBlock(error);
     }];
