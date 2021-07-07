@@ -13,7 +13,10 @@ extension AgoraSmallRenderUIController {
     func updateCoHosts(with infos: [AgoraEduContextUserDetailInfo]) {
         let newData = [AgoraRenderListItem](list: infos)
         coHosts = newData
-        reloadData()
+        
+        renderListView.collectionView.reloadData()
+        delegate?.renderSmallController(self,
+                                        didUpdateCoHosts: infos)
     }
     
     func getUserView(index: Int) -> AgoraUIUserView {

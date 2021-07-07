@@ -13,11 +13,8 @@ import AudioToolbox
 extension AgoraSmallRenderUIController {
     func updateRenderView(_ isFullScreen: Bool) {
         // 全屏或者没有上台数据的时候
-        self.renderListView.isHidden = false
-        self.renderListView.alpha = isFullScreen ? 1 : 0
-        UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.renderListView.alpha = isFullScreen ? 0 : 1
-        }
+        self.teacherView.alpha = isFullScreen ? 0 : 1
+        self.renderListView.alpha = isFullScreen ? 0 : 1
     }
 }
 
@@ -44,6 +41,8 @@ extension AgoraSmallRenderUIController: UICollectionViewDataSource {
         }
         
         cell.userView = userView
+        userView.agora_y = 0
+        userView.agora_bottom = 0
         
         if userInfo.enableVideo {
             renderVideoStream(userInfo.streamUuid,
@@ -71,6 +70,7 @@ extension AgoraSmallRenderUIController: UIScrollViewDelegate, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
+
         let userInteractionEvent = (collectionView.isDragging || collectionView.isDecelerating || collectionView.isTracking)
         
         guard let tCell = cell as? AgoraUserRenderCell,
@@ -114,26 +114,49 @@ extension AgoraSmallRenderUIController: AgoraUIUserViewDelegate {
     func userView(_ userView: AgoraUIUserView,
                   didPressAudioButton button: AgoraBaseUIButton,
                   indexOfUserList index: Int) {
-        let info = coHosts[index].userInfo
-        guard info.isSelf else {
-            return
-        }
+        switch index {
+        case teacherIndex:
+            guard let info = teacherInfo,
+                  info.isSelf else {
+                return
+            }
+            
+            button.isSelected.toggle()
+            let isMuted = button.isSelected
+            userContext?.muteAudio(isMuted)
+        default:
+            let studentInfo = coHosts[index].userInfo
+            guard studentInfo.isSelf else {
+                return
+            }
 
-        button.isSelected.toggle()
-        let isMuted = button.isSelected
-        userContext?.muteAudio(isMuted)
+            button.isSelected.toggle()
+            let isMuted = button.isSelected
+            userContext?.muteAudio(isMuted)
+        }
     }
     
     func userView(_ userView: AgoraUIUserView,
                   didPressVideoButton button: AgoraBaseUIButton,
                   indexOfUserList index: Int) {
-        let info = coHosts[index].userInfo
-        guard info.isSelf else {
-            return
-        }
+        switch index {
+        case teacherIndex:
+            guard let info = teacherInfo,
+                  info.isSelf else {
+                return
+            }
+            
+            button.isSelected.toggle()
+            userContext?.muteVideo(button.isSelected)
+        default:
+            let studentInfo = coHosts[index].userInfo
+            guard studentInfo.isSelf else {
+                return
+            }
 
-        button.isSelected.toggle()
-        userContext?.muteVideo(button.isSelected)
+            button.isSelected.toggle()
+            userContext?.muteVideo(button.isSelected)
+        }
     }
 }
 

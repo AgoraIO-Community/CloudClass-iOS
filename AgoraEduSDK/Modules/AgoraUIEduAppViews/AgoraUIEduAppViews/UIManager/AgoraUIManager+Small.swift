@@ -76,7 +76,7 @@ extension AgoraUIManager {
         shareScreen.containerView.agora_right = 0
 
         whiteBoard.containerView.agora_safe_x = 0
-        whiteBoard.containerView.agora_safe_y = renderSmall.containerView.agora_safe_y + renderSmall.containerView.agora_height
+        whiteBoard.containerView.agora_safe_y = renderSmall.containerView.agora_safe_y + renderSmall.containerView.agora_height + 2
         whiteBoard.containerView.agora_safe_bottom = 0
         whiteBoard.containerView.agora_safe_right = 0
         
@@ -104,15 +104,8 @@ extension AgoraUIManager {
         renderSmall.updateRenderView(isFullScreen)
         
         // update
-        let ViewGap: CGFloat = 2
-        
-        let size = renderSmall.teacherViewSize
-        let renderListHeight = renderSmall.renderListViewHeight
-        let whiteBoardY = isFullScreen ? renderSmall.containerView.agora_safe_y : renderSmall.containerView.agora_safe_y + renderListHeight
-        let whiteBoardRight: CGFloat = 0
-        
+        let whiteBoardY = isFullScreen ? renderSmall.containerView.agora_safe_y : renderSmall.containerView.agora_safe_y + renderSmall.containerView.agora_height + 2
         whiteBoard.containerView.agora_safe_y = whiteBoardY
-        whiteBoard.containerView.agora_safe_right = whiteBoardRight
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
             self.appView.layoutSubviews()

@@ -45,8 +45,13 @@ extension AgoraSmallRenderUIController: AgoraEduUserHandler {
     // 音量提示
     public func onUpdateAudioVolumeIndication(_ value: Int,
                                               streamUuid: String) {
-        updateCoHostVolumeIndication(value,
-                                     streamUuid: streamUuid)
+        if let info = teacherInfo,
+           info.streamUuid == streamUuid {
+            teacherView.updateAudio(effect: value)
+        } else {
+            updateCoHostVolumeIndication(value,
+                                         streamUuid: streamUuid)
+        }
     }
     
     /* 显示提示信息

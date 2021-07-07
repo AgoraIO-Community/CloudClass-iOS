@@ -66,10 +66,11 @@ private extension AgoraUserRenderListView {
         layer.cornerRadius = AgoraKitDeviceAssistant.OS.isPad ? 10 : 4
         
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: AgoraUserRenderListView.preferenceHeight,
-                                     height: AgoraUserRenderListView.preferenceWidth)
+        flowLayout.itemSize = CGSize(width: AgoraUserRenderListView.preferenceWidth,
+                                     height: AgoraUserRenderListView.preferenceHeight)
 
         flowLayout.minimumLineSpacing = 2
+        
         flowLayout.scrollDirection = .horizontal
         collectionView.setCollectionViewLayout(flowLayout,
                                                animated: false)

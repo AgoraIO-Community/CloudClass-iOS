@@ -71,14 +71,6 @@ NS_ASSUME_NONNULL_BEGIN
 // 用户自定义属性
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> *userProperties;
 
-- (instancetype)initWithUserName:(NSString *)userName
-                        userUuid:(NSString *)userUuid
-                        roleType:(AgoraEduRoleType)roleType
-                        roomName:(NSString *)roomName
-                        roomUuid:(NSString *)roomUuid
-                        roomType:(AgoraEduRoomType)roomType
-                           token:(NSString *)token;
-
 @property (nonatomic, assign) AgoraBoardFitMode boardFitMode;
 
 - (instancetype)initWithUserName:(NSString *)userName

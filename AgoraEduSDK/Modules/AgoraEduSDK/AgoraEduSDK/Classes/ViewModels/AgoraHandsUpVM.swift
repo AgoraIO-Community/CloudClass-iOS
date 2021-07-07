@@ -121,7 +121,7 @@ import AgoraEduContext
               let cmd = cause["cmd"] as? Int,
               cmd == AgoraCauseType.handsupProgress.rawValue,
               let data = cause["data"] as? [String: Any],
-              let dataActionType = cause["actionType"] as? Int,
+              let dataActionType = data["actionType"] as? Int,
               dataActionType == AgoraActionStateType.carousel.rawValue else {
             return
         }
