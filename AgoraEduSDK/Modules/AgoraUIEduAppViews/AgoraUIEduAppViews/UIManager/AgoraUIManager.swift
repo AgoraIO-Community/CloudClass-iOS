@@ -325,11 +325,18 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         //        chat.containerView.agora_equal_to_superView(attribute: .right)
         //        chat.containerView.agora_equal_to_superView(attribute: .bottom,
         //                                                      constant: -90)
-                let isPad: Bool = UIDevice.current.model == "iPad"
-                chat.containerView.agora_safe_y = 150
-                chat.containerView.agora_safe_bottom = 0
-                chat.containerView.agora_width = isPad ? 300:200
-                chat.containerView.agora_safe_right = 0
+        let isPad: Bool = UIDevice.current.model == "iPad"
+        switch self.viewType {
+        case .lecture:
+            chat.containerView.agora_safe_y = 150;
+        case .small:
+            chat.containerView.agora_safe_y = 110;
+        default:
+            break;
+        }
+        chat.containerView.agora_safe_bottom = 0
+        chat.containerView.agora_width = isPad ? 300:200
+        chat.containerView.agora_safe_right = 0
         
         self.hxChat = chat
     }
@@ -412,6 +419,17 @@ extension AgoraUIManager: AgoraWidgetDelegate {
         switch widget.widgetId {
         case "AgoraChatWidget":
             chatViewMessageHandle(message: message)
+        case "Chat":
+            do {
+                switch self.viewType {
+                case .small:
+                    self.resetSmallHandsUpLayout()
+                case .lecture:
+                    self.resetLectureHandsUpLayout(self.isFullScreen)
+                default:
+                    break
+                }
+            }
         default:
             break
         }

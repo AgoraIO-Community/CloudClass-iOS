@@ -252,6 +252,8 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.containView.hidden = YES;
     self.miniButton.hidden = NO;
     self.badgeView.hidden = self.chatTopView.badgeView.hidden;
+    self.containerView.agora_width = 50;
+    [self sendMessage:@"min"];
 }
 
 - (void)showView
@@ -261,6 +263,8 @@ static const NSString* kChatRoomId = @"chatroomId";
     if(self.chatTopView.currentTab != 0)
         self.chatTopView.badgeView.hidden = self.badgeView.hidden;
     self.badgeView.hidden = YES;
+    self.containerView.agora_width = 200;
+    [self sendMessage:@"max"];
 }
 
 #pragma mark - ChatViewDelegate
