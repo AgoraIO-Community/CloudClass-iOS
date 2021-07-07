@@ -263,7 +263,11 @@ static const NSString* kChatRoomId = @"chatroomId";
     if(self.chatTopView.currentTab != 0)
         self.chatTopView.badgeView.hidden = self.badgeView.hidden;
     self.badgeView.hidden = YES;
-    self.containerView.agora_width = 200;
+    if([[UIDevice currentDevice].model isEqualToString:@"iPad"]) {
+        self.containerView.agora_width = 300;
+    }else
+        self.containerView.agora_width = 200;
+    
     [self sendMessage:@"max"];
 }
 

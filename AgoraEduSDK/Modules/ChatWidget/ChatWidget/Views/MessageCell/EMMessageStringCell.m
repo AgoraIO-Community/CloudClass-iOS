@@ -8,6 +8,7 @@
 
 #import "EMMessageStringCell.h"
 #import <Masonry/Masonry.h>
+#import "UIImage+ChatExt.h"
 
 @implementation EMMessageStringCell
 
@@ -26,8 +27,17 @@
         _stringLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:_stringLabel];
         [_stringLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.contentView);
+            make.center.equalTo(self.contentView);
             make.height.equalTo(@30);
+        }];
+        [_stringLabel sizeToFit];
+        self.preImageView = [[UIImageView alloc] init];
+        self.preImageView.image = [UIImage imageNamedFromBundle:@"icon_caution"];
+        [self.contentView addSubview:self.preImageView];
+        [self.preImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.equalTo(@24);
+            make.right.equalTo(self.stringLabel.mas_left).offset(-5);
+            make.centerY.equalTo(self.contentView);
         }];
     }
     

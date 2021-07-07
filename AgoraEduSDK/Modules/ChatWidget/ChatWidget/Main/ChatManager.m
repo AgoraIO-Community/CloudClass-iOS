@@ -113,7 +113,7 @@ static BOOL isSDKInited = NO;
             }];
         }
         EMUserInfo* userInfo = [[EMUserInfo alloc] init];
-        userInfo.ext = @"2";
+        userInfo.ext = @"{'role':2}";
         if(self.user.avatarurl.length > 0)
             userInfo.avatarUrl = [self.user.avatarurl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
         if(self.user.nickname.length > 0)
