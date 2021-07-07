@@ -15,14 +15,14 @@ extension AgoraUIManager {
               let `whiteBoard` = self.whiteBoard,
               let `chat` = self.chat,
               let `shareScreen` = self.shareScreen,
-              let `renderSmall` = self.renderSmall,
+              let `renderLecture` = self.renderLecture,
               let `handsUp` = self.handsUp,
               let `userList` = self.userList else  {
             return
         }
         
         appView.addSubview(room.containerView)
-        appView.addSubview(renderSmall.containerView)
+        appView.addSubview(renderLecture.containerView)
         appView.addSubview(whiteBoard.containerView)
         whiteBoard.containerView.addSubview(shareScreen.containerView)
         whiteBoard.containerView.sendSubviewToBack(shareScreen.containerView)
@@ -36,7 +36,7 @@ extension AgoraUIManager {
               let `whiteBoard` = self.whiteBoard,
               let `chat` = self.chat,
               let `shareScreen` = self.shareScreen,
-              let `renderSmall` = self.renderSmall,
+              let `renderLecture` = self.renderLecture,
               let `handsUp` = self.handsUp,
               let `userList` = self.userList else  {
             return
@@ -51,13 +51,13 @@ extension AgoraUIManager {
         room.containerView.agora_height = isPad ? 44 : 34
         room.containerView.agora_safe_y = 0
 
-        let size = renderSmall.teacherViewSize
-        let renderListHeight = renderSmall.renderListViewHeight
+        let size = renderLecture.teacherViewSize
+        let renderListHeight = renderLecture.renderListViewHeight
         
-        renderSmall.containerView.agora_safe_x = 0
-        renderSmall.containerView.agora_safe_y = top
-        renderSmall.containerView.agora_safe_right = 0
-        renderSmall.containerView.agora_height = max(size.height,
+        renderLecture.containerView.agora_safe_x = 0
+        renderLecture.containerView.agora_safe_y = top
+        renderLecture.containerView.agora_safe_right = 0
+        renderLecture.containerView.agora_height = max(size.height,
                                                      renderListHeight)
 
         resetLectureChatLayout(false)
@@ -68,7 +68,7 @@ extension AgoraUIManager {
         shareScreen.containerView.agora_right = 0
 
         whiteBoard.containerView.agora_safe_x = 0
-        whiteBoard.containerView.agora_safe_y = renderSmall.containerView.agora_safe_y
+        whiteBoard.containerView.agora_safe_y = renderLecture.containerView.agora_safe_y
         whiteBoard.containerView.agora_safe_bottom = 0
         whiteBoard.containerView.agora_safe_right = size.width + ViewGap
         
@@ -83,14 +83,14 @@ extension AgoraUIManager {
     
     func layoutLectureView(_ isFullScreen: Bool,
                          coHostsCount: Int) {
-        guard let `renderSmall` = self.renderSmall,
+        guard let `renderLecture` = self.renderLecture,
               let `whiteBoard` = self.whiteBoard,
               let `chat` = self.chat,
               let `userlist` = self.userList else {
             return
         }
         
-        renderSmall.updateRenderView(isFullScreen,
+        renderLecture.updateRenderView(isFullScreen,
                                      coHostsCount: self.coHostCount)
         
         // update
@@ -98,10 +98,10 @@ extension AgoraUIManager {
         let isPad = AgoraKitDeviceAssistant.OS.isPad
         let top = (isPad ? 44 : 34) + ViewGap
         
-        let size = renderSmall.teacherViewSize
-        let renderListHeight = renderSmall.renderListViewHeight
-        let whiteBoardY = (isFullScreen || coHostsCount == 0) ? renderSmall.containerView.agora_safe_y : renderSmall.containerView.agora_safe_y + renderListHeight
-        let whiteBoardRight = isFullScreen ? 0 : renderSmall.containerView.agora_safe_right + size.width + ViewGap
+        let size = renderLecture.teacherViewSize
+        let renderListHeight = renderLecture.renderListViewHeight
+        let whiteBoardY = (isFullScreen || coHostsCount == 0) ? renderLecture.containerView.agora_safe_y : renderLecture.containerView.agora_safe_y + renderListHeight
+        let whiteBoardRight = isFullScreen ? 0 : renderLecture.containerView.agora_safe_right + size.width + ViewGap
         
         whiteBoard.containerView.agora_safe_y = whiteBoardY
         whiteBoard.containerView.agora_safe_right = whiteBoardRight
@@ -122,7 +122,7 @@ extension AgoraUIManager {
         
     private func resetLectureChatLayout(_ isFullScreen: Bool) {
         guard let `chat` = self.chat,
-              let `renderSmall` = self.renderSmall,
+              let `renderLecture` = self.renderLecture,
               let `whiteBoard` = self.whiteBoard,
               let `handsUp` = self.handsUp else {
             return
@@ -134,14 +134,14 @@ extension AgoraUIManager {
         } else {
             let ViewGap: CGFloat = 2
             
-            let size = renderSmall.teacherViewSize
+            let size = renderLecture.teacherViewSize
             let kScreenHeight = min(UIScreen.agora_width,
                                     UIScreen.agora_height)
             let safeSpace = UIScreen.agora_safe_area_top + UIScreen.agora_safe_area_bottom
-            let renderSmallMaxY = renderSmall.containerView.agora_safe_y + size.height
+            let renderSmallMaxY = renderLecture.containerView.agora_safe_y + size.height
             let chatHeight = kScreenHeight - safeSpace - renderSmallMaxY - ViewGap
             
-            chat.containerView.agora_safe_right = renderSmall.containerView.agora_safe_right
+            chat.containerView.agora_safe_right = renderLecture.containerView.agora_safe_right
             chat.containerView.agora_width = size.width
             chat.containerView.agora_height = chatHeight
             chat.containerView.agora_safe_bottom = 0

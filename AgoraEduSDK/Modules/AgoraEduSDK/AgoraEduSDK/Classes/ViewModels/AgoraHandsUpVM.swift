@@ -114,6 +114,29 @@ import AgoraEduContext
         }
     }
     
+    // 轮播 更新上台的人
+    public func updateCarouselInfo(cause: Any?, completeBlock: @escaping (_ coHosts: [String]) -> Void) {
+        
+        guard let `cause` = cause as? Dictionary<String, Any>,
+              let cmd = cause["cmd"] as? Int,
+              cmd == AgoraCauseType.handsupProgress.rawValue,
+              let data = cause["data"] as? [String: Any],
+              let dataActionType = cause["actionType"] as? Int,
+              dataActionType == AgoraActionStateType.carousel.rawValue else {
+            return
+        }
+        
+        var coHosts: [String] = []
+        self.getHandsUpState { [weak self] in
+            if let accepted = self?.processInfo?.accepted {
+                accepted.forEach({coHosts.append($0.userUuid)})
+            }
+            completeBlock(coHosts)
+        } failureBlock: { (error) in
+//           failureBlock(error)
+        }
+    }
+    
     public func updateHandsUpInfo(cause: Any?, successBlock: @escaping () -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
 
         guard let actionCauseInfo = self.processManager?.analyzeActionCause(cause) else {

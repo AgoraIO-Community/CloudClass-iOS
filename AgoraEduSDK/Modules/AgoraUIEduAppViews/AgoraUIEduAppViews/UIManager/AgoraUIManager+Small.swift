@@ -62,7 +62,13 @@ extension AgoraUIManager {
         renderSmall.containerView.agora_height = max(size.height,
                                                      renderListHeight)
 
-        resetSmallChatLayout(false)
+        chat.containerView.agora_width = 56
+        chat.containerView.agora_height = 56
+        chat.containerView.agora_safe_bottom = 2
+        chat.containerView.agora_safe_right = 10
+        if let message = ["isMin": 1].jsonString() {
+            chat.widgetDidReceiveMessage(message)
+        }
         
         shareScreen.containerView.agora_x = 0
         shareScreen.containerView.agora_y = 0
@@ -70,9 +76,9 @@ extension AgoraUIManager {
         shareScreen.containerView.agora_right = 0
 
         whiteBoard.containerView.agora_safe_x = 0
-        whiteBoard.containerView.agora_safe_y = renderSmall.containerView.agora_safe_y
+        whiteBoard.containerView.agora_safe_y = renderSmall.containerView.agora_safe_y + renderSmall.containerView.agora_height
         whiteBoard.containerView.agora_safe_bottom = 0
-        whiteBoard.containerView.agora_safe_right = size.width + ViewGap
+        whiteBoard.containerView.agora_safe_right = 0
         
         handsUp.containerView.agora_safe_right = chat.containerView.agora_safe_right + chat.containerView.agora_width + 10 - 8
         handsUp.containerView.agora_safe_bottom = 2
@@ -88,69 +94,32 @@ extension AgoraUIManager {
         }
     }
     
-    func layoutSmallView(_ isFullScreen: Bool,
-                         coHostsCount: Int) {
+    func layoutSmallView(_ isFullScreen: Bool) {
         guard let `renderSmall` = self.renderSmall,
               let `whiteBoard` = self.whiteBoard,
               let `chat` = self.chat else {
             return
         }
         
-        renderSmall.updateRenderView(isFullScreen,
-                                     coHostsCount: self.coHostCount)
+        renderSmall.updateRenderView(isFullScreen)
         
         // update
         let ViewGap: CGFloat = 2
         
         let size = renderSmall.teacherViewSize
         let renderListHeight = renderSmall.renderListViewHeight
-        let whiteBoardY = (isFullScreen || coHostsCount == 0) ? renderSmall.containerView.agora_safe_y : renderSmall.containerView.agora_safe_y + renderListHeight
-        let whiteBoardRight = isFullScreen ? 0 : renderSmall.containerView.agora_safe_right + size.width + ViewGap
+        let whiteBoardY = isFullScreen ? renderSmall.containerView.agora_safe_y : renderSmall.containerView.agora_safe_y + renderListHeight
+        let whiteBoardRight: CGFloat = 0
         
         whiteBoard.containerView.agora_safe_y = whiteBoardY
         whiteBoard.containerView.agora_safe_right = whiteBoardRight
-
-        if let message = ["isFullScreen": (isFullScreen ? 1 : 0)].jsonString() {
-            chat.widgetDidReceiveMessage(message)
-        }
-        
-        self.resetSmallChatLayout(isFullScreen)
-        self.resetSmallHandsUpLayout(isFullScreen)
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
             self.appView.layoutSubviews()
         }
     }
-        
-    private func resetSmallChatLayout(_ isFullScreen: Bool) {
-        guard let `chat` = self.chat,
-              let `renderSmall` = self.renderSmall,
-              let `whiteBoard` = self.whiteBoard,
-              let `handsUp` = self.handsUp else {
-            return
-        }
-        
-        if isFullScreen {
-            chat.containerView.agora_safe_bottom = handsUp.containerView.agora_safe_bottom
-            chat.containerView.agora_safe_right = whiteBoard.containerView.agora_safe_right + 10
-        } else {
-            let ViewGap: CGFloat = 2
-            
-            let size = renderSmall.teacherViewSize
-            let kScreenHeight = min(UIScreen.agora_width,
-                                    UIScreen.agora_height)
-            let safeSpace = UIScreen.agora_safe_area_top + UIScreen.agora_safe_area_bottom
-            let renderSmallMaxY = renderSmall.containerView.agora_safe_y + size.height
-            let chatHeight = kScreenHeight - safeSpace - renderSmallMaxY - ViewGap
-            
-            chat.containerView.agora_safe_right = renderSmall.containerView.agora_safe_right
-            chat.containerView.agora_width = size.width
-            chat.containerView.agora_height = chatHeight
-            chat.containerView.agora_safe_bottom = 0
-        }
-    }
     
-    func resetSmallHandsUpLayout(_ isFullScreen: Bool) {
+    func resetSmallHandsUpLayout() {
         guard let `chat` = self.chat,
               let `handsUp` = self.handsUp else {
             return

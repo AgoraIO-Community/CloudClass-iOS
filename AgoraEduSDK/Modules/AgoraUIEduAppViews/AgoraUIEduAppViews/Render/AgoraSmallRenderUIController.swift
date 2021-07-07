@@ -10,8 +10,8 @@ import AgoraUIBaseViews
 import AgoraEduContext
 
 protocol AgoraSmallRenderUIControllerDelegate: NSObjectProtocol {
-    func renderController(_ controller: AgoraSmallRenderUIController,
-                         didUpdateCoHosts coHosts: [AgoraEduContextUserDetailInfo])
+    func renderSmallController(_ controller: AgoraSmallRenderUIController,
+                               didUpdateCoHosts coHosts: [AgoraEduContextUserDetailInfo])
 }
 
 class AgoraSmallRenderUIController: AgoraRenderUIController {
@@ -27,21 +27,33 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
     let renderTop: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 44 : 34
     
     // Views
-    let teacherView = AgoraUIUserView(frame: .zero)
     let renderListView = AgoraUserRenderListView(frame: .zero)
     var rewardImageView: AgoraFLAnimatedImageView?
     
     // DataSource
     var teacherInfo: AgoraEduContextUserDetailInfo? {
         didSet {
-            updateUserView(teacherView,
-                           oldUserInfo: oldValue,
-                           newUserInfo: teacherInfo)
+            let coHost = coHosts.first
+            var volume = 0
+            
+            // 删除
+            if coHost?.userInfo.user.role == .teacher {
+                coHosts.removeFirst()
+                volume = coHost?.volume ?? 0
+            }
+
+            // 增加
+            if let info = teacherInfo {
+                let coInfo = AgoraRenderListItem(userInfo: info,
+                                                 volume: volume)
+                
+                coHosts.insert(coInfo, at: 0)
+            }
+            
+            reloadData()
         }
     }
-    
-    let teacherIndex = -1
-    
+
     var coHosts = [AgoraRenderListItem]()
     var userViews = [AgoraUIUserView]()
     
@@ -59,38 +71,54 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
         observeEvent(register: eventRegister)
         observeUI()
     }
+    
+    func reloadData(){
+        renderListView.collectionView.reloadData()
+        
+        var infos = [AgoraEduContextUserDetailInfo]()
+        coHosts.forEach({infos.append($0.userInfo)})
+        delegate?.renderSmallController(self,
+                                        didUpdateCoHosts: infos)
+    }
 }
 
 // MARK: - Private
 private extension AgoraSmallRenderUIController {
     func initViews() {
-        teacherView.index = teacherIndex
-        
         containerView.backgroundColor = .clear
-        containerView.addSubview(teacherView)
         containerView.addSubview(renderListView)
         
         renderListView.isHidden = true
     }
 
     func initLayout() {
-        let isPad = AgoraKitDeviceAssistant.OS.isPad
+        // 获取当前屏幕宽
+        let Width = max(UIScreen.agora_width,
+                        UIScreen.agora_height)
+        let SafeWidth = max(UIScreen.agora_safe_area_top + UIScreen.agora_safe_area_bottom,
+                        UIScreen.agora_safe_area_right + UIScreen.agora_safe_area_left)
+        let MaxWidth = Width - SafeWidth
+        
+        // 间距
         let ViewGap: CGFloat = 2
         
-        let width: CGFloat = isPad ? 300 : 200
-        let height: CGFloat = isPad ? 168 : 112
+        // 最多上台人数为6人
+        let MaxStudnetCoHost: CGFloat = 6
         
-        teacherView.agora_y = 0
-        teacherView.agora_right = 0
-        teacherView.agora_width = width
-        teacherView.agora_height = height
+        // 老师和学生在一个列表, 计算放7个的时候
+        let itemWidth: CGFloat = (MaxWidth - MaxStudnetCoHost * ViewGap) / 6.0
+        // 宽高 16 ：9
+        let itemHeight = itemWidth * 9.0 / 16.0
         
+        teacherViewSize = CGSize(width: itemWidth, height: itemHeight)
+        AgoraUserRenderListView.preferenceWidth = teacherViewSize.width
+        AgoraUserRenderListView.preferenceHeight = teacherViewSize.height
+ 
         renderListView.agora_x = 0
         renderListView.agora_y = 0
         renderListView.agora_height = AgoraUserRenderListView.preferenceHeight
-        renderListView.agora_right = teacherView.agora_right + teacherView.agora_width + ViewGap
+        renderListView.agora_right = 0
         
-        teacherViewSize = CGSize(width: width, height: height)
         renderListViewHeight = renderListView.agora_height
     }
     
@@ -99,7 +127,6 @@ private extension AgoraSmallRenderUIController {
     }
 
     func observeUI() {
-        teacherView.delegate = self
         renderListView.collectionView.dataSource = self
         renderListView.collectionView.delegate = self
     }

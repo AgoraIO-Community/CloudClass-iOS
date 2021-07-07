@@ -41,6 +41,8 @@ public struct AgoraActionConfig {
     case cancel             = 5
     case canceled           = 6
     case applyTimeOut       = 7
+    
+    case carousel           = 10
 }
 
 @objcMembers public class AgoraActionStartOptions: NSObject {

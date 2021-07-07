@@ -10,7 +10,8 @@ import AgoraUIBaseViews
 import AgoraEduContext
 
 @objcMembers public class AgoraUserRenderListView: AgoraBaseUIView {
-    public static let preferenceHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 168 : 87
+    public static var preferenceHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 168 : 87
+    public static var preferenceWidth: CGFloat = preferenceHeight
     
     public weak var context: AgoraEduUserContext?
     
@@ -66,7 +67,7 @@ private extension AgoraUserRenderListView {
         
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: AgoraUserRenderListView.preferenceHeight,
-                                     height: AgoraUserRenderListView.preferenceHeight)
+                                     height: AgoraUserRenderListView.preferenceWidth)
 
         flowLayout.minimumLineSpacing = 2
         flowLayout.scrollDirection = .horizontal

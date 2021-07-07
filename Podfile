@@ -25,10 +25,13 @@ def sourcePod
 
   pod 'Protobuf'
 
+  pod 'ChatWidget', :path => 'AgoraEduSDK/Modules/ChatWidget/ChatWidget.podspec'
+
 end
 
 def binaryPod
   pod 'AgoraEduSDK', :path => 'AgoraEduSDK/AgoraEduSDK.podspec'
+  pod 'ChatWidget', :path => 'AgoraEduSDK/Modules/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
 end
 
 def uiSourcePod

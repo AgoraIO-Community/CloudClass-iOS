@@ -403,6 +403,14 @@ struct AgoraStudentInfo {
             failureBlock(error)
         }
     }
+    // 轮播
+    public func updateCarouselUserList(successBlock: @escaping () -> Void,
+                                       failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
+
+        // 重新初始化设置
+        self.initKitUserInfos(successBlock,
+                              failureBlock: failureBlock)
+    }
 
     // MARK: UserList
     public func getKitUserList(successBlock: @escaping () -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {

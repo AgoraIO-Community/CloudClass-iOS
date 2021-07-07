@@ -1,5 +1,5 @@
 //
-//  AgoraSmallRenderUIController+Data.swift
+//  AgoraLectureRenderUIController+Data.swift
 //  AgoraUIEduAppViews
 //
 //  Created by Cavan on 2021/4/21.
@@ -9,11 +9,15 @@ import AgoraEduContext
 import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
-extension AgoraSmallRenderUIController {
+extension AgoraLectureRenderUIController {
     func updateCoHosts(with infos: [AgoraEduContextUserDetailInfo]) {
         let newData = [AgoraRenderListItem](list: infos)
+        
         coHosts = newData
-        reloadData()
+        renderListView.collectionView.reloadData()
+        
+        delegate?.renderLectureController(self,
+                                          didUpdateCoHosts: infos)
     }
     
     func getUserView(index: Int) -> AgoraUIUserView {
@@ -61,32 +65,6 @@ extension AgoraSmallRenderUIController {
         fhs.userInfo.enableVideo = ths.userInfo.enableVideo
         fhs.userInfo.enableAudio = ths.userInfo.enableAudio
         fhs.userInfo.rewardCount = ths.userInfo.rewardCount
-    }
-}
-
-fileprivate extension AgoraEduContextUserDetailInfo {
-    static func ==(lhs: AgoraEduContextUserDetailInfo,
-            rhs: AgoraEduContextUserDetailInfo) -> Bool {
-        let lhsUser = lhs.user
-        let rhsUser = rhs.user
-        
-        guard lhsUser === rhsUser
-              && lhsUser.userUuid == rhsUser.userUuid else {
-            return false
-        }
-        
-        guard lhs.onLine == rhs.onLine
-                && lhs.coHost == rhs.coHost
-                && lhs.boardGranted == rhs.boardGranted
-                && lhs.cameraState == rhs.cameraState
-                && lhs.microState == rhs.microState
-                && lhs.enableVideo == rhs.enableVideo
-                && lhs.enableAudio == rhs.enableAudio
-                && lhs.rewardCount == rhs.rewardCount else {
-                return false
-        }
-        
-        return true
     }
 }
 

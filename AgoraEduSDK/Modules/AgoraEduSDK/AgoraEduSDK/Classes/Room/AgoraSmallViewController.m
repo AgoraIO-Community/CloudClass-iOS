@@ -103,15 +103,34 @@
     
     // CoHost
     [self.handsUpVM getChangedCoHostsWithCause:cause completeBlock:^(NSArray<NSString *> *onCoHosts, NSArray<NSString *> *offCoHosts) {
-            
-        AgoraWEAK(self);
+        
         [weakself.userVM updateKitUserListOnCoHosts:onCoHosts offCoHosts:offCoHosts successBlock:^{
             [weakself updateAllList];
         } failureBlock:^(AgoraEduContextError *error) {
             [weakself onShowErrorInfo:error];
         }];
     }];
-
+    
+    // CoHost
+    [self.handsUpVM getChangedCoHostsWithCause:cause completeBlock:^(NSArray<NSString *> *onCoHosts, NSArray<NSString *> *offCoHosts) {
+        [weakself.userVM updateKitUserListOnCoHosts:onCoHosts offCoHosts:offCoHosts successBlock:^{
+            [weakself updateAllList];
+        } failureBlock:^(AgoraEduContextError *error) {
+            [weakself onShowErrorInfo:error];
+        }];
+    }];
+    
+    // Carousel
+    [self.handsUpVM updateCarouselInfoWithCause:cause
+                                  completeBlock:^(NSArray<NSString *> * _Nonnull coHosts) {
+        
+        [weakself.userVM updateCarouselUserListWithSuccessBlock:^{
+            [weakself updateAllList];
+        } failureBlock:^(AgoraEduContextError * _Nonnull error) {
+            [weakself onShowErrorInfo:error];
+        }];
+    }];
+    
     // 私密语音
     [self.privateChatController updatePrivateChatWithCause:cause];
 }

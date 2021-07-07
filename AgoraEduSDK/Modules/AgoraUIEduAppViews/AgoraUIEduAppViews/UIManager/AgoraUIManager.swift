@@ -25,11 +25,14 @@ public var isDebug = false
     var whiteBoard: AgoraWhiteBoardUIController?
     var chat: AgoraEduWidget?
     var shareScreen: AgoraScreenUIController?
+    var hxChat: AgoraBaseWidget?
     
     // 1v1
     var render1V1: Agora1V1RenderUIController?
     // small
     var renderSmall: AgoraSmallRenderUIController?
+    // lecture
+    var renderLecture: AgoraLectureRenderUIController?
     var handsUp: AgoraHandsUpUIController?
     var privateChat: AgoraPrivateChatController?
     var userList: AgoraUserListUIController?
@@ -62,6 +65,7 @@ public var isDebug = false
         initControllers()
         addContainerViews()
         layoutContainerViews()
+        observeEvents()
     }
     
     func loadView() {
@@ -91,9 +95,25 @@ public var isDebug = false
             self.render1V1 = Agora1V1RenderUIController(viewType: viewType,
                                                         contextProvider: self,
                                                         eventRegister: self)
-        case .small: fallthrough
-        case .lecture:
+        case .small:
             self.renderSmall = AgoraSmallRenderUIController(viewType: viewType,
+                                                                contextProvider: self,
+                                                                eventRegister: self,
+                                                                delegate: self)
+            
+            self.handsUp = AgoraHandsUpUIController(viewType: viewType,
+                                                    contextProvider: self,
+                                                    eventRegister: self)
+            
+            self.privateChat = AgoraPrivateChatController(viewType: viewType,
+                                                          contextProvider: self,
+                                                          eventRegister: self)
+            
+            self.userList = AgoraUserListUIController(viewType: viewType,
+                                                      contextProvider: self,
+                                                      eventRegister: self)
+        case .lecture:
+            self.renderLecture = AgoraLectureRenderUIController(viewType: viewType,
                                                             contextProvider: self,
                                                             eventRegister: self,
                                                             delegate: self)
@@ -122,13 +142,13 @@ public var isDebug = false
             case "AgoraChatWidget":
                 let chat = contextPool.widget.createWidget(info: info,
                                                        contextPool: contextPool)
-//                chat.addMessageObserver(self)
+                chat.addMessageObserver(self)
+
+                if let message = ["hasConversation": (viewType != .oneToOne ? 1 : 0)].jsonString() {
+                    chat.widgetDidReceiveMessage(message)
+                }
 //
-//                if let message = ["hasConversation": (viewType != .oneToOne ? 1 : 0)].jsonString() {
-//                    chat.widgetDidReceiveMessage(message)
-//                }
-//
-                chat.containerView.isHidden = true
+//                chat.containerView.isHidden = true
                 self.chat = chat
             default:
                 break
@@ -156,6 +176,10 @@ public var isDebug = false
         case .lecture:
             layoutLectureContainerViews()
         }
+    }
+    
+    func observeEvents() {
+        contextPool.room.registerEventHandler(self)
     }
 }
 
@@ -245,6 +269,67 @@ extension AgoraUIManager: AgoraControllerEventRegister {
     }
 }
 
+extension AgoraUIManager: AgoraEduRoomHandler {
+    public func onClassroomJoined() {
+        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
+            return
+        }
+        
+        for info in widgetInfos {
+            switch info.widgetId {
+            case "Chat":
+                createHxChat(info: info)
+            default:
+                break
+            }
+        }
+    }
+    
+    func createHxChat(info: AgoraWidgetInfo) {
+        let userInfo = contextPool.user.getLocalUserInfo()
+        let roomInfo = contextPool.room.getRoomInfo()
+        
+        guard let y = room?.containerView.frame.maxY,
+              let userProperties = userInfo.userProperties,
+              let `whiteBoard` = self.whiteBoard else {
+            return
+        }
+        
+        let avatarurl = userProperties["avatarurl"]
+        
+        var properties = [String: Any]()
+        
+        properties["userName"] = userInfo.userName
+        properties["userUuid"] = userInfo.userUuid
+        properties["roomUuid"] = roomInfo.roomUuid
+        properties["roomName"] = roomInfo.roomName
+        properties["password"] = userInfo.userUuid
+        properties["avatarurl"] = avatarurl
+        
+        if let imProperties = contextPool.widget.getAgoraWidgetProperties(type: .im),
+           let hxProperties = imProperties["huanxin"] as? [String: Any],
+           let appKey = hxProperties["appKey"] as? String,
+           let chatRoomId = hxProperties["chatRoomId"] as? String {
+            properties["appkey"] = appKey
+            properties["chatRoomId"] = chatRoomId
+        }
+        
+        info.properties = properties
+        
+        let chat = contextPool.widget.createWidget(with: info)
+        chat.addMessageObserver(self)
+        whiteBoard.containerView.addSubview(chat.containerView)
+        
+        chat.containerView.agora_equal_to_superView(attribute: .top)
+        chat.containerView.agora_equal_to_superView(attribute: .left)
+        chat.containerView.agora_equal_to_superView(attribute: .right)
+        chat.containerView.agora_equal_to_superView(attribute: .bottom,
+                                                      constant: -90)
+        
+        self.hxChat = chat
+    }
+}
+
 // MARK: - AgoraRoomUIControllerDelegate
 extension AgoraUIManager: AgoraRoomUIControllerDelegate {
     func roomController(_ controller: AgoraRoomUIController,
@@ -303,8 +388,7 @@ extension AgoraUIManager: AgoraWhiteBoardUIControllerDelegate {
         case .oneToOne:
             layout1V1FullScreen(isFullScreen)
         case .small:
-            layoutSmallView(isFullScreen,
-                            coHostsCount: self.coHostCount)
+            layoutSmallView(isFullScreen)
         case .lecture:
             layoutLectureView(isFullScreen,
                               coHostsCount: self.coHostCount)
@@ -336,7 +420,7 @@ extension AgoraUIManager: AgoraWidgetDelegate {
         
         switch viewType {
         case .small:
-            resetSmallHandsUpLayout(isFullScreen)
+            resetSmallHandsUpLayout()
         case .lecture:
             resetLectureHandsUpLayout(isFullScreen)
         default:
@@ -347,31 +431,31 @@ extension AgoraUIManager: AgoraWidgetDelegate {
 
 // MARK: - AgoraSmallRenderUIControllerDelegate
 extension AgoraUIManager: AgoraSmallRenderUIControllerDelegate {
-    func renderController(_ controller: AgoraSmallRenderUIController,
-                          didUpdateCoHosts coHosts: [AgoraEduContextUserDetailInfo]) {
+    func renderSmallController(_ controller: AgoraSmallRenderUIController,
+                               didUpdateCoHosts coHosts: [AgoraEduContextUserDetailInfo]) {
+        self.coHostCount = coHosts.count
+
+        if let _ = coHosts.first(where: {$0.isSelf == true}) {
+            handsUp?.isCoHost = true
+        } else {
+            handsUp?.isCoHost = false
+        }
+    }
+}
+// MARK: - AgoraLectureRenderUIControllerDelegate
+extension AgoraUIManager: AgoraLectureRenderUIControllerDelegate {
+    
+    func renderLectureController(_ controller: AgoraLectureRenderUIController,
+                                 didUpdateCoHosts coHosts: [AgoraEduContextUserDetailInfo]) {
         self.coHostCount = coHosts.count
         
-        switch viewType {
-        case .small:
-            self.layoutSmallView(self.isFullScreen,
-                                 coHostsCount: self.coHostCount)
-            
-            if let _ = coHosts.first(where: {$0.isSelf == true}) {
-                handsUp?.isCoHost = true
-            } else {
-                handsUp?.isCoHost = false
-            }
-        case .lecture:
-            self.layoutLectureView(self.isFullScreen,
-                                   coHostsCount: self.coHostCount)
-            
-            if let _ = coHosts.first(where: {$0.isSelf == true}) {
-                handsUp?.isCoHost = true
-            } else {
-                handsUp?.isCoHost = false
-            }
-        default:
-            break
+        self.layoutLectureView(self.isFullScreen,
+                               coHostsCount: self.coHostCount)
+        
+        if let _ = coHosts.first(where: {$0.isSelf == true}) {
+            handsUp?.isCoHost = true
+        } else {
+            handsUp?.isCoHost = false
         }
     }
 }

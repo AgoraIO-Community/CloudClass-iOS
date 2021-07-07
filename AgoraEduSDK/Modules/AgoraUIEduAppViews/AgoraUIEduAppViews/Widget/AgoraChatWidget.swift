@@ -57,6 +57,17 @@ public class AgoraChatWidget: AgoraEduWidget, AgoraEduMessageHandler, AgoraEduUs
             }
         }
         
+        if let type = dic["isMin"] as? Int {
+            switch type {
+            case 1: // normal
+                updateChatStyle(true)
+            case 0: // full screen
+                updateChatStyle(false)
+            default:
+                break
+            }
+        }
+        
         if let hasConversation = dic["hasConversation"] as? Bool {
             chatView.hasConversation = hasConversation
         }

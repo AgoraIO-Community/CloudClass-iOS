@@ -101,8 +101,6 @@
     
     // CoHost
     [self.handsUpVM getChangedCoHostsWithCause:cause completeBlock:^(NSArray<NSString *> *onCoHosts, NSArray<NSString *> *offCoHosts) {
-            
-        AgoraWEAK(self);
         [weakself.userVM updateKitUserListOnCoHosts:onCoHosts offCoHosts:offCoHosts successBlock:^{
             [weakself updateAllList];
         } failureBlock:^(AgoraEduContextError *error) {

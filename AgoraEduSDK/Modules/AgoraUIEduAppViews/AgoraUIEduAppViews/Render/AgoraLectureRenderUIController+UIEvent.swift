@@ -1,5 +1,5 @@
 //
-//  AgoraSmallRenderUIController+UIEvent.swift
+//  AgoraLectureRenderUIController+UIEvent.swift
 //  AgoraUIEduAppViews
 //
 //  Created by Cavan on 2021/4/22.
@@ -10,19 +10,25 @@ import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 import AudioToolbox
 
-extension AgoraSmallRenderUIController {
-    func updateRenderView(_ isFullScreen: Bool) {
+extension AgoraLectureRenderUIController {
+    func updateRenderView(_ isFullScreen: Bool,
+                          coHostsCount: Int) {
+        
+        // 全屏的时候， 从1变成0
+        self.teacherView.alpha = isFullScreen ? 1 : 0
         // 全屏或者没有上台数据的时候
         self.renderListView.isHidden = false
-        self.renderListView.alpha = isFullScreen ? 1 : 0
+        self.renderListView.alpha = (isFullScreen || coHostsCount == 0) ? 1 : 0
+        
         UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.renderListView.alpha = isFullScreen ? 0 : 1
+            self.renderListView.alpha = (isFullScreen || coHostsCount == 0) ? 0 : 1
+            self.teacherView.alpha = isFullScreen ? 0 : 1
         }
     }
 }
 
 // MARK: - UICollectionViewDataSource
-extension AgoraSmallRenderUIController: UICollectionViewDataSource {
+extension AgoraLectureRenderUIController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView,
                                numberOfItemsInSection section: Int) -> Int {
         return self.coHosts.count
@@ -58,7 +64,7 @@ extension AgoraSmallRenderUIController: UICollectionViewDataSource {
 }
 
 // MARK: - UIScrollViewDelegate, UICollectionViewDelegate
-extension AgoraSmallRenderUIController: UIScrollViewDelegate, UICollectionViewDelegate {
+extension AgoraLectureRenderUIController: UIScrollViewDelegate, UICollectionViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let condition1 = scrollView.contentOffset.x > 0
         let condition2 = scrollView.contentOffset.x + scrollView.frame.width < scrollView.contentSize.width
@@ -110,35 +116,58 @@ extension AgoraSmallRenderUIController: UIScrollViewDelegate, UICollectionViewDe
 }
 
 // MARK: - AgoraUIUserViewDelegate
-extension AgoraSmallRenderUIController: AgoraUIUserViewDelegate {
+extension AgoraLectureRenderUIController: AgoraUIUserViewDelegate {
     func userView(_ userView: AgoraUIUserView,
                   didPressAudioButton button: AgoraBaseUIButton,
                   indexOfUserList index: Int) {
-        let info = coHosts[index].userInfo
-        guard info.isSelf else {
-            return
-        }
+        switch index {
+        case teacherIndex:
+            guard let info = teacherInfo,
+                  info.isSelf else {
+                return
+            }
+            
+            button.isSelected.toggle()
+            let isMuted = button.isSelected
+            userContext?.muteAudio(isMuted)
+        default:
+            let studentInfo = coHosts[index].userInfo
+            guard studentInfo.isSelf else {
+                return
+            }
 
-        button.isSelected.toggle()
-        let isMuted = button.isSelected
-        userContext?.muteAudio(isMuted)
+            button.isSelected.toggle()
+            let isMuted = button.isSelected
+            userContext?.muteAudio(isMuted)
+        }
     }
     
     func userView(_ userView: AgoraUIUserView,
                   didPressVideoButton button: AgoraBaseUIButton,
                   indexOfUserList index: Int) {
-        let info = coHosts[index].userInfo
-        guard info.isSelf else {
-            return
-        }
+        switch index {
+        case teacherIndex:
+            guard let info = teacherInfo,
+                  info.isSelf else {
+                return
+            }
+            
+            button.isSelected.toggle()
+            userContext?.muteVideo(button.isSelected)
+        default:
+            let studentInfo = coHosts[index].userInfo
+            guard studentInfo.isSelf else {
+                return
+            }
 
-        button.isSelected.toggle()
-        userContext?.muteVideo(button.isSelected)
+            button.isSelected.toggle()
+            userContext?.muteVideo(button.isSelected)
+        }
     }
 }
 
 // MARK: - Reward
-private extension AgoraSmallRenderUIController {
+private extension AgoraLectureRenderUIController {
     internal func rewardAnimation() {
         // Gif
         rewardImageView = rewardImage()

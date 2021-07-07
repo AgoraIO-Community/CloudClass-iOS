@@ -16,7 +16,7 @@ enum AgoraCauseType: Int, Decodable {
     // handsUpmanager
     case handsUpEnable = 5
     case handsupProgress = 501
-
+    
     // streamGroups
     case streamGroupsAdd = 600
     case streamGroupsDel = 601

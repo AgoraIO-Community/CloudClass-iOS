@@ -1,5 +1,5 @@
 //
-//  AgoraSmallRenderUIController+EventHandler.swift
+//  AgoraLectureRenderUIController+EventHandler.swift
 //  AgoraUIEduAppViews
 //
 //  Created by Cavan on 2021/4/22.
@@ -10,7 +10,7 @@ import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
 // MARK: - AgoraEduUserHandler
-extension AgoraSmallRenderUIController: AgoraEduUserHandler {
+extension AgoraLectureRenderUIController: AgoraEduUserHandler {
     // 更新人员信息列表，只显示在线人员信息
     public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
         if let kitUserInfo = list.first(where: { $0.user.role == .teacher }) {
@@ -45,8 +45,13 @@ extension AgoraSmallRenderUIController: AgoraEduUserHandler {
     // 音量提示
     public func onUpdateAudioVolumeIndication(_ value: Int,
                                               streamUuid: String) {
-        updateCoHostVolumeIndication(value,
-                                     streamUuid: streamUuid)
+        if let info = teacherInfo,
+           info.streamUuid == streamUuid {
+            teacherView.updateAudio(effect: value)
+        } else {
+            updateCoHostVolumeIndication(value,
+                                         streamUuid: streamUuid)
+        }
     }
     
     /* 显示提示信息
