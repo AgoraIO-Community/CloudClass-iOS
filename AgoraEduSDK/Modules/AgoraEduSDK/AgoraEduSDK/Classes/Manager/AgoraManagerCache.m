@@ -24,13 +24,13 @@ static AgoraManagerCache *manager = nil;
 
 - (void)setRoomStateInfoModel:(AgoraRoomStateInfoModel *)roomStateInfoModel {
     if (!roomStateInfoModel.board.boardRegion) {
-        roomStateInfoModel.board.boardRegion = @"cn-hz";
+        roomStateInfoModel.board.boardRegion = @"us-sv";
     }
     if (!roomStateInfoModel.rtcRegion) {
-        roomStateInfoModel.rtcRegion = @"AREA_GLOBAL";
+        roomStateInfoModel.rtcRegion = @"AREA_NA";
     }
     if (!roomStateInfoModel.rtmRegion) {
-        roomStateInfoModel.rtmRegion = @"AREA_GLOBAL";
+        roomStateInfoModel.rtmRegion = @"AREA_NA";
     }
     _roomStateInfoModel = roomStateInfoModel;
 }
@@ -39,12 +39,13 @@ static AgoraManagerCache *manager = nil;
     AgoraManagerCache.share.classroom = nil;
 //    AgoraManagerCache.share.replay = nil;
     AgoraManagerCache.share.classroomDelegate = nil;
-//    AgoraManagerCache.share.replayDelegate = nil;
     
     AgoraManagerCache.share.sdkReady = NO;
     
     AgoraManagerCache.share.boardAppId = @"";
     AgoraManagerCache.share.coursewares = @[];
     AgoraManagerCache.share.extApps = nil;
+    
+    AgoraManagerCache.share.mediaOptions = nil;
 }
 @end

@@ -36,14 +36,26 @@ typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
     AgoraEduRoomTypeSmall = 4,
 };
 
-//
-//typedef NS_ENUM(NSInteger, AgoraExtAppProvider) {
-//    // 1V1
-//    AgoraExtAppProvider = 0,
-//    // 大班课
-//    AgoraExtAppProvider = 2,
-//    // 小班课
-//    AgoraExtAppProvider = 4,
-//};
+/**加密方式*/
+typedef NS_ENUM(NSInteger, AgoraEduMediaEncryptionMode) {
+    /** 1: 128-bit AES encryption, XTS mode. */
+    AgoraEduMediaEncryptionModeAES128XTS = 1,
+    /** 2: 128-bit AES encryption, ECB mode. */
+    AgoraEduMediaEncryptionModeAES128ECB = 2,
+    /** 3: 256-bit AES encryption, XTS mode. */
+    AgoraEduMediaEncryptionModeAES256XTS = 3,
+    /** 4: 128-bit SM4 encryption, ECB mode. */
+    AgoraEduMediaEncryptionModeSM4128ECB = 4,
+    /** 5: 128-bit AES encryption, GCM mode.
+
+     @since v3.3.1
+     */
+    AgoraEduMediaEncryptionModeAES128GCM = 5,
+    /** 6: 256-bit AES encryption, GCM mode.
+
+     @since v3.3.1
+     */
+    AgoraEduMediaEncryptionModeAES256GCM = 6,
+};
 
 NS_ASSUME_NONNULL_END

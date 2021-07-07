@@ -264,8 +264,10 @@ static AgoraRTMManager *manager = nil;
         return AgoraAreaCodeEU;
     } else if ([areaStr isEqualToString:@"AREA_AS"]) {
         return AgoraAreaCodeAS;
-    }  else {
+    }  else if ([areaStr isEqualToString:@"AREA_GLOBAL"]){
         return AgoraAreaCodeGLOB;
+    } else {
+        return AgoraAreaCodeNA;
     }
 }
 @end

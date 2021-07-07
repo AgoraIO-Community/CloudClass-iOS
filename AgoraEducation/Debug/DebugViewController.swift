@@ -93,9 +93,9 @@ import AgoraUIBaseViews
         let roomName = (self.roomName.text ?? "")
         let userName = (self.userName.text ?? "")
         
-        let rtmToken = TokenBuilder.buildToken(KeyCenter.appId(),
-                                               appCertificate: KeyCenter.appCertificate(),
-                                               userUuid: userUuid)
+        let rtmToken = ""//TokenBuilder.buildToken(KeyCenter.appId(),
+//                                               appCertificate: KeyCenter.appCertificate(),
+//                                               userUuid: userUuid)
         
         let config = AgoraEduLaunchConfig(userName: userName,
                                           userUuid: userUuid,
@@ -106,7 +106,8 @@ import AgoraUIBaseViews
                                           token: rtmToken,
                                           startTime: __startTime,
                                           duration: __duration,
-                                          region: nil)
+                                          region: nil,
+                                          mediaOptions: nil)
 
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")

@@ -42,6 +42,18 @@
 + (void)serverInfo:(NSString *)region success:(void (^)(NSString *appid, NSString *userId, NSString *rtmToken))success failure:(void (^)(NSError *error))failure {
     
     NSString *url = @"";
+    if ([region isEqualToString:@"CN"]) {
+        url = @"https://api-solutions.bj2.agoralab.co/edu/v2/users/userUuid/token";
+        
+    } else if([region isEqualToString:@"NA"]) {
+        url = @"https://api-solutions.sv3sbm.agoralab.co/edu/v2/users/userUuid/token";
+        
+    } else if([region isEqualToString:@"EU"]) {
+        url = @"https://api-solutions.fr3sbm.agoralab.co/edu/v2/users/userUuid/token";
+        
+    } else if([region isEqualToString:@"AP"]) {
+        url = @"https://api-solutions.sg3sbm.agoralab.co/edu/v2/users/userUuid/token";
+    }
     
     [AgoraEducationHTTPClient get:url params:@{} headers:@{} success:^(id  _Nonnull responseObj) {
     

@@ -65,6 +65,10 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
 // state
 @property (nonatomic, assign) BOOL increaseSyncing;
 
+// rtc encryption
+@property (nonatomic, copy, nullable) NSString *encryptionKey;
+@property (nonatomic, assign) NSInteger encryptionMode;
+
 @end
 
 @implementation AgoraRTEClassroomManager
@@ -87,6 +91,9 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
         };
         self.messageHandle = [[AgoraRTEChannelMessageHandle alloc] initWithSyncSession:self.syncRoomSession];
         self.messageHandle.roomUuid = self.roomUuid;
+        
+        self.encryptionKey = config.encryptionKey;
+        self.encryptionMode = config.encryptionMode;
         
         [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(onReconnecting) name:NOTICE_KEY_START_RECONNECT object:nil];
     }
@@ -630,22 +637,18 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
                rtcRegion:(NSString *)rtcRegion
                  success:(AgoraRTESuccessBlock)successBlock
                  failure:(AgoraRTEFailureBlock)failureBlock {
-    
-    
     if(successBlock != nil) {
         self.joinRTCSuccessBlock = successBlock;
     }
     
     [AgoraRTCManager.shareManager initEngineKitWithAppid:self.appId
                                                rtcRegion:rtcRegion];
-    
-    
-    
+
     NSDictionary *dic = @{
         @"rtc.report_app_scenario":@{
             @"appScenario":@(self.sceneType),
             @"serviceType":@(0),
-            @"appVersion":@"1.1.0-offiicial"
+            @"appVersion":@"1.1.0.1"
         }
     };
     NSError *rtcError;
@@ -715,11 +718,21 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService);
     NSString *rtcToken = model.user.rtcToken;
     NSString *roomUuid = model.room.roomInfo.roomUuid;
     NSInteger uid = model.user.streamUuid.longLongValue;
+    
+    AgoraEncryptionConfig *config;
+    if (self.encryptionKey != nil) {
+        config = [AgoraEncryptionConfig new];
+        config.encryptionKey = self.encryptionKey;
+        config.encryptionMode = self.encryptionMode;
+    }
+    
     int errorCode = [AgoraRTCManager.shareManager joinChannelByToken:rtcToken
                                                            channelId:roomUuid
                                                                 info:info
                                                                  uid:uid
-                                                  autoSubscribeAudio:self.mediaOption.autoSubscribe autoSubscribeVideo:self.mediaOption.autoSubscribe];
+                                                  autoSubscribeAudio:self.mediaOption.autoSubscribe
+                                                  autoSubscribeVideo:self.mediaOption.autoSubscribe
+                                                    encryptionConfig:config];
     if (errorCode != 0) {
         if (failureBlock) {
             NSError *eduError = [AgoraRTEErrorManager mediaError:errorCode codeMsg:[AgoraRTCManager getErrorDescription:errorCode] code:201];

@@ -15,9 +15,9 @@
     return [self initWithAppId:appId
                       userUuid:userUuid
                          token:token
-                     urlRegion:@"cn"
-                     rtcRegion:@"AREA_GLOBAL"
-                     rtmRegion:@"AREA_GLOBAL"
+                     urlRegion:@"na"
+                     rtcRegion:@"AREA_NA"
+                     rtmRegion:@"AREA_NA"
                       userName:@""];
 }
 

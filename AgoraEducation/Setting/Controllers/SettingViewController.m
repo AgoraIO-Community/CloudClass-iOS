@@ -87,8 +87,8 @@
     [[NSUserDefaults standardUserDefaults] setBool:sender.on forKey:USER_DEFAULT_EYE_CARE];
     [[NSUserDefaults standardUserDefaults] synchronize];
    
-    AgoraEduSDKConfig *config = [[AgoraEduSDKConfig alloc] initWithAppId:KeyCenter.appId eyeCare:sender.on];
-    [AgoraEduSDK setConfig:config];
+//    AgoraEduSDKConfig *config = [[AgoraEduSDKConfig alloc] initWithAppId:KeyCenter.appId eyeCare:sender.on];
+//    [AgoraEduSDK setConfig:config];
 }
 
 - (BOOL)shouldAutorotate {

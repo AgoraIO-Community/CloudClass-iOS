@@ -20,6 +20,8 @@ enum FIELD_TYPE: String {
     case room
     case user
     case duration
+    case encryptKey
+    case encryptMode
     
     var moveDistance: CGFloat {
         switch self {
@@ -29,6 +31,10 @@ enum FIELD_TYPE: String {
             return LoginConfig.device == .iPad ? 50 : 0
         case .duration:
             return LoginConfig.device == .iPad ? 230 : 50
+        case .encryptKey:
+            return LoginConfig.device == .iPad ? 300 : 90
+        case .encryptMode:
+            return LoginConfig.device == .iPad ? 350 : 130
         default:
             return 0
         }
@@ -36,8 +42,8 @@ enum FIELD_TYPE: String {
 }
 
 enum Region_Type: String,CaseIterable {
-    case CN
     case NA
+    case CN
     case EU
     case AP
     

@@ -42,8 +42,18 @@ NS_ASSUME_NONNULL_BEGIN
                      rtcRegion:(NSString *)rtcRegion;
 
 // JoinChannel
-- (int)joinChannelByToken:(NSString * _Nullable)token channelId:(NSString * _Nonnull)channelId info:(NSString * _Nullable)info uid:(NSUInteger)uid;
-- (int)joinChannelByToken:(NSString * _Nullable)token channelId:(NSString * _Nonnull)channelId info:(NSString * _Nullable)info uid:(NSUInteger)uid autoSubscribeAudio:(BOOL)autoSubscribeAudio autoSubscribeVideo:(BOOL)autoSubscribeVideo;
+- (int)joinChannelByToken:(NSString * _Nullable)token
+                channelId:(NSString * _Nonnull)channelId
+                     info:(NSString * _Nullable)info
+                      uid:(NSUInteger)uid
+         encryptionConfig:(AgoraEncryptionConfig* _Nullable)config;
+- (int)joinChannelByToken:(NSString * _Nullable)token
+                channelId:(NSString * _Nonnull)channelId
+                     info:(NSString * _Nullable)info
+                      uid:(NSUInteger)uid
+       autoSubscribeAudio:(BOOL)autoSubscribeAudio
+       autoSubscribeVideo:(BOOL)autoSubscribeVideo
+         encryptionConfig:(AgoraEncryptionConfig* _Nullable)config;
 
 - (void)setChannelDelegateWithConfig:(AgoraRTCChannelDelegateConfig *)config channelId:(NSString * _Nonnull)channelId;
 

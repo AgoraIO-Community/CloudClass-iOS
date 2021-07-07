@@ -73,6 +73,11 @@ static AgoraEduManager *manager = nil;
     config.logDirectoryPath = self.logDirectoryPath;
     config.tag = tag;
     config.logConsoleState = self.consoleState;
+    if (AgoraManagerCache.share.mediaOptions != nil) {
+        config.encryptionKey = AgoraManagerCache.share.mediaOptions.encryptionConfig.key;
+        config.encryptionMode = AgoraManagerCache.share.mediaOptions.encryptionConfig.mode;
+    }
+    
     self.eduManager = [[AgoraRTEManager alloc] initWithConfig:config
                                                       success:successBlock
                                                       failure:^(NSError * _Nonnull error) {

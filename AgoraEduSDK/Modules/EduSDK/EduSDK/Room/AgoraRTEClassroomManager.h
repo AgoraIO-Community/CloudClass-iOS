@@ -31,6 +31,8 @@ typedef void (^OnGetStreamListSuccessBlock)(NSArray<AgoraRTEStream*> *streams);
 
 @property (nonatomic, weak) id<AgoraRTEClassroomDelegate> delegate;
 
+- (void)initEncryptionMode:(NSInteger)mode key:(NSString *)key;
+
 - (void)joinClassroom:(AgoraRTEClassroomJoinOptions*)options success:(OnJoinRoomSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
 
 - (void)getLocalUserWithSuccess:(OnGetLocalUserSuccessBlock)successBlock failure:(AgoraRTEFailureBlock _Nullable)failureBlock;

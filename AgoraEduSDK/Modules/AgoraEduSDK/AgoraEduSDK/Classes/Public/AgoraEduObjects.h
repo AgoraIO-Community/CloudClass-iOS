@@ -42,6 +42,20 @@ NS_ASSUME_NONNULL_BEGIN
                          resourceUrl:(NSString *)resourceUrl;
 @end
 
+/**设置媒体选项*/
+@interface AgoraEduMediaEncryptionConfig : NSObject
+@property (nonatomic, assign) AgoraEduMediaEncryptionMode mode;
+@property (nonatomic, copy) NSString *key;
+
+- (instancetype)initWithMode:(AgoraEduMediaEncryptionMode)mode key:(NSString *)key;
+@end
+
+@interface AgoraEduMediaOptions : NSObject
+@property (nonatomic, strong) AgoraEduMediaEncryptionConfig *encryptionConfig;
+
+- (instancetype)initWithConfig:(AgoraEduMediaEncryptionConfig *)encryptionConfig;
+@end
+
 /**启动课堂配置*/
 @interface AgoraEduLaunchConfig : NSObject
 // 用户名
@@ -59,11 +73,21 @@ NS_ASSUME_NONNULL_BEGIN
 // 声网RESTfule API token, 是RTMToken
 @property (nonatomic, copy) NSString *token;
 // 上课开始时间（毫秒）
-@property (nonatomic, copy) NSNumber *startTime;
+@property (nonatomic, copy, nullable) NSNumber *startTime;
 // 课程时间（秒）
 @property (nonatomic, copy, nullable) NSNumber *duration;
 // 区域
-@property (nonatomic, copy) NSString *region;
+@property (nonatomic, copy, nullable) NSString *region;
+// 加密
+@property (nonatomic, strong, nullable) AgoraEduMediaOptions *mediaOptions;
+
+- (instancetype)initWithUserName:(NSString *)userName
+                        userUuid:(NSString *)userUuid
+                        roleType:(AgoraEduRoleType)roleType
+                        roomName:(NSString *)roomName
+                        roomUuid:(NSString *)roomUuid
+                        roomType:(AgoraEduRoomType)roomType
+                           token:(NSString *)token;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
@@ -74,7 +98,8 @@ NS_ASSUME_NONNULL_BEGIN
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     region:(NSString *_Nullable)region;
+                          region:(NSString *_Nullable)region
+                    mediaOptions:(AgoraEduMediaOptions *_Nullable)mediaOptions;
 @end
 
 // 聊天翻译

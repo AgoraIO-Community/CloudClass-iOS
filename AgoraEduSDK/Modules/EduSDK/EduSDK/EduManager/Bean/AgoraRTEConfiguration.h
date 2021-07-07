@@ -35,6 +35,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) NSInteger logConsoleState;
 
+@property (nonatomic, copy, nullable) NSString *encryptionKey;
+@property (nonatomic, assign) NSInteger encryptionMode;
+
 - (instancetype)initWithAppId:(NSString *)appId
                      userUuid:(NSString *)userUuid
                         token:(NSString *)token;

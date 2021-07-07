@@ -102,22 +102,36 @@ static AgoraRTCManager *manager = nil;
     [self.rtcEngineKit disableLastmileTest];
 }
 
-- (int)joinChannelByToken:(NSString * _Nullable)token channelId:(NSString * _Nonnull)channelId info:(NSString * _Nullable)info uid:(NSUInteger)uid {
+- (int)joinChannelByToken:(NSString * _Nullable)token
+                channelId:(NSString * _Nonnull)channelId
+                     info:(NSString * _Nullable)info
+                      uid:(NSUInteger)uid
+         encryptionConfig:(AgoraEncryptionConfig* _Nullable)config {
     
-    return [self joinChannelByToken:token channelId:channelId info:info uid:uid autoSubscribeAudio:YES autoSubscribeVideo:YES];
+    return [self joinChannelByToken:token channelId:channelId info:info uid:uid autoSubscribeAudio:YES autoSubscribeVideo:YES encryptionConfig:config];
 }
 
 - (int)joinChannelByToken:(NSString * _Nullable)token
                 channelId:(NSString * _Nonnull)channelId
                      info:(NSString * _Nullable)info
                       uid:(NSUInteger)uid
-       autoSubscribeAudio:(BOOL)autoSubscribeAudio autoSubscribeVideo:(BOOL)autoSubscribeVideo {
+       autoSubscribeAudio:(BOOL)autoSubscribeAudio
+       autoSubscribeVideo:(BOOL)autoSubscribeVideo
+         encryptionConfig:(AgoraEncryptionConfig * _Nullable)config {
     
     [AgoraRTELogService logMessageWithDescribe:@"join channel:" message:@{@"roomUuid":AgoraRTCNoNullString(channelId), @"token":AgoraRTCNoNullString(token), @"uid":@(uid)}];
     
     AgoraRtcChannel *agoraRtcChannel = [self.rtcEngineKit createRtcChannel:channelId];
     [agoraRtcChannel setRtcChannelDelegate:self];
     
+    if (config) {
+        int encryptCode = [agoraRtcChannel enableEncryption:YES
+                                           encryptionConfig:config];
+        if (encryptCode != 0) {
+            return encryptCode;
+        }
+    }
+
     BOOL isExsit = NO;
     for (RTCChannelInfo *channelInfo in self.rtcChannelInfos) {
         if ([channelInfo.channelId isEqualToString:channelId]) {

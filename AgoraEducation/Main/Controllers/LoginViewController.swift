@@ -65,6 +65,10 @@ import AgoraEduSDK
     
     private lazy var iconImgView = AgoraBaseUIImageView(image: UIImage(named: "icon_\(LoginConfig.device.rawValue)"))
 
+    // TODO:
+    private lazy var encryptionKey = createFieldGroup(fieldType: .encryptKey, tag: "Key")
+    private lazy var encryptionMode = createFieldGroup(fieldType: .encryptMode, tag: "Mode")
+    
     private lazy var roomGroup = createFieldGroup(fieldType: .room)
     private lazy var userGroup = createFieldGroup(fieldType: .user)
     private lazy var durationGroup = createFieldGroup(fieldType: .duration)
@@ -204,9 +208,7 @@ extension LoginViewController {
     }
     
     private func setSDKConfig() {
-        let eyeCare = UserDefaults.standard.bool(forKey: LoginConfig.USER_DEFAULT_EYE_CARE)
-        let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(), eyeCare: eyeCare)
-        AgoraEduSDK.setConfig(defaultConfig)
+
     }
 }
 
@@ -238,11 +240,15 @@ extension LoginViewController {
         return warn
     }
     
-    private func createFieldGroup(fieldType: FIELD_TYPE) -> AgoraBaseUIView {
+    private func createFieldGroup(fieldType: FIELD_TYPE, tag: String? = nil) -> AgoraBaseUIView {
         let group = AgoraBaseUIView()
         
         let titleLabel = AgoraBaseUILabel()
-        titleLabel.text = NSLocalizedString("Login_\(fieldType.rawValue)_title",comment: "")
+        if let `tag` = tag {
+            titleLabel.text = tag
+        } else {
+            titleLabel.text = NSLocalizedString("Login_\(fieldType.rawValue)_title",comment: "")
+        }
         titleLabel.textColor = UIColor(hexString: "8A8A9A")
         titleLabel.font = UIFont.systemFont(ofSize: 14)
         
@@ -250,6 +256,7 @@ extension LoginViewController {
         field.font = UIFont.systemFont(ofSize: 14)
         field.placeholder = NSLocalizedString("Login_\(fieldType.rawValue)_holder",comment: "")
         field.delegate = self
+        field.tag = 99
         
         group.addSubview(titleLabel)
         group.addSubview(field)
@@ -274,6 +281,14 @@ extension LoginViewController {
         case .duration:
             group.addSubview(durationLine)
             setLineLayout(line: durationLine)
+        case .encryptKey:
+            let line = createGroupLine()
+            group.addSubview(line)
+            setLineLayout(line: line)
+        case .encryptMode:
+            let line = createGroupLine()
+            group.addSubview(line)
+            setLineLayout(line: line)
         default:
             print("")
         }
@@ -363,6 +378,11 @@ extension LoginViewController {
         
         view.addSubview(iconImgView)
         view.addSubview(aboutBtn)
+        
+        // TODO:
+//        view.addSubview(encryptionKey)
+//        view.addSubview(encryptionMode)
+
         view.addSubview(roomGroup)
         view.addSubview(userGroup)
         view.addSubview(classTypeGroup)
@@ -434,6 +454,23 @@ extension LoginViewController {
         enterBtn.agora_height = 44
         enterBtn.agora_width = 280
         enterBtn.agora_y = durationGroup.agora_y + durationGroup.agora_height + enter_gap
+        
+//        // TODO:
+//        if let tf = encryptionKey.viewWithTag(99) as? AgoraBaseUITextField {
+//            tf.placeholder = "视频流密码"
+//        }
+//        encryptionKey.agora_center_x = 0
+//        encryptionKey.agora_width = roomGroup.agora_width
+//        encryptionKey.agora_height = roomGroup.agora_height
+//        encryptionKey.agora_y = durationGroup.agora_y + durationGroup.agora_height + 20
+//        if let tf = encryptionMode.viewWithTag(99) as? AgoraBaseUITextField {
+//            tf.placeholder = "1=128XTS 2=128ECB 3=256XTS 4=128ECB 5=128GCM 6=256GCM"
+//        }
+//        encryptionMode.agora_center_x = 0
+//        encryptionMode.agora_width = roomGroup.agora_width
+//        encryptionMode.agora_height = roomGroup.agora_height
+//        encryptionMode.agora_y = encryptionKey.agora_y + encryptionKey.agora_height + 20
+//        enterBtn.agora_y = encryptionMode.agora_y + encryptionMode.agora_height + enter_gap
 
         bottomLabel.agora_center_x = 0
         if LoginConfig.device == .iPad {
@@ -547,33 +584,62 @@ extension LoginViewController{
         let roomUuid = "\(room)\(type.rawValue)"
         
         // userUuid = userName + roleType
-        let userId = "\(user)\(AgoraEduRoleType.student.rawValue)"
+//        let userUuid = "\(user)\(AgoraEduRoleType.student.rawValue)"
         
         // class time
         let startTime:NSNumber = NSNumber(value: NSDate().timeIntervalSince1970 * 1000)
         
-        let rtmToken = TokenBuilder.buildToken(KeyCenter.appId(),
-                                               appCertificate: KeyCenter.appCertificate(),
-                                               userUuid: userId)
-
-        let config = AgoraEduLaunchConfig(userName: user,
-                                          userUuid: userId,
-                                          roleType: .student,
-                                          roomName: room,
-                                          roomUuid: roomUuid,
-                                          roomType: type,
-                                          token: rtmToken,
-                                          startTime: startTime,
-                                          duration: duration,
-                                          region: region)
         
-        if alertView == nil {
-            alertView = AgoraUtils.showLoading(message: "")
-        } else {
-            alertView?.show(in: self.view)
+//        let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(), eyeCare: eyeCare)
+//        AgoraEduSDK.setConfig(defaultConfig)
+        
+        TokenBuilder.serverInfo(region) {[unowned self] (appid, userId, rtmToken) in
+            
+            let defaultConfig = AgoraEduSDKConfig.init(appId: appid, eyeCare: false)
+            AgoraEduSDK.setConfig(defaultConfig)
+            
+            // TODO:
+            var mediaOptions: AgoraEduMediaOptions?
+//            if let key = (encryptionKey.viewWithTag(99) as? AgoraBaseUITextField)?.text,
+//               let tfMode = (encryptionMode.viewWithTag(99) as? AgoraBaseUITextField)?.text {
+//
+//                let tfModeValue = Int(tfMode) ?? 0
+//                if tfModeValue > 0 && tfModeValue <= 6 {
+//                    let mode = AgoraEduMediaEncryptionMode(rawValue: tfModeValue)
+//                    let config = AgoraEduMediaEncryptionConfig(mode: mode!, key: key)
+//                    mediaOptions = AgoraEduMediaOptions(config: config)
+//                }
+//            }
+            
+            let config = AgoraEduLaunchConfig(userName: user,
+                                              userUuid: userId,
+                                              roleType: .student,
+                                              roomName: room,
+                                              roomUuid: roomUuid,
+                                              roomType: type,
+                                              token: rtmToken,
+                                              startTime: startTime,
+                                              duration: duration,
+                                              region: region,
+                                              mediaOptions: mediaOptions)
+            
+            if alertView == nil {
+                alertView = AgoraUtils.showLoading(message: "")
+            } else {
+                alertView?.show(in: self.view)
+            }
+            
+            AgoraEduSDK.launch(config, delegate: self)
+        } failure: { (error) in
+            print("\(error.localizedDescription)")
         }
         
-        AgoraEduSDK.launch(config, delegate: self)
+        
+//        let rtmToken = TokenBuilder.buildToken(KeyCenter.appId(),
+//                                               appCertificate: KeyCenter.appCertificate(),
+//                                               userUuid: userUuid)
+//
+        
     }
     
     @objc private func onPushDebugVC() {
@@ -600,11 +666,17 @@ extension LoginViewController: UITextFieldDelegate {
             return
         }
         
-        moveView(move: field.getType().moveDistance * -1 )
+        let type = field.getType()
+        moveView(move: type.moveDistance * -1 )
+        
+        guard type != .encryptKey,
+              type != .encryptMode else {
+            return
+        }
         
         guard let str = field.text,
               str != "" else {
-            switch field.getType() {
+            switch type {
             case .room:
                 roomName = nil
             case .user:

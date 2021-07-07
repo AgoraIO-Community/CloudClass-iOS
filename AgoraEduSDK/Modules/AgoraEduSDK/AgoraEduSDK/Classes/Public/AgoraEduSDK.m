@@ -114,6 +114,8 @@ static AgoraEduSDK *manager = nil;
     AgoraManagerCache.share.classroom = [AgoraEduClassroom new];
     AgoraManagerCache.share.token = NoNullString(config.token);
     
+    AgoraManagerCache.share.mediaOptions = config.mediaOptions;
+    
     // Report
     AgoraReportorContext *context = [[AgoraReportorContext alloc] initWithSource:@"apaas"
                                                                       clientType:@"flexible_class"
@@ -193,7 +195,7 @@ static AgoraEduSDK *manager = nil;
 }
 
 + (NSString *)version {
-    return @"1.1.0";
+    return @"1.1.0.1";
 }
 
 #pragma mark - Private

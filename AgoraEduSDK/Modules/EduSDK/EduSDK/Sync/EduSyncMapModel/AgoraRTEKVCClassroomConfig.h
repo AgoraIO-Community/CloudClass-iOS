@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *dafaultUserName;
 @property (nonatomic, assign) AgoraRTESceneType sceneType;
 
+@property (nonatomic, copy, nullable) NSString *encryptionKey;
+@property (nonatomic, assign) NSInteger encryptionMode;
+
 @end
 
 NS_ASSUME_NONNULL_END

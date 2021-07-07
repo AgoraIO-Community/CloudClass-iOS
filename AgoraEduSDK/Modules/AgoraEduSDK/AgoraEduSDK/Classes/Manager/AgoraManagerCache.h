@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray<AgoraEduCourseware*> *coursewares;
 @property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *extApps;
 
+@property (nonatomic, strong) AgoraEduMediaOptions * _Nullable mediaOptions;
+
 + (void)releaseResource;
 
 @end

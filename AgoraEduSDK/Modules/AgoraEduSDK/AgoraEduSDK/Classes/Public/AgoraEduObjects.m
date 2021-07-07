@@ -63,27 +63,72 @@
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
+                           token:(NSString *)token {
+    return [self initWithUserName:userName
+                         userUuid:userUuid
+                         roleType:roleType
+                         roomName:roomName
+                         roomUuid:roomUuid
+                         roomType:roomType
+                            token:token
+                        startTime:nil
+                         duration:nil
+                           region:nil
+                     mediaOptions:nil];
+}
+- (instancetype)initWithUserName:(NSString *)userName
+                        userUuid:(NSString *)userUuid
+                        roleType:(AgoraEduRoleType)roleType
+                        roomName:(NSString *)roomName
+                        roomUuid:(NSString *)roomUuid
+                        roomType:(AgoraEduRoomType)roomType
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                     region:(NSString * _Nullable)region{
-    self = [self init];
-    self.userName = userName;
-    self.userUuid = userUuid;
-    self.roomName = roomName;
-    self.roomUuid = roomUuid;
-    self.roomType = roomType;
-    self.token = token;
-    if (startTime != nil) {
-        self.startTime = startTime;
+                          region:(NSString * _Nullable)region
+                    mediaOptions:(AgoraEduMediaOptions *_Nullable)mediaOptions {
+    
+    if (self = [self init]) {
+        self.userName = userName;
+        self.userUuid = userUuid;
+        self.roomName = roomName;
+        self.roomUuid = roomUuid;
+        self.roomType = roomType;
+        self.token = token;
+        if (startTime != nil) {
+            self.startTime = startTime;
+        }
+        if (duration != nil) {
+            self.duration = duration;
+        }
+        if (region != nil) {
+            self.region = [region lowercaseString];
+        } else {
+            self.region = [@"CN" lowercaseString];
+        }
+        if (mediaOptions != nil) {
+            self.mediaOptions = mediaOptions;
+        }
     }
-    if (duration != nil) {
-        self.duration = duration;
+    return self;
+}
+@end
+
+/**设置媒体选项*/
+@implementation AgoraEduMediaEncryptionConfig
+- (instancetype)initWithMode:(AgoraEduMediaEncryptionMode)mode key:(NSString *)key {
+    if (self = super.init) {
+        self.mode = mode;
+        self.key = key;
     }
-    if (region != nil) {
-        self.region = [region lowercaseString];
-    } else {
-        self.region = [@"CN" lowercaseString];
+    return self;
+}
+@end
+
+@implementation AgoraEduMediaOptions
+- (instancetype)initWithConfig:(AgoraEduMediaEncryptionConfig *)encryptionConfig {
+    if (self = super.init) {
+        self.encryptionConfig = encryptionConfig;
     }
     return self;
 }

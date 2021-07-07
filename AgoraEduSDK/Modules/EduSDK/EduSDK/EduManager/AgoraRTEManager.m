@@ -43,6 +43,10 @@ static NSString *AGORA_EDU_BASE_URL = @"";
 
 @property (nonatomic, strong) NSMutableDictionary<NSString*, AgoraRTEClassroomManager *> *classrooms;
 
+
+@property (nonatomic, copy, nullable) NSString *encryptionKey;
+@property (nonatomic, assign) NSInteger encryptionMode;
+
 @end
 
 @implementation AgoraRTEManager
@@ -101,6 +105,9 @@ static NSString *AGORA_EDU_BASE_URL = @"";
         self.logDirectoryPath = logConfig.directoryPath;
         self.classrooms = [NSMutableDictionary dictionary];
         
+        self.encryptionKey = config.encryptionKey;
+        self.encryptionMode = config.encryptionMode;
+
         HttpManagerConfig *httpConfig = [AgoraRTEHttpManager getHttpManagerConfig];
         httpConfig.baseURL = AGORA_EDU_BASE_URL;
         httpConfig.appCode = AgoraRTE_APP_CODE;
@@ -212,7 +219,9 @@ static NSString *AGORA_EDU_BASE_URL = @"";
     kvcConfig.dafaultUserName = self.userName;
     kvcConfig.roomUuid = roomUuid;
     kvcConfig.sceneType = sceneType;
-    
+    kvcConfig.encryptionKey = self.encryptionKey;
+    kvcConfig.encryptionMode = self.encryptionMode;
+
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     SEL action = NSSelectorFromString(@"initWithConfig:");
