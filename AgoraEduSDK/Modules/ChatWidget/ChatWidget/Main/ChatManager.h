@@ -13,31 +13,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 弹幕信息
-@interface BarrageMsgInfo : NSObject
-@property (nonatomic,strong) NSString* msgId;
-@property (nonatomic,strong) NSString* text;
-@property (nonatomic,strong) NSString* avatarUrl;
-@property (nonatomic) BOOL isGift;
-@property (nonatomic,strong) NSString* giftUrl;
-+ (instancetype)barrageInfoWithId:(NSString*)aMsgId text:(NSString*)aText avatarUrl:(NSString*)aAvatarUrl;
-+ (instancetype)barrageInfoWithId:(NSString*)aMsgId text:(NSString*)aText avatarUrl:(NSString*)aAvatarUrl isGift:(BOOL)aIsGift giftUrl:(NSString*)aGiftUrl;
-@end
-
 @protocol ChatManagerDelegate <NSObject>
 
-// 需要展示接收弹幕消息
-- (void)barrageMessageDidReceive;
-// 需要展示发送弹幕消息
-- (void)barrageMessageDidSend:(BarrageMsgInfo*)aInfo;
+// 需要展示接收消息
+- (void)chatMessageDidReceive;
+// 需要展示发送消息
+- (void)chatMessageDidSend:(EMMessage*)aMessage;
 // 发生异常
 - (void)exceptionDidOccur:(NSString*)aErrorDescription;
-// 需要撤回弹幕消息
-- (void)barrageMessageDidRecall:(NSString*)aMessageId;
+// 需要撤回消息
+- (void)chatMessageDidRecall:(NSString*)aMessageId;
 // 禁言状态改变
 - (void)mutedStateDidChanged;
 // 状态发生改变
 - (void)roomStateDidChanged:(ChatRoomState)aState;
+// 公告发生变更
+- (void)announcementDidChanged:(NSString*)aAnnouncement;
 
 @end
 
@@ -56,8 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)sendCommonTextMsg:(NSString*)aText;
 // 获取用户配置
 - (ChatUserConfig*)userConfig;
-// 接收的弹幕消息
-- (NSArray<BarrageMsgInfo*> *)msgArray;
+// 接收的消息
+- (NSArray<EMMessage*> *)msgArray;
 // 更新头像
 - (void)updateAvatar:(NSString*)avatarUrl;
 // 更新昵称

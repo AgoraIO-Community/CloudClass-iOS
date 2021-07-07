@@ -27,7 +27,6 @@ Pod::Spec.new do |s|
       binary.dependency 'Masonry'
       binary.dependency 'HyphenateChat'
       binary.dependency 'SDWebImage'
-      binary.dependency 'BarrageRenderer'
       binary.dependency 'WHToast'
       binary.vendored_framework = '../../Frameworks/AgoraWidget.framework'
       binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => ['$(SRCROOT)/AgoraClassroomSDK/Frameworks/', '$(SRCROOT)/../AgoraEduSDK/Frameworks/'] }
@@ -37,7 +36,6 @@ Pod::Spec.new do |s|
       source.dependency 'Masonry'
       source.dependency 'HyphenateChat'
       source.dependency 'SDWebImage'
-      source.dependency 'BarrageRenderer'
       source.dependency 'WHToast'
       source.dependency "AgoraWidget"
       source.resources = 'ChatWidget/ChatWidget.bundle'

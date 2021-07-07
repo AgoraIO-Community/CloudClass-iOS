@@ -149,7 +149,7 @@ extension AgoraUIManager {
     }
     
     func resetLectureHandsUpLayout(_ isFullScreen: Bool) {
-        guard let `chat` = self.chat,
+        guard let `chat` = self.hxChat,
               let `handsUp` = self.handsUp else {
             return
         }

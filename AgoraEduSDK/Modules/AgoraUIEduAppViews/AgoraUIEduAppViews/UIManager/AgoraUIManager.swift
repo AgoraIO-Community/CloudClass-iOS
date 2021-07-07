@@ -38,7 +38,7 @@ public var isDebug = false
     var userList: AgoraUserListUIController?
     
     // variable
-    var isFullScreen = false
+    var isFullScreen = true
     var coHostCount = 0
     
     // 距离上面的值， 等于navView的高度
@@ -148,7 +148,7 @@ public var isDebug = false
                     chat.widgetDidReceiveMessage(message)
                 }
 //
-//                chat.containerView.isHidden = true
+                chat.containerView.isHidden = true
                 self.chat = chat
             default:
                 break
@@ -318,13 +318,18 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         
         let chat = contextPool.widget.createWidget(with: info)
         chat.addMessageObserver(self)
-        whiteBoard.containerView.addSubview(chat.containerView)
+        self.appView.addSubview(chat.containerView)
         
-        chat.containerView.agora_equal_to_superView(attribute: .top)
-        chat.containerView.agora_equal_to_superView(attribute: .left)
-        chat.containerView.agora_equal_to_superView(attribute: .right)
-        chat.containerView.agora_equal_to_superView(attribute: .bottom,
-                                                      constant: -90)
+        //        chat.containerView.agora_equal_to_superView(attribute: .top)
+        //        chat.containerView.agora_equal_to_superView(attribute: .left)
+        //        chat.containerView.agora_equal_to_superView(attribute: .right)
+        //        chat.containerView.agora_equal_to_superView(attribute: .bottom,
+        //                                                      constant: -90)
+                let isPad: Bool = UIDevice.current.model == "iPad"
+                chat.containerView.agora_safe_y = 150
+                chat.containerView.agora_safe_bottom = 0
+                chat.containerView.agora_width = isPad ? 300:200
+                chat.containerView.agora_safe_right = 0
         
         self.hxChat = chat
     }
