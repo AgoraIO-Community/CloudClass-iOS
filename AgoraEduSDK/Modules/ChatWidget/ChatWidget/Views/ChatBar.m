@@ -44,6 +44,7 @@
     [self.inputButton addTarget:self action:@selector(InputAction) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.inputButton];
     self.inputButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    self.inputButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     
     self.emojiButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.emojiButton setImage:[UIImage imageNamedFromBundle:@"icon_emoji"]
@@ -82,7 +83,7 @@
     [super layoutSubviews];
     self.oldframe = self.frame;
     
-    self.inputButton.frame = CGRectMake(0,0,self.bounds.size.width - EMOJIBUTTON_WIDTH - SENDBUTTON_WIDTH,
+    self.inputButton.frame = CGRectMake(10,0,self.bounds.size.width - EMOJIBUTTON_WIDTH - SENDBUTTON_WIDTH - 10,
                                            CONTAINVIEW_HEIGHT);
     
     self.emojiButton.frame = CGRectMake(self.bounds.size.width - EMOJIBUTTON_WIDTH,

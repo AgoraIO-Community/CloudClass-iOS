@@ -63,6 +63,8 @@
     //self.inputField.layer.cornerRadius = 15;
     self.inputField.returnKeyType = UIReturnKeySend;
     self.inputField.delegate = self;
+    self.inputField.inputAssistantItem.leadingBarButtonGroups = [NSArray array];
+    self.inputField.inputAssistantItem.trailingBarButtonGroups = [NSArray array];
     [self addSubview:self.inputField];
     
     self.emojiButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -80,7 +82,7 @@
                          action:@selector(emojiButtonAction)
                forControlEvents:UIControlEventTouchUpInside];
     
-    self.emojiKeyBoardView = [[EmojiKeyboardView alloc] initWithFrame:CGRectMake(0,0,self.bounds.size.width,190)];
+    self.emojiKeyBoardView = [[EmojiKeyboardView alloc] initWithFrame:CGRectMake(0,0,self.bounds.size.width,176)];
     self.emojiKeyBoardView.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
