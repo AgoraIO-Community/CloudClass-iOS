@@ -18,7 +18,7 @@
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.backgroundColor = [UIColor whiteColor];
-        self.contentView.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:252/255.0 alpha:1.0];
+        //self.contentView.backgroundColor = [UIColor colorWithRed:249/255.0 green:249/255.0 blue:252/255.0 alpha:1.0];
         
         _stringLabel = [[UILabel alloc] init];
         _stringLabel.font = [UIFont systemFontOfSize:14];

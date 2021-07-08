@@ -113,7 +113,10 @@ static BOOL isSDKInited = NO;
             }];
         }
         EMUserInfo* userInfo = [[EMUserInfo alloc] init];
-        userInfo.ext = @"{'role':2}";
+        NSDictionary* extDic = @{@"role":@2};
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:extDic options:0 error:nil];
+        NSString* str = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        userInfo.ext = str;
         if(self.user.avatarurl.length > 0)
             userInfo.avatarUrl = [self.user.avatarurl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
         if(self.user.nickname.length > 0)
@@ -134,6 +137,8 @@ static BOOL isSDKInited = NO;
         {
             weakself.chatRoom = aChatroom;
             weakself.isAllMuted = aChatroom.isMuteAllMembers;
+            if(weakself.isAllMuted)
+                [weakself.delegate mutedStateDidChanged];
         }
     }];
     EMCursorResult* result =  [[[EMClient sharedClient] chatManager] fetchHistoryMessagesFromServer:self.chatRoomId conversationType:EMConversationTypeGroupChat startMessageId:@"" pageSize:50 error:nil];
