@@ -15,44 +15,11 @@ const static NSString* kRoomUuid = @"roomUuid";
 
 static BOOL isSDKInited = NO;
 
-@implementation BarrageMsgInfo
-
-- (instancetype)init
-{
-    self = [super init];
-    if(self) {
-        self.avatarUrl = @"";
-        self.msgId = @"";
-        self.text = @"";
-    }
-    return self;
-}
-
-+ (instancetype)barrageInfoWithId:(NSString*)aMsgId text:(NSString*)aText avatarUrl:(NSString*)aAvatarUrl
-{
-    return [BarrageMsgInfo barrageInfoWithId:aMsgId text:aText avatarUrl:aAvatarUrl isGift:NO giftUrl:@""];
-}
-
-+ (instancetype)barrageInfoWithId:(NSString*)aMsgId text:(NSString*)aText avatarUrl:(NSString*)aAvatarUrl isGift:(BOOL)aIsGift giftUrl:(NSString*)aGiftUrl
-{
-    BarrageMsgInfo* barrageInfo = [[BarrageMsgInfo alloc] init];
-    if(barrageInfo) {
-        barrageInfo.msgId = aMsgId;
-        barrageInfo.text = aText;
-        barrageInfo.avatarUrl = aAvatarUrl;
-        barrageInfo.isGift = aIsGift;
-        barrageInfo.giftUrl = aGiftUrl;
-    }
-    return barrageInfo;
-}
-
-@end
-
 @interface ChatManager ()<EMClientDelegate,EMChatManagerDelegate,EMChatroomManagerDelegate>
 @property (nonatomic, copy) NSString* appkey;
 @property (nonatomic, copy) NSString* password;
 @property (nonatomic) BOOL isLogin;
-@property (nonatomic,copy) NSMutableArray<BarrageMsgInfo*>* dataArray;
+@property (nonatomic,copy) NSMutableArray<EMMessage*>* dataArray;
 @property (nonatomic,strong) NSLock* dataLock;
 @property (nonatomic,strong) NSLock* askAndAnswerMsgLock;
 @property (nonatomic,strong) EMChatroom* chatRoom;
@@ -146,7 +113,10 @@ static BOOL isSDKInited = NO;
             }];
         }
         EMUserInfo* userInfo = [[EMUserInfo alloc] init];
-        userInfo.ext = @"2";
+        NSDictionary* extDic = @{@"role":@2};
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:extDic options:0 error:nil];
+        NSString* str = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        userInfo.ext = str;
         if(self.user.avatarurl.length > 0)
             userInfo.avatarUrl = [self.user.avatarurl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
         if(self.user.nickname.length > 0)
@@ -166,8 +136,19 @@ static BOOL isSDKInited = NO;
         if(!aError)
         {
             weakself.chatRoom = aChatroom;
+            weakself.isAllMuted = aChatroom.isMuteAllMembers;
+            if(weakself.isAllMuted)
+                [weakself.delegate mutedStateDidChanged];
         }
     }];
+    EMCursorResult* result =  [[[EMClient sharedClient] chatManager] fetchHistoryMessagesFromServer:self.chatRoomId conversationType:EMConversationTypeGroupChat startMessageId:@"" pageSize:50 error:nil];
+    if(result.list.count > 0){
+        EMConversation* conv = [[[EMClient sharedClient] chatManager] getConversationWithConvId:self.chatRoomId];
+        [conv loadMessagesStartFromId:@"" count:50 searchDirection:EMMessageSearchDirectionUp completion:^(NSArray *aMessages, EMError *aError) {
+            [weakself.dataArray addObjectsFromArray:result.list];
+            [weakself.delegate chatMessageDidReceive];
+        }];
+    }
     // 获取是否被禁言
     [[[EMClient sharedClient] roomManager] isMemberInWhiteListFromServerWithChatroomId:self.chatRoomId completion:^(BOOL inWhiteList, EMError *aError) {
         if(!aError) {
@@ -179,22 +160,24 @@ static BOOL isSDKInited = NO;
     // 获取公告
     [[[EMClient sharedClient] roomManager] getChatroomAnnouncementWithId:self.chatRoomId completion:^(NSString *aAnnouncement, EMError *aError) {
         if(!aError)
-            [weakself _parseAnnouncement:aAnnouncement];
+        {
+            [weakself.delegate announcementDidChanged:aAnnouncement];
+        }
     }];
 }
 
-- (NSMutableArray<BarrageMsgInfo*>*)dataArray
+- (NSMutableArray<EMMessage*>*)dataArray
 {
     if(!_dataArray) {
-        _dataArray = [NSMutableArray<BarrageMsgInfo*> array];
+        _dataArray = [NSMutableArray<EMMessage*> array];
     }
     return _dataArray;
 }
 
-- (NSArray<BarrageMsgInfo*> *)msgArray
+- (NSArray<EMMessage*> *)msgArray
 {
     [self.dataLock lock];
-    NSArray<BarrageMsgInfo*> * array = [self.dataArray copy];
+    NSArray<EMMessage*> * array = [self.dataArray copy];
     [self.dataArray removeAllObjects];
     [self.dataLock unlock];
     return array;
@@ -265,8 +248,8 @@ static BOOL isSDKInited = NO;
                 } completion:^(EMMessage *message, EMError *error) {
                     if(!error) {
                         if(aType == ChatMsgTypeCommon) {
-                            if([weakself.delegate respondsToSelector:@selector(barrageMessageDidSend:)]){
-                                [weakself.delegate barrageMessageDidSend:[BarrageMsgInfo barrageInfoWithId:message.messageId text:aText avatarUrl:weakself.user.avatarurl]];
+                            if([weakself.delegate respondsToSelector:@selector(chatMessageDidSend:)]){
+                                [weakself.delegate chatMessageDidSend:message];
                             }
                         }
                         if(aType == ChatMsgTypeAsk) {
@@ -287,7 +270,7 @@ static BOOL isSDKInited = NO;
                                     }
                                 }
                             }else{
-                                [weakself.delegate exceptionDidOccur:error.description];
+                                [weakself.delegate exceptionDidOccur:error.errorDescription];
                             }
                         }
                         
@@ -341,56 +324,38 @@ static BOOL isSDKInited = NO;
     for (EMMessage* msg in aMessages) {
         // 判断聊天室消息
         if(msg.chatType == EMChatTypeChatRoom && [msg.to isEqualToString:self.chatRoomId]) {
-            // 普通消息
+            // 文本消息
             if(msg.body.type == EMMessageBodyTypeText) {
                 NSDictionary* ext = msg.ext;
                 NSNumber* msgType = [ext objectForKey:kMsgType];
                 EMTextMessageBody* textBody = (EMTextMessageBody*)msg.body;
-                // 普通弹幕消息
-                if(msgType.integerValue == ChatMsgTypeCommon) {
+                // 普通消息
+                //if(msgType.integerValue == ChatMsgTypeCommon) {
                     if([textBody.text length] > 0)
                     {
                         NSString* avatarUrl = [ext objectForKey:kAvatarUrl];
                         [self.dataLock lock];
-                        [self.dataArray addObject:[BarrageMsgInfo barrageInfoWithId:msg.messageId text:textBody.text avatarUrl:avatarUrl]];
+                        [self.dataArray addObject:msg];
                         [self.dataLock unlock];
                         aInsertCommonMsg = YES;
                     }
-                }
-                // 问答消息
-                if(msgType.integerValue == ChatMsgAnswer) {
-                    NSString* asker = [ext objectForKey:@"asker"];
-                    if([asker isEqualToString:self.user.username]) {
-                        [self.askAndAnswerMsgLock lock];
-                        [self.askAndAnswerMsgs addObject:msg];
-                        [self.askAndAnswerMsgLock unlock];
-                    }
-                }
-            }
-            // 礼物消息
-            if(msg.body.type == EMMessageBodyTypeCustom) {
-                EMCustomMessageBody* customBody = (EMCustomMessageBody*)msg.body;
-                if([customBody.event isEqualToString:@"gift"]) {
-                    NSDictionary* ext = customBody.customExt;
-                    NSString* avatarUrl = [ext objectForKey:kAvatarUrl];
-                    if(avatarUrl.length == 0){
-                        NSDictionary* curExt = msg.ext;
-                        avatarUrl = [curExt objectForKey:kAvatarUrl];
-                    }
-                    NSString* des = [ext objectForKey:@"des"];
-                    NSString* url = [ext objectForKey:@"url"];
-                    [self.dataLock lock];
-                    [self.dataArray addObject:[BarrageMsgInfo barrageInfoWithId:msg.messageId text:des avatarUrl:avatarUrl isGift:YES giftUrl:url]];
-                    [self.dataLock unlock];
-                    aInsertCommonMsg = YES;
-                }
+               // }
+//                // 问答消息
+//                if(msgType.integerValue == ChatMsgAnswer) {
+//                    NSString* asker = [ext objectForKey:@"asker"];
+//                    if([asker isEqualToString:self.user.username]) {
+//                        [self.askAndAnswerMsgLock lock];
+//                        [self.askAndAnswerMsgs addObject:msg];
+//                        [self.askAndAnswerMsgLock unlock];
+//                    }
+//                }
             }
         }
     }
     if(aInsertCommonMsg) {
-        // 这里需要读取消息发弹幕
-        if([self.delegate respondsToSelector:@selector(barrageMessageDidReceive)]) {
-            [self.delegate barrageMessageDidReceive];
+        // 这里需要读取消息展示
+        if([self.delegate respondsToSelector:@selector(chatMessageDidReceive)]) {
+            [self.delegate chatMessageDidReceive];
         }
     }
 }
@@ -412,11 +377,17 @@ static BOOL isSDKInited = NO;
                 msgIdToDel = [NSString stringWithFormat:@"%ld",num.unsignedIntValue];
             }
             if(msgIdToDel.length > 0) {
-                if([self.delegate respondsToSelector:@selector(barrageMessageDidRecall:)]) {
-                    [self.delegate barrageMessageDidRecall:msgIdToDel];
+                if([self.delegate respondsToSelector:@selector(chatMessageDidRecallchatMessageDidRecall:)]) {
+                    [self.delegate chatMessageDidRecall:msgIdToDel];
                 }
             }
         }
+    }
+    [self.dataLock lock];
+    [self.dataArray addObjectsFromArray:aCmdMessages];
+    [self.dataLock unlock];
+    if([self.delegate respondsToSelector:@selector(chatMessageDidReceive)]) {
+        [self.delegate chatMessageDidReceive];
     }
 }
 
@@ -425,24 +396,23 @@ static BOOL isSDKInited = NO;
     for (EMMessage* msg in aMessages) {
         // 判断聊天室消息
         if(msg.chatType == EMChatTypeChatRoom && [msg.to isEqualToString:self.chatRoomId]) {
-            // 普通消息
+            // 文本消息
             if(msg.body.type == EMMessageBodyTypeText) {
                 NSDictionary* ext = msg.ext;
                 NSNumber* msgType = [ext objectForKey:kMsgType];
-                // 普通弹幕消息
-                if(msgType.integerValue == ChatMsgTypeCommon) {
+                // 普通消息
+                //if(msgType.integerValue == ChatMsgTypeCommon) {
                     EMTextMessageBody* textBody = (EMTextMessageBody*)msg.body;
                     if([textBody.text length] > 0)
                     {
-                        if([self.delegate respondsToSelector:@selector(barrageMessageDidRecall:)]) {
-                            [self.delegate barrageMessageDidRecall:msg.messageId];
+                        if([self.delegate respondsToSelector:@selector(chatMessageDidRecallchatMessageDidRecall:)]) {
+                            [self.delegate chatMessageDidRecall:msg.messageId];
                         }
                     }
-                }
+                //}
             }
         }
     }
-    
 }
 
 - (void)messageStatusDidChange:(EMMessage *)aMessage
@@ -509,6 +479,10 @@ static BOOL isSDKInited = NO;
 - (void)chatroomAllMemberMuteChanged:(EMChatroom *)aChatroom
                     isAllMemberMuted:(BOOL)aMuted
 {
+    if([aChatroom.chatroomId isEqualToString:self.chatRoomId]) {
+        self.isAllMuted = aMuted;
+        [self.delegate mutedStateDidChanged];
+    }
     
 }
 
@@ -516,7 +490,7 @@ static BOOL isSDKInited = NO;
                          announcement:(NSString *)aAnnouncement
 {
     if([aChatroom.chatroomId isEqualToString:self.chatRoomId]) {
-        [self _parseAnnouncement:aAnnouncement];
+        [self.delegate announcementDidChanged:aAnnouncement];
     }
 }
 

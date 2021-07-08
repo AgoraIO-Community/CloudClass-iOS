@@ -113,7 +113,7 @@ extension AgoraUIManager {
     }
     
     func resetSmallHandsUpLayout() {
-        guard let `chat` = self.chat,
+        guard let `chat` = self.hxChat,
               let `handsUp` = self.handsUp else {
             return
         }

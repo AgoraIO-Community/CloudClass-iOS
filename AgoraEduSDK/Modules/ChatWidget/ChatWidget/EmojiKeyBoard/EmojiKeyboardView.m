@@ -109,7 +109,7 @@
         [models1 addObject:delModel];
         self.dataArray = [models1 copy];
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        [flowLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
+        [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height - 10) collectionViewLayout:flowLayout];
         self.collectionView.backgroundColor = [UIColor clearColor];
         self.collectionView.delegate = self;
@@ -117,7 +117,9 @@
         self.collectionView.showsVerticalScrollIndicator = NO;
         self.collectionView.showsHorizontalScrollIndicator = NO;
         self.collectionView.alwaysBounceHorizontal = YES;
+        self.collectionView.alwaysBounceVertical = YES;
         self.collectionView.pagingEnabled = YES;
+        self.collectionView.scrollEnabled = YES;
         //    self.collectionView.userInteractionEnabled = YES;
         [self.collectionView registerClass:[EMEmoticonCell class] forCellWithReuseIdentifier:@"EMEmoticonCell"];
         [self addSubview:self.collectionView];
