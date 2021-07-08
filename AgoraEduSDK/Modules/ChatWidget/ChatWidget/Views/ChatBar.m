@@ -43,6 +43,7 @@
     [self.inputButton setTitleColor:[UIColor colorWithRed:125/255.0 green:135/255.0 blue:152/255.0 alpha:1.0] forState:UIControlStateNormal];
     [self.inputButton addTarget:self action:@selector(InputAction) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.inputButton];
+    self.inputButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     
     self.emojiButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.emojiButton setImage:[UIImage imageNamedFromBundle:@"icon_emoji"]
@@ -58,12 +59,12 @@
     UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
     self.inputingView = [[InputingView alloc] initWithFrame:CGRectMake(0, 100, window.frame.size.width, 40)];
     self.inputingView.delegate = self;
-    [window addSubview:self.inputingView];
     self.exitInputButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.exitInputButton.frame = window.frame;
     [self.exitInputButton addTarget:self action:@selector(ExitInputAction) forControlEvents:UIControlEventTouchUpInside];
     [window addSubview:self.exitInputButton];
     [window bringSubviewToFront:self.inputingView];
+    [window addSubview:self.inputingView];
     self.inputingView.exitInputButton = self.exitInputButton;
     self.inputingView.hidden = YES;
     self.exitInputButton.hidden = YES;
@@ -142,6 +143,18 @@
 - (void)msgWillSend:(NSString *)aMsgText
 {
     [self.delegate msgWillSend:aMsgText];
+}
+
+- (void)keyBoardDidHide:(NSString*)aText
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(aText.length > 0) {
+            [self.inputButton setTitle:aText forState:UIControlStateNormal];
+        }else{
+            [self.inputButton setTitle:@"请输入消息" forState:UIControlStateNormal];
+        }
+    });
+    
 }
 
 

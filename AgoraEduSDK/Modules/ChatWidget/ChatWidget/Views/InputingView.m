@@ -31,6 +31,11 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)setupSubViews
 {
     self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -75,7 +80,7 @@
                          action:@selector(emojiButtonAction)
                forControlEvents:UIControlEventTouchUpInside];
     
-    self.emojiKeyBoardView = [[EmojiKeyboardView alloc] initWithFrame:CGRectMake(0,0,self.bounds.size.width,176)];
+    self.emojiKeyBoardView = [[EmojiKeyboardView alloc] initWithFrame:CGRectMake(0,0,self.bounds.size.width,190)];
     self.emojiKeyBoardView.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -101,7 +106,7 @@
         }
 }
 
-- (void)sendButtonAction
+- (void)sendMsg
 {
     self.hidden = YES;
     self.exitInputButton.hidden = YES;
@@ -109,8 +114,14 @@
         if(sendText.length > 0) {
             [self.delegate msgWillSend:sendText];
         }
-        self.inputField.text = @"";
-        [self.inputField resignFirstResponder];
+    self.inputField.text = @"";
+    [self.inputField resignFirstResponder];
+}
+
+- (void)sendButtonAction
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(sendMsg) object:nil];
+    [self performSelector:@selector(sendMsg) withObject:nil afterDelay:0.1];
 }
 
 #pragma mark - UITextFieldDelegate
@@ -152,8 +163,6 @@
         }
         
     }];
-    
-    
 }
 
 
@@ -161,6 +170,7 @@
 - (void)keyboardDidHide:(NSNotification *)notification{
     CGFloat duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
     [UIView animateWithDuration:duration animations:^{
+        [self.delegate keyBoardDidHide:self.inputField.text];
     }];
 }
 

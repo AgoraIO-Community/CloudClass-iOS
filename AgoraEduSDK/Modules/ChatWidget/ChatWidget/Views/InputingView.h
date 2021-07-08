@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol InputingViewDelegate <NSObject>
 
 - (void)msgWillSend:(NSString*)aMsgText;
+- (void)keyBoardDidHide:(NSString*)aText;
 
 @end
 
@@ -21,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) UIButton* emojiButton;
 @property (nonatomic,strong) UIButton* exitInputButton;
 - (void)changeKeyBoardType;
+
 @end
 
 NS_ASSUME_NONNULL_END

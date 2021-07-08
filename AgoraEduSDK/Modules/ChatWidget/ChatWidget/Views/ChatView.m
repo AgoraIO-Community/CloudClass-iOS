@@ -422,6 +422,7 @@
 
 - (void)messageCellDidLongPress:(EMMessageCell *)aCell
 {
+    return;
     self.menuIndexPath = [self.tableView indexPathForCell:aCell];
     [self _showMenuViewController:aCell model:aCell.model];
 }
