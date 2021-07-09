@@ -262,6 +262,10 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.miniButton.hidden = YES;
     if(self.chatTopView.currentTab != 0)
         self.chatTopView.badgeView.hidden = self.badgeView.hidden;
+    else
+    {
+        [self.chatView scrollToBottomRow];
+    }
     self.badgeView.hidden = YES;
     if([[UIDevice currentDevice].model isEqualToString:@"iPad"]) {
         self.containerView.agora_width = 300;

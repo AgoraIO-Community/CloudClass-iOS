@@ -145,7 +145,7 @@ static BOOL isSDKInited = NO;
     if(result.list.count > 0){
         EMConversation* conv = [[[EMClient sharedClient] chatManager] getConversationWithConvId:self.chatRoomId];
         [conv loadMessagesStartFromId:@"" count:50 searchDirection:EMMessageSearchDirectionUp completion:^(NSArray *aMessages, EMError *aError) {
-            [weakself.dataArray addObjectsFromArray:result.list];
+            [weakself.dataArray addObjectsFromArray:aMessages];
             [weakself.delegate chatMessageDidReceive];
         }];
     }

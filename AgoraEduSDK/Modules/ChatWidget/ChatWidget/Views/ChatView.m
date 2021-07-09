@@ -157,6 +157,15 @@
     [self addSubview:self.chatBar];
     [self bringSubviewToFront:self.chatBar];
     [self sendSubviewToBack:self.tableView];
+    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.width.equalTo(self);
+            make.bottom.equalTo(self).offset(-40);
+    }];
+    [self.chatBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.width.equalTo(self);
+        make.height.equalTo(@40);
+    }];
 }
 
 - (void)setAnnouncement:(NSString *)announcement
@@ -164,15 +173,21 @@
     _announcement = announcement;
     self.showAnnouncementView.hidden = _announcement.length == 0;
     announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+    NSCharacterSet *whitespaces = [NSCharacterSet whitespaceCharacterSet];
+    NSPredicate *noEmptyStrings = [NSPredicate predicateWithFormat:@"SELF != ''"];
+    NSArray *parts = [announcement componentsSeparatedByCharactersInSet:whitespaces];
+    NSArray *filteredArray = [parts filteredArrayUsingPredicate:noEmptyStrings];
+    announcement = [filteredArray componentsJoinedByString:@" "];
+
     [self.showAnnouncementView.announcementButton setTitle:announcement forState:UIControlStateNormal];
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    self.tableView.frame = CGRectMake(0, 0, self.bounds.size.width,self.bounds.size.height - 40);
-    self.chatBar.frame = CGRectMake(0, self.bounds.size.height - 40, self.bounds.size.width, 40);
-}
+//- (void)layoutSubviews
+//{
+//    [super layoutSubviews];
+////    self.tableView.frame = CGRectMake(0, 0, self.bounds.size.width,self.bounds.size.height - 40);
+////    self.chatBar.frame = CGRectMake(0, self.bounds.size.height - 40, self.bounds.size.width, 40);
+//}
 
 #pragma mark - getter
 
@@ -183,6 +198,7 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.tableFooterView = [UIView new];
     }
     
     return _tableView;
@@ -340,12 +356,16 @@
     return formated;
 }
 
-- (void)_scrollToBottomRow
+- (void)scrollToBottomRow
 {
     if ([self.dataArray count] > 0) {
+        [self.tableView setNeedsLayout];
+        [self.tableView layoutIfNeeded];
         NSInteger toRow = self.dataArray.count - 1;
         NSIndexPath *toIndexPath = [NSIndexPath indexPathForRow:toRow inSection:0];
-        [self.tableView scrollToRowAtIndexPath:toIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.tableView scrollToRowAtIndexPath:toIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        });
     }
 }
 
@@ -353,11 +373,14 @@
 {
     NSArray *formated = [self _formatMessages:msgArray];
     [self.dataArray addObjectsFromArray:formated];
-    [self.tableView reloadData];
-    if(self.dataArray.count > 0){
-        self.nilMsgView.hidden = YES;
-    }
-    [self _scrollToBottomRow];
+    __weak typeof(self) weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.tableView reloadData];
+        if(weakself.dataArray.count > 0){
+            weakself.nilMsgView.hidden = YES;
+        }
+        [weakself scrollToBottomRow];
+    });
 }
 
 #pragma mark - ChatBarDelegate
