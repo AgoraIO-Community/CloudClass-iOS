@@ -46,6 +46,7 @@ Login_duration_holder = "30mins";
 About_title = "About";
 About_close = "Close";
 About_privacy = "Privacy Policy";
+About_terms = "Terms Of Service";
 About_disclaimer = "Product Disclaimer";
 About_register = "Sign up Agora.io";
 About_version_time = "Version Time";
@@ -54,6 +55,7 @@ About_class_version = "Flexible Classroom Version";
 About_url = "www.agora.io";
 
 Privacy_url = "https://www.agora.io/en/privacy-policy/";
+Terms_url = "https://www.agora.io/en/terms-of-service/";
 Signup_url = "https://sso.agora.io/en/signup";
 
 Disclaimer_title = "Product disclaimer";

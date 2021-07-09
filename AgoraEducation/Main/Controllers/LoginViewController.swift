@@ -193,6 +193,7 @@ extension LoginViewController {
         initView()
         initLayout()
         setSDKConfig()
+        checkPrivacyPolicy()
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>,
@@ -281,6 +282,18 @@ private extension LoginViewController {
         countDown.image = UIImage(named: "countdown")
         let apps = [countDown]
         AgoraClassroomSDK.registerExtApps(apps)
+    }
+
+    private func checkPrivacyPolicy() {
+        if !TermsAndPolicyViewController.getPolicyPopped() {
+            showPrivacyPolicy()
+        }
+    }
+
+    private func showPrivacyPolicy() {
+        if let termsVC = TermsAndPolicyViewController.loadFromStoryboard("privacy", "terms") {
+            present(termsVC, animated: true, completion: nil)
+        }
     }
 }
 
