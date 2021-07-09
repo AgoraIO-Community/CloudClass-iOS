@@ -1,0 +1,18 @@
+
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "FaU-wm-p81"; */
+"FaU-wm-p81.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "UIButton"; normalTitle = "Disagree"; ObjectID = "af8-aG-M2X"; */
+"af8-aG-M2X.normalTitle" = "不同意";
+
+/* Class = "UIButton"; normalTitle = "Agree"; ObjectID = "bPN-fe-QEN"; */
+"bPN-fe-QEN.normalTitle" = "同意";
+
+/* Class = "UIButton"; normalTitle = "I have read the terms"; ObjectID = "dhy-gW-c3V"; */
+"dhy-gW-c3V.normalTitle" = "我已阅读平台条款与条件";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "gFl-4W-bAu"; */
+"gFl-4W-bAu.text" = "Agora 隐私政策和服务条款";
+
+/* Class = "UIButton"; normalTitle = "Close"; ObjectID = "oiJ-tU-un7"; */
+"oiJ-tU-un7.normalTitle" = "关闭";
