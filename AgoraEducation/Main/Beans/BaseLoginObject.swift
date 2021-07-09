@@ -61,6 +61,7 @@ class LoginConfig {
     
     static let AboutInfoList: Array<(String,Any?)> =
         [(NSLocalizedString("About_privacy", comment: ""), URL(string: NSLocalizedString("Privacy_url", comment: ""))),
+         (NSLocalizedString("About_terms", comment: ""), URL(string: NSLocalizedString("Terms_url", comment: ""))),
          (NSLocalizedString("About_disclaimer", comment: ""),  DisclaimerView(frame: .zero)),
          (NSLocalizedString("About_register", comment: ""), URL(string: NSLocalizedString("Signup_url", comment: ""))),
          (NSLocalizedString("About_version_time", comment: ""),  version_time),

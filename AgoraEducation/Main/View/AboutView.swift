@@ -98,7 +98,7 @@ public class AboutView: AgoraBaseUIView {
         label.isHidden = LoginConfig.device == .iPad
         return label
     }()
-    
+
     public override init(frame: CGRect) {
         super.init(frame: .zero)
         initView()
@@ -222,7 +222,7 @@ extension AboutView: UITableViewDataSource,UITableViewDelegate {
             DispatchQueue.main.async {
                 UIApplication.shared.open(detailUrl,
                                           options: [:]) { (complete) in
-                    
+
                 }
             }
         } else if let detailView = detail as? AgoraBaseUIView {

@@ -12,6 +12,11 @@
 		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
 		1A70AFB22359F17500942742 /* SettingViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A70AFB12359F17500942742 /* SettingViewCell.m */; };
 		1A87571223571CFE009C55A8 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A87571123571CFE009C55A8 /* SettingViewController.m */; };
+		586A17CA269854CE00112777 /* Agora_Privacy_Policy_cn.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 586A17C8269854CE00112777 /* Agora_Privacy_Policy_cn.rtf */; };
+		586A17CB269854CE00112777 /* Agora_Privacy_Policy_en.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 586A17C9269854CE00112777 /* Agora_Privacy_Policy_en.rtf */; };
+		586A17CD2698553300112777 /* TermsAndPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 586A17CC2698553300112777 /* TermsAndPolicyViewController.swift */; };
+		586A17CF2698553900112777 /* TermsAndPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 586A17CE2698553900112777 /* TermsAndPolicyView.swift */; };
+		586A17D226985A9900112777 /* privacy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 586A17D426985A9900112777 /* privacy.storyboard */; };
 		683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683622D5262AC4620028F7F5 /* DisclaimerView.swift */; };
 		68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68362356262D30C20028F7F5 /* BaseLoginObject.swift */; };
 		6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68880999262825FC00B5FB2A /* LoginViewController.swift */; };
@@ -77,6 +82,13 @@
 		3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.devrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.devrelease.xcconfig"; sourceTree = "<group>"; };
 		40B28313D80C71B4DA8D643D /* Pods-AgoraEducation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.debug.xcconfig"; sourceTree = "<group>"; };
 		4EAA54960A24224AEAEC570D /* Pods-AgoraEducation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.release.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.release.xcconfig"; sourceTree = "<group>"; };
+		586A17C8269854CE00112777 /* Agora_Privacy_Policy_cn.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Agora_Privacy_Policy_cn.rtf; sourceTree = "<group>"; };
+		586A17C9269854CE00112777 /* Agora_Privacy_Policy_en.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Agora_Privacy_Policy_en.rtf; sourceTree = "<group>"; };
+		586A17CC2698553300112777 /* TermsAndPolicyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermsAndPolicyViewController.swift; sourceTree = "<group>"; };
+		586A17CE2698553900112777 /* TermsAndPolicyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermsAndPolicyView.swift; sourceTree = "<group>"; };
+		586A17D326985A9900112777 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/privacy.storyboard; sourceTree = "<group>"; };
+		586A17D626985A9F00112777 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/privacy.strings; sourceTree = "<group>"; };
+		586A17D826985AD000112777 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/privacy.strings"; sourceTree = "<group>"; };
 		683622D5262AC4620028F7F5 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 		68362356262D30C20028F7F5 /* BaseLoginObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLoginObject.swift; sourceTree = "<group>"; };
 		68880999262825FC00B5FB2A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -205,6 +217,8 @@
 		1A87571323581AEC009C55A8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				586A17C8269854CE00112777 /* Agora_Privacy_Policy_cn.rtf */,
+				586A17C9269854CE00112777 /* Agora_Privacy_Policy_en.rtf */,
 				78A3EA5E25640261003067AB /* AgoraEducation-Bridging-Header.h */,
 				1A44BE5722BF863000766274 /* Assets.xcassets */,
 				1A44BE7E22BF874A00766274 /* Info.plist */,
@@ -323,6 +337,7 @@
 		78D7312E23B38B0A00D2146C /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				586A17D426985A9900112777 /* privacy.storyboard */,
 				6836221126296F660028F7F5 /* Beans */,
 				78D7313923B38B5700D2146C /* Controllers */,
 				78D7313523B38B5700D2146C /* View */,
@@ -333,6 +348,7 @@
 		78D7313523B38B5700D2146C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				586A17CE2698553900112777 /* TermsAndPolicyView.swift */,
 				6888099E2628383700B5FB2A /* ChooseTableView.swift */,
 				683622D5262AC4620028F7F5 /* DisclaimerView.swift */,
 				68A5E2AA2635143400E3C37E /* AboutTableCell.swift */,
@@ -344,6 +360,7 @@
 		78D7313923B38B5700D2146C /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				586A17CC2698553300112777 /* TermsAndPolicyViewController.swift */,
 				68880999262825FC00B5FB2A /* LoginViewController.swift */,
 				688809E72629358800B5FB2A /* MainViewController.swift */,
 			);
@@ -566,8 +583,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */,
+				586A17D226985A9900112777 /* privacy.storyboard in Resources */,
 				7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */,
+				586A17CB269854CE00112777 /* Agora_Privacy_Policy_en.rtf in Resources */,
 				1A44BE7522BF863000766274 /* Assets.xcassets in Resources */,
+				586A17CA269854CE00112777 /* Agora_Privacy_Policy_cn.rtf in Resources */,
 				78D7314823B3964400D2146C /* README.zh.md in Resources */,
 				7801A89D25DB7D9D00C63ABF /* DebugViewController.xib in Resources */,
 				7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */,
@@ -691,7 +711,9 @@
 				783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */,
 				787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */,
 				68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */,
+				586A17CD2698553300112777 /* TermsAndPolicyViewController.swift in Sources */,
 				86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */,
+				586A17CF2698553900112777 /* TermsAndPolicyView.swift in Sources */,
 				7801A89C25DB7D9D00C63ABF /* DebugViewController.swift in Sources */,
 				1A44BE7A22BF863000766274 /* main.m in Sources */,
 				78DFB67725AECAF600B01906 /* TokenBuilder.m in Sources */,
@@ -728,6 +750,16 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		586A17D426985A9900112777 /* privacy.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				586A17D326985A9900112777 /* Base */,
+				586A17D626985A9F00112777 /* en */,
+				586A17D826985AD000112777 /* zh-Hans */,
+			);
+			name = privacy.storyboard;
+			sourceTree = "<group>";
+		};
 		7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

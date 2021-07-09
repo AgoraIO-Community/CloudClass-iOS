@@ -210,6 +210,18 @@ extension LoginViewController {
     private func setSDKConfig() {
 
     }
+
+    private func checkPrivacyPolicy() {
+        if !TermsAndPolicyViewController.getPolicyPopped() {
+            showPrivacyPolicy()
+        }
+    }
+
+    private func showPrivacyPolicy() {
+        if let termsVC = TermsAndPolicyViewController.loadFromStoryboard("privacy", "terms") {
+            present(termsVC, animated: true, completion: nil)
+        }
+    }
 }
 
 // MARK: UI
@@ -220,6 +232,7 @@ extension LoginViewController {
         initView()
         initLayout()
         setSDKConfig()
+        checkPrivacyPolicy()
     }
 
     private func addWarnLabel(group: AgoraBaseUIView) -> AgoraBaseUILabel {
