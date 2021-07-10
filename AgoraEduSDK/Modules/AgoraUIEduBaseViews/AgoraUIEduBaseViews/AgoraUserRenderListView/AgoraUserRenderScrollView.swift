@@ -36,25 +36,21 @@ import AgoraEduContext
     
     // MARK: touch event
     @objc func buttonTap(btn: AgoraBaseUIButton) {
-        let width = scrollView.bounds.width
-        let height = scrollView.bounds.height
+        let Gap: CGFloat = 2
+        
         var x: CGFloat = 0
         
+        let count = Int(scrollView.contentOffset.x / (AgoraUserRenderScrollView.preferenceWidth + Gap))
+        
         if btn == leftButton {
-            x = scrollView.contentOffset.x - width
-            x = max(x,
-                    0)
+            let pageWidth = CGFloat(count - 1) * (AgoraUserRenderScrollView.preferenceWidth + Gap)
+            x = max(pageWidth, 0)
         } else {
-            x = scrollView.contentOffset.x + width
-            x = min(x,
-                    scrollView.contentSize.width)
+            let pageWidth = CGFloat((count + 1)) * (AgoraUserRenderScrollView.preferenceWidth + Gap)
+            x = min(pageWidth, scrollView.contentSize.width - scrollView.frame.width)
         }
         
-        scrollView.scrollRectToVisible(CGRect(x: x,
-                                                  y: 0,
-                                                  width: width,
-                                                  height: height),
-                                                animated: true)
+        scrollView.setContentOffset(CGPoint(x: x, y: 0), animated: true)
     }
 }
 

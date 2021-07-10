@@ -8,6 +8,12 @@
 
 import EduSDK
 import AgoraEduContext
+import AgoraReport
+
+@objcMembers public class AgoraDeviceStateCountInfo: NSObject {
+    public var cameraCount: Int = 0
+    public var microCount: Int = 0
+}
 
 @objcMembers public class AgoraDeviceVM: AgoraBaseVM {
     
@@ -23,6 +29,10 @@ import AgoraEduContext
     private var teaCameraState: AgoraEduContextDeviceState = .available
     private var teaMicroState: AgoraEduContextDeviceState = .available
     
+    // 用于判断远端设备状态
+    fileprivate var threadTimer: AgoraSubThreadTimer?
+    fileprivate var rteStreamCountInfo: [String: AgoraDeviceStateCountInfo] = [:]
+    
 //    fileprivate var deviceLock: NSLock = NSLock()
     
     public override init(config: AgoraVMConfig) {
@@ -30,6 +40,11 @@ import AgoraEduContext
         
         self.rteLocalStreamState.camera = .failed
         self.rteLocalStreamState.microphone = .failed
+        
+        threadTimer = AgoraSubThreadTimer(threadName: "io.agora.timer.event", timeInterval: 2.0)
+        threadTimer?.delegate = self
+        
+        threadTimer?.start()
     }
     
     public func initDeviceState(successBlock: ((AgoraEduContextDeviceConfig) -> Void)?,
@@ -117,7 +132,6 @@ import AgoraEduContext
         // 判断是否上报
         self.rteStreamStates = rteStreamStates
     }
-    
     public func updateRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState],
                                       deviceType: AgoraDeviceStateType) {
         // 判断是否上报
@@ -181,6 +195,10 @@ import AgoraEduContext
         }, failure: { (error) in
             
         })
+    }
+    
+    deinit {
+        threadTimer?.stop()
     }
     
     // MARK: DeviceChanged
@@ -269,6 +287,7 @@ import AgoraEduContext
                                    rteStream: AgoraRTEStream?) -> AgoraEduContextDeviceState {
         
         var deviceStreamState: AgoraEduContextDeviceState = .available
+        var resetRteStreamCount = true
         
         // 只有自己的时候需要deviceConfig判断
         if rteUser.userUuid == self.config.userUuid {
@@ -332,7 +351,22 @@ import AgoraEduContext
         
         // remote
         if streamStates == .frozen || streamStates == .stopped {
-            return .notAvailable
+            // 联系记录2次以上
+            let stateCountInfo = rteStreamCountInfo[rteUser.streamUuid] ?? AgoraDeviceStateCountInfo()
+            let count = (type == .camera) ? stateCountInfo.cameraCount : stateCountInfo.microCount
+            if count >= 2 {
+                resetRteStreamCount = false
+                return .notAvailable
+            }
+            return .available
+        }
+        
+        defer {
+            if rteUser.userUuid != self.config.userUuid && resetRteStreamCount {
+                
+                let stateType: AgoraDeviceStateType = (type == .camera) ? .camera : .microphone
+                resetRteStreamCountInfo(streamUuid: rteUser.streamUuid, type: stateType)
+            }
         }
     
         // device里面没有找到， 默认认为是好的
@@ -540,5 +574,48 @@ private extension AgoraDeviceVM {
                 failureBlock(err)
             }
         }
+    }
+}
+
+// MARK: Timer
+extension AgoraDeviceVM: AgoraSubThreadTimerDelegate {
+    func resetRteStreamCountInfo(streamUuid: String, type: AgoraDeviceStateType) {
+        let countInfo = rteStreamCountInfo[streamUuid] ?? AgoraDeviceStateCountInfo()
+        if type == .camera {
+            countInfo.cameraCount = 0
+        }
+        if type == .microphone {
+            countInfo.microCount = 0
+        }
+        rteStreamCountInfo[streamUuid] = countInfo
+    }
+    
+    func resetRteStreamCountInfo(streamUuid: String) {
+        resetRteStreamCountInfo(streamUuid: streamUuid, type: .camera)
+        resetRteStreamCountInfo(streamUuid: streamUuid, type: .microphone)
+    }
+    
+    public func perLoop() {
+        var streamCountInfo: [String: AgoraDeviceStateCountInfo] = [:]
+        for streamUuid in rteStreamStates.keys {
+            
+            let streamState = rteStreamStates[streamUuid]
+            let countInfo = rteStreamCountInfo[streamUuid] ?? AgoraDeviceStateCountInfo()
+            
+            if streamState!.camera == .frozen
+                || streamState!.camera == .stopped {
+                countInfo.cameraCount = (countInfo.cameraCount ?? 0) + 1
+            } else {
+                countInfo.cameraCount = 0
+            }
+            if streamState!.microphone == .frozen
+                || streamState!.microphone == .stopped {
+                countInfo.microCount = (countInfo.microCount ?? 0) + 1
+            } else {
+                countInfo.microCount = 0
+            }
+            streamCountInfo[streamUuid] = countInfo
+        }
+        rteStreamCountInfo = streamCountInfo
     }
 }

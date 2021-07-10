@@ -652,6 +652,7 @@ extension AgoraUserVM {
                                        coHostUserUuids: [String],
                                        rteStreams: [AgoraRTEStream],
                                        studentInfos: [String: AgoraStudentInfo]) -> [AgoraEduContextUserDetailInfo] {
+        
         let coHostInfos = self.getCoHostInfos(onLineRteUsers: onLineRteUsers,
                                               coHostUserUuids: coHostUserUuids,
                                               rteStreams: rteStreams,
@@ -680,9 +681,17 @@ extension AgoraUserVM {
             
             var kitUserInfo: AgoraEduContextUserDetailInfo!
             
-            if let onLineRteUser = onLineRteUsers.first(where: { (onLineRteUser) -> Bool in
+            // 如果是自己，那么肯定在线
+            if coHostUserUuid == self.config.userUuid,
+               let localUser = self.localUserInfo {
+                
+                kitUserInfo = self.getKitUserInfo(localUser, rteStream)
+                kitUserInfo.onLine = true
+
+            } else if let onLineRteUser = onLineRteUsers.first(where: { (onLineRteUser) -> Bool in
                 onLineRteUser.userUuid == coHostUserUuid
             }) {
+                // 查看是否在线
                 kitUserInfo = self.getKitUserInfo(onLineRteUser, rteStream)
                 kitUserInfo.onLine = true
                 
@@ -702,6 +711,11 @@ extension AgoraUserVM {
             kitUserInfo.enableVideo = false
             kitUserInfo.enableAudio = false
             kitUserInfo.coHost = true
+            if kitUserInfo.streamUuid == ""  {
+                if let info = self.kitUserInfos.first(where: {$0.user.userUuid == kitUserInfo.user.userUuid}) {
+                    kitUserInfo.streamUuid = info.streamUuid
+                }
+            }
             
             if let rteStream = rteStream {
                 kitUserInfo.enableVideo = rteStream.hasVideo

@@ -39,6 +39,7 @@ public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
     public weak var delegate: AgoraUIUserViewDelegate?
     
     public var index: Int = 0
+    public var userUuid: String?
     
     private(set) lazy var audioBtn: AgoraBaseUIButton = {
         let btn = AgoraBaseUIButton(type: .custom)
@@ -256,6 +257,7 @@ private extension AgoraUIUserView {
 // MARK: - Update views
 private extension AgoraUIUserView {
     func updateUserName(userInfo: AgoraEduContextUserDetailInfo?) {
+        self.userUuid = userInfo?.user.userUuid
         self.nameLabel.isHidden = true
         
         guard let info = userInfo else {

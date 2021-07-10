@@ -28,9 +28,9 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
     // 可渲染最大宽度
     private var renderMaxWidth: CGFloat = 0
     // 渲染间距
-    private let renderViewGap: CGFloat = 2
+    let renderViewGap: CGFloat = 2
     // 最多上台人数为6人
-    private let renderMaxView: CGFloat = 6
+    let renderMaxView: CGFloat = 6
     
     // Views
     let teacherView = AgoraUIUserView(frame: .zero)
@@ -124,17 +124,17 @@ private extension AgoraSmallRenderUIController {
         let Width = max(UIScreen.agora_width,
                         UIScreen.agora_height)
         let SafeWidth = max(UIScreen.agora_safe_area_top + UIScreen.agora_safe_area_bottom,
-                        UIScreen.agora_safe_area_right + UIScreen.agora_safe_area_left)
+                        UIScreen.agora_safe_area_right + UIScreen.agora_safe_area_left) + 10
         renderMaxWidth = Width - SafeWidth
     
         // 老师和学生在一个列表, 计算放7个的时候
-        let itemWidth: CGFloat = (renderMaxWidth - renderMaxView * renderViewGap) / renderMaxView
+        let itemWidth: CGFloat = (renderMaxWidth - renderMaxView * renderViewGap) / (renderMaxView + 1)
         // 宽高 16 ：9
         let itemHeight = itemWidth * 9.0 / 16.0
         
         teacherViewSize = CGSize(width: itemWidth, height: itemHeight)
-        AgoraUserRenderListView.preferenceWidth = teacherViewSize.width
-        AgoraUserRenderListView.preferenceHeight = teacherViewSize.height
+        AgoraUserRenderScrollView.preferenceWidth = teacherViewSize.width
+        AgoraUserRenderScrollView.preferenceHeight = teacherViewSize.height
     }
     
     func initViews() {
@@ -150,13 +150,13 @@ private extension AgoraSmallRenderUIController {
     func initLayout() {
         teacherView.agora_x = 0
         teacherView.agora_y = 0
-        teacherView.agora_width = AgoraUserRenderListView.preferenceWidth
-        teacherView.agora_height = AgoraUserRenderListView.preferenceHeight
+        teacherView.agora_width = AgoraUserRenderScrollView.preferenceWidth
+        teacherView.agora_height = AgoraUserRenderScrollView.preferenceHeight
         teacherView.isHidden = true
     
         renderListView.agora_x = teacherView.agora_x + teacherView.agora_width + renderViewGap
         renderListView.agora_y = 0
-        renderListView.agora_height = AgoraUserRenderListView.preferenceHeight
+        renderListView.agora_height = AgoraUserRenderScrollView.preferenceHeight
         renderListView.agora_right = 0
         renderListView.isHidden = true
     
