@@ -26,7 +26,7 @@ public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
 @objcMembers public class AgoraUIUserView: AgoraBaseUIView {
     public private(set) lazy var videoCanvas: AgoraUIVideoCanvas =  {
         let view = AgoraUIVideoCanvas()
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = UIColor.black
         return view
     }()
     

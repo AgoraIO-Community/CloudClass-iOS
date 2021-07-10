@@ -336,9 +336,10 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         }
         chat.containerView.agora_safe_bottom = 0
         chat.containerView.agora_width = isPad ? 300:200
-        chat.containerView.agora_safe_right = 0
+        chat.containerView.agora_safe_right = 10
         
         self.hxChat = chat
+        chat.widgetDidReceiveMessage("min")
     }
 }
 

@@ -69,6 +69,7 @@
 		783AAF0D25F4D53C00957598 /* AgoraCourseTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAF0825F4D53C00957598 /* AgoraCourseTipsView.swift */; };
 		783AAF0F25F4D53C00957598 /* AgoraAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAF0B25F4D53C00957598 /* AgoraAlertView.swift */; };
 		783AAF1025F4D53C00957598 /* AgorCycleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAF0C25F4D53C00957598 /* AgorCycleView.swift */; };
+		7853808D2698AD1500F91332 /* AgoraUserRenderScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7853808C2698AD1500F91332 /* AgoraUserRenderScrollView.swift */; };
 		78A0A27F26047E1500503C17 /* AgoraKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A0A27E26047E1500503C17 /* AgoraKitExtension.swift */; };
 		78A0A3132604B25100503C17 /* AgoraUserRenderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A0A3102604B25100503C17 /* AgoraUserRenderCell.swift */; };
 		78A0A3142604B25100503C17 /* AgoraUserRenderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A0A3112604B25100503C17 /* AgoraUserRenderListView.swift */; };
@@ -166,6 +167,7 @@
 		783AAF0825F4D53C00957598 /* AgoraCourseTipsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraCourseTipsView.swift; sourceTree = "<group>"; };
 		783AAF0B25F4D53C00957598 /* AgoraAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraAlertView.swift; sourceTree = "<group>"; };
 		783AAF0C25F4D53C00957598 /* AgorCycleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgorCycleView.swift; sourceTree = "<group>"; };
+		7853808C2698AD1500F91332 /* AgoraUserRenderScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserRenderScrollView.swift; sourceTree = "<group>"; };
 		78A0A27E26047E1500503C17 /* AgoraKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraKitExtension.swift; sourceTree = "<group>"; };
 		78A0A3102604B25100503C17 /* AgoraUserRenderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserRenderCell.swift; sourceTree = "<group>"; };
 		78A0A3112604B25100503C17 /* AgoraUserRenderListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserRenderListView.swift; sourceTree = "<group>"; };
@@ -391,6 +393,7 @@
 			children = (
 				78A0A3102604B25100503C17 /* AgoraUserRenderCell.swift */,
 				78A0A3112604B25100503C17 /* AgoraUserRenderListView.swift */,
+				7853808C2698AD1500F91332 /* AgoraUserRenderScrollView.swift */,
 			);
 			path = AgoraUserRenderListView;
 			sourceTree = "<group>";
@@ -715,6 +718,7 @@
 				78EF58CF25F749270045E98F /* AgoraUISettingView.swift in Sources */,
 				783AAEBC25F4D05700957598 /* AgoraRefreshNormalHeader.m in Sources */,
 				783AAEAB25F4D05700957598 /* AgoraRefreshBackStateFooter.m in Sources */,
+				7853808D2698AD1500F91332 /* AgoraUserRenderScrollView.swift in Sources */,
 				783AAEEB25F4D26600957598 /* AgoraKitUtils.swift in Sources */,
 				783AAED025F4D05700957598 /* AgoraChatPanelMessageCell.swift in Sources */,
 				8683140B26005886009C78A3 /* AgoraBoardToolsView.swift in Sources */,

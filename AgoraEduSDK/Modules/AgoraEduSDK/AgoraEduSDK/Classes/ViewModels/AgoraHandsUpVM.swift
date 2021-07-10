@@ -246,9 +246,10 @@ extension AgoraHandsUpVM {
            accepted.data.processUuid == AgoraActionProcessUuid.handsUp,
            accepted.data.actionType == AgoraActionStateType.accepted,
            let _ = accepted.data.addAccepted.first(where: { $0.userUuid == self.config.userUuid }) {
-
+            
             if let messsage = self.getHandsUpTips(accepted.data.actionType) {
                 self.showTipsBlock?(messsage)
+                self.updateHandsUpBlock?(AgoraEduContextHandsUpState.default)
             }
             
             return (accepted.cmd, accepted.data.actionType)

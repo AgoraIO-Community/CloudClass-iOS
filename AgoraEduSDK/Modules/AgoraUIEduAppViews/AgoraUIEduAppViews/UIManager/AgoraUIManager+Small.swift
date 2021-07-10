@@ -120,5 +120,9 @@ extension AgoraUIManager {
         
         let right = chat.containerView.agora_safe_right + chat.containerView.agora_width + 10 - 8
         handsUp.containerView.agora_safe_right = right
+        
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
+            self.appView.layoutSubviews()
+        }
     }
 }

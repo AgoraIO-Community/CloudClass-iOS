@@ -18,41 +18,108 @@ extension AgoraSmallRenderUIController {
     }
 }
 
-// MARK: - UICollectionViewDataSource
-extension AgoraSmallRenderUIController: UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView,
-                               numberOfItemsInSection section: Int) -> Int {
-        return self.coHosts.count
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView,
-                               cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AgoraUserRenderCell",
-                                                      for: indexPath) as! AgoraUserRenderCell
-        let userView = getUserView(index: indexPath.item)
-        let item = coHosts[indexPath.item]
-        let userInfo = item.userInfo
-        userView.delegate = self
-        userView.index = indexPath.item
-        userView.update(with: userInfo)
-        
-        if userInfo.enableAudio && userInfo.microState != .close {
-            userView.updateAudio(effect: item.volume)
+//
+extension AgoraSmallRenderUIController {
+    public func reloadCollectionView() {
+        // 遍历view， 如果有
+        let superV = self.renderListView.scrollView
+        var subVs = [AgoraUIUserView]()
+        superV.subviews.forEach { (v) in
+            if let `v` = v as? AgoraUIUserView {
+                subVs.append(v)
+            }
         }
         
-        cell.userView = userView
-        userView.agora_y = 0
-        userView.agora_bottom = 0
+        // 需要删除的view
+        var removeSubViews = [AgoraUIUserView]()
+        // 需要插入的view
+        var insertSubViews = [AgoraUIUserView]()
         
-        if userInfo.enableVideo {
-            renderVideoStream(userInfo.streamUuid,
-                              on: userView.videoCanvas)
-        } else {
-            unrenderVideoStream(userInfo.streamUuid,
-                                on: userView.videoCanvas)
+        let upsetBlock = { [weak self] (index: Int, isInsert: Bool) -> Void in
+            guard let `self` = self else {
+                return
+            }
+
+            let userInfo = self.coHosts[index].userInfo
+            
+            let userV = self.getUserView(index: index)
+            userV.delegate = self
+            userV.index = index
+            userV.update(with: userInfo)
+            
+            if userInfo.enableVideo {
+                self.renderVideoStream(userInfo.streamUuid,
+                                       on: userV.videoCanvas)
+            } else {
+                self.unrenderVideoStream(userInfo.streamUuid,
+                                         on: userV.videoCanvas)
+            }
+            
+            if isInsert {
+                superV.addSubview(userV)
+
+                userV.agora_x = (AgoraUserRenderListView.preferenceWidth + 2) * CGFloat(index + 1)
+                userV.agora_y = 0
+                userV.agora_width = AgoraUserRenderListView.preferenceWidth
+                userV.agora_height = AgoraUserRenderListView.preferenceHeight
+                
+                insertSubViews.append(userV)
+            }
         }
         
-        return cell
+        // 更新userlist位置
+        let layoutBlock = { [weak self] () -> Void in
+            guard let `self` = self else {
+                return
+            }
+            
+            superV.layoutIfNeeded()
+            
+            for (index, value) in self.coHosts.enumerated() {
+                let userV = self.getUserView(index: index)
+                userV.agora_x = (AgoraUserRenderListView.preferenceWidth + 2) * CGFloat(index)
+            }
+            
+            removeSubViews.forEach { (userV) in
+                userV.agora_width = 0
+            }
+//            insertSubViews.forEach { (userV) in
+//                userV.agora_width = AgoraUserRenderListView.preferenceWidth
+//            }
+   
+            UIView.animate(withDuration: 0.6) {
+                superV.layoutIfNeeded()
+            } completion: { (_) in
+                removeSubViews.forEach { $0.removeFromSuperview() }
+            }
+        }
+
+        // 标记当前针对coHosts对比到哪个
+        var queryIndex = 0
+        for (index, subV) in subVs.enumerated() {
+            if self.coHosts.count <= queryIndex {
+                removeSubViews.append(subV)
+                continue
+            }
+            
+            let oldItemUid = subV.videoCanvas.renderingStreamUuid
+            let newItemUid = self.coHosts[queryIndex].userInfo.streamUuid
+            if oldItemUid != newItemUid {
+                removeSubViews.append(subV)
+                continue
+            } else {
+                // 更新
+                upsetBlock(queryIndex, false)
+                queryIndex += 1
+            }
+        }
+        
+        // 新增的
+        for index in (queryIndex..<self.coHosts.count) {
+            upsetBlock(index, true)
+        }
+        
+        layoutBlock()
     }
 }
 
@@ -65,47 +132,6 @@ extension AgoraSmallRenderUIController: UIScrollViewDelegate, UICollectionViewDe
         let shouldShowLeftRightButton = condition1 && condition2
         renderListView.leftButton.isHidden = !shouldShowLeftRightButton
         renderListView.rightButton.isHidden = !shouldShowLeftRightButton
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        willDisplay cell: UICollectionViewCell,
-                        forItemAt indexPath: IndexPath) {
-
-        let userInteractionEvent = (collectionView.isDragging || collectionView.isDecelerating || collectionView.isTracking)
-        
-        guard let tCell = cell as? AgoraUserRenderCell,
-              let videoCanvas = tCell.userView?.videoCanvas,
-              userInteractionEvent else {
-            return
-        }
-        
-        let item = coHosts[indexPath.item]
-        let userInfo = item.userInfo
-
-        if userInfo.enableVideo {
-            renderVideoStream(userInfo.streamUuid,
-                              on: videoCanvas)
-        } else {
-            unrenderVideoStream(userInfo.streamUuid,
-                                on: videoCanvas)
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        didEndDisplaying cell: UICollectionViewCell,
-                        forItemAt indexPath: IndexPath) {
-        let userInteractionEvent = (collectionView.isDragging || collectionView.isDecelerating || collectionView.isTracking)
-        
-        guard let tCell = cell as? AgoraUserRenderCell,
-              let videoCanvas = tCell.userView?.videoCanvas,
-              userInteractionEvent else {
-            return
-        }
-        
-        let item = coHosts[indexPath.item]
-        let userInfo = item.userInfo
-        unrenderVideoStream(userInfo.streamUuid,
-                            on: videoCanvas)
     }
 }
 

@@ -105,16 +105,16 @@ public class AgoraBoardVM: AgoraBaseVM {
             DispatchQueue.main.async {
                 success()
             }
-        } failure: { [unowned self] (error) in
+        } failure: { [weak self] (error) in
             let errorCode = (error as NSError).code
             
             // Report
-            self.reportor.endJoinRoomSubEventNotificate(subEvent: subEvent,
+            self?.reportor.endJoinRoomSubEventNotificate(subEvent: subEvent,
                                                    type: .board,
                                                    errorCode: errorCode,
                                                    api: httpApi)
 
-            self.reportor.endJoinRoomNotificate(errorCode: errorCode)
+            self?.reportor.endJoinRoomNotificate(errorCode: errorCode)
             
             DispatchQueue.main.async {
                 failure(error)

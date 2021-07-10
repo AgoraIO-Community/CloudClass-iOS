@@ -61,6 +61,7 @@ struct AgoraStudentInfo {
                                        _ rteUser: AgoraRTEUser,
                                        _ rteStream: AgoraRTEStream?) -> AgoraEduContextDeviceState)?
     public var onStreamStatesChangedBlock: ((_ rteStreamStates: [String: AgoraDeviceStreamState], _ deviceType: AgoraDeviceStateType) -> Void)?
+    public var onResetStreamStatesBlock: ((_ rteStreamStates: [String: AgoraDeviceStreamState]) -> Void)?
     
     public var localBaseUserInfo: AgoraEduContextUserInfo {
         let userInfo = AgoraEduContextUserInfo()
@@ -406,10 +407,23 @@ struct AgoraStudentInfo {
     // 轮播
     public func updateCarouselUserList(successBlock: @escaping () -> Void,
                                        failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
+        
+        var states: [String: AgoraDeviceStreamState] = [:]
+        
+        // 只有学生轮播
+        if let teaUserInfo = self.kitUserInfos.first(where: {$0.user.role == .teacher}) {
+            if let state = self.rteStreamStates[teaUserInfo.streamUuid] {
+                states[teaUserInfo.streamUuid] = state
+            }
+        }
+        
+        // 之前的流状态重置
+        self.rteStreamStates = states
+        self.onResetStreamStatesBlock?(self.rteStreamStates)
 
         // 重新初始化设置
-        self.initKitUserInfos(successBlock,
-                              failureBlock: failureBlock)
+        self.getKitUserList(successBlock: successBlock,
+                            failureBlock: failureBlock)
     }
 
     // MARK: UserList

@@ -93,20 +93,21 @@ typedef NS_ENUM(NSUInteger, AgoraRTESyncStreamState) {
         };
         
         self.messageHandle.checkStreamPublish = ^(AgoraRTEStream * _Nonnull stream, AgoraRTEStreamAction action) {
-            
-            if (action == AgoraRTEStreamCreate || action == AgoraRTEStreamUpdate) {
-                [AgoraRTCManager.shareManager enableLocalVideo:stream.hasVideo];
-                [AgoraRTCManager.shareManager enableLocalAudio:stream.hasAudio];
-                [AgoraRTCManager.shareManager muteLocalVideoStream:!stream.hasVideo];
-                [AgoraRTCManager.shareManager muteLocalAudioStream:!stream.hasAudio];
-                [AgoraRTCManager.shareManager publishChannelId:weakself.channelId];
-            } else {
-                [AgoraRTCManager.shareManager enableLocalVideo:NO];
-                [AgoraRTCManager.shareManager enableLocalAudio:NO];
-                [AgoraRTCManager.shareManager muteLocalVideoStream:YES];
-                [AgoraRTCManager.shareManager muteLocalAudioStream:YES];
-                [AgoraRTCManager.shareManager unPublishChannelId:weakself.channelId];
-            }
+            dispatch_async(dispatch_queue_create(0, 0), ^{
+                if (action == AgoraRTEStreamCreate || action == AgoraRTEStreamUpdate) {
+                    [AgoraRTCManager.shareManager enableLocalVideo:stream.hasVideo];
+                    [AgoraRTCManager.shareManager enableLocalAudio:stream.hasAudio];
+                    [AgoraRTCManager.shareManager muteLocalVideoStream:!stream.hasVideo];
+                    [AgoraRTCManager.shareManager muteLocalAudioStream:!stream.hasAudio];
+                    [AgoraRTCManager.shareManager publishChannelId:weakself.channelId];
+                } else {
+                    [AgoraRTCManager.shareManager enableLocalVideo:NO];
+                    [AgoraRTCManager.shareManager enableLocalAudio:NO];
+                    [AgoraRTCManager.shareManager muteLocalVideoStream:YES];
+                    [AgoraRTCManager.shareManager muteLocalAudioStream:YES];
+                    [AgoraRTCManager.shareManager unPublishChannelId:weakself.channelId];
+                }
+            });
         };
     }
     return self;

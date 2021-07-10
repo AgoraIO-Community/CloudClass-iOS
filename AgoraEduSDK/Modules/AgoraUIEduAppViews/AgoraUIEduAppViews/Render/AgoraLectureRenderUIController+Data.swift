@@ -48,7 +48,7 @@ extension AgoraLectureRenderUIController {
         guard let cell = renderListView.collectionView.cellForItem(at: indexPath) as? AgoraUserRenderCell else {
             return
         }
-        
+
         cell.userView?.updateAudio(effect: value)
     }
     

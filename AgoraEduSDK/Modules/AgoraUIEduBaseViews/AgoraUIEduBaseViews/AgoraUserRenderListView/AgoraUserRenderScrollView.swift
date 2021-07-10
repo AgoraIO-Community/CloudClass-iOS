@@ -9,7 +9,7 @@ import UIKit
 import AgoraUIBaseViews
 import AgoraEduContext
 
-@objcMembers public class AgoraUserRenderListView: AgoraBaseUIView {
+@objcMembers public class AgoraUserRenderScrollView: AgoraBaseUIView {
     public static var preferenceHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 168 : 87
     public static var preferenceWidth: CGFloat = preferenceHeight
     
@@ -17,9 +17,8 @@ import AgoraEduContext
     
     public let leftButton = AgoraBaseUIButton()
     public let rightButton = AgoraBaseUIButton()
-    
-    public let collectionView = AgoraBaseUICollectionView(frame: .zero,
-                                                          collectionViewLayout: UICollectionViewFlowLayout())
+
+    public let scrollView = AgoraBaseUIScrollView(frame: .zero)
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,47 +36,37 @@ import AgoraEduContext
     
     // MARK: touch event
     @objc func buttonTap(btn: AgoraBaseUIButton) {
-        let width = collectionView.bounds.width
-        let height = collectionView.bounds.height
+        let width = scrollView.bounds.width
+        let height = scrollView.bounds.height
         var x: CGFloat = 0
         
         if btn == leftButton {
-            x = collectionView.contentOffset.x - width
+            x = scrollView.contentOffset.x - width
             x = max(x,
                     0)
         } else {
-            x = collectionView.contentOffset.x + width
+            x = scrollView.contentOffset.x + width
             x = min(x,
-                    collectionView.contentSize.width)
+                    scrollView.contentSize.width)
         }
         
-        collectionView.scrollRectToVisible(CGRect(x: x,
+        scrollView.scrollRectToVisible(CGRect(x: x,
                                                   y: 0,
                                                   width: width,
                                                   height: height),
-                                           animated: true)
+                                                animated: true)
     }
 }
 
 // MARK: - Private
-private extension AgoraUserRenderListView {
+private extension AgoraUserRenderScrollView {
     func initViews() {
         clipsToBounds = true
         layer.cornerRadius = AgoraKitDeviceAssistant.OS.isPad ? 10 : 4
         
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.itemSize = CGSize(width: AgoraUserRenderListView.preferenceHeight,
-                                     height: AgoraUserRenderListView.preferenceHeight)
+        scrollView.backgroundColor = UIColor(rgb: 0xf8f8fc)
+        scrollView.showsHorizontalScrollIndicator = false
 
-        flowLayout.minimumLineSpacing = 2
-        flowLayout.scrollDirection = .horizontal
-        collectionView.setCollectionViewLayout(flowLayout,
-                                               animated: false)
-        collectionView.backgroundColor = UIColor(rgb: 0xf8f8fc)
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.register(AgoraUserRenderCell.self,
-                                forCellWithReuseIdentifier: "AgoraUserRenderCell")
-        
         leftButton.setTitle(nil,
                             for: .normal)
         leftButton.setImage(AgoraKitImage("leftButtonIcon"),
@@ -90,16 +79,16 @@ private extension AgoraUserRenderListView {
                              for: .normal)
         rightButton.isHidden = true
 
-        addSubview(collectionView)
+        addSubview(scrollView)
         addSubview(leftButton)
         addSubview(rightButton)
     }
     
     func initLayout() {
-        collectionView.agora_x = 0
-        collectionView.agora_y = 0
-        collectionView.agora_right = 0
-        collectionView.agora_bottom = 0
+        scrollView.agora_x = 0
+        scrollView.agora_y = 0
+        scrollView.agora_right = 0
+        scrollView.agora_bottom = 0
         
         leftButton.agora_x = 0
         leftButton.agora_y = 0

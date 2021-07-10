@@ -113,6 +113,11 @@ import AgoraEduContext
         })
     }
     
+    public func resetRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState]) {
+        // 判断是否上报
+        self.rteStreamStates = rteStreamStates
+    }
+    
     public func updateRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState],
                                       deviceType: AgoraDeviceStateType) {
         // 判断是否上报

@@ -338,6 +338,9 @@
         [weakself.deviceController updateRteStreamStates:streamStates
                                               deviceType:deviceType];
     };
+    self.userVM.onResetStreamStatesBlock = ^(NSDictionary<NSString *,AgoraDeviceStreamState *> * _Nonnull streamStates) {
+        [weakself.deviceController resetRteStreamStates:streamStates];
+    };
     
     self.userVM.userDeviceStateBlock = ^enum AgoraEduContextDeviceState(enum AgoraDeviceStateType deviceStateType,
                                                                         AgoraRTEUser * _Nonnull user,

@@ -14,19 +14,30 @@ extension AgoraSmallRenderUIController {
         let newData = [AgoraRenderListItem](list: infos)
         coHosts = newData
         
-        renderListView.collectionView.reloadData()
+        var views = [String : AgoraUIUserView]()
+        coHosts.forEach { (item) in
+            let streamUuid = item.userInfo.streamUuid
+            if let v = userViews[streamUuid] {
+                views[streamUuid] = v
+            }
+        }
+        userViews = views
+        
+        reloadCollectionView()
+        
         delegate?.renderSmallController(self,
                                         didUpdateCoHosts: infos)
     }
     
     func getUserView(index: Int) -> AgoraUIUserView {
-        if (userViews.count - 1) < index {
-            let view = AgoraUIUserView(frame: .zero)
-            userViews.append(view)
-            return view
-        } else {
-            return userViews[index]
+        let streamUuid = coHosts[index].userInfo.streamUuid
+        if let v = userViews[streamUuid] {
+            return v
         }
+        
+        let view = AgoraUIUserView(frame: .zero)
+        userViews[streamUuid] = view
+        return view
     }
     
     func updateCoHostVolumeIndication(_ value: Int,
@@ -39,16 +50,9 @@ extension AgoraSmallRenderUIController {
             return
         }
         
-        let item = coHosts[tIndex]
-        item.volume = value
-        let indexPath = IndexPath(item: tIndex,
-                                  section: 0)
-        
-        guard let cell = renderListView.collectionView.cellForItem(at: indexPath) as? AgoraUserRenderCell else {
-            return
+        if let v = self.userViews[streamUuid] {
+            v.updateAudio(effect: value)
         }
-        
-        cell.userView?.updateAudio(effect: value)
     }
     
      private func updateListItem(fhs: AgoraRenderListItem,

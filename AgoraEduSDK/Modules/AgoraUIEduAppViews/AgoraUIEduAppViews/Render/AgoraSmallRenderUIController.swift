@@ -34,8 +34,8 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
     
     // Views
     let teacherView = AgoraUIUserView(frame: .zero)
-    lazy var renderListView: AgoraUserRenderListView = {
-        let v = AgoraUserRenderListView(frame: .zero)
+    lazy var renderListView: AgoraUserRenderScrollView = {
+        let v = AgoraUserRenderScrollView(frame: .zero)
         return v
     }()
     var rewardImageView: AgoraFLAnimatedImageView?
@@ -52,9 +52,10 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
     }
     
     let teacherIndex = -1
+
     var coHosts = [AgoraRenderListItem]()
-    var userViews = [AgoraUIUserView]()
-    
+    var userViews = [String : AgoraUIUserView]()
+
     init(viewType: AgoraEduContextAppType,
          contextProvider: AgoraControllerContextProvider,
          eventRegister: AgoraControllerEventRegister,
@@ -72,7 +73,6 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
     }
     
     func updateLayout() {
-        
         if (self.teacherInfo == nil && self.coHosts.count == 0) {
             self.teacherView.isHidden = true
             self.renderListView.isHidden = true
@@ -107,8 +107,11 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
             let coHostCount: CGFloat = CGFloat(self.coHosts.count + 1)
             let renderWidth: CGFloat = (coHostCount - 1) * renderViewGap + coHostCount * teacherViewSize.width
             let renderSide: CGFloat = max((renderMaxWidth - renderWidth) * 0.5, 0)
+            
             self.teacherView.agora_x = renderSide
             self.renderListView.agora_x = teacherView.agora_x + teacherView.agora_width + renderViewGap
+            self.renderListView.agora_right = renderSide
+            
             return
         }
     }
@@ -166,8 +169,7 @@ private extension AgoraSmallRenderUIController {
 
     func observeUI() {
         teacherView.delegate = self
-        renderListView.collectionView.dataSource = self
-        renderListView.collectionView.delegate = self
+        renderListView.scrollView.delegate = self
     }
 }
 

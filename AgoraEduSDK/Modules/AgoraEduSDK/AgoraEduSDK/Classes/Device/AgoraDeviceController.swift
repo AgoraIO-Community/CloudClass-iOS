@@ -53,6 +53,9 @@ import AgoraEduContext
         })
     }
     
+    public func resetRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState]) {
+        self.vm?.resetRteStreamStates(rteStreamStates)
+    }
     public func updateRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState],
                                       deviceType: AgoraDeviceStateType) {
         self.vm?.updateRteStreamStates(rteStreamStates, deviceType: deviceType)
