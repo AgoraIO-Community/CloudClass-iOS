@@ -172,6 +172,11 @@
 - (void)keyboardDidHide:(NSNotification *)notification{
     CGFloat duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
     [UIView animateWithDuration:duration animations:^{
+        if(duration>0.000001)
+        {
+            self.hidden = YES;
+            self.exitInputButton.hidden = YES;
+        }
         [self.delegate keyBoardDidHide:self.inputField.text];
     }];
 }

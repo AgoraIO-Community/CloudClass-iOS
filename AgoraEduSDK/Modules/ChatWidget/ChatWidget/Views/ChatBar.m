@@ -96,6 +96,8 @@
 {
     self.inputingView.hidden = NO;
     self.exitInputButton.hidden = NO;
+    if([self.inputingView.inputField isFirstResponder])
+        [self.inputingView.inputField resignFirstResponder];
     [self.inputingView.inputField becomeFirstResponder];
 }
 - (void)emojiButtonAction

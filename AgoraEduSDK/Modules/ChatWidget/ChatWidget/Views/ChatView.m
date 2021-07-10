@@ -105,6 +105,7 @@
 @property (strong, nonatomic) UITableView *tableView;
 @property (nonatomic,strong) ShowAnnouncementView* showAnnouncementView;
 @property (strong, nonatomic) NSMutableArray *dataArray;
+@property (strong, nonatomic) NSMutableArray *msgIdArray;
 //消息格式化
 @property (nonatomic) NSTimeInterval msgTimelTag;
 //长按操作栏
@@ -312,12 +313,25 @@
     }
 }
 
+-(NSMutableArray*)msgIdArray
+{
+    if(!_msgIdArray) {
+        _msgIdArray = [NSMutableArray array];
+    }
+    return _msgIdArray;
+}
+
 - (NSArray *)_formatMessages:(NSArray<EMMessage *> *)aMessages
 {
     NSMutableArray *formated = [[NSMutableArray alloc] init];
 
     for (int i = 0; i < [aMessages count]; i++) {
         EMMessage *msg = aMessages[i];
+        if([self.msgIdArray containsObject:msg.messageId]) {
+            continue;
+        }else{
+            [self.msgIdArray addObject:msg.messageId];
+        }
 
         // cmd消息不展示
         if(msg.body.type == EMMessageBodyTypeCmd) {

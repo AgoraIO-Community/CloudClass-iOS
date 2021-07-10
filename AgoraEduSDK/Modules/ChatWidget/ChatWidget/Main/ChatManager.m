@@ -24,6 +24,7 @@ static BOOL isSDKInited = NO;
 @property (nonatomic,strong) NSLock* askAndAnswerMsgLock;
 @property (nonatomic,strong) EMChatroom* chatRoom;
 @property (nonatomic,strong) NSMutableArray<EMMessage*>* askAndAnswerMsgs;
+@property (nonatomic,strong) NSString* latestMsgId;
 @end
 
 @implementation ChatManager
@@ -143,11 +144,11 @@ static BOOL isSDKInited = NO;
     }];
     EMCursorResult* result =  [[[EMClient sharedClient] chatManager] fetchHistoryMessagesFromServer:self.chatRoomId conversationType:EMConversationTypeGroupChat startMessageId:@"" pageSize:50 error:nil];
     if(result.list.count > 0){
-        EMConversation* conv = [[[EMClient sharedClient] chatManager] getConversationWithConvId:self.chatRoomId];
-        [conv loadMessagesStartFromId:@"" count:50 searchDirection:EMMessageSearchDirectionUp completion:^(NSArray *aMessages, EMError *aError) {
-            [weakself.dataArray addObjectsFromArray:aMessages];
-            [weakself.delegate chatMessageDidReceive];
-        }];
+        [weakself.dataArray addObjectsFromArray:result.list];
+        EMMessage* lastMsg = [result.list lastObject];
+        if(lastMsg)
+            self.latestMsgId = lastMsg.messageId;
+        [weakself.delegate chatMessageDidReceive];
     }
     // 获取是否被禁言
     [[[EMClient sharedClient] roomManager] isMemberInWhiteListFromServerWithChatroomId:self.chatRoomId completion:^(BOOL inWhiteList, EMError *aError) {
@@ -304,7 +305,28 @@ static BOOL isSDKInited = NO;
 #pragma mark - EMClientDelegate
 - (void)connectionStateDidChange:(EMConnectionState)aConnectionState
 {
-    
+    NSLog(@"connectionStateDidChange:%d",aConnectionState);
+    if(aConnectionState == EMConnectionConnected) {
+        [[[EMClient sharedClient] roomManager] joinChatroom:self.chatRoomId completion:^(EMChatroom *aChatroom, EMError *aError) {
+            if(self.latestMsgId.length > 0) {
+                EMCursorResult* result =  [[[EMClient sharedClient] chatManager] fetchHistoryMessagesFromServer:self.chatRoomId conversationType:EMConversationTypeGroupChat startMessageId:@"" pageSize:100 error:nil];
+                NSArray* arr = [[result.list reverseObjectEnumerator] allObjects];
+                NSMutableArray* msgToAdd = [NSMutableArray array];
+                for (EMMessage* msg in arr) {
+                    if([msg.messageId isEqualToString:self.latestMsgId]) {
+                        if(self.dataArray.count > 0){
+                            [self.delegate chatMessageDidReceive];
+                        }
+                        return;
+                    }else{
+                        [self.dataArray insertObject:msg atIndex:0];
+                    }
+                }
+                
+            }
+        }];
+        
+    }
 }
 
 - (void)userAccountDidLoginFromOtherDevice
@@ -336,6 +358,7 @@ static BOOL isSDKInited = NO;
                         NSString* avatarUrl = [ext objectForKey:kAvatarUrl];
                         [self.dataLock lock];
                         [self.dataArray addObject:msg];
+                        self.latestMsgId = msg.messageId;
                         [self.dataLock unlock];
                         aInsertCommonMsg = YES;
                     }
@@ -385,6 +408,9 @@ static BOOL isSDKInited = NO;
     }
     [self.dataLock lock];
     [self.dataArray addObjectsFromArray:aCmdMessages];
+    EMMessage* lastMsg = [aCmdMessages lastObject];
+    if(lastMsg)
+        self.latestMsgId = lastMsg.messageId;
     [self.dataLock unlock];
     if([self.delegate respondsToSelector:@selector(chatMessageDidReceive)]) {
         [self.delegate chatMessageDidReceive];
