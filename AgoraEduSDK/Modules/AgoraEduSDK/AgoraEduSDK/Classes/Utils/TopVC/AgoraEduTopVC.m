@@ -26,6 +26,10 @@
         if (window.hidden == YES || window.opaque == NO) {
             continue;
         }
+        if ([window isKindOfClass:NSClassFromString(@"UITextEffectsWindow")] ||
+            [window isKindOfClass:NSClassFromString(@"UIRemoteKeyboardWindow")]) {
+            continue;
+        }
         if (CGRectEqualToRect(window.bounds, UIScreen.mainScreen.bounds) == NO) {
             continue;
         }

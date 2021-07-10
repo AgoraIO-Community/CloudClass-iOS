@@ -111,7 +111,11 @@ extension AgoraBoardController {
         boardVM.join(boardId: boardId,
                      boardToken: boardToken) { [unowned self] in
             self.eventDispatcher.onSetLoadingVisible(false)
-        } failure: { [unowned self] (error) in
+        } failure: { [weak self] (error) in
+            guard let `self` = self else {
+                return
+            }
+
             self.eventDispatcher.onSetLoadingVisible(false)
             self.delegate?.boardController(self,
                                            didOccurError: error)

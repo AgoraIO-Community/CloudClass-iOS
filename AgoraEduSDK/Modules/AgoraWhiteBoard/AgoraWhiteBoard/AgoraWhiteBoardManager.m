@@ -102,8 +102,8 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
             WhiteScene *scene = scenes[sceneIndex];
             
             if (scene.ppt) {
-                [self.room scalePptToFit:WhiteAnimationModeContinuous];
-                [self.room scaleIframeToFit];
+                [weakself.room scalePptToFit:WhiteAnimationModeContinuous];
+                [weakself.room scaleIframeToFit];
             }
             
             [weakself refreshViewSize];
