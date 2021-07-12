@@ -147,20 +147,20 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
         case .aborted:
             // 踢出
             loadingView?.removeFromSuperview()
+            loadingView = nil
             AgoraUtils.showToast(message: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
             context?.leaveRoom()
         case .connecting:
             if loadingView?.superview == nil {
-                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("LoaingText"))
-                
-                
+                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("LoaingText"), shared: true)
             }
         case .disconnected, .reconnecting:
             if loadingView?.superview == nil {
-                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("ReconnectingText"))
+                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("ReconnectingText"), shared: true)
             }
         case .connected:
             loadingView?.removeFromSuperview()
+            loadingView = nil
         }
     }
     

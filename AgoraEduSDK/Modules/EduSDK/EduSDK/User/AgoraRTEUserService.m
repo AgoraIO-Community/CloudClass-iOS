@@ -597,10 +597,9 @@ typedef NS_ENUM(NSUInteger, AgoraRTESyncStreamState) {
     // 去重复
     for (AgoraRtcVideoCanvas *videoCanvas in self.rtcVideoCanvasList) {
 
-        if(!view) {
+        if (view == nil) {
             if(videoCanvas.uid == streamUuid) {
                 [removeArray addObject:videoCanvas];
-                return nil;
             }
         } else if(videoCanvas.view == view) {
             if(videoCanvas.uid == streamUuid) {

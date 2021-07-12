@@ -59,7 +59,8 @@ public class AgoraLocationAssistant: NSObject {
     static let object = AgoraLocationAssistant()
     
     private var dispatchWork: DispatchWorkItem?
-
+    
+    fileprivate weak var loadingView: AgoraAlertView?
     fileprivate lazy var toastView: AgoraCourseTipsView? = {
         
         guard let superView = UIApplication.shared.keyWindow else {
@@ -99,7 +100,7 @@ public class AgoraLocationAssistant: NSObject {
     @discardableResult public static func showToast(message: String) -> AgoraBaseUIView? {
         return AgoraShowToast(message)
     }
-    @discardableResult public static func showLoading(message: String, inView: UIView? = nil) -> AgoraAlertView? {
+    @discardableResult public static func showLoading(message: String, inView: UIView? = nil, shared: Bool = false) -> AgoraAlertView? {
         
         var view = inView
         if view == nil {
@@ -108,8 +109,15 @@ public class AgoraLocationAssistant: NSObject {
         guard let superView = view else {
             return nil
         }
-         
-        let alertView = AgoraAlertView(frame: .zero)
+        
+        var loadingView: AgoraAlertView?
+        if shared {
+            loadingView = AgoraLocationAssistant.shared().loadingView ?? AgoraAlertView(frame: .zero)
+        } else {
+            loadingView = AgoraAlertView(frame: .zero)
+        }
+        
+        let alertView = loadingView!
 
         let messageLabel = AgoraAlertLabelModel()
         messageLabel.text = message
@@ -118,8 +126,16 @@ public class AgoraLocationAssistant: NSObject {
         styleModel.style = .GifLoading
         styleModel.messageLabel = messageLabel
         alertView.styleModel = styleModel
-        alertView.show(in: superView)
-    
+        
+        if shared {
+            if alertView.superview == nil {
+                alertView.show(in: superView)
+            }
+            AgoraLocationAssistant.shared().loadingView = alertView
+        } else {
+            alertView.show(in: superView)
+        }
+
         return alertView
     }
     

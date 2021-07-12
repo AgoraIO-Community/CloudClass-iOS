@@ -116,10 +116,10 @@ extension AgoraBoardController {
 extension AgoraBoardController {
     func join() {
         eventDispatcher.onSetLoadingVisible(true)
-        
+
         boardVM.join(boardId: boardId,
-                     boardToken: boardToken) { [unowned self] in
-            self.eventDispatcher.onSetLoadingVisible(false)
+                     boardToken: boardToken) { [weak self] in
+            self?.eventDispatcher.onSetLoadingVisible(false)
         } failure: { [weak self] (error) in
             guard let `self` = self else {
                 return
@@ -252,6 +252,9 @@ extension AgoraBoardController: AgoraEduWhiteBoardPageControlContext {
 
 // MARK: - AgoraBoardVMDelegate
 extension AgoraBoardController: AgoraBoardVMDelegate {
+    func didBoardDisConnectedUnexpected() {
+        join()
+    }
     func didBoardFullScreenMode(_ fullScreen: Bool) {
         eventDispatcher.onSetResizeFullScreenEnable(!fullScreen)
         eventDispatcher.onSetFullScreen(fullScreen)

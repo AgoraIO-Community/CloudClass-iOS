@@ -109,11 +109,12 @@ private extension AgoraBoardView {
         self.alertCycleLoadingView = nil
         
         let message = getLocalizedString("LoaingText")
-        self.alertCycleLoadingView = AgoraUtils.showLoading(message: message, inView: self)
+        self.alertCycleLoadingView = AgoraUtils.showLoading(message: message, inView: self, shared: true)
     }
     
     func stopCycleLoadingAlert() {
         self.alertCycleLoadingView?.removeFromSuperview()
+        self.alertCycleLoadingView = nil
     }
     
     func downloadProcessAlert() {

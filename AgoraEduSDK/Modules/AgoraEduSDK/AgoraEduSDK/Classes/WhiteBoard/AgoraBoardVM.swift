@@ -25,6 +25,8 @@ protocol AgoraBoardVMDelegate: NSObjectProtocol {
     func didScenePathChanged(path: String)
     
     func didCameraConfigChanged(camera: AgoraWhiteBoardCameraConfig)
+    
+    func didBoardDisConnectedUnexpected()
 }
 
 public class AgoraBoardVM: AgoraBaseVM {
@@ -38,7 +40,7 @@ public class AgoraBoardVM: AgoraBaseVM {
     fileprivate var manager: AgoraWhiteBoardManager
     fileprivate var reportor: AgoraApaasReportorEventTube
     fileprivate var cache: AgoraManagerCache
-    
+
     var boardPage = BoardPage(index: 0,
                               count: 0)
     
@@ -69,11 +71,12 @@ public class AgoraBoardVM: AgoraBaseVM {
               boardToken: String,
               success: @escaping () -> Void,
               failure: @escaping (_ error: Error) -> Void) {
+
         // Report
         let subEvent = "board-join"
         let httpApi = "join"
         reportor.startJoinRoomSubEventNotificate(subEvent: subEvent)
-        
+
         let options = AgoraWhiteBoardJoinOptions()
         options.boardId = boardId
         options.boardToken = boardToken
@@ -92,7 +95,7 @@ public class AgoraBoardVM: AgoraBaseVM {
             
             self.reportor.endJoinRoomNotificate(errorCode: 0,
                                                 httpCode: 200)
-            
+                        
             let currentBoardState = self.manager.getWhiteBoardStateModel()
             let teacherFirstLogin = currentBoardState.teacherFirstLogin
             
@@ -279,6 +282,10 @@ extension AgoraBoardVM: AgoraWhiteManagerDelegate {
         
         delegate?.didBoardPageChange(pageIndex: pageIndex,
                                      pageCount: pageCount)
+    }
+    
+    public func onWhiteBoardDisConnectedUnexpected() {
+        delegate?.didBoardDisConnectedUnexpected()
     }
 
     // 老师切换场景，根据课件

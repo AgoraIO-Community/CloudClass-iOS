@@ -509,6 +509,14 @@ The RoomState property in the room will trigger this callback when it changes.
     }
 }
 
+- (void)firePhaseChanged:(WhiteRoomPhase)phase {
+    if (phase == WhiteRoomPhaseDisconnected && !self.room.disconnectedBySelf) {
+        if ([self.delegate respondsToSelector:@selector(onWhiteBoardDisConnectedUnexpected)]) {
+            [self.delegate onWhiteBoardDisConnectedUnexpected];
+        }
+    }
+}
+
 /** 用户被远程服务器踢出房间，附带踢出原因 */
 - (void)fireKickedWithReason:(NSString *)reason {
     if ([self.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
