@@ -7,10 +7,10 @@
 */
 
 ChatText = "Chat";
-ChatAnnouncement = "Announcement";
+ChatAnnouncement = "Notice";
 ChatEmptyText = "No Message";
 ChatPlaceholderText = "Input";
-ChatNoAnnouncement = "No Announcement";
+ChatNoAnnouncement = "No Notice";
 ChatSendText = "Send";
 ChatAllMute = "All Mute";
 ChatMute = "You are muted by teacher";
