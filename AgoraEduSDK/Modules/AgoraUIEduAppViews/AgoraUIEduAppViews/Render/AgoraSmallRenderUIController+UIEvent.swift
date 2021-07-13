@@ -13,17 +13,8 @@ import AudioToolbox
 extension AgoraSmallRenderUIController {
     func updateRenderView(_ isFullScreen: Bool,
                           coHostsCount: Int) {
-        
-        // 全屏的时候， 从1变成0
-        self.teacherView.alpha = isFullScreen ? 1 : 0
-        // 全屏或者没有上台数据的时候
-        self.renderListView.isHidden = false
-        self.renderListView.alpha = (isFullScreen || coHostsCount == 0) ? 1 : 0
-        
-        UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.renderListView.alpha = (isFullScreen || coHostsCount == 0) ? 0 : 1
-            self.teacherView.alpha = isFullScreen ? 0 : 1
-        }
+        self.teacherView.alpha = isFullScreen ? 0 : 1
+        self.renderListView.alpha = (isFullScreen || coHostsCount == 0) ? 0 : 1
     }
 }
 
