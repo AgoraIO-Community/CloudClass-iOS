@@ -154,7 +154,8 @@
         if(aText.length > 0) {
             [self.inputButton setTitle:aText forState:UIControlStateNormal];
         }else{
-            [self.inputButton setTitle:@"请输入消息" forState:UIControlStateNormal];
+            if(!self.isMuted && !self.isAllMuted)
+                [self.inputButton setTitle:@"请输入消息" forState:UIControlStateNormal];
         }
     });
     

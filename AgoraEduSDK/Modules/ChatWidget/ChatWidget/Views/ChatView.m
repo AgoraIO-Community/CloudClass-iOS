@@ -173,12 +173,12 @@
 {
     _announcement = announcement;
     self.showAnnouncementView.hidden = _announcement.length == 0;
-    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
-    NSCharacterSet *whitespaces = [NSCharacterSet whitespaceCharacterSet];
-    NSPredicate *noEmptyStrings = [NSPredicate predicateWithFormat:@"SELF != ''"];
-    NSArray *parts = [announcement componentsSeparatedByCharactersInSet:whitespaces];
-    NSArray *filteredArray = [parts filteredArrayUsingPredicate:noEmptyStrings];
-    announcement = [filteredArray componentsJoinedByString:@" "];
+//    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+//    NSCharacterSet *whitespaces = [NSCharacterSet whitespaceCharacterSet];
+//    NSPredicate *noEmptyStrings = [NSPredicate predicateWithFormat:@"SELF != ''"];
+//    NSArray *parts = [announcement componentsSeparatedByCharactersInSet:whitespaces];
+//    NSArray *filteredArray = [parts filteredArrayUsingPredicate:noEmptyStrings];
+//    announcement = [filteredArray componentsJoinedByString:@" "];
 
     [self.showAnnouncementView.announcementButton setTitle:announcement forState:UIControlStateNormal];
 }
@@ -268,6 +268,7 @@
         if (model.emModel.body.type == EMMessageBodyTypeCmd) {
             EMCmdMessageBody* cmdBody = (EMCmdMessageBody*)model.emModel.body;
             NSString*action = cmdBody.action;
+            NSDictionary* ext = model.emModel.ext;
             if([action isEqualToString:@"DEL"]) {
                 cellString = @"老师删除了一条消息";
             }
@@ -276,6 +277,20 @@
             }
             if([action isEqualToString:@"removeAllMute"]) {
                 cellString = @"已关闭全体学生禁言";
+            }
+            if([action isEqualToString:@"mute"] || [action isEqualToString:@"unmute"]) {
+                NSString* muteMember = [ext objectForKey:@"muteMember"];
+                
+                if(muteMember.length > 0 && [[EMClient sharedClient].currentUsername isEqualToString:muteMember]) {
+                    NSString* muteNickname = [ext objectForKey:@"muteNickName"];
+                    NSString* teacherNickName = [ext objectForKey:@"nickName"];
+                    if([action isEqualToString:@"mute"]) {
+                        cellString = [NSString stringWithFormat: @"您被%@老师禁止发言了",teacherNickName];
+                    }else{
+                        cellString = [NSString stringWithFormat: @"您被%@老师允许发言了",teacherNickName];
+                    }
+                    
+                }
             }
         }
     }
@@ -343,8 +358,14 @@
                     [self removDelMsg:msgIdToDel fromArray:formated];
                     [self removDelMsg:msgIdToDel fromArray:self.dataArray];
                 }
-            }else if(!( [cmdBody.action isEqualToString:@"setAllMute"] || [cmdBody.action isEqualToString:@"removeAllMute"]))
-                continue;
+            }else if(!( [cmdBody.action isEqualToString:@"setAllMute"] || [cmdBody.action isEqualToString:@"removeAllMute"])){
+                if([cmdBody.action isEqualToString:@"mute"] || [cmdBody.action isEqualToString:@"unmute"]) {
+                    NSString* muteMember = [msg.ext objectForKey:@"muteMember"];
+                    if(![[EMClient sharedClient].currentUsername isEqualToString:muteMember])
+                        continue;
+                }else
+                    continue;
+            }
         }
         if(msg.body.type == EMMessageBodyTypeCustom) {
             continue;
