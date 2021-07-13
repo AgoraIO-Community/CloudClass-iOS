@@ -7,6 +7,7 @@
 //
 
 #import "ChatManager.h"
+#import "ChatWidget+Localizable.h"
 
 const static NSString* kMsgType = @"msgtype";
 const static NSString* kAvatarUrl = @"avatarUrl";
@@ -277,10 +278,10 @@ static BOOL isSDKInited = NO;
                         }
                     }else{
                         if(error.code == EMErrorMessageIncludeIllegalContent)
-                            [weakself.delegate exceptionDidOccur:@"发送内容包含敏感词，发送失败"];
+                            [weakself.delegate exceptionDidOccur:[ChatWidget LocalizedString:@"ChatSendFaildBySensitive"]];
                         else {
                             if(error.code == EMErrorUserMuted) {
-                                [weakself.delegate exceptionDidOccur:@"禁言中，发送失败"];
+                                [weakself.delegate exceptionDidOccur:[ChatWidget LocalizedString:@"ChatSendFaildByMute"]];
                                 if(!weakself.isAllMuted) {
                                     if(!weakself.isMuted) {
                                         weakself.isMuted = YES;
@@ -337,12 +338,12 @@ static BOOL isSDKInited = NO;
 
 - (void)userAccountDidLoginFromOtherDevice
 {
-    [self.delegate exceptionDidOccur:@"账户在其他设备登录"];
+    [self.delegate exceptionDidOccur:[ChatWidget LocalizedString:@"ChatLoginOnOtherDevice"]];
 }
 
 - (void)userAccountDidForcedToLogout:(EMError *)aError
 {
-    [self.delegate exceptionDidOccur:@"账户被强制退出"];
+    [self.delegate exceptionDidOccur:[ChatWidget LocalizedString:@"ChatLogoutForced"]];
 }
 
 #pragma mark - EMChatManagerDelegate

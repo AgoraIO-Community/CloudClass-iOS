@@ -8,6 +8,7 @@
 #import "ChatBar.h"
 #import "UIImage+ChatExt.h"
 #import "InputingView.h"
+#import "ChatWidget+Localizable.h"
 
 
 #define CONTAINVIEW_HEIGHT 40
@@ -38,7 +39,7 @@
 {
     self.backgroundColor = [UIColor colorWithRed:236/255.0 green:236/255.0 blue:241/255.0 alpha:1.0];
     self.inputButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.inputButton setTitle:@"请输入消息" forState:UIControlStateNormal] ;
+    [self.inputButton setTitle:[ChatWidget LocalizedString:@"ChatPlaceholderText"] forState:UIControlStateNormal] ;
     self.inputButton.backgroundColor = [UIColor clearColor];
     [self.inputButton setTitleColor:[UIColor colorWithRed:125/255.0 green:135/255.0 blue:152/255.0 alpha:1.0] forState:UIControlStateNormal];
     [self.inputButton addTarget:self action:@selector(InputAction) forControlEvents:UIControlEventTouchUpInside];
@@ -125,17 +126,17 @@
 - (void)updateMuteState
 {
     if(self.isAllMuted) {
-        [self.inputButton setTitle:@"全体禁言中" forState:UIControlStateNormal];
+        [self.inputButton setTitle:[ChatWidget LocalizedString:@"ChatAllMute"] forState:UIControlStateNormal];
         [self.inputButton setEnabled:NO];
         self.emojiButton.enabled = NO;
         
     }else{
         if(self.isMuted){
-            [self.inputButton setTitle:@"禁言中" forState:UIControlStateNormal];
+            [self.inputButton setTitle:[ChatWidget LocalizedString:@"ChatMute"] forState:UIControlStateNormal];
             [self.inputButton setEnabled:NO];
             self.emojiButton.enabled = NO;
         }else{
-            [self.inputButton setTitle:@"请输入消息" forState:UIControlStateNormal];
+            [self.inputButton setTitle:[ChatWidget LocalizedString:@"ChatPlaceholderText"] forState:UIControlStateNormal];
             [self.inputButton setEnabled:YES];
             self.emojiButton.enabled = YES;
         }
@@ -155,7 +156,7 @@
             [self.inputButton setTitle:aText forState:UIControlStateNormal];
         }else{
             if(!self.isMuted && !self.isAllMuted)
-                [self.inputButton setTitle:@"请输入消息" forState:UIControlStateNormal];
+                [self.inputButton setTitle:[ChatWidget LocalizedString:@"ChatPlaceholderText"] forState:UIControlStateNormal];
         }
     });
     

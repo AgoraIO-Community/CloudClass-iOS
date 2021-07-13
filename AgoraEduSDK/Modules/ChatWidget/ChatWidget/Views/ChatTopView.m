@@ -8,6 +8,7 @@
 #import "ChatTopView.h"
 #import "UIImage+ChatExt.h"
 #import <Masonry/Masonry.h>
+#import "ChatWidget+Localizable.h"
 const static NSInteger TAG_BASE = 1000;
 
 @interface ChatTopView ()
@@ -67,7 +68,7 @@ const static NSInteger TAG_BASE = 1000;
     }];
     
     self.chatButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.chatButton setTitle:@"聊天" forState:UIControlStateNormal];
+    [self.chatButton setTitle:[ChatWidget LocalizedString:@"ChatText"] forState:UIControlStateNormal];
     [self.chatButton setTitleColor:[UIColor colorWithRed:25/255.0 green:25/255.0 blue:25/255.0 alpha:1.0] forState:UIControlStateNormal];
     self.chatButton.tag = TAG_BASE;
     [self.chatButton addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -89,7 +90,7 @@ const static NSInteger TAG_BASE = 1000;
     }];
     
     self.announcementButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.announcementButton setTitle:@"公告" forState:UIControlStateNormal];
+    [self.announcementButton setTitle:[ChatWidget LocalizedString:@"ChatAnnouncement"] forState:UIControlStateNormal];
     self.announcementButton.tag = TAG_BASE + 1;
     [self.announcementButton addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.announcementButton setTitleColor:[UIColor colorWithRed:123/255.0 green:136/255.0 blue:160/255.0 alpha:1.0] forState:UIControlStateNormal];
