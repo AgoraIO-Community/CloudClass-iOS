@@ -301,8 +301,8 @@
         if (cell == nil) {
             cell = [[EMMessageStringCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"EMMessageTimeCell"];
         }
-        
-        cell.stringLabel.text = cellString;
+
+        [cell updatetext:cellString];
         return cell;
     } else {
         EMMessageModel *model = (EMMessageModel *)obj;

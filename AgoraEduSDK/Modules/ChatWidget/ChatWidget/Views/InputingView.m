@@ -59,6 +59,9 @@
                                                                     CONTAINVIEW_HEIGHT-10)];
     self.inputField.layer.backgroundColor = [UIColor whiteColor].CGColor;
     self.inputField.layer.cornerRadius = 16;
+    self.inputField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 16, 0)];
+    self.inputField.leftView.userInteractionEnabled = NO;
+    self.inputField.leftViewMode = UITextFieldViewModeAlways;
     self.inputField.backgroundColor = [UIColor whiteColor];
     self.inputField.placeholder = [ChatWidget LocalizedString:@"ChatPlaceholderText"];
     //self.inputField.layer.cornerRadius = 15;
