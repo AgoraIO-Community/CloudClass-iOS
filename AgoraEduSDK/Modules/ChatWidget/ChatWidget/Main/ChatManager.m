@@ -526,6 +526,10 @@ static BOOL isSDKInited = NO;
         NSString* strAllMute = [aAnnouncement substringToIndex:1];
         self.isAllMuted = [strAllMute boolValue];
         [self.delegate mutedStateDidChanged];
+        NSString* announcement = [aAnnouncement substringFromIndex:1];
+        if(![self.chatroomAnnouncement isEqualToString:announcement]) {
+            self.chatroomAnnouncement = announcement;
+        }
     }
 }
 @end
