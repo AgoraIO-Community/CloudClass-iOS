@@ -66,6 +66,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 }
 
 - (void)dealloc {
+    [self.chatManager removeObserver:self forKeyPath:@"chatroomAnnouncement"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.chatManager logout];
 }
@@ -261,8 +262,21 @@ static const NSString* kChatRoomId = @"chatroomId";
     
     manager.delegate = self;
     self.chatManager = manager;
+    [self.chatManager addObserver:self forKeyPath:@"chatroomAnnouncement" options:NSKeyValueObservingOptionNew context:nil];
     
     [self.chatManager launch];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary<NSKeyValueChangeKey,id> *)change
+                       context:(void *)contex
+{
+    if([keyPath isEqualToString:@"chatroomAnnouncement"]) {
+        // 这是最新公告
+        NSString* newAnnouncement = self.chatManager.chatroomAnnouncement;
+        NSLog(@"newAnnouncement:%@",newAnnouncement);
+    }
 }
 
 - (GiftView*)giftView
