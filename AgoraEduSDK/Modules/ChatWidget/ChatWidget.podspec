@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
     s.subspec 'BINARY' do |binary|
       binary.resources = 'ChatWidget/ChatWidget.bundle'
-      binary.source_files = 'ChatWidget/**/*.{h,m}'
+      binary.source_files = 'ChatWidget/**/*.{h,m,strings}'
       binary.public_header_files = [
         'ChatWidget/Main/ChatWidget.h',
       ]
@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
       source.dependency 'WHToast'
       source.dependency "AgoraWidget"
       source.resources = 'ChatWidget/ChatWidget.bundle'
-      source.source_files = 'ChatWidget/**/*.{h,m}'
+      source.source_files = 'ChatWidget/**/*.{h,m,strings}'
       source.public_header_files = [
         'ChatWidget/Main/ChatWidget.h',
       ]

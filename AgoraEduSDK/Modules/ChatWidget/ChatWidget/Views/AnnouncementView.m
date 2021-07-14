@@ -8,6 +8,7 @@
 #import "AnnouncementView.h"
 #import "UIImage+ChatExt.h"
 #import <Masonry/Masonry.h>
+#import "ChatWidget+Localizable.h"
 
 @interface NilAnnouncementView ()
 @property (nonatomic,strong) UIImageView* nilAnnouncementImageView;
@@ -38,7 +39,7 @@
     }];
     
     self.nilAnnouncementLable = [[UILabel alloc] init];
-    self.nilAnnouncementLable.text = @"暂无公告";
+    self.nilAnnouncementLable.text = [ChatWidget LocalizedString:@"ChatNoAnnouncement"];
     self.nilAnnouncementLable.textAlignment = NSTextAlignmentCenter;
     [self addSubview:self.nilAnnouncementLable];
     [self.nilAnnouncementLable mas_makeConstraints:^(MASConstraintMaker *make) {

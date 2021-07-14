@@ -12,6 +12,7 @@
 #import "UIImage+ChatExt.h"
 #import <Masonry/Masonry.h>
 #import "EMDateHelper.h"
+#import "ChatWidget+Localizable.h"
 
 @interface NilMsgView ()
 @property (nonatomic,strong) UIImageView* nilMsgImageView;
@@ -42,7 +43,7 @@
     }];
     
     self.nilMsgLable = [[UILabel alloc] init];
-    self.nilMsgLable.text = @"还没有消息";
+    self.nilMsgLable.text = [ChatWidget LocalizedString:@"ChatEmptyText"];
     self.nilMsgLable.textAlignment = NSTextAlignmentCenter;
     [self addSubview:self.nilMsgLable];
     [self.nilMsgLable mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -173,12 +174,12 @@
 {
     _announcement = announcement;
     self.showAnnouncementView.hidden = _announcement.length == 0;
-    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
-    NSCharacterSet *whitespaces = [NSCharacterSet whitespaceCharacterSet];
-    NSPredicate *noEmptyStrings = [NSPredicate predicateWithFormat:@"SELF != ''"];
-    NSArray *parts = [announcement componentsSeparatedByCharactersInSet:whitespaces];
-    NSArray *filteredArray = [parts filteredArrayUsingPredicate:noEmptyStrings];
-    announcement = [filteredArray componentsJoinedByString:@" "];
+//    announcement = [announcement stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+//    NSCharacterSet *whitespaces = [NSCharacterSet whitespaceCharacterSet];
+//    NSPredicate *noEmptyStrings = [NSPredicate predicateWithFormat:@"SELF != ''"];
+//    NSArray *parts = [announcement componentsSeparatedByCharactersInSet:whitespaces];
+//    NSArray *filteredArray = [parts filteredArrayUsingPredicate:noEmptyStrings];
+//    announcement = [filteredArray componentsJoinedByString:@" "];
 
     [self.showAnnouncementView.announcementButton setTitle:announcement forState:UIControlStateNormal];
 }
@@ -231,7 +232,7 @@
 - (UIMenuItem *)recallMenuItem
 {
     if (_recallMenuItem == nil) {
-        _recallMenuItem = [[UIMenuItem alloc] initWithTitle:@"撤回" action:@selector(recallMenuItemAction:)];
+        _recallMenuItem = [[UIMenuItem alloc] initWithTitle:[ChatWidget LocalizedString:@"ChatRecall"] action:@selector(recallMenuItemAction:)];
     }
     
     return _recallMenuItem;
@@ -263,19 +264,34 @@
     } else if ([obj isKindOfClass:[EMMessageModel class]]) {
         EMMessageModel *model = (EMMessageModel *)obj;
         if (model.type == EMMessageTypeExtRecall) {
-            cellString = @"您撤回一条消息";
+            cellString = [ChatWidget LocalizedString:@"ChatRecallAMessage"];
         }
         if (model.emModel.body.type == EMMessageBodyTypeCmd) {
             EMCmdMessageBody* cmdBody = (EMCmdMessageBody*)model.emModel.body;
             NSString*action = cmdBody.action;
+            NSDictionary* ext = model.emModel.ext;
             if([action isEqualToString:@"DEL"]) {
-                cellString = @"老师删除了一条消息";
+                cellString = [ChatWidget LocalizedString:@"ChatTeacherRemoveMsg"];
             }
             if([action isEqualToString:@"setAllMute"]) {
-                cellString = @"已开启全体学生禁言";
+                cellString = [ChatWidget LocalizedString:@"ChatTeacherMuteAll"];
             }
             if([action isEqualToString:@"removeAllMute"]) {
-                cellString = @"已关闭全体学生禁言";
+                cellString = [ChatWidget LocalizedString:@"ChatTeacherUnmuteAll"];
+            }
+            if([action isEqualToString:@"mute"] || [action isEqualToString:@"unmute"]) {
+                NSString* muteMember = [ext objectForKey:@"muteMember"];
+                
+                if(muteMember.length > 0 && [[EMClient sharedClient].currentUsername isEqualToString:muteMember]) {
+                    NSString* muteNickname = [ext objectForKey:@"muteNickName"];
+                    NSString* teacherNickName = [ext objectForKey:@"nickName"];
+                    if([action isEqualToString:@"mute"]) {
+                        cellString = [NSString stringWithFormat: [ChatWidget LocalizedString:@"ChatMutedByTeacher"],teacherNickName];
+                    }else{
+                        cellString = [NSString stringWithFormat: [ChatWidget LocalizedString:@"ChatUnmutedByTeacher"],teacherNickName];
+                    }
+                    
+                }
             }
         }
     }
@@ -285,8 +301,8 @@
         if (cell == nil) {
             cell = [[EMMessageStringCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"EMMessageTimeCell"];
         }
-        
-        cell.stringLabel.text = cellString;
+
+        [cell updatetext:cellString];
         return cell;
     } else {
         EMMessageModel *model = (EMMessageModel *)obj;
@@ -343,8 +359,14 @@
                     [self removDelMsg:msgIdToDel fromArray:formated];
                     [self removDelMsg:msgIdToDel fromArray:self.dataArray];
                 }
-            }else if(!( [cmdBody.action isEqualToString:@"setAllMute"] || [cmdBody.action isEqualToString:@"removeAllMute"]))
-                continue;
+            }else if(!( [cmdBody.action isEqualToString:@"setAllMute"] || [cmdBody.action isEqualToString:@"removeAllMute"])){
+                if([cmdBody.action isEqualToString:@"mute"] || [cmdBody.action isEqualToString:@"unmute"]) {
+                    NSString* muteMember = [msg.ext objectForKey:@"muteMember"];
+                    if(![[EMClient sharedClient].currentUsername isEqualToString:muteMember])
+                        continue;
+                }else
+                    continue;
+            }
         }
         if(msg.body.type == EMMessageBodyTypeCustom) {
             continue;
@@ -422,7 +444,7 @@
     
     [[EMClient sharedClient].chatManager recallMessageWithMessageId:model.emModel.messageId completion:^(EMError *aError) {
         if (!aError) {
-            EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithText:@"您撤回一条消息"];
+            EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithText:[ChatWidget LocalizedString:@"ChatRecallAMessage"]];
             NSString *from = [[EMClient sharedClient] currentUsername];
             NSString *to = self.chatManager.chatRoomId;
             EMMessage *message = [[EMMessage alloc] initWithConversationID:to from:from to:to body:body ext:@{MSG_EXT_RECALL:@(YES)}];

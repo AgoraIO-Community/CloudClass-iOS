@@ -6,7 +6,7 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-#import "ChatWidget.h"
+#import "ChatWidget+Localizable.h"
 #import "ChatManager.h"
 #import <AgoraUIBaseViews/AgoraUIBaseViews-Swift.h>
 #import <WHToast/WHToast.h>
@@ -209,7 +209,7 @@ static const NSString* kChatRoomId = @"chatroomId";
                 
                 break;
             case ChatRoomStateLoginFailed:
-                [WHToast showErrorWithMessage:@"登录失败" duration:2 finishHandler:^{
+                [WHToast showErrorWithMessage:[ChatWidget LocalizedString:@"ChatLoginFaild"] duration:2 finishHandler:^{
                         
                 }];
                 break;
@@ -223,7 +223,7 @@ static const NSString* kChatRoomId = @"chatroomId";
                 
                 break;
             case ChatRoomStateJoinFail:
-                [WHToast showErrorWithMessage:@"加入聊天室失败" duration:2 finishHandler:^{
+                [WHToast showErrorWithMessage:[ChatWidget LocalizedString:@"ChatJoinFaild"] duration:2 finishHandler:^{
                         
                 }];
                 break;

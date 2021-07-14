@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIImageView *preImageView;
 
+- (void)updatetext:(NSString*)aText;
+
 @end
 
 NS_ASSUME_NONNULL_END

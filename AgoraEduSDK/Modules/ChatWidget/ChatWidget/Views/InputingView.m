@@ -8,6 +8,7 @@
 #import "InputingView.h"
 #import "EmojiKeyboardView.h"
 #import "UIImage+ChatExt.h"
+#import "ChatWidget+Localizable.h"
 
 #define CONTAINVIEW_HEIGHT 40
 #define SENDBUTTON_HEIGHT 30
@@ -39,7 +40,7 @@
 - (void)setupSubViews
 {
     self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.sendButton setTitle:@"发送"
+    [self.sendButton setTitle:[ChatWidget LocalizedString:@"ChatSendText"]
                      forState:UIControlStateNormal];
     [self addSubview:self.sendButton];
     self.sendButton.backgroundColor = [UIColor colorWithRed:53/255.0 green:123/255.0 blue:246/255.0 alpha:1.0];
@@ -58,8 +59,11 @@
                                                                     CONTAINVIEW_HEIGHT-10)];
     self.inputField.layer.backgroundColor = [UIColor whiteColor].CGColor;
     self.inputField.layer.cornerRadius = 16;
+    self.inputField.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 16, 0)];
+    self.inputField.leftView.userInteractionEnabled = NO;
+    self.inputField.leftViewMode = UITextFieldViewModeAlways;
     self.inputField.backgroundColor = [UIColor whiteColor];
-    self.inputField.placeholder = @"请输入消息";
+    self.inputField.placeholder = [ChatWidget LocalizedString:@"ChatPlaceholderText"];
     //self.inputField.layer.cornerRadius = 15;
     self.inputField.returnKeyType = UIReturnKeySend;
     self.inputField.delegate = self;
