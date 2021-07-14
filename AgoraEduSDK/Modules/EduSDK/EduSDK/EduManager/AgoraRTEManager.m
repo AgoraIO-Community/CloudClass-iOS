@@ -79,7 +79,7 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     }
      
     AgoraLogConfiguration *logConfig = [AgoraLogConfiguration new];
-    logConfig.logLevel = AgoraLogLevelInfo;
+    logConfig.logLevel = AgoraLogLevelTypeInfo;
     NSString *logBaseDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
     NSString *logDirectoryPath = [logBaseDirectoryPath stringByAppendingPathComponent:AgoraRTE_LOG_PATH];
     logConfig.directoryPath = logDirectoryPath;
@@ -283,7 +283,7 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     self.messageHandle.agoraDelegate = delegate;
 }
 
-- (NSError * _Nullable)logMessage:(NSString *)message level:(AgoraLogLevel)level {
+- (NSError * _Nullable)logMessage:(NSString *)message level:(AgoraLogLevelType)level {
     return [AgoraRTELogService logMessage:message level:level];
 }
 

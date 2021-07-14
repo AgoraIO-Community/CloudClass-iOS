@@ -29,7 +29,7 @@ static AgoraRTELogService *manager = nil;
 
 + (NSError * _Nullable)setupLog:(AgoraLogConfiguration *)config {
     
-    if (config.logLevel != AgoraLogLevelNone && config.logLevel != AgoraLogLevelInfo && config.logLevel != AgoraLogLevelWarn && config.logLevel != AgoraLogLevelError) {
+    if (config.logLevel != AgoraLogLevelTypeNone && config.logLevel != AgoraLogLevelTypeInfo && config.logLevel != AgoraLogLevelTypeWarn && config.logLevel != AgoraLogLevelTypeError) {
         
         NSError *eduError = [AgoraRTEErrorManager paramterInvalid:@"logLevel" code:1];
         return eduError;
@@ -50,14 +50,14 @@ static AgoraRTELogService *manager = nil;
     return nil;
 }
 
-+ (NSError * _Nullable)logMessage:(NSString *)message level:(AgoraLogLevel)level {
++ (NSError * _Nullable)logMessage:(NSString *)message level:(AgoraLogLevelType)level {
     
     if (![message isKindOfClass:NSString.class] || message.length == 0) {
         NSError *eduError = [AgoraRTEErrorManager paramterInvalid:@"message" code:1];
         return eduError;
     }
     
-    if (level != AgoraLogLevelNone && level != AgoraLogLevelInfo && level != AgoraLogLevelWarn && level != AgoraLogLevelError) {
+    if (level != AgoraLogLevelTypeNone && level != AgoraLogLevelTypeInfo && level != AgoraLogLevelTypeWarn && level != AgoraLogLevelTypeError) {
         NSError *eduError = [AgoraRTEErrorManager paramterInvalid:@"logLevel" code:1];
         return eduError;
     }
@@ -68,13 +68,13 @@ static AgoraRTELogService *manager = nil;
 + (void)logMessageWithDescribe:(NSString *)describe message:(id _Nullable)messageObj {
     
     NSString *string = [@"AgoraEduSDK " stringByAppendingString:describe];
-    [AgoraRTELogService logMessageWithLevel:AgoraLogLevelInfo describe:string message:messageObj];
+    [AgoraRTELogService logMessageWithLevel:AgoraLogLevelTypeInfo describe:string message:messageObj];
 }
 
 + (void)logErrMessageWithDescribe:(NSString *)describe message:(id _Nullable)messageObj {
     
     NSString *string = [@"AgoraEduSDK " stringByAppendingString:describe];
-    [AgoraRTELogService logMessageWithLevel:AgoraLogLevelError describe:string message:messageObj];
+    [AgoraRTELogService logMessageWithLevel:AgoraLogLevelTypeError describe:string message:messageObj];
 }
 
 + (void)uploadDebugItem:(AgoraRTEDebugItem)item
@@ -129,7 +129,7 @@ static AgoraRTELogService *manager = nil;
 }
 
 #pragma mark ---
-+ (void)logMessageWithLevel:(AgoraLogLevel)logLevel describe:(NSString *)describe message:(id _Nullable)messageObj {
++ (void)logMessageWithLevel:(AgoraLogLevelType)logLevel describe:(NSString *)describe message:(id _Nullable)messageObj {
     
     NSString *message = @"";
     if (messageObj != nil) {

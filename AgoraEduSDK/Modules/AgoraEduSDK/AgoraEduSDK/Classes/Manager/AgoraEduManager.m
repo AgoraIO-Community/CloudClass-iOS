@@ -25,7 +25,7 @@ NSString * const kStudentLimit = @"StudentLimit";
 static AgoraEduManager *manager = nil;
 
 @interface AgoraEduManager()
-@property (nonatomic, assign) AgoraLogLevel logLevel;
+@property (nonatomic, assign) AgoraLogLevelType logLevel;
 @property (nonatomic, assign) AgoraLogConsoleState consoleState;
 @property (nonatomic, strong) AgoraLogManager *logManager;
 @property (nonatomic, strong) NSString *logDirectoryPath;
@@ -43,7 +43,7 @@ static AgoraEduManager *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[AgoraEduManager alloc] init];
-        manager.logLevel = AgoraLogLevelInfo;
+        manager.logLevel = AgoraLogLevelTypeInfo;
         NSString *cachesPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
                                                                    NSUserDomainMask,
                                                                    YES).firstObject;
@@ -150,7 +150,7 @@ static AgoraEduManager *manager = nil;
 }
 
 - (void)logMessage:(NSString *)message
-             level:(AgoraLogLevel)level {
+             level:(AgoraLogLevelType)level {
     if (self.eduManager != nil) {
         self.logManager = nil;
         [self.eduManager logMessage:message level:level];
@@ -203,7 +203,7 @@ static AgoraEduManager *manager = nil;
 
         AgoraLogConfiguration *config = [AgoraLogConfiguration new];
         config.consoleState = self.consoleState;
-        config.logLevel = AgoraLogLevelInfo;
+        config.logLevel = AgoraLogLevelTypeInfo;
         config.directoryPath = self.logDirectoryPath;
         [manager setupLog:config];
         

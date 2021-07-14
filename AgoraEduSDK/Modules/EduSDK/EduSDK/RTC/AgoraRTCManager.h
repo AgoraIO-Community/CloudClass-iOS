@@ -9,9 +9,19 @@
 #import <Foundation/Foundation.h>
 
 #if __has_include(<AgoraRtcKit/AgoraRtcEngineKit.h>)
+
 #import <AgoraRtcKit/AgoraRtcEngineKit.h>
+#ifndef AgoraRtcKit_3_X
+#define AgoraRtcKit_3_X
+#endif
+
 #elif __has_include(<AgoraRtcEngineKit/AgoraRtcEngineKit.h>)
+
 #import <AgoraRtcEngineKit/AgoraRtcEngineKit.h>
+#ifndef AgoraRtcKit_2_X
+#define AgoraRtcKit_2_X
+#endif
+
 #else
 # error "Invalid import"
 #endif

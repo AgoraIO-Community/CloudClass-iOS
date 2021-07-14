@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSError * _Nullable)setupLog:(AgoraLogConfiguration *)config;
 
-+ (NSError * _Nullable)logMessage:(NSString *)message level:(AgoraLogLevel)level;
++ (NSError * _Nullable)logMessage:(NSString *)message level:(AgoraLogLevelType)level;
 
 + (void)logMessageWithDescribe:(NSString *)describe message:(id _Nullable)messageObj;
 

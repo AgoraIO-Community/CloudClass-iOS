@@ -624,7 +624,14 @@ typedef NS_ENUM(NSUInteger, AgoraRTESyncStreamState) {
     AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
     videoCanvas.uid = streamUuid;
     videoCanvas.view = view;
+    
+#ifdef AgoraRtcKit_2_X
     videoCanvas.channel = self.channelId;
+#endif
+#ifdef AgoraRtcKit_3_X
+    videoCanvas.channelId = self.channelId;
+#endif
+
     if (config.renderMode == AgoraRTERenderModeFit) {
         videoCanvas.renderMode = AgoraVideoRenderModeFit;
     } else if (config.renderMode == AgoraRTERenderModeHidden) {

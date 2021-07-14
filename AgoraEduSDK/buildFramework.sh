@@ -4,6 +4,7 @@ Scheme_Name=$SDK_Name
 Mode=$3
 Product_Path="Build/product"
 Frameworks_Path="../../Frameworks"
+dSYMs_Path="../../dSYMs"
 
 Derived_Data_Path=$Product_Path/derived_data
 iOS_Product_Path=$Product_Path/ios
@@ -70,6 +71,7 @@ rm -rf $Derived_Data_Path/*
 buildFunc "iphoneos"
 cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/*.framework $iPhone_Product_Path
 cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/*/*.framework $iPhone_Product_Path
+cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/*/*.framework.dSYM $dSYMs_Path
 
 #parameters 1: SDK Name
 handleEveryFramework() {

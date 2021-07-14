@@ -336,8 +336,6 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                 userModel.isChatAllowed = !((AgoraRTEChannelMsgUserInfo*)obj).muteChat;
             }
             userModel.cause = cause;
-//            [AgoraRTELogService logMessageWithDescribe:@"Srs updateUserState:" message:@{ @"sequence":@(sequence), @"currentMaxSeq":@(self.currentMaxSeq), @"obj":obj}];
-            
             users = @[userModel];
         }
         

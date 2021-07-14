@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, AgoraLogLevel) {
-    AgoraLogLevelNone,
-    AgoraLogLevelInfo,
-    AgoraLogLevelWarn,
-    AgoraLogLevelError,
+typedef NS_ENUM(NSInteger, AgoraLogLevelType) {
+    AgoraLogLevelTypeNone,
+    AgoraLogLevelTypeInfo,
+    AgoraLogLevelTypeWarn,
+    AgoraLogLevelTypeError,
 };
 
 typedef NS_ENUM(NSInteger, AgoraLogErrorType) {
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AgoraLogConfiguration : NSObject
 
-@property (nonatomic, assign) AgoraLogLevel logLevel;
+@property (nonatomic, assign) AgoraLogLevelType logLevel;
 // folder path of upload log
 @property (nonatomic, copy) NSString *directoryPath;
 

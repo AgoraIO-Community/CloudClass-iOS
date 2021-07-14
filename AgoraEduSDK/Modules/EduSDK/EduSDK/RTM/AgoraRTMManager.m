@@ -45,7 +45,7 @@ static AgoraRTMManager *manager = nil;
 - (void)initSignalWithAppid:(NSString *)appId appToken:(NSString *)appToken userId:(NSString *)uid completeSuccessBlock:(void (^ _Nullable) (void))successBlock completeFailBlock:(void (^ _Nullable) (NSInteger errorCode))failBlock {
  
     NSString *logStr = [NSString stringWithFormat:@"init signal appid:%@ apptoken:%@ uid:%@", AgoraRTMNoNullString(appId), AgoraRTMNoNullString(appToken), AgoraRTMNoNullString(uid)];
-    [AgoraRTELogService logMessage:logStr level:AgoraLogLevelInfo];
+    [AgoraRTELogService logMessage:logStr level:AgoraLogLevelTypeInfo];
     
     self.uid = AgoraRTMNoNullString(uid);
 
@@ -242,7 +242,7 @@ static AgoraRTMManager *manager = nil;
     for (RTMChannelInfo *channelInfo in self.rtmChannelInfos) {
         if (channelInfo.agoraRtmChannel == channel) {
             NSString *logStr = [NSString stringWithFormat:@"roomUuid:%@ messageReceived:%@", AgoraRTMNoNullString(channelInfo.channelName), AgoraRTMNoNullString(message.text)];
-            [AgoraRTELogService logMessage:logStr level:AgoraLogLevelInfo];
+            [AgoraRTELogService logMessage:logStr level:AgoraLogLevelTypeInfo];
 
             if([channelInfo.config.channelDelegate respondsToSelector:@selector(didReceivedSignal:fromChannel:)]) {
                [channelInfo.config.channelDelegate didReceivedSignal:message.text fromChannel:channel];

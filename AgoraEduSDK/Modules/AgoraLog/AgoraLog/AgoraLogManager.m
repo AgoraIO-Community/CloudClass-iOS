@@ -75,16 +75,16 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
     DDLogLevel _ddLogLevel = DDLogLevelAll;
     BOOL levelVerify = YES;
     switch (config.logLevel) {
-        case AgoraLogLevelNone:
+        case AgoraLogLevelTypeNone:
             _ddLogLevel = DDLogLevelOff;
             break;
-        case AgoraLogLevelInfo:
+        case AgoraLogLevelTypeInfo:
             _ddLogLevel = DDLogLevelInfo;
             break;
-        case AgoraLogLevelWarn:
+        case AgoraLogLevelTypeWarn:
             _ddLogLevel = DDLogLevelWarning;
             break;
-        case AgoraLogLevelError:
+        case AgoraLogLevelTypeError:
             _ddLogLevel = DDLogLevelError;
             break;
         default:
@@ -97,16 +97,16 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
     
 //    DDLogLevel _ddLogConsoleLevel = DDLogLevelAll;
 //    switch (config.logConsoleLevel) {
-//        case AgoraLogLevelNone:
+//        case AgoraLogLevelTypeNone:
 //            _ddLogConsoleLevel = DDLogLevelOff;
 //            break;
-//        case AgoraLogLevelInfo:
+//        case AgoraLogLevelTypeInfo:
 //            _ddLogConsoleLevel = DDLogLevelInfo;
 //            break;
-//        case AgoraLogLevelWarn:
+//        case AgoraLogLevelTypeWarn:
 //            _ddLogConsoleLevel = DDLogLevelWarning;
 //            break;
-//        case AgoraLogLevelError:
+//        case AgoraLogLevelTypeError:
 //            _ddLogConsoleLevel = DDLogLevelError;
 //            break;
 //        default:
@@ -159,17 +159,17 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
     return AgoraLogErrorTypeNone;
 }
 
-- (AgoraLogErrorType)logMessage:(NSString *)message level:(AgoraLogLevel)level {
+- (AgoraLogErrorType)logMessage:(NSString *)message level:(AgoraLogLevelType)level {
 
     BOOL levelVerify = YES;
     switch (level) {
-        case AgoraLogLevelError:
+        case AgoraLogLevelTypeError:
             AgoraLogError(self.logFileLevel, self.logContext, @"%@", message);
             break;
-        case AgoraLogLevelWarn:
+        case AgoraLogLevelTypeWarn:
             AgoraLogWarn(self.logFileLevel, self.logContext, @"%@", message);
             break;
-        case AgoraLogLevelInfo:
+        case AgoraLogLevelTypeInfo:
             AgoraLogInfo(self.logFileLevel, self.logContext, @"%@", message);
             break;
         default:

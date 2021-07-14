@@ -96,6 +96,7 @@ static AgoraRTCManager *manager = nil;
     if(self.rtcEngineKit == nil){
         self.rtcEngineKit = [AgoraRtcEngineKit sharedEngineWithAppId:appid delegate:self];
     }
+    [self.rtcEngineKit setParameters: @"{\"che.audio.keep.audiosession\": true}"];
     
     [self.rtcEngineKit enableVideo];
     [self.rtcEngineKit enableWebSdkInteroperability:YES];
@@ -423,7 +424,12 @@ static AgoraRTCManager *manager = nil;
 - (int)setupLocalVideo:(AgoraRtcVideoCanvas * _Nullable)local {
     
     int code =  [self.rtcEngineKit setupLocalVideo:local];
+#ifdef AgoraRtcKit_2_X
     [AgoraRTELogService logMessageWithDescribe:@"setupLocalVideo:" message:@{@"roomUuid":AgoraRTCNoNullString(local.channel), @"uid": @(local.uid), @"code":@(code)}];
+#endif
+#ifdef AgoraRtcKit_3_X
+    [AgoraRTELogService logMessageWithDescribe:@"setupLocalVideo:" message:@{@"roomUuid":AgoraRTCNoNullString(local.channelId), @"uid": @(local.uid), @"code":@(code)}];
+#endif
     
     return code;
 }
@@ -431,8 +437,14 @@ static AgoraRTCManager *manager = nil;
 - (int)setupRemoteVideo:(AgoraRtcVideoCanvas * _Nonnull)remote {
     
     int code =  [self.rtcEngineKit setupRemoteVideo:remote];
-    [AgoraRTELogService logMessageWithDescribe:@"setupRemoteVideo:" message:@{@"roomUuid":AgoraRTCNoNullString(remote.channel), @"uid": @(remote.uid), @"code":@(code)}];
     
+#ifdef AgoraRtcKit_2_X
+    [AgoraRTELogService logMessageWithDescribe:@"setupRemoteVideo:" message:@{@"roomUuid":AgoraRTCNoNullString(remote.channel), @"uid": @(remote.uid), @"code":@(code)}];
+#endif
+#ifdef AgoraRtcKit_3_X
+    [AgoraRTELogService logMessageWithDescribe:@"setupRemoteVideo:" message:@{@"roomUuid":AgoraRTCNoNullString(remote.channelId), @"uid": @(remote.uid), @"code":@(code)}];
+#endif
+
     return code;
 }
 

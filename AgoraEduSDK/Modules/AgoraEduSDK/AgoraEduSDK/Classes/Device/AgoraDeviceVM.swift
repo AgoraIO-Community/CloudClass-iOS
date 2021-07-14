@@ -10,11 +10,6 @@ import EduSDK
 import AgoraEduContext
 import AgoraReport
 
-@objcMembers public class AgoraDeviceStateCountInfo: NSObject {
-    public var cameraCount: Int = 0
-    public var microCount: Int = 0
-}
-
 @objcMembers public class AgoraDeviceVM: AgoraBaseVM {
     
     // 自己的流状态 用于本地记录，比较
@@ -22,29 +17,19 @@ import AgoraReport
     // 自己的设备状态
     fileprivate var deviceConfig: AgoraEduContextDeviceConfig?
     
-    // 流状态 [streamUuid: AgoraRTEStreamState]
-    fileprivate var rteStreamStates: [String: AgoraDeviceStreamState] = [:]
+    // 流状态
     fileprivate var rteLocalStreamState = AgoraDeviceStreamState()
     
     private var teaCameraState: AgoraEduContextDeviceState = .available
     private var teaMicroState: AgoraEduContextDeviceState = .available
     
-    // 用于判断远端设备状态
-    fileprivate var threadTimer: AgoraSubThreadTimer?
-    fileprivate var rteStreamCountInfo: [String: AgoraDeviceStateCountInfo] = [:]
-    
-//    fileprivate var deviceLock: NSLock = NSLock()
+    fileprivate var deviceLock: NSLock = NSLock()
     
     public override init(config: AgoraVMConfig) {
         super.init(config: config)
         
-        self.rteLocalStreamState.camera = .failed
-        self.rteLocalStreamState.microphone = .failed
-        
-        threadTimer = AgoraSubThreadTimer(threadName: "io.agora.timer.event", timeInterval: 2.0)
-        threadTimer?.delegate = self
-        
-        threadTimer?.start()
+        self.rteLocalStreamState.camera = .starting
+        self.rteLocalStreamState.microphone = .starting
     }
     
     public func initDeviceState(successBlock: ((AgoraEduContextDeviceConfig) -> Void)?,
@@ -128,15 +113,40 @@ import AgoraReport
         })
     }
     
-    public func resetRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState]) {
-        // 判断是否上报
-        self.rteStreamStates = rteStreamStates
-    }
-    public func updateRteStreamStates(_ rteStreamStates: [String: AgoraDeviceStreamState],
-                                      deviceType: AgoraDeviceStateType) {
-        // 判断是否上报
-        self.rteStreamStates = rteStreamStates
+    public func getLocalDeviceState(successBlock: @escaping (_ rteUser: AgoraRTEUser,
+                                                             _ camera: AgoraEduContextDeviceState,
+                                                             _ microphone: AgoraEduContextDeviceState) -> Void,
+                                    failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
         
+        AgoraEduManager.share().roomManager?.getLocalUser(success: { [weak self] (rteLocalUser) in
+            guard let `self` = self else {
+                return
+            }
+            
+            let camera = self.getUserDeviceState(.camera,
+                                                 rteUser: rteLocalUser,
+                                                 rteStream: rteLocalUser.streams.first)
+            let microphone = self.getUserDeviceState(.microphone,
+                                                     rteUser: rteLocalUser,
+                                                     rteStream: rteLocalUser.streams.first)
+
+            successBlock(rteLocalUser,
+                         camera,
+                         microphone)
+            
+        }, failure: { [weak self] (error) in
+            if let err = self?.kitError(error) {
+                failureBlock(err)
+            }
+        })
+    }
+    public func updateLocalRteStreamState(_ rteStreamState: AgoraRTEStreamState,
+                                           deviceType: AgoraDeviceStateType,
+                                           streamUuid: String,
+                                           successBlock: (() -> Void)?,
+                                           failureBlock: ((_ error: AgoraEduContextError) -> Void)?) {
+  
+        // 设备是否已经关闭
         if let deviceConfig = self.deviceConfig {
             if deviceType == .camera && !deviceConfig.cameraEnabled {
                 return
@@ -145,63 +155,33 @@ import AgoraReport
             }
         }
         
-        // TODO：添加同步锁， 保证不上传多次
-        AgoraEduManager.share().roomManager?.getLocalUser(success: { [weak self] (rteLocalUser) in
+        // 是否已经Mute
+        AgoraEduManager.share().roomManager?.getFullStreamList(success: { [weak self] (rteStreams) in
             
-            guard let `self` = self else {
+            guard let `self` = self,
+                  let rteStream = rteStreams.first(where: {$0.streamUuid == streamUuid}) else {
                 return
             }
             
-            if let rteStreamState = rteStreamStates[rteLocalUser.streamUuid] {
-                
-                var camera: Int?
-                var micro: Int?
-                
-                if deviceType == .camera {
-                    let cameraState = rteStreamState.camera
-                    let targetV = (cameraState == .failed) ? 0 : 1
-                    let currentV = (self.rteLocalStreamState.camera == .failed)  ? 0 : 1
-                    if targetV != currentV {
-                        camera = targetV
-                    } else {
-                        return
-                    }
-                } else {
-                    let microState = rteStreamState.microphone
-                    let targetV = (microState == .failed) ? 0 : 1
-                    let currentV = (self.rteLocalStreamState.microphone == .failed)  ? 0 : 1
-
-                    if targetV != currentV {
-                        micro = targetV
-                    } else {
-                        return
-                    }
-                }
-                
-                self.updateDevices(camera: camera,
-                                   micro: micro,
-                                   speaker: nil,
-                                   facing: nil) { [weak self] in
-                    
-                    if deviceType == .camera {
-                        self?.rteLocalStreamState.camera = rteStreamState.camera
-                    } else {
-                        self?.rteLocalStreamState.microphone = rteStreamState.microphone
-                    }
-                } failureBlock: { (error) in
-                    
-                }
+            if deviceType == .camera && !rteStream.hasVideo {
+                return
+            } else if deviceType == .microphone && !rteStream.hasAudio {
+                return
             }
-        }, failure: { (error) in
             
+            self.reportDeviceState(rteStreamState,
+                                   deviceType: deviceType,
+                                   successBlock: successBlock,
+                                   failureBlock: failureBlock)
+            
+        }, failure: { [weak self] (error) in
+            if let err = self?.kitError(error) {
+                failureBlock?(err)
+            }
         })
     }
-    
-    deinit {
-        threadTimer?.stop()
-    }
-    
-    // MARK: DeviceChanged
+
+    // MARK: Property DeviceChanged
     public func updateDeviceState(rteUser: AgoraRTEUser,
                                   cause: Any?,
                                   successBlock: ((AgoraRTEUser,
@@ -287,8 +267,7 @@ import AgoraReport
                                    rteStream: AgoraRTEStream?) -> AgoraEduContextDeviceState {
         
         var deviceStreamState: AgoraEduContextDeviceState = .available
-        var resetRteStreamCount = true
-        
+ 
         // 只有自己的时候需要deviceConfig判断
         if rteUser.userUuid == self.config.userUuid {
             // 0和1 不能来修改2
@@ -325,9 +304,9 @@ import AgoraReport
             return .close
         }
         
-        // TODO：没有业务流， 代表不在台上， 暂时显示close
+        // TODO：没有业务流， 代表不在台上， 默认设备正常
         guard let rteStream = rteStream else {
-            return .close
+            return .available
         }
         
         // mute, 设备正常
@@ -335,40 +314,19 @@ import AgoraReport
             !rteStream.hasAudio && type == .microphone {
             return .available
         }
-        
-        // 是否frozen或者stop
-        // 默认正常， 有可能远端设备坏的， 而且网络不好
-        let deviceStreamStates = self.rteStreamStates[rteUser.streamUuid]
-        let streamStates = (type == .camera ? deviceStreamStates?.camera : deviceStreamStates?.microphone) ?? .running
-        
-        // local
+            
+        // local 只判断本地rtc流， 远端的不依据rtc流
         if rteUser.userUuid == self.config.userUuid {
+            // 是否frozen或者stop
+            // 默认正常， 有可能远端设备坏的， 而且网络不好
+            let deviceStreamStates = self.rteLocalStreamState
+            let streamStates = (type == .camera ? deviceStreamStates.camera : deviceStreamStates.microphone) ?? .running
             if streamStates != .failed {
                 return .available
             }
             return .notAvailable
         }
         
-        // remote
-        if streamStates == .frozen || streamStates == .stopped {
-            // 联系记录2次以上
-            let stateCountInfo = rteStreamCountInfo[rteUser.streamUuid] ?? AgoraDeviceStateCountInfo()
-            let count = (type == .camera) ? stateCountInfo.cameraCount : stateCountInfo.microCount
-            if count >= 2 {
-                resetRteStreamCount = false
-                return .notAvailable
-            }
-            return .available
-        }
-        
-        defer {
-            if rteUser.userUuid != self.config.userUuid && resetRteStreamCount {
-                
-                let stateType: AgoraDeviceStateType = (type == .camera) ? .camera : .microphone
-                resetRteStreamCountInfo(streamUuid: rteUser.streamUuid, type: stateType)
-            }
-        }
-    
         // device里面没有找到， 默认认为是好的
         return .available
     }
@@ -523,6 +481,61 @@ private extension AgoraDeviceVM {
     }
 }
 
+// MARK: 上报设备状态
+private extension AgoraDeviceVM {
+    func reportDeviceState(_ rteStreamState: AgoraRTEStreamState,
+                           deviceType: AgoraDeviceStateType,
+                           successBlock: (() -> Void)?,
+                           failureBlock: ((_ error: AgoraEduContextError) -> Void)?) {
+
+        DispatchQueue.global().async {
+            self.deviceLock.lock()
+            
+            // TODO：添加同步锁， 保证不上传多次
+            var camera: Int?
+            var micro: Int?
+            if deviceType == .camera {
+                let targetV = (rteStreamState == .failed) ? 0 : 1
+                let currentV = (self.rteLocalStreamState.camera == .failed)  ? 0 : 1
+                if targetV != currentV {
+                    camera = targetV
+                } else {
+                    self.deviceLock.unlock()
+                    return
+                }
+                
+            } else if deviceType == .microphone {
+                let targetV = (rteStreamState == .failed) ? 0 : 1
+                let currentV = (self.rteLocalStreamState.microphone == .failed)  ? 0 : 1
+
+                if targetV != currentV {
+                    micro = targetV
+                } else {
+                    self.deviceLock.unlock()
+                    return
+                }
+            }
+            
+            self.updateDevices(camera: camera,
+                               micro: micro,
+                               speaker: nil,
+                               facing: nil) { [weak self] in
+                
+                if deviceType == .camera {
+                    self?.rteLocalStreamState.camera = rteStreamState
+                } else {
+                    self?.rteLocalStreamState.microphone = rteStreamState
+                }
+                self?.deviceLock.unlock()
+                successBlock?()
+            } failureBlock: { [weak self] (error) in
+                self?.deviceLock.unlock()
+                failureBlock?(error)
+            }
+        }
+    }
+}
+
 // MARK: HTTP
 private extension AgoraDeviceVM {
     // 1可用 0 不可用
@@ -574,48 +587,5 @@ private extension AgoraDeviceVM {
                 failureBlock(err)
             }
         }
-    }
-}
-
-// MARK: Timer
-extension AgoraDeviceVM: AgoraSubThreadTimerDelegate {
-    func resetRteStreamCountInfo(streamUuid: String, type: AgoraDeviceStateType) {
-        let countInfo = rteStreamCountInfo[streamUuid] ?? AgoraDeviceStateCountInfo()
-        if type == .camera {
-            countInfo.cameraCount = 0
-        }
-        if type == .microphone {
-            countInfo.microCount = 0
-        }
-        rteStreamCountInfo[streamUuid] = countInfo
-    }
-    
-    func resetRteStreamCountInfo(streamUuid: String) {
-        resetRteStreamCountInfo(streamUuid: streamUuid, type: .camera)
-        resetRteStreamCountInfo(streamUuid: streamUuid, type: .microphone)
-    }
-    
-    public func perLoop() {
-        var streamCountInfo: [String: AgoraDeviceStateCountInfo] = [:]
-        for streamUuid in rteStreamStates.keys {
-            
-            let streamState = rteStreamStates[streamUuid]
-            let countInfo = rteStreamCountInfo[streamUuid] ?? AgoraDeviceStateCountInfo()
-            
-            if streamState!.camera == .frozen
-                || streamState!.camera == .stopped {
-                countInfo.cameraCount = (countInfo.cameraCount ?? 0) + 1
-            } else {
-                countInfo.cameraCount = 0
-            }
-            if streamState!.microphone == .frozen
-                || streamState!.microphone == .stopped {
-                countInfo.microCount = (countInfo.microCount ?? 0) + 1
-            } else {
-                countInfo.microCount = 0
-            }
-            streamCountInfo[streamUuid] = countInfo
-        }
-        rteStreamCountInfo = streamCountInfo
     }
 }

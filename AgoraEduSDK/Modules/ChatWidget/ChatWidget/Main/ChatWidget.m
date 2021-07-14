@@ -94,6 +94,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.miniButton.layer.borderWidth = 1;
     self.miniButton.layer.borderColor = [UIColor colorWithRed:47/255.0 green:65/255.0 blue:146/255.0 alpha:0.15].CGColor;
     [self.miniButton addTarget:self action:@selector(showView) forControlEvents:UIControlEventTouchUpInside];
+    self.miniButton.backgroundColor = UIColor.whiteColor;
     [self.containerView addSubview:self.miniButton];
     self.miniButton.hidden = YES;
     

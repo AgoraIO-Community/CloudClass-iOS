@@ -18,11 +18,13 @@ extension AgoraSmallRenderUIController: AgoraEduUserHandler {
         } else {
             teacherInfo = nil
         }
+        updateLayout()
     }
     
     // 更新人员信息列表，只显示台上人员信息。（台上会包含不在线的）
     public func onUpdateCoHostList(_ list: [AgoraEduContextUserDetailInfo]) {
         updateCoHosts(with: list)
+        updateLayout()
     }
     
     // 自己被踢出

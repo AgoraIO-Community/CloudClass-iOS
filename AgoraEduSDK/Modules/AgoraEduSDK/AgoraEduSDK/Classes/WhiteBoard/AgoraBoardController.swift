@@ -47,7 +47,7 @@ import EduSDK
     private var boardAutoMode: Bool
     private var localGranted = false
     
-    private var currentScenePath: String!
+    private var currentScenePath: String = ""
     private var localCameraConfigs = [String: AgoraWhiteBoardCameraConfig]()
     
     public init(boardAppId: String,

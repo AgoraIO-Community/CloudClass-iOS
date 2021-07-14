@@ -213,7 +213,7 @@ static AgoraRTEHttpClient *manager = nil;
                      \nheaders==>\n%@\n\
                      \nparams==>\n%@\n\
                      ",AgoraHttpTypeStrings[type], url, headers, params];
-    [AgoraRTELogService logMessage:msg level:AgoraLogLevelInfo];
+    [AgoraRTELogService logMessage:msg level:AgoraLogLevelTypeInfo];
 }
 + (void)httpSuccessLogWithType:(AgoraRTEHttpType)type url:(NSString *)url
                      responseObject:(id)responseObject {
@@ -223,7 +223,7 @@ static AgoraRTEHttpClient *manager = nil;
                      \nurl==>\n%@\n\
                      \nResult==>\n%@\n\
                      ",AgoraHttpTypeStrings[type], url, responseObject];
-    [AgoraRTELogService logMessage:msg level:AgoraLogLevelInfo];
+    [AgoraRTELogService logMessage:msg level:AgoraLogLevelTypeInfo];
 }
 
 + (void)httpErrorLogWithType:(AgoraRTEHttpType)type url:(NSString *)url
@@ -234,7 +234,7 @@ static AgoraRTEHttpClient *manager = nil;
                      \nurl==>\n%@\n\
                      \nError==>\n%@\n\
                      ",AgoraHttpTypeStrings[type], url, error.description];
-    [AgoraRTELogService logMessage:msg level:AgoraLogLevelError];
+    [AgoraRTELogService logMessage:msg level:AgoraLogLevelTypeError];
 }
 
 #pragma mark Check

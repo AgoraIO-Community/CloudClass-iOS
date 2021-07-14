@@ -56,7 +56,7 @@ static AgoraLogHttpClient *manager = nil;
                      \nheaders==>\n%@\n\
                      \nparams==>\n%@\n\
                      ", url, headers, params];
-    [manager.logManager logMessage:msg level:AgoraLogLevelInfo];
+    [manager.logManager logMessage:msg level:AgoraLogLevelTypeInfo];
     
     [AgoraLogHttpClient.shareManager.sessionManager GET:url parameters:params headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
@@ -65,7 +65,7 @@ static AgoraLogHttpClient *manager = nil;
                          \nurl==>\n%@\n\
                          \nResult==>\n%@\n\
                          ", url, responseObject];
-        [manager.logManager logMessage:msg level:AgoraLogLevelInfo];
+        [manager.logManager logMessage:msg level:AgoraLogLevelTypeInfo];
         
         if (success) {
             success(responseObject);
@@ -78,7 +78,7 @@ static AgoraLogHttpClient *manager = nil;
                          \nurl==>\n%@\n\
                          \nError==>\n%@\n\
                          ", url, error.description];
-        [manager.logManager logMessage:msg level:AgoraLogLevelInfo];
+        [manager.logManager logMessage:msg level:AgoraLogLevelTypeInfo];
 
         if (failure) {
             failure(error);
@@ -101,7 +101,7 @@ static AgoraLogHttpClient *manager = nil;
                      \nheaders==>\n%@\n\
                      \nparams==>\n%@\n\
                      ", url, headers, params];
-    [manager.logManager logMessage:msg level:AgoraLogLevelInfo];
+    [manager.logManager logMessage:msg level:AgoraLogLevelTypeInfo];
     
     [AgoraLogHttpClient.shareManager.sessionManager POST:url parameters:params headers:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
@@ -110,7 +110,7 @@ static AgoraLogHttpClient *manager = nil;
                          \nurl==>\n%@\n\
                          \nResult==>\n%@\n\
                          ", url, responseObject];
-        [manager.logManager logMessage:msg level:AgoraLogLevelInfo];
+        [manager.logManager logMessage:msg level:AgoraLogLevelTypeInfo];
 
         if (success) {
             success(responseObject);
@@ -123,7 +123,7 @@ static AgoraLogHttpClient *manager = nil;
                          \nurl==>\n%@\n\
                          \nError==>\n%@\n\
                          ", url, error.description];
-        [manager.logManager logMessage:msg level:AgoraLogLevelInfo];
+        [manager.logManager logMessage:msg level:AgoraLogLevelTypeInfo];
 
         if (failure) {
           failure(error);

@@ -47,7 +47,7 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
                            oldUserInfo: oldValue,
                            newUserInfo: teacherInfo)
             
-            updateLayout()
+//            updateLayout()
         }
     }
     

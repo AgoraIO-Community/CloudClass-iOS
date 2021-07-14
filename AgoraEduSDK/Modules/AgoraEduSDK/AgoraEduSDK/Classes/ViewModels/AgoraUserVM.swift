@@ -31,8 +31,6 @@ struct AgoraStudentInfo {
     // online & offline students
     public var kitCoHostInfos: [AgoraEduContextUserDetailInfo] = []
     
-    // 流状态 [streamUuid: AgoraRTEStreamState]
-    fileprivate var rteStreamStates: [String: AgoraDeviceStreamState] = [:]
     // 白板状态
     fileprivate var usersBoardGranted: [String] = []
     
@@ -60,9 +58,7 @@ struct AgoraStudentInfo {
     public var userDeviceStateBlock: ((_ deviceType: AgoraDeviceStateType,
                                        _ rteUser: AgoraRTEUser,
                                        _ rteStream: AgoraRTEStream?) -> AgoraEduContextDeviceState)?
-    public var onStreamStatesChangedBlock: ((_ rteStreamStates: [String: AgoraDeviceStreamState], _ deviceType: AgoraDeviceStateType) -> Void)?
-    public var onResetStreamStatesBlock: ((_ rteStreamStates: [String: AgoraDeviceStreamState]) -> Void)?
-    
+
     public var localBaseUserInfo: AgoraEduContextUserInfo {
         let userInfo = AgoraEduContextUserInfo()
         
@@ -147,173 +143,13 @@ struct AgoraStudentInfo {
                 return
             }
             
-            let streamStateModels = AgoraEduManager.share().studentService?.streamStateModels ?? [:]
-            self.updateStreamStates(streamStateModels) {
-                successBlock()
-                
-            } failureBlock: { (error) in
-                failureBlock(error)
-            }
-
+            successBlock()
+            
         } failureBlock: { (error) in
             failureBlock(error)
         }
     }
-    
-    // MARK: Stream State
-    private func updateStreamStates(_ stateModels: [String: AgoraRTEStreamStateInfo],
-                                   successBlock: @escaping () -> Void,
-                                   failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
-        if stateModels.keys.count == 0 {
-            successBlock()
-        }
-        
-        let group = DispatchGroup()
-        let queue = DispatchQueue(label: "io.agora.user")
-        
-        var kitError: AgoraEduContextError?
-        
-        for key in stateModels.keys {
-            let stateInfo = stateModels[key]
-            if let audioState = stateInfo?.audioState, let state = AgoraRTEStreamState(rawValue: audioState.uintValue) {
-                group.enter()
-                queue.async() {
-                    let result = self.updateStreamState(state, isAudio: true, isVideo: false, streamUuid: key) {
-                        group.leave()
-                    } failureBlock: { (error) in
-                        kitError = error
-                        group.leave()
-                    }
-                    if !result {
-                        group.leave()
-                    }
-                }
-            }
-            if let videoState = stateInfo?.videoState, let state = AgoraRTEStreamState(rawValue: videoState.uintValue) {
-                group.enter()
-                queue.async() {
-                    let result = self.updateStreamState(state, isAudio: false, isVideo: true, streamUuid: key) {
-                        group.leave()
-                    } failureBlock: { (error) in
-                        kitError = error
-                        group.leave()
-                    }
-                    if !result {
-                        group.leave()
-                    }
-                }
-            }
-        }
-        
-        group.notify(queue: .main) {
-            if let error = kitError {
-                failureBlock(error)
-            } else {
-                successBlock()
-            }
-        }
-    }
-    public func updateStreamState(_ state: AgoraRTEStreamState,
-                                  isAudio: Bool,
-                                  isVideo: Bool,
-                                  streamUuid: String,
-                                  successBlock: @escaping () -> Void,
-                                  failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) -> Bool {
-        
-        // 代表变化的是哪个
-        if (isAudio == isVideo) {
-            return false
-        }
-        
-        // 没有这个人
-        let _kitUserInfo = self.kitUserInfos.first { $0.streamUuid == streamUuid }
-        guard let kitUserInfo = _kitUserInfo else {
-            return false
-        }
-                
-        // 如果流状态和之前一样， 那么不处理
-        if let rteDeviceState = self.rteStreamStates[streamUuid] {
-            let rteState = isAudio ? rteDeviceState.microphone : rteDeviceState.camera
-            if rteState == state {
-                return false
-            }
-        }
-        
-        // update cache
-        let deviceType = isAudio ? AgoraDeviceType.microphone : AgoraDeviceType.camera
-        var streamState = self.rteStreamStates[streamUuid] ?? AgoraDeviceStreamState()
-        if deviceType == .camera {
-            streamState.camera = state
-        } else {
-            streamState.microphone = state
-        }
-        self.rteStreamStates[streamUuid] = streamState
-        onStreamStatesChangedBlock?(self.rteStreamStates, isAudio ? AgoraDeviceStateType.microphone : AgoraDeviceStateType.camera)
-        
-//        // 没有发对应的流 就不需要关心RTCStreamState变化
-//        if (!kitUserInfo.enableVideo && deviceType == .camera)
-//            || (!kitUserInfo.enableAudio && deviceType == .microphone) {
-//            return false
-//        }
-        
-        // 更新list
-        AgoraEduManager.share().roomManager?.getFullStreamList(success: { [weak self] (rteStreams) in
-            
-            guard let `self` = self else {
-                return
-            }
-            
-            AgoraEduManager.share().roomManager?.getFullUserList(success: {[weak self] (rteUsers) in
-                
-                guard let `self` = self else {
-                    return
-                }
-                let _rteUser = rteUsers.first { $0.streamUuid == streamUuid }
-                guard let rteUser = _rteUser else {
-                    successBlock()
-                    return
-                }
-                
-                let rteStream = rteStreams.first(where: {$0.streamUuid == streamUuid })
-                let cameraState = self.getUserDeviceState(.camera,
-                                                          rteUser: rteUser,
-                                                          rteStream: rteStream)
-                let microState = self.getUserDeviceState(.microphone,
-                                                         rteUser: rteUser,
-                                                         rteStream: rteStream)
-                
-                let kitCoHostInfo = self.kitCoHostInfos.first { $0.streamUuid == streamUuid }
-                kitCoHostInfo?.cameraState = cameraState
-                kitCoHostInfo?.microState = microState
-                
-                kitUserInfo.cameraState = cameraState
-                kitUserInfo.microState = microState
-                
-                successBlock()
 
-            }, failure: { [weak self] (error) in
-                if let err = self?.kitError(error) {
-                    failureBlock(err)
-                }
-            })
-        }, failure: { [weak self] (error) in
-            if let err = self?.kitError(error) {
-                failureBlock(err)
-            }
-        })
-        
-
-        // reportStreamState
-//        if kitUserInfo.user.userUuid == self.config.userUuid {
-//            self.reportStreamState(state: state, streamId: streamUuid, deviceType: deviceType) {
-//            } failureBlock: { [weak self] (error) in
-//                self?.rteStreamStates.removeValue(forKey: streamUuid)
-//            }
-//        }
-        
-        return true
-    }
-    
     public func getStreamInfo(streamUuid: String,
                               successBlock: @escaping (_ stream: AgoraRTEStream) -> Void,
                               failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
@@ -404,23 +240,10 @@ struct AgoraStudentInfo {
             failureBlock(error)
         }
     }
+    
     // 轮播
     public func updateCarouselUserList(successBlock: @escaping () -> Void,
                                        failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
-        
-        var states: [String: AgoraDeviceStreamState] = [:]
-        
-        // 只有学生轮播
-        if let teaUserInfo = self.kitUserInfos.first(where: {$0.user.role == .teacher}) {
-            if let state = self.rteStreamStates[teaUserInfo.streamUuid] {
-                states[teaUserInfo.streamUuid] = state
-            }
-        }
-        
-        // 之前的流状态重置
-        self.rteStreamStates = states
-        self.onResetStreamStatesBlock?(self.rteStreamStates)
-
         // 重新初始化设置
         self.getKitUserList(successBlock: successBlock,
                             failureBlock: failureBlock)
@@ -430,6 +253,10 @@ struct AgoraStudentInfo {
     public func getKitUserList(successBlock: @escaping () -> Void, failureBlock: @escaping (_ error: AgoraEduContextError) -> Void) {
  
         AgoraEduManager.share().roomManager?.getFullUserList(success: {[weak self] (rteUsers) in
+            
+            for rteUser in rteUsers {
+                AgoraEduManager.share().logMessage("getKitUserList userUuid:\(rteUser.userUuid) userName:\(rteUser.userName) streamUuid:\(rteUser.streamUuid)", level: .warn)
+            }
             
             self?.kitUserInfos.removeAll()
             self?.kitCoHostInfos.removeAll()
@@ -490,6 +317,17 @@ struct AgoraStudentInfo {
                     guard let `self` = self else {
                         return
                     }
+                    
+                    for rteUser in rteUsers {
+                        AgoraEduManager.share().logMessage("updateKitUserList onLineRteUsers userUuid:\(rteUser.userUuid) userName:\(rteUser.userName) streamUuid:\(rteUser.streamUuid)", level: .warn)
+                    }
+                    for userUuid in userUuids {
+                        AgoraEduManager.share().logMessage("updateKitUserList userUuids userUuid:\(userUuid)", level: .warn)
+                    }
+                    for rteStream in streamInfos {
+                        AgoraEduManager.share().logMessage("updateKitUserList streamInfos userUuid:\(rteStream.userInfo.userUuid) userName:\(rteStream.userInfo.userName) streamUuid:\(rteStream.streamUuid)", level: .warn)
+                    }
+                    
                     let _ = self.updateUserListInfos(onLineRteUsers: rteUsers, coHostUserUuids: userUuids, rteStreams: streamInfos, studentInfos: studentInfos)
                     let _ = self.updateCoHostInfos(onLineRteUsers: rteUsers, coHostUserUuids: userUuids, rteStreams: streamInfos, studentInfos: studentInfos)
                     
@@ -605,7 +443,8 @@ struct AgoraStudentInfo {
                 kitUserInfo?.streamUuid = rteStream.streamUuid
                 kitCoHostInfo?.enableAudio = rteStream.hasAudio
                 kitCoHostInfo?.enableVideo = rteStream.hasVideo
-                kitCoHostInfo?.streamUuid = rteStream.streamUuid
+                
+                AgoraEduManager.share().logMessage("updateKitStreams userUuid:\(kitUserInfo?.user.userUuid) userName:\(kitUserInfo?.user.userName) streamUuid:\(kitUserInfo?.streamUuid)", level: .warn)
             }
         }
         
@@ -668,6 +507,11 @@ extension AgoraUserVM {
                 self?.kitCoHostInfos.append(coHostInfo)
             }
         }
+        
+        for coHostInfo in coHostInfos {
+            AgoraEduManager.share().logMessage("updateCoHostInfos coHostInfos userUuid:\(coHostInfo.user.userUuid) userName:\(coHostInfo.user.userName) streamUuid:\(coHostInfo.streamUuid)", level: .warn)
+        }
+        
         return coHostInfos
     }
     fileprivate func getCoHostInfos(onLineRteUsers: [AgoraRTEUser],
@@ -681,14 +525,7 @@ extension AgoraUserVM {
             
             var kitUserInfo: AgoraEduContextUserDetailInfo!
             
-            // 如果是自己，那么肯定在线
-            if coHostUserUuid == self.config.userUuid,
-               let localUser = self.localUserInfo {
-                
-                kitUserInfo = self.getKitUserInfo(localUser, rteStream)
-                kitUserInfo.onLine = true
-
-            } else if let onLineRteUser = onLineRteUsers.first(where: { (onLineRteUser) -> Bool in
+            if let onLineRteUser = onLineRteUsers.first(where: { (onLineRteUser) -> Bool in
                 onLineRteUser.userUuid == coHostUserUuid
             }) {
                 // 查看是否在线
@@ -701,6 +538,7 @@ extension AgoraUserVM {
                 continue
                 
             } else {
+                // 不在线， 找不到
                 let rteUser = AgoraRTEUser(userUuid: coHostUserUuid, streamUuid: "")
                 rteUser.userName = studentInfos[coHostUserUuid]?.name ?? ""
                 kitUserInfo = self.getKitUserInfo(rteUser, rteStream)
@@ -711,10 +549,8 @@ extension AgoraUserVM {
             kitUserInfo.enableVideo = false
             kitUserInfo.enableAudio = false
             kitUserInfo.coHost = true
-            if kitUserInfo.streamUuid == ""  {
-                if let info = self.kitUserInfos.first(where: {$0.user.userUuid == kitUserInfo.user.userUuid}) {
-                    kitUserInfo.streamUuid = info.streamUuid
-                }
+            if kitUserInfo.streamUuid == "" {
+                // TODO： 后台获取数据
             }
             
             if let rteStream = rteStream {
@@ -723,6 +559,10 @@ extension AgoraUserVM {
             }
             
             kitUserInfos.append(kitUserInfo)
+        }
+        
+        for kitUserInfo in kitUserInfos {
+            AgoraEduManager.share().logMessage("getCoHostInfos coHostInfos userUuid:\(kitUserInfo.user.userUuid) userName:\(kitUserInfo.user.userName) streamUuid:\(kitUserInfo.streamUuid)", level: .warn)
         }
         
         return kitUserInfos
@@ -785,6 +625,10 @@ extension AgoraUserVM {
             kitUserInfos.append(kitUserInfo)
         }
         
+        for kitUserInfo in kitUserInfos {
+            AgoraEduManager.share().logMessage("getUserListInfos kitUserInfo userUuid:\(kitUserInfo.user.userUuid) userName:\(kitUserInfo.user.userName) streamUuid:\(kitUserInfo.streamUuid)", level: .warn)
+        }
+        
         return kitUserInfos
     }
     
@@ -794,6 +638,9 @@ extension AgoraUserVM {
         let kitUserInfo = AgoraEduContextUserDetailInfo(user: user)
         kitUserInfo.isSelf = rteUser.userUuid == self.config.userUuid
         kitUserInfo.streamUuid = rteUser.streamUuid
+
+        AgoraEduManager.share().logMessage("getKitUserInfo userUuid:\(rteUser.userUuid) userName:\(rteUser.userName) streamUuid:\(rteUser.streamUuid)", level: .warn)
+        
         kitUserInfo.cameraState = self.getUserDeviceState(.camera,
                                                           rteUser: rteUser,
                                                           rteStream: rteStream)

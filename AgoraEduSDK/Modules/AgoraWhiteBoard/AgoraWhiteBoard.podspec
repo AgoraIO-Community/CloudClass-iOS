@@ -13,5 +13,5 @@ Pod::Spec.new do |spec|
   spec.source_files  = "AgoraWhiteBoard/*.{h,m}"
   spec.public_header_files = "AgoraWhiteBoard/*.h"
   
-  spec.dependency "Whiteboard", "2.13.8"
+  spec.dependency "Whiteboard", "2.13.12"
 end

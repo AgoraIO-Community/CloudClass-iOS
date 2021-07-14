@@ -16,9 +16,9 @@ extension AgoraSmallRenderUIController {
         
         var views = [String : AgoraUIUserView]()
         coHosts.forEach { (item) in
-            let streamUuid = item.userInfo.streamUuid
-            if let v = userViews[streamUuid] {
-                views[streamUuid] = v
+            let userUuid = item.userInfo.user.userUuid
+            if let v = userViews[userUuid] {
+                views[userUuid] = v
             }
         }
         userViews = views
@@ -30,13 +30,13 @@ extension AgoraSmallRenderUIController {
     }
     
     func getUserView(index: Int) -> AgoraUIUserView {
-        let streamUuid = coHosts[index].userInfo.streamUuid
-        if let v = userViews[streamUuid] {
+        let userUuid = coHosts[index].userInfo.user.userUuid
+        if let v = userViews[userUuid] {
             return v
         }
         
         let view = AgoraUIUserView(frame: .zero)
-        userViews[streamUuid] = view
+        userViews[userUuid] = view
         return view
     }
     
@@ -50,7 +50,8 @@ extension AgoraSmallRenderUIController {
             return
         }
         
-        if let v = self.userViews[streamUuid] {
+        let userUuid = coHosts[tIndex].userInfo.user.userUuid
+        if let v = self.userViews[userUuid] {
             v.updateAudio(effect: value)
         }
     }

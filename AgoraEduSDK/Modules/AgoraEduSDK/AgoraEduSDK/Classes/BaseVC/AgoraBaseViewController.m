@@ -333,15 +333,15 @@
                                                                    delegate:self];
     
     AgoraWEAK(self);
-    self.userVM.onStreamStatesChangedBlock = ^(NSDictionary<NSString *,AgoraDeviceStreamState *> * _Nonnull streamStates,
-                                               AgoraDeviceStateType deviceType) {
-        [weakself.deviceController updateRteStreamStates:streamStates
-                                              deviceType:deviceType];
-    };
-    self.userVM.onResetStreamStatesBlock = ^(NSDictionary<NSString *,AgoraDeviceStreamState *> * _Nonnull streamStates) {
-        [weakself.deviceController resetRteStreamStates:streamStates];
-    };
-    
+//    self.userVM.onStreamStatesChangedBlock = ^(NSDictionary<NSString *,AgoraDeviceStreamState *> * _Nonnull streamStates,
+//                                               AgoraDeviceStateType deviceType) {
+//        [weakself.deviceController updateRteStreamStates:streamStates
+//                                              deviceType:deviceType];
+//    };
+//    self.userVM.onResetStreamStatesBlock = ^(NSDictionary<NSString *,AgoraDeviceStreamState *> * _Nonnull streamStates) {
+//        [weakself.deviceController resetRteStreamStates:streamStates];
+//    };
+//
     self.userVM.userDeviceStateBlock = ^enum AgoraEduContextDeviceState(enum AgoraDeviceStateType deviceStateType,
                                                                         AgoraRTEUser * _Nonnull user,
                                                                         AgoraRTEStream * _Nullable stream) {
@@ -357,7 +357,6 @@
                 break;
         }
     };
-//    self.userVM.userDeviceStateBlock
     return self.deviceController;
 }
 
@@ -748,33 +747,31 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 - (void)didChangeOfLocalVideoStream:(NSString *)streamId
                           withState:(AgoraRTEStreamState)state {
     [self updateStreamState:state
-                    isAudio:NO
-                    isVideo:YES
+                       type:AgoraDeviceStateTypeCamera
                  streamUuid:streamId];
 }
 
 - (void)didChangeOfRemoteVideoStream:(NSString *)streamId
                            withState:(AgoraRTEStreamState)state {
-    [self updateStreamState:state
-                    isAudio:NO
-                    isVideo:YES
-                 streamUuid:streamId];
+//    [self updateStreamState:state
+//                    isAudio:NO
+//                    isVideo:YES
+//                 streamUuid:streamId];
 }
 
 - (void)didChangeOfLocalAudioStream:(NSString *)streamId
                           withState:(AgoraRTEStreamState)state {
     [self updateStreamState:state
-                    isAudio:YES
-                    isVideo:NO
+                       type:AgoraDeviceStateTypeMicrophone
                  streamUuid:streamId];
 }
 
 - (void)didChangeOfRemoteAudioStream:(NSString *)streamId
                            withState:(AgoraRTEStreamState)state {
-    [self updateStreamState:state
-                    isAudio:YES
-                    isVideo:NO
-                 streamUuid:streamId];
+//    [self updateStreamState:state
+//                    isAudio:YES
+//                    isVideo:NO
+//                 streamUuid:streamId];
 }
 
 - (void)audioVolumeIndicationOfLocalStream:(NSString *)streamId
@@ -866,9 +863,8 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     [self.userVM updateKitStreamsWithRteStreams:rteStreams
                                            type:changeType
                                    successBlock:^{
-        // 更新下设备
-        [weakself.deviceController updateDeviceStateWithRteStreams:rteStreams
-                                                        changeType:changeType];
+        [weakself updateAllList];
+        
     } failureBlock:^(AgoraEduContextError *error) {
         [weakself onShowErrorInfo:error];
     }];
@@ -883,9 +879,7 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     [self.userVM updateKitStreamsWithRteStreamEvents:rteStreamEvents
                                                 type:changeType
                                         successBlock:^{
-        // 更新下设备
-        [weakself.deviceController updateDeviceStateWithRteStreamEvents:rteStreamEvents
-                                                             changeType:changeType];
+        [weakself updateAllList];
     } failureBlock:^(AgoraEduContextError *error) {
         [weakself onShowErrorInfo:error];
     }];
@@ -968,19 +962,14 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 
 #pragma mark - Private--Update Stream State
 - (void)updateStreamState:(AgoraRTEStreamState)state
-                  isAudio:(BOOL)isAudio
-                  isVideo:(BOOL)isVideo
+                  type:(AgoraDeviceStateType)type
                streamUuid:(NSString *)streamUuid {
-    AgoraWEAK(self);
-    [self.userVM updateStreamState:state
-                           isAudio:isAudio
-                           isVideo:isVideo
-                        streamUuid:streamUuid
-                      successBlock:^{
-        [weakself updateAllList];
-    } failureBlock:^(AgoraEduContextError *error) {
-        [weakself onShowErrorInfo:error];
-    }];
+    
+    // 更新 devicecontroller
+    // 由devicecontroller delegate 回调里面更新userVM
+    [self.deviceController updateLocalRteStreamStates:state
+                                           deviceType:type
+                                           streamUuid:streamUuid];;
 }
 
 #pragma mark - AgoraURLGroupDataSource

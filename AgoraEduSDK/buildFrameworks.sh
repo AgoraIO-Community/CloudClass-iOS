@@ -4,6 +4,8 @@ Res='\033[0m'
 
 rm -rf Frameworks
 mkdir Frameworks
+rm -rf dSYMs
+mkdir dSYMs
 
 Root_Path=`pwd`
 
@@ -52,6 +54,5 @@ do
     fi
 done
 
-rm -rf dSYMs
-mkdir dSYMs
+
 

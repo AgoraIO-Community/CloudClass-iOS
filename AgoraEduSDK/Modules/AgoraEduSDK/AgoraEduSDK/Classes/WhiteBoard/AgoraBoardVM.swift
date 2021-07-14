@@ -97,14 +97,17 @@ public class AgoraBoardVM: AgoraBaseVM {
                                                 httpCode: 200)
                         
             let currentBoardState = self.manager.getWhiteBoardStateModel()
-            let teacherFirstLogin = currentBoardState.teacherFirstLogin
+
+            let users = currentBoardState.grantUsers
+            let usreGranted = users?.contains(self.userUuid) ?? false
             
-            let usreGranted = currentBoardState.grantUsers?.contains(self.userUuid) ?? false
-            if !usreGranted {
+            if usreGranted {
+                self.delegate?.didBoardLocalPermissionGranted(users ?? [])
+            } else {
                 self.operationPermission(false)
                 self.lockViewTransform(true)
             }
-
+            
             DispatchQueue.main.async {
                 success()
             }
