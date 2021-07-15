@@ -12,6 +12,9 @@ import AgoraExtApp
 import AgoraEduContext
 import AgoraWidget
 
+// 用于判断是否显示测试页面
+public var isDebug = false
+
 @objcMembers public class AgoraUIManager: NSObject {
     public let viewType: AgoraEduContextAppType
     public let contextPool: AgoraEduContextPool
@@ -45,6 +48,16 @@ import AgoraWidget
         self.contextPool = contextPool
         super.init()
 
+        if isDebug {
+            let bundle = Bundle(for: AgoraUIManager.classForCoder())
+            if let v = bundle.loadNibNamed("DebugView", owner: nil , options: nil)?.first as? DebugView {
+                v.contextPool = contextPool
+                appView.addSubview(v)
+            }
+            return
+        }
+        
+        self.controllerNeedRoomContext().joinClassroom()
         loadView()
         initWidgets()
         initControllers()

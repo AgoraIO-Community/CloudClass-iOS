@@ -1,13 +1,11 @@
 #!/bin/bash
-COLOR='\033[1;36m'
-RES='\033[0m'
+Color='\033[1;36m'
+Res='\033[0m'
 
 rm -rf Frameworks
 mkdir Frameworks
 
 Root_Path=`pwd`
-
-cd Modules/BuildShell
 
 errorExit() {
     SDK_Name=$1
@@ -24,37 +22,36 @@ errorExit() {
 buildItem() {
     SDK_Name=$1
     
-    echo "${COLOR} ======${SDK_Name} Start======== ${RES}"
-    ./build.sh ../${SDK_Name} ${SDK_Name} Release
+    echo "${Color} ======${SDK_Name} Start======== ${Res}"
+    ./buildFramework.sh Modules/${SDK_Name} ${SDK_Name} Release
 
     errorExit ${SDK_Name} $?
 }
 
- buildItem "AgoraLog"
- buildItem "AgoraExtApp"
- buildItem "AgoraEduContext"
- buildItem "AgoraReport"
-
- buildItem "AgoraWhiteBoard"
-
- # 中班课
- buildItem "AgoraHandsUp"
- buildItem "AgoraActionProcess"
- 
- buildItem "AgoraUIBaseViews"
-
- buildItem "AgoraWidget"
-
- 
- buildItem "AgoraUIEduBaseViews"
- buildItem "AgoraUIEduAppViews"
-
- buildItem "EduSDK"
- buildItem "AgoraEduSDK"
+buildItem "AgoraEduSDK"
 
 # copy special bundle to frameworks folder
 cd $Root_Path
 cp -r  Modules/AgoraEduSDK/Build/product/derived_data/Build/Products/Release-iphoneos/AgoraEduSDK.bundle Frameworks
 
-# 运行项目 demo
+Frameworks_Folder="Frameworks"
+
+Files=$(ls $Frameworks_Folder)
+
+for FileName in $Files
+do
+    if [[ $FileName == "EduSDK.framework" ]]
+    then
+        continue
+    elif [[ ! $FileName =~ "Agora" ]]
+    then
+        rm -fr $Frameworks_Folder/$FileName
+    elif [[ $FileName =~ "Pods" ]]
+    then
+        rm -fr $Frameworks_Folder/$FileName
+    fi
+done
+
+rm -rf dSYMs
+mkdir dSYMs
 

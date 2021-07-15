@@ -18,8 +18,23 @@
     code:(errCode) \
 userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
+@interface WhiteCameraConfig ()
+
+@end
+
+@implementation WhiteCameraConfig
++ (WhiteCameraConfig *)createWithAGConfig:(AgoraWhiteBoardCameraConfig *)config {
+    WhiteCameraConfig *tConfig = [[WhiteCameraConfig alloc] init];
+    tConfig.scale = @(config.scale);
+    tConfig.centerX = @(config.centerX);
+    tConfig.centerY = @(config.centerY);
+    return tConfig;
+}
+@end
+
 @interface AgoraWhiteBoardManager() <WhiteCommonCallbackDelegate, WhiteRoomCallbackDelegate>
 @property (nonatomic, strong) AgoraWhiteURLSchemeHandler *schemeHandler API_AVAILABLE(ios(11.0));
+@property (nonatomic, strong) AgoraWhiteBoardCameraConfig *cameraConfig;
 @property (nonatomic, strong) WhiteSDK *whiteSDK;
 @property (nonatomic, strong) WhiteRoom *room;
 @property (nonatomic, strong) WhiteMemberState *whiteMemberState;
@@ -35,6 +50,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     if (self) {
         self.isWritable = YES;
         self.boardScenePath = @"";
+        self.cameraConfig = [[AgoraWhiteBoardCameraConfig alloc] init];
         
         if (@available(iOS 11.0, *)) {
             // 在初始化 sdk 时，配置 PPTParams 的 scheme，保证与此处传入的 scheme 一致。
@@ -79,7 +95,6 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 - (void)joinWithOptions:(AgoraWhiteBoardJoinOptions *)options
                 success:(void (^) (void))successBlock
                 failure:(void (^) (NSError * error))failureBlock {
-    
     __weak AgoraWhiteBoardManager *weakself = self;
     
     WhiteRoomConfig *roomConfig = [[WhiteRoomConfig alloc] initWithUuid:options.boardId
@@ -89,8 +104,9 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     
     [self.whiteSDK joinRoomWithConfig:roomConfig
                             callbacks:self
-                    completionHandler:^(BOOL success, WhiteRoom * _Nullable room, NSError * _Nullable error) {
-        
+                    completionHandler:^(BOOL success,
+                                        WhiteRoom * _Nullable room,
+                                        NSError * _Nullable error) {
         if (success) {
             weakself.room = room;
             weakself.whiteMemberState = [WhiteMemberState new];
@@ -102,8 +118,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
             WhiteScene *scene = scenes[sceneIndex];
             
             if (scene.ppt) {
-                [self.room scalePptToFit:WhiteAnimationModeContinuous];
-                [self.room scaleIframeToFit];
+                [weakself.room scalePptToFit:WhiteAnimationModeContinuous];
             }
             
             [weakself refreshViewSize];
@@ -140,7 +155,9 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
     __weak AgoraWhiteBoardManager *weakself = self;
     
-    [self.room setWritable:allow completionHandler:^(BOOL isWritable, NSError * _Nullable error) {
+    [self.room setWritable:allow
+         completionHandler:^(BOOL isWritable,
+                             NSError * _Nullable error) {
         weakself.isWritable = isWritable;
         if (error && failureBlock) {
             failureBlock(error);
@@ -156,7 +173,20 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     } else {
         [self.room setViewMode:WhiteViewModeFreedom];
     }
+}
+
+- (AgoraWhiteBoardCameraConfig *)getBoardCameraConfig {
+    AgoraWhiteBoardCameraConfig *copyConfig = [[AgoraWhiteBoardCameraConfig alloc] init];
+    copyConfig.scale = self.cameraConfig.scale;
+    copyConfig.centerX = self.cameraConfig.centerX;
+    copyConfig.centerY = self.cameraConfig.centerY;
     
+    return copyConfig;
+}
+- (void)setBoardCameraConfig:(AgoraWhiteBoardCameraConfig *)config {
+    self.cameraConfig = config;
+    WhiteCameraConfig *camera = [WhiteCameraConfig createWithAGConfig:self.cameraConfig];
+    [self.room moveCamera:camera];
 }
 
 // when board view size changed, must call refreshViewSize
@@ -171,15 +201,15 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     NSArray<WhiteScene *> *scenes = sceneState.scenes;
     NSInteger sceneIndex = sceneState.index;
     WhiteScene *scene = scenes[sceneIndex];
+    
+    self.cameraConfig.scale = 1;
+    self.cameraConfig.centerX = 0;
+    self.cameraConfig.centerY = 0;
+
+    [self.room moveCamera:[WhiteCameraConfig createWithAGConfig:self.cameraConfig]];
+    
     if (scene.ppt) {
         [self.room scalePptToFit:WhiteAnimationModeContinuous];
-        [self.room scaleIframeToFit];
-    } else {
-        WhiteCameraConfig *config = [WhiteCameraConfig new];
-        config.scale = @(1);
-        config.centerY = @(0);
-        config.centerX = @(0);
-        [self.room moveCamera:config];
     }
 }
 
@@ -201,8 +231,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 }
 
 // leave
-- (void)leaveWithSuccess:(void (^ _Nullable) (void))successBlock
-                 failure:(void (^ _Nullable) (void))failureBlock {
+- (void)leave {
     self.isWritable = NO;
     
     if (self.room) {
@@ -287,15 +316,11 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     [self setWhiteMemberState];
 }
 
-- (void)setWhiteMemberState {
-    NSLog(@"currentApplianceName: %@", self.whiteMemberState.currentApplianceName);
-    [self.room setMemberState:self.whiteMemberState];
-}
-
-- (void)onSetPageIndex:(NSUInteger)index {
+- (void)setPageIndex:(NSUInteger)index {
     __weak AgoraWhiteBoardManager *weakself = self;
-    [self.room setSceneIndex:index completionHandler:^(BOOL success, NSError * _Nullable error) {
-        
+    [self.room setSceneIndex:index
+           completionHandler:^(BOOL success,
+                               NSError * _Nullable error) {
         if (!success && error != nil) {
             if ([weakself.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
                 [weakself.delegate onWhiteBoardError: error];
@@ -306,9 +331,9 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
 - (void)increaseScale {
     __weak AgoraWhiteBoardManager *weakself = self;
-    [self.room getZoomScaleWithResult:^(CGFloat scale) {
-        WhiteCameraConfig *config = [WhiteCameraConfig new];
-        config.scale = @(scale + 0.1);
+    [self.room getZoomScaleWithResult:^(CGFloat scale) {        
+        weakself.cameraConfig.scale = (scale + 0.1);
+        WhiteCameraConfig *config = [WhiteCameraConfig createWithAGConfig:self.cameraConfig];
         [weakself.room moveCamera:config];
     }];
 }
@@ -316,10 +341,17 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 - (void)decreaseScale {
     __weak AgoraWhiteBoardManager *weakself = self;
     [self.room getZoomScaleWithResult:^(CGFloat scale) {
-        WhiteCameraConfig *config = [WhiteCameraConfig new];
         CGFloat ss = scale - 0.1;
-        config.scale = @(ss < 0.1 ? 0.1 : ss);
+        
+        weakself.cameraConfig.scale = (ss < 0.1 ? 0.1 : ss);
+        
+        WhiteCameraConfig *config = [WhiteCameraConfig createWithAGConfig:self.cameraConfig];
         [weakself.room moveCamera:config];
+        
+        NSLog(@"####### decreaseScale config.scale: %f", config.scale.floatValue);
+        NSLog(@"####### decreaseScale config.centerX: %f", config.centerX.floatValue);
+        NSLog(@"####### decreaseScale config.centerY: %f", config.centerY.floatValue);
+        NSLog(@"####### ---------------------------------------------");
     }];
 }
 
@@ -343,6 +375,11 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                                       commonCallbackDelegate:self];
     
     [WhiteDisplayerState setCustomGlobalStateClass:AgoraWhiteGlobalStateModel.class];
+}
+
+- (void)setWhiteMemberState {
+    NSLog(@"currentApplianceName: %@", self.whiteMemberState.currentApplianceName);
+    [self.room setMemberState:self.whiteMemberState];
 }
 
 - (void)setApplianceNameWithToolType:(AgoraWhiteBoardToolType)type {
@@ -393,35 +430,26 @@ The RoomState property in the room will trigger this callback when it changes.
 - (void)fireRoomStateChanged:(WhiteRoomState *_Nullable)modifyState {
     // 老师离开
     if (modifyState.broadcastState && modifyState.broadcastState.broadcasterId == nil) {
-        [self.room scalePptToFit:WhiteAnimationModeContinuous];
-        [self.room scaleIframeToFit];
-    }
-    
-    // 全局状态 WhiteGlobalState 修改时
-    if (modifyState.globalState) {
-        id modelObj = [modifyState.globalState yy_modelToJSONObject];
-        AgoraWhiteBoardStateModel *state = [AgoraWhiteBoardStateModel new];
-        [state yy_modelSetWithJSON:modelObj];
-        
-        if ([self.delegate respondsToSelector:@selector(onWhiteBoardStateChanged:)]) {
-            [self.delegate onWhiteBoardStateChanged:state];
-        }
+//        [self.room scalePptToFit:WhiteAnimationModeContinuous];
     }
     
     WhiteSceneState *sceneState = self.room.sceneState;
+    
     if (sceneState != NULL) {
-        
         BOOL isEqualScenePath = NO;
+        
         if ([sceneState.scenePath isEqualToString:self.boardScenePath]) {
             isEqualScenePath = YES;
         } else {
             // 不等于的时候 要判断前面的path是否一样
-            NSArray<NSString *> *boardPaths1 =  [self.boardScenePath componentsSeparatedByString:@"/"];
-            NSArray<NSString *> *boardPaths2 =  [sceneState.scenePath componentsSeparatedByString:@"/"];
+            NSArray<NSString *> *boardPaths1 = [self.boardScenePath componentsSeparatedByString:@"/"];
+            NSArray<NSString *> *boardPaths2 = [sceneState.scenePath componentsSeparatedByString:@"/"];
+            
             if (boardPaths1.count >= 2 &&
                 boardPaths2.count >= 2) {
                 NSString *path1 = [NSString stringWithFormat:@"%@%@", boardPaths1[0], boardPaths1[1]];
                 NSString *path2 = [NSString stringWithFormat:@"%@%@", boardPaths2[0], boardPaths2[1]];
+                
                 if ([path1 isEqualToString:path2]) {
                     isEqualScenePath = YES;
                 }
@@ -436,20 +464,40 @@ The RoomState property in the room will trigger this callback when it changes.
         }
     }
     
+    // 全局状态 WhiteGlobalState 修改时
+    if (modifyState.globalState) {
+        id modelObj = [modifyState.globalState yy_modelToJSONObject];
+        AgoraWhiteBoardStateModel *state = [AgoraWhiteBoardStateModel new];
+        [state yy_modelSetWithJSON:modelObj];
+        
+        if ([self.delegate respondsToSelector:@selector(onWhiteBoardStateChanged:)]) {
+            [self.delegate onWhiteBoardStateChanged:state];
+        }
+    }
+    
     // 场景状态 WhiteSceneState 修改时
     if (modifyState.sceneState) {
         NSArray<WhiteScene *> *scenes = sceneState.scenes;
         NSInteger sceneIndex = sceneState.index;
         WhiteScene *scene = scenes[sceneIndex];
         
-        if (scene.ppt) {
-            [self.room scalePptToFit:WhiteAnimationModeContinuous];
-            [self.room scaleIframeToFit];
-        }
+//        if (scene.ppt) {
+//            [self.room scalePptToFit:WhiteAnimationModeContinuous];
+//        }
         
         if ([self.delegate respondsToSelector:@selector(onWhiteBoardPageChanged:pageCount:)]) {
             [self.delegate onWhiteBoardPageChanged:sceneIndex
                                          pageCount:scenes.count];
+        }
+    }
+    
+    if (modifyState.cameraState) {
+        self.cameraConfig.scale = modifyState.cameraState.scale.floatValue;
+        self.cameraConfig.centerX = modifyState.cameraState.centerX.floatValue;
+        self.cameraConfig.centerY = modifyState.cameraState.centerY.floatValue;
+        
+        if ([self.delegate respondsToSelector:@selector(onWhiteBoardCameraConfigChange:)]) {
+            [self.delegate onWhiteBoardCameraConfigChange:[self getBoardCameraConfig]];
         }
     }
 }
@@ -470,7 +518,8 @@ The RoomState property in the room will trigger this callback when it changes.
 }
 
 /** 用户错误事件捕获，附带用户 id，以及错误原因 */
-- (void)fireCatchErrorWhenAppendFrame:(NSUInteger)userId error:(NSString *)error {
+- (void)fireCatchErrorWhenAppendFrame:(NSUInteger)userId
+                                error:(NSString *)error {
     if ([self.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
         NSError *err = AgoraBoardLocalError(AgoraBoardLocalErrorCode, error);
         [self.delegate onWhiteBoardError: err];

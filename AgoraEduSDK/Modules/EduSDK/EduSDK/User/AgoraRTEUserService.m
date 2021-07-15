@@ -28,8 +28,6 @@
 #import "AgoraRTEKVCUserConfig.h"
 #import <EduSDK/EduSDK-Swift.h>
 
-@implementation AgoraRTERenderConfig
-@end
 @implementation AgoraRTEStreamStateInfo
 @end
 
@@ -618,6 +616,10 @@ typedef NS_ENUM(NSUInteger, AgoraRTESyncStreamState) {
         [self removeVideoCanvas:videoCanvas];
     }
     [removeArray removeAllObjects];
+    
+    if (view == nil) {
+        return nil;
+    }
     
     AgoraRtcVideoCanvas *videoCanvas = [[AgoraRtcVideoCanvas alloc] init];
     videoCanvas.uid = streamUuid;

@@ -107,6 +107,8 @@ import AgoraWidget
 
 // MARK: - Room
 @objc public protocol AgoraEduRoomHandler: NSObjectProtocol {
+    // 加入了房间事件
+    @objc optional func onJoinedClassroom()
     // 设置课程名称
     @objc optional func onSetClassroomName(_ name: String)
     // 设置课程状态
@@ -150,6 +152,10 @@ import AgoraWidget
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
     // 房间信息
     func getRoomInfo() -> AgoraEduContextRoomInfo
+
+    // 加入房间
+    func joinClassroom()
+
     // 更新自定义房间属性，如果没有就增加
     // 支持path修改和整体修改
     // properties: {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
@@ -261,6 +267,27 @@ import AgoraWidget
                                                     operator:AgoraEduContextUserInfo?)
 }
 
+@objc public protocol AgoraEduMediaContext: NSObjectProtocol {
+    // 开启摄像头
+    func openCamera()
+    // 关闭摄像头
+    func closeCamera()
+    // 开启本地视频预览
+    func startPreview(_ view: UIView)
+    // 停止本地视频预览
+    func stopPreview()
+    // 开启麦克风
+    func openMicrophone()
+    // 关闭麦克风
+    func closeMicrophone()
+    // 开始推流
+    func publishStream(type: EduContextMediaStreamType)
+    // 停止推流
+    func unpublishStream(type: EduContextMediaStreamType)
+    // 渲染或者关闭远端渲染，view为nil代表关闭渲染
+    func renderRemoteView(_ view: UIView?, streamUuid: String)
+}
+
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
     // 获取本地用户信息
     func getLocalUserInfo() -> AgoraEduContextUserInfo
@@ -271,12 +298,17 @@ import AgoraWidget
     func updateFlexUserProperties(_ userUuid: String,
                                   properties: [String: String],
                                   cause:[String: String]?)
+    
     // mute本地视频
+    @available(*, deprecated, message: "use publishStream instand of it")
     func muteVideo(_ mute: Bool)
     // mute本地音频
+    @available(*, deprecated, message: "use unpublishStream instand of it")
     func muteAudio(_ mute: Bool)
     // 渲染或者关闭渲染流，view为nil代表关闭流渲染
+    @available(*, deprecated, message: "use renderRemoteView instand of it")
     func renderView(_ view: UIView?, streamUuid: String)
+    
     // 事件监听
     func registerEventHandler(_ handler: AgoraEduUserHandler)
 }

@@ -12,13 +12,8 @@
 #import "AgoraRTEBaseTypes.h"
 #import "AgoraRTEStream.h"
 #import "AgoraRTEUser.h"
-#import "AgoraRTEVideoConfig.h"
-#import "AgoraRTEEnumerates.h"
 #import "AgoraRTEUserDelegate.h"
-
-@interface AgoraRTERenderConfig : NSObject
-@property (nonatomic, assign) AgoraRTERenderMode renderMode;
-@end
+#import "AgoraRTEObjects.h"
 
 @interface AgoraRTEStreamStateInfo : NSObject
 //AgoraRTEStreamState

@@ -14,6 +14,7 @@
 #import <EduSDK/EduSDK-Swift.h>
 
 #define AgoraRTCNoNullString(x) ([x isKindOfClass:NSString.class] ? x : @"")
+#define AgoraRTCNoNull(x) ((x == nil) ? @"nil" : x)
 
 @implementation AgoraRTCChannelDelegateConfig
 @end
@@ -95,6 +96,11 @@ static AgoraRTCManager *manager = nil;
     if(self.rtcEngineKit == nil){
         self.rtcEngineKit = [AgoraRtcEngineKit sharedEngineWithAppId:appid delegate:self];
     }
+    
+    [self.rtcEngineKit enableVideo];
+    [self.rtcEngineKit enableWebSdkInteroperability:YES];
+    [self.rtcEngineKit enableDualStreamMode:YES];
+    
     [self.rtcEngineKit disableLastmileTest];
 }
 
@@ -166,11 +172,7 @@ static AgoraRTCManager *manager = nil;
 
 #pragma mark Configuration
 - (NSInteger)setVideoEncoderConfiguration:(AgoraVideoEncoderConfiguration *)configuration {
-    
-    [self.rtcEngineKit enableVideo];
-    [self.rtcEngineKit enableWebSdkInteroperability:YES];
-    [self.rtcEngineKit enableDualStreamMode:YES];
-    
+        
     NSInteger errCode = [self.rtcEngineKit setVideoEncoderConfiguration:configuration];
     
     [self.rtcEngineKit enableLocalVideo:NO];
@@ -421,7 +423,7 @@ static AgoraRTCManager *manager = nil;
 - (int)setupLocalVideo:(AgoraRtcVideoCanvas * _Nullable)local {
     
     int code =  [self.rtcEngineKit setupLocalVideo:local];
-    [AgoraRTELogService logMessageWithDescribe:@"setupLocalVideo:" message:@{@"roomUuid":local.channel, @"uid": @(local.uid), @"code":@(code)}];
+    [AgoraRTELogService logMessageWithDescribe:@"setupLocalVideo:" message:@{@"roomUuid":AgoraRTCNoNullString(local.channel), @"uid": @(local.uid), @"code":@(code)}];
     
     return code;
 }
@@ -429,7 +431,7 @@ static AgoraRTCManager *manager = nil;
 - (int)setupRemoteVideo:(AgoraRtcVideoCanvas * _Nonnull)remote {
     
     int code =  [self.rtcEngineKit setupRemoteVideo:remote];
-    [AgoraRTELogService logMessageWithDescribe:@"setupRemoteVideo:" message:@{@"roomUuid":remote.channel, @"uid": @(remote.uid), @"code":@(code)}];
+    [AgoraRTELogService logMessageWithDescribe:@"setupRemoteVideo:" message:@{@"roomUuid":AgoraRTCNoNullString(remote.channel), @"uid": @(remote.uid), @"code":@(code)}];
     
     return code;
 }

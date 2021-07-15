@@ -619,8 +619,12 @@ private extension LoginViewController{
         AgoraClassroomSDK.perform(sel,
                             with: url)
         
-        let avatarurl = "https://image.baidu.com/search/detail?ct=503316480&z=1&ipn=d&word=%E5%AE%B6%E8%BE%89%E5%9F%B9%E4%BC%98&step_word=&hs=0&pn=0&spn=0&di=4180&pi=0&rn=1&tn=baiduimagedetail&is=0%2C0&istype=0&ie=utf-8&oe=utf-8&in=&cl=2&lm=-1&st=undefined&cs=1237126975%2C2001019500&os=2332624552%2C3941347092&simid=3415651148%2C346922647&adpicid=0&lpn=0&ln=255&fr=&fmq=1622031016324_R&fm=&ic=undefined&s=undefined&hd=undefined&latest=undefined&copyright=undefined&se=&sme=&tab=0&width=0&height=0&face=undefined&ist=&jit=&cg=&bdtype=0&oriquery=&objurl=https%3A%2F%2Fgimg2.baidu.com%2Fimage_search%2Fsrc%3Dhttp%3A%2F%2Fhiphotos.baidu.com%2Fdoc%2Fpic%2Fitem%2Fb8389b504fc2d562d2b0c3ceee1190ef76c66c5c.jpg%26refer%3Dhttp%3A%2F%2Fhiphotos.baidu.com%26app%3D2002%26size%3Df9999%2C10000%26q%3Da80%26n%3D0%26g%3D0n%26fmt%3Djpeg%3Fsec%3D1624623030%26t%3D940fb50962a66774a1187b56b16cecba&fromurl=ippr_z2C%24qAzdH3FAzdH3F6jpyrj_z%26e3Bojgh7_z%26e3Bkwt17_z%26e3Bv54AzdH3F5AzdH3F3iry%3Fpwk%3D8%2651%3D8%26etjo%3Da%26rwy%3Da%26vt1%3D80%26rg%3Dda&gsm=1&rpstart=0&rpnum=0&islist=&querylist=&force=undefined"
+        let sel1 = NSSelectorFromString("setLogConsoleState:");
+        AgoraClassroomSDK.perform(sel1,
+                            with: 1)
         
+        let avatarurl = "https://image.baidu.com/search/detail?ct=503316480&z=1&ipn=d&word=%E5%AE%B6%E8%BE%89%E5%9F%B9%E4%BC%98&step_word=&hs=0&pn=0&spn=0&di=4180&pi=0&rn=1&tn=baiduimagedetail&is=0%2C0&istype=0&ie=utf-8&oe=utf-8&in=&cl=2&lm=-1&st=undefined&cs=1237126975%2C2001019500&os=2332624552%2C3941347092&simid=3415651148%2C346922647&adpicid=0&lpn=0&ln=255&fr=&fmq=1622031016324_R&fm=&ic=undefined&s=undefined&hd=undefined&latest=undefined&copyright=undefined&se=&sme=&tab=0&width=0&height=0&face=undefined&ist=&jit=&cg=&bdtype=0&oriquery=&objurl=https%3A%2F%2Fgimg2.baidu.com%2Fimage_search%2Fsrc%3Dhttp%3A%2F%2Fhiphotos.baidu.com%2Fdoc%2Fpic%2Fitem%2Fb8389b504fc2d562d2b0c3ceee1190ef76c66c5c.jpg%26refer%3Dhttp%3A%2F%2Fhiphotos.baidu.com%26app%3D2002%26size%3Df9999%2C10000%26q%3Da80%26n%3D0%26g%3D0n%26fmt%3Djpeg%3Fsec%3D1624623030%26t%3D940fb50962a66774a1187b56b16cecba&fromurl=ippr_z2C%24qAzdH3FAzdH3F6jpyrj_z%26e3Bojgh7_z%26e3Bkwt17_z%26e3Bv54AzdH3F5AzdH3F3iry%3Fpwk%3D8%2651%3D8%26etjo%3Da%26rwy%3Da%26vt1%3D80%26rg%3Dda&gsm=1&rpstart=0&rpnum=0&islist=&querylist=&force=undefined"
+
         let config = AgoraEduLaunchConfig(userName: user,
                                           userUuid: userUuid,
                                           roleType: .student,
@@ -631,7 +635,8 @@ private extension LoginViewController{
                                           startTime: startTime,
                                           duration: duration,
                                           boardRegion: region,
-                                          userProperties: ["avatarurl": avatarurl])
+                                          userProperties: ["avatarurl": avatarurl],
+                                          boardFitMode: .retain)
         
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")

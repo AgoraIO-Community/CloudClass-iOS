@@ -50,4 +50,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray <AgoraWhiteGlobalStateTaskModel *> *materialList;
 @end
 
+@interface AgoraWhiteBoardCameraConfig : NSObject
+/** 白板视角中心 X 坐标，该坐标为中心在白板内部坐标系 X 轴中的坐标 */
+@property (nonatomic, assign) CGFloat centerX;
+/** 白板视角中心 Y 坐标，该坐标为中心在白板内部坐标系 Y 轴中的坐标 */
+@property (nonatomic, assign) CGFloat centerY;
+/** 缩放比例，白板视觉中心与白板的投影距离 */
+@property (nonatomic, assign) CGFloat scale;
+@end
+
 NS_ASSUME_NONNULL_END

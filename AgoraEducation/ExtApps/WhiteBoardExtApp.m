@@ -25,8 +25,7 @@
 }
 
 - (void)extAppWillUnload {
-    [self.manager leaveWithSuccess:nil
-                           failure:nil];
+    [self.manager leave];
 }
 
 #pragma mark - WhiteBoardExtApp

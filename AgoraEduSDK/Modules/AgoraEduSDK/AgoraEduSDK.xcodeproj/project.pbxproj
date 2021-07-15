@@ -71,6 +71,9 @@
 		78F0D8382600D92A005965AF /* AgoraModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F0D8372600D92A005965AF /* AgoraModels.swift */; };
 		78F0D8432600DA0E005965AF /* Agora1V1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78F0D83F2600DA0E005965AF /* Agora1V1ViewController.m */; };
 		78F0D8452600DA0E005965AF /* Agora1V1ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 78F0D8412600DA0E005965AF /* Agora1V1ViewController.h */; };
+		78F8D6052667B088002AAD1A /* AgoraMediaController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8D6042667B088002AAD1A /* AgoraMediaController.swift */; };
+		78F8D6092667B097002AAD1A /* AgoraMediaVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8D6082667B097002AAD1A /* AgoraMediaVM.swift */; };
+		78F8D60D2667B0A5002AAD1A /* AgoraMediaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8D60C2667B0A5002AAD1A /* AgoraMediaModel.swift */; };
 		78FEB4FA2600DF1200C7CD9D /* AgoraEduSDK.pch in Headers */ = {isa = PBXBuildFile; fileRef = 78FEB4F92600DF1100C7CD9D /* AgoraEduSDK.pch */; };
 		78FEB5B82600F3B900C7CD9D /* AgoraSmallViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 78FEB5B62600F3B900C7CD9D /* AgoraSmallViewController.h */; };
 		78FEB5B92600F3B900C7CD9D /* AgoraSmallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FEB5B72600F3B900C7CD9D /* AgoraSmallViewController.m */; };
@@ -171,6 +174,9 @@
 		78F0D8372600D92A005965AF /* AgoraModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraModels.swift; sourceTree = "<group>"; };
 		78F0D83F2600DA0E005965AF /* Agora1V1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Agora1V1ViewController.m; sourceTree = "<group>"; };
 		78F0D8412600DA0E005965AF /* Agora1V1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Agora1V1ViewController.h; sourceTree = "<group>"; };
+		78F8D6042667B088002AAD1A /* AgoraMediaController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraMediaController.swift; sourceTree = "<group>"; };
+		78F8D6082667B097002AAD1A /* AgoraMediaVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraMediaVM.swift; sourceTree = "<group>"; };
+		78F8D60C2667B0A5002AAD1A /* AgoraMediaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraMediaModel.swift; sourceTree = "<group>"; };
 		78FEB4F92600DF1100C7CD9D /* AgoraEduSDK.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduSDK.pch; sourceTree = "<group>"; };
 		78FEB5B62600F3B900C7CD9D /* AgoraSmallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraSmallViewController.h; sourceTree = "<group>"; };
 		78FEB5B72600F3B900C7CD9D /* AgoraSmallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraSmallViewController.m; sourceTree = "<group>"; };
@@ -278,6 +284,7 @@
 		7874830E25AAB5BC0022329D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				78F8D6012667B078002AAD1A /* Media */,
 				78CF283A2653FD860073758F /* Device */,
 				8690D7142653C8CF0025D62D /* ReportObjects */,
 				78ECBBF72645108600F0445E /* ScreenShare */,
@@ -446,6 +453,16 @@
 				78ECBC02264510BB00F0445E /* AgoraScreenShareModel.swift */,
 			);
 			path = ScreenShare;
+			sourceTree = "<group>";
+		};
+		78F8D6012667B078002AAD1A /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				78F8D6042667B088002AAD1A /* AgoraMediaController.swift */,
+				78F8D6082667B097002AAD1A /* AgoraMediaVM.swift */,
+				78F8D60C2667B0A5002AAD1A /* AgoraMediaModel.swift */,
+			);
+			path = Media;
 			sourceTree = "<group>";
 		};
 		866D91A62608D37B001EC193 /* Base */ = {
@@ -700,7 +717,9 @@
 				7874841425AAB5BD0022329D /* AgoraBoardModel.m in Sources */,
 				7859F91B25FF4EAE002E8757 /* AgoraBaseViewController+User.m in Sources */,
 				783BA5572622C6B80066C805 /* AgoraPrivateChatModel.swift in Sources */,
+				78F8D6092667B097002AAD1A /* AgoraMediaVM.swift in Sources */,
 				783EF99A2629B143006082AC /* AgoraEduContextPoolIMP.swift in Sources */,
+				78F8D60D2667B0A5002AAD1A /* AgoraMediaModel.swift in Sources */,
 				7874842A25AAB5BD0022329D /* AgoraEyeCareModeUtil.m in Sources */,
 				7845BF8926201EFE009635F0 /* AgoraPrivateChatVM.swift in Sources */,
 				86AD829825D4F74E00379126 /* AgoraApaasReportor.swift in Sources */,
@@ -717,6 +736,7 @@
 				7874840D25AAB5BD0022329D /* AgoraEduManager.m in Sources */,
 				68A74FE726048423005F5AF7 /* AgoraScreenVM.swift in Sources */,
 				78DB304C25FDD185002A3D97 /* AgoraRoomVM.swift in Sources */,
+				78F8D6052667B088002AAD1A /* AgoraMediaController.swift in Sources */,
 				86F802DB2626C8AD00364FFE /* AgoraKeys.swift in Sources */,
 				78ECBBF92645109B00F0445E /* AgoraScreenShareController.swift in Sources */,
 				78CF283F2653FDB30073758F /* AgoraDeviceVM.swift in Sources */,
@@ -914,6 +934,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "";
 			};
 			name = Debug;
 		};
@@ -951,6 +972,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "";
 			};
 			name = Release;
 		};

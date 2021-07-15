@@ -1,12 +1,14 @@
 //
-//  AgoraRTEVideoConfig.m
-//  EduSDK
+//  AgoraRTEObjects.m
+//  AgoraEduSDK
 //
-//  Created by SRS on 2020/7/9.
-//  Copyright © 2020 agora. All rights reserved.
+//  Created by SRS on 2021/6/1.
 //
 
-#import "AgoraRTEVideoConfig.h"
+#import "AgoraRTEObjects.h"
+
+@implementation AgoraRTERenderConfig
+@end
 
 @implementation AgoraRTEVideoConfig
 + (instancetype)defaultVideoConfig {

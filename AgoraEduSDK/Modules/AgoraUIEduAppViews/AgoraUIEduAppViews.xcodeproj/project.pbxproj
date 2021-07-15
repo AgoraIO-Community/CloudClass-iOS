@@ -14,6 +14,8 @@
 		78C44D62262DCC78006BDC7E /* AgoraWhiteBoardUIController+UIEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C44D5F262DCC78006BDC7E /* AgoraWhiteBoardUIController+UIEvent.swift */; };
 		78C44D63262DCC78006BDC7E /* AgoraWhiteBoardController+EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C44D60262DCC78006BDC7E /* AgoraWhiteBoardController+EventHandler.swift */; };
 		78C44D64262DCC78006BDC7E /* AgoraWhiteBoardUIController+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C44D61262DCC78006BDC7E /* AgoraWhiteBoardUIController+State.swift */; };
+		78F8D72C2668D671002AAD1A /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F8D72A2668D671002AAD1A /* DebugView.swift */; };
+		78F8D72D2668D671002AAD1A /* DebugView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78F8D72B2668D671002AAD1A /* DebugView.xib */; };
 		8619378826305072008A11D4 /* AgoraSmallRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619377A26305072008A11D4 /* AgoraSmallRenderUIController.swift */; };
 		8619378926305072008A11D4 /* Agora1V1RenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619377B26305072008A11D4 /* Agora1V1RenderUIController.swift */; };
 		8619378A26305072008A11D4 /* AgoraScreenUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619377D26305072008A11D4 /* AgoraScreenUIController.swift */; };
@@ -58,6 +60,8 @@
 		78C44D5F262DCC78006BDC7E /* AgoraWhiteBoardUIController+UIEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraWhiteBoardUIController+UIEvent.swift"; sourceTree = "<group>"; };
 		78C44D60262DCC78006BDC7E /* AgoraWhiteBoardController+EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraWhiteBoardController+EventHandler.swift"; sourceTree = "<group>"; };
 		78C44D61262DCC78006BDC7E /* AgoraWhiteBoardUIController+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraWhiteBoardUIController+State.swift"; sourceTree = "<group>"; };
+		78F8D72A2668D671002AAD1A /* DebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
+		78F8D72B2668D671002AAD1A /* DebugView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DebugView.xib; sourceTree = "<group>"; };
 		7C43200E3ADA8276A354EFF3 /* Pods-AgoraUIEduAppViews.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraUIEduAppViews.debug.xcconfig"; path = "Target Support Files/Pods-AgoraUIEduAppViews/Pods-AgoraUIEduAppViews.debug.xcconfig"; sourceTree = "<group>"; };
 		8619377A26305072008A11D4 /* AgoraSmallRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSmallRenderUIController.swift; sourceTree = "<group>"; };
 		8619377B26305072008A11D4 /* Agora1V1RenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Agora1V1RenderUIController.swift; sourceTree = "<group>"; };
@@ -161,6 +165,8 @@
 				8619378526305072008A11D4 /* AgoraUIManager+1V1.swift */,
 				8619378626305072008A11D4 /* AgoraUIManager+Small.swift */,
 				8619378726305072008A11D4 /* AgoraUIManager.swift */,
+				78F8D72A2668D671002AAD1A /* DebugView.swift */,
+				78F8D72B2668D671002AAD1A /* DebugView.xib */,
 			);
 			path = UIManager;
 			sourceTree = "<group>";
@@ -332,6 +338,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78F8D72D2668D671002AAD1A /* DebugView.xib in Resources */,
 				86A3D2082609F21E0066BA1E /* AgoraUIEduAppViews.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,6 +387,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				78C44D62262DCC78006BDC7E /* AgoraWhiteBoardUIController+UIEvent.swift in Sources */,
+				78F8D72C2668D671002AAD1A /* DebugView.swift in Sources */,
 				786AE1D9262C7EF7002E50F0 /* AgoraBoardStates.swift in Sources */,
 				8619386B263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift in Sources */,
 				8619378826305072008A11D4 /* AgoraSmallRenderUIController.swift in Sources */,
@@ -584,6 +592,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "";
 			};
 			name = Debug;
 		};
@@ -612,6 +621,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "";
 			};
 			name = Release;
 		};

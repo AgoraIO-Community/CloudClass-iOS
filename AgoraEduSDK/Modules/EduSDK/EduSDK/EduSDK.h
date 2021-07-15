@@ -34,5 +34,5 @@
 // stream
 #import "AgoraRTEStream.h"
 #import "AgoraRTEStreamConfig.h"
-#import "AgoraRTEVideoConfig.h"
+#import "AgoraRTEObjects.h"
 

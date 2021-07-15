@@ -263,7 +263,6 @@ static const NSString* kChatRoomId = @"chatroomId";
     manager.delegate = self;
     self.chatManager = manager;
     [self.chatManager addObserver:self forKeyPath:@"chatroomAnnouncement" options:NSKeyValueObservingOptionNew context:nil];
-    
     [self.chatManager launch];
 }
 

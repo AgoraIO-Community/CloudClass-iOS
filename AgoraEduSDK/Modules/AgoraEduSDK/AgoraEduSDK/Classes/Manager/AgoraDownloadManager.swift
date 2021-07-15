@@ -174,7 +174,7 @@ import EduSDK
 //            }
 //            fileDirectory = fileDirectory + fileName
 //        }
-        
+
         if let _ = self.fileExists(fileLocalPath) {
             success()
             return nil

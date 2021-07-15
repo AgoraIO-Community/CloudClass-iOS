@@ -121,7 +121,6 @@ extension AgoraScreenShareController {
 extension AgoraScreenShareController: AgoraEduScreenShareContext {
     // 事件监听
     public func registerEventHandler(_ handler: AgoraEduScreenShareHandler) {
-        
         eventDispatcher.register(event: .shareScreen(object: handler))
     }
 }

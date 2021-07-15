@@ -70,7 +70,7 @@ private extension AgoraSmallRenderUIController {
         containerView.addSubview(teacherView)
         containerView.addSubview(renderListView)
         
-        renderListView.isHidden = true
+        renderListView.alpha = 0
     }
 
     func initLayout() {

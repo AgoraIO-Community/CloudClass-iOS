@@ -37,6 +37,8 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
 @property (nonatomic, strong) NSString *userUuid;
 @property (nonatomic, strong) NSString *userName;
 
+@property (nonatomic, strong) AgoraRTEMediaControl *mediaControl;
+
 @property (nonatomic, strong) AgoraRTECommonMessageHandle *messageHandle;
 
 @property (nonatomic, strong) NSMutableDictionary<NSString*, AgoraRTEClassroomManager *> *classrooms;
@@ -119,12 +121,16 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
         httpConfig.logDirectoryPath = logConfig.directoryPath;
         [AgoraRTEHttpManager setupHttpManagerConfig:httpConfig];
     
+        AgoraRTEWEAK(self);
         [self loginWithUserUuid:config.userUuid
                        userName:AgoraRTENoNullString(config.userName)
                             tag:config.tag
-                        success:successBlock
+                        success:^{
+                            [weakself initMedia];
+                            successBlock();
+                        }
                         failure:failureBlock];
-        
+    
         [NSNotificationCenter.defaultCenter addObserver:self
                                                selector:@selector(onRoomDestory:)
                                                    name:AgoraRTE_NOTICE_KEY_ROOM_DESTORY
@@ -132,6 +138,22 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     }
 
     return self;
+}
+
+- (void)initMedia {
+    
+    // initRtc
+    [AgoraRTCManager.shareManager initEngineKitWithAppid:self.appId];
+    [AgoraRTCManager.shareManager setLogFile:self.logDirectoryPath];
+    
+    // initRtm
+    [AgoraRTMManager.shareManager setLogFile:self.logDirectoryPath];
+    
+    // initMedia
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    self.mediaControl = [[AgoraRTEMediaControl alloc] performSelector:NSSelectorFromString(@"init")];
+#pragma clang diagnostic pop
 }
 
 - (void)onRoomDestory:(NSNotification *)notification {
@@ -187,6 +209,10 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
     }];
 }
 
+- (AgoraRTEMediaControl *)getAgoraMediaControl {
+    return self.mediaControl;
+}
+
 - (AgoraRTEClassroomManager *)createClassroomWithConfig:(AgoraRTEClassroomConfig *)config {
     
     NSString *roomUuid = @"";
@@ -228,7 +254,6 @@ static NSString *AGORA_EDU_BASE_URL = @"https://api.agora.io/scene";
 }
 
 + (NSString *)version {
-//    NSString *string = [[AgoraRTCManager sdkVersion] stringByAppendingString:@".1"];
     return @"1.0.0";
 }
 

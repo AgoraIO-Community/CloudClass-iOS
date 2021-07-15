@@ -24,6 +24,8 @@ public typealias AgoraEduExtAppContext = AgoraExtAppProtocol
     var room: AgoraEduRoomContext { get }
     //  设备控制
     var device: AgoraEduDeviceContext { get }
+    // 媒体控制
+    var media: AgoraEduMediaContext { get }
     // 聊天
     var chat: AgoraEduMessageContext { get }
     // 个人

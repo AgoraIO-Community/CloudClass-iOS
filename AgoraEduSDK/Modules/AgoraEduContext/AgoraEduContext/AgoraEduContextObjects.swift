@@ -202,3 +202,8 @@ import Foundation
 @objc public enum EduContextWidgetType: Int {
     case im
 }
+
+/// 媒体类型
+@objc public enum EduContextMediaStreamType : Int {
+    case audio, video, all
+}

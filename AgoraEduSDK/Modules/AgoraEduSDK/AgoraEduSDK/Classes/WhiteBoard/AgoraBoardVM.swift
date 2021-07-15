@@ -23,6 +23,8 @@ protocol AgoraBoardVMDelegate: NSObjectProtocol {
     func didBoardPageChange(pageIndex: Int, pageCount: Int)
     func didSceneChange(urls: [URL])
     func didScenePathChanged(path: String)
+    
+    func didCameraConfigChanged(camera: AgoraWhiteBoardCameraConfig)
 }
 
 public class AgoraBoardVM: AgoraBaseVM {
@@ -93,23 +95,12 @@ public class AgoraBoardVM: AgoraBaseVM {
             
             let currentBoardState = self.manager.getWhiteBoardStateModel()
             let teacherFirstLogin = currentBoardState.teacherFirstLogin
-
-            // 预加载第一个课件
-//            if let courseware = self.cache.coursewares.first,
-//               !teacherFirstLogin {
-//                self.manager.putScenes(courseware.resourceUuid,
-//                                  scenes: courseware.scenes,
-//                                  index: 0)
-//                self.manager.setScenePath(courseware.scenePath)
-//            }
-            
             
             let usreGranted = currentBoardState.grantUsers?.contains(self.userUuid) ?? false
             if !usreGranted {
                 self.operationPermission(false)
                 self.lockViewTransform(true)
             }
-            self.onWhiteBoardStateChanged(currentBoardState)
 
             DispatchQueue.main.async {
                 success()
@@ -132,8 +123,15 @@ public class AgoraBoardVM: AgoraBaseVM {
     }
     
     func leave() {
-        manager.leave(success: nil,
-                      failure: nil)
+        manager.leave()
+    }
+    
+    func getCameraConfig() -> AgoraWhiteBoardCameraConfig {
+        return manager.getBoardCameraConfig()
+    }
+    
+    func setCameraConfig(_ camera: AgoraWhiteBoardCameraConfig) {
+        manager.setBoardCameraConfig(camera)
     }
 }
 
@@ -173,7 +171,7 @@ extension AgoraBoardVM {
             return
         }
         
-        manager.onSetPageIndex(UInt(prev))
+        manager.setPageIndex(UInt(prev))
     }
     
     public func nextPage() {
@@ -182,7 +180,7 @@ extension AgoraBoardVM {
             return
         }
         
-        manager.onSetPageIndex(UInt(next))
+        manager.setPageIndex(UInt(next))
     }
 }
 
@@ -211,7 +209,7 @@ extension AgoraBoardVM {
     }
     
     func onSetPageIndex(_ index: UInt) {
-        manager.onSetPageIndex(index)
+        manager.setPageIndex(index)
     }
     
     func setIncreaseScale() {
@@ -268,6 +266,10 @@ extension AgoraBoardVM: AgoraWhiteManagerDelegate {
             
             delegate?.didBoardPermissionUpdated(currentGrantUsers)
         }
+    }
+    
+    public func onWhiteBoardCameraConfigChange(_ config: AgoraWhiteBoardCameraConfig) {
+        delegate?.didCameraConfigChanged(camera: config)
     }
     
     public func onWhiteBoardPageChanged(_ pageIndex: Int,

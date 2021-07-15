@@ -1,9 +1,8 @@
 //
-//  AgoraRTEVideoConfig.h
-//  EduSDK
+//  AgoraRTEObjects.h
+//  AgoraEduSDK
 //
-//  Created by SRS on 2020/7/9.
-//  Copyright © 2020 agora. All rights reserved.
+//  Created by SRS on 2021/6/1.
 //
 
 #import <Foundation/Foundation.h>
@@ -11,17 +10,18 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AgoraRTEVideoConfig : NSObject
+@interface AgoraRTERenderConfig : NSObject
+@property (nonatomic, assign) AgoraRTERenderMode renderMode;
+@end
 
+@interface AgoraRTEVideoConfig : NSObject
 @property (nonatomic, assign) NSUInteger videoDimensionWidth;
 @property (nonatomic, assign) NSUInteger videoDimensionHeight;
 @property (nonatomic, assign) NSUInteger frameRate;
 @property (nonatomic, assign) NSUInteger bitrate;
 @property (nonatomic, assign) AgoraRTEVideoOutputOrientationMode orientationMode;
 @property (nonatomic, assign) AgoraRTEDegradationPreference degradationPreference;
-
 + (instancetype)defaultVideoConfig;
-
 @end
 
 NS_ASSUME_NONNULL_END
