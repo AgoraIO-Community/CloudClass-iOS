@@ -408,14 +408,14 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                         
                         [self.localUser yy_modelSetWithJSON: userObj];
 
-                        if ([self.delegate respondsToSelector:@selector(onLocalUserUpdateFrom:to:model:)]) {
+                        if ([self.delegate respondsToSelector:@selector(onLocalUserUpdateFrom:to:model:)] && [obj isKindOfClass:AgoraRTEChannelMsgUsersProperty.class]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 
                                 [self.delegate onLocalUserUpdateFrom:originalUser to:filterUser model:(AgoraRTEChannelMsgUsersProperty*)obj];
                             });
                         }
                     } else {
-                        if ([self.delegate respondsToSelector:@selector(onRemoteUserUpdateFrom:to:model:)]) {
+                        if ([self.delegate respondsToSelector:@selector(onRemoteUserUpdateFrom:to:model:)] && [obj isKindOfClass:AgoraRTEChannelMsgUsersProperty.class]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 
                                 [self.delegate onRemoteUserUpdateFrom:originalUser to:filterUser model:(AgoraRTEChannelMsgUsersProperty*)obj];

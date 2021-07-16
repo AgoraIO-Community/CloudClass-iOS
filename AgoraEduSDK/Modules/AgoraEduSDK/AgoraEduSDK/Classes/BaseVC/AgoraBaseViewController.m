@@ -186,7 +186,6 @@
             [weakself onShowErrorInfo:error];
         }];
         
-        [weakself.eventDispatcher onJoinedClassroom];
     } failureBlock:^(AgoraEduContextError *error) {
         [weakself onShowErrorInfo:error];
     }];
