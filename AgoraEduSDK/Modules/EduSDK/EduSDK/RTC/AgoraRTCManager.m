@@ -683,7 +683,7 @@ static AgoraRTCManager *manager = nil;
     [self.rtcEngineKit stopPreview];
     
     BOOL cameraBackup = self.frontCamera;
-    [self initData];e
+    [self initData];
     self.frontCamera = cameraBackup;
 }
 
