@@ -42,7 +42,7 @@ import AgoraReport
             var cameraEnabled = true
             var cameraFacing = EduContextCameraFacing.front
             var micEnabled = true
-            var speakerEnabled = false
+            var speakerEnabled = true
             
             if let properties = rteLocalUser.userProperties as? Dictionary<String, Any>,
                let device = properties["device"] as? Dictionary<String, Any> {

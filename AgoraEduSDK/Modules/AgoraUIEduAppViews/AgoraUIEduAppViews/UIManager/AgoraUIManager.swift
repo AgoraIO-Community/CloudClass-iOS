@@ -340,6 +340,9 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         
         self.hxChat = chat
         chat.widgetDidReceiveMessage("min")
+        
+        let right = chat.containerView.agora_safe_right + chat.containerView.agora_width + 10 - 8
+        self.handsUp?.containerView.agora_safe_right = right
     }
 }
 
