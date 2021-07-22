@@ -234,10 +234,20 @@ static const NSString* kChatRoomId = @"chatroomId";
     });
 }
 
-- (void)announcementDidChanged:(NSString *)aAnnouncement
+- (void)announcementDidChanged:(NSString *)aAnnouncement isFirst:(BOOL)aIsFirst
 {
     self.chatView.announcement = aAnnouncement;
     self.announcementView.announcement = aAnnouncement;
+    if(!aIsFirst) {
+        if([self.containView isHidden]) {
+            // 最小化了
+            self.badgeView.hidden = NO;
+        }
+        if(self.chatTopView.currentTab != 1) {
+            // 显示红点
+            self.chatTopView.isShowAnnouncementRedNotice = YES;
+        }
+    }
 }
 
 #pragma mark - ChatTopViewDelegate
@@ -256,7 +266,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 {
     self.containView.hidden = YES;
     self.miniButton.hidden = NO;
-    self.badgeView.hidden = self.chatTopView.badgeView.hidden;
+    self.badgeView.hidden = self.chatTopView.badgeView.hidden && self.chatTopView.announcementbadgeView.hidden;
     self.containerView.agora_width = 50;
     [self sendMessage:@"min"];
 }
@@ -265,11 +275,12 @@ static const NSString* kChatRoomId = @"chatroomId";
 {
     self.containView.hidden = NO;
     self.miniButton.hidden = YES;
-    if(self.chatTopView.currentTab != 0)
-        self.chatTopView.badgeView.hidden = self.badgeView.hidden;
-    else
-    {
+    if(self.chatTopView.currentTab == 0) {
+        self.chatTopView.badgeView.hidden = YES;
         [self.chatView scrollToBottomRow];
+    }
+    if(self.chatTopView.currentTab == 1) {
+        self.chatTopView.announcementbadgeView.hidden = YES;
     }
     self.badgeView.hidden = YES;
     if([[UIDevice currentDevice].model isEqualToString:@"iPad"]) {

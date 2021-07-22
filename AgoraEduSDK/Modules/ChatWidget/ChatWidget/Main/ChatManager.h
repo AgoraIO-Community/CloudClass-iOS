@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 状态发生改变
 - (void)roomStateDidChanged:(ChatRoomState)aState;
 // 公告发生变更
-- (void)announcementDidChanged:(NSString*)aAnnouncement;
+- (void)announcementDidChanged:(NSString*)aAnnouncement isFirst:(BOOL)aIsFirst;
 
 @end
 
