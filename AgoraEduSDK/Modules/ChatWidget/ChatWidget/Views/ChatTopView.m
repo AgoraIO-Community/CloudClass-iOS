@@ -81,8 +81,11 @@ const static NSInteger TAG_BASE = 1000;
     }];
     
     self.badgeView = [[CustomBadgeView alloc] init];
+    self.announcementbadgeView = [[CustomBadgeView alloc] init];
     [self addSubview:self.badgeView];
+    [self addSubview:self.announcementbadgeView];
     self.badgeView.hidden = YES;
+    self.announcementbadgeView.hidden = YES;
     [self.badgeView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self).offset(10);
         make.width.height.equalTo(@(self.badgeView.badgeSize));
@@ -100,6 +103,11 @@ const static NSInteger TAG_BASE = 1000;
         make.top.equalTo(self.tabView);
         make.height.equalTo(self.tabView);
         make.width.equalTo(self.tabView).multipliedBy(0.5);
+    }];
+    [self.announcementbadgeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self).offset(10);
+        make.width.height.equalTo(@(self.badgeView.badgeSize));
+        make.centerX.equalTo(self.announcementButton).offset(20);
     }];
     
     self.selLine = [[UIView alloc] init];
@@ -144,6 +152,7 @@ const static NSInteger TAG_BASE = 1000;
             [self.chatButton setTitleColor:[UIColor colorWithRed:25/255.0 green:25/255.0 blue:25/255.0 alpha:1.0] forState:UIControlStateNormal];
             [self.announcementButton setTitleColor:[UIColor colorWithRed:123/255.0 green:136/255.0 blue:160/255.0 alpha:1.0] forState:UIControlStateNormal];
         }else{
+            self.isShowAnnouncementRedNotice = NO;
             [self.selLine mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(self.announcementButton);
                 make.bottom.equalTo(self.tabView);
@@ -171,6 +180,16 @@ const static NSInteger TAG_BASE = 1000;
         self.badgeView.hidden = NO;
     }else{
         self.badgeView.hidden = YES;
+    }
+}
+
+- (void)setIsShowAnnouncementRedNotice:(BOOL)isShowAnnouncementRedNotice
+{
+    _isShowAnnouncementRedNotice = isShowAnnouncementRedNotice;
+    if(isShowAnnouncementRedNotice){
+        self.announcementbadgeView.hidden = NO;
+    }else{
+        self.announcementbadgeView.hidden = YES;
     }
 }
 
