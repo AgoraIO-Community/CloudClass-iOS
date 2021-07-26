@@ -97,7 +97,7 @@ extension AgoraUIManager {
     func layoutSmallView(_ isFullScreen: Bool) {
         guard let `renderSmall` = self.renderSmall,
               let `whiteBoard` = self.whiteBoard,
-              let `chat` = self.chat else {
+              let `chat` = self.hxChat else {
             return
         }
         
@@ -106,6 +106,7 @@ extension AgoraUIManager {
         // update
         let whiteBoardY = isFullScreen ? renderSmall.containerView.agora_safe_y : renderSmall.containerView.agora_safe_y + renderSmall.containerView.agora_height + 2
         whiteBoard.containerView.agora_safe_y = whiteBoardY
+        chat.containerView.agora_safe_y = whiteBoardY
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
             self.appView.layoutSubviews()

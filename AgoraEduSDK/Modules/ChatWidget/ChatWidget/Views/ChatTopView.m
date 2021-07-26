@@ -45,14 +45,14 @@ const static NSInteger TAG_BASE = 1000;
     self.layer.borderColor = [UIColor colorWithRed:236/255.0 green:236/255.0 blue:241/255.0 alpha:1.0].CGColor;
     self.layer.cornerRadius = 5;
     
-    int width = 24;
+    int width = 16;
     self.hideButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.hideButton.tag = TAG_BASE + 2;
     [self.hideButton setImage:[UIImage imageNamedFromBundle:@"icon_hide"] forState:UIControlStateNormal];
     [self.hideButton addTarget:self action:@selector(hideAction) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.hideButton];
     [self.hideButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self).with.offset(-5);
+        make.right.equalTo(self).with.offset(-14);
         make.centerY.equalTo(self);
         make.height.equalTo(@(width));
         make.width.equalTo(@(width));
@@ -71,6 +71,7 @@ const static NSInteger TAG_BASE = 1000;
     [self.chatButton setTitle:[ChatWidget LocalizedString:@"ChatText"] forState:UIControlStateNormal];
     [self.chatButton setTitleColor:[UIColor colorWithRed:25/255.0 green:25/255.0 blue:25/255.0 alpha:1.0] forState:UIControlStateNormal];
     self.chatButton.tag = TAG_BASE;
+    self.chatButton.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.chatButton addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.tabView addSubview:self.chatButton];
     [self.chatButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -95,6 +96,7 @@ const static NSInteger TAG_BASE = 1000;
     self.announcementButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.announcementButton setTitle:[ChatWidget LocalizedString:@"ChatAnnouncement"] forState:UIControlStateNormal];
     self.announcementButton.tag = TAG_BASE + 1;
+    self.announcementButton.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.announcementButton addTarget:self action:@selector(clickAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.announcementButton setTitleColor:[UIColor colorWithRed:123/255.0 green:136/255.0 blue:160/255.0 alpha:1.0] forState:UIControlStateNormal];
     [self.tabView addSubview:self.announcementButton];

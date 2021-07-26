@@ -156,6 +156,7 @@
     self.chatBar = [[ChatBar alloc] init];
     self.chatBar.parantView = self;
     self.chatBar.delegate = self;
+    self.chatBar.layer.cornerRadius = 4;
     [self addSubview:self.chatBar];
     [self bringSubviewToFront:self.chatBar];
     [self sendSubviewToBack:self.tableView];

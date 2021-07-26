@@ -104,25 +104,25 @@
     
     if (self.direction == EMMessageDirectionSend) {
         [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(15);
+            make.top.equalTo(self.contentView).offset(5);
             make.right.equalTo(self.contentView).offset(-10);
-            make.width.height.equalTo(@40);
+            make.width.height.equalTo(@28);
         }];
         [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.avatarView);
-            make.right.equalTo(_avatarView.mas_left).offset(-8);
+            make.centerY.equalTo(self.avatarView);
+            make.right.equalTo(_avatarView.mas_left).offset(-6);
             make.left.equalTo(self.contentView).offset(15);
         }];
         _nameLabel.textAlignment = NSTextAlignmentRight;
     } else {
         [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(15);
+            make.top.equalTo(self.contentView).offset(5);
             make.left.equalTo(self.contentView).offset(10);
-            make.width.height.equalTo(@40);
+            make.width.height.equalTo(@28);
         }];
         [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.avatarView);
-            make.left.equalTo(self.avatarView.mas_right).offset(8);
+            make.centerY.equalTo(self.avatarView);
+            make.left.equalTo(self.avatarView.mas_right).offset(6);
             make.right.equalTo(self.contentView).offset(-10);
         }];
         _nameLabel.textAlignment = NSTextAlignmentLeft;
@@ -135,17 +135,17 @@
     [self.contentView addSubview:_bubbleView];
     if (self.direction == EMMessageDirectionSend) {
         [_bubbleView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.nameLabel.mas_bottom).offset(3);
+            make.top.equalTo(self.avatarView.mas_bottom).offset(8);
             make.bottom.equalTo(self.contentView).offset(-15);
-            make.left.greaterThanOrEqualTo(self.contentView).offset(30);
-            make.right.equalTo(self.avatarView.mas_left).offset(-12);
+            make.left.greaterThanOrEqualTo(self.contentView).offset(46);
+            make.right.equalTo(self.contentView).offset(-12);
         }];
     } else {
         [_bubbleView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.nameLabel.mas_bottom).offset(3);
+            make.top.equalTo(self.avatarView.mas_bottom).offset(8);
             make.bottom.equalTo(self.contentView).offset(-15);
-            make.left.equalTo(self.avatarView.mas_right).offset(12);
-            make.right.lessThanOrEqualTo(self.contentView).offset(-30);
+            make.left.equalTo(self.contentView).offset(12);
+            make.right.lessThanOrEqualTo(self.contentView).offset(-46);
         }];
     }
 

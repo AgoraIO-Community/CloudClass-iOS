@@ -76,7 +76,7 @@ extension AgoraUIManager {
         
         render1V1.updateRenderView(fullScreen: isFullScreen)
         
-        guard let chatView = chat?.containerView else {
+        guard let chatView = hxChat?.containerView else {
             return
         }
         

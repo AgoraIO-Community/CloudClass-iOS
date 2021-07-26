@@ -20,7 +20,7 @@ static const NSString* kAvatarUrl = @"avatarUrl";
 static const NSString* kNickname = @"nickName";
 static const NSString* kChatRoomId = @"chatroomId";
 
-#define TOP_HEIGHT 40
+#define TOP_HEIGHT 34
 #define MINIBUTTON_SIZE 40
 
 @interface ChatWidget () <ChatManagerDelegate,
