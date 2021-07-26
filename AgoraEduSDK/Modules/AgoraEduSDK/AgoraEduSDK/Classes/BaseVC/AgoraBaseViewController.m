@@ -990,6 +990,7 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 - (AgoraURLGroup *)urlGroup {
     if (!_urlGroup) {
         _urlGroup = [[AgoraURLGroup alloc] init];
+        _urlGroup.host = self.host;
         _urlGroup.dataSource = self;
     }
 
