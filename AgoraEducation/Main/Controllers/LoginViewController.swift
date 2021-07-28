@@ -265,6 +265,10 @@ private extension LoginViewController {
     }
     
     func setSDKConfig() {
+        let sel = NSSelectorFromString("setBaseURL:");
+        let url = "http://api-solutions-dev.bj2.agoralab.co"
+        AgoraClassroomSDK.perform(sel,with: url)
+        
         let eyeCare = UserDefaults.standard.bool(forKey: LoginConfig.USER_DEFAULT_EYE_CARE)
         let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(),
                                                    eyeCare: eyeCare)
@@ -280,16 +284,34 @@ private extension LoginViewController {
                                                                      right: 0),
                                                  language: "zh")
         countDown.image = UIImage(named: "countdown")
-        let apps = [countDown]
+        
+        let answerExt = AgoraExtAppConfiguration(appIdentifier: "io.agora.answer",
+                                                 extAppClass: AnswerExtApp.self,
+                                                 frame: UIEdgeInsets(top: 0,
+                                                                     left: 0,
+                                                                     bottom: 0,
+                                                                     right: 0),
+                                                 language: "zh")
+        answerExt.image = UIImage(named: "countdown")
+
+        let voteExt = AgoraExtAppConfiguration(appIdentifier: "io.agora.vote",
+                                                 extAppClass: VoteExtApp.self,
+                                                 frame: UIEdgeInsets(top: 0,
+                                                                     left: 0,
+                                                                     bottom: 0,
+                                                                     right: 0),
+                                                 language: "zh")
+        voteExt.image = UIImage(named: "countdown")
+        let apps = [countDown, answerExt, voteExt]
         AgoraClassroomSDK.registerExtApps(apps)
     }
-
+    
     private func checkPrivacyPolicy() {
         if !TermsAndPolicyViewController.getPolicyPopped() {
             showPrivacyPolicy()
         }
     }
-
+    
     private func showPrivacyPolicy() {
         if let termsVC = TermsAndPolicyViewController.loadFromStoryboard("privacy", "terms") {
             present(termsVC, animated: true, completion: nil)

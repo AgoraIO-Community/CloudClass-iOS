@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0772054B26B1462C002DE760 /* AnswerExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0772054626B1462C002DE760 /* AnswerExtApp.m */; };
+		0772054C26B1462C002DE760 /* VoteExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 0772054726B1462C002DE760 /* VoteExtApp.m */; };
+		0772054D26B1462C002DE760 /* VoteListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0772054826B1462C002DE760 /* VoteListCell.m */; };
 		1A44BE7522BF863000766274 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A44BE5722BF863000766274 /* Assets.xcassets */; };
 		1A44BE7A22BF863000766274 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE5E22BF863000766274 /* main.m */; };
 		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
@@ -64,6 +67,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0772054526B1462C002DE760 /* AnswerExtApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerExtApp.h; sourceTree = "<group>"; };
+		0772054626B1462C002DE760 /* AnswerExtApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnswerExtApp.m; sourceTree = "<group>"; };
+		0772054726B1462C002DE760 /* VoteExtApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoteExtApp.m; sourceTree = "<group>"; };
+		0772054826B1462C002DE760 /* VoteListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoteListCell.m; sourceTree = "<group>"; };
+		0772054926B1462C002DE760 /* VoteExtApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoteExtApp.h; sourceTree = "<group>"; };
+		0772054A26B1462C002DE760 /* VoteListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoteListCell.h; sourceTree = "<group>"; };
 		1A44BE3522BF863000766274 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1A44BE5722BF863000766274 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A44BE5E22BF863000766274 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -412,6 +421,12 @@
 		8654871A261EDF830025ADCB /* ExtApps */ = {
 			isa = PBXGroup;
 			children = (
+				0772054526B1462C002DE760 /* AnswerExtApp.h */,
+				0772054626B1462C002DE760 /* AnswerExtApp.m */,
+				0772054926B1462C002DE760 /* VoteExtApp.h */,
+				0772054726B1462C002DE760 /* VoteExtApp.m */,
+				0772054A26B1462C002DE760 /* VoteListCell.h */,
+				0772054826B1462C002DE760 /* VoteListCell.m */,
 				687AFBB02646BC19004E5A34 /* CountDownExtApp */,
 				8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */,
 				8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */,
@@ -677,6 +692,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				688809E82629358800B5FB2A /* MainViewController.swift in Sources */,
+				0772054B26B1462C002DE760 /* AnswerExtApp.m in Sources */,
 				78DFB61525AE93C100B01906 /* AgoraEducationHTTPClient.m in Sources */,
 				783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */,
 				687AFBB22646BC2C004E5A34 /* SingleTimeView.swift in Sources */,
@@ -690,6 +706,8 @@
 				687AFBAF2646BBAD004E5A34 /* CountDownContainerView.swift in Sources */,
 				683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */,
 				6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */,
+				0772054D26B1462C002DE760 /* VoteListCell.m in Sources */,
+				0772054C26B1462C002DE760 /* VoteExtApp.m in Sources */,
 				687AFC2A264AA84A004E5A34 /* SingleTimeGroup.swift in Sources */,
 				78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */,
 				8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */,
