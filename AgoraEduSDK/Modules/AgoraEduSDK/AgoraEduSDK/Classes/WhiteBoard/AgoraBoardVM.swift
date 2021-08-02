@@ -23,6 +23,7 @@ protocol AgoraBoardVMDelegate: NSObjectProtocol {
     func didBoardPageChange(pageIndex: Int, pageCount: Int)
     func didSceneChange(urls: [URL])
     func didScenePathChanged(path: String)
+    func didFlexStateUpdated(state: [String: Any]?)
     
     func didCameraConfigChanged(camera: AgoraWhiteBoardCameraConfig)
     
@@ -100,7 +101,7 @@ public class AgoraBoardVM: AgoraBaseVM {
 
             let users = currentBoardState.grantUsers
             let usreGranted = users?.contains(self.userUuid) ?? false
-            
+
             if usreGranted {
                 self.delegate?.didBoardLocalPermissionGranted(users ?? [])
             } else {
@@ -240,6 +241,14 @@ extension AgoraBoardVM: AgoraWhiteManagerDelegate {
     public func onWhiteBoardStateChanged(_ state: AgoraWhiteBoardStateModel) {
         let originalState = boardState
         boardState = state
+        
+        // flexBoardState
+        if let originalFlexState = originalState.flexBoardState as? NSDictionary,
+           let currentFlexState = state.flexBoardState as? NSDictionary {
+            if !originalFlexState.yy_modelIsEqual(currentFlexState) {
+                delegate?.didFlexStateUpdated(state: state.flexBoardState as? [String : Any])
+            }
+        }
 
         let originalLocalIsGranted = originalState.grantUsers?.contains(self.userUuid) ?? false
         let currentlLocalIsGranted = state.grantUsers?.contains(self.userUuid) ?? false

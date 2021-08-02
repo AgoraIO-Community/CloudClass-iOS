@@ -71,6 +71,10 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     return state;
 }
 
+- (void)setWhiteBoardStateModel:(AgoraWhiteBoardStateModel *)state {
+    [self.room setGlobalState:state];
+}
+
 - (UIView *)contentView {
     if (_contentView) {
         return _contentView;
@@ -374,7 +378,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                                                       config:config
                                       commonCallbackDelegate:self];
     
-    [WhiteDisplayerState setCustomGlobalStateClass:AgoraWhiteGlobalStateModel.class];
+    [WhiteDisplayerState setCustomGlobalStateClass:AgoraWhiteBoardStateModel.class];
 }
 
 - (void)setWhiteMemberState {
@@ -469,7 +473,7 @@ The RoomState property in the room will trigger this callback when it changes.
         id modelObj = [modifyState.globalState yy_modelToJSONObject];
         AgoraWhiteBoardStateModel *state = [AgoraWhiteBoardStateModel new];
         [state yy_modelSetWithJSON:modelObj];
-        
+
         if ([self.delegate respondsToSelector:@selector(onWhiteBoardStateChanged:)]) {
             [self.delegate onWhiteBoardStateChanged:state];
         }

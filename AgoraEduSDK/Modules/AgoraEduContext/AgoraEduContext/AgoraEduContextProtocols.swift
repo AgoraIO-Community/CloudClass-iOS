@@ -27,6 +27,7 @@ import AgoraWidget
 
 // MARK: - WhiteBoard
 @objc public protocol AgoraEduWhiteBoardHandler: NSObjectProtocol {
+    
     // 获取白板容器View, 真正的白板会放在这个容器里面
     @objc optional func onGetBoardContainer() -> UIView
     // 设置是否可以画
@@ -47,9 +48,17 @@ import AgoraWidget
     @objc optional func onCancelCurDownload()
     // 显示白板权限信息
     @objc optional func onShowPermissionTips(_ granted: Bool)
+    // 只返回客户自定义状态
+    @objc optional func onWhiteGlobalStateChanged(_ state: [String: Any])
 }
 
 @objc public protocol AgoraEduWhiteBoardContext: NSObjectProtocol {
+    
+    // 只返回客户自定义状态
+    func whiteGlobalState() -> [String: Any]
+    // 设置客户自定义状态
+    func setWhiteGlobalState(_ state: [String: Any])
+    
     // 设置是否可以使用教具
     func boardInputEnable(_ enable: Bool)
     // 跳过课件下载

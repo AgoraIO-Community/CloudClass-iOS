@@ -55,6 +55,10 @@ extension AgoraWhiteBoardUIController: AgoraEduWhiteBoardHandler {
         let msg = granted ? AgoraKitLocalizedString("UnMuteBoardText") : AgoraKitLocalizedString("MuteBoardText")
         AgoraUtils.showToast(message: msg)
     }
+    
+    func onWhiteGlobalStateChanged(_ state: [String : Any]) {
+        print("onWhiteGlobalStateChanged:\(state)")
+    }
 }
 
 // MARK: - AgoraEduWhiteBoardPageControlHandler
