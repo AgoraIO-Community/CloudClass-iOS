@@ -156,6 +156,7 @@
         [ApaasReporterWrapper localUserJoin];
         
         [manager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
+            [weakself updateStartTimeWithRoomProperties:room.roomProperties];
             [weakself flexRoomPropsInitialize:room];
             [weakself updateExtApps:room];
             [weakself.widgetsController updateRoomProperties:room.roomProperties];
@@ -498,6 +499,9 @@ connectionStateChanged:(AgoraRTEConnectionState)state {
                        classroom:(AgoraRTEClassroom *)classroom
                            cause:(NSDictionary * _Nullable)cause
                     operatorUser:(AgoraRTEBaseUser *)operatorUser {
+    // update start time
+    [self updateStartTimeWithRoomProperties:classroom.roomProperties];
+    
     [self updateExtApps:classroom];
     [self.screenShareController updateScreenSelectedProperties:cause];
 
@@ -1032,4 +1036,21 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     
     return _widgetsController;
 }
+
+- (void)updateStartTimeWithRoomProperties:(NSDictionary *)properties {
+    // update start time
+    AgoraRoomStateInfoModel *state = (AgoraRoomStateInfoModel *)[AgoraManagerCache share].roomStateInfoModel;
+    
+    if (!state) {
+        return;
+    }
+    
+    NSDictionary *schedule = properties[@"schedule"];
+    NSNumber *number = schedule[@"startTime"];
+    
+    if (number) {
+        state.startTime = number.integerValue;
+    }
+}
+
 @end
