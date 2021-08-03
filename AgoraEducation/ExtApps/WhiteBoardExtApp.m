@@ -8,6 +8,8 @@
 
 #import <AgoraWhiteBoard/AgoraWhiteBoard.h>
 #import "WhiteBoardExtApp.h"
+@import AgoraEduExtApp;
+@import AgoraEduContext;
 
 @interface WhiteBoardExtApp ()
 @property (nonatomic, strong) UIButton *closeButton;
@@ -17,7 +19,7 @@
 
 @implementation WhiteBoardExtApp
 #pragma mark - Life cycle
-- (void)extAppDidLoad:(AgoraExtAppContext *)context {
+- (void)extAppDidLoad:(AgoraEduExtAppContext *)context {
     [self initWhiteBoard];
     [self initViews];
     [self layoutViews];

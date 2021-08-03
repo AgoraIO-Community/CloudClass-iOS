@@ -9,6 +9,8 @@
 #import "CountDownExtApp.h"
 #import "AgoraCloudClass-Swift.h"
 @import AgoraUIBaseViews;
+@import AgoraEduExtApp;
+@import AgoraEduContext;
 
 typedef enum : NSInteger {
     CountdownStateDefault = 0,
@@ -40,7 +42,7 @@ typedef enum : NSInteger {
 }
 
 #pragma mark - Life cycle
-- (void)extAppDidLoad:(AgoraExtAppContext *)context {
+- (void)extAppDidLoad:(AgoraEduExtAppContext *)context {
     [self initView];
     [self initData:context.properties];
 }

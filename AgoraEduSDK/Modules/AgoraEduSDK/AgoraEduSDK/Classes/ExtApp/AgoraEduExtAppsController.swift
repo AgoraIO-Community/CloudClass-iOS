@@ -9,18 +9,38 @@
 import UIKit
 import AgoraUIBaseViews
 import AgoraExtApp
+import AgoraEduExtApp
+import AgoraEduContext
 
 @objcMembers public class AgoraEduExtAppsController: AgoraExtAppsController {
     private weak var urlGroup: AgoraURLGroup?
-    
-    public init(urlGroup: AgoraURLGroup) {
+    private weak var contextPool: AgoraEduContextPool?
+
+    public init(urlGroup: AgoraURLGroup,
+                contextPool: AgoraEduContextPool) {
         self.urlGroup = urlGroup
+        self.contextPool = contextPool
         super.init()
     }
 }
 
 // MARK: - AgoraExtAppDelegate
 extension AgoraEduExtAppsController {
+    
+    public override func getContextWithAppIdentifier(_ appIdentifier: String,
+                                                     localUserInfo userInfo: AgoraExtAppUserInfo,
+                                                     roomInfo: AgoraExtAppRoomInfo,
+                                                     properties: [AnyHashable : Any],
+                                                     language: String) -> AgoraExtAppContext {
+        let context = AgoraEduExtAppContext(appIdentifier: appIdentifier,
+                                            localUserInfo: userInfo,
+                                            roomInfo: roomInfo,
+                                            properties: properties,
+                                            language: language)
+        context.contextPool = self.contextPool
+        return context
+    }
+    
     public override func extApp(_ app: AgoraBaseExtApp,
                        updateProperties properties: [AnyHashable : Any],
                        success: @escaping AgoraExtAppCompletion,
