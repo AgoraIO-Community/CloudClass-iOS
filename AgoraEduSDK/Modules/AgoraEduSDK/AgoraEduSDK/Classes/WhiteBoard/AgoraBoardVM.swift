@@ -109,9 +109,7 @@ public class AgoraBoardVM: AgoraBaseVM {
                 self.lockViewTransform(true)
             }
             
-            DispatchQueue.main.async {
-                success()
-            }
+            success()
         } failure: { [weak self] (error) in
             let errorCode = (error as NSError).code
             
@@ -243,11 +241,10 @@ extension AgoraBoardVM: AgoraWhiteManagerDelegate {
         boardState = state
         
         // flexBoardState
-        if let originalFlexState = originalState.flexBoardState as? NSDictionary,
-           let currentFlexState = state.flexBoardState as? NSDictionary {
-            if !originalFlexState.yy_modelIsEqual(currentFlexState) {
-                delegate?.didFlexStateUpdated(state: state.flexBoardState as? [String : Any])
-            }
+        let originalFlexState = originalState.flexBoardState as? NSDictionary ?? NSDictionary()
+        let currentFlexState = state.flexBoardState as? NSDictionary ?? NSDictionary()
+        if !originalFlexState.yy_modelIsEqual(currentFlexState) {
+            delegate?.didFlexStateUpdated(state: state.flexBoardState as? [String : Any])
         }
 
         let originalLocalIsGranted = originalState.grantUsers?.contains(self.userUuid) ?? false

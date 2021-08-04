@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSString *ext;
 @end
 
-@interface AgoraWhiteBoardStateModel : NSObject
+@interface AgoraWhiteBoardStateModel : WhiteGlobalState
 @property (nonatomic, assign) BOOL isFullScreen;
 @property (nonatomic, assign) BOOL teacherFirstLogin;
 @property (nonatomic, strong) NSArray <NSString *> * _Nullable grantUsers;

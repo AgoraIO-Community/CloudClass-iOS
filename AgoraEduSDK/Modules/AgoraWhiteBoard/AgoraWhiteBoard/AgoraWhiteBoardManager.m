@@ -72,7 +72,21 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 }
 
 - (void)setWhiteBoardStateModel:(AgoraWhiteBoardStateModel *)state {
-    [self.room setGlobalState:state];
+    __weak AgoraWhiteBoardManager *weakself = self;
+    
+    [self.room setWritable:YES
+         completionHandler:^(BOOL isWritable,
+                             NSError * _Nullable error) {
+        weakself.isWritable = isWritable;
+        if (error) {
+            if ([weakself.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
+                NSError *err = AgoraBoardLocalError(AgoraBoardLocalErrorCode, error);
+                [self.delegate onWhiteBoardError: error];
+            }
+        } else {
+            [weakself.room setGlobalState:state];
+        }
+    }];
 }
 
 - (UIView *)contentView {
