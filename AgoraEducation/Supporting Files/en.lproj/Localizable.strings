@@ -79,7 +79,7 @@ Option_sing = "Single";
 //answer
 Answer_title = "Selector";
 Answer_sumbit = "Post";
-Answer_modify = "Modify";
+Answer_modify = "Change My Answer";
 Answer_myans = "My Answer:";
 Answer_right = "The Correct Ansewer:";
 Answer_respondents = "Submission List:";

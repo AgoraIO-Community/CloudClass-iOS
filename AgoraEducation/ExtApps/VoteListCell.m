@@ -80,8 +80,10 @@
     _percentage.translatesAutoresizingMaskIntoConstraints = NO;
     NSLayoutConstraint *percentery = [NSLayoutConstraint constraintWithItem:_percentage attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
     NSLayoutConstraint *perright = [NSLayoutConstraint constraintWithItem:_percentage attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0];
+    NSLayoutConstraint *perwidth = [NSLayoutConstraint constraintWithItem:_percentage attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:50];
     [self.contentView addConstraint:percentery];
     [self.contentView addConstraint:perright];
+    [_percentage addConstraint:perwidth];
     
     _titleLab1 = [[UILabel alloc] init];
     _titleLab1.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -93,7 +95,7 @@
     _titleLab1.translatesAutoresizingMaskIntoConstraints = NO;
     NSLayoutConstraint *lab1left = [NSLayoutConstraint constraintWithItem:_titleLab1 attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
     NSLayoutConstraint *lab1centery = [NSLayoutConstraint constraintWithItem:_titleLab1 attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0];
-    NSLayoutConstraint *lab1right = [NSLayoutConstraint constraintWithItem:_titleLab1 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_percentage attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-20];
+    NSLayoutConstraint *lab1right = [NSLayoutConstraint constraintWithItem:_titleLab1 attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_percentage attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-10];
     [self.contentView addConstraint:lab1left];
     [self.contentView addConstraint:lab1centery];
     [self.contentView addConstraint:lab1right];

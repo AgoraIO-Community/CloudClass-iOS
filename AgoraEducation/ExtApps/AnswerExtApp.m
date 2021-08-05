@@ -6,6 +6,8 @@
 
 #import "AnswerExtApp.h"
 
+static const int s_btnSubmitWidth = 80;
+
 @interface AnswerExtApp ()
 @property (nonatomic, strong) UILabel *countDownLabel;
 @property (nonatomic, strong) NSTimer *timer;
@@ -327,7 +329,7 @@
     }
     
     {
-        int btnwidth = 80;
+        int btnwidth = s_btnSubmitWidth;
         int btnheight = 30;
         self.resultBtn = [[UIButton alloc] initWithFrame:CGRectMake(((self.view.agora_width - btnwidth) / 2), (self.view.agora_height - 20 - btnheight - self.titleHeight) , btnwidth, btnheight)];
         self.resultBtn.layer.cornerRadius = 15.0;
@@ -397,10 +399,18 @@
                     [exbtn setBackgroundImage:[UIImage imageNamed:@"answer_dis"] forState:UIControlStateNormal];
                 }
             }
+            NSString* nstr = NSLocalizedString(@"Answer_modify", nil);
             [self.resultBtn setBackgroundColor:[UIColor whiteColor]];
-            [self.resultBtn setTitle:NSLocalizedString(@"Answer_modify", nil) forState:UIControlStateNormal];
+            [self.resultBtn setTitle:nstr forState:UIControlStateNormal];
             [self.resultBtn setTitleColor:[UIColor colorWithRed:53/255.0 green:123/255.0 blue:246/255.0 alpha:1.0] forState:UIControlStateNormal];
             self.resultBtn.layer.borderWidth = 1;
+            
+            CGSize btnSize = [nstr sizeWithAttributes:@{NSFontAttributeName: [UIFont fontWithName:self.resultBtn.titleLabel.font.fontName size:self.resultBtn.titleLabel.font.pointSize]}];
+            if (btnSize.width - self.resultBtn.frame.size.width > 5) {
+                btnSize.width += 38;
+                
+                self.resultBtn.frame = CGRectMake(self.resultBtn.frame.origin.x - ((btnSize.width - self.resultBtn.frame.size.width) / 2), self.resultBtn.frame.origin.y, btnSize.width, self.resultBtn.frame.size.height);
+            }
         }else{
             self.currentAnsStatus = 2;
             [self initResultViews];
@@ -416,6 +426,9 @@
         [self.resultBtn setTitle:NSLocalizedString(@"Answer_sumbit", nil) forState:UIControlStateNormal];
         [self.resultBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         self.resultBtn.layer.borderWidth = 0.0;
+        if (self.resultBtn.frame.size.width - s_btnSubmitWidth > 5) {
+            self.resultBtn.frame = CGRectMake(self.resultBtn.frame.origin.x + ((self.resultBtn.frame.size.width - s_btnSubmitWidth) / 2), self.resultBtn.frame.origin.y, s_btnSubmitWidth, self.resultBtn.frame.size.height);
+        }
     }
 }
 
