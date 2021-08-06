@@ -69,3 +69,18 @@ You are free to choose whether to try the services provided by this product. If 
 
 // countdown
 Countdown_title = "Countdown";
+
+// vote
+Vote_title = "Polling";
+Vote_submit = "Submit";
+Option_mul = "Multi-select";
+Option_sing = "Single";
+
+//answer
+Answer_title = "Selector";
+Answer_sumbit = "Post";
+Answer_modify = "Change My Answer";
+Answer_myans = "My Answer:";
+Answer_right = "The Correct Ansewer:";
+Answer_respondents = "Submission List:";
+Answer_rate = "Accuracy:";

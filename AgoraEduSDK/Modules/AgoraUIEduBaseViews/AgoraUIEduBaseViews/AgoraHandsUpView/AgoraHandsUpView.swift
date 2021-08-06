@@ -65,20 +65,21 @@ fileprivate let MAXCOUNT = 3
     fileprivate lazy var timeCountLabel: AgoraBaseUILabel = {
         let label = AgoraBaseUILabel()
         label.text = "\(MAXCOUNT)"
-        label.font = .boldSystemFont(ofSize: 16)
+        label.font = .boldSystemFont(ofSize: 17)
         label.textAlignment = .center
-        label.textColor = .init(red: 68/255.0, green: 162/255.0, blue: 252/255.0, alpha: 1)
-    
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor(red: 53/255.0, green:123/255.0, blue: 246/255.0, alpha: 1)
+        
+        label.layer.shadowColor = UIColor(red: 0.18, green: 0.25, blue: 0.57, alpha: 0.15).cgColor
+        label.layer.shadowOffset = CGSize(width: 0, height: 2)
+        label.layer.shadowOpacity = 1
+        label.layer.shadowRadius = 8
+        
         return label
     }()
     
     fileprivate lazy var timeCountView: AgoraBaseUIImageView = {
         let imgView = AgoraBaseUIImageView(image: AgoraKitImage("bubble"))
-        imgView.addSubview(timeCountLabel)
-        timeCountLabel.agora_x = 0
-        timeCountLabel.agora_y = 12
-        timeCountLabel.agora_width = 42
-        
         imgView.isHidden = true
         return imgView
     }()
@@ -88,9 +89,17 @@ fileprivate let MAXCOUNT = 3
         btn.backgroundColor = .clear;
         btn.setImage(AgoraKitImage("hands_down_default"), for: .normal)
         
-        btn.addTarget(self, action: #selector(onButtonClick(_:)), for: .touchDown)
-        btn.addTarget(self, action: #selector(onButtonCancel(_:)), for: .touchUpInside)
-        btn.addTarget(self, action: #selector(onButtonCancel(_:)), for: .touchUpOutside)
+        btn.addSubview(timeCountLabel)
+        timeCountLabel.agora_width = 40
+        timeCountLabel.agora_height = 40
+        timeCountLabel.agora_center_x = btn.agora_center_x
+        timeCountLabel.agora_center_y = btn.agora_center_y
+        timeCountLabel.clipsToBounds = true
+        timeCountLabel.layer.cornerRadius = 20
+        self.timeCountLabel.isHidden = true
+        
+        btn.addTarget(self, action: #selector(onBtnDown(_:)), for: .touchDown)
+        btn.addTarget(self, action: #selector(onBtnUp(_:)), for: .touchUpInside)
         
         return btn
     }()
@@ -99,12 +108,18 @@ fileprivate let MAXCOUNT = 3
         self.stopTimer()
     }
     
-    @objc func onButtonClick(_ btn: UIButton) {
-        self.startTimer()
+    @objc func onBtnDown(_ btn: UIButton) {
+        self.stopTimer()
+        self.timeCountLabel.isHidden = false
+        self.timeCountLabel.text = "\(MAXCOUNT)"
+        var kitState: AgoraEduContextHandsUpState = .handsUp
+        if self.state != .handsUp {
+            self.context?.updateHandsUpState(kitState)
+        }
     }
 
-    @objc func onButtonCancel(_ btn: UIButton) {
-        self.stopTimer()
+    @objc func onBtnUp(_ btn: UIButton) {
+        self.startTimer()
     }
     
     public func onSetHandsUpEnable(_ enable: Bool) {
@@ -132,7 +147,7 @@ extension AgoraHandsUpView {
  
         self.stopTimer()
         
-        self.timeCountView.isHidden = false
+        self.timeCountLabel.isHidden = false
         timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.global())
         timer?.schedule(deadline: .now() + 1, repeating: 1)
         timer?.setEventHandler { [weak self] in
@@ -143,15 +158,11 @@ extension AgoraHandsUpView {
     
                 let val = (Int(count) ?? 0) - 1
                 if val <= 0 {
-                    self.timeCountView.isHidden = true
                     self.timeCountLabel.text = "\(MAXCOUNT)"
+                    self.timeCountLabel.isHidden = true
                     self.timer?.cancel()
                     
-                    var kitState: AgoraEduContextHandsUpState = .handsUp
-                    if self.state == .handsUp {
-                        kitState = .handsDown
-                    }
-                    self.context?.updateHandsUpState(kitState)
+                    self.context?.updateHandsUpState(.handsDown)
                 } else {
                     self.timeCountLabel.text = "\(val)"
                 }
@@ -161,9 +172,7 @@ extension AgoraHandsUpView {
     }
     
     fileprivate func stopTimer() {
-        self.timeCountView.isHidden = true
         self.timeCountLabel.text = "\(MAXCOUNT)"
-        
         if !(timer?.isCancelled ?? true) {
             timer?.cancel()
         }
@@ -176,15 +185,5 @@ extension AgoraHandsUpView {
             self.isHidden = true
             return
         }
-        
-        if isCoHost {
-            handsUpBtn.setImage(AgoraKitImage("hands_up_cohost"), for: .normal)
-            handsUpBtn.isUserInteractionEnabled = false
-            return
-        }
-        
-        let imageString = self.state == .handsUp ? "hands_up_waiting" : "hands_down_default"
-        handsUpBtn.setImage(AgoraKitImage(imageString), for: .normal)
-        handsUpBtn.isUserInteractionEnabled = true
     }
 }
