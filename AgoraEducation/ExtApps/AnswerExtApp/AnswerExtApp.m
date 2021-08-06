@@ -51,7 +51,12 @@ static const int s_btnSubmitWidth = 80;
         self.strRightkey = [rightKey componentsJoinedByString:@""];
     }
     
-    //BOOL isHaveMyResul = NO;
+    NSString *startTime = properties[@"startTime"];
+    NSInteger start = [startTime integerValue];
+    NSInteger current = [[NSDate date] timeIntervalSince1970];
+    self.countDown = current - start;
+    
+    BOOL isHaveMyResul = NO;
     NSArray* students = [properties objectForKey:@"students"];
     if (NULL != students) {
         self.totalPersonnel = students.count;
@@ -60,12 +65,27 @@ static const int s_btnSubmitWidth = 80;
             NSDictionary *ssit = [properties objectForKey:ssitKey];
             if (NULL != ssit) {
                 ++self.anwserPersonnel;
+                
+                BOOL fixMyAnswer = NO;
+                if ([stuname isEqualToString:self.localUserInfo.userUuid]) {
+                    //自己已经答题了
+                    isHaveMyResul = YES;
+                    fixMyAnswer = YES;
+                    [self.selecItems removeAllObjects];
+                }
+                
                 NSArray* answers = [ssit objectForKey:@"answer"];
                 if (nil != answers) {
-//                    if ([stuname isEqualToString:self.localUserInfo.userUuid]) {
-//                        isHaveMyResul = YES;
-//                    }
-                    
+                    if (fixMyAnswer) {
+                        for (NSString* myans in answers) {
+                            for (int i = 0; i < self.answerDatas.count; ++i) {
+                                if ([self.answerDatas[i] isEqualToString:myans]) {
+                                    NSNumber* sel = [[NSNumber alloc] initWithInt: i];
+                                    [self.selecItems addObject: sel];
+                                }
+                            }
+                        }
+                    }
                     if([self array:rightKey isEqualTo:answers]){
                         ++self.rightPersonnel;
                     }
@@ -75,16 +95,21 @@ static const int s_btnSubmitWidth = 80;
     }
     
     NSString *nowState = properties[@"state"];
-    if (-1 == self.currentAnsStatus) {
-        if ([nowState isEqualToString:@"start"]) {
+    if([nowState isEqualToString:@"start"]){
+        if (-1 == self.currentAnsStatus){
             self.currentAnsStatus = 0;
             [self initAnswerViews];
             [self startTimer];
-        }else if ([nowState isEqualToString:@"end"]) {
-            self.currentAnsStatus = 2;
-            [self initResultViews];
+        }
+        if (isHaveMyResul) {
+            [self switchToChgUI];
         }
     }else if([nowState isEqualToString:@"end"]){
+        NSString *endTime = properties[@"endTime"];
+        NSInteger end = [endTime integerValue];
+        self.countDown = end - start;
+        self.countDownLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)(self.countDown / 3600), (long)(self.countDown / 60), (long)(self.countDown % 60)];
+        
         self.currentAnsStatus = 2;
         [self initResultViews];
     }
@@ -172,6 +197,13 @@ static const int s_btnSubmitWidth = 80;
 
 - (void)initResultViews {
     [self stopTimer];
+    self.strMykey = @"";
+    for (NSNumber* item in self.selecItems) {
+        int index = [item intValue];
+        if (index <= self.answerDatas.count) {
+            self.strMykey = [self.strMykey stringByAppendingString:self.answerDatas[index]];
+        }
+    }
     [self.answerBtns removeAllObjects];
     [self.selecItems removeAllObjects];
     self.resultBtn = nil;
@@ -392,29 +424,7 @@ static const int s_btnSubmitWidth = 80;
         //提交答案
         [self resultSubmit];
         
-        if(self.canChange){
-            self.currentAnsStatus = 1;
-            for (UIButton* exbtn in self.answerBtns) {
-                if (exbtn.isSelected) {
-                    [exbtn setBackgroundImage:[UIImage imageNamed:@"answer_dis"] forState:UIControlStateNormal];
-                }
-            }
-            NSString* nstr = NSLocalizedString(@"Answer_modify", nil);
-            [self.resultBtn setBackgroundColor:[UIColor whiteColor]];
-            [self.resultBtn setTitle:nstr forState:UIControlStateNormal];
-            [self.resultBtn setTitleColor:[UIColor colorWithRed:53/255.0 green:123/255.0 blue:246/255.0 alpha:1.0] forState:UIControlStateNormal];
-            self.resultBtn.layer.borderWidth = 1;
-            
-            CGSize btnSize = [nstr sizeWithAttributes:@{NSFontAttributeName: [UIFont fontWithName:self.resultBtn.titleLabel.font.fontName size:self.resultBtn.titleLabel.font.pointSize]}];
-            if (btnSize.width - self.resultBtn.frame.size.width > 5) {
-                btnSize.width += 38;
-                
-                self.resultBtn.frame = CGRectMake(self.resultBtn.frame.origin.x - ((btnSize.width - self.resultBtn.frame.size.width) / 2), self.resultBtn.frame.origin.y, btnSize.width, self.resultBtn.frame.size.height);
-            }
-        }else{
-            self.currentAnsStatus = 2;
-            [self initResultViews];
-        }
+        [self switchToChgUI];
     }else if (1 == self.currentAnsStatus) {
         self.currentAnsStatus = 0;
         for (UIButton* exbtn in self.answerBtns) {
@@ -432,6 +442,35 @@ static const int s_btnSubmitWidth = 80;
     }
 }
 
+-(void)switchToChgUI{
+    if(self.canChange){
+        self.currentAnsStatus = 1;
+        for (NSNumber* i in self.selecItems) {
+            int index = [i intValue];
+            if (index < self.answerBtns.count) {
+                [self.answerBtns[index] setSelected:YES];
+                [self.answerBtns[index] setBackgroundImage:[UIImage imageNamed:@"answer_dis"] forState:UIControlStateNormal];
+            }
+        }
+        
+        NSString* nstr = NSLocalizedString(@"Answer_modify", nil);
+        [self.resultBtn setBackgroundColor:[UIColor whiteColor]];
+        [self.resultBtn setTitle:nstr forState:UIControlStateNormal];
+        [self.resultBtn setTitleColor:[UIColor colorWithRed:53/255.0 green:123/255.0 blue:246/255.0 alpha:1.0] forState:UIControlStateNormal];
+        self.resultBtn.layer.borderWidth = 1;
+        
+        CGSize btnSize = [nstr sizeWithAttributes:@{NSFontAttributeName: [UIFont fontWithName:self.resultBtn.titleLabel.font.fontName size:self.resultBtn.titleLabel.font.pointSize]}];
+        if (btnSize.width - self.resultBtn.frame.size.width > 5) {
+            btnSize.width += 38;
+            
+            self.resultBtn.frame = CGRectMake(self.resultBtn.frame.origin.x - ((btnSize.width - self.resultBtn.frame.size.width) / 2), self.resultBtn.frame.origin.y, btnSize.width, self.resultBtn.frame.size.height);
+        }
+    }else{
+        self.currentAnsStatus = 2;
+        [self initResultViews];
+    }
+}
+
 -(void)resultSubmit{
     NSMutableArray<NSString*>* answers = [NSMutableArray<NSString*> new];
     for (NSNumber* item in self.selecItems) {
@@ -440,7 +479,6 @@ static const int s_btnSubmitWidth = 80;
             [answers addObject:self.answerDatas[index]];
         }
     }
-    self.strMykey = [answers componentsJoinedByString:@""];
     
     NSDate *date = [NSDate date];
     NSTimeInterval timestamp = date.timeIntervalSince1970;
