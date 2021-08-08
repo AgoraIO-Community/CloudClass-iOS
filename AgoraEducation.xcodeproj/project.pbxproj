@@ -36,6 +36,7 @@
 		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
 		7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4CD23FA735700AF1B4F /* InfoPlist.strings */; };
 		787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787A004125D10FC10063456F /* AudioToolbox.framework */; };
+		78ADF11A26C02FB200BF44F4 /* AnswerExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 78ADF11826C02FB200BF44F4 /* AnswerExtApp.m */; };
 		78D7314723B3964400D2146C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 78D7314523B3964300D2146C /* README.md */; };
 		78D7314823B3964400D2146C /* README.zh.md in Resources */ = {isa = PBXBuildFile; fileRef = 78D7314623B3964400D2146C /* README.zh.md */; };
 		78DFB61525AE93C100B01906 /* AgoraEducationHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB61425AE93C000B01906 /* AgoraEducationHTTPClient.m */; };
@@ -122,6 +123,8 @@
 		7878B4CE23FA735A00AF1B4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		787A004125D10FC10063456F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		78A3EA5E25640261003067AB /* AgoraEducation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AgoraEducation-Bridging-Header.h"; sourceTree = "<group>"; };
+		78ADF11826C02FB200BF44F4 /* AnswerExtApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnswerExtApp.m; sourceTree = "<group>"; };
+		78ADF11926C02FB200BF44F4 /* AnswerExtApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswerExtApp.h; sourceTree = "<group>"; };
 		78D7314523B3964300D2146C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		78D7314623B3964400D2146C /* README.zh.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.zh.md; sourceTree = "<group>"; };
 		78DFB61325AE93C000B01906 /* AgoraEducationHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEducationHTTPClient.h; sourceTree = "<group>"; };
@@ -308,6 +311,15 @@
 			path = Color;
 			sourceTree = "<group>";
 		};
+		78ADF11726C02FB200BF44F4 /* AnswerExtApp */ = {
+			isa = PBXGroup;
+			children = (
+				78ADF11826C02FB200BF44F4 /* AnswerExtApp.m */,
+				78ADF11926C02FB200BF44F4 /* AnswerExtApp.h */,
+			);
+			path = AnswerExtApp;
+			sourceTree = "<group>";
+		};
 		78D730C423B3853200D2146C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -412,6 +424,7 @@
 		8654871A261EDF830025ADCB /* ExtApps */ = {
 			isa = PBXGroup;
 			children = (
+				78ADF11726C02FB200BF44F4 /* AnswerExtApp */,
 				687AFBB02646BC19004E5A34 /* CountDownExtApp */,
 				8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */,
 				8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */,
@@ -677,6 +690,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				688809E82629358800B5FB2A /* MainViewController.swift in Sources */,
+				78ADF11A26C02FB200BF44F4 /* AnswerExtApp.m in Sources */,
 				78DFB61525AE93C100B01906 /* AgoraEducationHTTPClient.m in Sources */,
 				783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */,
 				687AFBB22646BC2C004E5A34 /* SingleTimeView.swift in Sources */,
