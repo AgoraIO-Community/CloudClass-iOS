@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ChatBar : UIView
 @property (nonatomic,weak) id<ChatBarDelegate> delegate;
-@property (nonatomic) UIView* parantView;
 @property (nonatomic) BOOL isAllMuted;
 @property (nonatomic) BOOL isMuted;
 @end
