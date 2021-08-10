@@ -320,6 +320,7 @@ static AgoraClassroomSDK *manager = nil;
         vc = [[AgoraSmallViewController alloc] init];
     }
     vc.vmConfig = config;
+    vc.host = [AgoraHTTPManager getBaseURL];
     vc.modalPresentationStyle = UIModalPresentationFullScreen;
 
     [AgoraEduTopVC.topVC presentViewController:vc

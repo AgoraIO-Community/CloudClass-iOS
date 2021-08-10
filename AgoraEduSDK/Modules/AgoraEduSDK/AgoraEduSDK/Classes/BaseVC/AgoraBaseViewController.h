@@ -93,6 +93,9 @@ NS_ASSUME_NONNULL_BEGIN
 // View
 @property (nonatomic, weak) AgoraBaseUIView *appView;
 
+// host
+@property (nonatomic, copy) NSString *host;
+
 // imp in AgoraBaseViewController+Room
 - (void)onShowErrorInfo:(AgoraEduContextError *)error;
 
