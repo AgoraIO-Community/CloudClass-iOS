@@ -281,7 +281,18 @@ private extension LoginViewController {
                                                                      right: 0),
                                                  language: "zh")
         countDown.image = UIImage(named: "countdown")
-        let apps = [countDown]
+        
+        let answerExt = AgoraExtAppConfiguration(appIdentifier: "io.agora.answer",
+                                                 extAppClass: AnswerExtApp.self,
+                                                 frame: UIEdgeInsets(top: 0,
+                                                                     left: 0,
+                                                                     bottom: 0,
+                                                                     right: 0),
+                                                 language: "zh")
+        answerExt.image = UIImage(named: "countdown")
+
+        let apps = [countDown, answerExt]
+
         AgoraClassroomSDK.registerExtApps(apps)
     }
 

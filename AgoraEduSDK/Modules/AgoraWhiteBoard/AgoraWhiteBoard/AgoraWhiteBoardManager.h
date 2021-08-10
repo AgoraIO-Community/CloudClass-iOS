@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
                                      config:(AgoraWhiteBoardConfiguration *)config;
 
 - (AgoraWhiteBoardStateModel *)getWhiteBoardStateModel;
+- (void)setWhiteBoardStateModel:(AgoraWhiteBoardStateModel *)state;
 
 // join
 - (void)joinWithOptions:(AgoraWhiteBoardJoinOptions *)options

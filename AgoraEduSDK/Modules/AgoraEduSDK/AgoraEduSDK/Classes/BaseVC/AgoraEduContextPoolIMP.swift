@@ -10,7 +10,9 @@ import AgoraEduContext
 import AgoraUIEduAppViews
 
 @objcMembers public class AgoraEduContextPoolIMP: NSObject {
-    private var tmp: AgoraEduContextPoolTmp?
+    private lazy var tmp: AgoraEduContextPoolTmp = {
+        return AgoraEduContextPoolTmp(self)
+    }()
     
     public weak var whiteBoardIMP: AgoraEduWhiteBoardContext?
     public weak var whiteBoardToolIMP: AgoraEduWhiteBoardToolContext?
@@ -28,21 +30,17 @@ import AgoraUIEduAppViews
 
     public override init() {
         super.init()
-        tmp = AgoraEduContextPoolTmp(self)
+    }
+    
+    public func eduContextPool() -> AgoraEduContextPool {
+        return self.tmp
     }
 }
 
 extension AgoraEduContextPoolIMP {
     public func agoraUIManager(_ viewType: AgoraEduContextAppType) -> AgoraUIManager {
-        if let pool = self.tmp {
-            return AgoraUIManager(viewType: viewType,
-                                  contextPool: pool)
-        } else {
-            let pool = AgoraEduContextPoolTmp(self)
-            self.tmp = pool
-            return AgoraUIManager(viewType: viewType,
-                                  contextPool: pool)
-        }
+        return AgoraUIManager(viewType: viewType,
+                              contextPool: self.tmp)
     }
 }
 

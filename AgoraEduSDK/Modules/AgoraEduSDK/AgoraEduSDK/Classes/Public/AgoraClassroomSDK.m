@@ -246,6 +246,7 @@ static AgoraClassroomSDK *manager = nil;
         roomStateConfig.userProperties = config.userProperties;
     }
 
+    // log rte
     [AgoraEduManager.shareManager initWithUserUuid:userUuid
                                           userName:userName
                                             roomId:roomUuid
@@ -256,6 +257,7 @@ static AgoraClassroomSDK *manager = nil;
         NSString *httpApi = @"preflight";
         [ApaasReporterWrapper startJoinRoomSubEventWithSubEvent:subEvent];
         
+        // 预检
         [AgoraEduManager.shareManager queryRoomStateWithConfig:roomStateConfig
                                                        success:^{
             // Report

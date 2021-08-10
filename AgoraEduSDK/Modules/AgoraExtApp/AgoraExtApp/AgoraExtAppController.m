@@ -189,11 +189,11 @@
     instance.delegate = self;
     item.instance = instance;
     
-    AgoraExtAppContext *context = [[AgoraExtAppContext alloc] initWithAppIdentifier:appIdentifier
-                                                                      localUserInfo:dirty.localUserInfo
-                                                                           roomInfo:dirty.roomInfo
-                                                                         properties:dirty.properties
-                                                                           language:item.language];
+    AgoraExtAppContext *context = [self getContextWithAppIdentifier:appIdentifier
+                                                      localUserInfo:dirty.localUserInfo
+                                                           roomInfo:dirty.roomInfo
+                                                         properties:dirty.properties
+                                                           language:item.language];
     
     [self.containerView addSubview:instance.view];
     instance.view.agora_x = item.layout.left;
@@ -204,6 +204,20 @@
     [self.containerView setHidden:NO];
     
     [instance extAppDidLoad:context];
+}
+
+- (AgoraExtAppContext *)getContextWithAppIdentifier:(NSString *)appIdentifier
+                                      localUserInfo:(AgoraExtAppUserInfo *)userInfo
+                                           roomInfo:(AgoraExtAppRoomInfo *)roomInfo
+                                         properties:(NSDictionary *)properties
+                                           language:(NSString *)language {
+
+    AgoraExtAppContext *context = [[AgoraExtAppContext alloc] initWithAppIdentifier:appIdentifier
+                                                                      localUserInfo:userInfo
+                                                                           roomInfo:roomInfo
+                                                                         properties:properties
+                                                                           language:language];
+    return context;
 }
 
 - (NSArray<AgoraExtAppInfo *> *)getExtAppInfos {

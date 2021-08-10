@@ -18,6 +18,9 @@ import EduSDK
                          didUpdateUsers userId: [String])
     
     func boardController(_ controller: AgoraBoardController,
+                         didUpdateFlexState state: [String: Any])
+    
+    func boardController(_ controller: AgoraBoardController,
                          didScenePathChanged path: String)
 
     func boardController(_ controller: AgoraBoardController,
@@ -50,6 +53,8 @@ import EduSDK
     private var currentScenePath: String = ""
     private var localCameraConfigs = [String: AgoraWhiteBoardCameraConfig]()
     
+    private var manager: AgoraWhiteBoardManager?
+
     public init(boardAppId: String,
                 boardId: String,
                 boardToken: String,
@@ -69,12 +74,14 @@ import EduSDK
         
         let config = AgoraWhiteBoardConfiguration()
         config.appId = boardAppId
-        let manager = AgoraWhiteBoardManager(coursewareDirectory: coursewareDirectory,
+        let boardManager = AgoraWhiteBoardManager(coursewareDirectory: coursewareDirectory,
                                              config: config)
-        boardContentView = manager.contentView
+        self.manager = boardManager
+        
+        boardContentView = boardManager.contentView
         boardVM = AgoraBoardVM(boardAppId: boardAppId,
                                userUuid: userUuid,
-                               manager: manager,
+                               manager: boardManager,
                                reportor: reportor,
                                cache: cache,
                                delegate: nil)
@@ -179,6 +186,21 @@ private extension AgoraBoardController {
 
 // MARK: - AgoraKitWhiteBoardListener
 extension AgoraBoardController: AgoraEduWhiteBoardContext {
+    public func whiteGlobalState() -> [String: Any] {
+        if let stateModel = self.manager?.getWhiteBoardStateModel(),
+           let state = stateModel.flexBoardState as? [String: Any] {
+            return state ?? [String: Any]()
+        }
+        return [String: Any]()
+    }
+
+    public func setWhiteGlobalState(_ state: [String: Any]) {
+        if let stateModel = self.manager?.getWhiteBoardStateModel() {
+            stateModel.flexBoardState = state
+            self.manager?.setWhiteBoardStateModel(stateModel)
+        }
+    }
+    
     public func onBoardResetSize() {
         boardVM.resetViewSize()
     }
@@ -356,6 +378,10 @@ extension AgoraBoardController: AgoraBoardVMDelegate {
         
         delegate?.boardController(self,
                                   didScenePathChanged: path)
+    }
+    
+    func didFlexStateUpdated(state: [String : Any]?) {
+        eventDispatcher.onWhiteGlobalStateChanged(state ?? [String : Any]())
     }
 }
 

@@ -66,6 +66,7 @@ TODO: Add long description of the pod here.
   s.dependency "AgoraUIEduBaseViews"
   s.dependency "AgoraUIBaseViews"
   s.dependency "AgoraExtApp"
+  s.dependency "AgoraEduExtApp"
   s.dependency "AgoraEduContext"
   s.dependency "AgoraWidget"
   s.dependency "Protobuf"

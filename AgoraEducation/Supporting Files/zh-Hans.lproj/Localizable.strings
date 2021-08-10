@@ -63,3 +63,18 @@ Disclaimer_detail = "Agora Education（“本产品”）是由Agora提供的一
 
 // countdown
 Countdown_title = "倒计时";
+
+// vote
+Vote_title = "投票";
+Vote_submit = "投票";
+Option_mul = "多选";
+Option_sing = "单选";
+
+//answer
+Answer_title = "答题器";
+Answer_sumbit = "提交答案";
+Answer_modify = "修改答案";
+Answer_myans = "我的答案：";
+Answer_right = "正确答案：";
+Answer_respondents = "已答题人数：";
+Answer_rate = "正确率：";

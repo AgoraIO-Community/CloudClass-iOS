@@ -21,6 +21,10 @@ extension AgoraWhiteBoardUIController: AgoraEduWhiteBoardHandler {
     
     @objc public func onSetLoadingVisible(_ visible: Bool) {
         boardView.setLoadingVisible(visible: visible)
+        
+        if !visible {
+            self.contextProvider?.controllerNeedWhiteBoardContext().setWhiteGlobalState(["A":["B":"C"]])
+        }
     }
     
     // progress 0-100
@@ -54,6 +58,10 @@ extension AgoraWhiteBoardUIController: AgoraEduWhiteBoardHandler {
     @objc public func onShowPermissionTips(_ granted: Bool) {
         let msg = granted ? AgoraKitLocalizedString("UnMuteBoardText") : AgoraKitLocalizedString("MuteBoardText")
         AgoraUtils.showToast(message: msg)
+    }
+    
+    func onWhiteGlobalStateChanged(_ state: [String : Any]) {
+        print("onWhiteGlobalStateChanged:\(state)")
     }
 }
 

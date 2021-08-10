@@ -19,7 +19,8 @@ def sourcePod
   pod 'AgoraExtApp', :path => 'AgoraEduSDK/Modules/AgoraExtApp/AgoraExtApp.podspec'
   pod 'AgoraWidget', :path => 'AgoraEduSDK/Modules/AgoraWidget/AgoraWidget.podspec'
   pod 'AgoraEduContext', :path => 'AgoraEduSDK/Modules/AgoraEduContext/AgoraEduContext.podspec'
-
+  pod 'AgoraEduExtApp', :path => 'AgoraEduSDK/Modules/AgoraEduExtApp/AgoraEduExtApp.podspec'
+  
   # if you use swift project, you just only change 'OC' to 'Swift'
   pod 'AgoraActionProcess', :path => 'AgoraEduSDK/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
 

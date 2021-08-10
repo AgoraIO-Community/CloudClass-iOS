@@ -32,6 +32,7 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
           needRoomInfo:(void(^) (AgoraExtAppRoomInfo *roomInfo))roomInfo;
 @end
 
+// 内部管理使用
 @interface AgoraExtAppsController : NSObject <AgoraExtAppDelegate>
 @property (nonatomic, weak) id<AgoraExtAppsControllerDataSource> dataSource;
 @property (nonatomic, strong, readonly) AgoraBaseUIView *containerView;
@@ -40,6 +41,11 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
 - (void)perExtAppPropertiesDidUpdate:(NSDictionary *)properties;
 - (void)userInfoDidUpdate:(AgoraExtAppUserInfo *)userInfo;
 - (void)roomInfoDidUpdate:(AgoraExtAppRoomInfo *)roomInfo;
+- (AgoraExtAppContext *)getContextWithAppIdentifier:(NSString *)appIdentifier
+                                      localUserInfo:(AgoraExtAppUserInfo *)userInfo
+                                           roomInfo:(AgoraExtAppRoomInfo *)roomInfo
+                                         properties:(NSDictionary *)properties
+                                           language:(NSString *)language;
 - (void)appsCommonDidUpdate:(NSDictionary<NSString *, id> *)appsCommonDic;
 - (NSInteger)willLaunchExtApp:(NSString *)appIdentifier;
 - (NSArray<AgoraExtAppInfo *> *)getExtAppInfos;

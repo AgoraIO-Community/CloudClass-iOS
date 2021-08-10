@@ -84,9 +84,15 @@
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 }
 
+- (AgoraEduContextPoolIMP *)contextPool {
+    if (_contextPool == nil) {
+        _contextPool = [AgoraEduContextPoolIMP new];
+    }
+    return _contextPool;
+}
+
 #pragma mark - Private ContextPool
 - (void)initContextPool {
-    self.contextPool = [AgoraEduContextPoolIMP new];
     self.contextPool.whiteBoardIMP = self.boardController;
     self.contextPool.whiteBoardToolIMP = self.boardController;
     self.contextPool.whiteBoardPageControlIMP = self.boardController;
@@ -362,7 +368,8 @@
 
 #pragma mark - ExtAppsController
 - (id<AgoraController>)createExtAppsController {
-    self.appsController = [[AgoraEduExtAppsController alloc] initWithUrlGroup:self.urlGroup];
+    self.appsController = [[AgoraEduExtAppsController alloc] initWithUrlGroup:self.urlGroup
+                                                                  contextPool:self.contextPool.eduContextPool];
     self.appsController.dataSource = self;
 
     if (AgoraManagerCache.share.extApps.count > 0) {
@@ -821,6 +828,7 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 
 - (void)updateExtApps:(AgoraRTEClassroom *)classroom {
     NSDictionary *extAppsCommonDic = classroom.roomProperties[@"extAppsCommon"];
+    
     if (extAppsCommonDic && extAppsCommonDic.count > 0) {
         [self.appsController appsCommonDidUpdate:extAppsCommonDic];
     }

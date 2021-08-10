@@ -239,6 +239,16 @@ extension AgoraUIEventDispatcher {
             object.onShowPermissionTips?(granted)
         }
     }
+    
+    @objc public func onWhiteGlobalStateChanged(_ state: [String: Any]) {
+        guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
+            return
+        }
+
+        observers.traverse(type: AgoraEduWhiteBoardHandler.self) { (object) in
+            object.onWhiteGlobalStateChanged?(state)
+        }
+    }
 }
 
 extension AgoraUIEventDispatcher: AgoraEduWhiteBoardPageControlHandler {
