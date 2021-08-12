@@ -61,9 +61,11 @@ static const int s_btnSubmitWidth = 80;
     if (NULL != students) {
         self.totalPersonnel = students.count;
         for (NSString* stuname in students) {
+            //根据总学生，查找已经答题的学生
             NSString* ssitKey = [NSString stringWithFormat:@"student%@", stuname];
             NSDictionary *ssit = [properties objectForKey:ssitKey];
             if (NULL != ssit) {
+                //计算答题人数
                 ++self.anwserPersonnel;
                 
                 BOOL fixMyAnswer = NO;
@@ -74,18 +76,22 @@ static const int s_btnSubmitWidth = 80;
                     [self.selecItems removeAllObjects];
                 }
                 
+                //获取当前学生的答题项
                 NSArray* answers = [ssit objectForKey:@"answer"];
                 if (nil != answers) {
                     if (fixMyAnswer) {
+                        //自己已经答题，则查找自己答题项
                         for (NSString* myans in answers) {
                             for (int i = 0; i < self.answerDatas.count; ++i) {
                                 if ([self.answerDatas[i] isEqualToString:myans]) {
                                     NSNumber* sel = [[NSNumber alloc] initWithInt: i];
                                     [self.selecItems addObject: sel];
+                                    break;
                                 }
                             }
                         }
                     }
+                    //计算正确率
                     if([self array:rightKey isEqualTo:answers]){
                         ++self.rightPersonnel;
                     }
@@ -504,6 +510,9 @@ static const int s_btnSubmitWidth = 80;
 
 - (void)initData:(NSDictionary *)properties {
     [self propertiesDidUpdate:properties];
+    
+    UIPanGestureRecognizer* pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(drag:)];
+    [self.view addGestureRecognizer:pan];
 }
 
 - (BOOL)array:(NSArray *)array1 isEqualTo:(NSArray *)array2 {
@@ -523,6 +532,34 @@ static const int s_btnSubmitWidth = 80;
     return YES;
 }
 
+- (void)drag:(UIPanGestureRecognizer *)recognizer {
+    if (![recognizer.view isKindOfClass:AgoraBaseUIView.class]) {
+        return;
+    }
+    AgoraBaseUIView *view = (AgoraBaseUIView *)recognizer.view;
+    
+    CGPoint trans = [recognizer translationInView:UIApplication.sharedApplication.keyWindow];
+    
+    CGFloat ori_x = view.center.x;
+    CGFloat ori_y = view.center.y;
+    
+    BOOL needXConstraint = (view.frame.origin.x + view.frame.size.width + trans.x > view.superview.frame.size.width) || view.frame.origin.x + trans.x < 0;
+    BOOL needYConstraint = (view.frame.origin.y + view.frame.size.height + trans.y > view.superview.frame.size.height) || view.frame.origin.y + trans.y < 0;
+    
+    CGFloat new_x = needXConstraint ? ori_x : (ori_x + trans.x);
+    CGFloat new_y = needYConstraint ? ori_y : (ori_y + trans.y);
+    
+    if (recognizer.state == UIGestureRecognizerStateChanged) {
+        [UIView animateWithDuration:0
+                         animations:^{
+            recognizer.view.center = CGPointMake(new_x,
+                                                 new_y);
+            [recognizer setTranslation:CGPointZero
+                                inView:recognizer.view];
+        }];
+    }
+}
+
 #pragma mark - Timer
 - (void)startTimer {
     [self stopTimer];
@@ -536,7 +573,7 @@ static const int s_btnSubmitWidth = 80;
                                           block:^(NSTimer * _Nonnull timer) {
         weakSelf.countDown += 1;
         
-        weakSelf.countDownLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)(self.countDown / 3600), (long)(self.countDown / 60), (long)(self.countDown % 60)];
+        weakSelf.countDownLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)(weakSelf.countDown / 3600), (long)(weakSelf.countDown / 60), (long)(weakSelf.countDown % 60)];
         
 //        if (weakSelf.countDown <= 0) {
 //            [weakSelf stopTimer];
