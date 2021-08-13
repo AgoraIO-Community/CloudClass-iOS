@@ -8,6 +8,8 @@
 
 ChatText = "聊天";
 ChatAnnouncement= "公告";
+ChatTeacher= "老师";
+ChatAssistant= "助教";
 ChatEmptyText = "还没有消息";
 ChatPlaceholderText = "请输入消息";
 ChatNoAnnouncement = "暂无公告";
