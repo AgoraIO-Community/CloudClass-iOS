@@ -57,6 +57,13 @@ static const NSString* kChatRoomId = @"chatroomId";
     [self layoutViews];
 }
 
+- (void)widgetDidReceiveMessage:(NSString *)message
+{
+    if([message isEqualToString:@"min"]) {
+        [self chatTopViewDidClickHide];
+    }
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.chatManager logout];
