@@ -26,7 +26,7 @@ static const int s_btnSubmitWidth = 80;
 @property (assign, nonatomic) NSInteger totalPersonnel;//总人数
 @property (assign, nonatomic) NSInteger rightPersonnel;//正确的人员数
 @property (nonatomic, copy) NSString *strRightkey;      //正确答案
-@property (nonatomic, copy) NSString *strMykey;      //我的答案
+@property (nonatomic, copy) NSString *startTime;     //开始答题时间戳
 @end
 
 @implementation AnswerExtApp
@@ -51,8 +51,8 @@ static const int s_btnSubmitWidth = 80;
         self.strRightkey = [rightKey componentsJoinedByString:@""];
     }
     
-    NSString *startTime = properties[@"startTime"];
-    NSInteger start = [startTime integerValue];
+    self.startTime = properties[@"startTime"];
+    NSInteger start = [self.startTime integerValue];
     NSInteger current = [[NSDate date] timeIntervalSince1970];
     self.countDown = current - start;
     
@@ -127,7 +127,6 @@ static const int s_btnSubmitWidth = 80;
     self.currentAnsType = 0;
     self.countDown = 0;
     self.currentAnsStatus = -1;
-    self.strMykey = @"";
     if (nil == self.selecItems) {
         self.selecItems = [NSMutableArray<NSNumber*> new];
     }
@@ -203,11 +202,11 @@ static const int s_btnSubmitWidth = 80;
 
 - (void)initResultViews {
     [self stopTimer];
-    self.strMykey = @"";
+    NSString* strMyAnwser = @"";
     for (NSNumber* item in self.selecItems) {
         int index = [item intValue];
         if (index <= self.answerDatas.count) {
-            self.strMykey = [self.strMykey stringByAppendingString:self.answerDatas[index]];
+            strMyAnwser = [strMyAnwser stringByAppendingString:self.answerDatas[index]];
         }
     }
     [self.answerBtns removeAllObjects];
@@ -308,7 +307,7 @@ static const int s_btnSubmitWidth = 80;
         
         UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(0,posy,60,posh)];
         label1.font = [UIFont systemFontOfSize:13.0];
-        label1.attributedText = [[NSMutableAttributedString alloc] initWithString:self.strMykey attributes: @{NSForegroundColorAttributeName: [UIColor colorWithRed:240/255.0 green:76/255.0 blue:54/255.0 alpha:1.0]}];
+        label1.attributedText = [[NSMutableAttributedString alloc] initWithString:strMyAnwser attributes: @{NSForegroundColorAttributeName: [UIColor colorWithRed:240/255.0 green:76/255.0 blue:54/255.0 alpha:1.0]}];
         label1.textAlignment = NSTextAlignmentLeft;
         [viewCenter addSubview:label1];
         [label1 sizeToFit];
@@ -490,7 +489,7 @@ static const int s_btnSubmitWidth = 80;
     NSTimeInterval timestamp = date.timeIntervalSince1970;
     NSString *replyTime = [NSString stringWithFormat:@"%ld", (long)timestamp];
     NSString *idKey = [NSString stringWithFormat:@"student%@", self.localUserInfo.userUuid];
-    NSDictionary *properties = @{idKey: @{@"answer":answers,@"replyTime":replyTime}};
+    NSDictionary *properties = @{idKey: @{@"answer":answers,@"replyTime":replyTime,@"startTime":self.startTime}};
 
     [self updateProperties:properties success:^{
         NSLog(@"answer-- update properties successs");
