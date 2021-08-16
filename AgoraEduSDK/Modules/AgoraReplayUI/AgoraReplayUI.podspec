@@ -14,6 +14,6 @@ Pod::Spec.new do |spec|
   spec.resources = "AgoraReplayUI/**/*.{png,xcassets,xib,bundle}"
  
   spec.dependency "AgoraReplay"
-  spec.dependency "Whiteboard", "2.13.5"
+  spec.dependency "Whiteboard", "2.13.22"
 
 end
