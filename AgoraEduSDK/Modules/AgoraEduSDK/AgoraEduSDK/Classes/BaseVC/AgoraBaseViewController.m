@@ -156,7 +156,7 @@
         [ApaasReporterWrapper localUserJoin];
         
         [manager getClassroomInfoWithSuccess:^(AgoraRTEClassroom * _Nonnull room) {
-            [weakself updateStartTimeWithRoomProperties:room.roomProperties];
+            [weakself updateStartTimeWithRoom:room];
             [weakself flexRoomPropsInitialize:room];
             [weakself updateExtApps:room];
             [weakself.widgetsController updateRoomProperties:room.roomProperties];
@@ -499,8 +499,7 @@ connectionStateChanged:(AgoraRTEConnectionState)state {
                        classroom:(AgoraRTEClassroom *)classroom
                            cause:(NSDictionary * _Nullable)cause
                     operatorUser:(AgoraRTEBaseUser *)operatorUser {
-    // update start time
-    [self updateStartTimeWithRoomProperties:classroom.roomProperties];
+    [self updateStartTimeWithRoom:classroom];
     
     [self updateExtApps:classroom];
     [self.screenShareController updateScreenSelectedProperties:cause];
@@ -547,6 +546,7 @@ roomChatMessageReceived:(AgoraRTETextMessage *)textMessage {
         }
         case AgoraRTEClassroomChangeTypeCourseState:
             [self updateClassState];
+            [self updateStartTimeWithRoom:classroom];
             break;
         default:
             break;
@@ -1037,20 +1037,18 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
     return _widgetsController;
 }
 
-- (void)updateStartTimeWithRoomProperties:(NSDictionary *)properties {
-    // update start time
+- (void)updateStartTimeWithRoom:(AgoraRTEClassroom *)room {
     AgoraRoomStateInfoModel *state = (AgoraRoomStateInfoModel *)[AgoraManagerCache share].roomStateInfoModel;
     
-    if (!state) {
-        return;
-    }
-    
-    NSDictionary *schedule = properties[@"schedule"];
-    NSNumber *number = schedule[@"startTime"];
-    
-    if (number) {
-        state.startTime = number.integerValue;
+    if (room.roomState.courseState != AgoraRTECourseStateDefault) {
+        NSDictionary *schedule = room.roomProperties[@"schedule"];
+        NSNumber *number = schedule[@"startTime"];
+        
+        if (number) {
+            state.startTime = number.integerValue;
+        }
+    } else {
+        state.startTime = room.roomState.startTime;
     }
 }
-
 @end
