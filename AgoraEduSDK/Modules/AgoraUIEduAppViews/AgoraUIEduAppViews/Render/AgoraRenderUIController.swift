@@ -31,6 +31,8 @@ import AgoraEduContext
         self.viewType = viewType
         self.contextProvider = contextProvider
         self.eventRegister = eventRegister
+        
+        self.containerView.backgroundColor = UIColor(rgb: 0xF9F9FC)
     }
     
     func updateUserView(_ view: AgoraUIUserView,

@@ -10,16 +10,23 @@ import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 
+protocol AgoraHandsUpUIControllerDelegate: NSObjectProtocol {
+    func handsUpController(_ controller: AgoraHandsUpUIController,
+                           didHandsPressed: Bool)
+}
+
 class AgoraHandsUpUIController: NSObject, AgoraUIController {
 
-    var containerView = AgoraUIControllerContainer(frame: .zero)
+    private weak var delegate: AgoraHandsUpUIControllerDelegate?
+    
+    var containerView = AgoraHandsUpContainer(frame: .zero)
     var isCoHost: Bool = false {
         didSet {
             self.handsUpView.isCoHost = isCoHost
         }
     }
     
-    private let handsUpView = AgoraHandsUpView(frame: .zero)
+    let handsUpView = AgoraHandsUpView(frame: .zero)
 
     private(set) var viewType: AgoraEduContextAppType
     private weak var contextProvider: AgoraControllerContextProvider?
@@ -27,11 +34,13 @@ class AgoraHandsUpUIController: NSObject, AgoraUIController {
     
     init(viewType: AgoraEduContextAppType,
          contextProvider: AgoraControllerContextProvider,
-         eventRegister: AgoraControllerEventRegister) {
+         eventRegister: AgoraControllerEventRegister,
+         delegate: AgoraHandsUpUIControllerDelegate) {
 
         self.viewType = viewType
         self.contextProvider = contextProvider
         self.eventRegister = eventRegister
+        self.delegate = delegate
         
         super.init()
         initViews()
@@ -39,9 +48,19 @@ class AgoraHandsUpUIController: NSObject, AgoraUIController {
         initData()
     }
     
+    func updateMenu(width: CGFloat, height: CGFloat) {
+        self.handsUpView.updateLayout(width: width, height: height)
+    }
+    
     private func initData() {
         self.eventRegister?.controllerRegisterHandsUpEvent(self)
         handsUpView.context = self.contextProvider?.controllerNeedHandsUpContext()
+        
+        handsUpView.handsPressedBlock = { [weak self] in
+            if let `self` = self {
+                self.delegate?.handsUpController(self, didHandsPressed: true)
+            }
+        }
     }
 
     private func initViews() {
@@ -84,5 +103,17 @@ extension AgoraHandsUpUIController: AgoraEduHandsUpHandler {
      */
     public func onShowHandsUpTips(_ message: String) {
         self.handsUpView.onShowHandsUpTips(message)
+    }
+}
+
+class AgoraHandsUpContainer: AgoraUIControllerContainer {
+    public override func hitTest(_ point: CGPoint,
+                                 with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+        if hitView == self {
+            return nil
+        }
+        
+        return hitView
     }
 }

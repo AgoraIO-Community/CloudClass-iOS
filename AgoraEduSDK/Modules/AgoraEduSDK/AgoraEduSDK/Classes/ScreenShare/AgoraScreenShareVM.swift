@@ -130,51 +130,9 @@ extension AgoraScreenShareVM {
                 successBlock(AgoraScreenShareState.stop, nil)
                 return
             }
-
-            let selectedBlock = { [weak self] (isSelected: Bool) -> Void in
-                guard let `self` = self else {
-                    return
-                }
-                
-                // step2-2: 没有切换好，隐藏
-                if !isSelected {
-                    successBlock(AgoraScreenShareState.unSelected, rteStreamUuid)
-                    return
-                }
-                
-                // step3: 判断是否有rtc流
-                if self.screenRTCState == .offLine {
-                    successBlock(AgoraScreenShareState.pause, rteStreamUuid)
-                } else if self.screenRTCState == .onLine {
-                    successBlock(AgoraScreenShareState.start, rteStreamUuid)
-                }
-            }
             
-            // step2-0:判断scenepath & roomProperties
-            var isScenePathSelected = self.scenePath.contains("screenShare")
-            // step2-1:不是屏幕分享path，那就再查看后台roomProperty
-            if !isScenePathSelected {
-                AgoraEduManager.share().roomManager?.getClassroomInfo(success: { rteClassroom in
-                    
-                    
-                    guard let screen = rteClassroom.roomProperties["screen"] as? Dictionary<String, Any>,
-                        let selected = screen["selected"] as? Int else {
-                        
-                        selectedBlock(false)
-                        return
-                    }
+            successBlock(AgoraScreenShareState.start, streamUuid)
 
-                    isScenePathSelected = (selected == 1)
-                    selectedBlock(isScenePathSelected)
-                    
-                }, failure: { [weak self] (error) in
-                    if let err = self?.kitError(error) {
-                        failureBlock?(err)
-                    }
-                })
-            } else {
-                selectedBlock(isScenePathSelected)
-            }
         } failureBlock: { (error) in
             failureBlock?(error)
         }

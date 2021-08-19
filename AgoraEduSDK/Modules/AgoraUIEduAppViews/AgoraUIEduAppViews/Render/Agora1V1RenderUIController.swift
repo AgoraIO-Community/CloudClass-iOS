@@ -158,31 +158,6 @@ extension Agora1V1RenderUIController: AgoraUIUserViewDelegate {
             break
         }
     }
-    
-    func userView(_ userView: AgoraUIUserView,
-                  didPressVideoButton button: AgoraBaseUIButton,
-                  indexOfUserList index: Int) {
-        switch index {
-        case teacherIndex:
-            guard let info = teacherInfo,
-                  info.isSelf else {
-                return
-            }
-            
-            button.isSelected.toggle()
-            userContext?.muteVideo(button.isSelected)
-        case studentIndex:
-            guard let info = studentInfo,
-                  info.isSelf else {
-                return
-            }
-            
-            button.isSelected.toggle()
-            userContext?.muteVideo(button.isSelected)
-        default:
-            break
-        }
-    }
 }
 
 // MARK: - AgoraEduUserHandler

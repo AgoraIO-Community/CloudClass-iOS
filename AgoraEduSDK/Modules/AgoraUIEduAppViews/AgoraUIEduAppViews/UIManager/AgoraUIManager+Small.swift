@@ -13,32 +13,38 @@ extension AgoraUIManager {
     func addSmallContainerViews() {
         guard let `room` = self.room,
               let `whiteBoard` = self.whiteBoard,
-              let `chat` = self.chat,
               let `shareScreen` = self.shareScreen,
               let `renderSmall` = self.renderSmall,
-              let `handsUp` = self.handsUp,
-              let `userList` = self.userList else  {
+              let `userList` = self.userList,
+              let `set` = self.set else  {
             return
         }
         
-        appView.addSubview(room.containerView)
-        appView.addSubview(renderSmall.containerView)
-        appView.addSubview(whiteBoard.containerView)
-        whiteBoard.containerView.addSubview(shareScreen.containerView)
-        whiteBoard.containerView.sendSubviewToBack(shareScreen.containerView)
-        appView.addSubview(chat.containerView)
-        appView.addSubview(handsUp.containerView)
-        appView.addSubview(userList.containerView)
+        appContainerView.addSubview(room.containerView)
+        appContainerView.addSubview(renderSmall.containerView)
+        appContainerView.addSubview(whiteBoard.containerView)
+        appContainerView.addSubview(shareScreen.containerView)
+        
+        self.initMenuView()
+        appContainerView.addSubview(self.menuView)
+        self.menuView.agora_right = 0
+        self.menuView.agora_bottom = 0
+
+        appContainerView.addSubview(userList.containerView)
+        appContainerView.addSubview(set.containerView)
+
+        set.containerView.isHidden = true
+        whiteBoard.boardPageControl.isHidden = true
     }
 
     func layoutSmallContainerViews() {
         guard let `room` = self.room,
               let `whiteBoard` = self.whiteBoard,
-              let `chat` = self.chat,
               let `shareScreen` = self.shareScreen,
               let `renderSmall` = self.renderSmall,
               let `handsUp` = self.handsUp,
-              let `userList` = self.userList else  {
+              let `userList` = self.userList,
+              let `set` = self.set else  {
             return
         }
         
@@ -46,84 +52,187 @@ extension AgoraUIManager {
         
         room.containerView.agora_x = 0
         room.containerView.agora_right = 0
-        room.containerView.agora_height = isPad ? 44 : 34
-        room.containerView.agora_safe_y = 0
+        room.containerView.agora_height = AgoraNavBarHeight
+        room.containerView.agora_y = 0
         
-        let ViewGap: CGFloat = 2
+        let top = AgoraNavBarHeight + AgoraVideoGapY
         
-        let top = (isPad ? 44 : 34) + ViewGap
-        
-        let size = renderSmall.teacherViewSize
-        let renderListHeight = renderSmall.renderListViewHeight
-        
-        renderSmall.containerView.agora_safe_x = 0
-        renderSmall.containerView.agora_safe_y = top
-        renderSmall.containerView.agora_safe_right = 0
-        renderSmall.containerView.agora_height = max(size.height,
-                                                     renderListHeight)
+        let size = renderSmall.renderViewSize
+        renderSmall.containerView.agora_x = 0
+        renderSmall.containerView.agora_y = top
+        renderSmall.containerView.agora_right = 0
+        renderSmall.containerView.agora_height = size.height
 
-        chat.containerView.agora_width = 56
-        chat.containerView.agora_height = 56
-        chat.containerView.agora_safe_bottom = 2
-        chat.containerView.agora_safe_right = 10
-        if let message = ["isMin": 1].jsonString() {
-            chat.widgetDidReceiveMessage(message)
-        }
+        whiteBoard.containerView.agora_x = 0
+        whiteBoard.containerView.agora_height = AgoraBoardHeight
+        whiteBoard.containerView.agora_bottom = 0
+        whiteBoard.containerView.agora_right = 0
         
         shareScreen.containerView.agora_x = 0
-        shareScreen.containerView.agora_y = 0
+        shareScreen.containerView.agora_height = AgoraBoardHeight
         shareScreen.containerView.agora_bottom = 0
         shareScreen.containerView.agora_right = 0
-
-        whiteBoard.containerView.agora_safe_x = 0
-        whiteBoard.containerView.agora_safe_y = renderSmall.containerView.agora_safe_y + renderSmall.containerView.agora_height + 2
-        whiteBoard.containerView.agora_safe_bottom = 0
-        whiteBoard.containerView.agora_safe_right = 0
         
-        handsUp.containerView.agora_safe_right = chat.containerView.agora_safe_right + chat.containerView.agora_width + 10 - 8
-        handsUp.containerView.agora_safe_bottom = 2
-
         userList.containerView.agora_width = 548
         userList.containerView.agora_height = 312
-        if isPad {
-            userList.containerView.agora_center_x = -(size.width * 0.5)
-            userList.containerView.agora_center_y = 0
-        } else {
-            userList.containerView.agora_safe_x = whiteBoard.containerView.agora_safe_x + 60
-            userList.containerView.agora_safe_y = top
+        userList.containerView.agora_safe_bottom = 15
+        userList.containerView.agora_right = isPad ? 60 : 50
+        
+        set.containerView.agora_width = 280
+        set.containerView.agora_height = 256
+        set.containerView.agora_safe_bottom = 15
+        set.containerView.agora_right = isPad ? 60 : 50
+    }
+    
+    // TODO: 后面需要把menu都抽取一个单独的Controller
+    func initMenuView() {
+        
+        guard let `handsUp` = self.handsUp else  {
+            return
+        }
+
+        // menu
+        let isPad = AgoraKitDeviceAssistant.OS.isPad
+        let MenuSize = CGSize(width: isPad ? 54 : 42,
+                              height: isPad ? 54 : 42)
+        let MenuRight: CGFloat = 4
+        let MenuGap: CGFloat = 0
+        let MenuBottom: CGFloat = 7
+        // handsUp比较特殊， 宽高由子view填充
+        handsUp.containerView.tag = 1
+        handsUp.containerView.isUserInteractionEnabled = false
+        menuView.addSubview(handsUp.containerView)
+        handsUp.containerView.agora_safe_bottom = MenuBottom
+        handsUp.containerView.agora_right = MenuRight
+        handsUp.updateMenu(width: MenuSize.width,
+                           height: MenuSize.height)
+        
+        // ChatMenu
+        let chatMenu = AgoraBaseUIButton()
+        chatMenu.setBackgroundImage(AgoraKitImage("menu_chat_0"),
+                                    for: .normal)
+        chatMenu.setBackgroundImage(AgoraKitImage("menu_chat_1"),
+                                    for: .selected)
+        chatMenu.setBackgroundImage(AgoraKitImage("menu_chat_1"),
+                                    for: .highlighted)
+        chatMenu.addTarget(self,
+                           action: #selector(onChatPressed(_:)),
+                           for: .touchUpInside)
+        chatMenu.tag = 2
+        chatMenu.isUserInteractionEnabled = false
+        menuView.insertSubview(chatMenu, at: 0)
+        chatMenu.agora_width = MenuSize.width
+        chatMenu.agora_height = MenuSize.height
+        chatMenu.agora_safe_bottom = MenuBottom + 1 * (MenuSize.height + MenuGap)
+        chatMenu.agora_right = MenuRight
+        
+        // UserListMenu
+        let userListMenu = AgoraBaseUIButton()
+        userListMenu.setBackgroundImage(AgoraKitImage("menu_userlist_0"),
+                                        for: .normal)
+        userListMenu.setBackgroundImage(AgoraKitImage("menu_userlist_1"),
+                                        for: .selected)
+        userListMenu.setBackgroundImage(AgoraKitImage("menu_userlist_1"),
+                                        for: .highlighted)
+        userListMenu.addTarget(self,
+                               action: #selector(onUserListPressed(_:)),
+                               for: .touchUpInside)
+        userListMenu.tag = 3
+        menuView.insertSubview(userListMenu, at: 0)
+        userListMenu.agora_width = MenuSize.width
+        userListMenu.agora_height = MenuSize.height
+        userListMenu.agora_safe_bottom = MenuBottom + 2 * (MenuSize.height + MenuGap)
+        userListMenu.agora_right = MenuRight
+        
+        // LogMenu
+        let logMenu = AgoraBaseUIButton()
+        logMenu.setBackgroundImage(AgoraKitImage("menu_log_0"),
+                                   for: .normal)
+        logMenu.setBackgroundImage(AgoraKitImage("menu_log_1"),
+                                   for: .highlighted)
+        logMenu.addTarget(self,
+                          action: #selector(onLogPressed(_:)),
+                          for: .touchUpInside)
+        logMenu.tag = 4
+        menuView.insertSubview(logMenu, at: 0)
+        logMenu.agora_width = MenuSize.width
+        logMenu.agora_height = MenuSize.height
+        logMenu.agora_safe_bottom = MenuBottom + 3 * (MenuSize.height + MenuGap)
+        logMenu.agora_right = MenuRight
+        
+        // SetMenu
+        let setMenu = AgoraBaseUIButton()
+        setMenu.setBackgroundImage(AgoraKitImage("menu_set_0"),
+                                   for: .normal)
+        setMenu.setBackgroundImage(AgoraKitImage("menu_set_1"),
+                                   for: .selected)
+        setMenu.setBackgroundImage(AgoraKitImage("menu_set_1"),
+                                   for: .highlighted)
+        setMenu.addTarget(self,
+                          action: #selector(onSetPressed(_:)),
+                          for: .touchUpInside)
+        setMenu.tag = 5
+        menuView.insertSubview(setMenu, at: 0)
+        setMenu.agora_width = MenuSize.width
+        setMenu.agora_height = MenuSize.height
+        setMenu.agora_safe_bottom = MenuBottom + 4 * (MenuSize.height + MenuGap)
+        setMenu.agora_right = MenuRight
+        
+        // Container Fill
+        setMenu.agora_x = 0
+        setMenu.agora_y = 0
+    }
+    // 举手和聊天按钮 需要 加入成功后才可以点击
+    func roomJoined() {
+        self.menuView.viewWithTag(1)?.isUserInteractionEnabled = true
+        self.menuView.viewWithTag(2)?.isUserInteractionEnabled = true
+    }
+    
+    func onChatPressed() {
+        let btn = menuView.viewWithTag(2) as! AgoraBaseUIButton
+        onChatPressed(btn)
+    }
+    
+    func onChatPressed(_ sender: AgoraBaseUIButton) {
+        let isSelected = sender.isSelected
+        onMenuPressed()
+    
+        sender.isSelected = !isSelected
+        if sender.isSelected {
+            self.hxChat?.containerView.isHidden = false
         }
     }
     
-    func layoutSmallView(_ isFullScreen: Bool) {
-        guard let `renderSmall` = self.renderSmall,
-              let `whiteBoard` = self.whiteBoard,
-              let `chat` = self.hxChat else {
-            return
+    func onUserListPressed(_ sender: AgoraBaseUIButton) {
+        let isSelected = sender.isSelected
+        
+        onMenuPressed()
+        sender.isSelected = !isSelected
+        if sender.isSelected {
+            self.userList?.containerView.isHidden = false
         }
-        
-        renderSmall.updateRenderView(isFullScreen)
-        
-        // update
-        let whiteBoardY = isFullScreen ? renderSmall.containerView.agora_safe_y : renderSmall.containerView.agora_safe_y + renderSmall.containerView.agora_height + 2
-        whiteBoard.containerView.agora_safe_y = whiteBoardY
-        chat.containerView.agora_safe_y = whiteBoardY
-        
-        UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.appView.layoutSubviews()
+    }
+    func onLogPressed(_ sender: AgoraBaseUIButton) {
+        onMenuPressed()
+        room?.uploadLog()
+    }
+    func onSetPressed(_ sender: AgoraBaseUIButton) {
+        let isSelected = sender.isSelected
+        onMenuPressed()
+        sender.isSelected = !isSelected
+        if sender.isSelected {
+            self.set?.containerView.isHidden = false
         }
     }
     
-    func resetSmallHandsUpLayout() {
-        guard let `chat` = self.hxChat,
-              let `handsUp` = self.handsUp else {
-            return
+    // 重置menu状态
+    func onMenuPressed() {
+        for btn in self.menuView.subviews where btn is AgoraBaseUIButton {
+            (btn as? AgoraBaseUIButton)?.isSelected = false
         }
-        
-        let right = chat.containerView.agora_safe_right + chat.containerView.agora_width + 10 - 8
-        handsUp.containerView.agora_safe_right = right
-        
-        UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.appView.layoutSubviews()
-        }
+
+        self.hxChat?.containerView.isHidden = true
+        self.userList?.containerView.isHidden = true
+        self.set?.containerView.isHidden = true
     }
 }

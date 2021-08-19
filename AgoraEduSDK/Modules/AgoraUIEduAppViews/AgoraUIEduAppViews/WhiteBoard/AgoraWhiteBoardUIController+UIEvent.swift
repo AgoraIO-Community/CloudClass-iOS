@@ -100,7 +100,6 @@ extension AgoraWhiteBoardUIController: AgoraBoardPageControlDelegate {
 extension AgoraWhiteBoardUIController {
     func noBoardPermissionTools(_ viewType: AgoraEduContextAppType) {
         switch viewType {
-        case .small: fallthrough
         case .lecture:
             let image = getImage("icon-花名册-default")
             let selectedImage = getImage("icon-花名册-actived")
@@ -119,8 +118,9 @@ extension AgoraWhiteBoardUIController {
             
             boardToolsView.registerToolItems(list,
                                               selectedIndex: 0)
-            boardToolsView.isHidden = false
+            boardToolsView.isHidden = isScreenVisible
             boardToolsViewHeight(animation: true)
+        case .small: fallthrough
         case .oneToOne:
             boardToolsView.isHidden = true
         }
@@ -227,14 +227,15 @@ extension AgoraWhiteBoardUIController {
                 self.delegate?.whiteBoard(self,
                                           didPresseStudentListButton: button)
             }
-            list.append(studentListItem)
+            // 花名册现在放到外面了
+//            list.append(studentListItem)
         }
         
 //        if let extApps = extAppItems() {
 //            list.append(contentsOf: extApps)
 //        }
         
-        boardToolsView.isHidden = false
+        boardToolsView.isHidden = isScreenVisible
         
         boardToolsView.registerToolItems(list,
                                          selectedIndex: self.boardToolsState.selectedItem.rawValue)

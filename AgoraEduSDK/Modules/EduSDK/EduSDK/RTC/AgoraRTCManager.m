@@ -107,7 +107,6 @@ static AgoraRTCManager *manager = nil;
     [self.rtcEngineKit disableLastmileTest];
     
     [self.threadTimer start];
-
 }
 
 - (int)joinChannelByToken:(NSString * _Nullable)token channelId:(NSString * _Nonnull)channelId info:(NSString * _Nullable)info uid:(NSUInteger)uid {
@@ -637,7 +636,7 @@ static AgoraRTCManager *manager = nil;
     
     [AgoraRTELogService logMessageWithDescribe:@"setParameters:" message:@{@"options":AgoraRTCNoNullString(options), @"code":@(code)}];
     
-    return [self.rtcEngineKit setParameters:options];
+    return code;
 }
 
 + (NSString *_Nullable)getErrorDescription:(NSInteger)code {

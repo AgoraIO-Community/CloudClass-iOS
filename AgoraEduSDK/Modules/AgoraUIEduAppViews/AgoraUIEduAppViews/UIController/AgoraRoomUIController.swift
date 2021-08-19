@@ -11,8 +11,8 @@ import AgoraUIBaseViews
 import AgoraEduContext
 
 protocol AgoraRoomUIControllerDelegate: NSObjectProtocol {
-    func roomController(_ controller: AgoraRoomUIController,
-                         didClicked button: AgoraBaseUIButton)
+//    func roomController(_ controller: AgoraRoomUIController,
+//                         didClicked button: AgoraBaseUIButton)
 }
 
 class AgoraRoomUIController: NSObject, AgoraUIController {
@@ -41,13 +41,12 @@ class AgoraRoomUIController: NSObject, AgoraUIController {
         initViews()
         initLayout()
         observeEvent(register: eventRegister)
-        observeUI()
     }
 }
 
 private extension AgoraRoomUIController {
     func initViews() {
-        containerView.backgroundColor = .clear
+        containerView.backgroundColor = .white
         containerView.addSubview(navigationBar)
     }
     
@@ -62,18 +61,8 @@ private extension AgoraRoomUIController {
         register.controllerRegisterRoomEvent(self)
     }
     
-    func observeUI() {
-        navigationBar.setButton.tap { [unowned self] (button) in
-            self.delegate?.roomController(self, didClicked: button)
-        }
-        
-        navigationBar.logButton.tap { [unowned self] (button) in
-            self.context?.uploadLog()
-        }
-    }
-    
-    public func updateSetInteraction(enabled: Bool) {
-        navigationBar.setButton.isUserInteractionEnabled = enabled
+    public func uploadLog() {
+        self.context?.uploadLog()
     }
 }
 

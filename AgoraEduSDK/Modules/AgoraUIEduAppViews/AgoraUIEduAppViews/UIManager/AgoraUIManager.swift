@@ -19,6 +19,7 @@ public var isDebug = false
     public let viewType: AgoraEduContextAppType
     public let contextPool: AgoraEduContextPool
     public let appView = AgoraBaseUIView(frame: .zero)
+    public let appContainerView = AgoraBaseUIView(frame: .zero)
     
     var room: AgoraRoomUIController?
     var set: AgoraSetUIController?
@@ -26,6 +27,9 @@ public var isDebug = false
     var chat: AgoraEduWidget?
     var shareScreen: AgoraScreenUIController?
     var hxChat: AgoraBaseWidget?
+    
+    // TODO: 抽取一个AgoraUIController
+    public let menuView = AgoraBaseUIView(frame: .zero)
     
     // 1v1
     var render1V1: Agora1V1RenderUIController?
@@ -40,9 +44,6 @@ public var isDebug = false
     // variable
     var isFullScreen = true
     var coHostCount = 0
-    
-    // 距离上面的值， 等于navView的高度
-    var renderTop: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 44 : 34
 
     public init(viewType: AgoraEduContextAppType,
                 contextPool: AgoraEduContextPool) {
@@ -54,7 +55,7 @@ public var isDebug = false
             let bundle = Bundle(for: AgoraUIManager.classForCoder())
             if let v = bundle.loadNibNamed("DebugView", owner: nil , options: nil)?.first as? DebugView {
                 v.contextPool = contextPool
-                appView.addSubview(v)
+                appContainerView.addSubview(v)
             }
             return
         }
@@ -69,7 +70,17 @@ public var isDebug = false
     }
     
     func loadView() {
-        appView.backgroundColor = UIColor(rgb: 0xf8f8fc)
+        appView.backgroundColor = UIColor.black
+        
+        appView.addSubview(appContainerView)
+        appContainerView.backgroundColor = UIColor(rgb: 0xF9F9FC)
+         
+        let widthSide = (AgoraWidth - AgoraRealMaxWidth) * 0.5
+        let heightSide = (AgoraHeight - AgoraRealMaxHeight) * 0.5
+        appContainerView.agora_x = widthSide
+        appContainerView.agora_right = widthSide
+        appContainerView.agora_y = heightSide
+        appContainerView.agora_bottom = heightSide
     }
     
     func initControllers() {
@@ -103,7 +114,8 @@ public var isDebug = false
             
             self.handsUp = AgoraHandsUpUIController(viewType: viewType,
                                                     contextProvider: self,
-                                                    eventRegister: self)
+                                                    eventRegister: self,
+                                                    delegate: self)
             
             self.privateChat = AgoraPrivateChatController(viewType: viewType,
                                                           contextProvider: self,
@@ -120,7 +132,8 @@ public var isDebug = false
             
             self.handsUp = AgoraHandsUpUIController(viewType: viewType,
                                                     contextProvider: self,
-                                                    eventRegister: self)
+                                                    eventRegister: self,
+                                                    delegate: self)
             
             self.privateChat = AgoraPrivateChatController(viewType: viewType,
                                                           contextProvider: self,
@@ -147,7 +160,7 @@ public var isDebug = false
                 if let message = ["hasConversation": (viewType != .oneToOne ? 1 : 0)].jsonString() {
                     chat.widgetDidReceiveMessage(message)
                 }
-//
+
                 chat.containerView.isHidden = true
                 self.chat = chat
             default:
@@ -180,6 +193,13 @@ public var isDebug = false
     
     func observeEvents() {
         contextPool.room.registerEventHandler(self)
+    }
+}
+    
+// MARK: - AgoraHandsUpUIControllerDelegate
+extension AgoraUIManager: AgoraHandsUpUIControllerDelegate {
+    func handsUpController(_ controller: AgoraHandsUpUIController, didHandsPressed: Bool) {
+        onMenuPressed()
     }
 }
 
@@ -283,6 +303,8 @@ extension AgoraUIManager: AgoraEduRoomHandler {
                 break
             }
         }
+        
+        roomJoined()
     }
     
     func createHxChat(info: AgoraWidgetInfo) {
@@ -318,69 +340,21 @@ extension AgoraUIManager: AgoraEduRoomHandler {
         
         let chat = contextPool.widget.createWidget(with: info)
         chat.addMessageObserver(self)
-        self.appView.addSubview(chat.containerView)
-        
-        //        chat.containerView.agora_equal_to_superView(attribute: .top)
-        //        chat.containerView.agora_equal_to_superView(attribute: .left)
-        //        chat.containerView.agora_equal_to_superView(attribute: .right)
-        //        chat.containerView.agora_equal_to_superView(attribute: .bottom,
-        //                                                      constant: -90)
+        appContainerView.addSubview(chat.containerView)
+
         let isPad: Bool = UIDevice.current.model == "iPad"
-        chat.containerView.agora_safe_bottom = 0
+        chat.containerView.agora_safe_bottom = 15
         chat.containerView.agora_width = isPad ? 300:200
-        chat.containerView.agora_safe_right = 10
-        switch self.viewType {
-        case .oneToOne:
-            chat.containerView.agora_safe_y = self.whiteBoard?.containerView.agora_safe_y ?? 100;
-            chat.containerView.agora_safe_right = self.render1V1?.containerView.agora_width ?? 200;
-        case .lecture:
-            chat.containerView.agora_safe_y = isPad ? 210:150;
-        case .small:
-            chat.containerView.agora_safe_y = self.whiteBoard?.containerView.agora_safe_y ?? 100;
-        default:
-            break;
-        }
-        
-        
+        chat.containerView.agora_right = isPad ? 60:50
+        chat.containerView.agora_height = isPad ? 400:268
         self.hxChat = chat
-        chat.widgetDidReceiveMessage("min")
-        let right = chat.containerView.agora_safe_right + chat.containerView.agora_width + 10 - 8
-        self.handsUp?.containerView.agora_safe_right = right
+        
+        self.hxChat?.containerView.isHidden = true
     }
 }
 
 // MARK: - AgoraRoomUIControllerDelegate
 extension AgoraUIManager: AgoraRoomUIControllerDelegate {
-    func roomController(_ controller: AgoraRoomUIController,
-                         didClicked button: AgoraBaseUIButton) {
-        
-        //
-        if let v = self.set?.containerView, let navBar = self.room?.containerView {
-            if v.superview != nil {
-                v.removeFromSuperview()
-            } else {
-                self.room?.updateSetInteraction(enabled: false)
-                
-                appView.addSubview(v)
-                v.agora_height = 256
-                v.agora_y = -v.agora_height
-                v.agora_width = 280
-                v.agora_safe_right = 0
-                appView.layoutIfNeeded()
-                
-                v.agora_y = navBar.agora_height + 3
-                UIView.animate(withDuration: 0.55,
-                               delay: 0,
-                               usingSpringWithDamping: 0.5,
-                               initialSpringVelocity: 0.8,
-                               options: .curveEaseInOut) {
-                    self.appView.layoutIfNeeded()
-                } completion: { (_) in
-                    self.room?.updateSetInteraction(enabled: true)
-                }
-            }
-        }
-    }
 }
 
 // MARK: - AgoraScreenUIControllerDelegate
@@ -406,11 +380,10 @@ extension AgoraUIManager: AgoraWhiteBoardUIControllerDelegate {
         switch viewType {
         case .oneToOne:
             layout1V1FullScreen(isFullScreen)
-        case .small:
-            layoutSmallView(isFullScreen)
         case .lecture:
             layoutLectureView(isFullScreen,
                               coHostsCount: self.coHostCount)
+        default:break
         }
     }
     
@@ -427,18 +400,7 @@ extension AgoraUIManager: AgoraWidgetDelegate {
         case "AgoraChatWidget":
             chatViewMessageHandle(message: message)
         case "Chat":
-            do {
-                switch self.viewType {
-                case .oneToOne:
-                    self.layout1V1FullScreen(self.isFullScreen)
-                case .small:
-                    self.resetSmallHandsUpLayout()
-                case .lecture:
-                    self.resetLectureHandsUpLayout(self.isFullScreen)
-                default:
-                    break
-                }
-            }
+            chatViewMessageHandle(message: message)
         default:
             break
         }
@@ -452,7 +414,7 @@ extension AgoraUIManager: AgoraWidgetDelegate {
         
         switch viewType {
         case .small:
-            resetSmallHandsUpLayout()
+            onChatPressed()
         case .lecture:
             resetLectureHandsUpLayout(isFullScreen)
         default:

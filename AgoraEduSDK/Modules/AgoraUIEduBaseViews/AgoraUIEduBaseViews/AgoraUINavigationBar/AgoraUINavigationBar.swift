@@ -21,7 +21,7 @@ import AgoraUIBaseViews
     
     private lazy var roomNameLabel: AgoraBaseUILabel = {
         let label = AgoraBaseUILabel()
-        label.font = UIFont.systemFont(ofSize: 13)
+        label.font = UIFont.systemFont(ofSize: 9)
         label.textColor = UIColor(rgb: 0x191919)
         label.textAlignment = .right
         return label
@@ -29,40 +29,30 @@ import AgoraUIBaseViews
     
     private lazy var gridLineView: AgoraBaseUIView = {
         let view = AgoraBaseUIView()
-        view.backgroundColor = UIColor(rgb: 0xECECF1)
+        view.backgroundColor = UIColor(rgb: 0x677386)
         return view
     }()
     
     public private(set) lazy var timeLabel: AgoraBaseUILabel = {
         let label = AgoraBaseUILabel()
-        label.font = UIFont.systemFont(ofSize: 13)
+        label.font = UIFont.systemFont(ofSize: 9)
         return label
     }()
-
-    public private(set) lazy var setButton: AgoraBaseUIButton = {
-        let btn = AgoraBaseUIButton()
-        btn.setImage(AgoraKitImage("set"),
-                     for: .normal)
-        return btn
-    }()
-    
-    public private(set) lazy var logButton: AgoraBaseUIButton = {
-        let button = AgoraBaseUIButton()
-        button.setImage(AgoraKitImage("log"),
-                     for: .normal)
-        return button
-    }()
+//
+//    public private(set) lazy var logButton: AgoraBaseUIButton = {
+//        let button = AgoraBaseUIButton()
+//        button.setImage(AgoraKitImage("log"),
+//                     for: .normal)
+//        return button
+//    }()
     
     private lazy var lineView: AgoraBaseUIView = {
         let lineV = AgoraBaseUIView()
-        lineV.backgroundColor = UIColor.clear
-        lineV.layer.borderWidth = 1
-        lineV.layer.borderColor = UIColor(rgb: 0xECECF1).cgColor
-
+        lineV.backgroundColor = UIColor(rgb: 0xECECF1)
         return lineV
     }()
     
-    private let SwitchTag = 100
+//    private let SwitchTag = 100
 
     public override func didMoveToWindow() {
         super.didMoveToWindow()
@@ -88,30 +78,24 @@ import AgoraUIBaseViews
         let roomNameLen = self.getTextWidthForComment(text: roomName,
                                                       font: roomNameLabel.font)
         let roomTimeLen = self.getTextWidthForComment(text: roomTime,
-                                                      font: roomNameLabel.font)
+                                                      font: timeLabel.font)
         
-        let gridLineViewWidth: CGFloat = 1
-        let space: CGFloat = 20
-        
-        let len = roomNameLen + space + gridLineViewWidth + space + roomTimeLen
-        let roomNameX = self.bounds.size.width * 0.5 - len * 0.5
-        let gridLineX = roomNameX + space + roomNameLen
-        let roomTimeX = gridLineX + space + 1
-        
-        roomNameLabel.agora_y = 0
-        roomNameLabel.agora_bottom = 0
-        roomNameLabel.agora_x = roomNameX
-        roomNameLabel.agora_width = roomNameLen
-        
-        gridLineView.agora_x = gridLineX
-        gridLineView.agora_width = 1
-        gridLineView.agora_y = 8
-        gridLineView.agora_bottom = 8
-
+        let space: CGFloat = 8
+                
         timeLabel.agora_y = 0
         timeLabel.agora_bottom = 0
-        timeLabel.agora_x = roomTimeX
+        timeLabel.agora_right = 10
         timeLabel.agora_width = roomTimeLen
+        
+        gridLineView.agora_right = timeLabel.agora_right + timeLabel.agora_width + space
+        gridLineView.agora_width = 1
+        gridLineView.agora_height = 6
+        gridLineView.agora_center_y = 0
+
+        roomNameLabel.agora_y = 0
+        roomNameLabel.agora_bottom = 0
+        roomNameLabel.agora_right = gridLineView.agora_right + space
+        roomNameLabel.agora_width = roomNameLen
     }
 }
 
@@ -147,30 +131,30 @@ private extension AgoraUINavigationBar {
         addSubview(roomNameLabel)
         addSubview(gridLineView)
         addSubview(timeLabel)
-        addSubview(setButton)
+//        addSubview(setButton)
         addSubview(lineView)
-        addSubview(logButton)
+//        addSubview(logButton)
     }
 
     func initLayout() {
-        signalImgView.agora_safe_x = 10
-        signalImgView.agora_width = 20
-        signalImgView.agora_height = 20
+        signalImgView.agora_x = 10
+        signalImgView.agora_width = 14
+        signalImgView.agora_height = 14
         signalImgView.agora_center_y = 0
         
-        setButton.agora_safe_right = 10
-        setButton.agora_width = 24
-        setButton.agora_height = 24
-        setButton.agora_center_y = 0
-        
-        logButton.agora_safe_right = 56
-        logButton.agora_width = 24
-        logButton.agora_height = 24
-        logButton.agora_center_y = 0
-            
-        lineView.agora_x = -50
+//        setButton.agora_safe_right = 10
+//        setButton.agora_width = 24
+//        setButton.agora_height = 24
+//        setButton.agora_center_y = 0
+//
+//        logButton.agora_safe_right = 56
+//        logButton.agora_width = 24
+//        logButton.agora_height = 24
+//        logButton.agora_center_y = 0
+//
+        lineView.agora_x = 0
         lineView.agora_height = 1
-        lineView.agora_right = -50
+        lineView.agora_right = 0
         lineView.agora_bottom = 0
     }
     

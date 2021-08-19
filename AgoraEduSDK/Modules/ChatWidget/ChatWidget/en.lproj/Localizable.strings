@@ -8,8 +8,6 @@
 
 ChatText = "Chat";
 ChatAnnouncement = "Notice";
-ChatTeacher= "Teacher";
-ChatAssistant= "Assistant";
 ChatEmptyText = "No Message";
 ChatPlaceholderText = "Input";
 ChatNoAnnouncement = "No Notice";

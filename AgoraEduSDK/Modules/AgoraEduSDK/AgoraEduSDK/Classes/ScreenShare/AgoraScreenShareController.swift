@@ -32,16 +32,16 @@ import AgoraEduContext
     
     //
     public func updateScenePath(_ path: String) {
-        self.vm?.updateScenePath(path, successBlock: { [weak self] (screenShareState, screenStreamUuid) in
-            self?.handleScreenShareState(screenShareState, screenStreamUuid)
-        }, failureBlock: nil)
+//        self.vm?.updateScenePath(path, successBlock: { [weak self] (screenShareState, screenStreamUuid) in
+//            self?.handleScreenShareState(screenShareState, screenStreamUuid)
+//        }, failureBlock: nil)
     }
     
     //
     public func updateScreenSelectedProperties(_ cause: Any?) {
-        self.vm?.screenSelectChanged(cause: cause, successBlock: { [weak self] (screenShareState, screenStreamUuid) in
-            self?.handleScreenShareState(screenShareState, screenStreamUuid)
-        }, failureBlock: nil)
+//        self.vm?.screenSelectChanged(cause: cause, successBlock: { [weak self] (screenShareState, screenStreamUuid) in
+//            self?.handleScreenShareState(screenShareState, screenStreamUuid)
+//        }, failureBlock: nil)
     }
 
     public func updateStreams(_ rteStreams: [AgoraRTEStream], changeType: AgoraInfoChangeType) {
@@ -49,6 +49,9 @@ import AgoraEduContext
         if screenStreamInfos.count > 0 {
             self.vm?.updateScreenShareState(successBlock: { [weak self] (screenShareState, screenStreamUuid) in
                 self?.handleScreenShareState(screenShareState, screenStreamInfos.keys.first)
+                
+//                let parameters = "{\"che.video.render_background_color\":{\"uid\":\(screenStreamUuid), \"r\":\(1), \"g\":\(1), \"b\":\(1)}}"
+//                AgoraRTCManager.share().setParameters(parameters)
             }, failureBlock: nil)
         }
     }

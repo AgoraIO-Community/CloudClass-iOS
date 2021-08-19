@@ -17,10 +17,6 @@ public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
     func userView(_ userView: AgoraUIUserView,
                   didPressAudioButton button: AgoraBaseUIButton,
                   indexOfUserList index: Int)
-    
-    func userView(_ userView: AgoraUIUserView,
-                  didPressVideoButton button: AgoraBaseUIButton,
-                  indexOfUserList index: Int)
 }
 
 @objcMembers public class AgoraUIUserView: AgoraBaseUIView {
@@ -50,18 +46,6 @@ public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
         btn.setImage(AgoraKitImage("micro_disable_off"),
                      for: .normal)
         btn.isUserInteractionEnabled = false
-        return btn
-    }()
-    
-    private(set) lazy var videoBtn: AgoraBaseUIButton = {
-        let btn = AgoraBaseUIButton()
-        btn.touchRange = 20
-        btn.addTarget(self,
-                      action: #selector(onVideoTouchEvent(_:)),
-                      for: .touchUpInside)
-        btn.setImage(AgoraKitImage("camera_disable_off"),
-                     for: .normal)
-        btn.isHidden = true
         return btn
     }()
     
@@ -102,7 +86,7 @@ public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
         let label = AgoraBaseUILabel()
         label.text = ""
         label.textColor = UIColor.white
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: AgoraKitDeviceAssistant.OS.isPad ? 12 : 10)
         label.layer.shadowColor = UIColor(rgb: 0x0D1D3D, alpha: 0.8).cgColor
         label.layer.shadowOffset = CGSize(width: 0, height: 1)
         label.layer.shadowOpacity = 1
@@ -136,11 +120,11 @@ public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
         let imgView = AgoraBaseUIImageView(image: AgoraKitImage("default_offline"))
         view.addSubview(imgView)
         if AgoraKitDeviceAssistant.OS.isPad {
-            imgView.agora_resize(70, 70)
+            imgView.agora_resize(46, 46)
             imgView.agora_center_x = 0
             imgView.agora_center_y = 0
         } else {
-            imgView.agora_resize(45, 45)
+            imgView.agora_resize(30, 30)
             imgView.agora_center_x = 0
             imgView.agora_center_y = 0
         }
@@ -163,22 +147,10 @@ public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var isVideoButtonHidden = false
-    
-    func setVideoButtonHidden(hidden: Bool) {
-        isVideoButtonHidden = hidden
-    }
-    
     // MARK: touch event
     @objc  func onAudioTouchEvent(_ button: AgoraBaseUIButton) {
         delegate?.userView(self,
                            didPressAudioButton: button,
-                           indexOfUserList: index)
-    }
-    
-    @objc func onVideoTouchEvent(_ button: AgoraBaseUIButton) {
-        delegate?.userView(self,
-                           didPressVideoButton: button,
                            indexOfUserList: index)
     }
 }
@@ -188,15 +160,14 @@ private extension AgoraUIUserView {
      func initView() {
         backgroundColor = UIColor.clear
         clipsToBounds = true
-        layer.borderWidth = AgoraKitDeviceAssistant.OS.isPad ? 2 : 1
+        layer.borderWidth = 1
         layer.borderColor = UIColor(rgb: 0xECECF1).cgColor
-        layer.cornerRadius = AgoraKitDeviceAssistant.OS.isPad ? 10 : 4
+        layer.cornerRadius = 2
         
         addSubview(videoCanvas)
         addSubview(defaultView)
         addSubview(cupView)
         addSubview(audioBtn)
-        addSubview(videoBtn)
         addSubview(nameLabel)
         addSubview(audioEffectView)
         addSubview(whiteBoardImageView)
@@ -211,29 +182,25 @@ private extension AgoraUIUserView {
         self.videoCanvas.agora_right = 0
         self.videoCanvas.agora_bottom = 0
         
-        self.cupView.agora_right = 5
-        self.cupView.agora_y = 5
-        self.cupView.agora_height = 15
+        self.cupView.agora_right = 2
+        self.cupView.agora_y = 2
+        self.cupView.agora_height = 14
 
-        self.audioBtn.agora_x = 5
-        self.audioBtn.agora_bottom = 5
-        self.audioBtn.agora_resize(18, 18)
-        
-        self.videoBtn.agora_x = self.audioBtn.agora_x + self.audioBtn.agora_width + 2
-        self.videoBtn.agora_bottom = 5
-        self.videoBtn.agora_resize(18, 18)
-        
-        self.nameLabel.agora_x = self.videoBtn.agora_x + self.videoBtn.agora_width + 2
+        self.audioBtn.agora_x = 2
+        self.audioBtn.agora_bottom = 2
+        self.audioBtn.agora_resize(14, 14)
+
+        self.nameLabel.agora_x = self.audioBtn.agora_x + self.audioBtn.agora_width + 2
         self.nameLabel.agora_width = 75
         self.nameLabel.agora_bottom = self.audioBtn.agora_bottom
         self.nameLabel.agora_height = 18
         
-        whiteBoardImageView.agora_right = 5
-        whiteBoardImageView.agora_bottom = 5
-        whiteBoardImageView.agora_resize(18, 18)
+        whiteBoardImageView.agora_right = 2
+        whiteBoardImageView.agora_bottom = 2
+        whiteBoardImageView.agora_resize(14, 14)
         
-        let audioEffectViewWidth = self.audioBtn.agora_width * 0.8
-        let audioEffectHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 3 : 2
+        let audioEffectViewWidth = self.audioBtn.agora_width * 0.6
+        let audioEffectHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 2 : 1
         let audioEffectGap: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 3 : 2
         for index in 0...7 {
             let v = self.audioEffectView.viewWithTag(index + AudioEffectTagStart) as! AgoraBaseUIView
@@ -272,12 +239,6 @@ private extension AgoraUIUserView {
 
         self.nameLabel.text = name
 
-        if isVideoButtonHidden {
-            self.nameLabel.agora_x = self.audioBtn.agora_x + self.audioBtn.agora_width + 2
-        } else {
-            self.nameLabel.agora_x = self.videoBtn.agora_x + self.videoBtn.agora_width + 2
-        }
-
         let nameAgoraRight: CGFloat = info.boardGranted ? 20 : 0
 
         let maxWidth: CGFloat = 75
@@ -288,13 +249,8 @@ private extension AgoraUIUserView {
     func updateDefaultView(userInfo: AgoraEduContextUserDetailInfo?) {
         self.audioBtn.setImage(AgoraKitImage("micro_disable_off"),
                                for: .normal)
-        self.videoBtn.setImage(AgoraKitImage("camera_disable_off"),
-                               for: .normal)
         self.audioBtn.isUserInteractionEnabled = false
-        self.videoBtn.isUserInteractionEnabled = false
         self.audioBtn.isHidden = false
-        self.videoBtn.isHidden = true
-        self.isVideoButtonHidden = true
         
         self.audioEffectView.isHidden = true
         self.defaultView.isHidden = true
@@ -307,12 +263,6 @@ private extension AgoraUIUserView {
         }
         
         let user = info.user
-        
-        // 学生才显示视频按钮
-        if user.role == .student {
-            self.videoBtn.isHidden = false
-            self.isVideoButtonHidden = false
-        }
         
         // 不在线
         if !info.onLine {
@@ -331,20 +281,11 @@ private extension AgoraUIUserView {
             self.defaultImageView?.image = AgoraKitImage("default_baddevice")
             
         } else if info.enableVideo { // 摄像头好的 & 开流了
-            self.videoBtn.isUserInteractionEnabled = true
-            let imgName = "camera_enable_on"
-            self.videoBtn.setImage(AgoraKitImage(imgName),
-                                   for: .normal)
             
         } else { // // 摄像头好的 & 没有开流
             
             self.defaultView.isHidden = false
             self.defaultImageView?.image = AgoraKitImage("default_novideo")
-            
-            self.videoBtn.isUserInteractionEnabled = true
-            let imgName = "camera_enable_off"
-            self.videoBtn.setImage(AgoraKitImage(imgName),
-                                   for: .normal)
         }
         
         // 麦克风状态

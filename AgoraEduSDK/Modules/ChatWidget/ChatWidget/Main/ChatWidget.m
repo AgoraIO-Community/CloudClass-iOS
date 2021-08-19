@@ -57,13 +57,6 @@ static const NSString* kChatRoomId = @"chatroomId";
     [self layoutViews];
 }
 
-- (void)widgetDidReceiveMessage:(NSString *)message
-{
-    if([message isEqualToString:@"min"]) {
-        [self chatTopViewDidClickHide];
-    }
-}
-
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.chatManager logout];
@@ -271,11 +264,15 @@ static const NSString* kChatRoomId = @"chatroomId";
 
 - (void)chatTopViewDidClickHide
 {
-    self.containView.hidden = YES;
-    self.miniButton.hidden = NO;
-    self.badgeView.hidden = self.chatTopView.badgeView.hidden && self.chatTopView.announcementbadgeView.hidden;
-    self.containerView.agora_width = 50;
-    [self sendMessage:@"min"];
+//    self.containView.hidden = YES;
+//    self.miniButton.hidden = NO;
+//    self.badgeView.hidden = self.chatTopView.badgeView.hidden && self.chatTopView.announcementbadgeView.hidden;
+//    self.containerView.agora_width = 50;
+    
+    NSDictionary *infoDict = @{@"isMinSize":@(1)};
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:infoDict options:0 error:0];
+    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    [self sendMessage:dataStr];
 }
 
 - (void)showView

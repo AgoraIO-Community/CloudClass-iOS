@@ -12,6 +12,7 @@ import AgoraEduContext
 @objcMembers public class AgoraUserRenderScrollView: AgoraBaseUIView {
     public static var preferenceHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 168 : 87
     public static var preferenceWidth: CGFloat = preferenceHeight
+    public static var preferenceVideoGapX: CGFloat = 2
     
     public weak var context: AgoraEduUserContext?
     
@@ -36,7 +37,7 @@ import AgoraEduContext
     
     // MARK: touch event
     @objc func buttonTap(btn: AgoraBaseUIButton) {
-        let Gap: CGFloat = 2
+        let Gap: CGFloat = AgoraUserRenderScrollView.preferenceVideoGapX
         
         var x: CGFloat = 0
         

@@ -119,6 +119,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                                                               roomToken:options.boardToken];
     roomConfig.isWritable = self.isWritable;
     roomConfig.disableNewPencil = NO;
+    roomConfig.useMultiViews = YES;
     
     [self.whiteSDK joinRoomWithConfig:roomConfig
                             callbacks:self
@@ -135,11 +136,11 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
             NSInteger sceneIndex = sceneState.index;
             WhiteScene *scene = scenes[sceneIndex];
             
-            if (scene.ppt) {
-                [weakself.room scalePptToFit:WhiteAnimationModeContinuous];
-            }
-            
-            [weakself refreshViewSize];
+//            if (scene.ppt) {
+//                [weakself.room scalePptToFit:WhiteAnimationModeContinuous];
+//            }
+//
+//            [weakself refreshViewSize];
             
             if (successBlock) {
                 successBlock();
@@ -204,31 +205,31 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 - (void)setBoardCameraConfig:(AgoraWhiteBoardCameraConfig *)config {
     self.cameraConfig = config;
     WhiteCameraConfig *camera = [WhiteCameraConfig createWithAGConfig:self.cameraConfig];
-    [self.room moveCamera:camera];
+//    [self.room moveCamera:camera];
 }
 
 // when board view size changed, must call refreshViewSize
 // 当 WhiteBoardView 的 super view 的 frame 变化时，需要调用这个方法
 - (void)refreshViewSize {
-     [self.room refreshViewSize];
+//     [self.room refreshViewSize];
 }
 
 // 重置缩放比例
 - (void)resetViewSize {
-    WhiteSceneState *sceneState = self.room.sceneState;
-    NSArray<WhiteScene *> *scenes = sceneState.scenes;
-    NSInteger sceneIndex = sceneState.index;
-    WhiteScene *scene = scenes[sceneIndex];
-    
-    self.cameraConfig.scale = 1;
-    self.cameraConfig.centerX = 0;
-    self.cameraConfig.centerY = 0;
-
-    [self.room moveCamera:[WhiteCameraConfig createWithAGConfig:self.cameraConfig]];
-    
-    if (scene.ppt) {
-        [self.room scalePptToFit:WhiteAnimationModeContinuous];
-    }
+//    WhiteSceneState *sceneState = self.room.sceneState;
+//    NSArray<WhiteScene *> *scenes = sceneState.scenes;
+//    NSInteger sceneIndex = sceneState.index;
+//    WhiteScene *scene = scenes[sceneIndex];
+//
+//    self.cameraConfig.scale = 1;
+//    self.cameraConfig.centerX = 0;
+//    self.cameraConfig.centerY = 0;
+//
+//    [self.room moveCamera:[WhiteCameraConfig createWithAGConfig:self.cameraConfig]];
+//
+//    if (scene.ppt) {
+//        [self.room scalePptToFit:WhiteAnimationModeContinuous];
+//    }
 }
 
 - (void)putScenes:(NSString *)dir
@@ -378,13 +379,13 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                            fonts:(NSDictionary *)fonts {
     WhiteSdkConfiguration *config = [[WhiteSdkConfiguration alloc] initWithApp:appId];
     config.enableIFramePlugin = YES;
-    
-    if (@available(iOS 11.0, *)) {
-        WhitePptParams *pptParams = [[WhitePptParams alloc] init];
-        pptParams.scheme = AgoraWhiteCoursewareScheme;
-        config.pptParams = pptParams;
-    }
-    
+
+//    if (@available(iOS 11.0, *)) {
+//        WhitePptParams *pptParams = [[WhitePptParams alloc] init];
+//        pptParams.scheme = AgoraWhiteCoursewareScheme;
+//        config.pptParams = pptParams;
+//    }
+
     config.fonts = fonts;
     config.userCursor = YES;
     

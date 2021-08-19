@@ -26,13 +26,13 @@ import AgoraUIBaseViews
         }
     }
     
-    // 屏幕分享是否显示
-    public var isScreenVisible = false {
-        didSet {
-            self.containerView.isHidden = isScreenVisible
-            self.fullScreenAloneButton.isHidden = !isScreenVisible
-        }
-    }
+//    // 屏幕分享是否显示
+//    public var isScreenVisible = false {
+//        didSet {
+//            self.containerView.isHidden = isScreenVisible
+//            self.fullScreenAloneButton.isHidden = !isScreenVisible
+//        }
+//    }
     
     private var pageCount = 1 {
         didSet {

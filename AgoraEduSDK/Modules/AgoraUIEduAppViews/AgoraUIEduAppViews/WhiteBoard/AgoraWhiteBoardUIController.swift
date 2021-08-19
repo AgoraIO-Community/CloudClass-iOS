@@ -45,6 +45,23 @@ class AgoraWhiteBoardUIController: NSObject, AgoraUIController, AgoraUIControlle
     
     var containerView = AgoraUIControllerContainer(frame: .zero)
     
+    var isScreenVisible = false {
+        didSet {
+            containerView.isHidden = isScreenVisible
+            if isScreenVisible {
+                boardToolsView.isHidden = true
+            } else {
+                boardToolsView.isHidden = !boardToolsState.hasPermission
+            }
+        }
+    }
+    
+    private lazy var lineView: AgoraBaseUIView = {
+        let lineV = AgoraBaseUIView()
+        lineV.backgroundColor = UIColor(rgb: 0xECECF1)
+        return lineV
+    }()
+    
     // States
     let boardToolsState = AgoraBoardToolsState()
     let boardState = AgoraWhiteBoardState()
@@ -78,22 +95,25 @@ class AgoraWhiteBoardUIController: NSObject, AgoraUIController, AgoraUIControlle
     }
     
     func updateBoardViewOpaque(sharing: Bool) {
-        if sharing {
-            boardView.backgroundColor = UIColor.clear
-            boardView.isOpaque = false
-            for v in boardView.subviews {
-                v.isOpaque = false
-            }
-        } else {
-            boardView.backgroundColor = UIColor.white
-        }
+        self.isScreenVisible = sharing
         
-        self.boardPageControl.isScreenVisible = sharing
+//        if sharing {
+//            boardView.backgroundColor = UIColor.clear
+//            boardView.isOpaque = false
+//            for v in boardView.subviews {
+//                v.isOpaque = false
+//            }
+//        } else {
+//            boardView.backgroundColor = UIColor.white
+//        }
+        
+//        self.boardPageControl.isScreenVisible = sharing
     }
     
     func initViews() {
         containerView.delegate = self
         containerView.addSubview(boardView)
+        containerView.addSubview(lineView)
         containerView.addSubview(boardToolsView)
         containerView.addSubview(boardPageControl)
         containerView.addSubview(unfoldButton)
@@ -117,12 +137,17 @@ class AgoraWhiteBoardUIController: NSObject, AgoraUIController, AgoraUIControlle
     }
     
     func initLayout() {
+        
         boardView.agora_x = 0
         boardView.agora_y = 0
         boardView.agora_right = 0
         boardView.agora_bottom = 0
-        boardView.setupShadow(cornerRadius: 4)
         
+        lineView.agora_x = 0
+        lineView.agora_y = 0
+        lineView.agora_right = 0
+        lineView.agora_height = 1
+
         boardToolsView.agora_x = 10
         boardToolsView.agora_y = 10
         boardToolsView.agora_width = 42
@@ -173,10 +198,10 @@ class AgoraWhiteBoardUIController: NSObject, AgoraUIController, AgoraUIControlle
 
 fileprivate extension UIView {
     func setupShadow(cornerRadius: CGFloat) {
-        let shadowColor = UIColor(rgb: 0x2F4192).cgColor
+        let shadowColor = UIColor(rgb: 0xECECF1).cgColor
         let shadowOpacity: Float = 0.15
         let shadowOffset = CGSize(width: 0,
-                                  height: 2)
+                                  height: 1)
         
         layer.cornerRadius = cornerRadius
         layer.shadowColor = shadowColor

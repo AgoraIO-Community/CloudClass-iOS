@@ -27,7 +27,8 @@ protocol AgoraController where Self: NSObject {
 }
 
 protocol AgoraUIController: AgoraController {
-    var containerView: AgoraUIControllerContainer {set get}
+    associatedtype T: AgoraUIControllerContainer
+    var containerView: T {set get}
 }
 
 protocol AgoraControllerContextProvider: NSObjectProtocol {

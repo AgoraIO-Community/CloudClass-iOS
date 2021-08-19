@@ -116,7 +116,7 @@
     } else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
-    self.view.backgroundColor = UIColor.whiteColor;
+    self.view.backgroundColor = UIColor.blackColor;
 
     [self widgetsController];
     AgoraEduContextAppType appType = (AgoraEduContextAppType)self.vmConfig.sceneType;
@@ -483,7 +483,7 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
 
 - (void)boardController:(AgoraBoardController *)controller
     didScenePathChanged:(NSString *)path {
-    [self.screenShareController updateScenePath:path];
+//    [self.screenShareController updateScenePath:path];
 }
 
 - (void)boardController:(AgoraBoardController *)controller
@@ -518,7 +518,6 @@ connectionStateChanged:(AgoraRTEConnectionState)state {
                            cause:(NSDictionary * _Nullable)cause
                     operatorUser:(AgoraRTEBaseUser *)operatorUser {
     [self updateExtApps:classroom];
-    [self.screenShareController updateScreenSelectedProperties:cause];
 
     [self.widgetsController updateRoomProperties:classroom.roomProperties];
         

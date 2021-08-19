@@ -105,6 +105,8 @@ extension AgoraUIManager {
         let kAgoraScreenHeight: CGFloat = min(UIScreen.agora_width,
                                               UIScreen.agora_height)
             
+        // 距离上面的值， 等于navView的高度
+        let renderTop: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 44 : 34
         let top: CGFloat = renderTop + 4
 
         var width: CGFloat = 0

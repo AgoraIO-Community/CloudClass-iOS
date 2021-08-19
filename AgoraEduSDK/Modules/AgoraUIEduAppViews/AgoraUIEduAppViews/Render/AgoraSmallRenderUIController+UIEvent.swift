@@ -159,29 +159,6 @@ extension AgoraSmallRenderUIController: AgoraUIUserViewDelegate {
             userContext?.muteAudio(isMuted)
         }
     }
-    
-    func userView(_ userView: AgoraUIUserView,
-                  didPressVideoButton button: AgoraBaseUIButton,
-                  indexOfUserList index: Int) {
-        switch index {
-        case teacherIndex:
-            guard let info = teacherInfo,
-                  info.isSelf else {
-                return
-            }
-            
-            button.isSelected.toggle()
-            userContext?.muteVideo(button.isSelected)
-        default:
-            let studentInfo = coHosts[index].userInfo
-            guard studentInfo.isSelf else {
-                return
-            }
-
-            button.isSelected.toggle()
-            userContext?.muteVideo(button.isSelected)
-        }
-    }
 }
 
 // MARK: - Reward
