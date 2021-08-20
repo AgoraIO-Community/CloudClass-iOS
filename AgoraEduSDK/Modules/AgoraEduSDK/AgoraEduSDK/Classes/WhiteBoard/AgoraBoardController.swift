@@ -22,7 +22,11 @@ import EduSDK
     
     func boardController(_ controller: AgoraBoardController,
                          didScenePathChanged path: String)
-
+    
+    func boardController(_ controller: AgoraBoardController,
+                         didPositionUpdated appIdentifier: String,
+                         diffPoint: CGPoint)
+    
     func boardController(_ controller: AgoraBoardController,
                          didOccurError error: Error)
 }
@@ -93,6 +97,21 @@ import EduSDK
         super.init()
         
         boardVM.delegate = self
+    }
+    
+    public func syncAppPosition(appIdentifier: String,
+                                diffPoint: CGPoint) {
+        
+        guard let stateModel = self.manager?.getWhiteBoardStateModel() else {
+            return
+        }
+        var extAppMoveTracks = stateModel.extAppMoveTracks as? [String: Any] ?? [String: Any]()
+        extAppMoveTracks[appIdentifier] = ["userId": self.userId,
+                                           "x": diffPoint.x,
+                                           "y": diffPoint.y]
+        stateModel.extAppMoveTracks = extAppMoveTracks
+
+        self.manager?.setWhiteBoardStateModel(stateModel)
     }
 }
 
@@ -382,6 +401,13 @@ extension AgoraBoardController: AgoraBoardVMDelegate {
     
     func didFlexStateUpdated(state: [String : Any]?) {
         eventDispatcher.onWhiteGlobalStateChanged(state ?? [String : Any]())
+    }
+    
+    func didPositionUpdated(appIdentifier: String,
+                            diffPoint: CGPoint) {
+        delegate?.boardController(self,
+                                  didPositionUpdated: appIdentifier,
+                                  diffPoint: diffPoint)
     }
 }
 

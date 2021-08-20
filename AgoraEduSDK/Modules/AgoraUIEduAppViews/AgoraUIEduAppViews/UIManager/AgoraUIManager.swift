@@ -74,13 +74,11 @@ public var isDebug = false
         
         appView.addSubview(appContainerView)
         appContainerView.backgroundColor = UIColor(rgb: 0xF9F9FC)
-         
-        let widthSide = (AgoraWidth - AgoraRealMaxWidth) * 0.5
-        let heightSide = (AgoraHeight - AgoraRealMaxHeight) * 0.5
-        appContainerView.agora_x = widthSide
-        appContainerView.agora_right = widthSide
-        appContainerView.agora_y = heightSide
-        appContainerView.agora_bottom = heightSide
+        
+        appContainerView.agora_x = 0
+        appContainerView.agora_right = 0
+        appContainerView.agora_y = 0
+        appContainerView.agora_bottom = 0
     }
     
     func initControllers() {

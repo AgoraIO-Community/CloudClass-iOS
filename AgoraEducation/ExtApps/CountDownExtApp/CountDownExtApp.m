@@ -78,43 +78,12 @@ typedef enum : NSInteger {
 
 - (void)initData:(NSDictionary *)properties {
     [self propertiesDidUpdate:properties];
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
-                                                                          action:@selector(drag:)];
-    [self.view addGestureRecognizer:pan];
+    self.view.agora_is_draggable = YES;
 }
 
 - (NSInteger)getCurrentTime {
     NSDate *date = [NSDate date];
     return [date timeIntervalSince1970];
-    
-}
-
-- (void)drag:(UIPanGestureRecognizer *)recognizer {
-    if (![recognizer.view isKindOfClass:AgoraBaseUIView.class]) {
-        return;
-    }
-    AgoraBaseUIView *view = (AgoraBaseUIView *)recognizer.view;
-    
-    CGPoint trans = [recognizer translationInView:UIApplication.sharedApplication.keyWindow];
-    
-    CGFloat ori_x = view.center.x;
-    CGFloat ori_y = view.center.y;
-    
-    BOOL needXConstraint = (view.frame.origin.x + view.frame.size.width + trans.x > view.superview.frame.size.width) || view.frame.origin.x + trans.x < 0;
-    BOOL needYConstraint = (view.frame.origin.y + view.frame.size.height + trans.y > view.superview.frame.size.height) || view.frame.origin.y + trans.y < 0;
-    
-    CGFloat new_x = needXConstraint ? ori_x : (ori_x + trans.x);
-    CGFloat new_y = needYConstraint ? ori_y : (ori_y + trans.y);
-    
-    if (recognizer.state == UIGestureRecognizerStateChanged) {
-        [UIView animateWithDuration:0
-                         animations:^{
-            recognizer.view.center = CGPointMake(new_x,
-                                                 new_y);
-            [recognizer setTranslation:CGPointZero
-                                inView:recognizer.view];
-        }];
-    }
 }
 
 - (void)setProperties:(NSDictionary *)properties {

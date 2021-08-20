@@ -24,6 +24,10 @@
 @implementation AgoraWhiteBoardTaskModel
 @end
 
+@implementation AgoraWhiteBoardExtAppMovement
+@end
+
+
 @implementation AgoraWhiteBoardStateModel
 - (instancetype)init {
     self = [super init];

@@ -9,8 +9,6 @@
 import Foundation
 import AgoraUIBaseViews
 
-
-
 @objc public class CountDownWrapper: NSObject {
     private var countdownView = CountDownContainerView(frame: .zero)
     @objc public func getView(delegate: CountDownDelegate) -> AgoraBaseUIView {

@@ -102,6 +102,34 @@
     }
 }
 
+- (void)syncAppPosition:(NSString *)appIdentifier
+              diffPoint:(CGPoint)diffPoint {
+    
+    if (self.extApps.count <= 0) {
+        return;
+    }
+    
+    AgoraExtAppInfo *info = nil;
+    for (AgoraExtAppInfo *item in self.extAppInfos) {
+        if ([item.appIdentifier isEqualToString:appIdentifier]) {
+            info = item;
+            break;
+        }
+    }
+    if (!info) {
+        return;
+    }
+    
+    AgoraExtAppItem *item = self.extApps[info.appIdentifier];
+    if (!item.instance) {
+        return;
+    }
+    
+    if ([item.instance.view isKindOfClass:AgoraBaseExtAppUIView.class]) {
+        [((AgoraBaseExtAppUIView *)item.instance.view) onExtAppUIViewPositionSync:diffPoint];
+    }
+}
+
 - (void)appsCommonDidUpdate:(NSDictionary<NSString *,id> *)appsCommonDic {
     if (appsCommonDic.count == 0) {
         return;
@@ -253,6 +281,12 @@ updateProperties:(NSDictionary *)properties
     if (self.extApps.count == 0) {
         [self.containerView setHidden:YES];
     }
+}
+- (void)extApp:(AgoraBaseExtApp *)app
+syncAppPosition:(CGPoint)diffPoint {
+    [self.dataSource appsController:self
+                    syncAppPosition:app.appIdentifier
+                          diffPoint:diffPoint];
 }
 
 #pragma mark - Private

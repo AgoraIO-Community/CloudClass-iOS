@@ -31,6 +31,9 @@ deleteProperties:(NSArray <NSString *> *)keys
           fail:(AgoraExtAppErrorCompletion)fail;
 // App将被卸载， 你可以在该方法做些数据备份等
 - (void)extAppWillUnload:(AgoraBaseExtApp *)app;
+// 位置同步， 给AgoraEduExtAppsController处理
+- (void)extApp:(AgoraBaseExtApp *)app
+syncAppPosition:(CGPoint)diffPoint;
 @end
 
 // 容器App基类, 可以通过继承该类实现自己的容器应用

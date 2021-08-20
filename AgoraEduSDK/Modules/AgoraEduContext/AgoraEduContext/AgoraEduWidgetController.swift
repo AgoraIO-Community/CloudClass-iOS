@@ -8,8 +8,9 @@
 import AgoraWidget
 
 public class AgoraEduWidgetController: AgoraWidgetController, AgoraEduWidgetContext {
-    var roomProperties: [String: Any]?
     
+    var roomProperties: [String: Any]?
+
     public func getAgoraWidgetProperties(type: EduContextWidgetType) -> [String : Any]? {
         guard let properties = roomProperties else {
             return nil

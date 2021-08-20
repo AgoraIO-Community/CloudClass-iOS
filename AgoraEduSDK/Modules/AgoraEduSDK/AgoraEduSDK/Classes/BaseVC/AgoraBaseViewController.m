@@ -124,16 +124,16 @@
     self.uimanager = [self.contextPool agoraUIManager:appType];
     [self.view addSubview:self.uimanager.appView];
     self.appView = self.uimanager.appView;
-    self.appView.agora_x = 0;
-    self.appView.agora_y = 0;
-    self.appView.agora_right = 0;
-    self.appView.agora_bottom = 0;
+    self.appView.agora_center_x = 0;
+    self.appView.agora_center_y = 0;
+    self.appView.agora_width = AgoraLayoutAssist.agoraRealMaxWidth;
+    self.appView.agora_height = AgoraLayoutAssist.agoraRealMaxHeight;
 
     [self.view addSubview:self.appsController.containerView];
-    self.appsController.containerView.agora_safe_x = 0;
-    self.appsController.containerView.agora_safe_y = 0;
-    self.appsController.containerView.agora_safe_right = 0;
-    self.appsController.containerView.agora_safe_bottom = 0;
+    self.appsController.containerView.agora_center_x = 0;
+    self.appsController.containerView.agora_center_y = 0;
+    self.appsController.containerView.agora_width = self.appView.agora_width;
+    self.appsController.containerView.agora_height = self.appView.agora_height;
 }
 
 #pragma mark AgoraEduRoomContext
@@ -442,6 +442,14 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
     } failure:nil];
 }
 
+- (void)appsController:(AgoraExtAppsController *)controller
+       syncAppPosition:(NSString *)appIdentifier
+             diffPoint:(CGPoint)diffPoint {
+    // 设置到白板
+    [self.boardController syncAppPositionWithAppIdentifier:appIdentifier
+                                                 diffPoint:diffPoint];
+}
+
 - (NSString *)getDescriptionWithRole:(AgoraRTERoleType)role {
     switch (role) {
         case AgoraRTERoleTypeStudent:
@@ -484,6 +492,13 @@ needPropertiesOfExtAppIdentifier:(NSString *)appIdentifier
 - (void)boardController:(AgoraBoardController *)controller
     didScenePathChanged:(NSString *)path {
 //    [self.screenShareController updateScenePath:path];
+}
+
+- (void)boardController:(AgoraBoardController *)controller
+     didPositionUpdated:(NSString *)appIdentifier
+              diffPoint:(CGPoint)diffPoint {
+    [self.appsController syncAppPosition:appIdentifier
+                               diffPoint:diffPoint];
 }
 
 - (void)boardController:(AgoraBoardController *)controller
@@ -783,13 +798,13 @@ remoteStreamsRemoved:(NSArray<AgoraRTEStreamEvent*> *)events  {
 - (void)audioVolumeIndicationOfLocalStream:(NSString *)streamId
                                 withVolume:(NSUInteger)volume {
     [self onUpdateAudioVolumeIndication:volume
-                           streamUuid:streamId];
+                             streamUuid:streamId];
 }
 
 - (void)audioVolumeIndicationOfRemoteStream:(NSString *)streamId
                                  withVolume:(NSUInteger)volume {
     [self onUpdateAudioVolumeIndication:volume
-                           streamUuid:streamId];
+                             streamUuid:streamId];
 }
 
 #pragma mark - Private--Update Room

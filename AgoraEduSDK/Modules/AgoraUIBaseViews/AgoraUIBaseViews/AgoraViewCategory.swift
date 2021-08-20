@@ -44,6 +44,7 @@ fileprivate var Agora_Left_Key: NSString = "agora_left"
 fileprivate var Agora_Right_Key: NSString = "agora_right"
 fileprivate var Agora_Top_Key: NSString = "agora_top"
 fileprivate var Agora_Bottom_Key: NSString = "agora_bottom"
+fileprivate var Agora_Pan_Limit_Key: NSString = "agora_pan_limit"
 
 fileprivate var Agora_Total_Scale_Key: NSString = "agora_total_scale"
 
@@ -475,6 +476,28 @@ fileprivate let Agora_Float_Differ: Float = 0.001
         }
     }
     
+    var agora_pan_limit: CGRect {
+        set {
+            objc_setAssociatedObject(self,
+                                     &Agora_Pan_Limit_Key,
+                                     newValue,
+                                     .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        
+        get {
+            let v = objc_getAssociatedObject(self,
+                                             &Agora_Pan_Limit_Key)
+            
+            if let value = v as? CGRect {
+                return value
+            } else if let value = self.superview?.bounds {
+                return value
+            } else {
+                return UIApplication.shared.windows[0].frame
+            }
+        }
+    }
+    
     var agora_is_draggable: Bool {
         set {
             if newValue, let pan = self.agora_pan {
@@ -640,6 +663,10 @@ extension UIView {
         return self.agora_has_scaled() || self.agora_has_moved()
     }
     
+    open func agora_on_pan_transformed() {
+        
+    }
+    
     func agora_reset_transform() {
         self.transform = CGAffineTransform(scaleX: 1.0 / self.agora_total_scale,
                                            y: 1.0 / self.agora_total_scale)
@@ -691,8 +718,31 @@ extension UIView {
 fileprivate extension UIView {
     @objc func agora_on_pan_event(_ pan: UIPanGestureRecognizer) {
         let transP = pan.translation(in: self)
-        self.transform = CGAffineTransform(translationX: transP.x, y: transP.y)
+        let transX = transform.tx + transP.x
+        let transY = transform.ty + transP.y
+        
+        var leftConstraint = (frame.origin.x + transP.x) < 0
+        var topConstraint = (frame.origin.y + transP.y) < 0
+        var rightConstraint: Bool
+        var bottomConstraint: Bool
+        
+        if #available(iOS 11.0, *),
+           let safeAreaInsets = UIApplication.shared.keyWindow?.safeAreaInsets  {
+            rightConstraint = (frame.origin.x + frame.size.width + transP.x + safeAreaInsets.left + safeAreaInsets.right > agora_pan_limit.width)
+            bottomConstraint = (frame.origin.y + frame.size.height + transP.y + safeAreaInsets.top + safeAreaInsets.bottom > agora_pan_limit.height)
+        } else {
+            rightConstraint = (frame.origin.x + frame.size.width + transP.x > agora_pan_limit.width)
+            bottomConstraint = (frame.origin.y + frame.size.height + transP.y > agora_pan_limit.height)
+        }
+        
+        let new_x = (leftConstraint || rightConstraint) ? self.transform.tx : transX;
+        let new_y = (topConstraint || bottomConstraint) ? self.transform.ty : transY;
+        
+        self.transform = CGAffineTransform(translationX: new_x,
+                                           y: new_y)
         pan.setTranslation(CGPoint.zero, in: self)
+        
+        self.agora_on_pan_transformed()
     }
     
     @objc func agora_on_pinch_event(_ pinch: UIPinchGestureRecognizer) {
@@ -731,6 +781,23 @@ fileprivate extension UIView {
 }
 
 public extension UIView {
+    func agora_equal_to(view: UIView,
+                        attribute: NSLayoutConstraint.Attribute,
+                        constant: CGFloat = 0) {
+        guard let superView = self.superview else {
+            return
+        }
+      
+        let constraint = NSLayoutConstraint(item: self,
+                                            attribute: attribute,
+                                            relatedBy: .equal,
+                                            toItem: view,
+                                            attribute: attribute,
+                                            multiplier: 1.0,
+                                            constant: constant)
+        superView.addConstraint(constraint)
+    }
+    
     func agora_equal_to_superView(attribute: NSLayoutConstraint.Attribute,
                                   constant: CGFloat = 0) {
         guard let superView = self.superview else {

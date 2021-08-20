@@ -509,9 +509,7 @@ static const int s_btnSubmitWidth = 80;
 
 - (void)initData:(NSDictionary *)properties {
     [self propertiesDidUpdate:properties];
-    
-    UIPanGestureRecognizer* pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(drag:)];
-    [self.view addGestureRecognizer:pan];
+    self.view.agora_is_draggable = YES;
 }
 
 - (BOOL)array:(NSArray *)array1 isEqualTo:(NSArray *)array2 {

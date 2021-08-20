@@ -407,5 +407,6 @@ import AgoraWidget
 
     // 获取组件信息
     func getWidgetInfos() -> [AgoraWidgetInfo]?
+    
     func getAgoraWidgetProperties(type: EduContextWidgetType) -> [String: Any]?
 }

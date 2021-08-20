@@ -52,3 +52,13 @@ let AgoraVideoHeight: CGFloat = AgoraVideoWidth / AgoraVideoWidthHeightRatio
 let AgoraVideoGapX: CGFloat = (AgoraRealMaxWidth - (AgoraRenderMaxCount * AgoraVideoWidth)) / (AgoraRenderMaxCount - 1.0)
 // 小班课视频窗口竖向的间距
 let AgoraVideoGapY: CGFloat = (AgoraOtherHeight - AgoraNavBarHeight - AgoraVideoHeight) * 0.5
+
+@objcMembers public class AgoraLayoutAssist: NSObject {
+    public static func agoraRealMaxWidth() -> CGFloat {
+        return AgoraRealMaxWidth
+    }
+    
+    public static func agoraRealMaxHeight() -> CGFloat {
+        return AgoraRealMaxHeight
+    }
+}

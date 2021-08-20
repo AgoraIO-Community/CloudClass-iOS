@@ -29,12 +29,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSString *ext;
 @end
 
+@interface AgoraWhiteBoardExtAppMovement : NSObject
+@property (nonatomic, strong) NSString *userId;
+@property (nonatomic, assign) CGFloat x;
+@property (nonatomic, assign) CGFloat y;
+@end
+
 @interface AgoraWhiteBoardStateModel : WhiteGlobalState
 @property (nonatomic, assign) BOOL isFullScreen;
 @property (nonatomic, assign) BOOL teacherFirstLogin;
 @property (nonatomic, strong) NSArray <NSString *> * _Nullable grantUsers;
 @property (nonatomic, strong) NSArray <AgoraWhiteBoardTaskModel *> * _Nullable materialList;
 @property (nonatomic, strong) NSDictionary * _Nullable flexBoardState;
+
+@property (nonatomic, strong) NSDictionary * _Nullable extAppMoveTracks;
 @end
 
 @interface AgoraWhiteBoardCameraConfig : NSObject

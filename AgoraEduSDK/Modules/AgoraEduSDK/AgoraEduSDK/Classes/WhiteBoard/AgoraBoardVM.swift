@@ -25,6 +25,9 @@ protocol AgoraBoardVMDelegate: NSObjectProtocol {
     func didScenePathChanged(path: String)
     func didFlexStateUpdated(state: [String: Any]?)
     
+    func didPositionUpdated(appIdentifier: String,
+                            diffPoint: CGPoint)
+    
     func didCameraConfigChanged(camera: AgoraWhiteBoardCameraConfig)
     
     func didBoardDisConnectedUnexpected()
@@ -98,7 +101,20 @@ public class AgoraBoardVM: AgoraBaseVM {
                                                 httpCode: 200)
                         
             let currentBoardState = self.manager.getWhiteBoardStateModel()
-
+            // 初始化控件位置
+            let currentTracks = currentBoardState.extAppMoveTracks as? NSDictionary ?? NSDictionary()
+            for currentKey in currentTracks.allKeys {
+                let extAppMovement = AgoraWhiteBoardExtAppMovement.yy_model(withJSON: currentTracks[currentKey] ?? "")
+                if extAppMovement == nil {
+                    continue
+                }
+                
+                let point = CGPoint(x: extAppMovement!.x,
+                                    y: extAppMovement!.y)
+                self.delegate?.didPositionUpdated(appIdentifier: currentKey as! String,
+                                                  diffPoint: point)
+            }
+            
             let users = currentBoardState.grantUsers
             let usreGranted = users?.contains(self.userUuid) ?? false
 
@@ -245,6 +261,27 @@ extension AgoraBoardVM: AgoraWhiteManagerDelegate {
         let currentFlexState = state.flexBoardState as? NSDictionary ?? NSDictionary()
         if !originalFlexState.yy_modelIsEqual(currentFlexState) {
             delegate?.didFlexStateUpdated(state: state.flexBoardState as? [String : Any])
+        }
+        
+        // position
+        let originalTracks = originalState.extAppMoveTracks as? NSDictionary ?? NSDictionary()
+        let currentTracks = state.extAppMoveTracks as? NSDictionary ?? NSDictionary()
+        for currentKey in currentTracks.allKeys {
+            let extAppMovement = AgoraWhiteBoardExtAppMovement.yy_model(withJSON: currentTracks[currentKey] ?? "")
+            if extAppMovement == nil ||
+                extAppMovement?.userId == self.userUuid {
+                continue
+            }
+            
+            let originalExtAppMovement = AgoraWhiteBoardExtAppMovement.yy_model(withJSON: originalTracks[currentKey] ?? "")
+            if originalExtAppMovement?.x != extAppMovement!.x || originalExtAppMovement?.y != extAppMovement!.y {
+                
+                let point = CGPoint(x: extAppMovement!.x,
+                                    y: extAppMovement!.y)
+                delegate?.didPositionUpdated(appIdentifier: currentKey as! String,
+                                             diffPoint: point)
+            }
+
         }
 
         let originalLocalIsGranted = originalState.grantUsers?.contains(self.userUuid) ?? false
