@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.dependency "AgoraRtm_iOS", "1.4.6"
   s.dependency "AgoraRtcEngine_Special_iOS", "2.9.107.136"
   s.dependency "AFNetworking", "4.0.1"
-  s.dependency "Whiteboard", "2.13.19-window"
+  s.dependency "Whiteboard", "2.13.19-beta"
   s.dependency "CocoaLumberjack", "3.6.1"
   s.dependency "AliyunOSSiOS", "2.10.8"
   s.dependency "Protobuf"

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		644DD1852A8F2EC7CA94792F /* Pods_AgoraExtApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DDBC0FFBF40234CF549569B /* Pods_AgoraExtApp.framework */; };
+		7840705626D1286100769937 /* AgoraBaseExtAppUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840705526D1286100769937 /* AgoraBaseExtAppUIView.swift */; };
 		86193A4E263573C1008A11D4 /* AgoraExtAppController.h in Headers */ = {isa = PBXBuildFile; fileRef = 86193A4C263573C1008A11D4 /* AgoraExtAppController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		86193A4F263573C1008A11D4 /* AgoraExtAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86193A4D263573C1008A11D4 /* AgoraExtAppController.m */; };
 		86193A532635742A008A11D4 /* AgoraExtAppObjects.h in Headers */ = {isa = PBXBuildFile; fileRef = 86193A512635742A008A11D4 /* AgoraExtAppObjects.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		3DDBC0FFBF40234CF549569B /* Pods_AgoraExtApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraExtApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		492BAB83FA6BB5DDFB71DC8C /* Pods-AgoraExtApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraExtApp.debug.xcconfig"; path = "Target Support Files/Pods-AgoraExtApp/Pods-AgoraExtApp.debug.xcconfig"; sourceTree = "<group>"; };
+		7840705526D1286100769937 /* AgoraBaseExtAppUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBaseExtAppUIView.swift; sourceTree = "<group>"; };
 		86193A4C263573C1008A11D4 /* AgoraExtAppController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraExtAppController.h; sourceTree = "<group>"; };
 		86193A4D263573C1008A11D4 /* AgoraExtAppController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AgoraExtAppController.m; sourceTree = "<group>"; };
 		86193A512635742A008A11D4 /* AgoraExtAppObjects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraExtAppObjects.h; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				86548746261EF2CC0025ADCB /* AgoraBaseExtApp.m */,
 				86193A4C263573C1008A11D4 /* AgoraExtAppController.h */,
 				86193A4D263573C1008A11D4 /* AgoraExtAppController.m */,
+				7840705526D1286100769937 /* AgoraBaseExtAppUIView.swift */,
 				86193A512635742A008A11D4 /* AgoraExtAppObjects.h */,
 				86193A522635742A008A11D4 /* AgoraExtAppObjects.m */,
 				86193A562635753C008A11D4 /* AgoraExtAppInternalObjects.swift */,
@@ -207,6 +210,7 @@
 			files = (
 				86193A572635753C008A11D4 /* AgoraExtAppInternalObjects.swift in Sources */,
 				86193A542635742A008A11D4 /* AgoraExtAppObjects.m in Sources */,
+				7840705626D1286100769937 /* AgoraBaseExtAppUIView.swift in Sources */,
 				86193A4F263573C1008A11D4 /* AgoraExtAppController.m in Sources */,
 				86548748261EF2CC0025ADCB /* AgoraBaseExtApp.m in Sources */,
 			);
