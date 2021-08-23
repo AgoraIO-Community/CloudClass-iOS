@@ -125,6 +125,7 @@
         self.roomUuid = roomUuid;
         self.roomType = roomType;
         self.token = token;
+        self.roleType = roleType;
         self.boardFitMode = boardFitMode;
         
         if (startTime != nil) {
