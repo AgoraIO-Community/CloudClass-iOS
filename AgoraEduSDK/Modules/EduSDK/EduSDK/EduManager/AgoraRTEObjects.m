@@ -14,10 +14,10 @@
 + (instancetype)defaultVideoConfig {
     AgoraRTEVideoConfig *config = [[AgoraRTEVideoConfig alloc] init];
 
-    config.videoDimensionWidth = 360;
-    config.videoDimensionHeight = 360;
+    config.videoDimensionWidth = 320;
+    config.videoDimensionHeight = 240;
     config.frameRate = 15;
-    config.bitrate = 0;
+    config.bitrate = 200;
     config.orientationMode = AgoraRTEVideoOutputOrientationModeFixedLandscape;
     config.degradationPreference = AgoraRTEDegradationMaintainQuality;
     

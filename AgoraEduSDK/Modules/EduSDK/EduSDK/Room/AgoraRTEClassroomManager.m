@@ -241,6 +241,10 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService, UInt64 
                                                      @"localuser":weakself.syncRoomSession.localUser}];
         // media
         weakself.userService = userService;
+        
+        // set videoConfig before join room
+        [weakself setVideoConfig:options.videoConfig];
+        
         [weakself initMediaDispatchGroup:model
                                  success:^{
             [AgoraRTELogService logMessageWithDescribe:@"classroom initMedia success:"
@@ -520,6 +524,15 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService, UInt64 
     }
 }
 
+- (void)setVideoConfig:(AgoraRTEVideoConfig *_Nullable)videoConfig {
+    AgoraRTEVideoConfig *cameraEncodeConfig = videoConfig;
+    if (!cameraEncodeConfig) {
+        cameraEncodeConfig= [AgoraRTEVideoConfig defaultVideoConfig];
+    }
+    [self.userService setVideoConfig: videoConfig];
+}
+
+
 - (void)destory {
     [self releaseResource];
 }
@@ -697,26 +710,6 @@ typedef void (^OnJoinRoomSuccessBlock)(AgoraRTEUserService *userService, UInt64 
     }
         
     [AgoraRTCManager.shareManager setChannelProfile:AgoraChannelProfileLiveBroadcasting];
-    
-    AgoraRTEVideoConfig *videoConfig = [AgoraRTEVideoConfig defaultVideoConfig];
-    if (self.sceneType == AgoraRTESceneType1V1) {
-//        videoConfig.videoDimensionWidth = 640;
-//        videoConfig.videoDimensionHeight = 480;
-        videoConfig.videoDimensionWidth = 320;
-        videoConfig.videoDimensionHeight = 240;
-        
-    } else if(self.sceneType == AgoraRTESceneTypeSmall) {
-        videoConfig.videoDimensionWidth = 320;
-        videoConfig.videoDimensionHeight = 240;
-    
-    } else if(self.sceneType == AgoraRTESceneTypeBig) {
-        videoConfig.videoDimensionWidth = 320;
-        videoConfig.videoDimensionHeight = 240;
-    } else {
-        videoConfig.videoDimensionWidth = 320;
-        videoConfig.videoDimensionHeight = 240;
-    }
-    [self.userService setVideoConfig: videoConfig];
 
     if (self.mediaOption.autoPublish) {
         [AgoraRTCManager.shareManager setClientRole:AgoraClientRoleBroadcaster

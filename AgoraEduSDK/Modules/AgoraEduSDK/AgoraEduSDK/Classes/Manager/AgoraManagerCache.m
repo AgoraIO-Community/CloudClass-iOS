@@ -18,6 +18,7 @@ static AgoraManagerCache *manager = nil;
         manager.differTime = 0;
         manager.lan = AgoraEduChatTranslationLanAUTO;
         manager.coursewares = @[];
+        manager.cameraEncoderConfiguration = [AgoraEduVideoEncoderConfiguration new];
     });
     return manager;
 }
@@ -32,5 +33,7 @@ static AgoraManagerCache *manager = nil;
     AgoraManagerCache.share.coursewares = @[];
     AgoraManagerCache.share.extApps = nil;
     AgoraManagerCache.share.components = nil;
+    
+    AgoraManagerCache.share.cameraEncoderConfiguration = [AgoraEduVideoEncoderConfiguration new];
 }
 @end

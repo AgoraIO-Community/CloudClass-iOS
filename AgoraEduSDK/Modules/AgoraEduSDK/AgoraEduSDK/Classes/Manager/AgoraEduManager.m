@@ -32,6 +32,8 @@ static AgoraEduManager *manager = nil;
 
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, assign) AgoraRTESceneType roomType;
+
+@property (nonatomic, strong, nullable) AgoraRTEVideoConfig *videoConfig;
 @end
 
 @implementation AgoraEduManager
@@ -59,6 +61,7 @@ static AgoraEduManager *manager = nil;
                 userName:(NSString *)userName
                   roomId:(NSString *)roomId
                      tag:(NSInteger)tag
+             videoConfig:(AgoraRTEVideoConfig * _Nullable)videoConfig
                  success:(void (^) (void))successBlock
                  failure:(void (^) (NSError * _Nonnull error))failureBlock {
     AgoraRTEConfiguration *config = [[AgoraRTEConfiguration alloc] initWithAppId:AgoraManagerCache.share.appId
@@ -69,6 +72,7 @@ static AgoraEduManager *manager = nil;
     config.logDirectoryPath = self.logDirectoryPath;
     config.tag = tag;
     config.logConsoleState = self.consoleState;
+    self.videoConfig = videoConfig;
     self.eduManager = [[AgoraRTEManager alloc] initWithConfig:config
                                                       success:successBlock
                                                       failure:^(NSError * _Nonnull error) {
@@ -139,6 +143,8 @@ static AgoraEduManager *manager = nil;
     } else {
         options.mediaOption.autoPublish = YES;
     }
+    
+    options.videoConfig = self.videoConfig;
     
     [self.roomManager joinClassroom:options
                             success:^(AgoraRTEUserService * _Nonnull studentService, UInt64 timestamp) {

@@ -108,6 +108,7 @@ static AgoraClassroomSDK *manager = nil;
 
     AgoraManagerCache.share.classroom = [AgoraEduClassroom new];
     AgoraManagerCache.share.token = NoNullString(config.token);
+    AgoraManagerCache.share.cameraEncoderConfiguration = config.cameraEncoderConfiguration;
 
     // Report
     NSString *hostV1 = @"https://api.agora.io";
@@ -245,12 +246,19 @@ static AgoraClassroomSDK *manager = nil;
     if (config.userProperties) {
         roomStateConfig.userProperties = config.userProperties;
     }
+    
+    AgoraRTEVideoConfig *videoConfig = [AgoraRTEVideoConfig defaultVideoConfig];
+    videoConfig.bitrate = AgoraManagerCache.share.cameraEncoderConfiguration.bitrate;
+    videoConfig.frameRate = AgoraManagerCache.share.cameraEncoderConfiguration.frameRate;
+    videoConfig.videoDimensionWidth = AgoraManagerCache.share.cameraEncoderConfiguration.width;
+    videoConfig.videoDimensionHeight = AgoraManagerCache.share.cameraEncoderConfiguration.height;
 
     // log rte
     [AgoraEduManager.shareManager initWithUserUuid:userUuid
                                           userName:userName
                                             roomId:roomUuid
                                                tag:sceneType
+                                       videoConfig:videoConfig
                                            success:^{
         // Report
         NSString *subEvent = @"http-preflight";

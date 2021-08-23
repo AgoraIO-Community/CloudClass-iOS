@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AgoraRTEClassroomMediaOptions.h"
 #import "AgoraRTEUser.h"
+#import "AgoraRTEObjects.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) AgoraRTERoleType role;
 
 @property (nonatomic, strong) AgoraRTEClassroomMediaOptions *mediaOption;
+@property (nonatomic, strong, nullable) AgoraRTEVideoConfig *videoConfig;
 
 - (instancetype)initWithUserName:(NSString *)userName role:(AgoraRTERoleType)role;
 - (instancetype)initWithRole:(AgoraRTERoleType)role;

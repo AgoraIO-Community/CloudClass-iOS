@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *extApps;
 @property (nonatomic, strong) NSArray<AgoraWidgetConfiguration *> *components;
 
+@property (nonatomic, strong) AgoraEduVideoEncoderConfiguration *cameraEncoderConfiguration;
 + (void)releaseResource;
 
 @end
