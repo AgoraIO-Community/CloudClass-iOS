@@ -86,6 +86,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) AgoraEduVideoEncoderConfiguration *cameraEncoderConfiguration;
 @property (nonatomic, assign) AgoraBoardFitMode boardFitMode;
 
+// 白板课件收集按钮位置，Css
+@property (nonatomic, strong, nullable) NSDictionary<NSString *, id> *collectionStyle;
+
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
                         roleType:(AgoraEduRoleType)roleType

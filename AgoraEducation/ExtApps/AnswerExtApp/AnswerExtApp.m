@@ -157,7 +157,7 @@ static const int s_btnSubmitWidth = 80;
     self.view.agora_center_x = 0;
     self.view.agora_center_y = 0;
     self.view.agora_width = 240;
-    self.view.agora_height = 158;
+    self.view.agora_height = 180;
     
     self.titleHeight = 30;
     {
@@ -213,7 +213,12 @@ static const int s_btnSubmitWidth = 80;
     [self.selecItems removeAllObjects];
     self.resultBtn = nil;
     [self.viewContent.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    self.view.agora_height = 180;
+//    self.view.agora_height = 180;
+//    [self.view layoutIfNeeded];
+//    CGRect frame = self.view.frame;
+//    frame.origin.x = frame.origin.x - self.view.transform.tx;
+//    frame.origin.y = frame.origin.y - self.view.transform.ty;
+    
     self.viewContent.frame = CGRectMake(0, self.titleHeight, self.view.agora_width, self.view.agora_height - self.titleHeight);
     
     UIView* viewCenter = [[UIView alloc] initWithFrame:CGRectMake(45, 22, self.view.agora_width - 90, self.view.agora_height - self.titleHeight - 22)];
@@ -527,34 +532,6 @@ static const int s_btnSubmitWidth = 80;
         }
     }
     return YES;
-}
-
-- (void)drag:(UIPanGestureRecognizer *)recognizer {
-    if (![recognizer.view isKindOfClass:AgoraBaseUIView.class]) {
-        return;
-    }
-    AgoraBaseUIView *view = (AgoraBaseUIView *)recognizer.view;
-    
-    CGPoint trans = [recognizer translationInView:UIApplication.sharedApplication.keyWindow];
-    
-    CGFloat ori_x = view.center.x;
-    CGFloat ori_y = view.center.y;
-    
-    BOOL needXConstraint = (view.frame.origin.x + view.frame.size.width + trans.x > view.superview.frame.size.width) || view.frame.origin.x + trans.x < 0;
-    BOOL needYConstraint = (view.frame.origin.y + view.frame.size.height + trans.y > view.superview.frame.size.height) || view.frame.origin.y + trans.y < 0;
-    
-    CGFloat new_x = needXConstraint ? ori_x : (ori_x + trans.x);
-    CGFloat new_y = needYConstraint ? ori_y : (ori_y + trans.y);
-    
-    if (recognizer.state == UIGestureRecognizerStateChanged) {
-        [UIView animateWithDuration:0
-                         animations:^{
-            recognizer.view.center = CGPointMake(new_x,
-                                                 new_y);
-            [recognizer setTranslation:CGPointZero
-                                inView:recognizer.view];
-        }];
-    }
 }
 
 #pragma mark - Timer

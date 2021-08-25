@@ -14,6 +14,18 @@ import AgoraUIBaseViews
     }
 }
 
+@objcMembers public class AgoraExtAppPositionItem: NSObject {
+    public var x: CGFloat
+    public var y: CGFloat
+
+    @objc public init(x: CGFloat,
+                      y: CGFloat) {
+        self.x = x
+        self.y = y
+        super.init()
+    }
+}
+
 @objcMembers public class AgoraExtAppItem: NSObject {
     // 设置 ExtAppView 的位置
     public var layout: UIEdgeInsets

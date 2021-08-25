@@ -146,6 +146,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
         [self.streams addObject: stream];
     }
     self.localUser.streams = self.localStreams;
+
     [self.users addObject:self.localUser];
     
     AgoraRTERoomSessionDataModel *model = [AgoraRTERoomSessionDataModel yy_modelWithDictionary:syncData];
@@ -361,7 +362,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                     [self.streams removeObjectsInArray:streamFilters];
                     if (streamFilters.count > 0 && [userModel.userUuid isEqualToString:self.userUuid]) {
                         [self.localStreams removeObjectsInArray:streamFilters];
-                        
+
                         if ([self.delegate respondsToSelector:@selector(onLocalStreamInOut:state:)]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 if (streamFilters.count > 0) {
@@ -405,6 +406,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                     if ([userModel.userUuid isEqualToString:self.userUuid]) {
                         
                         [self.localUser yy_modelSetWithJSON: userObj];
+                        self.localUser.streams = self.localStreams;
 
                         if ([self.delegate respondsToSelector:@selector(onLocalUserUpdateFrom:to:model:)] && [obj isKindOfClass:AgoraRTEChannelMsgUsersProperty.class]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
@@ -430,6 +432,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                         // update local user
                         id userObj = [userModel yy_modelToJSONObject];
                         [self.localUser yy_modelSetWithJSON:userObj];
+                        self.localUser.streams = self.localStreams;
                     }
                     
                     for(AgoraRTEBaseSnapshotStreamModel *streamModel in userModel.streams) {
@@ -528,6 +531,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                     [self.streams removeObjectsInArray:filters];
                     if ([filterStream.fromUser.userUuid isEqualToString:self.userUuid]) {
                         [self.localStreams removeObjectsInArray:filters];
+ 
                         [streamModifyModel.localRemoveStreams addObjectsFromArray:filters];
                     } else {
                         [streamModifyModel.remoteRemoveStreams addObjectsFromArray:filters];

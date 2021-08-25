@@ -108,9 +108,9 @@
 }
 
 // 远端移动
-- (void)onExtAppUIViewPositionSync:(AgoraBaseExtAppUIView *)view
+- (void)onExtAppUIViewPositionSync:(AgoraBaseExtAppUIView *)extView
                              point:(CGPoint)point {
-    UIView *v = view.superview;
+    UIView *v = extView.superview;
     if (v == nil) {
         return;
     }
@@ -120,9 +120,10 @@
     CGPoint targetPoint = CGPointMake(point.x * medSize.width, point.y * medSize.height);
     
     // 更新位置
-    view.transform = CGAffineTransformMakeTranslation(targetPoint.x - view.x,
-                                                      targetPoint.y - view.y);
+    extView.transform = CGAffineTransformMakeTranslation(targetPoint.x - extView.x,
+                                                      targetPoint.y - extView.y);
     
+//    NSLog(@"Srs onExtAppUIViewPositionSync:%@ %f %f", extView, extView.transform.tx, extView.transform.ty);
 }
 
 // 最大有效移动范围（Maximum Effective Distance, MED）

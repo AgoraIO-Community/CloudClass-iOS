@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (AgoraWhiteBoardStateModel *)getWhiteBoardStateModel;
 - (void)setWhiteBoardStateModel:(AgoraWhiteBoardStateModel *)state;
 
+- (void)setCourseIconStyle:(NSDictionary *)style;
+
 // join
 - (void)joinWithOptions:(AgoraWhiteBoardJoinOptions *)options
                 success:(void (^) (void))successBlock

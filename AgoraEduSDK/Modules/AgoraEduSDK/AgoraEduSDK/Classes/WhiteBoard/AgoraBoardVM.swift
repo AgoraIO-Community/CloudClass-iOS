@@ -73,6 +73,7 @@ public class AgoraBoardVM: AgoraBaseVM {
     
     func join(boardId: String,
               boardToken: String,
+              collectionStyle : [String: Any]?,
               success: @escaping () -> Void,
               failure: @escaping (_ error: Error) -> Void) {
 
@@ -84,6 +85,7 @@ public class AgoraBoardVM: AgoraBaseVM {
         let options = AgoraWhiteBoardJoinOptions()
         options.boardId = boardId
         options.boardToken = boardToken
+        options.collectionStyle = collectionStyle
         
         manager.join(with: options) {[weak self] in
             guard let `self` = self else {

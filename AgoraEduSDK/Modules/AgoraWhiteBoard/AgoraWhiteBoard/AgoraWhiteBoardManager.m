@@ -117,10 +117,13 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     
     WhiteRoomConfig *roomConfig = [[WhiteRoomConfig alloc] initWithUuid:options.boardId
                                                               roomToken:options.boardToken];
+    if (options.collectionStyle != nil) {
+        roomConfig.collectionStyle = options.collectionStyle;
+    }
     roomConfig.isWritable = self.isWritable;
     roomConfig.disableNewPencil = NO;
     roomConfig.useMultiViews = YES;
-    
+
     [self.whiteSDK joinRoomWithConfig:roomConfig
                             callbacks:self
                     completionHandler:^(BOOL success,

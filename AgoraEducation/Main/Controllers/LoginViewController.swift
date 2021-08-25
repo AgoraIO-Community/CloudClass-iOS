@@ -653,6 +653,15 @@ private extension LoginViewController{
                                           userProperties: ["avatarurl": avatarurl],
                                           boardFitMode: .retain)
         
+        let size = LoginConfig.device == .iPad ? 40 : 30
+        config.collectionStyle = [
+            "position":"fixed",
+            "left":"50px",
+            "bottom":"\(UIScreen.agora_safe_area_bottom)px",
+            "width":"\(size)px",
+            "height":"\(size)px",
+        ]
+
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")
         } else {

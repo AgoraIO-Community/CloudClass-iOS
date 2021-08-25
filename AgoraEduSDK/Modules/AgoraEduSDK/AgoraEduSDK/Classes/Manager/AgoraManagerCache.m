@@ -34,6 +34,8 @@ static AgoraManagerCache *manager = nil;
     AgoraManagerCache.share.extApps = nil;
     AgoraManagerCache.share.components = nil;
     
+    AgoraManagerCache.share.collectionStyle = nil;
+    
     AgoraManagerCache.share.cameraEncoderConfiguration = [AgoraEduVideoEncoderConfiguration new];
 }
 @end

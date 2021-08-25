@@ -313,6 +313,7 @@
                                                                     boardId:boardId
                                                                  boardToken:boardToken
                                                                    userUuid:userId
+                                                            collectionStyle:AgoraManagerCache.share.collectionStyle
                                                                    download:self.download
                                                                    reportor:reportor
                                                                       cache:self.cache

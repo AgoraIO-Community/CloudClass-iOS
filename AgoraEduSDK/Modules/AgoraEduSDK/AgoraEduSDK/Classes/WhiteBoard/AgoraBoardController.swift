@@ -58,11 +58,15 @@ import EduSDK
     private var localCameraConfigs = [String: AgoraWhiteBoardCameraConfig]()
     
     private var manager: AgoraWhiteBoardManager?
+    
+    private var bInit = false
+    private var collectionStyle:[String: Any]?
 
     public init(boardAppId: String,
                 boardId: String,
                 boardToken: String,
                 userUuid: String,
+                collectionStyle: [String: Any]?,
                 download: AgoraDownloadManager,
                 reportor: AgoraApaasReportorEventTube,
                 cache: AgoraManagerCache,
@@ -72,6 +76,8 @@ import EduSDK
         self.boardId = boardId
         self.boardToken = boardToken
         self.boardAutoMode = boardAutoMode
+        
+        self.collectionStyle = collectionStyle
         
         self.userId = userUuid
         self.delegate = delegate
@@ -113,6 +119,11 @@ import EduSDK
 
         self.manager?.setWhiteBoardStateModel(stateModel)
     }
+    
+    
+    deinit {
+        self.leave()
+    }
 }
 
 // MARK: - Life cycle
@@ -122,16 +133,19 @@ extension AgoraBoardController {
     }
     
     public func viewDidLoad() {
-        
+
     }
     
     public func viewDidAppear() {
-        initBoardView()
-        join()
+        if !bInit {
+            initBoardView()
+            join()
+        }
+        bInit = true
     }
     
     public func viewWillDisappear() {
-        leave()
+        //leave()
     }
     
     public func viewDidDisappear() {
@@ -142,9 +156,10 @@ extension AgoraBoardController {
 extension AgoraBoardController {
     func join() {
         eventDispatcher.onSetLoadingVisible(true)
-
+        
         boardVM.join(boardId: boardId,
-                     boardToken: boardToken) { [weak self] in
+                     boardToken: boardToken,
+                     collectionStyle: self.collectionStyle) { [weak self] in
             self?.eventDispatcher.onSetLoadingVisible(false)
         } failure: { [weak self] (error) in
             guard let `self` = self else {

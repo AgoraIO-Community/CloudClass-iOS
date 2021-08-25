@@ -13,6 +13,7 @@
 @property (nonatomic, strong, nullable) NSMutableDictionary <NSString *, AgoraExtAppItem *> *extApps; // key: AgoraExtAppIdentifier
 @property (nonatomic, strong, nullable) NSMutableDictionary <NSString *, AgoraExtAppDirtyTag *> *extAppDirtyTags;// key: AgoraExtAppIdentifier
 @property (nonatomic, strong, nullable) NSMutableArray <AgoraExtAppInfo *> * extAppInfos;
+@property (nonatomic, strong, nullable) NSMutableDictionary <NSString *, AgoraExtAppPositionItem *> * extAppPositions;
 @end
 
 @implementation AgoraExtAppsController
@@ -35,6 +36,7 @@
     
     self.extApps = [NSMutableDictionary dictionary];
     self.extAppInfos = [NSMutableArray array];
+    self.extAppPositions = [NSMutableDictionary dictionary];
     
     for (AgoraExtAppConfiguration *item in apps) {
         // AgoraExtAppItem
@@ -104,6 +106,10 @@
 
 - (void)syncAppPosition:(NSString *)appIdentifier
               diffPoint:(CGPoint)diffPoint {
+    AgoraExtAppPositionItem *itemPosition = [[AgoraExtAppPositionItem alloc] initWithX:diffPoint.x
+                                                                             y:diffPoint.y];
+    self.extAppPositions[appIdentifier] = itemPosition;
+//    NSLog(@"Srs syncAppPosition:%f %f", itemPosition.x, itemPosition.y);
     
     if (self.extApps.count <= 0) {
         return;
@@ -232,6 +238,18 @@
     [self.containerView setHidden:NO];
     
     [instance extAppDidLoad:context];
+    
+    if (self.extAppPositions[appIdentifier] != nil &&
+        [instance.view isKindOfClass:AgoraBaseExtAppUIView.class]) {
+        
+        AgoraExtAppPositionItem *itemPosition = self.extAppPositions[appIdentifier];
+        CGPoint diffPoint = CGPointMake(itemPosition.x,
+                                        itemPosition.y);
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [((AgoraBaseExtAppUIView *)instance.view) onExtAppUIViewPositionSync:diffPoint];
+        });
+    }
 }
 
 - (AgoraExtAppContext *)getContextWithAppIdentifier:(NSString *)appIdentifier
