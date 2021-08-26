@@ -102,7 +102,7 @@ static const int s_btnSubmitWidth = 80;
     
     NSString *nowState = properties[@"state"];
     if([nowState isEqualToString:@"start"]){
-        if (-1 == self.currentAnsStatus){
+        if (-1 == self.currentAnsStatus || 2 == self.currentAnsStatus) {
             self.currentAnsStatus = 0;
             [self initAnswerViews];
             [self startTimer];
@@ -157,7 +157,7 @@ static const int s_btnSubmitWidth = 80;
     self.view.agora_center_x = 0;
     self.view.agora_center_y = 0;
     self.view.agora_width = 240;
-    self.view.agora_height = 180;
+    self.view.agora_height = 158;
     
     self.titleHeight = 30;
     {
@@ -213,12 +213,8 @@ static const int s_btnSubmitWidth = 80;
     [self.selecItems removeAllObjects];
     self.resultBtn = nil;
     [self.viewContent.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-//    self.view.agora_height = 180;
-//    [self.view layoutIfNeeded];
-//    CGRect frame = self.view.frame;
-//    frame.origin.x = frame.origin.x - self.view.transform.tx;
-//    frame.origin.y = frame.origin.y - self.view.transform.ty;
-    
+    self.view.agora_height = 180;
+  
     self.viewContent.frame = CGRectMake(0, self.titleHeight, self.view.agora_width, self.view.agora_height - self.titleHeight);
     
     UIView* viewCenter = [[UIView alloc] initWithFrame:CGRectMake(45, 22, self.view.agora_width - 90, self.view.agora_height - self.titleHeight - 22)];

@@ -249,7 +249,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
 // lock view
 - (void)lockViewTransform:(BOOL)lock {
-//    self.contentView.userInteractionEnabled = !lock;
+    self.contentView.userInteractionEnabled = !lock;
     [self.room disableCameraTransform:lock];
 }
 

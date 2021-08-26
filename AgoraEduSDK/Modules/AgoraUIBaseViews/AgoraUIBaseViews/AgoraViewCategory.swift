@@ -728,8 +728,8 @@ fileprivate extension UIView {
         
         if #available(iOS 11.0, *),
            let safeAreaInsets = UIApplication.shared.keyWindow?.safeAreaInsets  {
-            rightConstraint = (frame.origin.x + frame.size.width + transP.x + safeAreaInsets.left + safeAreaInsets.right > agora_pan_limit.width)
-            bottomConstraint = (frame.origin.y + frame.size.height + transP.y + safeAreaInsets.top + safeAreaInsets.bottom > agora_pan_limit.height)
+            rightConstraint = (frame.origin.x + frame.size.width + transP.x > agora_pan_limit.width)
+            bottomConstraint = (frame.origin.y + frame.size.height + transP.y > agora_pan_limit.height)
         } else {
             rightConstraint = (frame.origin.x + frame.size.width + transP.x > agora_pan_limit.width)
             bottomConstraint = (frame.origin.y + frame.size.height + transP.y > agora_pan_limit.height)

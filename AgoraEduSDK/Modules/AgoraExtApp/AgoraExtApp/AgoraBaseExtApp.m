@@ -25,8 +25,10 @@
         self.localUserInfo = userInfo;
         self.roomInfo = roomInfo;
         self.properties = properties;
-        AgoraBaseExtAppUIView *extView = [[AgoraBaseExtAppUIView alloc] initWithFrame: CGRectZero];
-        extView.extDelegate = self;
+        
+        AgoraBaseUIView *extView = [AgoraBaseExtAppUIViewWrapper createExtAppUIView];
+        [AgoraBaseExtAppUIViewWrapper extDelegate:extView
+                                         delegate:self];
         self.view = extView;
     }
     
@@ -88,16 +90,19 @@
     
 }
 
-- (void)extAppUIViewPanTransformed:(AgoraBaseExtAppUIView *)view {
-    UIView *v = view.superview;
+- (void)extAppUIViewPanTransformed:(AgoraBaseUIView *)extView {
+    UIView *v = extView.superview;
     if (v == nil) {
         return;
     }
     
     // 计算xy
     CGSize medSize = [self calculateMED];
-    CGFloat x = view.transform.tx + view.x;
-    CGFloat y = view.transform.ty + view.y;
+    
+    CGFloat fx = [AgoraBaseExtAppUIViewWrapper x:extView];
+    CGFloat fy = [AgoraBaseExtAppUIViewWrapper y:extView];
+    CGFloat x = extView.transform.tx + fx;
+    CGFloat y = extView.transform.ty + fy;
     CGPoint point = CGPointMake(x / medSize.width, y / medSize.height);
     
     // 抛上层
@@ -108,7 +113,7 @@
 }
 
 // 远端移动
-- (void)onExtAppUIViewPositionSync:(AgoraBaseExtAppUIView *)extView
+- (void)onExtAppUIViewPositionSync:(AgoraBaseUIView *)extView
                              point:(CGPoint)point {
     UIView *v = extView.superview;
     if (v == nil) {
@@ -118,12 +123,13 @@
     // 计算xy
     CGSize medSize = [self calculateMED];
     CGPoint targetPoint = CGPointMake(point.x * medSize.width, point.y * medSize.height);
-    
+
     // 更新位置
-    extView.transform = CGAffineTransformMakeTranslation(targetPoint.x - extView.x,
-                                                      targetPoint.y - extView.y);
-    
-//    NSLog(@"Srs onExtAppUIViewPositionSync:%@ %f %f", extView, extView.transform.tx, extView.transform.ty);
+    CGFloat fx = [AgoraBaseExtAppUIViewWrapper x:extView];
+    CGFloat fy = [AgoraBaseExtAppUIViewWrapper y:extView];
+
+    extView.transform = CGAffineTransformMakeTranslation(targetPoint.x - fx,
+                                                      targetPoint.y - fy);
 }
 
 // 最大有效移动范围（Maximum Effective Distance, MED）

@@ -131,9 +131,8 @@
         return;
     }
     
-    if ([item.instance.view isKindOfClass:AgoraBaseExtAppUIView.class]) {
-        [((AgoraBaseExtAppUIView *)item.instance.view) onExtAppUIViewPositionSync:diffPoint];
-    }
+    [AgoraBaseExtAppUIViewWrapper onExtAppUIViewPositionSync:item.instance.view
+                                                       point:diffPoint];
 }
 
 - (void)appsCommonDidUpdate:(NSDictionary<NSString *,id> *)appsCommonDic {
@@ -240,14 +239,15 @@
     [instance extAppDidLoad:context];
     
     if (self.extAppPositions[appIdentifier] != nil &&
-        [instance.view isKindOfClass:AgoraBaseExtAppUIView.class]) {
-        
+        [AgoraBaseExtAppUIViewWrapper isExtAppUIView:instance.view]) {
+
         AgoraExtAppPositionItem *itemPosition = self.extAppPositions[appIdentifier];
         CGPoint diffPoint = CGPointMake(itemPosition.x,
                                         itemPosition.y);
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [((AgoraBaseExtAppUIView *)instance.view) onExtAppUIViewPositionSync:diffPoint];
+            [AgoraBaseExtAppUIViewWrapper onExtAppUIViewPositionSync:instance.view
+                                                               point:diffPoint];
         });
     }
 }
