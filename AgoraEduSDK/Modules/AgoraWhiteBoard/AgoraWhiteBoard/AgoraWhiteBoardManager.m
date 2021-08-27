@@ -117,11 +117,17 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     
     WhiteRoomConfig *roomConfig = [[WhiteRoomConfig alloc] initWithUuid:options.boardId
                                                               roomToken:options.boardToken];
+    
+    WhiteWindowParams *windowParams = [[WhiteWindowParams alloc] init];
+    windowParams.chessboard = NO;
+    
+    CGSize size = self.contentView.frame.size;
+    windowParams.containerSizeRatio = @(size.height / size.width);
+    
     if (options.collectionStyle != nil) {
-        WhiteWindowParams *windowParams = [[WhiteWindowParams alloc] init];
         windowParams.collectorStyles = options.collectionStyle;
-        roomConfig.windowParams = windowParams;
     }
+    roomConfig.windowParams = windowParams;
     roomConfig.isWritable = self.isWritable;
     roomConfig.disableNewPencil = NO;
     roomConfig.useMultiViews = YES;
@@ -360,7 +366,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     [self.room getZoomScaleWithResult:^(CGFloat scale) {        
         weakself.cameraConfig.scale = (scale + 0.1);
         WhiteCameraConfig *config = [WhiteCameraConfig createWithAGConfig:self.cameraConfig];
-        [weakself.room moveCamera:config];
+//        [weakself.room moveCamera:config];
     }];
 }
 
@@ -372,7 +378,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
         weakself.cameraConfig.scale = (ss < 0.1 ? 0.1 : ss);
         
         WhiteCameraConfig *config = [WhiteCameraConfig createWithAGConfig:self.cameraConfig];
-        [weakself.room moveCamera:config];
+//        [weakself.room moveCamera:config];
         
         NSLog(@"####### decreaseScale config.scale: %f", config.scale.floatValue);
         NSLog(@"####### decreaseScale config.centerX: %f", config.centerX.floatValue);
