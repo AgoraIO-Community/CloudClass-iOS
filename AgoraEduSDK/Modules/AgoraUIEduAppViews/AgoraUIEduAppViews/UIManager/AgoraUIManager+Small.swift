@@ -200,6 +200,9 @@ extension AgoraUIManager {
         sender.isSelected = !isSelected
         if sender.isSelected {
             self.hxChat?.containerView.isHidden = false
+            if(self.hxChat != nil && self.hxChat!.responds(to: "showView")) {
+                self.hxChat!.performSelector(onMainThread: "showView", with: nil, waitUntilDone: true)
+            }
         }
     }
     

@@ -405,9 +405,16 @@ extension AgoraUIManager: AgoraWidgetDelegate {
     }
     
     func chatViewMessageHandle(message: String) {
-        guard let dic = message.json(),
-              let _ = dic["isMinSize"] as? Int else {
+        guard let dic = message.json() else {
             return
+        }
+        
+        let isShowBadge = dic["isShowBadge"] as? Bool;
+        // todo 根据isShowBadge决定是否显示红点
+        
+        let isMinSize = dic["isMinSize"] as? Int;
+        if(isMinSize == nil) {
+            return;
         }
         
         switch viewType {

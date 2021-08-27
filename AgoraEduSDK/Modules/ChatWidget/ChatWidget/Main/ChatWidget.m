@@ -19,6 +19,7 @@
 static const NSString* kAvatarUrl = @"avatarUrl";
 static const NSString* kNickname = @"nickName";
 static const NSString* kChatRoomId = @"chatroomId";
+static const NSString* kIsShowBadge = @"isShowBadge";
 
 #define TOP_HEIGHT 34
 #define MINIBUTTON_SIZE 40
@@ -34,8 +35,6 @@ static const NSString* kChatRoomId = @"chatroomId";
 @property (nonatomic,strong) ChatView* chatView;
 @property (nonatomic,strong) AgoraBaseUIContainer* containView;
 @property (nonatomic,strong) UITapGestureRecognizer *tap;
-@property (nonatomic,strong) UIButton* miniButton;
-@property (nonatomic,strong) CustomBadgeView* badgeView;
 @end
 
 @implementation ChatWidget
@@ -85,22 +84,6 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                        action:@selector(handleTapAction:)];
     [self.containView addGestureRecognizer:self.tap];
-    
-    self.miniButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.miniButton setImage:[UIImage imageNamedFromBundle:@"icon_chat"] forState:UIControlStateNormal];
-    self.miniButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.miniButton setImageEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    self.miniButton.layer.cornerRadius = MINIBUTTON_SIZE/2;
-    self.miniButton.layer.borderWidth = 1;
-    self.miniButton.layer.borderColor = [UIColor colorWithRed:47/255.0 green:65/255.0 blue:146/255.0 alpha:0.15].CGColor;
-    [self.miniButton addTarget:self action:@selector(showView) forControlEvents:UIControlEventTouchUpInside];
-    self.miniButton.backgroundColor = UIColor.whiteColor;
-    [self.containerView addSubview:self.miniButton];
-    self.miniButton.hidden = YES;
-    
-    self.badgeView = [[CustomBadgeView alloc] init];
-    [self.containerView addSubview:self.badgeView];
-    self.badgeView.hidden = YES;
 }
 
 - (void)layoutViews {
@@ -113,10 +96,6 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.announcementView.frame = CGRectMake(0,TOP_HEIGHT,self.containView.bounds.size.width,self.containView.bounds.size.height - TOP_HEIGHT);
     
     self.chatView.frame = CGRectMake(0,TOP_HEIGHT,self.containView.bounds.size.width,self.containView.bounds.size.height - TOP_HEIGHT);
-    
-    self.miniButton.frame = CGRectMake(10, self.containerView.bounds.size.height - MINIBUTTON_SIZE - 10, MINIBUTTON_SIZE, MINIBUTTON_SIZE);
-    
-    self.badgeView.frame = CGRectMake(10 + MINIBUTTON_SIZE*4/5, self.containerView.bounds.size.height - MINIBUTTON_SIZE - 10, self.badgeView.badgeSize, self.badgeView.badgeSize);
 }
 
 - (void)handleTapAction:(UITapGestureRecognizer *)aTap
@@ -156,6 +135,14 @@ static const NSString* kChatRoomId = @"chatroomId";
     [self.chatManager launch];
 }
 
+- (void)_showBadgeView:(BOOL)bShow
+{
+    NSDictionary *infoDict = @{kIsShowBadge:[NSNumber numberWithBool:bShow]};
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:infoDict options:0 error:0];
+    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    [self sendMessage:dataStr];
+}
+
 #pragma mark - ChatManagerDelegate
 - (void)chatMessageDidReceive
 {
@@ -164,9 +151,9 @@ static const NSString* kChatRoomId = @"chatroomId";
         NSArray<EMMessage*>* array = [weakself.chatManager msgArray];
         [self.chatView updateMsgs:array];
         if(array.count > 0) {
-            if([self.containView isHidden]) {
+            if([self.containerView isHidden]) {
                 // 最小化了
-                self.badgeView.hidden = NO;
+                [self _showBadgeView:YES];
             }
             if(self.chatTopView.currentTab != 0) {
                 // 显示红点
@@ -239,9 +226,9 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.chatView.announcement = aAnnouncement;
     self.announcementView.announcement = aAnnouncement;
     if(!aIsFirst) {
-        if([self.containView isHidden]) {
+        if([self.containerView isHidden]) {
             // 最小化了
-            self.badgeView.hidden = NO;
+            [self _showBadgeView:YES];
         }
         if(self.chatTopView.currentTab != 1) {
             // 显示红点
@@ -262,14 +249,15 @@ static const NSString* kChatRoomId = @"chatroomId";
     }
 }
 
+- (BOOL)shouldShowBadge
+{
+    return !self.chatTopView.badgeView.hidden || !self.chatTopView.announcementbadgeView.hidden;
+}
+
 - (void)chatTopViewDidClickHide
 {
-//    self.containView.hidden = YES;
-//    self.miniButton.hidden = NO;
-//    self.badgeView.hidden = self.chatTopView.badgeView.hidden && self.chatTopView.announcementbadgeView.hidden;
-//    self.containerView.agora_width = 50;
-    
-    NSDictionary *infoDict = @{@"isMinSize":@(1)};
+    BOOL isShowBadge = [self shouldShowBadge];
+    NSDictionary *infoDict = @{@"isMinSize":@(1),kIsShowBadge:[NSNumber numberWithBool:isShowBadge]};
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:infoDict options:0 error:0];
     NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     [self sendMessage:dataStr];
@@ -278,7 +266,6 @@ static const NSString* kChatRoomId = @"chatroomId";
 - (void)showView
 {
     self.containView.hidden = NO;
-    self.miniButton.hidden = YES;
     if(self.chatTopView.currentTab == 0) {
         self.chatTopView.badgeView.hidden = YES;
         [self.chatView scrollToBottomRow];
@@ -286,7 +273,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     if(self.chatTopView.currentTab == 1) {
         self.chatTopView.announcementbadgeView.hidden = YES;
     }
-    self.badgeView.hidden = YES;
+    [self _showBadgeView:NO];
     if([[UIDevice currentDevice].model isEqualToString:@"iPad"]) {
         self.containerView.agora_width = 300;
     }else
