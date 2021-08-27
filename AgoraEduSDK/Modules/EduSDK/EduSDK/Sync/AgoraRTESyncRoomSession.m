@@ -415,7 +415,7 @@ static dispatch_queue_t AgoraAsyncGetReleaseQueue() {
                             });
                         }
                     } else {
-                        if ([self.delegate respondsToSelector:@selector(onRemoteUserUpdateFrom:to:model:) && [obj isKindOfClass:AgoraRTEChannelMsgUsersProperty.class]]) {
+                        if ([self.delegate respondsToSelector:@selector(onRemoteUserUpdateFrom:to:model:)] && [obj isKindOfClass:AgoraRTEChannelMsgUsersProperty.class]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 
                                 [self.delegate onRemoteUserUpdateFrom:originalUser to:filterUser model:(AgoraRTEChannelMsgUsersProperty*)obj];

@@ -121,7 +121,8 @@ public var isDebug = false
             
             self.userList = AgoraUserListUIController(viewType: viewType,
                                                       contextProvider: self,
-                                                      eventRegister: self)
+                                                      eventRegister: self,
+                                                      delegate: self)
         case .lecture:
             self.renderLecture = AgoraLectureRenderUIController(viewType: viewType,
                                                             contextProvider: self,
@@ -139,7 +140,8 @@ public var isDebug = false
             
             self.userList = AgoraUserListUIController(viewType: viewType,
                                                       contextProvider: self,
-                                                      eventRegister: self)
+                                                      eventRegister: self,
+                                                      delegate: self)
         }
     }
     
@@ -355,6 +357,14 @@ extension AgoraUIManager: AgoraEduRoomHandler {
 extension AgoraUIManager: AgoraRoomUIControllerDelegate {
 }
 
+// MARK: - AgoraUserListUIControllerDelegate
+extension AgoraUIManager: AgoraUserListUIControllerDelegate {
+    func userListUIController(_ controller: AgoraUserListUIController,
+                              didStateChanged close: Bool) {
+        onUserListPressed()
+    }
+}
+
 // MARK: - AgoraScreenUIControllerDelegate
 extension AgoraUIManager: AgoraScreenUIControllerDelegate {
     func screenController(_ controller: AgoraScreenUIController,
@@ -409,11 +419,13 @@ extension AgoraUIManager: AgoraWidgetDelegate {
             return
         }
         
-        let isShowBadge = dic["isShowBadge"] as? Bool;
-        // todo 根据isShowBadge决定是否显示红点
+        if let isShowBadge = dic["isShowBadge"] as? Bool {
+            // 根据isShowBadge决定是否显示红点
+            showBadge(!isShowBadge)
+        }
         
         let isMinSize = dic["isMinSize"] as? Int;
-        if(isMinSize == nil) {
+        if (isMinSize == nil) {
             return;
         }
         

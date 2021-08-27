@@ -126,6 +126,18 @@ extension AgoraUIManager {
         chatMenu.agora_safe_bottom = MenuBottom + 1 * (MenuSize.height + MenuGap)
         chatMenu.agora_right = MenuRight
         
+        // ChatRed
+        let chatBadgeView = AgoraBaseUIView()
+        chatBadgeView.backgroundColor = .red
+        chatBadgeView.tag = 1
+        chatBadgeView.isHidden = true
+        chatMenu.addSubview(chatBadgeView)
+        chatBadgeView.agora_width = chatMenu.agora_width * 0.2
+        chatBadgeView.agora_height = chatBadgeView.agora_width
+        chatBadgeView.agora_y = isPad ? 8 : 5
+        chatBadgeView.agora_right = isPad ? 8 : 5
+        chatBadgeView.layer.cornerRadius = chatBadgeView.agora_height * 0.5;
+        
         // UserListMenu
         let userListMenu = AgoraBaseUIButton()
         userListMenu.setBackgroundImage(AgoraKitImage("menu_userlist_0"),
@@ -188,11 +200,16 @@ extension AgoraUIManager {
         self.menuView.viewWithTag(2)?.isUserInteractionEnabled = true
     }
     
+    func showBadge(_ hidden: Bool) {
+        if let redView = menuView.viewWithTag(2)?.viewWithTag(1) {
+            redView.isHidden = hidden
+        }
+    }
+    
     func onChatPressed() {
         let btn = menuView.viewWithTag(2) as! AgoraBaseUIButton
         onChatPressed(btn)
     }
-    
     func onChatPressed(_ sender: AgoraBaseUIButton) {
         let isSelected = sender.isSelected
         onMenuPressed()
@@ -206,6 +223,10 @@ extension AgoraUIManager {
         }
     }
     
+    func onUserListPressed() {
+        let btn = menuView.viewWithTag(3) as! AgoraBaseUIButton
+        onUserListPressed(btn)
+    }
     func onUserListPressed(_ sender: AgoraBaseUIButton) {
         let isSelected = sender.isSelected
         

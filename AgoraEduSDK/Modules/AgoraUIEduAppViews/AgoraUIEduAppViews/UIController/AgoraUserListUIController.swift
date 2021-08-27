@@ -11,6 +11,11 @@ import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 
+protocol AgoraUserListUIControllerDelegate: NSObjectProtocol {
+    func userListUIController(_ controller: AgoraUserListUIController,
+                              didStateChanged close: Bool)
+}
+
 class AgoraUserListUIController: NSObject, AgoraUIController {
     var containerView = AgoraUIControllerContainer(frame: .zero)
     
@@ -21,7 +26,8 @@ class AgoraUserListUIController: NSObject, AgoraUIController {
     private(set) var viewType: AgoraEduContextAppType
     private weak var contextProvider: AgoraControllerContextProvider?
     private weak var eventRegister: AgoraControllerEventRegister?
-    
+    private weak var delegate: AgoraUserListUIControllerDelegate?
+
     // View
     private lazy var userListView: AgoraUserListView = {
         var cellType: AgoraUserListView.UserCellType
@@ -49,10 +55,12 @@ class AgoraUserListUIController: NSObject, AgoraUIController {
     
     init(viewType: AgoraEduContextAppType,
          contextProvider: AgoraControllerContextProvider,
-         eventRegister: AgoraControllerEventRegister) {
+         eventRegister: AgoraControllerEventRegister,
+         delegate: AgoraUserListUIControllerDelegate) {
         self.viewType = viewType
         self.contextProvider = contextProvider
         self.eventRegister = eventRegister
+        self.delegate = delegate
         
         super.init()
         initViews()
@@ -111,7 +119,13 @@ private extension AgoraUserListUIController {
         userListView.studentTable.dataSource = self
         
         userListView.closeTouchBlock = { [weak self] in
-            self?.containerView.isHidden = true
+            guard let `self` = self else {
+                return
+            }
+            
+            self.containerView.isHidden = true
+            self.delegate?.userListUIController(self,
+                                                didStateChanged: true)
         }
     }
     

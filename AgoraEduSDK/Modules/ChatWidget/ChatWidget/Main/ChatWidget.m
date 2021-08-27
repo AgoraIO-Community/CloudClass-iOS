@@ -237,6 +237,11 @@ static const NSString* kIsShowBadge = @"isShowBadge";
     }
 }
 
+- (BOOL)shouldShowBadge
+{
+    return !self.chatTopView.badgeView.hidden || !self.chatTopView.announcementbadgeView.hidden;
+}
+
 #pragma mark - ChatTopViewDelegate
 - (void)chatTopViewDidSelectedChanged:(NSUInteger)nSelected
 {
@@ -247,11 +252,6 @@ static const NSString* kIsShowBadge = @"isShowBadge";
         [self.chatView removeFromSuperview];
         [self.containView addSubview:self.announcementView];
     }
-}
-
-- (BOOL)shouldShowBadge
-{
-    return !self.chatTopView.badgeView.hidden || !self.chatTopView.announcementbadgeView.hidden;
 }
 
 - (void)chatTopViewDidClickHide

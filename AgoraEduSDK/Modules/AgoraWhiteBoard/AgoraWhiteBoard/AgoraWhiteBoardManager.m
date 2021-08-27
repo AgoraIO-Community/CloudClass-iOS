@@ -48,7 +48,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                                      config:(AgoraWhiteBoardConfiguration *)config {
     self = [super init];
     if (self) {
-        self.isWritable = NO;
+        self.isWritable = YES;
         self.boardScenePath = @"";
         self.cameraConfig = [[AgoraWhiteBoardCameraConfig alloc] init];
         
@@ -77,13 +77,13 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     [self.room setWritable:YES
          completionHandler:^(BOOL isWritable,
                              NSError * _Nullable error) {
-        weakself.isWritable = isWritable;
         if (error) {
             if ([weakself.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
                 NSError *err = AgoraBoardLocalError(AgoraBoardLocalErrorCode, error);
                 [self.delegate onWhiteBoardError: error];
             }
         } else {
+            weakself.isWritable = isWritable;
             [weakself.room setGlobalState:state];
         }
     }];
@@ -120,14 +120,13 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     
     WhiteWindowParams *windowParams = [[WhiteWindowParams alloc] init];
     windowParams.chessboard = NO;
-    
     CGSize size = self.contentView.frame.size;
     windowParams.containerSizeRatio = @(size.height / size.width);
-    
     if (options.collectionStyle != nil) {
         windowParams.collectorStyles = options.collectionStyle;
     }
     roomConfig.windowParams = windowParams;
+    
     roomConfig.isWritable = self.isWritable;
     roomConfig.disableNewPencil = NO;
     roomConfig.useMultiViews = YES;
@@ -174,25 +173,25 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 - (void)allowTeachingaids:(BOOL)allow
                   success:(void (^) (void))successBlock
                   failure:(void (^) (NSError * error))failureBlock {
-    
-    [self.room disableDeviceInputs:!allow];
-    
+
     if (allow == self.isWritable) {
         if(successBlock) {
             successBlock();
         }
         return;
     }
-
+    
     __weak AgoraWhiteBoardManager *weakself = self;
 
     [self.room setWritable:allow
          completionHandler:^(BOOL isWritable,
                              NSError * _Nullable error) {
-        weakself.isWritable = isWritable;
+        
         if (error && failureBlock) {
             failureBlock(error);
         } else if (successBlock) {
+            weakself.isWritable = isWritable;
+            [weakself.room disableDeviceInputs:!allow];
             successBlock();
         }
     }];
