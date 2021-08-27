@@ -19,7 +19,7 @@ typedef enum : NSInteger {
     CountdownStateStop,
 } CountdownState;
 
-@interface CountDownExtApp ()<CountDownDelegate>
+@interface CountDownExtApp ()<CountDownDelegate, AgoraEduWhiteBoardHandler>
 @property (nonatomic, strong) id<CountDownProtocol> countDown;
 @property (nonatomic, assign) CountdownState localState;
 
@@ -45,10 +45,18 @@ typedef enum : NSInteger {
 - (void)extAppDidLoad:(AgoraEduExtAppContext *)context {
     [self initView];
     [self initData:context.properties];
+    
+    [context.contextPool.whiteBoard registerBoardEventHandler:self];
 }
 
 - (void)extAppWillUnload {
     [self.countDown cancelCountDown];
+}
+
+#pragma mark - AgoraEduWhiteBoardHandler
+// 有权限就可以移动白板，否则不可以
+- (void)onSetDrawingEnabled:(BOOL)enabled {
+    self.view.agora_is_draggable = enabled;
 }
 
 #pragma mark - private
@@ -78,7 +86,6 @@ typedef enum : NSInteger {
 
 - (void)initData:(NSDictionary *)properties {
     [self propertiesDidUpdate:properties];
-    self.view.agora_is_draggable = YES;
 }
 
 - (NSInteger)getCurrentTime {

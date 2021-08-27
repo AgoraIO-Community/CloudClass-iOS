@@ -48,7 +48,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                                      config:(AgoraWhiteBoardConfiguration *)config {
     self = [super init];
     if (self) {
-        self.isWritable = YES;
+        self.isWritable = NO;
         self.boardScenePath = @"";
         self.cameraConfig = [[AgoraWhiteBoardCameraConfig alloc] init];
         
@@ -118,7 +118,9 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     WhiteRoomConfig *roomConfig = [[WhiteRoomConfig alloc] initWithUuid:options.boardId
                                                               roomToken:options.boardToken];
     if (options.collectionStyle != nil) {
-        roomConfig.collectionStyle = options.collectionStyle;
+        WhiteWindowParams *windowParams = [[WhiteWindowParams alloc] init];
+        windowParams.collectorStyles = options.collectionStyle;
+        roomConfig.windowParams = windowParams;
     }
     roomConfig.isWritable = self.isWritable;
     roomConfig.disableNewPencil = NO;
@@ -166,6 +168,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 - (void)allowTeachingaids:(BOOL)allow
                   success:(void (^) (void))successBlock
                   failure:(void (^) (NSError * error))failureBlock {
+    
     [self.room disableDeviceInputs:!allow];
     
     if (allow == self.isWritable) {
@@ -176,7 +179,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     }
 
     __weak AgoraWhiteBoardManager *weakself = self;
-    
+
     [self.room setWritable:allow
          completionHandler:^(BOOL isWritable,
                              NSError * _Nullable error) {
@@ -401,7 +404,6 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 }
 
 - (void)setWhiteMemberState {
-    NSLog(@"currentApplianceName: %@", self.whiteMemberState.currentApplianceName);
     [self.room setMemberState:self.whiteMemberState];
 }
 

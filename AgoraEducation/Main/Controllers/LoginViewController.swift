@@ -653,6 +653,12 @@ private extension LoginViewController{
                                           userProperties: ["avatarurl": avatarurl],
                                           boardFitMode: .retain)
         
+        let encoderConfig = AgoraEduVideoEncoderConfiguration(width: 160,
+                                                              height: 120,
+                                                              frameRate: 15,
+                                                              bitrate: 200)
+        config.cameraEncoderConfiguration = encoderConfig
+
         let size = LoginConfig.device == .iPad ? 40 : 30
         config.collectionStyle = [
             "position":"fixed",

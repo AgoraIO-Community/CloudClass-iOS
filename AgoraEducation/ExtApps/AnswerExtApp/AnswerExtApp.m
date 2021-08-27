@@ -5,10 +5,12 @@
 //
 
 #import "AnswerExtApp.h"
+@import AgoraEduContext;
+@import AgoraEduExtApp;
 
 static const int s_btnSubmitWidth = 80;
 
-@interface AnswerExtApp ()
+@interface AnswerExtApp ()<AgoraEduWhiteBoardHandler>
 @property (nonatomic, strong) UILabel *countDownLabel;
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) NSInteger countDown; // second
@@ -122,7 +124,7 @@ static const int s_btnSubmitWidth = 80;
 }
 
 #pragma mark - Life cycle
-- (void)extAppDidLoad:(AgoraExtAppContext *)context {
+- (void)extAppDidLoad:(AgoraEduExtAppContext *)context {
     self.timer = nil;
     self.currentAnsType = 0;
     self.countDown = 0;
@@ -135,9 +137,17 @@ static const int s_btnSubmitWidth = 80;
     }
     [self initBaseViews];
     [self initData:context.properties];
+    
+    [context.contextPool.whiteBoard registerBoardEventHandler:self];
 }
 
 - (void)extAppWillUnload {
+}
+
+#pragma mark - AgoraEduWhiteBoardHandler
+// 有权限就可以移动白板，否则不可以
+- (void)onSetDrawingEnabled:(BOOL)enabled {
+    self.view.agora_is_draggable = enabled;
 }
 
 #pragma mark - VoteExtApp
@@ -510,7 +520,6 @@ static const int s_btnSubmitWidth = 80;
 
 - (void)initData:(NSDictionary *)properties {
     [self propertiesDidUpdate:properties];
-    self.view.agora_is_draggable = YES;
 }
 
 - (BOOL)array:(NSArray *)array1 isEqualTo:(NSArray *)array2 {
