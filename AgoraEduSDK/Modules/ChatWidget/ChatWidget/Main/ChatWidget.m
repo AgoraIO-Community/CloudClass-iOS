@@ -15,6 +15,7 @@
 #import "GiftView.h"
 #import <WHToast/WHToast.h>
 #import "UIImage+ChatExt.h"
+#import <EMEmojiHelper.h>
 
 static const NSString* kAvatarUrl = @"avatarUrl";
 static const NSString* kNickname = @"nickName";
@@ -220,11 +221,12 @@ static const NSString* kChatRoomId = @"chatroomId";
     descriptor.params[@"speed"] = @(arc4random() % 30+30);
     descriptor.params[@"direction"] = @(BarrageWalkDirectionR2L);
     descriptor.params[@"side"] = @(BarrageWalkSideDefault);
+    NSString* content = [EMEmojiHelper convertEmoji:aInfo.text];
     if(aInfo.isGift)
     {
         descriptor.spriteName = NSStringFromClass([BarrageWalkSprite class]);
         descriptor.params[@"viewClassName"] = NSStringFromClass([AvatarBarrageView class]);
-        descriptor.params[@"titles"] = @[aInfo.text];
+        descriptor.params[@"titles"] = @[content];
         if(aInfo.avatarUrl.length > 0)
             descriptor.params[@"avatarUrl"] = aInfo.avatarUrl;
         if(aInfo.giftUrl.length > 0){
@@ -232,7 +234,7 @@ static const NSString* kChatRoomId = @"chatroomId";
         }
     }else{
         descriptor.spriteName = NSStringFromClass([BarrageWalkTextSprite class]);
-        descriptor.params[@"text"] = aInfo.text;
+        descriptor.params[@"text"] = content;
         descriptor.params[@"textColor"] = [UIColor blueColor];
     }
     
