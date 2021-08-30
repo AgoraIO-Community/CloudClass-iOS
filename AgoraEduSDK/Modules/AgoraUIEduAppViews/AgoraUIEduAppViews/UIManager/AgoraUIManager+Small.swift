@@ -9,6 +9,8 @@ import Foundation
 import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
+fileprivate let MENU_TAG = 100
+
 extension AgoraUIManager {
     func addSmallContainerViews() {
         guard let `room` = self.room,
@@ -99,8 +101,9 @@ extension AgoraUIManager {
         let MenuGap: CGFloat = 0
         let MenuBottom: CGFloat = 7
         // handsUp比较特殊， 宽高由子view填充
-        handsUp.containerView.tag = 1
+        handsUp.containerView.tag = 1 + MENU_TAG
         handsUp.containerView.isUserInteractionEnabled = false
+
         menuView.addSubview(handsUp.containerView)
         handsUp.containerView.agora_safe_bottom = MenuBottom
         handsUp.containerView.agora_right = MenuRight
@@ -118,7 +121,7 @@ extension AgoraUIManager {
         chatMenu.addTarget(self,
                            action: #selector(onChatPressed(_:)),
                            for: .touchUpInside)
-        chatMenu.tag = 2
+        chatMenu.tag = 2 + MENU_TAG
         chatMenu.isUserInteractionEnabled = false
         menuView.insertSubview(chatMenu, at: 0)
         chatMenu.agora_width = MenuSize.width
@@ -149,7 +152,7 @@ extension AgoraUIManager {
         userListMenu.addTarget(self,
                                action: #selector(onUserListPressed(_:)),
                                for: .touchUpInside)
-        userListMenu.tag = 3
+        userListMenu.tag = 3 + MENU_TAG
         menuView.insertSubview(userListMenu, at: 0)
         userListMenu.agora_width = MenuSize.width
         userListMenu.agora_height = MenuSize.height
@@ -165,7 +168,7 @@ extension AgoraUIManager {
         logMenu.addTarget(self,
                           action: #selector(onLogPressed(_:)),
                           for: .touchUpInside)
-        logMenu.tag = 4
+        logMenu.tag = 4 + MENU_TAG
         menuView.insertSubview(logMenu, at: 0)
         logMenu.agora_width = MenuSize.width
         logMenu.agora_height = MenuSize.height
@@ -183,7 +186,7 @@ extension AgoraUIManager {
         setMenu.addTarget(self,
                           action: #selector(onSetPressed(_:)),
                           for: .touchUpInside)
-        setMenu.tag = 5
+        setMenu.tag = 5 + MENU_TAG
         menuView.insertSubview(setMenu, at: 0)
         setMenu.agora_width = MenuSize.width
         setMenu.agora_height = MenuSize.height
@@ -196,18 +199,18 @@ extension AgoraUIManager {
     }
     // 举手和聊天按钮 需要 加入成功后才可以点击
     func roomJoined() {
-        self.menuView.viewWithTag(1)?.isUserInteractionEnabled = true
-        self.menuView.viewWithTag(2)?.isUserInteractionEnabled = true
+        self.menuView.viewWithTag(1 + MENU_TAG)?.isUserInteractionEnabled = true
+        self.menuView.viewWithTag(2 + MENU_TAG)?.isUserInteractionEnabled = true
     }
     
     func showBadge(_ hidden: Bool) {
-        if let redView = menuView.viewWithTag(2)?.viewWithTag(1) {
+        if let redView = menuView.viewWithTag(2 + MENU_TAG)?.viewWithTag(1) {
             redView.isHidden = hidden
         }
     }
     
     func onChatPressed() {
-        let btn = menuView.viewWithTag(2) as! AgoraBaseUIButton
+        let btn = menuView.viewWithTag(2 + MENU_TAG) as! AgoraBaseUIButton
         onChatPressed(btn)
     }
     func onChatPressed(_ sender: AgoraBaseUIButton) {
@@ -224,7 +227,7 @@ extension AgoraUIManager {
     }
     
     func onUserListPressed() {
-        let btn = menuView.viewWithTag(3) as! AgoraBaseUIButton
+        let btn = menuView.viewWithTag(3 + MENU_TAG) as! AgoraBaseUIButton
         onUserListPressed(btn)
     }
     func onUserListPressed(_ sender: AgoraBaseUIButton) {

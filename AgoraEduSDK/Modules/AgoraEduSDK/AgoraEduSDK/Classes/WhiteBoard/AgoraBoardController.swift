@@ -37,7 +37,7 @@ import EduSDK
                                                                           true)[0] + "/AgoraDownload/"
     
     private lazy var afterWork = AgoraAfterWorker()
-    private var boardContentView: UIView?
+    private var boardContentView: WKWebView?
 
     public var boardVM: AgoraBoardVM
     
@@ -179,8 +179,8 @@ extension AgoraBoardController {
 
 private extension AgoraBoardController {
     func initBoardView() {
-        guard let `boardView` = eventDispatcher.onGetBoardContainer(),
-              let `contentView` = boardContentView else {
+        guard let `contentView` = boardContentView,
+              let `boardView` = eventDispatcher.onGetBoardContainer(contentView) else {
             return
         }
         

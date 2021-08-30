@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WebKit
 import AgoraWidget
 
 // MARK: - PrivateChat
@@ -29,7 +30,7 @@ import AgoraWidget
 @objc public protocol AgoraEduWhiteBoardHandler: NSObjectProtocol {
     
     // 获取白板容器View, 真正的白板会放在这个容器里面
-    @objc optional func onGetBoardContainer() -> UIView
+    @objc optional func onGetBoardContainer(_ webview: WKWebView) -> UIView
     // 设置是否可以画
     @objc optional func onSetDrawingEnabled(_ enabled: Bool)
     // 白板加载状态

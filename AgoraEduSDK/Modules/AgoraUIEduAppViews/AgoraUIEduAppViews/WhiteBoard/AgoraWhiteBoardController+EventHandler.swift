@@ -6,12 +6,13 @@
 //
 
 import UIKit
+import WebKit
 import AgoraUIEduBaseViews
 import AgoraEduContext
 
 // MARK: - AgoraEduWhiteBoardHandler
 extension AgoraWhiteBoardUIController: AgoraEduWhiteBoardHandler {
-    @objc public func onGetBoardContainer() -> UIView {
+    @objc public func onGetBoardContainer(_ webview: WKWebView) -> UIView {
         return boardView.getBoardContainer()
     }
     

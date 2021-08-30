@@ -191,7 +191,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
             failureBlock(error);
         } else if (successBlock) {
             weakself.isWritable = isWritable;
-            [weakself.room disableDeviceInputs:!allow];
+//            [weakself.room disableDeviceInputs:!allow];
             successBlock();
         }
     }];

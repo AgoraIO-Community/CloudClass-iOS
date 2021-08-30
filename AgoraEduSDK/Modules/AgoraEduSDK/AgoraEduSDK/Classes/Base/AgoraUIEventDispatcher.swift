@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import WebKit
 import AgoraEduContext
 
 /// For OC
@@ -142,12 +143,12 @@ public enum AgoraUIEvent {
 
 extension AgoraUIEventDispatcher {
     // 获取白板容器View, 真正的白板会放在这个容器里面
-    @objc public func onGetBoardContainer() -> UIView? {
+    @objc public func onGetBoardContainer(_ webview: WKWebView) -> UIView? {
         guard let observers = observerse(eventId: AgoraUIEvent.WhiteBoardId) else {
             return nil
         }
 
-        return observers.object(at: 0, type: AgoraEduWhiteBoardHandler.self)?.onGetBoardContainer?()
+        return observers.object(at: 0, type: AgoraEduWhiteBoardHandler.self)?.onGetBoardContainer?(webview)
     }
 
     // 设置是否可以画
