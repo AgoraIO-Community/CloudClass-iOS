@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray<AgoraWidgetConfiguration *> *components;
 
 @property (nonatomic, strong, nullable) NSDictionary *collectionStyle;
+@property (nonatomic, strong, nullable) NSArray<NSString *> *boardStyles;
 
 @property (nonatomic, strong) AgoraEduVideoEncoderConfiguration *cameraEncoderConfiguration;
 + (void)releaseResource;

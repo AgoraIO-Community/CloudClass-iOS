@@ -60,13 +60,13 @@ import EduSDK
     private var manager: AgoraWhiteBoardManager?
     
     private var bInit = false
-    private var collectionStyle:[String: Any]?
 
     public init(boardAppId: String,
                 boardId: String,
                 boardToken: String,
                 userUuid: String,
                 collectionStyle: [String: Any]?,
+                boardStyles: [String]?,
                 download: AgoraDownloadManager,
                 reportor: AgoraApaasReportorEventTube,
                 cache: AgoraManagerCache,
@@ -77,13 +77,13 @@ import EduSDK
         self.boardToken = boardToken
         self.boardAutoMode = boardAutoMode
         
-        self.collectionStyle = collectionStyle
-        
         self.userId = userUuid
         self.delegate = delegate
         
         let config = AgoraWhiteBoardConfiguration()
         config.appId = boardAppId
+        config.collectionStyle = collectionStyle
+        config.boardStyles = boardStyles
         let boardManager = AgoraWhiteBoardManager(coursewareDirectory: coursewareDirectory,
                                              config: config)
         self.manager = boardManager
@@ -158,8 +158,7 @@ extension AgoraBoardController {
         eventDispatcher.onSetLoadingVisible(true)
         
         boardVM.join(boardId: boardId,
-                     boardToken: boardToken,
-                     collectionStyle: self.collectionStyle) { [weak self] in
+                     boardToken: boardToken) { [weak self] in
             self?.eventDispatcher.onSetLoadingVisible(false)
         } failure: { [weak self] (error) in
             guard let `self` = self else {

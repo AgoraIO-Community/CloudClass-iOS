@@ -109,6 +109,7 @@ static AgoraClassroomSDK *manager = nil;
     AgoraManagerCache.share.classroom = [AgoraEduClassroom new];
     AgoraManagerCache.share.token = NoNullString(config.token);
     AgoraManagerCache.share.collectionStyle = config.collectionStyle;
+    AgoraManagerCache.share.boardStyles = config.boardStyles;
     AgoraManagerCache.share.cameraEncoderConfiguration = config.cameraEncoderConfiguration;
 
     // Report

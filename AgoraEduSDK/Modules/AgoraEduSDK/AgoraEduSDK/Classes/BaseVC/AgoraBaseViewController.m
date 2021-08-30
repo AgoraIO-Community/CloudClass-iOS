@@ -314,6 +314,7 @@
                                                                  boardToken:boardToken
                                                                    userUuid:userId
                                                             collectionStyle:AgoraManagerCache.share.collectionStyle
+                                                                boardStyles:AgoraManagerCache.share.boardStyles
                                                                    download:self.download
                                                                    reportor:reportor
                                                                       cache:self.cache

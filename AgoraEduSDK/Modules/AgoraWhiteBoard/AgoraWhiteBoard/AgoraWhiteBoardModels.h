@@ -15,12 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *appId;
 /** 文档转网页中字体文件映射关系 */
 @property (nonatomic, copy, nullable) NSDictionary *fonts;
+
+@property (nonatomic, strong, nullable) NSDictionary *collectionStyle;
+@property (nonatomic, strong, nullable) NSArray<NSString *> *boardStyles;
 @end
 
 @interface AgoraWhiteBoardJoinOptions : NSObject
 @property (nonatomic, copy) NSString *boardId;
 @property (nonatomic, copy) NSString *boardToken;
-@property (nonatomic, strong, nullable) NSDictionary *collectionStyle;
 @end
 
 @interface AgoraWhiteBoardTaskModel : NSObject

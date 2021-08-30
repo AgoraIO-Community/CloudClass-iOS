@@ -88,6 +88,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 白板课件收集按钮位置，Css
 @property (nonatomic, strong, nullable) NSDictionary<NSString *, id> *collectionStyle;
+// 白板样式，Css
+@property (nonatomic, copy, nullable) NSArray<NSString *> *boardStyles;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid

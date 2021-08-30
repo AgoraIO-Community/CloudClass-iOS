@@ -40,6 +40,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 @property (nonatomic, strong) WhiteMemberState *whiteMemberState;
 @property (nonatomic, assign) BOOL isWritable;
 @property (nonatomic, copy) NSString *boardScenePath;
+@property (nonatomic, strong) AgoraWhiteBoardConfiguration *boardConfig;
 @end
 
 @implementation AgoraWhiteBoardManager
@@ -50,6 +51,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     if (self) {
         self.isWritable = YES;
         self.boardScenePath = @"";
+        self.boardConfig = config;
         self.cameraConfig = [[AgoraWhiteBoardCameraConfig alloc] init];
         
         if (@available(iOS 11.0, *)) {
@@ -58,8 +60,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                                                                           directory:directory];
         }
         
-        [self initContentViewWithAppId:config.appId
-                                 fonts:config.fonts];
+        [self initContentView];
     }
     return self;
 }
@@ -72,21 +73,24 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 }
 
 - (void)setWhiteBoardStateModel:(AgoraWhiteBoardStateModel *)state {
-    __weak AgoraWhiteBoardManager *weakself = self;
     
-    [self.room setWritable:YES
-         completionHandler:^(BOOL isWritable,
-                             NSError * _Nullable error) {
-        if (error) {
-            if ([weakself.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
-                NSError *err = AgoraBoardLocalError(AgoraBoardLocalErrorCode, error);
-                [self.delegate onWhiteBoardError: error];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        __weak AgoraWhiteBoardManager *weakself = self;
+        
+        [self.room setWritable:YES
+             completionHandler:^(BOOL isWritable,
+                                 NSError * _Nullable error) {
+            if (error) {
+                if ([weakself.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
+                    NSError *err = AgoraBoardLocalError(AgoraBoardLocalErrorCode, error);
+                    [weakself.delegate onWhiteBoardError: error];
+                }
+            } else {
+                weakself.isWritable = isWritable;
+                [weakself.room setGlobalState:state];
             }
-        } else {
-            weakself.isWritable = isWritable;
-            [weakself.room setGlobalState:state];
-        }
-    }];
+        }];
+    });
 }
 
 - (UIView *)contentView {
@@ -94,25 +98,32 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
         return _contentView;
     }
     
+    WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
     if (@available(iOS 11, *)) {
-        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
         [config setURLSchemeHandler:self.schemeHandler
                        forURLScheme:AgoraWhiteCoursewareScheme];
-        WhiteBoardView *boardView = [[WhiteBoardView alloc] initWithFrame:CGRectZero
-                                                            configuration:config];
-        
-        _contentView = boardView;
-    } else {
-        WhiteBoardView *boardView = [[WhiteBoardView alloc] init];
-        _contentView = boardView;
     }
     
+    if (self.boardConfig.boardStyles != nil) {
+        WKUserContentController *ucc = [[WKUserContentController alloc] init];
+        for (NSString *boardStyle in self.boardConfig.boardStyles) {
+            WKUserScript *userScript = [[WKUserScript alloc] initWithSource:boardStyle
+                                                              injectionTime:WKUserScriptInjectionTimeAtDocumentEnd
+                                                           forMainFrameOnly:YES];
+            [ucc addUserScript:userScript];
+        }
+        config.userContentController = ucc;
+    }
+    
+    _contentView = [[WhiteBoardView alloc] initWithFrame:CGRectZero
+                                           configuration:config];
     return _contentView;
 }
 
 - (void)joinWithOptions:(AgoraWhiteBoardJoinOptions *)options
                 success:(void (^) (void))successBlock
                 failure:(void (^) (NSError * error))failureBlock {
+
     __weak AgoraWhiteBoardManager *weakself = self;
     
     WhiteRoomConfig *roomConfig = [[WhiteRoomConfig alloc] initWithUuid:options.boardId
@@ -122,11 +133,12 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
     windowParams.chessboard = NO;
     CGSize size = self.contentView.frame.size;
     windowParams.containerSizeRatio = @(size.height / size.width);
-    if (options.collectionStyle != nil) {
-        windowParams.collectorStyles = options.collectionStyle;
+    if (self.boardConfig.collectionStyle != nil) {
+        windowParams.collectorStyles = self.boardConfig.collectionStyle;
     }
-    roomConfig.windowParams = windowParams;
     
+    roomConfig.windowParams = windowParams;
+
     roomConfig.isWritable = self.isWritable;
     roomConfig.disableNewPencil = NO;
     roomConfig.useMultiViews = YES;
@@ -174,27 +186,29 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                   success:(void (^) (void))successBlock
                   failure:(void (^) (NSError * error))failureBlock {
 
-    if (allow == self.isWritable) {
-        if(successBlock) {
-            successBlock();
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (allow == self.isWritable) {
+            if(successBlock) {
+                successBlock();
+            }
+            return;
         }
-        return;
-    }
-    
-    __weak AgoraWhiteBoardManager *weakself = self;
-
-    [self.room setWritable:allow
-         completionHandler:^(BOOL isWritable,
-                             NSError * _Nullable error) {
         
-        if (error && failureBlock) {
-            failureBlock(error);
-        } else if (successBlock) {
-            weakself.isWritable = isWritable;
-//            [weakself.room disableDeviceInputs:!allow];
-            successBlock();
-        }
-    }];
+        __weak AgoraWhiteBoardManager *weakself = self;
+
+        [self.room setWritable:allow
+             completionHandler:^(BOOL isWritable,
+                                 NSError * _Nullable error) {
+            
+            if (error && failureBlock) {
+                failureBlock(error);
+            } else if (successBlock) {
+                weakself.isWritable = isWritable;
+    //            [weakself.room disableDeviceInputs:!allow];
+                successBlock();
+            }
+        }];
+    });
 }
 
 - (void)setFollowMode:(BOOL)follow{
@@ -362,7 +376,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
 - (void)increaseScale {
     __weak AgoraWhiteBoardManager *weakself = self;
-    [self.room getZoomScaleWithResult:^(CGFloat scale) {        
+    [self.room getZoomScaleWithResult:^(CGFloat scale) {
         weakself.cameraConfig.scale = (scale + 0.1);
         WhiteCameraConfig *config = [WhiteCameraConfig createWithAGConfig:self.cameraConfig];
 //        [weakself.room moveCamera:config];
@@ -387,9 +401,8 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 }
 
 #pragma mark - Private
-- (void)initContentViewWithAppId:(NSString *)appId
-                           fonts:(NSDictionary *)fonts {
-    WhiteSdkConfiguration *config = [[WhiteSdkConfiguration alloc] initWithApp:appId];
+- (void)initContentView {
+    WhiteSdkConfiguration *config = [[WhiteSdkConfiguration alloc] initWithApp:self.boardConfig.appId];
     config.enableIFramePlugin = YES;
 
 //    if (@available(iOS 11.0, *)) {
@@ -398,7 +411,7 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 //        config.pptParams = pptParams;
 //    }
 
-    config.fonts = fonts;
+    config.fonts = self.boardConfig.fonts;
     config.userCursor = YES;
     
     self.whiteSDK = [[WhiteSDK alloc] initWithWhiteBoardView:self.contentView

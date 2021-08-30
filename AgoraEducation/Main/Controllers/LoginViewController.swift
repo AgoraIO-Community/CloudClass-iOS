@@ -668,12 +668,30 @@ private extension LoginViewController{
             "height":"\(size)px",
         ]
 
+        // tab style example
+        let tabBGStyle = """
+            var style = document.createElement('style');
+            style.innerHTML = '.telebox-titlebar { background: #000; }';
+            document.head.appendChild(style);
+        """
+        let tabTitleStyle = """
+            var style = document.createElement('style');
+            style.innerHTML = '.telebox-title { color: #fff; }';
+            document.head.appendChild(style);
+        """
+        let tabBtnStyle = """
+            var style = document.createElement('style');
+            style.innerHTML = '.telebox-titlebar-btn-icon { filter: grayscale(100%); }';
+            document.head.appendChild(style);
+        """
+        config.boardStyles = [tabBGStyle, tabTitleStyle, tabBtnStyle]
+        
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")
         } else {
             alertView?.show(in: self.view)
         }
-
+        
         let chat = AgoraWidgetConfiguration(with: ChatWidget.self,
         widgetId: "Chat")
         AgoraClassroomSDK.registerWidgets([chat])
