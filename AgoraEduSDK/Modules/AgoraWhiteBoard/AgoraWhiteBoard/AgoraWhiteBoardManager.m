@@ -74,23 +74,21 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
 
 - (void)setWhiteBoardStateModel:(AgoraWhiteBoardStateModel *)state {
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        __weak AgoraWhiteBoardManager *weakself = self;
-        
-        [self.room setWritable:YES
-             completionHandler:^(BOOL isWritable,
-                                 NSError * _Nullable error) {
-            if (error) {
-                if ([weakself.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
-                    NSError *err = AgoraBoardLocalError(AgoraBoardLocalErrorCode, error);
-                    [weakself.delegate onWhiteBoardError: error];
-                }
-            } else {
-                weakself.isWritable = isWritable;
-                [weakself.room setGlobalState:state];
+    __weak AgoraWhiteBoardManager *weakself = self;
+    
+    [self.room setWritable:YES
+         completionHandler:^(BOOL isWritable,
+                             NSError * _Nullable error) {
+        if (error) {
+            if ([weakself.delegate respondsToSelector:@selector(onWhiteBoardError:)]) {
+                NSError *err = AgoraBoardLocalError(AgoraBoardLocalErrorCode, error);
+                [weakself.delegate onWhiteBoardError: error];
             }
-        }];
-    });
+        } else {
+            weakself.isWritable = isWritable;
+            [weakself.room setGlobalState:state];
+        }
+    }];
 }
 
 - (UIView *)contentView {
@@ -186,29 +184,27 @@ userInfo:@{NSLocalizedDescriptionKey:(reason)}])
                   success:(void (^) (void))successBlock
                   failure:(void (^) (NSError * error))failureBlock {
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (allow == self.isWritable) {
-            if(successBlock) {
-                successBlock();
-            }
-            return;
+    if (allow == self.isWritable) {
+        if(successBlock) {
+            successBlock();
         }
-        
-        __weak AgoraWhiteBoardManager *weakself = self;
+        return;
+    }
+    
+    __weak AgoraWhiteBoardManager *weakself = self;
 
-        [self.room setWritable:allow
-             completionHandler:^(BOOL isWritable,
-                                 NSError * _Nullable error) {
-            
-            if (error && failureBlock) {
-                failureBlock(error);
-            } else if (successBlock) {
-                weakself.isWritable = isWritable;
-    //            [weakself.room disableDeviceInputs:!allow];
-                successBlock();
-            }
-        }];
-    });
+    [self.room setWritable:allow
+         completionHandler:^(BOOL isWritable,
+                             NSError * _Nullable error) {
+        
+        if (error && failureBlock) {
+            failureBlock(error);
+        } else if (successBlock) {
+            weakself.isWritable = isWritable;
+//            [weakself.room disableDeviceInputs:!allow];
+            successBlock();
+        }
+    }];
 }
 
 - (void)setFollowMode:(BOOL)follow{
