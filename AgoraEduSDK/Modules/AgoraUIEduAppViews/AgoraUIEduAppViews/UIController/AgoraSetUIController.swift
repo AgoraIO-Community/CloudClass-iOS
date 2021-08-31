@@ -10,6 +10,11 @@ import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 
+protocol AgoraSetUIControllerDelegate: NSObjectProtocol {
+    func setUIController(_ controller: AgoraSetUIController,
+                         didStateChanged close: Bool)
+}
+
 class AgoraSetUIController: NSObject, AgoraUIController {
     // Contexts
     private var roomContext: AgoraEduRoomContext? {
@@ -20,13 +25,16 @@ class AgoraSetUIController: NSObject, AgoraUIController {
 
     private weak var contextProvider: AgoraControllerContextProvider?
     private weak var eventRegister: AgoraControllerEventRegister?
+    private weak var delegate: AgoraSetUIControllerDelegate?
     
     var containerView = AgoraUIControllerContainer(frame: .zero)
     
     public init(contextProvider: AgoraControllerContextProvider,
-                eventRegister: AgoraControllerEventRegister) {
+                eventRegister: AgoraControllerEventRegister,
+                delegate: AgoraSetUIControllerDelegate) {
         self.contextProvider = contextProvider
         self.eventRegister = eventRegister
+        self.delegate = delegate
         
         super.init()
         initViews()
@@ -56,7 +64,7 @@ private extension AgoraSetUIController {
     func observeUI() {
         setView.leaveClassBlock = { [unowned self] in
             self.existClassAlert()
-            self.containerView.removeFromSuperview()
+            self.containerView.isHidden = true
         }
         setView.cameraStateBlock = { [unowned self] (open: Bool) in
             self.contextProvider?.controllerNeedDeviceContext().setCameraDeviceEnable(enable: open)
@@ -98,6 +106,10 @@ private extension AgoraSetUIController {
         
         let leftButton = AgoraAlertButtonModel()
         leftButton.titleLabel = leftButtonLabel
+        leftButton.tapActionBlock = { [unowned self] (index) -> Void in
+            self.delegate?.setUIController(self,
+                                           didStateChanged: true)
+        }
         
         let rightButtonLabel = AgoraAlertLabelModel()
         rightButtonLabel.text = AgoraKitLocalizedString("SureText")

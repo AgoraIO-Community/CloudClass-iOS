@@ -216,7 +216,6 @@ extension AgoraUIManager {
     func onChatPressed(_ sender: AgoraBaseUIButton) {
         let isSelected = sender.isSelected
         onMenuPressed()
-    
         sender.isSelected = !isSelected
         if sender.isSelected {
             self.hxChat?.containerView.isHidden = false
@@ -232,7 +231,6 @@ extension AgoraUIManager {
     }
     func onUserListPressed(_ sender: AgoraBaseUIButton) {
         let isSelected = sender.isSelected
-        
         onMenuPressed()
         sender.isSelected = !isSelected
         if sender.isSelected {
@@ -242,6 +240,11 @@ extension AgoraUIManager {
     func onLogPressed(_ sender: AgoraBaseUIButton) {
         onMenuPressed()
         room?.uploadLog()
+    }
+    
+    func onSetPressed() {
+        let btn = menuView.viewWithTag(5 + MENU_TAG) as! AgoraBaseUIButton
+        onSetPressed(btn)
     }
     func onSetPressed(_ sender: AgoraBaseUIButton) {
         let isSelected = sender.isSelected

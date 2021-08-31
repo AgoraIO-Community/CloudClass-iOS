@@ -87,7 +87,8 @@ public var isDebug = false
                                           delegate: self)
         
         self.set = AgoraSetUIController(contextProvider: self,
-                                         eventRegister: self)
+                                        eventRegister: self,
+                                        delegate: self)
         
         self.whiteBoard = AgoraWhiteBoardUIController(viewType: viewType,
                                                      delegate: self,
@@ -362,6 +363,14 @@ extension AgoraUIManager: AgoraUserListUIControllerDelegate {
     func userListUIController(_ controller: AgoraUserListUIController,
                               didStateChanged close: Bool) {
         onUserListPressed()
+    }
+}
+
+// MARK: - AgoraSetUIControllerDelegate
+extension AgoraUIManager: AgoraSetUIControllerDelegate {
+    func setUIController(_ controller: AgoraSetUIController,
+                         didStateChanged close: Bool) {
+        onSetPressed()
     }
 }
 
