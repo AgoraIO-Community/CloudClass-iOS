@@ -16,10 +16,12 @@ static const int s_btnSubmitWidth = 80;
 @property (nonatomic, assign) NSInteger countDown; // second
 @property (nonatomic, assign) NSInteger titleHeight;
 @property (nonatomic, assign) BOOL canChange; // 是否能修改答案
+@property (nonatomic, assign) BOOL isMeRightAns; // 自己是否是正确答案
+@property (nonatomic, assign) BOOL isManualModifyUI; // 是否是手动点击修改答案
 @property (nonatomic, strong) UIView *viewContent;
 @property (nonatomic, strong) UIButton *resultBtn;
 @property (nonatomic, strong) NSArray<NSString*> *answerDatas;
-@property (nonatomic, strong) NSMutableArray<NSNumber*> *selecItems;
+@property (nonatomic, strong) NSMutableArray<NSString*> *myAnswerItems;
 @property (nonatomic, strong) NSMutableArray<UIButton*> *answerBtns;
 
 @property (assign, nonatomic) NSInteger currentAnsType;//0单选，1多选
@@ -46,81 +48,12 @@ static const int s_btnSubmitWidth = 80;
     self.currentAnsType = [properties[@"mulChoice"] boolValue] == NO ? 0 : 1;//0单选，1多选
     self.canChange = [properties[@"canChange"] boolValue];
     self.answerDatas = [properties objectForKey:@"items"];
-    
+    [self.myAnswerItems removeAllObjects];
+    self.isMeRightAns = NO;
     self.strRightkey = @"";
-    NSArray* rightKey = [properties objectForKey:@"answer"];
-    if (nil != rightKey) {
-        self.strRightkey = [rightKey componentsJoinedByString:@""];
-    }
     
-    self.startTime = properties[@"startTime"];
-    NSInteger start = [self.startTime integerValue];
-    NSInteger current = [[NSDate date] timeIntervalSince1970];
-    self.countDown = current - start;
-    
-    BOOL isHaveMyResul = NO;
-    NSArray* students = [properties objectForKey:@"students"];
-    if (NULL != students) {
-        self.totalPersonnel = students.count;
-        for (NSString* stuname in students) {
-            //根据总学生，查找已经答题的学生
-            NSString* ssitKey = [NSString stringWithFormat:@"student%@", stuname];
-            NSDictionary *ssit = [properties objectForKey:ssitKey];
-            if (NULL != ssit) {
-                //计算答题人数
-                ++self.anwserPersonnel;
-                
-                BOOL fixMyAnswer = NO;
-                if ([stuname isEqualToString:self.localUserInfo.userUuid]) {
-                    //自己已经答题了
-                    isHaveMyResul = YES;
-                    fixMyAnswer = YES;
-                    [self.selecItems removeAllObjects];
-                }
-                
-                //获取当前学生的答题项
-                NSArray* answers = [ssit objectForKey:@"answer"];
-                if (nil != answers) {
-                    if (fixMyAnswer) {
-                        //自己已经答题，则查找自己答题项
-                        for (NSString* myans in answers) {
-                            for (int i = 0; i < self.answerDatas.count; ++i) {
-                                if ([self.answerDatas[i] isEqualToString:myans]) {
-                                    NSNumber* sel = [[NSNumber alloc] initWithInt: i];
-                                    [self.selecItems addObject: sel];
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    //计算正确率
-                    if([self array:rightKey isEqualTo:answers]){
-                        ++self.rightPersonnel;
-                    }
-                }
-            }
-        }
-    }
-    
-    NSString *nowState = properties[@"state"];
-    if([nowState isEqualToString:@"start"]){
-        if (-1 == self.currentAnsStatus || 2 == self.currentAnsStatus) {
-            self.currentAnsStatus = 0;
-            [self initAnswerViews];
-            [self startTimer];
-        }
-        if (isHaveMyResul) {
-            [self switchToChgUI];
-        }
-    }else if([nowState isEqualToString:@"end"]){
-        NSString *endTime = properties[@"endTime"];
-        NSInteger end = [endTime integerValue];
-        self.countDown = end - start;
-        self.countDownLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)(self.countDown / 3600), (long)(self.countDown / 60), (long)(self.countDown % 60)];
-        
-        self.currentAnsStatus = 2;
-        [self initResultViews];
-    }
+    //deal
+    [self dealLogic:properties];
 }
 
 #pragma mark - Life cycle
@@ -129,8 +62,9 @@ static const int s_btnSubmitWidth = 80;
     self.currentAnsType = 0;
     self.countDown = 0;
     self.currentAnsStatus = -1;
-    if (nil == self.selecItems) {
-        self.selecItems = [NSMutableArray<NSNumber*> new];
+    self.isManualModifyUI = NO;
+    if (nil == self.myAnswerItems) {
+        self.myAnswerItems = [NSMutableArray<NSString*> new];
     }
     if (nil == self.answerBtns) {
         self.answerBtns = [NSMutableArray<UIButton*> new];
@@ -151,6 +85,76 @@ static const int s_btnSubmitWidth = 80;
 }
 
 #pragma mark - VoteExtApp
+- (void)dealLogic:(NSDictionary *)properties {
+    NSArray* rightKey = [properties objectForKey:@"answer"];
+    if (nil != rightKey) {
+        self.strRightkey = [rightKey componentsJoinedByString:@""];
+    }
+    
+    self.startTime = properties[@"startTime"];
+    NSInteger start = [self.startTime integerValue];
+    NSInteger current = [[NSDate date] timeIntervalSince1970];
+    self.countDown = current - start;
+    
+    BOOL isHaveMyResul = NO;
+    NSArray* students = [properties objectForKey:@"students"];
+    if (NULL != students) {
+        self.totalPersonnel = students.count;
+        for (NSString* stuname in students) {
+            //根据总学生，查找已经答题的学生
+            //如果能找到当前学生相关属性，则认为该学生已答题
+            NSString* ssitKey = [NSString stringWithFormat:@"student%@", stuname];
+            NSDictionary *ssit = [properties objectForKey:ssitKey];
+            if (NULL != ssit) {
+                //计算答题人数
+                ++self.anwserPersonnel;
+                
+                //获取当前学生的答题项
+                NSArray* answers = [ssit objectForKey:@"answer"];
+                if (nil != answers) {
+                    if ([stuname isEqualToString:self.localUserInfo.userUuid]) {
+                        //答题的是自己，且有了答案
+                        isHaveMyResul = YES;
+                        //保存自己的答题项
+                        [self.myAnswerItems addObjectsFromArray: answers];
+                    }
+                    
+                    //计算正确率
+                    if([self array:rightKey isEqualTo:answers]){
+                        ++self.rightPersonnel;
+                        if ([stuname isEqualToString:self.localUserInfo.userUuid]){
+                            //自己的答案是正确的
+                            self.isMeRightAns = YES;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    NSString *nowState = properties[@"state"];
+    if([nowState isEqualToString:@"start"]){
+        if (-1 == self.currentAnsStatus || 2 == self.currentAnsStatus) {
+            self.currentAnsStatus = 0;
+            [self initAnswerViews];
+            [self startTimer];
+        }
+        if (isHaveMyResul && !self.isManualModifyUI) {
+            //收到自己的答案，且自己并未点击修改答案，则修正和跳转到修改答案界面状态
+            [self switchToChgUIByRecvResult];
+        }
+    }else if([nowState isEqualToString:@"end"]){
+        //已结束，显示结果页面
+        NSString *endTime = properties[@"endTime"];
+        NSInteger end = [endTime integerValue];
+        self.countDown = end - start;
+        self.countDownLabel.text = [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)(self.countDown / 3600), (long)(self.countDown / 60), (long)(self.countDown % 60)];
+        
+        self.currentAnsStatus = 2;
+        [self initResultViews];
+    }
+}
+
 - (void)initBaseViews {
     //[self.view setUserInteractionEnabled:NO];
     [self.view agora_clear_constraint];
@@ -212,15 +216,10 @@ static const int s_btnSubmitWidth = 80;
 
 - (void)initResultViews {
     [self stopTimer];
-    NSString* strMyAnwser = @"";
-    for (NSNumber* item in self.selecItems) {
-        int index = [item intValue];
-        if (index <= self.answerDatas.count) {
-            strMyAnwser = [strMyAnwser stringByAppendingString:self.answerDatas[index]];
-        }
-    }
+    self.isManualModifyUI = NO;
+    
+    NSString* strMyAnwser = [self.myAnswerItems componentsJoinedByString:@""];
     [self.answerBtns removeAllObjects];
-    [self.selecItems removeAllObjects];
     self.resultBtn = nil;
     [self.viewContent.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     self.view.agora_height = 180;
@@ -318,7 +317,8 @@ static const int s_btnSubmitWidth = 80;
         
         UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(0,posy,60,posh)];
         label1.font = [UIFont systemFontOfSize:13.0];
-        label1.attributedText = [[NSMutableAttributedString alloc] initWithString:strMyAnwser attributes: @{NSForegroundColorAttributeName: [UIColor colorWithRed:240/255.0 green:76/255.0 blue:54/255.0 alpha:1.0]}];
+        label1.text = strMyAnwser;
+        label1.textColor = self.isMeRightAns ? [UIColor colorWithRed:11/255.0 green:173/255.0 blue:105/255.0 alpha:1.0] : [UIColor colorWithRed:240/255.0 green:76/255.0 blue:54/255.0 alpha:1.0];
         label1.textAlignment = NSTextAlignmentLeft;
         [viewCenter addSubview:label1];
         [label1 sizeToFit];
@@ -395,17 +395,23 @@ static const int s_btnSubmitWidth = 80;
     if (0 != self.currentAnsStatus || button.tag >= self.answerDatas.count) {
         return;
     }
-    NSNumber* sel = [[NSNumber alloc] initWithInteger: button.tag];
-    if ([self.selecItems containsObject: sel]) {
-        [self.selecItems removeObject: sel];
+    
+    BOOL isHaveSelected = NO;
+    if (button.isSelected) {
         button.selected = NO;
         button.layer.borderWidth = 0.8;
         button.layer.borderColor = [UIColor colorWithRed:238/255.0 green:238/255.0 blue:247/255.0 alpha:1.0].CGColor;
         [button setBackgroundImage:nil forState:UIControlStateNormal];
+        
+        for (UIButton* exbtn in self.answerBtns) {
+            if (exbtn.isSelected) {
+                isHaveSelected = YES;
+                break;
+            }
+        }
     }else{
         if (1 != self.currentAnsType) {
             //不可多选则移除其他
-            [self.selecItems removeAllObjects];
             for (UIButton* exbtn in self.answerBtns) {
                 exbtn.selected = NO;
                 exbtn.layer.borderWidth = 0.8;
@@ -414,14 +420,15 @@ static const int s_btnSubmitWidth = 80;
                 [exbtn setBackgroundImage:nil forState:UIControlStateNormal];
             }
         }
-        [self.selecItems addObject: sel];
         button.selected = YES;
         button.layer.borderWidth = 0;
         [button setBackgroundImage:[UIImage imageNamed:@"answer"] forState:UIControlStateNormal];
+        
+        isHaveSelected = YES;
     }
     
     if (nil != self.resultBtn) {
-        if (self.selecItems.count > 0) {
+        if (isHaveSelected) {
             [self.resultBtn setBackgroundColor:[UIColor colorWithRed:53/255.0 green:123/255.0 blue:246/255.0 alpha:1.0]];
             [self.resultBtn setEnabled:YES];
         }else{
@@ -432,16 +439,14 @@ static const int s_btnSubmitWidth = 80;
 }
 
 -(void)resultBtnClick{
-    if (0 == self.selecItems.count) {
-        return;
-    }
-    
     if (0 == self.currentAnsStatus) {
         //提交答案
-        [self resultSubmit];
-        
-        [self switchToChgUI];
+        self.isManualModifyUI = NO;
+        if([self resultSubmit]){
+            [self switchToChgUI];
+        }
     }else if (1 == self.currentAnsStatus) {
+        self.isManualModifyUI = YES;
         self.currentAnsStatus = 0;
         for (UIButton* exbtn in self.answerBtns) {
             if (exbtn.isSelected) {
@@ -458,14 +463,26 @@ static const int s_btnSubmitWidth = 80;
     }
 }
 
+-(void)switchToChgUIByRecvResult{
+    for (UIButton* exbtn in self.answerBtns) {
+        if (exbtn.tag < self.answerDatas.count) {
+            if ([self.myAnswerItems containsObject:self.answerDatas[exbtn.tag]]) {
+                [exbtn setSelected:YES];
+            }else{
+                [exbtn setSelected:NO];
+            }
+        }
+    }
+    [self switchToChgUI];
+}
+
+//修改答案界面
 -(void)switchToChgUI{
     if(self.canChange){
         self.currentAnsStatus = 1;
-        for (NSNumber* i in self.selecItems) {
-            int index = [i intValue];
-            if (index < self.answerBtns.count) {
-                [self.answerBtns[index] setSelected:YES];
-                [self.answerBtns[index] setBackgroundImage:[UIImage imageNamed:@"answer_dis"] forState:UIControlStateNormal];
+        for (UIButton* exbtn in self.answerBtns) {
+            if (exbtn.isSelected) {
+                [exbtn setBackgroundImage:[UIImage imageNamed:@"answer_dis"] forState:UIControlStateNormal];
             }
         }
         
@@ -487,13 +504,19 @@ static const int s_btnSubmitWidth = 80;
     }
 }
 
--(void)resultSubmit{
+-(BOOL)resultSubmit{
+    //选中项提交到答案
     NSMutableArray<NSString*>* answers = [NSMutableArray<NSString*> new];
-    for (NSNumber* item in self.selecItems) {
-        int index = [item intValue];
-        if (index <= self.answerDatas.count) {
-            [answers addObject:self.answerDatas[index]];
+    for (UIButton* exbtn in self.answerBtns) {
+        if (exbtn.isSelected) {
+            if (exbtn.tag < self.answerDatas.count) {
+                [answers addObject:self.answerDatas[exbtn.tag]];
+            }
         }
+    }
+    
+    if (answers.count <= 0) {
+        return NO;
     }
     
     NSDate *date = [NSDate date];
@@ -507,6 +530,7 @@ static const int s_btnSubmitWidth = 80;
     } fail:^(AgoraExtAppError * _Nonnull error) {
         NSLog(@"answer-- update properties fail");
     }];
+    return YES;
 }
 
 -(void)restSubmit{
