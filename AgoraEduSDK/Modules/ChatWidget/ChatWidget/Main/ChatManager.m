@@ -149,9 +149,9 @@ static BOOL isSDKInited = NO;
         EMUserInfo* userInfo = [[EMUserInfo alloc] init];
         userInfo.ext = @"2";
         if(self.user.avatarurl.length > 0)
-            userInfo.avatarUrl = [self.user.avatarurl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+            userInfo.avatarUrl = self.user.avatarurl;
         if(self.user.nickname.length > 0)
-            userInfo.nickName = [self.user.nickname stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+            userInfo.nickName = self.user.nickname;
         
         [[[EMClient sharedClient] userInfoManager] updateOwnUserInfo:userInfo completion:^(EMUserInfo *aUserInfo, EMError *aError) {
                         
@@ -306,7 +306,7 @@ static BOOL isSDKInited = NO;
 // 更新头像
 - (void)updateAvatar:(NSString*)avatarUrl
 {
-    self.user.avatarurl = [avatarUrl stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+    self.user.avatarurl = avatarUrl;
     if(avatarUrl.length > 0) {
         [[[EMClient sharedClient] userInfoManager] updateOwnUserInfo:avatarUrl withType:EMUserInfoTypeAvatarURL completion:nil];
     }
@@ -314,7 +314,7 @@ static BOOL isSDKInited = NO;
 // 更新昵称
 - (void)updateNickName:(NSString*)nickName
 {
-    self.user.nickname = [nickName stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]];
+    self.user.nickname = nickName;
     if(nickName.length > 0){
         [[[EMClient sharedClient] userInfoManager] updateOwnUserInfo:nickName withType:EMUserInfoTypeNickName completion:nil];
     }
