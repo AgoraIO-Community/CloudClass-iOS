@@ -28,6 +28,28 @@ static const NSString* kChatRoomId = @"chatroomId";
 #define GIFTBUTTON_WIDTH 28
 #define EMOJIBUTTON_WIDTH 30
 
+@interface BarrageTime : NSObject
+@property (nonatomic,strong) NSString* identifier;
+@property (nonatomic) NSTimeInterval beginTime;
+@property (nonatomic) NSUInteger viewLength;
+@property (nonatomic) CGFloat speed;
++ (instancetype)barrageTimeWithId:(NSString*)aId beginTime:(NSTimeInterval)aBeginTime viewLength:(NSUInteger)aViewLength speed:(CGFloat)aSpeed;
+@end
+
+@implementation BarrageTime
++ (instancetype)barrageTimeWithId:(NSString*)aId beginTime:(NSTimeInterval)aBeginTime viewLength:(NSUInteger)aViewLength speed:(CGFloat)aSpeed
+{
+    BarrageTime*barrageTime = [[BarrageTime alloc] init];
+    if(barrageTime) {
+        barrageTime.beginTime = aBeginTime;
+        barrageTime.identifier = aId;
+        barrageTime.viewLength = aViewLength;
+        barrageTime.speed = aSpeed;
+    }
+    return barrageTime;
+}
+@end
+
 @interface ChatWidget () <ChatManagerDelegate,
                           UITextFieldDelegate,
                           BarrageRendererDelegate,
@@ -45,6 +67,9 @@ static const NSString* kChatRoomId = @"chatroomId";
 @property (nonatomic,strong) EmojiKeyboardView *emojiKeyBoardView;
 @property (nonatomic,strong) GiftView* giftView;
 @property (nonatomic,strong) UITapGestureRecognizer *tap;
+@property (nonatomic,strong) UILabel* barrageLable;
+@property (nonatomic,strong) NSMutableArray<BarrageTime*>* barrageArray;
+@property (nonatomic,strong) NSLock* dataLock;
 @end
 
 @implementation ChatWidget
@@ -176,6 +201,8 @@ static const NSString* kChatRoomId = @"chatroomId";
                                               0,
                                               self.containerView.bounds.size.width,
                                               176);
+    
+    _renderer.canvasMargin = UIEdgeInsetsMake(10, 10, self.containerView.frame.size.height - 70, 10);
 }
 
 - (void)handleTapAction:(UITapGestureRecognizer *)aTap
@@ -193,7 +220,6 @@ static const NSString* kChatRoomId = @"chatroomId";
     _renderer = [[BarrageRenderer alloc]init];
     _renderer.smoothness = .2f;
     _renderer.delegate = self;
-    _renderer.canvasMargin = UIEdgeInsetsMake(10, 10, 10, 60);
     [self.containerView addSubview:_renderer.view];
     [self.containerView sendSubviewToBack:_renderer.view];
 }
@@ -217,8 +243,20 @@ static const NSString* kChatRoomId = @"chatroomId";
 - (BarrageDescriptor *)buildBarrageDescriptor:(BarrageMsgInfo*)aInfo
 {
     BarrageDescriptor * descriptor = [[BarrageDescriptor alloc] init];
+    size_t width = _renderer.view.frame.size.width;
+    if(aInfo.text.length > 50)
+        aInfo.text = [[aInfo.text substringToIndex:50] stringByAppendingString:@"..."];
+    self.barrageLable.text = aInfo.text;
+    [self.barrageLable sizeToFit];
+    NSInteger viewLength = self.barrageLable.bounds.size.width;
+    // 这个速度8s展示完全
+    CGFloat speed = (width+viewLength)/8;
+    descriptor.params[@"speed"] = [NSNumber numberWithFloat: speed];
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    // 设置delay保证不重叠
+    CGFloat delay = [self getBarrageDelayByLength:viewLength speed:speed currentTime:currentTime msgId:aInfo.msgId];
+    descriptor.params[@"delay"] = [NSNumber numberWithInteger:delay];
     
-    descriptor.params[@"speed"] = @(arc4random() % 30+30);
     descriptor.params[@"direction"] = @(BarrageWalkDirectionR2L);
     descriptor.params[@"side"] = @(BarrageWalkSideDefault);
     NSString* content = [EMEmojiHelper convertEmoji:aInfo.text];
@@ -412,7 +450,8 @@ static const NSString* kChatRoomId = @"chatroomId";
 {
     if(self.isShowBarrage) {
         if(aInfo.msgId.length > 0 && aInfo.text.length > 0)
-            [self.renderer receive:[self buildBarrageDescriptor:aInfo]];
+            //for(int i = 0;i< 10;i++)
+                [self.renderer receive:[self buildBarrageDescriptor:aInfo]];
     }
 }
 
@@ -491,6 +530,89 @@ static const NSString* kChatRoomId = @"chatroomId";
 - (void)giftViewHidden
 {
     [self mutedStateDidChanged];
+}
+
+- (void)barrageRenderer:(BarrageRenderer *)renderer spriteStage:(BarrageSpriteStage)stage spriteParams:(NSDictionary *)params
+{
+    if(stage == BarrageSpriteStageEnd) {
+        NSString* msgId = [params objectForKey:@"identifier"];
+        if(msgId.length > 0) {
+            [self.dataLock lock];
+            for (BarrageTime* bt in self.barrageArray) {
+                if([msgId isEqualToString:bt.identifier]) {
+                    [self.barrageArray removeObject:bt];
+                    break;
+                }
+            }
+            [self.dataLock unlock];
+        }
+    }
+}
+
+- (UILabel*)barrageLable
+{
+    if(!_barrageLable) {
+        _barrageLable = [[UILabel alloc] init];
+    }
+    return _barrageLable;
+}
+
+- (NSMutableArray<BarrageTime*>*)barrageArray
+{
+    if(!_barrageArray) {
+        _barrageArray = [NSMutableArray<BarrageTime*> array];
+    }
+    return _barrageArray;
+}
+
+- (CGFloat)getBarrageDelayByLength:(NSUInteger)aViewLength speed:(CGFloat)aSpeed currentTime:(NSTimeInterval)aCurrentTime msgId:(NSString*)msgId
+{
+    [self.dataLock lock];
+    // 最多显示3行弹幕，如果增加需要修改
+    if(self.barrageArray.count >= 3) {
+        NSTimeInterval minBeginTimeInterval = 0;
+        NSMutableArray* arr = [NSMutableArray array];
+        NSUInteger index = 0;
+        NSUInteger minIndex = 0;
+        for(BarrageTime* info in self.barrageArray) {
+            // 该弹幕全部显示到该行的时间
+            NSTimeInterval tmAllShow = info.beginTime + aViewLength/aSpeed;
+            // 计算恰好与该弹幕不重叠的时间,留800ms的余量
+            NSTimeInterval tmToBegin = 0;
+            if(aSpeed <= info.speed) {
+                tmToBegin = tmAllShow+0.8;
+            }else{
+                CGFloat width = self.renderer.view.bounds.size.width;
+                CGFloat t1 = width * (1-info.speed/aSpeed)/info.speed;
+                tmToBegin = tmAllShow+t1+0.8;
+            }
+            [arr addObject:[NSNumber numberWithDouble:tmToBegin]];
+            if(minBeginTimeInterval < 1 || minBeginTimeInterval>tmToBegin) {
+                minBeginTimeInterval = tmToBegin;
+                minIndex = index;
+            }
+            index++;
+        }
+        if(minBeginTimeInterval < aCurrentTime)
+            minBeginTimeInterval = aCurrentTime;
+        BarrageTime* bt = [BarrageTime barrageTimeWithId:msgId beginTime:minBeginTimeInterval viewLength:aViewLength speed:aSpeed];
+        [self.barrageArray replaceObjectAtIndex:minIndex withObject:bt];
+        [self.dataLock unlock];
+        return minBeginTimeInterval-aCurrentTime;
+    }else{
+        BarrageTime* bt = [BarrageTime barrageTimeWithId:msgId beginTime:aCurrentTime viewLength:aViewLength speed:aSpeed];
+        [self.barrageArray addObject:bt];
+        [self.dataLock unlock];
+        return 0;
+    }
+}
+
+-(NSLock*)dataLock
+{
+    if(!_dataLock) {
+        _dataLock = [[NSLock alloc] init];
+    }
+    return _dataLock;
 }
 
 @end
