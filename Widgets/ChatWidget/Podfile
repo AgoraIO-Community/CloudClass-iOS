@@ -1,0 +1,18 @@
+# Uncomment the next line to define a global platform for your project
+# source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '10.0'
+inhibit_all_warnings!
+
+def sourcePod
+  pod 'AgoraWidget', :path => '../AgoraWidget/AgoraWidget.podspec'
+  pod 'AgoraUIBaseViews', :path => '../AgoraUIBaseViews/AgoraUIBaseViews.podspec'
+end
+
+target 'ChatWidget' do
+  use_frameworks!
+  pod 'HyphenateChat'
+  pod 'SDWebImage'
+  pod 'Masonry'
+  pod 'WHToast'
+  sourcePod
+end

@@ -1,0 +1,31 @@
+/* 
+  Localizable.strings
+  Pods
+
+  Created by lixiaoming on 2021/7/13.
+  
+*/
+
+ChatText = "Chat";
+ChatAnnouncement = "Notice";
+ChatTeacher= "Teacher";
+ChatAssistant= "Assistant";
+ChatEmptyText = "No Message";
+ChatPlaceholderText = "Input";
+ChatNoAnnouncement = "No Notice";
+ChatSendText = "Send";
+ChatAllMute = "All Mute";
+ChatMute = "You are muted by teacher";
+ChatLoginFaild = "Login failed";
+ChatJoinFaild = "Join failed";
+ChatSendFaildByMute = "Send faild,you have been muted";
+ChatSendFaildBySensitive = "Send faild,message contain sensitive word";
+ChatLoginOnOtherDevice = "Account login on ther device";
+ChatLogoutForced = "Account login out forced";
+ChatTeacherRemoveMsg = "The teacher remove a message";
+ChatTeacherMuteAll = "The teacher mute all";
+ChatTeacherUnmuteAll = "The teacher unmute all";
+ChatRecall = "Recall";
+ChatRecallAMessage = "Recall a message";
+ChatMutedByTeacher = "muted by %@ teacher";
+ChatUnmutedByTeacher = "unmuted by %@ teacher";

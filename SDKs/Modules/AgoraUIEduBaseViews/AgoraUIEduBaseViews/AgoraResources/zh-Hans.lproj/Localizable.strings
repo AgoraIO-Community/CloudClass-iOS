@@ -1,0 +1,79 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+// Common
+OK = "确定";
+
+// Chat
+ChatText = "消息";
+ChatConversation = "提问";
+ChatEmptyText = "还没有消息";
+ChatSendText = "发送";
+ChatPlaceholderText = "请输入消息";
+ChatSilencedPlaceholderText = "禁止输入消息";
+ChatDisableToastText = "禁言模式开启";
+ChatEnableToastText = "禁言模式关闭";
+ChatDisableText = "禁言";
+
+// User List
+UserListMainTitle = "人员列表";
+UserListTeacherName = "教师姓名:";
+UserListName = "学生姓名";
+UserListCoVideo = "上下台";
+UserListBoard = "授权";
+UserListCamera = "摄像头";
+UserListMicro = "麦克风";
+UserListChat = "禁言";
+UserListReward = "奖励";
+
+ChatMuteTagText = "已禁言";
+
+// board
+MuteBoardText = "你现在无权使用白板了";
+UnMuteBoardText = "你可以使用白板了";
+
+// Set
+SetText = "设置";
+CameraText = "摄像头";
+DirectionText = "方向";
+FrontText = "前";
+BackText = "后";
+MicrophoneText = "麦克风";
+SpeakerText = "扬声器";
+LeaveText = "离开教室";
+UploadLog = "发送成功!";
+
+// Toast
+LoaingText = "加载中...";
+ReconnectingText = "重连中...";
+
+CloseText = "关闭";
+CancelText = "取消";
+SureText = "确认";
+
+LeaveClassTitleText = "下课确认";
+ClassOverNoticeText = "结束通知";
+ClassOverText = "课程已结束";
+LeaveClassText = "你确定要下课吗?";
+
+KickOutNoticeText = "移除通知";
+KickOutText = "你已被踢出教室!";
+
+ForbidNoticeText = "禁入通知";
+ForbidText = "你已被禁止进入这个教室!";
+
+BoardWareProcessText = "课件加载中，请稍后...";
+BoardWareFailTitleText = "课件加载失败!";
+BoardWareFailMsgText = "课件未能加载成功，您可以点击重新加载重试";
+BoardWareJumpText = "跳过";
+BoardWareCloseText = "关闭";
+BoardWareRetryText = "重新加载";
+
+LoginOnAnotherDeviceText = "账号在远端设备登录";
+
+

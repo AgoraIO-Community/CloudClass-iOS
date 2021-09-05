@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="ipad10_5" orientation="portrait" layout="fullscreen" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Launch Screen Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController storyboardIdentifier="UILaunchStoryboardName~iphone" wantsFullScreenLayout="YES" id="01J-lp-oVM" customClass="LaunchScreenController" sceneMemberID="viewController">
+                    <view key="view" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash" translatesAutoresizingMaskIntoConstraints="NO" id="7js-Lm-9Du">
+                                <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Powerd by agora.io" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dfh-OS-RPJ">
+                                <rect key="frame" x="356" y="1020" width="122" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="WED-yj-ddq"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="sel-j7-X8v"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" red="0.0" green="0.43137254899999999" blue="0.87058823529999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <accessibility key="accessibilityConfiguration">
+                            <accessibilityTraits key="traits" notEnabled="YES"/>
+                        </accessibility>
+                        <constraints>
+                            <constraint firstItem="dfh-OS-RPJ" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="EJV-6f-Z8e"/>
+                            <constraint firstItem="7js-Lm-9Du" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="Gnw-7V-kY3"/>
+                            <constraint firstItem="7js-Lm-9Du" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" id="Phk-QY-KHR"/>
+                            <constraint firstItem="7js-Lm-9Du" firstAttribute="centerY" secondItem="sel-j7-X8v" secondAttribute="centerY" id="akp-Ae-59q"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="dfh-OS-RPJ" secondAttribute="bottom" constant="76" id="miO-tW-QJU"/>
+                            <constraint firstItem="7js-Lm-9Du" firstAttribute="centerX" secondItem="sel-j7-X8v" secondAttribute="centerX" id="n6h-p8-AAJ"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="splash" width="1024" height="768"/>
+    </resources>
+</document>

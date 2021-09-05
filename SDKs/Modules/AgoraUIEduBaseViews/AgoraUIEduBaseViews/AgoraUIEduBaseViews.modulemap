@@ -1,0 +1,38 @@
+framework module AgoraUIEduBaseViews {
+    explicit module AgoraFiles {
+        
+        module AgoraRefresh {
+            requires objc
+            header "AgoraRefreshNormalHeader.h"
+            header "AgoraRefreshGifHeader.h"
+            header "AgoraRefreshBackNormalFooter.h"
+            header "AgoraRefreshBackGifFooter.h"
+            header "AgoraRefreshAutoNormalFooter.h"
+            header "AgoraRefreshAutoGifFooter.h"
+            header "AgoraRefreshNormalTrailer.h"
+            header "AgoraRefreshConst.h"
+            header "AgoraRefreshStateHeader.h"
+            header "AgoraRefreshHeader.h"
+            header "AgoraRefreshComponent.h"
+            header "AgoraRefreshBackStateFooter.h"
+            header "AgoraRefreshBackFooter.h"
+            header "AgoraRefreshFooter.h"
+            header "AgoraRefreshAutoStateFooter.h"
+            header "AgoraRefreshAutoFooter.h"
+            header "AgoraRefreshStateTrailer.h"
+            header "AgoraRefreshTrailer.h"
+            header "UIView+AgoraExtension.h"
+            header "NSBundle+AgoraRefresh.h"
+            header "UIScrollView+AgoraRefresh.h"
+            header "UIScrollView+AgoraExtension.h"
+            export *
+        }
+        
+        module AgoraAnimatedImage {
+            requires objc
+            header "AgoraFLAnimatedImageView.h"
+            header "AgoraFLAnimatedImage.h"
+            export *
+        }
+    }
+}

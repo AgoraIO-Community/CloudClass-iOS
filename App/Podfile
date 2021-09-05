@@ -1,0 +1,80 @@
+# Uncomment the next line to define a global platform for your project
+# source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '10.0'
+inhibit_all_warnings!
+
+def sourcePod
+  # close source libs
+  pod 'AgoraActionProcess', :path => '../../cloudclass-ios/SDKs/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
+  pod 'AgoraRx', :path => '../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
+  pod 'AgoraLog', :path => '../../cloudclass-ios/SDKs/Modules/AgoraLog/AgoraLog.podspec'
+  pod 'EduSDK', :path => '../../cloudclass-ios/SDKs/Modules/EduSDK/EduSDK.podspec'
+  pod 'AgoraWhiteBoard', :path => '../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
+  pod 'AgoraReport', :path => '../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
+  pod 'AgoraEduCore', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore.podspec'
+  
+  # common libs
+  pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
+  pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp.podspec'
+  pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget.podspec'
+  
+  # open source libs
+  pod 'AgoraEduSDK', :path => '../SDKs/AgoraEduSDK/AgoraEduSDK.podspec'
+  pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext.podspec'
+  pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI.podspec', :subspecs => ['SOURCE']
+  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SOURCE']
+
+  # widgets
+  pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
+  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE']  
+end
+
+def binaryPod
+  pod 'AgoraEduSDK', :path => '../Products/AgoraEduSDK_Binary.podspec'
+  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
+end
+
+def libVersion
+  pod 'Protobuf'
+  pod "AFNetworking", "4.0.1"
+  pod "CocoaLumberjack", "3.6.1"
+  pod "AliyunOSSiOS", "2.10.8"
+  pod "Whiteboard", "2.13.19"
+  pod "AgoraRtcEngine_iOS", "3.4.6"
+  pod "AgoraRtm_iOS", "1.4.8"
+  pod 'MLeaksFinder'
+end
+
+workspace 'AgoraEducation.xcworkspace'
+install! 'cocoapods', :deterministic_uuids => false, :warn_for_unused_master_specs_repo => false
+
+def find_and_replace(dir, findstr, replacestr)
+  Dir[dir].each do |name|
+      text = File.read(name)
+      replace = text.gsub(findstr,replacestr)
+      if text != replace
+          puts "Fix: " + name
+          File.open(name, "w") { |file| file.puts replace }
+          STDOUT.flush
+      end
+  end
+  Dir[dir + '*/'].each(&method(:find_and_replace))
+end
+
+target 'AgoraEducation' do
+  use_frameworks!
+
+  pod 'OpenSSL-Universal', '1.0.2.17'
+
+  #sourcePod
+  binaryPod
+  
+  libVersion
+
+  post_install do |installer|
+    ## Fix for XCode 12.5
+    find_and_replace("Pods/FBRetainCycleDetector/FBRetainCycleDetector/Layout/Classes/FBClassStrongLayout.mm",
+      "layoutCache[currentClass] = ivars;", "layoutCache[(id<NSCopying>)currentClass] = ivars;")
+  end
+end
+

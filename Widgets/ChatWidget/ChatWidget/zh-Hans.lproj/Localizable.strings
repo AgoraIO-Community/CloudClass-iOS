@@ -1,0 +1,31 @@
+/* 
+  Localizable.strings
+  Pods
+
+  Created by lixiaoming on 2021/7/13.
+  
+*/
+
+ChatText = "聊天";
+ChatAnnouncement= "公告";
+ChatTeacher= "老师";
+ChatAssistant= "助教";
+ChatEmptyText = "还没有消息";
+ChatPlaceholderText = "请输入消息";
+ChatNoAnnouncement = "暂无公告";
+ChatSendText = "发送";
+ChatAllMute = "全员禁言中";
+ChatMute = "您已被老师禁言，请谨慎发言";
+ChatLoginFaild = "登录失败";
+ChatJoinFaild = "登录失败";
+ChatSendFaildByMute = "禁言中，发送失败";
+ChatSendFaildBySensitive = "发送内容包含敏感词，发送失败";
+ChatLoginOnOtherDevice = "账户在其他设备登录";
+ChatLogoutForced = "账户被强制退出";
+ChatTeacherRemoveMsg = "老师删除了一条消息";
+ChatTeacherMuteAll = "已开启全体学生禁言";
+ChatTeacherUnmuteAll = "已关闭全体学生禁言";
+ChatRecall = "撤回";
+ChatRecallAMessage = "撤回一条消息";
+ChatMutedByTeacher = "您被%@老师禁止发言了";
+ChatUnmutedByTeacher = "您被%@老师允许发言了";
