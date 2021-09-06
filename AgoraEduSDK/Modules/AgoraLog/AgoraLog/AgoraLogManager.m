@@ -192,8 +192,10 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
 
     NSString *logDirectoryPath = self.logDirectoryPath;
     
-    NSString *logBaseDirectoryPath = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0];
-    NSString *zipDirectoryPath = [logBaseDirectoryPath stringByAppendingPathComponent:@"/AgoraLogZip/"];
+    NSString *zipDirectoryPath = [self getZipDirectoryPath];
+    if (!zipDirectoryPath) {
+        return AgoraLogErrorTypeInternalError;
+    }
     
     NSString *zipName = [AgoraLogManager generateZipName];
     NSString *zipPath = [NSString stringWithFormat:@"%@/%@", zipDirectoryPath, zipName];
@@ -205,7 +207,10 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
         return errType;
     }
 
-    [AgoraLogManager zipFilesWithSourceDirectory:logDirectoryPath zipdirectoryPath:zipDirectoryPath zipPath:zipPath  completeBlock:^(ZipStateType zipCode) {
+    [AgoraLogManager zipFilesWithSourceDirectory:logDirectoryPath
+                                zipdirectoryPath:zipDirectoryPath
+                                         zipPath:zipPath
+                                   completeBlock:^(ZipStateType zipCode) {
         
         if(zipCode != ZipStateTypeOK){
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -218,8 +223,17 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
             return;
         }
         
-        [AgoraLogManager checkZipCodeAndUploadWithZipCode:zipCode zipPath:zipPath logParams:options progress:progressBlock success:successBlock fail:^(NSError *error) {
-            
+        __weak AgoraLogManager *weakSelf = self;
+        [AgoraLogManager checkZipCodeAndUploadWithZipCode:zipCode
+                                                  zipPath:zipPath
+                                                logParams:options
+                                                 progress:progressBlock
+                                                  success:^(NSString *uploadSerialNumber) {
+            successBlock(uploadSerialNumber);
+            [weakSelf checkLogZipToUpload:options
+                                  success:nil
+                                     fail:nil];
+        } fail:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSError *sdkError = AgoraLogLocalError(AgoraLogErrorTypeNetworkError, error.localizedDescription);
                 if(failureBlock != nil) {
@@ -230,6 +244,38 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
     }];
     
     return AgoraLogErrorTypeNone;
+}
+
+- (void)checkLogZipToUpload:(AgoraLogUploadOptions *)options
+                    success:(void (^ _Nullable) (NSString *uploadSerialNumber))successBlock
+                       fail:(void (^ _Nullable) (NSError *error))failBlock {
+    NSString *dicPath = [self getZipDirectoryPath];
+    if (!dicPath ||
+        [self checkUploadOptions:options] != AgoraLogErrorTypeNone) {
+        return;
+    }
+    NSArray<NSString *> *zipToUploadArr = [[NSFileManager.defaultManager enumeratorAtPath:dicPath] allObjects];
+    NSMutableArray<NSString *> *serialNumberArr = [NSMutableArray array];
+    for (NSString *p in zipToUploadArr) {
+        
+        NSString *path = [dicPath stringByAppendingPathComponent: p];
+        [AgoraLogManager checkZipCodeAndUploadWithZipCode:ZipStateTypeOK
+                                                  zipPath:path
+                                                logParams:options
+                                                 progress:nil
+                                                  success:successBlock
+                                                     fail:failBlock];
+    }
+}
+
+- (NSString *)getZipDirectoryPath {
+    NSArray<NSString *> *basePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    if (basePaths != nil && basePaths.count > 0) {
+        NSString *logBaseDirectoryPath = basePaths[0];
+        NSString *zipDirectoryPath = [logBaseDirectoryPath stringByAppendingPathComponent:@"/AgoraLogZip/"];
+        return zipDirectoryPath;
+    }
+    return nil;
 }
 
 - (void)dealloc {
@@ -312,8 +358,14 @@ NSString *AGORA_EDU_HTTP_LOG_SECRET = @"7AIsPeMJgQAppO0Z";
                 });
             }
         } success:^(NSString * _Nonnull uploadSerialNumber) {
-
-            if(successBlock != nil) {
+            NSError *error;
+            BOOL rmvSuccess = [[NSFileManager defaultManager] removeItemAtPath:zipPath
+                                                                         error:&error];
+            if (!rmvSuccess && failBlock != nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    failBlock(error);
+                });
+            } else if(successBlock != nil) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     successBlock(uploadSerialNumber);
                 });

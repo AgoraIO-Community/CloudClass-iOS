@@ -225,6 +225,15 @@
             [weakself onSetClassTime:timerString];
         }
     };
+    
+    self.roomVM.uploadLogBlock = ^{
+        [AgoraEduManager.shareManager uploadDebugItemSuccess:^(NSString * _Nonnull serialNumber) {
+        } failure:^(NSError * _Nonnull error) {
+            AgoraEduContextError *eduError = [[AgoraEduContextError alloc] initWithCode:error.code
+                                                                                message:error.localizedDescription];
+            [weakself.eventDispatcher onShowErrorInfo:eduError];
+        }];
+    };
 
     self.userVM = [[AgoraUserVM alloc] initWithConfig:self.vmConfig];
     self.chatVM = [[AgoraChatVM alloc] initWithConfig:self.vmConfig];

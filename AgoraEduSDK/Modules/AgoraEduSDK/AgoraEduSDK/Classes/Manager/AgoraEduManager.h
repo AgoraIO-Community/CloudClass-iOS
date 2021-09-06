@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initWithUserUuid:(NSString *)userUuid
                 userName:(NSString *)userName
                   roomId:(NSString *)roomId
+                roomName:(NSString *)roomName
+                  role:(AgoraRTERoleType)role
                      tag:(NSInteger)tag
              videoConfig:(AgoraRTEVideoConfig * _Nullable)videoConfig
                  success:(void (^) (void))successBlock
@@ -44,6 +46,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)uploadDebugItemSuccess:(OnDebugItemUploadSuccessBlock)successBlock
                        failure:(AgoraRTEFailureBlock _Nullable)failureBlock;
+
+- (void)checkLogZipToUploadWithUserName:(NSString *)userName
+                               userUuid:(NSString *)userUuid;
 
 + (void)releaseResource;
 @end

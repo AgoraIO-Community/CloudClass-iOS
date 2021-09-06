@@ -30,6 +30,8 @@ static AgoraEduManager *manager = nil;
 @property (nonatomic, strong) AgoraLogManager *logManager;
 @property (nonatomic, strong) NSString *logDirectoryPath;
 
+@property (nonatomic, strong) AgoraLogUploadOptions *logOptions;
+
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, assign) AgoraRTESceneType roomType;
 
@@ -60,6 +62,8 @@ static AgoraEduManager *manager = nil;
 - (void)initWithUserUuid:(NSString *)userUuid
                 userName:(NSString *)userName
                   roomId:(NSString *)roomId
+                roomName:(NSString *)roomName
+                  role:(AgoraEduRoleType)role
                      tag:(NSInteger)tag
              videoConfig:(AgoraRTEVideoConfig * _Nullable)videoConfig
                  success:(void (^) (void))successBlock
@@ -72,6 +76,14 @@ static AgoraEduManager *manager = nil;
     config.logDirectoryPath = self.logDirectoryPath;
     config.tag = tag;
     config.logConsoleState = self.consoleState;
+    
+    self.logOptions.roomName = roomName;
+    self.logOptions.roomType = [NSString stringWithFormat:@"%ld",tag];
+    self.logOptions.userName = userName;
+    self.logOptions.userUuid = userUuid;
+    self.logOptions.role = [NSNumber numberWithInt:role];
+    self.logOptions.roomUuid = roomId;
+    
     self.videoConfig = videoConfig;
     self.eduManager = [[AgoraRTEManager alloc] initWithConfig:config
                                                       success:successBlock
@@ -170,37 +182,49 @@ static AgoraEduManager *manager = nil;
 
 - (void)uploadDebugItemSuccess:(OnDebugItemUploadSuccessBlock)successBlock
                        failure:(AgoraRTEFailureBlock _Nullable)failureBlock {
-    AgoraWEAK(self);
-    [self.roomManager getLocalUserWithSuccess:^(AgoraRTELocalUser * _Nonnull user) {
-        
-        AgoraLogUploadOptions *options = [AgoraLogUploadOptions new];
-        options.rtmToken = AgoraManagerCache.share.token;
-        options.userUuid = user.userUuid;
-        options.role = [NSString stringWithFormat:@"%ld",user.role];
-        options.userName = user.userName;
-        options.roomUuid = AgoraManagerCache.share.roomUuid;
-        
-        options.roomName = self.roomName;
-        options.roomType = [NSString stringWithFormat:@"%ld",self.roomType];
-        
-        if (weakself.eduManager != nil) {
-            AgoraRTEDebugItem item = AgoraRTEDebugItemLog;
-            [weakself.eduManager uploadDebugItem:item
-                                         options:options
-                                         success:successBlock
-                                         failure:failureBlock];
-        } else {
-            if(weakself.logManager == nil) {
-                [weakself getLogManager];
-            }
-            options.appId = AgoraManagerCache.share.appId;
-            
-            [weakself.logManager uploadLogWithOptions:options
-                                             progress:nil
-                                              success:successBlock
-                                              failure:failureBlock];
+    if (self.roomManager) {
+        AgoraWEAK(self);
+        [self.roomManager getLocalUserWithSuccess:^(AgoraRTELocalUser * _Nonnull user) {
+            self.logOptions.userUuid = user.userUuid;
+            self.logOptions.role = [NSString stringWithFormat:@"%ld",user.role];
+            self.logOptions.userName = user.userName;
+        } failure:failureBlock];
+    }
+    
+    if (self.eduManager != nil) {
+        AgoraRTEDebugItem item = AgoraRTEDebugItemLog;
+        [self.eduManager uploadDebugItem:item
+                                     options:self.logOptions
+                                     success:successBlock
+                                     failure:failureBlock];
+    } else {
+        if(self.logManager == nil) {
+            [self getLogManager];
         }
-    } failure:failureBlock];
+        
+        [self.logManager uploadLogWithOptions:self.logOptions
+                                         progress:nil
+                                          success:successBlock
+                                          failure:failureBlock];
+    }
+}
+
+- (void)checkLogZipToUploadWithUserName:(NSString *)userName
+                               userUuid:(NSString *)userUuid {
+    if(self.logManager == nil) {
+        [self getLogManager];
+    }
+    self.logOptions.userName = userName;
+    self.logOptions.userUuid = userUuid;
+    
+    __weak typeof(self)weakSelf = self;
+    // logManager用完就释放， 防止内部的日志重复，导致2份日志
+    [self.logManager checkLogZipToUpload:self.logOptions
+                                 success:^(NSString * _Nonnull uploadSerialNumber) {
+        weakSelf.logManager = nil;
+    } fail:^(NSError * _Nonnull error) {
+        weakSelf.logManager = nil;
+    }];
 }
 
 - (AgoraLogManager *)getLogManager {
@@ -217,6 +241,16 @@ static AgoraEduManager *manager = nil;
     }
     return _logManager;
 }
+
+- (AgoraLogUploadOptions *)logOptions {
+    if (!_logOptions) {
+        _logOptions = [[AgoraLogUploadOptions alloc] init];
+        _logOptions.appId = AgoraManagerCache.share.appId;
+        _logOptions.rtmToken = AgoraManagerCache.share.token;
+    }
+    return _logOptions;
+}
+
 
 #pragma mark PRIVATE
 - (void)getGroupClassInfoWithSuccess:(void (^) (NSString *groupRoomUuid, NSString *groupRoomName))successBlock
