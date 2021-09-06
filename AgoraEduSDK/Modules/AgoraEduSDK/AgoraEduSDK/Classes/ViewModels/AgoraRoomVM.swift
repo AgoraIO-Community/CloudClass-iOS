@@ -21,6 +21,8 @@ import AgoraEduSDK.AgoraEduSDKFiles
     // time
     public var timerToastBlock: ((_ message: String) -> Void)?
     public var updateTimerBlock: ((_ timerString: String) -> Void)?
+    public var uploadLogBlock: (() -> Void)?
+
     private var hasStop: Bool = false
     private var timer: DispatchSourceTimer?
     
@@ -50,6 +52,7 @@ import AgoraEduSDK.AgoraEduSDKFiles
                 }
             })
         } failure: { [weak self] (error) in
+            self?.uploadLogBlock?()
             if let err = self?.kitError(error) {
                 failureBlock(err)
             }
@@ -178,6 +181,10 @@ private extension AgoraRoomVM {
                     time = 0
                 }
                 
+                if time > 0 && time % 600 == 0 {
+                    self.uploadLogBlock?()
+                }
+                
                 if roomStateInfoModel.duration - time == 5 * 60 {
                     // 5分钟
                     let strStart = self.localizedString("ClassEndWarningStartText")
@@ -192,6 +199,10 @@ private extension AgoraRoomVM {
                 time = Int(Double((currentRealTime - startTime)) * 0.001)
                 if time < 0 {
                     time = 0
+                }
+                
+                if time > 0 && time % 600 == 0 {
+                    self.uploadLogBlock?()
                 }
                 
                 let countdown = closeDelay + roomStateInfoModel.duration - time

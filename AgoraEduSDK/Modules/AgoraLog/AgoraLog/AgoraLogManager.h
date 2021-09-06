@@ -17,7 +17,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (AgoraLogErrorType)logMessage:(NSString *)message level:(AgoraLogLevelType)level;
 
-- (AgoraLogErrorType)uploadLogWithOptions:(AgoraLogUploadOptions*)options progress:(void (^ _Nullable) (float progress))progressBlock success:(void (^ _Nullable) (NSString *serialNumber))successBlock failure:(void (^ _Nullable) (NSError *error))failureBlock;
+- (AgoraLogErrorType)uploadLogWithOptions:(AgoraLogUploadOptions*)options
+                                 progress:(void (^ _Nullable) (float progress))progressBlock
+                                  success:(void (^ _Nullable) (NSString *serialNumber))successBlock
+                                  failure:(void (^ _Nullable) (NSError *error))failureBlock;
+
+- (void)checkLogZipToUpload:(AgoraLogUploadOptions *)options
+                    success:(void (^ _Nullable) (NSString *uploadSerialNumber))successBlock
+                       fail:(void (^ _Nullable) (NSError *error))failBlock;
 
 @end
 
