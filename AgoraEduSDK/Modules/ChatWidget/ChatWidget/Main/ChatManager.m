@@ -7,6 +7,7 @@
 //
 
 #import "ChatManager.h"
+#import "EMEmojiHelper.h"
 #import "ChatWidget+Localizable.h"
 
 const static NSString* kMsgType = @"msgtype";
@@ -245,7 +246,11 @@ static BOOL isSDKInited = NO;
 - (void)sendTextMsg:(NSString*)aText msgType:(ChatMsgType)aType
 {
     if(aText.length > 0  && self.isLogin) {
-        EMTextMessageBody* textBody = [[EMTextMessageBody alloc] initWithText:aText];
+        if(self.user.avatarurl.length <= 0) {
+            self.user.avatarurl = @"https://download-sdk.oss-cn-beijing.aliyuncs.com/downloads/IMDemo/avatar/Image1.png";
+        }
+        NSString* retStr = [EMEmojiHelper convertEmojiToKeys:aText];
+        EMTextMessageBody* textBody = [[EMTextMessageBody alloc] initWithText:retStr];
         NSMutableDictionary* ext = [@{kMsgType:[NSNumber numberWithInteger: aType],
                                       @"role": [NSNumber numberWithInteger:self.user.role],
                                       kAvatarUrl: self.user.avatarurl} mutableCopy];

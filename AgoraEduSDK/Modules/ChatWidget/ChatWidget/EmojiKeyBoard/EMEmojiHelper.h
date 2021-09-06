@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)convertEmoji:(NSString *)aString;
 
++ (NSString *)convertEmojiToKeys:(NSString *)aString;
+
 @end
 
 NS_ASSUME_NONNULL_END
