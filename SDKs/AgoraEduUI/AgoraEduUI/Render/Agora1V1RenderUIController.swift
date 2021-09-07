@@ -232,6 +232,27 @@ extension Agora1V1RenderUIController: AgoraEduUserHandler {
     public func onShowUserTips(_ message: String) {
         AgoraUtils.showToast(message: message)
     }
+    
+    func onStreamUpdated(_ streamType: EduContextMediaStreamType,
+                         fromUser: AgoraEduContextUserDetailInfo,
+                         operator: AgoraEduContextUserInfo?) {
+        guard fromUser.isSelf else {
+            return
+        }
+        
+        switch streamType {
+        case .video:
+            let text = AgoraUILocalizedString(fromUser.enableVideo ? "CameraUnMuteText" : "CameraMuteText",
+                                              object: self)
+            AgoraUtils.showToast(message: text)
+        case .audio:
+            let text = AgoraUILocalizedString(fromUser.enableAudio ? "MicrophoneUnMuteText" : "MicrophoneMuteText",
+                                              object: self)
+            AgoraUtils.showToast(message: text)
+        default:
+            break
+        }
+    }
 }
 
 extension Agora1V1RenderUIController: AgoraUIControllerContainerDelegate {
