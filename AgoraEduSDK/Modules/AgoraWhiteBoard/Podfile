@@ -6,7 +6,7 @@ target 'AgoraWhiteBoard' do
   use_frameworks!
 
   # Pods for AgoraWhiteBoard
-  pod "Whiteboard", "2.13.19-beta9"
+  pod "Whiteboard", "2.13.19-beta10"
 
   post_install do |installer|
      installer.pods_project.targets.each do |target|
