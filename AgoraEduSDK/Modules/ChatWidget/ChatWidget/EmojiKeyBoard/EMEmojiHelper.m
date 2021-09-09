@@ -132,4 +132,19 @@ static EMEmojiHelper *helper = nil;
     return retStr;
 }
 
++ (NSString *)convertEmojiToKeys:(NSString *)aString
+ {
+     NSDictionary *emojisDic = [EMEmojiHelper sharedHelper].convertEmojiDic;
+     __block NSString* retStr = aString;
+     [emojisDic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+         NSString* emoji = (NSString*)obj;
+         NSString* emojiKey = (NSString*)key;
+         if([retStr containsString:emoji]) {
+             retStr = [retStr stringByReplacingOccurrencesOfString:emoji withString:key];
+         }
+     }];
+
+     return retStr;
+ }
+
 @end
