@@ -61,6 +61,18 @@ public class AgoraLocationAssistant: NSObject {
     private var dispatchWork: DispatchWorkItem?
 
     fileprivate weak var loadingView: AgoraAlertView?
+
+    fileprivate lazy var alertView: AgoraAlertView? = {
+        
+        guard let superView = UIApplication.shared.keyWindow else {
+            return nil
+        }
+        let alertView = AgoraAlertView(frame: superView.bounds)
+        
+        alertView.backgroundColor = UIColor(rgb: 0xffffff, alpha: 0.6)
+        return alertView
+    }()
+    
     fileprivate lazy var toastView: AgoraCourseTipsView? = {
         
         guard let superView = UIApplication.shared.keyWindow else {
@@ -143,14 +155,9 @@ public class AgoraLocationAssistant: NSObject {
                                                     title: String,
                                                     message: String,
                                                     btnModels: [AgoraAlertButtonModel]) -> AgoraAlertView? {
-        
         guard let superView = UIApplication.shared.keyWindow else {
             return nil
         }
-        
-        let alertView = AgoraAlertView(frame: superView.bounds)
-        alertView.backgroundColor = UIColor(rgb: 0xffffff, alpha: 0.6)
-
         let titleLabel = AgoraAlertLabelModel()
         titleLabel.text = title
         titleLabel.textColor = UIColor(rgb: 0x030303)
@@ -177,9 +184,9 @@ public class AgoraLocationAssistant: NSObject {
         styleModel.titleLabel = titleLabel
         styleModel.messageLabel = messageLabel
         styleModel.buttons = btnModels
-        alertView.styleModel = styleModel
-        alertView.show(in: superView)
-        return alertView
+        AgoraLocationAssistant.shared().alertView?.styleModel = styleModel
+        AgoraLocationAssistant.shared().alertView?.show(in: superView)
+        return AgoraLocationAssistant.shared().alertView
     }
     
     @discardableResult public static func showForbiddenAlert() -> AgoraAlertView? {
