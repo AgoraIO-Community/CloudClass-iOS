@@ -41,7 +41,7 @@ static AgoraClassroomSDK *manager = nil;
 }
 
 + (NSString *)version {
-    return @"1.1.2";
+    return @"1.1.5";
 }
 
 + (void)setBaseURL:(NSString *)baseURL {
@@ -81,7 +81,6 @@ static AgoraClassroomSDK *manager = nil;
     AgoraEduCore *core = [[AgoraEduCore alloc] initWithDelegate:manager];
     
     // 切换 host
-    // TODO: 蔡大佬测试环境 添加了region就范围失败，没有配置region的路由。先临时去除测试环境的region配置。
     NSString *host = [AgoraClassroomSDK share].baseURL;
     if (![host containsString:@"-dev"]) {
         host = [host stringByAppendingFormat:@"/%@",config.region.lowercaseString];
