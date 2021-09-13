@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 import AudioToolbox
+import UIKit
 
 public class AgoraUIVideoCanvas: AgoraBaseUIView {
     public var renderingStreamUuid: String?

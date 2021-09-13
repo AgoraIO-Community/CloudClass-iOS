@@ -2,9 +2,9 @@
 platform :ios, '10.0'
 
 def sourcePod
-  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
-  pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp.podspec'
-  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget.podspec'
+  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
+  pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
+  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
 end
 
 target 'AgoraEduContext' do

@@ -6,6 +6,7 @@
 //
 
 import AgoraUIBaseViews
+import UIKit
 
 public class AgoraUserListView : AgoraBaseUIView {    
     public enum UserCellType: String{

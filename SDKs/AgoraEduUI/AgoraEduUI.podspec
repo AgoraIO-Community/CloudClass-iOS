@@ -13,6 +13,7 @@ Pod::Spec.new do |spec|
   spec.module_name   = 'AgoraEduUI'
 
   spec.dependency "AgoraUIBaseViews"
+  spec.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
 
   spec.subspec 'SOURCE' do |source|
     source.source_files = "AgoraEduUI/**/*.{h,m,swift}"

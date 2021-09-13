@@ -6,6 +6,7 @@
 //
 
 import AgoraUIBaseViews
+import UIKit
 
 public protocol AgoraHandsUpViewDelegate: NSObjectProtocol {
     func handsUpVieWillHandsUp(_ view: AgoraHandsUpView)

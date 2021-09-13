@@ -28,9 +28,9 @@ def baseSource
   pod 'AgoraWidgets', :path => '../../Widgets/AgoraWidgets/AgoraWidgets.podspec'
 
   # common libs
-  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget.podspec'
-  pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp.podspec'
-  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews.podspec'  
+  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
+  pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
+  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'  
 end
 
 target 'AgoraEduSDK' do

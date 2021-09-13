@@ -14,9 +14,9 @@ def sourcePod
   pod 'AgoraEduCore', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore.podspec'
   
   # common libs
-  pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
-  pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp.podspec'
-  pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget.podspec'
+  pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
+  pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
+  pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
   
   # open source libs
   pod 'AgoraEduSDK', :path => '../SDKs/AgoraEduSDK/AgoraEduSDK.podspec'
@@ -32,6 +32,30 @@ end
 def binaryPod
   pod 'AgoraEduSDK', :path => '../Products/AgoraEduSDK_Binary.podspec'
   pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
+end
+
+def halfBinaryPod
+  # open source libs
+  pod 'AgoraEduSDK', :path => '../SDKs/AgoraEduSDK/AgoraEduSDK.podspec'
+  pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext.podspec'
+  #pod 'AgoraEduContext', :path => '../Products/AgoraEduConext_Binary.podspec'
+
+
+  pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI.podspec', :subspecs => ['SOURCE']
+  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SOURCE']
+
+   # close source libs
+  #pod 'AgoraEduCore', :path => '../../cloudclass-ios/Products/AgoraEduCore_Binary.podspec'
+  pod 'AgoraEduCore', :path => '../Products/AgoraEduCore_Binary.podspec'
+
+  # common libs
+  pod 'AgoraUIBaseViews', '1.0.1'
+  pod 'AgoraExtApp', '1.0.0'
+  pod 'AgoraWidget', '1.0.0'
+
+  # widgets
+  pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
+  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE'] 
 end
 
 def libVersion
@@ -67,7 +91,8 @@ target 'AgoraEducation' do
   pod 'OpenSSL-Universal', '1.0.2.17'
 
   #sourcePod
-  binaryPod
+  #binaryPod
+  halfBinaryPod
   
   libVersion
 

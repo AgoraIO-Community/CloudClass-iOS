@@ -6,6 +6,7 @@
 //
 
 import AgoraUIBaseViews
+import UIKit
 
 public protocol AgoraUserCellDelegate: NSObjectProtocol {
     func userCell(_ cell: AgoraUserCell,

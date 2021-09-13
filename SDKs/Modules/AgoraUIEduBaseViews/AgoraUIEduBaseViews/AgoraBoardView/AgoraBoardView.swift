@@ -5,8 +5,8 @@
 //  Created by SRS on 2021/2/13.
 //
 
-import Foundation
 import AgoraUIBaseViews
+import UIKit
 
 @objc public protocol AgoraBoardViewDelegate: NSObjectProtocol {
     func didCancelDownloadPressed()

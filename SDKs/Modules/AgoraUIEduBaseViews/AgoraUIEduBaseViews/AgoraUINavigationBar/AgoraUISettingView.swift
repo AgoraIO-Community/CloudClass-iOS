@@ -5,8 +5,8 @@
 //  Created by SRS on 2021/3/9.
 //
 
-import Foundation
 import AgoraUIBaseViews
+import UIKit
 
 @objcMembers public class AgoraUISettingView: AgoraBaseUIView {
     public var cameraStateBlock: ((_ open: Bool) -> Void)?
