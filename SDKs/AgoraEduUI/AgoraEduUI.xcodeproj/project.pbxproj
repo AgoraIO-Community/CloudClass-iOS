@@ -33,6 +33,7 @@
 		8619386A263162C4008A11D4 /* AgoraSmallRenderUIController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86193866263162C4008A11D4 /* AgoraSmallRenderUIController+Data.swift */; };
 		8619386B263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86193867263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift */; };
 		8619386C263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86193868263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift */; };
+		8644B3DA26EF3BEC00455F67 /* AgoraUIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644B3D926EF3BEC00455F67 /* AgoraUIExtension.swift */; };
 		864CCE0B262AD86000C10042 /* AgoraWhiteBoardUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864CCE09262AD86000C10042 /* AgoraWhiteBoardUIController.swift */; };
 		867451AC26BA3322007E06E4 /* AgoraEduUI.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 867451AB26BA3322007E06E4 /* AgoraEduUI.xcassets */; };
 		86A3D1FE2609F1F20066BA1E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 86A3D1E92609F1960066BA1E /* Localizable.strings */; };
@@ -81,6 +82,7 @@
 		86193866263162C4008A11D4 /* AgoraSmallRenderUIController+Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+Data.swift"; sourceTree = "<group>"; };
 		86193867263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+EventHandler.swift"; sourceTree = "<group>"; };
 		86193868263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+UIEvent.swift"; sourceTree = "<group>"; };
+		8644B3D926EF3BEC00455F67 /* AgoraUIExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUIExtension.swift; sourceTree = "<group>"; };
 		864CCE09262AD86000C10042 /* AgoraWhiteBoardUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraWhiteBoardUIController.swift; sourceTree = "<group>"; };
 		867451AB26BA3322007E06E4 /* AgoraEduUI.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AgoraEduUI.xcassets; sourceTree = "<group>"; };
 		868D62B225EF7A6200E914F2 /* AgoraEduUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +176,14 @@
 			path = UIController;
 			sourceTree = "<group>";
 		};
+		8644B3D826EF3BEC00455F67 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				8644B3D926EF3BEC00455F67 /* AgoraUIExtension.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		864CCE07262AD86000C10042 /* WhiteBoard */ = {
 			isa = PBXGroup;
 			children = (
@@ -214,6 +224,7 @@
 				8619377C26305072008A11D4 /* UIController */,
 				864CCE07262AD86000C10042 /* WhiteBoard */,
 				86A3D1E82609F1960066BA1E /* AgoraResources */,
+				8644B3D826EF3BEC00455F67 /* Utils */,
 				867451AB26BA3322007E06E4 /* AgoraEduUI.xcassets */,
 				868D62B625EF7A6200E914F2 /* Info.plist */,
 			);
@@ -383,6 +394,7 @@
 				8619386B263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift in Sources */,
 				8619378826305072008A11D4 /* AgoraSmallRenderUIController.swift in Sources */,
 				8619378E26305072008A11D4 /* AgoraRoomUIController.swift in Sources */,
+				8644B3DA26EF3BEC00455F67 /* AgoraUIExtension.swift in Sources */,
 				8619386C263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift in Sources */,
 				78658F4126B0536F00BBADA2 /* AgoraLectureRenderUIController+EventHandler.swift in Sources */,
 				8608263526A55A1E00E8FDE2 /* AgoraEduUI+Small.swift in Sources */,

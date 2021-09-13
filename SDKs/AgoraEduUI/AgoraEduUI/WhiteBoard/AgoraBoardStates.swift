@@ -6,6 +6,7 @@
 //
 
 import AgoraUIEduBaseViews
+import Foundation
 
 // MARK: - AgoraWhiteBoardState
 @objc public protocol AgoraWhiteBoardStateDelegate: NSObjectProtocol {

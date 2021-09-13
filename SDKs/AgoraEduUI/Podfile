@@ -3,23 +3,27 @@
 
 def sourcePod
   # open source libs
-  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SOURCE']
+  openSourceLibs
 
   # common libs
-  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
-  pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp.podspec'
-  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget.podspec'
+  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
+  pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
+  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
 end
 
 def binaryPod
-  pod 'AgoraUIBaseViews', :path => '../AgoraUIBaseViews/AgoraUIBaseViews.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SUMBINARY']
-  pod 'AgoraBaseBinary', :path => './AgoraBaseBinary.podspec'
+  pod 'AgoraUIBaseViews'
+end
+
+def openSourceLibs
+  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
 end
 
 target 'AgoraEduUI' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
+
+  openSourceLibs
   sourcePod
 end
