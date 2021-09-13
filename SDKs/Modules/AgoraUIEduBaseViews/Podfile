@@ -2,12 +2,11 @@
 # platform :ios, '9.0'
 
 def sourcePod
-  pod 'AgoraUIBaseViews', :path => '../../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews.podspec'
+  pod 'AgoraUIBaseViews', :path => '../../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
 end
 
 def binaryPod
-  pod 'AgoraUIBaseViews', :path => '../AgoraUIBaseViews/AgoraUIBaseViews.podspec'
-  pod 'AgoraBaseBinary', :path => './AgoraBaseBinary.podspec'
+  pod 'AgoraUIBaseViews'
 end
 
 target 'AgoraUIEduBaseViews' do

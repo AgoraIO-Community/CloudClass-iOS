@@ -3,6 +3,13 @@
 platform :ios, '10.0'
 inhibit_all_warnings!
 
+def openSourceLibs
+  pod 'AgoraEduSDK', :path => '../SDKs/AgoraEduSDK/AgoraEduSDK.podspec'
+  pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext.podspec'
+  pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
+end
+
 def sourcePod
   # close source libs
   pod 'AgoraActionProcess', :path => '../../cloudclass-ios/SDKs/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
@@ -17,12 +24,9 @@ def sourcePod
   pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
   pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
   pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
-  
+
   # open source libs
-  pod 'AgoraEduSDK', :path => '../SDKs/AgoraEduSDK/AgoraEduSDK.podspec'
-  pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext.podspec'
-  pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI.podspec', :subspecs => ['SOURCE']
-  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SOURCE']
+  openSourceLibs
 
   # widgets
   pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
@@ -36,15 +40,9 @@ end
 
 def halfBinaryPod
   # open source libs
-  pod 'AgoraEduSDK', :path => '../SDKs/AgoraEduSDK/AgoraEduSDK.podspec'
-  pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext.podspec'
-  #pod 'AgoraEduContext', :path => '../Products/AgoraEduConext_Binary.podspec'
+  openSourceLibs
 
-
-  pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI.podspec', :subspecs => ['SOURCE']
-  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec', :subspecs => ['SOURCE']
-
-   # close source libs
+  # close source libs
   #pod 'AgoraEduCore', :path => '../../cloudclass-ios/Products/AgoraEduCore_Binary.podspec'
   pod 'AgoraEduCore', :path => '../Products/AgoraEduCore_Binary.podspec'
 
@@ -67,6 +65,7 @@ def libVersion
   pod "AgoraRtcEngine_iOS", "3.4.6"
   pod "AgoraRtm_iOS", "1.4.8"
   pod 'MLeaksFinder'
+  pod 'OpenSSL-Universal', '1.0.2.17'
 end
 
 workspace 'AgoraEducation.xcworkspace'
@@ -88,14 +87,12 @@ end
 target 'AgoraEducation' do
   use_frameworks!
 
-  pod 'OpenSSL-Universal', '1.0.2.17'
-
-  #sourcePod
-  #binaryPod
-  halfBinaryPod
-  
   libVersion
 
+  sourcePod
+  #binaryPod
+  #halfBinaryPod
+  
   post_install do |installer|
     ## Fix for XCode 12.5
     find_and_replace("Pods/FBRetainCycleDetector/FBRetainCycleDetector/Layout/Classes/FBClassStrongLayout.mm",
