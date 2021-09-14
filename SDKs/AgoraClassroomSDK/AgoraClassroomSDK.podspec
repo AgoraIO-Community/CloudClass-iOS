@@ -19,7 +19,7 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
 
-  spec.source_files  = "AgoraEduSDK/**/*.{swift,h,m}"
+  spec.source_files  = "AgoraClassroomSDK/**/*.{swift,h,m}"
   spec.public_header_files = [
     "AgoraClassroomSDK/Public/*.h",
     "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
