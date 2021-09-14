@@ -9,7 +9,7 @@
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduCore
-import AgoraClassroomSDK
+import AgoraClassroomSDK_iOS
 import AgoraWidget
 import ChatWidget
 import AgoraLog

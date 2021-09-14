@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import AgoraClassroomSDK
+import AgoraClassroomSDK_iOS
 import AgoraEduCore
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews

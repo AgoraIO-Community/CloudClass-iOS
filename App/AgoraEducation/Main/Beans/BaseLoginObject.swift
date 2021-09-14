@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import AgoraClassroomSDK
+import AgoraClassroomSDK_iOS
 import AgoraEduCore
 
 enum Device: String {

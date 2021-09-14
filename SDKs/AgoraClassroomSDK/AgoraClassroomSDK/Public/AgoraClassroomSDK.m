@@ -115,7 +115,7 @@ static AgoraClassroomSDK *manager = nil;
                                                              videoDimensionHeight:config.cameraEncoderConfiguration.height
                                                                         frameRate:config.cameraEncoderConfiguration.frameRate
                                                                           bitrate:config.cameraEncoderConfiguration.bitrate
-                                                                        mirrorMode: config.cameraEncoderConfiguration.mirrorMode];
+                                                                        mirrorMode:config.cameraEncoderConfiguration.mirrorMode];
     }
     AgoraEduCoreMediaOptions *mediaOptions;
     if (config.mediaOptions) {
