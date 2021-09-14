@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		787A004725D110A80063456F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787A004625D110A80063456F /* AudioToolbox.framework */; };
-		81DAA06AEDE4764FA3712154 /* Pods_AgoraEduSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 184C538EB6D076BAC3B83E36 /* Pods_AgoraEduSDK.framework */; };
 		86323BE4269335FD006C9C31 /* AgoraBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86323BE3269335FD006C9C31 /* AgoraBaseViewController.m */; };
 		86323BE62693360A006C9C31 /* AgoraBaseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 86323BE52693360A006C9C31 /* AgoraBaseViewController.h */; };
 		8654EDB1268B258700B95D42 /* AgoraEduObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 8654EDA6268B258700B95D42 /* AgoraEduObjects.m */; };
@@ -22,11 +21,13 @@
 		8654EDC3268C139400B95D42 /* AgoraInternalClassroom.m in Sources */ = {isa = PBXBuildFile; fileRef = 8654EDC1268C139400B95D42 /* AgoraInternalClassroom.m */; };
 		8654EDC6268C14F700B95D42 /* AgoraEduTopVC.h in Headers */ = {isa = PBXBuildFile; fileRef = 8654EDC4268C14F700B95D42 /* AgoraEduTopVC.h */; };
 		8654EDC7268C14F700B95D42 /* AgoraEduTopVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 8654EDC5268C14F700B95D42 /* AgoraEduTopVC.m */; };
+		969EA2E1A2C3B220F176C02A /* Pods_AgoraClassroomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7209A60B3813A1070DB6FCAB /* Pods_AgoraClassroomSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		184C538EB6D076BAC3B83E36 /* Pods_AgoraEduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7874817F25A884A30022329D /* AgoraEduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		502E00B58E86BDC1D7EFEC74 /* Pods-AgoraClassroomSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraClassroomSDK.debug.xcconfig"; path = "Target Support Files/Pods-AgoraClassroomSDK/Pods-AgoraClassroomSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		7209A60B3813A1070DB6FCAB /* Pods_AgoraClassroomSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraClassroomSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7874817F25A884A30022329D /* AgoraClassroomSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraClassroomSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7874818325A884A30022329D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		787A004625D110A80063456F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		78E0FC7925C950E20023D161 /* AgoraEduSDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = AgoraEduSDK.modulemap; sourceTree = "<group>"; };
@@ -44,6 +45,7 @@
 		8654EDC4268C14F700B95D42 /* AgoraEduTopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduTopVC.h; sourceTree = "<group>"; };
 		8654EDC5268C14F700B95D42 /* AgoraEduTopVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduTopVC.m; sourceTree = "<group>"; };
 		8ACCDE2E28B832D1B7FE7D4D /* Pods-AgoraEduSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduSDK.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEduSDK/Pods-AgoraEduSDK.debug.xcconfig"; sourceTree = "<group>"; };
+		CFA3C49D76BC64554226BF46 /* Pods-AgoraClassroomSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraClassroomSDK.release.xcconfig"; path = "Target Support Files/Pods-AgoraClassroomSDK/Pods-AgoraClassroomSDK.release.xcconfig"; sourceTree = "<group>"; };
 		F0B08175A3283B9083EFAA8F /* Pods-AgoraEduSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduSDK.release.xcconfig"; path = "Target Support Files/Pods-AgoraEduSDK/Pods-AgoraEduSDK.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -52,8 +54,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81DAA06AEDE4764FA3712154 /* Pods_AgoraEduSDK.framework in Frameworks */,
 				787A004725D110A80063456F /* AudioToolbox.framework in Frameworks */,
+				969EA2E1A2C3B220F176C02A /* Pods_AgoraClassroomSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +67,8 @@
 			children = (
 				8ACCDE2E28B832D1B7FE7D4D /* Pods-AgoraEduSDK.debug.xcconfig */,
 				F0B08175A3283B9083EFAA8F /* Pods-AgoraEduSDK.release.xcconfig */,
+				502E00B58E86BDC1D7EFEC74 /* Pods-AgoraClassroomSDK.debug.xcconfig */,
+				CFA3C49D76BC64554226BF46 /* Pods-AgoraClassroomSDK.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -79,7 +83,7 @@
 		7874817525A884A30022329D = {
 			isa = PBXGroup;
 			children = (
-				7874818125A884A30022329D /* AgoraEduSDK */,
+				7874818125A884A30022329D /* AgoraClassroomSDK */,
 				7874818025A884A30022329D /* Products */,
 				17319F960276A9D24FD81272 /* Pods */,
 				B436AE073FE82D5EA407F170 /* Frameworks */,
@@ -90,12 +94,12 @@
 		7874818025A884A30022329D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7874817F25A884A30022329D /* AgoraEduSDK.framework */,
+				7874817F25A884A30022329D /* AgoraClassroomSDK.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7874818125A884A30022329D /* AgoraEduSDK */ = {
+		7874818125A884A30022329D /* AgoraClassroomSDK */ = {
 			isa = PBXGroup;
 			children = (
 				8654EDA0268B258700B95D42 /* Classes */,
@@ -103,7 +107,7 @@
 				7874818325A884A30022329D /* Info.plist */,
 				78E0FC7925C950E20023D161 /* AgoraEduSDK.modulemap */,
 			);
-			path = AgoraEduSDK;
+			path = AgoraClassroomSDK;
 			sourceTree = "<group>";
 		};
 		8654EDA0268B258700B95D42 /* Classes */ = {
@@ -137,7 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				787A004625D110A80063456F /* AudioToolbox.framework */,
-				184C538EB6D076BAC3B83E36 /* Pods_AgoraEduSDK.framework */,
+				7209A60B3813A1070DB6FCAB /* Pods_AgoraClassroomSDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -162,9 +166,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		7874817E25A884A30022329D /* AgoraEduSDK */ = {
+		7874817E25A884A30022329D /* AgoraClassroomSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7874818725A884A30022329D /* Build configuration list for PBXNativeTarget "AgoraEduSDK" */;
+			buildConfigurationList = 7874818725A884A30022329D /* Build configuration list for PBXNativeTarget "AgoraClassroomSDK" */;
 			buildPhases = (
 				5CD7F354D76558C26646E3AB /* [CP] Check Pods Manifest.lock */,
 				7874817A25A884A30022329D /* Headers */,
@@ -176,9 +180,9 @@
 			);
 			dependencies = (
 			);
-			name = AgoraEduSDK;
+			name = AgoraClassroomSDK;
 			productName = AgoraEduSDK;
-			productReference = 7874817F25A884A30022329D /* AgoraEduSDK.framework */;
+			productReference = 7874817F25A884A30022329D /* AgoraClassroomSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -196,7 +200,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7874817925A884A30022329D /* Build configuration list for PBXProject "AgoraEduSDK" */;
+			buildConfigurationList = 7874817925A884A30022329D /* Build configuration list for PBXProject "AgoraClassroomSDK" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -210,7 +214,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7874817E25A884A30022329D /* AgoraEduSDK */,
+				7874817E25A884A30022329D /* AgoraClassroomSDK */,
 			);
 		};
 /* End PBXProject section */
@@ -241,7 +245,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AgoraEduSDK-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-AgoraClassroomSDK-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -387,7 +391,7 @@
 		};
 		7874818825A884A30022329D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8ACCDE2E28B832D1B7FE7D4D /* Pods-AgoraEduSDK.debug.xcconfig */;
+			baseConfigurationReference = 502E00B58E86BDC1D7EFEC74 /* Pods-AgoraClassroomSDK.debug.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
@@ -402,7 +406,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PREFIX_HEADER = "";
-				INFOPLIST_FILE = AgoraEduSDK/Info.plist;
+				INFOPLIST_FILE = AgoraClassroomSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -411,8 +415,8 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_dylib;
-				MODULEMAP_FILE = AgoraEduSDK/AgoraEduSDK.modulemap;
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEduSDK;
+				MODULEMAP_FILE = AgoraClassroomSDK/AgoraClassroomSDK.modulemap;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraClassroomSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
@@ -425,7 +429,7 @@
 		};
 		7874818925A884A30022329D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F0B08175A3283B9083EFAA8F /* Pods-AgoraEduSDK.release.xcconfig */;
+			baseConfigurationReference = CFA3C49D76BC64554226BF46 /* Pods-AgoraClassroomSDK.release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
@@ -440,7 +444,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PREFIX_HEADER = "";
-				INFOPLIST_FILE = AgoraEduSDK/Info.plist;
+				INFOPLIST_FILE = AgoraClassroomSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -449,8 +453,8 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_dylib;
-				MODULEMAP_FILE = AgoraEduSDK/AgoraEduSDK.modulemap;
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEduSDK;
+				MODULEMAP_FILE = AgoraClassroomSDK/AgoraClassroomSDK.modulemap;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraClassroomSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = NO;
@@ -463,7 +467,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7874817925A884A30022329D /* Build configuration list for PBXProject "AgoraEduSDK" */ = {
+		7874817925A884A30022329D /* Build configuration list for PBXProject "AgoraClassroomSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7874818525A884A30022329D /* Debug */,
@@ -472,7 +476,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		7874818725A884A30022329D /* Build configuration list for PBXNativeTarget "AgoraEduSDK" */ = {
+		7874818725A884A30022329D /* Build configuration list for PBXNativeTarget "AgoraClassroomSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7874818825A884A30022329D /* Debug */,

@@ -25,7 +25,7 @@ end
 
 def sourcePod
   # close source libs
-  pod 'AgoraEduCore', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore.podspec'
+  pod 'AgoraEduCore', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
   pod 'AgoraActionProcess', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
   pod 'AgoraWhiteBoard', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
   pod 'AgoraReport', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
@@ -48,7 +48,7 @@ def binaryPod
   pod 'AgoraExtApp'
 end
 
-target 'AgoraEduSDK' do
+target 'AgoraClassroomSDK' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   

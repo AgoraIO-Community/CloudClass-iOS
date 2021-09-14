@@ -1,8 +1,8 @@
 Pod::Spec.new do |spec|
-  spec.name             = 'AgoraEduSDK'
+  spec.name             = 'AgoraClassroomSDK'
   spec.version          = '1.1.5'
   spec.summary          = 'Education scene SDK'
-  spec.description      = 'Agora Edu Scene SDK'
+  spec.description      = 'Agora Classroom SDK'
 
   spec.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
   spec.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
@@ -21,7 +21,8 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = "AgoraEduSDK/**/*.{swift,h,m}"
   spec.public_header_files = [
-    "AgoraEduSDK/Public/*.h", 
+    "AgoraClassroomSDK/Public/*.h",
+    "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
   ]
     
   # close source libs

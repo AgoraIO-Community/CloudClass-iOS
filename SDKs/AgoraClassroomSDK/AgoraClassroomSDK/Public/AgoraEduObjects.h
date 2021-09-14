@@ -1,6 +1,6 @@
 //
 //  EduObjects.h
-//  AgoraEduSDK
+//  AgoraClassroomSDK
 //
 //  Created by SRS on 2021/1/7.
 //
@@ -13,7 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 /**设置全局配置*/
-@interface AgoraEduSDKConfig : NSObject
+@interface AgoraClassroomSDKConfig : NSObject
 // 声网App Id
 @property (nonatomic, copy) NSString *appId;
 // 是否开启护眼模式

@@ -1,13 +1,13 @@
 //
 //  AgoraEduObjects.m
-//  AgoraEduSDK
+//  AgoraClassroomSDK
 //
 //  Created by SRS on 2021/1/7.
 //
 
 #import "AgoraEduObjects.h"
 
-@implementation AgoraEduSDKConfig
+@implementation AgoraClassroomSDKConfig
 - (instancetype)init {
     self = [super init];
     if (self) {

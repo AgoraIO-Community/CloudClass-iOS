@@ -1,6 +1,6 @@
 //
 //  AgoraInternalClassroom.m
-//  AgoraEduSDK
+//  AgoraClassroomSDK
 //
 //  Created by Cavan on 2021/6/30.
 //  Copyright © 2021 Agora. All rights reserved.
@@ -8,7 +8,7 @@
 
 #import "AgoraInternalClassroom.h"
 
-@implementation AgoraEduSDKConfig (Internal)
+@implementation AgoraClassroomSDKConfig (Internal)
 - (BOOL)isLegal {
     return (self.appId.length > 0);
 }

@@ -15,7 +15,7 @@
 #import "AgoraInternalClassroom.h"
 
 @interface AgoraClassroomSDK () <AgoraEduCoreDelegate, AgoraDownloadDelegate>
-@property (nonatomic, strong) AgoraEduSDKConfig *sdkConfig;
+@property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
 @property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *apps;
 @property (nonatomic, strong) NSArray<AgoraWidgetConfiguration *> *widgets;
 @property (nonatomic, strong) AgoraEduCore *core;
@@ -53,7 +53,7 @@ static AgoraClassroomSDK *manager = nil;
 }
 
 #pragma mark - Public
-+ (BOOL)setConfig:(AgoraEduSDKConfig *)config {
++ (BOOL)setConfig:(AgoraClassroomSDKConfig *)config {
     if (config == nil) {
         return NO;
     }
