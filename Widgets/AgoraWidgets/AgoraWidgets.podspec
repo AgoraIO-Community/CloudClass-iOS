@@ -18,7 +18,7 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
 
-  spec.source_files  = "Widgets/AgoraWidgets/**/*.{h,m,swift}", "**/*.{h,m,swift}"
+  spec.source_files  = "Widgets/AgoraWidgets/**/*.{h,m,swift}", "Chat/*.{h,m,swift}"
   spec.resource_bundles = {
     'AgoraWidgets' => [
       "AgoraResources", 
