@@ -10,9 +10,9 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'base_view_v' + "#{spec.version.to_s}" }
   spec.ios.deployment_target = "10.0"
   
-  spec.module_name   = 'AgoraUIEduBaseViews'
-  spec.module_map = 'AgoraUIEduBaseViews/AgoraUIEduBaseViews.modulemap'
-  spec.preserve_path = 'AgoraUIEduBaseViews/AgoraUIEduBaseViews.modulemap'
+  spec.module_name  = 'AgoraUIEduBaseViews'
+  spec.module_map = 'SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/AgoraUIEduBaseViews.modulemap'
+  spec.preserve_path = 'SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/AgoraUIEduBaseViews.modulemap'
   spec.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
   spec.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
   spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
