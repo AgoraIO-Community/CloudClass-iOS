@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
   spec.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
   spec.author       = { "Agora Lab" => "developer@agora.io" }
-  spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => "#{spec.version.to_s}" }
+  spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'base_view_' + "#{spec.version.to_s}" }
   spec.ios.deployment_target = "10.0"
   
   spec.module_name   = 'AgoraUIEduBaseViews'
@@ -20,12 +20,14 @@ Pod::Spec.new do |spec|
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
   
-  spec.source_files  = "AgoraUIEduBaseViews/**/*.{h,m,swift}"
-  spec.public_header_files = "AgoraUIEduBaseViews/**/*.h"
+  spec.source_files  = "SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/**/*.{h,m,swift}", "AgoraUIEduBaseViews/**/*.{h,m,swift}"
+  spec.public_header_files = "SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/**/*.h", "AgoraUIEduBaseViews/**/*.h"
   spec.resource_bundles = {
     'AgoraUIEduBaseViews' => [
       'AgoraUIEduBaseViews/**/*.{png,xib,gif,wav,strings}', 
-      'AgoraUIEduBaseViews/*.xcassets']
+      'AgoraUIEduBaseViews/*.xcassets', 
+      'SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/**/*.{png,xib,gif,wav,strings}', 
+      'SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/*.xcassets']
   }
 
   spec.dependency "AgoraEduContext"
