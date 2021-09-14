@@ -13,6 +13,11 @@ Pod::Spec.new do |spec|
 
   spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
   spec.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
+  spec.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
+  spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
+  spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
+  spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
+  
   spec.source_files = "AgoraEduUI/**/*.{h,m,swift}"
   spec.public_header_files = "AgoraEduUI/**/*.h"
   spec.resource_bundles = {
