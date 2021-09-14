@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
   spec.author       = { "Agora Lab" => "developer@agora.io" }
   spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'ui_v' + "#{spec.version.to_s}" }
   spec.ios.deployment_target = "10.0"
-  spec.module_name   = 'AgoraEduUI'
+  spec.module_name  = 'AgoraEduUI'
 
   spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
   spec.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
