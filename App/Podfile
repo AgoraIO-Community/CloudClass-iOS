@@ -11,8 +11,6 @@ def libVersion
   pod "Whiteboard", "2.13.19"
   pod "AgoraRtcEngine_iOS", "3.4.6"
   pod "AgoraRtm_iOS", "1.4.8"
-  pod 'MLeaksFinder'
-  pod 'OpenSSL-Universal', '1.0.2.17'
 end
 
 def openSourceLibs
@@ -53,9 +51,9 @@ end
 def halfBinaryPod
   # open source libs
   openSourceLibs
-
+  
   # close source libs
-  pod 'AgoraEduCore', '1.1.5.3'
+  pod 'AgoraEduCore', '1.1.5.4'
 
   # common libs
   pod 'AgoraUIBaseViews', '1.0.1'
@@ -85,6 +83,10 @@ end
 
 target 'AgoraEducation' do
   use_frameworks!
+  
+  pod 'MLeaksFinder'
+  pod 'OpenSSL-Universal', '1.0.2.17'
+
 
   libVersion   
 

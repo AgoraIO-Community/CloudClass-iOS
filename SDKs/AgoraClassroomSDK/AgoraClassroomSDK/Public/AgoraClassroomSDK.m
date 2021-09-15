@@ -36,6 +36,7 @@ static AgoraClassroomSDK *manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[AgoraClassroomSDK alloc] init];
+        manager.consoleState = [[NSNumber alloc] initWithInt:0];
     });
     return manager;
 }
@@ -87,8 +88,15 @@ static AgoraClassroomSDK *manager = nil;
     }
 
     if (host.length > 0) {
-        NSDictionary *dic = @{@"host": host};
-        [core setParameters:dic];
+        NSDictionary *parameters = @{@"host": host};
+        [core setParameters:parameters];
+    }
+    
+    // log console
+    NSNumber *console = [AgoraClassroomSDK share].consoleState;
+    if (console) {
+        NSDictionary *parameters = @{@"console": console};
+        [core setParameters:parameters];
     }
     
     NSArray *coursewares = nil;
