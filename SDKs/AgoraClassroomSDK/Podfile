@@ -15,7 +15,7 @@ def openSourceLibs
   # open source libs
   pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec' 
   pod 'AgoraEduUI', :path => '../AgoraEduUI/AgoraEduUI.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
   
 end
 
