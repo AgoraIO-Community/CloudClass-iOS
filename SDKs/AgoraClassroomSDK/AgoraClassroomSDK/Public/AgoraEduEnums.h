@@ -1,6 +1,6 @@
 //
 //  AgoraEduEnums.h
-//  AgoraEduSDK
+//  AgoraClassroomSDK
 //
 //  Created by SRS on 2021/1/7.
 //

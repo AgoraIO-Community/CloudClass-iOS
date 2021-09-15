@@ -3,22 +3,32 @@
 platform :ios, '10.0'
 inhibit_all_warnings!
 
+def libVersion
+  pod 'Protobuf', '3.17.0'
+  pod "AFNetworking", "4.0.1"
+  pod "CocoaLumberjack", "3.6.1"
+  pod "AliyunOSSiOS", "2.10.8"
+  pod "Whiteboard", "2.13.19"
+  pod "AgoraRtcEngine_iOS", "3.4.6"
+  pod "AgoraRtm_iOS", "1.4.8"
+end
+
 def openSourceLibs
-  pod 'AgoraEduSDK', :path => '../SDKs/AgoraEduSDK/AgoraEduSDK.podspec'
+  pod 'AgoraClassroomSDK_iOS', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_iOS.podspec'
   pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext.podspec'
   pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
 end
 
 def sourcePod
   # close source libs
+  pod 'AgoraEduCore', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
   pod 'AgoraActionProcess', :path => '../../cloudclass-ios/SDKs/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
   pod 'AgoraRx', :path => '../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
   pod 'AgoraLog', :path => '../../cloudclass-ios/SDKs/Modules/AgoraLog/AgoraLog.podspec'
   pod 'EduSDK', :path => '../../cloudclass-ios/SDKs/Modules/EduSDK/EduSDK.podspec'
   pod 'AgoraWhiteBoard', :path => '../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
   pod 'AgoraReport', :path => '../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
-  pod 'AgoraEduCore', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore.podspec'
   
   # common libs
   pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
@@ -41,10 +51,9 @@ end
 def halfBinaryPod
   # open source libs
   openSourceLibs
-
+  
   # close source libs
-  #pod 'AgoraEduCore', :path => '../../cloudclass-ios/Products/AgoraEduCore_Binary.podspec'
-  pod 'AgoraEduCore', :path => '../Products/AgoraEduCore_Binary.podspec'
+  pod 'AgoraEduCore', '1.1.5.4'
 
   # common libs
   pod 'AgoraUIBaseViews', '1.0.1'
@@ -54,18 +63,6 @@ def halfBinaryPod
   # widgets
   pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
   pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE'] 
-end
-
-def libVersion
-  pod 'Protobuf'
-  pod "AFNetworking", "4.0.1"
-  pod "CocoaLumberjack", "3.6.1"
-  pod "AliyunOSSiOS", "2.10.8"
-  pod "Whiteboard", "2.13.19"
-  pod "AgoraRtcEngine_iOS", "3.4.6"
-  pod "AgoraRtm_iOS", "1.4.8"
-  pod 'MLeaksFinder'
-  pod 'OpenSSL-Universal', '1.0.2.17'
 end
 
 workspace 'AgoraEducation.xcworkspace'
@@ -86,12 +83,16 @@ end
 
 target 'AgoraEducation' do
   use_frameworks!
+  
+  pod 'MLeaksFinder'
+  pod 'OpenSSL-Universal', '1.0.2.17'
 
-  libVersion
 
-  sourcePod
+  libVersion   
+
+  #sourcePod
   #binaryPod
-  #halfBinaryPod
+  halfBinaryPod
   
   post_install do |installer|
     ## Fix for XCode 12.5

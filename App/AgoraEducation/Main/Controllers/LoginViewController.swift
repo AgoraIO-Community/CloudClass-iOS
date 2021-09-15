@@ -9,7 +9,7 @@
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduCore
-import AgoraEduSDK
+import AgoraClassroomSDK_iOS
 import AgoraWidget
 import ChatWidget
 import AgoraLog
@@ -714,19 +714,6 @@ private extension LoginViewController{
         }
         registerExtApps()
         
-        let sel = NSSelectorFromString("setBaseURL:");
-        let url = KeyCenter.hostURL()
-        AgoraClassroomSDK.perform(sel,
-                                  with: url)
-        
-        let sel1 = NSSelectorFromString("setLogConsoleState:");
-        AgoraClassroomSDK.perform(sel1,
-                                  with: 1)
-        
-        let sel2 = NSSelectorFromString("setBaseURL:");
-        AgoraLogManager.perform(sel2,
-                                with: url)
-        
         // roomUuid = roomName + classType
         let roomUuid = "\(room)\(type.rawValue)"
         
@@ -768,7 +755,7 @@ private extension LoginViewController{
                 }
             }
             
-            let sdkConfig = AgoraEduSDKConfig(appId: appid)
+            let sdkConfig = AgoraClassroomSDKConfig(appId: appid)
             AgoraClassroomSDK.setConfig(sdkConfig)
             
             let config = AgoraEduLaunchConfig(userName: user,

@@ -10,11 +10,11 @@
 
 @implementation KeyCenter
 + (NSString *)rtcVersion {
-    return @"2.9.107.136";
+    return @"3.4.6";
 }
 
 + (NSString *)publishDate {
-    return @"2021.09.05";
+    return @"2021.09.14";
 }
 
 + (NSString *)appId {
@@ -26,6 +26,6 @@
 }
 
 + (NSString *)hostURL {
-    return <#Your Agora Host#>;
+    return @"https://api.agora.io";
 }
 @end

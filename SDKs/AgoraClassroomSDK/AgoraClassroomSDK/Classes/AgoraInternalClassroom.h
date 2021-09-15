@@ -1,6 +1,6 @@
 //
 //  AgoraInternalClassroom.h
-//  AgoraEduSDK
+//  AgoraClassroomSDK
 //
 //  Created by Cavan on 2021/6/30.
 //  Copyright © 2021 Agora. All rights reserved.
@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AgoraEduSDKConfig (Internal)
+@interface AgoraClassroomSDKConfig (Internal)
 - (BOOL)isLegal;
 @end
 

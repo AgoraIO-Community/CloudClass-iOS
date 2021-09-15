@@ -1,6 +1,6 @@
 //
-//  AgoraEduSDK.h
-//  AgoraEduSDK
+//  AgoraClassroomSDK.h
+//  AgoraClassroomSDK
 //
 //  Created by SRS on 2021/1/5.
 //
@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface AgoraClassroomSDK : NSObject
-+ (BOOL)setConfig:(AgoraEduSDKConfig *)config;
++ (BOOL)setConfig:(AgoraClassroomSDKConfig *)config;
 
 + (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config
                                delegate:(id<AgoraEduClassroomDelegate> _Nullable)delegate;
