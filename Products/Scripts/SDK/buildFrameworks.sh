@@ -38,7 +38,7 @@ buildItem() {
     errorExit ${SDK_Name} $?
 }
 
-SDK_Name="AgoraEduSDK"
+SDK_Name="AgoraClassroomSDK"
 
 buildItem ${SDK_Name}
 
