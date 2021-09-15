@@ -3,6 +3,8 @@ Mode=$1
 Project_Path="../../../App"
 Local_Path=`pwd`
 
+python pod.py ${Project_Path}
+
 cd ${Project_Path}
 
 Product_Path="../Products/App"
