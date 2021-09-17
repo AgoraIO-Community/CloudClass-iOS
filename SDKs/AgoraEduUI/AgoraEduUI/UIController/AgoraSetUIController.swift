@@ -56,7 +56,7 @@ private extension AgoraSetUIController {
 
     func observeUI() {
         setView.leaveClassBlock = { [unowned self] in
-            self.existClassAlert()
+            self.exitClassAlert()
             self.containerView.removeFromSuperview()
         }
         
@@ -118,7 +118,7 @@ extension AgoraSetUIController: AgoraEduUserHandler {
 }
 
 private extension AgoraSetUIController {
-    func existClassAlert() {
+    func exitClassAlert() {
         let leftButtonLabel = AgoraAlertLabelModel()
         leftButtonLabel.text = AgoraKitLocalizedString("CancelText")
         
