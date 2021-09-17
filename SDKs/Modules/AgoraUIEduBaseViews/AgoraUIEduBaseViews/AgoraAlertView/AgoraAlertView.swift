@@ -199,7 +199,7 @@ import AgoraUIBaseViews
         }
         
         UIView.animate(withDuration: 0.25) {
-            self.alpha = 0
+            self.contentView.alpha = 0
         } completion: { (_) in
             self.removeFromSuperview()
             btnModels[btn.tag].tapActionBlock?(btn.tag)
