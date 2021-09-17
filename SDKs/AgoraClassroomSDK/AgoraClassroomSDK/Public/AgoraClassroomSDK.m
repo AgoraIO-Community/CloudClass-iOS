@@ -83,9 +83,6 @@ static AgoraClassroomSDK *manager = nil;
     
     // 切换 host
     NSString *host = [AgoraClassroomSDK share].baseURL;
-    if (![host containsString:@"-dev"]) {
-        host = [host stringByAppendingFormat:@"/%@",config.region.lowercaseString];
-    }
 
     if (host.length > 0) {
         NSDictionary *parameters = @{@"host": host};
