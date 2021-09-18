@@ -6,13 +6,17 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-import UIKit
+#if canImport(AgoraClassroomSDK_iOS)
 import AgoraClassroomSDK_iOS
+#else
+import AgoraClassroomSDK
+#endif
 import AgoraEduCore
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraWidget
 import ChatWidget
+import UIKit
 
 @objcMembers class DebugViewController: UIViewController {
     private var alertView: AgoraAlertView?

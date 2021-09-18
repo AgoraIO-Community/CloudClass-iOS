@@ -6,6 +6,7 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
+#import <AgoraEduCore/AgoraEduCore-Swift.h>
 #import "AgoraInternalClassroom.h"
 
 @implementation AgoraClassroomSDKConfig (Internal)
