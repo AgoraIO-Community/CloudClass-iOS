@@ -1,6 +1,11 @@
 # Uncomment the next line to define a global platform for your project
  platform :ios, '10.0'
 
+def openSourceLibs
+  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
+end
+
 def sourcePod
   # open source libs
   openSourceLibs
@@ -13,11 +18,8 @@ end
 
 def binaryPod
   pod 'AgoraUIBaseViews'
-end
-
-def openSourceLibs
-  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
+  pod 'AgoraExtApp'
+  pod 'AgoraWidget'
 end
 
 target 'AgoraEduUI' do
