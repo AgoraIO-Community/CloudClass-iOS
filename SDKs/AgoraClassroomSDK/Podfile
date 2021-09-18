@@ -56,8 +56,8 @@ target 'AgoraClassroomSDK' do
   openSourceLibs
   widgets	
 
-  #sourcePod
-  binaryPod
+  sourcePod
+  #binaryPod
   
   post_install do |installer|
      installer.pods_project.targets.each do |target|
