@@ -44,7 +44,7 @@ def sourcePod
 end
 
 def binaryPod
-  pod 'AgoraEduSDK', :path => '../Products/AgoraEduSDK_Binary.podspec'
+  pod 'AgoraClassroomSDK', :path => '../Products/AgoraClassroomSDK_Binary.podspec'
   pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
 end
 
@@ -98,6 +98,13 @@ target 'AgoraEducation' do
     ## Fix for XCode 12.5
     find_and_replace("Pods/FBRetainCycleDetector/FBRetainCycleDetector/Layout/Classes/FBClassStrongLayout.mm",
       "layoutCache[currentClass] = ivars;", "layoutCache[(id<NSCopying>)currentClass] = ivars;")
-  end
+       installer.pods_project.targets.each do |target|
+         target.build_configurations.each do |config|
+             config.build_settings['BITCODE_GENERATION_MODE'] = 'bitcode'
+             config.build_settings['ENABLE_BITCODE'] = 'YES'
+             config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+       end
+     end
+   end
 end
 
