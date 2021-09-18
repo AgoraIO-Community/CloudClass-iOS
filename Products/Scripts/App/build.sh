@@ -5,6 +5,8 @@ Local_Path=`pwd`
 
 python pod.py ${Project_Path}
 
+pod install
+
 cd ${Project_Path}
 
 Product_Path="../Products/App"
