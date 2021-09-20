@@ -3,13 +3,16 @@
 import groovy.transform.Field
 import hudson.model.Result
 import jenkins.model.CauseOfInterruption
+import org.apache.commons.codec.digest.DigestUtils
 import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 @Library('agora-build-pipeline-library') _
 
-@Field def releaseBranchPattern = ~/^release\/(\d+.\d+.\d+(.\d)?)_[a-z]+$|arsenal/
+@Field def releaseBranchPattern = ~/Flex/
 @Field def repoName = "open-cloudclass-ios"
 @Field def repoBranch = ""
-@Field def companionBranch = ''
+@Field def companionBranch = ""
+@Field def companionPrInfo = [:]
+@Field def companionCommitInfo = [:]
 @Field def companionReposConfig = [
     "open-cloudclass-ios": "ssh://git@git.agoralab.co/aduc/open-cloudclass-ios.git",
     "apaas-common-libs-ios": "ssh://git@git.agoralab.co/aduc/apaas-common-libs-ios.git",
@@ -23,13 +26,14 @@ withWechatNotify {
             companionBranch = env.CHANGE_TARGET ?: env.BRANCH_NAME
 
             def branches = [:]
-            commitPrInfo = companionPullRequestsChecker(companionReposConfig, repoBranch, branches)
+            (companionCommitInfo, companionPrInfo) = companionPullRequestsChecker(companionReposConfig, repoBranch, branches)
+            println(companionPrInfo)
+            println(companionCommitInfo)
 
-            def job_util = new agora.build.JobUtils()
-            job_util.abortPreviousRunningBuilds(commitPrInfo)
+            abortPreviousRunningBuilds(companionPrInfo)
 
             def buildParams = [
-                string(name: 'build_branch', value: branches["cloudclass-ios"] ?: companionBranch),
+                string(name: 'build_branch', value: branches["CloudClass_IOS"] ?: companionBranch),
                 string(name: 'open_cloud_class_branch', value: branches["open-cloudclass-ios"] ?: companionBranch),
                 string(name: 'common_libs_branch', value: branches["apaas-common-libs-ios"] ?: companionBranch),
                 string(name: 'ci_branch', value: 'new_ios'),
@@ -54,6 +58,8 @@ def withKnownErrorHandling(Closure block) {
     } catch (Exception ex) {
         currentBuild.result = "FAILURE"
         throw ex
+    } finally {
+        updateAllRepoStatus(companionCommitInfo, companionPrInfo)
     }
 }
 
@@ -107,12 +113,13 @@ def withWechatNotify(Closure block) {
 
 def companionPullRequestsChecker(REPOS, repoBranch, branches) {
     def utils = new agora.build.Utils()
-    def companionPrInfo = [:]
+    def prInfo = [:]
+    def commitInfo = [:]
     REPOS.each {k, v ->
         branches."${k}" = ''
         repoGroup = v.split("/")[-2]
         try {
-            response = utils.sendBitbucketRequest("GET", "rest/api/latest/projects/${repoGroup}/repos/${k}/commits?until=${repoBranch}&limit=0&start=0")
+            response = utils.sendBitbucketRequest("GET", "rest/api/latest/projects/${repoGroup}/repos/${k.toString().toLowerCase()}/commits?until=${repoBranch}&limit=0&start=0")
         } catch (Exception ex) {
             echo "***** error message: ${ex.getMessage()}"
             error("SourceControlConnectionError")
@@ -120,11 +127,14 @@ def companionPullRequestsChecker(REPOS, repoBranch, branches) {
 
         if(response?.status == 200) {
             branches."${k}" = repoBranch
+            def commits = readJSON text: response.content
+            commitInfo."${k}" = commits['values'][0]['id']
+
             def found = false
             response = utils.sendBitbucketRequest("GET", "rest/api/1.0/projects/${repoGroup}/repos/${k}/pull-requests?direction=outgoing&at=refs/heads/${repoBranch}")
             pullRequest = readJSON text: response.content
             if(pullRequest.values) {
-                companionPrInfo."${k}" = pullRequest.values[0].id
+                prInfo."${k}" = pullRequest.values[0].id
                 found = true
             }
 
@@ -135,5 +145,60 @@ def companionPullRequestsChecker(REPOS, repoBranch, branches) {
             }
         }
     }
-    return companionPrInfo
+    return [commitInfo, prInfo]
+}
+
+def abortPreviousRunningBuilds(prInfo) {
+    def instance = Hudson.instance
+    def prBuilds = []
+    prInfo.each { k, v ->
+        prBuilds.add("AD/${k}/PR-${v}")
+    }
+
+    def current_build_starttime = currentBuild.getStartTimeInMillis()
+    println "current build start time is: ${current_build_starttime}"
+
+    prBuilds.each { item ->
+            instance.getItemByFullName(item)?.getBuilds().each{ build ->
+            def exec = build.getExecutor()
+
+            if (exec != null) {
+                // skip current build
+                if (item == env.JOB_NAME && build.number == currentBuild.number) {
+                    return true
+                }
+
+                exec.interrupt(
+                    Result.ABORTED,
+                    new CauseOfInterruption.UserInterruption(
+                    "Aborted by companion pr build #${currentBuild.absoluteUrl}"
+                    )
+                )
+                println("Aborted companion pr build #${item}/${build.number}")
+            }
+        }
+    }
+}
+
+def updateAllRepoStatus(commitInfo, prInfo) {
+    def utils = new agora.build.Utils()
+    commitInfo.each { repo, commit ->
+        echo repo
+        echo commit
+        def response = utils.sendBitbucketRequest('GET', "rest/build-status/1.0/commits/${commit}")
+
+        if (response.status == 200) {
+            def statuses = readJSON text: response.content
+            def compile_status = statuses.values.find { it.name.contains(repo) && it.name.contains("AD") }
+            def pr_id = prInfo."${repo}"
+            if (!compile_status) {
+                def buildName = pr_id ? "AD/${repo}/PR-${pr_id}" : "${currentBuild.rawBuild.getParent().getParent().getFullName()}/${repo}/${env.BRANCH_NAME}"
+                utils.notifyStash(currentBuild, commit, DigestUtils.md5Hex(buildName), "Companion build ${repo}: ${currentBuild.fullDisplayName}", env)
+            } else {
+                utils.notifyStash(currentBuild, commit, compile_status['key'], compile_status['name'], env)
+            }
+        } else {
+            error("SourceControlConnectionError")
+        }
+    }
 }
