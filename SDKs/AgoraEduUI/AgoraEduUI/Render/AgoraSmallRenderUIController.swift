@@ -160,7 +160,6 @@ private extension AgoraSmallRenderUIController {
     }
     
     func observeUI() {
-        teacherView.delegate = self
         renderListView.scrollView.delegate = self
     }
 }

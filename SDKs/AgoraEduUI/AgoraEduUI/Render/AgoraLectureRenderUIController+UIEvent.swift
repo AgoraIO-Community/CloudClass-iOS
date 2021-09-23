@@ -44,7 +44,6 @@ extension AgoraLectureRenderUIController: UICollectionViewDataSource {
         let userView = getUserView(index: indexPath.item)
         let item = coHosts[indexPath.item]
         let userInfo = item.userInfo
-        userView.delegate = self
         userView.index = indexPath.item
         
         userView.updateCameraState(userInfo.cameraState.uiType,
@@ -134,57 +133,6 @@ extension AgoraLectureRenderUIController: UIScrollViewDelegate, UICollectionView
             let userInfo = item.userInfo
             unrenderVideoStream(userInfo.streamUuid,
                                 on: videoCanvas)
-        }
-    }
-}
-
-// MARK: - AgoraUIUserViewDelegate
-extension AgoraLectureRenderUIController: AgoraUIUserViewDelegate {
-    func userView(_ userView: AgoraUIUserView,
-                  didPressAudioButton button: AgoraBaseUIButton,
-                  indexOfUserList index: Int) {
-        switch index {
-        case teacherIndex:
-            guard let info = teacherInfo,
-                  info.isSelf else {
-                return
-            }
-
-            button.isSelected.toggle()
-            let isMuted = button.isSelected
-            userContext?.muteAudio(isMuted)
-        default:
-            let studentInfo = coHosts[index].userInfo
-            guard studentInfo.isSelf else {
-                return
-            }
-
-            button.isSelected.toggle()
-            let isMuted = button.isSelected
-            userContext?.muteAudio(isMuted)
-        }
-    }
-    
-    func userView(_ userView: AgoraUIUserView,
-                  didPressVideoButton button: AgoraBaseUIButton,
-                  indexOfUserList index: Int) {
-        switch index {
-        case teacherIndex:
-            guard let info = teacherInfo,
-                  info.isSelf else {
-                return
-            }
-
-            button.isSelected.toggle()
-            userContext?.muteVideo(button.isSelected)
-        default:
-            let studentInfo = coHosts[index].userInfo
-            guard studentInfo.isSelf else {
-                return
-            }
-
-            button.isSelected.toggle()
-            userContext?.muteVideo(button.isSelected)
         }
     }
 }

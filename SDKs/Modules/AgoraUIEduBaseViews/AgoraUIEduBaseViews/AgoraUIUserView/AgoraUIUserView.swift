@@ -15,6 +15,10 @@ public class AgoraUIVideoCanvas: AgoraBaseUIView {
 
 public protocol AgoraUIUserViewDelegate: NSObjectProtocol {
     func userView(_ userView: AgoraUIUserView,
+                  didPressVideoButton button: AgoraBaseUIButton,
+                  indexOfUserList index: Int)
+    
+    func userView(_ userView: AgoraUIUserView,
                   didPressAudioButton button: AgoraBaseUIButton,
                   indexOfUserList index: Int)
 }
@@ -44,9 +48,6 @@ public class AgoraUIUserView: AgoraBaseUIView {
     public private(set) lazy var audioBtn: AgoraBaseUIButton = {
         let btn = AgoraBaseUIButton(type: .custom)
         btn.touchRange = 20
-        btn.addTarget(self,
-                      action: #selector(onAudioTouchEvent(_:)),
-                      for: .touchUpInside)
         btn.setImage(AgoraKitImage("micro_disable_off"),
                      for: .normal)
         btn.isUserInteractionEnabled = false
@@ -155,13 +156,6 @@ public class AgoraUIUserView: AgoraBaseUIView {
     
     func setVideoButtonHidden(hidden: Bool) {
         isVideoButtonHidden = hidden
-    }
-    
-    // MARK: touch event
-    @objc  func onAudioTouchEvent(_ button: AgoraBaseUIButton) {
-        delegate?.userView(self,
-                           didPressAudioButton: button,
-                           indexOfUserList: index)
     }
 }
 
