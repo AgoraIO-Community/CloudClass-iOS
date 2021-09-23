@@ -79,9 +79,7 @@ extension AgoraHandsUpUIController: AgoraEduHandsUpHandler {
                                                   object: self)
                 AgoraUtils.showToast(message: text)
             case .handsDown:
-                let text = AgoraUILocalizedString("HandsDownSuccessText",
-                                                  object: self)
-                AgoraUtils.showToast(message: text)
+                break
             default:
                 break
             }
