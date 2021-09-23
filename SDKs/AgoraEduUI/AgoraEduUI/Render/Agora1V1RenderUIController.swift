@@ -40,7 +40,6 @@ class Agora1V1RenderUIController: AgoraRenderUIController {
         containerView.delegate = self
         
         initViews()
-        observeUI()
     }
     
     func updateRenderView(fullScreen: Bool) {
@@ -117,55 +116,6 @@ private extension Agora1V1RenderUIController {
         studentView.agora_right = teacherView.agora_right
         studentView.agora_width = width
         studentView.agora_height = height
-    }
-
-    func observeUI() {
-        teacherView.delegate = self
-        studentView.delegate = self
-    }
-}
-
-// MARK: - UI event
-extension Agora1V1RenderUIController: AgoraUIUserViewDelegate {
-    func userView(_ userView: AgoraUIUserView,
-                  didPressAudioButton button: AgoraBaseUIButton,
-                  indexOfUserList index: Int) {
-        func muteAudio(_ mute: Bool) {
-            if mute {
-                mediaContext?.closeMicrophone()
-                mediaContext?.unpublishStream(type: .audio)
-                // TODO: to deprecate
-                userContext?.muteAudio(!mute)
-            } else {
-                mediaContext?.openMicrophone()
-                mediaContext?.publishStream(type: .audio)
-                // TODO: to deprecate
-                userContext?.muteAudio(!mute)
-            }
-        }
-        
-        switch index {
-        case teacherIndex:
-            guard let info = teacherInfo,
-                  info.isSelf else {
-                return
-            }
-            
-            button.isSelected.toggle()
-            let mute = button.isSelected
-            muteAudio(mute)
-        case studentIndex:
-            guard let info = studentInfo,
-                  info.isSelf else {
-                return
-            }
-            
-            button.isSelected.toggle()
-            let mute = button.isSelected
-            muteAudio(mute)
-        default:
-            break
-        }
     }
 }
 
