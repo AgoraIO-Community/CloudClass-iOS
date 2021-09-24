@@ -6,10 +6,14 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
+#if canImport(AgoraClassroomSDK_iOS)
+import AgoraClassroomSDK_iOS
+#else
+import AgoraClassroomSDK
+#endif
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduCore
-import AgoraClassroomSDK_iOS
 import AgoraWidget
 import ChatWidget
 import AgoraLog

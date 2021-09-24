@@ -91,7 +91,6 @@ private extension AgoraLectureRenderUIController {
     }
     
     func observeUI() {
-        teacherView.delegate = self
         renderListView.collectionView.dataSource = self
         renderListView.collectionView.delegate = self
     }

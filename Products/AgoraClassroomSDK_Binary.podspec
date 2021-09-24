@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
-  spec.name             = 'AgoraEduSDK'
-  spec.version          = '1.0.1'
+  spec.name             = 'AgoraClassroomSDK'
+  spec.version          = '1.0.0'
   spec.summary          = 'Education scene SDK'
 
   spec.description      = <<-DESC
@@ -14,8 +14,8 @@ TODO: Add long description of the pod here.
 
   spec.ios.deployment_target = '10.0'
   spec.frameworks = 'AudioToolbox', 'Foundation', 'UIKit'
-
   spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
+  spec.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' } 
   
   spec.default_subspec = 'BINARY'
   

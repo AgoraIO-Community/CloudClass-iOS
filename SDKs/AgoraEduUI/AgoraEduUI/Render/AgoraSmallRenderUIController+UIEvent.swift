@@ -62,12 +62,10 @@ extension AgoraSmallRenderUIController {
     }
     
     func upsetCoHost(_ index: Int, _ isInsert: Bool) {
-        
         let superV = self.renderListView.scrollView
         let userInfo = self.coHosts[index].userInfo
 
         let userV = self.getUserView(index: index)
-        userV.delegate = self
         userV.index = index
         
         userV.userUuid = userInfo.user.userUuid
@@ -147,57 +145,6 @@ extension AgoraSmallRenderUIController: UIScrollViewDelegate, UICollectionViewDe
         let shouldShowLeftRightButton = condition1 && condition2
         renderListView.leftButton.isHidden = !shouldShowLeftRightButton
         renderListView.rightButton.isHidden = !shouldShowLeftRightButton
-    }
-}
-
-// MARK: - AgoraUIUserViewDelegate
-extension AgoraSmallRenderUIController: AgoraUIUserViewDelegate {
-    func userView(_ userView: AgoraUIUserView,
-                  didPressAudioButton button: AgoraBaseUIButton,
-                  indexOfUserList index: Int) {
-        switch index {
-        case teacherIndex:
-            guard let info = teacherInfo,
-                  info.isSelf else {
-                return
-            }
-            
-            button.isSelected.toggle()
-            let isMuted = button.isSelected
-            userContext?.muteAudio(isMuted)
-        default:
-            let studentInfo = coHosts[index].userInfo
-            guard studentInfo.isSelf else {
-                return
-            }
-
-            button.isSelected.toggle()
-            let isMuted = button.isSelected
-            userContext?.muteAudio(isMuted)
-        }
-    }
-    
-    func userView(_ userView: AgoraUIUserView,
-                  didPressVideoButton button: AgoraBaseUIButton,
-                  indexOfUserList index: Int) {
-        switch index {
-        case teacherIndex:
-            guard let info = teacherInfo,
-                  info.isSelf else {
-                return
-            }
-            
-            button.isSelected.toggle()
-            userContext?.muteVideo(button.isSelected)
-        default:
-            let studentInfo = coHosts[index].userInfo
-            guard studentInfo.isSelf else {
-                return
-            }
-
-            button.isSelected.toggle()
-            userContext?.muteVideo(button.isSelected)
-        }
     }
 }
 

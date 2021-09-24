@@ -5,14 +5,15 @@
 //  Created by SRS on 2021/1/5.
 //
 
-#import <AgoraEduCore/AgoraEduCore-Swift.h>
-#import <AgoraEduUI/AgoraEduUI-Swift.h>
 #import <AgoraEduContext/AgoraEduContext-Swift.h>
 #import <AgoraWidgets/AgoraWidgets-Swift.h>
+#import <AgoraEduCore/AgoraEduCore-Swift.h>
+#import <AgoraEduUI/AgoraEduUI-Swift.h>
+#import <AgoraWidget/AgoraWidget.h>
 #import "AgoraBaseViewController.h"
-#import "AgoraEduTopVC.h"
-#import "AgoraClassroomSDK.h"
 #import "AgoraInternalClassroom.h"
+#import "AgoraClassroomSDK.h"
+#import "AgoraEduTopVC.h"
 
 @interface AgoraClassroomSDK () <AgoraEduCoreDelegate, AgoraDownloadDelegate>
 @property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
@@ -42,7 +43,15 @@ static AgoraClassroomSDK *manager = nil;
 }
 
 + (NSString *)version {
-    return @"1.1.5";
+    NSBundle *bundle = [NSBundle bundleForClass:[AgoraClassroomSDK class]];
+    NSDictionary *dictionary = bundle.infoDictionary;
+    NSString *version = dictionary[@"CFBundleShortVersionString"];
+    
+    if (version.length > 0) {
+        return version;
+    } else {
+        return @"1.0.0";
+    }
 }
 
 + (void)setBaseURL:(NSString *)baseURL {

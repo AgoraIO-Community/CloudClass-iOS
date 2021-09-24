@@ -16,7 +16,6 @@ def openSourceLibs
   pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec' 
   pod 'AgoraEduUI', :path => '../AgoraEduUI/AgoraEduUI.podspec'
   pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
-  
 end
 
 def widgets
@@ -56,8 +55,8 @@ target 'AgoraClassroomSDK' do
   openSourceLibs
   widgets	
 
-  #sourcePod
-  binaryPod
+  sourcePod
+  #binaryPod
   
   post_install do |installer|
      installer.pods_project.targets.each do |target|

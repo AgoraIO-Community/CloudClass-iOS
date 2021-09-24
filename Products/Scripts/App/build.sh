@@ -7,6 +7,8 @@ python pod.py ${Project_Path}
 
 cd ${Project_Path}
 
+pod install
+
 Product_Path="../Products/App"
 Plist_Path="../Products/Plists/exportPlist.plist"
 
