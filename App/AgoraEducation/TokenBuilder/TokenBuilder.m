@@ -6,10 +6,10 @@
 //  Copyright © 2021 yangmoumou. All rights reserved.
 //
 
+#import <YYModel/YYModel.h>
+#import "AgoraEducationHTTPClient.h"
 #import "TokenBuilder.h"
 #import "RtmTokenTool.h"
-#import "AgoraEducationHTTPClient.h"
-#import <YYModel/YYModel.h>
 #import "KeyCenter.h"
 
 #define NoNullString(x) ([x isKindOfClass:NSString.class] ? x : @"")
@@ -85,10 +85,18 @@
     }];
 }
 
-+ (void)boardResources:(NSString *)url token:(NSString *)token success:(void (^)(NSArray<WhiteScene *> *models, NSString *resourceName, NSString *resourceUuid, NSString *scenePath, NSString *downURL))success failure:(void (^)(NSError *error))failure {
-    
-    [AgoraEducationHTTPClient get:url params:@{} headers:@{@"token":token} success:^(id  _Nonnull responseObj) {
-        
++ (void)boardResources:(NSString *)url
+                 token:(NSString *)token
+               success:(void (^)(NSArray<AgoraEduBoardScene *> *models,
+                                 NSString *resourceName,
+                                 NSString *resourceUuid,
+                                 NSString *scenePath,
+                                 NSString *downURL))success
+               failure:(void (^)(NSError *error))failure {
+    [AgoraEducationHTTPClient get:url
+                           params:@{}
+                          headers:@{@"token": token}
+                          success:^(id  _Nonnull responseObj) {
         NSDictionary *data = NoNullDictionary(NoNullDictionary(responseObj)[@"data"]);
         NSDictionary *big = NoNullDictionary(data[@"large"]);
         
@@ -100,21 +108,26 @@
         NSDictionary *taskProgress = NoNullDictionary(big[@"taskProgress"]);
         NSArray *convertedFileList = NoNullArray(taskProgress[@"convertedFileList"]);
         
-        NSMutableArray<WhiteScene *> *models = [NSMutableArray array];
+        NSMutableArray<AgoraEduBoardScene *> *models = [NSMutableArray array];
         for (id dic in convertedFileList) {
-            WhiteScene *model = [WhiteScene.class yy_modelWithDictionary:NoNullDictionary(dic)];
+            AgoraEduBoardScene *model = [AgoraEduBoardScene.class yy_modelWithDictionary:NoNullDictionary(dic)];
             [models addObject:model];
         }
         
         NSString *scenePath = [NSString stringWithFormat:@"%@/%@", resourceName, [models.firstObject name]];
         
-        NSString *downURL = [NSString stringWithFormat:@"%@%@%@", @"https://convertcdn.netless.link/dynamicConvert/", taskUuid, @".zip"];    
-        if(success != nil) {
-            success(models, resourceName, resourceUuid, scenePath, downURL);
+        NSString *downURL = [NSString stringWithFormat:@"%@%@%@", @"https://convertcdn.netless.link/dynamicConvert/", taskUuid, @".zip"];
+        
+        if (success) {
+            success(models,
+                    resourceName,
+                    resourceUuid,
+                    scenePath,
+                    downURL);
         }
-    
-    } failure:^(NSError * _Nonnull error, NSInteger statusCode) {
-        if(failure != nil) {
+    } failure:^(NSError * _Nonnull error,
+                NSInteger statusCode) {
+        if (failure) {
             failure(error);
         }
     }];

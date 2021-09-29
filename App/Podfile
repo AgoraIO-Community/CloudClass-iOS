@@ -22,6 +22,7 @@ end
 
 def sourcePod
   # close source libs
+  pod 'AgoraEduCorePuppet', :path => '../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
   pod 'AgoraEduCore', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
   pod 'AgoraActionProcess', :path => '../../cloudclass-ios/SDKs/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
   pod 'AgoraRx', :path => '../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
@@ -91,8 +92,8 @@ target 'AgoraEducation' do
   libVersion   
 
   #sourcePod
-  #binaryPod
-  halfBinaryPod
+  binaryPod
+  #halfBinaryPod
   
   post_install do |installer|
     ## Fix for XCode 12.5

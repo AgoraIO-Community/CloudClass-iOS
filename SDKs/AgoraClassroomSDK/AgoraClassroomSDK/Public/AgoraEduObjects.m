@@ -7,6 +7,7 @@
 
 #import "AgoraEduObjects.h"
 
+#pragma mark - Config
 @implementation AgoraClassroomSDKConfig
 - (instancetype)init {
     self = [super init];
@@ -32,13 +33,59 @@
 }
 @end
 
+#pragma mark - White board
+@implementation AgoraEduPPTPage
+- (instancetype)initWithSource:(NSString *)source
+                          size:(CGSize)size {
+    self = [super init];
+    
+    if (self) {
+        self.source = source;
+        self.height = size.height;
+        self.width = size.width;
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithSource:(NSString *)source
+                    previewURL:(NSString *)url
+                          size:(CGSize)size {
+    self = [super init];
+    
+    if (self) {
+        self.source = source;
+        self.previewURL = url;
+        self.height = size.height;
+        self.width = size.width;
+    }
+    
+    return self;
+}
+@end
+
+@implementation AgoraEduBoardScene
+- (instancetype)initWithName:(NSString *)name
+                     pptPage:(AgoraEduPPTPage * _Nullable)pptPage {
+    self = [super init];
+    
+    if (self) {
+        self.name = name;
+        self.pptPage = pptPage;
+    }
+    
+    return self;
+}
+@end
+
 @implementation AgoraEduCourseware
 - (instancetype)initWithResourceName:(NSString *)resourceName
                         resourceUuid:(NSString *)resourceUuid
                            scenePath:(NSString *)scenePath
-                              scenes:(NSArray<WhiteScene *> *)scenes
+                              scenes:(NSArray<AgoraEduBoardScene *> *)scenes
                          resourceUrl:(NSString *)resourceUrl {
     self = [super init];
+    
     if (self) {
         self.resourceName = resourceName;
         self.resourceUuid = resourceUuid;
@@ -58,16 +105,16 @@
         self.height = 240;
         self.frameRate = 15;
         self.bitrate = 200;
-        self.mirrorMode = AgoraEduCoreMirrorModeAuto;
+        self.mirrorMode = AgoraEduMirrorModeAuto;
     }
     return self;
 }
 
-- (instancetype)initWithWidth:(NSInteger)width
-                       height:(NSInteger)height
-                    frameRate:(NSInteger)frameRate
-                      bitrate:(NSInteger)bitrate
-                   mirrorMode:(AgoraEduCoreMirrorMode)mirrorMode{
+- (instancetype)initWithWidth:(NSUInteger)width
+                       height:(NSUInteger)height
+                    frameRate:(NSUInteger)frameRate
+                      bitrate:(NSUInteger)bitrate
+                   mirrorMode:(AgoraEduMirrorMode)mirrorMode{
     if (self = [super init]) {
         self.width = width;
         self.height = height;
@@ -110,7 +157,7 @@
                        videoState:AgoraEduStreamStateDefault
                        audioState:AgoraEduStreamStateDefault
                      latencyLevel:AgoraEduLatencyLevelUltraLow
-                     boardFitMode:AgoraBoardFitModeAuto];
+                     boardFitMode:AgoraEduBoardFitModeAuto];
 }
 
 - (instancetype)initWithUserName:(NSString *)userName
@@ -128,7 +175,7 @@
                       videoState:(AgoraEduStreamState)videoState
                       audioState:(AgoraEduStreamState)audioState
                     latencyLevel:(AgoraEduLatencyLevel)latencyLevel
-                    boardFitMode:(AgoraBoardFitMode)boardFitMode {
+                    boardFitMode:(AgoraEduBoardFitMode)boardFitMode {
     self = [self init];
     self.userName = userName;
     self.userUuid = userUuid;
@@ -156,20 +203,27 @@
 
 /**设置媒体选项*/
 @implementation AgoraEduMediaEncryptionConfig
-- (instancetype)initWithMode:(AgoraEduMediaEncryptionMode)mode key:(NSString *)key {
-    if (self = super.init) {
+- (instancetype)initWithMode:(AgoraEduMediaEncryptionMode)mode
+                         key:(NSString *)key {
+    self = [super init];
+    
+    if (self) {
         self.mode = mode;
         self.key = key;
     }
+    
     return self;
 }
 @end
 
 @implementation AgoraEduMediaOptions
 - (instancetype)initWithConfig:(AgoraEduMediaEncryptionConfig *)encryptionConfig {
-    if (self = super.init) {
+    self = [super init];
+    
+    if (self) {
         self.encryptionConfig = encryptionConfig;
     }
+    
     return self;
 }
 @end

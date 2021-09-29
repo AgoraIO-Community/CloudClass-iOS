@@ -6,8 +6,13 @@
 //  Copyright © 2021 yangmoumou. All rights reserved.
 //
 
+#if __has_include(<AgoraClassroomSDK_iOS/AgoraClassroomSDK.h>)
+    #import <AgoraClassroomSDK_iOS/AgoraClassroomSDK.h>
+#else
+    #import <AgoraClassroomSDK/AgoraClassroomSDK.h>
+#endif
+
 #import <Foundation/Foundation.h>
-#import <Whiteboard/Whiteboard.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,7 +37,14 @@ NS_ASSUME_NONNULL_BEGIN
            failure:(void (^)(NSError *error))failure;
 
 // 获取白板课件
-+ (void)boardResources:(NSString *)url token:(NSString *)token success:(void (^)(NSArray<WhiteScene *> *models, NSString *resourceName, NSString *resourceUuid, NSString *scenePath, NSString *downURL))success failure:(void (^)(NSError *error))failure;
++ (void)boardResources:(NSString *)url
+                 token:(NSString *)token
+               success:(void (^)(NSArray<AgoraEduBoardScene *> *models,
+                                 NSString *resourceName,
+                                 NSString *resourceUuid,
+                                 NSString *scenePath,
+                                 NSString *downURL))success
+               failure:(void (^)(NSError *error))failure;
 @end
 
 NS_ASSUME_NONNULL_END

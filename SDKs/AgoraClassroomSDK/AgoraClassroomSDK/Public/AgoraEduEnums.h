@@ -44,4 +44,37 @@ typedef NS_ENUM(NSInteger, AgoraEduMediaEncryptionMode) {
     AgoraEduMediaEncryptionModeAES256GCM = 6,
 };
 
+typedef NS_ENUM(NSInteger, AgoraEduMirrorMode) {
+    AgoraEduMirrorModeAuto     = 0,
+    AgoraEduMirrorModeEnabled  = 1,
+    AgoraEduMirrorModeDisabled = 2,
+};
+
+// RTC 观众延时级别
+typedef NS_ENUM(NSInteger, AgoraEduLatencyLevel) {
+    AgoraEduLatencyLevelLow      = 1,
+    AgoraEduLatencyLevelUltraLow = 2,
+};
+
+typedef NS_ENUM(NSInteger, AgoraEduBoardFitMode) {
+    AgoraEduBoardFitModeAuto   = 1,
+    AgoraEduBoardFitModeRetain = 2,
+};
+
+typedef NS_ENUM(NSInteger, AgoraEduRoleType) {
+    AgoraEduRoleTypeStudent = 2,
+};
+
+typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
+    AgoraEduRoomTypeOneToOne   = 0,
+    AgoraEduRoomTypeLecture    = 2,
+    AgoraEduRoomTypeSmall      = 4,
+};
+
+typedef NS_ENUM(NSInteger, AgoraEduStreamState) {
+    AgoraEduStreamStateOff     = 0,
+    AgoraEduStreamStateOn      = 1,
+    AgoraEduStreamStateDefault = 3,
+};
+
 NS_ASSUME_NONNULL_END

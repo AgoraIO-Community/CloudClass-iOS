@@ -6,8 +6,8 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-#import <AgoraEduCore/AgoraEduCore-Swift.h>
 #import "AgoraInternalClassroom.h"
+#import "AgoraEduEnums.h"
 
 @implementation AgoraClassroomSDKConfig (Internal)
 - (BOOL)isLegal {

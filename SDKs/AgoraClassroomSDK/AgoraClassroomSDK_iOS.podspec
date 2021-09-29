@@ -26,6 +26,7 @@ Pod::Spec.new do |spec|
   ]
     
   # close source libs
+  spec.dependency "AgoraEduCorePuppet"
   spec.dependency "AgoraEduCore"
 
   # common libs

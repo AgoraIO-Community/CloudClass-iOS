@@ -6,10 +6,9 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
+import AgoraUIEduBaseViews
 import Foundation
 import UIKit
-import AgoraUIEduBaseViews
-import AgoraEduCore
 
 @objc public class MainViewController: UINavigationController {
     private var alertView: AgoraAlertView?

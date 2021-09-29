@@ -13,7 +13,6 @@ import AgoraClassroomSDK
 #endif
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
-import AgoraEduCore
 import AgoraWidget
 import ChatWidget
 import AgoraLog

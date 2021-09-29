@@ -6,8 +6,8 @@
 //
 
 #import <AgoraEduContext/AgoraEduContext-Swift.h>
+#import <AgoraEduCorePuppet/AgoraEduCoreWrapper.h>
 #import <AgoraWidgets/AgoraWidgets-Swift.h>
-#import <AgoraEduCore/AgoraEduCore-Swift.h>
 #import <AgoraEduUI/AgoraEduUI-Swift.h>
 #import <AgoraWidget/AgoraWidget.h>
 #import "AgoraBaseViewController.h"
@@ -15,11 +15,11 @@
 #import "AgoraClassroomSDK.h"
 #import "AgoraEduTopVC.h"
 
-@interface AgoraClassroomSDK () <AgoraEduCoreDelegate, AgoraDownloadDelegate>
+@interface AgoraClassroomSDK () <AgoraEduCorePuppetDelegate, AgoraEduCorePuppetDownloadProcess>
 @property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
 @property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *apps;
 @property (nonatomic, strong) NSArray<AgoraWidgetConfiguration *> *widgets;
-@property (nonatomic, strong) AgoraEduCore *core;
+@property (nonatomic, strong) AgoraEduCorePuppet *core;
 @property (nonatomic, strong) AgoraEduUI *ui;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSArray<AgoraEduCourseware *> *coursewares;
@@ -38,6 +38,7 @@ static AgoraClassroomSDK *manager = nil;
     dispatch_once(&onceToken, ^{
         manager = [[AgoraClassroomSDK alloc] init];
         manager.consoleState = [[NSNumber alloc] initWithInt:0];
+        manager.core = [[AgoraEduCorePuppet alloc] initWithDelegate:manager];
     });
     return manager;
 }
@@ -87,10 +88,9 @@ static AgoraClassroomSDK *manager = nil;
     }
     
     AgoraClassroomSDK *manager = [AgoraClassroomSDK share];
+    AgoraEduCorePuppet *core = manager.core;
     
-    AgoraEduCore *core = [[AgoraEduCore alloc] initWithDelegate:manager];
-    
-    // 切换 host
+    // Switch host
     NSString *host = [AgoraClassroomSDK share].baseURL;
 
     if (host.length > 0) {
@@ -98,87 +98,78 @@ static AgoraClassroomSDK *manager = nil;
         [core setParameters:parameters];
     }
     
-    // log console
+    // Log console
     NSNumber *console = [AgoraClassroomSDK share].consoleState;
     if (console) {
         NSDictionary *parameters = @{@"console": console};
         [core setParameters:parameters];
     }
     
-    NSArray *coursewares = nil;
+    // Board coursewares
+    NSArray<AgoraEduCorePuppetCourseware *> *coursewares = [self getPuppetBoardModelCoursewares:manager.coursewares];
     
-    // 模型转换
-    if (manager.coursewares.count > 0) {
-        NSMutableArray *array = [NSMutableArray array];
-        
-        for (AgoraEduCourseware *courseware in manager.coursewares) {
-            AgoraEduCoreCourseware *item = [[AgoraEduCoreCourseware alloc] initWithResourceName:courseware.resourceName
-                                                                                   resourceUuid:courseware.resourceUuid
-                                                                                      scenePath:courseware.scenePath
-                                                                                    resourceURL:courseware.resourceUrl
-                                                                                         scenes:courseware.scenes];
-            [array addObject:item];
-        }
-        
-        coursewares = array;
-    }
-    
-    AgoraEduCoreVideoConfig *videoConfig;
+    // Media video encoder config
+    AgoraEduCorePuppetVideoConfig *videoConfig = nil;
     if (config.cameraEncoderConfiguration) {
-        videoConfig = [[AgoraEduCoreVideoConfig alloc] initWithVideoDimensionWidth:config.cameraEncoderConfiguration.width
-                                                             videoDimensionHeight:config.cameraEncoderConfiguration.height
-                                                                        frameRate:config.cameraEncoderConfiguration.frameRate
-                                                                          bitrate:config.cameraEncoderConfiguration.bitrate
-                                                                        mirrorMode:config.cameraEncoderConfiguration.mirrorMode];
+        videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithVideoDimensionWidth:config.cameraEncoderConfiguration.width
+                                                                    videoDimensionHeight:config.cameraEncoderConfiguration.height
+                                                                               frameRate:config.cameraEncoderConfiguration.frameRate
+                                                                                 bitRate:config.cameraEncoderConfiguration.bitrate
+                                                                              mirrorMode:config.cameraEncoderConfiguration.mirrorMode];
     }
-    AgoraEduCoreMediaOptions *mediaOptions;
+
+    AgoraEduCorePuppetMediaOptions *mediaOptions = nil;
     if (config.mediaOptions) {
-        AgoraEduCoreMediaEncryptionConfig * encryptionConfig = [[AgoraEduCoreMediaEncryptionConfig alloc] initWithKey:config.mediaOptions.encryptionConfig.key
-                                                                                                                 mode:config.mediaOptions.encryptionConfig.mode];
-        mediaOptions = [[AgoraEduCoreMediaOptions alloc] initWithEncryptionConfig:encryptionConfig];
+        NSString *key = config.mediaOptions.encryptionConfig.key;
+        AgoraEduCorePuppetMediaEncryptionMode mode = config.mediaOptions.encryptionConfig.mode;
+        AgoraEduCorePuppetMediaEncryptionConfig *encryptionConfig = [[AgoraEduCorePuppetMediaEncryptionConfig alloc] initWithKey:key
+                                                                                                                            mode:mode];
+        mediaOptions = [[AgoraEduCorePuppetMediaOptions alloc] initWithEncryptionConfig:encryptionConfig];
     }
-    AgoraEduCoreLaunchConfig *coreConfig = [[AgoraEduCoreLaunchConfig alloc] initWithUserName:config.userName
-                                                                                     userUuid:config.userUuid
-                                                                                     userRole:AgoraEduRoleTypeStudent
-                                                                               userProperties:config.userProperties
-                                                                                     roomName:config.roomName
-                                                                                     roomUuid:config.roomUuid
-                                                                                     roomType:config.roomType
-                                                                                    startTime:config.startTime
-                                                                                     duration:config.duration
-                                                                                        appId:manager.sdkConfig.appId
-                                                                                     rtmToken:config.token
-                                                                                       region:config.region
-                                                                                 mediaOptions:mediaOptions
-                                                                                   videoState:config.videoState
-                                                                                   audioState:config.audioState
-                                                                                  coursewares:coursewares
-                                                                                  videoConfig:videoConfig
-                                                                                 latencyLevel:config.latencyLevel
-                                                                                 boardFitMode:config.boardFitMode];
+
+    AgoraEduCorePuppetRoleType role = config.roleType;
+
+    AgoraEduCorePuppetLaunchConfig *coreConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:manager.sdkConfig.appId
+                                                                                              rtmToken:config.token
+                                                                                                region:config.region
+                                                                                              userName:config.userName
+                                                                                              userUuid:config.userUuid
+                                                                                              userRole:role
+                                                                                        userProperties:config.userProperties
+                                                                                           videoConfig:videoConfig
+                                                                                          mediaOptions:mediaOptions
+                                                                                            videoState:config.videoState
+                                                                                            audioState:config.audioState
+                                                                                          latencyLevel:config.latencyLevel
+                                                                                              roomName:config.roomName
+                                                                                              roomUuid:config.roomUuid
+                                                                                              roomType:config.roomType
+                                                                                             startTime:config.startTime
+                                                                                              duration:config.duration
+                                                                                           coursewares:coursewares
+                                                                                          boardFitMode:config.boardFitMode];
     
     manager.core = core;
 
     __weak AgoraClassroomSDK *weakManager = manager;
-    __weak AgoraEduCore *weakCore = core;
-    
-    // 注册内部的 widget
+
+    // Register widgets
     AgoraWidgetConfiguration *chat = [[AgoraWidgetConfiguration alloc] initWithClass:[AgoraChatWidget class]
                                                                             widgetId:@"AgoraChatWidget"];
-    
+
     NSMutableDictionary *widgets = [NSMutableDictionary dictionary];
     widgets[chat.widgetId] = chat;
-    
+
     for (AgoraWidgetConfiguration *item in manager.widgets) {
         widgets[item.widgetId] = item;
     }
-    
+
     [core launchWithConfig:coreConfig
                    extApps:manager.apps
                    widgets:widgets.allValues
                    success:^(id<AgoraEduContextPool> _Nonnull pool) {
         AgoraEduContextRoomType roomType = AgoraEduContextRoomTypeOneToOne;
-
+        
         switch (config.roomType) {
             case AgoraEduRoomTypeOneToOne:
                 roomType = AgoraEduContextRoomTypeOneToOne;
@@ -211,20 +202,20 @@ static AgoraClassroomSDK *manager = nil;
                                         completion:^{
             [weakManager launchCompleteEvent:AgoraEduEventReady];
         }];
-        
+
         weakManager.ui = ui;
-    } fail:^(AgoraEduContextError * _Nonnull error) {
+    } fail:^(NSError * _Nonnull error) {
         if (error.code == 30403100) {
             [manager launchCompleteEvent:AgoraEduEventForbidden];
         } else {
             [manager launchCompleteEvent:AgoraEduEventFailed];
         }
     }];
-    
+
     AgoraEduClassroom *room = [[AgoraEduClassroom alloc] init];
     manager.room = room;
     manager.roomDelegate = delegate;
-    
+
     return room;
 }
 
@@ -234,18 +225,19 @@ static AgoraClassroomSDK *manager = nil;
 
 + (void)downloadCoursewares:(id<AgoraEduCoursewareDelegate> _Nullable)delegate {
     AgoraClassroomSDK *manager = [AgoraClassroomSDK share];
-    AgoraEduCore *core = manager.core;
+    AgoraEduCorePuppet *core = manager.core;
     NSArray *coursewares = manager.coursewares;
-    
+
     // 下载公共课件
-    NSString *directory = core.fileGroup.downloadFolder;
-    NSString *url = core.urlGroup.netlessPublicCourseware;
+    NSString *directory = [core getDownloadFolderPath];;
+    NSString *url = [core getNetlessPublicCoursewareURL];;
     NSURL *publicCourseware = [NSURL URLWithString:url];
+
+    core.downloadProcess = manager;
     
-    [core.download downloadWithUrls:@[publicCourseware]
-                      fileDirectory:directory
-                                key:nil
-                           delegate:nil];
+    [core downloadWithURL:publicCourseware
+           downloadFolder:directory
+                      key:nil];
     
     // 下载私有课件
     // 判断非空
@@ -257,15 +249,14 @@ static AgoraClassroomSDK *manager = nil;
         if (courseware.resourceUrl.length == 0) {
             continue;;
         }
-        
+
         NSURL *url = [NSURL URLWithString:courseware.resourceUrl];
         NSString *key = [NSString stringWithFormat:@"%lu", (unsigned long)courseware.resourceUrl.hash];
-        [core.download downloadWithUrls:@[url]
-                          fileDirectory:directory
-                                    key:key
-                               delegate:manager];
+        [core downloadWithURL:url
+               downloadFolder:directory
+                          key:key];
     }
-    
+
     manager.coursewareDelegate = delegate;
 }
 
@@ -324,15 +315,16 @@ static AgoraClassroomSDK *manager = nil;
     [self launchCompleteEvent:AgoraEduEventDestroyed];
 }
 
-#pragma mark - AgoraEduCoreDelegate
-- (void)didExit {
+#pragma mark - AgoraEduCorePuppetDelegate
+- (void)corePuppetDidExit {
     [self destory];
 }
 
-#pragma mark - AgoraDownloadDelegate
-- (void)onProcessChanged:(NSString *)key
-                     url:(NSURL *)url
-                 process:(float)process {
+#pragma mark - AgoraEduCorePuppetDownloadProcess
+- (void)corePuppet:(AgoraEduCorePuppet *)core
+didProcessUpdatedWithURL:(NSURL *)url
+           process:(float)process
+               key:(NSString *)key {
     if (key.length == 0) {
         return;
     }
@@ -353,10 +345,11 @@ static AgoraClassroomSDK *manager = nil;
     }
 }
 
-- (void)onDownloadCompleted:(NSString *)key
-                       urls:(NSArray<NSURL *> *)urls
-                      error:(NSError *)error
-                  errorCode:(NSInteger)errorCode {
+- (void)corePuppet:(nonnull AgoraEduCorePuppet *)core
+    didFishWithKey:(nonnull NSString *)key
+              urls:(nonnull NSArray<NSURL *> *)urls
+             error:(nonnull NSError *)error
+         errorCode:(NSInteger)errorCode {
     if (key.length == 0) {
         return;
     }
@@ -375,5 +368,46 @@ static AgoraClassroomSDK *manager = nil;
             return;
         }
     }
+}
+
+#pragma mark - Model translation
++ (NSArray<AgoraEduCorePuppetCourseware *> * _Nullable)getPuppetBoardModelCoursewares:(NSArray<AgoraEduCourseware *> *)coursewares {
+    if (coursewares.count <= 0) {
+        return nil;
+    }
+    
+    NSMutableArray<AgoraEduCorePuppetCourseware *> *puppetCoursewares = [NSMutableArray array];
+    
+    for (AgoraEduCourseware *courseware in coursewares) {
+        NSMutableArray *puppetScenes = [NSMutableArray array];
+        
+        // board scene
+        for (AgoraEduBoardScene *scene in courseware.scenes) {
+            // board ppt
+            AgoraEduPPTPage *ppt = scene.pptPage;
+            AgoraEduCorePuppetPPTPage *puppetPPT = nil;
+            
+            if (ppt) {
+                puppetPPT = [[AgoraEduCorePuppetPPTPage alloc] initWithSource:ppt.source
+                                                                   previewURL:ppt.previewURL
+                                                                         size:CGSizeMake(ppt.width,
+                                                                                         ppt.height)];
+            }
+            
+            AgoraEduCorePuppetBoardScene *puppetScene = [[AgoraEduCorePuppetBoardScene alloc] initWithName:scene.name
+                                                                                                   pptPage:puppetPPT];
+            
+            [puppetScenes addObject:puppetScene];
+        }
+        
+        AgoraEduCorePuppetCourseware *puppetCourseware = [[AgoraEduCorePuppetCourseware alloc] initWithResourceName:courseware.resourceName
+                                                                                                       resourceUuid:courseware.resourceUuid
+                                                                                                          scenePath:courseware.scenePath
+                                                                                                        resourceURL:courseware.resourceUrl
+                                                                                                             scenes:puppetScenes];
+        [puppetCoursewares addObject:puppetCourseware];
+    }
+    
+    return puppetCoursewares;
 }
 @end
