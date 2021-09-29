@@ -1,30 +1,22 @@
 Pod::Spec.new do |spec|
-  spec.name             = 'AgoraClassroomSDK'
-  spec.version          = '1.0.0'
-  spec.summary          = 'Education scene SDK'
+  spec.name         = 'AgoraClassroomSDK'
+  spec.version      = '1.0.0'
+  spec.summary      = 'Education scene SDK'
 
-  spec.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
+  spec.description  = "Education scene binary SDK "
 
-  spec.homepage         = 'https://github.com/603722906@qq.com/AgoraEduSDK'
-  spec.license          = { :type => 'MIT', :file => 'LICENSE' }
-  spec.author           = { '603722906@qq.com' => 'sirusheng@agora.io' }
-  spec.source           = { :git => 'https://github.com/603722906@qq.com/AgoraEduSDK.git', :tag => spec.version.to_s }
+  spec.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
+  spec.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
+  spec.author       = { "Agora Lab" => "developer@agora.io" }
+  spec.source       = { :git => 'hgit@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => spec.version.to_s }
 
   spec.ios.deployment_target = '10.0'
   spec.frameworks = 'AudioToolbox', 'Foundation', 'UIKit'
-  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
   spec.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' } 
   
-  spec.default_subspec = 'BINARY'
-  
-  spec.subspec 'BINARY' do |binary|
-    binary.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => ['$(SRCROOT)/../Products/Libs/'] }
+  spec.xcconfig = { 'FRAMEWORK_SEARCH_PATHS' => ['$(SRCROOT)/../Products/Libs/'] }
 
-    binary.vendored_frameworks = [
-      "Libs/*.framework"
-    ]
-  end
-
+  spec.vendored_frameworks = [
+    "Libs/*.framework"
+  ]
 end

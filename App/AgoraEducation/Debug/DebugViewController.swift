@@ -11,7 +11,6 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
-import AgoraEduCore
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraWidget
@@ -36,7 +35,7 @@ import UIKit
     @IBOutlet weak var regionField: UITextField!
     fileprivate var startTime: Int?
 
-    fileprivate var scenes: [WhiteScene] = []
+    fileprivate var scenes: [AgoraEduBoardScene] = []
     fileprivate var resourceName: String = ""
     fileprivate var resourceUuid: String = ""
     fileprivate var scenePath: String = ""
@@ -47,10 +46,14 @@ import UIKit
                                             y: UIScreen.main.bounds.height - 100,
                                             width: 100,
                                             height: 50))
-        popBtn.setTitle("LoginVC", for: .normal)
-        popBtn.setTitleColor(.white, for: .normal)
+        popBtn.setTitle("LoginVC",
+                        for: .normal)
+        popBtn.setTitleColor(.white,
+                             for: .normal)
         popBtn.backgroundColor = UIColor(hexString: "C0D6FF")
-        popBtn.addTarget(self, action: #selector(onPopDebugVC), for: .touchUpInside)
+        popBtn.addTarget(self,
+                         action: #selector(onPopDebugVC),
+                         for: .touchUpInside)
         return popBtn
     }()
     
@@ -81,18 +84,38 @@ import UIKit
         picker.setDate(date, animated: true)
         self.startTime = Int(timeInterval * 1000)
     
-        picker.addTarget(self, action: #selector(selectValue), for: UIControl.Event.valueChanged)
+        picker.addTarget(self,
+                         action: #selector(selectValue),
+                         for: UIControl.Event.valueChanged)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        UIDevice.current.setValue(UIDeviceOrientation.landscapeRight.rawValue, forKey: "orientation")
+        UIDevice.current.setValue(UIDeviceOrientation.landscapeRight.rawValue,
+                                  forKey: "orientation")
     }
     
-    fileprivate func joinRoom(_ type: AgoraEduRoomType) {
-
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        self.view.endEditing(true)
+    }
+    
+    override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .landscapeRight
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .landscapeRight
+    }
+    
+    private func joinRoom(_ type: AgoraEduRoomType) {
         var __startTime: NSNumber?
-        if self.startTime != nil {
-            __startTime = NSNumber(value: self.startTime!)
+        
+        if let startTime = self.startTime {
+            __startTime = NSNumber(value: startTime)
         }
 
         var __duration: NSNumber?
@@ -187,33 +210,42 @@ import UIKit
         
         self.updateListLabel.text = "更新中"
         
-        TokenBuilder.boardResources(url, token: token) {[weak self] (scenes, resourceName, resourceUuid, scenePath, downURL) in
-            
+        TokenBuilder.boardResources(url,
+                                    token: token) { [weak self] (scenes,
+                                                                 resourceName,
+                                                                 resourceUuid,
+                                                                 scenePath,
+                                                                 downURL) in
             self?.scenes = scenes
             self?.resourceName = resourceName
             self?.scenePath = scenePath
             self?.downURL = downURL
             self?.updateListLabel.text = "更新完成"
             
-            let courseware = AgoraEduCourseware(resourceName: resourceName, resourceUuid: resourceUuid, scenePath: scenePath, scenes: scenes, resourceUrl: downURL)
+            let courseware = AgoraEduCourseware(resourceName: resourceName,
+                                                resourceUuid: resourceUuid,
+                                                scenePath: scenePath,
+                                                scenes: scenes,
+                                                resourceUrl: downURL)
+            
             AgoraClassroomSDK.configCoursewares([courseware])
-
-        } failure: {[weak self] (error) in
+        } failure: { [weak self] (error) in
             self?.updateListLabel.text = "更新失败"
         }
     }
-    @IBAction func downWareList(_ sender: Any) {
-        
-        self.downLabel.text = "下载中"
     
-//        AgoraClassroomSDK.downloadCoursewares(self)
+    @IBAction func downWareList(_ sender: Any) {
+        self.downLabel.text = "下载中"
+        AgoraClassroomSDK.downloadCoursewares(self)
     }
+    
     @IBAction func clearWareList(_ sender: Any) {
-        
         self.clearLabel.text = "清除中"
         
         DispatchQueue.global(qos: .userInitiated).async {
-                let basePath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0]
+                let basePath = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory,
+                                                                   FileManager.SearchPathDomainMask.userDomainMask,
+                                                                   true)[0]
                 let path = "\(basePath)/AgoraDownload/"
                 try? FileManager.default.removeItem(atPath: path)
             // back to the main thread
@@ -227,43 +259,29 @@ import UIKit
         self.startTime = Int(picker.date.timeIntervalSince1970 * 1000)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        self.view.endEditing(true)
-    }
-    
     @objc fileprivate func onPopDebugVC() {
         self.navigationController?.popViewController(animated: true)
-    }
-    
-    override var shouldAutorotate: Bool {
-        return true
-    }
-    
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .landscapeRight
-    }
-    
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .landscapeRight
     }
 }
 
 // MARK: AgoraEduClassroomDelegate
 extension DebugViewController: AgoraEduClassroomDelegate {
-    public func classroom(_ classroom: AgoraEduClassroom, didReceivedEvent event: AgoraEduEvent) {
+    public func classroom(_ classroom: AgoraEduClassroom,
+                          didReceivedEvent event: AgoraEduEvent) {
         if alertView != nil {
             alertView?.removeFromSuperview()
         }
     }
-//}
-//
-//extension DebugViewController: AgoraEduCoursewareDelegate {
-//    func courseware(_ courseware: AgoraEduCourseware, didProcessChanged process: Float) {
-//        self.downProcess = CGFloat(process)
-//    }
-//
-//    func courseware(_ courseware: AgoraEduCourseware, didCompleted error: Error?) {
-//        self.downCompleteSuccess = (error == nil)
-//    }
+}
+
+extension DebugViewController: AgoraEduCoursewareDelegate {
+    func courseware(_ courseware: AgoraEduCourseware,
+                    didProcessChanged process: Float) {
+        self.downProcess = CGFloat(process)
+    }
+
+    func courseware(_ courseware: AgoraEduCourseware,
+                    didCompleted error: Error?) {
+        self.downCompleteSuccess = (error == nil)
+    }
 }

@@ -5,10 +5,9 @@
 //  Created by SRS on 2021/1/5.
 //
 
-#import <Foundation/Foundation.h>
 #import <AgoraExtApp/AgoraExtApp.h>
 #import <AgoraWidget/AgoraWidget.h>
-#import <AgoraEduCore/AgoraEduCore-Swift.h>
+#import <Foundation/Foundation.h>
 #import "AgoraEduObjects.h"
 #import "AgoraEduClassroom.h"
 

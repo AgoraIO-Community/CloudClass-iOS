@@ -15,6 +15,7 @@ Products/dSYMs_Simulator/
 Products/dSYMs_iPhone/
 Package
 XCBuildData
+*.zip
 
 ## Various settings
 *.pbxuser

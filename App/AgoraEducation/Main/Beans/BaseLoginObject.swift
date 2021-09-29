@@ -11,7 +11,6 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
-import AgoraEduCore
 import Foundation
 
 enum Device: String {

@@ -8,10 +8,11 @@
 #import <Foundation/Foundation.h>
 #import <Whiteboard/Whiteboard.h>
 #import <AgoraExtApp/AgoraExtApp.h>
-#import <AgoraEduCore/AgoraEduCore-Swift.h>
 #import "AgoraEduEnums.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+#pragma mark - Config
 /**设置全局配置*/
 @interface AgoraClassroomSDKConfig : NSObject
 // 声网App Id
@@ -22,6 +23,56 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithAppId:(NSString *)appId;
 - (instancetype)initWithAppId:(NSString *)appId
                       eyeCare:(BOOL)eyeCare;
+@end
+
+#pragma mark - White board
+@interface AgoraEduPPTPage : NSObject
+/**
+ 图片的 URL 地址。
+ */
+@property (nonatomic, copy) NSString *source;
+/**
+ 图片的 URL 宽度。单位为像素。
+ */
+@property (nonatomic, assign) CGFloat width;
+/**
+ 图片的 URL 高度。单位为像素。
+ */
+@property (nonatomic, assign) CGFloat height;
+
+/**
+ 预览图片的 URL 地址。
+ */
+@property (nonatomic, copy, nullable) NSString *previewURL;
+
+
+/**
+ @param source 图片的 URL 地址。
+ @param size 图片尺寸。
+
+ @return 初始化的 `WhitePptPage` 对象。
+ */
+- (instancetype)initWithSource:(NSString *)source
+                          size:(CGSize)size;
+
+/** 设置场景的预览图片信息并初始化一个 `WhitePptPage` 对象。
+ @param source 图片的 URL 地址。
+ @param url 预览图片的 URL 地址。
+ @param size 图片尺寸。
+
+ @return 初始化的 `WhitePptPage` 对象。
+ */
+- (instancetype)initWithSource:(NSString *)source
+                    previewURL:(NSString *)url
+                          size:(CGSize)size;
+@end
+
+@interface AgoraEduBoardScene : NSObject
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, strong, nullable) AgoraEduPPTPage *pptPage;
+
+- (instancetype)initWithName:(NSString *)name
+                     pptPage:(AgoraEduPPTPage * _Nullable)pptPage;
 @end
 
 /**设置课件预加载配置*/
@@ -38,14 +89,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *resourceUrl;
 // 课件文件列表，用于目录里面每页的数据
 // 对应convertedFileList对象
-@property (nonatomic, strong) NSArray<WhiteScene *> *scenes;
+@property (nonatomic, strong) NSArray<AgoraEduBoardScene *> *scenes;
+
 - (instancetype)initWithResourceName:(NSString *)resourceName
                         resourceUuid:(NSString *)resourceUuid
                            scenePath:(NSString *)scenePath
-                              scenes:(NSArray<WhiteScene *> *)scenes
+                              scenes:(NSArray<AgoraEduBoardScene *> *)scenes
                          resourceUrl:(NSString *)resourceUrl;
 @end
 
+#pragma mark - Media
 /**设置媒体选项*/
 @interface AgoraEduMediaEncryptionConfig : NSObject
 @property (nonatomic, assign) AgoraEduMediaEncryptionMode mode;
@@ -65,15 +118,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSUInteger height;
 @property (nonatomic, assign) NSUInteger frameRate;
 @property (nonatomic, assign) NSUInteger bitrate;
-@property (nonatomic, assign) AgoraEduCoreMirrorMode mirrorMode;
+@property (nonatomic, assign) AgoraEduMirrorMode mirrorMode;
 
 - (instancetype)initWithWidth:(NSUInteger)width
                        height:(NSUInteger)height
                     frameRate:(NSUInteger)frameRate
                       bitrate:(NSUInteger)bitrate
-                   mirrorMode:(AgoraEduCoreMirrorMode)mirrorMode;
+                   mirrorMode:(AgoraEduMirrorMode)mirrorMode;
 @end
 
+#pragma mark - Launch
 /**启动课堂配置*/
 @interface AgoraEduLaunchConfig : NSObject
 // 用户名
@@ -109,7 +163,7 @@ NS_ASSUME_NONNULL_BEGIN
 // RTC观众延时级别,默认lowlatency（极速直播）
 @property (nonatomic, assign) AgoraEduLatencyLevel latencyLevel;
 
-@property (nonatomic, assign) AgoraBoardFitMode boardFitMode;
+@property (nonatomic, assign) AgoraEduBoardFitMode boardFitMode;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
@@ -134,7 +188,7 @@ NS_ASSUME_NONNULL_BEGIN
                       videoState:(AgoraEduStreamState)videoState
                       audioState:(AgoraEduStreamState)audioState
                     latencyLevel:(AgoraEduLatencyLevel)latencyLevel
-                    boardFitMode:(AgoraBoardFitMode)boardFitMode;
+                    boardFitMode:(AgoraEduBoardFitMode)boardFitMode;
 @end
 
 // 聊天翻译
