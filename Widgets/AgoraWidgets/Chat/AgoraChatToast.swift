@@ -45,9 +45,9 @@ extension AgoraChatWidget {
     
     func roomSilencedChanged(hasRoomChatPermission: Bool) -> String {
         if UIDevice.current.isChineseLanguage {
-            return hasRoomChatPermission ? "禁言模式开启" : "禁言模式关闭"
+            return hasRoomChatPermission ? "禁言模式关闭" : "禁言模式开启"
        } else {
-           return hasRoomChatPermission ? "Turn on mute mode" : "Turn off mute mode"
+           return hasRoomChatPermission ? "Turn off mute mode" :  "Turn on mute mode"
        }
     }
 }

@@ -203,6 +203,11 @@ import AgoraWidget
                     chat.widgetDidReceiveMessage(message)
                 }
                 
+                let isMin = (viewType == .lecture ? 0 : 1)
+                if let message = ["isMinSize": isMin].jsonString() {
+                    chat.widgetDidReceiveMessage(message)
+                }
+                
                 self.chat = chat
             default:
                 break
@@ -422,6 +427,12 @@ extension AgoraEduUI: AgoraScreenUIControllerDelegate {
 extension AgoraEduUI: AgoraWhiteBoardUIControllerDelegate {
     func whiteBoard(_ controller: AgoraWhiteBoardUIController,
                     willUpdateDisplayMode isFullScreen: Bool) {
+        if viewType == .lecture,
+           let `chat` = self.chat,
+           let message = ["showMinButton": isFullScreen].jsonString() {
+            chat.widgetDidReceiveMessage(message)
+        }
+        
         self.isFullScreen = isFullScreen
     }
     
@@ -447,14 +458,18 @@ extension AgoraEduUI: AgoraWidgetDelegate {
     
     func agoraChatWidgetMessageHandle(message: String) {
         guard let dic = message.json(),
-              let _ = dic["isMinSize"] as? Int else {
+              let isMin = dic["isMinSize"] as? Bool else {
             return
         }
         
         switch viewType {
+        case .oneToOne:
+            resetOneToOneAgoraChatLayout(isMin: isMin)
         case .small:
+            resetSmallAgoraChatLayout(isMin: isMin)
             resetSmallHandsUpLayout()
         case .lecture:
+            resetLectureAgoraChatLayout(isMin: isMin)
             resetLectureHandsUpLayout(isFullScreen)
         default:
             break

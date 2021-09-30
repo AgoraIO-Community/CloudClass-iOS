@@ -102,6 +102,38 @@ extension AgoraEduUI {
         }
     }
     
+    func resetOneToOneAgoraChatLayout(isMin: Bool) {
+        guard let `chat` = self.chat,
+              !isHyChat else {
+            return
+        }
+        
+        let size = get1V1RenderViewSize()
+        
+        if isMin {
+            chat.containerView.agora_safe_right = isFullScreen ? 10 : size.width + 10
+            chat.containerView.agora_width = 56
+            chat.containerView.agora_height = 56
+            chat.containerView.agora_safe_bottom = 0
+        } else {
+            let isPad = UIDevice.current.isPad
+            let kAgoraScreenHeight: CGFloat = min(UIScreen.agora_width,
+                                                  UIScreen.agora_height)
+            
+            let chatWidth: CGFloat = (isPad ? 300 : 200)
+            let chatHeight: CGFloat = (isPad ? 400 : kAgoraScreenHeight - 34 - renderTop - 10)
+            
+            chat.containerView.agora_safe_right = isFullScreen ? 10 : size.width + 10
+            chat.containerView.agora_width = chatWidth
+            chat.containerView.agora_height = chatHeight
+            chat.containerView.agora_safe_bottom = 0
+        }
+        
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
+            self.appView.layoutIfNeeded()
+        }
+    }
+    
     private func get1V1RenderViewSize() -> CGSize {
         let isPad = AgoraKitDeviceAssistant.OS.isPad
 

@@ -86,7 +86,8 @@ private extension AgoraLectureRenderUIController {
         renderListView.agora_height = AgoraUserRenderListView.preferenceHeight
         renderListView.agora_right = teacherView.agora_right + teacherView.agora_width + ViewGap
         
-        teacherViewSize = CGSize(width: width, height: height)
+        teacherViewSize = CGSize(width: width,
+                                 height: height)
         renderListViewHeight = renderListView.agora_height
     }
     

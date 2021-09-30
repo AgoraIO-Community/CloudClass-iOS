@@ -26,6 +26,6 @@
 }
 
 + (NSString *)hostURL {
-    return @"https://api.agora.io";
+    return <#Your Agora Host#>;
 }
 @end

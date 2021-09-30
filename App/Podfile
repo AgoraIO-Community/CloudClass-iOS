@@ -92,8 +92,8 @@ target 'AgoraEducation' do
   libVersion   
 
   #sourcePod
-  binaryPod
-  #halfBinaryPod
+  #binaryPod
+  halfBinaryPod
   
   post_install do |installer|
     ## Fix for XCode 12.5
