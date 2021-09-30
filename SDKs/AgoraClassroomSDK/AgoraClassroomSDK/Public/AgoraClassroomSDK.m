@@ -38,7 +38,6 @@ static AgoraClassroomSDK *manager = nil;
     dispatch_once(&onceToken, ^{
         manager = [[AgoraClassroomSDK alloc] init];
         manager.consoleState = [[NSNumber alloc] initWithInt:0];
-        manager.core = [[AgoraEduCorePuppet alloc] initWithDelegate:manager];
     });
     return manager;
 }
@@ -53,6 +52,14 @@ static AgoraClassroomSDK *manager = nil;
     } else {
         return @"1.0.0";
     }
+}
+
+- (AgoraEduCorePuppet *)core {
+    if (_core == nil) {
+        _core = [[AgoraEduCorePuppet alloc] initWithDelegate:self];
+    }
+    
+    return _core;
 }
 
 + (void)setBaseURL:(NSString *)baseURL {
@@ -148,8 +155,6 @@ static AgoraClassroomSDK *manager = nil;
                                                                                               duration:config.duration
                                                                                            coursewares:coursewares
                                                                                           boardFitMode:config.boardFitMode];
-    
-    manager.core = core;
 
     __weak AgoraClassroomSDK *weakManager = manager;
 

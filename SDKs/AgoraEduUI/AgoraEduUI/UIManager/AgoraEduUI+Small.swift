@@ -67,12 +67,6 @@ extension AgoraEduUI {
             chat.containerView.agora_height = 56
             chat.containerView.agora_safe_bottom = 2
             chat.containerView.agora_safe_right = 10
-            
-            guard let message = ["isMin": 1].jsonString() else {
-                return
-            }
-            
-            chat.widgetDidReceiveMessage(message)
         }
         
         shareScreen.containerView.agora_equal_to(view: whiteBoard.containerView,
@@ -129,6 +123,36 @@ extension AgoraEduUI {
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
             self.appView.layoutSubviews()
+        }
+    }
+    
+    func resetSmallAgoraChatLayout(isMin: Bool) {
+        guard let `chat` = self.chat,
+              !isHyChat else {
+            return
+        }
+        
+        if isMin {
+            chat.containerView.agora_safe_right = 10
+            chat.containerView.agora_width = 56
+            chat.containerView.agora_height = 56
+            chat.containerView.agora_safe_bottom = 0
+        } else {
+            let isPad = UIDevice.current.isPad
+            let kAgoraScreenHeight: CGFloat = min(UIScreen.agora_width,
+                                                  UIScreen.agora_height)
+            
+            let chatWidth: CGFloat = (isPad ? 300 : 200)
+            let chatHeight: CGFloat = (isPad ? 400 : kAgoraScreenHeight - 34 - renderTop - 10)
+            
+            chat.containerView.agora_safe_right = 10
+            chat.containerView.agora_width = chatWidth
+            chat.containerView.agora_height = chatHeight
+            chat.containerView.agora_safe_bottom = 0
+        }
+        
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
+            self.appView.layoutIfNeeded()
         }
     }
     

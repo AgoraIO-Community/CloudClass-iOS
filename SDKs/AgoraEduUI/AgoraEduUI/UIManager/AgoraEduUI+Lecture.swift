@@ -59,8 +59,6 @@ extension AgoraEduUI {
         renderLecture.containerView.agora_safe_right = 0
         renderLecture.containerView.agora_height = max(size.height,
                                                      renderListHeight)
-
-        resetLectureChatLayout(false)
         
         shareScreen.containerView.agora_equal_to(view: whiteBoard.containerView,
                                                  attribute: .top)
@@ -76,6 +74,19 @@ extension AgoraEduUI {
         whiteBoard.containerView.agora_safe_bottom = 0
         whiteBoard.containerView.agora_safe_right = size.width + ViewGap
         
+        userList.containerView.agora_safe_x = whiteBoard.containerView.agora_safe_x + (isPad ? 65 : 57)
+        userList.containerView.agora_width = 300
+        userList.containerView.agora_safe_y = isPad ? (whiteBoard.containerView.agora_safe_y + 101) : (top - ViewGap)
+        userList.containerView.agora_height = 312
+        
+        if let `chat` = self.chat,
+           !isHyChat {
+            chat.containerView.agora_safe_right = 00
+            chat.containerView.agora_safe_bottom = 0
+            chat.containerView.agora_y = whiteBoard.containerView.agora_safe_y + size.height
+            chat.containerView.agora_width = size.width
+        }
+        
         if let `chat` = self.chat {
             handsUp.containerView.agora_safe_right = chat.containerView.agora_safe_right + chat.containerView.agora_width + 10 - 8
         } else {
@@ -83,11 +94,6 @@ extension AgoraEduUI {
         }
         
         handsUp.containerView.agora_safe_bottom = 2
-    
-        userList.containerView.agora_safe_x = whiteBoard.containerView.agora_safe_x + (isPad ? 65 : 57)
-        userList.containerView.agora_width = 300
-        userList.containerView.agora_safe_y = isPad ? (whiteBoard.containerView.agora_safe_y + 101) : (top - ViewGap)
-        userList.containerView.agora_height = 312
     }
     
     func layoutLectureView(isFullScreen: Bool) {
@@ -111,13 +117,17 @@ extension AgoraEduUI {
         
         userlist.containerView.agora_safe_y = isPad ? (whiteBoard.containerView.agora_safe_y + 50.5) : (top - ViewGap)
         
-        if let message = ["isFullScreen": (isFullScreen ? 1 : 0)].jsonString(),
-           let `chat` = self.chat {
+        // Chat
+        let isMin = isFullScreen
+        
+        if let `chat` = self.chat,
+           !isHyChat,
+           let message = ["isMinSize": isMin].jsonString() {
             chat.widgetDidReceiveMessage(message)
         }
         
-        // 也全屏设置
-        resetLectureChatLayout(isFullScreen)
+        resetLectureAgoraChatLayout(isMin: isMin)
+        
         resetLectureHandsUpLayout(isFullScreen)
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
@@ -145,30 +155,39 @@ extension AgoraEduUI {
         userlist.containerView.agora_safe_y = isPad ? (whiteBoard.containerView.agora_safe_y + 50.5) : (top - ViewGap)
     }
     
-    private func resetLectureChatLayout(_ isFullScreen: Bool) {
+    func resetLectureAgoraChatLayout(isMin: Bool) {
         guard let `renderLecture` = self.renderLecture,
               let `whiteBoard` = self.whiteBoard,
-              let `handsUp` = self.handsUp else {
+              let `handsUp` = self.handsUp,
+              let `chat` = self.chat else {
             return
         }
         
-        if isFullScreen {
-            chat?.containerView.agora_safe_bottom = handsUp.containerView.agora_safe_bottom
-            chat?.containerView.agora_safe_right = whiteBoard.containerView.agora_safe_right + 10
-        } else {
-            let ViewGap: CGFloat = 2
+        let size = renderLecture.teacherViewSize
+        
+        if isMin {
+            chat.containerView.agora_clear_constraint()
             
-            let size = renderLecture.teacherViewSize
+            chat.containerView.agora_safe_right = 10
+            chat.containerView.agora_width = 56
+            chat.containerView.agora_height = 56
+            chat.containerView.agora_safe_bottom = 0
+        } else {
+            let viewGap: CGFloat = 2
+            
             let kScreenHeight = min(UIScreen.agora_width,
                                     UIScreen.agora_height)
+            
             let safeSpace = UIScreen.agora_safe_area_top + UIScreen.agora_safe_area_bottom
             let renderLectureMaxY = renderLecture.containerView.agora_safe_y + size.height
-            let chatHeight = kScreenHeight - safeSpace - renderLectureMaxY - ViewGap
+            let chatHeight = kScreenHeight - safeSpace - renderLectureMaxY - viewGap
             
-            chat?.containerView.agora_safe_right = renderLecture.containerView.agora_safe_right
-            chat?.containerView.agora_width = size.width
-            chat?.containerView.agora_height = chatHeight
-            chat?.containerView.agora_safe_bottom = 0
+            chat.containerView.agora_clear_constraint()
+            
+            chat.containerView.agora_width = size.width
+            chat.containerView.agora_height = chatHeight
+            chat.containerView.agora_safe_right = renderLecture.containerView.agora_safe_right
+            chat.containerView.agora_safe_bottom = 0
         }
     }
     
