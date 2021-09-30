@@ -152,10 +152,9 @@ extension AgoraSmallRenderUIController: UIScrollViewDelegate, UICollectionViewDe
 private extension AgoraSmallRenderUIController {
     internal func rewardAnimation() {
         // Gif
-        rewardImageView = rewardImage()
+        let rewardImageView = rewardImage()
         
-        guard let `rewardImageView` = rewardImageView,
-              let keyWindow = UIApplication.shared.keyWindow else {
+        guard let keyWindow = UIApplication.shared.keyWindow else {
             fatalError()
         }
         
@@ -173,21 +172,17 @@ private extension AgoraSmallRenderUIController {
     }
     
     func rewardImage() -> AgoraFLAnimatedImageView {
-        guard let bundle = Bundle.agora_bundle(object: self,
-                                               resource: "AgoraEduUI"),
-              let url = bundle.url(forResource: "reward",
-                                   withExtension: "gif"),
-              let data = try? Data(contentsOf: url) else {
+        guard let data = rewardGifData else {
             fatalError()
         }
             
-        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
+        var animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
         animatedImage?.loopCount = 1
         
         let imageView = AgoraFLAnimatedImageView()
         imageView.animatedImage = animatedImage
-        imageView.loopCompletionBlock = { (count) in
-            imageView.removeFromSuperview()
+        imageView.loopCompletionBlock = {[weak imageView] (count) in
+            imageView?.removeFromSuperview()
         }
         
         return imageView
