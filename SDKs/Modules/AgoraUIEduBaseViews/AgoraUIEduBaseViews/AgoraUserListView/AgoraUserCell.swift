@@ -282,9 +282,8 @@ private extension AgoraUserCell {
         rewardImg.agora_center_y = 0
         rewardImg.agora_width = 22
         
-        rewardLabel.agora_x = CGFloat(22 + 91.3 * 6)
+        rewardLabel.agora_x = rewardImg.agora_x + rewardImg.agora_width
         rewardLabel.agora_center_y = 0
-        rewardLabel.agora_bottom = 11
     }
     
     func initMiddleNonCnLayout() {
