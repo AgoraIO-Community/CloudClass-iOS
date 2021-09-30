@@ -717,6 +717,11 @@ private extension LoginViewController{
         }
         registerExtApps()
         
+        let sel = NSSelectorFromString("setBaseURL:");
+        let url = KeyCenter.hostURL()
+        AgoraClassroomSDK.perform(sel,
+                                  with: url)
+        
         // roomUuid = roomName + classType
         let roomUuid = "\(room)\(type.rawValue)"
         
