@@ -39,7 +39,17 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
         let v = AgoraUserRenderScrollView(frame: .zero)
         return v
     }()
-    var rewardImageView: AgoraFLAnimatedImageView?
+
+    lazy var rewardGifData: Data? = {
+        guard let bundle = Bundle.agora_bundle(object: self,
+                                               resource: "AgoraEduUI"),
+              let url = bundle.url(forResource: "reward",
+                                   withExtension: "gif"),
+              let data = try? Data(contentsOf: url) else {
+                  return nil
+              }
+        return data
+    }()
     
     // DataSource
     var teacherInfo: AgoraEduContextUserDetailInfo? {
