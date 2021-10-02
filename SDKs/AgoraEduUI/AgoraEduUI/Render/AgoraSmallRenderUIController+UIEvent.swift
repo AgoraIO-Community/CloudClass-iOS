@@ -149,7 +149,7 @@ extension AgoraSmallRenderUIController: UIScrollViewDelegate, UICollectionViewDe
 }
 
 // MARK: - Reward
-private extension AgoraSmallRenderUIController {
+extension AgoraSmallRenderUIController {
     func rewardAnimation() {
         // Gif
         let rewardImageView = rewardImage()
@@ -171,7 +171,7 @@ private extension AgoraSmallRenderUIController {
         rewardAudioEffect()
     }
     
-    func rewardImage() -> AgoraFLAnimatedImageView {
+    private func rewardImage() -> AgoraFLAnimatedImageView {
         guard let data = rewardGifData else {
             fatalError()
         }
@@ -188,7 +188,7 @@ private extension AgoraSmallRenderUIController {
         return imageView
     }
     
-    func rewardAudioEffect() {
+    private func rewardAudioEffect() {
         guard let bundle = Bundle.agora_bundle(object: self,
                                                resource: "AgoraEduUI"),
               let url = bundle.url(forResource: "reward",
