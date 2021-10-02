@@ -3,7 +3,7 @@
 
 def openSourceLibs
   pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
 end
 
 def sourcePod

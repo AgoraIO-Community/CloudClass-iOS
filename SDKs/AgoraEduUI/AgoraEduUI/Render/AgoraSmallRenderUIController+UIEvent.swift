@@ -150,7 +150,7 @@ extension AgoraSmallRenderUIController: UIScrollViewDelegate, UICollectionViewDe
 
 // MARK: - Reward
 private extension AgoraSmallRenderUIController {
-    internal func rewardAnimation() {
+    func rewardAnimation() {
         // Gif
         let rewardImageView = rewardImage()
         
@@ -176,7 +176,7 @@ private extension AgoraSmallRenderUIController {
             fatalError()
         }
             
-        var animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
+        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
         animatedImage?.loopCount = 1
         
         let imageView = AgoraFLAnimatedImageView()
