@@ -6,9 +6,9 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
+import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import SnapKit
-import AgoraUIEduBaseViews
 
 fileprivate class MemberVolumeView: UIView {
     // 0...1
@@ -48,8 +48,11 @@ fileprivate class MemberVolumeView: UIView {
         }
         
         var views = [UIView]()
-        for index in 0..<7 {
-            let view = UIView(frame: CGRect(x: 0, y: 0, width: 6, height: 1))
+        for _ in 0..<7 {
+            let view = UIView(frame: CGRect(x: 0,
+                                            y: 0,
+                                            width: 6,
+                                            height: 1))
             view.backgroundColor = UIColor(rgb: 0x357BF6)
             contentView.addArrangedSubview(view)
             views.append(view)

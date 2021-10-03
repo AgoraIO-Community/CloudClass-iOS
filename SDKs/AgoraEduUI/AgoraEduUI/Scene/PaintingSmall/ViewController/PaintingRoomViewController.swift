@@ -131,8 +131,8 @@ extension PaintingRoomViewController: PaintingRenderViewControllerDelegate {
             make.centerX.equalTo(view)
         }
     }
-    
 }
+
 // MARK: - PaintingSmallToolsViewDelegate
 extension PaintingRoomViewController: PaintingSmallToolsViewDelegate {
     

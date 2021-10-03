@@ -20,8 +20,6 @@
 		8608263226A55A1E00E8FDE2 /* AgoraEduUI+Lecture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8608262E26A55A1E00E8FDE2 /* AgoraEduUI+Lecture.swift */; };
 		8608263326A55A1E00E8FDE2 /* AgoraEduUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8608262F26A55A1E00E8FDE2 /* AgoraEduUI.swift */; };
 		8608263426A55A1E00E8FDE2 /* AgoraEduUI+1V1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8608263026A55A1E00E8FDE2 /* AgoraEduUI+1V1.swift */; };
-		8608263526A55A1E00E8FDE2 /* AgoraEduUI+Small.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8608263126A55A1E00E8FDE2 /* AgoraEduUI+Small.swift */; };
-		8619378826305072008A11D4 /* AgoraSmallRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619377A26305072008A11D4 /* AgoraSmallRenderUIController.swift */; };
 		8619378926305072008A11D4 /* Agora1V1RenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619377B26305072008A11D4 /* Agora1V1RenderUIController.swift */; };
 		8619378A26305072008A11D4 /* AgoraScreenUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619377D26305072008A11D4 /* AgoraScreenUIController.swift */; };
 		8619378B26305072008A11D4 /* AgoraUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619377E26305072008A11D4 /* AgoraUIController.swift */; };
@@ -30,12 +28,25 @@
 		8619378E26305072008A11D4 /* AgoraRoomUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619378126305072008A11D4 /* AgoraRoomUIController.swift */; };
 		8619379026305072008A11D4 /* AgoraUserListUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8619378326305072008A11D4 /* AgoraUserListUIController.swift */; };
 		86193869263162C4008A11D4 /* AgoraRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86193865263162C4008A11D4 /* AgoraRenderUIController.swift */; };
-		8619386A263162C4008A11D4 /* AgoraSmallRenderUIController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86193866263162C4008A11D4 /* AgoraSmallRenderUIController+Data.swift */; };
-		8619386B263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86193867263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift */; };
-		8619386C263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86193868263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift */; };
 		8644B3DA26EF3BEC00455F67 /* AgoraUIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644B3D926EF3BEC00455F67 /* AgoraUIExtension.swift */; };
 		864CCE0B262AD86000C10042 /* AgoraWhiteBoardUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864CCE09262AD86000C10042 /* AgoraWhiteBoardUIController.swift */; };
 		867451AC26BA3322007E06E4 /* AgoraEduUI.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 867451AB26BA3322007E06E4 /* AgoraEduUI.xcassets */; };
+		8685E1F52709927000E3B390 /* AgoraEduUI+Painting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1E22709927000E3B390 /* AgoraEduUI+Painting.swift */; };
+		8685E1F62709927000E3B390 /* AgoraMemberItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1E42709927000E3B390 /* AgoraMemberItemCell.swift */; };
+		8685E1F72709927000E3B390 /* PaintingToolBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1E52709927000E3B390 /* PaintingToolBoxView.swift */; };
+		8685E1F82709927000E3B390 /* PaintingSmallToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1E62709927000E3B390 /* PaintingSmallToolsView.swift */; };
+		8685E1F92709927000E3B390 /* PaintingClassRoomStatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1E72709927000E3B390 /* PaintingClassRoomStatusBar.swift */; };
+		8685E1FA2709927000E3B390 /* BrushToolItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1E82709927000E3B390 /* BrushToolItemCell.swift */; };
+		8685E1FB2709927000E3B390 /* PaintingRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1EA2709927000E3B390 /* PaintingRoomViewController.swift */; };
+		8685E1FC2709927000E3B390 /* PaintingSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1EB2709927000E3B390 /* PaintingSettingViewController.swift */; };
+		8685E1FD2709927000E3B390 /* MemberMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1EC2709927000E3B390 /* MemberMenuViewController.swift */; };
+		8685E1FE2709927000E3B390 /* PaintingRenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1ED2709927000E3B390 /* PaintingRenderViewController.swift */; };
+		8685E1FF2709927000E3B390 /* BrushToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1EE2709927000E3B390 /* BrushToolsViewController.swift */; };
+		8685E2002709927000E3B390 /* AgoraSmallRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1F02709927000E3B390 /* AgoraSmallRenderUIController.swift */; };
+		8685E2012709927000E3B390 /* AgoraSmallRenderUIController+EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1F12709927000E3B390 /* AgoraSmallRenderUIController+EventHandler.swift */; };
+		8685E2022709927000E3B390 /* AgoraSmallRenderUIController+UIEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1F22709927000E3B390 /* AgoraSmallRenderUIController+UIEvent.swift */; };
+		8685E2032709927000E3B390 /* AgoraSmallRenderUIController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1F32709927000E3B390 /* AgoraSmallRenderUIController+Data.swift */; };
+		8685E2042709927000E3B390 /* AgoraEduUI+Small.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8685E1F42709927000E3B390 /* AgoraEduUI+Small.swift */; };
 		86A3D1FE2609F1F20066BA1E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 86A3D1E92609F1960066BA1E /* Localizable.strings */; };
 		86A3D1FF2609F1F20066BA1E /* reward.gif in Resources */ = {isa = PBXBuildFile; fileRef = 86A3D1EC2609F1960066BA1E /* reward.gif */; };
 		86A3D2082609F21E0066BA1E /* AgoraEduUI.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 86A3D1F62609F1BE0066BA1E /* AgoraEduUI.bundle */; };
@@ -69,8 +80,6 @@
 		8608262E26A55A1E00E8FDE2 /* AgoraEduUI+Lecture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraEduUI+Lecture.swift"; sourceTree = "<group>"; };
 		8608262F26A55A1E00E8FDE2 /* AgoraEduUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduUI.swift; sourceTree = "<group>"; };
 		8608263026A55A1E00E8FDE2 /* AgoraEduUI+1V1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraEduUI+1V1.swift"; sourceTree = "<group>"; };
-		8608263126A55A1E00E8FDE2 /* AgoraEduUI+Small.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraEduUI+Small.swift"; sourceTree = "<group>"; };
-		8619377A26305072008A11D4 /* AgoraSmallRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSmallRenderUIController.swift; sourceTree = "<group>"; };
 		8619377B26305072008A11D4 /* Agora1V1RenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Agora1V1RenderUIController.swift; sourceTree = "<group>"; };
 		8619377D26305072008A11D4 /* AgoraScreenUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraScreenUIController.swift; sourceTree = "<group>"; };
 		8619377E26305072008A11D4 /* AgoraUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUIController.swift; sourceTree = "<group>"; };
@@ -79,12 +88,25 @@
 		8619378126305072008A11D4 /* AgoraRoomUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRoomUIController.swift; sourceTree = "<group>"; };
 		8619378326305072008A11D4 /* AgoraUserListUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserListUIController.swift; sourceTree = "<group>"; };
 		86193865263162C4008A11D4 /* AgoraRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderUIController.swift; sourceTree = "<group>"; };
-		86193866263162C4008A11D4 /* AgoraSmallRenderUIController+Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+Data.swift"; sourceTree = "<group>"; };
-		86193867263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+EventHandler.swift"; sourceTree = "<group>"; };
-		86193868263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+UIEvent.swift"; sourceTree = "<group>"; };
 		8644B3D926EF3BEC00455F67 /* AgoraUIExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUIExtension.swift; sourceTree = "<group>"; };
 		864CCE09262AD86000C10042 /* AgoraWhiteBoardUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraWhiteBoardUIController.swift; sourceTree = "<group>"; };
 		867451AB26BA3322007E06E4 /* AgoraEduUI.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AgoraEduUI.xcassets; sourceTree = "<group>"; };
+		8685E1E22709927000E3B390 /* AgoraEduUI+Painting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraEduUI+Painting.swift"; sourceTree = "<group>"; };
+		8685E1E42709927000E3B390 /* AgoraMemberItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraMemberItemCell.swift; sourceTree = "<group>"; };
+		8685E1E52709927000E3B390 /* PaintingToolBoxView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaintingToolBoxView.swift; sourceTree = "<group>"; };
+		8685E1E62709927000E3B390 /* PaintingSmallToolsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaintingSmallToolsView.swift; sourceTree = "<group>"; };
+		8685E1E72709927000E3B390 /* PaintingClassRoomStatusBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaintingClassRoomStatusBar.swift; sourceTree = "<group>"; };
+		8685E1E82709927000E3B390 /* BrushToolItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrushToolItemCell.swift; sourceTree = "<group>"; };
+		8685E1EA2709927000E3B390 /* PaintingRoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaintingRoomViewController.swift; sourceTree = "<group>"; };
+		8685E1EB2709927000E3B390 /* PaintingSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaintingSettingViewController.swift; sourceTree = "<group>"; };
+		8685E1EC2709927000E3B390 /* MemberMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemberMenuViewController.swift; sourceTree = "<group>"; };
+		8685E1ED2709927000E3B390 /* PaintingRenderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaintingRenderViewController.swift; sourceTree = "<group>"; };
+		8685E1EE2709927000E3B390 /* BrushToolsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrushToolsViewController.swift; sourceTree = "<group>"; };
+		8685E1F02709927000E3B390 /* AgoraSmallRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSmallRenderUIController.swift; sourceTree = "<group>"; };
+		8685E1F12709927000E3B390 /* AgoraSmallRenderUIController+EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+EventHandler.swift"; sourceTree = "<group>"; };
+		8685E1F22709927000E3B390 /* AgoraSmallRenderUIController+UIEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+UIEvent.swift"; sourceTree = "<group>"; };
+		8685E1F32709927000E3B390 /* AgoraSmallRenderUIController+Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+Data.swift"; sourceTree = "<group>"; };
+		8685E1F42709927000E3B390 /* AgoraEduUI+Small.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraEduUI+Small.swift"; sourceTree = "<group>"; };
 		868D62B225EF7A6200E914F2 /* AgoraEduUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		868D62B625EF7A6200E914F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86A3D1EA2609F1960066BA1E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -140,7 +162,6 @@
 				8608262F26A55A1E00E8FDE2 /* AgoraEduUI.swift */,
 				8608262E26A55A1E00E8FDE2 /* AgoraEduUI+Lecture.swift */,
 				8608263026A55A1E00E8FDE2 /* AgoraEduUI+1V1.swift */,
-				8608263126A55A1E00E8FDE2 /* AgoraEduUI+Small.swift */,
 			);
 			path = UIManager;
 			sourceTree = "<group>";
@@ -149,10 +170,6 @@
 			isa = PBXGroup;
 			children = (
 				86193865263162C4008A11D4 /* AgoraRenderUIController.swift */,
-				86193866263162C4008A11D4 /* AgoraSmallRenderUIController+Data.swift */,
-				86193867263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift */,
-				86193868263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift */,
-				8619377A26305072008A11D4 /* AgoraSmallRenderUIController.swift */,
 				8619377B26305072008A11D4 /* Agora1V1RenderUIController.swift */,
 				78658F3F26B0536E00BBADA2 /* AgoraLectureRenderUIController.swift */,
 				78658F3E26B0536E00BBADA2 /* AgoraLectureRenderUIController+Data.swift */,
@@ -196,6 +213,61 @@
 			path = WhiteBoard;
 			sourceTree = "<group>";
 		};
+		8685E1E02709927000E3B390 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				8685E1E12709927000E3B390 /* PaintingSmall */,
+				8685E1EF2709927000E3B390 /* SmallClass */,
+			);
+			path = Scene;
+			sourceTree = "<group>";
+		};
+		8685E1E12709927000E3B390 /* PaintingSmall */ = {
+			isa = PBXGroup;
+			children = (
+				8685E1E22709927000E3B390 /* AgoraEduUI+Painting.swift */,
+				8685E1E32709927000E3B390 /* View */,
+				8685E1E92709927000E3B390 /* ViewController */,
+			);
+			path = PaintingSmall;
+			sourceTree = "<group>";
+		};
+		8685E1E32709927000E3B390 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8685E1E42709927000E3B390 /* AgoraMemberItemCell.swift */,
+				8685E1E52709927000E3B390 /* PaintingToolBoxView.swift */,
+				8685E1E62709927000E3B390 /* PaintingSmallToolsView.swift */,
+				8685E1E72709927000E3B390 /* PaintingClassRoomStatusBar.swift */,
+				8685E1E82709927000E3B390 /* BrushToolItemCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8685E1E92709927000E3B390 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				8685E1EA2709927000E3B390 /* PaintingRoomViewController.swift */,
+				8685E1EB2709927000E3B390 /* PaintingSettingViewController.swift */,
+				8685E1EC2709927000E3B390 /* MemberMenuViewController.swift */,
+				8685E1ED2709927000E3B390 /* PaintingRenderViewController.swift */,
+				8685E1EE2709927000E3B390 /* BrushToolsViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		8685E1EF2709927000E3B390 /* SmallClass */ = {
+			isa = PBXGroup;
+			children = (
+				8685E1F02709927000E3B390 /* AgoraSmallRenderUIController.swift */,
+				8685E1F12709927000E3B390 /* AgoraSmallRenderUIController+EventHandler.swift */,
+				8685E1F22709927000E3B390 /* AgoraSmallRenderUIController+UIEvent.swift */,
+				8685E1F32709927000E3B390 /* AgoraSmallRenderUIController+Data.swift */,
+				8685E1F42709927000E3B390 /* AgoraEduUI+Small.swift */,
+			);
+			path = SmallClass;
+			sourceTree = "<group>";
+		};
 		868D62A825EF7A6200E914F2 = {
 			isa = PBXGroup;
 			children = (
@@ -219,6 +291,7 @@
 		868D62B425EF7A6200E914F2 /* AgoraEduUI */ = {
 			isa = PBXGroup;
 			children = (
+				8685E1E02709927000E3B390 /* Scene */,
 				8608262D26A55A1E00E8FDE2 /* UIManager */,
 				8619377926305072008A11D4 /* Render */,
 				8619377C26305072008A11D4 /* UIController */,
@@ -391,30 +464,41 @@
 				78C44D62262DCC78006BDC7E /* AgoraWhiteBoardUIController+UIEvent.swift in Sources */,
 				8608263326A55A1E00E8FDE2 /* AgoraEduUI.swift in Sources */,
 				786AE1D9262C7EF7002E50F0 /* AgoraBoardStates.swift in Sources */,
-				8619386B263162C4008A11D4 /* AgoraSmallRenderUIController+EventHandler.swift in Sources */,
-				8619378826305072008A11D4 /* AgoraSmallRenderUIController.swift in Sources */,
+				8685E1F92709927000E3B390 /* PaintingClassRoomStatusBar.swift in Sources */,
 				8619378E26305072008A11D4 /* AgoraRoomUIController.swift in Sources */,
 				8644B3DA26EF3BEC00455F67 /* AgoraUIExtension.swift in Sources */,
-				8619386C263162C4008A11D4 /* AgoraSmallRenderUIController+UIEvent.swift in Sources */,
+				8685E2002709927000E3B390 /* AgoraSmallRenderUIController.swift in Sources */,
 				78658F4126B0536F00BBADA2 /* AgoraLectureRenderUIController+EventHandler.swift in Sources */,
-				8608263526A55A1E00E8FDE2 /* AgoraEduUI+Small.swift in Sources */,
 				78C44D63262DCC78006BDC7E /* AgoraWhiteBoardUIController+EventHandler.swift in Sources */,
+				8685E1FD2709927000E3B390 /* MemberMenuViewController.swift in Sources */,
 				8608263226A55A1E00E8FDE2 /* AgoraEduUI+Lecture.swift in Sources */,
+				8685E2042709927000E3B390 /* AgoraEduUI+Small.swift in Sources */,
 				8619378D26305072008A11D4 /* AgoraHandsUpUIController.swift in Sources */,
 				8619378A26305072008A11D4 /* AgoraScreenUIController.swift in Sources */,
+				8685E1FF2709927000E3B390 /* BrushToolsViewController.swift in Sources */,
 				78658F4326B0536F00BBADA2 /* AgoraLectureRenderUIController.swift in Sources */,
 				78C44D64262DCC78006BDC7E /* AgoraWhiteBoardUIController+State.swift in Sources */,
+				8685E1FE2709927000E3B390 /* PaintingRenderViewController.swift in Sources */,
+				8685E1F82709927000E3B390 /* PaintingSmallToolsView.swift in Sources */,
+				8685E1F72709927000E3B390 /* PaintingToolBoxView.swift in Sources */,
 				78658F4226B0536F00BBADA2 /* AgoraLectureRenderUIController+Data.swift in Sources */,
+				8685E1F62709927000E3B390 /* AgoraMemberItemCell.swift in Sources */,
 				78658F4026B0536F00BBADA2 /* AgoraLectureRenderUIController+UIEvent.swift in Sources */,
+				8685E1F52709927000E3B390 /* AgoraEduUI+Painting.swift in Sources */,
+				8685E1FA2709927000E3B390 /* BrushToolItemCell.swift in Sources */,
 				784152BB26529AD900F0A4EC /* AgoraSetUIController.swift in Sources */,
+				8685E1FC2709927000E3B390 /* PaintingSettingViewController.swift in Sources */,
 				8619379026305072008A11D4 /* AgoraUserListUIController.swift in Sources */,
 				8619378926305072008A11D4 /* Agora1V1RenderUIController.swift in Sources */,
 				864CCE0B262AD86000C10042 /* AgoraWhiteBoardUIController.swift in Sources */,
-				8619386A263162C4008A11D4 /* AgoraSmallRenderUIController+Data.swift in Sources */,
+				8685E1FB2709927000E3B390 /* PaintingRoomViewController.swift in Sources */,
 				8608263426A55A1E00E8FDE2 /* AgoraEduUI+1V1.swift in Sources */,
 				8619378C26305072008A11D4 /* AgoraPrivateChatController.swift in Sources */,
+				8685E2012709927000E3B390 /* AgoraSmallRenderUIController+EventHandler.swift in Sources */,
+				8685E2022709927000E3B390 /* AgoraSmallRenderUIController+UIEvent.swift in Sources */,
 				8619378B26305072008A11D4 /* AgoraUIController.swift in Sources */,
 				86193869263162C4008A11D4 /* AgoraRenderUIController.swift in Sources */,
+				8685E2032709927000E3B390 /* AgoraSmallRenderUIController+Data.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -96,8 +96,10 @@ private extension PaintingSettingViewController {
 // MARK: - Creations
 private extension PaintingSettingViewController {
     func createViews() {
-        view.layer.shadowColor = UIColor(rgb: 0x2F4192, alpha: 0.15).cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowColor = UIColor(rgb: 0x2F4192,
+                                         alpha: 0.15).cgColor
+        view.layer.shadowOffset = CGSize(width: 0,
+                                         height: 2)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 6
         
@@ -115,8 +117,11 @@ private extension PaintingSettingViewController {
         
         cameraSwitch = UISwitch()
         cameraSwitch.onTintColor = UIColor(rgb: 0x357BF6)
-        cameraSwitch.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
-        cameraSwitch.addTarget(self, action: #selector(onClickCameraSwitch(_:)), for: .touchUpInside)
+        cameraSwitch.transform = CGAffineTransform(scaleX: 0.75,
+                                                   y: 0.75)
+        cameraSwitch.addTarget(self,
+                               action: #selector(onClickCameraSwitch(_:)),
+                               for: .touchUpInside)
         view.addSubview(cameraSwitch)
         
         directionLabel = UILabel(frame: .zero)
@@ -127,14 +132,22 @@ private extension PaintingSettingViewController {
         
         frontCamButton = UIButton(type: .custom)
         frontCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        frontCamButton.setTitleColor(.white, for: .selected)
+        frontCamButton.setTitleColor(.white,
+                                     for: .selected)
         frontCamButton.setTitleColor(UIColor(rgb: 0xB5B5C9),
                                      for: .normal)
         frontCamButton.setTitle(AgoraKitLocalizedString("FrontText"),
                                 for: .normal)
-        frontCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0xF4F4F8), size: CGSize(width: 1, height: 1)), for: .normal)
-        frontCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0x7B88A0), size: CGSize(width: 1, height: 1)), for: .selected)
-        frontCamButton.addTarget(self, action: #selector(onClickFrontCamera(_:)),
+        frontCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0xF4F4F8),
+                                                  size: CGSize(width: 1,
+                                                               height: 1)),
+                                          for: .normal)
+        frontCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0x7B88A0),
+                                                  size: CGSize(width: 1,
+                                                               height: 1)),
+                                          for: .selected)
+        frontCamButton.addTarget(self,
+                                 action: #selector(onClickFrontCamera(_:)),
                                  for: .touchUpInside)
         frontCamButton.layer.cornerRadius = 4
         frontCamButton.clipsToBounds = true
@@ -142,12 +155,22 @@ private extension PaintingSettingViewController {
         
         backCamButton = UIButton(type: .custom)
         backCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        backCamButton.setTitleColor(.white, for: .selected)
-        backCamButton.setTitleColor(UIColor(rgb: 0xB5B5C9), for: .normal)
-        backCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0xF4F4F8), size: CGSize(width: 1, height: 1)), for: .normal)
-        backCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0x7B88A0), size: CGSize(width: 1, height: 1)), for: .selected)
-        backCamButton.setTitle(AgoraKitLocalizedString("BackText"), for: .normal)
-        backCamButton.addTarget(self, action: #selector(onClickBackCamera(_:)),
+        backCamButton.setTitleColor(.white,
+                                    for: .selected)
+        backCamButton.setTitleColor(UIColor(rgb: 0xB5B5C9),
+                                    for: .normal)
+        backCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0xF4F4F8),
+                                                 size: CGSize(width: 1,
+                                                              height: 1)),
+                                         for: .normal)
+        backCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0x7B88A0),
+                                                 size: CGSize(width: 1,
+                                                              height: 1)),
+                                         for: .selected)
+        backCamButton.setTitle(AgoraKitLocalizedString("BackText"),
+                               for: .normal)
+        backCamButton.addTarget(self,
+                                action: #selector(onClickBackCamera(_:)),
                                 for: .touchUpInside)
         backCamButton.layer.cornerRadius = 4
         backCamButton.clipsToBounds = true
@@ -165,8 +188,11 @@ private extension PaintingSettingViewController {
         
         micSwitch = UISwitch()
         micSwitch.onTintColor = UIColor(rgb: 0x357BF6)
-        micSwitch.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
-        micSwitch.addTarget(self, action: #selector(onClickCameraSwitch(_:)), for: .touchUpInside)
+        micSwitch.transform = CGAffineTransform(scaleX: 0.75,
+                                                y: 0.75)
+        micSwitch.addTarget(self,
+                            action: #selector(onClickCameraSwitch(_:)),
+                            for: .touchUpInside)
         view.addSubview(micSwitch)
         
         audioLabel = UILabel(frame: .zero)
@@ -177,8 +203,11 @@ private extension PaintingSettingViewController {
         
         audioSwitch = UISwitch()
         audioSwitch.onTintColor = UIColor(rgb: 0x357BF6)
-        audioSwitch.transform = CGAffineTransform(scaleX: 0.75, y: 0.75)
-        audioSwitch.addTarget(self, action: #selector(onClickCameraSwitch(_:)), for: .touchUpInside)
+        audioSwitch.transform = CGAffineTransform(scaleX: 0.75,
+                                                  y: 0.75)
+        audioSwitch.addTarget(self,
+                              action: #selector(onClickCameraSwitch(_:)),
+                              for: .touchUpInside)
         view.addSubview(audioSwitch)
         
         let attrs = [
@@ -188,15 +217,22 @@ private extension PaintingSettingViewController {
         let str = NSMutableAttributedString(string: AgoraKitLocalizedString("upload_log"),
                                             attributes: attrs)
         uploadLogButton = UIButton(type: .custom)
-        uploadLogButton.setAttributedTitle(str, for: .normal)
-        uploadLogButton.addTarget(self, action: #selector(onClickUploadLog(_:)), for: .touchUpInside)
+        uploadLogButton.setAttributedTitle(str,
+                                           for: .normal)
+        uploadLogButton.addTarget(self,
+                                  action: #selector(onClickUploadLog(_:)),
+                                  for: .touchUpInside)
         view.addSubview(uploadLogButton)
         
         exitButton = UIButton(type: .custom)
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        exitButton.setTitleColor(.white, for: .normal)
-        exitButton.setTitle(AgoraKitLocalizedString("LeaveText"), for: .normal)
-        exitButton.addTarget(self, action: #selector(onClickExit(_:)), for: .touchUpInside)
+        exitButton.setTitleColor(.white,
+                                 for: .normal)
+        exitButton.setTitle(AgoraKitLocalizedString("LeaveText"),
+                            for: .normal)
+        exitButton.addTarget(self,
+                             action: #selector(onClickExit(_:)),
+                             for: .touchUpInside)
         exitButton.backgroundColor = UIColor(rgb: 0x191919)
         exitButton.layer.cornerRadius = 6
         exitButton.clipsToBounds = true

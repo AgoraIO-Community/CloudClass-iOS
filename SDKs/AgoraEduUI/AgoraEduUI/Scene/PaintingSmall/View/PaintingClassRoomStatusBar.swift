@@ -42,7 +42,8 @@ private extension PaintingClassRoomStatusBar {
         layer.borderColor = UIColor(rgb: 0xECECF1).cgColor
         layer.cornerRadius = 2.0
         
-        netStateView = AgoraBaseUIImageView(image: AgoraUIImage(object: self, name: "ic_network_unknow"))
+        netStateView = AgoraBaseUIImageView(image: AgoraUIImage(object: self,
+                                                                name: "ic_network_unknow"))
         addSubview(netStateView)
         
         timeLabel = AgoraBaseUILabel()

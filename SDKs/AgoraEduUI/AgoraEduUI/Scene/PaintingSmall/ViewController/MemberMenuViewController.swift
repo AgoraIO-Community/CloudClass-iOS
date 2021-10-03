@@ -88,28 +88,50 @@ private extension MemberMenuViewController {
         view.addSubview(contentView)
         
         micButton = UIButton(type: .custom)
-        micButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        micButton.setBackgroundImage(AgoraUIImage(object: self, name: "ic_member_menu_mic"), for: .normal)
+        micButton.frame = CGRect(x: 0,
+                                 y: 0,
+                                 width: 40,
+                                 height: 40)
+        micButton.setBackgroundImage(AgoraUIImage(object: self,
+                                                  name: "ic_member_menu_mic"),
+                                     for: .normal)
         contentView.addArrangedSubview(micButton)
         
         cameraButton = UIButton(type: .custom)
         cameraButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        cameraButton.setBackgroundImage(AgoraUIImage(object: self, name: "ic_member_menu_camera"), for: .normal)
+        cameraButton.setBackgroundImage(AgoraUIImage(object: self,
+                                                     name: "ic_member_menu_camera"),
+                                        for: .normal)
         contentView.addArrangedSubview(cameraButton)
         
         stageButton = UIButton(type: .custom)
-        stageButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        stageButton.setBackgroundImage(AgoraUIImage(object: self, name: "ic_member_menu_stage"), for: .normal)
+        stageButton.frame = CGRect(x: 0,
+                                   y: 0,
+                                   width: 40,
+                                   height: 40)
+        stageButton.setBackgroundImage(AgoraUIImage(object: self,
+                                                    name: "ic_member_menu_stage"),
+                                       for: .normal)
         contentView.addArrangedSubview(stageButton)
         
         signButton = UIButton(type: .custom)
-        signButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        signButton.setBackgroundImage(AgoraUIImage(object: self, name: "ic_member_menu_auth"), for: .normal)
+        signButton.frame = CGRect(x: 0,
+                                  y: 0,
+                                  width: 40,
+                                  height: 40)
+        signButton.setBackgroundImage(AgoraUIImage(object: self,
+                                                   name: "ic_member_menu_auth"),
+                                      for: .normal)
         contentView.addArrangedSubview(signButton)
         
         priseButton = UIButton(type: .custom)
-        priseButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        priseButton.setBackgroundImage(AgoraUIImage(object: self, name: "ic_member_menu_star"), for: .normal)
+        priseButton.frame = CGRect(x: 0,
+                                   y: 0,
+                                   width: 40,
+                                   height: 40)
+        priseButton.setBackgroundImage(AgoraUIImage(object: self,
+                                                    name: "ic_member_menu_star"),
+                                       for: .normal)
         contentView.addArrangedSubview(priseButton)
     }
     

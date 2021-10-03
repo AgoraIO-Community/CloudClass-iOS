@@ -5,12 +5,11 @@
 //  Created by Jonathan on 2021/9/29.
 //
 
-import UIKit
 import SnapKit
+import UIKit
 
 // MARK: - BrushToolItemCell
 class BrushToolItemCell: UICollectionViewCell {
-    
     var imageView: UIImageView!
     
     private var colorView: UIView!
@@ -49,8 +48,8 @@ class BrushToolItemCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }
+
 // MARK: - BrushTextSizeItemCell
 class BrushTextSizeItemCell: UICollectionViewCell {
     
@@ -74,8 +73,8 @@ class BrushTextSizeItemCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }
+
 // MARK: - BrushSizeItemCell
 class BrushSizeItemCell: UICollectionViewCell {
     
@@ -108,9 +107,9 @@ class BrushSizeItemCell: UICollectionViewCell {
         sizeView.center = self.center
     }
 }
+
 // MARK: - BrushColorItemCell
 class BrushColorItemCell: UICollectionViewCell {
-    
     var frontView: UIView!
     
     var backView: UIView!
@@ -155,5 +154,4 @@ class BrushColorItemCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }

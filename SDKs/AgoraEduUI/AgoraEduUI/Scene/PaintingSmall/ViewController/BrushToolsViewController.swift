@@ -106,7 +106,8 @@ class BrushToolsViewController: UIViewController {
 // MARK: - UICollectionViewDelegate
 extension BrushToolsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
         if collectionView == toolsCollectionView {
             return tools.count
         } else if collectionView == sizeCollectionView {
@@ -124,61 +125,80 @@ extension BrushToolsViewController: UICollectionViewDelegate, UICollectionViewDa
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == toolsCollectionView {
-            let cell = collectionView.dequeueReusableCell(withClass: BrushToolItemCell.self, for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withClass: BrushToolItemCell.self,
+                                                          for: indexPath)
             let tool = tools[indexPath.row]
             var image: UIImage?
             switch tool {
             case .arrow:
-                image = AgoraUIImage(object: self, name: "ic_brush_arrow")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_arrow")?.withRenderingMode(.alwaysTemplate)
             case .area:
-                image = AgoraUIImage(object: self, name: "ic_brush_area")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_area")?.withRenderingMode(.alwaysTemplate)
             case .text:
-                image = AgoraUIImage(object: self, name: "ic_brush_text")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_text")?.withRenderingMode(.alwaysTemplate)
             case .rubber:
-                image = AgoraUIImage(object: self, name: "ic_brush_rubber")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_rubber")?.withRenderingMode(.alwaysTemplate)
             case .laser:
-                image = AgoraUIImage(object: self, name: "ic_brush_laser")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_laser")?.withRenderingMode(.alwaysTemplate)
             case .pencil:
-                image = AgoraUIImage(object: self, name: "ic_brush_pencil")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_pencil")?.withRenderingMode(.alwaysTemplate)
             case .line:
-                image = AgoraUIImage(object: self, name: "ic_brush_line")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_line")?.withRenderingMode(.alwaysTemplate)
             case .rect:
-                image = AgoraUIImage(object: self, name: "ic_brush_rect")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_rect")?.withRenderingMode(.alwaysTemplate)
             case .cycle:
-                image = AgoraUIImage(object: self, name: "ic_brush_cycle")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_cycle")?.withRenderingMode(.alwaysTemplate)
             default:
-                image = AgoraUIImage(object: self, name: "ic_brush_arrow")?.withRenderingMode(.alwaysTemplate)
+                image = AgoraUIImage(object: self,
+                                     name: "ic_brush_arrow")?.withRenderingMode(.alwaysTemplate)
             }
             cell.imageView.image = image
             cell.aSelected = (tool == selectedTool)
             return cell
         } else if collectionView == sizeCollectionView {
             if selectedTool == .text {
-                let cell = collectionView.dequeueReusableCell(withClass: BrushTextSizeItemCell.self, for: indexPath)
+                let cell = collectionView.dequeueReusableCell(withClass: BrushTextSizeItemCell.self,
+                                                              for: indexPath)
                 return cell
             } else if selectedTool == .pencil {
-                let cell = collectionView.dequeueReusableCell(withClass: BrushSizeItemCell.self, for: indexPath)
+                let cell = collectionView.dequeueReusableCell(withClass: BrushSizeItemCell.self,
+                                                              for: indexPath)
                 
                 return cell
             } else {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(BrushSizeItemCell.self), for: indexPath) as! BrushSizeItemCell
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(BrushSizeItemCell.self),
+                                                              for: indexPath) as! BrushSizeItemCell
                 return cell
             }
         } else if collectionView == colorCollectionView {
-            let cell = collectionView.dequeueReusableCell(withClass: BrushColorItemCell.self, for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withClass: BrushColorItemCell.self,
+                                                          for: indexPath)
             cell.color = colors[indexPath.row]
             cell.aSelected = (indexPath == colorIndex)
             return cell
         } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(BrushColorItemCell.self), for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(BrushColorItemCell.self),
+                                                          for: indexPath)
             return cell
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: false)
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath,
+                                    animated: false)
         if collectionView == toolsCollectionView {
             let tool = tools[indexPath.row]
             if selectedTool != tool {
@@ -204,7 +224,9 @@ extension BrushToolsViewController: UICollectionViewDelegate, UICollectionViewDa
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == toolsCollectionView {
             return CGSize(width: 56, height: 56)
         } else if collectionView == sizeCollectionView {
@@ -218,19 +240,29 @@ extension BrushToolsViewController: UICollectionViewDelegate, UICollectionViewDa
                 return .zero
             }
         } else if collectionView == colorCollectionView {
-            return CGSize(width: 32, height: 32)
+            return CGSize(width: 32,
+                          height: 32)
         } else {
-            return CGSize(width: 0, height: 0)
+            return CGSize(width: 0,
+                          height: 0)
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
         if collectionView == toolsCollectionView {
-            return UIEdgeInsets(top: 12, left: 8, bottom: 0, right: 8)
+            return UIEdgeInsets(top: 12,
+                                left: 8,
+                                bottom: 0,
+                                right: 8)
         } else if collectionView == sizeCollectionView {
             return .zero
         } else if collectionView == colorCollectionView {
-            return UIEdgeInsets(top: 12, left: 10, bottom: 0, right: 10)
+            return UIEdgeInsets(top: 12,
+                                left: 10,
+                                bottom: 0,
+                                right: 10)
         } else {
             return .zero
         }
@@ -239,8 +271,10 @@ extension BrushToolsViewController: UICollectionViewDelegate, UICollectionViewDa
 // MARK: - Creations
 private extension BrushToolsViewController {
     func createViews() {
-        view.layer.shadowColor = UIColor(rgb: 0x2F4192, alpha: 0.15).cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
+        view.layer.shadowColor = UIColor(rgb: 0x2F4192,
+                                         alpha: 0.15).cgColor
+        view.layer.shadowOffset = CGSize(width: 0,
+                                         height: 2)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 6
         
@@ -265,7 +299,7 @@ private extension BrushToolsViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         sizeCollectionView = UICollectionView(frame: .zero,
-                                          collectionViewLayout: layout)
+                                              collectionViewLayout: layout)
         sizeCollectionView.showsHorizontalScrollIndicator = false
         sizeCollectionView.backgroundColor = .white
         sizeCollectionView.bounces = false

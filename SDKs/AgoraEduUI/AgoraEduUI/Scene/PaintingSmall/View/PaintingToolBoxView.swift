@@ -5,10 +5,10 @@
 //  Created by HeZhengQing on 2021/9/28.
 //
 
-import UIKit
-import SnapKit
-import SwifterSwift
 import AgoraUIEduBaseViews
+import SwifterSwift
+import SnapKit
+import UIKit
 
 // MARK: - BrushToolItemCell
 class ToolBoxItemCell: UICollectionViewCell {
@@ -62,7 +62,7 @@ enum PaintingToolBoxTool {
     case answerSheet
 }
 
-protocol PaintingToolBoxViewDelegate: class {
+protocol PaintingToolBoxViewDelegate: NSObjectProtocol {
     func toolBoxDidSelectTool(_ tool: PaintingToolBoxTool)
 }
 
@@ -145,29 +145,39 @@ extension PaintingToolBoxView: UICollectionViewDelegate, UICollectionViewDataSou
         delegate?.toolBoxDidSelectTool(tool)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: itemWidth, height: itemHeight)
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: itemWidth,
+                      height: itemHeight)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return kGapSize
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return kGapSize
     }
     
-    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        didHighlightItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
         cell?.backgroundColor = UIColor(rgb: 0xF9F9FC)
     }
     
-    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        didUnhighlightItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath)
         cell?.backgroundColor = .white
     }
     
-    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+    func collectionView(_ collectionView: UICollectionView,
+                        shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         return true
     }
     
@@ -175,7 +185,8 @@ extension PaintingToolBoxView: UICollectionViewDelegate, UICollectionViewDataSou
 // MARK: - Creations
 extension PaintingToolBoxView {
     func createViews() {
-        layer.shadowColor = UIColor(rgb: 0x2F4192, alpha: 0.15).cgColor
+        layer.shadowColor = UIColor(rgb: 0x2F4192,
+                                    alpha: 0.15).cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 1
         layer.shadowRadius = 6
