@@ -50,7 +50,7 @@ import Foundation
 
 @objc public enum AgoraEduContextRoomType: Int {
     // 场景：1V1、小班课
-    case oneToOne = 0, lecture = 2, small = 4
+    case oneToOne = 0, lecture = 2, small = 4, paintingSmall = 5
 }
 
 @objc public enum AgoraEduContextNetworkQuality: Int {

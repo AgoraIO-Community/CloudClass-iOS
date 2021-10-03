@@ -185,6 +185,9 @@ static AgoraClassroomSDK *manager = nil;
             case AgoraEduRoomTypeLecture:
                 roomType = AgoraEduContextRoomTypeLecture;
                 break;
+            case AgoraEduRoomTypePaintingSmall:
+                roomType = AgoraEduContextRoomTypePaintingSmall;
+                break;
             default:
                 assert("Enum RoomType error");
                 break;

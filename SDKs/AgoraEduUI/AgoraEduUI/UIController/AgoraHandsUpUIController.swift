@@ -31,6 +31,7 @@ class AgoraHandsUpUIController: NSObject, AgoraUIController {
     
     init(viewType: AgoraEduContextRoomType,
          contextProvider: AgoraControllerContextProvider) {
+        self.containerView.backgroundColor = .orange
         self.viewType = viewType
         self.contextProvider = contextProvider
         

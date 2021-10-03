@@ -82,7 +82,7 @@ public class AgoraUIUserView: AgoraBaseUIView {
         label.agora_width = 20
         label.agora_height = 15
         
-        let img = AgoraKitImage("star")
+        let img = AgoraKitImage("member_prise_star")
         let tag = AgoraBaseUIImageView(image: img)
         bg.addSubview(tag)
         let imgSize = AgoraKitDeviceAssistant.OS.isPad ? CGSize(width: 22, height: 22) : CGSize(width: 13, height: 13)

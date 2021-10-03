@@ -111,4 +111,3 @@ class AboutTableCell: AgoraBaseUITableViewCell {
         infoLabel.agora_safe_right = LoginConfig.about_cell_info_right
     }
 }
-

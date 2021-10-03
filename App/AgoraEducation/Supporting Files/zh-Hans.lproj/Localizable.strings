@@ -41,9 +41,13 @@ Login_version = "Version: Flexible Classroom";
 Login_onetoone = "一对一课堂";
 Login_small = "互动小班课";
 Login_lecture = "大班课";
+login_painting_small = "美术小班课";
 Login_warn = "只能输入字母、数字";
 Login_duration_title = "时长";
 Login_duration_holder = "30分钟";
+login_title_role = "角色";
+login_role_teacher = "老师";
+login_role_student = "学生";
 
 About_title = "关于";
 About_close = "关闭";

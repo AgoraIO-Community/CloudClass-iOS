@@ -95,6 +95,7 @@ extension AgoraWhiteBoardUIController: AgoraUserListUIControllerDelegate {
 extension AgoraWhiteBoardUIController {
     func noBoardPermissionTools(_ viewType: AgoraEduContextRoomType) {
         switch viewType {
+        case .paintingSmall: fallthrough
         case .small: fallthrough
         case .lecture:
             let studentListImage = getImage("icon-花名册-default")

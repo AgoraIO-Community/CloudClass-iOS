@@ -39,6 +39,8 @@ class AgoraUserListUIController: NSObject, AgoraUIController {
             cellType = region == "CN" ? .bigCn : .bigNonCn
         case .small:
             cellType = region == "CN" ? .smallCn : .smallNonCn
+        case .paintingSmall:
+            cellType = region == "CN" ? .smallCn : .smallNonCn
         default:
             fatalError()
         }
