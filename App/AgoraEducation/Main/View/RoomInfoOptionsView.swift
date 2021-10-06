@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RoomInfoOptionsView: AgoraBaseUIView {
+class RoomInfoOptionsView: AgoraBaseUIView, UITableViewDelegate, UITableViewDataSource {
         
     var tableView: UITableView!
     
@@ -56,14 +56,12 @@ class RoomInfoOptionsView: AgoraBaseUIView {
         isHidden = true
         onSelected = nil
     }
-}
-
-extension RoomInfoOptionsView: UITableViewDelegate, UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(RoomInfoOptionCell.self)) as? RoomInfoOptionCell
         cell?.infoLabel.text = dataSource[indexPath.row]
         let color = (selectedIndex == indexPath.row) ? UIColor(hexString: "#357BF6") : UIColor(hexString: "#191919")
@@ -76,6 +74,10 @@ extension RoomInfoOptionsView: UITableViewDelegate, UITableViewDataSource {
         onSelected?(indexPath.row)
     }
 }
+
+//extension RoomInfoOptionsView:  {
+//
+//}
 
 // MARK: - Creations
 extension RoomInfoOptionsView {

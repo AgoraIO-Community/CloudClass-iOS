@@ -11,6 +11,8 @@ def libVersion
   pod "Whiteboard", "2.13.19"
   pod "AgoraRtcEngine_iOS", "3.4.6"
   pod "AgoraRtm_iOS", "1.4.8"
+  pod "SnapKit", "5.0.1"
+  pod "SwifterSwift", "5.2.0" 
 end
 
 def openSourceLibs
@@ -22,12 +24,11 @@ end
 
 def sourcePod
   # close source libs
+  pod 'AgoraRte', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
   pod 'AgoraEduCorePuppet', :path => '../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
   pod 'AgoraEduCore', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
   pod 'AgoraActionProcess', :path => '../../cloudclass-ios/SDKs/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
   pod 'AgoraRx', :path => '../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
-  pod 'AgoraLog', :path => '../../cloudclass-ios/SDKs/Modules/AgoraLog/AgoraLog.podspec'
-  pod 'EduSDK', :path => '../../cloudclass-ios/SDKs/Modules/EduSDK/EduSDK.podspec'
   pod 'AgoraWhiteBoard', :path => '../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
   pod 'AgoraReport', :path => '../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
   
