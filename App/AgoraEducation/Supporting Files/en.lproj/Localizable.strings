@@ -42,10 +42,14 @@ Login_enter = "Enter";
 Login_version = "Version: Flexible Classroom";
 Login_onetoone = "One to One Classroom";
 Login_small = "Smart Classroom";
+login_painting_small = "Painting Classroom";
 Login_lecture = "Lecture Hall";
 Login_warn = "Letter or number only";
 Login_duration_title = "Duration";
 Login_duration_holder = "30mins";
+login_title_role = "Role";
+login_role_teacher = "teacher";
+login_role_student = "Student";
 
 About_title = "About";
 About_close = "Close";

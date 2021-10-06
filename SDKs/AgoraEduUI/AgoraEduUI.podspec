@@ -33,4 +33,7 @@ Pod::Spec.new do |spec|
   spec.dependency "AgoraUIBaseViews"
   spec.dependency "AgoraExtApp"
   spec.dependency "AgoraWidget"
+  spec.dependency "SnapKit"
+  spec.dependency "SwifterSwift"
+  
 end

@@ -37,6 +37,19 @@ ChatMuteTagText = "You are not allowed to send messages in the chat box";
 MuteBoardText = "Your cannot use the whiteboard tools.";
 UnMuteBoardText = "You can now use the whiteboard tools.";
 
+// tool box
+toolbox_cloud_storage = "Cloud storage";
+
+toolbox_save_borad = "Save borad";
+
+toolbox_record_class = "Record";
+
+toolbox_vote = "Vote";
+
+toolbox_count_down = "Count down";
+
+toolbox_answer_sheet = "Answer sheet";
+
 // Set
 SetText = "Set";
 CameraText = "Camera";
@@ -46,6 +59,7 @@ BackText = "Back";
 MicrophoneText = "Microphone";
 SpeakerText = "Speaker";
 LeaveText = "Leave Classroom";
+upload_log = "upload log";
 UploadLog = "Logs sent succcesfully!";
 
 // Toast

@@ -31,6 +31,8 @@ import AgoraWidget
     var handsUp: AgoraHandsUpUIController?
     var privateChat: AgoraPrivateChatController?
     var userList: AgoraUserListUIController?
+    // painting small
+    var paintingSmall: PaintingRoomViewController?
     
     // variable
     var isFullScreen = false {
@@ -46,6 +48,8 @@ import AgoraWidget
                 layoutSmallView()
             case .lecture:
                 layoutLectureView(isFullScreen: isFullScreen)
+            case .paintingSmall:
+                layoutPaintingView()
             @unknown default:
                 break
             }
@@ -65,6 +69,8 @@ import AgoraWidget
                 layoutSmallView()
             case .lecture:
                 layoutLectureView(hasCoHosts: hasCoHosts)
+            case .paintingSmall:
+                layoutPaintingView()
             @unknown default:
                 break
             }
@@ -80,6 +86,8 @@ import AgoraWidget
                 break
             case .small:
                 layoutSmallView()
+            case .paintingSmall:
+                layoutPaintingView()
             @unknown default:
                 break
             }
@@ -165,6 +173,18 @@ import AgoraWidget
                                                       contextProvider: self,
                                                       region: region)
             self.userList?.delegate = whiteBoard
+        case .paintingSmall:
+            
+            self.handsUp = AgoraHandsUpUIController(viewType: viewType,
+                                                    contextProvider: self)
+            
+            self.privateChat = AgoraPrivateChatController(viewType: viewType,
+                                                          contextProvider: self)
+            
+            self.userList = AgoraUserListUIController(viewType: viewType,
+                                                      contextProvider: self,
+                                                      region: region)
+            self.userList?.delegate = whiteBoard
         @unknown default:
             break
         }
@@ -223,6 +243,8 @@ import AgoraWidget
             addSmallContainerViews()
         case .lecture:
             addLectureContainerViews()
+        case .paintingSmall:
+            addPaintingContainerViews()
         @unknown default:
             break
         }
@@ -236,6 +258,8 @@ import AgoraWidget
             layoutSmallContainerViews()
         case .lecture:
             layoutLectureContainerViews()
+        case .paintingSmall:
+            layoutPaintingContainerViews()
         @unknown default:
             break
         }

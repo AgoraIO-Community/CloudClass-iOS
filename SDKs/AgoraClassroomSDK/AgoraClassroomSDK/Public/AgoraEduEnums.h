@@ -42,6 +42,8 @@ typedef NS_ENUM(NSInteger, AgoraEduMediaEncryptionMode) {
      @since v3.3.1
      */
     AgoraEduMediaEncryptionModeAES256GCM = 6,
+    AgoraEduMediaEncryptionModeAES128GCM2 = 7,
+    AgoraEduMediaEncryptionModeAES256GCM2 = 8,
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduMirrorMode) {
@@ -62,6 +64,7 @@ typedef NS_ENUM(NSInteger, AgoraEduBoardFitMode) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduRoleType) {
+    AgoraEduRoleTypeTeacher = 1,
     AgoraEduRoleTypeStudent = 2,
 };
 
@@ -69,6 +72,7 @@ typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
     AgoraEduRoomTypeOneToOne   = 0,
     AgoraEduRoomTypeLecture    = 2,
     AgoraEduRoomTypeSmall      = 4,
+    AgoraEduRoomTypePaintingSmall = 6,
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduStreamState) {

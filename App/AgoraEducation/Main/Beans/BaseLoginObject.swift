@@ -45,43 +45,19 @@ enum FIELD_TYPE: String {
     }
 }
 
-enum Region_Type: String,CaseIterable {
-    case CN
-    case NA
-    case EU
-    case AP
-    
-    static func allTypes() -> Array<String> {
-        var arr: Array<String> = []
-        Region_Type.allCases.forEach{arr.append($0.rawValue)}
-        return arr
-    }
-}
-
 class LoginConfig {
-    static let ClassTypes: Array<(AgoraEduRoomType, String)> = [(AgoraEduRoomType.oneToOne, NSLocalizedString("Login_onetoone", comment: "")),
-                                                                (AgoraEduRoomType.small, NSLocalizedString("Login_small", comment: "")),
-                                                                (AgoraEduRoomType.lecture, NSLocalizedString("Login_lecture", comment: ""))]
     
-    static let EncryptionTypes: Array<(AgoraEduMediaEncryptionMode,String)> = [(.none,"None"),
-                                                                               (.AES128XTS,"aes-128-xts"),
-                                                                               (.AES128ECB,"aes-128-ecb"),
-                                                                               (.AES256XTS,"aes-256-xts"),
-                                                                               (.SM4128ECB,"sm4-128-ecb"),
-                                                                               (.AES128GCM,"aes-128-gcm"),
-                                                                               (.AES256GCM,"aes-256-xts")]
-    
-    static let AboutInfoList: Array<(String,Any?)> =
-        [(NSLocalizedString("About_privacy", comment: ""), URL(string: NSLocalizedString("Privacy_url", comment: ""))),
-         (NSLocalizedString("About_terms", comment: ""), URL(string: NSLocalizedString("Terms_url", comment: ""))),
-         (NSLocalizedString("About_disclaimer", comment: ""),  DisclaimerView(frame: .zero)),
-         (NSLocalizedString("About_register", comment: ""), URL(string: NSLocalizedString("Signup_url", comment: ""))),
-         (NSLocalizedString("About_version_time", comment: ""),  version_time),
-         (NSLocalizedString("About_sdk_version", comment: ""),  sdk_version),
-         (NSLocalizedString("About_class_version", comment: ""), class_version)]
+    static let AboutInfoList: Array<(String,Any?)> = [
+        (NSLocalizedString("About_privacy", comment: ""), URL(string: NSLocalizedString("Privacy_url", comment: ""))),
+        (NSLocalizedString("About_terms", comment: ""), URL(string: NSLocalizedString("Terms_url", comment: ""))),
+        (NSLocalizedString("About_disclaimer", comment: ""),  DisclaimerView(frame: .zero)),
+        (NSLocalizedString("About_register", comment: ""), URL(string: NSLocalizedString("Signup_url", comment: ""))),
+        (NSLocalizedString("About_version_time", comment: ""),  version_time),
+        (NSLocalizedString("About_sdk_version", comment: ""),  sdk_version),
+        (NSLocalizedString("About_class_version", comment: ""), class_version)
+    ]
     
     static let version_time: String = KeyCenter.publishDate()
-    static let RegionList: Array<String> = Region_Type.allTypes()
     
     static let sdk_version: String = KeyCenter.rtcVersion()
     static let class_version: String = "Ver)"
