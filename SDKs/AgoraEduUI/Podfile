@@ -29,6 +29,6 @@ target 'AgoraEduUI' do
   openSourceLibs
   sourcePod
 
-  pod 'SnapKit'
-  pod 'SwifterSwift'
+  pod 'SnapKit', "5.0.1"
+  pod 'SwifterSwift', "5.2.0" 
 end

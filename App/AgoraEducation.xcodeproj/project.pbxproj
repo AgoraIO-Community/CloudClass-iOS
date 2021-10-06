@@ -40,6 +40,7 @@
 		78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */; };
 		78DFB69925AEE20B00B01906 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68B25AEE20B00B01906 /* md5.cpp */; };
 		8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */; };
+		8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 78136271242C81ED00B7D1FE /* libz.tbd */; };
 		86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 86F80251262589AF00364FFE /* CountDownExtApp.m */; };
 		AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */; };
 		AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */; };
@@ -159,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				75D36FB810CB94F4AEF8D9A2 /* Pods_AgoraEducation.framework in Frameworks */,
+				8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */,
 				787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
