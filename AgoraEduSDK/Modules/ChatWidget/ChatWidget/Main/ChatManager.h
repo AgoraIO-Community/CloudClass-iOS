@@ -60,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,strong) NSString* chatroomAnnouncement;
 @property (nonatomic,weak) id<ChatManagerDelegate> delegate;
 @property (nonatomic) ChatRoomState state;
+@property (nonatomic) BOOL hasNewMsgs;
 @end
 
 NS_ASSUME_NONNULL_END

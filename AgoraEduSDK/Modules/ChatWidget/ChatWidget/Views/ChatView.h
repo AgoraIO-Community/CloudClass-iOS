@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,weak) id<ChatViewDelegate> delegate;
 @property (nonatomic,strong) NSString* announcement;
 @property (nonatomic,strong) ChatBar* chatBar;
-@property (nonatomic,strong) ChatManager* chatManager;
+@property (nonatomic,weak) ChatManager* chatManager;
 - (void)updateMsgs:(NSMutableArray<EMMessage*>*)msgArray;
 - (void)scrollToBottomRow;
 @end

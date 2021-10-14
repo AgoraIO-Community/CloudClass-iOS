@@ -21,6 +21,8 @@
 
 @property (nonatomic, strong) UILabel *nameLabel;
 
+@property (nonatomic, strong) UILabel *timeLabel;
+
 @property (nonatomic, strong) EMMessageStatusView *statusView;
 
 @property (nonatomic, strong) UIButton *readReceiptBtn;//阅读回执按钮
@@ -98,9 +100,14 @@
     [self.contentView addSubview:_avatarView];
     
     _nameLabel = [[UILabel alloc] init];
-    _nameLabel.font = [UIFont systemFontOfSize:13];
-    _nameLabel.textColor = [UIColor grayColor];
+    _nameLabel.font = [UIFont systemFontOfSize:12];
+    _nameLabel.textColor = [UIColor blackColor];
     [self.contentView addSubview:_nameLabel];
+    
+    _timeLabel = [[UILabel alloc] init];
+    _timeLabel.font = [UIFont systemFontOfSize:10];
+    _timeLabel.textColor = [UIColor colorWithRed:123/255.0 green:136/255.0 blue:160/255.0 alpha:1.0];
+    [self.contentView addSubview:_timeLabel];
     _avatarView.image = [UIImage imageNamed:@"user_avatar_me"];
     
     _roleTag = [[UITextField alloc] init];
@@ -133,6 +140,11 @@
             make.centerY.equalTo(self.avatarView);
             make.right.equalTo(_nameLabel.mas_left).offset(-6);
         }];
+        [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.nameLabel);
+            make.right.equalTo(self.roleTag.mas_left).offset(-6);
+        }];
+        _timeLabel.textAlignment = NSTextAlignmentRight;
     } else {
         [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.contentView).offset(5);
@@ -148,6 +160,11 @@
             make.centerY.equalTo(self.avatarView);
             make.left.equalTo(_nameLabel.mas_right).offset(6);
         }];
+        [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.nameLabel);
+            make.left.equalTo(self.roleTag.mas_right).offset(6);
+        }];
+        _timeLabel.textAlignment = NSTextAlignmentRight;
     }
     
     _bubbleView = [self _getBubbleViewWithType:aType];
@@ -250,6 +267,10 @@
     _model = model;
     self.bubbleView.model = model;
     self.nameLabel.text = model.emModel.from;
+    NSDate* date = [NSDate dateWithTimeIntervalSince1970:model.emModel.timestamp/1000];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"HH:mm:ss"];
+    self.timeLabel.text = [formatter stringFromDate:date];
     NSDictionary*ext = model.emModel.ext;
     NSString* nickName = [ext objectForKey:@"nickName"];
     NSString* avartarUrl = [ext objectForKey:@"avatarUrl"];
@@ -273,6 +294,29 @@
     if (model.direction == EMMessageDirectionSend) {
         
         [self.statusView setSenderStatus:model.emModel.status isReadAcked:model.emModel.isReadAcked];
+        if(self.roleTag.isHidden) {
+            [_timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.nameLabel);
+                make.right.equalTo(self.nameLabel.mas_left).offset(-6);
+            }];
+        }else{
+            [_timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.nameLabel);
+                make.right.equalTo(self.roleTag.mas_left).offset(-6);
+            }];
+        }
+    }else{
+        if(self.roleTag.isHidden) {
+            [_timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.nameLabel);
+                make.left.equalTo(self.nameLabel.mas_right).offset(6);
+            }];
+        }else{
+            [_timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.nameLabel);
+                make.left.equalTo(self.roleTag.mas_right).offset(6);
+            }];
+        }
     }
     if(model.emModel.isNeedGroupAck) {
         self.readReceiptBtn.hidden = NO;

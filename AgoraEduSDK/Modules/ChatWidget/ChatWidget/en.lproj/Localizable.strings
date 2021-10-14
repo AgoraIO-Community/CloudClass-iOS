@@ -29,3 +29,4 @@ ChatRecall = "Recall";
 ChatRecallAMessage = "Recall a message";
 ChatMutedByTeacher = "muted by %@ teacher";
 ChatUnmutedByTeacher = "unmuted by %@ teacher";
+ChatNewMsgs = "New messages";
