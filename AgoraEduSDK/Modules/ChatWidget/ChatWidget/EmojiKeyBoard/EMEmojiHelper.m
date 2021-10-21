@@ -7,10 +7,25 @@
 //
 
 #import "EMEmojiHelper.h"
+#import "UIImage+ChatExt.h"
 
 #define EMOJI_CODE_TO_SYMBOL(x) ((((0x808080F0 | (x & 0x3F000) >> 4) | (x & 0xFC0) << 10) | (x & 0x1C0000) << 18) | (x & 0x3F) << 24);
 
 static EMEmojiHelper *helper = nil;
+
+@interface EMRange : NSObject
++ (instancetype)initWithRange:(NSRange)range;
+@property (nonatomic) NSRange range;
+@end
+
+@implementation EMRange
++ (instancetype)initWithRange:(NSRange)range
+{
+    EMRange* emRange = [[EMRange alloc] init];
+    emRange.range = range;
+    return emRange;
+}
+@end
 @implementation EMEmojiHelper
 
 - (instancetype)init
@@ -18,6 +33,42 @@ static EMEmojiHelper *helper = nil;
     self = [super init];
     if (self) {
         _convertEmojiDic = @{@"[):]":@"😊", @"[:D]":@"😃", @"[;)]":@"😉", @"[:-o]":@"😮", @"[:p]":@"😋", @"[(H)]":@"😎", @"[:@]":@"😡", @"[:s]":@"😖", @"[:$]":@"😳", @"[:(]":@"😞", @"[:'(]":@"😭", @"[:|]":@"😐", @"[(a)]":@"😇", @"[8o|]":@"😬", @"[8-|]":@"😆", @"[+o(]":@"😱", @"[<o)]":@"🎅", @"[|-)]":@"😴", @"[*-)]":@"😕", @"[:-#]":@"😷", @"[:-*]":@"😯", @"[^o)]":@"😏", @"[8-)]":@"😑", @"[(|)]":@"💖", @"[(u)]":@"💔", @"[(S)]":@"🌙", @"[(*)]":@"🌟", @"[(#)]":@"🌞", @"[(R)]":@"🌈", @"[(})]":@"😚", @"[({)]":@"😍", @"[(k)]":@"💋", @"[(F)]":@"🌹", @"[(W)]":@"🍂", @"[(D)]":@"👍"};
+        _emojiFilesDic = @{@"[):]": @"ee_1",
+                           @"[:D]": @"ee_2",
+                           @"[;)]": @"ee_3",
+                           @"[:-o]": @"ee_4",
+                           @"[:p]": @"ee_5",
+                           @"[(H)]": @"ee_6",
+                           @"[:@]": @"ee_7",
+                           @"[:s]": @"ee_8",
+                           @"[:$]": @"ee_9",
+                           @"[:(]": @"ee_10",
+                           @"[:'(]": @"ee_11",
+                           @"[:|]": @"ee_18",
+                           @"[(a)]": @"ee_13",
+                           @"[8o|]": @"ee_14",
+                           @"[8-|]": @"ee_15",
+                           @"[+o(]": @"ee_16",
+                           @"[<o)]": @"ee_12",
+                           @"[|-)]": @"ee_17",
+                           @"[*-)]": @"ee_19",
+                           @"[:-#]": @"ee_20",
+                           @"[:-*]": @"ee_22",
+                           @"[^o)]": @"ee_21",
+                           @"[8-)]": @"ee_23",
+                           @"[(|)]": @"ee_24",
+                           @"[(u)]": @"ee_25",
+                           @"[(S)]": @"ee_26",
+                           @"[(*)]": @"ee_27",
+                           @"[(#)]": @"ee_28",
+                           @"[(R)]": @"ee_29",
+                           @"[({)]": @"ee_30",
+                           @"[(})]": @"ee_31",
+                           @"[(k)]": @"ee_32",
+                           @"[(F)]": @"ee_33",
+                           @"[(W)]": @"ee_34",
+                           @"[(D)]": @"ee_35"
+        };
     }
     
     return self;
@@ -145,6 +196,48 @@ static EMEmojiHelper *helper = nil;
     }];
     
     return retStr;
+}
+
++ (NSMutableAttributedString*)convertStrings:(NSString*)aString
+{
+    NSMutableAttributedString* tmpAttrStr = [[NSMutableAttributedString alloc] initWithString:aString];
+    NSError *error = nil;
+    NSDictionary* dic = [EMEmojiHelper sharedHelper].emojiFilesDic;
+    NSString* tmp = [aString copy];
+    if([tmp containsString:@"["] && [tmp containsString:@"]"]) {
+        NSMutableArray* rangeArr = [NSMutableArray array];
+        for(NSString* key in dic) {
+            NSString* p = [tmp copy];
+            NSRange range = [p rangeOfString:key];
+            while (range.location != NSNotFound) {
+                [rangeArr addObject:[EMRange initWithRange:range]];
+                NSRange rangeNext;
+                rangeNext.location = range.location+range.length;
+                rangeNext.length = p.length - rangeNext.location;
+                range = [p rangeOfString:key options:1 range:rangeNext];
+            }
+        }
+        if(rangeArr.count > 0) {
+            [rangeArr sortUsingComparator:^NSComparisonResult(EMRange * obj1, EMRange *obj2) {
+                return [obj1 range].location < [obj2 range].location;
+            }];
+            for(NSTextCheckingResult *result in [rangeArr objectEnumerator]) {
+                NSRange matchRange = [result range];
+                NSLog(@"%@",NSStringFromRange(matchRange));
+                NSString* str = [aString substringWithRange:matchRange];
+                if(str.length == 0) continue;
+                NSTextAttachment* attachMent = [[NSTextAttachment alloc] init];
+                NSString* imageFileName = [dic objectForKey:str];
+                if(imageFileName.length == 0) continue;
+                attachMent.bounds = CGRectMake(0, 0, 16, 16);
+                attachMent.image = [UIImage imageNamedFromBundle:imageFileName];
+                NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:attachMent];
+                [tmpAttrStr replaceCharactersInRange:matchRange withAttributedString:imageStr];
+            }
+        }
+        
+    }
+    return tmpAttrStr;
 }
 
 @end

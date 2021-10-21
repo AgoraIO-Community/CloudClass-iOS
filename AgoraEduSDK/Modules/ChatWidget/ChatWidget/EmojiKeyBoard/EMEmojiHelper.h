@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSDictionary *convertEmojiDic;
 
+@property (nonatomic, strong) NSDictionary *emojiFilesDic;
+
 + (instancetype)sharedHelper;
 
 + (NSArray<NSString *> *)getAllEmojis;
@@ -23,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSString *)convertEmoji:(NSString *)aString;
 
 + (NSString *)convertEmojiToKeys:(NSString *)aString;
+
++ (NSMutableAttributedString*)convertStrings:(NSString*)aString;
 
 @end
 

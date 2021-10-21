@@ -71,7 +71,7 @@
     if (model.type == EMEmotionTypeEmoji) {
         self.label.font = [UIFont fontWithName:@"AppleColorEmoji" size:29.0];
     }
-    self.label.text = model.name;
+    //self.label.text = model.name;
     
     if ([model.imgName length] > 0) {
         self.imgView.image = [UIImage imageNamedFromBundle:model.imgName];
@@ -94,11 +94,12 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.itemMargin = 8;
-        NSArray *emojis = [EMEmojiHelper getAllEmojis];
+        NSDictionary *emojis = [EMEmojiHelper sharedHelper].emojiFilesDic;
         NSMutableArray *models1 = [[NSMutableArray alloc] init];
         for (NSString *emoji in emojis) {
             EMEmoticonModel *model = [[EMEmoticonModel alloc] initWithType:EMEmotionTypeEmoji];
             model.eId = emoji;
+            model.imgName = [emojis objectForKey:emoji];
             model.name = emoji;
             model.original = emoji;
             [models1 addObject:model];

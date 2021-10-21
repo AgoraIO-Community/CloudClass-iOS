@@ -15,6 +15,7 @@
 #import "GiftView.h"
 #import <WHToast/WHToast.h>
 #import "UIImage+ChatExt.h"
+#import "NSTimer+Block.h"
 #import <EMEmojiHelper.h>
 
 static const NSString* kAvatarUrl = @"avatarUrl";
@@ -70,6 +71,10 @@ static const NSString* kChatRoomId = @"chatroomId";
 @property (nonatomic,strong) UILabel* barrageLable;
 @property (nonatomic,strong) NSMutableArray<BarrageTime*>* barrageArray;
 @property (nonatomic,strong) NSLock* dataLock;
+@property (atomic,strong) NSMutableArray<BarrageMsgInfo*>* barrageInfoArray;
+@property (nonatomic,weak) NSTimer* timerBarrage;
+@property (nonatomic) NSInteger reserveBarrageCount;
+@property (nonatomic,strong) NSLock* barrageLock;
 @end
 
 @implementation ChatWidget
@@ -95,6 +100,10 @@ static const NSString* kChatRoomId = @"chatroomId";
     [self.chatManager removeObserver:self forKeyPath:@"chatroomAnnouncement"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.chatManager logout];
+    if(self.timerBarrage) {
+        [self.timerBarrage invalidate];
+        self.timerBarrage = nil;
+    }
 }
 
 #pragma mark - ChatWidget
@@ -202,13 +211,13 @@ static const NSString* kChatRoomId = @"chatroomId";
                                               self.containerView.bounds.size.width,
                                               176);
     
-    _renderer.canvasMargin = UIEdgeInsetsMake(10, 10, self.containerView.frame.size.height - 70, 10);
+    // 调整弹幕区域显示大小
+    _renderer.canvasMargin = UIEdgeInsetsMake(10, 10, self.containerView.frame.size.height - 85, 10);
 }
 
 - (void)handleTapAction:(UITapGestureRecognizer *)aTap
 {
     if (aTap.state == UIGestureRecognizerStateEnded) {
-
         if([self.inputField isFirstResponder]) {
             [self.inputField resignFirstResponder];
         }
@@ -226,6 +235,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 
 - (void)startBarrage
 {
+    self.reserveBarrageCount = 0;
     [_renderer start];
 }
 
@@ -244,11 +254,20 @@ static const NSString* kChatRoomId = @"chatroomId";
 {
     BarrageDescriptor * descriptor = [[BarrageDescriptor alloc] init];
     size_t width = _renderer.view.frame.size.width;
-    if(aInfo.text.length > 50)
-        aInfo.text = [[aInfo.text substringToIndex:50] stringByAppendingString:@"..."];
-    self.barrageLable.text = aInfo.text;
+    // 将字符串中的表情转换成表情图片富文本
+    NSMutableAttributedString* attrString = [EMEmojiHelper convertStrings:aInfo.text];
+    if(attrString.length > 50) {
+        attrString = [attrString attributedSubstringFromRange:NSMakeRange(0, 50)];
+        [attrString appendAttributedString:[[NSAttributedString alloc] initWithString: @"..."]];
+    }
+    self.barrageLable.attributedText = attrString;
+    self.barrageLable.font = [UIFont systemFontOfSize:16];
     [self.barrageLable sizeToFit];
     NSInteger viewLength = self.barrageLable.bounds.size.width;
+    if(aInfo.isGift)
+    {
+        viewLength += 80;
+    }
     // 这个速度8s展示完全
     CGFloat speed = (width+viewLength)/8;
     descriptor.params[@"speed"] = [NSNumber numberWithFloat: speed];
@@ -256,10 +275,10 @@ static const NSString* kChatRoomId = @"chatroomId";
     // 设置delay保证不重叠
     CGFloat delay = [self getBarrageDelayByLength:viewLength speed:speed currentTime:currentTime msgId:aInfo.msgId];
     descriptor.params[@"delay"] = [NSNumber numberWithInteger:delay];
-    
+
     descriptor.params[@"direction"] = @(BarrageWalkDirectionR2L);
     descriptor.params[@"side"] = @(BarrageWalkSideDefault);
-    NSString* content = [EMEmojiHelper convertEmoji:aInfo.text];
+    NSString* content = aInfo.text;
     if(aInfo.isGift)
     {
         descriptor.spriteName = NSStringFromClass([BarrageWalkSprite class]);
@@ -272,12 +291,17 @@ static const NSString* kChatRoomId = @"chatroomId";
         }
     }else{
         descriptor.spriteName = NSStringFromClass([BarrageWalkTextSprite class]);
-        descriptor.params[@"text"] = content;
-        descriptor.params[@"textColor"] = [UIColor blueColor];
+        descriptor.params[@"attributedText"] = attrString;
+        descriptor.params[@"textColor"] = [UIColor redColor];
+        descriptor.params[@"shadowColor"] = [UIColor blackColor];
+        descriptor.params[@"shadowOffset"] = [NSValue valueWithCGSize:CGSizeMake(0, 1)];
+        descriptor.params[@"fontSize"] = [NSNumber numberWithDouble:15.0];
+        descriptor.params[@"fontFamily"] = @"PingFangSC-Medium";
     }
-    
+
     descriptor.params[@"identifier"] = aInfo.msgId;
-    
+    descriptor.params[@"viewTm"] = [NSNumber numberWithDouble:viewLength/speed];
+
     return descriptor;
 }
 
@@ -380,15 +404,39 @@ static const NSString* kChatRoomId = @"chatroomId";
 #pragma mark - CustomKeyBoardDelegate
 
 - (void)emojiItemDidClicked:(NSString *)item{
-    self.inputField.text = [self.inputField.text stringByAppendingString:item];
+    NSRange selectedRange = [self selectedRange:self.inputField];
+    NSString* string = self.inputField.text;
+    string = [string stringByReplacingCharactersInRange:selectedRange withString:item];
+    self.inputField.text = string;
 }
 
 - (void)emojiDidDelete
 {
-    if ([self.inputField.text length] > 0) {
-        NSRange range = [self.inputField.text rangeOfComposedCharacterSequenceAtIndex:self.inputField.text.length-1];
-        self.inputField.text = [self.inputField.text substringToIndex:range.location];
+    if ([self.inputField.attributedText length] > 0) {
+        NSRange selectedRange = [self selectedRange:self.inputField];
+        NSString* string = self.inputField.text;
+        if(selectedRange.length > 0)
+        {
+            string = [string stringByReplacingCharactersInRange:selectedRange withString:@""];
+        }else{
+            if(selectedRange.location > 0)
+                string = [string stringByReplacingCharactersInRange:NSMakeRange(selectedRange.location-1,1) withString:@""];
+        }
+        
+        self.inputField.text = string;
     }
+}
+
+- (NSRange)selectedRange:(UITextField*)textField
+{
+    UITextRange* range = [textField selectedTextRange];
+    UITextPosition* beginning = textField.beginningOfDocument;
+    UITextPosition* selectionStart = range.start;
+    UITextPosition* selectionEnd = range.end;
+    const NSInteger location = [textField offsetFromPosition:beginning toPosition:selectionStart];
+    const NSInteger length = [textField offsetFromPosition:selectionStart toPosition:selectionEnd];
+
+    return NSMakeRange(location, length);
 }
 
 #pragma mark - 键盘显示
@@ -438,7 +486,7 @@ static const NSString* kChatRoomId = @"chatroomId";
             NSArray<BarrageMsgInfo*>* array = [weakself.chatManager msgArray];
             for (BarrageMsgInfo* msg in array) {
                 if(msg.text.length > 0 && msg.msgId.length > 0) {
-                    [weakself.renderer receive:[weakself buildBarrageDescriptor:msg]];
+                    [weakself pushBarrageMsgInfos:msg];
                 }
             }
         }
@@ -450,8 +498,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 {
     if(self.isShowBarrage) {
         if(aInfo.msgId.length > 0 && aInfo.text.length > 0)
-            //for(int i = 0;i< 10;i++)
-                [self.renderer receive:[self buildBarrageDescriptor:aInfo]];
+            [self pushBarrageMsgInfos:aInfo];
     }
 }
 
@@ -519,6 +566,42 @@ static const NSString* kChatRoomId = @"chatroomId";
     
 }
 
+#pragma mark - BarrageMsgInfo
+- (void)pushBarrageMsgInfos:(BarrageMsgInfo*)barrage
+{
+    [self.barrageLock lock];
+    [self.barrageInfoArray addObject:barrage];
+    [self.barrageLock unlock];
+    if(!self.timerBarrage) {
+        __weak typeof(self) weakself = self;
+        self.timerBarrage = [NSTimer block_scheduledTimerWithTimeInterval:0.1 block:^{
+            [weakself showBarrage];
+        } repeats:YES];
+    }
+}
+
+- (BarrageMsgInfo*)popBarrageMsgInfo
+{
+    if(self.barrageInfoArray.count == 0)
+        return nil;
+    [self.barrageLock lock];
+    BarrageMsgInfo* msgInfo = [self.barrageInfoArray firstObject];
+    [self.barrageInfoArray removeObjectAtIndex:0];
+    [self.barrageLock unlock];
+    return msgInfo;
+}
+
+- (void)showBarrage
+{
+    if(self.reserveBarrageCount >= 3)
+        return;
+    BarrageMsgInfo* barrageMsgInfo = [self popBarrageMsgInfo];
+    if(barrageMsgInfo) {
+        [self.renderer receive:[self buildBarrageDescriptor:barrageMsgInfo]];
+        self.reserveBarrageCount++;
+    }
+}
+
 #pragma mark - GiftViewDelegate
 - (void)sendGift:(GiftCellView*)giftView
 {
@@ -547,6 +630,20 @@ static const NSString* kChatRoomId = @"chatroomId";
             [self.dataLock unlock];
         }
     }
+    if(stage == BarrageSpriteStageBegin) {
+        NSNumber* viewTm = [params objectForKey:@"viewTm"];
+        if(viewTm) {
+            __weak typeof(self) weakself = self;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, viewTm.doubleValue * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                if(self.reserveBarrageCount > 0)
+                    self.reserveBarrageCount--;
+            });
+        }else{
+            if(self.reserveBarrageCount > 0)
+                self.reserveBarrageCount--;
+        }
+        
+    }
 }
 
 - (UILabel*)barrageLable
@@ -563,6 +660,14 @@ static const NSString* kChatRoomId = @"chatroomId";
         _barrageArray = [NSMutableArray<BarrageTime*> array];
     }
     return _barrageArray;
+}
+
+- (NSMutableArray<BarrageMsgInfo*>*)barrageInfoArray
+{
+    if(!_barrageInfoArray) {
+        _barrageInfoArray = [NSMutableArray<BarrageMsgInfo*> array];
+    }
+    return _barrageInfoArray;
 }
 
 - (CGFloat)getBarrageDelayByLength:(NSUInteger)aViewLength speed:(CGFloat)aSpeed currentTime:(NSTimeInterval)aCurrentTime msgId:(NSString*)msgId
@@ -613,6 +718,14 @@ static const NSString* kChatRoomId = @"chatroomId";
         _dataLock = [[NSLock alloc] init];
     }
     return _dataLock;
+}
+
+-(NSLock*)barrageLock
+{
+    if(!_barrageLock) {
+        _barrageLock = [[NSLock alloc] init];
+    }
+    return _barrageLock;
 }
 
 @end

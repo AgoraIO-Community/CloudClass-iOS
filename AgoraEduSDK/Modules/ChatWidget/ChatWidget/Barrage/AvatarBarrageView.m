@@ -49,16 +49,16 @@
 - (void)layoutSubviews
 {
     self.backgroundColor = [UIColor colorWithRed:0.3 green:0.8 blue:0.2 alpha:0.2];
-    CGFloat const imageWidth = 30.0f;
+    CGFloat const imageWidth = 18.0f;
     [super layoutSubviews];
     self.imageView.frame = CGRectMake(0, 0, imageWidth, imageWidth);
-    self.titleLabel.frame = CGRectMake(imageWidth+5, 0, self.bounds.size.width-imageWidth-40, self.bounds.size.height);
-    self.giftView.frame = CGRectMake(self.bounds.size.width-30, 0, imageWidth, imageWidth);
+    self.titleLabel.frame = CGRectMake(imageWidth+5, 0, self.bounds.size.width-imageWidth*2-10, self.bounds.size.height);
+    self.giftView.frame = CGRectMake(self.bounds.size.width-imageWidth-5, 0, imageWidth, imageWidth);
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-    CGFloat const imageWidth = 30.0f;
+    CGFloat const imageWidth = 18.0f;
     UILabel *prototypeLabel = self.titleLabel;
     CGFloat maxWidth = 0;
     CGFloat maxHeight = 0;

@@ -244,8 +244,8 @@ static BOOL isSDKInited = NO;
 - (void)sendTextMsg:(NSString*)aText msgType:(ChatMsgType)aType
 {
     if(aText.length > 0  && self.isLogin) {
-        NSString* retStr = [EMEmojiHelper convertEmojiToKeys:aText];
-        EMTextMessageBody* textBody = [[EMTextMessageBody alloc] initWithText:retStr];
+        //NSString* retStr = [EMEmojiHelper convertEmojiToKeys:aText];
+        EMTextMessageBody* textBody = [[EMTextMessageBody alloc] initWithText:aText];
         NSMutableDictionary* ext = [@{kMsgType:[NSNumber numberWithInteger: aType],
                                       @"role": [NSNumber numberWithInteger:self.user.role],
                                       kAvatarUrl: self.user.avatarurl} mutableCopy];
