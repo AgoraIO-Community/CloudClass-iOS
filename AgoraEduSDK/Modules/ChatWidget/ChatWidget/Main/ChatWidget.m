@@ -17,6 +17,7 @@
 #import "UIImage+ChatExt.h"
 #import "NSTimer+Block.h"
 #import <EMEmojiHelper.h>
+#import "UITextView+Placeholder.h"
 
 static const NSString* kAvatarUrl = @"avatarUrl";
 static const NSString* kNickname = @"nickName";
@@ -51,14 +52,22 @@ static const NSString* kChatRoomId = @"chatroomId";
 }
 @end
 
+@interface EmojiTextAttachment : NSTextAttachment
+@property (nonatomic,strong) NSString* emojiStr;
+@end
+
+@implementation EmojiTextAttachment
+
+@end
+
 @interface ChatWidget () <ChatManagerDelegate,
-                          UITextFieldDelegate,
+                          UITextViewDelegate,
                           BarrageRendererDelegate,
                           GiftViewDelegate,
                           EmojiKeyboardDelegate,
                           AgoraUIContainerDelegate>
 @property (nonatomic,strong) ChatManager* chatManager;
-@property (nonatomic,strong) UITextField* inputField;
+@property (nonatomic,strong) UITextView* inputField;
 @property (nonatomic,strong) AgoraBaseUIContainer* containView;
 @property (nonatomic,strong) UIButton* emojiButton;
 @property (nonatomic,strong) UIButton* sendButton;
@@ -115,7 +124,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.containerView.backgroundColor = [UIColor clearColor];
     [self.containerView addSubview:self.containView];
     
-    self.inputField = [[UITextField alloc] initWithFrame:CGRectZero];
+    self.inputField = [[UITextView alloc] initWithFrame:CGRectZero];
     self.inputField.placeholder = @"发个弹幕吧";
     self.inputField.backgroundColor = [UIColor colorWithRed:245/255.0
                                                       green:245/255.0
@@ -386,44 +395,72 @@ static const NSString* kChatRoomId = @"chatroomId";
 
 - (void)sendButtonAction
 {
-    NSString* sendText = self.inputField.text;
-    if(sendText.length > 0) {
-        [self.chatManager sendCommonTextMsg:sendText];
+    if(self.chatManager.isMuted || self.chatManager.isAllMuted)
+        return;
+    NSString* sendText = self.inputField.attributedText;
+    __weak typeof(self) weakself = self;
+    NSAttributedString*attr = self.inputField.attributedText;
+    __block NSString* str = @"";
+    [attr enumerateAttributesInRange:NSMakeRange(0, attr.length) options:0 usingBlock:^(NSDictionary<NSAttributedStringKey,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
+        EmojiTextAttachment* attachment = [attrs objectForKey:NSAttachmentAttributeName];
+        if(attachment){
+            NSString* fileType = attachment.emojiStr;
+            str = [str stringByAppendingString:fileType];
+        }else{
+            NSAttributedString* tmp = [attr attributedSubstringFromRange:range];
+            str = [str stringByAppendingString:tmp.string];
+        }
+    }];
+    if(str.length > 0) {
+        [self.chatManager sendCommonTextMsg:str];
     }
     self.inputField.text = @"";
     [self.inputField resignFirstResponder];
 }
 
-#pragma mark - UITextFieldDelegate
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [self sendButtonAction];
+#pragma mark - UITextViewDelegate
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if ([text isEqualToString:@"\n"]){
+        [self sendButtonAction];
+        return NO;
+    }
     return YES;
-    
 }
+
 #pragma mark - CustomKeyBoardDelegate
 
 - (void)emojiItemDidClicked:(NSString *)item{
+    if(self.chatManager.isMuted || self.chatManager.isAllMuted)
+        return;
     NSRange selectedRange = [self selectedRange:self.inputField];
-    NSString* string = self.inputField.text;
-    string = [string stringByReplacingCharactersInRange:selectedRange withString:item];
-    self.inputField.text = string;
+    NSMutableAttributedString* attrString = [self.inputField.attributedText mutableCopy];
+    EmojiTextAttachment* attachMent = [[EmojiTextAttachment alloc] init];
+    NSString* imageFileName = [[EMEmojiHelper sharedHelper].emojiFilesDic objectForKey:item];
+    if(imageFileName.length == 0) return;
+    attachMent.emojiStr = item;
+    attachMent.bounds = CGRectMake(0, 0, 16, 16);
+    attachMent.image = [UIImage imageNamedFromBundle:imageFileName];
+    NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:attachMent];
+    [attrString replaceCharactersInRange:selectedRange withAttributedString:imageStr];
+    self.inputField.attributedText = attrString;
 }
 
 - (void)emojiDidDelete
 {
+    if(self.chatManager.isMuted || self.chatManager.isAllMuted)
+        return;
     if ([self.inputField.attributedText length] > 0) {
         NSRange selectedRange = [self selectedRange:self.inputField];
-        NSString* string = self.inputField.text;
+        NSMutableAttributedString* attrString = [self.inputField.attributedText mutableCopy];
         if(selectedRange.length > 0)
         {
-            string = [string stringByReplacingCharactersInRange:selectedRange withString:@""];
+            [attrString deleteCharactersInRange:selectedRange];
         }else{
             if(selectedRange.location > 0)
-                string = [string stringByReplacingCharactersInRange:NSMakeRange(selectedRange.location-1,1) withString:@""];
+                [attrString deleteCharactersInRange:NSMakeRange(selectedRange.location-1, 1)];
         }
-        
-        self.inputField.text = string;
+
+        self.inputField.attributedText = attrString;
     }
 }
 
@@ -453,7 +490,7 @@ static const NSString* kChatRoomId = @"chatroomId";
         {
             CGRect oldFrame = self.containView.frame;
             self.containView.frame = CGRectMake(0, oldFrame.origin.y - (rect.origin.y - keyboardFrame.origin.y) - CONTAINVIEW_HEIGHT, oldFrame.size.width, CONTAINVIEW_HEIGHT);
-            self.inputField.frame = CGRectMake(20, 10, self.containView.bounds.size.width - SENDBUTTON_WIDTH - EMOJIBUTTON_WIDTH - 30, CONTAINVIEW_HEIGHT-10);
+            self.inputField.frame = CGRectMake(20, 10, self.containView.bounds.size.width - SENDBUTTON_WIDTH - EMOJIBUTTON_WIDTH - 30, CONTAINVIEW_HEIGHT-20);
             self.giftButton.hidden = YES;
             self.sendButton.hidden = NO;
             self.emojiButton.hidden = NO;
