@@ -100,7 +100,8 @@ import AgoraUIBaseViews
 }
 
 extension AgoraCourseTipsView {
-    public func setImage(image: UIImage, imageSize: CGSize) {
+    public func setImage(image: UIImage,
+                         imageSize: CGSize) {
         self.image = image
         self.imageSize = imageSize
         setWidth()
@@ -108,8 +109,36 @@ extension AgoraCourseTipsView {
     }
     
     public func setText(text: String,
+                        usingRedAttribe: Bool =  true,
+                        redAttrRanges: [NSRange] = [],
                         color: UIColor = .white,
                         font: UIFont = UIFont.systemFont(ofSize: 13)){
+        
+        var attrString = NSMutableAttributedString(string: text)
+        var font = UIFont.systemFont(ofSize: AgoraKitDeviceAssistant.OS.isPad ? 14 : 12)
+        if !usingRedAttribe || redAttrRanges.count == 0 {
+            attrString = NSMutableAttributedString(string: text)
+            let strSubAttr1: [NSMutableAttributedString.Key: Any] = [.font: font,
+                                                                     .foregroundColor: color]
+            attrString.addAttributes(strSubAttr1, range: NSRange(location: 0, length: text.count))
+            setAttributedText(attributedText: attrString)
+            return
+        }
+        
+        guard text.count > redAttrRanges.last!.location + redAttrRanges.last!.length else {
+            return
+        }
+    
+        textLabel.font = UIFont.systemFont(ofSize: AgoraKitDeviceAssistant.OS.isPad ? 14 : 12)
+        textLabel.textColor = color
+        for range in redAttrRanges {
+            let strSubAttr: [NSMutableAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: AgoraKitDeviceAssistant.OS.isPad ? 20 : 18),
+                                                                    .foregroundColor: UIColor.red]
+            attrString.addAttributes(strSubAttr, range: NSRange(location: range.location,
+                                                                length: range.length))
+        }
+        
+        setAttributedText(attributedText: attrString)
         textLabel.text = text
         textLabel.textColor = color
         textLabel.font = font

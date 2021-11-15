@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "default_offline.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

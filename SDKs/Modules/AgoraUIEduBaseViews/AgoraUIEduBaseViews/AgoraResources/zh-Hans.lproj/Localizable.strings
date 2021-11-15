@@ -9,17 +9,6 @@
 // Common
 OK = "确定";
 
-// Chat
-ChatText = "消息";
-ChatConversation = "提问";
-ChatEmptyText = "还没有消息";
-ChatSendText = "发送";
-ChatPlaceholderText = "请输入消息";
-ChatSilencedPlaceholderText = "禁止输入消息";
-ChatDisableToastText = "禁言模式开启";
-ChatEnableToastText = "禁言模式关闭";
-ChatDisableText = "禁言";
-
 // User List
 UserListMainTitle = "人员列表";
 UserListTeacherName = "教师姓名:";
@@ -30,8 +19,7 @@ UserListCamera = "摄像头";
 UserListMicro = "麦克风";
 UserListChat = "禁言";
 UserListReward = "奖励";
-
-ChatMuteTagText = "已禁言";
+nameroll_kick_out = "踢人";
 
 // board
 MuteBoardText = "你现在无权使用白板了";
@@ -74,6 +62,9 @@ LeaveClassTitleText = "下课确认";
 ClassOverNoticeText = "结束通知";
 ClassOverText = "课程已结束";
 LeaveClassText = "你确定要下课吗?";
+ClassTimeHourText = "时";
+ClassTimeMinuteText = "分";
+ClassTimeSecondText = "秒";
 
 KickOutNoticeText = "移除通知";
 KickOutText = "你已被踢出教室!";
@@ -90,4 +81,5 @@ BoardWareRetryText = "重新加载";
 
 LoginOnAnotherDeviceText = "账号在远端设备登录";
 
+HandsupFirstInText = "举手请长按";
 

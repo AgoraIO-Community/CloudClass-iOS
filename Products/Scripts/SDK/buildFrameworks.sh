@@ -2,6 +2,9 @@
 Color='\033[1;36m'
 Res='\033[0m'
 
+# 下载大重构 SDK
+#../../../../common-scene-sdk/iOS/ReRtc/download_libs.sh
+
 Products_Path="../../Libs"
 SDKs_Path="../../../SDKs"
 dSYMs_iPhone="../../Libs/dSYMs_iPhone"

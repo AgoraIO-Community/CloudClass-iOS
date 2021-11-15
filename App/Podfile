@@ -8,15 +8,37 @@ def libVersion
   pod "AFNetworking", "4.0.1"
   pod "CocoaLumberjack", "3.6.1"
   pod "AliyunOSSiOS", "2.10.8"
-  pod "Whiteboard", "2.13.19"
-  pod "AgoraRtcEngine_iOS", "3.4.6"
+  pod "Armin", "1.0.8"
+  pod "Alamofire", "4.7.3"
+  pod "SSZipArchive", "2.4.2"
+  
   pod "AgoraRtm_iOS", "1.4.8"
-  pod "SnapKit", "5.0.1"
+  pod "Whiteboard", "2.15.1"
+
   pod "SwifterSwift", "5.2.0" 
+  pod "Masonry"
+
+  pod "HyphenateChat", "3.8.6"
+  pod "SDWebImage", "5.12.0"
+end
+
+def preRtc
+   pod 'AgoraClassroomSDK_iOS/PreRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_iOS.podspec'
+   pod 'AgoraEduCorePuppet/PreRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
+   pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
+   pod 'AgoraRte/PreRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
+   pod "AgoraRtcEngine_iOS", "3.4.6"
+end
+
+def reRtc
+   pod 'AgoraClassroomSDK_iOS/ReRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_iOS.podspec'
+   pod 'AgoraEduCorePuppet/ReRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
+   pod 'AgoraEduCore/ReRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
+   pod 'AgoraRte/ReRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
+   pod 'AgoraRtcKit', :path => '../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'
 end
 
 def openSourceLibs
-  pod 'AgoraClassroomSDK_iOS', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_iOS.podspec'
   pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext.podspec'
   pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI.podspec'
   pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
@@ -24,10 +46,6 @@ end
 
 def sourcePod
   # close source libs
-  pod 'AgoraRte', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
-  pod 'AgoraEduCorePuppet', :path => '../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
-  pod 'AgoraEduCore', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
-  pod 'AgoraActionProcess', :path => '../../cloudclass-ios/SDKs/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
   pod 'AgoraRx', :path => '../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
   pod 'AgoraWhiteBoard', :path => '../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
   pod 'AgoraReport', :path => '../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
@@ -40,14 +58,19 @@ def sourcePod
   # open source libs
   openSourceLibs
 
+  # rtc
+  preRtc
+
   # widgets
   pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
-  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE']  
+  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE']
 end
 
 def binaryPod
   pod 'AgoraClassroomSDK', :path => '../Products/AgoraClassroomSDK_Binary.podspec'
   pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
+
+  pod "AgoraRtcEngine_iOS", "3.4.6"
 end
 
 def halfBinaryPod
@@ -88,10 +111,9 @@ target 'AgoraEducation' do
   
   pod 'MLeaksFinder'
   pod 'OpenSSL-Universal', '1.0.2.17'
-
-
-  libVersion   
-
+  
+  libVersion
+    
   #sourcePod
   #binaryPod
   halfBinaryPod

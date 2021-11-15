@@ -10,6 +10,7 @@
 		1A44BE7522BF863000766274 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A44BE5722BF863000766274 /* Assets.xcassets */; };
 		1A44BE7A22BF863000766274 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE5E22BF863000766274 /* main.m */; };
 		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
+		2616FAB2271EC4530086397B /* TokenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2616FAB1271EC4530086397B /* TokenBuilder.swift */; };
 		683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683622D5262AC4620028F7F5 /* DisclaimerView.swift */; };
 		68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68362356262D30C20028F7F5 /* BaseLoginObject.swift */; };
 		6861690E26AEAC3C00E26F69 /* TermsAndPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6861690D26AEAC3C00E26F69 /* TermsAndPolicyView.swift */; };
@@ -30,18 +31,24 @@
 		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
 		783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 783FB6CE240D0746007298C1 /* AlertViewUtil.m */; };
 		783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 783FB6DA240D0746007298C1 /* UIView+Toast.m */; };
-		787485F825AB155F0022329D /* KeyCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 787485F725AB155F0022329D /* KeyCenter.m */; };
 		787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 787485FE25AB176B0022329D /* UIColor+Addition.m */; };
 		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
 		7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4CD23FA735700AF1B4F /* InfoPlist.strings */; };
 		787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787A004125D10FC10063456F /* AudioToolbox.framework */; };
-		78DFB61525AE93C100B01906 /* AgoraEducationHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB61425AE93C000B01906 /* AgoraEducationHTTPClient.m */; };
-		78DFB67725AECAF600B01906 /* TokenBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB67625AECAF600B01906 /* TokenBuilder.m */; };
 		78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */; };
 		78DFB69925AEE20B00B01906 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68B25AEE20B00B01906 /* md5.cpp */; };
 		8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */; };
 		8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 78136271242C81ED00B7D1FE /* libz.tbd */; };
+		86B99C452732B67C0090D013 /* DebugCourware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B99C442732B67C0090D013 /* DebugCourware.swift */; };
 		86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 86F80251262589AF00364FFE /* CountDownExtApp.m */; };
+		AB245B80273A5A1600C01B4C /* AnswerSheetExtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B78273A5A1600C01B4C /* AnswerSheetExtApp.swift */; };
+		AB245B81273A5A1600C01B4C /* ExtAppTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7A273A5A1600C01B4C /* ExtAppTitleView.swift */; };
+		AB245B82273A5A1600C01B4C /* AnswerSheetSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7B273A5A1600C01B4C /* AnswerSheetSelectCell.swift */; };
+		AB245B83273A5A1600C01B4C /* AnswerSheetResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7C273A5A1600C01B4C /* AnswerSheetResultView.swift */; };
+		AB245B84273A5A1600C01B4C /* AnswerSheetSelecterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7D273A5A1600C01B4C /* AnswerSheetSelecterView.swift */; };
+		AB245B85273A5A1600C01B4C /* AnswerSheetResultItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7E273A5A1600C01B4C /* AnswerSheetResultItemCell.swift */; };
+		AB245B86273A5A1600C01B4C /* AnswerSheetSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7F273A5A1600C01B4C /* AnswerSheetSetupView.swift */; };
+		AB245B88273BB40700C01B4C /* AnswerSheetStudentResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B87273BB40700C01B4C /* AnswerSheetStudentResultView.swift */; };
 		AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */; };
 		AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */; };
 		AB7FFD6926EAFEF2003A50B8 /* RoomInfoOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */; };
@@ -77,6 +84,7 @@
 		1AE0D0A222897EA60092AC5E /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		1AE0D0A422897EC40092AC5E /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		1AE0D0A622897ECD0092AC5E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		2616FAB1271EC4530086397B /* TokenBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenBuilder.swift; sourceTree = "<group>"; };
 		3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.devrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.devrelease.xcconfig"; sourceTree = "<group>"; };
 		40B28313D80C71B4DA8D643D /* Pods-AgoraEducation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.debug.xcconfig"; sourceTree = "<group>"; };
 		4EAA54960A24224AEAEC570D /* Pods-AgoraEducation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.release.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.release.xcconfig"; sourceTree = "<group>"; };
@@ -112,8 +120,6 @@
 		785D12F224CEB24E00F7A8AB /* AgoraReplayUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraReplayUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		785D12F624CEB25200F7A8AB /* AgoraWhiteBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraWhiteBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		785D12F924CEB25700F7A8AB /* EduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		787485F625AB155F0022329D /* KeyCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyCenter.h; sourceTree = "<group>"; };
-		787485F725AB155F0022329D /* KeyCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyCenter.m; sourceTree = "<group>"; };
 		787485FD25AB176B0022329D /* UIColor+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Addition.h"; sourceTree = "<group>"; };
 		787485FE25AB176B0022329D /* UIColor+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Addition.m"; sourceTree = "<group>"; };
 		7878B4C623FA72EE00AF1B4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -122,10 +128,6 @@
 		7878B4CE23FA735A00AF1B4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		787A004125D10FC10063456F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		78A3EA5E25640261003067AB /* AgoraEducation-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AgoraEducation-Bridging-Header.h"; sourceTree = "<group>"; };
-		78DFB61325AE93C000B01906 /* AgoraEducationHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEducationHTTPClient.h; sourceTree = "<group>"; };
-		78DFB61425AE93C000B01906 /* AgoraEducationHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEducationHTTPClient.m; sourceTree = "<group>"; };
-		78DFB67525AECAF600B01906 /* TokenBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TokenBuilder.h; sourceTree = "<group>"; };
-		78DFB67625AECAF600B01906 /* TokenBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TokenBuilder.m; sourceTree = "<group>"; };
 		78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RtmTokenTool.mm; sourceTree = "<group>"; };
 		78DFB68725AEE20B00B01906 /* RtmTokenTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmTokenTool.h; sourceTree = "<group>"; };
 		78DFB68925AEE20B00B01906 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
@@ -144,10 +146,19 @@
 		78DFB69725AEE20B00B01906 /* DynamicKey4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey4.h; sourceTree = "<group>"; };
 		8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardExtApp.h; sourceTree = "<group>"; };
 		8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardExtApp.m; sourceTree = "<group>"; };
+		86B99C442732B67C0090D013 /* DebugCourware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCourware.swift; sourceTree = "<group>"; };
 		86F80250262589AF00364FFE /* CountDownExtApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CountDownExtApp.h; sourceTree = "<group>"; };
 		86F80251262589AF00364FFE /* CountDownExtApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CountDownExtApp.m; sourceTree = "<group>"; };
 		8CD382F7BF039504C1D49C53 /* Pods-AgoraEducation.qatestrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qatestrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qatestrelease.xcconfig"; sourceTree = "<group>"; };
 		A5BFF93D50503E0756F47D98 /* Pods-AgoraEducation.qarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qarelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qarelease.xcconfig"; sourceTree = "<group>"; };
+		AB245B78273A5A1600C01B4C /* AnswerSheetExtApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetExtApp.swift; sourceTree = "<group>"; };
+		AB245B7A273A5A1600C01B4C /* ExtAppTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtAppTitleView.swift; sourceTree = "<group>"; };
+		AB245B7B273A5A1600C01B4C /* AnswerSheetSelectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetSelectCell.swift; sourceTree = "<group>"; };
+		AB245B7C273A5A1600C01B4C /* AnswerSheetResultView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetResultView.swift; sourceTree = "<group>"; };
+		AB245B7D273A5A1600C01B4C /* AnswerSheetSelecterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetSelecterView.swift; sourceTree = "<group>"; };
+		AB245B7E273A5A1600C01B4C /* AnswerSheetResultItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetResultItemCell.swift; sourceTree = "<group>"; };
+		AB245B7F273A5A1600C01B4C /* AnswerSheetSetupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetSetupView.swift; sourceTree = "<group>"; };
+		AB245B87273BB40700C01B4C /* AnswerSheetStudentResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerSheetStudentResultView.swift; sourceTree = "<group>"; };
 		AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoCell.swift; sourceTree = "<group>"; };
 		AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoOptionsView.swift; sourceTree = "<group>"; };
 		AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoOptionCell.swift; sourceTree = "<group>"; };
@@ -185,13 +196,12 @@
 		1A44BE3322BF863000766274 /* AgoraEducation */ = {
 			isa = PBXGroup;
 			children = (
-				8654871A261EDF830025ADCB /* ExtApps */,
-				7801A89925DB7D7100C63ABF /* Debug */,
-				78DFB67425AECAB700B01906 /* TokenBuilder */,
-				78DFB61225AE93C000B01906 /* HTTP */,
-				7813B6F223FA5A0300265830 /* StoryBoards */,
-				78D730C423B3853200D2146C /* Utils */,
 				78D7312E23B38B0A00D2146C /* Main */,
+				7813B6F223FA5A0300265830 /* StoryBoards */,
+				8654871A261EDF830025ADCB /* ExtApps */,
+				78DFB67425AECAB700B01906 /* TokenBuilder */,
+				7801A89925DB7D7100C63ABF /* Debug */,
+				78D730C423B3853200D2146C /* Utils */,
 				1A87571323581AEC009C55A8 /* Supporting Files */,
 			);
 			path = AgoraEducation;
@@ -217,8 +227,6 @@
 		1AE0CFFB2283C5F20092AC5E = {
 			isa = PBXGroup;
 			children = (
-				787485F625AB155F0022329D /* KeyCenter.h */,
-				787485F725AB155F0022329D /* KeyCenter.m */,
 				1A44BE3322BF863000766274 /* AgoraEducation */,
 				1AE0D0052283C5F20092AC5E /* Products */,
 				938D296AAD5470F95D0BD9D5 /* Pods */,
@@ -260,6 +268,7 @@
 			isa = PBXGroup;
 			children = (
 				7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */,
+				86B99C442732B67C0090D013 /* DebugCourware.swift */,
 				7801A89B25DB7D9D00C63ABF /* DebugViewController.xib */,
 			);
 			path = Debug;
@@ -353,20 +362,10 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		78DFB61225AE93C000B01906 /* HTTP */ = {
-			isa = PBXGroup;
-			children = (
-				78DFB61325AE93C000B01906 /* AgoraEducationHTTPClient.h */,
-				78DFB61425AE93C000B01906 /* AgoraEducationHTTPClient.m */,
-			);
-			path = HTTP;
-			sourceTree = "<group>";
-		};
 		78DFB67425AECAB700B01906 /* TokenBuilder */ = {
 			isa = PBXGroup;
 			children = (
-				78DFB67525AECAF600B01906 /* TokenBuilder.h */,
-				78DFB67625AECAF600B01906 /* TokenBuilder.m */,
+				2616FAB1271EC4530086397B /* TokenBuilder.swift */,
 				78DFB68525AEE20B00B01906 /* RtmTokenTool */,
 			);
 			path = TokenBuilder;
@@ -414,6 +413,7 @@
 		8654871A261EDF830025ADCB /* ExtApps */ = {
 			isa = PBXGroup;
 			children = (
+				AB245B77273A5A1600C01B4C /* AnswerSheetExtApp */,
 				687AFBB02646BC19004E5A34 /* CountDownExtApp */,
 				8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */,
 				8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */,
@@ -432,6 +432,29 @@
 				D58F6327530BE8AC6BB7A5A6 /* Pods-AgoraEducation.qatestnewrelease.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		AB245B77273A5A1600C01B4C /* AnswerSheetExtApp */ = {
+			isa = PBXGroup;
+			children = (
+				AB245B78273A5A1600C01B4C /* AnswerSheetExtApp.swift */,
+				AB245B79273A5A1600C01B4C /* View */,
+			);
+			path = AnswerSheetExtApp;
+			sourceTree = "<group>";
+		};
+		AB245B79273A5A1600C01B4C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				AB245B7A273A5A1600C01B4C /* ExtAppTitleView.swift */,
+				AB245B7B273A5A1600C01B4C /* AnswerSheetSelectCell.swift */,
+				AB245B7C273A5A1600C01B4C /* AnswerSheetResultView.swift */,
+				AB245B7D273A5A1600C01B4C /* AnswerSheetSelecterView.swift */,
+				AB245B7E273A5A1600C01B4C /* AnswerSheetResultItemCell.swift */,
+				AB245B7F273A5A1600C01B4C /* AnswerSheetSetupView.swift */,
+				AB245B87273BB40700C01B4C /* AnswerSheetStudentResultView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		E01323DE5BE7ACD24D968F1E /* Frameworks */ = {
@@ -610,7 +633,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ntime=$(date \"+%Y.%m.%d\")\npublishLine=`grep -n \"publishDate\" $SRCROOT/KeyCenter.m | cut -d \":\" -f 1`\nsed -i '' \"$(($publishLine+1))s/@\\\".*\\\"/@\\\"$time\\\"/g\"  $SRCROOT/KeyCenter.m\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#time=$(date \"+%Y.%m.%d\")\n#publishLine=`grep -n \"publishDate\" $SRCROOT/KeyCenter.m | cut -d \":\" -f 1`\n#sed -i '' \"$(($publishLine+1))s/@\\\".*\\\"/@\\\"$time\\\"/g\"  $SRCROOT/KeyCenter.m\n";
 		};
 		9CCF3ABB7D45F972FD1E62D9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -659,32 +682,39 @@
 			buildActionMask = 2147483647;
 			files = (
 				688809E82629358800B5FB2A /* MainViewController.swift in Sources */,
+				AB245B83273A5A1600C01B4C /* AnswerSheetResultView.swift in Sources */,
+				AB245B80273A5A1600C01B4C /* AnswerSheetExtApp.swift in Sources */,
 				AB7FFD6926EAFEF2003A50B8 /* RoomInfoOptionCell.swift in Sources */,
-				78DFB61525AE93C100B01906 /* AgoraEducationHTTPClient.m in Sources */,
 				783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */,
 				687AFBB22646BC2C004E5A34 /* SingleTimeView.swift in Sources */,
 				68A5E2F12635557B00E3C37E /* AboutView.swift in Sources */,
 				AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */,
-				787485F825AB155F0022329D /* KeyCenter.m in Sources */,
 				68A5E2AB2635143400E3C37E /* AboutTableCell.swift in Sources */,
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
 				687AFBAF2646BBAD004E5A34 /* CountDownContainerView.swift in Sources */,
+				AB245B88273BB40700C01B4C /* AnswerSheetStudentResultView.swift in Sources */,
 				683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */,
+				AB245B82273A5A1600C01B4C /* AnswerSheetSelectCell.swift in Sources */,
+				2616FAB2271EC4530086397B /* TokenBuilder.swift in Sources */,
 				6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */,
 				687AFC2A264AA84A004E5A34 /* SingleTimeGroup.swift in Sources */,
 				AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */,
+				AB245B84273A5A1600C01B4C /* AnswerSheetSelecterView.swift in Sources */,
 				78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */,
 				8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */,
+				AB245B86273A5A1600C01B4C /* AnswerSheetSetupView.swift in Sources */,
 				783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */,
+				86B99C452732B67C0090D013 /* DebugCourware.swift in Sources */,
 				787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */,
 				6861691726AEAFCF00E26F69 /* TermsAndPolicyViewController.swift in Sources */,
 				68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */,
 				86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */,
+				AB245B85273A5A1600C01B4C /* AnswerSheetResultItemCell.swift in Sources */,
 				6861690E26AEAC3C00E26F69 /* TermsAndPolicyView.swift in Sources */,
+				AB245B81273A5A1600C01B4C /* ExtAppTitleView.swift in Sources */,
 				7801A89C25DB7D9D00C63ABF /* DebugViewController.swift in Sources */,
 				1A44BE7A22BF863000766274 /* main.m in Sources */,
-				78DFB67725AECAF600B01906 /* TokenBuilder.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -924,7 +954,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -987,7 +1017,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraFlexEduDis;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1179,7 +1209,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1334,7 +1364,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATestNew;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1489,7 +1519,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQA;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1644,7 +1674,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.5;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATest;
 				PRODUCT_NAME = AgoraCloudClass;

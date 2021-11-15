@@ -1,39 +1,44 @@
-Pod::Spec.new do |spec|
-  spec.name         = "AgoraEduUI"
-  spec.version      = "1.1.5.1"
-  spec.summary      = "Agora Edu UI"
-  spec.description  = "Agora Edu UI SDK"
+Pod::Spec.new do |s|
+  s.name         = "AgoraEduUI"
+  s.version      = "1.1.5.1"
+  s.summary      = "Agora Edu UI"
+  s.description  = "Agora Edu UI SDK"
 
-  spec.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
-  spec.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
-  spec.author       = { "Agora Lab" => "developer@agora.io" }
-  spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'ui_v' + "#{spec.version.to_s}" }
-  spec.ios.deployment_target = "10.0"
-  spec.module_name  = 'AgoraEduUI'
+  s.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
+  s.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
+  s.author       = { "Agora Lab" => "developer@agora.io" }
+  s.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'ui_v' + "#{s.version.to_s}" }
+  s.ios.deployment_target = "10.0"
+  s.module_name  = 'AgoraEduUI'
 
-  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
-  spec.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
-  spec.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
-  spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
-  spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
-  spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
+  s.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
+  s.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
+  s.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
+  s.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   
-  spec.source_files = "SDKs/AgoraEduUI/AgoraEduUI/**/*.{h,m,swift}", "AgoraEduUI/**/*.{h,m,swift}"
-  spec.public_header_files = "SDKs/AgoraEduUI/AgoraEduUI/**/*.h", "AgoraEduUI/**/*.h"
-  spec.resource_bundles = {
-    'AgoraEduUI' => [
-      'AgoraEduUI/**/*.{png,xib,gif,wav,mp3,strings}',
-      'AgoraEduUI/*.xcassets', 
-      'SDKs/AgoraEduUI/AgoraEduUI/**/*.{png,xib,gif,wav,mp3,strings}',
-      'SDKs/AgoraEduUI/AgoraEduUI/*.xcassets']
-  }
+  s.public_header_files = "SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.h", "AgoraEduUI/**/*.h"
+  
+  s.source_files = 'AgoraEduUI/Classes/**/*.{h,m,swift}'
 
-  spec.dependency "AgoraEduContext"
-  spec.dependency "AgoraUIEduBaseViews"
-  spec.dependency "AgoraUIBaseViews"
-  spec.dependency "AgoraExtApp"
-  spec.dependency "AgoraWidget"
-  spec.dependency "SnapKit"
-  spec.dependency "SwifterSwift"
+  s.dependency "AgoraEduContext"
+  s.dependency "AgoraUIEduBaseViews"
+  s.dependency "AgoraUIBaseViews"
+  s.dependency "AgoraExtApp"
+  s.dependency "AgoraWidget"
+  s.dependency "Masonry"
+  s.dependency "SwifterSwift"
+  
+  s.subspec 'AkasuoResource' do |ss|
+    ss.resource_bundles = {
+      'Akasuo' => ['AgoraEduUI/AkasuoAssets/**/*.{xcassets,strings,gif,mp3,wav}']
+    }
+  end
+  s.subspec 'Resources' do |ss|
+    ss.resource_bundles = {
+      'AgoraEduUI' => ['AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}']
+    }
+  end
   
 end

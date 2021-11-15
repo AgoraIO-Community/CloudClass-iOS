@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+ 
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+// Chat
+ChatMuteTagText = "You are not allowed to send messages in the chat box";
+ChatText = "Message";
+ChatEmptyText = "No Message";
+ChatConversation = "Quiz";
+ChatSendText = "Send";
+ChatPlaceholderText = "Input";
+ChatSilencedPlaceholderText = "Banned to chat";
+ChatDisableToastText = "Turn on mute mode";
+ChatEnableToastText = "Turn off mute mode";
+ChatDisableText = "mute chat";

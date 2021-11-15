@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		787A004725D110A80063456F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787A004625D110A80063456F /* AudioToolbox.framework */; };
-		86323BE4269335FD006C9C31 /* AgoraBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86323BE3269335FD006C9C31 /* AgoraBaseViewController.m */; };
-		86323BE62693360A006C9C31 /* AgoraBaseViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 86323BE52693360A006C9C31 /* AgoraBaseViewController.h */; };
 		8654EDB1268B258700B95D42 /* AgoraEduObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 8654EDA6268B258700B95D42 /* AgoraEduObjects.m */; };
 		8654EDB4268B258700B95D42 /* AgoraEduObjects.h in Headers */ = {isa = PBXBuildFile; fileRef = 8654EDA9268B258700B95D42 /* AgoraEduObjects.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8654EDB5268B258700B95D42 /* AgoraEduEnums.h in Headers */ = {isa = PBXBuildFile; fileRef = 8654EDAA268B258700B95D42 /* AgoraEduEnums.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -30,8 +28,6 @@
 		7874817F25A884A30022329D /* AgoraClassroomSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraClassroomSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7874818325A884A30022329D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		787A004625D110A80063456F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		86323BE3269335FD006C9C31 /* AgoraBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraBaseViewController.m; sourceTree = "<group>"; };
-		86323BE52693360A006C9C31 /* AgoraBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraBaseViewController.h; sourceTree = "<group>"; };
 		8654EDA6268B258700B95D42 /* AgoraEduObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduObjects.m; sourceTree = "<group>"; };
 		8654EDA9268B258700B95D42 /* AgoraEduObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduObjects.h; sourceTree = "<group>"; };
 		8654EDAA268B258700B95D42 /* AgoraEduEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduEnums.h; sourceTree = "<group>"; };
@@ -44,9 +40,7 @@
 		8654EDC4268C14F700B95D42 /* AgoraEduTopVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduTopVC.h; sourceTree = "<group>"; };
 		8654EDC5268C14F700B95D42 /* AgoraEduTopVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraEduTopVC.m; sourceTree = "<group>"; };
 		8667832626F064880039C077 /* AgoraClassroomSDK.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = AgoraClassroomSDK.modulemap; sourceTree = "<group>"; };
-		8ACCDE2E28B832D1B7FE7D4D /* Pods-AgoraEduSDK.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduSDK.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEduSDK/Pods-AgoraEduSDK.debug.xcconfig"; sourceTree = "<group>"; };
 		CFA3C49D76BC64554226BF46 /* Pods-AgoraClassroomSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraClassroomSDK.release.xcconfig"; path = "Target Support Files/Pods-AgoraClassroomSDK/Pods-AgoraClassroomSDK.release.xcconfig"; sourceTree = "<group>"; };
-		F0B08175A3283B9083EFAA8F /* Pods-AgoraEduSDK.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduSDK.release.xcconfig"; path = "Target Support Files/Pods-AgoraEduSDK/Pods-AgoraEduSDK.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,8 +59,6 @@
 		17319F960276A9D24FD81272 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				8ACCDE2E28B832D1B7FE7D4D /* Pods-AgoraEduSDK.debug.xcconfig */,
-				F0B08175A3283B9083EFAA8F /* Pods-AgoraEduSDK.release.xcconfig */,
 				502E00B58E86BDC1D7EFEC74 /* Pods-AgoraClassroomSDK.debug.xcconfig */,
 				CFA3C49D76BC64554226BF46 /* Pods-AgoraClassroomSDK.release.xcconfig */,
 			);
@@ -113,8 +105,6 @@
 		8654EDA0268B258700B95D42 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				86323BE52693360A006C9C31 /* AgoraBaseViewController.h */,
-				86323BE3269335FD006C9C31 /* AgoraBaseViewController.m */,
 				8654EDC4268C14F700B95D42 /* AgoraEduTopVC.h */,
 				8654EDC5268C14F700B95D42 /* AgoraEduTopVC.m */,
 				8654EDC0268C139400B95D42 /* AgoraInternalClassroom.h */,
@@ -158,7 +148,6 @@
 				8654EDB4268B258700B95D42 /* AgoraEduObjects.h in Headers */,
 				8654EDBE268B27E300B95D42 /* AgoraEduClassroom.h in Headers */,
 				8654EDC2268C139400B95D42 /* AgoraInternalClassroom.h in Headers */,
-				86323BE62693360A006C9C31 /* AgoraBaseViewController.h in Headers */,
 				8654EDC6268C14F700B95D42 /* AgoraEduTopVC.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,7 +248,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86323BE4269335FD006C9C31 /* AgoraBaseViewController.m in Sources */,
 				8654EDC7268C14F700B95D42 /* AgoraEduTopVC.m in Sources */,
 				8654EDB1268B258700B95D42 /* AgoraEduObjects.m in Sources */,
 				8654EDC3268C139400B95D42 /* AgoraInternalClassroom.m in Sources */,

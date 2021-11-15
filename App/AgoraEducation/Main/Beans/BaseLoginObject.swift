@@ -57,9 +57,9 @@ class LoginConfig {
         (NSLocalizedString("About_class_version", comment: ""), class_version)
     ]
     
-    static let version_time: String = KeyCenter.publishDate()
+    static let version_time: String = "d"
     
-    static let sdk_version: String = KeyCenter.rtcVersion()
+    static let sdk_version: String = "1"
     static let class_version: String = "Ver)"
     
     static var device: Device {

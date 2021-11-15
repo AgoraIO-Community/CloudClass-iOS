@@ -40,4 +40,6 @@ public typealias AgoraEduExtAppContext = AgoraExtAppProtocol
     var extApp: AgoraEduExtAppContext { get }
     // 插件， 属于UIKit一部分。 每个插件是一个功能模块。
     var widget: AgoraEduWidgetContext { get }
+    
+    var stream: AgoraEduStreamContext { get }
 }

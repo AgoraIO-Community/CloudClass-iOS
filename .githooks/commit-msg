@@ -1,0 +1,49 @@
+!/bin/sh
+#
+# An example hook script to check the commit log message.
+# Called by "git commit" with one argument, the name of the file
+# that has the commit message.  The hook should exit with non-zero
+# status after issuing an appropriate message if it wants to stop the
+# commit.  The hook is allowed to edit the commit message file.
+#
+# To enable this hook, rename this file to "commit-msg".
+
+# Uncomment the below to add a Signed-off-by line to the message.
+# Doing this in a hook is a bad idea in general, but the prepare-commit-msg
+# hook is more suited to it.
+#
+# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
+# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
+
+# This example catches duplicate Signed-off-by lines.
+# 在.git所在目录执行git config core.hooksPath .githooks
+
+git diff --cached --name-only --diff-filter=M -z $against -- | while read -d $'\0' f; do
+
+if [[ ${f} == *"swift"* ]]
+then
+
+	project="${f%.*}"
+	project="${project##*/}"
+
+	if [ "$project" = "LoginViewController" ]; then
+		while read line; do
+			if [[ "$line" != *"LoginViewController"* ]]
+			then
+					cat <<EOF
+Error: 注意啦，这是一个特别的文件，你真的要提交吗？
+
+file \`$f' is added, but \`$f' s name is not in the commit message.
+
+如果你确定是要提交这个文件的修改，请对本次提交的描述进行修改，详见下句：
+
+Please add \`$project' to your message line as well.
+EOF
+			exit 1
+		   fi
+
+		done < $1
+
+	fi
+fi
+done

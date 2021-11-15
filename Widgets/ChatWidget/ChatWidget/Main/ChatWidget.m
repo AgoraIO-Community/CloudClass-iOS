@@ -34,7 +34,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 @property (nonatomic,strong) ChatView* chatView;
 @property (nonatomic,strong) AgoraBaseUIContainer* containView;
 @property (nonatomic,strong) UITapGestureRecognizer *tap;
-@property (nonatomic,strong) UIButton* miniButton;
+//@property (nonatomic,strong) UIButton* miniButton;
 @property (nonatomic,strong) CustomBadgeView* badgeView;
 @end
 
@@ -61,6 +61,8 @@ static const NSString* kChatRoomId = @"chatroomId";
 {
     if([message isEqualToString:@"min"]) {
         [self chatTopViewDidClickHide];
+    } else if([message isEqualToString:@"max"]) {
+        [self showView];
     }
 }
 
@@ -93,17 +95,17 @@ static const NSString* kChatRoomId = @"chatroomId";
                                                        action:@selector(handleTapAction:)];
     [self.containView addGestureRecognizer:self.tap];
     
-    self.miniButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.miniButton setImage:[UIImage imageNamedFromBundle:@"icon_chat"] forState:UIControlStateNormal];
-    self.miniButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
-    [self.miniButton setImageEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    self.miniButton.layer.cornerRadius = MINIBUTTON_SIZE/2;
-    self.miniButton.layer.borderWidth = 1;
-    self.miniButton.layer.borderColor = [UIColor colorWithRed:47/255.0 green:65/255.0 blue:146/255.0 alpha:0.15].CGColor;
-    [self.miniButton addTarget:self action:@selector(showView) forControlEvents:UIControlEventTouchUpInside];
-    self.miniButton.backgroundColor = UIColor.whiteColor;
-    [self.containerView addSubview:self.miniButton];
-    self.miniButton.hidden = YES;
+//    self.miniButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [self.miniButton setImage:[UIImage imageNamedFromBundle:@"icon_chat"] forState:UIControlStateNormal];
+//    self.miniButton.imageView.contentMode = UIViewContentModeScaleAspectFit;
+//    [self.miniButton setImageEdgeInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
+//    self.miniButton.layer.cornerRadius = MINIBUTTON_SIZE/2;
+//    self.miniButton.layer.borderWidth = 1;
+//    self.miniButton.layer.borderColor = [UIColor colorWithRed:47/255.0 green:65/255.0 blue:146/255.0 alpha:0.15].CGColor;
+//    [self.miniButton addTarget:self action:@selector(showView) forControlEvents:UIControlEventTouchUpInside];
+//    self.miniButton.backgroundColor = UIColor.whiteColor;
+//    [self.containerView addSubview:self.miniButton];
+//    self.miniButton.hidden = YES;
     
     self.badgeView = [[CustomBadgeView alloc] init];
     [self.containerView addSubview:self.badgeView];
@@ -121,7 +123,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     
     self.chatView.frame = CGRectMake(0,TOP_HEIGHT,self.containView.bounds.size.width,self.containView.bounds.size.height - TOP_HEIGHT);
     
-    self.miniButton.frame = CGRectMake(10, self.containerView.bounds.size.height - MINIBUTTON_SIZE - 10, MINIBUTTON_SIZE, MINIBUTTON_SIZE);
+//    self.miniButton.frame = CGRectMake(10, self.containerView.bounds.size.height - MINIBUTTON_SIZE - 10, MINIBUTTON_SIZE, MINIBUTTON_SIZE);
     
     self.badgeView.frame = CGRectMake(10 + MINIBUTTON_SIZE*4/5, self.containerView.bounds.size.height - MINIBUTTON_SIZE - 10, self.badgeView.badgeSize, self.badgeView.badgeSize);
 }
@@ -272,7 +274,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 - (void)chatTopViewDidClickHide
 {
     self.containView.hidden = YES;
-    self.miniButton.hidden = NO;
+//    self.miniButton.hidden = NO;
     self.badgeView.hidden = self.chatTopView.badgeView.hidden && self.chatTopView.announcementbadgeView.hidden;
     self.containerView.agora_width = 50;
     [self sendMessage:@"min"];
@@ -281,7 +283,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 - (void)showView
 {
     self.containView.hidden = NO;
-    self.miniButton.hidden = YES;
+//    self.miniButton.hidden = YES;
     if(self.chatTopView.currentTab == 0) {
         self.chatTopView.badgeView.hidden = YES;
         [self.chatView scrollToBottomRow];

@@ -5,10 +5,13 @@
 //  Created by SRS on 2021/3/7.
 //
 
-import UIKit
 import AgoraWidget
+import UIKit
 
-// MARK: - PrivateChat
+public typealias AgoraEduContextSuccess = () -> (Void)
+public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
+
+// MARK: - Private communication
 @objc public protocol AgoraEduPrivateChatHandler: NSObjectProtocol {
     // 收到开始私密语音通知
     @objc optional func onStartPrivateChat(_ info: AgoraEduContextPrivateChatInfo)
@@ -40,7 +43,7 @@ import AgoraWidget
      文案显示：
      enabled == true -> "你可以使用白板了" 【文案名：UnMuteBoardText】
      enabled == false -> "你现在无权使用白板了" 【文案名：MuteBoardText】
-    */
+     */
     @objc optional func onDrawingEnabled(_ enabled: Bool)
     
     // 白板加载状态
@@ -48,34 +51,12 @@ import AgoraWidget
     
     // 课件下载进度，url是课件地址，progress:0-100
     @objc optional func onDownloadProgress(_ url: String,
-                                            progress: Float)
+                                           progress: Float)
     // 课件下载时间过长，一次课件下载超过了15秒，会有该调用
     @objc optional func onDownloadTimeOut(_ url: String)
     
     // 课件下载完成
     @objc optional func onDownloadComplete(_ url: String)
-    
-    /** 即将弃用接口 **/
-    @available(*, deprecated, message: "use onBoardContentView instead of it")
-    @objc optional func onGetBoardContainer() -> UIView?
-    
-    @available(*, deprecated, message: "use onDrawingEnabled instead of it")
-    @objc optional func onSetDrawingEnabled(_ enabled: Bool)
-    
-    @available(*, deprecated, message: "use onLoadingVisible instead of it")
-    @objc optional func onSetLoadingVisible(_ visible: Bool)
-    
-    @available(*, deprecated, message: "use onDownloadProgress instead of it")
-    @objc optional func onSetDownloadProgress(_ url: String,
-                                            progress: Float)
-    @available(*, deprecated, message: "use onDownloadTimeOut instead of it")
-    @objc optional func onSetDownloadTimeOut(_ url: String)
-    
-    @available(*, deprecated, message: "use onDownloadComplete instead of it")
-    @objc optional func onSetDownloadComplete(_ url: String)
-
-    @available(*, deprecated, message: "add tips in onDrawingEnabled")
-    @objc optional func onShowPermissionTips(_ granted: Bool)
 }
 
 @objc public protocol AgoraEduWhiteBoardContext: NSObjectProtocol {
@@ -95,6 +76,22 @@ import AgoraWidget
     
     // 事件监听
     func registerBoardEventHandler(_ handler: AgoraEduWhiteBoardHandler)
+    
+    /// 设置当前场景
+    /// - parameter 路径
+    func setScenePath(_ path: String)
+    
+    /// 插入新的场景
+    /// - parameter dir 目录位置
+    /// - parameter scenes 要插入的场景数组
+    /// - parameter index 插入的位置
+    func pushScenes(dir: String,
+                    scenes: [AgoraEduContextWhiteScene],
+                    index: UInt)
+    
+    /// 获取课件列表
+    /// - Returns: 课件列表
+    func getCoursewares() -> [AgoraEduContextCourseware]
 }
 
 @objc public protocol AgoraEduWhiteBoardToolContext: NSObjectProtocol {
@@ -108,12 +105,11 @@ import AgoraWidget
     func thicknessSelected(_ thick: Int)
 }
 
-// MARK: - WhiteBoardPageControl
 @objc public protocol AgoraEduWhiteBoardPageControlHandler: NSObjectProtocol {
     /** 新增接口 **/
     // 设置总页数，当前第几页
     @objc optional func onPageIndex(_ pageIndex: NSInteger,
-                                     pageCount: NSInteger)
+                                    pageCount: NSInteger)
     // 设置是否全屏，注意和onResizeFullScreenEnable的区别
     @objc optional func onFullScreen(_ fullScreen: Bool)
     
@@ -121,27 +117,9 @@ import AgoraWidget
     @objc optional func onPagingEnable(_ enable: Bool)
     // 是否可以放大、缩小
     @objc optional func onZoomEnable(_ zoomOutEnable: Bool,
-                                      zoomInEnable: Bool)
+                                     zoomInEnable: Bool)
     // 是否可以全屏，注意和onFullScreen的区别
     @objc optional func onResizeFullScreenEnable(_ enable: Bool)
-    
-    /** 即将弃用接口 **/
-    @available(*, deprecated, message: "use onPageIndex instead of it")
-    @objc optional func onSetPageIndex(_ pageIndex: NSInteger,
-                                     pageCount: NSInteger)
-    
-    @available(*, deprecated, message: "use onFullScreen instead of it")
-    @objc optional func onSetFullScreen(_ fullScreen: Bool)
-    
-    @available(*, deprecated, message: "use onPagingEnable instead of it")
-    @objc optional func onSetPagingEnable(_ enable: Bool)
-    
-    @available(*, deprecated, message: "use onZoomEnable instead of it")
-    @objc optional func onSetZoomEnable(_ zoomOutEnable: Bool,
-                                      zoomInEnable: Bool)
-    
-    @available(*, deprecated, message: "use onResizeFullScreenEnable instead of it")
-    @objc optional func onSetResizeFullScreenEnable(_ enable: Bool)
 }
 
 @objc public protocol AgoraEduWhiteBoardPageControlContext: NSObjectProtocol {
@@ -157,7 +135,7 @@ import AgoraWidget
     func registerPageControlEventHandler(_ handler: AgoraEduWhiteBoardPageControlHandler)
 }
 
-// MARK: - Room
+// MARK: - Classroom
 @objc public protocol AgoraEduRoomHandler: NSObjectProtocol {
     // 日志上传成功
     @objc optional func onUploadLogSuccess(_ logId: String)
@@ -173,7 +151,7 @@ import AgoraWidget
     // 房间属性变化
     // properties：用户自定义全量房间属性
     // server更新的时候operator为空
-    @objc optional func onFlexRoomPropertiesChanged(_ changedProperties: [String: Any],
+    @objc optional func onFlexRoomPropertiesChanged(_ changedProperties: [String],
                                                     properties: [String: Any],
                                                     cause: [String: Any]?,
                                                     operator:AgoraEduContextUserInfo?)
@@ -197,36 +175,11 @@ import AgoraWidget
                                         differTime: Int64,
                                         duration: Int64,
                                         closeDelay: Int64)
-
+    
     // 网络状态
     @objc optional func onNetworkQuality(_ quality: AgoraEduContextNetworkQuality)
     // 连接状态
     @objc optional func onConnectionState(_ state: AgoraEduContextConnectionState)
-
-    /** 即将弃用接口 **/
-    @available(*, deprecated, message: "use onClassroomName instead of it")
-    @objc optional func onSetClassroomName(_ name: String)
-    
-    @available(*, deprecated, message: "use onClassState instead of it")
-    @objc optional func onSetClassState(_ state: AgoraEduContextClassState)
-    
-    @available(*, deprecated, message: "use onClassTimeInfo instead of it")
-    @objc optional func onSetClassTime(_ time: String)
-
-    /* 该方法曾用于展示上课期间的提示：
-     * 课程还有5分钟结束
-     * 课程结束咯，还有5分钟关闭教室
-     * 距离教室关闭还有1分钟
-     * 现与onSetClassTime方法合并为onClassTimeInfo(startTime:differTime:duration:closeDelay:)方法，由UI层执行计时、显示tips等
-     */
-    @available(*, deprecated, message: "add tips in onClassTimeInfo instead of it")
-    @objc optional func onShowClassTips(_ message: String)
-    
-    @available(*, deprecated, message: "use onNetworkQuality instead of it")
-    @objc optional func onSetNetworkQuality(_ quality: AgoraEduContextNetworkQuality)
-    
-    @available(*, deprecated, message: "use onConnectionState instead of it")
-    @objc optional func onSetConnectionState(_ state: AgoraEduContextConnectionState)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
@@ -242,16 +195,20 @@ import AgoraWidget
     // cause: 修改的原因，可为空
     func updateFlexRoomProperties(_ properties:[String: String],
                                   cause:[String: String]?)
-
+    
     // 离开教室
     func leaveRoom()
     // 上传日志
     func uploadLog()
     // 事件监听
     func registerEventHandler(_ handler: AgoraEduRoomHandler)
+    
+    /** 新增接口 **/
+    // 刷新房间
+    func refresh()
 }
 
-// MARK: - Chat
+// MARK: - Message
 @objc public protocol AgoraEduMessageHandler: NSObjectProtocol {
     // 收到房间消息
     @objc optional func onAddRoomMessage(_ info: AgoraEduContextChatInfo)
@@ -280,12 +237,12 @@ import AgoraWidget
      * allow == false -> "xx被xx解除了禁言"
      */
     @objc optional func onUpdateRemoteChatPermission(_ allow: Bool,
-                                                    toUser: AgoraEduContextUserInfo,
-                                                    operatorUser: AgoraEduContextUserInfo)
+                                                     toUser: AgoraEduContextUserInfo,
+                                                     operatorUser: AgoraEduContextUserInfo)
     
     // 本地发送消息结果（包含首次和后面重发），如果error不为空，代表失败
     @objc optional func onSendRoomMessageResult(_ error: AgoraEduContextError?,
-                                                info: AgoraEduContextChatInfo?)
+                                                info: AgoraEduContextChatInfo)
     
     // 本地发送提问消息结果（包含首次和后面重发），如果error不为空，代表失败
     @objc optional func onSendConversationMessageResult(_ error: AgoraEduContextError?,
@@ -294,7 +251,7 @@ import AgoraWidget
     // 查询历史消息结果，如果error不为空，代表失败
     @objc optional func onFetchHistoryMessagesResult(_ error: AgoraEduContextError?,
                                                      list: [AgoraEduContextChatInfo]?)
-
+    
     @objc optional func onFetchConversationHistoryMessagesResult(_ error: AgoraEduContextError?,
                                                                  list: [AgoraEduContextChatInfo]?)
     
@@ -303,15 +260,6 @@ import AgoraWidget
     @objc optional func onUpdateRoomMessageList(_ list: [AgoraEduContextChatInfo])
     // 提问消息列表更新
     @objc optional func onUpdateConversationMessageList(_ list: [AgoraEduContextChatInfo])
-    
-    /** 即将弃用接口 **/
-    /* 该方法曾用于显示聊天过程中提示信息：
-     * 禁言模式开启
-     * 禁言模式关闭
-     * 现由UI层在onUpdateChatPermission方法中执行显示tips的操作
-     */
-    @available(*, deprecated, message: "add tips in onUpdateChatPermission instead of it")
-    @objc optional func onShowChatTips(_ message: String)
 }
 
 @objc public protocol AgoraEduMessageContext: NSObjectProtocol {
@@ -362,7 +310,7 @@ import AgoraWidget
     // 音量提示
     @objc optional func onUpdateAudioVolumeIndication(_ value: Int,
                                                       streamUuid: String)
-
+    
     // 收到奖励（自己或者其他学生）
     @objc optional func onShowUserReward(_ user: AgoraEduContextUserInfo)
     
@@ -378,16 +326,8 @@ import AgoraWidget
                                         fromUser: AgoraEduContextUserDetailInfo,
                                         operator: AgoraEduContextUserInfo?)
     
-    /** 即将弃用接口 **/
-    /* 该方法曾用于显示提示信息
-     * 你的摄像头被关闭了
-     * 你的麦克风被关闭了
-     * 你的摄像头被打开了
-     * 你的麦克风被打开了
-     * 现由UI层在AgoraEduDeviceHandler的onCameraDeviceEnableChanged,onMicDeviceEnabledChanged方法中执行显示tips的操作
-     */
-    @available(*, deprecated, message: "add tips in onCameraDeviceEnableChanged、onMicDeviceEnabledChanged in AgoraEduDeviceHandler instead of it")
-    @objc optional func onShowUserTips(_ message: String)
+    @objc optional func onRemoteUserLeft(users: [AgoraEduContextUserInfo])
+    @objc optional func onRemoteUserJoin(users: [AgoraEduContextUserInfo])
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
@@ -407,15 +347,63 @@ import AgoraWidget
     // 获取本地用户信息
     func getLocalUserInfo() -> AgoraEduContextUserInfo
     
-    /** 即将弃用接口 **/
-    @available(*, deprecated, message: "use publishStream in AgoraEduMediaContext instead of it")
-    func muteVideo(_ mute: Bool)
+    /// 获取用户自定义属性 (v1.2.0)
+    /// - parameter userUuid: 用户id
+    /// - returns: 用户自定义属性字典
+    func getFlexUserProperties(userUuid: String) -> [String: Any]?
     
-    @available(*, deprecated, message: "use unpublishStream in AgoraEduMediaContext instead of it")
-    func muteAudio(_ mute: Bool)
+    /// 获取所有上台用户信息 (v1.2.0)
+    /// - returns: 用户列表数组
+    func getUserInfoList() -> [AgoraEduContextUserDetailInfo]
+
+    /// 获取所有在线用户信息 (v1.2.0)
+    /// - returns: 用户列表数组
+    func getCoUserInfoList() -> [AgoraEduContextUserDetailInfo]
     
-    @available(*, deprecated, message: "use renderRemoteView in AgoraEduMediaContext instead of it")
-    func renderView(_ view: UIView?, streamUuid: String)
+    /// 指定用户上台 (v1.2.0)
+    /// - parameter userUuids: 用户id
+    /// - returns: void
+    func addCoHosts(userUuids: [String],
+                    success: AgoraEduContextSuccess?,
+                    failure: AgoraEduContextFail?)
+    
+    /// 指定用户下台 (v1.2.0)
+    /// - parameter userUuids: 用户id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    /// - returns: void
+    func removeCoHosts(userUuids: [String],
+                       success: AgoraEduContextSuccess?,
+                       failure: AgoraEduContextFail?)
+    
+    /// 授权/取消用户的白板操作权限 (v1.2.0)
+    /// - parameter userUuid: 用户id
+    /// - parameter granted: 是否授权
+    /// - returns: void
+    func updateBoardGranted(userUuids: [String],
+                            granted: Bool)
+    
+    /// 给用户发奖 (v1.2.0)
+    /// - parameter userUuid: 用户id
+    /// - parameter rewardCount: 奖杯数量
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    /// - returns: void
+    func rewardUsers(userUuids: [String],
+                     rewardCount: Int,
+                     success: AgoraEduContextSuccess?,
+                     failure: AgoraEduContextFail?)
+    
+    /// 踢人 (v1.2.0)
+    /// - parameter userUuid: 用户id
+    /// - parameter forever: 是否永久踢出该用户
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    /// - returns: void
+    func kickOut(userUuids: [String],
+                 forever: Bool,
+                 success: AgoraEduContextSuccess?,
+                 failure: AgoraEduContextFail?)
 }
 
 // MARK: - HandsUp
@@ -443,39 +431,19 @@ import AgoraWidget
      */
     @objc optional func onHandsUpError(_ error: AgoraEduContextError?)
     
-    /** 即将弃用接口 **/
-    @available(*, deprecated, message: "use onHandsUpEnable instead of it")
-    @objc optional func onSetHandsUpEnable(_ enable: Bool)
-    
-    @available(*, deprecated, message: "use onHandsUpState instead of it")
-    @objc optional func onSetHandsUpState(_ state: AgoraEduContextHandsUpState)
-    
-    @available(*, deprecated, message: "use onHandsUpError instead of it")
-    @objc optional func onUpdateHandsUpStateResult(_ error: AgoraEduContextError?)
-    
-    /* 该方法曾用于显示举手相关消息
-     * 举手超时
-     * 老师拒绝了你的举手申请x
-     * 老师同意了你的举手申请
-     * 你被老师下台了
-     * 举手成功
-     * 取消举手成功
-     * 老师关闭了举手功能
-     * 老师开启了举手功能
-     * 现由UI层在onHandsUpEnable,onHandsUpState,onHandsUpError方法中执行显示tips的操作
-     */
-    @available(*, deprecated, message: "add tips in onHandsUpError instead of it")
-    @objc optional func onShowHandsUpTips(_ message: String)
-    
     // 新增的回调，举手申请的结果
     @objc optional func onHandsUpResult(_ result: AgoraEduContextHandsUpResult)
 }
 
 @objc public protocol AgoraEduHandsUpContext: NSObjectProtocol {
-    // 更新举手状态
+    // 更新举手状态【即将废弃】
     func updateHandsUpState(_ state: AgoraEduContextHandsUpState)
     // 事件监听
     func registerEventHandler(_ handler: AgoraEduHandsUpHandler)
+    
+    /** 新增接口 **/
+    func updateWaveArmsState(_ state: AgoraEduContextHandsUpState,
+                            timeout: Int)
 }
 
 // MARK: - ScreenSharing
@@ -487,19 +455,10 @@ import AgoraWidget
      *
      */
     @objc optional func onUpdateScreenShareState(_ state: AgoraEduContextScreenShareState,
-                                                   streamUuid: String)
-
+                                                 streamUuid: String)
+    
     // 切换屏幕课件Tab
     @objc optional func onSelectScreenShare(_ selected: Bool)
-    
-    /** 即将弃用接口 **/
-    /* 该方法曾用于显示屏幕分享相关消息
-     * XXX开启了屏幕分享
-     * XXX关闭了屏幕分享
-     * 现由UI层在onUpdateScreenShareState方法中执行显示tips的操作
-     */
-    @available(*, deprecated, message: "add tips in onUpdateScreenShareState instead of it")
-    @objc optional func onShowScreenShareTips(_ message: String)
 }
 
 @objc public protocol AgoraEduScreenShareContext: NSObjectProtocol {
@@ -511,12 +470,12 @@ import AgoraWidget
 @objc public protocol AgoraEduDeviceHandler: NSObjectProtocol {
     /* 摄像头开关
      * 文案显示：
-    *   enabled == true -> "你的摄像头被打开了" 【文案名：CameraUnMuteText】
-    *   enabled == false -> "你的摄像头被关闭了" 【文案名：CameraMuteText】
-    *
-    * 你的麦克风被关闭了
-    *
-    * 你的麦克风被打开了
+     *   enabled == true -> "你的摄像头被打开了" 【文案名：CameraUnMuteText】
+     *   enabled == false -> "你的摄像头被关闭了" 【文案名：CameraMuteText】
+     *
+     * 你的麦克风被关闭了
+     *
+     * 你的麦克风被打开了
      */
     @objc optional func onCameraDeviceEnableChanged(enabled: Bool)
     
@@ -535,13 +494,6 @@ import AgoraWidget
     
     // 扬声器开关
     @objc optional func onSpeakerEnabledChanged(enabled: Bool)
-    
-    /** 即将弃用接口 **/
-    /* 原用于显示设备相关信息提示
-    * 老师视频可能出现问题
-    * 该文案已弃用
-    */
-    @objc optional func onDeviceTips(message: String)
 }
 
 @objc public protocol AgoraEduDeviceContext: NSObjectProtocol {
@@ -554,6 +506,7 @@ import AgoraWidget
     func registerDeviceEventHandler(_ handler: AgoraEduDeviceHandler)
 }
 
+// MARK: - Media
 @objc public protocol AgoraEduMediaContext: NSObjectProtocol {
     // 开启摄像头
     func openCamera()
@@ -568,25 +521,94 @@ import AgoraWidget
     // 关闭麦克风
     func closeMicrophone()
     // 开始推流
-    func publishStream(type: EduContextMediaStreamType)
+    func publishStream(streamUuid: String,
+                       type: EduContextMediaStreamType)
     // 停止推流
-    func unpublishStream(type: EduContextMediaStreamType)
-    // 渲染或者关闭远端渲染，view为nil代表关闭渲染
-    func renderRemoteView(_ view: UIView?, streamUuid: String)
-    // 配置视频参数 (you must set Video Config before startOrUpdateLocalStream)
+    func unpublishStream(streamUuid: String,
+                         type: EduContextMediaStreamType)
+    // 配置视频参数
     func setVideoConfig(_ videoConfig: AgoraEduContextVideoConfig)
+    // 渲染本地视频流
+    func startRenderLocalVideo(view: UIView,
+                               renderConfig: AgoraEduContextRenderConfig,
+                               streamUuid: String)
+    // 停止渲染本地视频流
+    func stopRenderLocalVideo(streamUuid: String)
+    // 开始渲染远端视频流
+    func startRenderRemoteVideo(view: UIView,
+                                renderConfig: AgoraEduContextRenderConfig,
+                                streamUuid: String)
+    // 停止渲染远端视频流
+    func stopRenderRemoteVideo(streamUuid: String)
 }
 
+// MARK: - Widget
 @objc public protocol AgoraEduWidgetContext: AgoraWidgetProtocol {
-    
     func getAgoraWidgetProperties(type: EduContextWidgetType) -> [String: Any]?
+}
+
+// MARK: - Stream
+@objc public protocol AgoraEduStreamHandler: NSObjectProtocol {
     
-    /** 新增接口 **/
-//    func create(with: AgoraWidgetInfo) -> AgoraBaseWidget
+    /// 远端流加入频道事件 (v1.2.0)
+    /// - parameter stream: 流信息
+    /// - parameter operator: 操作人，可以为空
+    /// - returns: void
+    @objc optional func onStreamJoin(stream: AgoraEduContextStream,
+                                     operator: AgoraEduContextUserInfo?)
     
-    /** 已弃用接口 **/
-    // 创建组件
-    // info:组件配置信息
-    // contextPool:给组件传递实现了协议的接口对象
-    // func createWidget(info: AgoraWidgetInfo, contextPool: AgoraEduContextPool) -> AgoraEduWidget
+    /// 远端流离开频道事件 (v1.2.0)
+    /// - parameter stream: 流信息
+    /// - parameter operator: 操作人，可以为空
+    /// - returns: void
+    @objc optional func onStreamLeave(stream: AgoraEduContextStream,
+                                      operator: AgoraEduContextUserInfo?)
+    
+    /// 远端流更新事件 (v1.2.0)
+    /// - parameter stream: 流信息
+    /// - parameter operator: 操作人，可以为空
+    /// - returns: void
+    @objc optional func onStreamUpdate(stream: AgoraEduContextStream,
+                                       operator: AgoraEduContextUserInfo?)
+}
+
+@objc public protocol AgoraEduStreamContext: NSObjectProtocol {
+    /// 禁止或允许远端用户发视频流 (v1.2.0)
+    /// - parameter userUuid: 用户id
+    /// - parameter mute: 是否禁止发流
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    /// - returns: void
+    func muteRemoteVideo(streamUuids: [String],
+                         mute: Bool,
+                         success: AgoraEduContextSuccess?,
+                         failure: AgoraEduContextFail?)
+    
+    /// 禁止或允许远端用户发音频流 (v1.2.0)
+    /// - parameter userUuid: 用户id
+    /// - parameter mute: 是否禁止发流
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    /// - returns: void
+    func muteRemoteAudio(streamUuids: [String],
+                         mute: Bool,
+                         success: AgoraEduContextSuccess?,
+                         failure: AgoraEduContextFail?)
+    
+    /// 获取某个用户的一组流信息 (v1.2.0)
+    /// - parameter userUuid: 用户Id
+    /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
+    func getStreamsInfo(userUuid: String) -> [AgoraEduContextStream]?
+    
+    /// 选择订阅高/低分辨率的视频流 (v1.2.0)
+    /// - parameter streamUuid: 流Id
+    /// - parameter level: 分辨率类型
+    /// - returns: void
+    func subscribeVideoStreamLevel(streamUuid: String,
+                                   level: AgoraEduContextVideoStreamSubscribeLevel)
+    
+    /// 注册流事件回调 (v1.2.0)
+    /// - parameter handler: 遵守 AgoraEduStreamHandler 的对象
+    /// - returns: void
+    func registerStreamEventHandler(_ handler: AgoraEduStreamHandler)
 }

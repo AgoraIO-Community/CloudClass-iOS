@@ -94,8 +94,9 @@
     AgoraWhiteBoardJoinOptions *options = [[AgoraWhiteBoardJoinOptions alloc] init];
     options.boardId = self.properties[@"boardId"];
     options.boardToken = self.properties[@"boardToken"];
-    
+    options.cursorName = self.properties[@"cursorName"] ? self.properties[@"cursorName"] : @"";
     [self.manager joinWithOptions:options
+                         userUuid:@""
                           success:^{
         NSLog(@"00- join");
     } failure:^(NSError * _Nonnull error) {

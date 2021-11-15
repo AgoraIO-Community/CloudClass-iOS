@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface AgoraClassroomSDK : NSObject
++ (void)setBaseURL:(NSString *)baseURL;
 + (BOOL)setConfig:(AgoraClassroomSDKConfig *)config;
 
 + (AgoraEduClassroom * _Nullable)launch:(AgoraEduLaunchConfig *)config

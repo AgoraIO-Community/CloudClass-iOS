@@ -1,0 +1,84 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+
+NoEmptyText = " 參數不能為空";
+ParamErrorText = " 參數錯誤";
+NeedCallText = "你需要先調用";
+DismissVCText = "頁面上層還有其他頁面";
+
+UserFullText = "加入教室失敗，教室人數已滿";
+
+DuplicateLaunchText = "已經啟動了";
+UnInitializedText = " 沒有初始化完成";
+
+// ------------------------------------------------
+ClassTimeHourText = "時";
+ClassTimeMinuteText = "分";
+ClassTimeMinute2Text = "分鐘";
+ClassTimeSecondText = "秒";
+ClassBeforeStartText = "距離上課還有：";
+ClassAfterStartText = "已開始上課：";
+ClassAfterStopText = "課程已結束";
+
+// Room State
+ClassIDText = "課程ID：";
+ClassSingalGoodText = "優";
+ClassSingalMediumText = "良";
+ClassSingalBadText = "差";
+ClassSingalUnknownText = "未知";
+ClassLeftText = "離開教室";
+
+// toast
+ClassEndWarningStartText = "課程還有";
+ClassEndWarningEndText = "分鐘結束";
+ClassCloseWarningStartText = "課程結束咯，還有";
+ClassCloseWarningEndText = "關閉教室";
+ClassCloseWarningStart2Text = "距離教室關閉還有";
+ClassCloseWarningEnd2Text = "分鐘";
+//CoursewareFullOnText = "The teacher turned on the full screen of the courseware";
+//CoursewareFullOffText = "The teacher turned off the full screen of the courseware";
+ClassExitWarningText = "課程還沒結束，是否確定要退出教室？";
+ClassExitTipText = "退出教室";
+ClassThinkTipText = "再想一下";
+ClassExitText = "是否確定要退出教室？";
+
+// chat
+ChatDisableToastText = "禁言模式開啟";
+ChatEnableToastText = "禁言模式關閉";
+
+// canvas
+CameraMuteText = "你的攝像頭被關閉了";
+MicrophoneMuteText = "你的麥克風被關閉了";
+CameraUnMuteText = "你的攝像頭被打開了";
+MicrophoneUnMuteText = "你的麥克風被打開了";
+
+// Device
+TeacherVideoFailText = "There may be a problem with the teacher's video";
+
+// CoHost
+HandsUpTimeOutText = "舉手超時";
+RejectedCoHostText = "Teacher rejected your application";
+AcceptedCoHostText = "老師接受了你的連麥申請!";
+RemovedCoHostText = "You are not on stage now and you can not interact with others";
+HandsUpSuccessText = "已發送舉手請求給老師";
+HandsDownSuccessText = "取消舉手成功";
+CloseHandsUpText = "Teacher closed hands up mode";
+OpenHandsUpText = "Teacher opened hands up mode";
+
+// screenshare
+ScreensharedBySb = "The teacher starts to the screenshare";
+ScreenshareStoppedBySb = "The teacher stops the screenshare";
+
+long_press_to_wave_hands = "舉手請長按";
+
+kick_out_student = "移出學生";
+kick_out_once = "僅移出教室一次";
+kick_out_forever = "禁止再次進入教室";
+kick_out_submit = "確定";
+kick_out_cancel = "取消";

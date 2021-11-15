@@ -73,3 +73,19 @@ You are free to choose whether to try the services provided by this product. If 
 
 // countdown
 Countdown_title = "Countdown";
+
+// Answer sheet
+answer_sheet_title = "Selector";
+answer_sheet_submit_answer = "Post";
+answer_sheet_change_answer = "Change My Answer";
+answer_sheet_begin = "Begin Answering";
+answer_sheet_restart = "Restart";
+answer_sheet_end = "End of Answer";
+
+answer_sheet_student_name = "Name";
+answer_sheet_student_duration = "Duration";
+answer_sheet_student_answer = "Answer";
+answer_sheet_member_count = "Submission List:";
+answer_sheet_ratio = "Accuracy:";
+answer_sheet_correct = "The Correct Ansewer:";
+answer_sheet_mine = "My Answer:";

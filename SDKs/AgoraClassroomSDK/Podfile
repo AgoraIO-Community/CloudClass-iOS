@@ -6,11 +6,29 @@ def libVersion
   pod "AFNetworking", "4.0.1"
   pod "CocoaLumberjack", "3.6.1"
   pod "AliyunOSSiOS", "2.10.8"
-  pod "Whiteboard", "2.13.13"
-  pod "AgoraRtcEngine_iOS", "3.4.6"
+  pod "Armin", "1.0.8"
+  pod "Alamofire", "4.7.3"
+  pod "SSZipArchive", "2.4.2"
+
+  pod "Whiteboard", "2.15.1"
   pod "AgoraRtm_iOS", "1.4.8"
-  pod "SnapKit", "5.0.1"
+
   pod "SwifterSwift", "5.2.0" 
+  pod "Masonry"
+end
+
+def preRtc
+  pod 'AgoraEduCorePuppet/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
+  pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
+  pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
+  pod "AgoraRtcEngine_iOS", "3.4.6"
+end
+
+def reRtc
+  pod 'AgoraEduCorePuppet/ReRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
+  pod 'AgoraEduCore/ReRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
+  pod 'AgoraRte/ReRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
+  pod 'AgoraRtcKit', :path => '../../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'  
 end
 
 def openSourceLibs
@@ -26,10 +44,6 @@ end
 
 def sourcePod
   # close source libs
-  pod 'AgoraRte', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
-  pod 'AgoraEduCorePuppet', :path => '../../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
-  pod 'AgoraEduCore', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
-  pod 'AgoraActionProcess', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraActionProcess/AgoraActionProcess.podspec', :subspecs => ['OC']
   pod 'AgoraWhiteBoard', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
   pod 'AgoraReport', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
   pod 'AgoraRx', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
@@ -38,6 +52,9 @@ def sourcePod
   pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
   pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
   pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'  
+
+  # rtc
+  preRtc
 end
 
 def binaryPod
@@ -54,6 +71,7 @@ target 'AgoraClassroomSDK' do
   use_frameworks!
   
   libVersion
+  
   openSourceLibs
   widgets	
 

@@ -10,7 +10,6 @@
 #import <AgoraWidgets/AgoraWidgets-Swift.h>
 #import <AgoraEduUI/AgoraEduUI-Swift.h>
 #import <AgoraWidget/AgoraWidget.h>
-#import "AgoraBaseViewController.h"
 #import "AgoraInternalClassroom.h"
 #import "AgoraClassroomSDK.h"
 #import "AgoraEduTopVC.h"
@@ -22,6 +21,7 @@
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
 @property (nonatomic, strong) AgoraEduUI *ui;
 @property (nonatomic, strong) NSNumber *consoleState;
+@property (nonatomic, strong) NSNumber *environment;
 @property (nonatomic, strong) NSArray<AgoraEduCourseware *> *coursewares;
 @property (nonatomic, strong) AgoraEduClassroom *room;
 @property (nonatomic, weak) id<AgoraEduClassroomDelegate> roomDelegate;
@@ -32,12 +32,12 @@
 static AgoraClassroomSDK *manager = nil;
 
 @implementation AgoraClassroomSDK
-
 + (instancetype)share {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[AgoraClassroomSDK alloc] init];
         manager.consoleState = [[NSNumber alloc] initWithInt:0];
+        manager.environment = @(2);
     });
     return manager;
 }
@@ -62,8 +62,8 @@ static AgoraClassroomSDK *manager = nil;
     return _core;
 }
 
-+ (void)setBaseURL:(NSString *)baseURL {
-    [AgoraClassroomSDK share].baseURL = baseURL;
++ (void)setEnvironment:(NSNumber *)environment {
+    [AgoraClassroomSDK share].environment = environment;
 }
 
 + (void)setLogConsoleState:(NSNumber *)state {
@@ -106,9 +106,16 @@ static AgoraClassroomSDK *manager = nil;
     }
     
     // Log console
-    NSNumber *console = [AgoraClassroomSDK share].consoleState;
+    NSNumber *console = manager.consoleState;
     if (console) {
         NSDictionary *parameters = @{@"console": console};
+        [core setParameters:parameters];
+    }
+    
+    // Environment
+    NSNumber *environment = manager.environment;
+    if (environment) {
+        NSDictionary *parameters = @{@"environment": environment};
         [core setParameters:parameters];
     }
     
@@ -117,23 +124,26 @@ static AgoraClassroomSDK *manager = nil;
     
     // Media video encoder config
     AgoraEduCorePuppetVideoConfig *videoConfig = nil;
-    if (config.cameraEncoderConfiguration) {
-        videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithVideoDimensionWidth:config.cameraEncoderConfiguration.width
-                                                                    videoDimensionHeight:config.cameraEncoderConfiguration.height
-                                                                               frameRate:config.cameraEncoderConfiguration.frameRate
-                                                                                 bitRate:config.cameraEncoderConfiguration.bitrate
-                                                                              mirrorMode:config.cameraEncoderConfiguration.mirrorMode];
+    if (config.mediaOptions.cameraEncoderConfiguration) {
+        videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithVideoDimensionWidth:config.mediaOptions.cameraEncoderConfiguration.width
+                                                                    videoDimensionHeight:config.mediaOptions.cameraEncoderConfiguration.height
+                                                                               frameRate:config.mediaOptions.cameraEncoderConfiguration.frameRate
+                                                                                 bitRate:config.mediaOptions.cameraEncoderConfiguration.bitrate
+                                                                              mirrorMode:config.mediaOptions.cameraEncoderConfiguration.mirrorMode];
     }
-
-    AgoraEduCorePuppetMediaOptions *mediaOptions = nil;
-    if (config.mediaOptions) {
+    AgoraEduCorePuppetMediaEncryptionConfig *encryptionConfig = nil;
+    if (config.mediaOptions.encryptionConfig) {
         NSString *key = config.mediaOptions.encryptionConfig.key;
         AgoraEduCorePuppetMediaEncryptionMode mode = config.mediaOptions.encryptionConfig.mode;
-        AgoraEduCorePuppetMediaEncryptionConfig *encryptionConfig = [[AgoraEduCorePuppetMediaEncryptionConfig alloc] initWithKey:key
-                                                                                                                            mode:mode];
-        mediaOptions = [[AgoraEduCorePuppetMediaOptions alloc] initWithEncryptionConfig:encryptionConfig];
+        encryptionConfig = [[AgoraEduCorePuppetMediaEncryptionConfig alloc] initWithKey:key
+                                                                                   mode:mode];
     }
-
+    AgoraEduCorePuppetMediaOptions *mediaOptions = [[AgoraEduCorePuppetMediaOptions alloc] initWithEncryptionConfig:encryptionConfig
+                                                                                                        videoConfig:videoConfig
+                                                                                                       latencyLevel:config.mediaOptions.latencyLevel
+                                                                                                         videoState:config.mediaOptions.videoState
+                                                                                                         audioState:config.mediaOptions.audioState];
+    
     AgoraEduCorePuppetRoleType role = config.roleType;
 
     AgoraEduCorePuppetLaunchConfig *coreConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:manager.sdkConfig.appId
@@ -143,11 +153,7 @@ static AgoraClassroomSDK *manager = nil;
                                                                                               userUuid:config.userUuid
                                                                                               userRole:role
                                                                                         userProperties:config.userProperties
-                                                                                           videoConfig:videoConfig
                                                                                           mediaOptions:mediaOptions
-                                                                                            videoState:config.videoState
-                                                                                            audioState:config.audioState
-                                                                                          latencyLevel:config.latencyLevel
                                                                                               roomName:config.roomName
                                                                                               roomUuid:config.roomUuid
                                                                                               roomType:config.roomType
@@ -159,11 +165,22 @@ static AgoraClassroomSDK *manager = nil;
     __weak AgoraClassroomSDK *weakManager = manager;
 
     // Register widgets
+    NSMutableDictionary *widgets = [NSMutableDictionary dictionary];
+    // chat
     AgoraWidgetConfiguration *chat = [[AgoraWidgetConfiguration alloc] initWithClass:[AgoraChatWidget class]
                                                                             widgetId:@"AgoraChatWidget"];
 
-    NSMutableDictionary *widgets = [NSMutableDictionary dictionary];
     widgets[chat.widgetId] = chat;
+    
+    // AgoraSpreadRenderWidget
+    AgoraWidgetConfiguration *spreadRender = [[AgoraWidgetConfiguration alloc] initWithClass:[AgoraSpreadRenderWidget class]
+                                                                                   widgetId:@"big-window"];
+    widgets[spreadRender.widgetId] = spreadRender;
+    
+    // AgoraCloudWidget
+    AgoraWidgetConfiguration *cloudWidgetConfig = [[AgoraWidgetConfiguration alloc] initWithClass:[AgoraCloudWidget class]
+                                                                                         widgetId:@"AgoraCloudWidget"];
+    widgets[cloudWidgetConfig.widgetId] = cloudWidgetConfig;
 
     for (AgoraWidgetConfiguration *item in manager.widgets) {
         widgets[item.widgetId] = item;
@@ -172,7 +189,8 @@ static AgoraClassroomSDK *manager = nil;
     [core launchWithConfig:coreConfig
                    extApps:manager.apps
                    widgets:widgets.allValues
-                   success:^(id<AgoraEduContextPool> _Nonnull pool) {
+                   success:^(id<AgoraEduContextPool> pool) {
+        
         AgoraEduContextRoomType roomType = AgoraEduContextRoomTypeOneToOne;
         
         switch (config.roomType) {
@@ -192,26 +210,19 @@ static AgoraClassroomSDK *manager = nil;
                 assert("Enum RoomType error");
                 break;
         }
-
-        AgoraEduUI *ui = [[AgoraEduUI alloc] initWithViewType:roomType
+        
+        AgoraEduUI *eduUI = [[AgoraEduUI alloc] init];
+        AgoraUIManager *uiManager = [eduUI launchWithRoomType:roomType
                                                   contextPool:pool
                                                        region:config.region];
-
-        AgoraBaseViewController *vc = [[AgoraBaseViewController alloc] init];
-        vc.modalPresentationStyle = UIModalPresentationFullScreen;
-        [vc.view addSubview:ui.appView];
-        ui.appView.agora_x = 0;
-        ui.appView.agora_y = 0;
-        ui.appView.agora_right = 0;
-        ui.appView.agora_bottom = 0;
-
-        [AgoraEduTopVC.topVC presentViewController:vc
+        uiManager.modalPresentationStyle = UIModalPresentationFullScreen;
+        [AgoraEduTopVC.topVC presentViewController:uiManager
                                           animated:YES
                                         completion:^{
             [weakManager launchCompleteEvent:AgoraEduEventReady];
         }];
 
-        weakManager.ui = ui;
+        weakManager.ui = eduUI;
     } fail:^(NSError * _Nonnull error) {
         if (error.code == 30403100) {
             [manager launchCompleteEvent:AgoraEduEventForbidden];
@@ -298,7 +309,7 @@ static AgoraClassroomSDK *manager = nil;
 - (void)destory {
     __weak AgoraClassroomSDK *weakself = self;
     
-    if (![AgoraEduTopVC.topVC isKindOfClass:[AgoraBaseViewController class]]) {
+    if (![AgoraEduTopVC.topVC isKindOfClass:[AgoraUIManager class]]) {
         [self agoraRelease];
         return;
     }
@@ -412,7 +423,10 @@ didProcessUpdatedWithURL:(NSURL *)url
                                                                                                        resourceUuid:courseware.resourceUuid
                                                                                                           scenePath:courseware.scenePath
                                                                                                         resourceURL:courseware.resourceUrl
-                                                                                                             scenes:puppetScenes];
+                                                                                                             scenes:puppetScenes
+                                                                                                                ext:courseware.ext
+                                                                                                               size:courseware.size
+                                                                                                         updateTime:courseware.updateTime];
         [puppetCoursewares addObject:puppetCourseware];
     }
     

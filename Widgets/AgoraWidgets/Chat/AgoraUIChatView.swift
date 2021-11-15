@@ -41,13 +41,13 @@ class AgoraUIChatView: AgoraBaseUIView,
     }()
     
     @objc lazy var resignFirstResponderGesture: UITapGestureRecognizer = {
-    let tapGesture = UITapGestureRecognizer(target: self,
-                                           action: #selector(keyboardEndRecognized(_:)))
-     tapGesture.cancelsTouchesInView = false
-     tapGesture.isEnabled = true
-     tapGesture.delegate = self
-     return tapGesture
-     }()
+        let tapGesture = UITapGestureRecognizer(target: self,
+                                                action: #selector(keyboardEndRecognized(_:)))
+        tapGesture.cancelsTouchesInView = false
+        tapGesture.isEnabled = true
+        tapGesture.delegate = self
+        return tapGesture
+    }()
     
     // MARK: - State
     var showDefaultText = true {
@@ -150,7 +150,7 @@ private extension AgoraUIChatView {
         maxView.agora_y = 0
         maxView.agora_bottom = 0
         maxView.agora_right = 0
-
+        
         minView.agora_x = 0
         minView.agora_y = 0
         minView.agora_right = 0

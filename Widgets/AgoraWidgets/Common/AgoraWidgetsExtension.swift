@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AgoraUIEduBaseViews
 
 extension Dictionary {
     func jsonString() -> String? {
@@ -45,4 +46,20 @@ extension Data {
         
         return dic
     }
+}
+
+public func GetWidgetImage(object: NSObject,
+                           _ name: String) -> UIImage? {
+    let resource = "AgoraWidgets"
+    return UIImage.agora_bundle(object: object,
+                                resource: resource,
+                                name: name)
+}
+
+public func GetWidgetLocalizableString(object: NSObject,
+                                       key: String) -> String {
+    let resource = "AgoraWidgets"
+    return String.agora_localized_string(key,
+                                         object: object,
+                                         resource: resource)
 }

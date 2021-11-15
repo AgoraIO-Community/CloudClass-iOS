@@ -47,7 +47,6 @@ typedef NS_ENUM(NSInteger, AgoraEduMediaEncryptionMode) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduMirrorMode) {
-    AgoraEduMirrorModeAuto     = 0,
     AgoraEduMirrorModeEnabled  = 1,
     AgoraEduMirrorModeDisabled = 2,
 };
@@ -72,7 +71,7 @@ typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
     AgoraEduRoomTypeOneToOne   = 0,
     AgoraEduRoomTypeLecture    = 2,
     AgoraEduRoomTypeSmall      = 4,
-    AgoraEduRoomTypePaintingSmall = 6,
+    AgoraEduRoomTypePaintingSmall = 5,
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduStreamState) {

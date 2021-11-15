@@ -1,0 +1,17 @@
+/* 
+  Localizable.strings
+  
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+// Chat
+ChatMuteTagText = "已禁言";
+ChatText = "消息";
+ChatConversation = "提问";
+ChatEmptyText = "还没有消息";
+ChatSendText = "发送";
+ChatPlaceholderText = "请输入消息";
+ChatSilencedPlaceholderText = "禁止输入消息";
+ChatDisableToastText = "禁言模式开启";
+ChatEnableToastText = "禁言模式关闭";
+ChatDisableText = "禁言";

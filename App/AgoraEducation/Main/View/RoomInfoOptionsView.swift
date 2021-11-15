@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RoomInfoOptionsView: AgoraBaseUIView, UITableViewDelegate, UITableViewDataSource {
+class RoomInfoOptionsView: AgoraBaseUIView,  UITableViewDelegate, UITableViewDataSource {
         
     var tableView: UITableView!
     
@@ -29,7 +29,10 @@ class RoomInfoOptionsView: AgoraBaseUIView, UITableViewDelegate, UITableViewData
         fatalError("init(coder:) has not been implemented")
     }
     // 在某个视图的下方展示
-    public func show(beside: UIView, options: [String], index: Int, onSelected:@escaping (_ index: Int)->()) {
+    public func show(beside: UIView,
+                     options: [String],
+                     index: Int,
+                     onSelected:@escaping (_ index: Int)->()) {
         hide()
         superview?.bringSubviewToFront(self)
         self.onSelected = onSelected
@@ -57,11 +60,13 @@ class RoomInfoOptionsView: AgoraBaseUIView, UITableViewDelegate, UITableViewData
         onSelected = nil
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    @objc func tableView(_ tableView: UITableView,
+                          numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    @objc func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(RoomInfoOptionCell.self)) as? RoomInfoOptionCell
         cell?.infoLabel.text = dataSource[indexPath.row]
         let color = (selectedIndex == indexPath.row) ? UIColor(hexString: "#357BF6") : UIColor(hexString: "#191919")
@@ -69,15 +74,13 @@ class RoomInfoOptionsView: AgoraBaseUIView, UITableViewDelegate, UITableViewData
         return cell!
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
+    @objc func tableView(_ tableView: UITableView,
+                          didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath,
+                              animated: false)
         onSelected?(indexPath.row)
     }
 }
-
-//extension RoomInfoOptionsView:  {
-//
-//}
 
 // MARK: - Creations
 extension RoomInfoOptionsView {
@@ -94,8 +97,6 @@ extension RoomInfoOptionsView {
         tableView.dataSource = self
         tableView.tableFooterView = UIView.init(frame: CGRect(x: 0, y: 0, width: 1, height: 0.01))
         tableView.rowHeight = 44
-        tableView.separatorColor = UIColor(hexString: "#E3E3EC")
-        tableView.separatorInset = .zero
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         tableView.separatorColor = UIColor(hexString: "#EEEEF7")
         tableView.register(RoomInfoOptionCell.self, forCellReuseIdentifier: NSStringFromClass(RoomInfoOptionCell.self))

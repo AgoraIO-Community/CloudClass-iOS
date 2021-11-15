@@ -5,8 +5,8 @@
 //  Created by Cavan on 2021/2/1.
 //
 
-import UIKit
 import AgoraUIBaseViews
+import UIKit
 
 // MARK: - AgoraImageViewCell
 class AgoraImageViewCell: AgoraBaseUICollectionCell {

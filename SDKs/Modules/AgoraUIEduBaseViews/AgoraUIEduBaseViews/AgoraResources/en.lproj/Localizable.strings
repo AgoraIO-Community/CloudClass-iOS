@@ -9,17 +9,6 @@
 // Common
 OK = "OK";
 
-// Chat
-ChatText = "Message";
-ChatEmptyText = "No Message";
-ChatConversation = "Quiz";
-ChatSendText = "Send";
-ChatPlaceholderText = "Input";
-ChatSilencedPlaceholderText = "Banned to chat";
-ChatDisableToastText = "Turn on mute mode";
-ChatEnableToastText = "Turn off mute mode";
-ChatDisableText = "mute chat";
-
 // User List
 UserListMainTitle = "Member List";
 UserListTeacherName = "Teacher:";
@@ -30,8 +19,9 @@ UserListCamera = "Camera";
 UserListMicro = "Mute";
 UserListChat = "Silence";
 UserListReward = "Rewards";
+nameroll_kick_out = "Ban";
 
-ChatMuteTagText = "You are not allowed to send messages in the chat box";
+
 
 // board
 MuteBoardText = "Your cannot use the whiteboard tools.";
@@ -74,6 +64,9 @@ LeaveClassTitleText = "Leave Class";
 ClassOverNoticeText = "Over Notification";
 ClassOverText = "Class is end!";
 LeaveClassText = "Are you sure you want to end get out of class?";
+ClassTimeHourText = "h";
+ClassTimeMinuteText = "m";
+ClassTimeSecondText = "s";
 
 KickOutNoticeText = "Remove Notification";
 KickOutText = "You have been kicked out of the classroom.";
@@ -90,3 +83,4 @@ BoardWareRetryText = "Retry";
 
 LoginOnAnotherDeviceText = "Account was logged in from remote device";
 
+HandsupFirstInText = "Press and hold down";

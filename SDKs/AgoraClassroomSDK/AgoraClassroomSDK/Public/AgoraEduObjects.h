@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <Whiteboard/Whiteboard.h>
 #import <AgoraExtApp/AgoraExtApp.h>
 #import "AgoraEduEnums.h"
 
@@ -90,12 +89,21 @@ NS_ASSUME_NONNULL_BEGIN
 // 课件文件列表，用于目录里面每页的数据
 // 对应convertedFileList对象
 @property (nonatomic, strong) NSArray<AgoraEduBoardScene *> *scenes;
+/// 原始文件的扩展名
+@property (nonatomic, copy, nullable) NSString *ext;
+/// 原始文件的大小 单位是字节
+@property (nonatomic, assign) double size;
+/// 原始文件的更新时间
+@property (nonatomic, assign) double updateTime;
 
 - (instancetype)initWithResourceName:(NSString *)resourceName
                         resourceUuid:(NSString *)resourceUuid
                            scenePath:(NSString *)scenePath
                               scenes:(NSArray<AgoraEduBoardScene *> *)scenes
-                         resourceUrl:(NSString *)resourceUrl;
+                         resourceUrl:(NSString *)resourceUrl
+                                 ext:(NSString * _Nonnull)ext
+                                size:(double)size
+                          updateTime:(double)updateTime;
 @end
 
 #pragma mark - Media
@@ -105,12 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *key;
 
 - (instancetype)initWithMode:(AgoraEduMediaEncryptionMode)mode key:(NSString *)key;
-@end
-
-@interface AgoraEduMediaOptions : NSObject
-@property (nonatomic, strong) AgoraEduMediaEncryptionConfig *encryptionConfig;
-
-- (instancetype)initWithConfig:(AgoraEduMediaEncryptionConfig *)encryptionConfig;
 @end
 
 @interface AgoraEduVideoEncoderConfiguration : NSObject
@@ -127,6 +129,24 @@ NS_ASSUME_NONNULL_BEGIN
                    mirrorMode:(AgoraEduMirrorMode)mirrorMode;
 @end
 
+@interface AgoraEduMediaOptions : NSObject
+@property (nonatomic, strong, nullable) AgoraEduMediaEncryptionConfig *encryptionConfig;
+// 分辨率配置属性
+@property (nonatomic, strong, nullable) AgoraEduVideoEncoderConfiguration *cameraEncoderConfiguration;
+// RTC观众延时级别,默认lowlatency（极速直播）
+@property (nonatomic, assign) AgoraEduLatencyLevel latencyLevel;
+// 学生上麦默认打开/关闭视频
+@property (nonatomic, assign) AgoraEduStreamState videoState;
+// 学生上麦默认打开/关闭音频
+@property (nonatomic, assign) AgoraEduStreamState audioState;
+
+- (instancetype)initWithEncryptionConfig:(AgoraEduMediaEncryptionConfig *_Nullable)encryptionConfig
+              cameraEncoderConfiguration:(AgoraEduVideoEncoderConfiguration *_Nullable)cameraEncoderConfiguration
+                            latencyLevel:(AgoraEduLatencyLevel)latencyLevel
+                              videoState:(AgoraEduStreamState)videoState
+                              audioState:(AgoraEduStreamState)audioState;
+@end
+
 #pragma mark - Launch
 /**启动课堂配置*/
 @interface AgoraEduLaunchConfig : NSObject
@@ -134,7 +154,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *userName;
 // 用户全局唯一id，需要与你签发token时使用的uid一致
 @property (nonatomic, copy) NSString *userUuid;
-// 角色类型(参考AgoraEduRoleType)
+// 角色类型(参考AgoraEduCoreRoleType)
 @property (nonatomic, assign) AgoraEduRoleType roleType;
 // 教室名称
 @property (nonatomic, copy) NSString *roomName;
@@ -154,14 +174,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) AgoraEduMediaOptions *mediaOptions;
 // 用户自定属性
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> * userProperties;
-// 学生上麦默认打开/关闭视频
-@property (nonatomic, assign) AgoraEduStreamState videoState;
-// 学生上麦默认打开/关闭音频
-@property (nonatomic, assign) AgoraEduStreamState audioState;
-// 分辨率配置属性
-@property (nonatomic, strong, nullable) AgoraEduVideoEncoderConfiguration *cameraEncoderConfiguration;
-// RTC观众延时级别,默认lowlatency（极速直播）
-@property (nonatomic, assign) AgoraEduLatencyLevel latencyLevel;
 
 @property (nonatomic, assign) AgoraEduBoardFitMode boardFitMode;
 
@@ -185,9 +197,6 @@ NS_ASSUME_NONNULL_BEGIN
                           region:(NSString * _Nullable)region
                     mediaOptions:(AgoraEduMediaOptions * _Nullable)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties
-                      videoState:(AgoraEduStreamState)videoState
-                      audioState:(AgoraEduStreamState)audioState
-                    latencyLevel:(AgoraEduLatencyLevel)latencyLevel
                     boardFitMode:(AgoraEduBoardFitMode)boardFitMode;
 @end
 

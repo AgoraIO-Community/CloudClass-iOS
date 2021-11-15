@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "ic_handsup_off_stage.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

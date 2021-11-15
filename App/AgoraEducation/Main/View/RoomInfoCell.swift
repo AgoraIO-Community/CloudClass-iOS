@@ -170,7 +170,7 @@ extension RoomInfoCell {
         textField.agora_height = 40
         
         indicatorView.agora_right = 0
-        indicatorView.agora_center_y = titleLabel.agora_center_y
+        indicatorView.agora_equal_to(view: titleLabel, attribute: .centerY)
         
         lineView.agora_x = 0
         lineView.agora_right = 0

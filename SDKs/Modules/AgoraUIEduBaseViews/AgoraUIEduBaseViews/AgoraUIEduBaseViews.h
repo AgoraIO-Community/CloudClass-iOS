@@ -14,5 +14,3 @@ FOUNDATION_EXPORT double AgoraUIEduBaseViewsVersionNumber;
 FOUNDATION_EXPORT const unsigned char AgoraUIEduBaseViewsVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <AgoraUIEduBaseViews/PublicHeader.h>
-
-

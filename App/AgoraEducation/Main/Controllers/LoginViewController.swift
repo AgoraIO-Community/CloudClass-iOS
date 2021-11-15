@@ -136,6 +136,8 @@ struct RoomInfoModel {
     private var selectedIndex = -1
     
     private var classroom: AgoraEduClassroom?
+    
+    private let tokenBuilder = TokenBuilder()
 }
 
 // MARK: - override
@@ -168,7 +170,8 @@ extension LoginViewController {
         }
     }
     
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    public override func touchesBegan(_ touches: Set<UITouch>,
+                                      with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         
         hideOptions()
@@ -197,7 +200,16 @@ private extension LoginViewController {
                                                  frame: .zero,
                                                  language: "zh")
         countDown.image = UIImage(named: "countdown")
-        let apps = [countDown]
+        
+        let answerExt = AgoraExtAppConfiguration(appIdentifier: "io.agora.answer",
+                                                 extAppClass: AnswerSheetExtApp.self,
+                                                 frame: UIEdgeInsets(top: 0,
+                                                                     left: 0,
+                                                                     bottom: 0,
+                                                                     right: 0),
+                                                 language: "zh")
+        answerExt.image = UIImage(named: "countdown")
+        let apps = [countDown, answerExt]
         AgoraClassroomSDK.registerExtApps(apps)
     }
     /** 获取选项列表*/
@@ -205,7 +217,8 @@ private extension LoginViewController {
         return options.map {$1}
     }
     /** 获取选项的文本*/
-    func optionDescription<T: Equatable>(option: T?, in options: [(T, String)]) -> String {
+    func optionDescription<T: Equatable>(option: T?,
+                                         in options: [(T, String)]) -> String {
         for (_, (element, desc)) in options.enumerated() {
             if option == element {
                 return desc
@@ -214,7 +227,8 @@ private extension LoginViewController {
         return ""
     }
     /** 获取选项的下标*/
-    func optionIndex<T: Equatable>(option: T?, in options: [(T, String)]) -> Int {
+    func optionIndex<T: Equatable>(option: T?,
+                                   in options: [(T, String)]) -> Int {
         var index = -1
         guard let option = option else {
             return index
@@ -239,7 +253,6 @@ private extension LoginViewController {
 
 // MARK: - Actions
 private extension LoginViewController {
-    
     @objc func onTouchAbout() {
         view.addSubview(aboutView)
         aboutView.agora_x = 0
@@ -305,10 +318,11 @@ private extension LoginViewController {
         }
         registerExtApps()
         
-        let sel = NSSelectorFromString("setBaseURL:");
-        let url = KeyCenter.hostURL()
-        AgoraClassroomSDK.perform(sel,
-                                  with: url)
+        if region.rawValue.contains("CN") {
+            let chat = AgoraWidgetConfiguration(with: ChatWidget.self,
+                                                widgetId: "HyChatWidget")
+            AgoraClassroomSDK.registerWidgets([chat])
+        }
         
         // roomUuid = roomName + classType
         let roomUuid = "\(room)\(roomStyle.rawValue)"
@@ -316,69 +330,103 @@ private extension LoginViewController {
         // userUuid = userName + roleType
         let userUuid = "\(user)\(roleType.rawValue)"
 
-        if region.rawValue.contains("CN") {
-            let chat = AgoraWidgetConfiguration(with: ChatWidget.self, widgetId: "HyChatWidget")
-            AgoraClassroomSDK.registerWidgets([chat])
-        }
+        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
+        let duration = self.defaultParams.duration!
         
+        var encryptionConfig: AgoraEduMediaEncryptionConfig?
+        if let key = self.inputParams.encryptKey ?? self.defaultParams.encryptKey,
+           encryptionMode != .none {
+            let tfModeValue = encryptionMode.rawValue
+            if tfModeValue > 0 && tfModeValue <= 6 {
+                encryptionConfig = AgoraEduMediaEncryptionConfig(mode: encryptionMode, key: key)
+            }
+        }
+        let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
+                                                cameraEncoderConfiguration: nil,
+                                                latencyLevel: .ultraLow,
+                                                videoState: .on,
+                                                audioState: .on)
+        
+        requestToken(region: region.rawValue,
+                     userUuid: userUuid) { [weak self] (response) in
+            guard let `self` = self else {
+                return
+            }
+            
+            let appId = response.appId
+            let rtmToken = response.rtmToken
+            let userUuid = response.userId
+            let sdkConfig = AgoraClassroomSDKConfig(appId: appId)
+            
+            let launchConfig = AgoraEduLaunchConfig(userName: user,
+                                                    userUuid: userUuid,
+                                                    roleType: roleType,
+                                                    roomName: room,
+                                                    roomUuid: roomUuid,
+                                                    roomType: roomStyle,
+                                                    token: rtmToken,
+                                                    startTime: NSNumber(value: startTime),
+                                                    duration: NSNumber(value: duration),
+                                                    region: region.rawValue,
+                                                    mediaOptions: mediaOptions,
+                                                    userProperties: nil,
+                                                    boardFitMode: .retain)
+            
+            AgoraClassroomSDK.setConfig(sdkConfig)
+            self.classroom = AgoraClassroomSDK.launch(launchConfig,
+                                                      delegate: self)
+        }
+    }
+    
+    @objc func onPushDebugVC() {
+        navigationController?.pushViewController(DebugViewController(),
+                                                 animated: true)
+    }
+}
+
+private extension LoginViewController {
+    func buildToken(appId: String,
+                    appCertificate: String,
+                    userUuid: String,
+                    completion: @escaping (TokenBuilder.ServerResp) -> ()) {
+        let token = tokenBuilder.buildByAppId(appId,
+                                              appCertificate: appCertificate,
+                                              userUuid: userUuid)
+        
+        let response = TokenBuilder.ServerResp(appId: appId,
+                                               userId: userUuid,
+                                               rtmToken: token)
+        completion(response)
+    }
+    
+    func requestToken(region: String,
+                      userUuid: String,
+                      completion: @escaping (TokenBuilder.ServerResp) -> ()) {
         if alertView == nil {
             alertView = AgoraUtils.showLoading(message: "")
         } else {
             alertView?.show(in: view)
         }
         
-        TokenBuilder.serverInfo(region.rawValue, userUuid: userUuid) { [weak self] (appid, userId, rtmToken) in
-            guard let `self` = self else {
-                return
-            }
-            var mediaOptions: AgoraEduMediaOptions?
-            if let key = self.inputParams.encryptKey ?? self.defaultParams.encryptKey,
-               encryptionMode != .none {
-                let tfModeValue = encryptionMode.rawValue
-                if tfModeValue > 0 && tfModeValue <= 6 {
-                    let config = AgoraEduMediaEncryptionConfig(mode: encryptionMode, key: key)
-                    mediaOptions = AgoraEduMediaOptions(config: config)
-                }
-            }
-            
-            let sdkConfig = AgoraClassroomSDKConfig(appId: appid)
-            AgoraClassroomSDK.setConfig(sdkConfig)
-            let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
-            let config = AgoraEduLaunchConfig(userName: user,
-                                              userUuid: userUuid,
-                                              roleType: roleType,
-                                              roomName: room,
-                                              roomUuid: roomUuid,
-                                              roomType: roomStyle,
-                                              token: rtmToken,
-                                              startTime: NSNumber.init(value: startTime),
-                                              duration: NSNumber(value: self.defaultParams.duration!),
-                                              region: region.rawValue,
-                                              mediaOptions: mediaOptions,
-                                              userProperties: nil,
-                                              videoState: .on,
-                                              audioState: .on,
-                                              latencyLevel: .ultraLow,
-                                              boardFitMode: .retain)
-            
-            self.classroom = AgoraClassroomSDK.launch(config, delegate: self)
-        } failure: { [weak self] error in
+        tokenBuilder.buildByServer(region: region,
+                                   userUuid: userUuid,
+                                   environment: .pro,
+                                   success: { (resp) in
+            completion(resp)
+        }, fail: { [weak self] (error) in
             guard let `self` = self else {
                 return
             }
             self.alertView?.removeFromSuperview()
             AgoraUtils.showToast(message: error.localizedDescription)
-        }
-    }
-    
-    @objc func onPushDebugVC() {
-        navigationController?.pushViewController(DebugViewController(), animated: true)
+        })
     }
 }
 
 // MARK: - AgoraEduClassroomDelegate
 extension LoginViewController: AgoraEduClassroomDelegate {
-    public func classroom(_ classroom: AgoraEduClassroom, didReceivedEvent event: AgoraEduEvent) {
+    public func classroom(_ classroom: AgoraEduClassroom,
+                          didReceivedEvent event: AgoraEduEvent) {
         if alertView != nil {
             alertView?.removeFromSuperview()
         }
@@ -395,16 +443,19 @@ extension LoginViewController: AgoraEduClassroomDelegate {
 }
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView,
+                          numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }
     
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView,
+                          cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let reuseId = "RoomInfoCellAt\(indexPath.row)"
         var cell: RoomInfoCell!
         cell = tableView.dequeueReusableCell(withIdentifier: reuseId) as? RoomInfoCell
         if cell == nil {
-            cell = RoomInfoCell.init(style: .default, reuseIdentifier: reuseId)
+            cell = RoomInfoCell(style: .default,
+                                reuseIdentifier: reuseId)
         }
         cell.delegate = self
         cell.indexPath = indexPath
@@ -413,44 +464,58 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         switch rowType {
         case .roomName:
             cell.mode = .input
-            cell.titleLabel.text = NSLocalizedString("Login_room_title",comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_room_holder",comment: "")
+            cell.titleLabel.text = NSLocalizedString("Login_room_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_room_holder",
+                                                           comment: "")
         case .nickName:
             cell.mode = .input
-            cell.titleLabel.text = NSLocalizedString("Login_user_title",comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_user_holder",comment: "")
+            cell.titleLabel.text = NSLocalizedString("Login_user_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_user_holder",
+                                                           comment: "")
         case .roomStyle:
             cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("Login_class_type_title",comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_type_holder",comment: "")
+            cell.titleLabel.text = NSLocalizedString("Login_class_type_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_type_holder",
+                                                           comment: "")
             cell.textField.text = optionDescription(option: inputParams.roomStyle,
-                                                         in: kRoomOptions)
+                                                    in: kRoomOptions)
         case .roleType:
             // 美术小班课可选角色，其他不可选
             cell.mode = (inputParams.roomStyle == .paintingSmall) ? .option : .unable
-            cell.titleLabel.text = NSLocalizedString("login_title_role",comment: "")
+            cell.titleLabel.text = NSLocalizedString("login_title_role",
+                                                     comment: "")
             cell.textField.placeholder = optionDescription(option: defaultParams.roleType,
-                                                                in: kRoleOptions)
+                                                           in: kRoleOptions)
             cell.textField.text = optionDescription(option: inputParams.roleType,
-                                                         in: kRoleOptions)
+                                                    in: kRoleOptions)
         case .region:
             cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("Login_region_title",comment: "")
+            cell.titleLabel.text = NSLocalizedString("Login_region_title",
+                                                     comment: "")
             cell.textField.placeholder = defaultParams.region?.rawValue
             cell.textField.text = optionDescription(option: inputParams.region,
-                                                         in: kRegionOptions)
+                                                    in: kRegionOptions)
         case .duration:
             cell.mode = .unable
-            cell.titleLabel.text = NSLocalizedString("Login_duration_title",comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_duration_holder",comment: "")
+            cell.titleLabel.text = NSLocalizedString("Login_duration_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_duration_holder",
+                                                           comment: "")
         case .encryptKey:
             cell.mode = .input
-            cell.titleLabel.text = NSLocalizedString("Login_encryptKey_title",comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_encryptKey_holder",comment: "")
+            cell.titleLabel.text = NSLocalizedString("Login_encryptKey_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_encryptKey_holder",
+                                                           comment: "")
         case .encryptMode:
             cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("Login_encryption_mode_title",comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_encryption_mode_holder",comment: "")
+            cell.titleLabel.text = NSLocalizedString("Login_encryption_mode_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_encryption_mode_holder",
+                                                           comment: "")
             cell.textField.text = optionDescription(option: inputParams.encryptMode,
                                                          in: kEncryptionOptions)
         default:
@@ -459,7 +524,8 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
-    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView,
+                          didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? RoomInfoCell else {
             return
         }
@@ -474,8 +540,11 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         let rowType = RoomInfoItemType(rawValue: indexPath.row)
         if rowType == .roomStyle {
             let options = optionStrings(form: kRoomOptions)
-            let index = optionIndex(option: inputParams.roomStyle ?? defaultParams.roomStyle, in: kRoomOptions)
-            optionsView.show(beside: cell, options: options, index: index) { i in
+            let index = optionIndex(option: inputParams.roomStyle ?? defaultParams.roomStyle,
+                                    in: kRoomOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
                 self.hideOptions()
                 let (v, str) = kRoomOptions[i]
                 self.inputParams.roomStyle = v
@@ -493,7 +562,9 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
             // 美术小班课可以选择角色，其他不可以
             let options = optionStrings(form: kRoleOptions)
             let index = optionIndex(option: inputParams.roleType ?? defaultParams.roleType, in: kRoleOptions)
-            optionsView.show(beside: cell, options: options, index: index) { i in
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
                 self.hideOptions()
                 let (v, str) = kRoleOptions[i]
                 self.inputParams.roleType = v
@@ -502,7 +573,9 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         }  else if rowType == .region {
             let options = optionStrings(form: kRegionOptions)
             let index = optionIndex(option: inputParams.region ?? defaultParams.region, in: kRegionOptions)
-            optionsView.show(beside: cell, options: options, index: index) { i in
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
                 self.hideOptions()
                 let (v, str) = kRegionOptions[i]
                 self.inputParams.region = v
@@ -511,7 +584,9 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         }  else if rowType == .encryptMode {
             let options = optionStrings(form: kEncryptionOptions)
             let index = optionIndex(option: inputParams.encryptMode ?? defaultParams.encryptMode, in: kEncryptionOptions)
-            optionsView.show(beside: cell, options: options, index: index) { i in
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
                 let (v, str) = kEncryptionOptions[i]
                 self.inputParams.encryptMode = v
                 cell.textField.text = str
@@ -522,7 +597,8 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
-    public func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView,
+                          didDeselectRowAt indexPath: IndexPath) {
         hideOptions()
     }
     
@@ -540,10 +616,10 @@ extension LoginViewController: RoomInfoCellDelegate {
     }
     
     func infoCellInputTextDidChange(cell: RoomInfoCell) {
-        guard let text = cell.textField.text  else {
+        guard let text = cell.textField.text else {
             return
         }
-        let itemType = RoomInfoItemType.init(rawValue: cell.indexPath.row)
+        let itemType = RoomInfoItemType(rawValue: cell.indexPath.row)
         let pattern = "[a-zA-Z0-9]*$"
         let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
         switch itemType {
@@ -572,7 +648,8 @@ private extension LoginViewController {
             let image = UIImage(named: LoginConfig.device == .iPhone_Small ? "title_bg_small" : "title_bg")
             topImageView = AgoraBaseUIImageView(image: image)
             let label = AgoraBaseUILabel()
-            label.text = NSLocalizedString("Login_title", comment: "")
+            label.text = NSLocalizedString("Login_title",
+                                           comment: "")
             label.textColor = .white
             label.font = UIFont.systemFont(ofSize: 20)
             topImageView.addSubview(label)
@@ -586,18 +663,26 @@ private extension LoginViewController {
         
         aboutButton = AgoraBaseUIButton()
         let image = UIImage(named: "about_tag_\(UIDevice.current.model)")
-        aboutButton.setBackgroundImage(image, for: .normal)
+        aboutButton.setBackgroundImage(image,
+                                       for: .normal)
         aboutButton.alpha = 0.7
-        aboutButton.addTarget(self, action: #selector(onTouchAbout), for: .touchUpInside)
+        aboutButton.addTarget(self,
+                              action: #selector(onTouchAbout),
+                              for: .touchUpInside)
         view.addSubview(aboutButton)
         
         enterButton = AgoraBaseUIButton()
-        enterButton.setTitle(NSLocalizedString("Login_enter", comment: ""), for: .normal)
-        enterButton.setTitleColor(.white, for: .normal)
+        enterButton.setTitle(NSLocalizedString("Login_enter",
+                                               comment: ""),
+                             for: .normal)
+        enterButton.setTitleColor(.white,
+                                  for: .normal)
         enterButton.backgroundColor = UIColor(hexString: "C0D6FF")
         enterButton.isUserInteractionEnabled = true
         enterButton.layer.cornerRadius = 22
-        enterButton.addTarget(self, action: #selector(onTouchJoinRoom), for: .touchUpInside)
+        enterButton.addTarget(self,
+                              action: #selector(onTouchJoinRoom),
+                              for: .touchUpInside)
         view.addSubview(enterButton)
         
         bottomButton = AgoraBaseUIButton()
@@ -606,16 +691,22 @@ private extension LoginViewController {
         if appVersion.count > 0 {
             appVersion = "_" + appVersion
         }
-        let loginVersion = NSLocalizedString("Login_version", comment: "") + appVersion
-        bottomButton.setTitle(loginVersion, for: .normal)
-        bottomButton.setTitleColor(UIColor(hexString: "7D8798"), for: .normal)
+        let loginVersion = NSLocalizedString("Login_version",
+                                             comment: "") + appVersion
+        bottomButton.setTitle(loginVersion,
+                              for: .normal)
+        bottomButton.setTitleColor(UIColor(hexString: "7D8798"),
+                                   for: .normal)
         bottomButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        bottomButton.addTarget(self, action: #selector(onPushDebugVC), for: .touchUpInside)
+        bottomButton.addTarget(self,
+                               action: #selector(onPushDebugVC),
+                               for: .touchUpInside)
         view.addSubview(bottomButton)
         
         view.addSubview(aboutView)
         
-        tableView = AgoraBaseUITableView.init(frame: .zero, style: .plain)
+        tableView = AgoraBaseUITableView.init(frame: .zero,
+                                              style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()

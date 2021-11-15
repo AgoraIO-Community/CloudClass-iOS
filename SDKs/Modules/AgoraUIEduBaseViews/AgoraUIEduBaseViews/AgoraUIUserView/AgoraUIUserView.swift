@@ -200,15 +200,12 @@ public extension AgoraUIUserView {
     }
     
     func updateMicState(_ state: DeviceState,
-                        hasStream: Bool,
-                        isLocal: Bool) {
+                        hasStream: Bool) {
         // micro_disable_off  // 灰色
         // micro_disable_on   // 灰色
         
         // micro_enable_off   // 红色
         // micro_enable_on    // 蓝色
-        
-        audioBtn.isUserInteractionEnabled = isLocal
         
         switch state {
         // 麦克风正常
@@ -217,10 +214,8 @@ public extension AgoraUIUserView {
             
             // 是否有流
             if hasStream {
-                // 是否是自己
                 imageName = "micro_enable_on"
             } else {
-                // 是否是自己
                 imageName = "micro_enable_off"
             }
             

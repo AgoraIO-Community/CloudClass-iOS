@@ -12,7 +12,7 @@ import UIKit
     case clicker = 0, select, pencil, text, eraser, color
 }
 
-@objc public enum AgoraBoardToolsColor: Int {
+@objc public enum AgoraBoardToolsColor: Int, CaseIterable {
     case white, lightGray, darkGray, black
     case red, orange, yellow, green
     case purple, cyan, blue, pink
@@ -46,8 +46,8 @@ import UIKit
     }
 }
 
-@objc public enum AgoraBoardToolsLineWidth: Int {
-    case width1 = 1, width2, width3, width4
+@objc public enum AgoraBoardToolsLineWidth: Int, CaseIterable {
+    case width1 = 1, width2, width3, width4, width5
     
     public var value: Int {
         switch self {
@@ -55,6 +55,7 @@ import UIKit
         case .width2: return 8
         case .width3: return 12
         case .width4: return 18
+        case .width5: return 22
         }
     }
 }
@@ -63,7 +64,7 @@ import UIKit
     case pencil, rectangle, circle, line
 }
 
-@objc public enum AgoraBoardToolsFont: Int {
+@objc public enum AgoraBoardToolsFont: Int, CaseIterable {
     case font22, font24, font26, font30, font36, font42
     
     public var value: Int {

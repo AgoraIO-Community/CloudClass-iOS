@@ -5,10 +5,10 @@
 //  Created by SRS on 2021/1/31.
 //
 
-import Foundation
+import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
-import AgoraUIEduBaseViews
+import Foundation
 
 protocol AgoraChatPanelMessageCellDelegate: NSObjectProtocol {
     func chatCell(_ cell: AgoraBaseUITableViewCell,
@@ -48,12 +48,8 @@ class AgoraChatPanelMessageCell: AgoraBaseUITableViewCell {
                       action: #selector(onFailTouchEvent),
                       for: .touchUpInside)
         
-//        let image = UIImage.agora_bundle(object: self,
-//                                         resource: "AgoraWidgets",
-//                                         name: "chat_error")
-        
-        let image = AgoraKitImage("chat_error")
-        
+        let image = GetWidgetImage(object: self,
+                                   "chat_error")
         btn.setImage(image,
                      for: .normal)
         btn.imageView?.contentMode = .scaleToFill

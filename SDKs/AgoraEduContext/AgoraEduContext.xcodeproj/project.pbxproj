@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		862193292711D60E0001EB2A /* AgoraEduContextEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862193282711D60E0001EB2A /* AgoraEduContextEnums.swift */; };
 		86485A2826479AD700E80613 /* AgoraEduContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 86485A2626479AD700E80613 /* AgoraEduContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		86485A3226479B6700E80613 /* AgoraEduContextObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86485A2E26479B6700E80613 /* AgoraEduContextObjects.swift */; };
 		86485A3326479B6700E80613 /* AgoraEduContextProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86485A2F26479B6700E80613 /* AgoraEduContextProtocols.swift */; };
@@ -17,6 +18,7 @@
 /* Begin PBXFileReference section */
 		22F0EFEA32AA66CAA88E6C15 /* Pods_AgoraEduContext.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEduContext.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		65B0CAB3EA88D2389DC96C4E /* Pods-AgoraEduContext.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduContext.release.xcconfig"; path = "Target Support Files/Pods-AgoraEduContext/Pods-AgoraEduContext.release.xcconfig"; sourceTree = "<group>"; };
+		862193282711D60E0001EB2A /* AgoraEduContextEnums.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduContextEnums.swift; sourceTree = "<group>"; };
 		86485A2326479AD700E80613 /* AgoraEduContext.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduContext.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		86485A2626479AD700E80613 /* AgoraEduContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AgoraEduContext.h; sourceTree = "<group>"; };
 		86485A2726479AD700E80613 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			children = (
 				86485A2626479AD700E80613 /* AgoraEduContext.h */,
 				86485A3126479B6700E80613 /* AgoraEduContext.swift */,
+				862193282711D60E0001EB2A /* AgoraEduContextEnums.swift */,
 				86485A2E26479B6700E80613 /* AgoraEduContextObjects.swift */,
 				86485A2F26479B6700E80613 /* AgoraEduContextProtocols.swift */,
 				86485A2726479AD700E80613 /* Info.plist */,
@@ -192,6 +195,7 @@
 			files = (
 				86485A3226479B6700E80613 /* AgoraEduContextObjects.swift in Sources */,
 				86485A3526479B6700E80613 /* AgoraEduContext.swift in Sources */,
+				862193292711D60E0001EB2A /* AgoraEduContextEnums.swift in Sources */,
 				86485A3326479B6700E80613 /* AgoraEduContextProtocols.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

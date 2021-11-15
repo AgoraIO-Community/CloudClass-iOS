@@ -72,3 +72,19 @@ Disclaimer_detail = "灵动课堂（“本产品”）是由上海兆言网络�
 
 // countdown
 Countdown_title = "倒计时";
+
+// Answer sheet
+answer_sheet_title = "答题器";
+answer_sheet_submit_answer = "提交答案";
+answer_sheet_change_answer = "修改答案";
+answer_sheet_begin = "开始答题";
+answer_sheet_restart = "重新开始";
+answer_sheet_end = "结束答题";
+
+answer_sheet_student_name = "学生姓名";
+answer_sheet_student_duration = "答题用时";
+answer_sheet_student_answer = "所选答案";
+answer_sheet_member_count = "已答题人数：";
+answer_sheet_ratio = "正确率：";
+answer_sheet_correct = "正确答案：";
+answer_sheet_mine = "我的答案：";

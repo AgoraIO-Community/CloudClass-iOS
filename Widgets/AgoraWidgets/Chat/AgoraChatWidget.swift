@@ -308,7 +308,7 @@ extension AgoraChatWidget: AgoraEduMessageHandler {
     }
     
     @objc public func onSendRoomMessageResult(_ error: AgoraEduContextError?,
-                                              info: AgoraEduContextChatInfo?) {
+                                              info: AgoraEduContextChatInfo) {
         if chatType == .room {
             chatView.maxView.chatTableView.agora_header?.endRefreshing()
         }
@@ -434,12 +434,12 @@ private extension AgoraChatWidget {
                                                       count: perPageCount)
         }
     }
-
+    
     func fetchAllTypeHistoryMessage() {
         let roomMessageId = vm.roomMessages.first?.info.id ?? "0"
         context?.fetchHistoryMessages(roomMessageId,
                                       count: perPageCount)
-
+        
         let conversationMessageId = vm.roomMessages.first?.info.id ?? "0"
         context?.fetchConversationHistoryMessages(conversationMessageId,
                                                   count: perPageCount)
@@ -454,21 +454,21 @@ extension AgoraChatWidget: UITableViewDataSource {
         case .conversation: return vm.conversationMessages.count
         }
     }
-
+    
     public func tableView(_ tableView: UITableView,
                           numberOfRowsInSection section: Int) -> Int {
         return 1
     }
-
+    
     public func tableView(_ tableView: UITableView,
                           cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var item: AgoraChatItem
-
+        
         switch chatType {
         case .room:         item = vm.roomMessages[indexPath.section]
         case .conversation: item = vm.conversationMessages[indexPath.section]
         }
-
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: AgoraChatPanelMessageCell.MessageCellID,
                                                  for: indexPath) as! AgoraChatPanelMessageCell
         
@@ -490,7 +490,7 @@ extension AgoraChatWidget: UITableViewDelegate {
         case .room:         item = vm.roomMessages[indexPath.section]
         case .conversation: item = vm.conversationMessages[indexPath.section]
         }
-
+        
         return item.cellHeight
     }
     
@@ -498,7 +498,7 @@ extension AgoraChatWidget: UITableViewDelegate {
                           heightForHeaderInSection section: Int) -> CGFloat {
         return 1
     }
-
+    
     public func tableView(_ tableView: UITableView,
                           heightForFooterInSection section: Int) -> CGFloat {
         return 7
@@ -516,7 +516,7 @@ extension AgoraChatWidget: AgoraChatPanelMessageCellDelegate {
         case .conversation:
             let message = vm.conversationMessages[index].info
             context?.resendConversationMessage(message.message,
-                                       messageId: message.id)
+                                               messageId: message.id)
         }
     }
 }

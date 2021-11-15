@@ -13,6 +13,8 @@ public protocol AgoraUserCellDelegate: NSObjectProtocol {
                   didPresseVideoMuteAt index: Int)
     func userCell(_ cell: AgoraUserCell,
                   didPresseAudioMuteAt index: Int)
+    func userCell(_ cell: AgoraUserCell,
+                  didPresseKickAt index: Int)
 }
 
 private enum AgoraEduUIDeviceState: Int {

@@ -18,36 +18,47 @@ class AgoraChatSendView: AgoraBaseUIView {
         sendContentView.backgroundColor = UIColor(rgb: 0xF9F9FC)
         
         let button = AgoraBaseUIButton(type: .custom)
-        button.setTitle(AgoraKitLocalizedString("ChatSendText"),
-                     for: .normal)
-        button.backgroundColor = UIColor(red: 0.21,
-                                      green: 0.48,
-                                      blue: 0.96,
-                                      alpha: 1)
-        button.clipsToBounds = true
         self.sendButton = button
-
-        let textField = AgoraBaseUITextField()
         
-        textField.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatPlaceholderText"),
-                                                             attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125 / 255.0,
-                                                                                                                         green: 135 / 255.0,
-                                                                                                                         blue: 152 / 255.0,
-                                                                                                                         alpha: 1)])
-        textField.font = UIFont.systemFont(ofSize: 13)
-        textField.returnKeyType = .send
+        let textField = AgoraBaseUITextField()
         self.textField = textField
         
         let archView = AgoraBaseUIView()
+        self.archView = archView
+        
+        super.init(frame: frame)
+        backgroundColor = UIColor.clear
+        
+        // button
+        let buttonText = GetWidgetLocalizableString(object: self,
+                                                    key: "ChatSendText")
+        button.setTitle(buttonText,
+                        for: .normal)
+        button.backgroundColor = UIColor(red: 0.21,
+                                         green: 0.48,
+                                         blue: 0.96,
+                                         alpha: 1)
+        button.clipsToBounds = true
+        
+        // textField
+        let text = GetWidgetLocalizableString(object: self,
+                                              key: "ChatPlaceholderText")
+        let color = UIColor(red: 125 / 255.0,
+                            green: 135 / 255.0,
+                            blue: 152 / 255.0,
+                            alpha: 1)
+        let placeholder = NSAttributedString(string: text,
+                                             attributes:[NSAttributedString.Key.foregroundColor: color])
+        
+        textField.attributedPlaceholder = placeholder
+        textField.font = UIFont.systemFont(ofSize: 13)
+        textField.returnKeyType = .send
+        
+        // archView
         archView.backgroundColor = UIColor(rgb: 0xF9F9FC)
         archView.layer.cornerRadius = 18
         archView.layer.borderWidth = 1
         archView.layer.borderColor = UIColor(rgb: 0xECECF1).cgColor
-        self.archView = archView
-        
-        super.init(frame: frame)
-        
-        backgroundColor = UIColor.clear
         
         addSubview(archView)
         archView.agora_x = 0
@@ -108,8 +119,10 @@ class AgoraChatMinView: AgoraBaseUIButton {
         
         redLabel.clipsToBounds = true
         redLabel.layer.cornerRadius = redLabel.agora_height * 0.5
-             
-        setImage(AgoraKitImage("chat_toast"),
+        
+        let image = GetWidgetImage(object: self,
+                                   "chat_toast")
+        setImage(image,
                  for: .normal)
     }
     
@@ -150,17 +163,22 @@ class AgoraChatPlaceHolderView: AgoraBaseUIView {
     var label: AgoraBaseUILabel
     
     override init(frame: CGRect) {
-        let imageV = AgoraBaseUIImageView(image: AgoraKitImage("chat_empty"))
-        
         let label = AgoraBaseUILabel()
         label.textColor = UIColor(rgb: 0x7D8798)
         label.textAlignment = .center
-        label.text = AgoraKitLocalizedString("ChatEmptyText")
         label.font = UIFont.systemFont(ofSize: 13)
         
         self.label = label
         
         super.init(frame: frame)
+        
+        let text = GetWidgetLocalizableString(object: self,
+                                              key: "ChatEmptyText")
+        label.text = text
+        
+        let image = GetWidgetImage(object: self,
+                                   "chat_empty")
+        let imageV = AgoraBaseUIImageView(image: image)
         
         addSubview(imageV)
         imageV.agora_center_x = 0
@@ -187,7 +205,7 @@ class AgoraPermissionStateView: AgoraBaseUIView {
         backgroundColor = UIColor(rgb: 0xF9F9FC)
         layer.borderWidth = 1
         layer.borderColor = UIColor(rgb: 0xECECF1).cgColor
-
+        
         let label = AgoraBaseUILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = UIColor(rgb: 0x191919)
@@ -197,10 +215,12 @@ class AgoraPermissionStateView: AgoraBaseUIView {
         
         let attr = NSMutableAttributedString()
         
-        let textArt = NSAttributedString(string: AgoraKitLocalizedString("ChatMuteTagText"))
-       
+        let textArt = NSAttributedString(string: GetWidgetLocalizableString(object: self,
+                                                                            key: "ChatMuteTagText"))
+        
         let imageAttachment = NSTextAttachment()
-        let image = AgoraKitImage("chat_mute_tag")
+        let image = GetWidgetImage(object: self,
+                                   "chat_mute_tag")
         imageAttachment.image = image
         imageAttachment.bounds = CGRect(x: 0,
                                         y: -5,
@@ -232,12 +252,15 @@ class AgoraChatTitleView: AgoraBaseUIView {
     
     override init(frame: CGRect) {
         let button = AgoraBaseUIButton(type: .custom)
-        button.setImage(AgoraKitImage("chat_min"),
-                        for: .normal)
-        
         self.minButton = button
         
         super.init(frame: frame)
+        
+        let image = GetWidgetImage(object: self,
+                                   "chat_min")
+        button.setImage(image,
+                        for: .normal)
+        
         
         backgroundColor = .clear
         
@@ -292,7 +315,7 @@ class AgoraChatMaxView: AgoraBaseUIView {
         chatTableView.agora_right = 0
         chatTableView.agora_y = self.titleView.agora_height
         chatTableView.agora_bottom = 69
-
+        
         addSubview(chatPlaceHolderView)
         chatPlaceHolderView.agora_center_x = 0
         chatPlaceHolderView.agora_center_y = 20
@@ -324,17 +347,27 @@ class AgoraChatMaxView: AgoraBaseUIView {
         sendButton.isEnabled = permission
         
         if permission {
-            sendView.textField.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatPlaceholderText"),
-                                                                  attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125 / 255.0,
-                                                                                                                              green: 135 / 255.0,
-                                                                                                                              blue: 152 / 255.0,
-                                                                                                                              alpha: 1)])
+            let text = GetWidgetLocalizableString(object: self,
+                                                  key: "ChatPlaceholderText")
+            let color = UIColor(red: 125 / 255.0,
+                                green: 135 / 255.0,
+                                blue: 152 / 255.0,
+                                alpha: 1)
+            let placeholder = NSAttributedString(string: text,
+                                                 attributes: [NSAttributedString.Key.foregroundColor: color])
+            
+            sendView.textField.attributedPlaceholder = placeholder
         } else {
-            sendView.textField.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatSilencedPlaceholderText"),
-                                                                  attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125 / 255.0,
-                                                                                                                              green: 135 / 255.0,
-                                                                                                                              blue: 152 / 255.0,
-                                                                                                                              alpha: 1)])
+            let text = GetWidgetLocalizableString(object: self,
+                                                  key: "ChatSilencedPlaceholderText")
+            let color = UIColor(red: 125 / 255.0,
+                                green: 135 / 255.0,
+                                blue: 152 / 255.0,
+                                alpha: 1)
+            let placeholder = NSAttributedString(string: text,
+                                                 attributes: [NSAttributedString.Key.foregroundColor: color])
+            
+            sendView.textField.attributedPlaceholder = placeholder
         }
     }
     
@@ -344,23 +377,29 @@ class AgoraChatMaxView: AgoraBaseUIView {
         sendButton.isEnabled = true
         sendView.textField.isUserInteractionEnabled = true
         
-        sendView.textField.attributedPlaceholder = NSAttributedString(string: AgoraKitLocalizedString("ChatPlaceholderText"),
-                                                                      attributes:[NSAttributedString.Key.foregroundColor: UIColor(red: 125 / 255.0,
-                                                                                                                                  green: 135 / 255.0,
-                                                                                                                                  blue: 152 / 255.0,
-                                                                                                                                  alpha: 1)])
+        let text = GetWidgetLocalizableString(object: self,
+                                              key: "ChatPlaceholderText")
+        let color = UIColor(red: 125 / 255.0,
+                            green: 135 / 255.0,
+                            blue: 152 / 255.0,
+                            alpha: 1)
+        let placeholder = NSAttributedString(string: text,
+                                             attributes: [NSAttributedString.Key.foregroundColor: color])
+        
+        sendView.textField.attributedPlaceholder = placeholder
         chatPermissionStateView.isHidden = true
     }
     
     func titleViewWithoutConversation() {
         let label = AgoraBaseUILabel()
-        label.textColor = UIColor(red: 25/255.0,
-                                  green:25/255.0,
-                                  blue: 25/255.0,
+        label.textColor = UIColor(red: 25 / 255.0,
+                                  green:25 / 255.0,
+                                  blue: 25 / 255.0,
                                   alpha: 1)
         label.font = UIFont.systemFont(ofSize: 13)
-    
-        let chatMsg = AgoraKitLocalizedString("ChatText")
+        
+        let chatMsg = GetWidgetLocalizableString(object: self,
+                                                 key: "ChatText")
         label.text = chatMsg
         titleView.addSubview(label)
         
@@ -376,7 +415,8 @@ class AgoraChatMaxView: AgoraBaseUIView {
         view.underlineColor = UIColor(rgb: 0x357BF6)
         
         view.selectedTitle = AgoraTabSelectView.TitleProperty(color: UIColor(rgb: 0x191919),
-                                                              font: UIFont.systemFont(ofSize: 13, weight: .bold))
+                                                              font: UIFont.systemFont(ofSize: 13,
+                                                                                      weight: .bold))
         view.unselectedTitle = AgoraTabSelectView.TitleProperty(color: UIColor(rgb: 0x7B88A0),
                                                                 font: UIFont.systemFont(ofSize: 13))
         
@@ -395,14 +435,18 @@ class AgoraChatMaxView: AgoraBaseUIView {
         view.agora_right = 0
         view.agora_bottom = 0
         
-        let chat = AgoraKitLocalizedString("ChatText")
-        let conversation = AgoraKitLocalizedString("ChatConversation")
-        view.update([chat, conversation])
+        let chatText = GetWidgetLocalizableString(object: self,
+                                                  key: "ChatText")
+        
+        let chat = chatText
+        
+        let conversationText = GetWidgetLocalizableString(object: self,
+                                                          key: "ChatConversation")
+        
+        let conversation = conversationText
+        view.update([chat,
+                     conversation])
         
         tabSelectView = view
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("")
     }
 }

@@ -13,31 +13,52 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = '10.0'
   spec.frameworks = 'AudioToolbox', 'Foundation', 'UIKit'
 
-  spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
   spec.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
   spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
   spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
-
-  spec.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}", "AgoraClassroomSDK/**/*.{swift,h,m}"
-  spec.public_header_files = [
-    "AgoraClassroomSDK/Public/*.h",
-    "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
-  ]
+  
+  spec.subspec 'PreRtc' do |pre_rtc|
+    pre_rtc.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}", "AgoraClassroomSDK/**/*.{swift,h,m}"
+    pre_rtc.public_header_files = [
+      "AgoraClassroomSDK/Public/*.h",
+      "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
+    ]
     
-  # close source libs
-  spec.dependency "AgoraEduCorePuppet"
-  spec.dependency "AgoraEduCore"
+    # close source libs
+    pre_rtc.dependency "AgoraEduCorePuppet/PreRtc"
+    pre_rtc.dependency "AgoraEduCore/PreRtc"
 
-  # common libs
-  spec.dependency "AgoraExtApp"
-  spec.dependency "AgoraWidget"
+    # common libs
+    pre_rtc.dependency "AgoraExtApp"
+    pre_rtc.dependency "AgoraWidget"
 
-  # open source libs
-  spec.dependency "AgoraEduUI"
-  spec.dependency "AgoraEduContext"
-  spec.dependency "AgoraWidgets"
+    # open source libs
+    pre_rtc.dependency "AgoraEduUI"
+    pre_rtc.dependency "AgoraEduContext"
+    pre_rtc.dependency "AgoraWidgets"
+  end
+  
+  spec.subspec 'ReRtc' do |re_rtc|
+    re_rtc.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}", "AgoraClassroomSDK/**/*.{swift,h,m}"
+    re_rtc.public_header_files = [
+      "AgoraClassroomSDK/Public/*.h",
+      "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
+    ]
+    
+    # close source libs
+    re_rtc.dependency "AgoraEduCorePuppet/ReRtc"
+    re_rtc.dependency "AgoraEduCore/ReRtc"
 
-  # third part libs
-  spec.dependency "Whiteboard"
+    # common libs
+    re_rtc.dependency "AgoraExtApp"
+    re_rtc.dependency "AgoraWidget"
+
+    # open source libs
+    re_rtc.dependency "AgoraEduUI"
+    re_rtc.dependency "AgoraEduContext"
+    re_rtc.dependency "AgoraWidgets"
+  end
+
+  spec.default_subspecs = 'PreRtc'
 end

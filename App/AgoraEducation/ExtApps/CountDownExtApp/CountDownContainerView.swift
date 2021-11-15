@@ -9,8 +9,6 @@
 import Foundation
 import AgoraUIBaseViews
 
-
-
 @objc public class CountDownWrapper: NSObject {
     private var countdownView = CountDownContainerView(frame: .zero)
     @objc public func getView(delegate: CountDownDelegate) -> AgoraBaseUIView {
@@ -25,8 +23,7 @@ import AgoraUIBaseViews
 
 @objcMembers public class CountDownContainerView: AgoraBaseUIView,
                                                   CountDownProtocol {
-    
-    private let isPad: Bool = UIDevice.current.model == "iPad"
+    private let isPad: Bool = UIDevice.current.isPad
     
     private var timer: DispatchSourceTimer?
     

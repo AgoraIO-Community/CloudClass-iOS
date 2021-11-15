@@ -47,6 +47,22 @@ public struct AgoraKitDeviceAssistant {
             return false
             #endif
         }
+        
+        public static var hasSafeArea: Bool {
+            #if os(iOS)
+            if #available(iOS 11.0, *) {
+                if let safeAreaInsets = UIApplication.shared.keyWindow?.safeAreaInsets {
+                    return safeAreaInsets.left > 0.0 ||
+                    safeAreaInsets.top > 0.0 ||
+                    safeAreaInsets.right > 0.0 ||
+                    safeAreaInsets.bottom > 0.0
+                }
+            }
+            return false
+            #else
+            return false
+            #endif
+        }
     }
     
     public struct Language {

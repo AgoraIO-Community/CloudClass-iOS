@@ -9,7 +9,9 @@ import UIKit
 import AgoraUIBaseViews
 
 @discardableResult func AgoraShowToast(_ message: String,
-                                       shared: Bool = true) -> AgoraBaseUIView? {
+                                       shared: Bool = true,
+                                       usingRedAttribe: Bool =  true,
+                                       redAttrRanges: [NSRange] = []) -> AgoraBaseUIView? {
     if (message.count == 0) {
         return nil
     }
@@ -44,7 +46,9 @@ import AgoraUIBaseViews
     }
     
     view.isHidden = false
-    view.setText(text: message)
+    view.setText(text: message,
+                 usingRedAttribe: usingRedAttribe,
+                 redAttrRanges: redAttrRanges)
     
     let boundingRect = message.agoraKitSize(font: v!.textLabelFont,
                                    width: CGFloat(MAXFLOAT),
@@ -54,6 +58,61 @@ import AgoraUIBaseViews
 
     return view
 }
+
+@discardableResult func AgoraShowToast(_ message: String,
+                                       usingRedAttribe: Bool = false,
+                                       redAttrRanges: [NSRange] = [],
+                                       image: UIImage? = nil,
+                                       imageSize: CGSize? = nil,
+                                       shared: Bool = true) -> AgoraBaseUIView? {
+    if (message.count == 0) {
+        return nil
+    }
+    
+    var v: AgoraCourseTipsView?
+    
+    if shared {
+        v = AgoraLocationAssistant.shared().toastView
+        AgoraLocationAssistant.shared().delayHiddenToastView()
+    } else {
+        guard let superView = UIApplication.shared.keyWindow else {
+            return nil
+        }
+
+        v = AgoraCourseTipsView(frame: .zero)
+        superView.addSubview(v!)
+    
+        v!.agora_center_x = 0
+        v!.agora_bottom = 30 + (AgoraKitDeviceAssistant.OS.hasSafeArea ? 34 : 0)
+        v!.agora_height = AgoraCourseTipsView.allHeight()
+        
+        let time = 3 + (Double(message.count) / 20.0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+            v!.removeFromSuperview()
+        }
+    }
+        
+    v!.isHidden = false
+    if let img = image {
+        v!.setImage(image: img,
+                    imageSize: imageSize == nil ? img.size : imageSize!)
+    }
+
+    v!.setText(text: message,
+               usingRedAttribe: usingRedAttribe,
+               redAttrRanges: redAttrRanges)
+    let options : NSStringDrawingOptions = [.usesLineFragmentOrigin,
+                                            .usesFontLeading]
+    let boundingRect = NSString(string: message).boundingRect(with: CGSize(width: CGFloat(MAXFLOAT),
+                                                                           height: v!.agora_height),
+                                                              options: options,
+                                                              attributes: [NSAttributedString.Key.font:v!.textLabelFont],
+                                                              context: nil)
+    v!.agora_width = boundingRect.width +  v!.textLabelLeadingConstraintConstant() * 2
+
+    return v
+}
+
 
 public class AgoraLocationAssistant: NSObject {
     static let object = AgoraLocationAssistant()
@@ -112,6 +171,21 @@ public class AgoraLocationAssistant: NSObject {
     @discardableResult public static func showToast(message: String) -> AgoraBaseUIView? {
         return AgoraShowToast(message)
     }
+    
+    @discardableResult public static func showToast(message: String,
+                                                    usingRedAttribe: Bool = false,
+                                                    redAttrRanges: [NSRange] = [],
+                                                    image: UIImage? = nil,
+                                                    imageSize: CGSize? = nil,
+                                                    shared: Bool = true) -> AgoraBaseUIView? {
+        return AgoraShowToast(message,
+                              usingRedAttribe: usingRedAttribe,
+                              redAttrRanges: redAttrRanges,
+                              image: image,
+                              imageSize: imageSize,
+                              shared: shared)
+    }
+    
     @discardableResult public static func showLoading(message: String, inView: UIView? = nil, shared: Bool = false) -> AgoraAlertView? {
         
         var view = inView

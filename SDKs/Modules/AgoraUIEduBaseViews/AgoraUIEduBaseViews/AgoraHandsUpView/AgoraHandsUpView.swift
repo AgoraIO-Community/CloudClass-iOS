@@ -6,104 +6,93 @@
 //
 
 import AgoraUIBaseViews
-import UIKit
+import AgoraEduContext
 
 public protocol AgoraHandsUpViewDelegate: NSObjectProtocol {
-    func handsUpVieWillHandsUp(_ view: AgoraHandsUpView)
+    func handsUpVieWillHandsUp(_ view: AgoraHandsUpView,
+                               timeout: Int)
+    
     func handsUpVieWillHandsDown(_ view: AgoraHandsUpView)
 }
 
+fileprivate let MAXCOUNT = 3
+
 public class AgoraHandsUpView: AgoraBaseUIView {
-    public enum HandsUpState : Int {
-        // 举手状态： 默认、举手、放手
-        case `default`
-        case handsUp
-        case handsDown
-    }
     
+    public enum HandsUpState : Int {
+            // 举手状态： 默认、举手、放手
+            case `default`
+            case handsUp
+            case handsDown
+        }
+    
+    public var isEnable: Bool = false {
+        didSet {
+            self.updateStateWithCoHost()
+        }
+    }
+    public var isCoHost: Bool = false {
+        didSet {
+            self.updateStateWithCoHost()
+        }
+    }
+    public var state: HandsUpState = .default {
+        didSet {
+            self.updateStateWithCoHost()
+        }
+    }
+
+    private var firstInFlag = true
+    fileprivate var timer: DispatchSourceTimer?
     //MARK: lazy load
-    private lazy var timeCountLabel: AgoraBaseUILabel = {
+    fileprivate lazy var timeCountLabel: AgoraBaseUILabel = {
         let label = AgoraBaseUILabel()
         label.text = "\(MAXCOUNT)"
-        label.font = .boldSystemFont(ofSize: 16)
+        label.font = .boldSystemFont(ofSize: 13)
         label.textAlignment = .center
-        label.textColor = .init(red: 68 / 255.0,
-                                green: 162 / 255.0,
-                                blue: 252 / 255.0,
-                                alpha: 1)
+        label.textColor = .white
+    
         return label
     }()
     
-    private lazy var timeCountView: AgoraBaseUIImageView = {
-        let imgView = AgoraBaseUIImageView(image: AgoraKitImage("bubble"))
-        imgView.addSubview(timeCountLabel)
-        timeCountLabel.agora_x = 0
-        timeCountLabel.agora_y = 12
-        timeCountLabel.agora_width = 42
-        
+    fileprivate lazy var timeCountView: AgoraBaseUIImageView = {
+        let imgView = AgoraBaseUIImageView(image: AgoraKitImage("countdown"))
+        imgView.addSubview(self.timeCountLabel)
+        self.timeCountLabel.agora_center_x = 0
+        self.timeCountLabel.agora_center_y = 0
+        self.timeCountLabel.agora_width = 34
+
         imgView.isHidden = true
         return imgView
     }()
     
-    private lazy var handsUpBtn: AgoraBaseUIButton = {
+    fileprivate lazy var handsUpBtn: AgoraBaseUIButton = {
         let btn = AgoraBaseUIButton()
         btn.backgroundColor = .clear;
-        btn.setImage(AgoraKitImage("hands_down_default"),
-                     for: .normal)
+        btn.setBackgroundImage(AgoraKitImage("handsup"),
+                               for: .normal)
         
-        btn.addTarget(self,
-                      action: #selector(onButtonClick(_:)),
+        btn.addTarget(self, action: #selector(onButtonClick(_:)),
                       for: .touchDown)
-        btn.addTarget(self,
-                      action: #selector(onButtonCancel(_:)),
+        // 处理手抬起来
+        btn.addTarget(self, action: #selector(onButtonCancel(_:)),
                       for: .touchUpInside)
-        btn.addTarget(self,
-                      action: #selector(onButtonCancel(_:)),
+        btn.addTarget(self, action: #selector(onButtonCancel(_:)),
                       for: .touchUpOutside)
         
         return btn
     }()
     
-    private var state: HandsUpState = .default {
-        didSet {
-            var imageName: String
-            
-            switch state {
-            case .default:
-                imageName = "hands_down_default"
-                handsUpBtn.isUserInteractionEnabled = true
-            case .handsUp:
-                imageName = "hands_up_waiting"
-                handsUpBtn.isUserInteractionEnabled = true
-            case .handsDown:
-                imageName = "hands_down_default"
-                handsUpBtn.isUserInteractionEnabled = true
-            }
-            
-            handsUpBtn.setImage(AgoraKitImage(imageName),
-                                for: .normal)
-        }
-    }
+    fileprivate lazy var popover = AgoraPopover(options: [.type(.left),
+                                                     .blackOverlayColor(.clear),
+                                                     .cornerRadius(10),
+                                                     .arrowSize(CGSize(width: 16,
+                                                                       height: 4)),
+                                                     .arrowPointerOffset(CGPoint(x: -5,
+                                                                                 y: 0))])
     
-    private var isEnable: Bool = false {
-        didSet {
-            isHidden = !isEnable
-        }
-    }
     
-    private let MAXCOUNT = 3
-    private var timer: DispatchSourceTimer?
-    
-    public var isCoHost: Bool = false {
-        didSet {
-            let imageName = (isCoHost ? "hands_up_cohost" : "hands_down_default")
-            
-            handsUpBtn.setImage(AgoraKitImage(imageName),
-                                for: .normal)
-            handsUpBtn.isUserInteractionEnabled = !isCoHost
-        }
-    }
-    
+
     public weak var delegate: AgoraHandsUpViewDelegate?
 
     //MARK: init
@@ -118,30 +107,51 @@ public class AgoraHandsUpView: AgoraBaseUIView {
     }
     
     private func initView() {
-        addSubview(timeCountView)
         addSubview(handsUpBtn)
+        addSubview(timeCountView)
+        addSubview(popover)
+        // popover
+        popover.delegate = self
+        popover.strokeColor = .white
+        popover.borderColor = .white
     }
     
     private func initLayout() {
-        timeCountView.agora_x = 7
-        timeCountView.agora_height = 47
+        timeCountView.agora_center_x = 0
+        timeCountView.agora_height = 38
         timeCountView.agora_y = 0
-        timeCountView.agora_width = 42
-        
+        timeCountView.agora_width = 34
+
         handsUpBtn.agora_x = 0
         handsUpBtn.agora_right = 0
-        handsUpBtn.agora_y = timeCountView.agora_height + 3
+        handsUpBtn.agora_y = 0
         handsUpBtn.agora_width = 56
         handsUpBtn.agora_height = handsUpBtn.agora_width
         handsUpBtn.agora_bottom = 0
     }
-    
+    public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+        if handsUpBtn == hitView {
+            return hitView
+        }
+        // 返回nil 那么事件就不由当前控件处理
+        return nil
+    }
+        
+    public func updateLayout(width: CGFloat, height: CGFloat) {
+        timeCountView.agora_width = width
+        timeCountView.agora_height = height
+        
+        handsUpBtn.agora_width = width
+        handsUpBtn.agora_height = height
+    }
     @objc func onButtonClick(_ btn: UIButton) {
-        startTimer()
+        showFirstInTip()
+        sendHandsUpRequest()
     }
 
     @objc func onButtonCancel(_ btn: UIButton) {
-        stopTimer()
+        startTimerCountDown()
     }
     
     public func setHandsUpEnable(_ enable: Bool) {
@@ -153,55 +163,102 @@ public class AgoraHandsUpView: AgoraBaseUIView {
     }
     
     deinit {
-        self.stopTimer()
+        
     }
 }
 
 // MARK: - UI action
 private extension AgoraHandsUpView {
-     func startTimer() {
-        stopTimer()
-        
-        timeCountView.isHidden = false
-        timer = DispatchSource.makeTimerSource(flags: [],
-                                               queue: DispatchQueue.global())
-        timer?.schedule(deadline: .now() + 1,
-                        repeating: 1)
-        
-        timer?.setEventHandler { [weak self] in
-            DispatchQueue.main.async {
-                guard let `self` = self,
-                      let count = self.timeCountLabel.text?.intValue else {
+    fileprivate func showFirstInTip() {
+        if firstInFlag {
+            let font = UIFont.systemFont(ofSize: 12)
+            let text = AgoraKitLocalizedString("HandsupFirstInText")
+            let textSize = text.agora_size(font: font)
+            
+            let label = AgoraBaseUILabel(frame: CGRect(x: 0,
+                                                       y: 0,
+                                                       width: textSize.width + 20,
+                                                       height: textSize.height + 10))
+            label.text = text
+            label.textAlignment = .center
+            label.font = font
+
+            popover.borderColor = UIColor(rgb: 0xE1E1EA)
+            popover.layer.shadowColor = UIColor(rgb: 0x2F4192,
+                                                alpha: 0.15).cgColor
+            popover.layer.shadowOffset = CGSize(width: 0,
+                                                height: 2)
+            popover.layer.shadowOpacity = 0.15
+            popover.show(label,
+                         fromView: self)
+            var countDownNum = 3
+            Timer.scheduledTimer(withTimeInterval: 1,
+                                 repeats: true) {[weak self] (timer) in
+                guard let `self` = self else {
                     return
                 }
                 
-                if count <= 0 {
-                    self.timeCountView.isHidden = true
-                    self.timeCountLabel.text = "\(self.MAXCOUNT)"
-                    self.timer?.cancel()
-                    if self.state == .handsUp {
-                        self.delegate?.handsUpVieWillHandsDown(self)
+                if countDownNum == 0 {
+                    self.firstInFlag = false
+                    self.popover.dismiss()
+                    timer.invalidate()
                     } else {
-                        self.delegate?.handsUpVieWillHandsUp(self)
+                        countDownNum -= 1
                     }
+            }
+        }
+    }
+    
+    fileprivate func sendHandsUpRequest() {
+        delegate?.handsUpVieWillHandsUp(self,
+                                        timeout: -1)
+    }
+    
+    fileprivate func startTimerCountDown() {
+        self.timeCountView.isHidden = false
+        self.handsUpBtn.isUserInteractionEnabled = false
+        delegate?.handsUpVieWillHandsUp(self,
+                                        timeout: MAXCOUNT)
+        timer = DispatchSource.makeTimerSource(flags: [],
+                                               queue: DispatchQueue.global())
+        timer?.schedule(deadline: .now() + 1, repeating: 1)
+        timer?.setEventHandler { [weak self] in
+            DispatchQueue.main.async {
+                guard let `self` = self,
+                        let count = self.timeCountLabel.text else {
+                    return
+                }
+    
+                let val = (Int(count) ?? 0) - 1
+                if val <= 0 {
+                    self.timeCountView.isHidden = true
+                    self.timeCountLabel.text = "\(MAXCOUNT)"
+                    self.timer?.cancel()
+                    
+                    self.handsUpBtn.isUserInteractionEnabled = true
                 } else {
-                    self.timeCountLabel.text = "\(count - 1)"
+                    self.timeCountLabel.text = "\(val)"
                 }
             }
         }
         timer?.resume()
     }
     
-    func stopTimer() {
-        timeCountView.isHidden = true
-        timeCountLabel.text = "\(MAXCOUNT)"
-        
-        guard let `timer` = timer else {
+    /// Only called when enabled,which means the view is visible
+    fileprivate func updateStateWithCoHost() {
+        self.isHidden = false
+        if !self.isEnable {
+            self.isHidden = true
             return
         }
         
-        timer.cancel()
-        self.timer = nil
+        handsUpBtn.isUserInteractionEnabled = true
+    }
+}
+
+extension AgoraHandsUpView: AgoraPopoverDelegate {
+    public func popoverDidDismiss(_ popover: AgoraPopover) {
+        
     }
 }
 

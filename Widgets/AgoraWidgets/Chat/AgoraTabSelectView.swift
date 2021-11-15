@@ -128,9 +128,9 @@ public extension AgoraTabSelectView {
     func needRemind(_ remind: Bool,
                     index: Int) {
         guard let buttons = titleButtons,
-            index <= buttons.count - 1
-            else {
-                return
+              index <= buttons.count - 1
+        else {
+            return
         }
         let button = buttons[index]
         
@@ -162,10 +162,7 @@ private extension AgoraTabSelectView {
             button.frame = frame
             button.setTitle(title,
                             for: .normal)
-//            button.titleLabel?.font = unselectedTitle.font
             button.tag = index
-//            button.setTitleColor(unselectedTitle.color,
-//                                 for: .normal)
             addSubview(button)
             lastButtonMaxX = button.frame.maxX + space
             
@@ -240,7 +237,7 @@ private extension AgoraTabSelectView {
         
         let index = selectedIndex
         let h: CGFloat = underlineHeight
-    
+        
         var x: CGFloat
         var w: CGFloat
         
@@ -267,7 +264,7 @@ private extension AgoraTabSelectView {
         if (contentOffset.x + boundsWidth) < (x + w) {
             setContentOffset(CGPoint(x: offsetX + insets.right, y: 0),
                              animated: true)
-        // over left
+            // over left
         } else if (contentOffset.x > x) {
             setContentOffset(CGPoint(x: offsetX, y: 0),
                              animated: true)

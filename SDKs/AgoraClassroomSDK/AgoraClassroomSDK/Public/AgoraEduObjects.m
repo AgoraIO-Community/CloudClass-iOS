@@ -83,7 +83,10 @@
                         resourceUuid:(NSString *)resourceUuid
                            scenePath:(NSString *)scenePath
                               scenes:(NSArray<AgoraEduBoardScene *> *)scenes
-                         resourceUrl:(NSString *)resourceUrl {
+                         resourceUrl:(NSString *)resourceUrl
+                                 ext:(NSString * _Nonnull)ext
+                                size:(double)size
+                          updateTime:(double)updateTime{
     self = [super init];
     
     if (self) {
@@ -92,6 +95,9 @@
         self.scenePath = scenePath;
         self.resourceUrl = resourceUrl;
         self.scenes = scenes;
+        self.ext = ext;
+        self.size = size;
+        self.updateTime = updateTime;
     }
     return self;
 }
@@ -105,7 +111,7 @@
         self.height = 240;
         self.frameRate = 15;
         self.bitrate = 200;
-        self.mirrorMode = AgoraEduMirrorModeAuto;
+        self.mirrorMode = AgoraEduMirrorModeDisabled;
     }
     return self;
 }
@@ -142,6 +148,11 @@
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
                            token:(NSString *)token {
+    AgoraEduMediaOptions *mediaOptions = [[AgoraEduMediaOptions alloc] initWithEncryptionConfig:nil
+                                                                     cameraEncoderConfiguration:nil
+                                                                                   latencyLevel:AgoraEduLatencyLevelUltraLow
+                                                                                     videoState:AgoraEduStreamStateDefault
+                                                                                     audioState:AgoraEduStreamStateDefault];
     return [self initWithUserName:userName
                          userUuid:userUuid
                          roleType:roleType
@@ -152,11 +163,8 @@
                         startTime:nil
                          duration:nil
                            region:nil
-                     mediaOptions:nil
+                     mediaOptions:mediaOptions
                    userProperties:nil
-                       videoState:AgoraEduStreamStateDefault
-                       audioState:AgoraEduStreamStateDefault
-                     latencyLevel:AgoraEduLatencyLevelUltraLow
                      boardFitMode:AgoraEduBoardFitModeAuto];
 }
 
@@ -170,11 +178,8 @@
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                           region:(NSString * _Nullable)region
-                    mediaOptions:(AgoraEduMediaOptions * _Nullable)mediaOptions
+                    mediaOptions:(AgoraEduMediaOptions *)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties
-                      videoState:(AgoraEduStreamState)videoState
-                      audioState:(AgoraEduStreamState)audioState
-                    latencyLevel:(AgoraEduLatencyLevel)latencyLevel
                     boardFitMode:(AgoraEduBoardFitMode)boardFitMode {
     self = [self init];
     self.userName = userName;
@@ -189,12 +194,9 @@
     self.startTime = startTime ? startTime : nil;
     self.duration = duration ? duration : nil;
     self.region = region ? region : @"cn";
-    self.mediaOptions = mediaOptions ? mediaOptions : nil;
+    self.mediaOptions = mediaOptions;
     
     self.userProperties = userProperties ? userProperties : nil;
-    self.videoState = videoState;
-    self.audioState = audioState;
-    self.latencyLevel = latencyLevel;
     self.boardFitMode = boardFitMode;
     
     return self;
@@ -217,27 +219,35 @@
 @end
 
 @implementation AgoraEduMediaOptions
-- (instancetype)initWithConfig:(AgoraEduMediaEncryptionConfig *)encryptionConfig {
+- (instancetype)initWithEncryptionConfig:(AgoraEduMediaEncryptionConfig *_Nullable)encryptionConfig
+              cameraEncoderConfiguration:(AgoraEduVideoEncoderConfiguration *_Nullable)cameraEncoderConfiguration
+                            latencyLevel:(AgoraEduLatencyLevel)latencyLevel
+                              videoState:(AgoraEduStreamState)videoState
+                              audioState:(AgoraEduStreamState)audioState {
     self = [super init];
     
     if (self) {
         self.encryptionConfig = encryptionConfig;
+        self.cameraEncoderConfiguration = cameraEncoderConfiguration;
+        self.latencyLevel = latencyLevel;
+        self.videoState = videoState;
+        self.audioState = audioState;
     }
     
     return self;
 }
 @end
 
-NSString * const AgoraEduChatTranslationLanAUTO = @"auto";
-NSString * const AgoraEduChatTranslationLanCN = @"zh-CHS";
-NSString * const AgoraEduChatTranslationLanEN = @"en";
-NSString * const AgoraEduChatTranslationLanJA = @"ja";
-NSString * const AgoraEduChatTranslationLanKO = @"ko";
-NSString * const AgoraEduChatTranslationLanFR = @"fr";
-NSString * const AgoraEduChatTranslationLanES = @"es";
-NSString * const AgoraEduChatTranslationLanPT = @"pt";
-NSString * const AgoraEduChatTranslationLanIT = @"it";
-NSString * const AgoraEduChatTranslationLanRU = @"ru";
-NSString * const AgoraEduChatTranslationLanVI = @"vi";
-NSString * const AgoraEduChatTranslationLanDE = @"de";
-NSString * const AgoraEduChatTranslationLanAR = @"ar";
+NSString * const AgoraEduCoreChatTranslationLanAUTO = @"auto";
+NSString * const AgoraEduCoreChatTranslationLanCN = @"zh-CHS";
+NSString * const AgoraEduCoreChatTranslationLanEN = @"en";
+NSString * const AgoraEduCoreChatTranslationLanJA = @"ja";
+NSString * const AgoraEduCoreChatTranslationLanKO = @"ko";
+NSString * const AgoraEduCoreChatTranslationLanFR = @"fr";
+NSString * const AgoraEduCoreChatTranslationLanES = @"es";
+NSString * const AgoraEduCoreChatTranslationLanPT = @"pt";
+NSString * const AgoraEduCoreChatTranslationLanIT = @"it";
+NSString * const AgoraEduCoreChatTranslationLanRU = @"ru";
+NSString * const AgoraEduCoreChatTranslationLanVI = @"vi";
+NSString * const AgoraEduCoreChatTranslationLanDE = @"de";
+NSString * const AgoraEduCoreChatTranslationLanAR = @"ar";
