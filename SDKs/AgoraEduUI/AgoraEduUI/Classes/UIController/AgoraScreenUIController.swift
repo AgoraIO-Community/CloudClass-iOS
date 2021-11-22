@@ -65,10 +65,10 @@ extension AgoraScreenUIController: AgoraEduScreenShareHandler {
         if toastShowedStates.contains(#function) {
             switch state {
             case .start:
-                AgoraUtils.showToast(message: AgoraUILocalizedString("ScreensharedBySb",
+                AgoraToast.toast(msg: AgoraUILocalizedString("ScreensharedBySb",
                                                                      object: self))
             case .stop:
-                AgoraUtils.showToast(message: AgoraUILocalizedString("ScreenshareStoppedBySb",
+                AgoraToast.toast(msg: AgoraUILocalizedString("ScreenshareStoppedBySb",
                                                                      object: self))
             default:
                 break
@@ -107,6 +107,6 @@ extension AgoraScreenUIController: AgoraEduScreenShareHandler {
      * XXX关闭了屏幕分享
      */
     func onShowScreenShareTips(_ message: String) {
-        AgoraUtils.showToast(message: message)
+        AgoraToast.toast(msg: message)
     }
 }

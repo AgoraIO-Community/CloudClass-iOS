@@ -62,7 +62,6 @@ import UIKit
         }
     }
     
-    private var alertView: AgoraAlertView?
     private var startTime: Int?
     private var classroom: AgoraEduClassroom?
     private let tokenBuilder = TokenBuilder()
@@ -249,23 +248,15 @@ private extension DebugViewController {
     func requestToken(region: String,
                       userUuid: String,
                       completion: @escaping (TokenBuilder.ServerResp) -> ()) {
-        if alertView == nil {
-            alertView = AgoraUtils.showLoading(message: "")
-        } else {
-            alertView?.show(in: view)
-        }
-        
+        AgoraLoading.loading()
         tokenBuilder.buildByServer(region: region,
                                    userUuid: userUuid,
                                    environment: .dev,
                                    success: { (resp) in
                                     completion(resp)
-                                   }, fail: { [weak self] (error) in
-                                    guard let `self` = self else {
-                                        return
-                                    }
-                                    self.alertView?.removeFromSuperview()
-                                    AgoraUtils.showToast(message: error.localizedDescription)
+                                   }, fail: { error in
+                                    AgoraLoading.hide()
+                                    AgoraToast.toast(msg: error.localizedDescription)
                                    })
     }
 }
@@ -335,11 +326,7 @@ extension DebugViewController {
 extension DebugViewController: AgoraEduClassroomDelegate {
     public func classroom(_ classroom: AgoraEduClassroom,
                           didReceivedEvent event: AgoraEduEvent) {
-        guard let `alertView` = alertView else {
-            return
-        }
-        
-        alertView.removeFromSuperview()
+        AgoraLoading.hide()
     }
 }
 

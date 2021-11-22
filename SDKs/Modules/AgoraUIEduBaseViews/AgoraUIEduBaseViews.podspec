@@ -22,16 +22,18 @@ Pod::Spec.new do |spec|
   
   spec.source_files  = "SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/**/*.{h,m,swift}", "AgoraUIEduBaseViews/**/*.{h,m,swift}"
   spec.public_header_files = "SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/**/*.h", "AgoraUIEduBaseViews/**/*.h"
-  spec.resource_bundles = {
-    'AgoraUIEduBaseViews' => [
-      'AgoraUIEduBaseViews/**/*.{png,xib,gif,wav,strings}', 
-      'AgoraUIEduBaseViews/*.xcassets', 
-      'SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/**/*.{png,xib,gif,wav,strings}', 
-      'SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/*.xcassets']
-  }
-
+  
   spec.dependency "AgoraEduContext"
   spec.dependency "AgoraUIBaseViews"
   spec.dependency "AgoraExtApp"
   spec.dependency "AgoraWidget"
+
+  spec.dependency "Masonry"
+
+  spec.subspec 'Resources' do |ss|
+    ss.resource_bundles = {
+      'AgoraUIEduBaseViews' => ['AgoraUIEduBaseViews/Assets/**/*.{xcassets,strings,gif,mp3}']
+    }
+  end
+  
 end

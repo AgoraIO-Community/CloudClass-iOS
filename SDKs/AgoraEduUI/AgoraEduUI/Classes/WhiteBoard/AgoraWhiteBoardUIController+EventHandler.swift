@@ -24,7 +24,7 @@ extension AgoraWhiteBoardUIController: AgoraEduWhiteBoardHandler {
     @objc public func onDrawingEnabled(_ enabled: Bool) {
         if toastShowedStates.contains(#function) {
             let msg = enabled ? AgoraKitLocalizedString("UnMuteBoardText") : AgoraKitLocalizedString("MuteBoardText")
-            AgoraUtils.showToast(message: msg)
+            AgoraToast.toast(msg: msg)
         } else {
             toastShowedStates.append(#function)
         }
@@ -64,7 +64,7 @@ extension AgoraWhiteBoardUIController: AgoraEduWhiteBoardHandler {
     @objc public func onShowPermissionTips(_ granted: Bool) {
         if toastShowedStates.contains(#function) {
             let msg = granted ? AgoraKitLocalizedString("UnMuteBoardText") : AgoraKitLocalizedString("MuteBoardText")
-            AgoraUtils.showToast(message: msg)
+            AgoraToast.toast(msg: msg)
         } else {
             toastShowedStates.append(#function)
         }

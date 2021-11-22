@@ -29,7 +29,6 @@ class AgoraRoomUIController: NSObject, AgoraUIController {
     }
     
     private let navigationBar = AgoraUINavigationBar(frame: .zero)
-    private var loadingView: AgoraAlertView?
     
     // move timer handle to ui
     private var timer: DispatchSourceTimer?
@@ -125,7 +124,7 @@ private extension AgoraRoomUIController {
                 let strMid = "5"
                 let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
                                                     object: self)
-                AgoraUtils.showToast(message: strStart + strMid + strEnd)
+                AgoraToast.toast(msg: strStart + strMid + strEnd)
             default:
                 break
             }
@@ -147,7 +146,7 @@ private extension AgoraRoomUIController {
                                                     object: self)
                 let strEnd = AgoraUILocalizedString("ClassCloseWarningEndText",
                                                     object: self)
-                AgoraUtils.showToast(message: strStart + strMid + strMin + strEnd)
+                AgoraToast.toast(msg: strStart + strMid + strMin + strEnd)
             case 1 * 60:
                 // 距离教室关闭还有1分钟
                 let strStart = AgoraUILocalizedString("ClassCloseWarningStart2Text",
@@ -155,7 +154,7 @@ private extension AgoraRoomUIController {
                 let strMid = "1"
                 let strEnd = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
                                                     object: self)
-                AgoraUtils.showToast(message: strStart + strMid + strEnd)
+                AgoraToast.toast(msg: strStart + strMid + strEnd)
             default:
                 break
             }
@@ -229,28 +228,22 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
     public func onConnectionState(_ state: AgoraEduContextConnectionState) {
         switch state {
         case .aborted:
+            AgoraLoading.hide()
             // 踢出
-            loadingView?.removeFromSuperview()
-            AgoraUtils.showToast(message: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
+            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
             context?.leaveRoom()
         case .connecting:
-            if loadingView?.superview == nil {
-                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("LoaingText"),
-                                                          shared: true)
-            }
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
-            if loadingView?.superview == nil {
-                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("ReconnectingText"),
-                                                          shared: true)
-            }
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
         case .connected:
-            loadingView?.removeFromSuperview()
+            AgoraLoading.hide()
         }
     }
     
     // 上课过程中，错误信息
     public func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraUtils.showToast(message: error.message ?? "")
+        AgoraToast.toast(msg: error.message ?? "")
     }
     
     public func onUploadLogSuccess(_ logId: String) {

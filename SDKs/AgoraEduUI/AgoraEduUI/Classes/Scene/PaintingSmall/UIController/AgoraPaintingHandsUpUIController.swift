@@ -252,7 +252,7 @@ extension AgoraPaintingHandsUpUIController: AgoraEduHandsUpHandler {
             text = AgoraUILocalizedString("HandsUpTimeOutText",
                                           object: self)
         }
-        AgoraUtils.showToast(message: text)
+        AgoraToast.toast(msg: text)
     }
 }
 // MARK: - AgoraEduUserHandler

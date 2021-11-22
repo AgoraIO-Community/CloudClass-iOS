@@ -353,14 +353,14 @@ private extension AgoraPaintingRenderUIController {
             return
         }
         if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
-            AgoraUtils.showToast(message: AgoraUILocalizedString("MicrophoneMuteText", object: self))
+            AgoraToast.toast(msg: AgoraUILocalizedString("MicrophoneMuteText", object: self))
         } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
-            AgoraUtils.showToast(message: AgoraUILocalizedString("MicrophoneUnMuteText", object: self))
+            AgoraToast.toast(msg: AgoraUILocalizedString("MicrophoneUnMuteText", object: self))
         }
         if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
-            AgoraUtils.showToast(message: AgoraUILocalizedString("CameraMuteText", object: self))
+            AgoraToast.toast(msg: AgoraUILocalizedString("CameraMuteText", object: self))
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
-            AgoraUtils.showToast(message: AgoraUILocalizedString("CameraUnMuteText", object: self))
+            AgoraToast.toast(msg: AgoraUILocalizedString("CameraUnMuteText", object: self))
         }
     }
     

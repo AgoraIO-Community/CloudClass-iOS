@@ -16,7 +16,6 @@ import UIKit
 
 @objcMembers public class AgoraBoardView: AgoraBaseUIView  {
     private var contentView: UIView?
-    private var alertCycleLoadingView: AgoraAlertView?
     private var alertLineLoadingView: AgoraAlertView?
     
     public weak var delegate: AgoraBoardViewDelegate?
@@ -32,7 +31,6 @@ import UIKit
     }
     
     deinit {
-        alertCycleLoadingView = nil
         alertLineLoadingView = nil
     }
     
@@ -48,8 +46,7 @@ import UIKit
     }
     
     public func removeLoadingView() {
-        self.alertCycleLoadingView?.removeFromSuperview()
-        self.alertCycleLoadingView = nil
+        AgoraLoading.removeLoading(in: self)
         
         self.alertLineLoadingView?.removeFromSuperview()
         self.alertLineLoadingView = nil
@@ -104,18 +101,12 @@ private extension AgoraBoardView {
 // MARK: - AlertView
 private extension AgoraBoardView {
     func startCycleLoadingAlert() {
-        self.alertCycleLoadingView?.removeFromSuperview()
-        self.alertCycleLoadingView = nil
-        
         let message = getLocalizedString("LoaingText")
-        alertCycleLoadingView = AgoraUtils.showLoading(message: message,
-                                                       inView: self,
-                                                       shared: true)
+        AgoraLoading.addLoading(in: self, msg: message)
     }
     
     func stopCycleLoadingAlert() {
-        self.alertCycleLoadingView?.removeFromSuperview()
-        self.alertCycleLoadingView = nil
+        AgoraLoading.removeLoading(in: self)
     }
     
     func downloadProcessAlert() {

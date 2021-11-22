@@ -101,7 +101,7 @@ extension AgoraSettingUIController: AgoraEduDeviceHandler {
     }
     
     func onDeviceTips(message: String) {
-        AgoraUtils.showToast(message: message)
+        AgoraToast.toast(msg: message)
     }
 }
 // MARK: - Actions

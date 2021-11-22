@@ -250,13 +250,13 @@ extension Agora1V1RenderUIController: AgoraEduStreamHandler {
         if lastStream.streamType.hasVideo != stream.streamType.hasVideo {
             let text = AgoraUILocalizedString(stream.streamType.hasVideo ? "CameraUnMuteText" : "CameraMuteText",
                                               object: self)
-            AgoraUtils.showToast(message: text)
+            AgoraToast.toast(msg: text)
         }
         
         if lastStream.streamType.hasAudio != stream.streamType.hasAudio {
             let text = AgoraUILocalizedString(stream.streamType.hasVideo ? "MicrophoneUnMuteText" : "MicrophoneMuteText",
                                               object: self)
-            AgoraUtils.showToast(message: text)
+            AgoraToast.toast(msg: text)
         }
     }
 }

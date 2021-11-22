@@ -11,7 +11,7 @@ import AgoraEduContext
 import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
-fileprivate struct AgoraRoomTimeInfo {
+struct AgoraClassTimeInfo {
     var startTime: Int64
     var differTime: Int64
     var duration: Int64
@@ -36,7 +36,7 @@ class AgoraRoomStateUIController: UIViewController {
     /** 房间计时器*/
     private var timer: Timer?
     /** 房间时间信息*/
-    private var timeInfo: AgoraRoomTimeInfo?
+    private var timeInfo: AgoraClassTimeInfo?
     
     deinit {
         self.timer?.invalidate()
@@ -94,7 +94,7 @@ private extension AgoraRoomStateUIController {
                 let strMid = "5"
                 let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
                                                     object: self)
-                AgoraUtils.showToast(message: strStart + strMid + strEnd)
+                AgoraToast.toast(msg: strStart + strMid + strEnd)
             }
         case .end:
             stateView.timeLabel.textColor = .red
@@ -113,14 +113,14 @@ private extension AgoraRoomStateUIController {
                                                     object: self)
                 let strEnd = AgoraUILocalizedString("ClassCloseWarningEndText",
                                                     object: self)
-                AgoraUtils.showToast(message: strStart + strMid + strMin + strEnd)
+                AgoraToast.toast(msg: strStart + strMid + strMin + strEnd)
             } else if countDown == 60 {
                 let strStart = AgoraUILocalizedString("ClassCloseWarningStart2Text",
                                                       object: self)
                 let strMid = "1"
                 let strEnd = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
                                                     object: self)
-                AgoraUtils.showToast(message: strStart + strMid + strEnd)
+                AgoraToast.toast(msg: strStart + strMid + strEnd)
             }
         case .close:
             stateView.timeLabel.textColor = .red
@@ -188,10 +188,10 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
                          differTime: Int64,
                          duration: Int64,
                          closeDelay: Int64) {
-        self.timeInfo = AgoraRoomTimeInfo(startTime: startTime,
-                                             differTime: differTime,
-                                             duration: duration * 1000,
-                                             closeDelay: closeDelay * 1000)
+        self.timeInfo = AgoraClassTimeInfo(startTime: startTime,
+                                           differTime: differTime,
+                                           duration: duration * 1000,
+                                           closeDelay: closeDelay * 1000)
     }
     
     func onNetworkQuality(_ quality: AgoraEduContextNetworkQuality) {

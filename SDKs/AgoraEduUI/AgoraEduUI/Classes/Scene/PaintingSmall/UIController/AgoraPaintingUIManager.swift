@@ -94,8 +94,6 @@ class AgoraPaintingUIManager: AgoraUIManager {
         return vc
     }()
     
-    private var loadingView: AgoraAlertView?
-
     deinit {
         print("\(#function): \(self.classForCoder)")
     }
@@ -156,22 +154,16 @@ extension AgoraPaintingUIManager: AgoraEduRoomHandler {
     func onConnectionState(_ state: AgoraEduContextConnectionState) {
         switch state {
         case .aborted:
+            AgoraLoading.hide()
             // 踢出
-            loadingView?.removeFromSuperview()
-            AgoraUtils.showToast(message: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
+            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
             contextPool.room.leaveRoom()
         case .connecting:
-            if loadingView == nil {
-                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("LoaingText"),
-                                                          shared: true)
-            }
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
-            if loadingView == nil {
-                self.loadingView = AgoraUtils.showLoading(message: AgoraKitLocalizedString("ReconnectingText"),
-                                                          shared: true)
-            }
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
         case .connected:
-            loadingView?.removeFromSuperview()
+            AgoraLoading.hide()
         }
     }
     
@@ -180,7 +172,7 @@ extension AgoraPaintingUIManager: AgoraEduRoomHandler {
     }
     
     func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraUtils.showToast(message: error.message)
+        AgoraToast.toast(msg: error.message)
     }
 }
 // MARK: - AgoraEduRoomHandler

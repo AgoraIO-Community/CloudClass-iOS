@@ -26,10 +26,10 @@ class AgoraPrivateChatController: NSObject, AgoraController {
 extension AgoraPrivateChatController: AgoraEduPrivateChatHandler {
     // 收到开始私密语音通知
     func onStartPrivateChat(_ info: AgoraEduContextPrivateChatInfo) {
-        AgoraUtils.showToast(message: "\(info.fromUser.userName) 和 \(info.toUser.userName) onStartPrivateChat")
+        AgoraToast.toast(msg: "\(info.fromUser.userName) 和 \(info.toUser.userName) onStartPrivateChat")
     }
     // 收到结束私密语音通知
     func onEndPrivateChat() {
-        AgoraUtils.showToast(message: "onEndPrivateChat")
+        AgoraToast.toast(msg: "onEndPrivateChat")
     }
 }

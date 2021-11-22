@@ -41,7 +41,7 @@ import AgoraEduContext
             let text = AgoraUILocalizedString("RemovedCoHostText",
                                               object: self)
             
-            AgoraUtils.showToast(message: text)
+            AgoraToast.toast(msg: text)
         }
     }
     

@@ -114,9 +114,6 @@ struct RoomInfoModel {
         about.alpha = 0
         return about
     }()
-    // ..
-    private var alertView: AgoraAlertView?
-    
     private var topImageView: AgoraBaseUIImageView!
     /** logo*/
     private var logoImageView: AgoraBaseUIImageView!
@@ -402,24 +399,16 @@ private extension LoginViewController {
     func requestToken(region: String,
                       userUuid: String,
                       completion: @escaping (TokenBuilder.ServerResp) -> ()) {
-        if alertView == nil {
-            alertView = AgoraUtils.showLoading(message: "")
-        } else {
-            alertView?.show(in: view)
-        }
-        
+        AgoraLoading.loading()
         tokenBuilder.buildByServer(region: region,
                                    userUuid: userUuid,
                                    environment: .pro,
                                    success: { (resp) in
-            completion(resp)
-        }, fail: { [weak self] (error) in
-            guard let `self` = self else {
-                return
-            }
-            self.alertView?.removeFromSuperview()
-            AgoraUtils.showToast(message: error.localizedDescription)
-        })
+                                        completion(resp)
+                                    }, fail: { error in
+                                        AgoraLoading.hide()
+                                        AgoraToast.toast(msg: error.localizedDescription)
+                                    })
     }
 }
 
@@ -427,14 +416,12 @@ private extension LoginViewController {
 extension LoginViewController: AgoraEduClassroomDelegate {
     public func classroom(_ classroom: AgoraEduClassroom,
                           didReceivedEvent event: AgoraEduEvent) {
-        if alertView != nil {
-            alertView?.removeFromSuperview()
-        }
+        AgoraLoading.hide()
         switch event {
         case .failed:
-            AgoraUtils.showToast(message: "Launch fail")
+            AgoraToast.toast(msg: "Launch fail")
         case .forbidden:
-            AgoraUtils.showToast(message: "Launch fail")
+            AgoraToast.toast(msg: "Launch fail")
             AgoraUtils.showForbiddenAlert()
         default:
             break

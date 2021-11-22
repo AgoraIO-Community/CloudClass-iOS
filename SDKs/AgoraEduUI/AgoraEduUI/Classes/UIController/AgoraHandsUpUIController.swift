@@ -59,7 +59,7 @@ extension AgoraHandsUpUIController: AgoraEduHandsUpHandler {
     // 是否可以举手
     public func onHandsUpEnable(_ enable: Bool) {
         if toastShowedStates.contains(#function) {
-            AgoraUtils.showToast(message: AgoraUILocalizedString(enable ? "OpenHandsUpText" : "CloseHandsUpText",
+            AgoraToast.toast(msg: AgoraUILocalizedString(enable ? "OpenHandsUpText" : "CloseHandsUpText",
                                                                  object: self))
         } else {
             toastShowedStates.append(#function)
@@ -78,7 +78,7 @@ extension AgoraHandsUpUIController: AgoraEduHandsUpHandler {
             case .handsUp:
                 let text = AgoraUILocalizedString("HandsUpSuccessText",
                                                   object: self)
-                AgoraUtils.showToast(message: text)
+                AgoraToast.toast(msg: text)
             case .handsDown:
                 break
             default:
@@ -122,7 +122,7 @@ extension AgoraHandsUpUIController: AgoraEduHandsUpHandler {
                                           object: self)
         }
         
-        AgoraUtils.showToast(message: text)
+        AgoraToast.toast(msg: text)
     }
 }
 

@@ -61,7 +61,7 @@ extension AgoraLectureRenderUIController: AgoraEduUserHandler {
      * 你的麦克风被打开了
      */
     public func onShowUserTips(_ message: String) {
-        AgoraUtils.showToast(message: message)
+        AgoraToast.toast(msg: message)
     }
     
     public func onStreamUpdated(_ streamType: EduContextMediaStreamType,
@@ -75,11 +75,11 @@ extension AgoraLectureRenderUIController: AgoraEduUserHandler {
 //        case .video:
 //            let text = AgoraUILocalizedString(fromUser.enableVideo ? "CameraUnMuteText" : "CameraMuteText",
 //                                              object: self)
-//            AgoraUtils.showToast(message: text)
+//            AgoraToast.toast(msg: text)
 //        case .audio:
 //            let text = AgoraUILocalizedString(fromUser.enableAudio ? "MicrophoneUnMuteText" : "MicrophoneMuteText",
 //                                              object: self)
-//            AgoraUtils.showToast(message: text)
+//            AgoraToast.toast(msg: text)
 //        default:
 //            break
 //        }

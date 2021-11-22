@@ -41,7 +41,7 @@ enum ChatType {
             switch chatType {
             case .room:
                 chatView.maxView.roomChatIfHasPermission(hasRoomChatPermission)
-                AgoraUtils.showToast(message: roomSilencedChanged(hasRoomChatPermission: hasRoomChatPermission))
+                AgoraToast.toast(msg: roomSilencedChanged(hasRoomChatPermission: hasRoomChatPermission))
             case .conversation:
                 chatView.maxView.conversationChatWithoutPermission()
             }
@@ -314,7 +314,7 @@ extension AgoraChatWidget: AgoraEduMessageHandler {
         }
         
         if let `error` = error {
-            AgoraUtils.showToast(message: error.message)
+            AgoraToast.toast(msg: error.message)
         }
         
         placeHolderNeedHidden()
@@ -335,7 +335,7 @@ extension AgoraChatWidget: AgoraEduMessageHandler {
         }
         
         if let `error` = error {
-            AgoraUtils.showToast(message: error.message)
+            AgoraToast.toast(msg: error.message)
         }
         
         placeHolderNeedHidden()
@@ -360,7 +360,7 @@ extension AgoraChatWidget: AgoraEduMessageHandler {
         }
         
         if let `error` = error {
-            AgoraUtils.showToast(message: error.message)
+            AgoraToast.toast(msg: error.message)
         }
         
         placeHolderNeedHidden()
@@ -378,7 +378,7 @@ extension AgoraChatWidget: AgoraEduMessageHandler {
         }
         
         if let `error` = error {
-            AgoraUtils.showToast(message: error.message)
+            AgoraToast.toast(msg: error.message)
         }
         
         placeHolderNeedHidden()
@@ -400,7 +400,7 @@ extension AgoraChatWidget: AgoraEduMessageHandler {
         }
         
         hasRoomChatPermission = allow
-        AgoraUtils.showToast(message: text)
+        AgoraToast.toast(msg: text)
     }
     
     @objc public func onUpdateRemoteChatPermission(_ allow: Bool,
@@ -416,7 +416,7 @@ extension AgoraChatWidget: AgoraEduMessageHandler {
                                   operatorUser: operatorUser.userName)
         }
         
-        AgoraUtils.showToast(message: text)
+        AgoraToast.toast(msg: text)
     }
 }
 
