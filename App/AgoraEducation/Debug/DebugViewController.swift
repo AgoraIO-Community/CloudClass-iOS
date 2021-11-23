@@ -63,7 +63,6 @@ import UIKit
     }
     
     private var startTime: Int?
-    private var classroom: AgoraEduClassroom?
     private let tokenBuilder = TokenBuilder()
     private let debugCourware = DebugCourware()
     
@@ -127,7 +126,7 @@ import UIKit
     
     @IBAction func downWareList(_ sender: Any) {
         downLabel.text = "下载中"
-        AgoraClassroomSDK.downloadCoursewares(self)
+        
     }
     
     @IBAction func clearWareList(_ sender: Any) {
@@ -234,14 +233,14 @@ private extension DebugViewController {
                                                     token: rtmToken,
                                                     startTime: NSNumber(value: startTime),
                                                     duration: NSNumber(value: duration),
-                                                    region: region,
+                                                    region: .CN,
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil,
                                                     boardFitMode: .retain)
             
             AgoraClassroomSDK.setConfig(sdkConfig)
-            self.classroom = AgoraClassroomSDK.launch(launchConfig,
-                                                      delegate: self)
+//            self.classroom = AgoraClassroomSDK.launch(launchConfig,
+//                                                      delegate: self)
         }
     }
     
@@ -314,7 +313,7 @@ extension DebugViewController {
                     }
                 }
                 
-                AgoraClassroomSDK.configCoursewares(coursewares)
+//                AgoraClassroomSDK.configCoursewares(coursewares)
             } catch {
                 print(error.localizedDescription)
             }
@@ -323,14 +322,7 @@ extension DebugViewController {
 }
 
 // MARK: AgoraEduClassroomDelegate
-extension DebugViewController: AgoraEduClassroomDelegate {
-    public func classroom(_ classroom: AgoraEduClassroom,
-                          didReceivedEvent event: AgoraEduEvent) {
-        AgoraLoading.hide()
-    }
-}
-
-extension DebugViewController: AgoraEduCoursewareDelegate {
+extension DebugViewController: AgoraEduCoursewareProcess {
     func courseware(_ courseware: AgoraEduCourseware,
                     didProcessChanged process: Float) {
         downProcess = CGFloat(process)

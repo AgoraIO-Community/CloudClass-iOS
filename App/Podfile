@@ -24,16 +24,14 @@ end
 
 def preRtc
    pod 'AgoraClassroomSDK_iOS/PreRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_iOS.podspec'
-   pod 'AgoraEduCorePuppet/PreRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
-   pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
+   pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
    pod 'AgoraRte/PreRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
    pod "AgoraRtcEngine_iOS", "3.4.6"
 end
 
 def reRtc
    pod 'AgoraClassroomSDK_iOS/ReRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_iOS.podspec'
-   pod 'AgoraEduCorePuppet/ReRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
-   pod 'AgoraEduCore/ReRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
+   pod 'AgoraEduCore/ReRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
    pod 'AgoraRte/ReRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
    pod 'AgoraRtcKit', :path => '../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'
 end
@@ -45,11 +43,8 @@ def openSourceLibs
 end
 
 def sourcePod
-  # close source libs
-  pod 'AgoraRx', :path => '../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
   pod 'AgoraWhiteBoard', :path => '../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
-  pod 'AgoraReport', :path => '../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
-  
+
   # common libs
   pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
   pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
@@ -114,9 +109,9 @@ target 'AgoraEducation' do
   
   libVersion
     
-  #sourcePod
+  sourcePod
   #binaryPod
-  halfBinaryPod
+  #halfBinaryPod
   
   post_install do |installer|
     ## Fix for XCode 12.5

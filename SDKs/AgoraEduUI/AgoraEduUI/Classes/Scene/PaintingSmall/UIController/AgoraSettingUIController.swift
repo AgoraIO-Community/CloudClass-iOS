@@ -10,7 +10,13 @@ import AgoraEduContext
 import SwifterSwift
 import UIKit
 
+protocol AgoraSettingUIControllerDelegate: NSObjectProtocol {
+    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController)
+}
+
 class AgoraSettingUIController: UIViewController {
+    weak var delegate: AgoraSettingUIControllerDelegate?
+    
     var contentView: UIView!
     
     var cameraLabel: UILabel!
@@ -136,6 +142,7 @@ private extension AgoraSettingUIController {
         rightButton.titleLabel = rightButtonLabel
         rightButton.tapActionBlock = { [unowned self] (index) -> Void in
             self.contextPool.room.leaveRoom()
+            self.delegate?.settingUIControllerDidPressedLeaveRoom(controller: self)
         }
         AgoraUtils.showAlert(imageModel: nil,
                              title: AgoraKitLocalizedString("LeaveClassTitleText"),

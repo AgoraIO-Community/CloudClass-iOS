@@ -15,7 +15,7 @@ import UIKit
 
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
-class AgoraPaintingUIManager: AgoraUIManager {
+class AgoraPaintingUIManager: AgoraEduUIManager {
     private let roomType: AgoraEduContextRoomType = .paintingSmall
     /// 视图部分，支持feature的UI交互显示
     /** 容器视图，用以保持比例*/
@@ -98,10 +98,10 @@ class AgoraPaintingUIManager: AgoraUIManager {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(contextPool: AgoraEduContextPool) {
-        super.init(nibName: nil,
-                   bundle: nil)
-        self.contextPool = contextPool
+    public override init(contextPool: AgoraEduContextPool,
+                         delegate: AgoraEduUIManagerDelegate) {
+        super.init(contextPool: contextPool,
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
@@ -158,6 +158,7 @@ extension AgoraPaintingUIManager: AgoraEduRoomHandler {
             // 踢出
             AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
             contextPool.room.leaveRoom()
+            exit(reason: .kickOut)
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
@@ -185,6 +186,7 @@ extension AgoraPaintingUIManager: AgoraEduUserHandler {
         btnModel.titleLabel = btnLabel
         btnModel.tapActionBlock = { [weak self] (index) -> Void in
             self?.contextPool.room.leaveRoom()
+            self?.exit(reason: .kickOut)
         }
         AgoraUtils.showAlert(imageModel: nil,
                              title: AgoraKitLocalizedString("KickOutNoticeText"),

@@ -1,56 +1,35 @@
 //
-//  AgoraEduUI.swift
+//  AgoraUIManager.swift
 //  AgoraEduUI
 //
-//  Created by SRS on 2021/3/13.
+//  Created by Cavan on 2021/11/18.
 //
 
-import AgoraUIEduBaseViews
-import AgoraUIBaseViews
 import AgoraEduContext
-import AudioToolbox
-import AgoraExtApp
 import AgoraWidget
+import UIKit
 
-@objcMembers public class AgoraEduUI: NSObject {
-    public private(set) var presentedUIManager: AgoraUIManager?
-    
-    public func launch(roomType: AgoraEduContextRoomType,
-                       contextPool: AgoraEduContextPool,
-                       region: String) -> AgoraUIManager {
-        var manager: AgoraUIManager
-        
-        switch roomType {
-        case .oneToOne:
-            manager = AgoraOneToOneUIManager(contextPool: contextPool)
-        case .small:
-            manager = AgoraSmallUIManager(contextPool: contextPool)
-        case .lecture:
-            manager = AgoraLectureUIManager(contextPool: contextPool,
-                                            region: region)
-        case .paintingSmall:
-            manager = AgoraPaintingUIManager(contextPool: contextPool)
-        default:
-            fatalError()
-        }
-        
-        presentedUIManager = manager
-        
-        return manager
-    }
-    
-    deinit {
-        print("ui deinit")
-    }
+public protocol AgoraEduUIManagerDelegate: NSObjectProtocol {
+    func manager(manager: AgoraEduUIManager,
+                 didExited reason: AgoraEduUIExitReason)
 }
 
-@objcMembers public class AgoraUIManager: UIViewController {
+public class AgoraEduUIManager: UIViewController {
+    weak var delegate: AgoraEduUIManagerDelegate?
     var contextPool: AgoraEduContextPool!
+    
     public override init(nibName nibNameOrNil: String?,
                          bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil,
                    bundle: nibBundleOrNil)
-
+    }
+    
+    public init(contextPool: AgoraEduContextPool,
+                delegate: AgoraEduUIManagerDelegate) {
+        super.init(nibName: nil,
+                   bundle: nil)
+        self.contextPool = contextPool
+        self.delegate = delegate
     }
     
     required init?(coder: NSCoder) {
@@ -67,6 +46,11 @@ import AgoraWidget
     
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .landscapeRight
+    }
+    
+    public func exit(reason: AgoraEduUIExitReason) {
+        self.delegate?.manager(manager: self,
+                               didExited: reason)
     }
     
     public func createChatWidget() -> AgoraBaseWidget? {

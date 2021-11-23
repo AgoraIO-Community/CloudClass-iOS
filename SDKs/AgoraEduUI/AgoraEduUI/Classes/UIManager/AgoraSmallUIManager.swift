@@ -14,7 +14,7 @@ import AgoraWidget
 
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
-class AgoraSmallUIManager: AgoraUIManager {
+class AgoraSmallUIManager: AgoraEduUIManager {
     private let roomType: AgoraEduContextRoomType = .paintingSmall
     /// 视图部分，支持feature的UI交互显示
     /** 容器视图，用以保持比例*/
@@ -71,6 +71,7 @@ class AgoraSmallUIManager: AgoraUIManager {
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
+        vc.delegate = self
         self.addChild(vc)
         return vc
     }()
@@ -86,11 +87,10 @@ class AgoraSmallUIManager: AgoraUIManager {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(contextPool: AgoraEduContextPool) {
-        super.init(nibName: nil,
-                   bundle: nil)
-        self.contextPool = contextPool
-
+    public override init(contextPool: AgoraEduContextPool,
+                         delegate: AgoraEduUIManagerDelegate) {
+        super.init(contextPool: contextPool,
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
@@ -421,5 +421,12 @@ extension AgoraSmallUIManager: AgoraWidgetDelegate {
         default:
             break
         }
+    }
+}
+
+// MARK: - AgoraSettingUIControllerDelegate
+extension AgoraSmallUIManager: AgoraSettingUIControllerDelegate {
+    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
+        exit(reason: .normal)
     }
 }

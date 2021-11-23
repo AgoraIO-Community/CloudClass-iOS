@@ -541,7 +541,7 @@
 		1AE0CFFC2283C5F20092AC5E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = Agora;
 				TargetAttributes = {
 					1AE0D0032283C5F20092AC5E = {

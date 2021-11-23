@@ -115,6 +115,7 @@ def companionPullRequestsChecker(REPOS, repoBranch, branches) {
     def utils = new agora.build.Utils()
     def prInfo = [:]
     def commitInfo = [:]
+    def companionPrDetails = [:]
     REPOS.each {k, v ->
         branches."${k}" = ''
         repoGroup = v.split("/")[-2]
@@ -135,6 +136,7 @@ def companionPullRequestsChecker(REPOS, repoBranch, branches) {
             pullRequest = readJSON text: response.content
             if(pullRequest.values) {
                 prInfo."${k}" = pullRequest.values[0].id
+                companionPrDetails."${k}" = pullRequest.values[0]
                 found = true
             }
 
@@ -145,6 +147,7 @@ def companionPullRequestsChecker(REPOS, repoBranch, branches) {
             }
         }
     }
+    utils.updateCompanionPullRequestsDetails(companionPrDetails)
     return [commitInfo, prInfo]
 }
 

@@ -10,7 +10,7 @@ import AgoraUIBaseViews
 import AgoraEduContext
 import Masonry
 
-class AgoraOneToOneUIManager: AgoraUIManager {
+class AgoraOneToOneUIManager: AgoraEduUIManager {
     
     private let roomType: AgoraEduContextRoomType = .oneToOne
     /** 状态栏 控制器*/

@@ -18,6 +18,15 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   
+  # common libs
+  spec.dependency "AgoraExtApp"
+  spec.dependency "AgoraWidget"
+
+  # open source libs
+  spec.dependency "AgoraEduUI"
+  spec.dependency "AgoraEduContext"
+  spec.dependency "AgoraWidgets"
+
   spec.subspec 'PreRtc' do |pre_rtc|
     pre_rtc.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}", "AgoraClassroomSDK/**/*.{swift,h,m}"
     pre_rtc.public_header_files = [
@@ -26,17 +35,7 @@ Pod::Spec.new do |spec|
     ]
     
     # close source libs
-    pre_rtc.dependency "AgoraEduCorePuppet/PreRtc"
     pre_rtc.dependency "AgoraEduCore/PreRtc"
-
-    # common libs
-    pre_rtc.dependency "AgoraExtApp"
-    pre_rtc.dependency "AgoraWidget"
-
-    # open source libs
-    pre_rtc.dependency "AgoraEduUI"
-    pre_rtc.dependency "AgoraEduContext"
-    pre_rtc.dependency "AgoraWidgets"
   end
   
   spec.subspec 'ReRtc' do |re_rtc|
@@ -47,17 +46,7 @@ Pod::Spec.new do |spec|
     ]
     
     # close source libs
-    re_rtc.dependency "AgoraEduCorePuppet/ReRtc"
     re_rtc.dependency "AgoraEduCore/ReRtc"
-
-    # common libs
-    re_rtc.dependency "AgoraExtApp"
-    re_rtc.dependency "AgoraWidget"
-
-    # open source libs
-    re_rtc.dependency "AgoraEduUI"
-    re_rtc.dependency "AgoraEduContext"
-    re_rtc.dependency "AgoraWidgets"
   end
 
   spec.default_subspecs = 'PreRtc'

@@ -132,8 +132,6 @@ struct RoomInfoModel {
     
     private var selectedIndex = -1
     
-    private var classroom: AgoraEduClassroom?
-    
     private let tokenBuilder = TokenBuilder()
 }
 
@@ -344,8 +342,21 @@ private extension LoginViewController {
                                                 videoState: .on,
                                                 audioState: .on)
         
+        AgoraLoading.loading()
+
+        let fail: (Error) -> () = { (error) in
+            AgoraLoading.hide()
+            AgoraToast.toast(msg: error.localizedDescription,
+                             type: .erro)
+        }
+        
+        let success: () -> () = {
+            AgoraLoading.hide()
+        }
+        
         requestToken(region: region.rawValue,
-                     userUuid: userUuid) { [weak self] (response) in
+                     userUuid: userUuid,
+                     success: { [weak self] (response) in
             guard let `self` = self else {
                 return
             }
@@ -364,15 +375,18 @@ private extension LoginViewController {
                                                     token: rtmToken,
                                                     startTime: NSNumber(value: startTime),
                                                     duration: NSNumber(value: duration),
-                                                    region: region.rawValue,
+                                                    region: region.eduType,
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil,
                                                     boardFitMode: .retain)
             
             AgoraClassroomSDK.setConfig(sdkConfig)
-            self.classroom = AgoraClassroomSDK.launch(launchConfig,
-                                                      delegate: self)
-        }
+            
+            AgoraClassroomSDK.launch(launchConfig,
+                                     delegate: self,
+                                     success: success,
+                                     fail: fail)
+        }, fail: fail)
     }
     
     @objc func onPushDebugVC() {
@@ -385,7 +399,8 @@ private extension LoginViewController {
     func buildToken(appId: String,
                     appCertificate: String,
                     userUuid: String,
-                    completion: @escaping (TokenBuilder.ServerResp) -> ()) {
+                    success: @escaping (TokenBuilder.ServerResp) -> (),
+                    fail: @escaping (Error) -> ()) {
         let token = tokenBuilder.buildByAppId(appId,
                                               appCertificate: appCertificate,
                                               userUuid: userUuid)
@@ -393,41 +408,38 @@ private extension LoginViewController {
         let response = TokenBuilder.ServerResp(appId: appId,
                                                userId: userUuid,
                                                rtmToken: token)
-        completion(response)
+        success(response)
     }
     
     func requestToken(region: String,
                       userUuid: String,
-                      completion: @escaping (TokenBuilder.ServerResp) -> ()) {
-        AgoraLoading.loading()
+                      success: @escaping (TokenBuilder.ServerResp) -> (),
+                      fail: @escaping (Error) -> ()) {
         tokenBuilder.buildByServer(region: region,
                                    userUuid: userUuid,
                                    environment: .pro,
                                    success: { (resp) in
-                                        completion(resp)
-                                    }, fail: { error in
-                                        AgoraLoading.hide()
-                                        AgoraToast.toast(msg: error.localizedDescription)
-                                    })
+                                    success(resp)
+                                   }, fail: { (error) in
+                                    fail(error)
+                                   })
     }
 }
 
 // MARK: - AgoraEduClassroomDelegate
-extension LoginViewController: AgoraEduClassroomDelegate {
-    public func classroom(_ classroom: AgoraEduClassroom,
-                          didReceivedEvent event: AgoraEduEvent) {
-        AgoraLoading.hide()
-        switch event {
-        case .failed:
-            AgoraToast.toast(msg: "Launch fail")
-        case .forbidden:
-            AgoraToast.toast(msg: "Launch fail")
-            AgoraUtils.showForbiddenAlert()
+
+extension LoginViewController: AgoraEduClassroomSDKDelegate {
+    public func classroomSDK(_ classroom: AgoraClassroomSDK,
+                             didExited reason: AgoraEduExitReason) {
+        switch reason {
+        case .kickOut:
+            AgoraToast.toast(msg: "kick out")
         default:
             break
         }
     }
 }
+
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView,
@@ -744,6 +756,17 @@ private extension LoginViewController {
             } else {
                 bottomButton.agora_bottom = LoginConfig.login_bottom_bottom
             }
+        }
+    }
+}
+
+fileprivate extension RoomRegionType {
+    var eduType: AgoraEduRegion {
+        switch self {
+        case .CN: return .CN
+        case .NA: return .NA
+        case .EU: return .EU
+        case .AP: return .AP
         }
     }
 }

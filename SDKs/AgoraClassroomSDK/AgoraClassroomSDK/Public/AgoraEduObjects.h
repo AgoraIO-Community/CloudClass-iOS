@@ -169,7 +169,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 课程时间（秒）
 @property (nonatomic, copy, nullable) NSNumber *duration;
 // 区域
-@property (nonatomic, copy) NSString *region;
+@property (nonatomic, assign) AgoraEduRegion region;
 // 加密
 @property (nonatomic, strong, nullable) AgoraEduMediaOptions *mediaOptions;
 // 用户自定属性
@@ -194,7 +194,7 @@ NS_ASSUME_NONNULL_BEGIN
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                          region:(NSString * _Nullable)region
+                          region:(AgoraEduRegion)region
                     mediaOptions:(AgoraEduMediaOptions * _Nullable)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties
                     boardFitMode:(AgoraEduBoardFitMode)boardFitMode;

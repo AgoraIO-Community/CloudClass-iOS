@@ -28,7 +28,7 @@ def main():
     
     print(App_Path)
     
-    position = content.find("self.classroom = AgoraClassroomSDK.launch(launchConfig,")
+    position = content.find("AgoraClassroomSDK.launch(launchConfig,")
     
     if position != -1:
         string1 = "let setEnvironment = NSSelectorFromString(\"setEnvironment:\")\n"

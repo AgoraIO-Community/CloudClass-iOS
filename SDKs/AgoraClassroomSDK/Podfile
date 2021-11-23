@@ -18,8 +18,10 @@ def libVersion
 end
 
 def preRtc
-  pod 'AgoraEduCorePuppet/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
-  pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
+  pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
+
+  #pod 'AgoraEduCorePuppet/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
+  #pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
   pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
   pod "AgoraRtcEngine_iOS", "3.4.6"
 end
@@ -45,8 +47,8 @@ end
 def sourcePod
   # close source libs
   pod 'AgoraWhiteBoard', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
-  pod 'AgoraReport', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
-  pod 'AgoraRx', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
+  #pod 'AgoraReport', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
+  #pod 'AgoraRx', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
 	
   # common libs
   pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'

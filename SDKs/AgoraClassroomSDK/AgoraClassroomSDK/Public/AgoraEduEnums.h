@@ -9,16 +9,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 事件类型
-typedef NS_ENUM(NSInteger, AgoraEduEvent) {
+typedef NS_ENUM(NSInteger, AgoraEduRegion) {
+    // 中国大陆
+    AgoraEduRegionCN = 0,
+    // 北美
+    AgoraEduRegionNA = 1,
+    // 欧洲
+    AgoraEduRegionEU = 2,
+    // 东南亚
+    AgoraEduRegionAP = 3,
+};
+
+typedef NS_ENUM(NSInteger, AgoraEduExitReason) {
     // 失败
-    AgoraEduEventFailed = 0,
+    AgoraEduExitReasonNormal = 0,
     // 准备完成
-    AgoraEduEventReady,
-    // 已经销毁
-    AgoraEduEventDestroyed,
-    // Forbidden
-    AgoraEduEventForbidden,
+    AgoraEduExitReasonKickOut = 1
 };
 
 /**加密方式*/
@@ -32,15 +38,9 @@ typedef NS_ENUM(NSInteger, AgoraEduMediaEncryptionMode) {
     AgoraEduMediaEncryptionModeAES256XTS = 3,
     /** 4: 128-bit SM4 encryption, ECB mode. */
     AgoraEduMediaEncryptionModeSM4128ECB = 4,
-    /** 5: 128-bit AES encryption, GCM mode.
-
-     @since v3.3.1
-     */
+    /** 5: 128-bit AES encryption, GCM mode.*/
     AgoraEduMediaEncryptionModeAES128GCM = 5,
-    /** 6: 256-bit AES encryption, GCM mode.
-
-     @since v3.3.1
-     */
+    /** 6: 256-bit AES encryption, GCM mode.*/
     AgoraEduMediaEncryptionModeAES256GCM = 6,
     AgoraEduMediaEncryptionModeAES128GCM2 = 7,
     AgoraEduMediaEncryptionModeAES256GCM2 = 8,

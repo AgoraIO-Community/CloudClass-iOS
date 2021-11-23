@@ -177,7 +177,7 @@
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
-                          region:(NSString * _Nullable)region
+                          region:(AgoraEduRegion)region
                     mediaOptions:(AgoraEduMediaOptions *)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties
                     boardFitMode:(AgoraEduBoardFitMode)boardFitMode {
@@ -191,12 +191,12 @@
     self.roomType = roomType;
     self.token = token;
     
-    self.startTime = startTime ? startTime : nil;
-    self.duration = duration ? duration : nil;
-    self.region = region ? region : @"cn";
+    self.startTime = startTime;
+    self.duration = duration;
+    self.region = region;
     self.mediaOptions = mediaOptions;
     
-    self.userProperties = userProperties ? userProperties : nil;
+    self.userProperties = userProperties;
     self.boardFitMode = boardFitMode;
     
     return self;

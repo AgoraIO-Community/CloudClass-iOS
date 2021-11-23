@@ -14,8 +14,7 @@ import AgoraWidget
 
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
-class AgoraLectureUIManager: AgoraUIManager {
-    private let region: String
+class AgoraLectureUIManager: AgoraEduUIManager {
     private let roomType: AgoraEduContextRoomType = .lecture
     /// 视图部分，支持feature的UI交互显示
     /** 容器视图，用以保持比例*/
@@ -74,12 +73,10 @@ class AgoraLectureUIManager: AgoraUIManager {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(contextPool: AgoraEduContextPool,
-         region: String) {
-        self.region = region
-        super.init(nibName: nil,
-                   bundle: nil)
-        self.contextPool = contextPool
+    public override init(contextPool: AgoraEduContextPool,
+                         delegate: AgoraEduUIManagerDelegate) {
+        super.init(contextPool: contextPool,
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
