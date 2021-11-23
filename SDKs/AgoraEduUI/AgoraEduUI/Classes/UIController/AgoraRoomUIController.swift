@@ -24,8 +24,11 @@ fileprivate class AgoraRoomTimeInfo: NSObject {
 
 class AgoraRoomUIController: NSObject, AgoraUIController {
     // Contexts
-    private var context: AgoraEduRoomContext? {
+    private var roomContext: AgoraEduRoomContext? {
         return contextProvider?.controllerNeedRoomContext()
+    }
+    private var monitorContext: AgoraEduMonitorContext? {
+        return contextProvider?.controllerNeedMonitorContext()
     }
     
     private let navigationBar = AgoraUINavigationBar(frame: .zero)
@@ -48,6 +51,9 @@ class AgoraRoomUIController: NSObject, AgoraUIController {
         initViews()
         initLayout()
         observeUI()
+        
+        contextProvider.controllerNeedRoomContext().registerEventHandler(self)
+        contextProvider.controllerNeedMonitorContext().registerMonitorEventHandler(self)
     }
     
     func updateSetInteraction(enabled: Bool) {
@@ -79,7 +85,21 @@ private extension AgoraRoomUIController {
         }
         
         navigationBar.logButton.tap { [unowned self] (button) in
-            self.context?.uploadLog()
+            self.monitorContext?.uploadLog(success: { logId in
+                let title = AgoraKitLocalizedString("UploadLog")
+                
+                let button = AgoraAlertButtonModel()
+                let buttonTitleProperties = AgoraAlertLabelModel()
+                buttonTitleProperties.text = AgoraKitLocalizedString("OK")
+                button.titleLabel = buttonTitleProperties
+                
+                AgoraUtils.showAlert(imageModel: nil,
+                                     title: title,
+                                     message: logId,
+                                     btnModels: [button])
+            }, failure: { error in
+                // TODO: 上传日志失败
+            })
         }
     }
 }
@@ -174,7 +194,7 @@ private extension AgoraRoomUIController {
         let button = AgoraAlertButtonModel()
         button.titleLabel = ButtonLabel
         button.tapActionBlock = { [weak self] (index) -> Void in
-            self?.context?.leaveRoom()
+            self?.roomContext?.leaveRoom()
         }
         
         AgoraUtils.showAlert(imageModel: nil,
@@ -219,19 +239,26 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
         }
     }
     
+    // 上课过程中，错误信息
+    public func onShowErrorInfo(_ error: AgoraEduContextError) {
+        AgoraToast.toast(msg: error.message)
+    }
+}
+
+extension AgoraRoomUIController: AgoraEduMonitorHandler {
     // 网络状态
-    public func onNetworkQuality(_ quality: AgoraEduContextNetworkQuality) {
+    func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
         navigationBar.setNetworkQuality(quality.barType)
     }
     
     // 连接状态
-    public func onConnectionState(_ state: AgoraEduContextConnectionState) {
+    func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
         switch state {
         case .aborted:
             AgoraLoading.hide()
             // 踢出
             AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
-            context?.leaveRoom()
+            roomContext?.leaveRoom()
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
@@ -239,25 +266,6 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
         case .connected:
             AgoraLoading.hide()
         }
-    }
-    
-    // 上课过程中，错误信息
-    public func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraToast.toast(msg: error.message ?? "")
-    }
-    
-    public func onUploadLogSuccess(_ logId: String) {
-        let title = AgoraKitLocalizedString("UploadLog")
-        
-        let button = AgoraAlertButtonModel()
-        let buttonTitleProperties = AgoraAlertLabelModel()
-        buttonTitleProperties.text = AgoraKitLocalizedString("OK")
-        button.titleLabel = buttonTitleProperties
-        
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: title,
-                             message: logId,
-                             btnModels: [button])
     }
 }
 

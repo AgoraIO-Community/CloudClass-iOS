@@ -9,6 +9,7 @@ import AgoraWidget
 import UIKit
 
 public typealias AgoraEduContextSuccess = () -> (Void)
+public typealias AgoraEduContextSuccessWithString = (String) -> (Void)
 public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
 
 // MARK: - Private communication
@@ -137,8 +138,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
 
 // MARK: - Classroom
 @objc public protocol AgoraEduRoomHandler: NSObjectProtocol {
-    // 日志上传成功
-    @objc optional func onUploadLogSuccess(_ logId: String)
     // 上课过程中，错误信息
     @objc optional func onShowErrorInfo(_ error: AgoraEduContextError)
     
@@ -175,11 +174,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
                                         differTime: Int64,
                                         duration: Int64,
                                         closeDelay: Int64)
-    
-    // 网络状态
-    @objc optional func onNetworkQuality(_ quality: AgoraEduContextNetworkQuality)
-    // 连接状态
-    @objc optional func onConnectionState(_ state: AgoraEduContextConnectionState)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
@@ -198,8 +192,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     
     // 离开教室
     func leaveRoom()
-    // 上传日志
-    func uploadLog()
     // 事件监听
     func registerEventHandler(_ handler: AgoraEduRoomHandler)
     
@@ -611,4 +603,31 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - parameter handler: 遵守 AgoraEduStreamHandler 的对象
     /// - returns: void
     func registerStreamEventHandler(_ handler: AgoraEduStreamHandler)
+}
+
+// MARK: - Monitor
+@objc public protocol AgoraEduMonitorContext: NSObjectProtocol {
+    /// 上传日志(v2.0.0)
+    /// - parameter success: 上传成功，获取日志的id
+    /// - parameter failure: 上传失败
+    /// - returns: void
+    func uploadLog(success: AgoraEduContextSuccessWithString?,
+                   failure: AgoraEduContextFail?)
+    
+    /// 注册SDK状态监控事件回调 (v2.0.0)
+    /// - parameter handler: 遵守 AgoraEduMonitorHandler 的对象
+    /// - returns: void
+    func registerMonitorEventHandler(_ handler: AgoraEduMonitorHandler)
+}
+
+@objc public protocol AgoraEduMonitorHandler: NSObjectProtocol {
+    /// 本地网络质量更新(v2.0.0)
+    /// - parameter quality: 网络质量
+    /// - returns: void
+    @objc optional func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality)
+    
+    /// 本地与服务器的连接状态
+    /// - parameter state: 连接
+    /// - returns: void
+    @objc optional func onLocalConnectionUpdated(state: AgoraEduContextConnectionState)
 }

@@ -92,6 +92,7 @@ class AgoraLectureUIManager: AgoraEduUIManager {
         createConstrains()
         contextPool.room.registerEventHandler(self)
         contextPool.user.registerEventHandler(self)
+        contextPool.monitor.registerMonitorEventHandler(self)
     }
 }
 
@@ -120,8 +121,19 @@ extension AgoraLectureUIManager {
 
 // MARK: - AgoraEduRoomHandler
 extension AgoraLectureUIManager: AgoraEduRoomHandler {
+    func onClassroomJoined() {
+        initWidgets()
+    }
+    
+    func onShowErrorInfo(_ error: AgoraEduContextError) {
+        AgoraToast.toast(msg: error.message)
+    }
+}
+
+// MARK: - AgoraEduMonitorHandler
+extension AgoraLectureUIManager: AgoraEduMonitorHandler {
     // 连接状态
-    public func onConnectionState(_ state: AgoraEduContextConnectionState) {
+    func onLocalConnectionUpdated(_ state: AgoraEduContextConnectionState) {
         switch state {
         case .aborted:
             // 踢出
@@ -136,17 +148,9 @@ extension AgoraLectureUIManager: AgoraEduRoomHandler {
             AgoraLoading.hide()
         }
     }
-    
-    func onClassroomJoined() {
-        initWidgets()
-    }
-    
-    func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraToast.toast(msg: error.message)
-    }
 }
 
-// MARK: - AgoraEduRoomHandler
+// MARK: - AgoraEduUserHandler
 extension AgoraLectureUIManager: AgoraEduUserHandler {
     func onKickedOut() {
         let btnLabel = AgoraAlertLabelModel()

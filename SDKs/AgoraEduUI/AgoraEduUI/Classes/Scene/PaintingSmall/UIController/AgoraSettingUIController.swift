@@ -64,25 +64,9 @@ class AgoraSettingUIController: UIViewController {
         createViews()
         createConstrains()
         contextPool.device.registerDeviceEventHandler(self)
-        contextPool.room.registerEventHandler(self)
     }
 }
-// MARK: - AgoraEduRoomHandler
-extension AgoraSettingUIController: AgoraEduRoomHandler {
-    func onUploadLogSuccess(_ logId: String) {
-        let title = AgoraKitLocalizedString("UploadLog")
-        
-        let button = AgoraAlertButtonModel()
-        let buttonTitleProperties = AgoraAlertLabelModel()
-        buttonTitleProperties.text = AgoraKitLocalizedString("OK")
-        button.titleLabel = buttonTitleProperties
-        
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: title,
-                             message: logId,
-                             btnModels: [button])
-    }
-}
+
 // MARK: - AgoraEduDeviceHandler
 extension AgoraSettingUIController: AgoraEduDeviceHandler {
     func onCameraDeviceEnableChanged(enabled: Bool) {
@@ -125,7 +109,22 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickUploadLog(_ sender: UIButton) {
-        contextPool.room.uploadLog()
+        contextPool.monitor.uploadLog { logId in
+            let title = AgoraKitLocalizedString("UploadLog")
+            
+            let button = AgoraAlertButtonModel()
+            let buttonTitleProperties = AgoraAlertLabelModel()
+            buttonTitleProperties.text = AgoraKitLocalizedString("OK")
+            button.titleLabel = buttonTitleProperties
+            
+            AgoraUtils.showAlert(imageModel: nil,
+                                 title: title,
+                                 message: logId,
+                                 btnModels: [button])
+        } failure: { error in
+            // TODO: 上传日志失败
+        }
+
     }
     
     @objc func onClickExit(_ sender: UIButton) {

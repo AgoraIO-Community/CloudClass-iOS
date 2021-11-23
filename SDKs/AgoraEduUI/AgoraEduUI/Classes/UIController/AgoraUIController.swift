@@ -43,6 +43,7 @@ protocol AgoraControllerContextProvider: NSObjectProtocol {
     func controllerNeedScreenContext() -> AgoraEduScreenShareContext
     func controllerNeedExtAppContext() -> AgoraEduExtAppContext
     func controllerNeedMediaContext() -> AgoraEduMediaContext
+    func controllerNeedMonitorContext() -> AgoraEduMonitorContext
 }
 
 protocol AgoraControllerEventRegister: NSObjectProtocol {
@@ -50,6 +51,7 @@ protocol AgoraControllerEventRegister: NSObjectProtocol {
     func controllerRegisterWhiteBoardPageControlEvent(_ handler: AgoraEduWhiteBoardPageControlHandler)
     
     func controllerRegisterRoomEvent(_ handler: AgoraEduRoomHandler)
+    func controllerRegisterMonitorEvent(_ handler: AgoraEduMonitorHandler)
     func controllerRegisterDeviceEvent(_ handler: AgoraEduDeviceHandler)
     func controllerRegisterChatEvent(_ handler: AgoraEduMessageHandler)
     func controllerRegisterPrivateChatEvent(_ handler: AgoraEduPrivateChatHandler)

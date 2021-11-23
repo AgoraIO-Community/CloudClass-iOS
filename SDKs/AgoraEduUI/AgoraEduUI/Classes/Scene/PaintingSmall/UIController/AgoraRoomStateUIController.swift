@@ -63,6 +63,7 @@ class AgoraRoomStateUIController: UIViewController {
             self?.updateTimeVisual()
         })
         contextPool.room.registerEventHandler(self)
+        contextPool.monitor.registerMonitorEventHandler(self)
     }
 }
 
@@ -193,8 +194,10 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
                                            duration: duration * 1000,
                                            closeDelay: closeDelay * 1000)
     }
-    
-    func onNetworkQuality(_ quality: AgoraEduContextNetworkQuality) {
+}
+
+extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
+    func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
         switch quality {
         case .unknown:
             self.stateView.setNetworkState(.unknown)

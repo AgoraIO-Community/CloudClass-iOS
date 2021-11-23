@@ -121,6 +121,7 @@ class AgoraPaintingUIManager: AgoraEduUIManager {
         }
         contextPool.room.registerEventHandler(self)
         contextPool.user.registerEventHandler(self)
+        contextPool.monitor.registerMonitorEventHandler(self)
     }
 }
 
@@ -150,8 +151,19 @@ extension AgoraPaintingUIManager {
 }
 // MARK: - AgoraEduRoomHandler
 extension AgoraPaintingUIManager: AgoraEduRoomHandler {
+    func onClassroomJoined() {
+        initWidgets()
+    }
+    
+    func onShowErrorInfo(_ error: AgoraEduContextError) {
+        AgoraToast.toast(msg: error.message)
+    }
+}
+
+// MARK: - AgoraEduMonitorHandler
+extension AgoraPaintingUIManager: AgoraEduMonitorHandler {
     // 连接状态
-    func onConnectionState(_ state: AgoraEduContextConnectionState) {
+    func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
         switch state {
         case .aborted:
             AgoraLoading.hide()
@@ -167,16 +179,9 @@ extension AgoraPaintingUIManager: AgoraEduRoomHandler {
             AgoraLoading.hide()
         }
     }
-    
-    func onClassroomJoined() {
-        initWidgets()
-    }
-    
-    func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraToast.toast(msg: error.message)
-    }
 }
-// MARK: - AgoraEduRoomHandler
+
+// MARK: - AgoraEduUserHandler
 extension AgoraPaintingUIManager: AgoraEduUserHandler {
     func onKickedOut() {
         let btnLabel = AgoraAlertLabelModel()
