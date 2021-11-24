@@ -25,6 +25,7 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
+        vc.delegate = self
         self.addChild(vc)
         return vc
     }()
@@ -46,10 +47,10 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
         }
     }
     
-    init(contextPool: AgoraEduContextPool) {
-        super.init(nibName: nil,
-                   bundle: nil)
-        self.contextPool = contextPool
+    public override init(contextPool: AgoraEduContextPool,
+                         delegate: AgoraEduUIManagerDelegate) {
+        super.init(contextPool: contextPool,
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
@@ -243,3 +244,9 @@ extension AgoraOneToOneUIManager {
     }
 }
 
+// MARK: - AgoraSettingUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraSettingUIControllerDelegate {
+    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
+        exit(reason: .normal)
+    }
+}

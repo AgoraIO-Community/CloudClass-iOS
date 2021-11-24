@@ -113,10 +113,12 @@ private extension AgoraPaintingUserListUIController {
                 model.silent.enable = isAdmin && user.isOnLine
                 // stream
                 let s = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
-                model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
-                model.mic.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .audio)
-                model.camera.enable = (user.isLocal && user.isCoHost) || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
-                model.mic.enable = (user.isLocal && user.isCoHost) || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
+                
+                // TODO:
+//                model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
+//                model.mic.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .audio)
+//                model.camera.enable = (user.isLocal && user.isCoHost) || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
+//                model.mic.enable = (user.isLocal && user.isCoHost) || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
                 
                 tmp.append(model)
             }
@@ -135,10 +137,12 @@ private extension AgoraPaintingUserListUIController {
         if let model = dataSource.first{ $0.uuid == uuid},
            let user = contextPool.user.getUserInfoList().first {$0.userUuid == uuid} {
             let s = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
-            model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
-            model.mic.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .audio)
-            model.camera.enable = user.isLocal || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
-            model.mic.enable = user.isLocal || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
+            
+            // TODO:
+//            model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
+//            model.mic.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .audio)
+//            model.camera.enable = user.isLocal || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
+//            model.mic.enable = user.isLocal || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
             reloadTableView()
         }
     }
@@ -209,7 +213,8 @@ extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelega
             reloadTableView()
         case .camera:
             if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
-                self.contextPool.device.setCameraDeviceEnable(enable: isOn)
+                // TODO:
+//                self.contextPool.device.setCameraDeviceEnable(enable: isOn)
                 user.camera.isOn = isOn
                 reloadTableView()
             } else {
@@ -220,7 +225,8 @@ extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelega
             }
         case .mic:
             if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
-                self.contextPool.device.setMicDeviceEnable(enable: isOn)
+                // TODO:
+//                self.contextPool.device.setMicDeviceEnable(enable: isOn)
                 user.mic.isOn = isOn
                 reloadTableView()
             } else {

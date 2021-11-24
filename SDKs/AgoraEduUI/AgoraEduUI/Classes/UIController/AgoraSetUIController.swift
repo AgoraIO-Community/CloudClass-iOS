@@ -12,10 +12,6 @@ import AgoraEduContext
 class AgoraSetUIController: NSObject, AgoraUIController {
     private var toastShowedStates: [String] = []
     // Contexts
-    private weak var deviceContext: AgoraEduDeviceContext? {
-        return context?.device
-    }
-    
     private weak var mediaContext: AgoraEduMediaContext? {
         return context?.media
     }
@@ -79,7 +75,7 @@ private extension AgoraSetUIController {
                 return
             }
             
-            self.deviceContext?.setCameraDeviceEnable(enable: open)
+           
         }
         
         setView.micStateBlock = { [unowned self] (open: Bool) in
@@ -87,15 +83,15 @@ private extension AgoraSetUIController {
                 return
             }
             
-            self.deviceContext?.setMicDeviceEnable(enable: open)
+            
         }
         
         setView.speakerStateBlock = { [unowned self] (open: Bool) in
-            self.deviceContext?.setSpeakerEnable(enable: open)
+            
         }
         
         setView.switchCameraBlock = { [unowned self] in
-            self.deviceContext?.switchCameraFacing()
+            
         }
     }
     
@@ -146,17 +142,6 @@ extension AgoraSetUIController: AgoraEduRoomHandler {
         }
         
         updateView(from: stream)
-    }
-}
-
-extension AgoraSetUIController: AgoraEduDeviceHandler {
-    @objc func onCameraFacingChanged(facing: EduContextCameraFacing) {
-        let isFront = (facing == .front ? true : false)
-        setView.updateCameraFacing(isFront)
-    }
-    
-    @objc func onSpeakerEnabledChanged(enabled: Bool) {
-        setView.updateSpeakerState(enabled)
     }
 }
 

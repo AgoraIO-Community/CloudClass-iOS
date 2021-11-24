@@ -60,104 +60,61 @@ import Foundation
     public var wavingArms: Bool = false
 }
 
-// MARK: - Chat
-@objcMembers public class AgoraEduContextChatInfo: NSObject {
-    // 消息Id
-    public var id: String
-    // 消息内容
-    public let message: String
-    // 消息所属人员信息
-    public let user: AgoraEduContextUserInfo
-    // 消息发送状态
-    public var sendState: AgoraEduContextChatState = .default
-    // 消息发送类型
-    public let type: AgoraEduContextChatType
-    // 消息时间， 毫秒级时间戳
-    public let time: Int64
-    // 消息来自本地还是远端
-    public let from: AgoraEduContextChatFrom
-    // 敏感词列表
-    public let sensitiveWords: [String]
-    
-    public init(id: String,
-                message: String,
-                user: AgoraEduContextUserInfo,
-                sendState: AgoraEduContextChatState,
-                type: AgoraEduContextChatType = .text,
-                time: Int64,
-                from: AgoraEduContextChatFrom = .local,
-                sensitiveWords: [String]) {
-        self.id = id
-        self.message = message
-        self.user = user
-        self.sendState = sendState
-        self.type = type
-        self.time = time
-        self.from = from
-        self.sensitiveWords = sensitiveWords
-    }
-}
-
 // MARK: - Media
-@objcMembers public class AgoraEduContextVideoConfig: NSObject {
-    // 视频宽
-    public var videoDimensionWidth: UInt = 320
-    // 视频高
-    public var videoDimensionHeight: UInt = 240
-    // 视频帧率
+@objcMembers public class AgoraEduContextVideoStreamConfig: NSObject {
+    /// 视频宽
+    public var dimensionWidth: UInt = 320
+    /// 视频高
+    public var dimensionHeight: UInt = 240
+    /// 视频帧率
     public var frameRate: UInt = 15
+    /// 视频码率
+    public var bitRate: UInt = 200
+    /// 是否镜像
+    public var isMirror: Bool = false
     
-    public var bitrate: UInt = 200
-    
-    public var mirrorMode: AgoraEduContextVideoMirrorMode = .auto
-    
-    public init(videoDimensionWidth: UInt,
-                videoDimensionHeight: UInt,
+    public init(dimensionWidth: UInt,
+                dimensionHeight: UInt,
                 frameRate: UInt,
-                bitrate: UInt,
-                mirrorMode: AgoraEduContextVideoMirrorMode ) {
+                bitRate: UInt,
+                isMirror: Bool) {
         super.init()
-        self.videoDimensionWidth = videoDimensionWidth
-        self.videoDimensionHeight = videoDimensionHeight
+        self.dimensionWidth = dimensionWidth
+        self.dimensionHeight = dimensionHeight
         self.frameRate = frameRate
-        self.bitrate = bitrate
-        self.mirrorMode = mirrorMode
+        self.bitRate = bitRate
+        self.isMirror = isMirror
     }
     
-    public static func defaultConfig() -> AgoraEduContextVideoConfig {
-        return AgoraEduContextVideoConfig(videoDimensionWidth: 320,
-                                          videoDimensionHeight: 240,
-                                          frameRate: 15,
-                                          bitrate: 200,
-                                          mirrorMode: .auto)
+    public static func defaultConfig() -> AgoraEduContextVideoStreamConfig {
+        return AgoraEduContextVideoStreamConfig(dimensionWidth: 320,
+                                                dimensionHeight: 240,
+                                                frameRate: 15,
+                                                bitRate: 200,
+                                                isMirror: false)
     }
 }
 
 @objcMembers public class AgoraEduContextRenderConfig: NSObject {
-    public var mode: AgoraEduContextRenderMode = .hidden
-    public var mirror: Bool = false
+    public var mode: AgoraEduContextVideoRenderMode = .hidden
+    public var isMirror: Bool = false
 }
 
-@objcMembers public class AgoraEduContextDeviceConfig: NSObject {
-    // 是否开启摄像头
-    public var cameraEnabled: Bool = true
-    // 摄像头方向
-    public var cameraFacing: EduContextCameraFacing = .front
-    // 是否开启麦克风
-    public var micEnabled: Bool = true
-    // 是否开启扬声器
-    public var speakerEnabled: Bool = true
+@objcMembers public class AgoraEduContextDeviceInfo: NSObject {
+    /// 设备 Id
+    public var deviceId: String
+    /// 设备名
+    public var deviceName: String
+    /// 设备类型
+    public var deviceType: AgoraEduContextDeviceType
     
-    public init(cameraEnabled: Bool,
-                cameraFacing: EduContextCameraFacing,
-                micEnabled: Bool,
-                speakerEnabled: Bool) {
+    public init(deviceId: String,
+                deviceName: String,
+                deviceType: AgoraEduContextDeviceType) {
+        self.deviceId = deviceId
+        self.deviceName = deviceName
+        self.deviceType = deviceType
         super.init()
-        
-        self.cameraEnabled = cameraEnabled
-        self.cameraFacing = cameraFacing
-        self.micEnabled = micEnabled
-        self.speakerEnabled = speakerEnabled
     }
 }
 
@@ -173,6 +130,10 @@ import Foundation
     public let videoSourceType: AgoraEduContextVideoSourceType
     /// 流的音频源类型
     public let audioSourceType: AgoraEduContextAudioSourceType
+    /// 流的音频源状态
+    public let videoSourceState: AgoraEduContextMediaSourceState
+    /// 流的音频源状态
+    public let audioSourceState: AgoraEduContextMediaSourceState
     /// 流的拥有者
     public let owner: AgoraEduContextUserInfo
     
@@ -181,12 +142,16 @@ import Foundation
                 streamType: AgoraEduContextMediaStreamType,
                 videoSourceType: AgoraEduContextVideoSourceType,
                 audioSourceType: AgoraEduContextAudioSourceType,
+                videoSourceState: AgoraEduContextMediaSourceState,
+                audioSourceState: AgoraEduContextMediaSourceState,
                 owner: AgoraEduContextUserInfo) {
         self.streamUuid = streamUuid
         self.streamName = streamName
         self.streamType = streamType
         self.videoSourceType = videoSourceType
         self.audioSourceType = audioSourceType
+        self.videoSourceState = videoSourceState
+        self.audioSourceState = audioSourceState
         self.owner = owner
     }
 }

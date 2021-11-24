@@ -68,27 +68,6 @@ extension AgoraSmallRenderUIController: AgoraEduUserHandler {
         AgoraToast.toast(msg: message)
     }
     
-    public func onStreamUpdated(_ streamType: EduContextMediaStreamType,
-                                fromUser: AgoraEduContextUserDetailInfo,
-                                operator: AgoraEduContextUserInfo?) {
-        guard fromUser.isLocal else {
-            return
-        }
-        
-//        switch streamType {
-//        case .video:
-//            let text = AgoraUILocalizedString(fromUser.enableVideo ? "CameraUnMuteText" : "CameraMuteText",
-//                                              object: self)
-//            AgoraToast.toast(msg: text)
-//        case .audio:
-//            let text = AgoraUILocalizedString(fromUser.enableAudio ? "MicrophoneUnMuteText" : "MicrophoneMuteText",
-//                                              object: self)
-//            AgoraToast.toast(msg: text)
-//        default:
-//            break
-//        }
-    }
-    
     // 收到奖励（自己或者其他学生）
     public func onShowUserReward(_ user: AgoraEduContextUserInfo) {
         rewardAnimation()

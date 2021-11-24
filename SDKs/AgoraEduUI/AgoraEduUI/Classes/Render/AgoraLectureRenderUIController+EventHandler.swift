@@ -54,37 +54,6 @@ extension AgoraLectureRenderUIController: AgoraEduUserHandler {
 //        }
     }
     
-    /* 显示提示信息
-     * 你的摄像头被关闭了
-     * 你的麦克风被关闭了
-     * 你的摄像头被打开了
-     * 你的麦克风被打开了
-     */
-    public func onShowUserTips(_ message: String) {
-        AgoraToast.toast(msg: message)
-    }
-    
-    public func onStreamUpdated(_ streamType: EduContextMediaStreamType,
-                                fromUser: AgoraEduContextUserDetailInfo,
-                                operator: AgoraEduContextUserInfo?) {
-        guard fromUser.isLocal else {
-            return
-        }
-//
-//        switch streamType {
-//        case .video:
-//            let text = AgoraUILocalizedString(fromUser.enableVideo ? "CameraUnMuteText" : "CameraMuteText",
-//                                              object: self)
-//            AgoraToast.toast(msg: text)
-//        case .audio:
-//            let text = AgoraUILocalizedString(fromUser.enableAudio ? "MicrophoneUnMuteText" : "MicrophoneMuteText",
-//                                              object: self)
-//            AgoraToast.toast(msg: text)
-//        default:
-//            break
-//        }
-    }
-    
     // 收到奖励（自己或者其他学生）
     public func onShowUserReward(_ user: AgoraEduContextUserInfo) {
         rewardAnimation()

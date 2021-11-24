@@ -102,7 +102,7 @@ import AgoraEduContext
 
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        renderConfig.mirror = false
+        renderConfig.isMirror = false
         
         streamContext.subscribeVideoStreamLevel(streamUuid: streamUuid,
                                                 level: .low)

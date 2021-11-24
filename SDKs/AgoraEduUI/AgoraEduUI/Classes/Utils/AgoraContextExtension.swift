@@ -23,19 +23,19 @@ extension AgoraEduContextUserInfo {
 extension AgoraEduContextVideoSourceType {
     var uiType: AgoraUIUserView.DeviceState {
         switch self {
-        case .invalid:      return .invalid
         case .none:         return .close
         case .camera:       return .available
         case .screen:       return .available
+        @unknown default:   fatalError()
         }
     }
     
     var isOpen: Bool {
         switch self {
-        case .invalid:      return false
         case .none:         return false
         case .camera:       return true
         case .screen:       return true
+        @unknown default:   fatalError()
         }
     }
 }
@@ -43,17 +43,17 @@ extension AgoraEduContextVideoSourceType {
 extension AgoraEduContextAudioSourceType {
     var uiType: AgoraUIUserView.DeviceState {
         switch self {
-        case .invalid:      return .invalid
         case .none:         return .close
         case .mic:          return .available
+        @unknown default:   fatalError()
         }
     }
     
     var isOpen: Bool {
         switch self {
-        case .invalid:      return false
         case .none:         return false
         case .mic:          return true
+        @unknown default:   fatalError()
         }
     }
 }
@@ -64,7 +64,7 @@ extension AgoraEduContextMediaStreamType {
         case .none:          return false
         case .audio:         return true
         case .video:         return false
-        case .audioAndVideo: return true
+        case .both:          return true
         @unknown default:    return false
         }
     }
@@ -74,7 +74,7 @@ extension AgoraEduContextMediaStreamType {
         case .none:          return false
         case .audio:         return false
         case .video:         return true
-        case .audioAndVideo: return true
+        case .both:          return true
         @unknown default:    return false
         }
     }

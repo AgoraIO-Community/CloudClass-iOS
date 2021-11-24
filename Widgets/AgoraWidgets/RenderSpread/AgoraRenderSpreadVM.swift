@@ -102,15 +102,10 @@ enum AgoraSpreadAction: Int,Decodable {
 extension AgoraEduContextVideoSourceType {
     func toSpread() -> AgoraSpreadDeviceState {
         switch self {
-        case .none:
-            return .close
-        case .invalid:
-            return .invalid
-        case .camera: fallthrough
-        case .screen:
-            return .available
-        default:
-            return .invalid
+        case .none:   return .close
+        case .camera: return .available
+        case .screen: return .available
+        default:      return .invalid
         }
     }
 }
@@ -119,9 +114,8 @@ extension AgoraEduContextAudioSourceType {
     func toSpread() -> AgoraSpreadDeviceState {
         switch self {
         case .none: return .close
-        case .invalid: return .invalid
-        case .mic: return .available
-        default: return .invalid
+        case .mic:  return .available
+        default:    return .invalid
         }
     }
 }
@@ -131,7 +125,7 @@ extension AgoraEduContextUserRole {
         switch self {
         case .teacher: return .teacher
         case .student: return .student
-        default: return .invalid
+        default:       return .invalid
         }
     }
 }

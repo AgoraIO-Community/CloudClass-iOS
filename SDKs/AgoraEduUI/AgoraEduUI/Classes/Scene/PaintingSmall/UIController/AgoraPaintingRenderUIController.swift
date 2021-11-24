@@ -35,32 +35,33 @@ extension AgoraRenderItemInfoModel {
             return
         }
         self.streamUUID = s.streamUuid
-        if s.streamType == .video ||
-            s.streamType == .audioAndVideo {
-            switch s.videoSourceType {
-            case .invalid:
-                self.cameraDeviceState = .invalid
-            case .none:
-                self.cameraDeviceState = .close
-            case .camera, .screen:
-                self.cameraDeviceState = .available
-            }
-        } else {
-            self.cameraDeviceState = .close
-        }
-        if s.streamType == .audio ||
-            s.streamType == .audioAndVideo {
-            switch s.audioSourceType {
-            case .invalid:
-                self.micDeviceState = .invalid
-            case .none:
-                self.micDeviceState = .close
-            case .mic:
-                self.micDeviceState = .available
-            }
-        } else {
-            self.micDeviceState = .close
-        }
+        // TODO:
+//        if s.streamType == .video ||
+//            s.streamType == .audioAndVideo {
+//            switch s.videoSourceType {
+//            case .invalid:
+//                self.cameraDeviceState = .invalid
+//            case .none:
+//                self.cameraDeviceState = .close
+//            case .camera, .screen:
+//                self.cameraDeviceState = .available
+//            }
+//        } else {
+//            self.cameraDeviceState = .close
+//        }
+//        if s.streamType == .audio ||
+//            s.streamType == .audioAndVideo {
+//            switch s.audioSourceType {
+//            case .invalid:
+//                self.micDeviceState = .invalid
+//            case .none:
+//                self.micDeviceState = .close
+//            case .mic:
+//                self.micDeviceState = .available
+//            }
+//        } else {
+//            self.micDeviceState = .close
+//        }
     }
 }
 

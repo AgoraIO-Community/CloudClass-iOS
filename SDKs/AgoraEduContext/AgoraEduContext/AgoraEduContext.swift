@@ -22,20 +22,14 @@ public typealias AgoraEduExtAppContext = AgoraExtAppProtocol
     var whiteBoardPageControl: AgoraEduWhiteBoardPageControlContext { get }
     // 白板页控制
     var room: AgoraEduRoomContext { get }
-    //  设备控制
-    var device: AgoraEduDeviceContext { get }
     // 媒体控制
     var media: AgoraEduMediaContext { get }
-    // 聊天
-    var chat: AgoraEduMessageContext { get }
     // 个人
     var user: AgoraEduUserContext { get }
     // 举手
     var handsUp: AgoraEduHandsUpContext { get }
     // 私密语音：目前只支持个人对个人
     var privateChat: AgoraEduPrivateChatContext { get }
-    // 屏幕分享
-    var screenSharing: AgoraEduScreenShareContext { get }
     // 扩展容器：该应用容器提供了生命周期、扩展
     var extApp: AgoraEduExtAppContext { get }
     // 插件， 属于UIKit一部分。 每个插件是一个功能模块。

@@ -63,49 +63,38 @@ class AgoraSettingUIController: UIViewController {
         
         createViews()
         createConstrains()
-        contextPool.device.registerDeviceEventHandler(self)
+        contextPool.room.registerEventHandler(self)
+    }
+}
+// MARK: - AgoraEduRoomHandler
+extension AgoraSettingUIController: AgoraEduRoomHandler {
+    func onUploadLogSuccess(_ logId: String) {
+        let title = AgoraKitLocalizedString("UploadLog")
+        
+        let button = AgoraAlertButtonModel()
+        let buttonTitleProperties = AgoraAlertLabelModel()
+        buttonTitleProperties.text = AgoraKitLocalizedString("OK")
+        button.titleLabel = buttonTitleProperties
+        
+        AgoraUtils.showAlert(imageModel: nil,
+                             title: title,
+                             message: logId,
+                             btnModels: [button])
     }
 }
 
-// MARK: - AgoraEduDeviceHandler
-extension AgoraSettingUIController: AgoraEduDeviceHandler {
-    func onCameraDeviceEnableChanged(enabled: Bool) {
-        cameraSwitch.setOn(enabled,
-                           animated: false)
-    }
-    
-    func onCameraFacingChanged(facing: EduContextCameraFacing) {
-        let isFront = (facing == .front)
-        frontCamButton.isSelected = isFront
-        backCamButton.isSelected = !isFront
-    }
-    
-    func onMicDeviceEnabledChanged(enabled: Bool) {
-        micSwitch.setOn(enabled,
-                        animated: false)
-    }
-    
-    func onSpeakerEnabledChanged(enabled: Bool) {
-        audioSwitch.setOn(enabled,
-                          animated: false)
-    }
-    
-    func onDeviceTips(message: String) {
-        AgoraToast.toast(msg: message)
-    }
-}
 // MARK: - Actions
 private extension AgoraSettingUIController {
     @objc func onClickCameraSwitch(_ sender: UISwitch) {
-        self.contextPool.device.setCameraDeviceEnable(enable: sender.isOn)
+//        self.contextPool.device.setCameraDeviceEnable(enable: sender.isOn)
     }
     
     @objc func onClickMicSwitch(_ sender: UISwitch) {
-        self.contextPool.device.setMicDeviceEnable(enable: sender.isOn)
+//        self.contextPool.device.setMicDeviceEnable(enable: sender.isOn)
     }
     
     @objc func onClickAudioSwitch(_ sender: UISwitch) {
-        self.contextPool.device.setSpeakerEnable(enable: sender.isOn)
+//        self.contextPool.device.setSpeakerEnable(enable: sender.isOn)
     }
     
     @objc func onClickUploadLog(_ sender: UIButton) {
@@ -124,7 +113,6 @@ private extension AgoraSettingUIController {
         } failure: { error in
             // TODO: 上传日志失败
         }
-
     }
     
     @objc func onClickExit(_ sender: UIButton) {
@@ -152,13 +140,13 @@ private extension AgoraSettingUIController {
     @objc func onClickFrontCamera(_ sender: UIButton) {
         sender.isSelected = true
         backCamButton.isSelected = false
-        self.contextPool.device.switchCameraFacing()
+        // TODO:
     }
     
     @objc func onClickBackCamera(_ sender: UIButton) {
         sender.isSelected = true
         frontCamButton.isSelected = false
-        self.contextPool.device.switchCameraFacing()
+        // TODO:
     }
 }
 

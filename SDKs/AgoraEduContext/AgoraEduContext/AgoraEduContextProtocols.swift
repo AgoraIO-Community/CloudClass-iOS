@@ -200,94 +200,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     func refresh()
 }
 
-// MARK: - Message
-@objc public protocol AgoraEduMessageHandler: NSObjectProtocol {
-    // 收到房间消息
-    @objc optional func onAddRoomMessage(_ info: AgoraEduContextChatInfo)
-    // 收到提问消息
-    @objc optional func onAddConversationMessage(_ info: AgoraEduContextChatInfo)
-    
-    /* 收到聊天权限变化
-     * 文案显示：
-     * allow == true -> "禁言模式开启" 【文案名： ChatDisableToastText】
-     * allow == false -> "禁言模式关闭" 【文案名： ChatEnableToastText】
-     */
-    @objc optional func onUpdateChatPermission(_ allow: Bool)
-    
-    /* 收到本地聊天权限变化
-     * 文案显示：
-     * allow == true -> "你被xx禁言了"
-     * allow == false -> "你被xx解除了禁言"
-     */
-    @objc optional func onUpdateLocalChatPermission(_ allow: Bool,
-                                                    toUser: AgoraEduContextUserInfo,
-                                                    operatorUser: AgoraEduContextUserInfo)
-    
-    /* 收到远端聊天权限变化
-     * 文案显示：
-     * allow == true -> "xx被xx禁言了"
-     * allow == false -> "xx被xx解除了禁言"
-     */
-    @objc optional func onUpdateRemoteChatPermission(_ allow: Bool,
-                                                     toUser: AgoraEduContextUserInfo,
-                                                     operatorUser: AgoraEduContextUserInfo)
-    
-    // 本地发送消息结果（包含首次和后面重发），如果error不为空，代表失败
-    @objc optional func onSendRoomMessageResult(_ error: AgoraEduContextError?,
-                                                info: AgoraEduContextChatInfo)
-    
-    // 本地发送提问消息结果（包含首次和后面重发），如果error不为空，代表失败
-    @objc optional func onSendConversationMessageResult(_ error: AgoraEduContextError?,
-                                                        info: AgoraEduContextChatInfo?)
-    
-    // 查询历史消息结果，如果error不为空，代表失败
-    @objc optional func onFetchHistoryMessagesResult(_ error: AgoraEduContextError?,
-                                                     list: [AgoraEduContextChatInfo]?)
-    
-    @objc optional func onFetchConversationHistoryMessagesResult(_ error: AgoraEduContextError?,
-                                                                 list: [AgoraEduContextChatInfo]?)
-    
-    /** 新增接口 **/
-    // 房间消息列表更新
-    @objc optional func onUpdateRoomMessageList(_ list: [AgoraEduContextChatInfo])
-    // 提问消息列表更新
-    @objc optional func onUpdateConversationMessageList(_ list: [AgoraEduContextChatInfo])
-}
-
-@objc public protocol AgoraEduMessageContext: NSObjectProtocol {
-    // 发送房间信息
-    func sendRoomMessage(_ message: String)
-    // 发送提问信息
-    func sendConversationMessage(_ message: String)
-    /* 重发房间信息
-     * messageId: AgoraEduContextChatInfo内id
-     */
-    func resendRoomMessage(_ message: String,
-                           messageId: String)
-    
-    /* 重发提问信息
-     * messageId: AgoraEduContextChatInfo内id
-     */
-    func resendConversationMessage(_ message: String,
-                                   messageId: String)
-    /* 获取历史消息
-     * startId: 从哪个开始获取，AgoraEduContextChatInfo内id
-     * count: 要获取多少条数据
-     */
-    func fetchHistoryMessages(_ startId: String,
-                              count: Int)
-    
-    /* 获取提问历史消息
-     * startId: 从哪个开始获取，AgoraEduContextChatInfo内id
-     * count: 要获取多少条数据
-     */
-    func fetchConversationHistoryMessages(_ startId: String,
-                                          count: Int)
-    
-    // 事件监听
-    func registerEventHandler(_ handler: AgoraEduMessageHandler)
-}
-
 // MARK: - User
 @objc public protocol AgoraEduUserHandler: NSObjectProtocol {
     // 更新人员信息列表，只显示在线人员信息
@@ -313,10 +225,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
                                                     cause: [String : Any]?,
                                                     fromUser: AgoraEduContextUserDetailInfo,
                                                     operator: AgoraEduContextUserInfo?)
-    
-    @objc optional func onStreamUpdated(_ streamType: EduContextMediaStreamType,
-                                        fromUser: AgoraEduContextUserDetailInfo,
-                                        operator: AgoraEduContextUserInfo?)
     
     @objc optional func onRemoteUserLeft(users: [AgoraEduContextUserInfo])
     @objc optional func onRemoteUserJoin(users: [AgoraEduContextUserInfo])
@@ -438,100 +346,79 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
                             timeout: Int)
 }
 
-// MARK: - ScreenSharing
-@objc public protocol AgoraEduScreenShareHandler: NSObjectProtocol {
-    /* 开启或者关闭屏幕分享
-     * 文案显示：
-     * state == .start -> "老师发起了屏幕共享" 【文案名：ScreensharedBySb】
-     * state == .stop -> "老师停止了屏幕共享" 【文案名：ScreenshareStoppedBySb】
-     *
-     */
-    @objc optional func onUpdateScreenShareState(_ state: AgoraEduContextScreenShareState,
-                                                 streamUuid: String)
+@objc public protocol AgoraEduMediaHandler: NSObjectProtocol {
+    /// 音量变化 (v2.0.0)
+    /// - parameter volume: 音量
+    /// - parameter streamUuid: 流 Id
+    /// - returns: Void
+    func onVolumeUpdated(volume: Int,
+                         streamUuid: String)
     
-    // 切换屏幕课件Tab
-    @objc optional func onSelectScreenShare(_ selected: Bool)
-}
-
-@objc public protocol AgoraEduScreenShareContext: NSObjectProtocol {
-    // 事件监听
-    func registerEventHandler(_ handler: AgoraEduScreenShareHandler)
-}
-
-// MARK: - Device
-@objc public protocol AgoraEduDeviceHandler: NSObjectProtocol {
-    /* 摄像头开关
-     * 文案显示：
-     *   enabled == true -> "你的摄像头被打开了" 【文案名：CameraUnMuteText】
-     *   enabled == false -> "你的摄像头被关闭了" 【文案名：CameraMuteText】
-     *
-     * 你的麦克风被关闭了
-     *
-     * 你的麦克风被打开了
-     */
-    @objc optional func onCameraDeviceEnableChanged(enabled: Bool)
-    
-    // 摄像头切换
-    @objc optional func onCameraFacingChanged(facing: EduContextCameraFacing)
-    
-    /* 麦克风开关
-     *   enabled == true -> "你可以发言了" 【文案名：MicrophoneUnMuteText】
-     *   enabled == false -> "你暂时不能发言了" 【文案名：MicrophoneMuteText】
-     *
-     * 你的麦克风被关闭了
-     *
-     * 你的麦克风被打开了
-     */
-    @objc optional func onMicDeviceEnabledChanged(enabled: Bool)
-    
-    // 扬声器开关
-    @objc optional func onSpeakerEnabledChanged(enabled: Bool)
-}
-
-@objc public protocol AgoraEduDeviceContext: NSObjectProtocol {
-    func setCameraDeviceEnable(enable: Bool)
-    func switchCameraFacing()
-    func setMicDeviceEnable(enable: Bool)
-    func setSpeakerEnable(enable: Bool)
-
-    // 事件监听
-    func registerDeviceEventHandler(_ handler: AgoraEduDeviceHandler)
+    /// 设备状态更新 (v2.0.0)
+    /// - parameter device: 设备信息
+    /// - parameter state: 设备状态
+    /// - returns: Void
+    func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
+                                   state: AgoraEduContextDeviceState)
 }
 
 // MARK: - Media
 @objc public protocol AgoraEduMediaContext: NSObjectProtocol {
-    // 开启摄像头
-    func openCamera()
-    // 关闭摄像头
-    func closeCamera()
-    // 开启本地视频预览
-    func startPreview(_ view: UIView)
-    // 停止本地视频预览
-    func stopPreview()
-    // 开启麦克风
-    func openMicrophone()
-    // 关闭麦克风
-    func closeMicrophone()
-    // 开始推流
-    func publishStream(streamUuid: String,
-                       type: EduContextMediaStreamType)
-    // 停止推流
-    func unpublishStream(streamUuid: String,
-                         type: EduContextMediaStreamType)
-    // 配置视频参数
-    func setVideoConfig(_ videoConfig: AgoraEduContextVideoConfig)
-    // 渲染本地视频流
+    /// 获取设备列表 (v2.0.0)
+    /// - parameter deviceType: 设备类型
+    /// - returns: [AgoraEduContextDeviceInfo], 设备列表
+    func getLocalDevices(deviceType: AgoraEduContextDeviceType) -> [AgoraEduContextDeviceInfo]
+    
+    /// 打开设备 (v2.0.0)
+    /// - parameter device: 设备信息
+    /// - returns: AgoraEduContextError, 返回错误
+    func openLocalDevice(device: AgoraEduContextDeviceInfo) -> AgoraEduContextError?
+    
+    /// 关闭设备 (v2.0.0)
+    /// - parameter device: 设备信息
+    /// - returns: AgoraEduContextError, 返回错误
+    func closeLocalDevice(device: AgoraEduContextDeviceInfo) -> AgoraEduContextError?
+    
+    /// 获取设备状态 (v2.0.0)
+    /// - parameter device: 设备信息
+    /// - parameter success: 参数正确，返回设备状态
+    /// - parameter fail: 参数错误
+    /// - returns: AgoraEduContextError, 返回错误
+    func getLocalDeviceState(device: AgoraEduContextDeviceInfo,
+                             success: (AgoraEduContextDeviceState) -> (),
+                             fail: (AgoraEduContextError) -> ())
+    
+    /// 渲染本地视频流 (v2.0.0)
+    /// - parameter view: 渲染视频的容器
+    /// - parameter renderConfig: 渲染配置
+    /// - parameter streamUuid: 流 Id
+    /// - returns: AgoraEduContextError, 返回错误
     func startRenderLocalVideo(view: UIView,
                                renderConfig: AgoraEduContextRenderConfig,
-                               streamUuid: String)
-    // 停止渲染本地视频流
-    func stopRenderLocalVideo(streamUuid: String)
-    // 开始渲染远端视频流
+                               streamUuid: String) -> AgoraEduContextError?
+    
+    /// 停止渲染本地视频流 (v2.0.0)
+    /// - parameter streamUuid: 流 Id
+    /// - returns: AgoraEduContextError, 返回错误
+    func stopRenderLocalVideo(streamUuid: String) -> AgoraEduContextError?
+    
+    /// 渲染远端视视频流 (v2.0.0)
+    /// - parameter view: 渲染视频的容器
+    /// - parameter renderConfig: 渲染配置
+    /// - parameter streamUuid: 流 Id
+    /// - returns: AgoraEduContextError, 返回错误
     func startRenderRemoteVideo(view: UIView,
                                 renderConfig: AgoraEduContextRenderConfig,
-                                streamUuid: String)
-    // 停止渲染远端视频流
-    func stopRenderRemoteVideo(streamUuid: String)
+                                streamUuid: String) -> AgoraEduContextError?
+    
+    /// 停止渲染远端视频流 (v2.0.0)
+    /// - parameter streamUuid: 流 Id
+    /// - returns: AgoraEduContextError, 返回错误
+    func stopRenderRemoteVideo(streamUuid: String) -> AgoraEduContextError?
+    
+    /// 注册事件监听
+    /// - returns: Void
+    func registerMediaEventHandler(_ handler: AgoraEduMediaHandler)
 }
 
 // MARK: - Widget

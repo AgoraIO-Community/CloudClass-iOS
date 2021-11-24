@@ -249,10 +249,10 @@ fileprivate extension AgoraSpreadRenderWidget {
             return
         }
         
-        var cameraState = stream.videoSourceType.toSpread()
-        var microState = stream.audioSourceType.toSpread()
-        var enableVideo = (stream.streamType == .video) || (stream.streamType == .audioAndVideo)
-        var enableAudio = (stream.streamType == .audio) || (stream.streamType == .audioAndVideo)
+        let cameraState = stream.videoSourceType.toSpread()
+        let microState = stream.audioSourceType.toSpread()
+        let enableVideo = (stream.streamType == .video) || (stream.streamType == .both)
+        let enableAudio = (stream.streamType == .audio) || (stream.streamType == .both)
         
         renderUserInfo = AgoraSpreadRenderUserInfo(userId: renderUser.userId,
                                                    userName: renderUser.userName,

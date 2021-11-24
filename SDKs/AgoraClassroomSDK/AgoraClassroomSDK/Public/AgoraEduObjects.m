@@ -9,25 +9,10 @@
 
 #pragma mark - Config
 @implementation AgoraClassroomSDKConfig
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.eyeCare = NO;
-    }
-    return self;
-}
-
 - (instancetype)initWithAppId:(NSString *)appId {
-    return [self initWithAppId:appId
-                       eyeCare:NO];
-}
-
-- (instancetype)initWithAppId:(NSString *)appId
-                      eyeCare:(BOOL)eyeCare {
     self = [super init];
     if (self) {
         self.appId = appId;
-        self.eyeCare = eyeCare;
     }
     return self;
 }

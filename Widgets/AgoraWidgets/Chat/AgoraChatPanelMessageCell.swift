@@ -44,9 +44,9 @@ class AgoraChatPanelMessageCell: AgoraBaseUITableViewCell {
     private lazy var failView: AgoraBaseUIView = {
         let view = self.loadingView()
         let btn = view.viewWithTag(LoadingBtnTag) as! AgoraBaseUIButton
-        btn.addTarget(self,
-                      action: #selector(onFailTouchEvent),
-                      for: .touchUpInside)
+//        btn.addTarget(self,
+//                      action: #selector(onFailTouchEvent),
+//                      for: .touchUpInside)
         
         let image = GetWidgetImage(object: self,
                                    "chat_error")
@@ -86,68 +86,68 @@ class AgoraChatPanelMessageCell: AgoraBaseUITableViewCell {
         initLayout()
     }
 
-    func updateView(model: AgoraChatItem) {
-        switch model.info.from {
-        case .local:
-            chatContentView.backgroundColor = UIColor(rgb: 0xE1EBFC)
-            chatContentView.layer.borderColor = UIColor.clear.cgColor
-            
-            mineLabel.isHidden = false
-            remoteLabel.isHidden = true
-            mineLabel.attributedText = nickAttributedString(text: model.info.user.userName)
-            
-            // failView
-            updateFaileView(sendState: model.info.sendState)
-        case .remote:
-            chatContentView.backgroundColor = .white
-            chatContentView.layer.borderColor = UIColor(rgb: 0xECECF1).cgColor
-            
-            mineLabel.isHidden = true
-            remoteLabel.isHidden = false
-            remoteLabel.attributedText = nickAttributedString(text: model.info.user.userName)
-            
-            // failView
-            failView.isHidden = true
-        }
-        
-        // message source label
-        messageSourceLabel.font = model.font
-        messageSourceLabel.text = model.info.message
-        messageSourceLabel.agora_x = model.messageLabelRect.origin.x
-        messageSourceLabel.agora_y = model.messageLabelRect.origin.y
-        messageSourceLabel.agora_width = model.messageLabelRect.size.width
-        messageSourceLabel.agora_height = model.messageLabelRect.size.height
-
-        chatContentView.agora_clear_constraint()
-        
-        // message content view
-        if (model.info.from == .local) {
-            chatContentView.agora_y = model.messageContentViewRect.origin.y
-            chatContentView.agora_right = model.messageContentViewRect.origin.x
-            chatContentView.agora_width = model.messageContentViewRect.width
-            
-            // failView
-            let contentViewMaxRightX =  model.messageContentViewRect.origin.x + model.messageContentViewRect.width
-            let failViewMaxRightX = model.failViewAndContentViewGap + model.failViewRect.width
-            failView.agora_x = model.cellWidth - contentViewMaxRightX - failViewMaxRightX
-            failView.agora_y = model.failViewRect.origin.y
-            failView.agora_width = model.failViewRect.width
-            failView.agora_height = model.failViewRect.height
-        } else {
-            chatContentView.agora_x = model.messageContentViewRect.origin.x
-            chatContentView.agora_y = model.messageContentViewRect.origin.y
-            chatContentView.agora_width = model.messageContentViewRect.width
-        }
-        
-        chatContentView.agora_height = model.messageContentViewRect.size.height
-        chatContentView.layer.cornerRadius = model.messageContentViewRect.size.width * 0.04
-    }
+//    func updateView(model: AgoraChatItem) {
+//        switch model.info.from {
+//        case .local:
+//            chatContentView.backgroundColor = UIColor(rgb: 0xE1EBFC)
+//            chatContentView.layer.borderColor = UIColor.clear.cgColor
+//            
+//            mineLabel.isHidden = false
+//            remoteLabel.isHidden = true
+//            mineLabel.attributedText = nickAttributedString(text: model.info.user.userName)
+//            
+//            // failView
+//            updateFaileView(sendState: model.info.sendState)
+//        case .remote:
+//            chatContentView.backgroundColor = .white
+//            chatContentView.layer.borderColor = UIColor(rgb: 0xECECF1).cgColor
+//            
+//            mineLabel.isHidden = true
+//            remoteLabel.isHidden = false
+//            remoteLabel.attributedText = nickAttributedString(text: model.info.user.userName)
+//            
+//            // failView
+//            failView.isHidden = true
+//        }
+//        
+//        // message source label
+//        messageSourceLabel.font = model.font
+//        messageSourceLabel.text = model.info.message
+//        messageSourceLabel.agora_x = model.messageLabelRect.origin.x
+//        messageSourceLabel.agora_y = model.messageLabelRect.origin.y
+//        messageSourceLabel.agora_width = model.messageLabelRect.size.width
+//        messageSourceLabel.agora_height = model.messageLabelRect.size.height
+//
+//        chatContentView.agora_clear_constraint()
+//        
+//        // message content view
+//        if (model.info.from == .local) {
+//            chatContentView.agora_y = model.messageContentViewRect.origin.y
+//            chatContentView.agora_right = model.messageContentViewRect.origin.x
+//            chatContentView.agora_width = model.messageContentViewRect.width
+//            
+//            // failView
+//            let contentViewMaxRightX =  model.messageContentViewRect.origin.x + model.messageContentViewRect.width
+//            let failViewMaxRightX = model.failViewAndContentViewGap + model.failViewRect.width
+//            failView.agora_x = model.cellWidth - contentViewMaxRightX - failViewMaxRightX
+//            failView.agora_y = model.failViewRect.origin.y
+//            failView.agora_width = model.failViewRect.width
+//            failView.agora_height = model.failViewRect.height
+//        } else {
+//            chatContentView.agora_x = model.messageContentViewRect.origin.x
+//            chatContentView.agora_y = model.messageContentViewRect.origin.y
+//            chatContentView.agora_width = model.messageContentViewRect.width
+//        }
+//        
+//        chatContentView.agora_height = model.messageContentViewRect.size.height
+//        chatContentView.layer.cornerRadius = model.messageContentViewRect.size.width * 0.04
+//    }
     
     // MARK: action
-    @objc fileprivate func onFailTouchEvent() {
-        delegate?.chatCell(self,
-                           didTapRetryOn: index)
-    }
+//    @objc fileprivate func onFailTouchEvent() {
+//        delegate?.chatCell(self,
+//                           didTapRetryOn: index)
+//    }
 }
 
 // MARK: Rect
@@ -233,23 +233,23 @@ private extension AgoraChatPanelMessageCell {
         return view
     }
     
-    func updateFaileView(sendState: AgoraEduContextChatState) {
-        let failBtn = failView.viewWithTag(LoadingBtnTag) as! AgoraBaseUIButton
-        let failLoading = failView.viewWithTag(LoadingViewTag) as! UIActivityIndicatorView
-        
-        switch sendState {
-        case .success:
-            failView.isHidden = true
-        case .failure:
-            failBtn.isHidden = false
-            failLoading.isHidden = true
-            failLoading.stopAnimating()
-        case .inProgress:
-            failBtn.isHidden = true
-            failLoading.isHidden = false
-            failLoading.startAnimating()
-        case .default:
-            break
-        }
-    }
+//    func updateFaileView(sendState: AgoraEduContextChatState) {
+//        let failBtn = failView.viewWithTag(LoadingBtnTag) as! AgoraBaseUIButton
+//        let failLoading = failView.viewWithTag(LoadingViewTag) as! UIActivityIndicatorView
+//
+//        switch sendState {
+//        case .success:
+//            failView.isHidden = true
+//        case .failure:
+//            failBtn.isHidden = false
+//            failLoading.isHidden = true
+//            failLoading.stopAnimating()
+//        case .inProgress:
+//            failBtn.isHidden = true
+//            failLoading.isHidden = false
+//            failLoading.startAnimating()
+//        case .default:
+//            break
+//        }
+//    }
 }

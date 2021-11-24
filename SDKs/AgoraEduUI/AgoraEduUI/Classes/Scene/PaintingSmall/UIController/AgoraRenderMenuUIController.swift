@@ -92,17 +92,19 @@ private extension AgoraRenderMenuUIController {
         }
         let s = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
         // 设置按钮的状态
-        for fn in items {
-            switch fn {
-            case .mic:
-                micButton.isSelected = (s?.streamType == .audioAndVideo || s?.streamType == .audio)
-            case .camera:
-                cameraButton.isSelected = (s?.streamType == .audioAndVideo || s?.streamType == .video)
-            case .auth:
-                authButton.isSelected = user.boardGranted
-            default: break
-            }
-        }
+        
+        // TODO:
+//        for fn in items {
+//            switch fn {
+//            case .mic:
+//                micButton.isSelected = (s?.streamType == .audioAndVideo || s?.streamType == .audio)
+//            case .camera:
+//                cameraButton.isSelected = (s?.streamType == .audioAndVideo || s?.streamType == .video)
+//            case .auth:
+//                authButton.isSelected = user.boardGranted
+//            default: break
+//            }
+//        }
     }
     
     func reloadItems() {
@@ -140,7 +142,8 @@ extension AgoraRenderMenuUIController {
             return
         }
         if contextPool.user.getLocalUserInfo().userUuid == UUID {
-            self.contextPool.device.setMicDeviceEnable(enable: !sender.isSelected)
+            // TODO:
+//            self.contextPool.device.setMicDeviceEnable(enable: !sender.isSelected)
             sender.isSelected = !sender.isSelected
         } else {
             contextPool.stream.muteRemoteAudio(streamUuids: [UUID], mute: sender.isSelected, success: {
@@ -154,7 +157,8 @@ extension AgoraRenderMenuUIController {
             return
         }
         if contextPool.user.getLocalUserInfo().userUuid == UUID {
-            self.contextPool.device.setCameraDeviceEnable(enable: !sender.isSelected)
+            // TODO:
+//            self.contextPool.device.setCameraDeviceEnable(enable: !sender.isSelected)
             sender.isSelected = !sender.isSelected
         } else {
             contextPool.stream.muteRemoteVideo(streamUuids: [UUID], mute: sender.isSelected, success: {

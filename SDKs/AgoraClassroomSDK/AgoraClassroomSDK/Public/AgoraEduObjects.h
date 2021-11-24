@@ -20,8 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 // default false
 @property (nonatomic, assign) BOOL eyeCare;
 - (instancetype)initWithAppId:(NSString *)appId;
-- (instancetype)initWithAppId:(NSString *)appId
-                      eyeCare:(BOOL)eyeCare;
 @end
 
 #pragma mark - White board

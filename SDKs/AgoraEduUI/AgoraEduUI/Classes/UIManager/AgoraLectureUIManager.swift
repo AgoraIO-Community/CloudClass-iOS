@@ -65,6 +65,7 @@ class AgoraLectureUIManager: AgoraEduUIManager {
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
+        vc.delegate = self
         self.addChild(vc)
         return vc
     }()
@@ -374,5 +375,12 @@ extension AgoraLectureUIManager: AgoraWidgetDelegate {
         default:
             break
         }
+    }
+}
+
+// MARK: - AgoraSettingUIControllerDelegate
+extension AgoraLectureUIManager: AgoraSettingUIControllerDelegate {
+    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
+        exit(reason: .normal)
     }
 }

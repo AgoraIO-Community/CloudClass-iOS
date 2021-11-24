@@ -29,7 +29,8 @@ import AgoraWidget
         
         switch roomType {
         case .oneToOne:
-            manager = AgoraOneToOneUIManager(contextPool: contextPool)
+            manager = AgoraOneToOneUIManager(contextPool: contextPool,
+                                             delegate: self)
         case .small:
             manager = AgoraSmallUIManager(contextPool: contextPool,
                                           delegate: self)

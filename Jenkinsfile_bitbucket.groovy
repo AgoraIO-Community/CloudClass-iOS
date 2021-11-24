@@ -36,6 +36,7 @@ withWechatNotify {
                 string(name: 'build_branch', value: branches["cloudclass-ios"] ?: companionBranch),
                 string(name: 'open_cloud_class_branch', value: branches["open-cloudclass-ios"] ?: companionBranch),
                 string(name: 'common_libs_branch', value: branches["apaas-common-libs-ios"] ?: companionBranch),
+                string(name: 'rte_branch', value: 'Flex'),
                 string(name: 'ci_branch', value: 'new_ios'),
                 string(name: 'build_env', value: 'Debug'),
                 booleanParam(name: 'appstore', value: false)

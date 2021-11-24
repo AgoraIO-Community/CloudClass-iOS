@@ -15,7 +15,7 @@ protocol AgoraRoomUIControllerDelegate: NSObjectProtocol {
 }
 
 fileprivate class AgoraRoomTimeInfo: NSObject {
-    var classState: AgoraEduContextClassState = .default
+    var classState: AgoraEduContextClassState = .before
     var startTime: Int64 = 0
     var differTime: Int64 = 0
     var duration: Int64 = 0
@@ -131,61 +131,61 @@ private extension AgoraRoomUIController {
         
         var text: String
         
-        switch timeInfo.classState {
-        case .default:
-            let before = AgoraUILocalizedString("ClassBeforeStartText",
-                                                object: self)
-            text = before + timeText
-        case .start:
-            switch countdown {
-            case (5 * 60 + timeInfo.closeDelay):
-                let strStart = AgoraUILocalizedString("ClassEndWarningStartText",
-                                                      object: self)
-                let strMid = "5"
-                let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
-                                                    object: self)
-                AgoraToast.toast(msg: strStart + strMid + strEnd)
-            default:
-                break
-            }
-            let start = AgoraUILocalizedString("ClassAfterStartText",
-                                               object: self)
-            text = start + timeText
-            /*
-             * 课程还有5分钟结束
-             */
-        case .end:
-            switch countdown {
-            case timeInfo.closeDelay:
-                // 课程结束咯，还有10分钟关闭教室
-                let strStart = AgoraUILocalizedString("ClassCloseWarningStartText",
-                                                      object: self)
-                let minNum = Int(timeInfo.closeDelay / 60)
-                let strMid = "\(minNum)"
-                let strMin = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
-                                                    object: self)
-                let strEnd = AgoraUILocalizedString("ClassCloseWarningEndText",
-                                                    object: self)
-                AgoraToast.toast(msg: strStart + strMid + strMin + strEnd)
-            case 1 * 60:
-                // 距离教室关闭还有1分钟
-                let strStart = AgoraUILocalizedString("ClassCloseWarningStart2Text",
-                                                      object: self)
-                let strMid = "1"
-                let strEnd = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
-                                                    object: self)
-                AgoraToast.toast(msg: strStart + strMid + strEnd)
-            default:
-                break
-            }
-            let end = AgoraUILocalizedString("ClassAfterStopText",
-                                             object: self)
-            text = end + timeText
-        case .close:
-            text = ""
-        }
+//        switch timeInfo.classState {
+//        case .default:
+//            let before = AgoraUILocalizedString("ClassBeforeStartText",
+//                                                object: self)
+//            text = before + timeText
+//        case .start:
+//            switch countdown {
+//            case (5 * 60 + timeInfo.closeDelay):
+//                let strStart = AgoraUILocalizedString("ClassEndWarningStartText",
+//                                                      object: self)
+//                let strMid = "5"
+//                let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
+//                                                    object: self)
+//                AgoraToast.toast(msg: strStart + strMid + strEnd)
+//            default:
+//                break
+//            }
+//            let start = AgoraUILocalizedString("ClassAfterStartText",
+//                                               object: self)
+//            text = start + timeText
+//            /*
+//             * 课程还有5分钟结束
+//             */
+//        case .end:
+//            switch countdown {
+//            case timeInfo.closeDelay:
+//                // 课程结束咯，还有10分钟关闭教室
+//                let strStart = AgoraUILocalizedString("ClassCloseWarningStartText",
+//                                                      object: self)
+//                let minNum = Int(timeInfo.closeDelay / 60)
+//                let strMid = "\(minNum)"
+//                let strMin = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
+//                                                    object: self)
+//                let strEnd = AgoraUILocalizedString("ClassCloseWarningEndText",
+//                                                    object: self)
+//                AgoraToast.toast(msg: strStart + strMid + strMin + strEnd)
+//            case 1 * 60:
+//                // 距离教室关闭还有1分钟
+//                let strStart = AgoraUILocalizedString("ClassCloseWarningStart2Text",
+//                                                      object: self)
+//                let strMid = "1"
+//                let strEnd = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
+//                                                    object: self)
+//                AgoraToast.toast(msg: strStart + strMid + strEnd)
+//            default:
+//                break
+//            }
+//            let end = AgoraUILocalizedString("ClassAfterStopText",
+//                                             object: self)
+//            text = end + timeText
+//        case .close:
+//            text = ""
+//        }
         
-        navigationBar.setClassTime(text)
+//        navigationBar.setClassTime(text)
     }
     func classOverAlert() {
         let ButtonLabel = AgoraAlertLabelModel()
@@ -212,18 +212,18 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
     }
     
     // 设置课程状态
-    public func onClassState(_ state: AgoraEduContextClassState) {
-        timeInfo.classState = state
-        switch state {
-        case .close:
-            classOverAlert()
-            navigationBar.timeLabel.textColor = .red
-        case .end:
-            navigationBar.timeLabel.textColor = .red
-        default:
-            navigationBar.timeLabel.textColor = UIColor(rgb: 0x677386)
-        }
-    }
+//    public func onClassState(_ state: AgoraEduContextClassState) {
+//        timeInfo.classState = state
+//        switch state {
+//        case .close:
+//            classOverAlert()
+//            navigationBar.timeLabel.textColor = .red
+//        case .end:
+//            navigationBar.timeLabel.textColor = .red
+//        default:
+//            navigationBar.timeLabel.textColor = UIColor(rgb: 0x677386)
+//        }
+//    }
     
     // 设置课程时间信息
     public func onClassTimeInfo(startTime: Int64,
@@ -313,27 +313,27 @@ private extension AgoraRoomUIController {
         
         var time: Int64 // 距离课程已经开始时间
         
-        switch state {
-        case .default:
-            time = startTime - currentRealTime
-        case .start:
-            time = currentRealTime - startTime
-        case .end:
-            time = currentRealTime - startTime
-        case .close:
-            stopTimer()
-            return
-        @unknown default:
-            return
-        }
-        
-        if time < 0 {
-            time = 0
-        }
-        
-        let countdown = closeDelay + duration - time
-        updateTimeUI((time / 1000),
-                    countdown: countdown)
+//        switch state {
+//        case .default:
+//            time = startTime - currentRealTime
+//        case .start:
+//            time = currentRealTime - startTime
+//        case .end:
+//            time = currentRealTime - startTime
+//        case .close:
+//            stopTimer()
+//            return
+//        @unknown default:
+//            return
+//        }
+//
+//        if time < 0 {
+//            time = 0
+//        }
+//
+//        let countdown = closeDelay + duration - time
+//        updateTimeUI((time / 1000),
+//                    countdown: countdown)
     }
 }
 

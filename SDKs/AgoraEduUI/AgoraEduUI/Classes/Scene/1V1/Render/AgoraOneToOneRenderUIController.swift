@@ -48,7 +48,6 @@ class AgoraOneToOneRenderUIController: UIViewController {
         createConstrains()
         contextPool.user.registerEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
-        contextPool.device.registerDeviceEventHandler(self)
     }
 }
 // MARK: - Private
@@ -65,29 +64,30 @@ private extension AgoraOneToOneRenderUIController {
             let model = AgoraRenderItemInfoModel(with: studentInfo,
                                                  stream: stream)
             studentView.item = model
-            if let s = stream {
-                if  s.videoSourceType == .invalid {
-                    studentView.cameraState = .erro
-                } else if s.videoSourceType == .none ||
-                            s.streamType == .audio ||
-                            s.streamType == .none {
-                    studentView.cameraState = .off
-                } else {
-                    studentView.cameraState = .on
-                }
-                if s.audioSourceType == .invalid {
-                    studentView.micState = .erro
-                } else if s.streamType == .video ||
-                            s.streamType == .none ||
-                            s.audioSourceType == .none {
-                    studentView.micState = .off
-                } else {
-                    studentView.micState = .on
-                }
-            } else {
-                studentView.cameraState = .erro
-                studentView.micState = .erro
-            }
+            // TODO:
+//            if let s = stream {
+//                if  s.videoSourceType == .invalid {
+//                    studentView.cameraState = .erro
+//                } else if s.videoSourceType == .none ||
+//                            s.streamType == .audio ||
+//                            s.streamType == .none {
+//                    studentView.cameraState = .off
+//                } else {
+//                    studentView.cameraState = .on
+//                }
+//                if s.audioSourceType == .invalid {
+//                    studentView.micState = .erro
+//                } else if s.streamType == .video ||
+//                            s.streamType == .none ||
+//                            s.audioSourceType == .none {
+//                    studentView.micState = .off
+//                } else {
+//                    studentView.micState = .on
+//                }
+//            } else {
+//                studentView.cameraState = .erro
+//                studentView.micState = .erro
+//            }
         } else {
             studentView.item = nil
             studentView.cameraState = .on
@@ -98,29 +98,30 @@ private extension AgoraOneToOneRenderUIController {
             let model = AgoraRenderItemInfoModel(with: teacherInfo,
                                                  stream: stream)
             teacherView.item = model
-            if let s = stream {
-                if s.videoSourceType == .invalid {
-                    teacherView.cameraState = .erro
-                } else if s.streamType == .audio ||
-                            s.streamType == .none ||
-                            s.videoSourceType == .none {
-                    teacherView.cameraState = .off
-                } else {
-                    teacherView.cameraState = .on
-                }
-                if s.audioSourceType == .invalid {
-                    teacherView.micState = .erro
-                } else if s.streamType == .video ||
-                            s.streamType == .none ||
-                            s.audioSourceType == .none {
-                    teacherView.micState = .off
-                } else {
-                    teacherView.micState = .on
-                }
-            } else {
-                teacherView.cameraState = .erro
-                teacherView.micState = .erro
-            }
+            // TODO:
+//            if let s = stream {
+//                if s.videoSourceType == .invalid {
+//                    teacherView.cameraState = .erro
+//                } else if s.streamType == .audio ||
+//                            s.streamType == .none ||
+//                            s.videoSourceType == .none {
+//                    teacherView.cameraState = .off
+//                } else {
+//                    teacherView.cameraState = .on
+//                }
+//                if s.audioSourceType == .invalid {
+//                    teacherView.micState = .erro
+//                } else if s.streamType == .video ||
+//                            s.streamType == .none ||
+//                            s.audioSourceType == .none {
+//                    teacherView.micState = .off
+//                } else {
+//                    teacherView.micState = .on
+//                }
+//            } else {
+//                teacherView.cameraState = .erro
+//                teacherView.micState = .erro
+//            }
         } else {
             teacherView.item = nil
         }
@@ -218,24 +219,7 @@ extension AgoraOneToOneRenderUIController: AgoraOneToOneMemberViewDelegate {
         }
     }
 }
-// MARK: - AgoraEduDeviceHandler
-extension AgoraOneToOneRenderUIController: AgoraEduDeviceHandler {
-    func onCameraDeviceEnableChanged(enabled: Bool) {
-        studentView.cameraState = enabled ? .on : .erro
-    }
-    
-    func onMicDeviceEnabledChanged(enabled: Bool) {
-        studentView.micState = enabled ? .on : .erro
-    }
-    
-    func onSpeakerEnabledChanged(enabled: Bool) {
-        
-    }
-    
-    func onDeviceTips(message: String) {
-        
-    }
-}
+
 // MARK: - AgoraEduUserHandler
 extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
     func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
@@ -263,12 +247,6 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
                                      cause: [String : Any]?,
                                      fromUser: AgoraEduContextUserDetailInfo,
                                      operator: AgoraEduContextUserInfo?) {
-        print(#function)
-    }
-    
-    func onStreamUpdated(_ streamType: EduContextMediaStreamType,
-                         fromUser: AgoraEduContextUserDetailInfo,
-                         operator: AgoraEduContextUserInfo?) {
         print(#function)
     }
 }

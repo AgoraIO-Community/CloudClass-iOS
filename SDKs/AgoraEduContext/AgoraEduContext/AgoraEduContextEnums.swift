@@ -20,30 +20,29 @@ import Foundation
 }
 
 @objc public enum AgoraEduContextClassState: Int {
-    // 教室状态： 默认、开始、结束、关闭
-    case `default`, start, end, close
+    /// 课前
+    case before = 0
+    /// 课中
+    case during = 1
+    /// 课后
+    case after = 2
 }
 
 // MARK: - User
 @objc public enum AgoraEduContextUserRole: Int {
-    // 角色： 老师、学生、助教
-    case teacher = 1, student, assistant
+    /// 老师
+    case teacher = 1
+    /// 学生
+    case student = 2
+    /// 助教
+    case assistant = 3
 }
 
-// MARK: - Chat
-@objc public enum AgoraEduContextChatState: Int {
-    // 状态：默认、发送中、成功、失败
-    case `default`, inProgress, success, failure
-}
-
-@objc public enum AgoraEduContextChatType: Int {
-    // 文本
-    case text = 1
-}
-
-@objc public enum AgoraEduContextChatFrom: Int {
-    // 消息来源：本地、远端
-    case local = 1, remote
+@objc public enum AgoraEduContextUserLeaveReason: Int {
+    // 正常离开
+    case normal = 0
+    // 被踢
+    case kickOut = 1
 }
 
 // MARK: - Network
@@ -72,21 +71,8 @@ import Foundation
 }
 
 // MARK: - Media
-@objc public enum AgoraEduContextRenderMode: Int {
-    case hidden, fit
-}
-
-@objc public enum AgoraEduContextVideoMirrorMode: Int {
-    case auto, enabled,disabled
-}
-
-@objc public enum EduContextCameraFacing: Int {
-    // 摄像头方向：前置、后置
-    case front, back
-}
-
-@objc public enum EduContextMediaStreamType: Int {
-    case audio, video, all
+@objc public enum AgoraEduContextVideoRenderMode: Int {
+    case hidden = 1, fit = 2
 }
 
 @objc public enum AgoraEduContextScreenShareState: Int {
@@ -94,9 +80,31 @@ import Foundation
     case start, pause, stop
 }
 
+@objc public enum AgoraEduContextDeviceType: Int {
+    /// 摄像头
+    case camera = 1
+    /// 麦克风
+    case mic = 2
+    /// 扬声器、喇叭
+    case speaker = 3
+}
+
 @objc public enum AgoraEduContextDeviceState: Int {
-    // 设备状态：不可用、可用, 关闭
-    case notAvailable = 0, available = 1, close = 2
+    /// 设备错误
+    case error = -1
+    /// 设备关闭
+    case close = 0
+    /// 设备开启
+    case open = 1
+}
+
+@objc public enum AgoraEduContextMediaSourceState: Int {
+    /// 媒体源错误
+    case error = -1
+    /// 媒体源关闭
+    case close = 0
+    /// 媒体源开启
+    case open = 1
 }
 
 // MARK: - Widget
@@ -107,9 +115,7 @@ import Foundation
 // MARK: - Stream
 /// 视频源
 @objc public enum AgoraEduContextVideoSourceType: Int {
-    /// 视频源损坏
-    case invalid = -1
-    /// 无视频源或视频源关闭
+    /// 无视频源
     case none = 0
     /// 摄像头
     case camera = 1
@@ -119,9 +125,7 @@ import Foundation
 
 /// 音频源
 @objc public enum AgoraEduContextAudioSourceType: Int {
-    /// 音频源损坏
-    case invalid = -1
-    /// 无音频源或音频源关闭
+    /// 无音频源
     case none = 0
     /// 麦克风
     case mic = 1
@@ -136,7 +140,7 @@ import Foundation
     /// 只有视频
     case video = 2
     /// 既有音频也有视频
-    case audioAndVideo = 3
+    case both = 3
 }
 
 /// 订阅高/低视频分辨率
