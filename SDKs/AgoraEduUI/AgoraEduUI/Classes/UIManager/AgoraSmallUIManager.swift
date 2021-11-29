@@ -99,14 +99,24 @@ class AgoraSmallUIManager: AgoraEduUIManager {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        contextPool.room.joinRoom(success: nil, fail: nil)
-        
-        createViews()
-        createConstrains()
-        contextPool.room.registerEventHandler(self)
-        contextPool.user.registerEventHandler(self)
-        contextPool.monitor.registerMonitorEventHandler(self)
+                
+        self.view.backgroundColor = .white
+        AgoraLoading.loading()
+        contextPool.room.joinRoom { [weak self] in
+            AgoraLoading.hide()
+            guard let `self` = self else {
+                return
+            }
+            self.createViews()
+            self.createConstrains()
+            self.contextPool.user.registerEventHandler(self)
+            self.contextPool.monitor.registerMonitorEventHandler(self)
+            
+            self.initWidgets()
+        } fail: { [weak self] error in
+            AgoraLoading.hide()
+            self?.contextPool.room.leaveRoom()
+        }
     }
 }
 
@@ -132,17 +142,6 @@ extension AgoraSmallUIManager {
         handsUpViewController.deselect()
         brushToolButton.isSelected = false
         ctrlView = nil
-    }
-}
-
-// MARK: - AgoraEduRoomHandler Old
-extension AgoraSmallUIManager: AgoraEduRoomHandler {
-    func onClassroomJoined() {
-        initWidgets()
-    }
-    
-    func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraToast.toast(msg: error.message)
     }
 }
 

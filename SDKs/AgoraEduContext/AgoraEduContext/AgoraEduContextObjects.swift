@@ -26,9 +26,9 @@ import Foundation
 }
 
 @objcMembers public class AgoraEduContextClassInfo: NSObject {
-    // 房间Id
+    /// 课堂状态
     public var state: AgoraEduContextClassState = .before
-    // 房间名字
+    
     public var startTime: Int64
     
     public var duration: Int64

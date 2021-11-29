@@ -110,21 +110,26 @@ class AgoraPaintingUIManager: AgoraEduUIManager {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        createViews()
-        createConstrains()
-        if contextPool.user.getLocalUserInfo().role == .teacher {
-            self.toolsView.tools = [.setting, .toolBox, .message]
-        } else if contextPool.user.getLocalUserInfo().role == .student {
-            self.toolsView.tools = [.setting, .message]
-        }
-        contextPool.room.registerEventHandler(self)
-        contextPool.user.registerEventHandler(self)
-        contextPool.monitor.registerMonitorEventHandler(self)
-
+        self.view.backgroundColor = .white
+        AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
-            self?.initWidgets()
+            AgoraLoading.hide()
+            guard let `self` = self else {
+                return
+            }
+            self.createViews()
+            self.createConstrains()
+            if self.contextPool.user.getLocalUserInfo().role == .teacher {
+                self.toolsView.tools = [.setting, .toolBox, .message]
+            } else if self.contextPool.user.getLocalUserInfo().role == .student {
+                self.toolsView.tools = [.setting, .message]
+            }
+            self.contextPool.user.registerEventHandler(self)
+            self.contextPool.monitor.registerMonitorEventHandler(self)
+            
+            self.initWidgets()
         } fail: { [weak self] error in
+            AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
         }
     }
@@ -152,16 +157,6 @@ extension AgoraPaintingUIManager {
         handsUpViewController.deselect()
         brushToolButton.isSelected = false
         ctrlView = nil
-    }
-}
-// MARK: - AgoraEduRoomHandler Old
-extension AgoraPaintingUIManager: AgoraEduRoomHandler {
-    func onClassroomJoined() {
-        initWidgets()
-    }
-    
-    func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraToast.toast(msg: error.message)
     }
 }
 

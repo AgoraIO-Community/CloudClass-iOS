@@ -64,30 +64,37 @@ private extension AgoraOneToOneRenderUIController {
             let model = AgoraRenderItemInfoModel(with: studentInfo,
                                                  stream: stream)
             studentView.item = model
-            // TODO:
-//            if let s = stream {
-//                if  s.videoSourceType == .invalid {
-//                    studentView.cameraState = .erro
-//                } else if s.videoSourceType == .none ||
-//                            s.streamType == .audio ||
-//                            s.streamType == .none {
-//                    studentView.cameraState = .off
-//                } else {
-//                    studentView.cameraState = .on
-//                }
-//                if s.audioSourceType == .invalid {
-//                    studentView.micState = .erro
-//                } else if s.streamType == .video ||
-//                            s.streamType == .none ||
-//                            s.audioSourceType == .none {
-//                    studentView.micState = .off
-//                } else {
-//                    studentView.micState = .on
-//                }
-//            } else {
-//                studentView.cameraState = .erro
-//                studentView.micState = .erro
-//            }
+            if let s = stream {
+                if s.streamType == .video ||
+                    s.streamType == .both {
+                    switch s.videoSourceState {
+                    case .error:
+                        studentView.cameraState = .erro
+                    case .close:
+                        studentView.cameraState = .off
+                    case .open:
+                        studentView.cameraState = .on
+                    }
+                } else {
+                    studentView.cameraState = .off
+                }
+                if s.streamType == .audio ||
+                    s.streamType == .both {
+                    switch s.audioSourceState {
+                    case .error:
+                        studentView.micState = .erro
+                    case .close:
+                        studentView.micState = .off
+                    case .open:
+                        studentView.micState = .on
+                    }
+                } else {
+                    studentView.micState = .off
+                }
+            } else {
+                studentView.cameraState = .erro
+                studentView.micState = .erro
+            }
         } else {
             studentView.item = nil
             studentView.cameraState = .on
@@ -98,30 +105,37 @@ private extension AgoraOneToOneRenderUIController {
             let model = AgoraRenderItemInfoModel(with: teacherInfo,
                                                  stream: stream)
             teacherView.item = model
-            // TODO:
-//            if let s = stream {
-//                if s.videoSourceType == .invalid {
-//                    teacherView.cameraState = .erro
-//                } else if s.streamType == .audio ||
-//                            s.streamType == .none ||
-//                            s.videoSourceType == .none {
-//                    teacherView.cameraState = .off
-//                } else {
-//                    teacherView.cameraState = .on
-//                }
-//                if s.audioSourceType == .invalid {
-//                    teacherView.micState = .erro
-//                } else if s.streamType == .video ||
-//                            s.streamType == .none ||
-//                            s.audioSourceType == .none {
-//                    teacherView.micState = .off
-//                } else {
-//                    teacherView.micState = .on
-//                }
-//            } else {
-//                teacherView.cameraState = .erro
-//                teacherView.micState = .erro
-//            }
+            if let s = stream {
+                if s.streamType == .video ||
+                    s.streamType == .both {
+                    switch s.videoSourceState {
+                    case .error:
+                        teacherView.cameraState = .erro
+                    case .close:
+                        teacherView.cameraState = .off
+                    case .open:
+                        teacherView.cameraState = .on
+                    }
+                } else {
+                    studentView.cameraState = .off
+                }
+                if s.streamType == .audio ||
+                    s.streamType == .both {
+                    switch s.audioSourceState {
+                    case .error:
+                        teacherView.micState = .erro
+                    case .close:
+                        teacherView.micState = .off
+                    case .open:
+                        teacherView.micState = .on
+                    }
+                } else {
+                    teacherView.micState = .off
+                }
+            } else {
+                teacherView.cameraState = .erro
+                teacherView.micState = .erro
+            }
         } else {
             teacherView.item = nil
         }

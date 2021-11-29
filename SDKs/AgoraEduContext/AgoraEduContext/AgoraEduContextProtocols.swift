@@ -211,13 +211,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - parameter operator: 操作者，可为空
     @objc optional func onUserUpdated(user: AgoraEduContextUserInfo,
                                       operator: AgoraEduContextUserInfo?)
-    
-    @objc optional func onRemoteUserLeft(users: [AgoraEduContextUserInfo])
-    @objc optional func onRemoteUserJoin(users: [AgoraEduContextUserInfo])
 
-    /// 用户手放下，结束上台申请
-    ///
-    /// - parameter fromUser: 手放下的用户
     /// 用户自定义属性更新(v2.0.0)
     /// - parameter user: 更新的用户
     /// - parameter changedProperties: 更新的用户属性字典

@@ -60,9 +60,22 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
-        createViews()
-        createConstrains()
-        contextPool.room.joinRoom(success: nil, fail: nil)
+        
+        contextPool.room.joinRoom { [weak self] in
+            AgoraLoading.hide()
+            guard let `self` = self else {
+                return
+            }
+            self.createViews()
+            if AgoraKitDeviceAssistant.OS.isPad {
+                self.createPadConstrains()
+            } else {
+                self.createPhoneConstrains()
+            }
+        } fail: { [weak self] error in
+            AgoraLoading.hide()
+            self?.contextPool.room.leaveRoom()
+        }
     }
 }
 // Mark: - Actions
@@ -116,7 +129,31 @@ private extension AgoraOneToOneUIManager {
         view.addSubview(ctrlMaskView)
     }
     
-    func createConstrains() {
+    func createPhoneConstrains() {
+        stateController.view.mas_makeConstraints { [unowned self] make in
+            make?.top.equalTo()(self.view)
+            make?.left.right().equalTo()(0)
+            make?.height.equalTo()(AgoraFit.scale(44))
+        }
+        renderController.view.mas_makeConstraints { [unowned self] make in
+            if #available(iOS 11.0, *) {
+                make?.right.equalTo()(self.view.mas_safeAreaLayoutGuideRight)
+            } else {
+                make?.right.equalTo()(20)
+            }
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+            make?.width.equalTo()(168)
+            make?.bottom.equalTo()(self.view)
+        }
+        ctrlMaskView.mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view.mas_bottom)
+            make?.left.right().bottom().equalTo()(0)
+        }
+        boardControllerLayout()
+        chatControllerLayout()
+    }
+    
+    func createPadConstrains() {
         stateController.view.mas_makeConstraints { [unowned self] make in
             make?.top.equalTo()(self.view)
             make?.left.right().equalTo()(0)

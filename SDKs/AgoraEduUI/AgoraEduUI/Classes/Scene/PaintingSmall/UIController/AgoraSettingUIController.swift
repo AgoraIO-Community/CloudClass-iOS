@@ -14,6 +14,8 @@ protocol AgoraSettingUIControllerDelegate: NSObjectProtocol {
     func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController)
 }
 
+fileprivate let kFrontCameraStr = "front"
+fileprivate let kBackCameraStr = "back"
 class AgoraSettingUIController: UIViewController {
     weak var delegate: AgoraSettingUIControllerDelegate?
     
@@ -63,7 +65,39 @@ class AgoraSettingUIController: UIViewController {
         
         createViews()
         createConstrains()
+        setup()
         contextPool.room.registerEventHandler(self)
+        contextPool.media.registerMediaEventHandler(self)
+    }
+}
+private extension AgoraSettingUIController {
+    func setup() {
+        let cameras = contextPool.media.getLocalDevices(deviceType: .camera)
+        for camera in cameras {
+            if camera.deviceName.contains(kFrontCameraStr) {
+                contextPool.media.getLocalDeviceState(device: camera) { state in
+                    frontCamButton.isSelected = (state == .open)
+                } fail: { error in
+                }
+            } else if camera.deviceName.contains(kBackCameraStr) {
+                contextPool.media.getLocalDeviceState(device: camera) { state in
+                    backCamButton.isSelected = (state == .open)
+                } fail: { error in
+                }
+            }
+        }
+        if let d = contextPool.media.getLocalDevices(deviceType: .mic).first {
+            contextPool.media.getLocalDeviceState(device: d) { state in
+                micSwitch.isOn = (state == .open)
+            } fail: { error in
+            }
+        }
+        if let d = contextPool.media.getLocalDevices(deviceType: .speaker).first {
+            contextPool.media.getLocalDeviceState(device: d) { state in
+                audioSwitch.isOn = (state == .open)
+            } fail: { error in
+            }
+        }
     }
 }
 // MARK: - AgoraEduRoomHandler
@@ -83,18 +117,58 @@ extension AgoraSettingUIController: AgoraEduRoomHandler {
     }
 }
 
+extension AgoraSettingUIController: AgoraEduMediaHandler {
+    func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
+                                   state: AgoraEduContextDeviceState) {
+        if device.deviceType == .camera {
+            cameraSwitch.isOn = (state == .open)
+        } else if device.deviceType == .mic {
+            micSwitch.isOn = (state == .open)
+        } else if device.deviceType == .speaker {
+            audioSwitch.isOn = (state == .open)
+        }
+    }
+}
+
 // MARK: - Actions
 private extension AgoraSettingUIController {
     @objc func onClickCameraSwitch(_ sender: UISwitch) {
-//        self.contextPool.device.setCameraDeviceEnable(enable: sender.isOn)
+        let devices = contextPool.media.getLocalDevices(deviceType: .camera)
+        var camera: AgoraEduContextDeviceInfo?
+        if frontCamButton.isSelected {
+            camera = devices.first(where: {$0.deviceName.contains(kFrontCameraStr)})
+        } else if backCamButton.isSelected {
+            camera = devices.first(where: {$0.deviceName.contains(kBackCameraStr)})
+        }
+        if let c = camera {
+            if sender.isOn {
+                self.contextPool.media.openLocalDevice(device: c)
+            } else {
+                self.contextPool.media.closeLocalDevice(device: c)
+            }
+        }
     }
     
     @objc func onClickMicSwitch(_ sender: UISwitch) {
-//        self.contextPool.device.setMicDeviceEnable(enable: sender.isOn)
+        guard let d = self.contextPool.media.getLocalDevices(deviceType: .mic).first else {
+            return
+        }
+        if sender.isOn {
+            self.contextPool.media.openLocalDevice(device: d)
+        } else {
+            self.contextPool.media.closeLocalDevice(device: d)
+        }
     }
     
     @objc func onClickAudioSwitch(_ sender: UISwitch) {
-//        self.contextPool.device.setSpeakerEnable(enable: sender.isOn)
+        guard let d = self.contextPool.media.getLocalDevices(deviceType: .speaker).first else {
+            return
+        }
+        if sender.isOn {
+            self.contextPool.media.openLocalDevice(device: d)
+        } else {
+            self.contextPool.media.closeLocalDevice(device: d)
+        }
     }
     
     @objc func onClickUploadLog(_ sender: UIButton) {
@@ -138,15 +212,27 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickFrontCamera(_ sender: UIButton) {
+        guard sender.isSelected == false else {
+            return
+        }
         sender.isSelected = true
         backCamButton.isSelected = false
-        // TODO:
+        let devices = self.contextPool.media.getLocalDevices(deviceType: .camera)
+        if let camera = devices.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
+            contextPool.media.openLocalDevice(device: camera)
+        }
     }
     
     @objc func onClickBackCamera(_ sender: UIButton) {
+        guard sender.isSelected == false else {
+            return
+        }
         sender.isSelected = true
         frontCamButton.isSelected = false
-        // TODO:
+        let devices = self.contextPool.media.getLocalDevices(deviceType: .camera)
+        if let camera = devices.first(where: {$0.deviceName.contains(kBackCameraStr)}) {
+            contextPool.media.openLocalDevice(device: camera)
+        }
     }
 }
 
@@ -188,6 +274,7 @@ private extension AgoraSettingUIController {
         view.addSubview(directionLabel)
         
         frontCamButton = UIButton(type: .custom)
+        frontCamButton.isSelected = true
         frontCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         frontCamButton.setTitleColor(.white,
                                      for: .selected)
