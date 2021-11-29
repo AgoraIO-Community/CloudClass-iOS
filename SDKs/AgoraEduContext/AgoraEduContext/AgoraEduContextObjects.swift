@@ -25,6 +25,27 @@ import Foundation
     }
 }
 
+@objcMembers public class AgoraEduContextClassInfo: NSObject {
+    // 房间Id
+    public var state: AgoraEduContextClassState = .before
+    // 房间名字
+    public var startTime: Int64
+    
+    public var duration: Int64
+    
+    public var closeDelay: Int64
+    
+    public init(state: AgoraEduContextClassState,
+                startTime: Int64,
+                duration: Int64,
+                closeDelay: Int64) {
+        self.state = state
+        self.startTime = startTime
+        self.duration = duration
+        self.closeDelay = closeDelay
+    }
+}
+
 // MARK: - User
 @objcMembers public class AgoraEduContextUserInfo: NSObject {
     // 用户id

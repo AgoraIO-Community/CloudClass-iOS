@@ -110,7 +110,6 @@ class AgoraPaintingUIManager: AgoraEduUIManager {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        contextPool.room.joinClassroom()
         
         createViews()
         createConstrains()
@@ -122,6 +121,12 @@ class AgoraPaintingUIManager: AgoraEduUIManager {
         contextPool.room.registerEventHandler(self)
         contextPool.user.registerEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
+
+        contextPool.room.joinRoom { [weak self] in
+            self?.initWidgets()
+        } fail: { [weak self] error in
+            self?.contextPool.room.leaveRoom()
+        }
     }
 }
 
@@ -149,7 +154,7 @@ extension AgoraPaintingUIManager {
         ctrlView = nil
     }
 }
-// MARK: - AgoraEduRoomHandler
+// MARK: - AgoraEduRoomHandler Old
 extension AgoraPaintingUIManager: AgoraEduRoomHandler {
     func onClassroomJoined() {
         initWidgets()
@@ -180,7 +185,6 @@ extension AgoraPaintingUIManager: AgoraEduMonitorHandler {
         }
     }
 }
-
 // MARK: - AgoraEduUserHandler
 extension AgoraPaintingUIManager: AgoraEduUserHandler {
     func onKickedOut() {

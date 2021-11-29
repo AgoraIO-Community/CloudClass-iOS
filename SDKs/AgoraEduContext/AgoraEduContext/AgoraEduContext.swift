@@ -26,8 +26,6 @@ public typealias AgoraEduExtAppContext = AgoraExtAppProtocol
     var media: AgoraEduMediaContext { get }
     // 个人
     var user: AgoraEduUserContext { get }
-    // 举手
-    var handsUp: AgoraEduHandsUpContext { get }
     // 私密语音：目前只支持个人对个人
     var privateChat: AgoraEduPrivateChatContext { get }
     // 扩展容器：该应用容器提供了生命周期、扩展

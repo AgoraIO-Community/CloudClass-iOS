@@ -138,66 +138,58 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
 
 // MARK: - Classroom
 @objc public protocol AgoraEduRoomHandler: NSObjectProtocol {
-    // 上课过程中，错误信息
-    @objc optional func onShowErrorInfo(_ error: AgoraEduContextError)
-    
-    // 加入教室成功
-    @objc optional func onClassroomJoined()
-    
-    // 房间属性初始化， 如果没有设置Flex属性，怎么不会回调
-    // properties：用户自定义全量房间属性
-    @objc optional func onFlexRoomPropertiesInitialize(_ properties: [String: Any])
-    // 房间属性变化
-    // properties：用户自定义全量房间属性
-    // server更新的时候operator为空
-    @objc optional func onFlexRoomPropertiesChanged(_ changedProperties: [String],
-                                                    properties: [String: Any],
-                                                    cause: [String: Any]?,
-                                                    operator:AgoraEduContextUserInfo?)
-    
-    /** 新增接口 **/
-    // 设置课程名称
-    @objc optional func onClassroomName(_ name: String)
-    // 设置课程状态
-    @objc optional func onClassState(_ state: AgoraEduContextClassState)
-    
-    /* 显示课程时间(课堂时间相关信息传递给UI层，UI层自己处理相关逻辑):
-     * 上课前：`距离上课还有：X分X秒` 【文案名：ClassBeforeStartText,ClassTimeMinuteText,ClassTimeSecondText】
-     * 开始上课：`已开始上课:X分X秒` 【文案名：ClassAfterStartText,ClassTimeMinuteText,ClassTimeSecondText】
-     * 结束上课：`已开始上课:X分X秒` 【文案名：ClassAfterStartText,ClassTimeMinuteText,ClassTimeSecondText】
-     * 上课期间的提示:
-     * 课程还有5分钟结束 【文案名：ClassEndWarningStartText,ClassEndWarningEndText】
-     * 课程结束咯，还有10分钟关闭教室 【文案名：ClassCloseWarningStartText,ClassCloseWarningEnd2Text,ClassCloseWarningEndText】
-     * 距离教室关闭还有1分钟 【文案名：ClassCloseWarningStart2Text,ClassCloseWarningEnd2Text】
-     */
-    @objc optional func onClassTimeInfo(startTime: Int64,
-                                        differTime: Int64,
-                                        duration: Int64,
-                                        closeDelay: Int64)
+    /// 房间自定义属性更新
+    ///
+    /// - parameter changedProperties: 本次更新的部分 properties
+    /// - parameter cause: 更新的原因
+    /// - parameter operator: 该操作的执行者
+    @objc optional func onRoomPropertiesUpdated(changedProperties: [String: Any],
+                                                cause: [String: Any]?,
+                                                operator: AgoraEduContextUserInfo?)
+    /// 房间自定义属性删除
+    ///
+    /// - parameter keyPaths: 被删除的属性的key path数组
+    /// - parameter cause: 原因
+    /// - parameter operator: 该操作的执行者
+    @objc optional func onRoomPropertiesDeleted(keyPaths: [String],
+                                                cause: [String: Any]?,
+                                                operator: AgoraEduContextUserInfo?)
+    /// 房间关闭
+    @objc optional func onRoomClosed()
+    /// 课堂状态更新
+    ///
+    /// - parameter state: 当前的课堂状态
+    @objc optional func onClassStateUpdated(state: AgoraEduContextClassState)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
-    // 房间信息
-    func getRoomInfo() -> AgoraEduContextRoomInfo
-    
-    // 加入房间
-    func joinClassroom()
-    
-    // 更新自定义房间属性，如果没有就增加
-    // 支持path修改和整体修改
-    // properties: {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
-    // cause: 修改的原因，可为空
-    func updateFlexRoomProperties(_ properties:[String: String],
-                                  cause:[String: String]?)
-    
-    // 离开教室
-    func leaveRoom()
-    // 事件监听
+    /// 事件监听
     func registerEventHandler(_ handler: AgoraEduRoomHandler)
-    
-    /** 新增接口 **/
-    // 刷新房间
-    func refresh()
+    /// 加入房间
+    func joinRoom(success: (() -> Void)?,
+                  fail: ((AgoraEduContextError) -> Void)?)
+    /// 离开房间
+    func leaveRoom()
+    /// 获取房间信息
+    func getRoomInfo() -> AgoraEduContextRoomInfo
+    /// 更新自定义房间属性，如果没有就增加
+    /// 支持path修改和整体修改
+    /// - parameter properties: {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
+    /// - parameter cause: 修改的原因，可为空
+    func updateRoomProperties(_ properties: [String: String],
+                              cause: [String: String]?,
+                              success: (() -> Void)?,
+                              fail: ((AgoraEduContextError) -> Void)?)
+    /// 删除房间自定义属性
+    func deleteRoomProperties(_ keyPaths: [String],
+                              cause: [String: Any]?,
+                              success: (() -> Void)?,
+                              fail: ((AgoraEduContextError) -> Void)?)
+    /// 在加入房间后，不立即上课，而是老师手动触发上课
+    func startClass(success: (() -> Void)?,
+                    fail: ((AgoraEduContextError) -> Void)?)
+    /// 获取课堂信息
+    func getClassInfo() -> AgoraEduContextClassInfo
 }
 
 // MARK: - User
@@ -220,6 +212,12 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     @objc optional func onUserUpdated(user: AgoraEduContextUserInfo,
                                       operator: AgoraEduContextUserInfo?)
     
+    @objc optional func onRemoteUserLeft(users: [AgoraEduContextUserInfo])
+    @objc optional func onRemoteUserJoin(users: [AgoraEduContextUserInfo])
+
+    /// 用户手放下，结束上台申请
+    ///
+    /// - parameter fromUser: 手放下的用户
     /// 用户自定义属性更新(v2.0.0)
     /// - parameter user: 更新的用户
     /// - parameter changedProperties: 更新的用户属性字典
@@ -364,8 +362,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
                      forever: Bool,
                      success: AgoraEduContextSuccess?,
                      failure: AgoraEduContextFail?)
-    
-    /// 举手，申请上台 (v2.0.0)
+    /// 举手，申请上台 (v1.2.0)
     /// - parameter duration: 举手申请的时长，单位秒
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败
@@ -373,7 +370,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     func handsWave(duration: Int,
                    success: AgoraEduContextSuccess?,
                    failure: AgoraEduContextFail?)
-    
+
     /// 手放下，取消申请上台 (v2.0.0)
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败

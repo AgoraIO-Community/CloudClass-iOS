@@ -100,7 +100,7 @@ class AgoraSmallUIManager: AgoraEduUIManager {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        contextPool.room.joinClassroom()
+        contextPool.room.joinRoom(success: nil, fail: nil)
         
         createViews()
         createConstrains()
@@ -135,7 +135,7 @@ extension AgoraSmallUIManager {
     }
 }
 
-// MARK: - AgoraEduRoomHandler
+// MARK: - AgoraEduRoomHandler Old
 extension AgoraSmallUIManager: AgoraEduRoomHandler {
     func onClassroomJoined() {
         initWidgets()

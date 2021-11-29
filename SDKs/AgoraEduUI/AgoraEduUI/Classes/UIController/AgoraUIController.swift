@@ -37,7 +37,6 @@ protocol AgoraControllerContextProvider: NSObjectProtocol {
     func controllerNeedRoomContext() -> AgoraEduRoomContext
     
     func controllerNeedUserContext() -> AgoraEduUserContext
-    func controllerNeedHandsUpContext() -> AgoraEduHandsUpContext
     func controllerNeedPrivateChatContext() -> AgoraEduPrivateChatContext
     
     func controllerNeedExtAppContext() -> AgoraEduExtAppContext
@@ -52,5 +51,4 @@ protocol AgoraControllerEventRegister: NSObjectProtocol {
     func controllerRegisterRoomEvent(_ handler: AgoraEduRoomHandler)
     func controllerRegisterPrivateChatEvent(_ handler: AgoraEduPrivateChatHandler)
     func controllerRegisterUserEvent(_ handler: AgoraEduUserHandler)
-    func controllerRegisterHandsUpEvent(_ handler: AgoraEduHandsUpHandler)
 }

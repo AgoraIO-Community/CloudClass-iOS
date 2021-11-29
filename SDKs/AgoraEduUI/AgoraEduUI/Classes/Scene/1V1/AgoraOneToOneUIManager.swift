@@ -62,8 +62,7 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
         createViews()
         createConstrains()
-        
-        contextPool.room.joinClassroom()
+        contextPool.room.joinRoom(success: nil, fail: nil)
     }
 }
 // Mark: - Actions

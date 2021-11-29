@@ -147,11 +147,10 @@ class AgoraPaintingHandsUpUIController: UIViewController {
         // Do any additional setup after loading the view.
         if contextPool.user.getLocalUserInfo().role == .teacher {
             listButton.isHidden = false
-            contextPool.user.registerEventHandler(self)
         } else {
             ctrlButton.isHidden = false
-            contextPool.handsUp.registerEventHandler(self)
         }
+        contextPool.user.registerEventHandler(self)
     }
     
     public func deselect() {
@@ -213,12 +212,12 @@ extension AgoraPaintingHandsUpUIController: AgoraHandsUpDelayViewDelegate {
         switch state {
         case .hold:
             mayShowTips()
-            contextPool.handsUp.updateWaveArmsState(.handsUp,
-                                                   timeout: -1)
+//            contextPool.handsUp.updateWaveArmsState(.handsUp,
+//                                                   timeout: -1)
             break
         case .free:
-            contextPool.handsUp.updateWaveArmsState(.handsUp,
-                                                   timeout: 3)
+//            contextPool.handsUp.updateWaveArmsState(.handsUp,
+//                                                   timeout: 3)
             break
         case .counting: break
         default: break
@@ -226,7 +225,7 @@ extension AgoraPaintingHandsUpUIController: AgoraHandsUpDelayViewDelegate {
     }
 }
 // MARK: - AgoraEduHandsUpHandler
-extension AgoraPaintingHandsUpUIController: AgoraEduHandsUpHandler {
+extension AgoraPaintingHandsUpUIController {
     func onHandsUpEnable(_ enable: Bool) {
         
     }

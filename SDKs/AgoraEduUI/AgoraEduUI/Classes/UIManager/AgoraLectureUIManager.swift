@@ -87,11 +87,10 @@ class AgoraLectureUIManager: AgoraEduUIManager {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        contextPool.room.joinClassroom()
+        contextPool.room.joinRoom(success: nil, fail: nil)
         
         createViews()
         createConstrains()
-        contextPool.room.registerEventHandler(self)
         contextPool.user.registerEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
     }
@@ -120,17 +119,6 @@ extension AgoraLectureUIManager {
     }
 }
 
-// MARK: - AgoraEduRoomHandler
-extension AgoraLectureUIManager: AgoraEduRoomHandler {
-    func onClassroomJoined() {
-        initWidgets()
-    }
-    
-    func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraToast.toast(msg: error.message)
-    }
-}
-
 // MARK: - AgoraEduMonitorHandler
 extension AgoraLectureUIManager: AgoraEduMonitorHandler {
     // 连接状态
@@ -148,6 +136,13 @@ extension AgoraLectureUIManager: AgoraEduMonitorHandler {
         case .connected:
             AgoraLoading.hide()
         }
+    }
+    func onClassroomJoined() {
+        initWidgets()
+    }
+    
+    func onShowErrorInfo(_ error: AgoraEduContextError) {
+        AgoraToast.toast(msg: error.message)
     }
 }
 
