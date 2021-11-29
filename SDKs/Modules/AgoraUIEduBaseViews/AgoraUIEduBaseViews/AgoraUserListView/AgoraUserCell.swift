@@ -68,14 +68,6 @@ public class AgoraUserCell : AgoraBaseUITableViewCell {
         }
     }
     
-    public var chatEnabled: Bool = true {
-        didSet {
-            if !chatBanImg.isHidden {
-                chatBanImg.image = AgoraKitImage(chatEnabled ? "chat_enable" : "chat_disable")
-            }
-        }
-    }
-    
     private var stageImg: AgoraBaseUIImageView = AgoraBaseUIImageView(frame: .zero)
     private var authImg : AgoraBaseUIImageView = AgoraBaseUIImageView(frame: .zero)
     private var rewardImg : AgoraBaseUIImageView = AgoraBaseUIImageView(image: AgoraKitImage("reward"))

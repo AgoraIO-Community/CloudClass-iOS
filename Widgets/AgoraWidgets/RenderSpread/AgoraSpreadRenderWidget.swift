@@ -73,7 +73,7 @@ extension AgoraSpreadRenderWidget: AgoraRenderSpreadViewDelegate {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraSpreadRenderWidget: AgoraEduUserHandler {
-    public func onUpdateCoHostList(_ list: [AgoraEduContextUserDetailInfo]) {
+    public func onUpdateCoHostList(_ list: [AgoraEduContextUserInfo]) {
         // 下台/离开房间，大窗消失
         if let renderUser = renderUserInfo,
            list.first(where: {$0.userUuid == renderUser.userId }) == nil {
@@ -81,7 +81,7 @@ extension AgoraSpreadRenderWidget: AgoraEduUserHandler {
         }
     }
     
-    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
+    public func onUpdateUserList(_ list: [AgoraEduContextUserInfo]) {
         if let render = renderUserInfo,
            list.first(where: { $0.userUuid == render.userId}) == nil {
             sendDismissMessage()
@@ -139,7 +139,7 @@ fileprivate extension AgoraSpreadRenderWidget {
         }
         
         guard let messageModel = AgoraSpreadRoomMessageModel.decode(dic),
-              let userInfo = userContext?.getUserInfoList().first(where: { $0.userUuid == messageModel.extra.userId}) else {
+              let userInfo = userContext?.getAllUserList().first(where: { $0.userUuid == messageModel.extra.userId}) else {
             return
         }
         

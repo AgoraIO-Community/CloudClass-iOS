@@ -53,7 +53,7 @@ class AgoraOneToOneRenderUIController: UIViewController {
 // MARK: - Private
 private extension AgoraOneToOneRenderUIController {
     func updateCoHosts() {
-        let list = self.contextPool.user.getUserInfoList()
+        let list = self.contextPool.user.getAllUserList()
         self.currentStream = nil
         if let studentInfo = list.first(where: { $0.role == .student }) {
             let stream = contextPool.stream.getStreamsInfo(userUuid: studentInfo.userUuid)?.first
@@ -222,11 +222,11 @@ extension AgoraOneToOneRenderUIController: AgoraOneToOneMemberViewDelegate {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
-    func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
+    func onUpdateUserList(_ list: [AgoraEduContextUserInfo]) {
         self.updateCoHosts()
     }
     
-    func onUpdateCoHostList(_ list: [AgoraEduContextUserDetailInfo]) {
+    func onUpdateCoHostList(_ list: [AgoraEduContextUserInfo]) {
         self.updateCoHosts()
     }
     
@@ -245,7 +245,7 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
     func onFlexUserPropertiesChanged(_ changedProperties: [String : Any],
                                      properties: [String: Any],
                                      cause: [String : Any]?,
-                                     fromUser: AgoraEduContextUserDetailInfo,
+                                     fromUser: AgoraEduContextUserInfo,
                                      operator: AgoraEduContextUserInfo?) {
         print(#function)
     }

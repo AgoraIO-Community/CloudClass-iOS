@@ -11,7 +11,7 @@ import AgoraEduContext
 
 protocol AgoraLectureRenderUIControllerDelegate: NSObjectProtocol {
     func renderLectureController(_ controller: AgoraLectureRenderUIController,
-                                 didUpdateCoHosts coHosts: [AgoraEduContextUserDetailInfo])
+                                 didUpdateCoHosts coHosts: [AgoraEduContextUserInfo])
 }
 
 class AgoraLectureRenderUIController: AgoraRenderUIController {
@@ -31,7 +31,7 @@ class AgoraLectureRenderUIController: AgoraRenderUIController {
     var rewardImageView: AgoraFLAnimatedImageView?
     
     // DataSource
-    var teacherInfo: AgoraEduContextUserDetailInfo? {
+    var teacherInfo: AgoraEduContextUserInfo? {
         didSet {
             updateUserView(teacherView,
                            oldUserInfo: oldValue,
@@ -50,6 +50,8 @@ class AgoraLectureRenderUIController: AgoraRenderUIController {
         self.delegate = delegate
         super.init(viewType: viewType,
                    contextPool: contextPool)
+        
+        self.localUserId = userContext?.getLocalUserInfo().userUuid ?? ""
         
         initViews()
         initLayout()

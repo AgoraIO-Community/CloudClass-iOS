@@ -11,7 +11,7 @@ import AgoraEduContext
 
 protocol AgoraSmallRenderUIControllerDelegate: NSObjectProtocol {
     func renderSmallController(_ controller: AgoraSmallRenderUIController,
-                               didUpdateCoHosts coHosts: [AgoraEduContextUserDetailInfo])
+                               didUpdateCoHosts coHosts: [AgoraEduContextUserInfo])
     func renderSmallController(_ controller: AgoraSmallRenderUIController,
                                didUpdateTeacherIn teacherIn: Bool )
 }
@@ -52,7 +52,7 @@ class AgoraSmallRenderUIController: AgoraRenderUIController {
     }()
     
     // DataSource
-    var teacherInfo: AgoraEduContextUserDetailInfo? {
+    var teacherInfo: AgoraEduContextUserInfo? {
         didSet {
             updateUserView(teacherView,
                            oldUserInfo: oldValue,

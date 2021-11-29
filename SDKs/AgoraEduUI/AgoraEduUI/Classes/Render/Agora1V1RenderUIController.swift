@@ -11,7 +11,7 @@ import AgoraEduContext
 
 class Agora1V1RenderUIController: AgoraRenderUIController {
     
-    private var teacherInfo: AgoraEduContextUserDetailInfo? {
+    private var teacherInfo: AgoraEduContextUserInfo? {
         didSet {
             updateUserView(teacherView,
                            oldUserInfo: oldValue,
@@ -19,7 +19,7 @@ class Agora1V1RenderUIController: AgoraRenderUIController {
         }
     }
     
-    private var studentInfo: AgoraEduContextUserDetailInfo? {
+    private var studentInfo: AgoraEduContextUserInfo? {
         didSet {
             updateUserView(studentView,
                            oldUserInfo: oldValue,
@@ -116,9 +116,13 @@ private extension Agora1V1RenderUIController {
         studentView.agora_height = height
     }
     
-    func updateRenderItemsFromUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        var newTeacherInfo: AgoraEduContextUserDetailInfo? = nil
-        var newStudentInfo: AgoraEduContextUserDetailInfo? = nil
+    func updateRenderItems() {
+        guard let user = userContext else {
+            return
+        }
+        let list = user.getAllUserList()
+        var newTeacherInfo: AgoraEduContextUserInfo? = nil
+        var newStudentInfo: AgoraEduContextUserInfo? = nil
 
         for info in list {
             switch info.role {
@@ -138,13 +142,18 @@ private extension Agora1V1RenderUIController {
 
 // MARK: - AgoraEduUserHandler
 extension Agora1V1RenderUIController: AgoraEduUserHandler {
-    // 更新人员信息列表，只显示在线人员信息
-    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        updateRenderItemsFromUserList(list)
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        updateRenderItems()
     }
     
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operator: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        updateRenderItems()
+    }
+
     // 自己被踢出
-    public func onKickedOut() {
+    public func onLocalUserKickedOut() {
         let buttonLabel = AgoraAlertLabelModel()
         buttonLabel.text = AgoraKitLocalizedString("SureText")
         
@@ -198,8 +207,7 @@ extension Agora1V1RenderUIController: AgoraEduStreamHandler {
             lastLocalStream = stream
         }
         
-        let list = userContext.getUserInfoList()
-        updateRenderItemsFromUserList(list)
+        updateRenderItems()
     }
     
     func onStreamLeave(stream: AgoraEduContextStream,
@@ -214,8 +222,7 @@ extension Agora1V1RenderUIController: AgoraEduStreamHandler {
             lastLocalStream = stream
         }
         
-        let list = userContext.getUserInfoList()
-        updateRenderItemsFromUserList(list)
+        updateRenderItems()
     }
     
     func onStreamUpdate(stream: AgoraEduContextStream,
@@ -224,8 +231,7 @@ extension Agora1V1RenderUIController: AgoraEduStreamHandler {
             return
         }
         
-        let list = userContext.getUserInfoList()
-        updateRenderItemsFromUserList(list)
+        updateRenderItems()
         
         defer {
             let localUser = userContext.getLocalUserInfo()

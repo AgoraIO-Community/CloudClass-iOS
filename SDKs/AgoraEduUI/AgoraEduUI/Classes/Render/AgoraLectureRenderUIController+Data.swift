@@ -10,12 +10,17 @@ import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
 extension AgoraLectureRenderUIController {
-    func updateCoHosts(with infos: [AgoraEduContextUserDetailInfo]) {
-        if let _ = infos.first(where: {$0.isLocal}) {
-            isCoHost = true
-        } else {
-            isCoHost = false
+    func updateCoHosts() {
+        guard let allInfo = userContext?.getUserList(role: .student) else {
+            return
         }
+        let infos = allInfo.filter {$0.isCoHost}
+        isCoHost = infos.contains(where: { [weak self] userInfo in
+            guard let localId = self?.localUserId else {
+                return false
+            }
+            return (localId == userInfo.userUuid)
+        })
         
         let newData = [AgoraRenderListItem](list: infos)
         
@@ -75,7 +80,7 @@ extension AgoraLectureRenderUIController {
 }
 
 fileprivate extension Array where Element == AgoraRenderListItem {
-    init(list: [AgoraEduContextUserDetailInfo]) {
+    init(list: [AgoraEduContextUserInfo]) {
         var temp = [AgoraRenderListItem]()
         
         for user in list {

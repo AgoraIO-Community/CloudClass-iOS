@@ -84,7 +84,7 @@ public class AgoraEduUIManager: UIViewController {
 
         var properties = [String: Any]()
         
-        if let flexProps = contextPool.user.getFlexUserProperties(userUuid: userInfo.userUuid),
+        if let flexProps = contextPool.user.getUserProperties(userUuid: userInfo.userUuid),
            let url = flexProps["avatarurl"] as? String {
             properties["avatarurl"] = url
         }

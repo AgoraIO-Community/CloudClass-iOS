@@ -11,26 +11,50 @@ import AgoraUIEduBaseViews
 
 // MARK: - AgoraEduUserHandler
 extension AgoraSmallRenderUIController: AgoraEduUserHandler {
-    // 更新人员信息列表，只显示在线人员信息
-    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        if let kitUserInfo = list.first(where: { $0.role == .teacher }) {
-            teacherInfo = kitUserInfo
-        } else {
-            teacherInfo = nil
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        if user.role == .teacher {
+            teacherInfo = user
         }
         delegate?.renderSmallController(self,
                                         didUpdateTeacherIn: teacherInfo != nil)
         updateLayout()
+        
+        if user.isCoHost {
+            updateCoHosts()
+            updateLayout()
+        }
     }
     
-    // 更新人员信息列表，只显示台上人员信息。（台上会包含不在线的）
-    public func onUpdateCoHostList(_ list: [AgoraEduContextUserDetailInfo]) {
-        updateCoHosts(with: list)
-        updateLayout()
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operator: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        if user.role == .teacher {
+            teacherInfo = nil
+        }
+        if user.isCoHost {
+            updateCoHosts()
+            updateLayout()
+        }
+    }
+    
+    func onUserHandsWave(fromUser: AgoraEduContextUserInfo,
+                         duration: Int) {
+        // TODO: waving handle
+    }
+    
+    func onUserUpdated(user: AgoraEduContextUserInfo,
+                       operator: AgoraEduContextUserInfo?) {
+        if user.role == .teacher {
+            teacherInfo = user
+        }
+        if user.isCoHost {
+            updateCoHosts()
+            updateLayout()
+        }
     }
     
     // 自己被踢出
-    public func onKickedOut() {
+    public func onLocalUserKickedOut() {
         let btnLabel = AgoraAlertLabelModel()
         btnLabel.text = AgoraKitLocalizedString("SureText")
         let btnModel = AgoraAlertButtonModel()
@@ -46,30 +70,27 @@ extension AgoraSmallRenderUIController: AgoraEduUserHandler {
                              btnModels: [btnModel])
     }
     
-    // 音量提示
-    public func onUpdateAudioVolumeIndication(_ value: Int,
-                                              streamUuid: String) {
-//        if let info = teacherInfo,
-//           info.streamUuid == streamUuid {
-//            teacherView.updateAudio(effect: value)
-//        } else {
-//            updateCoHostVolumeIndication(value,
-//                                         streamUuid: streamUuid)
-//        }
-    }
-    
-    /* 显示提示信息
-     * 你的摄像头被关闭了
-     * 你的麦克风被关闭了
-     * 你的摄像头被打开了
-     * 你的麦克风被打开了
-     */
-    public func onShowUserTips(_ message: String) {
-        AgoraToast.toast(msg: message)
-    }
-    
-    // 收到奖励（自己或者其他学生）
-    public func onShowUserReward(_ user: AgoraEduContextUserInfo) {
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operator: AgoraEduContextUserInfo) {
         rewardAnimation()
+    }
+}
+
+extension AgoraSmallRenderUIController: AgoraEduMediaHandler {
+    func onVolumeUpdated(volume: Int,
+                         streamUuid: String) {
+        //        if let info = teacherInfo,
+        //           info.streamUuid == streamUuid {
+        //            teacherView.updateAudio(effect: value)
+        //        } else {
+        //            updateCoHostVolumeIndication(value,
+        //                                         streamUuid: streamUuid)
+        //        }
+    }
+    
+    func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
+                                   state: AgoraEduContextDeviceState) {
+        
     }
 }

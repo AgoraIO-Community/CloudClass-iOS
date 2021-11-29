@@ -10,14 +10,20 @@ import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
 extension AgoraSmallRenderUIController {
-    func updateCoHosts(with infos: [AgoraEduContextUserDetailInfo]) {
-        if let _ = infos.first(where: {$0.isLocal}) {
+    func updateCoHosts() {
+        guard let allInfo = userContext?.getUserList(role: .student) else {
+            return
+        }
+        let infos = allInfo.filter {$0.isCoHost}
+        
+        if let _ = infos.first(where: {$0.userUuid == self.localUserId}) {
             isCoHost = true
         } else {
             isCoHost = false
         }
         
-        let newData = [AgoraRenderListItem](list: infos)
+        let newData = [AgoraRenderListItem](list: infos,
+                                            localUserId: localUserId)
         coHosts = newData
         
         var views = [String : AgoraUIUserView]()
@@ -78,9 +84,9 @@ extension AgoraSmallRenderUIController {
 //    }
 }
 
-//fileprivate extension AgoraEduContextUserDetailInfo {
-//    static func ==(lhs: AgoraEduContextUserDetailInfo,
-//            rhs: AgoraEduContextUserDetailInfo) -> Bool {
+//fileprivate extension AgoraEduContextUserInfo {
+//    static func ==(lhs: AgoraEduContextUserInfo,
+//            rhs: AgoraEduContextUserInfo) -> Bool {
 //        let lhsUser = lhs.user
 //        let rhsUser = rhs.user
 //
@@ -105,11 +111,12 @@ extension AgoraSmallRenderUIController {
 //}
 
 fileprivate extension Array where Element == AgoraRenderListItem {
-    init(list: [AgoraEduContextUserDetailInfo]) {
+    init(list: [AgoraEduContextUserInfo],
+         localUserId: String) {
         var temp = [AgoraRenderListItem]()
         
         for user in list {
-            guard user.isLocal else {
+            guard user.userUuid == localUserId else {
                 continue
             }
             

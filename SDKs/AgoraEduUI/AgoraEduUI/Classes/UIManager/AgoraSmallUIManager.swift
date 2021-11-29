@@ -166,7 +166,7 @@ extension AgoraSmallUIManager: AgoraEduMonitorHandler {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraSmallUIManager: AgoraEduUserHandler {
-    func onKickedOut() {
+    func onLocalUserKickedOut() {
         let btnLabel = AgoraAlertLabelModel()
         btnLabel.text = AgoraKitLocalizedString("SureText")
         let btnModel = AgoraAlertButtonModel()

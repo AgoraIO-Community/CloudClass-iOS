@@ -53,7 +53,8 @@ extension AgoraLectureRenderUIController: UICollectionViewDataSource {
 //                                hasStream: userInfo.enableAudio,
 //                                isLocal: userInfo.isSelf)
 
-        userView.whiteBoardImageView.isHidden = !userInfo.boardGranted
+        // TODO: board granted
+//        userView.whiteBoardImageView.isHidden = !userInfo.boardGranted
         userView.updateUserReward(count: userInfo.rewardCount)
         userView.updateUserName(name: userInfo.userName)
 

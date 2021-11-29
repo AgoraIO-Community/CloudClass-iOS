@@ -51,7 +51,7 @@ class AgoraUserListUIController: NSObject, AgoraUIController {
     }()
     
     // DataSource
-    private var studentModels: [AgoraEduContextUserDetailInfo] = [] {
+    private var studentModels: [AgoraEduContextUserInfo] = [] {
         didSet {
             userListView.studentTable.reloadData()
         }
@@ -132,14 +132,15 @@ private extension AgoraUserListUIController {
         }
     }
     
-    func sortListForBigClass(oriList: [AgoraEduContextUserDetailInfo]) -> [AgoraEduContextUserDetailInfo]? {
-        guard let sortedArr: [[AgoraEduContextUserDetailInfo]] = oriList.sepToNumAndCohost() else {
+    func sortListForBigClass(oriList: [AgoraEduContextUserInfo]?) -> [AgoraEduContextUserInfo]? {
+        guard let list = oriList,
+              let sortedArr: [[AgoraEduContextUserInfo]] = list.sepToNumAndCohost() else {
             return nil
         }
         
-        var finalList: [AgoraEduContextUserDetailInfo] = [AgoraEduContextUserDetailInfo]()
+        var finalList: [AgoraEduContextUserInfo] = [AgoraEduContextUserInfo]()
         sortedArr.forEach { (list) in
-            guard var arr = list as? [AgoraEduContextUserDetailInfo] else {
+            guard var arr = list as? [AgoraEduContextUserInfo] else {
                 return
             }
             arr.sort { (info_0, info_1) -> Bool in
@@ -155,38 +156,57 @@ private extension AgoraUserListUIController {
         
         return finalList
     }
+    
+    func updateUserList() {
+        guard let `userContext` = userContext,
+              let studentList = userContext.getUserList(role: .student) else {
+            studentModels = [AgoraEduContextUserInfo]()
+            return
+        }
+
+        var finalList = studentList
+        
+        // 大班课需要排序
+        if viewType == .lecture,
+           let sortedList = sortListForBigClass(oriList: studentList) {
+            finalList = sortedList
+        }
+        
+        studentModels = finalList
+        
+    }
 }
 
 // MARK: - AgoraEduUserHandler
 extension AgoraUserListUIController: AgoraEduUserHandler {
-    // 更新人员信息列表，只显示在线人员信息
-    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        var finalList = list
-        
-        if viewType == .lecture,
-           let sortedList = sortListForBigClass(oriList: list) {
-            finalList = sortedList
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        if user.role == .teacher {
+            userListView.teacherName = user.userName
+        } else {
+            updateUserList()
         }
-        
-        var studentList = [AgoraEduContextUserDetailInfo]()
-        var teacherOnline = false
-        
-        finalList.forEach { (info) in
-                switch info.role {
-                case .student:
-                    studentList.append(info)
-                case .teacher:
-                    teacherOnline = true
-                    userListView.teacherName = info.userName
-                default:
-                    break
-                }
-        }
-        if !teacherOnline {
+    }
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operator: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        if user.role == .teacher {
             userListView.teacherName = ""
+        } else {
+            updateUserList()
         }
-        
-        studentModels = studentList
+    }
+    func onUserUpdated(user: AgoraEduContextUserInfo,
+                       operator: AgoraEduContextUserInfo?) {
+        if user.role == .teacher {
+            userListView.teacherName = user.userName
+        } else {
+            updateUserList()
+        }
+    }
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operator: AgoraEduContextUserInfo) {
+        updateUserList()
     }
 }
 
@@ -203,9 +223,9 @@ extension AgoraUserListUIController: UITableViewDataSource {
         let studentModel = studentModels[indexPath.row]
         cell.userName = studentModel.userName
         cell.coHostFlag = studentModel.isCoHost
-        cell.boardGrantedFlag = studentModel.boardGranted
+        // TODO: boardGranted handle
+//        cell.boardGrantedFlag = studentModel.boardGranted
         cell.rewardCount = studentModel.rewardCount
-        cell.chatEnabled = studentModel.enableChat
 //        cell.updateSpecificCameraState(deviceState: studentModel.cameraState.rawValue,
 //                                       enableVideo: studentModel.enableVideo,
 //                                       isSelf: studentModel.isSelf)
@@ -315,15 +335,15 @@ fileprivate extension String {
 
 fileprivate extension Array {
     // 拆分为【已上台+首字符为数字】【已上台+首字符不为数字】【未上台+首字符为数字】【未上台+首字符不为数字】
-    func sepToNumAndCohost() -> [[AgoraEduContextUserDetailInfo]]? {
-        guard let oriArr = self as? [AgoraEduContextUserDetailInfo] else {
+    func sepToNumAndCohost() -> [[AgoraEduContextUserInfo]]? {
+        guard let oriArr = self as? [AgoraEduContextUserInfo] else {
             return nil
         }
         
-        var arrOnNum = [AgoraEduContextUserDetailInfo]()
-        var arrOnNone = [AgoraEduContextUserDetailInfo]()
-        var arrOffNum = [AgoraEduContextUserDetailInfo]()
-        var arrOffNone = [AgoraEduContextUserDetailInfo]()
+        var arrOnNum = [AgoraEduContextUserInfo]()
+        var arrOnNone = [AgoraEduContextUserInfo]()
+        var arrOffNum = [AgoraEduContextUserInfo]()
+        var arrOffNone = [AgoraEduContextUserInfo]()
         
         oriArr.forEach { (info) in
             guard let name = info.userName as? String else {

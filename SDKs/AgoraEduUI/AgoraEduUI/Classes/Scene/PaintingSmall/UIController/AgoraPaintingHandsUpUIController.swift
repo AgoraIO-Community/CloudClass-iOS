@@ -117,7 +117,7 @@ class AgoraPaintingHandsUpUIController: UIViewController {
     
     private var isShowedTips = false
     
-    private var dataSource = [AgoraEduContextUserDetailInfo]()
+    private var dataSource = [AgoraEduContextUserInfo]()
     
     private var isReminding: Bool = false {
         didSet {
@@ -257,25 +257,27 @@ extension AgoraPaintingHandsUpUIController: AgoraEduHandsUpHandler {
 }
 // MARK: - AgoraEduUserHandler
 extension AgoraPaintingHandsUpUIController: AgoraEduUserHandler {
-    func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        var temp = [AgoraEduContextUserDetailInfo]()
-        for user in list {
-            if user.wavingArms {
-                temp.append(user)
-            }
-        }
-        dataSource = temp
-        redDot.isHidden = (dataSource.count == 0)
-        countLabel.text = "\(dataSource.count)"
-        isReminding = (dataSource.count > 0)
-        tableView.reloadData()
+    func onUserHandsWave(fromUser: AgoraEduContextUserInfo,
+                         duration: Int) {
+        // TODO: wavingArms handle
+//        var temp = [AgoraEduContextUserInfo]()
+//        for user in list {
+//            if user.wavingArms {
+//                temp.append(user)
+//            }
+//        }
+//        dataSource = temp
+//        redDot.isHidden = (dataSource.count == 0)
+//        countLabel.text = "\(dataSource.count)"
+//        isReminding = (dataSource.count > 0)
+//        tableView.reloadData()
     }
 }
 // MARK: - HandsUpItemCellDelegate
 extension AgoraPaintingHandsUpUIController: AgoraHandsUpItemCellDelegate {
     func onClickAcceptAtIndex(_ index: IndexPath) {
         let u = dataSource[index.row]
-        contextPool.user.addCoHosts(userUuids: [u.userUuid]) {
+        contextPool.user.addCoHost(userUuid: u.userUuid) {
             // Do Noting
         } failure: { ero in
             // Do Noting
@@ -304,11 +306,11 @@ extension AgoraPaintingHandsUpUIController: UITableViewDataSource, UITableViewDe
                    didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath,
                               animated: true)
-        guard let u = dataSource[indexPath.row] as? AgoraEduContextUserDetailInfo,
+        guard let u = dataSource[indexPath.row] as? AgoraEduContextUserInfo,
               !u.isCoHost else {
                   return
               }
-        contextPool.user.addCoHosts(userUuids: [u.userUuid]) {
+        contextPool.user.addCoHost(userUuid: u.userUuid) {
             // TODO 将用户从tableView中移除
         } failure: { (error) in
             print("")

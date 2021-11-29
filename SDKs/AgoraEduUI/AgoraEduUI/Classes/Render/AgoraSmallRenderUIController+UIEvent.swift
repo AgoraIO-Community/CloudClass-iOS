@@ -69,20 +69,18 @@ extension AgoraSmallRenderUIController {
         userV.index = index
         
         userV.userUuid = userInfo.userUuid
-        if userInfo.isOnLine {
-//            userV.updateCameraState(userInfo.cameraState.uiType,
-//                                    hasStream: userInfo.enableVideo)
-        } else {
-            userV.updateDefaultDeviceState()
-        }
+
+        // TODO: 设备状态
+//        userV.updateCameraState(userInfo.cameraState.uiType,
+//                                hasStream: userInfo.enableVideo)
 
         
 //        userV.updateMicState(userInfo.microState.uiType,
 //                             hasStream: userInfo.enableAudio,
 //                             isLocal: userInfo.isSelf)
         
-        
-        userV.whiteBoardImageView.isHidden = !userInfo.boardGranted
+        // TODO: 白板授权
+//        userV.whiteBoardImageView.isHidden = !userInfo.boardGranted
         userV.updateUserReward(count: userInfo.rewardCount)
         userV.updateUserName(name: userInfo.userName)
         

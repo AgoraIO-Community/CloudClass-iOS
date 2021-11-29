@@ -153,7 +153,7 @@ extension AgoraLectureUIManager: AgoraEduMonitorHandler {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraLectureUIManager: AgoraEduUserHandler {
-    func onKickedOut() {
+    func onLocalUserKickedOut() {
         let btnLabel = AgoraAlertLabelModel()
         btnLabel.text = AgoraKitLocalizedString("SureText")
         let btnModel = AgoraAlertButtonModel()

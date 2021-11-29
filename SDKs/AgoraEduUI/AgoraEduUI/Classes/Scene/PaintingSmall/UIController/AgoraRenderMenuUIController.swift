@@ -79,12 +79,8 @@ class AgoraRenderMenuUIController: UIViewController {
 // MARK: - Private
 private extension AgoraRenderMenuUIController {
     func updateView() {
-        let currentUser = contextPool.user.getUserInfoList().first {
-            $0.userUuid == self.userUUID
-        }
-        guard let user = currentUser else {
-            return
-        }
+        let user = contextPool.user.getLocalUserInfo()
+
         if user.role == .teacher {
             items = [.mic, .camera, .stage]
         } else if user.role == .student {
@@ -171,7 +167,8 @@ extension AgoraRenderMenuUIController {
         guard let UUID = self.userUUID else {
             return
         }
-        contextPool.user.removeCoHosts(userUuids: [UUID],
+
+        contextPool.user.removeCoHost(userUuid: UUID,
                                        success: nil,
                                        failure: nil)
     }
@@ -180,9 +177,10 @@ extension AgoraRenderMenuUIController {
         guard let UUID = self.userUUID else {
             return
         }
-        contextPool.user.updateBoardGranted(userUuids: [UUID],
-                                            granted: false)
-        sender.isSelected = true
+        // TODO: 白板权限
+//        contextPool.user.updateBoardGranted(userUuids: [UUID],
+//                                            granted: false)
+//        sender.isSelected = true
     }
     
     @objc func onClickReward(_ sender: UIButton) {
@@ -196,15 +194,14 @@ extension AgoraRenderMenuUIController {
 }
 // MARK: - AgoraEduUserHandler
 extension AgoraRenderMenuUIController: AgoraEduUserHandler {
-    func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        updateView()
-    }
-    
-    func onUpdateCoHostList(_ list: [AgoraEduContextUserDetailInfo]) {
+    func onUserUpdated(user: AgoraEduContextUserInfo,
+                       operator: AgoraEduContextUserInfo?) {
         if let UUID = self.userUUID,
-           list.first {$0.userUuid == UUID} == nil {
-            self.userUUID = nil
-            delegate?.onMenuResignedUser()
+           user.userUuid == UUID {
+            // TODO: 没看懂
+//            updateView()
+//            self.userUUID = nil
+//            delegate?.onMenuResignedUser()
         }
     }
 }

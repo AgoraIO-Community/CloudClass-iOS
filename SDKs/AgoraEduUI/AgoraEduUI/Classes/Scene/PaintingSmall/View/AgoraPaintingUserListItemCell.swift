@@ -20,8 +20,6 @@ class AgoraPaintingUserListItemModel {
                                                                 isOn: false)
     var mic: AgoraUserListFuncState = AgoraUserListFuncState(enable: false,
                                                              isOn: false)
-    var silent: AgoraUserListFuncState = AgoraUserListFuncState(enable: false,
-                                                                isOn: false)
     var rewards: Int = 0
 }
 
@@ -113,21 +111,6 @@ class AgoraPaintingUserListItemCell: UITableViewCell {
         v.addTarget(self, action: #selector(onClickMic(_:)), for: .touchUpInside)
         return v
     }()
-    /** 禁言*/
-    private lazy var silentButton: UIButton = {
-        let v = UIButton(type: .custom)
-        let on = UIImage.ag_imageNamed("ic_nameroll_silent_on",
-                                       in: "AgoraEduUI")?.withRenderingMode(.alwaysTemplate)
-        let off = UIImage.ag_imageNamed("ic_nameroll_silent_off",
-                                        in: "AgoraEduUI")?.withRenderingMode(.alwaysTemplate)
-        v.setImage(on, for: .normal)
-        v.setImage(off, for: .selected)
-        v.tintColor = UIColor(hex: 0x7E8BA2)
-        v.addTarget(self,
-                    action: #selector(onClickSilent(_:)),
-                    for: .touchUpInside)
-        return v
-    }()
     /** 奖励*/
     private lazy var rewardButton: UIButton = {
         let v = UIButton(type: .custom)
@@ -179,8 +162,6 @@ class AgoraPaintingUserListItemCell: UITableViewCell {
                 temp.append(cameraButton)
             case .mic:
                 temp.append(micButton)
-            case .silent:
-                temp.append(silentButton)
             case .reward:
                 temp.append(rewardButton)
             case .kick:
@@ -219,10 +200,6 @@ private extension AgoraPaintingUserListItemCell {
                 micButton.isSelected = !model.mic.isOn
                 micButton.tintColor = model.mic.enable ? nil : disable
                 micButton.isUserInteractionEnabled = model.mic.enable
-            case .silent:
-                silentButton.isSelected = !model.silent.isOn
-                silentButton.tintColor = model.silent.enable ? nil : disable
-                silentButton.isUserInteractionEnabled = model.silent.enable
             case .reward:
                 rewardButton.setTitle("x\(model.rewards)", for: .normal)
             case .kick:
@@ -263,13 +240,7 @@ private extension AgoraPaintingUserListItemCell {
         delegateSelectFunc(.mic,
                            state: !model.mic.isOn)
     }
-    @objc func onClickSilent(_ sender: UIButton) {
-        guard let model = itemModel else {
-            return
-        }
-        delegateSelectFunc(.silent,
-                           state: !model.silent.isOn)
-    }
+
     @objc func onClickReward(_ sender: UIButton) {
         guard let model = itemModel else {
             return

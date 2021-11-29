@@ -33,6 +33,10 @@ import Foundation
     public var userName: String
     // 用户角色
     public var role: AgoraEduContextUserRole
+    // 是否在台上
+    public var isCoHost: Bool = false
+    // 奖励数量
+    public var rewardCount: Int = 0
     
     public init(userUuid: String,
                 userName: String,
@@ -41,23 +45,20 @@ import Foundation
         self.userName = userName
         self.role = role
     }
-}
+    
+    public init(userUuid: String,
+                userName: String,
+                role: AgoraEduContextUserRole = .student,
+                isCoHost: Bool,
+                rewardCount: Int) {
+        self.userUuid = userUuid
+        self.userName = userName
+        self.role = role
+        self.isCoHost = isCoHost
+        self.rewardCount = rewardCount
+    }
+    
 
-@objcMembers public class AgoraEduContextUserDetailInfo: AgoraEduContextUserInfo {
-    // 是不是自己
-    public var isLocal: Bool = false
-    // 是否在线
-    public var isOnLine: Bool = false
-    // 是否在台上
-    public var isCoHost: Bool = false
-    // 是否有白板权限
-    public var boardGranted: Bool = false
-    // 是否可以聊天
-    public var enableChat: Bool = true
-    // 奖励数量
-    public var rewardCount: Int = 0
-    // 是否正在挥手
-    public var wavingArms: Bool = false
 }
 
 // MARK: - Media

@@ -11,7 +11,7 @@ import SwifterSwift
 import UIKit
 
 enum AgoraUserListFunction: Int {
-    case stage = 0, auth, camera, mic, silent, reward, kick
+    case stage = 0, auth, camera, mic, reward, kick
     
     func title() -> String {
         switch self {
@@ -23,8 +23,6 @@ enum AgoraUserListFunction: Int {
             return AgoraKitLocalizedString("UserListCamera")
         case .mic:
             return AgoraKitLocalizedString("UserListMicro")
-        case .silent:
-            return AgoraKitLocalizedString("UserListChat")
         case .reward:
             return AgoraKitLocalizedString("UserListReward")
         case .kick:
@@ -59,9 +57,9 @@ class AgoraPaintingUserListUIController: UIViewController {
     /** 支持的选项列表*/
     lazy var supportFuncs: [AgoraUserListFunction] = {
         if contextPool.user.getLocalUserInfo().role == .teacher {
-            return [.stage, .auth, .camera, .mic, .silent, .reward, .kick]
+            return [.stage, .auth, .camera, .mic, .reward, .kick]
         } else {
-            return [.stage, .auth, .camera, .mic, .silent, .reward]
+            return [.stage, .auth, .camera, .mic, .reward]
         }
     }()
     /** SDK环境*/
@@ -93,9 +91,9 @@ class AgoraPaintingUserListUIController: UIViewController {
 private extension AgoraPaintingUserListUIController {
     func reloadUsers() {
         let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
-        let list = contextPool.user.getUserInfoList()
+        let list = contextPool.user.getAllUserList()
         var tmp = [AgoraPaintingUserListItemModel]()
-        var teacher: AgoraEduContextUserDetailInfo?
+        var teacher: AgoraEduContextUserInfo?
         for user in list {
             if user.role == .teacher {
                 teacher = user
@@ -105,12 +103,11 @@ private extension AgoraPaintingUserListUIController {
                 model.name = user.userName
                 model.rewards = user.rewardCount
                 model.stage.isOn = user.isCoHost
-                model.auth.isOn = user.boardGranted
-                model.silent.isOn = user.enableChat
+                // TODO: 白板权限
+//                model.auth.isOn = user.boardGranted
                 // enable
-                model.stage.enable = isAdmin && user.isOnLine
-                model.auth.enable = isAdmin && user.isOnLine
-                model.silent.enable = isAdmin && user.isOnLine
+                model.stage.enable = isAdmin
+                model.auth.enable = isAdmin
                 // stream
                 let s = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
                 
@@ -135,7 +132,7 @@ private extension AgoraPaintingUserListUIController {
     func updateStreamWithUUID(_ uuid: String) {
         let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
         if let model = dataSource.first{ $0.uuid == uuid},
-           let user = contextPool.user.getUserInfoList().first {$0.userUuid == uuid} {
+           let user = contextPool.user.getAllUserList().first {$0.userUuid == uuid} {
             let s = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
             
             // TODO:
@@ -156,12 +153,14 @@ private extension AgoraPaintingUserListUIController {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraPaintingUserListUIController: AgoraEduUserHandler {
-    func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        self.reloadUsers()
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        reloadUsers()
     }
-    
-    func onUpdateCoHostList(_ list: [AgoraEduContextUserDetailInfo]) {
-        self.reloadUsers()
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?, reason: AgoraEduContextUserLeaveReason) {
+        reloadUsers()
+    }
+    func onUserUpdated(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?) {
+        reloadUsers()
     }
 }
 
@@ -192,14 +191,14 @@ extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelega
         switch fn {
         case .stage:
             if isOn {
-                contextPool.user.addCoHosts(userUuids: [user.uuid]) { [weak self] in
+                contextPool.user.addCoHost(userUuid: user.uuid) { [weak self] in
                     user.stage.isOn = true
                     self?.reloadTableView()
                 } failure: { contextError in
                     
                 }
             } else {
-                contextPool.user.removeCoHosts(userUuids: [user.uuid]) {[weak self] in
+                contextPool.user.removeCoHost(userUuid: user.uuid) {[weak self] in
                     user.stage.isOn = false
                     self?.reloadTableView()
                 } failure: { contextError in
@@ -207,10 +206,11 @@ extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelega
                 }
             }
         case .auth:
-            contextPool.user.updateBoardGranted(userUuids: [user.uuid],
-                                                granted: isOn)
+            // TODO: 白板权限
+//            contextPool.user.updateBoardGranted(userUuids: [user.uuid],
+//                                                granted: isOn)
             user.auth.isOn = isOn
-            reloadTableView()
+//            reloadTableView()
         case .camera:
             if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
                 // TODO:
@@ -235,18 +235,15 @@ extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelega
                     self?.reloadTableView()
                 }, failure: nil)
             }
-        case .silent:
-            // TODO: 禁言
-            break
         case .reward:
             // 奖励： 花名册只展示，不操作
             break
         case .kick:
             AgoraKickOutAlertController.present(by: self, onComplete: { forever in
-                self.contextPool.user.kickOut(userUuids: [user.uuid],
-                                              forever: forever,
-                                              success: nil,
-                                              failure: nil)
+                self.contextPool.user.kickOutUser(userUuid: user.uuid,
+                                                  forever: forever,
+                                                  success: nil,
+                                                  failure: nil)
             }, onCancel: nil)
         default:  break
         }

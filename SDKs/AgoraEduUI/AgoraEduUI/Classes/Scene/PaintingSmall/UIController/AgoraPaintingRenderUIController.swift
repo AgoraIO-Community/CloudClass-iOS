@@ -16,14 +16,14 @@ import UIKit
 
 /** extension: 用于在feature层将SDK数据模型转换成cell model的数据模型*/
 extension AgoraRenderItemInfoModel {
-    convenience init(with user: AgoraEduContextUserDetailInfo,
+    convenience init(with user: AgoraEduContextUserInfo,
                      stream: AgoraEduContextStream?) {
         self.init()
         self.userUUID = user.userUuid
         self.userName = user.userName
-        self.isOnline = user.isOnLine
         self.rewardCount = user.rewardCount
-        self.isWaving = user.wavingArms
+        // TODO: waving hands
+//        self.isWaving = user.wavingArms
         update(stream: stream)
     }
     
@@ -324,7 +324,7 @@ private extension AgoraPaintingRenderUIController {
     }
 
     func updateCoHosts() {
-        let list = self.contextPool.user.getUserInfoList()
+        let list = self.contextPool.user.getAllUserList()
         var tempStudents = [AgoraRenderItemInfoModel]()
         var tempTeacher: AgoraRenderItemInfoModel?
         let localInfo = contextPool.user.getLocalUserInfo()
@@ -402,29 +402,42 @@ private extension AgoraPaintingRenderUIController {
 }
 // MARK: - AgoraEduUserHandler
 extension AgoraPaintingRenderUIController: AgoraEduUserHandler {
-    
-    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        
-    }
-    
-    public func onUpdateCoHostList(_ list: [AgoraEduContextUserDetailInfo]) {
-        self.updateCoHosts()
-    }
-    
-    public func onUpdateAudioVolumeIndication(_ value: Int,
-                                              streamUuid: String) {
-        if teacherItem?.streamUUID == streamUuid {
-            teacherItem?.volume = value
-        } else {
-            let item = self.dataSource.first { $0.streamUUID == streamUuid }
-            item?.volume = value
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        if user.isCoHost {
+            updateCoHosts()
         }
     }
     
-    public func onShowUserReward(_ user: AgoraEduContextUserInfo) {
-        self.showRewardAnimation()
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?, reason: AgoraEduContextUserLeaveReason) {
+        if user.isCoHost {
+            updateCoHosts()
+        }
+    }
+    
+    func onUserUpdated(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?) {
+        if user.isCoHost {
+            updateCoHosts()
+        }
+    }
+    
+    func onUserRewarded(user: AgoraEduContextUserInfo, rewardCount: Int, operator: AgoraEduContextUserInfo) {
+        showRewardAnimation()
     }
 }
+
+// MARK: - AgoraEduMediaHandler
+extension AgoraPaintingRenderUIController: AgoraEduMediaHandler {
+    func onVolumeUpdated(volume: Int,
+                         streamUuid: String) {
+        if teacherItem?.streamUUID == streamUuid {
+            teacherItem?.volume = volume
+        } else {
+            let item = self.dataSource.first { $0.streamUUID == streamUuid }
+            item?.volume = volume
+        }
+    }
+}
+
 // MARK: - AgoraEduStreamHandler
 extension AgoraPaintingRenderUIController: AgoraEduStreamHandler {
     func onStreamJoin(stream: AgoraEduContextStream,

@@ -11,22 +11,40 @@ import AgoraUIEduBaseViews
 
 // MARK: - AgoraEduUserHandler
 extension AgoraLectureRenderUIController: AgoraEduUserHandler {
-    // 更新人员信息列表，只显示在线人员信息
-    public func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        if let kitUserInfo = list.first(where: { $0.role == .teacher }) {
-            teacherInfo = kitUserInfo
-        } else {
-            teacherInfo = nil
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        if user.role == .teacher {
+            teacherInfo = user
+        }
+        if user.isCoHost {
+            updateCoHosts()
         }
     }
     
-    // 更新人员信息列表，只显示台上人员信息。（台上会包含不在线的）
-    public func onUpdateCoHostList(_ list: [AgoraEduContextUserDetailInfo]) {
-        updateCoHosts(with: list)
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operator: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        if user.role == .teacher {
+            teacherInfo = nil
+        }
+        if user.isCoHost {
+            updateCoHosts()
+        }
     }
     
+    func onUserHandsWave(fromUser: AgoraEduContextUserInfo,
+                         duration: Int) {
+        // TODO: waving handle
+    }
+    
+    func onUserUpdated(user: AgoraEduContextUserInfo,
+                       operator: AgoraEduContextUserInfo?) {
+        if user.role == .teacher {
+            teacherInfo = user
+        }
+    }
+
     // 自己被踢出
-    public func onKickedOut() {
+    public func onLocalUserKickedOut() {
         let btnLabel = AgoraAlertLabelModel()
         btnLabel.text = AgoraKitLocalizedString("SureText")
         let btnModel = AgoraAlertButtonModel()
@@ -42,9 +60,17 @@ extension AgoraLectureRenderUIController: AgoraEduUserHandler {
                              btnModels: [btnModel])
     }
     
-    // 音量提示
-    public func onUpdateAudioVolumeIndication(_ value: Int,
-                                              streamUuid: String) {
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operator: AgoraEduContextUserInfo) {
+        rewardAnimation()
+    }
+}
+
+// TODO: media handle
+extension AgoraLectureRenderUIController: AgoraEduMediaHandler {
+    func onVolumeUpdated(volume: Int,
+                         streamUuid: String) {
 //        if let info = teacherInfo,
 //           info.streamUuid == streamUuid {
 //            teacherView.updateAudio(effect: value)
@@ -54,8 +80,9 @@ extension AgoraLectureRenderUIController: AgoraEduUserHandler {
 //        }
     }
     
-    // 收到奖励（自己或者其他学生）
-    public func onShowUserReward(_ user: AgoraEduContextUserInfo) {
-        rewardAnimation()
+    func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
+                                   state: AgoraEduContextDeviceState) {
+        
     }
+    
 }

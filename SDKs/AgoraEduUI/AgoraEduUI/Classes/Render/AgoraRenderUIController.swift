@@ -45,15 +45,18 @@ import AgoraEduContext
         }
     }
     
+    var localUserId = ""
+    
     init(viewType: AgoraEduContextRoomType,
          contextPool: AgoraEduContextPool) {
         self.viewType = viewType
         self.contextPool = contextPool
+        localUserId = contextPool.user.getLocalUserInfo().userUuid
     }
     
     func updateUserView(_ view: AgoraUIUserView,
-                        oldUserInfo: AgoraEduContextUserDetailInfo? = nil,
-                        newUserInfo: AgoraEduContextUserDetailInfo? = nil) {
+                        oldUserInfo: AgoraEduContextUserInfo? = nil,
+                        newUserInfo: AgoraEduContextUserInfo? = nil) {
         guard let `streamContext` = streamContext else {
             return
         }
@@ -72,7 +75,8 @@ import AgoraEduContext
                                   on: view.videoCanvas)
             }
             
-            view.whiteBoardImageView.isHidden = !userInfo.boardGranted
+            // TODO: 白板权限
+//            view.whiteBoardImageView.isHidden = !userInfo.boardGranted
             view.updateUserReward(count: userInfo.rewardCount)
             view.updateUserName(name: userInfo.userName)
         } else {
@@ -82,7 +86,7 @@ import AgoraEduContext
         }
     }
 
-    func renderVideoStream(from user: AgoraEduContextUserDetailInfo,
+    func renderVideoStream(from user: AgoraEduContextUserInfo,
                            on view: AgoraUIVideoCanvas) {
         guard let `streamContext` = streamContext,
               let streams = streamContext.getStreamsInfo(userUuid: user.userUuid),
@@ -91,7 +95,7 @@ import AgoraEduContext
         }
         
         let streamUuid = stream.streamUuid
-        let isLocal = user.isLocal
+        let isLocal = (user.userUuid == localUserId)
         
         if let canvasStreamUuid = view.renderingStreamUuid,
            canvasStreamUuid == streamUuid {
@@ -118,7 +122,7 @@ import AgoraEduContext
         }
     }
     
-    func unrenderVideoStream(from user: AgoraEduContextUserDetailInfo,
+    func unrenderVideoStream(from user: AgoraEduContextUserInfo,
                              on view: AgoraUIVideoCanvas) {
         guard let `streamContext` = streamContext,
               let streams = streamContext.getStreamsInfo(userUuid: user.userUuid),
@@ -127,7 +131,7 @@ import AgoraEduContext
         }
         
         let streamUuid = stream.streamUuid
-        let isLocal = user.isLocal
+        let isLocal = (user.userUuid == localUserId)
         
         guard let _ = view.renderingStreamUuid else {
             return
@@ -144,7 +148,7 @@ import AgoraEduContext
 }
 
 class AgoraRenderListItem: NSObject {
-    var userInfo: AgoraEduContextUserDetailInfo
+    var userInfo: AgoraEduContextUserInfo
     
     var volume: Int = 0 {
         didSet {
@@ -158,7 +162,7 @@ class AgoraRenderListItem: NSObject {
     
     var onUpdateVolume: ((Int) -> Void)?
 
-    init(userInfo: AgoraEduContextUserDetailInfo,
+    init(userInfo: AgoraEduContextUserInfo,
          volume: Int) {
         self.userInfo = userInfo
         self.volume = volume

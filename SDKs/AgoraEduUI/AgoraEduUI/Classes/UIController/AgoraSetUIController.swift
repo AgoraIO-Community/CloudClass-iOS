@@ -33,7 +33,7 @@ class AgoraSetUIController: NSObject, AgoraUIController {
     private let setView = AgoraUISettingView(frame: .zero)
     
     var containerView = AgoraUIControllerContainer(frame: .zero)
-    var localUser: AgoraEduContextUserDetailInfo?
+    var localUser: AgoraEduContextUserInfo?
     
     public init(context: AgoraEduContextPool) {
         self.context = context
@@ -142,14 +142,6 @@ extension AgoraSetUIController: AgoraEduRoomHandler {
         }
         
         updateView(from: stream)
-    }
-}
-
-extension AgoraSetUIController: AgoraEduUserHandler {
-    func onUpdateUserList(_ list: [AgoraEduContextUserDetailInfo]) {
-        for user in list where user.isLocal == true {
-            localUser = user
-        }
     }
 }
 
