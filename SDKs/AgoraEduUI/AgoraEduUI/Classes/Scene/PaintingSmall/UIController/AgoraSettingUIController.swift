@@ -72,16 +72,20 @@ class AgoraSettingUIController: UIViewController {
 }
 private extension AgoraSettingUIController {
     func setup() {
+        frontCamButton.isSelected = true
+        
         let cameras = contextPool.media.getLocalDevices(deviceType: .camera)
         for camera in cameras {
             if camera.deviceName.contains(kFrontCameraStr) {
                 contextPool.media.getLocalDeviceState(device: camera) { state in
                     frontCamButton.isSelected = (state == .open)
+                    backCamButton.isSelected = !(state == .open)
                 } fail: { error in
                 }
             } else if camera.deviceName.contains(kBackCameraStr) {
                 contextPool.media.getLocalDeviceState(device: camera) { state in
                     backCamButton.isSelected = (state == .open)
+                    frontCamButton.isSelected = !(state == .open)
                 } fail: { error in
                 }
             }
