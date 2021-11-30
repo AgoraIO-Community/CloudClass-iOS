@@ -12,23 +12,6 @@ public typealias AgoraEduContextSuccess = () -> (Void)
 public typealias AgoraEduContextSuccessWithString = (String) -> (Void)
 public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
 
-// MARK: - Private communication
-@objc public protocol AgoraEduPrivateChatHandler: NSObjectProtocol {
-    // 收到开始私密语音通知
-    @objc optional func onStartPrivateChat(_ info: AgoraEduContextPrivateChatInfo)
-    // 收到结束私密语音通知
-    @objc optional func onEndPrivateChat()
-}
-
-@objc public protocol AgoraEduPrivateChatContext: NSObjectProtocol {
-    // 开始私密语音
-    func updatePrivateChat(_ userUuid: String)
-    // 停止私密语音
-    func endPrivateChat()
-    // 事件监听
-    func registerEventHandler(_ handler: AgoraEduPrivateChatHandler)
-}
-
 // MARK: - WhiteBoard
 @objc public protocol AgoraEduWhiteBoardHandler: NSObjectProtocol {
     // 课件下载失败
@@ -402,31 +385,20 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     @objc optional func onHandsUpResult(_ result: AgoraEduContextHandsUpResult)
 }
 
-@objc public protocol AgoraEduHandsUpContext: NSObjectProtocol {
-    // 更新举手状态【即将废弃】
-    func updateHandsUpState(_ state: AgoraEduContextHandsUpState)
-    // 事件监听
-    func registerEventHandler(_ handler: AgoraEduHandsUpHandler)
-    
-    /** 新增接口 **/
-    func updateWaveArmsState(_ state: AgoraEduContextHandsUpState,
-                            timeout: Int)
-}
-
 @objc public protocol AgoraEduMediaHandler: NSObjectProtocol {
     /// 音量变化 (v2.0.0)
     /// - parameter volume: 音量
     /// - parameter streamUuid: 流 Id
     /// - returns: Void
     @objc optional  func onVolumeUpdated(volume: Int,
-                         streamUuid: String)
+                                         streamUuid: String)
     
     /// 设备状态更新 (v2.0.0)
     /// - parameter device: 设备信息
     /// - parameter state: 设备状态
     /// - returns: Void
     @objc optional func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
-                                   state: AgoraEduContextDeviceState)
+                                                  state: AgoraEduContextDeviceState)
 }
 
 // MARK: - Media
@@ -455,33 +427,19 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
                              success: (AgoraEduContextDeviceState) -> (),
                              fail: (AgoraEduContextError) -> ())
     
-    /// 渲染本地视频流 (v2.0.0)
+    /// 渲染视频流 (v2.0.0)
     /// - parameter view: 渲染视频的容器
     /// - parameter renderConfig: 渲染配置
     /// - parameter streamUuid: 流 Id
     /// - returns: AgoraEduContextError, 返回错误
-    func startRenderLocalVideo(view: UIView,
-                               renderConfig: AgoraEduContextRenderConfig,
-                               streamUuid: String) -> AgoraEduContextError?
+    func startRenderVideo(view: UIView,
+                          renderConfig: AgoraEduContextRenderConfig,
+                          streamUuid: String) -> AgoraEduContextError?
     
-    /// 停止渲染本地视频流 (v2.0.0)
+    /// 停止渲染视频流 (v2.0.0)
     /// - parameter streamUuid: 流 Id
     /// - returns: AgoraEduContextError, 返回错误
-    func stopRenderLocalVideo(streamUuid: String) -> AgoraEduContextError?
-    
-    /// 渲染远端视视频流 (v2.0.0)
-    /// - parameter view: 渲染视频的容器
-    /// - parameter renderConfig: 渲染配置
-    /// - parameter streamUuid: 流 Id
-    /// - returns: AgoraEduContextError, 返回错误
-    func startRenderRemoteVideo(view: UIView,
-                                renderConfig: AgoraEduContextRenderConfig,
-                                streamUuid: String) -> AgoraEduContextError?
-    
-    /// 停止渲染远端视频流 (v2.0.0)
-    /// - parameter streamUuid: 流 Id
-    /// - returns: AgoraEduContextError, 返回错误
-    func stopRenderRemoteVideo(streamUuid: String) -> AgoraEduContextError?
+    func stopRenderVideo(streamUuid: String) -> AgoraEduContextError?
     
     /// 注册事件监听
     /// - returns: Void
@@ -495,65 +453,77 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
 
 // MARK: - Stream
 @objc public protocol AgoraEduStreamHandler: NSObjectProtocol {
-    
-    /// 远端流加入频道事件 (v1.2.0)
+    /// 远端流加入频道事件 (v2.0.0)
     /// - parameter stream: 流信息
     /// - parameter operator: 操作人，可以为空
     /// - returns: void
-    @objc optional func onStreamJoin(stream: AgoraEduContextStream,
+    @objc optional func onStreamJoined(stream: AgoraEduContextStream,
+                                       operator: AgoraEduContextUserInfo?)
+    
+    /// 远端流离开频道事件 (v2.0.0)
+    /// - parameter stream: 流信息
+    /// - parameter operator: 操作人，可以为空
+    /// - returns: void
+    @objc optional func onStreamLeft(stream: AgoraEduContextStream,
                                      operator: AgoraEduContextUserInfo?)
     
-    /// 远端流离开频道事件 (v1.2.0)
+    /// 远端流更新事件 (v2.0.0)
     /// - parameter stream: 流信息
     /// - parameter operator: 操作人，可以为空
     /// - returns: void
-    @objc optional func onStreamLeave(stream: AgoraEduContextStream,
-                                      operator: AgoraEduContextUserInfo?)
-    
-    /// 远端流更新事件 (v1.2.0)
-    /// - parameter stream: 流信息
-    /// - parameter operator: 操作人，可以为空
-    /// - returns: void
-    @objc optional func onStreamUpdate(stream: AgoraEduContextStream,
-                                       operator: AgoraEduContextUserInfo?)
+    @objc optional func onStreamUpdated(stream: AgoraEduContextStream,
+                                        operator: AgoraEduContextUserInfo?)
 }
 
 @objc public protocol AgoraEduStreamContext: NSObjectProtocol {
-    /// 禁止或允许远端用户发视频流 (v1.2.0)
-    /// - parameter userUuid: 用户id
-    /// - parameter mute: 是否禁止发流
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func muteRemoteVideo(streamUuids: [String],
-                         mute: Bool,
-                         success: AgoraEduContextSuccess?,
-                         failure: AgoraEduContextFail?)
-    
-    /// 禁止或允许远端用户发音频流 (v1.2.0)
-    /// - parameter userUuid: 用户id
-    /// - parameter mute: 是否禁止发流
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func muteRemoteAudio(streamUuids: [String],
-                         mute: Bool,
-                         success: AgoraEduContextSuccess?,
-                         failure: AgoraEduContextFail?)
-    
-    /// 获取某个用户的一组流信息 (v1.2.0)
+    /// 获取某个用户的一组流信息 (v2.0.0)
     /// - parameter userUuid: 用户Id
     /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
-    func getStreamsInfo(userUuid: String) -> [AgoraEduContextStream]?
+    func getStreamInfo(userUuid: String) -> [AgoraEduContextStream]?
     
-    /// 选择订阅高/低分辨率的视频流 (v1.2.0)
+    /// 获取所有的流信息 (v2.0.0)
+    /// - parameter userUuid: 用户Id
+    /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
+    func getAllStreamInfo(userUuid: String) -> [AgoraEduContextStream]?
+    
+    /// 授予流的发流权限(v2.0.0)
+    /// - parameter streamUuids: 流Id
+    /// - parameter streamType: 流类型;  streamType 等于 none 为无效参数
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
+    func publishStream(streamUuids: [String],
+                       streamType: AgoraEduContextMediaStreamType,
+                       success: AgoraEduContextSuccess?,
+                       failure: AgoraEduContextFail?)
+    
+    /// 取消流的发流权限 (v2.0.0)
+    /// - parameter streamUuids: 流Id
+    /// - parameter streamType: 流类型;  streamType 等于 none 为无效参数
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    /// - returns: void
+    func muteStream(streamUuids: [String],
+                    streamType: AgoraEduContextMediaStreamType,
+                    success: AgoraEduContextSuccess?,
+                    failure: AgoraEduContextFail?)
+    
+    /// 设置本地流的视频配置(v1.2.0)
+    /// - parameter streamUuid: 流id
+    /// - parameter config: 视频配置
+    /// - returns: AgoraEduContextError
+    func setLocalVideoConfig(streamUuid: String,
+                             config: AgoraEduContextVideoStreamConfig) -> AgoraEduContextError?
+    
+    
+    /// 选择订阅高/低分辨率的视频流 (v2.0.0)
     /// - parameter streamUuid: 流Id
     /// - parameter level: 分辨率类型
     /// - returns: void
-    func subscribeVideoStreamLevel(streamUuid: String,
-                                   level: AgoraEduContextVideoStreamSubscribeLevel)
+    func setRemoteVideoStreamSubscribeLevel(streamUuid: String,
+                                            level: AgoraEduContextVideoStreamSubscribeLevel) -> AgoraEduContextError?
     
-    /// 注册流事件回调 (v1.2.0)
+    /// 注册流事件回调 (v2.0.0)
     /// - parameter handler: 遵守 AgoraEduStreamHandler 的对象
     /// - returns: void
     func registerStreamEventHandler(_ handler: AgoraEduStreamHandler)

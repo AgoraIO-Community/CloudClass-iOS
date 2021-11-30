@@ -147,13 +147,6 @@ extension AgoraLectureUIManager: AgoraEduMonitorHandler {
             AgoraLoading.hide()
         }
     }
-    func onClassroomJoined() {
-        initWidgets()
-    }
-    
-    func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraToast.toast(msg: error.message)
-    }
 }
 
 // MARK: - AgoraEduUserHandler

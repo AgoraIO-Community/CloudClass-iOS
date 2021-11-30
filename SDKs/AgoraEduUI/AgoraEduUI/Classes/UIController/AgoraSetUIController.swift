@@ -136,7 +136,7 @@ extension AgoraSetUIController: AgoraEduRoomHandler {
         
         let localUser = userContext.getLocalUserInfo()
         
-        guard let streams = streamContext.getStreamsInfo(userUuid: localUser.userUuid),
+        guard let streams = streamContext.getStreamInfo(userUuid: localUser.userUuid),
               let stream = streams.first else {
             return
         }

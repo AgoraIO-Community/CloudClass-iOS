@@ -35,6 +35,7 @@ extension AgoraRenderItemInfoModel {
             return
         }
         self.streamUUID = s.streamUuid
+        
         if s.streamType == .video ||
             s.streamType == .both {
             switch s.videoSourceState {
@@ -329,13 +330,13 @@ private extension AgoraPaintingRenderUIController {
         let localInfo = contextPool.user.getLocalUserInfo()
         for user in list {
             if user.role == .teacher {
-                let stream = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first(where: {
+                let stream = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first(where: {
                     $0.streamName != "secondary"
                 })
                 tempTeacher = AgoraRenderItemInfoModel(with: user,
                                                        stream: stream)
             } else if user.role == .student && user.isCoHost {
-                let stream = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
+                let stream = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
                 if stream?.owner.userUuid == localInfo.userUuid {
                     self.currentStream = stream
                 }
@@ -465,28 +466,20 @@ extension AgoraPaintingRenderUIController: AgoraRenderItemCellDelegate  {
                                    userUUID: String) {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        contextPool.stream.subscribeVideoStreamLevel(streamUuid: streamID,
-                                                     level: .low)
+        contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamID,
+                                                              level: .low)
+       
         let u = contextPool.user.getLocalUserInfo()
-        if userUUID == u.userUuid {
-            contextPool.media.startRenderLocalVideo(view: view,
-                                                    renderConfig: renderConfig,
-                                                    streamUuid: streamID)
-        } else {
-            contextPool.media.startRenderRemoteVideo(view: view,
-                                                     renderConfig: renderConfig,
-                                                     streamUuid: streamID)
-        }
+        
+        contextPool.media.startRenderVideo(view: view,
+                                           renderConfig: renderConfig,
+                                           streamUuid: streamID)
     }
     
     func onCellRequestCancelRender(streamID: String,
                                    userUUID: String) {
         let u = contextPool.user.getLocalUserInfo()
-        if userUUID == u.userUuid {
-            contextPool.media.stopRenderLocalVideo(streamUuid: streamID)
-        } else {
-            contextPool.media.stopRenderRemoteVideo(streamUuid: streamID)
-        }
+        contextPool.media.stopRenderVideo(streamUuid: streamID)
     }
 }
 // MARK: - UICollectionView Call Back

@@ -84,5 +84,4 @@ extension AgoraLectureRenderUIController: AgoraEduMediaHandler {
                                    state: AgoraEduContextDeviceState) {
         
     }
-    
 }

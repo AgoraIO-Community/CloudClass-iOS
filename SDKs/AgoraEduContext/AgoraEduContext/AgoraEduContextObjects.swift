@@ -66,20 +66,6 @@ import Foundation
         self.userName = userName
         self.role = role
     }
-    
-    public init(userUuid: String,
-                userName: String,
-                role: AgoraEduContextUserRole = .student,
-                isCoHost: Bool,
-                rewardCount: Int) {
-        self.userUuid = userUuid
-        self.userName = userName
-        self.role = role
-        self.isCoHost = isCoHost
-        self.rewardCount = rewardCount
-    }
-    
-
 }
 
 // MARK: - Media
@@ -183,12 +169,12 @@ import Foundation
     // 错误Code
     public var code: Int = 0
     // 错误消息
-    public var message: String = ""
+    public var message: String?
     
     public init(code: Int,
-                message: String?) {
+                message: String? = nil) {
         self.code = code
-        self.message = message ?? ""
+        self.message = message
     }
 }
 

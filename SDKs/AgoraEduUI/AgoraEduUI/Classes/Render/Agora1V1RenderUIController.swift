@@ -177,7 +177,7 @@ extension Agora1V1RenderUIController: AgoraEduUserHandler {
         }
         
         if let info = teacherInfo,
-           let streams = streamContext.getStreamsInfo(userUuid: info.userUuid),
+           let streams = streamContext.getStreamInfo(userUuid: info.userUuid),
            let stream = streams.first,
            stream.streamUuid == streamUuid,
            stream.streamType.hasAudio {
@@ -185,7 +185,7 @@ extension Agora1V1RenderUIController: AgoraEduUserHandler {
         }
 
         if let info = studentInfo,
-           let streams = streamContext.getStreamsInfo(userUuid: info.userUuid),
+           let streams = streamContext.getStreamInfo(userUuid: info.userUuid),
            let stream = streams.first,
            stream.streamUuid == streamUuid,
            stream.streamType.hasAudio {

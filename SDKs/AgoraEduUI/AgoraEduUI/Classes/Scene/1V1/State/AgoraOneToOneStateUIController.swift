@@ -30,8 +30,10 @@ class AgoraOneToOneStateUIController: UIViewController {
     private var settingButton: UIButton!
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
+
     /** 课堂状态*/
     private var classState: AgoraEduContextClassState = .before
+    
     /** 房间计时器*/
     private var timer: Timer?
     /** 房间时间信息*/
@@ -135,6 +137,7 @@ extension AgoraOneToOneStateUIController {
         guard let info = self.timeInfo else {
             return
         }
+        
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch self.classState {
         case .before:
@@ -190,7 +193,6 @@ extension AgoraOneToOneStateUIController {
 }
 
 extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
-    
     func onClassState(_ state: AgoraEduContextClassState) {
         self.classState = state
     }

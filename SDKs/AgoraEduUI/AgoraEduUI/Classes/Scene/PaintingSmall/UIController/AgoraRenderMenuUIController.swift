@@ -86,7 +86,7 @@ private extension AgoraRenderMenuUIController {
         } else if user.role == .student {
             items = [.mic, .camera, .stage, .auth, .reward]
         }
-        let s = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
+        let s = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
         // 设置按钮的状态
         
         // TODO:
@@ -142,9 +142,11 @@ extension AgoraRenderMenuUIController {
 //            self.contextPool.device.setMicDeviceEnable(enable: !sender.isSelected)
             sender.isSelected = !sender.isSelected
         } else {
-            contextPool.stream.muteRemoteAudio(streamUuids: [UUID], mute: sender.isSelected, success: {
-                sender.isSelected = !sender.isSelected
-            }, failure: nil)
+            
+            
+//            contextPool.stream.muteRemoteAudio(streamUuids: [UUID], mute: sender.isSelected, success: {
+//                sender.isSelected = !sender.isSelected
+//            }, failure: nil)
         }
     }
     
@@ -157,9 +159,9 @@ extension AgoraRenderMenuUIController {
 //            self.contextPool.device.setCameraDeviceEnable(enable: !sender.isSelected)
             sender.isSelected = !sender.isSelected
         } else {
-            contextPool.stream.muteRemoteVideo(streamUuids: [UUID], mute: sender.isSelected, success: {
-                sender.isSelected = !sender.isSelected
-            }, failure: nil)
+//            contextPool.stream.muteRemoteVideo(streamUuids: [UUID], mute: sender.isSelected, success: {
+//                sender.isSelected = !sender.isSelected
+//            }, failure: nil)
         }
     }
     

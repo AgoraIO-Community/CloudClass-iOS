@@ -210,7 +210,7 @@ fileprivate extension AgoraSpreadRenderWidget {
             containerView.backgroundColor = .white
             // TODO: 若为教师端发起 需要发送http请求
 
-            if let streams = streamContext?.getStreamsInfo(userUuid: messageModel.userId) {
+            if let streams = streamContext?.getStreamInfo(userUuid: messageModel.userId) {
                 for stream in streams {
                     if stream.streamUuid == messageModel.streamId {
                         updateRenderStreamInfo(stream: stream)
@@ -273,24 +273,14 @@ fileprivate extension AgoraSpreadRenderWidget {
         }
         
         if startFlag {
-            streamContext?.subscribeVideoStreamLevel(streamUuid: streamId,
-                                                     level: .high)
+            streamContext?.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
+                                                              level: .high)
             
-            if isLocal {
-                media.startRenderLocalVideo(view: spreadView.getVideoCanvas(),
-                                            renderConfig: renderConfig(),
-                                            streamUuid: streamId)
-            } else {
-                media.startRenderRemoteVideo(view: spreadView.getVideoCanvas(),
-                                             renderConfig: renderConfig(),
-                                             streamUuid: streamId)
-            }
+            media.startRenderVideo(view: spreadView.getVideoCanvas(),
+                                   renderConfig: renderConfig(),
+                                   streamUuid: streamId)
         } else {
-            if isLocal {
-                media.stopRenderLocalVideo(streamUuid: streamId)
-            } else {
-                media.stopRenderRemoteVideo(streamUuid: streamId)
-            }
+            media.stopRenderVideo(streamUuid: streamId)
         }
     }
     

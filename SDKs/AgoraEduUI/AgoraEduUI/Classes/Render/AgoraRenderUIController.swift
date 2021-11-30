@@ -62,7 +62,7 @@ import AgoraEduContext
         }
         
         if let userInfo = newUserInfo,
-           let streams = streamContext.getStreamsInfo(userUuid: userInfo.userUuid),
+           let streams = streamContext.getStreamInfo(userUuid: userInfo.userUuid),
            let stream = streams.first {
             view.updateCameraState(stream.videoSourceType.uiType,
                                    hasStream: stream.streamType.hasAudio)
@@ -89,7 +89,7 @@ import AgoraEduContext
     func renderVideoStream(from user: AgoraEduContextUserInfo,
                            on view: AgoraUIVideoCanvas) {
         guard let `streamContext` = streamContext,
-              let streams = streamContext.getStreamsInfo(userUuid: user.userUuid),
+              let streams = streamContext.getStreamInfo(userUuid: user.userUuid),
               let stream = streams.first else {
             return
         }
@@ -108,24 +108,18 @@ import AgoraEduContext
         renderConfig.mode = .hidden
         renderConfig.isMirror = false
         
-        streamContext.subscribeVideoStreamLevel(streamUuid: streamUuid,
-                                                level: .low)
-
-        if isLocal {
-            mediaContext?.startRenderLocalVideo(view: view,
-                                                renderConfig: renderConfig,
-                                                streamUuid: streamUuid)
-        } else {
-            mediaContext?.startRenderRemoteVideo(view: view,
-                                                 renderConfig: renderConfig,
-                                                 streamUuid: streamUuid)
-        }
+        streamContext.setRemoteVideoStreamSubscribeLevel(streamUuid: streamUuid,
+                                                         level: .low)
+        
+        mediaContext?.startRenderVideo(view: view,
+                                       renderConfig: renderConfig,
+                                       streamUuid: streamUuid)
     }
     
     func unrenderVideoStream(from user: AgoraEduContextUserInfo,
                              on view: AgoraUIVideoCanvas) {
         guard let `streamContext` = streamContext,
-              let streams = streamContext.getStreamsInfo(userUuid: user.userUuid),
+              let streams = streamContext.getStreamInfo(userUuid: user.userUuid),
               let stream = streams.first else {
             return
         }
@@ -139,11 +133,7 @@ import AgoraEduContext
         
         view.renderingStreamUuid = nil
         
-        if isLocal {
-            mediaContext?.stopRenderLocalVideo(streamUuid: streamUuid)
-        } else {
-            mediaContext?.stopRenderRemoteVideo(streamUuid: streamUuid)
-        }
+        mediaContext?.stopRenderVideo(streamUuid: streamUuid)
     }
 }
 

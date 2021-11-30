@@ -100,6 +100,7 @@ private extension AgoraSettingUIController {
         }
     }
 }
+
 // MARK: - AgoraEduRoomHandler
 extension AgoraSettingUIController: AgoraEduRoomHandler {
     func onUploadLogSuccess(_ logId: String) {

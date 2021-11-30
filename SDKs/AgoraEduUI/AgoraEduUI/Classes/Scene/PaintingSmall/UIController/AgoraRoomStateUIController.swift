@@ -75,6 +75,7 @@ private extension AgoraRoomStateUIController {
         guard let info = self.timeInfo else {
             return
         }
+
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch self.classState {
         case .before:

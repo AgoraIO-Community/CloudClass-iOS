@@ -56,7 +56,7 @@ private extension AgoraOneToOneRenderUIController {
         let list = self.contextPool.user.getAllUserList()
         self.currentStream = nil
         if let studentInfo = list.first(where: { $0.role == .student }) {
-            let stream = contextPool.stream.getStreamsInfo(userUuid: studentInfo.userUuid)?.first
+            let stream = contextPool.stream.getStreamInfo(userUuid: studentInfo.userUuid)?.first
             let localInfo = contextPool.user.getLocalUserInfo()
             if stream?.owner.userUuid == localInfo.userUuid {
                 self.currentStream = stream
@@ -64,6 +64,7 @@ private extension AgoraOneToOneRenderUIController {
             let model = AgoraRenderItemInfoModel(with: studentInfo,
                                                  stream: stream)
             studentView.item = model
+            
             if let s = stream {
                 if s.streamType == .video ||
                     s.streamType == .both {
@@ -101,10 +102,11 @@ private extension AgoraOneToOneRenderUIController {
         }
         // teacher view
         if let teacherInfo = list.first(where: { $0.role == .teacher }) {
-            let stream = contextPool.stream.getStreamsInfo(userUuid: teacherInfo.userUuid)?.first
+            let stream = contextPool.stream.getStreamInfo(userUuid: teacherInfo.userUuid)?.first
             let model = AgoraRenderItemInfoModel(with: teacherInfo,
                                                  stream: stream)
             teacherView.item = model
+
             if let s = stream {
                 if s.streamType == .video ||
                     s.streamType == .both {
@@ -209,28 +211,21 @@ extension AgoraOneToOneRenderUIController: AgoraOneToOneMemberViewDelegate {
     func onMemberViewRequestRenderOnView(view: UIView, streamID: String, userUUID: String) {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        contextPool.stream.subscribeVideoStreamLevel(streamUuid: streamID, level: .low)
+        
+        contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamID,
+                                                              level: .low)
+        
         let u = contextPool.user.getLocalUserInfo()
-        contextPool.stream.subscribeVideoStreamLevel(streamUuid: streamID,
-                                                     level: .low)
-        if userUUID == u.userUuid {
-            contextPool.media.startRenderLocalVideo(view: view,
-                                                    renderConfig: renderConfig,
-                                                    streamUuid: streamID)
-        } else {
-            contextPool.media.startRenderRemoteVideo(view: view,
-                                                     renderConfig: renderConfig,
-                                                     streamUuid: streamID)
-        }
+        
+        
+        contextPool.media.startRenderVideo(view: view,
+                                           renderConfig: renderConfig,
+                                           streamUuid: streamID)
     }
     
     func onMemberViewRequestCancelRender(streamID: String, userUUID: String) {
         let u = contextPool.user.getLocalUserInfo()
-        if userUUID == u.userUuid {
-            contextPool.media.stopRenderLocalVideo(streamUuid: streamID)
-        } else {
-            contextPool.media.stopRenderRemoteVideo(streamUuid: streamID)
-        }
+        contextPool.media.stopRenderVideo(streamUuid: streamID)
     }
 }
 

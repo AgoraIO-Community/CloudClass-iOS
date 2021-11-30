@@ -225,24 +225,6 @@ extension AgoraRoomUIController: AgoraEduRoomHandler {
 //        }
 //    }
     
-    // 设置课程时间信息
-    public func onClassTimeInfo(startTime: Int64,
-                                differTime: Int64,
-                                duration: Int64,
-                                closeDelay: Int64) {
-        timeInfo.startTime = startTime
-        timeInfo.differTime = differTime
-        timeInfo.duration = duration
-        timeInfo.closeDelay = closeDelay
-        if startTime > 0 {
-            startTimer()
-        }
-    }
-    
-    // 上课过程中，错误信息
-    public func onShowErrorInfo(_ error: AgoraEduContextError) {
-        AgoraToast.toast(msg: error.message)
-    }
 }
 
 extension AgoraRoomUIController: AgoraEduMonitorHandler {

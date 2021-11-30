@@ -109,7 +109,7 @@ private extension AgoraPaintingUserListUIController {
                 model.stage.enable = isAdmin
                 model.auth.enable = isAdmin
                 // stream
-                let s = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
+                let s = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
                 
                 // TODO:
 //                model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
@@ -133,7 +133,7 @@ private extension AgoraPaintingUserListUIController {
         let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
         if let model = dataSource.first{ $0.uuid == uuid},
            let user = contextPool.user.getAllUserList().first {$0.userUuid == uuid} {
-            let s = contextPool.stream.getStreamsInfo(userUuid: user.userUuid)?.first
+            let s = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
             
             // TODO:
 //            model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
@@ -218,10 +218,17 @@ extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelega
                 user.camera.isOn = isOn
                 reloadTableView()
             } else {
-                contextPool.stream.muteRemoteVideo(streamUuids: [user.uuid], mute: !isOn, success: { [weak self] in
-                    user.camera.isOn = isOn
-                    self?.reloadTableView()
+                // TODO:
+                contextPool.stream.muteStream(streamUuids: [user.uuid],
+                                              streamType: .video,
+                                              success: { [weak self] () -> (Void) in
+                                                user.camera.isOn = isOn
+                                                self?.reloadTableView()
                 }, failure: nil)
+                
+//                contextPool.stream.publishStream(streamUuids: <#T##[String]#>, streamType: <#T##AgoraEduContextMediaStreamType#>, success: <#T##AgoraEduContextSuccess?##AgoraEduContextSuccess?##() -> (Void)#>, failure: <#T##AgoraEduContextFail?##AgoraEduContextFail?##(AgoraEduContextError) -> (Void)#>)
+                
+               
             }
         case .mic:
             if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
@@ -230,10 +237,12 @@ extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelega
                 user.mic.isOn = isOn
                 reloadTableView()
             } else {
-                contextPool.stream.muteRemoteAudio(streamUuids: [user.uuid], mute: !isOn, success: { [weak self] in
-                    user.mic.isOn = isOn
-                    self?.reloadTableView()
-                }, failure: nil)
+                // TODO:
+                
+//                contextPool.stream.muteRemoteAudio(streamUuids: [user.uuid], mute: !isOn, success: { [weak self] in
+//                    user.mic.isOn = isOn
+//                    self?.reloadTableView()
+//                }, failure: nil)
             }
         case .reward:
             // 奖励： 花名册只展示，不操作
