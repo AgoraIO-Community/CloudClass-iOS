@@ -446,11 +446,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     func registerMediaEventHandler(_ handler: AgoraEduMediaHandler)
 }
 
-// MARK: - Widget
-@objc public protocol AgoraEduWidgetContext: AgoraWidgetProtocol {
-    func getAgoraWidgetProperties(type: EduContextWidgetType) -> [String: Any]?
-}
-
 // MARK: - Stream
 @objc public protocol AgoraEduStreamHandler: NSObjectProtocol {
     /// 远端流加入频道事件 (v2.0.0)

@@ -13,36 +13,36 @@ import Masonry
     private let cloudView = AgoraCloudView(frame: .zero)
     private var vm: AgoraCloudVM!
     
-    public override init(widgetId: String,
-                         properties: [AnyHashable : Any]?) {
-        super.init(widgetId: widgetId,
-                   properties: properties)
-        guard let contextPool = properties?["contextPool"] as? AgoraEduContextPool else {
-            fatalError("can not find contextPool in properties")
-            return
-        }
-        let config = AgoraCloudVM.Config(token: "",
-                                         uid: "1231",
-                                         appId: "",
-                                         hostUrlString: "")
-        self.vm = AgoraCloudVM(contextPool: contextPool,
-                               config: config)
-        setup()
-        initLayout()
-        commonInit()
-    }
+//    public override init(widgetId: String,
+//                         properties: [AnyHashable : Any]?) {
+//        super.init(widgetId: widgetId,
+//                   properties: properties)
+//        guard let contextPool = properties?["contextPool"] as? AgoraEduContextPool else {
+//            fatalError("can not find contextPool in properties")
+//            return
+//        }
+//        let config = AgoraCloudVM.Config(token: "",
+//                                         uid: "1231",
+//                                         appId: "",
+//                                         hostUrlString: "")
+//        self.vm = AgoraCloudVM(contextPool: contextPool,
+//                               config: config)
+//        setup()
+//        initLayout()
+//        commonInit()
+//    }
     
     private func setup() {
-        containerView.backgroundColor = .clear
-        containerView.addSubview(cloudView)
+        view.backgroundColor = .clear
+        view.addSubview(cloudView)
     }
     
     private func initLayout() {
         cloudView.mas_makeConstraints { make in
-            make?.left.equalTo()(self.containerView)
-            make?.right.equalTo()(self.containerView)
-            make?.top.equalTo()(self.containerView)
-            make?.bottom.equalTo()(self.containerView)
+            make?.left.equalTo()(self.view)
+            make?.right.equalTo()(self.view)
+            make?.top.equalTo()(self.view)
+            make?.bottom.equalTo()(self.view)
         }
     }
     

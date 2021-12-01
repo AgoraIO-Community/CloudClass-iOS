@@ -39,25 +39,22 @@ static const NSString* kChatRoomId = @"chatroomId";
 @end
 
 @implementation ChatWidget
-- (instancetype)initWithWidgetId:(NSString *)widgetId
-                      properties:(NSDictionary * _Nullable)properties {
-    self = [super initWithWidgetId:widgetId
-                        properties:properties];
+- (instancetype)initWithWidgetInfo:(AgoraWidgetInfo *)info {
+    self = [super initWithWidgetInfo:info];
     
     if (self) {
-        self.containerView.delegate = self;
+        self.view.delegate = self;
         [self initViews];
-        [self initData:properties];
+        [self initData:info.properties];
     }
     
     return self;
 }
-
 - (void)containerLayoutSubviews {
     [self layoutViews];
 }
 
-- (void)widgetDidReceiveMessage:(NSString *)message
+- (void)onMessageReceived:(NSString *)message
 {
     if([message isEqualToString:@"min"]) {
         [self chatTopViewDidClickHide];
@@ -79,7 +76,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.containView.layer.borderWidth = 1;
     self.containView.layer.borderColor = [UIColor colorWithRed:236/255.0 green:236/255.0 blue:241/255.0 alpha:1.0].CGColor;
     self.containView.layer.cornerRadius = 5;
-    [self.containerView addSubview:self.containView];
+    [self.view addSubview:self.containView];
     
     self.chatTopView = [[ChatTopView alloc] initWithFrame:CGRectZero];
     self.chatTopView.delegate = self;
@@ -108,15 +105,15 @@ static const NSString* kChatRoomId = @"chatroomId";
 //    self.miniButton.hidden = YES;
     
     self.badgeView = [[CustomBadgeView alloc] init];
-    [self.containerView addSubview:self.badgeView];
+    [self.view addSubview:self.badgeView];
     self.badgeView.hidden = YES;
 }
 
 - (void)layoutViews {
     self.containView.frame = CGRectMake(0,
                                         0,
-                                        self.containerView.bounds.size.width,
-                                        self.containerView.bounds.size.height);
+                                        self.view.bounds.size.width,
+                                        self.view.bounds.size.height);
     self.chatTopView.frame = CGRectMake(0, 0, self.containView.bounds.size.width, TOP_HEIGHT);
     
     self.announcementView.frame = CGRectMake(0,TOP_HEIGHT,self.containView.bounds.size.width,self.containView.bounds.size.height - TOP_HEIGHT);
@@ -125,7 +122,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     
 //    self.miniButton.frame = CGRectMake(10, self.containerView.bounds.size.height - MINIBUTTON_SIZE - 10, MINIBUTTON_SIZE, MINIBUTTON_SIZE);
     
-    self.badgeView.frame = CGRectMake(10 + MINIBUTTON_SIZE*4/5, self.containerView.bounds.size.height - MINIBUTTON_SIZE - 10, self.badgeView.badgeSize, self.badgeView.badgeSize);
+    self.badgeView.frame = CGRectMake(10 + MINIBUTTON_SIZE*4/5, self.view.bounds.size.height - MINIBUTTON_SIZE - 10, self.badgeView.badgeSize, self.badgeView.badgeSize);
 }
 
 - (void)handleTapAction:(UITapGestureRecognizer *)aTap
@@ -276,7 +273,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     self.containView.hidden = YES;
 //    self.miniButton.hidden = NO;
     self.badgeView.hidden = self.chatTopView.badgeView.hidden && self.chatTopView.announcementbadgeView.hidden;
-    self.containerView.agora_width = 50;
+    self.view.agora_width = 50;
     [self sendMessage:@"min"];
 }
 
@@ -293,9 +290,9 @@ static const NSString* kChatRoomId = @"chatroomId";
     }
     self.badgeView.hidden = YES;
     if([[UIDevice currentDevice].model isEqualToString:@"iPad"]) {
-        self.containerView.agora_width = 300;
+        self.view.agora_width = 300;
     }else
-        self.containerView.agora_width = 200;
+        self.view.agora_width = 200;
     
     [self sendMessage:@"max"];
 }

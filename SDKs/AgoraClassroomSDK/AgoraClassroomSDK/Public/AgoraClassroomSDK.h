@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 注册容器App
 + (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)apps;
 
-+ (void)registerWidgets:(NSArray<AgoraWidgetConfiguration *> *)widgets;
++ (void)registerWidgets:(NSArray<AgoraWidgetConfig *> *)widgets;
 
 + (NSString *)version;
 @end

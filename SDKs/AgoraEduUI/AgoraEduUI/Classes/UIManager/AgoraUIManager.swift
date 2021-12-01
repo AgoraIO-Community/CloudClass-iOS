@@ -54,28 +54,29 @@ public class AgoraEduUIManager: UIViewController {
     }
     
     public func createChatWidget() -> AgoraBaseWidget? {
-        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
-            return nil
-        }
-        var agoraChatWidget: AgoraBaseWidget?
-        if let chatInfo = widgetInfos.first(where: {$0.widgetId == "HyChatWidget"}) {
-            agoraChatWidget = createHxChat(info: chatInfo)
-        }else if let agoraChatInfo = widgetInfos.first(where: {$0.widgetId == "AgoraChatWidget"}) {
-            agoraChatInfo.properties = ["contextPool": contextPool]
-            let chatWidget = contextPool.widget.create(with: agoraChatInfo)
-            agoraChatWidget = chatWidget
-            
-            let hasConversation = (contextPool.room.getRoomInfo().roomType == .oneToOne ? 0 : 1)
-            if let message = ["hasConversation": hasConversation].jsonString() {
-                chatWidget.widgetDidReceiveMessage(message)
-            }
-            
-            let isMin = (contextPool.room.getRoomInfo().roomType == .lecture ? 0 : 1)
-            if let message = ["isMinSize": isMin].jsonString() {
-                chatWidget.widgetDidReceiveMessage(message)
-            }
-        }
-        return agoraChatWidget
+//        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
+//            return nil
+//        }
+//        var agoraChatWidget: AgoraBaseWidget?
+//        if let chatInfo = widgetInfos.first(where: {$0.widgetId == "HyChatWidget"}) {
+//            agoraChatWidget = createHxChat(info: chatInfo)
+//        }else if let agoraChatInfo = widgetInfos.first(where: {$0.widgetId == "AgoraChatWidget"}) {
+//            agoraChatInfo.properties = ["contextPool": contextPool]
+//            let chatWidget = contextPool.widget.create(with: agoraChatInfo)
+//            agoraChatWidget = chatWidget
+//
+//            let hasConversation = (contextPool.room.getRoomInfo().roomType == .oneToOne ? 0 : 1)
+//            if let message = ["hasConversation": hasConversation].jsonString() {
+//                chatWidget.onMessageReceived(message)
+//            }
+//
+//            let isMin = (contextPool.room.getRoomInfo().roomType == .lecture ? 0 : 1)
+//            if let message = ["isMinSize": isMin].jsonString() {
+//                chatWidget.onMessageReceived(message)
+//            }
+//        }
+//        return agoraChatWidget
+        return nil
     }
     
     private func createHxChat(info: AgoraWidgetInfo) -> AgoraBaseWidget? {
@@ -94,24 +95,25 @@ public class AgoraEduUIManager: UIViewController {
         properties["roomUuid"] = roomInfo.roomUuid
         properties["roomName"] = roomInfo.roomName
         properties["password"] = userInfo.userUuid
-        
-        if let imProperties = contextPool.widget.getAgoraWidgetProperties(type: .im),
-           let hxProperties = imProperties["huanxin"] as? [String: Any],
-           let appKey = hxProperties["appKey"] as? String,
-           let chatRoomId = hxProperties["chatRoomId"] as? String {
-            properties["appkey"] = appKey
-            properties["chatRoomId"] = chatRoomId
-        }
-        
-        info.properties = properties
-        
-        let chat = contextPool.widget.create(with: info)
-        
-        if contextPool.room.getRoomInfo().roomType != .oneToOne {
-            chat.widgetDidReceiveMessage("min")
-        }
-        
-        return chat
+//
+//        if let imProperties = contextPool.widget.getAgoraWidgetProperties(type: .im),
+//           let hxProperties = imProperties["huanxin"] as? [String: Any],
+//           let appKey = hxProperties["appKey"] as? String,
+//           let chatRoomId = hxProperties["chatRoomId"] as? String {
+//            properties["appkey"] = appKey
+//            properties["chatRoomId"] = chatRoomId
+//        }
+//
+//        info.properties = properties
+//
+//        let chat = contextPool.widget.create(with: info)
+//
+//        if contextPool.room.getRoomInfo().roomType != .oneToOne {
+//            chat.onMessageReceived("min")
+//        }
+//
+//        return chat
+        return nil
     }
 }
 

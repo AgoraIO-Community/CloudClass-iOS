@@ -301,9 +301,9 @@ extension AgoraPaintingUIManager: AgoraRoomToolsViewDelegate {
             }
         case .message:
             if let message = messageController {
-                message.widgetDidReceiveMessage("max")
+                message.onMessageReceived("max")
                 
-                ctrlView = message.containerView
+                ctrlView = message.view
                 ctrlView?.mas_remakeConstraints { make in
                     make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
                     make?.centerY.equalTo()(toolsView)
@@ -327,7 +327,7 @@ extension AgoraPaintingUIManager: AgoraToolBoxUIControllerDelegate {
         switch tool {
         case .cloudStorage:
             // 云盘工具操作
-            ctrlView = cloudController?.containerView
+            ctrlView = cloudController?.view
             ctrlView?.mas_makeConstraints { make in
                 make?.width.equalTo()(550)
                 make?.height.equalTo()(260)
@@ -421,30 +421,30 @@ private extension AgoraPaintingUIManager {
     }
     
     func initWidgets() {
-        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
-            return
-        }
-        if let message = createChatWidget() {
-            messageController = message
-            message.addMessageObserver(self)
-            contentView.addSubview(message.containerView)
-        }
-
-        if let info = widgetInfos.first(where: {$0.widgetId == "big-window"}) {
-            info.properties = ["contextPool": contextPool]
-            let renderSpread = contextPool.widget.create(with: info)
-            
-            spreadRenderController = renderSpread
-            contentView.addSubview(renderSpread.containerView)
-            renderSpread.addMessageObserver(self)
-        }
-
-        if let cloudWidgetInfo = widgetInfos.first(where: {$0.widgetId == "AgoraCloudWidget"}) {
-            cloudWidgetInfo.properties = ["contextPool" : contextPool]
-            let cloudWidget = contextPool.widget.create(with: cloudWidgetInfo)
-            cloudWidget.addMessageObserver(self)
-            cloudController = cloudWidget
-        }
+//        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
+//            return
+//        }
+//        if let message = createChatWidget() {
+//            messageController = message
+//            message.addMessageObserver(self)
+//            contentView.addSubview(message.containerView)
+//        }
+//
+//        if let info = widgetInfos.first(where: {$0.widgetId == "big-window"}) {
+//            info.properties = ["contextPool": contextPool]
+//            let renderSpread = contextPool.widget.create(with: info)
+//
+//            spreadRenderController = renderSpread
+//            contentView.addSubview(renderSpread.containerView)
+//            renderSpread.addMessageObserver(self)
+//        }
+//
+//        if let cloudWidgetInfo = widgetInfos.first(where: {$0.widgetId == "AgoraCloudWidget"}) {
+//            cloudWidgetInfo.properties = ["contextPool" : contextPool]
+//            let cloudWidget = contextPool.widget.create(with: cloudWidgetInfo)
+//            cloudWidget.addMessageObserver(self)
+//            cloudController = cloudWidget
+//        }
     }
     
     func createConstrains() {
@@ -527,7 +527,7 @@ private extension AgoraPaintingUIManager {
                                    height: height)
         case 1:
             // move
-            guard let spreadView = spreadRenderController?.containerView,
+            guard let spreadView = spreadRenderController?.view,
                   let xaxis = messageDic["xaxis"] as? CGFloat,
                   let yaxis = messageDic["yaxis"] as? CGFloat,
                   let width = messageDic["width"] as? CGFloat,
@@ -578,12 +578,12 @@ private extension AgoraPaintingUIManager {
         let MEDx = contentView.width - spreadWidth
         let MEDy = contentView.height - stateController.view.frame.height - spreadHeight
         
-        spread.containerView.mas_remakeConstraints { make in
+        spread.view.mas_remakeConstraints { make in
             make?.width.height().equalTo()(fromView)
             make?.center.equalTo()(fromView)
         }
         view.layoutIfNeeded()
-        spread.containerView.mas_remakeConstraints { make in
+        spread.view.mas_remakeConstraints { make in
             make?.width.equalTo()(spreadWidth)
             make?.height.equalTo()(spreadHeight)
             make?.left.equalTo()(MEDx * xaxis)
@@ -611,7 +611,7 @@ private extension AgoraPaintingUIManager {
         let MEDx = view.width - spreadWidth
         let MEDy = view.height - settingViewController.view.agora_height - spreadHeight
         
-        spread.containerView.mas_remakeConstraints { make in
+        spread.view.mas_remakeConstraints { make in
             make?.width.equalTo()(spreadWidth)
             make?.height.equalTo()(spreadHeight)
             make?.left.equalTo()(MEDx * xaxis)
@@ -630,7 +630,7 @@ private extension AgoraPaintingUIManager {
             return
         }
 
-        spread.containerView.mas_remakeConstraints { make in
+        spread.view.mas_remakeConstraints { make in
             make?.width.height().equalTo()(toView)
             make?.center.equalTo()(toView)
         }
@@ -661,16 +661,16 @@ private extension AgoraPaintingUIManager {
                                   "userId": userId,
                                   "streamId":streamId]
         if let message = dic.jsonString() {
-            spreadRenderController?.widgetDidReceiveMessage(message)
+            spreadRenderController?.onMessageReceived(message)
         }
     }
 }
 
-// MARK: - AgoraWidgetDelegate
-extension AgoraPaintingUIManager: AgoraWidgetDelegate {
-    func widget(_ widget: AgoraBaseWidget,
-                didSendMessage message: String) {
-        switch widget.widgetId {
+// MARK: - AgoraWidgetMessageObserver
+extension AgoraPaintingUIManager: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String!) {
+        switch widgetId {
         case "big-window":
             spreadRenderWidgetMessageHandle(message: message)
         case "AgoraChatWidget":

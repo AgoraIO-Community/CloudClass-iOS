@@ -26,7 +26,7 @@
 
 @property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
 @property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *apps;
-@property (nonatomic, strong) NSArray<AgoraWidgetConfiguration *> *widgets;
+@property (nonatomic, strong) NSArray<AgoraWidgetConfig *> *widgets;
 @property (nonatomic, strong) NSArray<AgoraEduCourseware *> *coursewares;
 
 @property (nonatomic, strong) NSNumber *consoleState;
@@ -150,22 +150,22 @@ static AgoraClassroomSDK *manager = nil;
     // Register widgets
     NSMutableDictionary *widgets = [NSMutableDictionary dictionary];
     // chat
-    AgoraWidgetConfiguration *chat = [[AgoraWidgetConfiguration alloc] initWithClass:[AgoraChatWidget class]
+    AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[AgoraChatWidget class]
                                                                             widgetId:@"AgoraChatWidget"];
     
     widgets[chat.widgetId] = chat;
     
     // AgoraSpreadRenderWidget
-    AgoraWidgetConfiguration *spreadRender = [[AgoraWidgetConfiguration alloc] initWithClass:[AgoraSpreadRenderWidget class]
+    AgoraWidgetConfig *spreadRender = [[AgoraWidgetConfig alloc] initWithClass:[AgoraSpreadRenderWidget class]
                                                                                     widgetId:@"big-window"];
     widgets[spreadRender.widgetId] = spreadRender;
     
     // AgoraCloudWidget
-    AgoraWidgetConfiguration *cloudWidgetConfig = [[AgoraWidgetConfiguration alloc] initWithClass:[AgoraCloudWidget class]
+    AgoraWidgetConfig *cloudWidgetConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
                                                                                          widgetId:@"AgoraCloudWidget"];
     widgets[cloudWidgetConfig.widgetId] = cloudWidgetConfig;
     
-    for (AgoraWidgetConfiguration *item in manager.widgets) {
+    for (AgoraWidgetConfig *item in manager.widgets) {
         widgets[item.widgetId] = item;
     }
 
@@ -191,7 +191,7 @@ static AgoraClassroomSDK *manager = nil;
     [AgoraClassroomSDK share].apps = [NSArray arrayWithArray:apps];
 }
 
-+ (void)registerWidgets:(NSArray<AgoraWidgetConfiguration *> *)widgets {
++ (void)registerWidgets:(NSArray<AgoraWidgetConfig *> *)widgets {
     [AgoraClassroomSDK share].widgets = [NSArray arrayWithArray:widgets];
 }
 

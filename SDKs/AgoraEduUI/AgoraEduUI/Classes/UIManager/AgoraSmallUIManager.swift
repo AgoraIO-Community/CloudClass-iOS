@@ -224,9 +224,9 @@ extension AgoraSmallUIManager: AgoraRoomToolsViewDelegate {
             }
         case .message:
             if let message = messageController {
-                message.widgetDidReceiveMessage("max")
+                message.onMessageReceived("max")
                 
-                ctrlView = message.containerView
+                ctrlView = message.view
                 ctrlView?.mas_remakeConstraints { make in
                     make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
                     make?.centerY.equalTo()(toolsView)
@@ -242,7 +242,7 @@ extension AgoraSmallUIManager: AgoraRoomToolsViewDelegate {
         ctrlView = nil
         if tool == .message,
         let message = messageController {
-            message.widgetDidReceiveMessage("min")
+            message.onMessageReceived("min")
         }
     }
 }
@@ -344,15 +344,16 @@ private extension AgoraSmallUIManager {
     }
     
     func initWidgets() {
-        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
-            return
-        }
-        
-        if let message = createChatWidget() {
-            messageController = message
-            message.addMessageObserver(self)
-            contentView.addSubview(message.containerView)
-        }
+//        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
+//            return
+//        }
+//        
+//        if let message = createChatWidget() {
+//            messageController = message
+//            message.add
+//            message.addMessageObserver(self)
+//            contentView.addSubview(message.containerView)
+//        }
     }
     
     func createConstrains() {
@@ -404,11 +405,11 @@ private extension AgoraSmallUIManager {
     }
 }
 
-// MARK: - AgoraWidgetDelegate
-extension AgoraSmallUIManager: AgoraWidgetDelegate {
-    func widget(_ widget: AgoraBaseWidget,
-                didSendMessage message: String) {
-        switch widget.widgetId {
+// MARK: - AgoraWidgetMessageObserver
+extension AgoraSmallUIManager: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String!) {
+        switch widgetId {
         case "AgoraChatWidget":
             if let dic = message.json(),
                let isMin = dic["isMinSize"] as? Bool,

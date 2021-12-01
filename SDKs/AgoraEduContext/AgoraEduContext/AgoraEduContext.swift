@@ -5,10 +5,12 @@
 //  Created by SRS on 2021/4/16.
 //
 
-import Foundation
 import AgoraExtApp
+import AgoraWidget
+import Foundation
 
 public typealias AgoraEduExtAppContext = AgoraExtAppProtocol
+public typealias AgoraEduWidgetContext = AgoraWidgetProtocol
 
 /* AgoraEduContextPool: 能力池
  * 你可以通过这个对象使用和监听目前灵动课堂提供的各种业务能力

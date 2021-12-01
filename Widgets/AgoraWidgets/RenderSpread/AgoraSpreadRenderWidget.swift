@@ -29,23 +29,23 @@ import AgoraWidget
         }
     }
     
-    public override init(widgetId: String,
-                         properties: [AnyHashable : Any]?) {
-        super.init(widgetId: widgetId,
-                   properties: properties)
-        initViews()
-        initLayout()
-        initData()
-        
-        if let contextPool = properties?["contextPool"] as? AgoraEduContextPool {
-            userContext = contextPool.user
-            streamContext = contextPool.stream
-            mediaContext = contextPool.media
-            initData()
-        }
-    }
+//    public override init(widgetId: String,
+//                         properties: [AnyHashable : Any]?) {
+//        super.init(widgetId: widgetId,
+//                   properties: properties)
+//        initViews()
+//        initLayout()
+//        initData()
+//
+//        if let contextPool = properties?["contextPool"] as? AgoraEduContextPool {
+//            userContext = contextPool.user
+//            streamContext = contextPool.stream
+//            mediaContext = contextPool.media
+//            initData()
+//        }
+//    }
     
-    public override func widgetDidReceiveMessage(_ message: String) {
+    public override func onMessageReceived(_ message: String) {
         guard let dic = message.json(),
               let `localUser` = localUserInfo else {
             return
@@ -109,14 +109,14 @@ extension AgoraSpreadRenderWidget: AgoraEduStreamHandler {
 // MARK: - private
 fileprivate extension AgoraSpreadRenderWidget {
     func initViews() {
-        containerView.backgroundColor = .clear
-        containerView.addSubview(spreadView)
-        containerView.isHidden = true
+        view.backgroundColor = .clear
+        view.addSubview(spreadView)
+        view.isHidden = true
     }
     
     func initLayout() {
         spreadView.mas_makeConstraints {[weak self] make in
-            make?.top.left().bottom().right().equalTo()(self?.containerView)
+            make?.top.left().bottom().right().equalTo()(self?.view)
         }
     }
     
@@ -206,8 +206,8 @@ fileprivate extension AgoraSpreadRenderWidget {
         switch messageModel.action {
         case .start: fallthrough
         case .change:
-            containerView.isHidden = false
-            containerView.backgroundColor = .white
+            view.isHidden = false
+            view.backgroundColor = .white
             // TODO: 若为教师端发起 需要发送http请求
 
             if let streams = streamContext?.getStreamInfo(userUuid: messageModel.userId) {
@@ -226,7 +226,7 @@ fileprivate extension AgoraSpreadRenderWidget {
             executeRender(startFlag: false,
                           isLocal: isLocal,
                           streamId: messageModel.streamId)
-            containerView.isHidden = true
+            view.isHidden = true
         default: break
         }
     }
@@ -292,11 +292,11 @@ fileprivate extension AgoraSpreadRenderWidget {
 }
 
 extension AgoraSpreadRenderWidget {
-    public override func addMessageObserver(_ observer: AgoraWidgetDelegate) {
-        super.addMessageObserver(observer)
-        if let message = latestMessage {
-            sendMessage(message)
-        }
-        
-    }
+//    public override func addMessageObserver(_ observer: AgoraWidgetMessageObserver) {
+//        super.addMessageObserver(observer)
+//        if let message = latestMessage {
+//            sendMessage(message)
+//        }
+//        
+//    }
 }

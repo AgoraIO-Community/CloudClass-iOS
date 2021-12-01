@@ -107,11 +107,6 @@ import Foundation
     case open = 1
 }
 
-// MARK: - Widget
-@objc public enum EduContextWidgetType: Int {
-    case im, bigWindow, rtmchat, cloud
-}
-
 // MARK: - Stream
 /// 视频源
 @objc public enum AgoraEduContextVideoSourceType: Int {

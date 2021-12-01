@@ -54,22 +54,22 @@ enum ChatType {
     // Context
 //    private weak var context: AgoraEduMessageContext?
     
-    public required override init(widgetId: String,
-                                  properties: [AnyHashable: Any]?) {
-        super.init(widgetId: widgetId,
-                   properties: properties)
-        
-        initViews()
-        initLayout()
-        keyboardNotification()
-        
-//        if let contextPool = properties?["contextPool"] as? AgoraEduContextPool {
-//            context = contextPool.chat
-//            initData()
-//        }
-    }
+//    public required override init(widgetId: String,
+//                                  properties: [AnyHashable: Any]?) {
+//        super.init(widgetId: widgetId,
+//                   properties: properties)
+//
+//        initViews()
+//        initLayout()
+//        keyboardNotification()
+//
+////        if let contextPool = properties?["contextPool"] as? AgoraEduContextPool {
+////            context = contextPool.chat
+////            initData()
+////        }
+//    }
     
-    public override func widgetDidReceiveMessage(_ message: String) {
+    public override func onMessageReceived(_ message: String) {
         guard let dic = message.json() else {
             return
         }
@@ -96,8 +96,8 @@ enum ChatType {
 // MARK: - Private
 private extension AgoraChatWidget {
     func initViews() {
-        containerView.backgroundColor = .clear
-        containerView.addSubview(chatView)
+        view.backgroundColor = .clear
+        view.addSubview(chatView)
         
 //        chatView.maxView.chatTableView.delegate = self
 //        chatView.maxView.chatTableView.dataSource = self
@@ -166,7 +166,7 @@ private extension AgoraChatWidget {
         let duration = durationValue.doubleValue
         
         UIView.animate(withDuration: duration) {
-            self.containerView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -182,7 +182,7 @@ private extension AgoraChatWidget {
         let duration = durationValue.doubleValue
         
         UIView.animate(withDuration: duration) {
-            self.containerView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
         }
     }
     
