@@ -84,6 +84,8 @@ static const NSString* kChatRoomId = @"chatroomId";
 @property (nonatomic,weak) NSTimer* timerBarrage;
 @property (nonatomic) NSInteger reserveBarrageCount;
 @property (nonatomic,strong) NSLock* barrageLock;
+@property (nonatomic,strong) NSThread* timerThread;
+@property (nonatomic,strong) dispatch_semaphore_t seg;
 @end
 
 @implementation ChatWidget
@@ -109,6 +111,16 @@ static const NSString* kChatRoomId = @"chatroomId";
     [self.chatManager removeObserver:self forKeyPath:@"chatroomAnnouncement"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.chatManager logout];
+    if(self.timerThread) {
+        [self performSelector:@selector(closeTimer) onThread:self.timerThread withObject:nil waitUntilDone:NO];
+        [self.timerThread cancel];
+        self.timerThread = NULL;
+    }
+    
+}
+
+- (void)closeTimer
+{
     if(self.timerBarrage) {
         [self.timerBarrage invalidate];
         self.timerBarrage = nil;
@@ -315,6 +327,7 @@ static const NSString* kChatRoomId = @"chatroomId";
 }
 
 - (void)initData:(NSDictionary *)properties {
+    self.seg = dispatch_semaphore_create(0);
     ChatUserConfig* user = [[ChatUserConfig alloc] init];
     
     user.avatarurl = properties[@"avatarurl"];
@@ -609,11 +622,22 @@ static const NSString* kChatRoomId = @"chatroomId";
     [self.barrageLock lock];
     [self.barrageInfoArray addObject:barrage];
     [self.barrageLock unlock];
-    if(!self.timerBarrage) {
+    if(!self.timerThread) {
         __weak typeof(self) weakself = self;
-        self.timerBarrage = [NSTimer block_scheduledTimerWithTimeInterval:0.1 block:^{
-            [weakself showBarrage];
-        } repeats:YES];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            weakself.timerThread = [NSThread currentThread];
+            if(!weakself.timerBarrage) {
+                weakself.timerBarrage = [NSTimer block_scheduledTimerWithTimeInterval:0.5 block:^{
+                    [weakself showBarrage];
+                } repeats:YES];
+                NSRunLoop* runloop = [NSRunLoop currentRunLoop];
+                [runloop addTimer:weakself.timerBarrage forMode:NSDefaultRunLoopMode];
+                [runloop run];
+            }
+            dispatch_semaphore_signal(weakself.seg);
+        });
+        dispatch_semaphore_wait(weakself.seg, 2.0*NSEC_PER_SEC);
+        
     }
 }
 
@@ -630,12 +654,18 @@ static const NSString* kChatRoomId = @"chatroomId";
 
 - (void)showBarrage
 {
-    if(self.reserveBarrageCount >= 3)
+    if(self.reserveBarrageCount >= 3 || !self.isShowBarrage)
         return;
-    BarrageMsgInfo* barrageMsgInfo = [self popBarrageMsgInfo];
-    if(barrageMsgInfo) {
-        [self.renderer receive:[self buildBarrageDescriptor:barrageMsgInfo]];
-        self.reserveBarrageCount++;
+    BarrageMsgInfo* barrageMsgInfo = nil;
+    while(barrageMsgInfo = [self popBarrageMsgInfo]) {
+        __weak typeof(self) weakself = self;
+        
+        if(barrageMsgInfo) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakself.renderer receive:[self buildBarrageDescriptor:barrageMsgInfo]];
+                weakself.reserveBarrageCount++;
+            });
+        }
     }
 }
 
