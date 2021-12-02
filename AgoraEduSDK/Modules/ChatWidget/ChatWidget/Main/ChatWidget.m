@@ -313,7 +313,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     }else{
         descriptor.spriteName = NSStringFromClass([BarrageWalkTextSprite class]);
         descriptor.params[@"attributedText"] = attrString;
-        descriptor.params[@"textColor"] = [UIColor redColor];
+        descriptor.params[@"textColor"] = [UIColor blueColor];
         descriptor.params[@"shadowColor"] = [UIColor blackColor];
         descriptor.params[@"shadowOffset"] = [NSValue valueWithCGSize:CGSizeMake(0, 1)];
         descriptor.params[@"fontSize"] = [NSNumber numberWithDouble:15.0];
