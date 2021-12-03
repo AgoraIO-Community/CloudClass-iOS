@@ -30,10 +30,8 @@ class AgoraOneToOneStateUIController: UIViewController {
     private var settingButton: UIButton!
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
-
     /** 课堂状态*/
     private var classState: AgoraEduContextClassState = .before
-    
     /** 房间计时器*/
     private var timer: Timer?
     /** 房间时间信息*/
@@ -59,6 +57,7 @@ class AgoraOneToOneStateUIController: UIViewController {
         
         createViews()
         createConstrains()
+        setup()
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
                                           repeats: true,
                                           block: { [weak self] _ in
@@ -85,17 +84,13 @@ extension AgoraOneToOneStateUIController {
     }
     
     func classOverAlert() {
-        let buttonLabel = AgoraAlertLabelModel()
-        buttonLabel.text = AgoraKitLocalizedString("SureText")
-        let button = AgoraAlertButtonModel()
-        button.titleLabel = buttonLabel
-        button.tapActionBlock = { [weak self] (index) -> Void in
-            self?.contextPool.room.leaveRoom()
-        }
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: AgoraKitLocalizedString("ClassOverNoticeText"),
-                             message: AgoraKitLocalizedString("ClassOverText"),
-                             btnModels: [button])
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
+            .setMessage(AgoraKitLocalizedString("ClassOverText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.contextPool.room.leaveRoom()
+            }))
+            .show(in: self)
     }
     
     func timeString(from interval: Int64) -> String {
@@ -137,7 +132,6 @@ extension AgoraOneToOneStateUIController {
         guard let info = self.timeInfo else {
             return
         }
-        
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch self.classState {
         case .before:
@@ -193,6 +187,7 @@ extension AgoraOneToOneStateUIController {
 }
 
 extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
+    
     func onClassState(_ state: AgoraEduContextClassState) {
         self.classState = state
     }
@@ -256,7 +251,7 @@ private extension AgoraOneToOneStateUIController {
         settingButton.imageView?.tintColor = UIColor(rgb: 0x7B88A0)
         settingButton.addTarget(self, action: #selector(onClickSetting(_:)),
                                 for: .touchUpInside)
-        settingButton.layer.cornerRadius = AgoraFit.scale(34) * 0.5
+        settingButton.layer.cornerRadius = AgoraFit.scale(26) * 0.5
         settingButton.clipsToBounds = true
         view.addSubview(settingButton)
     }
@@ -291,7 +286,7 @@ private extension AgoraOneToOneStateUIController {
                 make?.right.equalTo()(0)
             }
             make?.centerY.equalTo()(0)
-            make?.width.height().equalTo()(AgoraFit.scale(34))
+            make?.width.height().equalTo()(AgoraFit.scale(26))
         }
     }
 }

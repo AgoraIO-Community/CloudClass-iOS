@@ -11,7 +11,6 @@ import Foundation
 import UIKit
 
 @objc public class MainViewController: UINavigationController {
-    private var alertView: AgoraAlertView?
     
     public override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)

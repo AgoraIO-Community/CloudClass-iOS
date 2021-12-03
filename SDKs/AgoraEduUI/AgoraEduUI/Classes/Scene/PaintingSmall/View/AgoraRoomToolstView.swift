@@ -76,7 +76,7 @@ protocol AgoraRoomToolsViewDelegate: NSObject {
     func toolsViewDidDeselectTool(_ tool: AgoraRoomToolstView.AgoraRoomToolType)
 }
 // MARK: - AgoraToolListView
-private let kButtonSize: CGFloat = AgoraFit.scale(46.0)
+private let kButtonSize: CGFloat = AgoraFit.scale(36.0)
 private let kGap: CGFloat = 12.0
 private let kDefaultTag: Int = 3389
 

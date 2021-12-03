@@ -36,23 +36,21 @@ class AgoraToastTipsView: UIView {
             self.layer.borderColor = UIColor(rgb: 0x357BF6).cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_notice",
                                                          in: "AgoraUIEduBaseViews")
-            break
         case .warning:
             self.backgroundColor = UIColor(rgb: 0xFFFBF4)
             self.layer.borderColor = UIColor(rgb: 0xF0C996).cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_warning",
                                                          in: "AgoraUIEduBaseViews")
-            break
         case .erro:
-            self.backgroundColor = UIColor(rgb: 0xF07766)
+            self.backgroundColor = UIColor(rgb: 0xFFF2F2)
             self.layer.borderColor = UIColor(rgb: 0xF07766).cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_error",
                                                          in: "AgoraUIEduBaseViews")
-            break
         case .success:
             self.backgroundColor = UIColor(rgb: 0xFAFFFF)
             self.layer.borderColor = UIColor(rgb: 0x357BF6).cgColor
-            break
+            self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_notice",
+                                                         in: "AgoraUIEduBaseViews")
         }
     }
     

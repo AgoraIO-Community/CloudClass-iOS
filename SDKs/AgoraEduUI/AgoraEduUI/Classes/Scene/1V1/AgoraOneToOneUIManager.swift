@@ -8,6 +8,7 @@
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
+import AgoraWidget
 import Masonry
 
 class AgoraOneToOneUIManager: AgoraEduUIManager {
@@ -17,10 +18,14 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
     private var stateController: AgoraOneToOneStateUIController!
     /** 渲染 控制器*/
     private var renderController: AgoraOneToOneRenderUIController!
-    
+    /** 右边用来切圆角和显示背景色的容器视图*/
+    private var rightContentView: UIView!
+    /** 白板 控制器*/
     private var boardController: UIViewController!
+    /** 聊天 控制器*/
+    private var messageController: AgoraBaseWidget?
     
-    private var chatController: UIViewController!
+    private var tabSelectView: AgoraOneToOneTabView?
     
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
@@ -61,17 +66,19 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
+        self.createViews()
+        self.createConstrains()
+        if AgoraKitDeviceAssistant.OS.isPad {
+            self.createPadViews()
+        } else {
+            self.createPhoneViews()
+        }
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
                 return
             }
-            self.createViews()
-            if AgoraKitDeviceAssistant.OS.isPad {
-                self.createPadConstrains()
-            } else {
-                self.createPhoneConstrains()
-            }
+            self.initWidgets()
         } fail: { [weak self] error in
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
@@ -80,11 +87,39 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
 }
 // Mark: - Actions
 private extension AgoraOneToOneUIManager {
+    
     @objc func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {
         ctrlView = nil
         stateController.deSelect()
     }
 }
+extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
+    func onChatTabSelectChanged(isSelected: Bool) {
+        messageController?.view.isHidden = !isSelected
+    }
+}
+
+extension AgoraOneToOneUIManager: AgoraWidgetMessageObserver {
+    
+    func onMessageReceived(_ message: String,
+                           widgetId: String!) {
+        switch widgetId {
+        case "AgoraChatWidget":
+            if let dic = message.json(),
+               let isMin = dic["isMinSize"] as? Bool,
+               isMin{
+                ctrlView == nil
+            }
+        case "HyChatWidget":
+            if message == "min" {
+                ctrlView == nil
+            }
+        default:
+            break
+        }
+    }
+}
+
 // Mark: - AgoraOneToOneStateUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
     func onSettingSelected(isSelected: Bool) {
@@ -113,13 +148,15 @@ private extension AgoraOneToOneUIManager {
         addChild(boardController)
         view.addSubview(boardController.view)
         
+        rightContentView = UIView()
+        rightContentView.backgroundColor = .white
+        rightContentView.layer.cornerRadius = 4.0
+        rightContentView.clipsToBounds = true
+        view.addSubview(rightContentView)
+        
         renderController = AgoraOneToOneRenderUIController(context: contextPool)
         addChild(renderController)
-        view.addSubview(renderController.view)
-        
-        chatController = UIViewController()
-        addChild(chatController)
-        view.addSubview(chatController.view)
+        rightContentView.addSubview(renderController.view)
         
         ctrlMaskView = UIView(frame: .zero)
         ctrlMaskView.isHidden = true
@@ -129,52 +166,75 @@ private extension AgoraOneToOneUIManager {
         view.addSubview(ctrlMaskView)
     }
     
-    func createPhoneConstrains() {
+    func createConstrains() {
         stateController.view.mas_makeConstraints { [unowned self] make in
-            make?.top.equalTo()(self.view)
-            make?.left.right().equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(44))
-        }
-        renderController.view.mas_makeConstraints { [unowned self] make in
-            if #available(iOS 11.0, *) {
-                make?.right.equalTo()(self.view.mas_safeAreaLayoutGuideRight)
-            } else {
-                make?.right.equalTo()(20)
-            }
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
-            make?.width.equalTo()(168)
-            make?.bottom.equalTo()(self.view)
+            make?.top.left().right().equalTo()(0)
+            make?.height.equalTo()(AgoraFit.scale(34))
         }
         ctrlMaskView.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)
             make?.left.right().bottom().equalTo()(0)
         }
-        boardControllerLayout()
-        chatControllerLayout()
+        boardController.view.mas_makeConstraints { make in
+            make?.left.bottom().equalTo()(0)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(3)
+        }
     }
     
-    func createPadConstrains() {
-        stateController.view.mas_makeConstraints { [unowned self] make in
-            make?.top.equalTo()(self.view)
-            make?.left.right().equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(44))
-        }
-        renderController.view.mas_makeConstraints { [unowned self] make in
-            if #available(iOS 11.0, *) {
-                make?.right.equalTo()(self.view.mas_safeAreaLayoutGuideRight)
-            } else {
-                make?.right.equalTo()(20)
-            }
+    func createPhoneViews() {
+        let v = AgoraOneToOneTabView(frame: .zero)
+        v.delegate = self
+        rightContentView.addSubview(v)
+        tabSelectView = v
+        
+        rightContentView.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
-            make?.width.equalTo()(168)
-            make?.bottom.equalTo()(self.view)
+            make?.bottom.right().equalTo()(0)
+            make?.width.equalTo()(198)
         }
-        ctrlMaskView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)
+        tabSelectView?.mas_makeConstraints { make in
+            make?.top.left().right().equalTo()(0)
+            make?.height.equalTo()(34)
+        }
+        renderController.view.mas_makeConstraints { make in
+            make?.top.equalTo()(tabSelectView?.mas_bottom)
             make?.left.right().bottom().equalTo()(0)
         }
-        boardControllerLayout()
-        chatControllerLayout()
+    }
+    
+    func createPadViews() {
+        rightContentView.mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view)
+            make?.bottom.right().equalTo()(0)
+            make?.width.equalTo()(340)
+        }
+        renderController.view.mas_makeConstraints { make in
+            make?.top.left().right().equalTo()(0)
+        }
+    }
+    
+    func initWidgets() {
+//        guard let widgetInfos = contextPool.widget.getWidgetConfigs() else {
+//            return
+//        }
+//        if let widget = createChatWidget() {
+//            widget.addMessageObserver(self)
+//            widget.containerView.isHidden = true
+//            rightContentView.addSubview(widget.containerView)
+//            messageController = widget
+//
+//            if AgoraKitDeviceAssistant.OS.isPad {
+//                widget.view.mas_makeConstraints { make in
+//                    make?.top.equalTo()(renderController.view.mas_bottom)
+//                    make?.left.right().bottom().equalTo()(0)
+//                }
+//            } else {
+//                widget.view.mas_makeConstraints { make in
+//                    make?.top.equalTo()(tabSelectView?.mas_bottom)
+//                    make?.left.right().bottom().equalTo()(0)
+//                }
+//            }
+//        }
     }
 }
 
@@ -250,25 +310,6 @@ private extension AgoraOneToOneUIManager {
             } else {
                 make?.bottom.equalTo()(-bottomSpace)
             }
-        }
-    }
-    
-    func chatControllerLayout() {
-        let isTraditional = UIDevice.current.isTraditionalChineseLanguage
-        //let chatOriginalSize = chatController.originalSize
-        
-        chatController.view.mas_makeConstraints { make in
-            let space: CGFloat = 10
-            
-            if isTraditional {
-                make?.left.equalTo()(boardController.view.mas_left)?.offset()(space)
-            } else {
-                make?.right.equalTo()(boardController.view.mas_right)?.offset()(-space)
-            }
-            
-            make?.bottom.equalTo()(boardController.view.mas_bottom)?.offset()(-space)
-//            make?.height.equalTo()(chatOriginalSize.height)
-//            make?.width.equalTo()(chatOriginalSize.width)
         }
     }
 }

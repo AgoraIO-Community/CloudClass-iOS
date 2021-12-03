@@ -17,7 +17,7 @@ public class AgoraToast: NSObject {
     /// 弹出Message提醒
     /// - parameter msg: 提醒内容
     /// - parameter type: 提醒框的样式
-    @objc public static func toast(msg: String,
+    @objc public static func toast(msg: String?,
                                    type: AgoraToastType = .notice) {
         AgoraToast.shared.toast(msg: msg,
                                 type: type)
@@ -27,9 +27,10 @@ public class AgoraToast: NSObject {
     
     private var tipsViews = [AgoraToastTipsView]()
         
-    private func toast(msg: String,
+    private func toast(msg: String?,
                        type: AgoraToastType = .notice) {
-        guard let window = UIApplication.shared.keyWindow else {
+        guard let window = UIApplication.shared.keyWindow,
+              let `msg` = msg else {
             return
         }
         let tipsView = AgoraToastTipsView(msg: msg,

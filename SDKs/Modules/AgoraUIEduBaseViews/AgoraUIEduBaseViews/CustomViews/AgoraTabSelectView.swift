@@ -19,8 +19,13 @@ public class AgoraTabSelectView: AgoraBaseUIScrollView {
     }
     
     public struct TitleProperty {
-        var color: UIColor
-        var font: UIFont
+        public var color: UIColor
+        public var font: UIFont
+        
+        public init(color: UIColor, font: UIFont) {
+            self.color = color
+            self.font = font
+        }
     }
     
     private lazy var underline: UIView = {

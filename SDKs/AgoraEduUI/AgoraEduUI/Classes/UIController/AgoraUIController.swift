@@ -21,14 +21,6 @@ class AgoraUIControllerContainer: AgoraBaseUIView {
     }
 }
 
-protocol AgoraController where Self: NSObject {
-//    func observeEvent(register: AgoraControllerEventRegister)
-}
-
-protocol AgoraUIController: AgoraController {
-    var containerView: AgoraUIControllerContainer {set get}
-}
-
 protocol AgoraControllerContextProvider: NSObjectProtocol {
     func controllerNeedWhiteBoardContext() -> AgoraEduWhiteBoardContext
     func controllerNeedWhiteBoardToolContext() -> AgoraEduWhiteBoardToolContext

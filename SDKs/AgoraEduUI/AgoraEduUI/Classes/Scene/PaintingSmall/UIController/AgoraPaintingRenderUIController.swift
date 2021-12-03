@@ -35,7 +35,6 @@ extension AgoraRenderItemInfoModel {
             return
         }
         self.streamUUID = s.streamUuid
-        
         if s.streamType == .video ||
             s.streamType == .both {
             switch s.videoSourceState {
@@ -382,8 +381,8 @@ private extension AgoraPaintingRenderUIController {
             window.addSubview(imageView)
             imageView.mas_makeConstraints { make in
                 make?.center.equalTo()(0)
-                make?.width.equalTo()(AgoraFit.scale(300))
-                make?.height.equalTo()(AgoraFit.scale(300))
+                make?.width.equalTo()(AgoraFit.scale(238))
+                make?.height.equalTo()(AgoraFit.scale(238))
             }
         }
         // sounds
@@ -468,17 +467,14 @@ extension AgoraPaintingRenderUIController: AgoraRenderItemCellDelegate  {
         renderConfig.mode = .hidden
         contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamID,
                                                               level: .low)
-       
-        let u = contextPool.user.getLocalUserInfo()
-        
         contextPool.media.startRenderVideo(view: view,
                                            renderConfig: renderConfig,
                                            streamUuid: streamID)
+
     }
     
     func onCellRequestCancelRender(streamID: String,
                                    userUUID: String) {
-        let u = contextPool.user.getLocalUserInfo()
         contextPool.media.stopRenderVideo(streamUuid: streamID)
     }
 }

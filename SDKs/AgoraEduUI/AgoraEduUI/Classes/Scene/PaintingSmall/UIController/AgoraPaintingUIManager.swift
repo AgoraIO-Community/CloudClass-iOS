@@ -76,6 +76,7 @@ class AgoraPaintingUIManager: AgoraEduUIManager {
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
+        vc.delegate = self
         self.addChild(vc)
         return vc
     }()
@@ -111,23 +112,30 @@ class AgoraPaintingUIManager: AgoraEduUIManager {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        
+        self.createViews()
+        self.createConstrains()
+        if self.contextPool.user.getLocalUserInfo().role == .teacher {
+            self.toolsView.tools = [.setting, .toolBox, .message]
+        } else if self.contextPool.user.getLocalUserInfo().role == .student {
+            self.toolsView.tools = [.setting, .message]
+        }
+        self.contextPool.user.registerEventHandler(self)
+        self.contextPool.monitor.registerMonitorEventHandler(self)
+        
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
                 return
             }
-            self.createViews()
-            self.createConstrains()
-            if self.contextPool.user.getLocalUserInfo().role == .teacher {
-                self.toolsView.tools = [.setting, .toolBox, .message]
-            } else if self.contextPool.user.getLocalUserInfo().role == .student {
-                self.toolsView.tools = [.setting, .message]
-            }
-            self.contextPool.user.registerEventHandler(self)
-            self.contextPool.monitor.registerMonitorEventHandler(self)
-            
             self.initWidgets()
+            if self.contextPool.user.getLocalUserInfo().role == .teacher {
+                self.contextPool.room.startClass {
+                } fail: { error in
+                    AgoraToast.toast(msg: error.message, type: .erro)
+                }
+            }
         } fail: { [weak self] error in
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
@@ -183,19 +191,14 @@ extension AgoraPaintingUIManager: AgoraEduMonitorHandler {
 // MARK: - AgoraEduUserHandler
 extension AgoraPaintingUIManager: AgoraEduUserHandler {
     func onKickedOut() {
-        let btnLabel = AgoraAlertLabelModel()
-        btnLabel.text = AgoraKitLocalizedString("SureText")
-        let btnModel = AgoraAlertButtonModel()
-        
-        btnModel.titleLabel = btnLabel
-        btnModel.tapActionBlock = { [weak self] (index) -> Void in
-            self?.contextPool.room.leaveRoom()
-            self?.exit(reason: .kickOut)
-        }
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: AgoraKitLocalizedString("KickOutNoticeText"),
-                             message: AgoraKitLocalizedString("KickOutText"),
-                             btnModels: [btnModel])
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
+            .setMessage(AgoraKitLocalizedString("KickOutText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.contextPool.room.leaveRoom()
+                self.exit(reason: .kickOut)
+            }))
+            .show(in: self)
     }
     
     func onShowUserReward(_ user: AgoraEduContextUserInfo) {
@@ -372,6 +375,13 @@ extension AgoraPaintingUIManager: AgoraPaintingBoardUIControllerDelegate {
     }
 }
 
+extension AgoraPaintingUIManager: AgoraSettingUIControllerDelegate {
+    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
+        exit(reason: .normal)
+    }
+}
+
+
 // MARK: - Creations
 private extension AgoraPaintingUIManager {
     func createViews() {
@@ -470,7 +480,7 @@ private extension AgoraPaintingUIManager {
         renderController.view.mas_makeConstraints { make in
             make?.left.right().equalTo()(renderController.view.superview)
             make?.top.equalTo()(stateController.view.mas_bottom)
-            make?.height.equalTo()(AgoraFit.scale(80))
+            make?.height.equalTo()(AgoraFit.scale(64))
         }
         whiteBoardController.view.mas_makeConstraints { make in
             make?.top.equalTo()(renderController.view.mas_bottom)
@@ -482,14 +492,14 @@ private extension AgoraPaintingUIManager {
         brushToolButton.mas_makeConstraints { make in
             make?.right.equalTo()(-9)
             make?.bottom.equalTo()(-14)
-            make?.width.height().equalTo()(AgoraFit.scale(46))
+            make?.width.height().equalTo()(AgoraFit.scale(36))
         }
         toolsView.mas_makeConstraints { make in
             make?.right.equalTo()(brushToolButton)
             make?.centerY.equalTo()(toolsView.superview)
         }
         handsUpViewController.view.mas_makeConstraints { make in
-            make?.width.height().equalTo()(AgoraFit.scale(46))
+            make?.width.height().equalTo()(AgoraFit.scale(36))
             make?.centerX.equalTo()(toolsView)
             make?.top.equalTo()(toolsView.mas_bottom)?.offset()(12)
         }
@@ -678,10 +688,12 @@ extension AgoraPaintingUIManager: AgoraWidgetMessageObserver {
                let isMin = dic["isMinSize"] as? Bool,
                isMin {
                 ctrlView == nil
+                toolsView.deselectAll()
             }
         case "HyChatWidget":
             if message == "min" {
                 ctrlView == nil
+                toolsView.deselectAll()
             }
         default:
             break

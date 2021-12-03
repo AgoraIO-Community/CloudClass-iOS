@@ -81,3 +81,6 @@ kick_out_once = "Move out of the classroom only once";
 kick_out_forever = "Prevent re-entry into the classroom";
 kick_out_submit = "Submit";
 kick_out_cancel = "Cancel";
+
+one_to_one_tab_video = "Video";
+one_to_one_tab_chat = "Chat";

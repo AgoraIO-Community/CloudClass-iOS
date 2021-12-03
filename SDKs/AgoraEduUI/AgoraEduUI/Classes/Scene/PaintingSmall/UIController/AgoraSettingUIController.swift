@@ -66,7 +66,6 @@ class AgoraSettingUIController: UIViewController {
         createViews()
         createConstrains()
         setup()
-        contextPool.room.registerEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
     }
 }
@@ -102,23 +101,6 @@ private extension AgoraSettingUIController {
             } fail: { error in
             }
         }
-    }
-}
-
-// MARK: - AgoraEduRoomHandler
-extension AgoraSettingUIController: AgoraEduRoomHandler {
-    func onUploadLogSuccess(_ logId: String) {
-        let title = AgoraKitLocalizedString("UploadLog")
-        
-        let button = AgoraAlertButtonModel()
-        let buttonTitleProperties = AgoraAlertLabelModel()
-        buttonTitleProperties.text = AgoraKitLocalizedString("OK")
-        button.titleLabel = buttonTitleProperties
-        
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: title,
-                             message: logId,
-                             btnModels: [button])
     }
 }
 
@@ -178,42 +160,26 @@ private extension AgoraSettingUIController {
     
     @objc func onClickUploadLog(_ sender: UIButton) {
         contextPool.monitor.uploadLog { logId in
-            let title = AgoraKitLocalizedString("UploadLog")
-            
-            let button = AgoraAlertButtonModel()
-            let buttonTitleProperties = AgoraAlertLabelModel()
-            buttonTitleProperties.text = AgoraKitLocalizedString("OK")
-            button.titleLabel = buttonTitleProperties
-            
-            AgoraUtils.showAlert(imageModel: nil,
-                                 title: title,
-                                 message: logId,
-                                 btnModels: [button])
+            AgoraAlert()
+                .setTitle(AgoraKitLocalizedString("UploadLog"))
+                .setMessage(logId)
+                .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("OK"), action: nil))
+                .show(in: self)
         } failure: { error in
             // TODO: 上传日志失败
         }
     }
     
     @objc func onClickExit(_ sender: UIButton) {
-        let leftButtonLabel = AgoraAlertLabelModel()
-        leftButtonLabel.text = AgoraKitLocalizedString("CancelText")
-        
-        let leftButton = AgoraAlertButtonModel()
-        leftButton.titleLabel = leftButtonLabel
-        
-        let rightButtonLabel = AgoraAlertLabelModel()
-        rightButtonLabel.text = AgoraKitLocalizedString("SureText")
-        
-        let rightButton = AgoraAlertButtonModel()
-        rightButton.titleLabel = rightButtonLabel
-        rightButton.tapActionBlock = { [unowned self] (index) -> Void in
-            self.contextPool.room.leaveRoom()
-            self.delegate?.settingUIControllerDidPressedLeaveRoom(controller: self)
-        }
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: AgoraKitLocalizedString("LeaveClassTitleText"),
-                             message: AgoraKitLocalizedString("LeaveClassText"),
-                             btnModels: [leftButton, rightButton])
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("LeaveClassTitleText"))
+            .setMessage(AgoraKitLocalizedString("LeaveClassText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("CancelText"), action:nil))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.contextPool.room.leaveRoom()
+                self.delegate?.settingUIControllerDidPressedLeaveRoom(controller: self)
+            }))
+            .show(in: self)
     }
     
     @objc func onClickFrontCamera(_ sender: UIButton) {

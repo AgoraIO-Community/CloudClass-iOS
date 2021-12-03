@@ -166,18 +166,13 @@ extension AgoraSmallUIManager: AgoraEduMonitorHandler {
 // MARK: - AgoraEduUserHandler
 extension AgoraSmallUIManager: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
-        let btnLabel = AgoraAlertLabelModel()
-        btnLabel.text = AgoraKitLocalizedString("SureText")
-        let btnModel = AgoraAlertButtonModel()
-        
-        btnModel.titleLabel = btnLabel
-        btnModel.tapActionBlock = { [weak self] (index) -> Void in
-            self?.contextPool.room.leaveRoom()
-        }
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: AgoraKitLocalizedString("KickOutNoticeText"),
-                             message: AgoraKitLocalizedString("KickOutText"),
-                             btnModels: [btnModel])
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
+            .setMessage(AgoraKitLocalizedString("KickOutText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.contextPool.room.leaveRoom()
+            }))
+            .show(in: self)
     }
     
     func onShowUserReward(_ user: AgoraEduContextUserInfo) {
@@ -379,7 +374,7 @@ private extension AgoraSmallUIManager {
         renderController.view.mas_makeConstraints { make in
             make?.left.right().equalTo()(renderController.view.superview)
             make?.top.equalTo()(stateController.view.mas_bottom)
-            make?.height.equalTo()(AgoraFit.scale(80))
+            make?.height.equalTo()(AgoraFit.scale(64))
         }
         whiteBoardController.view.mas_makeConstraints { make in
             make?.top.equalTo()(renderController.view.mas_bottom)
@@ -391,14 +386,14 @@ private extension AgoraSmallUIManager {
         brushToolButton.mas_makeConstraints { make in
             make?.right.equalTo()(-9)
             make?.bottom.equalTo()(-14)
-            make?.width.height().equalTo()(AgoraFit.scale(46))
+            make?.width.height().equalTo()(AgoraFit.scale(36))
         }
         toolsView.mas_makeConstraints { make in
             make?.right.equalTo()(brushToolButton)
             make?.centerY.equalTo()(toolsView.superview)
         }
         handsUpViewController.view.mas_makeConstraints { make in
-            make?.width.height().equalTo()(AgoraFit.scale(46))
+            make?.width.height().equalTo()(AgoraFit.scale(36))
             make?.centerX.equalTo()(toolsView)
             make?.top.equalTo()(toolsView.mas_bottom)?.offset()(12)
         }

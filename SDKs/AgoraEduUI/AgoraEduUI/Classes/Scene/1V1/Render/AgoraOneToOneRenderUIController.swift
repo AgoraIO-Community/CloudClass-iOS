@@ -64,7 +64,6 @@ private extension AgoraOneToOneRenderUIController {
             let model = AgoraRenderItemInfoModel(with: studentInfo,
                                                  stream: stream)
             studentView.item = model
-            
             if let s = stream {
                 if s.streamType == .video ||
                     s.streamType == .both {
@@ -106,7 +105,6 @@ private extension AgoraOneToOneRenderUIController {
             let model = AgoraRenderItemInfoModel(with: teacherInfo,
                                                  stream: stream)
             teacherView.item = model
-
             if let s = stream {
                 if s.streamType == .video ||
                     s.streamType == .both {
@@ -211,20 +209,14 @@ extension AgoraOneToOneRenderUIController: AgoraOneToOneMemberViewDelegate {
     func onMemberViewRequestRenderOnView(view: UIView, streamID: String, userUUID: String) {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        
         contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamID,
                                                               level: .low)
-        
-        let u = contextPool.user.getLocalUserInfo()
-        
-        
         contextPool.media.startRenderVideo(view: view,
                                            renderConfig: renderConfig,
                                            streamUuid: streamID)
     }
     
     func onMemberViewRequestCancelRender(streamID: String, userUUID: String) {
-        let u = contextPool.user.getLocalUserInfo()
         contextPool.media.stopRenderVideo(streamUuid: streamID)
     }
 }
@@ -296,13 +288,13 @@ private extension AgoraOneToOneRenderUIController {
     func createConstrains() {
         teacherView.mas_remakeConstraints { make in
             make?.top.equalTo()(0)
-            make?.left.equalTo()(0)
+            make?.centerX.equalTo()(0)
             make?.width.equalTo()(view)
-            make?.height.equalTo()(view.mas_width)
+            make?.height.equalTo()(view.mas_width)?.multipliedBy()(190.0/340.0)
         }
         studentView.mas_remakeConstraints { make in
             make?.top.equalTo()(teacherView.mas_bottom)?.offset()(2)
-            make?.left.equalTo()(0)
+            make?.centerX.equalTo()(0)
             make?.width.height().equalTo()(teacherView)
         }
     }

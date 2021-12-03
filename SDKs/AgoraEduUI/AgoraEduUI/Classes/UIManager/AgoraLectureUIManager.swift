@@ -152,18 +152,13 @@ extension AgoraLectureUIManager: AgoraEduMonitorHandler {
 // MARK: - AgoraEduUserHandler
 extension AgoraLectureUIManager: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
-        let btnLabel = AgoraAlertLabelModel()
-        btnLabel.text = AgoraKitLocalizedString("SureText")
-        let btnModel = AgoraAlertButtonModel()
-        
-        btnModel.titleLabel = btnLabel
-        btnModel.tapActionBlock = { [weak self] (index) -> Void in
-            self?.contextPool.room.leaveRoom()
-        }
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: AgoraKitLocalizedString("KickOutNoticeText"),
-                             message: AgoraKitLocalizedString("KickOutText"),
-                             btnModels: [btnModel])
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
+            .setMessage(AgoraKitLocalizedString("KickOutText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.contextPool.room.leaveRoom()
+            }))
+            .show(in: self)
     }
     
     func onShowUserReward(_ user: AgoraEduContextUserInfo) {

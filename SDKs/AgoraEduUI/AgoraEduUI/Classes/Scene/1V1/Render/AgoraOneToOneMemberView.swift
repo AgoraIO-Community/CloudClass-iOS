@@ -133,10 +133,9 @@ class AgoraOneToOneMemberView: UIView {
 // MARK: - Creations
 private extension AgoraOneToOneMemberView {
     func createViews() {
-        layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
-        layer.borderWidth = 1
         layer.cornerRadius = 4
         self.clipsToBounds = true
+        self.backgroundColor = UIColor(hex: 0xF9F9FC)
         
         cameraStateView = UIImageView(image: UIImage.ag_imageNamed("ic_member_device_offline",
                                                                    in: "AgoraEduUI"))

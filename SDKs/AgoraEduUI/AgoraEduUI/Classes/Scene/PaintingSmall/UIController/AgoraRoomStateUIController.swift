@@ -75,7 +75,6 @@ private extension AgoraRoomStateUIController {
         guard let info = self.timeInfo else {
             return
         }
-
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch self.classState {
         case .before:
@@ -158,22 +157,18 @@ private extension AgoraRoomStateUIController {
     }
     
     func classOverAlert() {
-        let buttonLabel = AgoraAlertLabelModel()
-        buttonLabel.text = AgoraKitLocalizedString("SureText")
-        let button = AgoraAlertButtonModel()
-        button.titleLabel = buttonLabel
-        button.tapActionBlock = { [weak self] (index) -> Void in
-            self?.contextPool.room.leaveRoom()
-        }
-        AgoraUtils.showAlert(imageModel: nil,
-                             title: AgoraKitLocalizedString("ClassOverNoticeText"),
-                             message: AgoraKitLocalizedString("ClassOverText"),
-                             btnModels: [button])
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
+            .setMessage(AgoraKitLocalizedString("ClassOverText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.contextPool.room.leaveRoom()
+                self.dismiss(animated: true, completion: nil)
+            }))
+            .show(in: self)
     }
 }
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomStateUIController: AgoraEduRoomHandler {
-    
     func onClassState(_ state: AgoraEduContextClassState) {
         self.classState = state
     }

@@ -26,12 +26,12 @@ public func AgoraUILocalizedString(_ key: String,
 }
 
 /** 尺寸适配*/
-fileprivate let kShortSide = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-fileprivate let kReferenceShort: Float = 768.0
+// 以375*667的短边作为缩放标准
+fileprivate let kScale = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) / 375.0
 fileprivate let kPad = UIDevice.current.userInterfaceIdiom == .pad
 struct AgoraFit {
     static func scale(_ value: CGFloat) -> CGFloat {
-        return kPad ? value : value * 0.79
+        return value * kScale
     }
     
     static func os(phone: CGFloat, pad: CGFloat) -> CGFloat {

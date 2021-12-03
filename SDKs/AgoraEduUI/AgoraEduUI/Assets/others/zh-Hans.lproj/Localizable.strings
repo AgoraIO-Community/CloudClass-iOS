@@ -93,3 +93,6 @@ kick_out_once = "仅移出教室一次";
 kick_out_forever = "禁止再次进入教室";
 kick_out_submit = "确定";
 kick_out_cancel = "取消";
+
+one_to_one_tab_video = "视频";
+one_to_one_tab_chat = "聊天";
