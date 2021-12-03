@@ -690,7 +690,7 @@ extension AgoraPaintingUIManager: AgoraWidgetMessageObserver {
                 ctrlView == nil
                 toolsView.deselectAll()
             }
-        case "HyChatWidget":
+        case "easemobIM":
             if message == "min" {
                 ctrlView == nil
                 toolsView.deselectAll()

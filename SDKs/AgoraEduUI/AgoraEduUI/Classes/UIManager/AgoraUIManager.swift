@@ -54,11 +54,19 @@ public class AgoraEduUIManager: UIViewController {
     }
     
     public func createChatWidget() -> AgoraBaseWidget? {
-//        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
+        // easemobIM
+        guard let chatConfig = contextPool.widget.getWidgetConfig("easemobIM") else {
+            return nil
+        }
+        
+        return createHxChat(config: chatConfig)
+        
+//        guard let widgetConfigs = contextPool.widget.getWidgetConfigs() else {
 //            return nil
 //        }
 //        var agoraChatWidget: AgoraBaseWidget?
-//        if let chatInfo = widgetInfos.first(where: {$0.widgetId == "HyChatWidget"}) {
+//        if let chatInfo = widgetConfigs.first(where: {$0.widgetId == "easemobIM"}) {
+
 //            agoraChatWidget = createHxChat(info: chatInfo)
 //        }else if let agoraChatInfo = widgetInfos.first(where: {$0.widgetId == "AgoraChatWidget"}) {
 //            agoraChatInfo.properties = ["contextPool": contextPool]
@@ -76,10 +84,9 @@ public class AgoraEduUIManager: UIViewController {
 //            }
 //        }
 //        return agoraChatWidget
-        return nil
     }
     
-    private func createHxChat(info: AgoraWidgetInfo) -> AgoraBaseWidget? {
+    private func createHxChat(config: AgoraWidgetConfig) -> AgoraBaseWidget? {
         let userInfo = contextPool.user.getLocalUserInfo()
         let roomInfo = contextPool.room.getRoomInfo()
 
@@ -89,12 +96,17 @@ public class AgoraEduUIManager: UIViewController {
            let url = flexProps["avatarurl"] as? String {
             properties["avatarurl"] = url
         }
+//
+//        properties["userName"] = userInfo.userName
+//        properties["userUuid"] = userInfo.userUuid
+//        properties["roomUuid"] = roomInfo.roomUuid
+//        properties["roomName"] = roomInfo.roomName
+//        properties["password"] = userInfo.userUuid
         
-        properties["userName"] = userInfo.userName
-        properties["userUuid"] = userInfo.userUuid
-        properties["roomUuid"] = roomInfo.roomUuid
-        properties["roomName"] = roomInfo.roomName
-        properties["password"] = userInfo.userUuid
+        
+        let widget = contextPool.widget.create(config)
+        
+        return widget
 //
 //        if let imProperties = contextPool.widget.getAgoraWidgetProperties(type: .im),
 //           let hxProperties = imProperties["huanxin"] as? [String: Any],

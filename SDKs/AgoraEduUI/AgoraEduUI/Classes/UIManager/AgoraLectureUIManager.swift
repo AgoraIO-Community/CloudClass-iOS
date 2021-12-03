@@ -361,7 +361,7 @@ extension AgoraLectureUIManager: AgoraWidgetMessageObserver {
                isMin{
                 ctrlView == nil
             }
-        case "HyChatWidget":
+        case "easemobIM":
             if message == "min" {
                 ctrlView == nil
             }

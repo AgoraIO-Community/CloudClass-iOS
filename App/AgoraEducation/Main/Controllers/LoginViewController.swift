@@ -315,7 +315,7 @@ private extension LoginViewController {
         
         if region.rawValue.contains("CN") {
             let chat = AgoraWidgetConfig(with: ChatWidget.self,
-                                                widgetId: "HyChatWidget")
+                                         widgetId: "easemobIM")
             AgoraClassroomSDK.registerWidgets([chat])
         }
         

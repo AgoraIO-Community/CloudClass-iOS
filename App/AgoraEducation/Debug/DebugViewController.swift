@@ -180,7 +180,7 @@ private extension DebugViewController {
         
         if region.contains("CN") {
             let chat = AgoraWidgetConfig(with: ChatWidget.self,
-                                                widgetId: "HyChatWidget")
+                                         widgetId: "easemobIM")
             AgoraClassroomSDK.registerWidgets([chat])
         }
         

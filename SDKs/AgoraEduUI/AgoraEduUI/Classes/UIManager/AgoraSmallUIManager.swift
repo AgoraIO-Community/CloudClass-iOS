@@ -339,16 +339,12 @@ private extension AgoraSmallUIManager {
     }
     
     func initWidgets() {
-//        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
-//            return
-//        }
-//        
-//        if let message = createChatWidget() {
-//            messageController = message
-//            message.add
-//            message.addMessageObserver(self)
-//            contentView.addSubview(message.containerView)
-//        }
+        if let message = createChatWidget() {
+            messageController = message
+            contextPool.widget.add(self,
+                                   widgetId: message.info.widgetId)
+            contentView.addSubview(message.view)
+        }
     }
     
     func createConstrains() {
@@ -411,7 +407,7 @@ extension AgoraSmallUIManager: AgoraWidgetMessageObserver {
                isMin{
                 ctrlView == nil
             }
-        case "HyChatWidget":
+        case "easemobIM":
             if message == "min" {
                 ctrlView == nil
             }
