@@ -702,8 +702,8 @@ static const NSString* kChatRoomId = @"chatroomId";
         if(viewTm) {
             __weak typeof(self) weakself = self;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, viewTm.doubleValue * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                if(self.reserveBarrageCount > 0)
-                    self.reserveBarrageCount--;
+                if(weakself.reserveBarrageCount > 0)
+                    weakself.reserveBarrageCount--;
             });
         }else{
             if(self.reserveBarrageCount > 0)
