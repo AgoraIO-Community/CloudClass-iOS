@@ -24,7 +24,7 @@ class AgoraPaintingBoardUIController: UIViewController {
         super.init(nibName: nil,
                    bundle: nil)
         
-        context.whiteBoard.registerBoardEventHandler(self)
+//        context.whiteBoard.registerBoardEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
