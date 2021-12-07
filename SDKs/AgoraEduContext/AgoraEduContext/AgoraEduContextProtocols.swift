@@ -256,7 +256,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     
     /// 获取所有在线用户信息 (v2.0.0)
     /// - returns: 用户列表数组
-    func getCoHostList() -> [AgoraEduContextUserInfo]
+    func getCoHostList() -> [AgoraEduContextUserInfo]?
     
     /// 获取指定角色的用户信息数组 (v2.0.0)
     /// - parameter role: 角色
@@ -364,35 +364,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - returns: void
     func handsDown(success: AgoraEduContextSuccess?,
                    failure: AgoraEduContextFail?)
-}
-
-// MARK: - HandsUp
-@objc public protocol AgoraEduHandsUpHandler: NSObjectProtocol {
-    
-    /** 新增接口 **/
-    /* 是否可以举手
-     * 文案显示：
-     * enabled == true -> "老师开启了举手功能" 【文案名：OpenHandsUpText】
-     * enabled == false -> "老师关闭了举手功能" 【文案名：CloseHandsUpText】
-     */
-    @objc optional func onHandsUpEnable(_ enable: Bool)
-    
-    /* 当前举手状态
-     * 文案显示：
-     * state == handsUp -> "举手成功" 【文案名：HandsUpSuccessText】
-     * enabled == handsDown -> "取消举手成功" 【文案名：HandsDownSuccessText】
-     */
-    @objc optional func onHandsUpState(_ state: AgoraEduContextHandsUpState)
-    
-    // 更新举手状态结果，如果error不为空，代表失败
-    /* 是否可以举手
-     * 文案显示：
-     * 如果error不为空，展示error的msg
-     */
-    @objc optional func onHandsUpError(_ error: AgoraEduContextError?)
-    
-    // 新增的回调，举手申请的结果
-    @objc optional func onHandsUpResult(_ result: AgoraEduContextHandsUpResult)
 }
 
 @objc public protocol AgoraEduMediaHandler: NSObjectProtocol {

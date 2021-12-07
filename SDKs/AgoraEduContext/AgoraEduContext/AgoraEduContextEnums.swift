@@ -45,6 +45,13 @@ import Foundation
     case kickOut = 1
 }
 
+@objc public enum AgoraEduContextUserUpdateReason: Int {
+    // 奖励
+    case reward = 0
+    // 连麦
+    case coHost = 1
+}
+
 // MARK: - Network
 @objc public enum AgoraEduContextNetworkQuality: Int {
     // 网络状态：未知、好、一般、差
