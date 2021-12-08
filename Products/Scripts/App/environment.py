@@ -11,13 +11,13 @@ def main():
     CoreEnvi = "0"
     TokenEnvi = "environment: .dev"
     
-    if Environment == "QATestAll":
+    if Environment == "QATestALL":
         CoreEnvi = "0"
         TokenEnvi = "environment: .dev"
-    elif Environment == "QAPreAll":
+    elif Environment == "QAPreALL":
         CoreEnvi = "1"
         TokenEnvi = "environment: .pre"
-    elif Environment == "QAProAll":
+    elif Environment == "QAProALL":
         CoreEnvi = "2"
         TokenEnvi = "environment: .pro"
     else:

@@ -85,7 +85,7 @@ public class AgoraUIUserView: AgoraBaseUIView {
         let img = AgoraKitImage("member_prise_star")
         let tag = AgoraBaseUIImageView(image: img)
         bg.addSubview(tag)
-        let imgSize = AgoraKitDeviceAssistant.OS.isPad ? CGSize(width: 22, height: 22) : CGSize(width: 13, height: 13)
+        let imgSize = UIDevice.current.isPad ? CGSize(width: 22, height: 22) : CGSize(width: 13, height: 13)
         tag.agora_right = label.agora_right + 15 + 3
         tag.agora_center_y = 0
         tag.agora_resize(imgSize.width, imgSize.height)
@@ -124,7 +124,7 @@ public class AgoraUIUserView: AgoraBaseUIView {
         
         let imgView = AgoraBaseUIImageView(image: AgoraKitImage("default_offline"))
         view.addSubview(imgView)
-        if AgoraKitDeviceAssistant.OS.isPad {
+        if UIDevice.current.isPad {
             imgView.agora_resize(70, 70)
             imgView.agora_center_x = 0
             imgView.agora_center_y = 0
@@ -291,9 +291,9 @@ private extension AgoraUIUserView {
      func initView() {
         backgroundColor = UIColor.clear
         clipsToBounds = true
-        layer.borderWidth = AgoraKitDeviceAssistant.OS.isPad ? 2 : 1
+        layer.borderWidth = UIDevice.current.isPad ? 2 : 1
         layer.borderColor = UIColor(rgb: 0xECECF1).cgColor
-        layer.cornerRadius = AgoraKitDeviceAssistant.OS.isPad ? 10 : 4
+        layer.cornerRadius = UIDevice.current.isPad ? 10 : 4
         
         addSubview(videoCanvas)
         addSubview(defaultView)
@@ -331,8 +331,8 @@ private extension AgoraUIUserView {
         whiteBoardImageView.agora_resize(18, 18)
         
         let audioEffectViewWidth = self.audioBtn.agora_width * 0.8
-        let audioEffectHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 3 : 2
-        let audioEffectGap: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 3 : 2
+        let audioEffectHeight: CGFloat = UIDevice.current.isPad ? 3 : 2
+        let audioEffectGap: CGFloat = UIDevice.current.isPad ? 3 : 2
         for index in 0...7 {
             let v = self.audioEffectView.viewWithTag(index + AudioEffectTagStart) as! AgoraBaseUIView
             

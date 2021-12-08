@@ -256,7 +256,7 @@ private extension AgoraRenderItemCell {
     func createViews() {
         contentView.backgroundColor = UIColor.white
         contentView.clipsToBounds = true
-        contentView.layer.cornerRadius = AgoraKitDeviceAssistant.OS.isPad ? 10 : 4
+        contentView.layer.cornerRadius = UIDevice.current.isPad ? 10 : 4
         
         cameraStateView = AgoraBaseUIImageView(image: AgoraKitImage("default_offline"))
         contentView.addSubview(cameraStateView)
@@ -297,7 +297,7 @@ private extension AgoraRenderItemCell {
     
     func createConstrains() {
         cameraStateView.mas_makeConstraints { make in
-            if AgoraKitDeviceAssistant.OS.isPad {
+            if UIDevice.current.isPad {
                 make?.size.equalTo()(CGSize(width: 70, height: 70))
             } else {
                 make?.size.equalTo()(CGSize(width: 45, height: 45))

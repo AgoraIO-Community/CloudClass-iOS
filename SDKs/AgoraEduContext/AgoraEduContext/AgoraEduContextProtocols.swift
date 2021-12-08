@@ -444,7 +444,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - returns: AgoraEduContextError, 返回错误
     func getLocalDeviceState(device: AgoraEduContextDeviceInfo,
                              success: (AgoraEduContextDeviceState) -> (),
-                             fail: (AgoraEduContextError) -> ())
+                             failure: (AgoraEduContextError) -> ())
     
     /// 渲染视频流 (v2.0.0)
     /// - parameter view: 渲染视频的容器
@@ -498,7 +498,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// 获取所有的流信息 (v2.0.0)
     /// - parameter userUuid: 用户Id
     /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
-    func getAllStreamInfo(userUuid: String) -> [AgoraEduContextStream]?
+    func getAllStreamInfo() -> [AgoraEduContextStream]?
     
     /// 授予流的发流权限(v2.0.0)
     /// - parameter streamUuids: 流Id

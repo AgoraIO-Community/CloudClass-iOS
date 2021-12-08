@@ -9,7 +9,7 @@ import UIKit
 import AgoraUIBaseViews
 
 @objcMembers public class AgoraUserRenderScrollView: AgoraBaseUIView {
-    public static var preferenceHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 168 : 87
+    public static var preferenceHeight: CGFloat = UIDevice.current.isPad ? 168 : 87
     public static var preferenceWidth: CGFloat = preferenceHeight
     
     public let leftButton = AgoraBaseUIButton()
@@ -55,7 +55,7 @@ import AgoraUIBaseViews
 private extension AgoraUserRenderScrollView {
     func initViews() {
         clipsToBounds = true
-        layer.cornerRadius = AgoraKitDeviceAssistant.OS.isPad ? 10 : 4
+        layer.cornerRadius = UIDevice.current.isPad ? 10 : 4
         
         scrollView.backgroundColor = UIColor(rgb: 0xf8f8fc)
         scrollView.showsHorizontalScrollIndicator = false

@@ -139,12 +139,12 @@ private extension AgoraBoardView {
         
         let imageModel = AgoraAlertImageModel()
         imageModel.name = "caution"
-        imageModel.width =  AgoraKitDeviceAssistant.OS.isPad ? 22 * 1.2 : 22
-        imageModel.height =  AgoraKitDeviceAssistant.OS.isPad ? 20 * 1.2 : 20
+        imageModel.width =  UIDevice.current.isPad ? 22 * 1.2 : 22
+        imageModel.height =  UIDevice.current.isPad ? 20 * 1.2 : 20
         
         let titleLabel = AgoraAlertLabelModel()
         titleLabel.text = getLocalizedString("BoardWareFailTitleText")
-        titleLabel.textFont = UIFont.boldSystemFont(ofSize: AgoraKitDeviceAssistant.OS.isPad ? 18 : 16)
+        titleLabel.textFont = UIFont.boldSystemFont(ofSize: UIDevice.current.isPad ? 18 : 16)
         titleLabel.textColor = UIColor(rgb: 0x191919)
         
         let messageLabel = AgoraAlertLabelModel()
@@ -153,7 +153,7 @@ private extension AgoraBoardView {
         
         let leftBtnLabel = AgoraAlertLabelModel()
         leftBtnLabel.text = getLocalizedString("BoardWareCloseText")
-        leftBtnLabel.textFont = UIFont.systemFont(ofSize: AgoraKitDeviceAssistant.OS.isPad ? 18 : 16)
+        leftBtnLabel.textFont = UIFont.systemFont(ofSize: UIDevice.current.isPad ? 18 : 16)
         leftBtnLabel.textColor = UIColor(rgb: 0x007AFF)
         let leftBtn = AgoraAlertButtonModel()
         leftBtn.titleLabel = leftBtnLabel
@@ -164,7 +164,7 @@ private extension AgoraBoardView {
 
         let rightBtnLabel = AgoraAlertLabelModel()
         rightBtnLabel.text = getLocalizedString("BoardWareRetryText")
-        rightBtnLabel.textFont = UIFont.systemFont(ofSize:  AgoraKitDeviceAssistant.OS.isPad ? 18 : 16)
+        rightBtnLabel.textFont = UIFont.systemFont(ofSize:  UIDevice.current.isPad ? 18 : 16)
         rightBtnLabel.textColor = UIColor(rgb: 0x007AFF)
         let rightBtn = AgoraAlertButtonModel()
         rightBtn.titleLabel = rightBtnLabel
@@ -186,7 +186,7 @@ private extension AgoraBoardView {
     func cancelDownload(_ styleModel: AgoraAlertModel) {
         let btnLabel = AgoraAlertLabelModel()
         btnLabel.text = getLocalizedString("BoardWareJumpText")
-        btnLabel.textFont = UIFont.systemFont(ofSize: AgoraKitDeviceAssistant.OS.isPad ? 18 :  16)
+        btnLabel.textFont = UIFont.systemFont(ofSize: UIDevice.current.isPad ? 18 :  16)
         btnLabel.textColor = UIColor(rgb: 0x191919)
         
         let btn = AgoraAlertButtonModel()

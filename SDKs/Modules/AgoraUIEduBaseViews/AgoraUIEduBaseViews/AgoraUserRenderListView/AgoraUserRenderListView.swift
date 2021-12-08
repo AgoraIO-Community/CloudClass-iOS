@@ -9,7 +9,7 @@ import UIKit
 import AgoraUIBaseViews
 
 @objcMembers public class AgoraUserRenderListView: AgoraBaseUIView {
-    public static var preferenceHeight: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 168 : 87
+    public static var preferenceHeight: CGFloat = UIDevice.current.isPad ? 168 : 87
     public static var preferenceWidth: CGFloat = preferenceHeight
 
     public let leftButton = AgoraBaseUIButton()
@@ -60,7 +60,7 @@ import AgoraUIBaseViews
 private extension AgoraUserRenderListView {
     func initViews() {
         clipsToBounds = true
-        layer.cornerRadius = AgoraKitDeviceAssistant.OS.isPad ? 10 : 4
+        layer.cornerRadius = UIDevice.current.isPad ? 10 : 4
         
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.itemSize = CGSize(width: AgoraUserRenderListView.preferenceHeight,

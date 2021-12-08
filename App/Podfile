@@ -8,7 +8,7 @@ def libVersion
   pod "AFNetworking", "4.0.1"
   pod "CocoaLumberjack", "3.6.1"
   pod "AliyunOSSiOS", "2.10.8"
-  pod "Armin", "1.0.8"
+  pod "Armin", "1.0.9"
   pod "Alamofire", "4.7.3"
   pod "SSZipArchive", "2.4.2"
   

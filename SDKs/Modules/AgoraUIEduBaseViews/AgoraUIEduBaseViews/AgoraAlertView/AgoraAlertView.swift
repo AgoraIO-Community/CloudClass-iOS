@@ -124,14 +124,14 @@ import AgoraUIBaseViews
         let label = AgoraBaseUILabel()
         label.text = "0%"
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: AgoraKitDeviceAssistant.OS.isPad ? 14 : 12)
+        label.font = UIFont.systemFont(ofSize: UIDevice.current.isPad ? 14 : 12)
         label.textColor = UIColor(rgb: 0x5471FE)
         label.adjustsFontSizeToFitWidth = true
         label.tag = LabelTag
         v.addSubview(label)
         label.agora_y = 0
         label.agora_right = 0
-        if AgoraKitDeviceAssistant.OS.isPad {
+        if UIDevice.current.isPad {
             label.agora_resize(30, 16)
         } else {
             label.agora_resize(28, 14)
@@ -220,17 +220,17 @@ extension AgoraAlertView {
         let ratio: CGFloat = 1.2
         
         if model.style == .CircleLoading || model.style == .GifLoading {
-            self.contentView.agora_width = AgoraKitDeviceAssistant.OS.isPad ? 120 * ratio : 120
+            self.contentView.agora_width = UIDevice.current.isPad ? 120 * ratio : 120
         } else if model.style == .LineLoading {
-            self.contentView.agora_width = AgoraKitDeviceAssistant.OS.isPad ? 210 * ratio : 210
+            self.contentView.agora_width = UIDevice.current.isPad ? 210 * ratio : 210
         }  else if model.style == .Alert {
-            self.contentView.agora_width = AgoraKitDeviceAssistant.OS.isPad ? 270 * ratio : 270
+            self.contentView.agora_width = UIDevice.current.isPad ? 270 * ratio : 270
         }
         
         let SideVGap: CGFloat = self.titleLabel.agora_y
         let SideHGap: CGFloat = self.titleLabel.agora_x
-        let MessageVGap: CGFloat = AgoraKitDeviceAssistant.OS.isPad ? 18 : 13
-        let LoadingViewSize = AgoraKitDeviceAssistant.OS.isPad ? CGSize(width: 60 * ratio, height: 60 * ratio) : CGSize(width: 60, height: 60)
+        let MessageVGap: CGFloat = UIDevice.current.isPad ? 18 : 13
+        let LoadingViewSize = UIDevice.current.isPad ? CGSize(width: 60 * ratio, height: 60 * ratio) : CGSize(width: 60, height: 60)
 
         // titleLabel
         // default value for no title
@@ -341,7 +341,7 @@ extension AgoraAlertView {
             }
             
             self.btnView.isHidden = false
-            self.btnView.agora_height = AgoraKitDeviceAssistant.OS.isPad ? 50 : 45
+            self.btnView.agora_height = UIDevice.current.isPad ? 50 : 45
             self.btnView.agora_y = btnViewBottom
             btnViewBottom = LineLoadingBottom + self.btnView.agora_height
         

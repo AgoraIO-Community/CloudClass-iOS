@@ -51,7 +51,7 @@ import Masonry
         
         self.createViews()
         self.createConstrains()
-        if AgoraKitDeviceAssistant.OS.isPad {
+        if UIDevice.current.isPad {
             self.createPadViews()
         } else {
             self.createPhoneViews()
@@ -184,27 +184,28 @@ private extension AgoraOneToOneUIManager {
     }
     
     func initWidgets() {
-//        guard let widgetInfos = contextPool.widget.getWidgetConfigs() else {
-//            return
-//        }
-//        if let widget = createChatWidget() {
-//            widget.addMessageObserver(self)
-//            widget.containerView.isHidden = true
-//            rightContentView.addSubview(widget.containerView)
-//            messageController = widget
-//
-//            if AgoraKitDeviceAssistant.OS.isPad {
-//                widget.view.mas_makeConstraints { make in
-//                    make?.top.equalTo()(renderController.view.mas_bottom)
-//                    make?.left.right().bottom().equalTo()(0)
-//                }
-//            } else {
-//                widget.view.mas_makeConstraints { make in
-//                    make?.top.equalTo()(tabSelectView?.mas_bottom)
-//                    make?.left.right().bottom().equalTo()(0)
-//                }
-//            }
-//        }
+        guard let widgetInfos = contextPool.widget.getWidgetConfigs() else {
+            return
+        }
+        if let widget = createChatWidget() {
+            contextPool.widget.add(self,
+                                   widgetId: widget.info.widgetId)
+            widget.view.isHidden = true
+            rightContentView.addSubview(widget.view)
+            messageController = widget
+
+            if UIDevice.current.isPad {
+                widget.view.mas_makeConstraints { make in
+                    make?.top.equalTo()(renderController.view.mas_bottom)
+                    make?.left.right().bottom().equalTo()(0)
+                }
+            } else {
+                widget.view.mas_makeConstraints { make in
+                    make?.top.equalTo()(tabSelectView?.mas_bottom)
+                    make?.left.right().bottom().equalTo()(0)
+                }
+            }
+        }
     }
 }
 

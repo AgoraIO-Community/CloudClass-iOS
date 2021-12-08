@@ -50,7 +50,7 @@ import AgoraUIBaseViews
                          action: #selector(doPrePagePressed),
                          for: .touchUpInside)
         
-        if !AgoraKitDeviceAssistant.OS.isPad {
+        if !UIDevice.current.isPad {
             button.touchRange = TouchRange
         }
         
@@ -66,7 +66,7 @@ import AgoraUIBaseViews
                          action: #selector(doNextPagePressed),
                          for: .touchUpInside)
         
-        if !AgoraKitDeviceAssistant.OS.isPad {
+        if !UIDevice.current.isPad {
             button.touchRange = TouchRange
         }
         
@@ -82,7 +82,7 @@ import AgoraUIBaseViews
                          action: #selector(doIncreaseScalePressed),
                          for: .touchUpInside)
         
-        if !AgoraKitDeviceAssistant.OS.isPad {
+        if !UIDevice.current.isPad {
             button.touchRange = TouchRange
         }
         
@@ -98,7 +98,7 @@ import AgoraUIBaseViews
                          action: #selector(doDecreaseScalePressed),
                          for: .touchUpInside)
         
-        if !AgoraKitDeviceAssistant.OS.isPad {
+        if !UIDevice.current.isPad {
             button.touchRange = TouchRange
         }
         
@@ -122,7 +122,7 @@ import AgoraUIBaseViews
                          action: #selector(doFullScreenPressed),
                          for: .touchUpInside)
         
-        if !AgoraKitDeviceAssistant.OS.isPad {
+        if !UIDevice.current.isPad {
             button.touchRange = TouchRange
         }
         
@@ -141,7 +141,7 @@ import AgoraUIBaseViews
                          action: #selector(doFullScreenPressed),
                          for: .touchUpInside)
         
-        if !AgoraKitDeviceAssistant.OS.isPad {
+        if !UIDevice.current.isPad {
             button.touchRange = TouchRange
         }
         button.isHidden = true

@@ -335,7 +335,7 @@ extension AgoraUISettingView {
         switchBtn.tag = SwitchTag
         view.addSubview(switchBtn)
         
-        if !AgoraKitDeviceAssistant.OS.isPad {
+        if !UIDevice.current.isPad {
             switchBtn.transform = CGAffineTransform(scaleX: 48 /  switchBtn.frame.size.width,
                                                     y: 26 / switchBtn.frame.size.height)
         }

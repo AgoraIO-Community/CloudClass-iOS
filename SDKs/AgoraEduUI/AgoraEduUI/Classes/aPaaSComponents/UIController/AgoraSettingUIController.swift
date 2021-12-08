@@ -79,26 +79,26 @@ private extension AgoraSettingUIController {
                 contextPool.media.getLocalDeviceState(device: camera) { state in
                     frontCamButton.isSelected = (state == .open)
                     backCamButton.isSelected = !(state == .open)
-                } fail: { error in
+                } failure: { error in
                 }
             } else if camera.deviceName.contains(kBackCameraStr) {
                 contextPool.media.getLocalDeviceState(device: camera) { state in
                     backCamButton.isSelected = (state == .open)
                     frontCamButton.isSelected = !(state == .open)
-                } fail: { error in
+                } failure: { error in
                 }
             }
         }
         if let d = contextPool.media.getLocalDevices(deviceType: .mic).first {
             contextPool.media.getLocalDeviceState(device: d) { state in
                 micSwitch.isOn = (state == .open)
-            } fail: { error in
+            } failure: { error in
             }
         }
         if let d = contextPool.media.getLocalDevices(deviceType: .speaker).first {
             contextPool.media.getLocalDeviceState(device: d) { state in
                 audioSwitch.isOn = (state == .open)
-            } fail: { error in
+            } failure: { error in
             }
         }
     }
