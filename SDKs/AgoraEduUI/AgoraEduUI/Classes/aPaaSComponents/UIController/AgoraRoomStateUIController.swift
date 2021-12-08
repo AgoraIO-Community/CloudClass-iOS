@@ -196,6 +196,12 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
 // MARK: - Creations
 private extension AgoraRoomStateUIController {
     func createViews() {
+        view.backgroundColor = .white
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
+        view.layer.cornerRadius = 2
+        view.clipsToBounds = true
+        
         stateView = AgoraRoomStateBar(frame: .zero)
         stateView.themeColor = themeColor ?? .white
         view.addSubview(stateView)

@@ -253,14 +253,13 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     @objc optional func onUserHandsWaveEnable(enable: Bool)
     
     /// 用户挥手（v2.0.0)
-    /// - parameter fromUser: 手放下的用户
+    /// - parameter fromUser: 举手用户
     /// - parameter duration: 举手的时长，单位秒
     @objc optional func onUserHandsWave(user: AgoraEduContextUserInfo,
                                         duration: Int)
     
     /// 用户手放下，结束上台申请（v2.0.0)
-    /// - parameter user: 收到奖励的用户
-    /// - parameter duration: 收到奖励的用户
+    /// - parameter fromUser: 手放下的用户
     /// - note: 无论是用户自己取消举手，还是举手申请被接受，都要走这个回调
     @objc optional func onUserHandsDown(user: AgoraEduContextUserInfo)
 }

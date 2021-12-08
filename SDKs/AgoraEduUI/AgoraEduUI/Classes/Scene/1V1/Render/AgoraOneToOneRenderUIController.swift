@@ -47,7 +47,9 @@ class AgoraOneToOneRenderUIController: UIViewController {
         createViews()
         createConstrains()
         contextPool.user.registerEventHandler(self)
+        contextPool.media.registerMediaEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
+        contextPool.room.registerEventHandler(self)
     }
 }
 // MARK: - Private
@@ -117,7 +119,7 @@ private extension AgoraOneToOneRenderUIController {
                         teacherView.cameraState = .on
                     }
                 } else {
-                    studentView.cameraState = .off
+                    teacherView.cameraState = .off
                 }
                 if s.streamType == .audio ||
                     s.streamType == .both {
@@ -223,32 +225,37 @@ extension AgoraOneToOneRenderUIController: AgoraOneToOneMemberViewDelegate {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
-    func onUpdateUserList(_ list: [AgoraEduContextUserInfo]) {
+    
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         self.updateCoHosts()
     }
     
-    func onUpdateCoHostList(_ list: [AgoraEduContextUserInfo]) {
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operator: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
         self.updateCoHosts()
     }
     
-    func onUpdateAudioVolumeIndication(_ value: Int, streamUuid: String) {
-        if teacherView.item?.streamUUID == streamUuid {
-            self.teacherView.setVolumeValue(value)
-        } else {
-            self.studentView.setVolumeValue(value)
-        }
+    func onUserUpdated(user: AgoraEduContextUserInfo,
+                       operator: AgoraEduContextUserInfo?) {
+        self.updateCoHosts()
     }
     
-    func onShowUserReward(_ user: AgoraEduContextUserInfo) {
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operator: AgoraEduContextUserInfo) {
         self.showRewardAnimation()
     }
-    
-    func onFlexUserPropertiesChanged(_ changedProperties: [String : Any],
-                                     properties: [String: Any],
-                                     cause: [String : Any]?,
-                                     fromUser: AgoraEduContextUserInfo,
-                                     operator: AgoraEduContextUserInfo?) {
-        print(#function)
+}
+// MARK: - AgoraEduUserHandler
+extension AgoraOneToOneRenderUIController: AgoraEduMediaHandler {
+    func onVolumeUpdated(volume: Int,
+                         streamUuid: String) {
+        if teacherView.item?.streamUUID == streamUuid {
+            self.teacherView.setVolumeValue(volume)
+        } else {
+            self.studentView.setVolumeValue(volume)
+        }
     }
 }
 // MARK: - AgoraEduStreamHandler
@@ -268,6 +275,12 @@ extension AgoraOneToOneRenderUIController: AgoraEduStreamHandler {
         if stream.streamUuid == currentStream?.streamUuid {
             self.currentStream = stream
         }
+        self.updateCoHosts()
+    }
+}
+// MARK: - AgoraEduRoomHandler
+extension AgoraOneToOneRenderUIController: AgoraEduRoomHandler {
+    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
         self.updateCoHosts()
     }
 }

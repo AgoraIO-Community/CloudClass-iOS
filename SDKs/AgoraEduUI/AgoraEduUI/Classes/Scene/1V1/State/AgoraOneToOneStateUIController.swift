@@ -223,6 +223,8 @@ private extension AgoraOneToOneStateUIController {
         view.backgroundColor = .white
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
+        view.layer.cornerRadius = 2
+        view.clipsToBounds = true
         
         netStateView = UIImageView(image: UIImage.ag_imageNamed("ic_network_unknow",
                                                                 in: "AgoraEduUI"))
@@ -233,12 +235,12 @@ private extension AgoraOneToOneStateUIController {
         view.addSubview(lineView)
         
         titleLabel = UILabel()
-        titleLabel.font = UIFont.systemFont(ofSize: 13)
+        titleLabel.font = UIFont.systemFont(ofSize: 9)
         titleLabel.textColor = UIColor(rgb: 0x191919)
         view.addSubview(titleLabel)
         
         timeLabel = UILabel()
-        timeLabel.font = UIFont.systemFont(ofSize: 13)
+        timeLabel.font = UIFont.systemFont(ofSize: 9)
         timeLabel.textColor = UIColor(rgb: 0x677386)
         view.addSubview(timeLabel)
         
@@ -251,18 +253,14 @@ private extension AgoraOneToOneStateUIController {
         settingButton.imageView?.tintColor = UIColor(rgb: 0x7B88A0)
         settingButton.addTarget(self, action: #selector(onClickSetting(_:)),
                                 for: .touchUpInside)
-        settingButton.layer.cornerRadius = AgoraFit.scale(26) * 0.5
+        settingButton.layer.cornerRadius = 20 * 0.5
         settingButton.clipsToBounds = true
         view.addSubview(settingButton)
     }
     
     func createConstrains() {
         netStateView.mas_makeConstraints { make in
-            if #available(iOS 11.0, *) {
-                make?.left.equalTo()(self.view.mas_safeAreaLayoutGuideLeft)?.offset()(10)
-            } else {
-                make?.left.equalTo()(self.view)?.offset()(10)
-            }
+            make?.left.equalTo()(self.view)?.offset()(AgoraFit.scale(10))
             make?.width.height().equalTo()(20)
             make?.centerY.equalTo()(0)
         }
@@ -273,20 +271,16 @@ private extension AgoraOneToOneStateUIController {
         }
         titleLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(0)
-            make?.right.equalTo()(lineView.mas_left)?.offset()(-20)
+            make?.right.equalTo()(lineView.mas_left)?.offset()(-8)
         }
         timeLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(0)
-            make?.left.equalTo()(lineView.mas_right)?.offset()(20)
+            make?.left.equalTo()(lineView.mas_right)?.offset()(8)
         }
         settingButton.mas_makeConstraints { make in
-            if #available(iOS 11.0, *) {
-                make?.right.equalTo()(self.view.mas_safeAreaLayoutGuideRight)
-            } else {
-                make?.right.equalTo()(0)
-            }
+            make?.right.equalTo()(AgoraFit.scale(-10))
             make?.centerY.equalTo()(0)
-            make?.width.height().equalTo()(AgoraFit.scale(26))
+            make?.width.height().equalTo()(20)
         }
     }
 }

@@ -20,44 +20,6 @@ extension AgoraEduContextUserInfo {
     }
 }
 
-extension AgoraEduContextVideoSourceType {
-    var uiType: AgoraUIUserView.DeviceState {
-        switch self {
-        case .none:         return .close
-        case .camera:       return .available
-        case .screen:       return .available
-        @unknown default:   fatalError()
-        }
-    }
-    
-    var isOpen: Bool {
-        switch self {
-        case .none:         return false
-        case .camera:       return true
-        case .screen:       return true
-        @unknown default:   fatalError()
-        }
-    }
-}
-
-extension AgoraEduContextAudioSourceType {
-    var uiType: AgoraUIUserView.DeviceState {
-        switch self {
-        case .none:         return .close
-        case .mic:          return .available
-        @unknown default:   fatalError()
-        }
-    }
-    
-    var isOpen: Bool {
-        switch self {
-        case .none:         return false
-        case .mic:          return true
-        @unknown default:   fatalError()
-        }
-    }
-}
-
 extension AgoraEduContextMediaStreamType {
     var hasAudio: Bool {
         switch self {

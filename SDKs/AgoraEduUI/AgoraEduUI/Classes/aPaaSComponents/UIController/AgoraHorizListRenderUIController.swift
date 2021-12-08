@@ -81,7 +81,7 @@ protocol AgoraPaintingRenderUIControllerDelegate: class {
 
 private let kItemGap: CGFloat = 5.0
 private let kTeacherIndex: IndexPath = IndexPath(row: -1, section: 0)
-class AgoraPaintingRenderUIController: UIViewController {
+class AgoraHorizListRenderUIController: UIViewController {
     
     weak var delegate: AgoraPaintingRenderUIControllerDelegate?
     
@@ -99,8 +99,6 @@ class AgoraPaintingRenderUIController: UIViewController {
     
     var rightButton: UIButton!
     
-    var lineView: AgoraBaseUIView!
-
     private var spreadIndex: IndexPath? {
         didSet {
             if spreadIndex != oldValue {
@@ -153,6 +151,7 @@ class AgoraPaintingRenderUIController: UIViewController {
         createConstrains()
         contextPool.user.registerEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
+        contextPool.room.registerEventHandler(self)
     }
     
     override func viewDidLayoutSubviews() {
@@ -218,7 +217,7 @@ class AgoraPaintingRenderUIController: UIViewController {
 
 
 // MARK: - Actions
-extension AgoraPaintingRenderUIController {
+extension AgoraHorizListRenderUIController {
     @objc func onDoubleClick(_ sender: UITapGestureRecognizer) {
         let user = contextPool.user.getLocalUserInfo()
         let point = sender.location(in: collectionView)
@@ -292,7 +291,7 @@ extension AgoraPaintingRenderUIController {
     }
 }
 // MARK: - Private
-private extension AgoraPaintingRenderUIController {
+private extension AgoraHorizListRenderUIController {
     // 更新约束
     func reloadLayout() {
         let sigleWidth = (self.view.bounds.width + kItemGap) / 7 - kItemGap
@@ -401,7 +400,7 @@ private extension AgoraPaintingRenderUIController {
     }
 }
 // MARK: - AgoraEduUserHandler
-extension AgoraPaintingRenderUIController: AgoraEduUserHandler {
+extension AgoraHorizListRenderUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         // TODO:
 //        if user.isCoHost {
@@ -430,7 +429,7 @@ extension AgoraPaintingRenderUIController: AgoraEduUserHandler {
 }
 
 // MARK: - AgoraEduMediaHandler
-extension AgoraPaintingRenderUIController: AgoraEduMediaHandler {
+extension AgoraHorizListRenderUIController: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
                          streamUuid: String) {
         if teacherItem?.streamUUID == streamUuid {
@@ -443,7 +442,7 @@ extension AgoraPaintingRenderUIController: AgoraEduMediaHandler {
 }
 
 // MARK: - AgoraEduStreamHandler
-extension AgoraPaintingRenderUIController: AgoraEduStreamHandler {
+extension AgoraHorizListRenderUIController: AgoraEduStreamHandler {
     func onStreamJoin(stream: AgoraEduContextStream,
                       operator: AgoraEduContextUserInfo?) {
         self.updateCoHosts()
@@ -463,8 +462,15 @@ extension AgoraPaintingRenderUIController: AgoraEduStreamHandler {
     }
 }
 
+// MARK: - AgoraEduRoomHandler
+extension AgoraHorizListRenderUIController: AgoraEduRoomHandler {
+    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        self.updateCoHosts()
+    }
+}
+
 // MARK: - AgoraRenderItemCellDelegate
-extension AgoraPaintingRenderUIController: AgoraRenderItemCellDelegate  {
+extension AgoraHorizListRenderUIController: AgoraRenderItemCellDelegate  {
     func onCellRequestRenderOnView(view: UIView,
                                    streamID: String,
                                    userUUID: String) {
@@ -484,7 +490,7 @@ extension AgoraPaintingRenderUIController: AgoraRenderItemCellDelegate  {
     }
 }
 // MARK: - UICollectionView Call Back
-extension AgoraPaintingRenderUIController: UICollectionViewDelegate,
+extension AgoraHorizListRenderUIController: UICollectionViewDelegate,
                                            UICollectionViewDataSource,
                                            UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView,
@@ -534,9 +540,9 @@ extension AgoraPaintingRenderUIController: UICollectionViewDelegate,
 }
 
 // MARK: - Creations
-private extension AgoraPaintingRenderUIController {
+private extension AgoraHorizListRenderUIController {
     func createViews() {
-        self.view.backgroundColor = UIColor(rgb: 0xF9F9FC)
+        self.view.backgroundColor = .white
         
         contentView = UIView()
         view.addSubview(contentView)
@@ -605,28 +611,20 @@ private extension AgoraPaintingRenderUIController {
         tap.numberOfTouchesRequired = 1
         tap.delaysTouchesBegan = true
         collectionView.addGestureRecognizer(tap)
-        
-        lineView = AgoraBaseUIView()
-        lineView.backgroundColor = UIColor(rgb: 0xECECF1, alpha: 1)
-        view.addSubview(lineView)
     }
     
     func createConstrains() {
-        lineView.mas_makeConstraints { make in
-            make?.left.right().bottom().equalTo()(lineView.superview)
-            make?.height.equalTo()(1)
-        }
         contentView.mas_makeConstraints { make in
-            make?.centerX.equalTo()(contentView.superview)
-            make?.top.equalTo()(contentView.superview)
-            make?.bottom.equalTo()(lineView.mas_top)
+            make?.centerX.equalTo()(0)
+            make?.top.equalTo()(0)
+            make?.bottom.equalTo()(0)
         }
         teacherContentView.mas_makeConstraints { make in
-            make?.top.left().bottom().equalTo()(teacherContentView.superview)
+            make?.top.left().bottom().equalTo()(0)
             make?.width.equalTo()(0)
         }
         collectionView.mas_makeConstraints { make in
-            make?.right.top().bottom().equalTo()(collectionView.superview)
+            make?.right.top().bottom().equalTo()(0)
             make?.left.equalTo()(teacherContentView.mas_right)
         }
         leftButton.mas_makeConstraints { make in
@@ -638,7 +636,7 @@ private extension AgoraPaintingRenderUIController {
             make?.width.equalTo()(24)
         }
         teacherView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(teacherView.superview)
+            make?.left.right().top().bottom().equalTo()(0)
         }
     }
 }

@@ -147,10 +147,10 @@ class AgoraPaintingHandsUpUIController: UIViewController {
         // Do any additional setup after loading the view.
         if contextPool.user.getLocalUserInfo().role == .teacher {
             listButton.isHidden = false
+            contextPool.user.registerEventHandler(self)
         } else {
             ctrlButton.isHidden = false
         }
-        contextPool.user.registerEventHandler(self)
     }
     
     public func deselect() {
@@ -212,12 +212,18 @@ extension AgoraPaintingHandsUpUIController: AgoraHandsUpDelayViewDelegate {
         switch state {
         case .hold:
             mayShowTips()
-//            contextPool.handsUp.updateWaveArmsState(.handsUp,
-//                                                   timeout: -1)
+            contextPool.user.handsWave(duration: 3) {
+                
+            } failure: { error in
+                
+            }
             break
         case .free:
-//            contextPool.handsUp.updateWaveArmsState(.handsUp,
-//                                                   timeout: 3)
+            contextPool.user.handsDown {
+                
+            } failure: { error in
+                
+            }
             break
         case .counting: break
         default: break
@@ -256,20 +262,24 @@ extension AgoraPaintingHandsUpUIController {
 }
 // MARK: - AgoraEduUserHandler
 extension AgoraPaintingHandsUpUIController: AgoraEduUserHandler {
+
     func onUserHandsWave(user: AgoraEduContextUserInfo,
                          duration: Int) {
-        // TODO: wavingArms handle
-//        var temp = [AgoraEduContextUserInfo]()
-//        for user in list {
-//            if user.wavingArms {
-//                temp.append(user)
-//            }
-//        }
-//        dataSource = temp
-//        redDot.isHidden = (dataSource.count == 0)
-//        countLabel.text = "\(dataSource.count)"
-//        isReminding = (dataSource.count > 0)
-//        tableView.reloadData()
+        if dataSource.contains(where: {$0.userUuid == user.userUuid}) == false {
+            dataSource.append(user)
+        }
+        redDot.isHidden = (dataSource.count == 0)
+        countLabel.text = "\(dataSource.count)"
+        isReminding = (dataSource.count > 0)
+        tableView.reloadData()
+    }
+    
+    func onUserHandsDown(fromUser: AgoraEduContextUserInfo) {
+        dataSource.removeAll(where: {$0.userUuid == fromUser.userUuid})
+        redDot.isHidden = (dataSource.count == 0)
+        countLabel.text = "\(dataSource.count)"
+        isReminding = (dataSource.count > 0)
+        tableView.reloadData()
     }
 }
 // MARK: - HandsUpItemCellDelegate

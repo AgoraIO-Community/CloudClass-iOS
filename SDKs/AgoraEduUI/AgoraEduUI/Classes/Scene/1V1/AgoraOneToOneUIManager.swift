@@ -11,7 +11,7 @@ import AgoraEduContext
 import AgoraWidget
 import Masonry
 
-class AgoraOneToOneUIManager: AgoraEduUIManager {
+@objc public class AgoraOneToOneUIManager: AgoraEduUIManager {
     
     private let roomType: AgoraEduContextRoomType = .oneToOne
     /** 状态栏 控制器*/
@@ -35,25 +35,8 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
         return vc
     }()
     
-    /// 弹窗控制器
-    /** 控制器遮罩层，用来盛装控制器和处理手势触发消失事件*/
-    private var ctrlMaskView: UIView!
-    /** 弹出显示的控制widget视图*/
-    private weak var ctrlView: UIView? {
-        willSet {
-            if let view = ctrlView {
-                ctrlView?.removeFromSuperview()
-                ctrlMaskView.isHidden = true
-            }
-            if let view = newValue {
-                ctrlMaskView.isHidden = false
-                self.view.addSubview(view)
-            }
-        }
-    }
-    
-    public override init(contextPool: AgoraEduContextPool,
-                         delegate: AgoraEduUIManagerDelegate) {
+    @objc public override init(contextPool: AgoraEduContextPool,
+                               delegate: AgoraEduUIManagerDelegate) {
         super.init(contextPool: contextPool,
                    delegate: delegate)
     }
@@ -62,7 +45,7 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
@@ -84,15 +67,13 @@ class AgoraOneToOneUIManager: AgoraEduUIManager {
             self?.contextPool.room.leaveRoom()
         }
     }
-}
-// Mark: - Actions
-private extension AgoraOneToOneUIManager {
     
-    @objc func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {
-        ctrlView = nil
+    public override func didClickCtrlMaskView() {
+        super.didClickCtrlMaskView()
         stateController.deSelect()
     }
 }
+
 extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
     func onChatTabSelectChanged(isSelected: Bool) {
         messageController?.view.isHidden = !isSelected
@@ -128,8 +109,8 @@ extension AgoraOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
             ctrlView?.mas_makeConstraints { make in
                 make?.width.equalTo()(201)
                 make?.height.equalTo()(281)
-                make?.top.equalTo()(44)
-                make?.right.equalTo()(-16)
+                make?.top.equalTo()(AgoraFit.scale(30))
+                make?.right.equalTo()(self.contentView)?.offset()((-10))
             }
         } else {
             ctrlView = nil
@@ -142,38 +123,27 @@ private extension AgoraOneToOneUIManager {
         stateController = AgoraOneToOneStateUIController(context: contextPool)
         stateController.delegate = self
         addChild(stateController)
-        view.addSubview(stateController.view)
+        contentView.addSubview(stateController.view)
         
         boardController = UIViewController()
         addChild(boardController)
-        view.addSubview(boardController.view)
+        contentView.addSubview(boardController.view)
         
         rightContentView = UIView()
         rightContentView.backgroundColor = .white
         rightContentView.layer.cornerRadius = 4.0
         rightContentView.clipsToBounds = true
-        view.addSubview(rightContentView)
+        contentView.addSubview(rightContentView)
         
         renderController = AgoraOneToOneRenderUIController(context: contextPool)
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
-        
-        ctrlMaskView = UIView(frame: .zero)
-        ctrlMaskView.isHidden = true
-        let tap = UITapGestureRecognizer(
-            target: self, action: #selector(onClickCtrlMaskView(_:)))
-        ctrlMaskView.addGestureRecognizer(tap)
-        view.addSubview(ctrlMaskView)
     }
     
     func createConstrains() {
         stateController.view.mas_makeConstraints { [unowned self] make in
             make?.top.left().right().equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(34))
-        }
-        ctrlMaskView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)
-            make?.left.right().bottom().equalTo()(0)
+            make?.height.equalTo()(AgoraFit.scale(23))
         }
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
@@ -190,11 +160,11 @@ private extension AgoraOneToOneUIManager {
         rightContentView.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
             make?.bottom.right().equalTo()(0)
-            make?.width.equalTo()(198)
+            make?.width.equalTo()(AgoraFit.scale(170))
         }
         tabSelectView?.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
-            make?.height.equalTo()(34)
+            make?.height.equalTo()(AgoraFit.scale(33))
         }
         renderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(tabSelectView?.mas_bottom)

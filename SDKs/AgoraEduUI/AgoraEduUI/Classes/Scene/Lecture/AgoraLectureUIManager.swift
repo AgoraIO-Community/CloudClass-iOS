@@ -14,11 +14,9 @@ import AgoraWidget
 
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
-class AgoraLectureUIManager: AgoraEduUIManager {
+@objc public class AgoraLectureUIManager: AgoraEduUIManager {
     private let roomType: AgoraEduContextRoomType = .lecture
     /// 视图部分，支持feature的UI交互显示
-    /** 容器视图，用以保持比例*/
-    private var contentView: UIView!
     /** 工具栏*/
     private var toolsView: AgoraRoomToolstView!
     /** 画笔工具*/
@@ -27,25 +25,9 @@ class AgoraLectureUIManager: AgoraEduUIManager {
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
     /** 远程视窗渲染 控制器*/
-    private var renderController: AgoraPaintingRenderUIController!
+    private var renderController: AgoraHorizListRenderUIController!
     /** 白板的渲染 控制器*/
     private var whiteBoardController: AgoraPaintingBoardUIController!
-    /// 弹窗控制器
-    /** 控制器遮罩层，用来盛装控制器和处理手势触发消失事件*/
-    private var ctrlMaskView: UIView!
-    /** 弹出显示的控制widget视图*/
-    private weak var ctrlView: UIView? {
-        willSet {
-            if let view = ctrlView {
-                ctrlView?.removeFromSuperview()
-                ctrlMaskView.isHidden = true
-            }
-            if let view = newValue {
-                ctrlMaskView.isHidden = false
-                self.view.addSubview(view)
-            }
-        }
-    }
     /** 工具箱 控制器*/
     private lazy var toolBoxViewController: AgoraToolBoxUIController = {
         let vc = AgoraToolBoxUIController(context: contextPool)
@@ -74,8 +56,8 @@ class AgoraLectureUIManager: AgoraEduUIManager {
         print("\(#function): \(self.classForCoder)")
     }
     
-    public override init(contextPool: AgoraEduContextPool,
-                         delegate: AgoraEduUIManagerDelegate) {
+    @objc public override init(contextPool: AgoraEduContextPool,
+                               delegate: AgoraEduUIManagerDelegate) {
         super.init(contextPool: contextPool,
                    delegate: delegate)
     }
@@ -84,9 +66,8 @@ class AgoraLectureUIManager: AgoraEduUIManager {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .white
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -104,6 +85,12 @@ class AgoraLectureUIManager: AgoraEduUIManager {
             self?.contextPool.room.leaveRoom()
         }
     }
+    
+    public override func didClickCtrlMaskView() {
+        super.didClickCtrlMaskView()
+        toolsView.deselectAll()
+        brushToolButton.isSelected = false
+    }
 }
 
 // MARK: - Actions
@@ -120,12 +107,6 @@ extension AgoraLectureUIManager {
         } else {
             ctrlView = nil
         }
-    }
-    
-    @objc func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {
-        toolsView.deselectAll()
-        brushToolButton.isSelected = false
-        ctrlView = nil
     }
 }
 
@@ -151,7 +132,7 @@ extension AgoraLectureUIManager: AgoraEduMonitorHandler {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraLectureUIManager: AgoraEduUserHandler {
-    func onLocalUserKickedOut() {
+    public func onLocalUserKickedOut() {
         AgoraAlert()
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
             .setMessage(AgoraKitLocalizedString("KickOutText"))
@@ -249,14 +230,7 @@ extension AgoraLectureUIManager: AgoraPaintingBoardUIControllerDelegate {
 // MARK: - Creations
 private extension AgoraLectureUIManager {
     func createViews() {
-        view.backgroundColor = .black
-        
-        contentView = UIView(frame: self.view.bounds)
-        contentView.backgroundColor = UIColor(rgb: 0xECECF1)
-        view.addSubview(contentView)
-        
         stateController = AgoraRoomStateUIController(context: contextPool)
-        stateController.themeColor = UIColor(rgb: 0x1D35AD)
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
@@ -264,17 +238,10 @@ private extension AgoraLectureUIManager {
         whiteBoardController.delegate = self
         contentView.addSubview(whiteBoardController.view)
         
-        renderController = AgoraPaintingRenderUIController(context: contextPool)
+        renderController = AgoraHorizListRenderUIController(context: contextPool)
         renderController.themeColor = UIColor(rgb: 0x75C0FE)
         addChild(renderController)
         contentView.addSubview(renderController.view)
-        
-        ctrlMaskView = UIView(frame: .zero)
-        ctrlMaskView.isHidden = true
-        let tap = UITapGestureRecognizer(
-            target: self, action: #selector(onClickCtrlMaskView(_:)))
-        ctrlMaskView.addGestureRecognizer(tap)
-        contentView.addSubview(ctrlMaskView)
         
         brushToolButton = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
                                                         y: 0,
@@ -307,21 +274,6 @@ private extension AgoraLectureUIManager {
     }
     
     func createConstrains() {
-        let width = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-        let height = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-        if width/height > 667.0/375.0 {
-            contentView.mas_makeConstraints { make in
-                make?.center.equalTo()(contentView.superview)
-                make?.height.equalTo()(height)
-                make?.width.equalTo()(height * 16.0/9.0)
-            }
-        } else {
-            contentView.mas_makeConstraints { make in
-                make?.center.equalTo()(contentView.superview)
-                make?.width.equalTo()(width)
-                make?.height.equalTo()(width * 9.0/16.0)
-            }
-        }
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(stateController.view.superview)
             make?.height.equalTo()(20)
@@ -335,9 +287,6 @@ private extension AgoraLectureUIManager {
             make?.top.equalTo()(renderController.view.mas_bottom)
             make?.left.right().bottom().equalTo()(whiteBoardController.view.superview)
         }
-        ctrlMaskView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(self.view)
-        }
         brushToolButton.mas_makeConstraints { make in
             make?.right.equalTo()(-9)
             make?.bottom.equalTo()(-14)
@@ -345,15 +294,15 @@ private extension AgoraLectureUIManager {
         }
         toolsView.mas_makeConstraints { make in
             make?.right.equalTo()(brushToolButton)
-            make?.centerY.equalTo()(toolsView.superview)
+            make?.centerY.equalTo()(0)
         }
     }
 }
 
 // MARK: - AgoraWidgetMessageObserver
 extension AgoraLectureUIManager: AgoraWidgetMessageObserver {
-    func onMessageReceived(_ message: String,
-                           widgetId: String) {
+    public func onMessageReceived(_ message: String,
+                                  widgetId: String) {
         switch widgetId {
         case "AgoraChatWidget":
             if let dic = message.json(),

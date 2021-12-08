@@ -75,7 +75,8 @@ class AgoraToastTipsView: UIView {
                                                object: nil)
         self.delegate?.onDidFinishTips(self)
         UIView.animate(withDuration: 0.2) {
-            self.transform = CGAffineTransform(scaleX: 1, y: 0.8)
+            self.frame.origin.y = 0
+            self.transform = CGAffineTransform(scaleX: 0.9, y: 0.6)
             self.alpha = 0
         }
     }

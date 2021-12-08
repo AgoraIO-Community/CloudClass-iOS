@@ -30,11 +30,6 @@ Pod::Spec.new do |s|
   s.dependency "Masonry"
   s.dependency "SwifterSwift"
   
-  s.subspec 'AkasuoResource' do |ss|
-    ss.resource_bundles = {
-      'Akasuo' => ['AgoraEduUI/AkasuoAssets/**/*.{xcassets,strings,gif,mp3,wav}']
-    }
-  end
   s.subspec 'Resources' do |ss|
     ss.resource_bundles = {
       'AgoraEduUI' => ['AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}']

@@ -39,7 +39,11 @@ public class AgoraToast: NSObject {
         window.addSubview(tipsView)
         if tipsViews.count == 0 {
             tipsView.mas_makeConstraints { make in
-                make?.top.equalTo()(16)
+                if #available(iOS 11.0, *) {
+                    make?.top.equalTo()(tipsView.superview?.mas_safeAreaLayoutGuideTop)?.offset()(16)
+                } else {
+                    make?.top.equalTo()(16)
+                }
                 make?.centerX.equalTo()(0)
             }
         } else if let last = tipsViews.last {
@@ -62,7 +66,11 @@ extension AgoraToast: AgoraToastTipsViewDelegate {
         if let next = self.tipsViews.first {
             next.superview?.layoutIfNeeded()
             next.mas_remakeConstraints { make in
-                make?.top.equalTo()(16)
+                if #available(iOS 11.0, *) {
+                    make?.top.equalTo()(next.superview?.mas_safeAreaLayoutGuideTop)?.offset()(16)
+                } else {
+                    make?.top.equalTo()(16)
+                }
                 make?.centerX.equalTo()(0)
             }
             UIView.animate(withDuration: 0.2) {

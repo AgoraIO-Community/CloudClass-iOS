@@ -14,11 +14,9 @@ import AgoraWidget
 
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
-class AgoraSmallUIManager: AgoraEduUIManager {
+@objc public class AgoraSmallUIManager: AgoraEduUIManager {
     private let roomType: AgoraEduContextRoomType = .paintingSmall
     /// 视图部分，支持feature的UI交互显示
-    /** 容器视图，用以保持比例*/
-    private var contentView: UIView!
     /** 工具栏*/
     private var toolsView: AgoraRoomToolstView!
     /** 画笔工具*/
@@ -27,25 +25,9 @@ class AgoraSmallUIManager: AgoraEduUIManager {
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
     /** 远程视窗渲染 控制器*/
-    private var renderController: AgoraPaintingRenderUIController!
+    private var renderController: AgoraHorizListRenderUIController!
     /** 白板的渲染 控制器*/
     private var whiteBoardController: AgoraPaintingBoardUIController!
-    /// 弹窗控制器
-    /** 控制器遮罩层，用来盛装控制器和处理手势触发消失事件*/
-    private var ctrlMaskView: UIView!
-    /** 弹出显示的控制widget视图*/
-    private weak var ctrlView: UIView? {
-        willSet {
-            if let view = ctrlView {
-                ctrlView?.removeFromSuperview()
-                ctrlMaskView.isHidden = true
-            }
-            if let view = newValue {
-                ctrlMaskView.isHidden = false
-                self.view.addSubview(view)
-            }
-        }
-    }
     /** 工具箱 控制器*/
     private lazy var toolBoxViewController: AgoraToolBoxUIController = {
         let vc = AgoraToolBoxUIController(context: contextPool)
@@ -54,8 +36,8 @@ class AgoraSmallUIManager: AgoraEduUIManager {
         return vc
     }()
     /** 花名册 控制器*/
-    private lazy var nameRollController: AgoraPaintingUserListUIController = {
-        let vc = AgoraPaintingUserListUIController(context: contextPool)
+    private lazy var nameRollController: AgoraUserListUIController = {
+        let vc = AgoraUserListUIController(context: contextPool)
         self.addChild(vc)
         return vc
     }()
@@ -87,8 +69,8 @@ class AgoraSmallUIManager: AgoraEduUIManager {
         print("\(#function): \(self.classForCoder)")
     }
     
-    public override init(contextPool: AgoraEduContextPool,
-                         delegate: AgoraEduUIManagerDelegate) {
+    @objc public override init(contextPool: AgoraEduContextPool,
+                               delegate: AgoraEduUIManagerDelegate) {
         super.init(contextPool: contextPool,
                    delegate: delegate)
     }
@@ -97,10 +79,9 @@ class AgoraSmallUIManager: AgoraEduUIManager {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
-                
-        self.view.backgroundColor = .white
+        
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -117,6 +98,12 @@ class AgoraSmallUIManager: AgoraEduUIManager {
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
         }
+    }
+    
+    public override func didClickCtrlMaskView() {
+        toolsView.deselectAll()
+        handsUpViewController.deselect()
+        brushToolButton.isSelected = false
     }
 }
 
@@ -136,17 +123,10 @@ extension AgoraSmallUIManager {
             ctrlView = nil
         }
     }
-    
-    @objc func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {
-        toolsView.deselectAll()
-        handsUpViewController.deselect()
-        brushToolButton.isSelected = false
-        ctrlView = nil
-    }
 }
 
 extension AgoraSmallUIManager: AgoraEduMonitorHandler {
-    func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
+    public func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
         switch state {
         case .aborted:
             // 踢出
@@ -165,7 +145,7 @@ extension AgoraSmallUIManager: AgoraEduMonitorHandler {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraSmallUIManager: AgoraEduUserHandler {
-    func onLocalUserKickedOut() {
+    public func onLocalUserKickedOut() {
         AgoraAlert()
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
             .setMessage(AgoraKitLocalizedString("KickOutText"))
@@ -291,14 +271,7 @@ extension AgoraSmallUIManager: AgoraPaintingBoardUIControllerDelegate {
 // MARK: - Creations
 private extension AgoraSmallUIManager {
     func createViews() {
-        view.backgroundColor = .black
-        
-        contentView = UIView(frame: self.view.bounds)
-        contentView.backgroundColor = UIColor(rgb: 0xECECF1)
-        view.addSubview(contentView)
-        
         stateController = AgoraRoomStateUIController(context: contextPool)
-        stateController.themeColor = UIColor(rgb: 0x1D35AD)
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
@@ -306,22 +279,15 @@ private extension AgoraSmallUIManager {
         whiteBoardController.delegate = self
         contentView.addSubview(whiteBoardController.view)
         
-        renderController = AgoraPaintingRenderUIController(context: contextPool)
+        renderController = AgoraHorizListRenderUIController(context: contextPool)
         renderController.themeColor = UIColor(rgb: 0x75C0FE)
         addChild(renderController)
         contentView.addSubview(renderController.view)
-        
-        ctrlMaskView = UIView(frame: .zero)
-        ctrlMaskView.isHidden = true
-        let tap = UITapGestureRecognizer(
-            target: self, action: #selector(onClickCtrlMaskView(_:)))
-        ctrlMaskView.addGestureRecognizer(tap)
-        contentView.addSubview(ctrlMaskView)
-        
+                
         brushToolButton = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
-                                                        y: 0,
-                                                        width: 44,
-                                                        height: 44))
+                                                                y: 0,
+                                                                width: 44,
+                                                                height: 44))
         brushToolButton.isHidden = true
         brushToolButton.setImage(AgoraUIImage(object: self,
                                               name: "ic_brush_pencil"))
@@ -348,36 +314,18 @@ private extension AgoraSmallUIManager {
     }
     
     func createConstrains() {
-        let width = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-        let height = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-        if width/height > 667.0/375.0 {
-            contentView.mas_makeConstraints { make in
-                make?.center.equalTo()(contentView.superview)
-                make?.height.equalTo()(height)
-                make?.width.equalTo()(height * 16.0/9.0)
-            }
-        } else {
-            contentView.mas_makeConstraints { make in
-                make?.center.equalTo()(contentView.superview)
-                make?.width.equalTo()(width)
-                make?.height.equalTo()(width * 9.0/16.0)
-            }
-        }
         stateController.view.mas_makeConstraints { make in
-            make?.top.left().right().equalTo()(stateController.view.superview)
-            make?.height.equalTo()(20)
+            make?.top.left().right().equalTo()(0)
+            make?.height.equalTo()(AgoraFit.scale(14))
         }
         renderController.view.mas_makeConstraints { make in
-            make?.left.right().equalTo()(renderController.view.superview)
-            make?.top.equalTo()(stateController.view.mas_bottom)
-            make?.height.equalTo()(AgoraFit.scale(64))
+            make?.left.right().equalTo()(0)
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
+            make?.height.equalTo()(AgoraFit.scale(52))
         }
         whiteBoardController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(renderController.view.mas_bottom)
-            make?.left.right().bottom().equalTo()(whiteBoardController.view.superview)
-        }
-        ctrlMaskView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(self.view)
+            make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
+            make?.left.right().bottom().equalTo()(0)
         }
         brushToolButton.mas_makeConstraints { make in
             make?.right.equalTo()(-9)

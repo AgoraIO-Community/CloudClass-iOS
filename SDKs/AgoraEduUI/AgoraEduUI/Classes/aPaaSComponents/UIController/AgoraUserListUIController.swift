@@ -32,7 +32,7 @@ enum AgoraUserListFunction: Int {
     }
 }
 
-class AgoraPaintingUserListUIController: UIViewController {
+class AgoraUserListUIController: UIViewController {
     /** 容器*/
     var contentView: UIView!
     /** 页面title*/
@@ -88,7 +88,7 @@ class AgoraPaintingUserListUIController: UIViewController {
     }
 }
 // MARK: - Private
-private extension AgoraPaintingUserListUIController {
+private extension AgoraUserListUIController {
     func reloadUsers() {
         let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
         let list = contextPool.user.getAllUserList()
@@ -155,7 +155,7 @@ private extension AgoraPaintingUserListUIController {
 }
 
 // MARK: - AgoraEduUserHandler
-extension AgoraPaintingUserListUIController: AgoraEduUserHandler {
+extension AgoraUserListUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         reloadUsers()
     }
@@ -168,7 +168,7 @@ extension AgoraPaintingUserListUIController: AgoraEduUserHandler {
 }
 
 // MARK: - AgoraEduStreamHandler
-extension AgoraPaintingUserListUIController: AgoraEduStreamHandler {
+extension AgoraUserListUIController: AgoraEduStreamHandler {
     func onStreamJoin(stream: AgoraEduContextStream,
                       operator: AgoraEduContextUserInfo?) {
         self.updateStreamWithUUID(stream.owner.userUuid)
@@ -186,7 +186,7 @@ extension AgoraPaintingUserListUIController: AgoraEduStreamHandler {
 }
 
 // MARK: - PaintingNameRollItemCellDelegate
-extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelegate {
+extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
     func onDidSelectFunction(_ fn: AgoraUserListFunction,
                              at index: NSIndexPath,
                              isOn: Bool) {
@@ -262,7 +262,7 @@ extension AgoraPaintingUserListUIController: AgoraPaintingUserListItemCellDelega
     }
 }
 // MARK: - TableView Callback
-extension AgoraPaintingUserListUIController: UITableViewDelegate,
+extension AgoraUserListUIController: UITableViewDelegate,
                                              UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
@@ -282,7 +282,7 @@ extension AgoraPaintingUserListUIController: UITableViewDelegate,
 }
 
 // MARK: - Creations
-extension AgoraPaintingUserListUIController {
+extension AgoraUserListUIController {
     func createViews() {
         view.layer.shadowColor = UIColor(rgb: 0x2F4192,
                                          alpha: 0.15).cgColor
