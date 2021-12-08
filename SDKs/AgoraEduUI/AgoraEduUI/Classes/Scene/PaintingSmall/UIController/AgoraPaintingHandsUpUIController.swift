@@ -295,7 +295,8 @@ extension AgoraPaintingHandsUpUIController: UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withClass: AgoraHandsUpItemCell.self)
         let data = dataSource[indexPath.row]
         cell.nameLabel.text = data.userName
-        cell.state = data.isCoHost ? .onStage : .waiting
+        // TODO:
+//        cell.state = data.isCoHost ? .onStage : .waiting
         cell.delegate = self
         cell.indexPath = indexPath
         return cell
@@ -305,8 +306,8 @@ extension AgoraPaintingHandsUpUIController: UITableViewDataSource, UITableViewDe
                    didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath,
                               animated: true)
-        guard let u = dataSource[indexPath.row] as? AgoraEduContextUserInfo,
-              !u.isCoHost else {
+        guard let u = dataSource[indexPath.row] as? AgoraEduContextUserInfo
+               else { // TODO: !u.isCoHost
                   return
               }
         contextPool.user.addCoHost(userUuid: u.userUuid) {

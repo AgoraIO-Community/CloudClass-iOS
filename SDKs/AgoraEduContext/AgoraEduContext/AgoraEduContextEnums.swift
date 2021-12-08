@@ -48,8 +48,6 @@ import Foundation
 @objc public enum AgoraEduContextUserUpdateReason: Int {
     // 奖励
     case reward = 0
-    // 连麦
-    case coHost = 1
 }
 
 // MARK: - Network

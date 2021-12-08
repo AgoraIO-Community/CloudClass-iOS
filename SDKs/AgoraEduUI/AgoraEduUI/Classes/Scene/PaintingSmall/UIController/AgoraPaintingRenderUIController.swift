@@ -334,7 +334,7 @@ private extension AgoraPaintingRenderUIController {
                 })
                 tempTeacher = AgoraRenderItemInfoModel(with: user,
                                                        stream: stream)
-            } else if user.role == .student && user.isCoHost {
+            } else if user.role == .student  { // TODO: && user.isCoHost
                 let stream = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
                 if stream?.owner.userUuid == localInfo.userUuid {
                     self.currentStream = stream
@@ -402,24 +402,29 @@ private extension AgoraPaintingRenderUIController {
 // MARK: - AgoraEduUserHandler
 extension AgoraPaintingRenderUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        if user.isCoHost {
-            updateCoHosts()
-        }
+        // TODO:
+//        if user.isCoHost {
+//            updateCoHosts()
+//        }
     }
     
     func onRemoteUserLeft(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?, reason: AgoraEduContextUserLeaveReason) {
-        if user.isCoHost {
-            updateCoHosts()
-        }
+        // TODO:
+//        if user.isCoHost {
+//            updateCoHosts()
+//        }
     }
     
     func onUserUpdated(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?) {
-        if user.isCoHost {
-            updateCoHosts()
-        }
+        // TODO:
+//        if user.isCoHost {
+//            updateCoHosts()
+//        }
     }
     
-    func onUserRewarded(user: AgoraEduContextUserInfo, rewardCount: Int, operator: AgoraEduContextUserInfo) {
+    func onUserUpdated(user: AgoraEduContextUserInfo,
+                       operator: AgoraEduContextUserInfo?,
+                       reason: AgoraEduContextUserUpdateReason) {
         showRewardAnimation()
     }
 }

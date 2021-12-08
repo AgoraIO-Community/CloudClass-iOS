@@ -102,7 +102,8 @@ private extension AgoraPaintingUserListUIController {
                 model.uuid = user.userUuid
                 model.name = user.userName
                 model.rewards = user.rewardCount
-                model.stage.isOn = user.isCoHost
+                // TODO:
+//                model.stage.isOn = user.isCoHost
                 // TODO: 白板权限
 //                model.auth.isOn = user.boardGranted
                 // enable
