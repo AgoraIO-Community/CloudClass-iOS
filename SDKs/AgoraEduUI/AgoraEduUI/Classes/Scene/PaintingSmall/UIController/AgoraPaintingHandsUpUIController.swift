@@ -256,7 +256,7 @@ extension AgoraPaintingHandsUpUIController {
 }
 // MARK: - AgoraEduUserHandler
 extension AgoraPaintingHandsUpUIController: AgoraEduUserHandler {
-    func onUserHandsWave(fromUser: AgoraEduContextUserInfo,
+    func onUserHandsWave(user: AgoraEduContextUserInfo,
                          duration: Int) {
         // TODO: wavingArms handle
 //        var temp = [AgoraEduContextUserInfo]()

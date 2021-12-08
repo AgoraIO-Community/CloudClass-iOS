@@ -21,7 +21,8 @@ extension AgoraRenderItemInfoModel {
         self.init()
         self.userUUID = user.userUuid
         self.userName = user.userName
-        self.rewardCount = user.rewardCount
+        // TODO:
+//        self.rewardCount = user.rewardCount
         // TODO: waving hands
 //        self.isWaving = user.wavingArms
         update(stream: stream)
@@ -422,9 +423,8 @@ extension AgoraPaintingRenderUIController: AgoraEduUserHandler {
 //        }
     }
     
-    func onUserUpdated(user: AgoraEduContextUserInfo,
-                       operator: AgoraEduContextUserInfo?,
-                       reason: AgoraEduContextUserUpdateReason) {
+    func onUserUpdated(userInfo: AgoraEduContextUserInfo,
+                       operatorUser: AgoraEduContextUserInfo?) {
         showRewardAnimation()
     }
 }

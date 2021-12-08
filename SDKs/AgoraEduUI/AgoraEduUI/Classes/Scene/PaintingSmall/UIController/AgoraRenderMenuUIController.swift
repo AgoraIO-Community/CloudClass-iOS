@@ -189,7 +189,7 @@ extension AgoraRenderMenuUIController {
         guard let UUID = self.userUUID else {
             return
         }
-        contextPool.user.rewardUsers(userUuids: [UUID],
+        contextPool.user.rewardUsers(userUuidList: [UUID],
                                      rewardCount: 1,
                                      success: nil, failure: nil)
     }

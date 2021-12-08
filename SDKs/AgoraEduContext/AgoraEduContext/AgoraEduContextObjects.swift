@@ -54,8 +54,6 @@ import Foundation
     public var userName: String
     // 用户角色
     public var role: AgoraEduContextUserRole
-    // 奖励数量
-    public var rewardCount: Int = 0
     
     public init(userUuid: String,
                 userName: String,

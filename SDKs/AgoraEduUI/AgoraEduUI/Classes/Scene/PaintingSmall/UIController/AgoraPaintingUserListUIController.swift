@@ -101,7 +101,9 @@ private extension AgoraPaintingUserListUIController {
                 let model = AgoraPaintingUserListItemModel()
                 model.uuid = user.userUuid
                 model.name = user.userName
-                model.rewards = user.rewardCount
+                // TODO:
+//                model.rewards = user.rewardCount
+
                 // TODO:
 //                model.stage.isOn = user.isCoHost
                 // TODO: 白板权限

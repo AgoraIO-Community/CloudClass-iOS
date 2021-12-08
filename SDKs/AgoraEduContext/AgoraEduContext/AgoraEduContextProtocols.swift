@@ -203,7 +203,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - parameter user: 更新的用户
     /// - parameter operator: 操作者，可为空
     @objc optional func onUserUpdated(user: AgoraEduContextUserInfo,
-                                      operator: AgoraEduContextUserInfo?,
+                                      operatorUser: AgoraEduContextUserInfo?,
                                       reason: AgoraEduContextUserUpdateReason)
 
     /// 开始连麦的用户（v2.0.0)
@@ -226,7 +226,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     @objc optional func onUserPropertiesUpdated(user: AgoraEduContextUserInfo,
                                                 changedProperties: [String: Any],
                                                 cause: [String: Any]?,
-                                                operator: AgoraEduContextUserInfo?)
+                                                operatorUser: AgoraEduContextUserInfo?)
     
     /// 用户自定义属性删除(v2.0.0)
     /// - parameter user: 更新的用户
@@ -236,27 +236,33 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     @objc optional func onUserPropertiesDeleted(user: AgoraEduContextUserInfo,
                                                 deletedProperties: [String],
                                                 cause: [String: Any]?,
-                                                operator: AgoraEduContextUserInfo?)
+                                                operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 用户收到奖励(v2.0.0)
+    /// - parameter user: 用户信息
+    /// - parameter rewardCount: 奖励个数
+    @objc optional func onUserRewarded(user: AgoraEduContextUserInfo,
+                                       rewardCount: Int,
+                                       operatorUser: AgoraEduContextUserInfo?)
     
     /// 自己被踢出（v2.0.0)
     @objc optional func onLocalUserKickedOut()
     
     /// 是否可以挥手（v2.0.0)
-    /// - parameter fromUser: 手放下的用户
-    /// - parameter duration: 举手的时长，单位秒
+    /// - parameter enable: 是否可以挥手
     @objc optional func onUserHandsWaveEnable(enable: Bool)
     
     /// 用户挥手（v2.0.0)
     /// - parameter fromUser: 手放下的用户
     /// - parameter duration: 举手的时长，单位秒
-    @objc optional func onUserHandsWave(fromUser: AgoraEduContextUserInfo,
+    @objc optional func onUserHandsWave(user: AgoraEduContextUserInfo,
                                         duration: Int)
     
     /// 用户手放下，结束上台申请（v2.0.0)
     /// - parameter user: 收到奖励的用户
     /// - parameter duration: 收到奖励的用户
     /// - note: 无论是用户自己取消举手，还是举手申请被接受，都要走这个回调
-    @objc optional func onUserHandsDown(fromUser: AgoraEduContextUserInfo)
+    @objc optional func onUserHandsDown(user: AgoraEduContextUserInfo)
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
@@ -287,7 +293,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - returns: void
     func updateUserProperties(userUuid: String,
                               properties: [String: Any],
-                              cause:[String: Any]?,
+                              cause: [String: Any]?,
                               success: AgoraEduContextSuccess?,
                               failure: AgoraEduContextFail?)
     
@@ -300,7 +306,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - returns: void
     func deleteUserProperties(userUuid: String,
                               keyPaths: [String],
-                              cause:[String: Any]?,
+                              cause: [String: Any]?,
                               success: AgoraEduContextSuccess?,
                               failure: AgoraEduContextFail?)
     
@@ -336,14 +342,19 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     
     /// 给用户发奖 (v2.0.0)
     /// - parameter userUuid: 用户id
-    /// - parameter rewardCount: 奖杯数量
+    /// - parameter rewardCount: 奖励数
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败
     /// - returns: void
-    func rewardUsers(userUuids: [String],
+    func rewardUsers(userUuidList: [String],
                      rewardCount: Int,
                      success: AgoraEduContextSuccess?,
                      failure: AgoraEduContextFail?)
+    
+    /// 获取用户的发奖数 (v2.0.0)
+    /// - parameter userUuid: 用户id
+    /// - returns: Int, 奖励数
+    func getUserRewardCount(userUuid: String) -> Int
     
     /// 踢人 (v2.0.0)
     /// - parameter userUuid: 用户id
