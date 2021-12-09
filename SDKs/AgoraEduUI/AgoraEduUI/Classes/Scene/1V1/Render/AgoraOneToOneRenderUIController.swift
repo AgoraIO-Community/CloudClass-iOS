@@ -55,92 +55,87 @@ class AgoraOneToOneRenderUIController: UIViewController {
 // MARK: - Private
 private extension AgoraOneToOneRenderUIController {
     func updateCoHosts() {
-        let list = self.contextPool.user.getAllUserList()
         self.currentStream = nil
-        if let studentInfo = list.first(where: { $0.role == .student }) {
-            let stream = contextPool.stream.getStreamInfo(userUuid: studentInfo.userUuid)?.first
-            let localInfo = contextPool.user.getLocalUserInfo()
-            if stream?.owner.userUuid == localInfo.userUuid {
-                self.currentStream = stream
-            }
-            let model = AgoraRenderItemInfoModel(with: studentInfo,
-                                                 stream: stream)
-            studentView.item = model
-            if let s = stream {
-                if s.streamType == .video ||
-                    s.streamType == .both {
-                    switch s.videoSourceState {
-                    case .error:
-                        studentView.cameraState = .erro
-                    case .close:
-                        studentView.cameraState = .off
-                    case .open:
-                        studentView.cameraState = .on
-                    }
-                } else {
-                    studentView.cameraState = .off
+        
+        let user = contextPool.user
+        let stream = contextPool.stream
+        
+        // student view
+        if let studentInfo = user.getUserList(role: .student)?.first {
+            let localInfo = user.getLocalUserInfo()
+            
+            if let stream = stream.getStreamInfo(userUuid: studentInfo.userUuid)?.first {
+                if studentInfo.userUuid == localInfo.userUuid {
+                    self.currentStream = stream
                 }
-                if s.streamType == .audio ||
-                    s.streamType == .both {
-                    switch s.audioSourceState {
-                    case .error:
-                        studentView.micState = .erro
-                    case .close:
-                        studentView.micState = .off
-                    case .open:
-                        studentView.micState = .on
-                    }
-                } else {
-                    studentView.micState = .off
-                }
+                
+                updateRenderView(studentView,
+                                 with: stream)
             } else {
-                studentView.cameraState = .erro
-                studentView.micState = .erro
+                updateRenderViewWithoutStream(studentView)
             }
         } else {
             studentView.item = nil
-            studentView.cameraState = .on
         }
+        
         // teacher view
-        if let teacherInfo = list.first(where: { $0.role == .teacher }) {
-            let stream = contextPool.stream.getStreamInfo(userUuid: teacherInfo.userUuid)?.first
-            let model = AgoraRenderItemInfoModel(with: teacherInfo,
-                                                 stream: stream)
-            teacherView.item = model
-            if let s = stream {
-                if s.streamType == .video ||
-                    s.streamType == .both {
-                    switch s.videoSourceState {
-                    case .error:
-                        teacherView.cameraState = .erro
-                    case .close:
-                        teacherView.cameraState = .off
-                    case .open:
-                        teacherView.cameraState = .on
-                    }
-                } else {
-                    teacherView.cameraState = .off
-                }
-                if s.streamType == .audio ||
-                    s.streamType == .both {
-                    switch s.audioSourceState {
-                    case .error:
-                        teacherView.micState = .erro
-                    case .close:
-                        teacherView.micState = .off
-                    case .open:
-                        teacherView.micState = .on
-                    }
-                } else {
-                    teacherView.micState = .off
-                }
+        if let teacherInfo = user.getUserList(role: .teacher)?.first {
+            if let stream = stream.getStreamInfo(userUuid: teacherInfo.userUuid)?.first {
+                updateRenderView(teacherView,
+                                 with: stream)
             } else {
-                teacherView.cameraState = .erro
-                teacherView.micState = .erro
+                updateRenderViewWithoutStream(teacherView)
             }
         } else {
             teacherView.item = nil
         }
+    }
+    
+    func updateRenderView(_ view: AgoraOneToOneMemberView,
+                          with stream: AgoraEduContextStreamInfo) {
+        let model = AgoraRenderItemInfoModel(with: stream.owner,
+                                             stream: stream)
+        
+        view.item = model
+        
+        if stream.streamType.hasVideo {
+            switch stream.videoSourceState {
+            case .error:
+                view.cameraState = .erro
+                print("view.cameraState = .erro")
+            case .close:
+                view.cameraState = .off
+                print("view.cameraState = .off")
+            case .open:
+                view.cameraState = .on
+                print("view.cameraState = .on")
+            }
+        } else {
+            view.cameraState = .off
+            print("view.cameraState = .off")
+        }
+        
+        if stream.streamType.hasAudio {
+            switch stream.audioSourceState {
+            case .error:
+                view.micState = .erro
+                print("view.micState = .erro")
+            case .close:
+                view.micState = .off
+                print("view.micState = .off")
+            case .open:
+                view.micState = .on
+                print("view.micState = .off")
+            }
+        } else {
+            view.micState = .off
+            print("view.micState = .off")
+        }
+    }
+    
+    func updateRenderViewWithoutStream(_ view: AgoraOneToOneMemberView) {
+        view.cameraState = .erro
+        view.micState = .erro
     }
     
     func streamChanged(from: AgoraEduContextStreamInfo?, to: AgoraEduContextStreamInfo?) {
@@ -208,7 +203,9 @@ private extension AgoraOneToOneRenderUIController {
 }
 // MARK: - AkOneToOneItemCellDelegate
 extension AgoraOneToOneRenderUIController: AgoraOneToOneMemberViewDelegate {
-    func onMemberViewRequestRenderOnView(view: UIView, streamID: String, userUUID: String) {
+    func onMemberViewRequestRenderOnView(view: UIView,
+                                         streamID: String,
+                                         userUUID: String) {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamID,
@@ -218,29 +215,15 @@ extension AgoraOneToOneRenderUIController: AgoraOneToOneMemberViewDelegate {
                                            streamUuid: streamID)
     }
     
-    func onMemberViewRequestCancelRender(streamID: String, userUUID: String) {
+    func onMemberViewRequestCancelRender(streamID: String,
+                                         userUUID: String) {
         contextPool.media.stopRenderVideo(streamUuid: streamID)
+        print("cancel render")
     }
 }
 
 // MARK: - AgoraEduUserHandler
 extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
-    
-    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        self.updateCoHosts()
-    }
-    
-    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
-                          operator: AgoraEduContextUserInfo?,
-                          reason: AgoraEduContextUserLeaveReason) {
-        self.updateCoHosts()
-    }
-    
-    func onUserUpdated(user: AgoraEduContextUserInfo,
-                       operator: AgoraEduContextUserInfo?) {
-        self.updateCoHosts()
-    }
-    
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operator: AgoraEduContextUserInfo) {
@@ -260,21 +243,21 @@ extension AgoraOneToOneRenderUIController: AgoraEduMediaHandler {
 }
 // MARK: - AgoraEduStreamHandler
 extension AgoraOneToOneRenderUIController: AgoraEduStreamHandler {
-    func onStreamJoin(stream: AgoraEduContextStreamInfo,
-                      operator: AgoraEduContextUserInfo?) {
-        self.updateCoHosts()
-    }
-    
-    func onStreamLeave(stream: AgoraEduContextStreamInfo,
-                       operator: AgoraEduContextUserInfo?) {
-        self.updateCoHosts()
-    }
-    
-    func onStreamUpdate(stream: AgoraEduContextStreamInfo,
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operator: AgoraEduContextUserInfo?) {
+        self.updateCoHosts()
+    }
+    
+    func onStreamUpdated(stream: AgoraEduContextStreamInfo,
+                         operator: AgoraEduContextUserInfo?) {
         if stream.streamUuid == currentStream?.streamUuid {
             self.currentStream = stream
         }
+        self.updateCoHosts()
+    }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operator: AgoraEduContextUserInfo?) {
         self.updateCoHosts()
     }
 }

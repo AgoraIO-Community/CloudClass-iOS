@@ -5,7 +5,6 @@ Project_Path="../../../App"
 Local_Path=`pwd`
 
 python pod.py ${Project_Path}
-python environment.py ${Project_Path} ${Envi}
 
 cd ${Project_Path}
 
