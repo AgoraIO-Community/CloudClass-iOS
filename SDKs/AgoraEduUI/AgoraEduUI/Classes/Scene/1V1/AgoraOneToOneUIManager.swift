@@ -23,7 +23,7 @@ import Masonry
     /** 白板 控制器*/
     private var boardController: UIViewController!
     /** 聊天 控制器*/
-    private var messageController: AgoraBaseWidget?
+    private var messageController: AgoraChatUIController?
     
     private var tabSelectView: AgoraOneToOneTabView?
     
@@ -61,7 +61,7 @@ import Masonry
             guard let `self` = self else {
                 return
             }
-            self.initWidgets()
+            self.createChatController()
         } fail: { [weak self] error in
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
@@ -77,27 +77,6 @@ import Masonry
 extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
     func onChatTabSelectChanged(isSelected: Bool) {
         messageController?.view.isHidden = !isSelected
-    }
-}
-
-extension AgoraOneToOneUIManager: AgoraWidgetMessageObserver {
-    
-    func onMessageReceived(_ message: String,
-                           widgetId: String!) {
-        switch widgetId {
-        case "AgoraChatWidget":
-            if let dic = message.json(),
-               let isMin = dic["isMinSize"] as? Bool,
-               isMin{
-                ctrlView == nil
-            }
-        case "HyChatWidget":
-            if message == "min" {
-                ctrlView == nil
-            }
-        default:
-            break
-        }
     }
 }
 
@@ -183,29 +162,26 @@ private extension AgoraOneToOneUIManager {
         }
     }
     
-    func initWidgets() {
-        guard let widgetInfos = contextPool.widget.getWidgetConfigs() else {
-            return
-        }
-        if let widget = createChatWidget() {
-            contextPool.widget.add(self,
-                                   widgetId: widget.info.widgetId)
-            widget.view.isHidden = true
-            rightContentView.addSubview(widget.view)
-            messageController = widget
-
-            if UIDevice.current.isPad {
-                widget.view.mas_makeConstraints { make in
-                    make?.top.equalTo()(renderController.view.mas_bottom)
-                    make?.left.right().bottom().equalTo()(0)
-                }
-            } else {
-                widget.view.mas_makeConstraints { make in
-                    make?.top.equalTo()(tabSelectView?.mas_bottom)
-                    make?.left.right().bottom().equalTo()(0)
-                }
+    func createChatController() {
+        let controller = AgoraChatUIController()
+        controller.contextPool = contextPool
+        
+        controller.view.isHidden = true
+        rightContentView.addSubview(controller.view)
+        
+        if UIDevice.current.isPad {
+            controller.view.mas_makeConstraints { make in
+                make?.top.equalTo()(renderController.view.mas_bottom)
+                make?.left.right().bottom().equalTo()(0)
+            }
+        } else {
+            controller.view.mas_makeConstraints { make in
+                make?.top.equalTo()(tabSelectView?.mas_bottom)
+                make?.left.right().bottom().equalTo()(0)
             }
         }
+        
+        messageController = controller
     }
 }
 

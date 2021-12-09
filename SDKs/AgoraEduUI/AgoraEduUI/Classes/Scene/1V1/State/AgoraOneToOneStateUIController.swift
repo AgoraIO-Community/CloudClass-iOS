@@ -63,7 +63,7 @@ class AgoraOneToOneStateUIController: UIViewController {
                                           block: { [weak self] _ in
             self?.updateTimeVisual()
         })
-        contextPool.room.registerEventHandler(self)
+        contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
     }
     

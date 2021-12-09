@@ -156,8 +156,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
-    /// 事件监听
-    func registerEventHandler(_ handler: AgoraEduRoomHandler)
     /// 加入房间
     func joinRoom(success: (() -> Void)?,
                   fail: ((AgoraEduContextError) -> Void)?)
@@ -183,6 +181,9 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
                     fail: ((AgoraEduContextError) -> Void)?)
     /// 获取课堂信息
     func getClassInfo() -> AgoraEduContextClassInfo
+    
+    /// 事件监听
+    func registerRoomEventHandler(_ handler: AgoraEduRoomHandler)
 }
 
 // MARK: - User

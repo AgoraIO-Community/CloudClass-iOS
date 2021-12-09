@@ -49,7 +49,7 @@ class AgoraOneToOneRenderUIController: UIViewController {
         contextPool.user.registerEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
-        contextPool.room.registerEventHandler(self)
+        contextPool.room.registerRoomEventHandler(self)
     }
 }
 // MARK: - Private

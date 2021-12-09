@@ -151,7 +151,7 @@ class AgoraHorizListRenderUIController: UIViewController {
         createConstrains()
         contextPool.user.registerEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
-        contextPool.room.registerEventHandler(self)
+        contextPool.room.registerRoomEventHandler(self)
     }
     
     override func viewDidLayoutSubviews() {

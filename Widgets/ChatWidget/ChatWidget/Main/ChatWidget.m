@@ -20,6 +20,56 @@ static const NSString* kAvatarUrl = @"avatarUrl";
 static const NSString* kNickname = @"nickName";
 static const NSString* kChatRoomId = @"chatroomId";
 
+@interface ChatWidgetLaunchData : NSObject
+// key
+@property (nonatomic, copy) NSString *appKey;
+@property (nonatomic, copy) NSString *password;
+@property (nonatomic, copy) NSString *orgName;
+@property (nonatomic, copy) NSString *appName;
+
+// room
+@property (nonatomic, copy) NSString *roomUuid;
+@property (nonatomic, copy) NSString *chatRoomId;
+
+// user
+@property (nonatomic, copy) NSString *avatarurl;
+@property (nonatomic, copy) NSString *userUuid;
+@property (nonatomic, copy) NSString *userName;
+@end
+
+@implementation ChatWidgetLaunchData
+- (BOOL)checkIsLegal {
+    // key
+    if (self.appKey.length <= 0) {
+        return false;
+    }
+    
+    if (self.password.length <= 0) {
+        return false;
+    }
+    
+    // room
+    if (self.roomUuid.length <= 0) {
+        return false;
+    }
+    
+    if (self.chatRoomId.length <= 0) {
+        return false;
+    }
+    
+    // user
+    if (self.userUuid.length <= 0) {
+        return false;
+    }
+    
+    if (self.userName.length <= 0) {
+        return false;
+    }
+    
+    return YES;
+}
+@end
+
 #define TOP_HEIGHT 34
 #define MINIBUTTON_SIZE 40
 
@@ -28,14 +78,15 @@ static const NSString* kChatRoomId = @"chatroomId";
                           AgoraUIContainerDelegate,
                           ChatTopViewDelegate,
                           ChatViewDelegate>
-@property (nonatomic,strong) ChatManager* chatManager;
-@property (nonatomic,strong) ChatTopView* chatTopView;
-@property (nonatomic,strong) AnnouncementView* announcementView;
-@property (nonatomic,strong) ChatView* chatView;
-@property (nonatomic,strong) AgoraBaseUIContainer* containView;
-@property (nonatomic,strong) UITapGestureRecognizer *tap;
+@property (nonatomic, strong) ChatManager* chatManager;
+@property (nonatomic, strong) ChatTopView* chatTopView;
+@property (nonatomic, strong) AnnouncementView* announcementView;
+@property (nonatomic, strong) ChatView* chatView;
+@property (nonatomic, strong) AgoraBaseUIContainer* containView;
+@property (nonatomic, strong) UITapGestureRecognizer *tap;
 //@property (nonatomic,strong) UIButton* miniButton;
-@property (nonatomic,strong) CustomBadgeView* badgeView;
+@property (nonatomic, strong) CustomBadgeView* badgeView;
+@property (nonatomic, strong) ChatWidgetLaunchData *launchData;
 @end
 
 @implementation ChatWidget
@@ -44,6 +95,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     
     if (self) {
         self.view.delegate = self;
+        self.launchData = [[ChatWidgetLaunchData alloc] init];
         [self initViews];
         [self initData:info.properties];
     }
@@ -54,12 +106,17 @@ static const NSString* kChatRoomId = @"chatroomId";
     [self layoutViews];
 }
 
-- (void)onMessageReceived:(NSString *)message
-{
-    if([message isEqualToString:@"min"]) {
+- (void)onMessageReceived:(NSString *)message {
+    if ([message isEqualToString:@"min"]) {
         [self chatTopViewDidClickHide];
-    } else if([message isEqualToString:@"max"]) {
+    } else if ([message isEqualToString:@"max"]) {
         [self showView];
+    } else {
+        NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data
+                                                            options:NSJSONReadingMutableContainers
+                                                              error:nil];
+        [self initData:dic];
     }
 }
 
@@ -137,18 +194,79 @@ static const NSString* kChatRoomId = @"chatroomId";
 }
 
 - (void)initData:(NSDictionary *)properties {
+    NSLog(@"********* initData: %@", properties.description);
+    
+    NSDictionary *widgetExtraProps = properties[@"extra"];
+    
+    // key
+    NSString *appKey = nil;
+    NSString *password = properties[@"userId"];
+    
+    // room
+    NSString *chatRoomId = nil;
+    NSString *roomUuid = self.info.roomInfo.roomUuid;
+    
+    // user
+    NSString *avatarurl = nil;
+    NSString *userUuid = properties[@"userId"];
+    NSString *userName = self.info.localUserInfo.userName;
+    
+    if (widgetExtraProps) {
+        appKey = widgetExtraProps[@"appKey"];
+        chatRoomId = widgetExtraProps[@"chatRoomId"];
+    }
+        
+    // key
+    if (appKey.length > 0) {
+        self.launchData.appKey = appKey;
+    }
+    
+    if (password.length > 0) {
+        self.launchData.password = password;
+    }
+    
+    // room
+    if (chatRoomId.length > 0) {
+        self.launchData.chatRoomId = chatRoomId;
+    }
+    
+    if (roomUuid.length > 0) {
+        self.launchData.roomUuid = roomUuid;
+    }
+    
+    // user
+    if (avatarurl.length > 0) {
+        self.launchData.avatarurl = avatarurl;
+    }
+    
+    if (userUuid.length > 0) {
+        self.launchData.userUuid = userUuid;
+    }
+    
+    if (userName.length > 0) {
+        self.launchData.userName = userName;
+    }
+    
+    if (![self.launchData checkIsLegal]) {
+        return;
+    }
+    
+    [self launch];
+}
+
+- (void)launch {
     ChatUserConfig* user = [[ChatUserConfig alloc] init];
     
-    user.avatarurl = properties[@"avatarurl"];
-    user.username = [properties[@"userUuid"] lowercaseString];
-    user.nickname = properties[@"userName"];
-    user.roomUuid = properties[@"roomUuid"];
+    user.avatarurl = self.launchData.avatarurl;
+    user.username = self.launchData.userUuid;
+    user.nickname = self.launchData.userName;
+    user.roomUuid = self.launchData.roomUuid;
     user.role = 2;
     
-    kChatRoomId =  properties[@"chatRoomId"];
+    kChatRoomId = self.launchData.chatRoomId;
     
-    NSString *appKey = properties[@"appkey"];
-    NSString *password = properties[@"password"];
+    NSString *appKey = self.launchData.appKey;
+    NSString *password = self.launchData.password;
     
     ChatManager *manager = [[ChatManager alloc] initWithUserConfig:user
                                                             appKey:appKey

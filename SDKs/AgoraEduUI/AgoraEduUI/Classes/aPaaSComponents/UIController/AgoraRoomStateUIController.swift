@@ -56,7 +56,7 @@ class AgoraRoomStateUIController: UIViewController {
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] t in
             self?.updateTimeVisual()
         })
-        contextPool.room.registerEventHandler(self)
+        contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
     }
 }
