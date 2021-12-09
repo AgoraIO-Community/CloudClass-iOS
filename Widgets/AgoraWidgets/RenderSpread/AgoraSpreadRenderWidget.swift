@@ -96,11 +96,11 @@ extension AgoraSpreadRenderWidget: AgoraEduUserHandler {
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraSpreadRenderWidget: AgoraEduStreamHandler {
-    public func onStreamJoin(stream: AgoraEduContextStream,
+    public func onStreamJoin(stream: AgoraEduContextStreamInfo,
                              operator: AgoraEduContextUserInfo?) {
         updateRenderStreamInfo(stream: stream)
     }
-    public func onStreamUpdate(stream: AgoraEduContextStream,
+    public func onStreamUpdate(stream: AgoraEduContextStreamInfo,
                                operator: AgoraEduContextUserInfo?){
         updateRenderStreamInfo(stream: stream)
     }
@@ -242,7 +242,7 @@ fileprivate extension AgoraSpreadRenderWidget {
         renderUserInfo = nil
     }
     
-    func updateRenderStreamInfo(stream: AgoraEduContextStream) {
+    func updateRenderStreamInfo(stream: AgoraEduContextStreamInfo) {
         
         guard let renderUser = renderUserInfo,
               stream.owner.userUuid == renderUser.userId else {

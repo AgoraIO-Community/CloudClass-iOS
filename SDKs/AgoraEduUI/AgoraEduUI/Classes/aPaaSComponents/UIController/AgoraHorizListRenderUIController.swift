@@ -17,7 +17,7 @@ import UIKit
 /** extension: 用于在feature层将SDK数据模型转换成cell model的数据模型*/
 extension AgoraRenderItemInfoModel {
     convenience init(with user: AgoraEduContextUserInfo,
-                     stream: AgoraEduContextStream?) {
+                     stream: AgoraEduContextStreamInfo?) {
         self.init()
         self.userUUID = user.userUuid
         self.userName = user.userName
@@ -28,7 +28,7 @@ extension AgoraRenderItemInfoModel {
         update(stream: stream)
     }
     
-    func update(stream: AgoraEduContextStream?) {
+    func update(stream: AgoraEduContextStreamInfo?) {
         guard let s = stream else {
             self.streamUUID = nil
             self.cameraDeviceState = .close
@@ -129,7 +129,7 @@ class AgoraHorizListRenderUIController: UIViewController {
         }
     }
     /** 用来记录当前流是否被老师操作*/
-    var currentStream: AgoraEduContextStream? {
+    var currentStream: AgoraEduContextStreamInfo? {
         didSet {
             streamChanged(from: oldValue, to: currentStream)
         }
@@ -348,7 +348,7 @@ private extension AgoraHorizListRenderUIController {
         teacherItem = tempTeacher
     }
     
-    func streamChanged(from: AgoraEduContextStream?, to: AgoraEduContextStream?) {
+    func streamChanged(from: AgoraEduContextStreamInfo?, to: AgoraEduContextStreamInfo?) {
         guard let fromStream = from, let toStream = to else {
             return
         }
@@ -443,17 +443,17 @@ extension AgoraHorizListRenderUIController: AgoraEduMediaHandler {
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraHorizListRenderUIController: AgoraEduStreamHandler {
-    func onStreamJoin(stream: AgoraEduContextStream,
+    func onStreamJoin(stream: AgoraEduContextStreamInfo,
                       operator: AgoraEduContextUserInfo?) {
         self.updateCoHosts()
     }
     
-    func onStreamLeave(stream: AgoraEduContextStream,
+    func onStreamLeave(stream: AgoraEduContextStreamInfo,
                        operator: AgoraEduContextUserInfo?) {
         self.updateCoHosts()
     }
     
-    func onStreamUpdate(stream: AgoraEduContextStream,
+    func onStreamUpdate(stream: AgoraEduContextStreamInfo,
                         operator: AgoraEduContextUserInfo?) {
         if stream.streamUuid == currentStream?.streamUuid {
             self.currentStream = stream

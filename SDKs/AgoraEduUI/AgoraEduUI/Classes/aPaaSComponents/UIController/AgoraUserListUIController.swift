@@ -169,17 +169,17 @@ extension AgoraUserListUIController: AgoraEduUserHandler {
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraUserListUIController: AgoraEduStreamHandler {
-    func onStreamJoin(stream: AgoraEduContextStream,
+    func onStreamJoin(stream: AgoraEduContextStreamInfo,
                       operator: AgoraEduContextUserInfo?) {
         self.updateStreamWithUUID(stream.owner.userUuid)
     }
     
-    func onStreamLeave(stream: AgoraEduContextStream,
+    func onStreamLeave(stream: AgoraEduContextStreamInfo,
                        operator: AgoraEduContextUserInfo?) {
         self.updateStreamWithUUID(stream.owner.userUuid)
     }
     
-    func onStreamUpdate(stream: AgoraEduContextStream,
+    func onStreamUpdate(stream: AgoraEduContextStreamInfo,
                         operator: AgoraEduContextUserInfo?) {
         self.updateStreamWithUUID(stream.owner.userUuid)
     }

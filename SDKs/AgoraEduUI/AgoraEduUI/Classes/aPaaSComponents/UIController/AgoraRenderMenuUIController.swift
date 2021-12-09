@@ -210,21 +210,21 @@ extension AgoraRenderMenuUIController: AgoraEduUserHandler {
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraRenderMenuUIController: AgoraEduStreamHandler {
-    func onStreamJoin(stream: AgoraEduContextStream,
+    func onStreamJoin(stream: AgoraEduContextStreamInfo,
                       operator: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userUUID {
             updateView()
         }
     }
     
-    func onStreamLeave(stream: AgoraEduContextStream,
+    func onStreamLeave(stream: AgoraEduContextStreamInfo,
                        operator: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userUUID {
             updateView()
         }
     }
     
-    func onStreamUpdate(stream: AgoraEduContextStream,
+    func onStreamUpdate(stream: AgoraEduContextStreamInfo,
                         operator: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userUUID {
             updateView()

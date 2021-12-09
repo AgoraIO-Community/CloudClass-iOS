@@ -23,7 +23,7 @@ class AgoraOneToOneRenderUIController: UIViewController {
     
     var studentView: AgoraOneToOneMemberView!
     /** 用来记录当前流是否被老师操作*/
-    var currentStream: AgoraEduContextStream? {
+    var currentStream: AgoraEduContextStreamInfo? {
         didSet {
             streamChanged(from: oldValue, to: currentStream)
         }
@@ -143,7 +143,7 @@ private extension AgoraOneToOneRenderUIController {
         }
     }
     
-    func streamChanged(from: AgoraEduContextStream?, to: AgoraEduContextStream?) {
+    func streamChanged(from: AgoraEduContextStreamInfo?, to: AgoraEduContextStreamInfo?) {
         guard let fromStream = from, let toStream = to else {
             return
         }
@@ -260,17 +260,17 @@ extension AgoraOneToOneRenderUIController: AgoraEduMediaHandler {
 }
 // MARK: - AgoraEduStreamHandler
 extension AgoraOneToOneRenderUIController: AgoraEduStreamHandler {
-    func onStreamJoin(stream: AgoraEduContextStream,
+    func onStreamJoin(stream: AgoraEduContextStreamInfo,
                       operator: AgoraEduContextUserInfo?) {
         self.updateCoHosts()
     }
     
-    func onStreamLeave(stream: AgoraEduContextStream,
+    func onStreamLeave(stream: AgoraEduContextStreamInfo,
                        operator: AgoraEduContextUserInfo?) {
         self.updateCoHosts()
     }
     
-    func onStreamUpdate(stream: AgoraEduContextStream,
+    func onStreamUpdate(stream: AgoraEduContextStreamInfo,
                         operator: AgoraEduContextUserInfo?) {
         if stream.streamUuid == currentStream?.streamUuid {
             self.currentStream = stream

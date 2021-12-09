@@ -123,7 +123,7 @@ import Foundation
 }
 
 // MARK: - Stream
-@objcMembers public class AgoraEduContextStream: NSObject {
+@objcMembers public class AgoraEduContextStreamInfo: NSObject {
     /// 流 Id
     public let streamUuid: String
     /// 流名字

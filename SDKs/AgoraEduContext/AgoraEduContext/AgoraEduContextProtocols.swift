@@ -203,8 +203,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - parameter user: 更新的用户
     /// - parameter operator: 操作者，可为空
     @objc optional func onUserUpdated(user: AgoraEduContextUserInfo,
-                                      operatorUser: AgoraEduContextUserInfo?,
-                                      reason: AgoraEduContextUserUpdateReason)
+                                      operatorUser: AgoraEduContextUserInfo?)
 
     /// 开始连麦的用户（v2.0.0)
     /// - parameter userList: 开始连麦的用户列表
@@ -471,21 +470,21 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - parameter stream: 流信息
     /// - parameter operator: 操作人，可以为空
     /// - returns: void
-    @objc optional func onStreamJoined(stream: AgoraEduContextStream,
+    @objc optional func onStreamJoined(stream: AgoraEduContextStreamInfo,
                                        operator: AgoraEduContextUserInfo?)
     
     /// 远端流离开频道事件 (v2.0.0)
     /// - parameter stream: 流信息
     /// - parameter operator: 操作人，可以为空
     /// - returns: void
-    @objc optional func onStreamLeft(stream: AgoraEduContextStream,
+    @objc optional func onStreamLeft(stream: AgoraEduContextStreamInfo,
                                      operator: AgoraEduContextUserInfo?)
     
     /// 远端流更新事件 (v2.0.0)
     /// - parameter stream: 流信息
     /// - parameter operator: 操作人，可以为空
     /// - returns: void
-    @objc optional func onStreamUpdated(stream: AgoraEduContextStream,
+    @objc optional func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                                         operator: AgoraEduContextUserInfo?)
 }
 
@@ -493,12 +492,12 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// 获取某个用户的一组流信息 (v2.0.0)
     /// - parameter userUuid: 用户Id
     /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
-    func getStreamInfo(userUuid: String) -> [AgoraEduContextStream]?
+    func getStreamInfo(userUuid: String) -> [AgoraEduContextStreamInfo]?
     
     /// 获取所有的流信息 (v2.0.0)
     /// - parameter userUuid: 用户Id
     /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
-    func getAllStreamInfo() -> [AgoraEduContextStream]?
+    func getAllStreamInfo() -> [AgoraEduContextStreamInfo]?
     
     /// 授予流的发流权限(v2.0.0)
     /// - parameter streamUuids: 流Id
