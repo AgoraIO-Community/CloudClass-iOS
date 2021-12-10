@@ -45,7 +45,7 @@ import AgoraWidget
         return vc
     }()
     /** 聊天窗口 控制器*/
-    private var messageController: AgoraBaseWidget?
+    private var chatController: AgoraChatUIController!
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
@@ -83,7 +83,7 @@ import AgoraWidget
             guard let `self` = self else {
                 return
             }
-            self.initWidgets()
+            self.createChatController()
         } fail: { [weak self] error in
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
@@ -164,18 +164,6 @@ extension AgoraLectureUIManager: AgoraRoomToolsViewDelegate {
                 make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
                 make?.top.equalTo()(self.toolsView)?.priority()(998)
                 make?.bottom.lessThanOrEqualTo()(-10)?.priority()(999)
-            }
-        case .message:
-            if let message = messageController {
-                message.onMessageReceived("max")
-                
-                ctrlView = message.view
-                ctrlView?.mas_remakeConstraints { make in
-                    make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
-                    make?.width.equalTo()(200)
-                    make?.height.equalTo()(287)
-                    make?.bottom.equalTo()(toolsView)
-                }
             }
         default: break
         }
@@ -266,7 +254,7 @@ private extension AgoraLectureUIManager {
         contentView.addSubview(studentsRenderController.view)
         
         teacherRenderController = AgoraTeacherRenderUIController(context: contextPool)
-        teacherRenderController.view.layer.cornerRadius = 2
+        teacherRenderController.view.layer.cornerRadius = AgoraFit.scale(2)
         teacherRenderController.view.clipsToBounds = true
         addChild(teacherRenderController)
         contentView.addSubview(teacherRenderController.view)
@@ -292,18 +280,6 @@ private extension AgoraLectureUIManager {
         handsUpController.delegate = self
         addChild(handsUpController)
         view.addSubview(handsUpController.view)
-    }
-    
-    func initWidgets() {
-//        guard let widgetInfos = contextPool.widget.getWidgetInfos() else {
-//            return
-//        }
-//        
-//        if let message = createChatWidget() {
-//            messageController = message
-//            message.addMessageObserver(self)
-//            contentView.addSubview(message.containerView)
-//        }
     }
     
     func createConstrains() {
@@ -343,25 +319,16 @@ private extension AgoraLectureUIManager {
             make?.bottom.equalTo()(handsUpController.view.mas_top)?.offset()(-8)
         }
     }
-}
-
-// MARK: - AgoraWidgetMessageObserver
-extension AgoraLectureUIManager: AgoraWidgetMessageObserver {
-    public func onMessageReceived(_ message: String,
-                                  widgetId: String) {
-        switch widgetId {
-        case "AgoraChatWidget":
-            if let dic = message.json(),
-               let isMin = dic["isMinSize"] as? Bool,
-               isMin{
-                ctrlView == nil
-            }
-        case "easemobIM":
-            if message == "min" {
-                ctrlView == nil
-            }
-        default:
-            break
+    
+    func createChatController() {
+        chatController = AgoraChatUIController()
+        chatController.contextPool = contextPool
+        addChild(chatController)
+        contentView.addSubview(chatController.view)
+        chatController.view.mas_makeConstraints { make in
+            make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.left.equalTo()(whiteBoardController.view.mas_right)?.offset()(AgoraFit.scale(2))
+            make?.right.bottom().equalTo()(0)
         }
     }
 }

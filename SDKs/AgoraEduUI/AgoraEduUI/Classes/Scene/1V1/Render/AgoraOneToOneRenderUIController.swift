@@ -19,9 +19,23 @@ class AgoraOneToOneRenderUIController: UIViewController {
         
     var contextPool: AgoraEduContextPool!
     
-    var teacherView: AgoraOneToOneMemberView!
+    var teacherView: AgoraRenderMemberView!
     
-    var studentView: AgoraOneToOneMemberView!
+    var studentView: AgoraRenderMemberView!
+    
+    var teacherModel: AgoraRenderMemberModel? {
+        didSet {
+            teacherView.setModel(model: teacherModel,
+                                 delegate: self)
+        }
+    }
+    
+    var studentModel: AgoraRenderMemberModel? {
+        didSet {
+            studentView.setModel(model: studentModel,
+                                 delegate: self)
+        }
+    }
     /** 用来记录当前流是否被老师操作*/
     var currentStream: AgoraEduContextStreamInfo? {
         didSet {
@@ -54,88 +68,20 @@ class AgoraOneToOneRenderUIController: UIViewController {
 }
 // MARK: - Private
 private extension AgoraOneToOneRenderUIController {
-    func updateCoHosts() {
-        self.currentStream = nil
-        
-        let user = contextPool.user
-        let stream = contextPool.stream
-        
-        // student view
-        if let studentInfo = user.getUserList(role: .student)?.first {
-            let localInfo = user.getLocalUserInfo()
-            
-            if let stream = stream.getStreamInfo(userUuid: studentInfo.userUuid)?.first {
-                if studentInfo.userUuid == localInfo.userUuid {
-                    self.currentStream = stream
-                }
-                
-                updateRenderView(studentView,
-                                 with: stream)
-            } else {
-                updateRenderViewWithoutStream(studentView)
-            }
-        } else {
-            studentView.item = nil
-        }
-        
-        // teacher view
-        if let teacherInfo = user.getUserList(role: .teacher)?.first {
-            if let stream = stream.getStreamInfo(userUuid: teacherInfo.userUuid)?.first {
-                updateRenderView(teacherView,
-                                 with: stream)
-            } else {
-                updateRenderViewWithoutStream(teacherView)
-            }
-        } else {
-            teacherView.item = nil
-        }
-    }
     
-    func updateRenderView(_ view: AgoraOneToOneMemberView,
-                          with stream: AgoraEduContextStreamInfo) {
-        let model = AgoraRenderItemInfoModel(with: stream.owner,
-                                             stream: stream)
-        
-        view.item = model
-        
-        if stream.streamType.hasVideo {
-            switch stream.videoSourceState {
-            case .error:
-                view.cameraState = .erro
-                print("view.cameraState = .erro")
-            case .close:
-                view.cameraState = .off
-                print("view.cameraState = .off")
-            case .open:
-                view.cameraState = .on
-                print("view.cameraState = .on")
-            }
-        } else {
-            view.cameraState = .off
-            print("view.cameraState = .off")
+    func setup() {
+        if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
+            teacherModel = AgoraRenderMemberModel.model(with: contextPool,
+                                                        uuid: teacher.userUuid,
+                                                        name: teacher.userName,
+                                                        role: .teacher)
         }
-        
-        if stream.streamType.hasAudio {
-            switch stream.audioSourceState {
-            case .error:
-                view.micState = .erro
-                print("view.micState = .erro")
-            case .close:
-                view.micState = .off
-                print("view.micState = .off")
-            case .open:
-                view.micState = .on
-                print("view.micState = .off")
-            }
-        } else {
-            view.micState = .off
-            print("view.micState = .off")
+        if let student = contextPool.user.getUserList(role: .student)?.first {
+            studentModel = AgoraRenderMemberModel.model(with: contextPool,
+                                                        uuid: student.userUuid,
+                                                        name: student.userName,
+                                                        role: .student)
         }
-    }
-    
-    func updateRenderViewWithoutStream(_ view: AgoraOneToOneMemberView) {
-        view.cameraState = .erro
-        view.micState = .erro
     }
     
     func streamChanged(from: AgoraEduContextStreamInfo?, to: AgoraEduContextStreamInfo?) {
@@ -201,29 +147,42 @@ private extension AgoraOneToOneRenderUIController {
         AudioServicesPlaySystemSound(soundId)
     }
 }
-// MARK: - AkOneToOneItemCellDelegate
-extension AgoraOneToOneRenderUIController: AgoraOneToOneMemberViewDelegate {
-    func onMemberViewRequestRenderOnView(view: UIView,
-                                         streamID: String,
-                                         userUUID: String) {
+// MARK: - AgoraRenderMemberViewDelegate
+extension AgoraOneToOneRenderUIController: AgoraRenderMemberViewDelegate {
+    func memberViewRender(memberView: AgoraRenderMemberView,
+                          in view: UIView,
+                          renderID: String) {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamID,
+        contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: renderID,
                                                               level: .low)
         contextPool.media.startRenderVideo(view: view,
                                            renderConfig: renderConfig,
-                                           streamUuid: streamID)
+                                           streamUuid: renderID)
     }
-    
-    func onMemberViewRequestCancelRender(streamID: String,
-                                         userUUID: String) {
-        contextPool.media.stopRenderVideo(streamUuid: streamID)
-        print("cancel render")
+
+    func memberViewCancelRender(memberView: AgoraRenderMemberView, renderID: String) {
+        contextPool.media.stopRenderVideo(streamUuid: renderID)
     }
 }
 
 // MARK: - AgoraEduUserHandler
 extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
+    
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        if user.role == .teacher {
+            teacherModel = AgoraRenderMemberModel.model(with: contextPool,
+                                                        uuid: user.userUuid,
+                                                        name: user.userName,
+                                                        role: .student)
+        } else if user.role == .student {
+            studentModel = AgoraRenderMemberModel.model(with: contextPool,
+                                                        uuid: user.userUuid,
+                                                        name: user.userName,
+                                                        role: .teacher)
+        }
+    }
+    
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operator: AgoraEduContextUserInfo) {
@@ -234,64 +193,66 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
 extension AgoraOneToOneRenderUIController: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
                          streamUuid: String) {
-        if teacherView.item?.streamUUID == streamUuid {
-            self.teacherView.setVolumeValue(volume)
-        } else {
-            self.studentView.setVolumeValue(volume)
+        if teacherModel?.streamID == streamUuid {
+            teacherModel?.volume = volume
+        } else if studentModel?.streamID == streamUuid {
+            studentModel?.volume = volume
         }
     }
 }
 // MARK: - AgoraEduStreamHandler
 extension AgoraOneToOneRenderUIController: AgoraEduStreamHandler {
-    func onStreamJoined(stream: AgoraEduContextStreamInfo,
-                        operator: AgoraEduContextUserInfo?) {
-        self.updateCoHosts()
-    }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operator: AgoraEduContextUserInfo?) {
+        if stream.streamUuid == teacherModel?.streamID {
+            teacherModel?.updateStream(stream)
+        } else if stream.streamUuid == studentModel?.streamID {
+            studentModel?.updateStream(stream)
+        }
         if stream.streamUuid == currentStream?.streamUuid {
             self.currentStream = stream
         }
-        self.updateCoHosts()
-    }
-    
-    func onStreamLeft(stream: AgoraEduContextStreamInfo,
-                      operator: AgoraEduContextUserInfo?) {
-        self.updateCoHosts()
     }
 }
 // MARK: - AgoraEduRoomHandler
 extension AgoraOneToOneRenderUIController: AgoraEduRoomHandler {
     func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        self.updateCoHosts()
+        self.setup()
     }
 }
 // MARK: - Creations
 private extension AgoraOneToOneRenderUIController {
     func createViews() {
-        teacherView = AgoraOneToOneMemberView(frame: .zero)
-        teacherView.delegate = self
-        teacherView.viewType = .admin
+        teacherView = AgoraRenderMemberView(frame: .zero)
         view.addSubview(teacherView)
         
-        studentView = AgoraOneToOneMemberView(frame: .zero)
-        studentView.delegate = self
-        studentView.viewType = .member
+        studentView = AgoraRenderMemberView(frame: .zero)
         view.addSubview(studentView)
     }
     
     func createConstrains() {
-        teacherView.mas_remakeConstraints { make in
-            make?.top.equalTo()(0)
-            make?.centerX.equalTo()(0)
-            make?.width.equalTo()(view)
-            make?.height.equalTo()(view.mas_width)?.multipliedBy()(190.0/340.0)
-        }
-        studentView.mas_remakeConstraints { make in
-            make?.top.equalTo()(teacherView.mas_bottom)?.offset()(2)
-            make?.centerX.equalTo()(0)
-            make?.width.height().equalTo()(teacherView)
+        if UIDevice.current.isPad {
+            teacherView.mas_remakeConstraints { make in
+                make?.top.equalTo()(0)
+                make?.centerX.equalTo()(0)
+                make?.width.equalTo()(view)
+                make?.height.equalTo()(view.mas_width)?.multipliedBy()(190.0/340.0)
+            }
+            studentView.mas_remakeConstraints { make in
+                make?.top.equalTo()(teacherView.mas_bottom)?.offset()(2)
+                make?.centerX.equalTo()(0)
+                make?.width.height().equalTo()(teacherView)
+            }
+        } else {
+            teacherView.mas_remakeConstraints { make in
+                make?.top.left().right().equalTo()(0)
+                make?.bottom.equalTo()(self.view.mas_centerY)?.offset()(AgoraFit.scale(-1))
+            }
+            studentView.mas_remakeConstraints { make in
+                make?.bottom.left().right().equalTo()(0)
+                make?.top.equalTo()(self.view.mas_centerY)?.offset()(AgoraFit.scale(1))
+            }
         }
     }
 }
