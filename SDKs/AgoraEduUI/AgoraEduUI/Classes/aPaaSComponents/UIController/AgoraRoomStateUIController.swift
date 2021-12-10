@@ -51,8 +51,6 @@ class AgoraRoomStateUIController: UIViewController {
         
         createViews()
         createConstrains()
-        setup()
-
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] t in
             self?.updateTimeVisual()
         })
@@ -83,19 +81,13 @@ private extension AgoraRoomStateUIController {
             } else {
                 stateView.timeLabel.textColor = UIColor(rgb: 0x677386)
             }
-            let time = realTime - info.startTime
-            let text = AgoraUILocalizedString("ClassAfterStartText",
-                                              object: self)
-            stateView.timeLabel.text = text + timeString(from: time)
-            // 事件
-            let countDown = info.closeDelay + info.duration - time
-            if countDown == 5 * 60 + info.closeDelay {
-                let strStart = AgoraUILocalizedString("ClassEndWarningStartText",
-                                                      object: self)
-                let strMid = "5"
-                let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
-                                                    object: self)
-                AgoraToast.toast(msg: strStart + strMid + strEnd)
+            if info.startTime == 0 {
+                stateView.timeLabel.text = "title_before_class".ag_localizedIn("AgoraEduUI")
+            } else {
+                let time = info.startTime - realTime
+                let text = AgoraUILocalizedString("ClassBeforeStartText",
+                                                  object: self)
+                stateView.timeLabel.text = text + timeString(from: time)
             }
         case .after:
             stateView.timeLabel.textColor = .red
@@ -129,10 +121,20 @@ private extension AgoraRoomStateUIController {
             } else {
                 stateView.timeLabel.textColor = UIColor(rgb: 0x677386)
             }
-            let time = info.startTime - realTime
-            let text = AgoraUILocalizedString("ClassBeforeStartText",
+            let time = realTime - info.startTime
+            let text = AgoraUILocalizedString("ClassAfterStartText",
                                               object: self)
             stateView.timeLabel.text = text + timeString(from: time)
+            // 事件
+            let countDown = info.closeDelay + info.duration - time
+            if countDown == 5 * 60 + info.closeDelay {
+                let strStart = AgoraUILocalizedString("ClassEndWarningStartText",
+                                                      object: self)
+                let strMid = "5"
+                let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
+                                                    object: self)
+                AgoraToast.toast(msg: strStart + strMid + strEnd)
+            }
         }
     }
     
@@ -155,8 +157,18 @@ private extension AgoraRoomStateUIController {
             return "\(minuteString)\(minuteText)\(secondString)\(secondText)"
         }
     }
+}
+// MARK: - AgoraEduRoomHandler
+extension AgoraRoomStateUIController: AgoraEduRoomHandler {
+    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        self.setup()
+    }
     
-    func classOverAlert() {
+    func onClassStateUpdated(state: AgoraEduContextClassState) {
+        self.classState = state
+    }
+    
+    func onRoomClosed() {
         AgoraAlert()
             .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
             .setMessage(AgoraKitLocalizedString("ClassOverText"))
@@ -165,16 +177,6 @@ private extension AgoraRoomStateUIController {
                 self.dismiss(animated: true, completion: nil)
             }))
             .show(in: self)
-    }
-}
-// MARK: - AgoraEduRoomHandler
-extension AgoraRoomStateUIController: AgoraEduRoomHandler {
-    func onClassState(_ state: AgoraEduContextClassState) {
-        self.classState = state
-    }
-    
-    func onRoomClosed() {
-        classOverAlert()
     }
 }
 

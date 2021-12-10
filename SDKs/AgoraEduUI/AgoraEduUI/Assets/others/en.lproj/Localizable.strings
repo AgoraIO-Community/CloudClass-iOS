@@ -24,6 +24,7 @@ ClassTimeSecondText = "s";
 ClassBeforeStartText = "Class will begin after：";
 ClassAfterStartText = "Class begins：";
 ClassAfterStopText = "Class ends：";
+title_before_class = "Class will begin";
 
 // Room State
 ClassIDText = "Class ID：";
@@ -84,3 +85,8 @@ kick_out_cancel = "Cancel";
 
 one_to_one_tab_video = "Video";
 one_to_one_tab_chat = "Chat";
+
+render_state_camera_off = "Camera is turned off";
+render_state_camera_disable = "Camera is disabled";
+render_state_student_off = "Student is not in the classroom";
+render_state_teacher_off = "Teacher is not in the classroom";

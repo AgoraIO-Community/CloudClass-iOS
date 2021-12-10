@@ -65,12 +65,15 @@ class AgoraOneToOneMemberView: UIView {
             case .on:
                 cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_offline",
                                                               in: "AgoraEduUI")
+                videoView.isHidden = false
             case .off:
-                cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_close",
+                cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_off",
                                                               in: "AgoraEduUI")
+                videoView.isHidden = true
             case .erro:
                 cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_bad",
                                                               in: "AgoraEduUI")
+                videoView.isHidden = true
             default: break
             }
         }

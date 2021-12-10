@@ -24,6 +24,7 @@ ClassTimeSecondText = "秒";
 ClassBeforeStartText = "距離上課還有：";
 ClassAfterStartText = "已開始上課：";
 ClassAfterStopText = "課程已結束";
+title_before_class = "課程未開始";
 
 // Room State
 ClassIDText = "課程ID：";
@@ -84,3 +85,8 @@ kick_out_cancel = "取消";
 
 one_to_one_tab_video = "視頻";
 one_to_one_tab_chat = "聊天";
+
+render_state_camera_off = "攝像頭已關閉";
+render_state_camera_disable = "攝像頭被禁用";
+render_state_student_off = "學生不在教室";
+render_state_teacher_off = "老師不在教室";

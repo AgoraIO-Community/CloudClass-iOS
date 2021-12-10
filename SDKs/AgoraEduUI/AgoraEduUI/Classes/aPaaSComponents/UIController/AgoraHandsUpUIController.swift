@@ -11,16 +11,16 @@ import AgoraEduContext
 import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
-protocol AgoraPaintingHandsUpUIControllerDelegate: NSObjectProtocol {
+protocol AgoraHandsUpUIControllerDelegate: NSObjectProtocol {
     /** 展示举手列表*/
     func onShowHandsUpList(_ view: UIView)
     /** 取消展示举手列表*/
     func onHideHandsUpList(_ view: UIView)
 }
 
-class AgoraPaintingHandsUpUIController: UIViewController {
+class AgoraHandsUpUIController: UIViewController {
     /** 代理*/
-    weak var delegate: AgoraPaintingHandsUpUIControllerDelegate?
+    weak var delegate: AgoraHandsUpUIControllerDelegate?
     /** 举手列表控制按钮*/
     private lazy var listButton: AgoraRoomToolZoomButton = {
         let v = AgoraRoomToolZoomButton(frame: .zero)
@@ -161,7 +161,7 @@ class AgoraPaintingHandsUpUIController: UIViewController {
     }
 }
 // MARK: - Private
-private extension AgoraPaintingHandsUpUIController {
+private extension AgoraHandsUpUIController {
     func mayShowTips() {
         guard self.isShowedTips == false else {
             return
@@ -194,7 +194,7 @@ private extension AgoraPaintingHandsUpUIController {
     
 }
 // MARK: - Actions
-extension AgoraPaintingHandsUpUIController {
+extension AgoraHandsUpUIController {
     @objc func onSelectListButton(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         sender.backgroundColor = sender.isSelected ? UIColor(rgb: 0x357BF6) : .white
@@ -207,7 +207,7 @@ extension AgoraPaintingHandsUpUIController {
     }
 }
 // MARK: - HandsUpDelayViewDelegate
-extension AgoraPaintingHandsUpUIController: AgoraHandsUpDelayViewDelegate {
+extension AgoraHandsUpUIController: AgoraHandsUpDelayViewDelegate {
     func onHandsUpViewDidChangeState(_ state: AgoraHandsUpDelayView.ViewState) {
         switch state {
         case .hold:
@@ -230,38 +230,13 @@ extension AgoraPaintingHandsUpUIController: AgoraHandsUpDelayViewDelegate {
         }
     }
 }
-// MARK: - AgoraEduHandsUpHandler
-extension AgoraPaintingHandsUpUIController {
-    func onHandsUpEnable(_ enable: Bool) {
-        
-    }
-    
-    func onHandsUpState(_ state: AgoraEduContextHandsUpState) {
-        
-    }
-    
-    func onHandsUpError(_ error: AgoraEduContextError?) {
-        
-    }
-    
-    func onHandsUpResult(_ result: AgoraEduContextHandsUpResult) {
-        var text: String
-        switch result {
-        case .accepted:
-            text = AgoraUILocalizedString("AcceptedCoHostText",
-                                          object: self)
-        case .rejected:
-            text = AgoraUILocalizedString("RejectedCoHostText",
-                                          object: self)
-        case .timeout:
-            text = AgoraUILocalizedString("HandsUpTimeOutText",
-                                          object: self)
-        }
-        AgoraToast.toast(msg: text)
-    }
-}
+
 // MARK: - AgoraEduUserHandler
-extension AgoraPaintingHandsUpUIController: AgoraEduUserHandler {
+extension AgoraHandsUpUIController: AgoraEduUserHandler {
+    
+    func onUserHandsWaveEnable(enable: Bool) {
+        self.view.isHidden = !enable
+    }
 
     func onUserHandsWave(user: AgoraEduContextUserInfo,
                          duration: Int) {
@@ -283,7 +258,7 @@ extension AgoraPaintingHandsUpUIController: AgoraEduUserHandler {
     }
 }
 // MARK: - HandsUpItemCellDelegate
-extension AgoraPaintingHandsUpUIController: AgoraHandsUpItemCellDelegate {
+extension AgoraHandsUpUIController: AgoraHandsUpItemCellDelegate {
     func onClickAcceptAtIndex(_ index: IndexPath) {
         let u = dataSource[index.row]
         contextPool.user.addCoHost(userUuid: u.userUuid) {
@@ -295,7 +270,7 @@ extension AgoraPaintingHandsUpUIController: AgoraHandsUpItemCellDelegate {
 }
 
 // MARK: - TableView Call back
-extension AgoraPaintingHandsUpUIController: UITableViewDataSource, UITableViewDelegate {
+extension AgoraHandsUpUIController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSource.count
     }

@@ -8,6 +8,8 @@
 import AgoraUIEduBaseViews
 import AgoraEduContext
 
+let kFrontCameraStr = "front"
+let kBackCameraStr = "back"
 extension AgoraEduContextUserInfo {
     static func ==(left: AgoraEduContextUserInfo,
                    right: AgoraEduContextUserInfo) -> Bool {
@@ -40,4 +42,73 @@ extension AgoraEduContextMediaStreamType {
         @unknown default:    return false
         }
     }
+}
+
+extension AgoraRenderMemberModel {
+    static func model(with context: AgoraEduContextPool,
+                      uuid: String,
+                      name: String,
+                      role: AgoraEduContextUserRole) -> AgoraRenderMemberModel {
+        var model = AgoraRenderMemberModel()
+        model.uuid = uuid
+        model.name = name
+        model.role = role == .teacher ? .teacher : .student
+        let stream = context.stream.getStreamInfo(userUuid: uuid)?.first
+        model.updateStream(stream)
+        context.user.getUserRewardCount(userUuid: uuid)
+        return model
+    }
+    
+    func updateStream(_ stream: AgoraEduContextStreamInfo?) {
+        if let `stream` = stream {
+            self.streamID = stream.streamUuid
+            // audio
+            if stream.streamType == .both ||
+                stream.streamType == .audio {
+                switch stream.audioSourceState {
+                case .error:
+                    self.audioState = .broken
+                case .close:
+                    self.audioState = .off
+                case .open:
+                    self.audioState = .on
+                }
+            } else {
+                switch stream.audioSourceState {
+                case .error:
+                    self.audioState = .broken
+                case .close:
+                    self.audioState = .forbidden
+                case .open:
+                    self.audioState = .off
+                }
+            }
+            // video
+            if stream.streamType == .both ||
+                stream.streamType == .video {
+                switch stream.audioSourceState {
+                case .error:
+                    self.videoState = .broken
+                case .close:
+                    self.videoState = .off
+                case .open:
+                    self.videoState = .on
+                }
+            } else {
+                switch stream.audioSourceState {
+                case .error:
+                    self.videoState = .broken
+                case .close:
+                    self.videoState = .forbidden
+                case .open:
+                    self.videoState = .off
+                }
+            }
+        } else {
+            self.streamID = nil
+            self.audioState = .off
+            self.videoState = .off
+        }
+    }
+    
 }

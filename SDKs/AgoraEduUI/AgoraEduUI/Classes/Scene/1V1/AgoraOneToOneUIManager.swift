@@ -87,7 +87,7 @@ extension AgoraOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
             ctrlView = settingViewController.view
             ctrlView?.mas_makeConstraints { make in
                 make?.width.equalTo()(201)
-                make?.height.equalTo()(281)
+                make?.height.equalTo()(220)
                 make?.top.equalTo()(AgoraFit.scale(30))
                 make?.right.equalTo()(self.contentView)?.offset()((-10))
             }

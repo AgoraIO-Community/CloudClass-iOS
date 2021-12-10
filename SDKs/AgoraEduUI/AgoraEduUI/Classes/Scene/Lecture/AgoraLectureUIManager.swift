@@ -24,8 +24,10 @@ import AgoraWidget
     /// 控制器部分，除了视图显示，还包含和SDK之间的事件及数据交互
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
-    /** 远程视窗渲染 控制器*/
-    private var renderController: AgoraHorizListRenderUIController!
+    /** 学生列表渲染 控制器*/
+    private var studentsRenderController: AgoraStudentsRenderUIController!
+    /** 老师渲染 控制器*/
+    private var teacherRenderController: AgoraTeacherRenderUIController!
     /** 白板的渲染 控制器*/
     private var whiteBoardController: AgoraPaintingBoardUIController!
     /** 工具箱 控制器*/
@@ -51,6 +53,8 @@ import AgoraWidget
         self.addChild(vc)
         return vc
     }()
+    /** 举手 控制器*/
+    private var handsUpController: AgoraHandsUpUIController!
         
     deinit {
         print("\(#function): \(self.classForCoder)")
@@ -68,17 +72,17 @@ import AgoraWidget
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.createViews()
+        self.createConstrains()
+        self.contextPool.user.registerEventHandler(self)
+        self.contextPool.monitor.registerMonitorEventHandler(self)
+        
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
                 return
             }
-            self.createViews()
-            self.createConstrains()
-            self.contextPool.user.registerEventHandler(self)
-            self.contextPool.monitor.registerMonitorEventHandler(self)
-            
             self.initWidgets()
         } fail: { [weak self] error in
             AgoraLoading.hide()
@@ -156,9 +160,10 @@ extension AgoraLectureUIManager: AgoraRoomToolsViewDelegate {
             ctrlView = settingViewController.view
             ctrlView?.mas_makeConstraints { make in
                 make?.width.equalTo()(201)
-                make?.height.equalTo()(281)
+                make?.height.equalTo()(220)
                 make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
-                make?.centerY.equalTo()(toolsView)
+                make?.top.equalTo()(self.toolsView)?.priority()(998)
+                make?.bottom.lessThanOrEqualTo()(-10)?.priority()(999)
             }
         case .message:
             if let message = messageController {
@@ -167,9 +172,9 @@ extension AgoraLectureUIManager: AgoraRoomToolsViewDelegate {
                 ctrlView = message.view
                 ctrlView?.mas_remakeConstraints { make in
                     make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
-                    make?.centerY.equalTo()(toolsView)
                     make?.width.equalTo()(200)
                     make?.height.equalTo()(287)
+                    make?.bottom.equalTo()(toolsView)
                 }
             }
         default: break
@@ -222,8 +227,26 @@ extension AgoraLectureUIManager: AgoraPaintingBoardUIControllerDelegate {
            view == brushToolsViewController.view {
             ctrlView = nil
         }
-        
         brushToolButton.isHidden = !permission
+    }
+}
+
+// MARK: - AgoraPaintingHandsUpUIControllerDelegate
+extension AgoraLectureUIManager: AgoraHandsUpUIControllerDelegate {
+    func onShowHandsUpList(_ view: UIView) {
+        toolsView.deselectAll()
+        brushToolButton.isSelected = false
+        ctrlView = view
+        view.mas_makeConstraints { make in
+            make?.bottom.equalTo()(handsUpController.view)
+            make?.width.equalTo()(220)
+            make?.height.equalTo()(245)
+            make?.right.equalTo()(handsUpController.view.mas_left)?.offset()(-10)
+        }
+    }
+    
+    func onHideHandsUpList(_ view: UIView) {
+        ctrlView = nil
     }
 }
 
@@ -238,10 +261,15 @@ private extension AgoraLectureUIManager {
         whiteBoardController.delegate = self
         contentView.addSubview(whiteBoardController.view)
         
-        renderController = AgoraHorizListRenderUIController(context: contextPool)
-        renderController.themeColor = UIColor(rgb: 0x75C0FE)
-        addChild(renderController)
-        contentView.addSubview(renderController.view)
+        studentsRenderController = AgoraStudentsRenderUIController(context: contextPool)
+        addChild(studentsRenderController)
+        contentView.addSubview(studentsRenderController.view)
+        
+        teacherRenderController = AgoraTeacherRenderUIController(context: contextPool)
+        teacherRenderController.view.layer.cornerRadius = 2
+        teacherRenderController.view.clipsToBounds = true
+        addChild(teacherRenderController)
+        contentView.addSubview(teacherRenderController.view)
         
         brushToolButton = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
                                                         y: 0,
@@ -253,12 +281,17 @@ private extension AgoraLectureUIManager {
         brushToolButton.addTarget(self,
                                   action: #selector(onClickBrushTools(_:)),
                                   for: .touchUpInside)
-        contentView.addSubview(brushToolButton)
+        view.addSubview(brushToolButton)
         
         toolsView = AgoraRoomToolstView(frame: .zero)
-        toolsView.tools = [.setting, .message]
+        toolsView.tools = [.setting, .toolBox, .nameRoll]
         toolsView.delegate = self
-        contentView.addSubview(toolsView)
+        view.addSubview(toolsView)
+        
+        handsUpController = AgoraHandsUpUIController(context: contextPool)
+        handsUpController.delegate = self
+        addChild(handsUpController)
+        view.addSubview(handsUpController.view)
     }
     
     func initWidgets() {
@@ -278,23 +311,36 @@ private extension AgoraLectureUIManager {
             make?.top.left().right().equalTo()(stateController.view.superview)
             make?.height.equalTo()(20)
         }
-        renderController.view.mas_makeConstraints { make in
-            make?.left.right().equalTo()(renderController.view.superview)
-            make?.top.equalTo()(stateController.view.mas_bottom)
-            make?.height.equalTo()(AgoraFit.scale(80))
-        }
         whiteBoardController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(renderController.view.mas_bottom)
-            make?.left.right().bottom().equalTo()(whiteBoardController.view.superview)
+            make?.left.bottom().equalTo()(0)
+            make?.width.equalTo()(AgoraFit.scale(465))
+            make?.height.equalTo()(AgoraFit.scale(262))
+        }
+        studentsRenderController.view.mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.left.equalTo()(0)
+            make?.right.equalTo()(whiteBoardController.view)
+            make?.bottom.equalTo()(whiteBoardController.view.mas_top)?.offset()(AgoraFit.scale(-2))
+        }
+        teacherRenderController.view.mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.left.equalTo()(studentsRenderController.view.mas_right)?.offset()(AgoraFit.scale(2))
+            make?.right.equalTo()(0)
+            make?.height.equalTo()(AgoraFit.scale(112))
         }
         brushToolButton.mas_makeConstraints { make in
-            make?.right.equalTo()(-9)
-            make?.bottom.equalTo()(-14)
-            make?.width.height().equalTo()(AgoraFit.scale(46))
+            make?.right.equalTo()(whiteBoardController.view)?.offset()(AgoraFit.scale(-6))
+            make?.bottom.equalTo()(whiteBoardController.view)?.offset()(AgoraFit.scale(-6))
+            make?.width.height().equalTo()(36)
+        }
+        handsUpController.view.mas_makeConstraints { make in
+            make?.width.height().equalTo()(36)
+            make?.centerX.equalTo()(brushToolButton)
+            make?.bottom.equalTo()(brushToolButton.mas_top)?.offset()(-8)
         }
         toolsView.mas_makeConstraints { make in
             make?.right.equalTo()(brushToolButton)
-            make?.centerY.equalTo()(0)
+            make?.bottom.equalTo()(handsUpController.view.mas_top)?.offset()(-8)
         }
     }
 }

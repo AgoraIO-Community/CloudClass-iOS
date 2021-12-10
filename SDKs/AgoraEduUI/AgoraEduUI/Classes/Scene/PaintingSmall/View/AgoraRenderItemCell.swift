@@ -188,7 +188,7 @@ public class AgoraRenderItemCell: UICollectionViewCell {
                                                           in: "AgoraEduUI")
         } else if itemInfo.cameraDeviceState == .close {
             videoView.isHidden = true
-            cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_close",
+            cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_off",
                                                           in: "AgoraEduUI")
         } else {
             videoView.isHidden = false

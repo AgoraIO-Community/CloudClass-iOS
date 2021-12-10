@@ -58,8 +58,8 @@ import AgoraWidget
         return vc
     }()
     /** 举手 控制器*/
-    private lazy var handsUpViewController: AgoraPaintingHandsUpUIController = {
-        let vc = AgoraPaintingHandsUpUIController(context: contextPool)
+    private lazy var handsUpViewController: AgoraHandsUpUIController = {
+        let vc = AgoraHandsUpUIController(context: contextPool)
         vc.delegate = self
         self.addChild(vc)
         return vc
@@ -160,7 +160,7 @@ extension AgoraSmallUIManager: AgoraEduUserHandler {
     }
 }
 // MARK: - HandsUpViewControllerDelegate
-extension AgoraSmallUIManager: AgoraPaintingHandsUpUIControllerDelegate {
+extension AgoraSmallUIManager: AgoraHandsUpUIControllerDelegate {
     func onShowHandsUpList(_ view: UIView) {
         toolsView.deselectAll()
         brushToolButton.isSelected = false
@@ -187,7 +187,7 @@ extension AgoraSmallUIManager: AgoraRoomToolsViewDelegate {
             ctrlView = settingViewController.view
             ctrlView?.mas_makeConstraints { make in
                 make?.width.equalTo()(201)
-                make?.height.equalTo()(281)
+                make?.height.equalTo()(220)
                 make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
                 make?.centerY.equalTo()(toolsView)
             }

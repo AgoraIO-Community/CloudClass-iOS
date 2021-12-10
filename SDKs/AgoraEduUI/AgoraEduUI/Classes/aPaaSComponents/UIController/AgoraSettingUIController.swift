@@ -14,8 +14,6 @@ protocol AgoraSettingUIControllerDelegate: NSObjectProtocol {
     func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController)
 }
 
-fileprivate let kFrontCameraStr = "front"
-fileprivate let kBackCameraStr = "back"
 class AgoraSettingUIController: UIViewController {
     weak var delegate: AgoraSettingUIControllerDelegate?
     
@@ -40,9 +38,7 @@ class AgoraSettingUIController: UIViewController {
     var audioLabel: UILabel!
     
     var audioSwitch: UISwitch!
-    
-    var uploadLogButton: UIButton!
-    
+        
     var exitButton: UIButton!
     /** SDK环境*/
     var contextPool: AgoraEduContextPool!
@@ -155,18 +151,6 @@ private extension AgoraSettingUIController {
             self.contextPool.media.openLocalDevice(device: d)
         } else {
             self.contextPool.media.closeLocalDevice(device: d)
-        }
-    }
-    
-    @objc func onClickUploadLog(_ sender: UIButton) {
-        contextPool.monitor.uploadLog { logId in
-            AgoraAlert()
-                .setTitle(AgoraKitLocalizedString("UploadLog"))
-                .setMessage(logId)
-                .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("OK"), action: nil))
-                .show(in: self)
-        } failure: { error in
-            // TODO: 上传日志失败
         }
     }
     
@@ -325,20 +309,6 @@ private extension AgoraSettingUIController {
                               for: .touchUpInside)
         view.addSubview(audioSwitch)
         
-        let attrs = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize:12.0),
-            NSAttributedString.Key.foregroundColor: UIColor(rgb: 0x191919),
-            NSAttributedString.Key.underlineStyle: 1] as [NSAttributedString.Key : Any]
-        let str = NSMutableAttributedString(string: AgoraKitLocalizedString("upload_log"),
-                                            attributes: attrs)
-        uploadLogButton = UIButton(type: .custom)
-        uploadLogButton.setAttributedTitle(str,
-                                           for: .normal)
-        uploadLogButton.addTarget(self,
-                                  action: #selector(onClickUploadLog(_:)),
-                                  for: .touchUpInside)
-        view.addSubview(uploadLogButton)
-        
         exitButton = UIButton(type: .system)
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         exitButton.setTitleColor(.white,
@@ -359,7 +329,7 @@ private extension AgoraSettingUIController {
     
     func createConstrains() {
         contentView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(contentView.superview)
+            make?.left.right().top().bottom().equalTo()(0)
         }
         cameraLabel.mas_makeConstraints { make in
             make?.top.left().equalTo()(16)
@@ -417,11 +387,6 @@ private extension AgoraSettingUIController {
             make?.right.equalTo()(-15)
             make?.height.equalTo()(30)
             make?.bottom.equalTo()(-16)
-        }
-        uploadLogButton.mas_makeConstraints { make in
-            make?.right.equalTo()(cameraSwitch)
-            make?.height.equalTo()(20)
-            make?.bottom.equalTo()(exitButton.mas_top)?.offset()(-30)
         }
     }
 }
