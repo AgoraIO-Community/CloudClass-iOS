@@ -53,7 +53,7 @@ extension AgoraRenderMemberModel {
         model.uuid = uuid
         model.name = name
         model.role = role == .teacher ? .teacher : .student
-        let stream = context.stream.getStreamInfo(userUuid: uuid)?.first
+        let stream = context.stream.getStreamList(userUuid: uuid)?.first
         model.updateStream(stream)
         context.user.getUserRewardCount(userUuid: uuid)
         return model
@@ -110,5 +110,4 @@ extension AgoraRenderMemberModel {
             self.videoState = .off
         }
     }
-    
 }

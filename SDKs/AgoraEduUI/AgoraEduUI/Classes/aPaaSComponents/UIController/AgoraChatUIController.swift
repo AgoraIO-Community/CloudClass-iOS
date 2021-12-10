@@ -38,21 +38,12 @@ class AgoraChatUIController: UIViewController {
         let userInfo = contextPool.user.getLocalUserInfo()
         
         if let flexProps = contextPool.user.getUserProperties(userUuid: userInfo.userUuid),
-           let url = flexProps["avatarurl"] as? String {
-            let properties = ["avatarurl": url]
-            if let message = properties.jsonString() {
+           let url = flexProps["avatarurl"] as? String,
+            let message = ["avatarurl": url].jsonString() {
                 contextPool.widget.sendMessage(toWidget: chatWidgetId,
                                                message: message)
-            }
         }
         
         return widget
     }
 }
-
-//extension AgoraChatUIController: AgoraWidgetMessageObserver {
-//    func onMessageReceived(_ message: String,
-//                           widgetId: String!) {
-//
-//    }
-//}

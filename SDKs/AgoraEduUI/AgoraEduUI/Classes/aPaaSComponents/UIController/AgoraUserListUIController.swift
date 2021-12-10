@@ -112,7 +112,7 @@ private extension AgoraUserListUIController {
                 model.stage.enable = isAdmin
                 model.auth.enable = isAdmin
                 // stream
-                let s = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
+                let s = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first
                 
                 // TODO:
 //                model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
@@ -136,7 +136,7 @@ private extension AgoraUserListUIController {
         let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
         if let model = dataSource.first{ $0.uuid == uuid},
            let user = contextPool.user.getAllUserList().first {$0.userUuid == uuid} {
-            let s = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
+            let s = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first
             
             // TODO:
 //            model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)

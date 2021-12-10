@@ -413,12 +413,12 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// 获取某个用户的一组流信息 (v2.0.0)
     /// - parameter userUuid: 用户Id
     /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
-    func getStreamInfo(userUuid: String) -> [AgoraEduContextStreamInfo]?
+    func getStreamList(userUuid: String) -> [AgoraEduContextStreamInfo]?
     
     /// 获取所有的流信息 (v2.0.0)
     /// - parameter userUuid: 用户Id
     /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
-    func getAllStreamInfo() -> [AgoraEduContextStreamInfo]?
+    func getAllStreamList() -> [AgoraEduContextStreamInfo]?
     
     /// 授予流的发流权限(v2.0.0)
     /// - parameter streamUuids: 流Id

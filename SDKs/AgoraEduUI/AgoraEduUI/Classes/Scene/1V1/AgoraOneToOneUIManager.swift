@@ -24,6 +24,9 @@ import Masonry
     private var boardController: AgoraBoardUIController!
     /** 聊天 控制器*/
     private var messageController: AgoraChatUIController?
+
+    /** 屏幕分享 控制器*/
+    private var screenSharingController: AgoraScreenSharingUIController!
     
     private var tabSelectView: AgoraOneToOneTabView?
     
@@ -117,6 +120,10 @@ private extension AgoraOneToOneUIManager {
         renderController = AgoraOneToOneRenderUIController(context: contextPool)
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
+        
+        screenSharingController = AgoraScreenSharingUIController(context: contextPool)
+        addChild(screenSharingController)
+        contentView.addSubview(screenSharingController.view)
     }
     
     func createConstrains() {
@@ -124,10 +131,17 @@ private extension AgoraOneToOneUIManager {
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(23))
         }
+        
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(3))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(3))
+        }
+        
+        screenSharingController.view.mas_makeConstraints { make in
+            make?.left.bottom().equalTo()(0)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(3)
+            make?.right.equalTo()(rightContentView.mas_left)
         }
     }
     
@@ -191,7 +205,6 @@ private extension AgoraOneToOneUIManager {
 
 // MARK: - Layout
 private extension AgoraOneToOneUIManager {
-    
     func boardControllerLayout(isFullScreen: Bool = false,
                                needAnimation: Bool = false) {
         defer {

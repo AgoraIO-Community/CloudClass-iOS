@@ -210,7 +210,7 @@ fileprivate extension AgoraSpreadRenderWidget {
             view.backgroundColor = .white
             // TODO: 若为教师端发起 需要发送http请求
 
-            if let streams = streamContext?.getStreamInfo(userUuid: messageModel.userId) {
+            if let streams = streamContext?.getStreamList(userUuid: messageModel.userId) {
                 for stream in streams {
                     if stream.streamUuid == messageModel.streamId {
                         updateRenderStreamInfo(stream: stream)

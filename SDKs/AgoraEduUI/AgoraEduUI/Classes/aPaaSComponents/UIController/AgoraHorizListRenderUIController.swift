@@ -329,13 +329,13 @@ private extension AgoraHorizListRenderUIController {
         let localInfo = contextPool.user.getLocalUserInfo()
         for user in list {
             if user.role == .teacher {
-                let stream = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first(where: {
+                let stream = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first(where: {
                     $0.streamName != "secondary"
                 })
                 tempTeacher = AgoraRenderItemInfoModel(with: user,
                                                        stream: stream)
             } else if user.role == .student  { // TODO: && user.isCoHost
-                let stream = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
+                let stream = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first
                 if stream?.owner.userUuid == localInfo.userUuid {
                     self.currentStream = stream
                 }

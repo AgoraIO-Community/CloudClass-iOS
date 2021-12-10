@@ -68,7 +68,6 @@ class AgoraOneToOneRenderUIController: UIViewController {
 }
 // MARK: - Private
 private extension AgoraOneToOneRenderUIController {
-    
     func setup() {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             teacherModel = AgoraRenderMemberModel.model(with: contextPool,

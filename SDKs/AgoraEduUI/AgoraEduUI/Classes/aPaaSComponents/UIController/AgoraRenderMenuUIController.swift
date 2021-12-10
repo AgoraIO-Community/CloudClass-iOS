@@ -86,7 +86,7 @@ private extension AgoraRenderMenuUIController {
         } else if user.role == .student {
             items = [.mic, .camera, .stage, .auth, .reward]
         }
-        let s = contextPool.stream.getStreamInfo(userUuid: user.userUuid)?.first
+        let s = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first
         // 设置按钮的状态
         
         // TODO:
