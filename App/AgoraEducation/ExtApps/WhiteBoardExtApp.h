@@ -1,18 +1,18 @@
+////
+////  WhiteBoardExtApp.h
+////  AgoraEducation
+////
+////  Created by Cavan on 2021/4/8.
+////  Copyright © 2021 Agora. All rights reserved.
+////
 //
-//  WhiteBoardExtApp.h
-//  AgoraEducation
+//#import <Foundation/Foundation.h>
+//#import <AgoraExtApp/AgoraExtApp.h>
 //
-//  Created by Cavan on 2021/4/8.
-//  Copyright © 2021 Agora. All rights reserved.
+//NS_ASSUME_NONNULL_BEGIN
 //
-
-#import <Foundation/Foundation.h>
-#import <AgoraExtApp/AgoraExtApp.h>
-
-NS_ASSUME_NONNULL_BEGIN
-
-@interface WhiteBoardExtApp : AgoraBaseExtApp
-
-@end
-
-NS_ASSUME_NONNULL_END
+//@interface WhiteBoardExtApp : AgoraBaseExtApp
+//
+//@end
+//
+//NS_ASSUME_NONNULL_END

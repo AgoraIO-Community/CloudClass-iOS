@@ -41,8 +41,8 @@ class AgoraChatUIController: UIViewController {
            let url = flexProps["avatarurl"] as? String {
             let properties = ["avatarurl": url]
             if let message = properties.jsonString() {
-                contextPool.widget.sendMessage(toWidget: message,
-                                               widgetId: chatWidgetId)
+                contextPool.widget.sendMessage(toWidget: chatWidgetId,
+                                               message: message)
             }
         }
         

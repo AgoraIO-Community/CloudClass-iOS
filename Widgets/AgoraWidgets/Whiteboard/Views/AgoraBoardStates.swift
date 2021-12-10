@@ -8,25 +8,6 @@
 import AgoraUIEduBaseViews
 import Foundation
 
-// MARK: - AgoraWhiteBoardState
-@objc public protocol AgoraWhiteBoardStateDelegate: NSObjectProtocol {
-    func boardStateDidUpdate(_ state: AgoraWhiteBoardState)
-}
-
-@objcMembers public class AgoraWhiteBoardState: NSObject {
-    public var isFullScreen: Bool = false {
-        didSet {
-            callDelegateFunc()
-        }
-    }
-    
-    public weak var delegate: AgoraWhiteBoardStateDelegate?
-    
-    private func callDelegateFunc() {
-        delegate?.boardStateDidUpdate(self)
-    }
-}
-
 // MARK: - AgoraPageControlState
 @objc public protocol AgoraBoardPageControlStateDelegate: NSObjectProtocol {
     func pageControlStateDidUpdate(_ state: AgoraBoardPageControlState)

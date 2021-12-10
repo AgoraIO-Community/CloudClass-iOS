@@ -178,12 +178,6 @@ private extension DebugViewController {
         
         //        registerExtApps()
         
-        if region.contains("CN") {
-            let chat = AgoraWidgetConfig(with: ChatWidget.self,
-                                         widgetId: "easemobIM")
-            AgoraClassroomSDK.registerWidgets([chat])
-        }
-        
 //        let sel = NSSelectorFromString("setBaseURL:");
 //        let url = KeyCenter.hostURL()
 //        AgoraClassroomSDK.perform(sel,

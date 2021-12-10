@@ -42,6 +42,7 @@ end
 
 def widgets
   pod 'AgoraWidgets', :path => '../../Widgets/AgoraWidgets/AgoraWidgets.podspec'
+  pod 'ChatWidget', :path => '../../Widgets/ChatWidget/ChatWidget.podspec'
 end
 
 def sourcePod

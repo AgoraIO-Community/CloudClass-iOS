@@ -25,7 +25,8 @@ class AgoraCloudVM: NSObject {
     
     init(contextPool: AgoraEduContextPool,
          config: Config) {
-        self.publicFiles = contextPool.whiteBoard.getCoursewares().map({ Info(courseware: $0) })
+        // TODO: 获取白板课件？
+//        self.publicFiles = contextPool.whiteBoard.getCoursewares().map({ Info(courseware: $0) })
         self.contextPool = contextPool
         self.serverApi = CloudServerApi(config: config)
         super.init()
@@ -85,9 +86,10 @@ class AgoraCloudVM: NSObject {
         let dataList = selectedType == .selectedPublic ? publicFiles : privateFiles
         let info = dataList[index]
         let dir = info.courseware.scenePath
-        contextPool.whiteBoard.pushScenes(dir: dir,
-                                          scenes: info.courseware.scenes,
-                                          index: 1)
+        // TODO: 白板widget能力
+//        contextPool.whiteBoard.pushScenes(dir: dir,
+//                                          scenes: info.courseware.scenes,
+//                                          index: 1)
     }
     
     func changeSelectedType(type: SelectedType) {

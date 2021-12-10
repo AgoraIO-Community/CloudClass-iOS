@@ -6,6 +6,8 @@
 //
 
 #import "AgoraEduObjects.h"
+@import AgoraWidgets;
+@import ChatWidget;
 
 #pragma mark - Config
 @implementation AgoraClassroomSDKConfig
@@ -184,7 +186,42 @@
     self.userProperties = userProperties;
     self.boardFitMode = boardFitMode;
     
+    self.widgets = [self baseWidgets];
+    // TODO: ext apps 抽出来
+//    self.extApps = [self baseExtApps];
+    
     return self;
+}
+
+- (NSMutableDictionary<NSString *,AgoraWidgetConfig *> *)baseWidgets {
+    // Register widgets
+    NSMutableDictionary<NSString *,AgoraWidgetConfig *> *widgets = [NSMutableDictionary dictionary];
+    // TODO: replace rtm to im (chat)
+    AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[ChatWidget class]
+                                                              widgetId:@"easemobIM"];
+    widgets[chat.widgetId] = chat;
+    
+    // AgoraSpreadRenderWidget
+    AgoraWidgetConfig *spreadRender = [[AgoraWidgetConfig alloc] initWithClass:[AgoraSpreadRenderWidget class]
+                                                                                    widgetId:@"big-window"];
+    widgets[spreadRender.widgetId] = spreadRender;
+    
+    // AgoraCloudWidget
+    AgoraWidgetConfig *cloudWidgetConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
+                                                                                         widgetId:@"AgoraCloudWidget"];
+    widgets[cloudWidgetConfig.widgetId] = cloudWidgetConfig;
+    
+    // AgoraWhiteboardWidget
+    AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWhiteboardWidget class]
+                                                                          widgetId:@"netlessBoard"];
+    // TODO: courseware地址为下载地址
+    NSString *courseFolder = [NSString stringWithFormat:@"%@/%@",NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0],@"AgoraDownload"];
+    whiteboardConfig.extraInfo = @{@"coursewareDirectory":courseFolder,
+                                   @"useMultiViews": @YES,
+                                   @"autoFit": @NO};
+
+    widgets[whiteboardConfig.widgetId] = whiteboardConfig;
+    return widgets;
 }
 @end
 

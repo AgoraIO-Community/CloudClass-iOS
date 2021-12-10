@@ -7,12 +7,6 @@
 
 import Foundation
 
-// MARK: - White board
-@objc public enum AgoraEduContextApplianceType: Int {
-    // 选择、笔、矩形、圆形、线形、橡皮擦
-    case select, pen, rect, circle, line, eraser, clicker
-}
-
 // MARK: - Classroom
 @objc public enum AgoraEduContextRoomType: Int {
     // 场景：1V1、小班课

@@ -8,10 +8,30 @@
 import Foundation
 import AgoraUIEduBaseViews
 
+protocol Convertable: Codable {
+    
+}
+
+extension Convertable {
+    func toDictionary() -> Dictionary<String, Any>? {
+        var dic: Dictionary<String,Any>?
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(self)
+            dic = try JSONSerialization.jsonObject(with: data,
+                                                   options: .allowFragments) as? Dictionary<String, Any>
+        } catch {
+            print(error)
+        }
+        return dic
+    }
+}
+
 extension Dictionary {
     func jsonString() -> String? {
-        guard let data = try? JSONSerialization.data(withJSONObject: self,
-                                                    options: JSONSerialization.WritingOptions.prettyPrinted) else {
+        guard JSONSerialization.isValidJSONObject(self),
+              let data = try? JSONSerialization.data(withJSONObject: self,
+                                                     options: JSONSerialization.WritingOptions.prettyPrinted) else {
             return nil
         }
         
@@ -30,6 +50,19 @@ extension String {
         }
         
         return data.json()
+    }
+}
+
+extension Decodable {
+    public static func decode(_ dic: [String : Any]) -> Self? {
+        guard JSONSerialization.isValidJSONObject(dic),
+              let data = try? JSONSerialization.data(withJSONObject: dic,
+                                                      options: []),
+              let model = try? JSONDecoder().decode(Self.self,
+                                                    from: data) else {
+                  return nil
+              }
+        return model
     }
 }
 

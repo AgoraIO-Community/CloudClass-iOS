@@ -194,6 +194,10 @@ import UIKit
 //        return chat
         return nil
     }
+    
+    func createWhiteboard(info: AgoraWidgetInfo) {
+        
+    }
 }
 
 extension Dictionary {

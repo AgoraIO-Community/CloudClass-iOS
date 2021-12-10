@@ -12,113 +12,6 @@ public typealias AgoraEduContextSuccess = () -> (Void)
 public typealias AgoraEduContextSuccessWithString = (String) -> (Void)
 public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
 
-// MARK: - WhiteBoard
-@objc public protocol AgoraEduWhiteBoardHandler: NSObjectProtocol {
-    // 课件下载失败
-    @objc optional func onDownloadError(_ url: String)
-    // 课件下载取消
-    @objc optional func onCancelCurDownload()
-    
-    /** 新增接口 **/
-    // 获取白板容器View, 真正的白板会放在这个容器里面
-    @objc optional func onBoardContentView(_ view: UIView)
-    /*
-     设置是否可以画
-     文案显示：
-     enabled == true -> "你可以使用白板了" 【文案名：UnMuteBoardText】
-     enabled == false -> "你现在无权使用白板了" 【文案名：MuteBoardText】
-     */
-    @objc optional func onDrawingEnabled(_ enabled: Bool)
-    
-    // 白板加载状态
-    @objc optional func onLoadingVisible(_ visible: Bool)
-    
-    // 课件下载进度，url是课件地址，progress:0-100
-    @objc optional func onDownloadProgress(_ url: String,
-                                           progress: Float)
-    // 课件下载时间过长，一次课件下载超过了15秒，会有该调用
-    @objc optional func onDownloadTimeOut(_ url: String)
-    
-    // 课件下载完成
-    @objc optional func onDownloadComplete(_ url: String)
-}
-
-@objc public protocol AgoraEduWhiteBoardContext: NSObjectProtocol {
-    // 设置是否可以使用教具
-    func boardInputEnable(_ enable: Bool)
-    // 跳过课件下载
-    func skipDownload(_ url: String)
-    // 取消课件下载
-    func cancelDownload(_ url: String)
-    // 课件下载重试
-    func retryDownload(_ url: String)
-    // 刷新白板大小， 在白板容器大小发送变化的时候，需要调用该方法
-    func boardRefreshSize()
-    
-    // 获取白板内容的 View, 如果白板没有初始化成功， 返回为nil
-    func getContentView() -> UIView?
-    
-    // 事件监听
-    func registerBoardEventHandler(_ handler: AgoraEduWhiteBoardHandler)
-    
-    /// 设置当前场景
-    /// - parameter 路径
-    func setScenePath(_ path: String)
-    
-    /// 插入新的场景
-    /// - parameter dir 目录位置
-    /// - parameter scenes 要插入的场景数组
-    /// - parameter index 插入的位置
-    func pushScenes(dir: String,
-                    scenes: [AgoraEduContextWhiteScene],
-                    index: UInt)
-    
-    /// 获取课件列表
-    /// - Returns: 课件列表
-    func getCoursewares() -> [AgoraEduContextCourseware]
-}
-
-@objc public protocol AgoraEduWhiteBoardToolContext: NSObjectProtocol {
-    // 选择教具
-    func applianceSelected(_ mode: AgoraEduContextApplianceType)
-    // 选择颜色
-    func colorSelected(_ color: UIColor)
-    // 选择字体大小
-    func fontSizeSelected(_ size: Int)
-    // 选择粗细
-    func thicknessSelected(_ thick: Int)
-}
-
-@objc public protocol AgoraEduWhiteBoardPageControlHandler: NSObjectProtocol {
-    /** 新增接口 **/
-    // 设置总页数，当前第几页
-    @objc optional func onPageIndex(_ pageIndex: NSInteger,
-                                    pageCount: NSInteger)
-    // 设置是否全屏，注意和onResizeFullScreenEnable的区别
-    @objc optional func onFullScreen(_ fullScreen: Bool)
-    
-    // 是否可以翻页
-    @objc optional func onPagingEnable(_ enable: Bool)
-    // 是否可以放大、缩小
-    @objc optional func onZoomEnable(_ zoomOutEnable: Bool,
-                                     zoomInEnable: Bool)
-    // 是否可以全屏，注意和onFullScreen的区别
-    @objc optional func onResizeFullScreenEnable(_ enable: Bool)
-}
-
-@objc public protocol AgoraEduWhiteBoardPageControlContext: NSObjectProtocol {
-    // 放大白板，每次10%
-    func zoomIn()
-    // 缩小白板，每次10%
-    func zoomOut()
-    // 选择上一页
-    func prevPage()
-    // 选择下一页
-    func nextPage()
-    // 事件监听
-    func registerPageControlEventHandler(_ handler: AgoraEduWhiteBoardPageControlHandler)
-}
-
 // MARK: - Classroom
 @objc public protocol AgoraEduRoomHandler: NSObjectProtocol {
     /// 加入房间成功
@@ -404,6 +297,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     func registerEventHandler(_ handler: AgoraEduUserHandler)
 }
 
+// MARK: - Media
 @objc public protocol AgoraEduMediaHandler: NSObjectProtocol {
     /// 音量变化 (v2.0.0)
     /// - parameter volume: 音量
@@ -418,9 +312,16 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - returns: Void
     @objc optional func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
                                                   state: AgoraEduContextDeviceState)
+    
+    /// 混音状态变化 (v2.0.0)
+    /// - parameter stateCode: 状态码
+    /// - parameter errorCode: 错误码
+    /// - returns: Void
+    @objc optional func onAudioMixingStateChanged(stateCode: Int,
+                                                  errorCode: Int)
 }
 
-// MARK: - Media
+
 @objc public protocol AgoraEduMediaContext: NSObjectProtocol {
     /// 获取设备列表 (v2.0.0)
     /// - parameter deviceType: 设备类型
@@ -459,6 +360,25 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - parameter streamUuid: 流 Id
     /// - returns: AgoraEduContextError, 返回错误
     func stopRenderVideo(streamUuid: String) -> AgoraEduContextError?
+    
+    /// 开启混音 (v2.0.0)
+    /// - parameter filePath: 需要混音的文件路径
+    /// - parameter loopback: 是否只在本地客户端播放音乐文件
+    /// - parameter replace: 是否将麦克风采集的音频替换为音乐文件
+    /// - parameter cycle: 音乐文件的播放次数
+    /// - Returns: AgoraEduContextError, 返回错误，为空代表成功
+    func startAudioMixing(filePath: String,
+                          loopback: Bool,
+                          replace: Bool,
+                          cycle: Int) -> AgoraEduContextError?
+    
+    /// 关闭混音 (v2.0.0)
+    /// - Returns: AgoraEduContextError, 返回错误，为空代表成功
+    func stopAudioMixing() -> AgoraEduContextError?
+    
+    /// 设置音频混合文件的播放起始位置 (v2.0.0)
+    /// - Returns: AgoraEduContextError, 返回错误，为空代表成功
+    func setAudioMixingPosition(position: Int) -> AgoraEduContextError?
     
     /// 注册事件监听
     /// - returns: Void

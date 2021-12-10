@@ -24,8 +24,7 @@
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
 
 @property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
-@property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *apps;
-@property (nonatomic, strong) NSArray<AgoraWidgetConfig *> *widgets;
+@property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *extApps;
 @property (nonatomic, strong) NSArray<AgoraEduCourseware *> *coursewares;
 
 @property (nonatomic, strong) UIViewController *eduUI;
@@ -149,31 +148,9 @@ static AgoraClassroomSDK *manager = nil;
     
     __weak AgoraClassroomSDK *weakManager = manager;
 
-    // Register widgets
-    NSMutableDictionary *widgets = [NSMutableDictionary dictionary];
-    // chat
-    AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[AgoraChatWidget class]
-                                                                            widgetId:@"AgoraChatWidget"];
-    
-    widgets[chat.widgetId] = chat;
-    
-    // AgoraSpreadRenderWidget
-    AgoraWidgetConfig *spreadRender = [[AgoraWidgetConfig alloc] initWithClass:[AgoraSpreadRenderWidget class]
-                                                                                    widgetId:@"big-window"];
-    widgets[spreadRender.widgetId] = spreadRender;
-    
-    // AgoraCloudWidget
-    AgoraWidgetConfig *cloudWidgetConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
-                                                                                         widgetId:@"AgoraCloudWidget"];
-    widgets[cloudWidgetConfig.widgetId] = cloudWidgetConfig;
-    
-    for (AgoraWidgetConfig *item in manager.widgets) {
-        widgets[item.widgetId] = item;
-    }
-
     [core launchWithConfig:coreConfig
-                   extApps:manager.apps
-                   widgets:widgets.allValues
+                   extApps:manager.extApps
+                   widgets:config.widgets.allValues
                    success:^(id<AgoraEduContextPool> pool) {
         AgoraEduUIManager *eduVC = nil;
         switch ([pool.room getRoomInfo].roomType) {
@@ -206,19 +183,14 @@ static AgoraClassroomSDK *manager = nil;
     } fail:fail];
 }
 
-+ (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)apps {
-    [AgoraClassroomSDK share].apps = [NSArray arrayWithArray:apps];
-}
-
-+ (void)registerWidgets:(NSArray<AgoraWidgetConfig *> *)widgets {
-    [AgoraClassroomSDK share].widgets = [NSArray arrayWithArray:widgets];
++ (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)extApps {
+    [AgoraClassroomSDK share].extApps = [NSArray arrayWithArray:extApps];
 }
 
 - (void)agoraRelease {
     self.core = nil;
     self.eduUI = nil;
-    self.apps = nil;
-    self.widgets = nil;
+    self.extApps = nil;
     self.coursewares = nil;
     self.delegate = nil;
     self.coursewareDelegate = nil;

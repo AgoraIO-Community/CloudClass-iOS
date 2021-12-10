@@ -313,12 +313,6 @@ private extension LoginViewController {
         }
         registerExtApps()
         
-        if region.rawValue.contains("CN") {
-            let chat = AgoraWidgetConfig(with: ChatWidget.self,
-                                         widgetId: "easemobIM")
-            AgoraClassroomSDK.registerWidgets([chat])
-        }
-        
         // roomUuid = roomName + classType
         let roomUuid = "\(room)\(roomStyle.rawValue)"
         
@@ -379,6 +373,7 @@ private extension LoginViewController {
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil,
                                                     boardFitMode: .retain)
+            
             
             AgoraClassroomSDK.setConfig(sdkConfig)
             

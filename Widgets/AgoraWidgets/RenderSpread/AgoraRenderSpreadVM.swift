@@ -73,19 +73,6 @@ struct AgoraSpreadVCMessageModel: Decodable {
     var streamId: String
 }
 
-extension Decodable {
-    public static func decode(_ dic: [String : Any]) -> Self? {
-        guard JSONSerialization.isValidJSONObject(dic),
-              let data = try? JSONSerialization.data(withJSONObject: dic,
-                                                      options: []),
-              let model = try? JSONDecoder().decode(Self.self,
-                                                    from: data) else {
-                  return nil
-              }
-        return model
-    }
-}
-
 // MARK: - enum
 enum AgoraSpreadDeviceState {
     case available, invalid, close

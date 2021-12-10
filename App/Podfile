@@ -43,8 +43,6 @@ def openSourceLibs
 end
 
 def sourcePod
-  pod 'AgoraWhiteBoard', :path => '../../cloudclass-ios/SDKs/Modules/AgoraWhiteBoard/AgoraWhiteBoard.podspec'
-
   # common libs
   pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
   pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
@@ -109,9 +107,9 @@ target 'AgoraEducation' do
   
   libVersion
     
-  #sourcePod
+  sourcePod
   #binaryPod
-  halfBinaryPod
+  #halfBinaryPod
   
   post_install do |installer|
     ## Fix for XCode 12.5

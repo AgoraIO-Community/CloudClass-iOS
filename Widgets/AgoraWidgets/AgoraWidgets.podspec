@@ -18,12 +18,13 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
 
-  spec.source_files  = "Widgets/AgoraWidgets/**/*.{h,m,swift}", "Chat/*.{h,m,swift}", "Common/*.{h,m,swift}","RenderSpread/*.{h,m,swift}", "Cloud/**/*.{h,m,swift}"
+  spec.source_files  = "Widgets/AgoraWidgets/**/*.{h,m,swift}", "Chat/*.{h,m,swift}", "Common/*.{h,m,swift}","RenderSpread/*.{h,m,swift}", "Cloud/**/*.{h,m,swift}","Whiteboard/**/*.{h,m,swift}"
 
   spec.dependency "Masonry"
   spec.dependency "AgoraWidget"
   spec.dependency "AgoraUIBaseViews"
   spec.dependency "AgoraUIEduBaseViews"
+  spec.dependency "Whiteboard"
   spec.dependency "AgoraEduContext"
   spec.dependency "Armin"
   

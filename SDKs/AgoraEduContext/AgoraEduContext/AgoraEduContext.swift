@@ -16,13 +16,7 @@ public typealias AgoraEduWidgetContext = AgoraWidgetProtocol
  * 你可以通过这个对象使用和监听目前灵动课堂提供的各种业务能力
  */
 @objc public protocol AgoraEduContextPool: NSObjectProtocol {
-    // 白板通用控制，包含下载
-    var whiteBoard: AgoraEduWhiteBoardContext { get }
-    // 白板教具
-    var whiteBoardTool: AgoraEduWhiteBoardToolContext { get }
-    // 白板页控制
-    var whiteBoardPageControl: AgoraEduWhiteBoardPageControlContext { get }
-    // 白板页控制
+    // 房间控制
     var room: AgoraEduRoomContext { get }
     // 媒体控制
     var media: AgoraEduMediaContext { get }

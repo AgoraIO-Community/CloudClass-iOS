@@ -6,6 +6,7 @@
 //
 
 import AgoraEduContext
+import AgoraWidget
 import Masonry
 import UIKit
 
@@ -15,7 +16,8 @@ protocol AgoraPaintingBoardUIControllerDelegate: NSObjectProtocol {
 }
 
 class AgoraPaintingBoardUIController: UIViewController {
-    private weak var contentView: UIView?
+    private weak var contentView: UIView? // 为白板widget的视图
+    private weak var boardWidget: AgoraBaseWidget?
     weak var delegate: AgoraPaintingBoardUIControllerDelegate?
     var contextPool: AgoraEduContextPool
     
@@ -23,8 +25,8 @@ class AgoraPaintingBoardUIController: UIViewController {
         contextPool = context
         super.init(nibName: nil,
                    bundle: nil)
-        
-//        context.whiteBoard.registerBoardEventHandler(self)
+        context.widget.add(self,
+                           widgetId: "netlessBoard")
     }
     
     required init?(coder: NSCoder) {
@@ -32,23 +34,35 @@ class AgoraPaintingBoardUIController: UIViewController {
     }
 }
 
-extension AgoraPaintingBoardUIController: AgoraEduWhiteBoardHandler {
-    func onDrawingEnabled(_ enabled: Bool) {
-        delegate?.controller(self,
-                             didUpdateBoard: enabled)
-    }
-    
-    func onBoardContentView(_ view: UIView) {
-        guard contentView == nil else {
+extension AgoraPaintingBoardUIController: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String) {
+        guard widgetId == "netlessBoard",
+        let messageDic = message.json() else {
             return
         }
         
-        contentView = view
         
-        self.view.addSubview(view)
-        
-        view.mas_makeConstraints { make in
-            make?.left.right().bottom().top().equalTo()(view.superview)
-        }
     }
 }
+
+//extension AgoraPaintingBoardUIController: AgoraEduWhiteBoardHandler {
+//    func onDrawingEnabled(_ enabled: Bool) {
+//        delegate?.controller(self,
+//                             didUpdateBoard: enabled)
+//    }
+//
+//    func onBoardContentView(_ view: UIView) {
+//        guard contentView == nil else {
+//            return
+//        }
+//
+//        contentView = view
+//
+//        self.view.addSubview(view)
+//
+//        view.mas_makeConstraints { make in
+//            make?.left.right().bottom().top().equalTo()(view.superview)
+//        }
+//    }
+//}

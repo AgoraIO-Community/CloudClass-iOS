@@ -58,6 +58,21 @@ import UIKit
         case .width5: return 22
         }
     }
+    
+    public static func fromValue(_ value: Int?) -> AgoraBoardToolsLineWidth {
+        guard let v = value else {
+            return .width1
+        }
+        switch v {
+        case 4: return .width1
+        case 8: return .width2
+        case 12: return .width3
+        case 18: return .width4
+        case 22: return .width5
+        default:
+            return .width1
+        }
+    }
 }
 
 @objc public enum AgoraBoardToolsPencilType: Int {

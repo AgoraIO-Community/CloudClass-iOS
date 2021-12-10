@@ -21,7 +21,7 @@ import Masonry
     /** 右边用来切圆角和显示背景色的容器视图*/
     private var rightContentView: UIView!
     /** 白板 控制器*/
-    private var boardController: UIViewController!
+    private var boardController: AgoraBoardUIController!
     /** 聊天 控制器*/
     private var messageController: AgoraChatUIController?
     
@@ -104,7 +104,7 @@ private extension AgoraOneToOneUIManager {
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        boardController = UIViewController()
+        boardController = AgoraBoardUIController(context: contextPool)
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
@@ -126,7 +126,8 @@ private extension AgoraOneToOneUIManager {
         }
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(3)
+            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(3))
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(3))
         }
     }
     
@@ -182,6 +183,9 @@ private extension AgoraOneToOneUIManager {
         }
         
         messageController = controller
+
+		// board widget
+        boardController?.joinBoard()
     }
 }
 
