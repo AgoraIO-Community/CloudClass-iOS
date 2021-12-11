@@ -16,8 +16,7 @@ protocol AGBoardWidgetDTDelegate: NSObjectProtocol {
     func onFollowChanged(follow: Bool)
     func onGrantUsersChanged(grantUsers: [String]?)
     
-    func onInitEnable()
-    func onJoinEnable()
+    func onConfigComplete()
 }
 
 
@@ -43,8 +42,9 @@ class AgoraWhiteboardWidgetDT {
             if globalState.follow != oldValue.follow {
                 delegate?.onFollowChanged(follow: globalState.follow)
             }
-            localGranted = globalState.grantUsers.contains(localUserInfo.userUuid)
+            
             if globalState.grantUsers.count != oldValue.grantUsers.count {
+                delegate?.onLocalGrantedChangedForBoardHandle(localGranted: localGranted)
                 delegate?.onGrantUsersChanged(grantUsers: globalState.grantUsers)
             }
         }
@@ -53,27 +53,18 @@ class AgoraWhiteboardWidgetDT {
     // from properties
     var localCameraConfigs = [String: AgoraWhiteBoardCameraConfig]()
 
-    var localGranted: Bool = false {
-        didSet {
-            if localGranted != oldValue {
-                delegate?.onLocalGrantedChangedForBoardHandle(localGranted: localGranted)
-            }
-        }
-    }
+    var localGranted: Bool = false
     
     // config
     var properties: AgoraWhiteboardProperties? {
         didSet {
             if let props = properties {
                 if props.extra.boardAppId != "",
-                   props.extra.boardRegion != "" {
-                    delegate?.onInitEnable()
-                }
-                if props.extra.boardId != "",
+                   props.extra.boardRegion != "",
+                   props.extra.boardId != "",
                    props.extra.boardToken != "" {
-                    delegate?.onJoinEnable()
+                    delegate?.onConfigComplete()
                 }
-                
             }
         }
     }

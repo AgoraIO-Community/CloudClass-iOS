@@ -178,6 +178,10 @@ extension String {
             return .JoinBoard
         }
         
+        if let bodyArr = dic["body"] as? [String] {
+            return .BoardGrantDataChanged(bodyArr)
+        }
+        
         guard let bodyDic = dic["body"] as? [String:Any],
               let type = AgoraBoardInteractionSignal.getType(rawValue: signalRaw),
               let obj = try type.decode(bodyDic) else {

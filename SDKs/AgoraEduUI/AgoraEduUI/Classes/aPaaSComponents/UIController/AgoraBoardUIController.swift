@@ -12,35 +12,11 @@ class AgoraBoardUIController: UIViewController {
     var boardWidget: AgoraBaseWidget?
     var contextPool: AgoraEduContextPool!
     
-    var needInit: Bool = false {
-        didSet {
-            if needInit {
-                initBoardWidget()
-                
-                if needJoin {
-                    joinBoard()
-                }
-            }
-        }
-    }
-    
-    var needJoin: Bool = false {
-        didSet {
-            if needInit {
-                needInit = true
-                return
-            }
-            if needJoin {
-                joinBoard()
-            }
-        }
-    }
-    
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
         view.backgroundColor = .clear
-        needInit = true
+        initBoardWidget()
         contextPool.room.registerRoomEventHandler(self)
     }
     
@@ -62,13 +38,10 @@ private extension AgoraBoardUIController {
             boardWidget.view.mas_makeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(0)
             }
-            
-            needInit = false
         }
     }
     
     func joinBoard() {
-        // 需要先将白板视图添加到视图栈中再加入白板
         if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
             contextPool.widget.sendMessage(toWidget: "netlessBoard",
                                            message: message)
@@ -118,8 +91,6 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
         }
         
         switch signal {
-        case .BoardInit:
-            needInit = true
         case .BoardPhaseChanged(let phase):
             handleBoardPhase(phase)
         case .BoardAudioMixingRequest(let requestData):
@@ -134,6 +105,6 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
 
 extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        needJoin = true
+        joinBoard()
     }
 }

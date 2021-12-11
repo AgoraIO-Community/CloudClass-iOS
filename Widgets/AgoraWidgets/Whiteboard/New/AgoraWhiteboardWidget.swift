@@ -11,6 +11,12 @@ import AgoraWidget
 import AgoraEduContext
 import AgoraUIEduBaseViews
 
+struct InitCondition {
+    var configComplete = false
+    var needInit = false
+    var needJoin = false
+}
+
 @objcMembers public class AgoraWhiteboardWidget: AgoraBaseWidget {
 
     private(set) var contentView: UIView!
@@ -20,6 +26,17 @@ import AgoraUIEduBaseViews
 
     var dt: AgoraWhiteboardWidgetDT
     
+    var initCondition = InitCondition() {
+        didSet {
+            if initCondition.configComplete,
+               initCondition.needInit,
+               initCondition.needJoin {
+                initWhiteboard()
+                joinWhiteboard()
+            }
+        }
+    }
+
     var needInit: Bool = false {
         didSet {
             if needInit {
@@ -27,26 +44,11 @@ import AgoraUIEduBaseViews
             }
         }
     }
-    var needJoin: Bool = false {
-        didSet {
-            guard needJoin else {
-                return
-            }
-            
-            if needInit {
-                sendMessage(signal: .BoardInit)
-                return
-            }
-            
-            joinWhiteboard()
-        }
-    }
-    
+
     // MARK: - AgoraBaseWidget
     public override init(widgetInfo: AgoraWidgetInfo) {
         guard let extraDic = widgetInfo.extraInfo as? [String: Any],
               let extra = extraDic.toObj(AgoraWhiteboardExtraInfo.self) else {
-            // TODO: 初始化失败
             fatalError()
             return
         }
@@ -55,10 +57,11 @@ import AgoraUIEduBaseViews
         
         super.init(widgetInfo: widgetInfo)
         self.dt.delegate = self
+        
+        initCondition.needInit = true
 
         if let wbProperties = widgetInfo.properties?.toObj(AgoraWhiteboardProperties.self) {
             dt.properties = wbProperties
-            needInit = true
         }
     }
     
@@ -71,7 +74,7 @@ import AgoraUIEduBaseViews
         let signal = message.toSignal()
         switch signal {
         case .JoinBoard:
-            needJoin = true
+            initCondition.needJoin = true
         case .MemberStateChanged(let agoraWhiteboardMemberState):
             handleMemberState(state: agoraWhiteboardMemberState)
         case .AudioMixingStateChanged(let agoraBoardAudioMixingData):
@@ -89,12 +92,6 @@ import AgoraUIEduBaseViews
         }
         
         dt.properties = wbProperties
-        
-        if needInit {
-            needInit = true
-        } else if needJoin {
-            needJoin = true
-        }
     }
     
     public override func onPropertiesDeleted(_ properties: [String : Any]?,
@@ -140,13 +137,16 @@ extension AgoraWhiteboardWidget {
                             config: whiteSDKConfig,
                             commonCallbackDelegate: self,
                             audioMixerBridgeDelegate: self)
+        
+        // 需要先将白板视图添加到视图栈中再加入白板
         view.addSubview(contentView)
+        
         contentView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(view)
         }
         WhiteDisplayerState.setCustomGlobalStateClass(AgoraWhiteboardGlobalState.self)
         
-        needInit = false
+        initCondition.needInit = false
     }
     
     func joinWhiteboard() {
@@ -182,8 +182,7 @@ extension AgoraWhiteboardWidget {
             self.sendMessage(signal: .MemberStateChanged(member))
             whiteRoom.disableCameraTransform(true)
             
-            self.needJoin = false
-
+            self.initCondition.needJoin = false
             
             // TODO: temp
             let state = AgoraWhiteboardGlobalState()

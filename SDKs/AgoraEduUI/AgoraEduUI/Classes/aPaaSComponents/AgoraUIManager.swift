@@ -222,12 +222,20 @@ extension String {
             return nil
         }
 
-        return data.json()
+        return data.dic()
+    }
+    
+    func toArr() -> [Any]? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+        
+        return data.toArr()
     }
 }
 
 extension Data {
-    func json() -> [String: Any]? {
+    func dic() -> [String: Any]? {
         guard let object = try? JSONSerialization.jsonObject(with: self,
                                                              options: [.mutableContainers]) else {
             return nil
@@ -238,5 +246,18 @@ extension Data {
         }
 
         return dic
+    }
+    
+    func toArr() -> [Any]? {
+        guard let object = try? JSONSerialization.jsonObject(with: self,
+                                                             options: [.mutableContainers]) else {
+            return nil
+        }
+
+        guard let arr = object as? [Any] else {
+            return nil
+        }
+        
+        return arr
     }
 }

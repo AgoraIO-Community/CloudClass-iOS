@@ -22,7 +22,6 @@ enum AgoraBoardWidgetSignal {
     case BoardGrantDataChanged(Array<String>?)
     case AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData)
     case BoardAudioMixingRequest(AgoraBoardWidgetAudioMixingRequestData)
-    case BoardInit
     
     var rawValue: Int {
         switch self {
@@ -32,7 +31,6 @@ enum AgoraBoardWidgetSignal {
         case .BoardGrantDataChanged(_):     return 3
         case .AudioMixingStateChanged(_):   return 4
         case .BoardAudioMixingRequest(_):   return 5
-        case .BoardInit:                     return 6
         }
     }
     
@@ -73,8 +71,6 @@ enum AgoraBoardWidgetSignal {
             if let x = body as? AgoraBoardWidgetAudioMixingRequestData {
                 return .BoardAudioMixingRequest(x)
             }
-        case 6:
-            return .BoardInit
         default:
             break
         }
@@ -108,10 +104,10 @@ struct AgoraBoardWidgetMemberState: Convertable {
     // 文字大小
     var textSize: Int?
     
-    init(activeApplianceType: AgoraBoardWidgetToolType?,
-         strokeColor: Array<Int>?,
-         strokeWidth: Int?,
-         textSize: Int?) {
+    init(activeApplianceType: AgoraBoardWidgetToolType? = nil,
+         strokeColor: Array<Int>? = nil,
+         strokeWidth: Int? = nil,
+         textSize: Int? = nil) {
         self.activeApplianceType = activeApplianceType
         self.strokeColor = strokeColor
         self.strokeWidth = strokeWidth
@@ -169,7 +165,7 @@ extension AgoraBoardWidgetSignal {
         default:
             break
         }
-        return dic.jsonString()
+    return dic.jsonString()
     }
 }
 
@@ -183,12 +179,17 @@ extension String {
             return .JoinBoard
         }
         
-        guard let bodyDic = dic["body"] as? [String:Any],
-              let type = AgoraBoardWidgetSignal.getType(rawValue: signalRaw),
-              let obj = try type.decode(bodyDic) else {
-            return nil
+        if let bodyArr = dic["body"] as? [String] {
+            return .BoardGrantDataChanged(bodyArr)
         }
-        return AgoraBoardWidgetSignal.makeSignal(rawValue: signalRaw,
-                                                      body: obj)
+        
+        if let bodyDic = dic["body"] as? [String:Any],
+              let type = AgoraBoardWidgetSignal.getType(rawValue: signalRaw),
+              let obj = try type.decode(bodyDic) {
+            return AgoraBoardWidgetSignal.makeSignal(rawValue: signalRaw,
+                                                          body: obj)
+        }
+        
+        return nil
     }
 }

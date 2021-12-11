@@ -25,7 +25,6 @@ enum AgoraBoardInteractionSignal {
     case BoardGrantDataChanged(Array<String>?)
     case AudioMixingStateChanged(AgoraBoardAudioMixingData)
     case BoardAudioMixingRequest(AgoraBoardAudioMixingRequestData)
-    case BoardInit
     
     var rawValue: Int {
         switch self {
@@ -35,7 +34,6 @@ enum AgoraBoardInteractionSignal {
         case .BoardGrantDataChanged(_):              return 3
         case .AudioMixingStateChanged(_):            return 4
         case .BoardAudioMixingRequest(_):            return 5
-        case .BoardInit:                             return 6
         default:
             return -1
         }
@@ -78,8 +76,6 @@ enum AgoraBoardInteractionSignal {
             if let x = body as? AgoraBoardAudioMixingRequestData {
                 return .BoardAudioMixingRequest(x)
             }
-        case 6:
-            return .BoardInit
         default:
             break
         }

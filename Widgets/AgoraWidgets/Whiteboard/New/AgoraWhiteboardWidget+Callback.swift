@@ -81,7 +81,7 @@ extension AgoraWhiteboardWidget: WhiteRoomCallbackDelegate {
            let `room` = room,
            !room.disconnectedBySelf {
             // 断线重连
-            needJoin = true
+            joinWhiteboard()
         }
     }
 }
@@ -124,14 +124,10 @@ extension AgoraWhiteboardWidget: WhiteAudioMixerBridgeDelegate {
 }
 
 extension AgoraWhiteboardWidget: AGBoardWidgetDTDelegate {
-    func onInitEnable() {
-        needInit = true
+    func onConfigComplete() {
+        initCondition.configComplete = true
     }
-    
-    func onJoinEnable() {
-        needJoin = true
-    }
-    
+
     func onFollowChanged(follow: Bool) {
         if follow {
             room?.setViewMode(.follower)
@@ -145,13 +141,20 @@ extension AgoraWhiteboardWidget: AGBoardWidgetDTDelegate {
     }
     
     func onLocalGrantedChangedForBoardHandle(localGranted: Bool) {
+        room?.disableDeviceInputs(!localGranted)
         room?.disableCameraTransform(!localGranted)
         ifUseLocalCameraConfig()
-//        if localGranted {
-//            room?.setViewMode(.freedom)
-//        } else {
-//            room?.setViewMode(.follower)
-//        }
+        
+        if localGranted != dt.localGranted {
+            room?.setWritable(localGranted,
+                              completionHandler: {[weak self] isWritable, error in
+                                self?.dt.localGranted = isWritable
+                                if let error = error {
+                                    self?.log(.error,
+                                              content: "Local Granted Handle error")
+                                }
+                              })
+        }
     }
     
     func onScenePathChanged(path: String) {
