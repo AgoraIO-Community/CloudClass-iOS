@@ -60,8 +60,8 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// 支持path修改和整体修改
     /// - parameter properties: {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
     /// - parameter cause: 修改的原因，可为空
-    func updateRoomProperties(_ properties: [String: String],
-                              cause: [String: String]?,
+    func updateRoomProperties(_ properties: [String: Any],
+                              cause: [String: Any]?,
                               success: (() -> Void)?,
                               fail: ((AgoraEduContextError) -> Void)?)
     /// 删除房间自定义属性
@@ -320,7 +320,6 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     @objc optional func onAudioMixingStateChanged(stateCode: Int,
                                                   errorCode: Int)
 }
-
 
 @objc public protocol AgoraEduMediaContext: NSObjectProtocol {
     /// 获取设备列表 (v2.0.0)

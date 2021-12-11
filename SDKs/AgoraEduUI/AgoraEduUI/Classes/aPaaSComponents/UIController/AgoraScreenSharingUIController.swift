@@ -29,8 +29,7 @@ class AgoraScreenSharingUIController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .blue
-        view.isHidden = false
+        view.isHidden = true
         
         contextPool.room.registerRoomEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
