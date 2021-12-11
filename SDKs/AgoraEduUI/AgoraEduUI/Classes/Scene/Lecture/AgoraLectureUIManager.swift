@@ -212,6 +212,10 @@ extension AgoraLectureUIManager: AgoraBoardToolsUIControllerDelegate {
     func brushToolsViewDidBrushChanged(_ tool: AgoraBoardToolItem) {
         brushToolButton.setImage(tool.image(self))
     }
+    
+    func onShowBrushTools(isShow: Bool) {
+        
+    }
 }
 
 // MARK: - PaintingBoardUIControllerDelegate

@@ -108,6 +108,16 @@ class AgoraRenderMemberView: UIView {
     
     private var memberModel: AgoraRenderMemberModel?
     
+    public var defaultRole: AgoraRenderMemberModel.AgoraRenderRole = .student {
+        didSet {
+            if defaultRole == .teacher {
+                stateLabel.text = "render_state_teacher_off".ag_localizedIn("AgoraEduUI")
+            } else {
+                stateLabel.text = "render_state_student_off".ag_localizedIn("AgoraEduUI")
+            }
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -119,7 +129,8 @@ class AgoraRenderMemberView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func setModel(model: AgoraRenderMemberModel?, delegate: AgoraRenderMemberViewDelegate) {
+    public func setModel(model: AgoraRenderMemberModel?,
+                         delegate: AgoraRenderMemberViewDelegate) {
         if let oldModel = memberModel, oldModel.uuid != model?.uuid {
             self.resignOldModel(model: oldModel)
         }
@@ -252,7 +263,7 @@ private extension AgoraRenderMemberView {
         stateLabel.font = UIFont.systemFont(ofSize: 12)
         stateLabel.textColor = UIColor(hex: 0x677386)
         stateLabel.textAlignment = .center
-        stateLabel.text = "render_state_teacher_off".ag_localizedIn("AgoraEduUI")
+        stateLabel.text = "render_state_student_off".ag_localizedIn("AgoraEduUI")
         addSubview(stateLabel)
         
         videoView = UIView(frame: .zero)

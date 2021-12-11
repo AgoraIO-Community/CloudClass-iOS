@@ -178,13 +178,28 @@ private enum AgoraBoardToolsViewState {
 }
 
 protocol AgoraBoardToolsUIControllerDelegate: class {
-    /** 选中了某个🖌工具*/
-    func brushToolsViewDidBrushChanged(_ tool: AgoraBoardToolItem)
+    /** 展示或隐藏画笔工具*/
+    func onShowBrushTools(isShow: Bool)
 }
 
 private let kBrushSizeCount: Int = 5
 private let kTextSizeCount: Int = 4
 class AgoraBoardToolsUIController: UIViewController {
+    
+    public lazy var button: AgoraRoomToolZoomButton = {
+        let v = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
+                                                      y: 0,
+                                                      width: 44,
+                                                      height: 44))
+        v.isHidden = true
+        v.setImage(AgoraUIImage(object: self,
+                                name: "ic_brush_pencil"))
+        v.addTarget(self,
+                    action: #selector(onClickBrushTools(_:)),
+                    for: .touchUpInside)
+        return v
+    }()
+    
     weak var delegate: AgoraBoardToolsUIControllerDelegate?
     
     var contentView: UIView!
@@ -315,8 +330,19 @@ class AgoraBoardToolsUIController: UIViewController {
 //        default:
 //            break
 //        }
+        
+        
+        //brushToolButton.setImage(tool.image(self))
     }
 }
+
+private extension AgoraBoardToolsUIController {
+    @objc func onClickBrushTools(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        self.delegate?.onShowBrushTools(isShow: sender.isSelected)
+    }
+}
+
 // MARK: - UICollectionViewDelegate
 extension AgoraBoardToolsUIController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     

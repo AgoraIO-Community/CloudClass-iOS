@@ -224,6 +224,7 @@ extension AgoraOneToOneRenderUIController: AgoraEduRoomHandler {
 private extension AgoraOneToOneRenderUIController {
     func createViews() {
         teacherView = AgoraRenderMemberView(frame: .zero)
+        teacherView.defaultRole = .teacher
         view.addSubview(teacherView)
         
         studentView = AgoraRenderMemberView(frame: .zero)

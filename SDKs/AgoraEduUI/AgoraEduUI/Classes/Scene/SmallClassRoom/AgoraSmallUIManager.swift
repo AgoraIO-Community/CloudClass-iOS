@@ -19,8 +19,6 @@ import AgoraWidget
     /// 视图部分，支持feature的UI交互显示
     /** 工具栏*/
     private var toolsView: AgoraRoomToolstView!
-    /** 画笔工具*/
-    private var brushToolButton: AgoraRoomToolZoomButton!
     /// 控制器部分，除了视图显示，还包含和SDK之间的事件及数据交互
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
@@ -112,25 +110,7 @@ import AgoraWidget
     public override func didClickCtrlMaskView() {
         toolsView.deselectAll()
         handsUpViewController.deselect()
-        brushToolButton.isSelected = false
-    }
-}
-
-// MARK: - Actions
-extension AgoraSmallUIManager {
-    @objc func onClickBrushTools(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
-        if sender.isSelected {
-            toolsView.deselectAll()
-            handsUpViewController.deselect()
-            ctrlView = brushToolsViewController.view
-            ctrlView?.mas_makeConstraints { make in
-                make?.right.equalTo()(brushToolButton.mas_left)?.offset()(-7)
-                make?.bottom.equalTo()(brushToolButton)?.offset()(-10)
-            }
-        } else {
-            ctrlView = nil
-        }
+        brushToolsViewController.button.isSelected = false
     }
 }
 
@@ -168,7 +148,7 @@ extension AgoraSmallUIManager: AgoraEduUserHandler {
 extension AgoraSmallUIManager: AgoraHandsUpUIControllerDelegate {
     func onShowHandsUpList(_ view: UIView) {
         toolsView.deselectAll()
-        brushToolButton.isSelected = false
+        brushToolsViewController.button.isSelected = false
         ctrlView = view
         view.mas_makeConstraints { make in
             make?.bottom.equalTo()(handsUpViewController.view)
@@ -186,7 +166,7 @@ extension AgoraSmallUIManager: AgoraHandsUpUIControllerDelegate {
 extension AgoraSmallUIManager: AgoraRoomToolsViewDelegate {
     func toolsViewDidSelectTool(_ tool: AgoraRoomToolstView.AgoraRoomToolType) {
         handsUpViewController.deselect()
-        brushToolButton.isSelected = false
+        brushToolsViewController.button.isSelected = false
         switch tool {
         case .setting:
             ctrlView = settingViewController.view
@@ -245,8 +225,18 @@ extension AgoraSmallUIManager: AgoraToolBoxUIControllerDelegate {
 
 // MARK: - AgoraBoardToolsUIControllerDelegate
 extension AgoraSmallUIManager: AgoraBoardToolsUIControllerDelegate {
-    func brushToolsViewDidBrushChanged(_ tool: AgoraBoardToolItem) {
-        brushToolButton.setImage(tool.image(self))
+    func onShowBrushTools(isShow: Bool) {
+        if isShow {
+            toolsView.deselectAll()
+            handsUpViewController.deselect()
+            ctrlView = brushToolsViewController.view
+            ctrlView?.mas_makeConstraints { make in
+                make?.right.equalTo()(brushToolsViewController.button.mas_left)?.offset()(-7)
+                make?.bottom.equalTo()(brushToolsViewController.button)?.offset()(-10)
+            }
+        } else {
+            ctrlView = nil
+        }
     }
 }
 
@@ -261,7 +251,7 @@ extension AgoraSmallUIManager: AgoraPaintingBoardUIControllerDelegate {
             ctrlView = nil
         }
         
-        brushToolButton.isHidden = !permission
+        brushToolsViewController.button.isHidden = !permission
     }
 }
 
@@ -284,17 +274,7 @@ private extension AgoraSmallUIManager {
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
-        brushToolButton = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
-                                                                y: 0,
-                                                                width: 44,
-                                                                height: 44))
-        brushToolButton.isHidden = true
-        brushToolButton.setImage(AgoraUIImage(object: self,
-                                              name: "ic_brush_pencil"))
-        brushToolButton.addTarget(self,
-                                  action: #selector(onClickBrushTools(_:)),
-                                  for: .touchUpInside)
-        contentView.addSubview(brushToolButton)
+        contentView.addSubview(brushToolsViewController.button)
         
         toolsView = AgoraRoomToolstView(frame: view.bounds)
         toolsView.delegate = self
@@ -318,13 +298,13 @@ private extension AgoraSmallUIManager {
             make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
             make?.left.right().bottom().equalTo()(0)
         }
-        brushToolButton.mas_makeConstraints { make in
+        brushToolsViewController.button.mas_makeConstraints { make in
             make?.right.equalTo()(-9)
             make?.bottom.equalTo()(-14)
             make?.width.height().equalTo()(AgoraFit.scale(36))
         }
         toolsView.mas_makeConstraints { make in
-            make?.right.equalTo()(brushToolButton)
+            make?.right.equalTo()(brushToolsViewController.button)
             make?.centerY.equalTo()(toolsView.superview)
         }
         handsUpViewController.view.mas_makeConstraints { make in
