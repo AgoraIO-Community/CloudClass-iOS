@@ -111,6 +111,15 @@ import UIKit
                 return
             }
             self.initWidgets()
+            // 打开本地音视频设备
+            let cameras = self.contextPool.media.getLocalDevices(deviceType: .camera)
+            if let camera = cameras.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
+                let ero = self.contextPool.media.openLocalDevice(device: camera)
+                print(ero)
+            }
+            if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
+                self.contextPool.media.openLocalDevice(device: mic)
+            }
             if self.contextPool.user.getLocalUserInfo().role == .teacher {
                 self.contextPool.room.startClass {
                 } fail: { error in

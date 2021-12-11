@@ -92,6 +92,7 @@ import UIKit
         ctrlMaskView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(self.view)
         }
+        
     }
     
     @objc private func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {

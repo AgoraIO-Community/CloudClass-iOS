@@ -25,7 +25,7 @@ import AgoraWidget
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
     /** 远程视窗渲染 控制器*/
-    private var renderController: AgoraHorizListRenderUIController!
+    private var renderController: AgoraMembersHorizeRenderUIController!
     /** 白板的渲染 控制器*/
     private var whiteBoardController: AgoraPaintingBoardUIController!
     /** 工具箱 控制器*/
@@ -49,7 +49,7 @@ import AgoraWidget
         return vc
     }()
     /** 聊天窗口 控制器*/
-    private var messageController: AgoraBaseWidget?
+    private var chatController: AgoraChatUIController!
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
@@ -82,18 +82,27 @@ import AgoraWidget
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.createViews()
+        self.createConstrains()
+        self.contextPool.user.registerEventHandler(self)
+        self.contextPool.monitor.registerMonitorEventHandler(self)
+        
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
                 return
             }
-            self.createViews()
-            self.createConstrains()
-            self.contextPool.user.registerEventHandler(self)
-            self.contextPool.monitor.registerMonitorEventHandler(self)
-            
-            self.initWidgets()
+            self.createChatController()
+            // 打开本地音视频设备
+            let cameras = self.contextPool.media.getLocalDevices(deviceType: .camera)
+            if let camera = cameras.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
+                let ero = self.contextPool.media.openLocalDevice(device: camera)
+                print(ero)
+            }
+            if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
+                self.contextPool.media.openLocalDevice(device: mic)
+            }
         } fail: { [weak self] error in
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
@@ -154,10 +163,6 @@ extension AgoraSmallUIManager: AgoraEduUserHandler {
             }))
             .show(in: self)
     }
-    
-    func onShowUserReward(_ user: AgoraEduContextUserInfo) {
-        
-    }
 }
 // MARK: - HandsUpViewControllerDelegate
 extension AgoraSmallUIManager: AgoraHandsUpUIControllerDelegate {
@@ -198,16 +203,12 @@ extension AgoraSmallUIManager: AgoraRoomToolsViewDelegate {
                 make?.centerY.equalTo()(toolsView)
             }
         case .message:
-            if let message = messageController {
-                message.onMessageReceived("max")
-                
-                ctrlView = message.view
-                ctrlView?.mas_remakeConstraints { make in
-                    make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
-                    make?.centerY.equalTo()(toolsView)
-                    make?.width.equalTo()(200)
-                    make?.height.equalTo()(287)
-                }
+            ctrlView = chatController.view
+            ctrlView?.mas_remakeConstraints { make in
+                make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
+                make?.centerY.equalTo()(toolsView)
+                make?.width.equalTo()(200)
+                make?.height.equalTo()(287)
             }
         default: break
         }
@@ -215,10 +216,6 @@ extension AgoraSmallUIManager: AgoraRoomToolsViewDelegate {
     
     func toolsViewDidDeselectTool(_ tool: AgoraRoomToolstView.AgoraRoomToolType) {
         ctrlView = nil
-        if tool == .message,
-        let message = messageController {
-            message.onMessageReceived("min")
-        }
     }
 }
 // MARK: - PaintingToolBoxViewDelegate
@@ -279,8 +276,7 @@ private extension AgoraSmallUIManager {
         whiteBoardController.delegate = self
         contentView.addSubview(whiteBoardController.view)
         
-        renderController = AgoraHorizListRenderUIController(context: contextPool)
-        renderController.themeColor = UIColor(rgb: 0x75C0FE)
+        renderController = AgoraMembersHorizeRenderUIController(context: contextPool)
         addChild(renderController)
         contentView.addSubview(renderController.view)
                 
@@ -302,15 +298,6 @@ private extension AgoraSmallUIManager {
         contentView.addSubview(toolsView)
         
         contentView.addSubview(handsUpViewController.view)
-    }
-    
-    func initWidgets() {
-        if let message = createChatWidget() {
-            messageController = message
-            contextPool.widget.add(self,
-                                   widgetId: message.info.widgetId)
-            contentView.addSubview(message.view)
-        }
     }
     
     func createConstrains() {
@@ -342,26 +329,10 @@ private extension AgoraSmallUIManager {
             make?.top.equalTo()(toolsView.mas_bottom)?.offset()(12)
         }
     }
-}
-
-// MARK: - AgoraWidgetMessageObserver
-extension AgoraSmallUIManager: AgoraWidgetMessageObserver {
-    func onMessageReceived(_ message: String,
-                           widgetId: String!) {
-        switch widgetId {
-        case "AgoraChatWidget":
-            if let dic = message.json(),
-               let isMin = dic["isMinSize"] as? Bool,
-               isMin{
-                ctrlView == nil
-            }
-        case "easemobIM":
-            if message == "min" {
-                ctrlView == nil
-            }
-        default:
-            break
-        }
+    
+    func createChatController() {
+        chatController = AgoraChatUIController()
+        chatController.contextPool = contextPool
     }
 }
 

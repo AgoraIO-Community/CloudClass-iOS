@@ -86,7 +86,7 @@ extension AgoraRenderMemberModel {
             // video
             if stream.streamType == .both ||
                 stream.streamType == .video {
-                switch stream.audioSourceState {
+                switch stream.videoSourceState {
                 case .error:
                     self.videoState = .broken
                 case .close:
@@ -95,7 +95,7 @@ extension AgoraRenderMemberModel {
                     self.videoState = .on
                 }
             } else {
-                switch stream.audioSourceState {
+                switch stream.videoSourceState {
                 case .error:
                     self.videoState = .broken
                 case .close:

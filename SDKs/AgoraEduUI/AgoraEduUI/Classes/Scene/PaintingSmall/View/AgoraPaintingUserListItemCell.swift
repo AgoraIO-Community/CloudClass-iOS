@@ -9,7 +9,7 @@ import AgoraEduContext
 import UIKit
 
 // 花名册上的 cell
-class AgoraPaintingUserListItemModel {
+class AgoraUserListModel {
     var uuid: String = ""
     var name: String = ""
     var stage: AgoraUserListFuncState = AgoraUserListFuncState(enable: false,
@@ -21,6 +21,9 @@ class AgoraPaintingUserListItemModel {
     var mic: AgoraUserListFuncState = AgoraUserListFuncState(enable: false,
                                                              isOn: false)
     var rewards: Int = 0
+    
+    /** 用作排序的首字母*/
+    var letter: String = ""
 }
 
 struct AgoraUserListFuncState {
@@ -48,7 +51,7 @@ class AgoraPaintingUserListItemCell: UITableViewCell {
         }
     }
     
-    var itemModel: AgoraPaintingUserListItemModel? {
+    var itemModel: AgoraUserListModel? {
         didSet {
             updateState()
         }

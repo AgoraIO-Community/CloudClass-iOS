@@ -23,8 +23,7 @@ import Masonry
     /** 白板 控制器*/
     private var boardController: AgoraBoardUIController!
     /** 聊天 控制器*/
-    private var messageController: AgoraChatUIController?
-
+    private var chatController: AgoraChatUIController?
     /** 屏幕分享 控制器*/
     private var screenSharingController: AgoraScreenSharingUIController!
     
@@ -65,6 +64,15 @@ import Masonry
                 return
             }
             self.createChatController()
+            // 打开本地音视频设备
+            let cameras = self.contextPool.media.getLocalDevices(deviceType: .camera)
+            if let camera = cameras.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
+                let ero = self.contextPool.media.openLocalDevice(device: camera)
+                print(ero)
+            }
+            if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
+                self.contextPool.media.openLocalDevice(device: mic)
+            }
         } fail: { [weak self] error in
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
@@ -79,7 +87,7 @@ import Masonry
 
 extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
     func onChatTabSelectChanged(isSelected: Bool) {
-        messageController?.view.isHidden = !isSelected
+        chatController?.view.isHidden = !isSelected
     }
 }
 
@@ -195,10 +203,7 @@ private extension AgoraOneToOneUIManager {
                 make?.left.right().bottom().equalTo()(0)
             }
         }
-        
-        messageController = controller
-
-		// board widget
+        chatController = controller
         boardController?.joinBoard()
     }
 }

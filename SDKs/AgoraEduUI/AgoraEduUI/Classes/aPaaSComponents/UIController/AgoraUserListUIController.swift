@@ -53,7 +53,7 @@ class AgoraUserListUIController: UIViewController {
     /** 表视图*/
     var tableView: UITableView!
     /** 数据源*/
-    var dataSource = [AgoraPaintingUserListItemModel]()
+    var dataSource = [AgoraUserListModel]()
     /** 支持的选项列表*/
     lazy var supportFuncs: [AgoraUserListFunction] = {
         if contextPool.user.getLocalUserInfo().role == .teacher {
@@ -83,68 +83,103 @@ class AgoraUserListUIController: UIViewController {
         
         createViews()
         createConstrains()
+        setup()
+        
         contextPool.user.registerEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
     }
 }
 // MARK: - Private
 private extension AgoraUserListUIController {
-    func reloadUsers() {
+    func setup() {
         let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
-        let list = contextPool.user.getAllUserList()
-        var tmp = [AgoraPaintingUserListItemModel]()
-        var teacher: AgoraEduContextUserInfo?
-        for user in list {
-            if user.role == .teacher {
-                teacher = user
-            } else if user.role == .student {
-                let model = AgoraPaintingUserListItemModel()
-                model.uuid = user.userUuid
-                model.name = user.userName
-                // TODO:
-//                model.rewards = user.rewardCount
-
-                // TODO:
-//                model.stage.isOn = user.isCoHost
-                // TODO: 白板权限
-//                model.auth.isOn = user.boardGranted
-                // enable
-                model.stage.enable = isAdmin
-                model.auth.enable = isAdmin
-                // stream
-                let s = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first
-                
-                // TODO:
-//                model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
-//                model.mic.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .audio)
-//                model.camera.enable = (user.isLocal && user.isCoHost) || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
-//                model.mic.enable = (user.isLocal && user.isCoHost) || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
-                
-                tmp.append(model)
-            }
-        }
-        if let model = teacher {
-            self.teacherNameLabel.text = model.userName
+        let localUserID = contextPool.user.getLocalUserInfo().userUuid
+        if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
+            teacherNameLabel.text = teacher.userName
         } else {
-            self.teacherNameLabel.text = nil
+            teacherNameLabel.text = nil
         }
-        self.dataSource = tmp
-        reloadTableView()
+        guard let students = contextPool.user.getUserList(role: .student) else {
+            return
+        }
+        var tmp = [AgoraUserListModel]()
+        let coHosts = contextPool.user.getCoHostList()
+        for student in students {
+            let model = AgoraUserListModel()
+            model.uuid = student.userUuid
+            model.name = student.userName
+            model.letter = getFirstLetterFromString(aString: student.userName)
+            model.rewards = contextPool.user.getUserRewardCount(userUuid: student.userUuid)
+            var isCoHost = false
+            if let _ = coHosts?.first(where: {$0.userUuid == student.userUuid}) {
+                isCoHost = true
+            }
+            model.stage.isOn = isCoHost
+            // TODO: 白板权限
+//                model.auth.isOn = user.boardGranted
+            // enable
+            model.stage.enable = isAdmin
+            model.auth.enable = isAdmin
+            // stream
+            let isLocalUser = (localUserID == student.userUuid)
+            let s = contextPool.stream.getStreamList(userUuid: student.userUuid)?.first
+            model.camera.isOn = (s?.streamType == .both || s?.streamType == .video)
+            model.mic.isOn = (s?.streamType == .both || s?.streamType == .audio)
+            model.camera.enable = (isLocalUser && isCoHost) || (isAdmin && isCoHost && s?.videoSourceState != .close)
+            model.mic.enable = (isLocalUser && isCoHost) || (isAdmin && isCoHost && s?.audioSourceState != .close)
+            tmp.append(model)
+        }
+        dataSource = tmp
+        sort()
+    }
+    // 针对某个模型进行更新
+    func updateModel(with uuid: String, resort: Bool) {
+        guard let model = dataSource.first(where: {$0.uuid == uuid}) else {
+            return
+        }
+        let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
+        let coHosts = contextPool.user.getCoHostList()
+        let localUserID = contextPool.user.getLocalUserInfo().userUuid
+        var isCoHost = false
+        if let _ = coHosts?.first(where: {$0.userUuid == model.uuid}) {
+            isCoHost = true
+        }
+        model.stage.isOn = isCoHost
+        // TODO: 白板权限
+//                model.auth.isOn = user.boardGranted
+        // enable
+        model.stage.enable = isAdmin
+        model.auth.enable = isAdmin
+        // stream
+        let isLocalUser = (localUserID == model.uuid)
+        let s = contextPool.stream.getStreamList(userUuid: model.uuid)?.first
+        model.camera.isOn = (s?.streamType == .both || s?.streamType == .video)
+        model.mic.isOn = (s?.streamType == .both || s?.streamType == .audio)
+        model.camera.enable = (isLocalUser && isCoHost) || (isAdmin && isCoHost && s?.videoSourceState != .close)
+        model.mic.enable = (isLocalUser && isCoHost) || (isAdmin && isCoHost && s?.audioSourceState != .close)
+        if resort {
+            tableView.reloadData()
+        } else {
+            sort()
+        }
     }
     
-    func updateStreamWithUUID(_ uuid: String) {
-        let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
-        if let model = dataSource.first{ $0.uuid == uuid},
-           let user = contextPool.user.getAllUserList().first {$0.userUuid == uuid} {
-            let s = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first
-            
-            // TODO:
-//            model.camera.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .video)
-//            model.mic.isOn = (s?.streamType == .audioAndVideo || s?.streamType == .audio)
-//            model.camera.enable = user.isLocal || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
-//            model.mic.enable = user.isLocal || (isAdmin && user.isOnLine && user.isCoHost && s?.videoSourceType != .invalid)
-            reloadTableView()
+    func sort() {
+        self.dataSource.sort { l, r in
+            l.letter > r.letter
         }
+        var coHosts = [AgoraUserListModel]()
+        var rest = [AgoraUserListModel]()
+        for user in self.dataSource {
+            if user.stage.isOn {
+                coHosts.append(user)
+            } else {
+                rest.append(user)
+            }
+        }
+        coHosts.append(contentsOf: rest)
+        self.dataSource = coHosts
+        self.tableView.reloadData()
     }
     
     func reloadTableView() {
@@ -152,36 +187,96 @@ private extension AgoraUserListUIController {
             self.tableView.reloadData()
         }
     }
+    
+    func getFirstLetterFromString(aString: String) -> String {
+        let string = aString.trimmingCharacters(in: .whitespaces)
+        let regexNum = "^[0-9]$"
+        let predNum = NSPredicate.init(format: "SELF MATCHES %@", regexNum)
+        let regexChar = "^[a-zA-Z]$"
+        let predChar = NSPredicate.init(format: "SELF MATCHES %@", regexChar)
+        if predNum.evaluate(with: string) {
+            return string.substring(to: string.index(string.startIndex, offsetBy:1))
+        } else if predChar.evaluate(with: string) {
+            let c = string.substring(to: string.index(string.startIndex, offsetBy:1))
+            return c.uppercased()
+        } else {
+            let mutableString = NSMutableString.init(string: string)
+            CFStringTransform(mutableString as CFMutableString, nil, kCFStringTransformToLatin, false)
+            // 去掉声调(用此方法大大提高遍历的速度)
+            let pinyinString = mutableString.folding(options: String.CompareOptions.diacriticInsensitive, locale: NSLocale.current)
+            // 将拼音首字母装换成小写
+            let strPinYin = polyphoneStringHandle(nameString: string, pinyinString: pinyinString).lowercased()
+            let firstString = strPinYin.substring(to: strPinYin.index(strPinYin.startIndex, offsetBy:1))
+            let regexA = "^[a-z]$"
+            let predA = NSPredicate.init(format: "SELF MATCHES %@", regexA)
+            return predA.evaluate(with: firstString) ? firstString : "#"
+        }
+    }
+    /// 多音字处理
+    func polyphoneStringHandle(nameString:String, pinyinString:String) -> String {
+        if nameString.hasPrefix("长") {return "chang"}
+        if nameString.hasPrefix("沈") {return "shen"}
+        if nameString.hasPrefix("厦") {return "xia"}
+        if nameString.hasPrefix("地") {return "di"}
+        if nameString.hasPrefix("重") {return "chong"}
+        return pinyinString;
+    }
 }
 
 // MARK: - AgoraEduUserHandler
 extension AgoraUserListUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        reloadUsers()
+        if user.role == .student {
+            let model = AgoraUserListModel()
+            dataSource.append(model)
+            sort()
+        } else if user.role == .teacher {
+            self.teacherNameLabel.text = user.userName
+        }
     }
-    func onRemoteUserLeft(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?, reason: AgoraEduContextUserLeaveReason) {
-        reloadUsers()
+        
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operator: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        if user.role == .student {
+            self.dataSource.removeAll(where: {$0.uuid == user.userUuid})
+            tableView.reloadData()
+        } else if user.role == .teacher {
+            self.teacherNameLabel.text = ""
+        }
     }
-    func onUserUpdated(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?) {
-        reloadUsers()
+    
+    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
+                               operatorUser: AgoraEduContextUserInfo?) {
+        for user in userList {
+            self.updateModel(with: user.userUuid,
+                             resort: true)
+        }
+    }
+    
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        for user in userList {
+            self.updateModel(with: user.userUuid,
+                             resort: false)
+        }
+    }
+    
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+            model.rewards = rewardCount
+            tableView.reloadData()
+        }
     }
 }
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraUserListUIController: AgoraEduStreamHandler {
-    func onStreamJoin(stream: AgoraEduContextStreamInfo,
-                      operator: AgoraEduContextUserInfo?) {
-        self.updateStreamWithUUID(stream.owner.userUuid)
-    }
-    
-    func onStreamLeave(stream: AgoraEduContextStreamInfo,
-                       operator: AgoraEduContextUserInfo?) {
-        self.updateStreamWithUUID(stream.owner.userUuid)
-    }
-    
-    func onStreamUpdate(stream: AgoraEduContextStreamInfo,
-                        operator: AgoraEduContextUserInfo?) {
-        self.updateStreamWithUUID(stream.owner.userUuid)
+    func onStreamUpdated(stream: AgoraEduContextStreamInfo,
+                         operator: AgoraEduContextUserInfo?) {
+        self.updateModel(with: stream.owner.userUuid, resort: false)
     }
 }
 

@@ -87,19 +87,19 @@ protocol AgoraRenderMemberViewDelegate: NSObjectProtocol {
 
 class AgoraRenderMemberView: UIView {
     
-    public weak var delegate: AgoraRenderMemberViewDelegate?
+    private weak var delegate: AgoraRenderMemberViewDelegate?
     
     private var stateImageView: UIImageView!
     
     private var stateLabel: UILabel!
-    
-    private var memberModel: AgoraRenderMemberModel?
     /** 画布*/
     private var videoView: UIView!
     /** 名字*/
     private var nameLabel: UILabel!
     /** 麦克风视图*/
     private var micView: AgoraRenderMicView!
+    
+    private var memberModel: AgoraRenderMemberModel?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -183,7 +183,7 @@ private extension AgoraRenderMemberView {
     }
     
     func updateVolume(volume: Int) {
-        
+        micView.setVolume(volume)
     }
     
     func updateAudioState(state: AgoraRenderMemberModel.AgoraRenderMediaState) {
