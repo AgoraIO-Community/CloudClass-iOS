@@ -12,19 +12,36 @@ class AgoraBoardUIController: UIViewController {
     var boardWidget: AgoraBaseWidget?
     var contextPool: AgoraEduContextPool!
     
+    var needInit: Bool = false {
+        didSet {
+            if needInit {
+                initBoardWidget()
+                
+                if needJoin {
+                    joinBoard()
+                }
+            }
+        }
+    }
+    
+    var needJoin: Bool = false {
+        didSet {
+            if needInit {
+                needInit = true
+                return
+            }
+            if needJoin {
+                joinBoard()
+            }
+        }
+    }
+    
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
         view.backgroundColor = .clear
-        initBoardWidget()
-    }
-    
-    func joinBoard() {
-        // 需要先将白板视图添加到视图栈中再加入白板
-        if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
-            contextPool.widget.sendMessage(toWidget: "netlessBoard",
-                                           message: message)
-        }
+        needInit = true
+        contextPool.room.registerRoomEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
@@ -45,6 +62,16 @@ private extension AgoraBoardUIController {
             boardWidget.view.mas_makeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(0)
             }
+            
+            needInit = false
+        }
+    }
+    
+    func joinBoard() {
+        // 需要先将白板视图添加到视图栈中再加入白板
+        if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
+            contextPool.widget.sendMessage(toWidget: "netlessBoard",
+                                           message: message)
         }
     }
     
@@ -58,18 +85,26 @@ private extension AgoraBoardUIController {
     }
     
     func handleAudioMixing(_ data: AgoraBoardWidgetAudioMixingRequestData) {
+        var contextError: AgoraEduContextError?
         switch data.requestType {
         case .start:
-            contextPool.media.startAudioMixing(filePath: data.filePath,
-                                               loopback: data.loopback,
-                                               replace: data.replace,
-                                               cycle: data.cycle)
+            contextError = contextPool.media.startAudioMixing(filePath: data.filePath,
+                                                              loopback: data.loopback,
+                                                              replace: data.replace,
+                                                              cycle: data.cycle)
         case .stop:
-            contextPool.media.stopAudioMixing()
+            contextError = contextPool.media.stopAudioMixing()
         case .setPosition:
-            contextPool.media.setAudioMixingPosition(position: data.position)
+            contextError = contextPool.media.setAudioMixingPosition(position: data.position)
         default:
             break
+        }
+        
+        if let error = contextError,
+           let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(statusCode: 714,
+                                                                                                              errorCode: error.code)).toMessageString() {
+            contextPool.widget.sendMessage(toWidget: "netlessBoard",
+                                           message: message)
         }
     }
 }
@@ -83,6 +118,8 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
         }
         
         switch signal {
+        case .BoardInit:
+            needInit = true
         case .BoardPhaseChanged(let phase):
             handleBoardPhase(phase)
         case .BoardAudioMixingRequest(let requestData):
@@ -92,5 +129,11 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
         default:
             break
         }
+    }
+}
+
+extension AgoraBoardUIController: AgoraEduRoomHandler {
+    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        needJoin = true
     }
 }

@@ -81,7 +81,7 @@ extension AgoraWhiteboardWidget: WhiteRoomCallbackDelegate {
            let `room` = room,
            !room.disconnectedBySelf {
             // 断线重连
-            joinWhiteboard()
+            needJoin = true
         }
     }
 }
@@ -103,36 +103,35 @@ extension AgoraWhiteboardWidget: WhiteAudioMixerBridgeDelegate {
                                  loopback: Bool,
                                  replace: Bool,
                                  cycle: Int) {
-//        // 调用RTC
-//        let contextError = context.media.startAudioMixing(filePath: filePath,
-//                                                   loopback: loopback,
-//                                                   replace: replace,
-//                                                   cycle: cycle)
-//        if let error = contextError {
-            // 714对应RTC中的AgoraAudioMixingStateFailed
-//            whiteSDK.audioMixer?.setMediaState(714,
-//                                               errorCode: error.code)
-//        }
+        let request = AgoraBoardAudioMixingRequestData(requestType: .start,
+                                                       filePath: filePath,
+                                                       loopback: loopback,
+                                                       replace: replace,
+                                                       cycle: cycle)
+        sendMessage(signal: .BoardAudioMixingRequest(request))
     }
     
     public func stopAudioMixing() {
-//        let contextError = context.media.stopAudioMixing()
-//        if let error = contextError {
-//            whiteSDK.audioMixer?.setMediaState(0,
-//                                               errorCode: error.code)
-//        }
+        let request = AgoraBoardAudioMixingRequestData(requestType: .stop)
+        sendMessage(signal: .BoardAudioMixingRequest(request))
     }
     
     public func setAudioMixingPosition(_ position: Int) {
-//        let contextError = context.media.setAudioMixingPosition(position: position)
-//        if let error = contextError {
-//            whiteSDK.audioMixer?.setMediaState(0,
-//                                               errorCode: error.code)
-//        }
+        let request = AgoraBoardAudioMixingRequestData(requestType: .setPosition,
+                                                       position: position)
+        sendMessage(signal: .BoardAudioMixingRequest(request))
     }
 }
 
 extension AgoraWhiteboardWidget: AGBoardWidgetDTDelegate {
+    func onInitEnable() {
+        needInit = true
+    }
+    
+    func onJoinEnable() {
+        needJoin = true
+    }
+    
     func onFollowChanged(follow: Bool) {
         if follow {
             room?.setViewMode(.follower)
@@ -145,14 +144,14 @@ extension AgoraWhiteboardWidget: AGBoardWidgetDTDelegate {
         sendMessage(signal: .BoardGrantDataChanged(grantUsers))
     }
     
-    func onLocalGrantedChanged(localGranted: Bool) {
+    func onLocalGrantedChangedForBoardHandle(localGranted: Bool) {
         room?.disableCameraTransform(!localGranted)
         ifUseLocalCameraConfig()
-        if localGranted {
-            room?.setViewMode(.freedom)
-        } else {
-            room?.setViewMode(.follower)
-        }
+//        if localGranted {
+//            room?.setViewMode(.freedom)
+//        } else {
+//            room?.setViewMode(.follower)
+//        }
     }
     
     func onScenePathChanged(path: String) {

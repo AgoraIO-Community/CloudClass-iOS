@@ -214,7 +214,6 @@
     // AgoraWhiteboardWidget
     AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWhiteboardWidget class]
                                                                           widgetId:@"netlessBoard"];
-    // TODO: courseware地址为下载地址
     NSString *courseFolder = [NSString stringWithFormat:@"%@/%@",NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0],@"AgoraDownload"];
     whiteboardConfig.extraInfo = @{@"coursewareDirectory":courseFolder,
                                    @"useMultiViews": @YES,

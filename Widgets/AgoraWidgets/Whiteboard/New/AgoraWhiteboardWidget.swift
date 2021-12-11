@@ -20,6 +20,28 @@ import AgoraUIEduBaseViews
 
     var dt: AgoraWhiteboardWidgetDT
     
+    var needInit: Bool = false {
+        didSet {
+            if needInit {
+                initWhiteboard()
+            }
+        }
+    }
+    var needJoin: Bool = false {
+        didSet {
+            guard needJoin else {
+                return
+            }
+            
+            if needInit {
+                sendMessage(signal: .BoardInit)
+                return
+            }
+            
+            joinWhiteboard()
+        }
+    }
+    
     // MARK: - AgoraBaseWidget
     public override init(widgetInfo: AgoraWidgetInfo) {
         guard let extraDic = widgetInfo.extraInfo as? [String: Any],
@@ -36,20 +58,20 @@ import AgoraUIEduBaseViews
 
         if let wbProperties = widgetInfo.properties?.toObj(AgoraWhiteboardProperties.self) {
             dt.properties = wbProperties
-            initWhiteboard()
+            needInit = true
         }
     }
     
+    // MARK: widget callback
     public override func onLocalUserInfoUpdated(_ localUserInfo: AgoraWidgetUserInfo) {
         dt.localUserInfo = localUserInfo
     }
     
-    // MARK: callback
     public override func onMessageReceived(_ message: String) {
         let signal = message.toSignal()
         switch signal {
         case .JoinBoard:
-            joinWhiteboard()
+            needJoin = true
         case .MemberStateChanged(let agoraWhiteboardMemberState):
             handleMemberState(state: agoraWhiteboardMemberState)
         case .AudioMixingStateChanged(let agoraBoardAudioMixingData):
@@ -68,10 +90,11 @@ import AgoraUIEduBaseViews
         
         dt.properties = wbProperties
         
-        if whiteSDK == nil {
-            initWhiteboard()
+        if needInit {
+            needInit = true
+        } else if needJoin {
+            needJoin = true
         }
-        
     }
     
     public override func onPropertiesDeleted(_ properties: [String : Any]?,
@@ -103,7 +126,8 @@ extension AgoraWhiteboardWidget {
     }
     
     func initWhiteboard() {
-        guard let whiteSDKConfig = dt.getWhiteSDKConfig() else {
+        guard let whiteSDKConfig = dt.getWhiteSDKConfigToInit(),
+              whiteSDK == nil else {
             return
         }
         
@@ -121,11 +145,13 @@ extension AgoraWhiteboardWidget {
             make?.left.right().top().bottom().equalTo()(view)
         }
         WhiteDisplayerState.setCustomGlobalStateClass(AgoraWhiteboardGlobalState.self)
+        
+        needInit = false
     }
     
     func joinWhiteboard() {
         guard let sdk = whiteSDK,
-              let roomConfig = dt.getWhiteRoomConfig() else {
+              let roomConfig = dt.getWhiteRoomConfigToJoin() else {
             return
         }
         
@@ -155,7 +181,14 @@ extension AgoraWhiteboardWidget {
                                                     textSize: whiteRoom.memberState.textSize?.intValue)
             self.sendMessage(signal: .MemberStateChanged(member))
             whiteRoom.disableCameraTransform(true)
+            
+            self.needJoin = false
 
+            
+            // TODO: temp
+            let state = AgoraWhiteboardGlobalState()
+            state.grantUsers = [self.dt.localUserInfo.userUuid]
+            self.dt.globalState = state
         }
     }
     

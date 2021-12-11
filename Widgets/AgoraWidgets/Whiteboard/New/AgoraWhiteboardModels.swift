@@ -25,6 +25,7 @@ enum AgoraBoardInteractionSignal {
     case BoardGrantDataChanged(Array<String>?)
     case AudioMixingStateChanged(AgoraBoardAudioMixingData)
     case BoardAudioMixingRequest(AgoraBoardAudioMixingRequestData)
+    case BoardInit
     
     var rawValue: Int {
         switch self {
@@ -34,6 +35,7 @@ enum AgoraBoardInteractionSignal {
         case .BoardGrantDataChanged(_):              return 3
         case .AudioMixingStateChanged(_):            return 4
         case .BoardAudioMixingRequest(_):            return 5
+        case .BoardInit:                             return 6
         default:
             return -1
         }
@@ -76,63 +78,13 @@ enum AgoraBoardInteractionSignal {
             if let x = body as? AgoraBoardAudioMixingRequestData {
                 return .BoardAudioMixingRequest(x)
             }
+        case 6:
+            return .BoardInit
         default:
             break
         }
         return nil
     }
-    
-//    init(from decoder: Decoder) throws {
-//        let container = try decoder.singleValueContainer()
-//        
-//        if let x = try? container.decode(AgoraBoardRoomPhase.self) {
-//            self = .BoardPhaseChanged(x)
-//            return
-//        }
-//        
-//        if let x = try? container.decode(AgoraBoardMemberState.self) {
-//            self = .MemberStateChanged(x)
-//            return
-//        }
-//        
-//        if let x = try? container.decode(Array<String>.self) {
-//            self = .BoardGrantDataChanged(x)
-//            return
-//        }
-//        
-//        if let x = try? container.decode(AgoraBoardAudioMixingData.self) {
-//            self = .AudioMixingStateChanged(x)
-//            return
-//        }
-//
-//        if let x = try? container.decode(AgoraBoardAudioMixingStartData.self) {
-//            self = .BoardAudioMixingStart(x)
-//            return
-//        }
-//        
-//        if let x = try? container.decode(Int.self) {
-//            self = .BoardAudioMixingPosition(x)
-//            return
-//        }
-//        
-//        self = .JoinBoard
-//    }
-    
-//    func encode(to encoder: Encoder) throws {
-//        var container = try encoder.singleValueContainer()
-//        switch self {
-//        case .JoinBoard:
-//            break
-//        case .BoardPhaseChanged(let AgoraBoardRoomPhase):
-//            try container.encode(AgoraBoardRoomPhase)
-//        case .MemberStateChanged(let AgoraBoardMemberState):
-//            try container.encode(AgoraBoardMemberState)
-//        case .AudioMixingStateChanged(let agoraBoardAudioMixingData):
-//            try container.encode(agoraBoardAudioMixingData)
-//        case .BoardGrantDataChanged(let agoraBoardGrantData):
-//            try container.encode(agoraBoardGrantData)
-//        }
-//    }
 }
 
 enum AgoraBoardToolType: Int,Convertable {

@@ -10,10 +10,14 @@ import AgoraWidget
 import Whiteboard
 
 protocol AGBoardWidgetDTDelegate: NSObjectProtocol {
-    func onLocalGrantedChanged(localGranted: Bool)
+    func onLocalGrantedChangedForBoardHandle(localGranted: Bool)
+    
     func onScenePathChanged(path: String)
     func onFollowChanged(follow: Bool)
     func onGrantUsersChanged(grantUsers: [String]?)
+    
+    func onInitEnable()
+    func onJoinEnable()
 }
 
 
@@ -36,37 +40,40 @@ class AgoraWhiteboardWidgetDT {
     
     var globalState = AgoraWhiteboardGlobalState() {
         didSet {
-            delegate?.onGrantUsersChanged(grantUsers: grantUsers)
+            if globalState.follow != oldValue.follow {
+                delegate?.onFollowChanged(follow: globalState.follow)
+            }
+            localGranted = globalState.grantUsers.contains(localUserInfo.userUuid)
+            if globalState.grantUsers.count != oldValue.grantUsers.count {
+                delegate?.onGrantUsersChanged(grantUsers: globalState.grantUsers)
+            }
         }
     }
     
     // from properties
     var localCameraConfigs = [String: AgoraWhiteBoardCameraConfig]()
-    var follow: Bool = true
+
     var localGranted: Bool = false {
         didSet {
-            delegate?.onLocalGrantedChanged(localGranted: localGranted)
+            if localGranted != oldValue {
+                delegate?.onLocalGrantedChangedForBoardHandle(localGranted: localGranted)
+            }
         }
     }
-    var grantUsers = [String]()
     
     // config
     var properties: AgoraWhiteboardProperties? {
         didSet {
-            guard let props = properties else {
-                return
-            }
-            if (props.extra.follow == 1) != follow {
-                follow = (props.extra.follow == 1)
-                delegate?.onFollowChanged(follow: follow)
-            }
-            if let grantUsers = props.extra.grantUsers {
-                if grantUsers.count != grantUsers.count  {
-                    delegate?.onGrantUsersChanged(grantUsers: grantUsers)
+            if let props = properties {
+                if props.extra.boardAppId != "",
+                   props.extra.boardRegion != "" {
+                    delegate?.onInitEnable()
                 }
-            } else if grantUsers.count != 0 {
-                grantUsers.removeAll()
-                delegate?.onGrantUsersChanged(grantUsers: grantUsers)
+                if props.extra.boardId != "",
+                   props.extra.boardToken != "" {
+                    delegate?.onJoinEnable()
+                }
+                
             }
         }
     }
@@ -145,7 +152,7 @@ class AgoraWhiteboardWidgetDT {
         return wkConfig
     }
     
-    func getWhiteSDKConfig() -> WhiteSdkConfiguration? {
+    func getWhiteSDKConfigToInit() -> WhiteSdkConfiguration? {
         guard let props = properties else {
             return nil
         }
@@ -164,7 +171,7 @@ class AgoraWhiteboardWidgetDT {
         return config
     }
     
-    func getWhiteRoomConfig() -> WhiteRoomConfig? {
+    func getWhiteRoomConfigToJoin() -> WhiteRoomConfig? {
         guard let props = properties else {
             return nil
         }

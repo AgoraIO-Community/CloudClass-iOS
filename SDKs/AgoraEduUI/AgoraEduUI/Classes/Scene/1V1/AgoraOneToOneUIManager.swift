@@ -160,7 +160,7 @@ private extension AgoraOneToOneUIManager {
         tabSelectView = v
         
         rightContentView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.bottom.right().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
         }
@@ -176,7 +176,7 @@ private extension AgoraOneToOneUIManager {
     
     func createPadViews() {
         rightContentView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view)
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.bottom.right().equalTo()(0)
             make?.width.equalTo()(340)
         }
@@ -204,89 +204,6 @@ private extension AgoraOneToOneUIManager {
             }
         }
         chatController = controller
-        boardController?.joinBoard()
-    }
-}
-
-// MARK: - Layout
-private extension AgoraOneToOneUIManager {
-    func boardControllerLayout(isFullScreen: Bool = false,
-                               needAnimation: Bool = false) {
-        defer {
-            if needAnimation {
-                UIView.animate(withDuration: TimeInterval.agora_animation) { [unowned self] in
-                    self.view.layoutIfNeeded()
-                }
-            } else {
-                view.layoutIfNeeded()
-            }
-        }
-        
-        let isTraditional = UIDevice.current.isTraditionalChineseLanguage
-        
-        boardController.view.mas_remakeConstraints { [unowned self] make in
-            let space: CGFloat = 12
-            
-            let rightSpace: CGFloat = (isFullScreen ? 0 : space)
-            let leftSpace: CGFloat = (isFullScreen ? 0 : space)
-            let bottomSpace: CGFloat = (isFullScreen ? 0 : space)
-            let topSpace: CGFloat = (isFullScreen ? 0 : space)
-            
-            // right
-            if isTraditional {
-                if #available(iOS 11.0, *) {
-                    make?.right.equalTo()(self.view.mas_safeAreaLayoutGuideRight)?.offset()(-rightSpace)
-                } else {
-                    make?.right.equalTo()(-rightSpace)
-                }
-            } else {
-                if isFullScreen {
-                    if #available(iOS 11.0, *) {
-                        make?.right.equalTo()(self.view.mas_safeAreaLayoutGuideRight)?.offset()(-rightSpace)
-                    } else {
-                        make?.right.equalTo()(-rightSpace)
-                    }
-                } else {
-                    make?.right.equalTo()(self.renderController.view.mas_left)?.offset()(-rightSpace)
-                }
-            }
-            
-            // left
-            if isTraditional {
-                if isFullScreen {
-                    if #available(iOS 11.0, *) {
-                        make?.left.equalTo()(self.view.mas_safeAreaLayoutGuideLeft)?.offset()(leftSpace)
-                    } else {
-                        make?.left.equalTo()(leftSpace)
-                    }
-                } else {
-                    make?.left.equalTo()(self.renderController.view.mas_right)?.offset()(leftSpace)
-                }
-            } else {
-                if #available(iOS 11.0, *) {
-                    make?.left.equalTo()(self.view.mas_safeAreaLayoutGuideLeft)?.offset()(leftSpace)
-                } else {
-                    make?.left.equalTo()(leftSpace)
-                }
-            }
-            
-            // top
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(topSpace)
-            
-            // bottom
-            if #available(iOS 11.0, *) {
-                make?.bottom.equalTo()(self.view.mas_safeAreaLayoutGuideBottom)?.offset()(-bottomSpace)
-            } else {
-                make?.bottom.equalTo()(-bottomSpace)
-            }
-        }
-    }
-}
-// MARK: - AkBoardUIControllerDelegate
-extension AgoraOneToOneUIManager {
-    func onFullScreenMode(isFullScreen: Bool) {
-        boardControllerLayout(isFullScreen: isFullScreen,
-                              needAnimation: true)
     }
 }
 

@@ -35,10 +35,12 @@ struct AgoraWhiteboardProperties: Decodable {
 
 struct AgoraWhiteboardExtraInfo : Convertable {
     var useMultiViews: Bool? = true
-    var coursewareDirectory: String
+    var coursewareDirectory: String = NSSearchPathForDirectoriesInDomains(.cachesDirectory,
+                                                                          .userDomainMask,
+                                                                          true)[0].appending("AgoraDownload")
+    var autoFit: Bool = false
     var fonts: Dictionary<String,String>?
     var collectorStyles: Dictionary<String,String>?
-    var autoFit: Bool = false
 }
 
 @objcMembers class AgoraWhiteBoardTask: NSObject {

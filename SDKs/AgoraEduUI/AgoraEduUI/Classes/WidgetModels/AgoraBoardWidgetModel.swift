@@ -22,6 +22,7 @@ enum AgoraBoardWidgetSignal {
     case BoardGrantDataChanged(Array<String>?)
     case AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData)
     case BoardAudioMixingRequest(AgoraBoardWidgetAudioMixingRequestData)
+    case BoardInit
     
     var rawValue: Int {
         switch self {
@@ -31,6 +32,7 @@ enum AgoraBoardWidgetSignal {
         case .BoardGrantDataChanged(_):     return 3
         case .AudioMixingStateChanged(_):   return 4
         case .BoardAudioMixingRequest(_):   return 5
+        case .BoardInit:                     return 6
         }
     }
     
@@ -71,6 +73,8 @@ enum AgoraBoardWidgetSignal {
             if let x = body as? AgoraBoardWidgetAudioMixingRequestData {
                 return .BoardAudioMixingRequest(x)
             }
+        case 6:
+            return .BoardInit
         default:
             break
         }
@@ -154,10 +158,10 @@ extension AgoraBoardWidgetSignal {
         var dic = [String: Any]()
         dic["signal"] = self.rawValue
         switch self {
-        case .JoinBoard:
-            break
         case .MemberStateChanged(let boardMemberState) :
             dic["body"] = boardMemberState.toDictionary()
+        case .BoardGrantDataChanged(let list):
+            dic["body"] = list
         case .AudioMixingStateChanged(let boardAudioMixingChangeData) :
             dic["body"] = boardAudioMixingChangeData
         case .BoardGrantDataChanged(let boardGrantData) :
