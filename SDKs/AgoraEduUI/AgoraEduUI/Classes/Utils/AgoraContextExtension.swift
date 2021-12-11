@@ -53,9 +53,10 @@ extension AgoraRenderMemberModel {
         model.uuid = uuid
         model.name = name
         model.role = role == .teacher ? .teacher : .student
+        let reward = context.user.getUserRewardCount(userUuid: uuid)
+        model.rewardCount = reward
         let stream = context.stream.getStreamList(userUuid: uuid)?.first
         model.updateStream(stream)
-        context.user.getUserRewardCount(userUuid: uuid)
         return model
     }
     
@@ -63,46 +64,30 @@ extension AgoraRenderMemberModel {
         if let `stream` = stream {
             self.streamID = stream.streamUuid
             // audio
-            if stream.streamType == .both ||
-                stream.streamType == .audio {
-                switch stream.audioSourceState {
-                case .error:
-                    self.audioState = .broken
-                case .close:
-                    self.audioState = .off
-                case .open:
-                    self.audioState = .on
-                }
+            if stream.streamType.hasAudio,
+               stream.audioSourceState == .open {
+                self.audioState = .on
+            } else if stream.streamType.hasAudio,
+                      stream.audioSourceState == .close {
+                self.audioState = .off
+            } else if stream.streamType.hasAudio == false,
+                      stream.audioSourceState == .open {
+                self.audioState = .forbidden
             } else {
-                switch stream.audioSourceState {
-                case .error:
-                    self.audioState = .broken
-                case .close:
-                    self.audioState = .forbidden
-                case .open:
-                    self.audioState = .off
-                }
+                self.audioState = .off
             }
             // video
-            if stream.streamType == .both ||
-                stream.streamType == .video {
-                switch stream.videoSourceState {
-                case .error:
-                    self.videoState = .broken
-                case .close:
-                    self.videoState = .off
-                case .open:
-                    self.videoState = .on
-                }
+            if stream.streamType.hasVideo,
+               stream.videoSourceState == .open {
+                self.videoState = .on
+            } else if stream.streamType.hasVideo,
+                      stream.videoSourceState == .close {
+                self.videoState = .off
+            } else if stream.streamType.hasVideo == false,
+                      stream.videoSourceState == .open {
+                self.videoState = .forbidden
             } else {
-                switch stream.videoSourceState {
-                case .error:
-                    self.videoState = .broken
-                case .close:
-                    self.videoState = .forbidden
-                case .open:
-                    self.videoState = .off
-                }
+                self.videoState = .off
             }
         } else {
             self.streamID = nil

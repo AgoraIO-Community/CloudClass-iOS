@@ -182,6 +182,16 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
         }
     }
     
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operator: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        if user.role == .teacher {
+            teacherModel = nil
+        } else if user.role == .student {
+            studentModel = nil
+        }
+    }
+    
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operator: AgoraEduContextUserInfo) {
@@ -237,12 +247,13 @@ private extension AgoraOneToOneRenderUIController {
                 make?.top.equalTo()(0)
                 make?.centerX.equalTo()(0)
                 make?.width.equalTo()(view)
-                make?.height.equalTo()(view.mas_width)?.multipliedBy()(190.0/340.0)
+                make?.height.equalTo()(view.mas_width)?.multipliedBy()(224.0/137.0)
             }
             studentView.mas_remakeConstraints { make in
                 make?.top.equalTo()(teacherView.mas_bottom)?.offset()(2)
                 make?.centerX.equalTo()(0)
                 make?.width.height().equalTo()(teacherView)
+                make?.bottom.equalTo()(0)
             }
         } else {
             teacherView.mas_remakeConstraints { make in

@@ -19,8 +19,6 @@ import AgoraWidget
     /// 视图部分，支持feature的UI交互显示
     /** 工具栏*/
     private var toolsView: AgoraRoomToolstView!
-    /** 画笔工具*/
-    private var brushToolButton: AgoraRoomToolZoomButton!
     /// 控制器部分，除了视图显示，还包含和SDK之间的事件及数据交互
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
@@ -38,7 +36,7 @@ import AgoraWidget
         return vc
     }()
     /** 画板工具 控制器*/
-    private lazy var brushToolsViewController: AgoraBoardToolsUIController = {
+    private lazy var brushToolsController: AgoraBoardToolsUIController = {
         let vc = AgoraBoardToolsUIController(context: contextPool)
         vc.delegate = self
         self.addChild(vc)
@@ -74,8 +72,6 @@ import AgoraWidget
         super.viewDidLoad()
         self.createViews()
         self.createConstrains()
-        self.contextPool.user.registerEventHandler(self)
-        self.contextPool.monitor.registerMonitorEventHandler(self)
         
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
@@ -102,68 +98,14 @@ import AgoraWidget
     public override func didClickCtrlMaskView() {
         super.didClickCtrlMaskView()
         toolsView.deselectAll()
-        brushToolButton.isSelected = false
-    }
-}
-
-// MARK: - Actions
-extension AgoraLectureUIManager {
-    @objc func onClickBrushTools(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
-        if sender.isSelected {
-            toolsView.deselectAll()
-            ctrlView = brushToolsViewController.view
-            ctrlView?.mas_makeConstraints { make in
-                make?.right.equalTo()(brushToolButton.mas_left)?.offset()(-7)
-                make?.bottom.equalTo()(brushToolButton)?.offset()(-10)
-            }
-        } else {
-            ctrlView = nil
-        }
-    }
-}
-
-// MARK: - AgoraEduMonitorHandler
-extension AgoraLectureUIManager: AgoraEduMonitorHandler {
-    // 连接状态
-    func onLocalConnectionUpdated(_ state: AgoraEduContextConnectionState) {
-        switch state {
-        case .aborted:
-            // 踢出
-            AgoraLoading.hide()
-            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
-            contextPool.room.leaveRoom()
-        case .connecting:
-            AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
-        case .disconnected, .reconnecting:
-            AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
-        case .connected:
-            AgoraLoading.hide()
-        }
-    }
-}
-
-// MARK: - AgoraEduUserHandler
-extension AgoraLectureUIManager: AgoraEduUserHandler {
-    public func onLocalUserKickedOut() {
-        AgoraAlert()
-            .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
-            .setMessage(AgoraKitLocalizedString("KickOutText"))
-            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
-            }))
-            .show(in: self)
-    }
-    
-    func onShowUserReward(_ user: AgoraEduContextUserInfo) {
-        
+        brushToolsController.button.isSelected = false
     }
 }
 
 // MARK: - AgoraToolListViewDelegate
 extension AgoraLectureUIManager: AgoraRoomToolsViewDelegate {
     func toolsViewDidSelectTool(_ tool: AgoraRoomToolstView.AgoraRoomToolType) {
-        brushToolButton.isSelected = false
+        brushToolsController.button.isSelected = false
         switch tool {
         case .setting:
             ctrlView = settingViewController.view
@@ -209,26 +151,18 @@ extension AgoraLectureUIManager: AgoraToolBoxUIControllerDelegate {
 
 // MARK: - AgoraBoardToolsUIControllerDelegate
 extension AgoraLectureUIManager: AgoraBoardToolsUIControllerDelegate {
-    func brushToolsViewDidBrushChanged(_ tool: AgoraBoardToolItem) {
-        brushToolButton.setImage(tool.image(self))
-    }
-    
     func onShowBrushTools(isShow: Bool) {
-        
-    }
-}
-
-// MARK: - PaintingBoardUIControllerDelegate
-extension AgoraLectureUIManager: AgoraPaintingBoardUIControllerDelegate {
-    func controller(_ controller: AgoraPaintingBoardUIController,
-                    didUpdateBoard permission: Bool) {
-        // 当白板变为未授权时，弹窗取消
-        if !permission,
-           let view = ctrlView,
-           view == brushToolsViewController.view {
+        if isShow {
+            toolsView.deselectAll()
+            handsUpController.deselect()
+            ctrlView = brushToolsController.view
+            ctrlView?.mas_makeConstraints { make in
+                make?.right.equalTo()(brushToolsController.button.mas_left)?.offset()(-7)
+                make?.bottom.equalTo()(brushToolsController.button)?.offset()(-10)
+            }
+        } else {
             ctrlView = nil
         }
-        brushToolButton.isHidden = !permission
     }
 }
 
@@ -236,7 +170,7 @@ extension AgoraLectureUIManager: AgoraPaintingBoardUIControllerDelegate {
 extension AgoraLectureUIManager: AgoraHandsUpUIControllerDelegate {
     func onShowHandsUpList(_ view: UIView) {
         toolsView.deselectAll()
-        brushToolButton.isSelected = false
+        brushToolsController.button.isSelected = false
         ctrlView = view
         view.mas_makeConstraints { make in
             make?.bottom.equalTo()(handsUpController.view)
@@ -276,27 +210,20 @@ private extension AgoraLectureUIManager {
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
-        brushToolButton = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
-                                                        y: 0,
-                                                        width: 44,
-                                                        height: 44))
-        brushToolButton.isHidden = true
-        brushToolButton.setImage(AgoraUIImage(object: self,
-                                              name: "ic_brush_pencil"))
-        brushToolButton.addTarget(self,
-                                  action: #selector(onClickBrushTools(_:)),
-                                  for: .touchUpInside)
-        view.addSubview(brushToolButton)
-        
-        toolsView = AgoraRoomToolstView(frame: .zero)
-        toolsView.tools = [.setting, .toolBox, .nameRoll]
-        toolsView.delegate = self
-        view.addSubview(toolsView)
+        brushToolsController = AgoraBoardToolsUIController(context: contextPool)
+        brushToolsController.delegate = self
+        self.addChild(brushToolsController)
+        view.addSubview(brushToolsController.button)
         
         handsUpController = AgoraHandsUpUIController(context: contextPool)
         handsUpController.delegate = self
-        addChild(handsUpController)
+        self.addChild(handsUpController)
         view.addSubview(handsUpController.view)
+        
+        toolsView = AgoraRoomToolstView(frame: view.bounds)
+        toolsView.delegate = self
+        toolsView.tools = [.setting, .message]
+        contentView.addSubview(toolsView)
     }
     
     func createConstrains() {
@@ -321,18 +248,18 @@ private extension AgoraLectureUIManager {
             make?.right.equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(112))
         }
-        brushToolButton.mas_makeConstraints { make in
+        brushToolsController.button.mas_makeConstraints { make in
             make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
             make?.bottom.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
             make?.width.height().equalTo()(36)
         }
         handsUpController.view.mas_makeConstraints { make in
             make?.width.height().equalTo()(36)
-            make?.centerX.equalTo()(brushToolButton)
-            make?.bottom.equalTo()(brushToolButton.mas_top)?.offset()(-8)
+            make?.centerX.equalTo()(brushToolsController.button)
+            make?.bottom.equalTo()(brushToolsController.button.mas_top)?.offset()(-8)
         }
         toolsView.mas_makeConstraints { make in
-            make?.right.equalTo()(brushToolButton)
+            make?.right.equalTo()(brushToolsController.button)
             make?.bottom.equalTo()(handsUpController.view.mas_top)?.offset()(-8)
         }
     }

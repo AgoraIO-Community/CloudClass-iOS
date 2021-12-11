@@ -30,8 +30,6 @@ class AgoraOneToOneStateUIController: UIViewController {
     private var settingButton: UIButton!
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
-    /** 课堂状态*/
-    private var classState: AgoraEduContextClassState = .before
     /** 房间计时器*/
     private var timer: Timer?
     /** 房间时间信息*/
@@ -78,7 +76,8 @@ extension AgoraOneToOneStateUIController {
     func setup() {
         self.titleLabel.text = self.contextPool.room.getRoomInfo().roomName
         let info = self.contextPool.room.getClassInfo()
-        self.timeInfo = AgoraClassTimeInfo(startTime: info.startTime,
+        self.timeInfo = AgoraClassTimeInfo(state: info.state,
+                                           startTime: info.startTime,
                                            duration: info.duration * 1000,
                                            closeDelay: info.closeDelay * 1000)
     }
@@ -133,22 +132,16 @@ extension AgoraOneToOneStateUIController {
             return
         }
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
-        switch self.classState {
+        switch info.state {
         case .before:
             timeLabel.textColor = UIColor(rgb: 0x677386)
-            let time = realTime - info.startTime
-            let text = AgoraUILocalizedString("ClassAfterStartText",
-                                              object: self)
-            timeLabel.text = text + timeString(from: time)
-            // 事件
-            let countDown = info.closeDelay + info.duration - time
-            if countDown == 5 * 60 + info.closeDelay {
-                let strStart = AgoraUILocalizedString("ClassEndWarningStartText",
-                                                      object: self)
-                let strMid = "5"
-                let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
-                                                    object: self)
-                AgoraToast.toast(msg: strStart + strMid + strEnd)
+            if info.startTime == 0 {
+                timeLabel.text = "title_before_class".ag_localizedIn("AgoraEduUI")
+            } else {
+                let time = info.startTime - realTime
+                let text = AgoraUILocalizedString("ClassBeforeStartText",
+                                                  object: self)
+                timeLabel.text = text + timeString(from: time)
             }
         case .after:
             timeLabel.textColor = .red
@@ -178,18 +171,32 @@ extension AgoraOneToOneStateUIController {
             }
         case .during:
             timeLabel.textColor = UIColor(rgb: 0x677386)
-            let time = info.startTime - realTime
-            let text = AgoraUILocalizedString("ClassBeforeStartText",
+            let time = realTime - info.startTime
+            let text = AgoraUILocalizedString("ClassAfterStartText",
                                               object: self)
             timeLabel.text = text + timeString(from: time)
+            // 事件
+            let countDown = info.closeDelay + info.duration - time
+            if countDown == 5 * 60 + info.closeDelay {
+                let strStart = AgoraUILocalizedString("ClassEndWarningStartText",
+                                                      object: self)
+                let strMid = "5"
+                let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
+                                                    object: self)
+                AgoraToast.toast(msg: strStart + strMid + strEnd)
+            }
         }
     }
 }
 
 extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
     
-    func onClassState(_ state: AgoraEduContextClassState) {
-        self.classState = state
+    func onClassStateUpdated(state: AgoraEduContextClassState) {
+        let info = self.contextPool.room.getClassInfo()
+        self.timeInfo = AgoraClassTimeInfo(state: info.state,
+                                           startTime: info.startTime,
+                                           duration: info.duration * 1000,
+                                           closeDelay: info.closeDelay * 1000)
     }
     
     func onRoomClosed() {

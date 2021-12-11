@@ -6,7 +6,10 @@
 //
 
 import UIKit
+import AudioToolbox
 import AgoraEduContext
+import AgoraUIBaseViews
+import AgoraUIEduBaseViews
 
 private let kItemGap: CGFloat = AgoraFit.scale(2)
 private let kItemMaxCount: CGFloat = 4
@@ -43,6 +46,7 @@ class AgoraStudentsRenderUIController: UIViewController {
         contextPool.media.registerMediaEventHandler(self)
     }
 }
+// MARK: - Private
 private extension AgoraStudentsRenderUIController {
     func setup() {
         if let students = contextPool.user.getCoHostList()?.filter({$0.role == .student}) {
@@ -73,6 +77,41 @@ private extension AgoraStudentsRenderUIController {
         self.leftButton.isHidden = pageEnable
         self.rightButton.isHidden = pageEnable
         collectionView.reloadData()
+    }
+    
+    func showRewardAnimation() {
+        guard let b = Bundle.ag_compentsBundleWithClass(self.classForCoder),
+              let url = b.url(forResource: "reward", withExtension: "gif"),
+              let data = try? Data(contentsOf: url) else {
+            return
+        }
+        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
+        animatedImage?.loopCount = 1
+        let imageView = AgoraFLAnimatedImageView()
+        imageView.animatedImage = animatedImage
+        imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
+            imageView?.removeFromSuperview()
+        }
+        if let window = UIApplication.shared.keyWindow {
+            window.addSubview(imageView)
+            imageView.mas_makeConstraints { make in
+                make?.center.equalTo()(0)
+                make?.width.equalTo()(AgoraFit.scale(238))
+                make?.height.equalTo()(AgoraFit.scale(238))
+            }
+        }
+        // sounds
+        guard let rewardUrl = b.url(forResource: "reward", withExtension: "mp3") else {
+            return
+        }
+        var soundId: SystemSoundID = 0;
+        AudioServicesCreateSystemSoundID(rewardUrl as CFURL,
+                                         &soundId);
+        AudioServicesAddSystemSoundCompletion(soundId, nil, nil, {
+            (soundId, clientData) -> Void in
+            AudioServicesDisposeSystemSoundID(soundId)
+        }, nil)
+        AudioServicesPlaySystemSound(soundId)
     }
 }
 // MARK: - Action
@@ -123,18 +162,14 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
     
     func onUserHandsWave(user: AgoraEduContextUserInfo,
                          duration: Int) {
-        for model in self.dataSource {
-            if user.userUuid == model.uuid {
-                model.isHandsUp = true
-            }
+        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+            model.isHandsUp = true
         }
     }
     
     func onUserHandsDown(user: AgoraEduContextUserInfo) {
-        for model in self.dataSource {
-            if user.userUuid == model.uuid {
-                model.isHandsUp = false
-            }
+        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+            model.isHandsUp = false
         }
     }
     
@@ -146,6 +181,7 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
                 model.rewardCount = rewardCount
             }
         }
+        showRewardAnimation()
     }
 }
 // MARK: - AgoraEduStreamHandler

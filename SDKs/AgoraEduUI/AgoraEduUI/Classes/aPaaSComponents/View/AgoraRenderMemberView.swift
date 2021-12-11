@@ -50,7 +50,7 @@ class AgoraRenderMemberModel {
     }
     var videoState: AgoraRenderMediaState = .on {
         didSet {
-            if audioState != oldValue {
+            if videoState != oldValue {
                 self.onUpdateVideoState?(videoState)
             }
         }
@@ -148,7 +148,13 @@ class AgoraRenderMemberView: UIView {
         }
     }
     
-    private var memberModel: AgoraRenderMemberModel?
+    private var memberModel: AgoraRenderMemberModel? {
+        didSet {
+            if memberModel == nil {
+                resetViewState()
+            }
+        }
+    }
     
     public var defaultRole: AgoraRenderMemberModel.AgoraRenderRole = .student {
         didSet {
@@ -180,10 +186,25 @@ class AgoraRenderMemberView: UIView {
         if let newModel = model, newModel.uuid != memberModel?.uuid {
             self.registerNewModel(model: newModel)
         }
+        memberModel = model
     }
 }
 // MARK: - Private
 private extension AgoraRenderMemberView {
+    func resetViewState() {
+        stateImageView.image = UIImage.ag_imageNamed("ic_member_no_user", in: "AgoraEduUI")
+        if defaultRole == .student {
+            stateLabel.text = "render_state_student_off".ag_localizedIn("AgoraEduUI")
+        } else {
+            stateLabel.text = "render_state_teacher_off".ag_localizedIn("AgoraEduUI")
+        }
+        micView.setState(.off)
+        self.nameLabel.text = ""
+        self.videoView.isHidden = true
+        self.rewardLabel.isHidden = true
+        self.rewardImageView.isHidden = true
+    }
+    
     func resignOldModel(model: AgoraRenderMemberModel) {
         if let renderID = model.streamID {
             self.delegate?.memberViewCancelRender(memberView: self,
@@ -199,6 +220,8 @@ private extension AgoraRenderMemberView {
     }
     
     func registerNewModel(model: AgoraRenderMemberModel) {
+        self.micView.isHidden = false
+        self.nameLabel.isHidden = false
         // 赋值
         self.updateName(name: model.name)
         self.updateVolume(volume: model.volume)
@@ -317,6 +340,7 @@ private extension AgoraRenderMemberView {
         
         videoView = UIView(frame: .zero)
         videoView.backgroundColor = .clear
+        videoView.isHidden = true
         addSubview(videoView)
         
         nameLabel = UILabel()
@@ -332,9 +356,11 @@ private extension AgoraRenderMemberView {
         addSubview(micView)
         
         rewardImageView = UIImageView(image: UIImage.ag_imageNamed("ic_member_reward", in: "AgoraEduUI"))
+        rewardImageView.isHidden = true
         addSubview(rewardImageView)
         
         rewardLabel = UILabel()
+        rewardLabel.isHidden = true
         rewardLabel.textColor = .white
         rewardLabel.font = UIFont.systemFont(ofSize: 10)
         addSubview(rewardLabel)

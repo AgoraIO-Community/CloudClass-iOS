@@ -102,7 +102,6 @@ import UIKit
             self.toolsView.tools = [.setting, .message]
         }
         self.contextPool.user.registerEventHandler(self)
-        self.contextPool.monitor.registerMonitorEventHandler(self)
         
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in

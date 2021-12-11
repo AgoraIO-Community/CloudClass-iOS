@@ -22,13 +22,14 @@ import Masonry
     private var rightContentView: UIView!
     /** 白板 控制器*/
     private var boardController: AgoraBoardUIController!
+    /** 画板工具 控制器*/
+    private var brushToolsController: AgoraBoardToolsUIController!
     /** 聊天 控制器*/
     private var chatController: AgoraChatUIController?
     /** 屏幕分享 控制器*/
     private var screenSharingController: AgoraScreenSharingUIController!
     
     private var tabSelectView: AgoraOneToOneTabView?
-    
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
@@ -82,16 +83,17 @@ import Masonry
     public override func didClickCtrlMaskView() {
         super.didClickCtrlMaskView()
         stateController.deSelect()
+        brushToolsController.button.isSelected = false
     }
 }
-
+// MARK: - AgoraOneToOneTabViewDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
     func onChatTabSelectChanged(isSelected: Bool) {
         chatController?.view.isHidden = !isSelected
     }
 }
 
-// Mark: - AgoraOneToOneStateUIControllerDelegate
+// MARK: - AgoraOneToOneStateUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
     func onSettingSelected(isSelected: Bool) {
         if isSelected {
@@ -107,7 +109,22 @@ extension AgoraOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
         }
     }
 }
-// Mark: - Creations
+// MARK: - AgoraBoardToolsUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraBoardToolsUIControllerDelegate {
+    func onShowBrushTools(isShow: Bool) {
+        if isShow {
+            stateController.deSelect()
+            ctrlView = brushToolsController.view
+            ctrlView?.mas_makeConstraints { make in
+                make?.right.equalTo()(brushToolsController.button.mas_left)?.offset()(-7)
+                make?.bottom.equalTo()(brushToolsController.button)?.offset()(-10)
+            }
+        } else {
+            ctrlView = nil
+        }
+    }
+}
+// MARK: - Creations
 private extension AgoraOneToOneUIManager {
     func createViews() {
         stateController = AgoraOneToOneStateUIController(context: contextPool)
@@ -132,6 +149,11 @@ private extension AgoraOneToOneUIManager {
         screenSharingController = AgoraScreenSharingUIController(context: contextPool)
         addChild(screenSharingController)
         contentView.addSubview(screenSharingController.view)
+        
+        brushToolsController = AgoraBoardToolsUIController(context: contextPool)
+        brushToolsController.delegate = self
+        self.addChild(brushToolsController)
+        view.addSubview(brushToolsController.button)
     }
     
     func createConstrains() {
@@ -139,13 +161,16 @@ private extension AgoraOneToOneUIManager {
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(23))
         }
-        
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(3))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(3))
         }
-        
+        brushToolsController.button.mas_makeConstraints { make in
+            make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
+            make?.bottom.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
+            make?.width.height().equalTo()(36)
+        }
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(3)
@@ -178,7 +203,7 @@ private extension AgoraOneToOneUIManager {
         rightContentView.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.bottom.right().equalTo()(0)
-            make?.width.equalTo()(340)
+            make?.width.equalTo()(AgoraFit.scale(224))
         }
         renderController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
@@ -194,7 +219,7 @@ private extension AgoraOneToOneUIManager {
         
         if UIDevice.current.isPad {
             controller.view.mas_makeConstraints { make in
-                make?.top.equalTo()(renderController.view.mas_bottom)
+                make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
                 make?.left.right().bottom().equalTo()(0)
             }
         } else {

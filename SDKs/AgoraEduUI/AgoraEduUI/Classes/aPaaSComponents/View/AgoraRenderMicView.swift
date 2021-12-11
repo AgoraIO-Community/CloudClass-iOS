@@ -34,7 +34,7 @@ class AgoraRenderMicView: UIView {
         guard micState == .on else {
             return
         }
-        animaView.isHidden = value > 30
+        animaView.isHidden = value > 60
     }
     
     public func setState(_ state: AgoraRenderMicViewState) {

@@ -53,7 +53,7 @@ public class AgoraToast: NSObject {
             }
         }
         tipsViews.append(tipsView)
-        if tipsViews.count > 5 {
+        if tipsViews.count > 3 {
             self.tipsViews.first?.stop()
         }
         tipsView.start()

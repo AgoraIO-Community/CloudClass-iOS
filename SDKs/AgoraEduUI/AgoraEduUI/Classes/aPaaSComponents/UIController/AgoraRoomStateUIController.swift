@@ -12,6 +12,7 @@ import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
 struct AgoraClassTimeInfo {
+    var state: AgoraEduContextClassState
     var startTime: Int64
     var duration: Int64
     var closeDelay: Int64
@@ -24,8 +25,6 @@ class AgoraRoomStateUIController: UIViewController {
     public var themeColor: UIColor?
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
-    /** 课堂状态*/
-    private var classState: AgoraEduContextClassState = .before
     /** 房间计时器*/
     private var timer: Timer?
     /** 房间时间信息*/
@@ -56,6 +55,7 @@ class AgoraRoomStateUIController: UIViewController {
         })
         contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
+        contextPool.user.registerEventHandler(self)
     }
 }
 
@@ -64,7 +64,8 @@ private extension AgoraRoomStateUIController {
     func setup() {
         self.stateView.titleLabel.text = self.contextPool.room.getRoomInfo().roomName
         let info = self.contextPool.room.getClassInfo()
-        self.timeInfo = AgoraClassTimeInfo(startTime: info.startTime,
+        self.timeInfo = AgoraClassTimeInfo(state: info.state,
+                                           startTime: info.startTime,
                                            duration: info.duration * 1000,
                                            closeDelay: info.closeDelay * 1000)
     }
@@ -73,8 +74,9 @@ private extension AgoraRoomStateUIController {
         guard let info = self.timeInfo else {
             return
         }
+        
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
-        switch self.classState {
+        switch info.state {
         case .before:
             if themeColor != nil {
                 stateView.timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
@@ -158,6 +160,19 @@ private extension AgoraRoomStateUIController {
         }
     }
 }
+// MARK: - AgoraEduUserHandler
+extension AgoraRoomStateUIController: AgoraEduUserHandler {
+    func onLocalUserKickedOut() {
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
+            .setMessage(AgoraKitLocalizedString("KickOutText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.contextPool.room.leaveRoom()
+            }))
+            .show(in: self)
+    }
+}
+
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
@@ -165,7 +180,11 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     }
     
     func onClassStateUpdated(state: AgoraEduContextClassState) {
-        self.classState = state
+        let info = self.contextPool.room.getClassInfo()
+        self.timeInfo = AgoraClassTimeInfo(state: info.state,
+                                           startTime: info.startTime,
+                                           duration: info.duration * 1000,
+                                           closeDelay: info.closeDelay * 1000)
     }
     
     func onRoomClosed() {
@@ -192,6 +211,22 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         case .bad:
             self.stateView.setNetworkState(.bad)
         default: break
+        }
+    }
+    
+    func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
+        switch state {
+        case .aborted:
+            // 踢出
+            AgoraLoading.hide()
+            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
+            contextPool.room.leaveRoom()
+        case .connecting:
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
+        case .disconnected, .reconnecting:
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
+        case .connected:
+            AgoraLoading.hide()
         }
     }
 }

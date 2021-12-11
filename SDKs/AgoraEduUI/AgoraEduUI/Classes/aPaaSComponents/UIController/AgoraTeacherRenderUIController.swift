@@ -10,11 +10,11 @@ import AgoraEduContext
 
 class AgoraTeacherRenderUIController: UIViewController {
     
-    var renderView: AgoraRenderMemberView!
+    private var renderView: AgoraRenderMemberView!
 
-    var contextPool: AgoraEduContextPool!
+    private var contextPool: AgoraEduContextPool!
     
-    var teacherModel: AgoraRenderMemberModel? {
+    private var teacherModel: AgoraRenderMemberModel? {
         didSet {
             self.renderView.setModel(model: teacherModel, delegate: self)
         }

@@ -155,12 +155,12 @@ private extension AgoraUserListUIController {
         let s = contextPool.stream.getStreamList(userUuid: model.uuid)?.first
         model.camera.isOn = (s?.streamType == .both || s?.streamType == .video)
         model.mic.isOn = (s?.streamType == .both || s?.streamType == .audio)
-        model.camera.enable = (isLocalUser && isCoHost) || (isAdmin && isCoHost && s?.videoSourceState != .close)
-        model.mic.enable = (isLocalUser && isCoHost) || (isAdmin && isCoHost && s?.audioSourceState != .close)
+        model.camera.enable = false
+        model.mic.enable = false
         if resort {
-            tableView.reloadData()
-        } else {
             sort()
+        } else {
+            tableView.reloadData()
         }
     }
     
