@@ -44,7 +44,11 @@ class AgoraWhiteboardWidgetDT {
             }
             
             if globalState.grantUsers.count != oldValue.grantUsers.count {
-                delegate?.onLocalGrantedChangedForBoardHandle(localGranted: localGranted)
+                if globalState.grantUsers.contains(localUserInfo.userUuid) {
+                    delegate?.onLocalGrantedChangedForBoardHandle(localGranted: true)
+                    localGranted = true
+                }
+                
                 delegate?.onGrantUsersChanged(grantUsers: globalState.grantUsers)
             }
         }

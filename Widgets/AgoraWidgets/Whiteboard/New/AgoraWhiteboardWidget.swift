@@ -184,10 +184,8 @@ extension AgoraWhiteboardWidget {
             
             self.initCondition.needJoin = false
             
-            // TODO: temp
-            let state = AgoraWhiteboardGlobalState()
-            state.grantUsers = [self.dt.localUserInfo.userUuid]
-            self.dt.globalState = state
+            // 初始化完成，抛出当前状态
+            self.fireRoomStateChanged(room?.state)
         }
     }
     
