@@ -16,8 +16,14 @@ class AgoraRenderMemberModel {
         case on, off, forbidden, broken
     }
     
-    var uuid: String = ""
-    var name: String = ""
+    var uuid: String?
+    var name: String = "" {
+        didSet {
+            if name != oldValue {
+                self.onUpdateName?(name)
+            }
+        }
+    }
     var role: AgoraRenderRole = .student
     var volume: Int = 0 {
         didSet {
@@ -61,7 +67,8 @@ class AgoraRenderMemberModel {
             }
         }
     }
-    
+    /** 名字产生变化 注意使用weak*/
+    var onUpdateName: ((String) -> Void)?
     /** 音量产生变化 注意使用weak*/
     var onUpdateVolume: ((Int) -> Void)?
     /** 渲染产生变化 注意使用weak*/
@@ -139,17 +146,21 @@ private extension AgoraRenderMemberView {
     
     func registerNewModel(model: AgoraRenderMemberModel) {
         // 赋值
-        nameLabel.text = model.name
+        self.updateName(name: model.name)
         self.updateVolume(volume: model.volume)
         self.updateAudioState(state: model.audioState)
         self.updateVideoState(state: model.videoState)
         self.updateHandsUpState(isHandsUp: model.isHandsUp)
         self.updateRewardCount(count: model.rewardCount)
-        // 注册回调
+        
         if let renderID = model.streamID {
             self.delegate?.memberViewRender(memberView: self,
                                             in: self.videoView,
                                             renderID: renderID)
+        }
+        // 注册回调
+        model.onUpdateName = { [weak self] name in
+            self?.updateName(name: name)
         }
         model.onUpdateVolume = { [weak self] volume in
             self?.updateVolume(volume: volume)
@@ -180,6 +191,10 @@ private extension AgoraRenderMemberView {
         model.onUpdateRewardCount = { [weak self] count in
             self?.updateRewardCount(count: count)
         }
+    }
+    
+    func updateName(name: String) {
+        nameLabel.text = name
     }
     
     func updateVolume(volume: Int) {

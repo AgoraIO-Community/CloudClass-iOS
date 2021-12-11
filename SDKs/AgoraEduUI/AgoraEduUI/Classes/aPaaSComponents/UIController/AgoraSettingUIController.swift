@@ -65,26 +65,10 @@ class AgoraSettingUIController: UIViewController {
         contextPool.media.registerMediaEventHandler(self)
     }
 }
+// MARK: - Private
 private extension AgoraSettingUIController {
     func setup() {
-        frontCamButton.isSelected = true
-        
-        let cameras = contextPool.media.getLocalDevices(deviceType: .camera)
-        for camera in cameras {
-            if camera.deviceName.contains(kFrontCameraStr) {
-                contextPool.media.getLocalDeviceState(device: camera) { state in
-                    frontCamButton.isSelected = (state == .open)
-                    backCamButton.isSelected = !(state == .open)
-                } failure: { error in
-                }
-            } else if camera.deviceName.contains(kBackCameraStr) {
-                contextPool.media.getLocalDeviceState(device: camera) { state in
-                    backCamButton.isSelected = (state == .open)
-                    frontCamButton.isSelected = !(state == .open)
-                } failure: { error in
-                }
-            }
-        }
+        updateCameraState()
         if let d = contextPool.media.getLocalDevices(deviceType: .mic).first {
             contextPool.media.getLocalDeviceState(device: d) { state in
                 micSwitch.isOn = (state == .open)
@@ -98,13 +82,39 @@ private extension AgoraSettingUIController {
             }
         }
     }
+    
+    func updateCameraState() {
+        cameraSwitch.isOn = false
+        let cameras = contextPool.media.getLocalDevices(deviceType: .camera)
+        for camera in cameras {
+            if camera.deviceName.contains(kFrontCameraStr) {
+                contextPool.media.getLocalDeviceState(device: camera) { state in
+                    frontCamButton.isSelected = (state == .open)
+                    backCamButton.isSelected = !(state == .open)
+                    if state == .open {
+                        cameraSwitch.isOn = true
+                    }
+                } failure: { error in
+                }
+            } else if camera.deviceName.contains(kBackCameraStr) {
+                contextPool.media.getLocalDeviceState(device: camera) { state in
+                    backCamButton.isSelected = (state == .open)
+                    frontCamButton.isSelected = !(state == .open)
+                    if state == .open {
+                        cameraSwitch.isOn = true
+                    }
+                } failure: { error in
+                }
+            }
+        }
+    }
 }
 
 extension AgoraSettingUIController: AgoraEduMediaHandler {
     func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
                                    state: AgoraEduContextDeviceState) {
         if device.deviceType == .camera {
-            cameraSwitch.isOn = (state == .open)
+            updateCameraState()
         } else if device.deviceType == .mic {
             micSwitch.isOn = (state == .open)
         } else if device.deviceType == .speaker {
@@ -167,7 +177,8 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickFrontCamera(_ sender: UIButton) {
-        guard sender.isSelected == false else {
+        guard sender.isSelected == false,
+              cameraSwitch.isOn == true else {
             return
         }
         sender.isSelected = true
@@ -179,7 +190,8 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickBackCamera(_ sender: UIButton) {
-        guard sender.isSelected == false else {
+        guard sender.isSelected == false,
+              cameraSwitch.isOn == true else {
             return
         }
         sender.isSelected = true

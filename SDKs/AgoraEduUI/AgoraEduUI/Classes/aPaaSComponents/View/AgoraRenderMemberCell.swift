@@ -14,8 +14,8 @@ class AgoraRenderMemberCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        layer.cornerRadius = AgoraFit.scale(2)
-        clipsToBounds = true
+        contentView.layer.cornerRadius = AgoraFit.scale(2)
+        contentView.clipsToBounds = true
         contentView.addSubview(renderView)
         renderView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)

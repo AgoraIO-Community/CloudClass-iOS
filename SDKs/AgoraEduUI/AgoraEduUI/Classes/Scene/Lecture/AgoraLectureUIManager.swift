@@ -29,7 +29,7 @@ import AgoraWidget
     /** 老师渲染 控制器*/
     private var teacherRenderController: AgoraTeacherRenderUIController!
     /** 白板的渲染 控制器*/
-    private var whiteBoardController: AgoraPaintingBoardUIController!
+    private var boardController: AgoraBoardUIController!
     /** 工具箱 控制器*/
     private lazy var toolBoxViewController: AgoraToolBoxUIController = {
         let vc = AgoraToolBoxUIController(context: contextPool)
@@ -254,10 +254,6 @@ private extension AgoraLectureUIManager {
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        whiteBoardController = AgoraPaintingBoardUIController(context: contextPool)
-        whiteBoardController.delegate = self
-        contentView.addSubview(whiteBoardController.view)
-        
         studentsRenderController = AgoraStudentsRenderUIController(context: contextPool)
         addChild(studentsRenderController)
         contentView.addSubview(studentsRenderController.view)
@@ -267,6 +263,14 @@ private extension AgoraLectureUIManager {
         teacherRenderController.view.clipsToBounds = true
         addChild(teacherRenderController)
         contentView.addSubview(teacherRenderController.view)
+        
+        boardController = AgoraBoardUIController(context: contextPool)
+        boardController.view.layer.cornerRadius = AgoraFit.scale(2)
+        boardController.view.borderWidth = 1
+        boardController.view.borderColor = UIColor(hex: 0xECECF1)
+        boardController.view.clipsToBounds = true
+        addChild(boardController)
+        contentView.addSubview(boardController.view)
         
         brushToolButton = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
                                                         y: 0,
@@ -296,7 +300,7 @@ private extension AgoraLectureUIManager {
             make?.top.left().right().equalTo()(stateController.view.superview)
             make?.height.equalTo()(20)
         }
-        whiteBoardController.view.mas_makeConstraints { make in
+        boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(465))
             make?.height.equalTo()(AgoraFit.scale(262))
@@ -304,8 +308,8 @@ private extension AgoraLectureUIManager {
         studentsRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.equalTo()(0)
-            make?.right.equalTo()(whiteBoardController.view)
-            make?.bottom.equalTo()(whiteBoardController.view.mas_top)?.offset()(AgoraFit.scale(-2))
+            make?.right.equalTo()(boardController.view)
+            make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-2))
         }
         teacherRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
@@ -314,8 +318,8 @@ private extension AgoraLectureUIManager {
             make?.height.equalTo()(AgoraFit.scale(112))
         }
         brushToolButton.mas_makeConstraints { make in
-            make?.right.equalTo()(whiteBoardController.view)?.offset()(AgoraFit.scale(-6))
-            make?.bottom.equalTo()(whiteBoardController.view)?.offset()(AgoraFit.scale(-6))
+            make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
+            make?.bottom.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
             make?.width.height().equalTo()(36)
         }
         handsUpController.view.mas_makeConstraints { make in
@@ -336,7 +340,7 @@ private extension AgoraLectureUIManager {
         contentView.addSubview(chatController.view)
         chatController.view.mas_makeConstraints { make in
             make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.left.equalTo()(whiteBoardController.view.mas_right)?.offset()(AgoraFit.scale(2))
+            make?.left.equalTo()(boardController.view.mas_right)?.offset()(AgoraFit.scale(2))
             make?.right.bottom().equalTo()(0)
         }
     }

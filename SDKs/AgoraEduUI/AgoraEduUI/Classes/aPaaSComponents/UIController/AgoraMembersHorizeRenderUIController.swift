@@ -339,8 +339,9 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
                                didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
         let u = dataSource[indexPath.row]
-        if let cell = collectionView.cellForItem(at: indexPath) {
-            delegate?.onClickMemberAt(view: cell, UUID: u.uuid)
+        if let cell = collectionView.cellForItem(at: indexPath),
+           let uuid = u.uuid {
+            delegate?.onClickMemberAt(view: cell, UUID: uuid)
         }
     }
     
@@ -367,12 +368,12 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
 // MARK: - Creations
 private extension AgoraMembersHorizeRenderUIController {
     func createViews() {
-        self.view.backgroundColor = .white
-        
         contentView = UIView()
         view.addSubview(contentView)
         
         teacherView = AgoraRenderMemberView(frame: .zero)
+        teacherView.layer.cornerRadius = AgoraFit.scale(2)
+        teacherView.clipsToBounds = true
         teacherView.isHidden = true
         contentView.addSubview(teacherView)
         let doubleTapTeacher = UITapGestureRecognizer(target: self,

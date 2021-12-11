@@ -219,11 +219,11 @@ extension AgoraHandsUpUIController: AgoraHandsUpDelayViewDelegate {
             }
             break
         case .free:
-            contextPool.user.handsDown {
-                
-            } failure: { error in
-                
-            }
+//            contextPool.user.handsDown {
+//
+//            } failure: { error in
+//
+//            }
             break
         case .counting: break
         default: break

@@ -27,7 +27,7 @@ import AgoraWidget
     /** 远程视窗渲染 控制器*/
     private var renderController: AgoraMembersHorizeRenderUIController!
     /** 白板的渲染 控制器*/
-    private var whiteBoardController: AgoraPaintingBoardUIController!
+    private var boardController: AgoraBoardUIController!
     /** 工具箱 控制器*/
     private lazy var toolBoxViewController: AgoraToolBoxUIController = {
         let vc = AgoraToolBoxUIController(context: contextPool)
@@ -272,14 +272,18 @@ private extension AgoraSmallUIManager {
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        whiteBoardController = AgoraPaintingBoardUIController(context: contextPool)
-        whiteBoardController.delegate = self
-        contentView.addSubview(whiteBoardController.view)
-        
         renderController = AgoraMembersHorizeRenderUIController(context: contextPool)
         addChild(renderController)
         contentView.addSubview(renderController.view)
-                
+        
+        boardController = AgoraBoardUIController(context: contextPool)
+        boardController.view.layer.cornerRadius = AgoraFit.scale(2)
+        boardController.view.borderWidth = 1
+        boardController.view.borderColor = UIColor(hex: 0xECECF1)
+        boardController.view.clipsToBounds = true
+        addChild(boardController)
+        contentView.addSubview(boardController.view)
+        
         brushToolButton = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
                                                                 y: 0,
                                                                 width: 44,
@@ -310,7 +314,7 @@ private extension AgoraSmallUIManager {
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
             make?.height.equalTo()(AgoraFit.scale(52))
         }
-        whiteBoardController.view.mas_makeConstraints { make in
+        boardController.view.mas_makeConstraints { make in
             make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
             make?.left.right().bottom().equalTo()(0)
         }
