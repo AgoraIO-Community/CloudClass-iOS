@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import AgoraUIEduBaseViews
+import AgoraUIBaseViews
 
 class AgoraRenderMemberModel {
     enum AgoraRenderRole {
@@ -105,6 +107,46 @@ class AgoraRenderMemberView: UIView {
     private var nameLabel: UILabel!
     /** 麦克风视图*/
     private var micView: AgoraRenderMicView!
+    /** 奖励*/
+    private var rewardImageView: UIImageView!
+    private var rewardLabel: UILabel!
+    /** 举手动画视图*/
+    private lazy var waveView: AgoraFLAnimatedImageView =  {
+        guard let bundle = Bundle.agora_bundle(object: self,
+                                               resource: "AgoraEduUI"),
+              let url = bundle.url(forResource: "hands_up_wave",
+                                   withExtension: "gif"),
+              let data = try? Data(contentsOf: url) else {
+            fatalError()
+        }
+            
+        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
+        animatedImage?.loopCount = 0
+        
+        let v = AgoraFLAnimatedImageView()
+        v.animatedImage = animatedImage
+        v.isHidden = true
+        self.addSubview(v)
+        v.mas_makeConstraints { make in
+            make?.width.height().equalTo()(self.mas_height)
+            make?.centerX.bottom().equalTo()(0)
+        }
+        return v
+    }()
+    
+    private var isWaving = false {
+        didSet {
+            if isWaving != oldValue {
+                if isWaving {
+                    waveView.startAnimating()
+                    waveView.isHidden = false
+                } else {
+                    waveView.stopAnimating()
+                    waveView.isHidden = true
+                }
+            }
+        }
+    }
     
     private var memberModel: AgoraRenderMemberModel?
     
@@ -147,6 +189,7 @@ private extension AgoraRenderMemberView {
             self.delegate?.memberViewCancelRender(memberView: self,
                                                   renderID: renderID)
         }
+        self.isWaving = false
         model.onUpdateVolume = nil
         model.onUpdateStreamID = nil
         model.onUpdateAudioState = nil
@@ -244,10 +287,16 @@ private extension AgoraRenderMemberView {
     }
     
     func updateHandsUpState(isHandsUp: Bool) {
-        
+        self.isWaving = isHandsUp
     }
     func updateRewardCount(count: Int) {
-        
+        rewardLabel.isHidden = count == 0
+        rewardImageView.isHidden = count == 0
+        if count < 99 {
+            rewardLabel.text = "x\(count)"
+        } else {
+            rewardLabel.text = "x99+"
+        }
     }
 }
 // MARK: - Creations
@@ -281,6 +330,14 @@ private extension AgoraRenderMemberView {
         
         micView = AgoraRenderMicView(frame: .zero)
         addSubview(micView)
+        
+        rewardImageView = UIImageView(image: UIImage.ag_imageNamed("ic_member_reward", in: "AgoraEduUI"))
+        addSubview(rewardImageView)
+        
+        rewardLabel = UILabel()
+        rewardLabel.textColor = .white
+        rewardLabel.font = UIFont.systemFont(ofSize: 10)
+        addSubview(rewardLabel)
     }
     
     func createConstrains() {
@@ -305,6 +362,16 @@ private extension AgoraRenderMemberView {
             make?.centerY.equalTo()(micView)
             make?.left.equalTo()(micView.mas_right)?.offset()(AgoraFit.scale(2))
             make?.right.lessThanOrEqualTo()(0)
+        }
+        rewardLabel.mas_makeConstraints { make in
+            make?.right.equalTo()(-2)
+            make?.width.greaterThanOrEqualTo()(15)
+            make?.top.equalTo()(5)
+        }
+        rewardImageView.mas_makeConstraints { make in
+            make?.centerY.equalTo()(rewardLabel)
+            make?.right.equalTo()(rewardLabel.mas_left)?.offset()(-2)
+            make?.width.height().equalTo()(10)
         }
     }
 }

@@ -254,9 +254,25 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
         }
     }
     
+    func onUserHandsWave(user: AgoraEduContextUserInfo,
+                         duration: Int) {
+        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+            model.isHandsUp = true
+        }
+    }
+    
+    func onUserHandsDown(user: AgoraEduContextUserInfo) {
+        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+            model.isHandsUp = false
+        }
+    }
+    
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
+        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+            model.rewardCount = rewardCount
+        }
         showRewardAnimation()
     }
 }

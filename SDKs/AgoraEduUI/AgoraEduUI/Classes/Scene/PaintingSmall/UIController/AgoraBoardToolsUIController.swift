@@ -273,8 +273,6 @@ class AgoraBoardToolsUIController: UIViewController {
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
-        contextPool.widget.add(self,
-                               widgetId: "netlessBoard")
     }
     
     required init?(coder: NSCoder) {
@@ -287,6 +285,8 @@ class AgoraBoardToolsUIController: UIViewController {
         
         createViews()
         createConstrains()
+        contextPool.widget.add(self,
+                               widgetId: "netlessBoard")
     }
     
     private func callbackItemUpdated() {
