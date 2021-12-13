@@ -40,6 +40,18 @@ extension WhiteRoomPhase {
             return .Disconnected
         }
     }
+    
+    var strValue: String {
+        switch self {
+        case .connecting:      return "Connecting"
+        case .connected:       return "Connected"
+        case .reconnecting:    return "Reconnecting"
+        case .disconnecting:   return "Disconnecting"
+        case .disconnected:    return "Disconnected"
+        default:
+            return "Disconnected"
+        }
+    }
 }
 
 extension WhiteCameraState {
@@ -49,6 +61,18 @@ extension WhiteCameraState {
         config.centerY = CGFloat(self.centerY)
         config.scale = CGFloat(self.scale)
         return config
+    }
+}
+
+extension WhiteReadonlyMemberState {
+    func toMemberState() -> WhiteMemberState {
+        var state = WhiteMemberState()
+        state.currentApplianceName = self.currentApplianceName
+        state.strokeColor = self.strokeColor
+        state.strokeWidth = self.strokeWidth
+        state.textSize = self.textSize
+        state.shapeType = self.shapeType
+        return state
     }
 }
 
@@ -111,7 +135,7 @@ extension AgoraBoardMemberState {
                   textSize: textSize)
     }
     
-    func toWhiteboard() -> WhiteMemberState {
+    func toWhiteboard(oriState: WhiteMemberState) -> WhiteMemberState {
         // TODO: 数据结构转换
         var memberState = WhiteMemberState()
         
@@ -131,7 +155,7 @@ extension AgoraBoardInteractionSignal {
         switch self {
         case .JoinBoard: break
         case .BoardPhaseChanged(let boardRoomPhase) :
-            dic["body"] = boardRoomPhase.toDictionary()
+            dic["body"] = boardRoomPhase.rawValue
         case .MemberStateChanged(let boardMemberState) :
             dic["body"] = boardMemberState.toDictionary()
         case .AudioMixingStateChanged(let boardAudioMixingChangeData) :
@@ -196,4 +220,20 @@ extension String {
 
 extension Array : Convertable where Element == String {
     
+}
+
+extension UIColor {
+    func getRGBAArr() -> Array<NSNumber> {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        self.getRed(&red,
+                    green: &green,
+                    blue: &blue,
+                    alpha: &alpha)
+        return [NSNumber(value: Int(red)),
+                NSNumber(value: Int(green)),
+                NSNumber(value: Int(blue))]
+    }
 }

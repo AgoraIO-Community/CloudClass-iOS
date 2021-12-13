@@ -50,10 +50,10 @@ struct AgoraWhiteboardExtraInfo : Convertable {
 }
 
 
-@objc class AgoraWhiteboardGlobalState: WhiteGlobalState {
+@objcMembers public class AgoraWhiteboardGlobalState: WhiteGlobalState {
     var materialList: [AgoraWhiteBoardTask]?
-    var grantUsers = [String]()
-    var follow: Bool = true
+    var currentSceneIndex: Int = 0
+    var grantUsers = Array<String>()
 }
 
 @objc class AgoraWhiteBoardCameraConfig : NSObject {

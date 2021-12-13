@@ -32,6 +32,7 @@ private extension AgoraBoardUIController {
             let boardWidget = contextPool.widget.create(boardConfig)
             contextPool.widget.add(self,
                                    widgetId: boardConfig.widgetId)
+            view.isUserInteractionEnabled = true
             view.addSubview(boardWidget.view)
             self.boardWidget = boardWidget
 

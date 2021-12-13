@@ -13,7 +13,6 @@ protocol AGBoardWidgetDTDelegate: NSObjectProtocol {
     func onLocalGrantedChangedForBoardHandle(localGranted: Bool)
     
     func onScenePathChanged(path: String)
-    func onFollowChanged(follow: Bool)
     func onGrantUsersChanged(grantUsers: [String]?)
     
     func onConfigComplete()
@@ -39,10 +38,6 @@ class AgoraWhiteboardWidgetDT {
     
     var globalState = AgoraWhiteboardGlobalState() {
         didSet {
-            if globalState.follow != oldValue.follow {
-                delegate?.onFollowChanged(follow: globalState.follow)
-            }
-            
             if globalState.grantUsers.count != oldValue.grantUsers.count {
                 if globalState.grantUsers.contains(localUserInfo.userUuid) {
                     delegate?.onLocalGrantedChangedForBoardHandle(localGranted: true)
@@ -53,6 +48,10 @@ class AgoraWhiteboardWidgetDT {
             }
         }
     }
+    
+    var currentMemberState: WhiteMemberState?
+    
+    var reconnectTime: Int = 0
     
     // from properties
     var localCameraConfigs = [String: AgoraWhiteBoardCameraConfig]()
@@ -79,6 +78,28 @@ class AgoraWhiteboardWidgetDT {
          localUserInfo: AgoraWidgetUserInfo) {
         self.extra = extra
         self.localUserInfo = localUserInfo
+    }
+    
+    func updateMemberState(state: AgoraBoardMemberState) {
+        if let tool = state.activeApplianceType {
+            currentMemberState?.currentApplianceName = tool.toWhiteboard()
+        }
+        
+        if let colors = state.strokeColor {
+            var stateColors = [NSNumber]()
+            colors.forEach { color in
+                stateColors.append(NSNumber(value: color))
+            }
+            currentMemberState?.strokeColor = stateColors
+        }
+        
+        if let strokeWidth = state.strokeWidth {
+            currentMemberState?.strokeWidth = NSNumber(value: strokeWidth)
+        }
+        
+        if let textSize = state.textSize {
+            currentMemberState?.textSize = NSNumber(value: textSize)
+        }
     }
     
     func getWKConfig() -> WKWebViewConfiguration {
@@ -152,7 +173,7 @@ class AgoraWhiteboardWidgetDT {
             return nil
         }
         let config = WhiteSdkConfiguration(app: props.extra.boardAppId)
-        config.enableIFramePlugin = true
+        config.enableIFramePlugin = false
         if #available(iOS 11.0, *) {
             let pptParams = WhitePptParams()
             pptParams.scheme = scheme

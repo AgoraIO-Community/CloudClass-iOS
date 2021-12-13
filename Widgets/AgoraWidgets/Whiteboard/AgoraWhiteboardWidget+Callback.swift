@@ -6,6 +6,7 @@
 //
 
 import Whiteboard
+import AgoraUIEduBaseViews
 
 extension AgoraWhiteboardWidget: WhiteRoomCallbackDelegate {
     public func fireRoomStateChanged(_ modifyState: WhiteRoomState!) {
@@ -14,8 +15,6 @@ extension AgoraWhiteboardWidget: WhiteRoomCallbackDelegate {
         }
         
         if let memberState = modifyState.memberState {
-            let agMember = AgoraBoardMemberState(memberState)
-            sendMessage(signal: .MemberStateChanged(agMember))
             return
         }
         
@@ -77,12 +76,22 @@ extension AgoraWhiteboardWidget: WhiteRoomCallbackDelegate {
     public func firePhaseChanged(_ phase: WhiteRoomPhase) {
         sendMessage(signal: .BoardPhaseChanged(phase.toWidget()))
         
-        if phase == .disconnected,
-           let `room` = room,
-           !room.disconnectedBySelf {
-            // 断线重连
-            joinWhiteboard()
+        log(.info,
+            content: "Whiteboard phase: \(phase.strValue)")
+        if phase == .connected {
+            AgoraLoading.hide()
         }
+    }
+    
+    public func fireDisconnectWithError(_ error: String!) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(dt.reconnectTime)) { [weak self] in
+            guard let `self` = self else {
+                return
+            }
+            
+            self.joinWhiteboard()
+        }
+        
     }
 }
 
@@ -127,31 +136,29 @@ extension AgoraWhiteboardWidget: AGBoardWidgetDTDelegate {
     func onConfigComplete() {
         initCondition.configComplete = true
     }
-
-    func onFollowChanged(follow: Bool) {
-        if follow {
-            room?.setViewMode(.follower)
-        } else {
-            room?.setViewMode(.freedom)
-        }
-    }
     
     func onGrantUsersChanged(grantUsers: [String]?) {
         sendMessage(signal: .BoardGrantDataChanged(grantUsers))
     }
     
     func onLocalGrantedChangedForBoardHandle(localGranted: Bool) {
+        room?.setViewMode(localGranted ? .freedom : .follower)
         room?.disableDeviceInputs(!localGranted)
-        room?.disableCameraTransform(!localGranted)
-        ifUseLocalCameraConfig()
         
         if localGranted != dt.localGranted {
             room?.setWritable(localGranted,
                               completionHandler: {[weak self] isWritable, error in
-                                self?.dt.localGranted = isWritable
+                                guard let `self` = self else {
+                                    return
+                                }
+                                self.dt.localGranted = isWritable
                                 if let error = error {
-                                    self?.log(.error,
+                                    self.log(.error,
                                               content: "Local Granted Handle error")
+                                } else {
+                                    self.room?.disableCameraTransform(!isWritable)
+                                    self.ifUseLocalCameraConfig()
+                                    self.room?.setViewMode(isWritable ? .freedom : .follower)
                                 }
                               })
         }
