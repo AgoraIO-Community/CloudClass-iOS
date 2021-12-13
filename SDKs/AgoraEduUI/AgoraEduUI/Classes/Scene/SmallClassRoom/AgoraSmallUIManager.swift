@@ -231,6 +231,8 @@ private extension AgoraSmallUIManager {
         toolsView.delegate = self
         toolsView.tools = [.setting, .nameRoll, .message]
         contentView.addSubview(toolsView)
+        // 花名册临时处理
+        let _ = nameRollController.view
     }
     
     func createConstrains() {

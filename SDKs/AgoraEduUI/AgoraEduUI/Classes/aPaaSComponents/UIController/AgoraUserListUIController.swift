@@ -8,6 +8,7 @@
 import AgoraUIEduBaseViews
 import AgoraEduContext
 import SwifterSwift
+import AgoraWidget
 import UIKit
 
 enum AgoraUserListFunction: Int {
@@ -62,6 +63,8 @@ class AgoraUserListUIController: UIViewController {
             return [.stage, .auth, .camera, .mic, .reward]
         }
     }()
+    
+    var boardUsers = [String]()
     /** SDK环境*/
     var contextPool: AgoraEduContextPool!
     
@@ -83,10 +86,12 @@ class AgoraUserListUIController: UIViewController {
         
         createViews()
         createConstrains()
-        setup()
         
         contextPool.user.registerEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
+        contextPool.room.registerRoomEventHandler(self)
+        contextPool.widget.add(self,
+                               widgetId: "netlessBoard")
     }
 }
 // MARK: - Private
@@ -145,8 +150,8 @@ private extension AgoraUserListUIController {
             isCoHost = true
         }
         model.stage.isOn = isCoHost
-        // TODO: 白板权限
-//                model.auth.isOn = user.boardGranted
+        
+        model.auth.isOn = boardUsers.contains(model.uuid)
         // enable
         model.stage.enable = isAdmin
         model.auth.enable = isAdmin
@@ -222,7 +227,34 @@ private extension AgoraUserListUIController {
         return pinyinString;
     }
 }
-
+// MARK: - AgoraWidgetMessageObserver
+extension AgoraUserListUIController: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String) {
+        guard widgetId == "netlessBoard",
+              let signal = message.toSignal() else {
+            return
+        }
+        switch signal {
+        case .BoardGrantDataChanged(let list):
+            if let userIDs = list {
+                self.boardUsers = userIDs
+                for model in dataSource {
+                    model.auth.isOn = userIDs.contains(model.uuid)
+                }
+                tableView.reloadData()
+            }
+        default:
+            break
+        }
+    }
+}
+// MARK: - AgoraEduRoomHandler
+extension AgoraUserListUIController: AgoraEduRoomHandler {
+    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        self.setup()
+    }
+}
 // MARK: - AgoraEduUserHandler
 extension AgoraUserListUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
@@ -276,7 +308,8 @@ extension AgoraUserListUIController: AgoraEduUserHandler {
 extension AgoraUserListUIController: AgoraEduStreamHandler {
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operator: AgoraEduContextUserInfo?) {
-        self.updateModel(with: stream.owner.userUuid, resort: false)
+        self.updateModel(with: stream.owner.userUuid,
+                         resort: false)
     }
 }
 

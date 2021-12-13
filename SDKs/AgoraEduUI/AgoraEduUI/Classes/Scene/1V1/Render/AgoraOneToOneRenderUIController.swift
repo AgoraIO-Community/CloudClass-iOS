@@ -100,42 +100,30 @@ private extension AgoraOneToOneRenderUIController {
     }
     
     func showRewardAnimation() {
-        guard let url = Bundle.ag_compentsBundleNamed("AgoraEduUI")?
-                .url(forResource: "ak_reward_cup",
-                     withExtension: "gif"),
+        guard let b = Bundle.ag_compentsBundleWithClass(self.classForCoder),
+              let url = b.url(forResource: "reward", withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             return
         }
-        let image = AgoraFLAnimatedImage(animatedGIFData: data)
-        image?.loopCount = 1
+        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
+        animatedImage?.loopCount = 1
         let imageView = AgoraFLAnimatedImageView()
-        imageView.animatedImage = image
+        imageView.animatedImage = animatedImage
         imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
-            guard let targetView = self.studentView else {
-                return
-            }
-            imageView?.mas_remakeConstraints { make in
-                make?.left.top().equalTo()(targetView)
-                make?.width.height().equalTo()(40)
-            }
-            UIView.animate(withDuration: 0.5) {
-                imageView?.superview?.layoutIfNeeded()
-            } completion: { finish in
-                imageView?.removeFromSuperview()
-            }
+            imageView?.removeFromSuperview()
         }
         if let window = UIApplication.shared.keyWindow {
             window.addSubview(imageView)
             imageView.mas_makeConstraints { make in
                 make?.center.equalTo()(0)
+                make?.width.equalTo()(AgoraFit.scale(238))
+                make?.height.equalTo()(AgoraFit.scale(238))
             }
         }
-        guard let rewardUrl = Bundle.ag_compentsBundleNamed("AgoraEduUI")?
-                .url(forResource: "ring_ak_reward",
-                     withExtension: "wav") else {
+        // sounds
+        guard let rewardUrl = b.url(forResource: "reward", withExtension: "mp3") else {
             return
         }
-        
         var soundId: SystemSoundID = 0;
         AudioServicesCreateSystemSoundID(rewardUrl as CFURL,
                                          &soundId);
@@ -195,7 +183,10 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operator: AgoraEduContextUserInfo) {
-        self.showRewardAnimation()
+        if studentModel?.uuid == user.userUuid {
+            studentModel?.rewardCount = rewardCount
+        }
+        showRewardAnimation()
     }
 }
 // MARK: - AgoraEduUserHandler

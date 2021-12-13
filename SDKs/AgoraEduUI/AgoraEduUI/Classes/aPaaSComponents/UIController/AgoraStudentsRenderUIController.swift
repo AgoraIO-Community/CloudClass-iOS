@@ -176,10 +176,8 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
-        for model in self.dataSource {
-            if user.userUuid == model.uuid {
-                model.rewardCount = rewardCount
-            }
+        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+            model.rewardCount = rewardCount
         }
         showRewardAnimation()
     }
