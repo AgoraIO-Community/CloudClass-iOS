@@ -6,8 +6,7 @@
 //
 
 import Foundation
-import Whiteboard
-import AgoraEduContext
+
 /// 对应AgoraBoardWidgetModel
 // MARK: - Config
 enum AgoraBoardRoomPhase: Int,Convertable {
@@ -43,8 +42,9 @@ enum AgoraBoardInteractionSignal {
         switch rawValue {
         case 1: return AgoraBoardRoomPhase.self
         case 2: return AgoraBoardMemberState.self
-        case 3: return AgoraBoardAudioMixingData.self
-        case 4: return Array<String>.self
+        case 3: return Array<String>.self
+        case 4: return AgoraBoardAudioMixingData.self
+        case 5: return AgoraBoardAudioMixingRequestData.self
             
         default:
             return nil

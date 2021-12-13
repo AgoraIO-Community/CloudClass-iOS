@@ -135,9 +135,11 @@ extension AgoraBoardInteractionSignal {
         case .MemberStateChanged(let boardMemberState) :
             dic["body"] = boardMemberState.toDictionary()
         case .AudioMixingStateChanged(let boardAudioMixingChangeData) :
-            dic["body"] = boardAudioMixingChangeData
+            dic["body"] = boardAudioMixingChangeData.toDictionary()
         case .BoardGrantDataChanged(let boardGrantData) :
             dic["body"] = boardGrantData
+        case .BoardAudioMixingRequest(let agoraBoardAudioMixingRequestData):
+            dic["body"] = agoraBoardAudioMixingRequestData.toDictionary()
         default:
             break
         }

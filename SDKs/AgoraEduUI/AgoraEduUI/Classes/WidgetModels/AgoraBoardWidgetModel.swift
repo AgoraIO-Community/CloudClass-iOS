@@ -159,9 +159,7 @@ extension AgoraBoardWidgetSignal {
         case .BoardGrantDataChanged(let list):
             dic["body"] = list
         case .AudioMixingStateChanged(let boardAudioMixingChangeData) :
-            dic["body"] = boardAudioMixingChangeData
-        case .BoardGrantDataChanged(let boardGrantData) :
-            dic["body"] = boardGrantData
+            dic["body"] = boardAudioMixingChangeData.toDictionary()
         default:
             break
         }
