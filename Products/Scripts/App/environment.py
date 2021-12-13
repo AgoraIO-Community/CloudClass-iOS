@@ -38,7 +38,7 @@ def main():
         string = string1 + string2 + string3
     
         content = content[:position] + string + content[position:]
-        content = re.sub(r'environment: .pro,', TokenEnvi, content)
+        content = re.sub(r'environment: .pro', TokenEnvi, content)
         
         f.seek(0)
         f.write(content)
