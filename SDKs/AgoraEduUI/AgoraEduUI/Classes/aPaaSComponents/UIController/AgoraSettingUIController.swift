@@ -72,19 +72,19 @@ class AgoraSettingUIController: UIViewController {
         
         createViews()
         createConstrains()
-        contextPool.media.registerMediaEventHandler(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         setup()
+        contextPool.media.registerMediaEventHandler(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        // remove event handler
+        contextPool.media.unregisterMediaEventHandler(self)
     }
 }
 // MARK: - Private

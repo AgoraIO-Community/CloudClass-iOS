@@ -82,16 +82,6 @@ extension AgoraOneToOneStateUIController {
                                            closeDelay: info.closeDelay * 1000)
     }
     
-    func classOverAlert() {
-        AgoraAlert()
-            .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
-            .setMessage(AgoraKitLocalizedString("ClassOverText"))
-            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
-            }))
-            .show(in: self)
-    }
-    
     func timeString(from interval: Int64) -> String {
         let time = interval > 0 ? (interval / 1000) : 0
         let hourInt = time / 3600
@@ -200,7 +190,13 @@ extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
     }
     
     func onRoomClosed() {
-        classOverAlert()
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
+            .setMessage(AgoraKitLocalizedString("ClassOverText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.contextPool.room.leaveRoom()
+            }))
+            .show(in: self)
     }
 }
 

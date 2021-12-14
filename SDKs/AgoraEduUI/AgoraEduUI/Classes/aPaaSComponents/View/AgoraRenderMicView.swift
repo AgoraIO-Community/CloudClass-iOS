@@ -17,6 +17,8 @@ class AgoraRenderMicView: UIView {
     
     private var animaView: UIImageView!
     
+    private var progressLayer: CAShapeLayer!
+    
     private var micState: AgoraRenderMicViewState = .off
     
     override init(frame: CGRect) {
@@ -30,11 +32,23 @@ class AgoraRenderMicView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        progressLayer.frame = bounds
+        let path = UIBezierPath.init()
+        path.move(to: CGPoint(x: bounds.midX, y: bounds.maxY))
+        path.addLine(to: CGPoint(x: bounds.midX, y: bounds.minY))
+        progressLayer.lineWidth = bounds.width
+        progressLayer.path = path.cgPath
+    }
+        
     public func setVolume(_ value: Int) {
         guard micState == .on else {
             return
         }
-        animaView.isHidden = value > 60
+        let floatValue = CGFloat(value)
+        self.progressLayer.strokeEnd = CGFloat(floatValue - 55.0) / (255.0 - 55.0)
     }
     
     public func setState(_ state: AgoraRenderMicViewState) {
@@ -71,6 +85,13 @@ private extension AgoraRenderMicView {
                                                 in: "AgoraEduUI")
         animaView.isHidden  = true
         addSubview(animaView)
+        
+        progressLayer = CAShapeLayer()
+        progressLayer.lineCap = .square
+        progressLayer.strokeColor = UIColor.white.cgColor
+        progressLayer.strokeStart = 0
+        progressLayer.strokeEnd = 0
+        animaView.layer.mask = progressLayer
     }
     
     func createConstrains() {

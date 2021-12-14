@@ -33,6 +33,44 @@ enum AgoraUserListFunction: Int {
     }
 }
 
+extension AgoraUserListModel {
+    func updateWithStream(_ stream: AgoraEduContextStreamInfo?) {
+        if let `stream` = stream {
+            // audio
+            if stream.streamType.hasAudio,
+               stream.audioSourceState == .open {
+                self.micState.state = .on
+            } else if stream.streamType.hasAudio,
+                      stream.audioSourceState == .close {
+                self.micState.state = .off
+            } else if stream.streamType.hasAudio == false,
+                      stream.audioSourceState == .open {
+                self.micState.state = .forbidden
+            } else {
+                self.micState.state = .off
+            }
+            // video
+            if stream.streamType.hasVideo,
+               stream.videoSourceState == .open {
+                self.cameraState.state = .on
+            } else if stream.streamType.hasVideo,
+                      stream.videoSourceState == .close {
+                self.cameraState.state = .off
+            } else if stream.streamType.hasVideo == false,
+                      stream.videoSourceState == .open {
+                self.cameraState.state = .forbidden
+            } else {
+                self.cameraState.state = .off
+            }
+        } else {
+            self.micState.state = .off
+            self.cameraState.state = .off
+        }
+        self.cameraState.isEnable = false
+        self.micState.isEnable = false
+    }
+}
+
 class AgoraUserListUIController: UIViewController {
     /** 容器*/
     private var contentView: UIView!
@@ -90,9 +128,6 @@ class AgoraUserListUIController: UIViewController {
         
         createViews()
         createConstrains()
-        
-        contextPool.user.registerUserEventHandler(self)
-        contextPool.stream.registerStreamEventHandler(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,6 +136,8 @@ class AgoraUserListUIController: UIViewController {
         isViewShow = true
         setup()
         // add event handler
+        contextPool.user.registerUserEventHandler(self)
+        contextPool.stream.registerStreamEventHandler(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -108,12 +145,14 @@ class AgoraUserListUIController: UIViewController {
         
         isViewShow = false
         // remove event handler
+        contextPool.user.unregisterUserEventHandler(self)
+        contextPool.stream.unregisterStreamEventHandler(self)
     }
 }
 // MARK: - Private
 private extension AgoraUserListUIController {
     func setup() {
-        let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
+        let isTeacher = contextPool.user.getLocalUserInfo().role == .teacher
         let localUserID = contextPool.user.getLocalUserInfo().userUuid
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             teacherNameLabel.text = teacher.userName
@@ -129,25 +168,20 @@ private extension AgoraUserListUIController {
             let model = AgoraUserListModel()
             model.uuid = student.userUuid
             model.name = student.userName
-            model.letter = getFirstLetterFromString(aString: student.userName)
             model.rewards = contextPool.user.getUserRewardCount(userUuid: student.userUuid)
             var isCoHost = false
             if let _ = coHosts?.first(where: {$0.userUuid == student.userUuid}) {
                 isCoHost = true
             }
-            model.stage.isOn = isCoHost
+            model.stageState.isOn = isCoHost
             // 白板权限
-            model.auth.isOn = self.boardUsers.contains(model.uuid)
+            model.authState.isOn = self.boardUsers.contains(model.uuid)
             // enable
-            model.stage.enable = isAdmin
-            model.auth.enable = isAdmin
+            model.stageState.isEnable = isTeacher
+            model.authState.isEnable = isTeacher
             // stream
-            let isLocalUser = (localUserID == student.userUuid)
             let s = contextPool.stream.getStreamList(userUuid: student.userUuid)?.first
-            model.camera.isOn = (s?.streamType == .both || s?.streamType == .video)
-            model.mic.isOn = (s?.streamType == .both || s?.streamType == .audio)
-            model.camera.enable = (isLocalUser && isCoHost) || (isAdmin && isCoHost && s?.videoSourceState != .close)
-            model.mic.enable = (isLocalUser && isCoHost) || (isAdmin && isCoHost && s?.audioSourceState != .close)
+            model.updateWithStream(s)
             tmp.append(model)
         }
         dataSource = tmp
@@ -158,26 +192,22 @@ private extension AgoraUserListUIController {
         guard let model = dataSource.first(where: {$0.uuid == uuid}) else {
             return
         }
-        let isAdmin = contextPool.user.getLocalUserInfo().role == .teacher
+        let isTeacher = contextPool.user.getLocalUserInfo().role == .teacher
         let coHosts = contextPool.user.getCoHostList()
         let localUserID = contextPool.user.getLocalUserInfo().userUuid
         var isCoHost = false
         if let _ = coHosts?.first(where: {$0.userUuid == model.uuid}) {
             isCoHost = true
         }
-        model.stage.isOn = isCoHost
-        
-        model.auth.isOn = boardUsers.contains(model.uuid)
+        model.stageState.isOn = isCoHost
+
+        model.authState.isOn = boardUsers.contains(model.uuid)
         // enable
-        model.stage.enable = isAdmin
-        model.auth.enable = isAdmin
+        model.stageState.isEnable = isTeacher
+        model.authState.isEnable = isTeacher
         // stream
-        let isLocalUser = (localUserID == model.uuid)
         let s = contextPool.stream.getStreamList(userUuid: model.uuid)?.first
-        model.camera.isOn = (s?.streamType == .both || s?.streamType == .video)
-        model.mic.isOn = (s?.streamType == .both || s?.streamType == .audio)
-        model.camera.enable = false
-        model.mic.enable = false
+        model.updateWithStream(s)
         if resort {
             sort()
         } else {
@@ -186,13 +216,11 @@ private extension AgoraUserListUIController {
     }
     
     func sort() {
-        self.dataSource.sort { l, r in
-            l.letter > r.letter
-        }
+        self.dataSource.sort {$0.sortRank < $1.sortRank}
         var coHosts = [AgoraUserListModel]()
         var rest = [AgoraUserListModel]()
         for user in self.dataSource {
-            if user.stage.isOn {
+            if user.stageState.isOn {
                 coHosts.append(user)
             } else {
                 rest.append(user)
@@ -207,40 +235,6 @@ private extension AgoraUserListUIController {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-    }
-    
-    func getFirstLetterFromString(aString: String) -> String {
-        let string = aString.trimmingCharacters(in: .whitespaces)
-        let regexNum = "^[0-9]$"
-        let predNum = NSPredicate.init(format: "SELF MATCHES %@", regexNum)
-        let regexChar = "^[a-zA-Z]$"
-        let predChar = NSPredicate.init(format: "SELF MATCHES %@", regexChar)
-        if predNum.evaluate(with: string) {
-            return string.substring(to: string.index(string.startIndex, offsetBy:1))
-        } else if predChar.evaluate(with: string) {
-            let c = string.substring(to: string.index(string.startIndex, offsetBy:1))
-            return c.uppercased()
-        } else {
-            let mutableString = NSMutableString.init(string: string)
-            CFStringTransform(mutableString as CFMutableString, nil, kCFStringTransformToLatin, false)
-            // 去掉声调(用此方法大大提高遍历的速度)
-            let pinyinString = mutableString.folding(options: String.CompareOptions.diacriticInsensitive, locale: NSLocale.current)
-            // 将拼音首字母装换成小写
-            let strPinYin = polyphoneStringHandle(nameString: string, pinyinString: pinyinString).lowercased()
-            let firstString = strPinYin.substring(to: strPinYin.index(strPinYin.startIndex, offsetBy:1))
-            let regexA = "^[a-z]$"
-            let predA = NSPredicate.init(format: "SELF MATCHES %@", regexA)
-            return predA.evaluate(with: firstString) ? firstString : "#"
-        }
-    }
-    /// 多音字处理
-    func polyphoneStringHandle(nameString:String, pinyinString:String) -> String {
-        if nameString.hasPrefix("长") {return "chang"}
-        if nameString.hasPrefix("沈") {return "shen"}
-        if nameString.hasPrefix("厦") {return "xia"}
-        if nameString.hasPrefix("地") {return "di"}
-        if nameString.hasPrefix("重") {return "chong"}
-        return pinyinString;
     }
 }
 // MARK: - AgoraWidgetMessageObserver
@@ -259,7 +253,7 @@ extension AgoraUserListUIController: AgoraWidgetMessageObserver {
                     return
                 }
                 for model in dataSource {
-                    model.auth.isOn = userIDs.contains(model.uuid)
+                    model.authState.isOn = userIDs.contains(model.uuid)
                 }
                 tableView.reloadData()
             }
@@ -282,7 +276,7 @@ extension AgoraUserListUIController: AgoraEduUserHandler {
     }
         
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
-                          operatorUser: AgoraEduContextUserInfo?,
+                          operator: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
         if user.role == .student {
             self.dataSource.removeAll(where: {$0.uuid == user.userUuid})
@@ -321,7 +315,7 @@ extension AgoraUserListUIController: AgoraEduUserHandler {
 // MARK: - AgoraEduStreamHandler
 extension AgoraUserListUIController: AgoraEduStreamHandler {
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
-                         operatorUser: AgoraEduContextUserInfo?) {
+                         operator: AgoraEduContextUserInfo?) {
         self.updateModel(with: stream.owner.userUuid,
                          resort: false)
     }
@@ -337,14 +331,14 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
         case .stage:
             if isOn {
                 contextPool.user.addCoHost(userUuid: user.uuid) { [weak self] in
-                    user.stage.isOn = true
+                    user.stageState.isOn = true
                     self?.reloadTableView()
                 } failure: { contextError in
                     
                 }
             } else {
                 contextPool.user.removeCoHost(userUuid: user.uuid) {[weak self] in
-                    user.stage.isOn = false
+                    user.stageState.isOn = false
                     self?.reloadTableView()
                 } failure: { contextError in
                     
@@ -354,41 +348,43 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
             // TODO: 白板权限
 //            contextPool.user.updateBoardGranted(userUuids: [user.uuid],
 //                                                granted: isOn)
-            user.auth.isOn = isOn
+            user.authState.isOn = isOn
 //            reloadTableView()
         case .camera:
-            if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
+//            if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
+//                // TODO:
+////                self.contextPool.device.setCameraDeviceEnable(enable: isOn)
+//                user.camera.isOn = isOn
+//                reloadTableView()
+//            } else {
                 // TODO:
-//                self.contextPool.device.setCameraDeviceEnable(enable: isOn)
-                user.camera.isOn = isOn
-                reloadTableView()
-            } else {
-                // TODO:
-                contextPool.stream.muteStream(streamUuids: [user.uuid],
-                                              streamType: .video,
-                                              success: { [weak self] () -> (Void) in
-                                                user.camera.isOn = isOn
-                                                self?.reloadTableView()
-                }, failure: nil)
+//                contextPool.stream.muteStream(streamUuids: [user.uuid],
+//                                              streamType: .video,
+//                                              success: { [weak self] () -> (Void) in
+//                                                user.camera.isOn = isOn
+//                                                self?.reloadTableView()
+//                }, failure: nil)
                 
 //                contextPool.stream.publishStream(streamUuids: <#T##[String]#>, streamType: <#T##AgoraEduContextMediaStreamType#>, success: <#T##AgoraEduContextSuccess?##AgoraEduContextSuccess?##() -> (Void)#>, failure: <#T##AgoraEduContextFail?##AgoraEduContextFail?##(AgoraEduContextError) -> (Void)#>)
                 
                
-            }
+//            }
+        break
         case .mic:
-            if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
+//            if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
                 // TODO:
 //                self.contextPool.device.setMicDeviceEnable(enable: isOn)
-                user.mic.isOn = isOn
-                reloadTableView()
-            } else {
+//                user.mic.isOn = isOn
+//                reloadTableView()
+//            } else {
                 // TODO:
                 
 //                contextPool.stream.muteRemoteAudio(streamUuids: [user.uuid], mute: !isOn, success: { [weak self] in
 //                    user.mic.isOn = isOn
 //                    self?.reloadTableView()
 //                }, failure: nil)
-            }
+//            }
+        break
         case .reward:
             // 奖励： 花名册只展示，不操作
             break
@@ -413,7 +409,7 @@ extension AgoraUserListUIController: UITableViewDelegate,
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withClass: AgoraPaintingUserListItemCell.self)
+        let cell = tableView.dequeueReusableCell(withClass: AgoraUserListItemCell.self)
         cell.supportFuncs = self.supportFuncs
         cell.itemModel = self.dataSource[indexPath.row]
         cell.indexPath = NSIndexPath(row: indexPath.row,
@@ -504,7 +500,7 @@ extension AgoraUserListUIController {
         tableView.allowsSelection = false
         tableView.separatorInset = .zero
         tableView.separatorColor = UIColor(rgb: 0xEEEEF7)
-        tableView.register(cellWithClass: AgoraPaintingUserListItemCell.self)
+        tableView.register(cellWithClass: AgoraUserListItemCell.self)
         contentView.addSubview(tableView)
     }
     
