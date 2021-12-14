@@ -35,26 +35,26 @@ enum AgoraUserListFunction: Int {
 
 class AgoraUserListUIController: UIViewController {
     /** 容器*/
-    var contentView: UIView!
+    private var contentView: UIView!
     /** 页面title*/
-    var titleLabel: UILabel!
+    private var titleLabel: UILabel!
     /** 教师信息*/
-    var infoView: UIView!
+    private var infoView: UIView!
     /** 分割线*/
-    var topSepLine: UIView!
-    var bottomSepLine: UIView!
+    private var topSepLine: UIView!
+    private var bottomSepLine: UIView!
     /** 教师姓名 标签*/
-    var teacherTitleLabel: UILabel!
+    private var teacherTitleLabel: UILabel!
     /** 教师姓名 姓名*/
-    var teacherNameLabel: UILabel!
+    private var teacherNameLabel: UILabel!
     /** 学生姓名*/
-    var studentTitleLabel: UILabel!
+    private var studentTitleLabel: UILabel!
     /** 列表项*/
-    var itemTitlesView: UIStackView!
+    private var itemTitlesView: UIStackView!
     /** 表视图*/
-    var tableView: UITableView!
+    private var tableView: UITableView!
     /** 数据源*/
-    var dataSource = [AgoraUserListModel]()
+    private var dataSource = [AgoraUserListModel]()
     /** 支持的选项列表*/
     lazy var supportFuncs: [AgoraUserListFunction] = {
         if contextPool.user.getLocalUserInfo().role == .teacher {
@@ -64,9 +64,11 @@ class AgoraUserListUIController: UIViewController {
         }
     }()
     
-    var boardUsers = [String]()
+    private var boardUsers = [String]()
+    
+    private var isViewShow: Bool = false
     /** SDK环境*/
-    var contextPool: AgoraEduContextPool!
+    private var contextPool: AgoraEduContextPool!
     
     deinit {
         print("\(#function): \(self.classForCoder)")
@@ -75,6 +77,8 @@ class AgoraUserListUIController: UIViewController {
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
+        contextPool.widget.add(self,
+                               widgetId: "netlessBoard")
     }
     
     required init?(coder: NSCoder) {
@@ -89,9 +93,21 @@ class AgoraUserListUIController: UIViewController {
         
         contextPool.user.registerEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
-        contextPool.room.registerRoomEventHandler(self)
-        contextPool.widget.add(self,
-                               widgetId: "netlessBoard")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        isViewShow = true
+        setup()
+        // add event handler
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        isViewShow = false
+        // remove event handler
     }
 }
 // MARK: - Private
@@ -120,8 +136,8 @@ private extension AgoraUserListUIController {
                 isCoHost = true
             }
             model.stage.isOn = isCoHost
-            // TODO: 白板权限
-//                model.auth.isOn = user.boardGranted
+            // 白板权限
+            model.auth.isOn = self.boardUsers.contains(model.uuid)
             // enable
             model.stage.enable = isAdmin
             model.auth.enable = isAdmin
@@ -239,6 +255,9 @@ extension AgoraUserListUIController: AgoraWidgetMessageObserver {
         case .BoardGrantDataChanged(let list):
             if let userIDs = list {
                 self.boardUsers = userIDs
+                guard isViewShow else {
+                    return
+                }
                 for model in dataSource {
                     model.auth.isOn = userIDs.contains(model.uuid)
                 }
@@ -249,12 +268,7 @@ extension AgoraUserListUIController: AgoraWidgetMessageObserver {
         }
     }
 }
-// MARK: - AgoraEduRoomHandler
-extension AgoraUserListUIController: AgoraEduRoomHandler {
-    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        self.setup()
-    }
-}
+
 // MARK: - AgoraEduUserHandler
 extension AgoraUserListUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {

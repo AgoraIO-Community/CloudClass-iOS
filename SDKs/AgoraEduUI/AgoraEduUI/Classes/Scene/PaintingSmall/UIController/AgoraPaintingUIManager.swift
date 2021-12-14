@@ -344,7 +344,7 @@ extension AgoraPaintingUIManager: AgoraToolBoxUIControllerDelegate {
 // MARK: - AgoraBoardToolsUIControllerDelegate
 extension AgoraPaintingUIManager: AgoraBoardToolsUIControllerDelegate {
     func brushToolsViewDidBrushChanged(_ tool: AgoraBoardToolItem) {
-        brushToolButton.setImage(tool.image(self))
+        brushToolButton.setImage(tool.image())
     }
     
     func onShowBrushTools(isShow: Bool) {

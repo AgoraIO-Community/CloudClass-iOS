@@ -222,7 +222,7 @@ private extension AgoraLectureUIManager {
         
         toolsView = AgoraRoomToolstView(frame: view.bounds)
         toolsView.delegate = self
-        toolsView.tools = [.setting, .message]
+        toolsView.tools = [.setting]
         contentView.addSubview(toolsView)
     }
     
