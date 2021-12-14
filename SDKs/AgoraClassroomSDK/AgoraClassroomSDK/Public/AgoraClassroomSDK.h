@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)launch:(AgoraEduLaunchConfig *)config
       delegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate
        success:(void (^)(void))success
-          fail:(void (^)(NSError *))fail;
+       failure:(void (^)(NSError *))failure;
 
 // 注册容器App
 + (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)apps;

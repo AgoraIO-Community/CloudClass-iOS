@@ -147,7 +147,7 @@ class AgoraHandsUpUIController: UIViewController {
         // Do any additional setup after loading the view.
         if contextPool.user.getLocalUserInfo().role == .teacher {
             listButton.isHidden = false
-            contextPool.user.registerEventHandler(self)
+            contextPool.user.registerUserEventHandler(self)
         } else {
             ctrlButton.isHidden = false
         }

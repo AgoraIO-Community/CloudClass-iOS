@@ -247,7 +247,7 @@ private extension DebugViewController {
                                    environment: .dev,
                                    success: { (resp) in
                                     completion(resp)
-                                   }, fail: { error in
+                                   }, failure: { error in
                                     AgoraLoading.hide()
                                     AgoraToast.toast(msg: error.localizedDescription)
                                    })

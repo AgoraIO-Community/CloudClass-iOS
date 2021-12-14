@@ -101,7 +101,7 @@ import UIKit
         } else if self.contextPool.user.getLocalUserInfo().role == .student {
             self.toolsView.tools = [.setting, .message]
         }
-        self.contextPool.user.registerEventHandler(self)
+        self.contextPool.user.registerUserEventHandler(self)
         
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
@@ -121,11 +121,11 @@ import UIKit
             }
             if self.contextPool.user.getLocalUserInfo().role == .teacher {
                 self.contextPool.room.startClass {
-                } fail: { error in
+                } failure: { error in
                     AgoraToast.toast(msg: error.message, type: .erro)
                 }
             }
-        } fail: { [weak self] error in
+        } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
         }

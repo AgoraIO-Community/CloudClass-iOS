@@ -49,10 +49,10 @@ buildFunc() {
         ARC="-arch x86_64"
     fi  
 
-    xcodebuild clean ${PROJECT_TYPE} ${TARGET_FILE}\
+    xcodebuild -quiet clean ${PROJECT_TYPE} ${TARGET_FILE}\
     -scheme ${Scheme_Name} 
     
-    xcodebuild ${PROJECT_TYPE} ${TARGET_FILE}\
+    xcodebuild -quiet ${PROJECT_TYPE} ${TARGET_FILE}\
     -scheme ${Scheme_Name}\
     -sdk ${OS_TYPE}\
     -configuration ${Mode}\

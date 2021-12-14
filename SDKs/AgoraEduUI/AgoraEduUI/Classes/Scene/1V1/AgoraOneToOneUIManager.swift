@@ -74,7 +74,7 @@ import Masonry
             if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
                 self.contextPool.media.openLocalDevice(device: mic)
             }
-        } fail: { [weak self] error in
+        } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.contextPool.room.leaveRoom()
         }

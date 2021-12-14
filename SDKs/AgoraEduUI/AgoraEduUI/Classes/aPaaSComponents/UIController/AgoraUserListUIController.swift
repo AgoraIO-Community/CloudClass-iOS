@@ -91,7 +91,7 @@ class AgoraUserListUIController: UIViewController {
         createViews()
         createConstrains()
         
-        contextPool.user.registerEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
     }
     
@@ -282,7 +282,7 @@ extension AgoraUserListUIController: AgoraEduUserHandler {
     }
         
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
-                          operator: AgoraEduContextUserInfo?,
+                          operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
         if user.role == .student {
             self.dataSource.removeAll(where: {$0.uuid == user.userUuid})
@@ -321,7 +321,7 @@ extension AgoraUserListUIController: AgoraEduUserHandler {
 // MARK: - AgoraEduStreamHandler
 extension AgoraUserListUIController: AgoraEduStreamHandler {
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
-                         operator: AgoraEduContextUserInfo?) {
+                         operatorUser: AgoraEduContextUserInfo?) {
         self.updateModel(with: stream.owner.userUuid,
                          resort: false)
     }

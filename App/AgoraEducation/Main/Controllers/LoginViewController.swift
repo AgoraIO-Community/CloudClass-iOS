@@ -338,7 +338,7 @@ private extension LoginViewController {
         
         AgoraLoading.loading()
 
-        let fail: (Error) -> () = { (error) in
+        let failure: (Error) -> () = { (error) in
             AgoraLoading.hide()
             AgoraToast.toast(msg: error.localizedDescription,
                              type: .erro)
@@ -380,8 +380,8 @@ private extension LoginViewController {
             AgoraClassroomSDK.launch(launchConfig,
                                      delegate: self,
                                      success: success,
-                                     fail: fail)
-        }, fail: fail)
+                                     failure: failure)
+        }, failure: failure)
     }
     
     @objc func onPushDebugVC() {
@@ -395,7 +395,7 @@ private extension LoginViewController {
                     appCertificate: String,
                     userUuid: String,
                     success: @escaping (TokenBuilder.ServerResp) -> (),
-                    fail: @escaping (Error) -> ()) {
+                    failure: @escaping (Error) -> ()) {
         let token = tokenBuilder.buildByAppId(appId,
                                               appCertificate: appCertificate,
                                               userUuid: userUuid)
@@ -409,14 +409,14 @@ private extension LoginViewController {
     func requestToken(region: String,
                       userUuid: String,
                       success: @escaping (TokenBuilder.ServerResp) -> (),
-                      fail: @escaping (Error) -> ()) {
+                      failure: @escaping (Error) -> ()) {
         tokenBuilder.buildByServer(region: region,
                                    userUuid: userUuid,
                                    environment: .pro,
                                    success: { (resp) in
                                     success(resp)
-                                   }, fail: { (error) in
-                                    fail(error)
+                                   }, failure: { (error) in
+                                    failure(error)
                                    })
     }
 }

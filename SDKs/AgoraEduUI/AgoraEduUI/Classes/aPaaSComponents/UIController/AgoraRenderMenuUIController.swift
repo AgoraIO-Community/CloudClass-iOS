@@ -66,7 +66,7 @@ class AgoraRenderMenuUIController: UIViewController {
         super.viewDidLoad()
         createViews()
         createConstrains()
-        contextPool.user.registerEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
     }
     

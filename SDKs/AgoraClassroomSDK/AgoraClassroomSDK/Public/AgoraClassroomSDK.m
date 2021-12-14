@@ -92,13 +92,13 @@ static AgoraClassroomSDK *manager = nil;
 + (void)launch:(AgoraEduLaunchConfig *)config
       delegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate
        success:(void (^)(void))success
-          fail:(void (^)(NSError *))fail {
+       failure:(void (^)(NSError *))failure {
     if (config == nil || !config.isLegal) {
-        if (fail) {
+        if (failure) {
             NSError *error = [[NSError alloc] initWithDomain:@"config illegal"
                                                         code:-1
                                                     userInfo:nil];
-            fail(error);
+            failure(error);
         }
         
         return;
@@ -180,7 +180,7 @@ static AgoraClassroomSDK *manager = nil;
         [topVC presentViewController:eduVC animated:true completion:^{
             !success ?: success();
         }];
-    } fail:fail];
+    } failure:failure];
 }
 
 + (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)extApps {

@@ -40,7 +40,7 @@ class AgoraStudentsRenderUIController: UIViewController {
         createViews()
         createConstrains()
         
-        contextPool.user.registerEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
@@ -185,7 +185,7 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
 // MARK: - AgoraEduStreamHandler
 extension AgoraStudentsRenderUIController: AgoraEduStreamHandler {
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
-                         operator: AgoraEduContextUserInfo?) {
+                         operatorUser: AgoraEduContextUserInfo?) {
         for model in self.dataSource {
             if stream.owner.userUuid == model.uuid {
                 model.updateStream(stream)

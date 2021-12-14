@@ -55,7 +55,7 @@ class AgoraRoomStateUIController: UIViewController {
         })
         contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
-        contextPool.user.registerEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
     }
 }
 

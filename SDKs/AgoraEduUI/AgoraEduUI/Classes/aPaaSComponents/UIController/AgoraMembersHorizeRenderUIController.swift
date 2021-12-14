@@ -71,7 +71,7 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         
         createViews()
         createConstrains()
-        contextPool.user.registerEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
     }
@@ -247,7 +247,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
     }
     
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
-                          operator: AgoraEduContextUserInfo?,
+                          operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
         if user.role == .teacher {
             self.teacherModel = nil
@@ -294,7 +294,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduMediaHandler {
 extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
-                         operator: AgoraEduContextUserInfo?) {
+                         operatorUser: AgoraEduContextUserInfo?) {
         if let model = teacherModel,
            stream.owner.userUuid == model.uuid {
             model.updateStream(stream)

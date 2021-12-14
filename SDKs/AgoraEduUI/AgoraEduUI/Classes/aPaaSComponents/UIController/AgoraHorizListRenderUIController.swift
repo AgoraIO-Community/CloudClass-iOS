@@ -149,7 +149,7 @@ class AgoraHorizListRenderUIController: UIViewController {
         
         createViews()
         createConstrains()
-        contextPool.user.registerEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
     }
@@ -408,7 +408,7 @@ extension AgoraHorizListRenderUIController: AgoraEduUserHandler {
 //        }
     }
     
-    func onRemoteUserLeft(user: AgoraEduContextUserInfo, operator: AgoraEduContextUserInfo?, reason: AgoraEduContextUserLeaveReason) {
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo, operatorUser: AgoraEduContextUserInfo?, reason: AgoraEduContextUserLeaveReason) {
         // TODO:
 //        if user.isCoHost {
 //            updateCoHosts()

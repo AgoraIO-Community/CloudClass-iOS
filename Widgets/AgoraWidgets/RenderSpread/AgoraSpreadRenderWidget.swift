@@ -122,7 +122,7 @@ fileprivate extension AgoraSpreadRenderWidget {
     
     func initData() {
         spreadView.delegate = self
-        userContext?.registerEventHandler(self)
+        userContext?.registerUserEventHandler(self)
         streamContext?.registerStreamEventHandler(self)
         localUserInfo = userContext?.getLocalUserInfo()
     }

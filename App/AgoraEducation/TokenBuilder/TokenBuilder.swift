@@ -14,7 +14,7 @@ class TokenBuilder {
         case dev, pre, pro
     }
     
-    typealias FailCompletion = (Error) -> ()
+    typealias FailureCompletion = (Error) -> ()
     typealias SuccessCompletion = (ServerResp) -> ()
     
     private let armin = Armin()
@@ -31,12 +31,12 @@ class TokenBuilder {
                        userUuid: String,
                        environment: Environment,
                        success: @escaping SuccessCompletion,
-                       fail: @escaping FailCompletion) {
+                       failure: @escaping FailureCompletion) {
         if region != "CN" && environment != .dev {
             let error = NSError(domain: "",
                                 code: -1,
                                 userInfo: ["message": "dev and pre only suppurt CN region"])
-            fail(error)
+            failure(error)
         }
         
         var urlSubFirst: String
@@ -83,7 +83,7 @@ class TokenBuilder {
                                   rtmToken: rtmToken)
             success(resp)
         }), failRetry: { error in
-            fail(error)
+            failure(error)
             return .resign
         })
     }

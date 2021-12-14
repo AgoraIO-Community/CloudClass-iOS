@@ -85,17 +85,17 @@ extension AgoraScreenSharingUIController: AgoraEduRoomHandler {
 
 extension AgoraScreenSharingUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
-                        operator: AgoraEduContextUserInfo?) {
+                        operatorUser: AgoraEduContextUserInfo?) {
         startRender(stream: stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
-                      operator: AgoraEduContextUserInfo?) {
+                      operatorUser: AgoraEduContextUserInfo?) {
        stopRender(stream: stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
-                         operator: AgoraEduContextUserInfo?) {
+                         operatorUser: AgoraEduContextUserInfo?) {
         startRender(stream: stream)
     }
 }
