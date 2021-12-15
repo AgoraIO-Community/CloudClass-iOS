@@ -38,6 +38,8 @@ import Masonry
         return vc
     }()
     
+    private var isJoinedRoom = false
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
@@ -54,6 +56,7 @@ import Masonry
             guard let `self` = self else {
                 return
             }
+            self.isJoinedRoom = true
             self.createChatController()
             // 打开本地音视频设备
             let cameras = self.contextPool.media.getLocalDevices(deviceType: .camera)
@@ -67,6 +70,13 @@ import Masonry
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)
+        }
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isJoinedRoom == false {
+            AgoraLoading.loading()
         }
     }
     

@@ -49,6 +49,8 @@ import AgoraWidget
     }()
     /** 举手 控制器*/
     private var handsUpController: AgoraHandsUpUIController!
+    
+    private var isJoinedRoom = false
         
     deinit {
         print("\(#function): \(self.classForCoder)")
@@ -60,12 +62,12 @@ import AgoraWidget
         self.createViews()
         self.createConstrains()
         
-        AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
                 return
             }
+            self.isJoinedRoom = true
             self.createChatController()
             // 打开本地音视频设备
             let cameras = self.contextPool.media.getLocalDevices(deviceType: .camera)
@@ -79,6 +81,13 @@ import AgoraWidget
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)
+        }
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isJoinedRoom == false {
+            AgoraLoading.loading()
         }
     }
     
