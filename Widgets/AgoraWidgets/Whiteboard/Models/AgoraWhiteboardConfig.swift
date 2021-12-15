@@ -5,8 +5,11 @@
 //  Created by LYY on 2021/12/6.
 //
 
-import AgoraEduContext
 import Whiteboard
+
+enum AgoraWhiteboardLogType {
+    case info,warning,error
+}
 
 struct AgoraWhiteboardSize: Decodable {
     var width: Int32

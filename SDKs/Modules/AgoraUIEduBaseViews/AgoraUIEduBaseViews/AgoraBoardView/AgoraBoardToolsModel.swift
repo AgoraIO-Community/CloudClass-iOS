@@ -92,4 +92,20 @@ import UIKit
         case .font42: return 42
         }
     }
+    
+    public static func fromValue(_ value: Int?) -> AgoraBoardToolsFont {
+        guard let v = value else {
+            return .font22
+        }
+        switch v {
+        case 22: return .font22
+        case 24: return .font24
+        case 26: return .font26
+        case 30: return .font30
+        case 36: return .font36
+        case 42: return .font42
+        default:
+            return .font22
+        }
+    }
 }

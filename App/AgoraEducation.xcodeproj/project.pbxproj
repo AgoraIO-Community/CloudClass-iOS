@@ -37,7 +37,6 @@
 		787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787A004125D10FC10063456F /* AudioToolbox.framework */; };
 		78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */; };
 		78DFB69925AEE20B00B01906 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68B25AEE20B00B01906 /* md5.cpp */; };
-		8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */; };
 		8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 78136271242C81ED00B7D1FE /* libz.tbd */; };
 		86B99C452732B67C0090D013 /* DebugCourware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B99C442732B67C0090D013 /* DebugCourware.swift */; };
 		86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 86F80251262589AF00364FFE /* CountDownExtApp.m */; };
@@ -144,8 +143,6 @@
 		78DFB69525AEE20B00B01906 /* RtcTokenBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtcTokenBuilder.h; sourceTree = "<group>"; };
 		78DFB69625AEE20B00B01906 /* DynamicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey.h; sourceTree = "<group>"; };
 		78DFB69725AEE20B00B01906 /* DynamicKey4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey4.h; sourceTree = "<group>"; };
-		8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardExtApp.h; sourceTree = "<group>"; };
-		8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardExtApp.m; sourceTree = "<group>"; };
 		86B99C442732B67C0090D013 /* DebugCourware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCourware.swift; sourceTree = "<group>"; };
 		86F80250262589AF00364FFE /* CountDownExtApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CountDownExtApp.h; sourceTree = "<group>"; };
 		86F80251262589AF00364FFE /* CountDownExtApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CountDownExtApp.m; sourceTree = "<group>"; };
@@ -415,8 +412,6 @@
 			children = (
 				AB245B77273A5A1600C01B4C /* AnswerSheetExtApp */,
 				687AFBB02646BC19004E5A34 /* CountDownExtApp */,
-				8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */,
-				8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */,
 			);
 			path = ExtApps;
 			sourceTree = "<group>";
@@ -702,7 +697,6 @@
 				AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */,
 				AB245B84273A5A1600C01B4C /* AnswerSheetSelecterView.swift in Sources */,
 				78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */,
-				8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */,
 				AB245B86273A5A1600C01B4C /* AnswerSheetSetupView.swift in Sources */,
 				783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */,
 				86B99C452732B67C0090D013 /* DebugCourware.swift in Sources */,

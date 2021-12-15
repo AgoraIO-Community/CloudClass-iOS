@@ -13,7 +13,7 @@ def libVersion
   pod "SSZipArchive", "2.4.2"
   
   pod "AgoraRtm_iOS", "1.4.8"
-  pod "Whiteboard", "2.15.1"
+  pod "Whiteboard", "2.15.8"
 
   pod "SwifterSwift", "5.2.0" 
   pod "Masonry"

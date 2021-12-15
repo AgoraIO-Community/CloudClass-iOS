@@ -32,7 +32,7 @@ extension AgoraWhiteboardWidget: WhiteRoomCallbackDelegate {
         }
 
         if let state = modifyState.globalState as? AgoraWhiteboardGlobalState {
-            dt.globalState = state
+            dt.updateGlobalState(state: state)
             return
         }
         
@@ -77,33 +77,26 @@ extension AgoraWhiteboardWidget: WhiteRoomCallbackDelegate {
         sendMessage(signal: .BoardPhaseChanged(phase.toWidget()))
         
         log(.info,
-            content: "Whiteboard phase: \(phase.strValue)")
+            log: "Whiteboard phase: \(phase.strValue)")
         if phase == .connected {
             AgoraLoading.hide()
         }
-    }
-    
-    public func fireDisconnectWithError(_ error: String!) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + .seconds(dt.reconnectTime)) { [weak self] in
-            guard let `self` = self else {
-                return
-            }
-            
+        if phase == .disconnected {
             self.joinWhiteboard()
         }
-        
     }
 }
 
 extension AgoraWhiteboardWidget: WhiteCommonCallbackDelegate {
     public func throwError(_ error: Error) {
         log(.error,
-            content: error.localizedDescription)
+            log: error.localizedDescription)
     }
     
     public func logger(_ dict: [AnyHashable : Any]) {
+        // {funName: string, message: id} funName 为对应 API 的名称
         log(.info,
-            content: dict.description)
+            log: dict.description)
     }
 }
 
@@ -137,11 +130,16 @@ extension AgoraWhiteboardWidget: AGBoardWidgetDTDelegate {
         initCondition.configComplete = true
     }
     
-    func onGrantUsersChanged(grantUsers: [String]?) {
+    func onGrantUsersChanged(grantUsers: [String]) {
+        log(.info,
+            log: "[Whiteboard widget] grant users changed: \(grantUsers)")
         sendMessage(signal: .BoardGrantDataChanged(grantUsers))
     }
     
     func onLocalGrantedChangedForBoardHandle(localGranted: Bool) {
+        log(.info,
+            log: "[Whiteboard widget] local granted: \(localGranted)")
+        
         room?.setViewMode(localGranted ? .freedom : .follower)
         room?.disableDeviceInputs(!localGranted)
         
@@ -154,7 +152,7 @@ extension AgoraWhiteboardWidget: AGBoardWidgetDTDelegate {
                                 self.dt.localGranted = isWritable
                                 if let error = error {
                                     self.log(.error,
-                                              content: "Local Granted Handle error")
+                                             log: "[Whiteboard widget] setWritable error: \(error.localizedDescription)")
                                 } else {
                                     self.room?.disableCameraTransform(!isWritable)
                                     self.ifUseLocalCameraConfig()

@@ -13,7 +13,7 @@ protocol AGBoardWidgetDTDelegate: NSObjectProtocol {
     func onLocalGrantedChangedForBoardHandle(localGranted: Bool)
     
     func onScenePathChanged(path: String)
-    func onGrantUsersChanged(grantUsers: [String]?)
+    func onGrantUsersChanged(grantUsers: [String])
     
     func onConfigComplete()
 }
@@ -24,6 +24,7 @@ class AgoraWhiteboardWidgetDT {
     private let scheme = "agoranetless"
     // from whiteboard
     var regionDomain = "convertcdn"
+    
     @available(iOS 11.0, *)
     lazy var schemeHandler: AgoraWhiteURLSchemeHandler? = {
         return AgoraWhiteURLSchemeHandler(scheme: scheme,
@@ -36,12 +37,15 @@ class AgoraWhiteboardWidgetDT {
         }
     }
     
-    var globalState = AgoraWhiteboardGlobalState() {
+    private var globalState = AgoraWhiteboardGlobalState() {
         didSet {
             if globalState.grantUsers.count != oldValue.grantUsers.count {
                 if globalState.grantUsers.contains(localUserInfo.userUuid) {
-                    delegate?.onLocalGrantedChangedForBoardHandle(localGranted: true)
                     localGranted = true
+                    delegate?.onLocalGrantedChangedForBoardHandle(localGranted: true)
+                } else {
+                    localGranted = false
+                    delegate?.onLocalGrantedChangedForBoardHandle(localGranted: false)
                 }
                 
                 delegate?.onGrantUsersChanged(grantUsers: globalState.grantUsers)
@@ -74,10 +78,30 @@ class AgoraWhiteboardWidgetDT {
     var extra: AgoraWhiteboardExtraInfo
     var localUserInfo: AgoraWidgetUserInfo
     
+    lazy var logFolder: String = {
+        let cachesFolder = NSSearchPathForDirectoriesInDomains(.cachesDirectory,
+                                                               .userDomainMask,
+                                                               true)[0]
+        let folder = cachesFolder.appending("/AgoraLog")
+        let manager = FileManager.default
+        
+        if !manager.fileExists(atPath: folder,
+                               isDirectory: nil) {
+            try? manager.createDirectory(atPath: folder,
+                                         withIntermediateDirectories: true,
+                                         attributes: nil)
+        }
+        return folder
+    }()
+    
     init(extra: AgoraWhiteboardExtraInfo,
          localUserInfo: AgoraWidgetUserInfo) {
         self.extra = extra
         self.localUserInfo = localUserInfo
+    }
+    
+    func updateGlobalState(state: AgoraWhiteboardGlobalState) {
+        globalState = state
     }
     
     func updateMemberState(state: AgoraBoardMemberState) {

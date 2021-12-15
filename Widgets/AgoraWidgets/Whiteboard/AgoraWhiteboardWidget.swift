@@ -7,8 +7,8 @@
 
 import Masonry
 import Whiteboard
+import AgoraLog
 import AgoraWidget
-import AgoraEduContext
 import AgoraUIEduBaseViews
 
 struct InitCondition {
@@ -27,6 +27,9 @@ struct InitCondition {
     var dt: AgoraWhiteboardWidgetDT
     
     var joinedFlag: Bool = false
+    
+    private var logger: AgoraLogger
+    
     var initCondition = InitCondition() {
         didSet {
             if initCondition.configComplete,
@@ -47,6 +50,13 @@ struct InitCondition {
         }
         self.dt = AgoraWhiteboardWidgetDT(extra: extra,
                                           localUserInfo: widgetInfo.localUserInfo)
+
+        
+        self.logger = AgoraLogger(folderPath: self.dt.logFolder,
+                                  filePrefix: widgetInfo.widgetId,
+                                  maximumNumberOfFiles: 5)
+        // 在此修改日志是否打印在控制台
+        self.logger.setPrintOnConsoleType(.all)
         
         super.init(widgetInfo: widgetInfo)
         self.dt.delegate = self
@@ -83,7 +93,8 @@ struct InitCondition {
         guard let wbProperties = properties.toObj(AgoraWhiteboardProperties.self) else {
             return
         }
-        
+        log(.info,
+            log: "[Whiteboard widget] onPropertiesUpdated:\(properties)")
         dt.properties = wbProperties
     }
     
@@ -94,6 +105,24 @@ struct InitCondition {
             return
         }
         dt.properties = wbProperties
+    }
+    
+    func log(_ type: AgoraWhiteboardLogType,
+             log: String) {
+        switch type {
+        case .info:
+            logger.log(log,
+                       type: .info)
+        case .warning:
+            logger.log(log,
+                       type: .warning)
+        case .error:
+            logger.log(log,
+                       type: .error)
+        default:
+            logger.log(log,
+                       type: .info)
+        }
     }
     
     deinit {
@@ -109,7 +138,7 @@ extension AgoraWhiteboardWidget {
     func sendMessage(signal: AgoraBoardInteractionSignal) {
         guard let text = signal.toMessageString() else {
             log(.error,
-                content: "signal encode error!")
+                log: "signal encode error!")
             return
         }
         sendMessage(text)
@@ -146,27 +175,43 @@ extension AgoraWhiteboardWidget {
         initCondition.needInit = false
     }
     
-    func joinWhiteboard(success: ((Void) -> Void)? = nil,
-                        error: ((NSError) -> Void)? = nil) {
+    func joinWhiteboard() {
         guard let sdk = whiteSDK,
               let roomConfig = dt.getWhiteRoomConfigToJoin() else {
             return
         }
         
-        AgoraLoading.loading()
+        DispatchQueue.main.async {
+            AgoraLoading.loading()
+        }
+        log(.info,
+            log: "[Whiteboard widget] start join")
         sdk.joinRoom(with: roomConfig,
                      callbacks: self) {[weak self] (success, room, error) in
             guard let `self` = self,
                   success,
                   error == nil,
                   let whiteRoom = room else {
-                AgoraLoading.hide()
+                
+                DispatchQueue.main.async {
+                    AgoraLoading.hide()
+                }
+                
+                self?.log(.error,
+                          log: "[Whiteboard widget] join room error :\(error?.localizedDescription)")
                 self?.dt.reconnectTime += 2
                 self?.sendMessage(signal: .BoardPhaseChanged(.Disconnected))
                 return
             }
             
-            AgoraLoading.hide()
+            DispatchQueue.main.async {
+                AgoraLoading.hide()
+            }
+            
+            self.log(.info,
+                      log: "[Whiteboard widget] join room success")
+            
+
             
             self.room = whiteRoom
             self.initRoomState(state: whiteRoom.state)
@@ -198,7 +243,6 @@ extension AgoraWhiteboardWidget {
         if let curState = dt.currentMemberState {
             room?.setMemberState(curState)
         }
-        
     }
     
     func handleAudioMixing(data: AgoraBoardAudioMixingData) {
@@ -222,16 +266,13 @@ extension AgoraWhiteboardWidget {
                 }
 
                 self.dt.currentMemberState = member
-                
+                room.setMemberState(member)
                 // 发送初始画笔状态的消息
                 var colorArr = Array<Int>()
                 member.strokeColor?.forEach { number in
                     colorArr.append(number.intValue)
                 }
-                let widgetMember = AgoraBoardMemberState(activeApplianceType: member.currentApplianceName!.toWidget(),
-                                                         strokeColor: colorArr,
-                                                         strokeWidth: member.strokeWidth?.intValue,
-                                                         textSize: member.textSize?.intValue)
+                let widgetMember = AgoraBoardMemberState(member)
                 self.sendMessage(signal: .MemberStateChanged(widgetMember))
             }
             
@@ -242,14 +283,10 @@ extension AgoraWhiteboardWidget {
                     room.scaleIframeToFit()
                 }
             }
-            
-            if let zoomScale = state.zoomScale {
-                
-            }
-
+        
             if let state = state.globalState as? AgoraWhiteboardGlobalState {
                 // 发送初始授权状态的消息
-                dt.globalState = state
+                dt.updateGlobalState(state: state)
             }
             
             if let sceneState = state.sceneState {
@@ -320,12 +357,4 @@ extension AgoraWhiteboardWidget {
 //    public func getCoursewares() -> [AgoraEduContextCourseware] {
 //        return dt.getCoursewares()
 //    }
-}
-
-extension AgoraWhiteboardWidget: AgoraEduMediaHandler {
-    public func onAudioMixingStateChanged(stateCode: Int,
-                                          errorCode: Int) {
-        whiteSDK?.audioMixer?.setMediaState(stateCode,
-                                           errorCode: errorCode)
-    }
 }

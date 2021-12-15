@@ -75,7 +75,7 @@ private extension AgoraBoardUIController {
         }
         
         if let error = contextError,
-           let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(statusCode: 714,
+           let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(stateCode: 714,
                                                                                                               errorCode: error.code)).toMessageString() {
             contextPool.widget.sendMessage(toWidget: "netlessBoard",
                                            message: message)
@@ -96,8 +96,6 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
             handleBoardPhase(phase)
         case .BoardAudioMixingRequest(let requestData):
             handleAudioMixing(requestData)
-        case .BoardGrantDataChanged(let list):
-            break
         default:
             break
         }
@@ -107,5 +105,17 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
 extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
         joinBoard()
+    }
+}
+
+extension AgoraBoardUIController: AgoraEduMediaHandler {
+    public func onAudioMixingStateChanged(stateCode: Int,
+                                          errorCode: Int) {
+        let data = AgoraBoardWidgetAudioMixingChangeData(stateCode: stateCode,
+                                                         errorCode: errorCode)
+        if let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(data).toMessageString() {
+            contextPool.widget.sendMessage(toWidget: "netlessBoard",
+                                           message: message)
+        }
     }
 }

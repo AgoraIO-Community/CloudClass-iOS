@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
   spec.dependency "AgoraUIBaseViews"
   spec.dependency "AgoraUIEduBaseViews"
   spec.dependency "Whiteboard"
-  spec.dependency "AgoraEduContext"
+  spec.dependency "AgoraLog"
   spec.dependency "Armin"
   
   spec.subspec 'Resources' do |ss|
