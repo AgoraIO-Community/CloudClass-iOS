@@ -10,36 +10,33 @@ import AgoraEduContext
 import SwifterSwift
 import UIKit
 
-protocol AgoraSettingUIControllerDelegate: NSObjectProtocol {
-    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController)
-}
-
 class AgoraSettingUIController: UIViewController {
-    weak var delegate: AgoraSettingUIControllerDelegate?
     
-    var contentView: UIView!
+    public weak var roomDelegate: AgoraClassRoomManagement?
     
-    var cameraLabel: UILabel!
+    private var contentView: UIView!
     
-    var cameraSwitch: UISwitch!
+    private var cameraLabel: UILabel!
     
-    var directionLabel: UILabel!
+    private var cameraSwitch: UISwitch!
     
-    var frontCamButton: UIButton!
+    private var directionLabel: UILabel!
     
-    var backCamButton: UIButton!
+    private var frontCamButton: UIButton!
     
-    var sepLine: UIView!
+    private var backCamButton: UIButton!
     
-    var micLabel: UILabel!
+    private var sepLine: UIView!
     
-    var micSwitch: UISwitch!
+    private var micLabel: UILabel!
     
-    var audioLabel: UILabel!
+    private var micSwitch: UISwitch!
     
-    var audioSwitch: UISwitch!
+    private var audioLabel: UILabel!
+    
+    private var audioSwitch: UISwitch!
         
-    var exitButton: UIButton!
+    private var exitButton: UIButton!
     
     private var isCamerOn: Bool = false {
         didSet {
@@ -83,7 +80,6 @@ class AgoraSettingUIController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
         contextPool.media.unregisterMediaEventHandler(self)
     }
 }
@@ -194,8 +190,7 @@ private extension AgoraSettingUIController {
             .setMessage(AgoraKitLocalizedString("LeaveClassText"))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("CancelText"), action:nil))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
-                self.delegate?.settingUIControllerDidPressedLeaveRoom(controller: self)
+                self.roomDelegate?.exitClassRoom(reason: .normal)
             }))
             .show(in: self)
     }

@@ -9,20 +9,25 @@ import AgoraEduContext
 import AgoraWidget
 import UIKit
 
-@objc public enum AgoraEduUIExitReason: Int {
+@objc public enum AgoraClassRoomExitReason: Int {
     case normal, kickOut
 }
 
-@objc public protocol AgoraEduUIManagerDelegate: NSObjectProtocol {
+@objc public protocol AgoraEduUIManagerCallBack: NSObjectProtocol {
     func manager(_ manager: AgoraEduUIManager,
-                 didExited reason: AgoraEduUIExitReason)
+                 didExited reason: AgoraClassRoomExitReason)
 }
 
-@objc public class AgoraEduUIManager: UIViewController {
+protocol AgoraClassRoomManagement: NSObjectProtocol {
+    
+    func exitClassRoom(reason: AgoraClassRoomExitReason)
+}
+
+@objc public class AgoraEduUIManager: UIViewController, AgoraClassRoomManagement {
     /** 容器视图，用来框出一块16：9的适配区域*/
     public var contentView: UIView!
     
-    weak var delegate: AgoraEduUIManagerDelegate?
+    weak var delegate: AgoraEduUIManagerCallBack?
     
     var contextPool: AgoraEduContextPool!
     /// 弹窗控制器
@@ -49,8 +54,8 @@ import UIKit
                    bundle: nibBundleOrNil)
     }
     
-    public init(contextPool: AgoraEduContextPool,
-                delegate: AgoraEduUIManagerDelegate) {
+    @objc public init(contextPool: AgoraEduContextPool,
+                      delegate: AgoraEduUIManagerCallBack) {
         super.init(nibName: nil,
                    bundle: nil)
         self.contextPool = contextPool
@@ -92,7 +97,6 @@ import UIKit
         ctrlMaskView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(self.view)
         }
-        
     }
     
     @objc private func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {
@@ -116,88 +120,12 @@ import UIKit
         return .landscapeRight
     }
     
-    public func exit(reason: AgoraEduUIExitReason) {
-        self.delegate?.manager(self,
-                               didExited: reason)
-    }
-    
-    public func createChatWidget() -> AgoraBaseWidget? {
-        // easemobIM
-        guard let chatConfig = contextPool.widget.getWidgetConfig("easemobIM") else {
-            return nil
+    public func exitClassRoom(reason: AgoraClassRoomExitReason) {
+        self.dismiss(animated: true) {
+            self.contextPool.room.leaveRoom()
+            self.delegate?.manager(self,
+                                   didExited: reason)
         }
-        
-        return createHxChat(config: chatConfig)
-        
-//        guard let widgetConfigs = contextPool.widget.getWidgetConfigs() else {
-//            return nil
-//        }
-//        var agoraChatWidget: AgoraBaseWidget?
-//        if let chatInfo = widgetConfigs.first(where: {$0.widgetId == "easemobIM"}) {
-
-//            agoraChatWidget = createHxChat(info: chatInfo)
-//        }else if let agoraChatInfo = widgetInfos.first(where: {$0.widgetId == "AgoraChatWidget"}) {
-//            agoraChatInfo.properties = ["contextPool": contextPool]
-//            let chatWidget = contextPool.widget.create(with: agoraChatInfo)
-//            agoraChatWidget = chatWidget
-//
-//            let hasConversation = (contextPool.room.getRoomInfo().roomType == .oneToOne ? 0 : 1)
-//            if let message = ["hasConversation": hasConversation].jsonString() {
-//                chatWidget.onMessageReceived(message)
-//            }
-//
-//            let isMin = (contextPool.room.getRoomInfo().roomType == .lecture ? 0 : 1)
-//            if let message = ["isMinSize": isMin].jsonString() {
-//                chatWidget.onMessageReceived(message)
-//            }
-//        }
-//        return agoraChatWidget
-    }
-    
-    private func createHxChat(config: AgoraWidgetConfig) -> AgoraBaseWidget? {
-        let userInfo = contextPool.user.getLocalUserInfo()
-        let roomInfo = contextPool.room.getRoomInfo()
-
-        var properties = [String: Any]()
-        
-        if let flexProps = contextPool.user.getUserProperties(userUuid: userInfo.userUuid),
-           let url = flexProps["avatarurl"] as? String {
-            properties["avatarurl"] = url
-        }
-//
-//        properties["userName"] = userInfo.userName
-//        properties["userUuid"] = userInfo.userUuid
-//        properties["roomUuid"] = roomInfo.roomUuid
-//        properties["roomName"] = roomInfo.roomName
-//        properties["password"] = userInfo.userUuid
-        
-        
-        let widget = contextPool.widget.create(config)
-        
-        return widget
-//
-//        if let imProperties = contextPool.widget.getAgoraWidgetProperties(type: .im),
-//           let hxProperties = imProperties["huanxin"] as? [String: Any],
-//           let appKey = hxProperties["appKey"] as? String,
-//           let chatRoomId = hxProperties["chatRoomId"] as? String {
-//            properties["appkey"] = appKey
-//            properties["chatRoomId"] = chatRoomId
-//        }
-//
-//        info.properties = properties
-//
-//        let chat = contextPool.widget.create(with: info)
-//
-//        if contextPool.room.getRoomInfo().roomType != .oneToOne {
-//            chat.onMessageReceived("min")
-//        }
-//
-//        return chat
-        return nil
-    }
-    
-    func createWhiteboard(info: AgoraWidgetInfo) {
-        
     }
 }
 

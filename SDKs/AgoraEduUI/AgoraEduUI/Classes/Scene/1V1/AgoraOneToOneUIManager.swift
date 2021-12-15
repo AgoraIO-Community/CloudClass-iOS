@@ -33,20 +33,10 @@ import Masonry
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
-        vc.delegate = self
+        vc.roomDelegate = self
         self.addChild(vc)
         return vc
     }()
-    
-    @objc public override init(contextPool: AgoraEduContextPool,
-                               delegate: AgoraEduUIManagerDelegate) {
-        super.init(contextPool: contextPool,
-                   delegate: delegate)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,7 +66,7 @@ import Masonry
             }
         } failure: { [weak self] error in
             AgoraLoading.hide()
-            self?.contextPool.room.leaveRoom()
+            self?.exitClassRoom(reason: .normal)
         }
     }
     
@@ -229,12 +219,5 @@ private extension AgoraOneToOneUIManager {
             }
         }
         chatController = controller
-    }
-}
-
-// MARK: - AgoraSettingUIControllerDelegate
-extension AgoraOneToOneUIManager: AgoraSettingUIControllerDelegate {
-    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
-        exit(reason: .normal)
     }
 }

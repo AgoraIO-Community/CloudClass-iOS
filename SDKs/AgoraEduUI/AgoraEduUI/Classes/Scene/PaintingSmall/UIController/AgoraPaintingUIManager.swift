@@ -58,7 +58,7 @@ import UIKit
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
-        vc.delegate = self
+        vc.roomDelegate = self
         self.addChild(vc)
         return vc
     }()
@@ -79,16 +79,6 @@ import UIKit
     
     deinit {
         print("\(#function): \(self.classForCoder)")
-    }
-    
-    @objc public override init(contextPool: AgoraEduContextPool,
-                         delegate: AgoraEduUIManagerDelegate) {
-        super.init(contextPool: contextPool,
-                   delegate: delegate)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     public override func viewDidLoad() {
@@ -127,7 +117,7 @@ import UIKit
             }
         } failure: { [weak self] error in
             AgoraLoading.hide()
-            self?.contextPool.room.leaveRoom()
+            self?.exitClassRoom(reason: .normal)
         }
     }
     
@@ -166,8 +156,7 @@ extension AgoraPaintingUIManager: AgoraEduMonitorHandler {
             AgoraLoading.hide()
             // 踢出
             AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
-            contextPool.room.leaveRoom()
-            exit(reason: .kickOut)
+            exitClassRoom(reason: .kickOut)
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
@@ -184,8 +173,7 @@ extension AgoraPaintingUIManager: AgoraEduUserHandler {
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
             .setMessage(AgoraKitLocalizedString("KickOutText"))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
-                self.exit(reason: .kickOut)
+                self.exitClassRoom(reason: .kickOut)
             }))
             .show(in: self)
     }
@@ -367,16 +355,11 @@ extension AgoraPaintingUIManager: AgoraPaintingBoardUIControllerDelegate {
     }
 }
 
-extension AgoraPaintingUIManager: AgoraSettingUIControllerDelegate {
-    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
-        exit(reason: .normal)
-    }
-}
-
 // MARK: - Creations
 private extension AgoraPaintingUIManager {
     func createViews() {
         stateController = AgoraRoomStateUIController(context: contextPool)
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         

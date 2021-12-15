@@ -20,7 +20,7 @@
 #import "AgoraInternalClassroom.h"
 #import "AgoraClassroomSDK.h"
 
-@interface AgoraClassroomSDK () <AgoraEduUIManagerDelegate>
+@interface AgoraClassroomSDK () <AgoraEduUIManagerCallBack>
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
 
 @property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
@@ -199,14 +199,13 @@ static AgoraClassroomSDK *manager = nil;
 #pragma mark - AgoraEduUIManagerDelegate
 
 - (void)manager:(AgoraEduUIManager *)manager
-      didExited:(enum AgoraEduUIExitReason)reason {
-    [self.eduUI dismissViewControllerAnimated:true completion:nil];
+      didExited:(enum AgoraClassRoomExitReason)reason {
     AgoraEduExitReason sdkReason = nil;
     switch (reason) {
-        case AgoraEduUIExitReasonNormal:
+        case AgoraClassRoomExitReasonNormal:
             sdkReason = AgoraEduExitReasonNormal;
             break;
-        case AgoraEduExitReasonKickOut:
+        case AgoraClassRoomExitReasonKickOut:
             sdkReason = AgoraEduExitReasonKickOut;
         default:
             break;

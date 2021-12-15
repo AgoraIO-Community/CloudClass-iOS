@@ -17,6 +17,8 @@ protocol AgoraOneToOneStateUIControllerDelegate: NSObjectProtocol {
 
 class AgoraOneToOneStateUIController: UIViewController {
     
+    public weak var roomDelegate: AgoraClassRoomManagement?
+    
     public weak var delegate: AgoraOneToOneStateUIControllerDelegate?
     
     private var netStateView: UIImageView!
@@ -194,7 +196,7 @@ extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
             .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
             .setMessage(AgoraKitLocalizedString("ClassOverText"))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
+                self.roomDelegate?.exitClassRoom(reason: .normal)
             }))
             .show(in: self)
     }

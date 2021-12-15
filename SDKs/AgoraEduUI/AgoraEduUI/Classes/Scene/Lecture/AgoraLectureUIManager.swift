@@ -47,7 +47,7 @@ import AgoraWidget
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
-        vc.delegate = self
+        vc.roomDelegate = self
         self.addChild(vc)
         return vc
     }()
@@ -56,16 +56,6 @@ import AgoraWidget
         
     deinit {
         print("\(#function): \(self.classForCoder)")
-    }
-    
-    @objc public override init(contextPool: AgoraEduContextPool,
-                               delegate: AgoraEduUIManagerDelegate) {
-        super.init(contextPool: contextPool,
-                   delegate: delegate)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     public override func viewDidLoad() {
@@ -91,7 +81,7 @@ import AgoraWidget
             }
         } failure: { [weak self] error in
             AgoraLoading.hide()
-            self?.contextPool.room.leaveRoom()
+            self?.exitClassRoom(reason: .normal)
         }
     }
     
@@ -189,6 +179,7 @@ extension AgoraLectureUIManager: AgoraHandsUpUIControllerDelegate {
 private extension AgoraLectureUIManager {
     func createViews() {
         stateController = AgoraRoomStateUIController(context: contextPool)
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
@@ -274,12 +265,5 @@ private extension AgoraLectureUIManager {
             make?.left.equalTo()(boardController.view.mas_right)?.offset()(AgoraFit.scale(2))
             make?.right.bottom().equalTo()(0)
         }
-    }
-}
-
-// MARK: - AgoraSettingUIControllerDelegate
-extension AgoraLectureUIManager: AgoraSettingUIControllerDelegate {
-    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
-        exit(reason: .normal)
     }
 }

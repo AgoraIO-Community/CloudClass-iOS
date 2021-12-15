@@ -34,11 +34,8 @@ import AgoraWidget
         return vc
     }()
     /** 花名册 控制器*/
-    private lazy var nameRollController: AgoraUserListUIController = {
-        let vc = AgoraUserListUIController(context: contextPool)
-        self.addChild(vc)
-        return vc
-    }()
+    private var nameRollController: AgoraUserListUIController!
+    
     /** 画板工具 控制器*/
     private var brushToolsController: AgoraBoardToolsUIController!
     /** 聊天窗口 控制器*/
@@ -46,7 +43,7 @@ import AgoraWidget
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
-        vc.delegate = self
+        vc.roomDelegate = self
         self.addChild(vc)
         return vc
     }()
@@ -55,16 +52,6 @@ import AgoraWidget
         
     deinit {
         print("\(#function): \(self.classForCoder)")
-    }
-    
-    @objc public override init(contextPool: AgoraEduContextPool,
-                               delegate: AgoraEduUIManagerDelegate) {
-        super.init(contextPool: contextPool,
-                   delegate: delegate)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     public override func viewDidLoad() {
@@ -91,7 +78,7 @@ import AgoraWidget
             }
         } failure: { [weak self] error in
             AgoraLoading.hide()
-            self?.contextPool.room.leaveRoom()
+            self?.exitClassRoom(reason: .normal)
         }
     }
     
@@ -202,6 +189,7 @@ extension AgoraSmallUIManager: AgoraBoardToolsUIControllerDelegate {
 private extension AgoraSmallUIManager {
     func createViews() {
         stateController = AgoraRoomStateUIController(context: contextPool)
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
@@ -231,8 +219,9 @@ private extension AgoraSmallUIManager {
         toolsView.delegate = self
         toolsView.tools = [.setting, .nameRoll, .message]
         contentView.addSubview(toolsView)
-        // 花名册临时处理
-        let _ = nameRollController.view
+        
+        nameRollController = AgoraUserListUIController(context: contextPool)
+        self.addChild(nameRollController)
     }
     
     func createConstrains() {
@@ -268,12 +257,5 @@ private extension AgoraSmallUIManager {
     func createChatController() {
         chatController = AgoraChatUIController()
         chatController.contextPool = contextPool
-    }
-}
-
-// MARK: - AgoraSettingUIControllerDelegate
-extension AgoraSmallUIManager: AgoraSettingUIControllerDelegate {
-    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
-        exit(reason: .normal)
     }
 }

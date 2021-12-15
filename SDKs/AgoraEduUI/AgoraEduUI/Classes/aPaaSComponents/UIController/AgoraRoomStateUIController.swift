@@ -19,6 +19,8 @@ struct AgoraClassTimeInfo {
 }
 
 class AgoraRoomStateUIController: UIViewController {
+    
+    public weak var roomDelegate: AgoraClassRoomManagement?
     /** 状态栏*/
     private var stateView: AgoraRoomStateBar!
     
@@ -167,7 +169,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
             .setMessage(AgoraKitLocalizedString("KickOutText"))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
+                self.roomDelegate?.exitClassRoom(reason: .kickOut)
             }))
             .show(in: self)
     }
@@ -192,8 +194,7 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
             .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
             .setMessage(AgoraKitLocalizedString("ClassOverText"))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
-                self.dismiss(animated: true, completion: nil)
+                self.roomDelegate?.exitClassRoom(reason: .normal)
             }))
             .show(in: self)
     }
@@ -220,7 +221,7 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
             // 踢出
             AgoraLoading.hide()
             AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
-            contextPool.room.leaveRoom()
+            self.roomDelegate?.exitClassRoom(reason: .kickOut)
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
