@@ -37,18 +37,17 @@ class AgoraWhiteboardWidgetDT {
         }
     }
     
-    private var globalState = AgoraWhiteboardGlobalState() {
+    private var globalState: AgoraWhiteboardGlobalState? {
         didSet {
-            if globalState.grantUsers.count != oldValue.grantUsers.count {
-                if globalState.grantUsers.contains(localUserInfo.userUuid) {
-                    localGranted = true
-                    delegate?.onLocalGrantedChangedForBoardHandle(localGranted: true)
-                } else {
-                    localGranted = false
-                    delegate?.onLocalGrantedChangedForBoardHandle(localGranted: false)
+            guard let newState = globalState else {
+                return
+            }
+            if let old = oldValue {
+                if newState.grantUsers.count != old.grantUsers.count {
+                    updateGrant(grantUsers: newState.grantUsers)
                 }
-                
-                delegate?.onGrantUsersChanged(grantUsers: globalState.grantUsers)
+            } else {
+                updateGrant(grantUsers: newState.grantUsers)
             }
         }
     }
@@ -124,6 +123,18 @@ class AgoraWhiteboardWidgetDT {
         if let textSize = state.textSize {
             currentMemberState?.textSize = NSNumber(value: textSize)
         }
+    }
+    
+    func updateGrant(grantUsers: [String]) {
+        if grantUsers.contains(localUserInfo.userUuid) {
+            localGranted = true
+            delegate?.onLocalGrantedChangedForBoardHandle(localGranted: true)
+        } else {
+            localGranted = false
+            delegate?.onLocalGrantedChangedForBoardHandle(localGranted: false)
+        }
+        
+        delegate?.onGrantUsersChanged(grantUsers: grantUsers)
     }
     
     func getWKConfig() -> WKWebViewConfiguration {

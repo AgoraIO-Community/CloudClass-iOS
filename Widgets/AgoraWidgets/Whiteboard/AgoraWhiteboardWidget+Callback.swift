@@ -48,9 +48,10 @@ extension AgoraWhiteboardWidget: WhiteRoomCallbackDelegate {
             }
             
             // 2. scenePath 判断
-            let newScenePath = sceneState.scenePath.split(separator: "/")[1]
-            if "/\(newScenePath)" != dt.scenePath {
-                dt.scenePath = "/\(newScenePath)"
+            let pathsArr = sceneState.scenePath.split(separator: "/")
+            if pathsArr.count > 0,
+               "/\(pathsArr[0])" != dt.scenePath {
+                dt.scenePath = "/\(pathsArr[0])"
             }
             
             // 3. ppt 获取总页数，当前第几页
