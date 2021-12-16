@@ -37,6 +37,7 @@
 		787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787A004125D10FC10063456F /* AudioToolbox.framework */; };
 		78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */; };
 		78DFB69925AEE20B00B01906 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68B25AEE20B00B01906 /* md5.cpp */; };
+		861D3CFB276AE05E00645D6A /* AppExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861D3CFA276AE05E00645D6A /* AppExtension.swift */; };
 		8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 78136271242C81ED00B7D1FE /* libz.tbd */; };
 		86B99C452732B67C0090D013 /* DebugCourware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B99C442732B67C0090D013 /* DebugCourware.swift */; };
 		86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 86F80251262589AF00364FFE /* CountDownExtApp.m */; };
@@ -143,6 +144,7 @@
 		78DFB69525AEE20B00B01906 /* RtcTokenBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtcTokenBuilder.h; sourceTree = "<group>"; };
 		78DFB69625AEE20B00B01906 /* DynamicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey.h; sourceTree = "<group>"; };
 		78DFB69725AEE20B00B01906 /* DynamicKey4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey4.h; sourceTree = "<group>"; };
+		861D3CFA276AE05E00645D6A /* AppExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtension.swift; sourceTree = "<group>"; };
 		86B99C442732B67C0090D013 /* DebugCourware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCourware.swift; sourceTree = "<group>"; };
 		86F80250262589AF00364FFE /* CountDownExtApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CountDownExtApp.h; sourceTree = "<group>"; };
 		86F80251262589AF00364FFE /* CountDownExtApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CountDownExtApp.m; sourceTree = "<group>"; };
@@ -320,6 +322,7 @@
 				787485FC25AB176B0022329D /* Color */,
 				783FB6CC240D0746007298C1 /* AlertView */,
 				783FB6D8240D0746007298C1 /* Toast */,
+				861D3CFA276AE05E00645D6A /* AppExtension.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -703,6 +706,7 @@
 				787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */,
 				6861691726AEAFCF00E26F69 /* TermsAndPolicyViewController.swift in Sources */,
 				68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */,
+				861D3CFB276AE05E00645D6A /* AppExtension.swift in Sources */,
 				86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */,
 				AB245B85273A5A1600C01B4C /* AnswerSheetResultItemCell.swift in Sources */,
 				6861690E26AEAC3C00E26F69 /* TermsAndPolicyView.swift in Sources */,
@@ -948,7 +952,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1011,7 +1015,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraFlexEduDis;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1203,7 +1207,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1358,7 +1362,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATestNew;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1513,7 +1517,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQA;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1668,7 +1672,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATest;
 				PRODUCT_NAME = AgoraCloudClass;

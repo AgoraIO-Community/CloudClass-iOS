@@ -46,7 +46,6 @@ enum FIELD_TYPE: String {
 }
 
 class LoginConfig {
-    
     static let AboutInfoList: Array<(String,Any?)> = [
         (NSLocalizedString("About_privacy", comment: ""), URL(string: NSLocalizedString("Privacy_url", comment: ""))),
         (NSLocalizedString("About_terms", comment: ""), URL(string: NSLocalizedString("Terms_url", comment: ""))),
@@ -57,10 +56,9 @@ class LoginConfig {
         (NSLocalizedString("About_class_version", comment: ""), class_version)
     ]
     
-    static let version_time: String = "d"
-    
-    static let sdk_version: String = "1"
-    static let class_version: String = "Ver)"
+    static let version_time: String = "2021.12.29"
+    static let sdk_version: String = AgoraClassroomSDK.version()
+    static let class_version: String = Bundle.main.version
     
     static var device: Device {
         if UIDevice.current.model == "iPhone" {
@@ -171,5 +169,4 @@ class LoginConfig {
     
     // Data
     static let USER_DEFAULT_EYE_CARE = "USER_DEFAULT_EYE_CARE"
-    
 }

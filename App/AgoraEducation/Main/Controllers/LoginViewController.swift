@@ -374,7 +374,6 @@ private extension LoginViewController {
                                                     userProperties: nil,
                                                     boardFitMode: .retain)
             
-            
             AgoraClassroomSDK.setConfig(sdkConfig)
             
             AgoraClassroomSDK.launch(launchConfig,
@@ -680,11 +679,8 @@ private extension LoginViewController {
         view.addSubview(enterButton)
         
         bottomButton = AgoraBaseUIButton()
-        let infoDictionary = Bundle.main.infoDictionary
-        var appVersion = infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-        if appVersion.count > 0 {
-            appVersion = "_" + appVersion
-        }
+        
+        let appVersion = "_" + Bundle.main.version
         let loginVersion = NSLocalizedString("Login_version",
                                              comment: "") + appVersion
         bottomButton.setTitle(loginVersion,
