@@ -182,7 +182,7 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
     
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
-                        operator: AgoraEduContextUserInfo) {
+                        operatorUser: AgoraEduContextUserInfo?) {
         if studentModel?.uuid == user.userUuid {
             studentModel?.rewardCount = rewardCount
         }

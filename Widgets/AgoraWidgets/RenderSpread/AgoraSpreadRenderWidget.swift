@@ -97,11 +97,11 @@ extension AgoraSpreadRenderWidget: AgoraEduUserHandler {
 // MARK: - AgoraEduStreamHandler
 extension AgoraSpreadRenderWidget: AgoraEduStreamHandler {
     public func onStreamJoin(stream: AgoraEduContextStreamInfo,
-                             operator: AgoraEduContextUserInfo?) {
+                             operatorUser: AgoraEduContextUserInfo?) {
         updateRenderStreamInfo(stream: stream)
     }
     public func onStreamUpdate(stream: AgoraEduContextStreamInfo,
-                               operator: AgoraEduContextUserInfo?){
+                               operatorUser: AgoraEduContextUserInfo?){
         updateRenderStreamInfo(stream: stream)
     }
 }

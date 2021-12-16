@@ -395,21 +395,21 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
 @objc public protocol AgoraEduStreamHandler: NSObjectProtocol {
     /// 远端流加入频道事件 (v2.0.0)
     /// - parameter stream: 流信息
-    /// - parameter operator: 操作人，可以为空
+    /// - parameter operatorUser: 操作人，可以为空
     /// - returns: void
     @objc optional func onStreamJoined(stream: AgoraEduContextStreamInfo,
                                        operatorUser: AgoraEduContextUserInfo?)
     
     /// 远端流离开频道事件 (v2.0.0)
     /// - parameter stream: 流信息
-    /// - parameter operator: 操作人，可以为空
+    /// - parameter operatorUser: 操作人，可以为空
     /// - returns: void
     @objc optional func onStreamLeft(stream: AgoraEduContextStreamInfo,
                                      operatorUser: AgoraEduContextUserInfo?)
     
     /// 远端流更新事件 (v2.0.0)
     /// - parameter stream: 流信息
-    /// - parameter operator: 操作人，可以为空
+    /// - parameter operatorUser: 操作人，可以为空
     /// - returns: void
     @objc optional func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                                         operatorUser: AgoraEduContextUserInfo?)

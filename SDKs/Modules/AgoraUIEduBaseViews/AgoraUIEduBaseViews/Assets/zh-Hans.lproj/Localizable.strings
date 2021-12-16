@@ -46,7 +46,7 @@ FrontText = "前";
 BackText = "后";
 MicrophoneText = "麦克风";
 SpeakerText = "扬声器";
-LeaveText = "离开教室";
+LeaveText = "退出教室";
 upload_log = "上传日志";
 UploadLog = "发送成功!";
 

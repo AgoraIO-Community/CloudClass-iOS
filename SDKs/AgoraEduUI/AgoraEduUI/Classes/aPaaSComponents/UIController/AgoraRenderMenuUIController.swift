@@ -197,7 +197,7 @@ extension AgoraRenderMenuUIController {
 // MARK: - AgoraEduUserHandler
 extension AgoraRenderMenuUIController: AgoraEduUserHandler {
     func onUserUpdated(user: AgoraEduContextUserInfo,
-                       operator: AgoraEduContextUserInfo?) {
+                       operatorUser: AgoraEduContextUserInfo?) {
         if let UUID = self.userUUID,
            user.userUuid == UUID {
             // TODO: 没看懂
@@ -211,21 +211,21 @@ extension AgoraRenderMenuUIController: AgoraEduUserHandler {
 // MARK: - AgoraEduStreamHandler
 extension AgoraRenderMenuUIController: AgoraEduStreamHandler {
     func onStreamJoin(stream: AgoraEduContextStreamInfo,
-                      operator: AgoraEduContextUserInfo?) {
+                      operatorUser: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userUUID {
             updateView()
         }
     }
     
     func onStreamLeave(stream: AgoraEduContextStreamInfo,
-                       operator: AgoraEduContextUserInfo?) {
+                       operatorUser: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userUUID {
             updateView()
         }
     }
     
     func onStreamUpdate(stream: AgoraEduContextStreamInfo,
-                        operator: AgoraEduContextUserInfo?) {
+                        operatorUser: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userUUID {
             updateView()
         }

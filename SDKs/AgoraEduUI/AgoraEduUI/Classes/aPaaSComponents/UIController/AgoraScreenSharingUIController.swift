@@ -51,6 +51,8 @@ class AgoraScreenSharingUIController: UIViewController {
         mediaContext.startRenderVideo(view: view,
                                       renderConfig: renderConfig,
                                       streamUuid: stream.streamUuid)
+        
+        isScreenSharing = true
     }
     
     private func stopRender(stream: AgoraEduContextStreamInfo) {

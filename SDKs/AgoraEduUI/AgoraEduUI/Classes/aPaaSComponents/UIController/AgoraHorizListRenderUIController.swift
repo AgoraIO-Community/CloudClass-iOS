@@ -444,17 +444,17 @@ extension AgoraHorizListRenderUIController: AgoraEduMediaHandler {
 // MARK: - AgoraEduStreamHandler
 extension AgoraHorizListRenderUIController: AgoraEduStreamHandler {
     func onStreamJoin(stream: AgoraEduContextStreamInfo,
-                      operator: AgoraEduContextUserInfo?) {
+                      operatorUser: AgoraEduContextUserInfo?) {
         self.updateCoHosts()
     }
     
     func onStreamLeave(stream: AgoraEduContextStreamInfo,
-                       operator: AgoraEduContextUserInfo?) {
+                       operatorUser: AgoraEduContextUserInfo?) {
         self.updateCoHosts()
     }
     
     func onStreamUpdate(stream: AgoraEduContextStreamInfo,
-                        operator: AgoraEduContextUserInfo?) {
+                        operatorUser: AgoraEduContextUserInfo?) {
         if stream.streamUuid == currentStream?.streamUuid {
             self.currentStream = stream
         }
