@@ -87,6 +87,8 @@ static const NSString* kChatRoomId = @"chatroomId";
 //@property (nonatomic,strong) UIButton* miniButton;
 @property (nonatomic, strong) CustomBadgeView* badgeView;
 @property (nonatomic, strong) ChatWidgetLaunchData *launchData;
+
+@property (nonatomic, assign) CGFloat topHeight;
 @end
 
 @implementation ChatWidget
@@ -96,6 +98,7 @@ static const NSString* kChatRoomId = @"chatroomId";
     if (self) {
         self.view.delegate = self;
         self.launchData = [[ChatWidgetLaunchData alloc] init];
+        self.topHeight = TOP_HEIGHT;
         [self initViews];
         [self initData:info.properties];
     }
@@ -111,6 +114,15 @@ static const NSString* kChatRoomId = @"chatroomId";
         [self chatTopViewDidClickHide];
     } else if ([message isEqualToString:@"max"]) {
         [self showView];
+    } else if ([message isEqualToString:@"hideTopBar"]) {
+        self.chatTopView.hidden = true;
+        self.topHeight = 0;
+        [self layoutViews];
+    } else if ([message isEqualToString:@"hideMiniButton"]) {
+        self.chatTopView.hideButton.hidden = true;
+    } else if ([message isEqualToString:@"hideAnnouncement"]) {
+        self.chatTopView.announcementButton.hidden = true;
+        self.chatTopView.selLine.hidden = true;
     } else {
         NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data
@@ -171,11 +183,11 @@ static const NSString* kChatRoomId = @"chatroomId";
                                         0,
                                         self.view.bounds.size.width,
                                         self.view.bounds.size.height);
-    self.chatTopView.frame = CGRectMake(0, 0, self.containView.bounds.size.width, TOP_HEIGHT);
+    self.chatTopView.frame = CGRectMake(0, 0, self.containView.bounds.size.width, self.topHeight);
     
-    self.announcementView.frame = CGRectMake(0,TOP_HEIGHT,self.containView.bounds.size.width,self.containView.bounds.size.height - TOP_HEIGHT);
+    self.announcementView.frame = CGRectMake(0,self.topHeight,self.containView.bounds.size.width,self.containView.bounds.size.height - self.topHeight);
     
-    self.chatView.frame = CGRectMake(0,TOP_HEIGHT,self.containView.bounds.size.width,self.containView.bounds.size.height - TOP_HEIGHT);
+    self.chatView.frame = CGRectMake(0,self.topHeight,self.containView.bounds.size.width,self.containView.bounds.size.height - self.topHeight);
     
 //    self.miniButton.frame = CGRectMake(10, self.containerView.bounds.size.height - MINIBUTTON_SIZE - 10, MINIBUTTON_SIZE, MINIBUTTON_SIZE);
     

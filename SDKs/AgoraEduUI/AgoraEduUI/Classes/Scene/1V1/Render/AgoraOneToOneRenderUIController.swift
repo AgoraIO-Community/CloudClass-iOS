@@ -239,16 +239,12 @@ private extension AgoraOneToOneRenderUIController {
     func createConstrains() {
         if UIDevice.current.isPad {
             teacherView.mas_remakeConstraints { make in
-                make?.top.equalTo()(0)
-                make?.centerX.equalTo()(0)
-                make?.width.equalTo()(view)
-                make?.height.equalTo()(view.mas_width)?.multipliedBy()(224.0/137.0)
+                make?.top.left().right().equalTo()(0)
+                make?.bottom.equalTo()(view.mas_centerY)
             }
             studentView.mas_remakeConstraints { make in
-                make?.top.equalTo()(teacherView.mas_bottom)?.offset()(2)
-                make?.centerX.equalTo()(0)
-                make?.width.height().equalTo()(teacherView)
-                make?.bottom.equalTo()(0)
+                make?.bottom.left().right().equalTo()(0)
+                make?.top.equalTo()(view.mas_centerY)
             }
         } else {
             teacherView.mas_remakeConstraints { make in

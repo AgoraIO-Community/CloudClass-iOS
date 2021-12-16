@@ -220,7 +220,8 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         case .aborted:
             // 踢出
             AgoraLoading.hide()
-            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
+            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
+                             type: .erro)
             self.roomDelegate?.exitClassRoom(reason: .kickOut)
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))

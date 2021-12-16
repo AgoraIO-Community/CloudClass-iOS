@@ -129,6 +129,7 @@ private extension AgoraOneToOneUIManager {
     func createViews() {
         stateController = AgoraOneToOneStateUIController(context: contextPool)
         stateController.delegate = self
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
@@ -163,8 +164,8 @@ private extension AgoraOneToOneUIManager {
         }
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(3))
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(3))
+            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
         brushToolsController.button.mas_makeConstraints { make in
             make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
@@ -173,7 +174,7 @@ private extension AgoraOneToOneUIManager {
         }
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(3)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
             make?.right.equalTo()(rightContentView.mas_left)
         }
     }
@@ -194,7 +195,7 @@ private extension AgoraOneToOneUIManager {
             make?.height.equalTo()(AgoraFit.scale(33))
         }
         renderController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(tabSelectView?.mas_bottom)
+            make?.top.equalTo()(tabSelectView?.mas_bottom)?.offset()(AgoraFit.scale(1))
             make?.left.right().bottom().equalTo()(0)
         }
     }
@@ -203,26 +204,30 @@ private extension AgoraOneToOneUIManager {
         rightContentView.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.bottom.right().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(224))
+            make?.width.equalTo()(AgoraFit.scale(170))
         }
         renderController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
+            make?.bottom.equalTo()(rightContentView.mas_centerY)
         }
     }
     
     func createChatController() {
-        let controller = AgoraChatUIController()
-        controller.contextPool = contextPool
-        
-        controller.view.isHidden = true
+        let controller = AgoraChatUIController(context: contextPool)
+        if UIDevice.current.isPad {
+            controller.hideMiniButton = true
+            controller.hideAnnouncement = true
+        } else {
+            controller.hideTopBar = true
+        }
         rightContentView.addSubview(controller.view)
-        
         if UIDevice.current.isPad {
             controller.view.mas_makeConstraints { make in
-                make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
                 make?.left.right().bottom().equalTo()(0)
+                make?.top.equalTo()(rightContentView.mas_centerY)
             }
         } else {
+            controller.view.isHidden = true
             controller.view.mas_makeConstraints { make in
                 make?.top.equalTo()(tabSelectView?.mas_bottom)
                 make?.left.right().bottom().equalTo()(0)

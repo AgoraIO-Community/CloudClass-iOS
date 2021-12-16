@@ -25,6 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) NSInteger currentTab;
 @property (nonatomic,strong) CustomBadgeView* badgeView;
 @property (nonatomic,strong) CustomBadgeView* announcementbadgeView;
+
+@property (nonatomic,strong) UIButton* chatButton;
+@property (nonatomic,strong) UIButton* hideButton;
+
+@property (nonatomic,strong) UIView* selLine;
+@property (nonatomic,strong) UIButton* announcementButton;
+
 @end
 
 NS_ASSUME_NONNULL_END

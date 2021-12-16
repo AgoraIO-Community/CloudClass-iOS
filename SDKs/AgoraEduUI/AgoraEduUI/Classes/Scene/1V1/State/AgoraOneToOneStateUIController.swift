@@ -220,6 +220,23 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
         default: break
         }
     }
+    
+    func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
+        switch state {
+        case .aborted:
+            // 踢出
+            AgoraLoading.hide()
+            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
+                             type: .erro)
+            self.roomDelegate?.exitClassRoom(reason: .kickOut)
+        case .connecting:
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
+        case .disconnected, .reconnecting:
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
+        case .connected:
+            AgoraLoading.hide()
+        }
+    }
 }
 
 // MARK: - Creaions

@@ -276,8 +276,7 @@ private extension AgoraLectureUIManager {
     }
     
     func createChatController() {
-        chatController = AgoraChatUIController()
-        chatController.contextPool = contextPool
+        chatController = AgoraChatUIController(context: contextPool)
         addChild(chatController)
         contentView.addSubview(chatController.view)
         chatController.view.mas_makeConstraints { make in

@@ -155,7 +155,8 @@ extension AgoraPaintingUIManager: AgoraEduMonitorHandler {
         case .aborted:
             AgoraLoading.hide()
             // 踢出
-            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
+            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
+                             type: .erro)
             exitClassRoom(reason: .kickOut)
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))

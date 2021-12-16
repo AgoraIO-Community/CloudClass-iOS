@@ -11,11 +11,27 @@ import Masonry
 import UIKit
 
 class AgoraChatUIController: UIViewController {
-    private let chatWidgetId = "easemobIM"
-    private var widget: AgoraBaseWidget?
     
+    private let chatWidgetId = "easemobIM"
+    
+    private var widget: AgoraBaseWidget?
     /** SDK环境*/
-    var contextPool: AgoraEduContextPool!
+    private var contextPool: AgoraEduContextPool!
+    
+    public var hideTopBar = false
+    
+    public var hideMiniButton = false
+    
+    public var hideAnnouncement = false
+    
+    init(context: AgoraEduContextPool) {
+        super.init(nibName: nil, bundle: nil)
+        contextPool = context
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +59,18 @@ class AgoraChatUIController: UIViewController {
                 contextPool.widget.sendMessage(toWidget: chatWidgetId,
                                                message: message)
         }
-        
+        if hideTopBar {
+            contextPool.widget.sendMessage(toWidget: chatWidgetId,
+                                           message: "hideTopBar")
+        }
+        if hideMiniButton {
+            contextPool.widget.sendMessage(toWidget: chatWidgetId,
+                                           message: "hideMiniButton")
+        }
+        if hideAnnouncement {
+            contextPool.widget.sendMessage(toWidget: chatWidgetId,
+                                           message: "hideAnnouncement")
+        }
         return widget
     }
 }

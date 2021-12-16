@@ -12,11 +12,9 @@
 const static NSInteger TAG_BASE = 1000;
 
 @interface ChatTopView ()
-@property (nonatomic,strong) UIButton* chatButton;
-@property (nonatomic,strong) UIButton* hideButton;
-@property (nonatomic,strong) UIButton* announcementButton;
+
 @property (nonatomic,strong) UIView* tabView;
-@property (nonatomic,strong) UIView* selLine;
+
 @end
 
 @implementation ChatTopView
