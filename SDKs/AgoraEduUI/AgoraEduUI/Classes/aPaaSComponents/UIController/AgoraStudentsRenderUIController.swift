@@ -186,6 +186,10 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
 extension AgoraStudentsRenderUIController: AgoraEduStreamHandler {
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
+        guard stream.videoSourceType != .screen else {
+            return
+        }
+        
         for model in self.dataSource {
             if stream.owner.userUuid == model.uuid {
                 model.updateStream(stream)

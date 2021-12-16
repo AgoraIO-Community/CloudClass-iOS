@@ -205,6 +205,10 @@ extension AgoraOneToOneRenderUIController: AgoraEduStreamHandler {
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
+        guard stream.videoSourceType != .screen else {
+            return
+        }
+        
         if stream.streamUuid == teacherModel?.streamID {
             teacherModel?.updateStream(stream)
         } else if stream.streamUuid == studentModel?.streamID {

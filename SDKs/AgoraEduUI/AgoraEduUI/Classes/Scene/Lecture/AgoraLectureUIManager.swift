@@ -28,6 +28,8 @@ import AgoraWidget
     private var teacherRenderController: AgoraTeacherRenderUIController!
     /** 白板的渲染 控制器*/
     private var boardController: AgoraBoardUIController!
+    /** 屏幕分享 控制器*/
+    private var screenSharingController: AgoraScreenSharingUIController!
     /** 工具箱 控制器*/
     private lazy var toolBoxViewController: AgoraToolBoxUIController = {
         let vc = AgoraToolBoxUIController(context: contextPool)
@@ -210,6 +212,10 @@ private extension AgoraLectureUIManager {
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
+        screenSharingController = AgoraScreenSharingUIController(context: contextPool)
+        addChild(screenSharingController)
+        contentView.addSubview(screenSharingController.view)
+        
         brushToolsController = AgoraBoardToolsUIController(context: contextPool)
         brushToolsController.delegate = self
         self.addChild(brushToolsController)
@@ -232,6 +238,11 @@ private extension AgoraLectureUIManager {
             make?.height.equalTo()(20)
         }
         boardController.view.mas_makeConstraints { make in
+            make?.left.bottom().equalTo()(0)
+            make?.width.equalTo()(AgoraFit.scale(465))
+            make?.height.equalTo()(AgoraFit.scale(262))
+        }
+        screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(465))
             make?.height.equalTo()(AgoraFit.scale(262))

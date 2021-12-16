@@ -46,7 +46,7 @@ class AgoraScreenSharingUIController: UIViewController {
         let mediaContext = contextPool.media
         
         let renderConfig = AgoraEduContextRenderConfig()
-        renderConfig.mode = .fit //1559292209
+        renderConfig.mode = .fit
         
         mediaContext.startRenderVideo(view: view,
                                       renderConfig: renderConfig,

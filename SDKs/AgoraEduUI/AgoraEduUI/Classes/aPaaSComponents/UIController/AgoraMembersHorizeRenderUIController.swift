@@ -212,7 +212,6 @@ private extension AgoraMembersHorizeRenderUIController {
 }
 // MARK: - AgoraEduUserHandler
 extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
-    
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
@@ -292,9 +291,12 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduMediaHandler {
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
-    
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
+        guard stream.videoSourceType != .screen else {
+            return
+        }
+        
         if let model = teacherModel,
            stream.owner.userUuid == model.uuid {
             model.updateStream(stream)
