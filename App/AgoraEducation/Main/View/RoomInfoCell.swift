@@ -36,7 +36,7 @@ class RoomInfoCell: AgoraBaseUITableViewCell {
     
     var lineView: AgoraBaseUIView!
     
-    var maxInputLenth = 50
+    let maxInputLength = 50
     
     private var indicatorView: AgoraBaseUIImageView!
     
@@ -129,7 +129,7 @@ extension RoomInfoCell: UITextFieldDelegate {
             return false
         }
         let strLength = text.count - range.length + string.count
-        return strLength <= maxInputLenth
+        return strLength <= maxInputLength
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {

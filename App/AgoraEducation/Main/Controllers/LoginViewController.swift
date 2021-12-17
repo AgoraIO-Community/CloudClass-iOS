@@ -134,6 +134,8 @@ struct RoomInfoModel {
     private var selectedIndex = -1
     
     private let tokenBuilder = TokenBuilder()
+    
+    private let minInputLength = 6
 }
 
 // MARK: - override
@@ -181,7 +183,8 @@ private extension LoginViewController {
         if let roomName = inputParams.roomName ?? defaultParams.roomName,
            let nickName = inputParams.nickName ?? defaultParams.nickName,
            let _ = inputParams.roomStyle ?? defaultParams.roomStyle,
-           roomName.count > 0, nickName.count > 0 {
+           roomName.count > 0, nickName.count > 0,
+           roomName.count >= minInputLength, nickName.count >= minInputLength {
             enterButton.backgroundColor = UIColor(hexString: "357BF6")
             enterButton.isUserInteractionEnabled = true
         } else {
