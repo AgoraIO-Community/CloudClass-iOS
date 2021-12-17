@@ -39,6 +39,7 @@ withWechatNotify {
                 string(name: 'rte_branch', value: branches["common-scene-sdk"] ?: companionBranch),
                 string(name: 'ci_branch', value: 'new_ios'),
                 string(name: 'build_env', value: 'Debug'),
+                booleanParam(name: 'Package_Publish', value: false),
                 booleanParam(name: 'appstore', value: false)
             ]
 
