@@ -247,110 +247,109 @@ extension AgoraWhiteboardWidget {
     }
     
     func initRoomState(state: WhiteRoomState) {
-            guard let `room` = room else {
-                return
+        guard let `room` = room else {
+            return
+        }
+        if let memberState = state.memberState as? WhiteReadonlyMemberState {
+            var member = memberState.toMemberState()
+            // 初始化时需要修改画笔状态，重连时不需要
+            if !joinedFlag {
+                member.currentApplianceName = WhiteApplianceNameKey.ApplianceSelector
+                member.strokeWidth = NSNumber(16)
+                member.strokeColor = UIColor(rgb: 0x0073FF).getRGBAArr()
+                member.textSize = NSNumber(18)
             }
             
-            if let memberState = state.memberState as? WhiteReadonlyMemberState {
-                var member = memberState.toMemberState()
-                // 初始化时需要修改画笔状态，重连时不需要
-                if !joinedFlag {
-                    member.currentApplianceName = WhiteApplianceNameKey.ApplianceSelector
-                    member.strokeWidth = NSNumber(16)
-                    member.strokeColor = UIColor(rgb: 0x0073FF).getRGBAArr()
-                    member.textSize = NSNumber(18)
-                }
-
-                self.dt.currentMemberState = member
-                room.setMemberState(member)
-                // 发送初始画笔状态的消息
-                var colorArr = Array<Int>()
-                member.strokeColor?.forEach { number in
-                    colorArr.append(number.intValue)
-                }
-                let widgetMember = AgoraBoardMemberState(member)
-                self.sendMessage(signal: .MemberStateChanged(widgetMember))
+            self.dt.currentMemberState = member
+            room.setMemberState(member)
+            // 发送初始画笔状态的消息
+            var colorArr = Array<Int>()
+            member.strokeColor?.forEach { number in
+                colorArr.append(number.intValue)
             }
-            
-            // 老师离开
-            if let broadcastState = state.broadcastState {
-                if broadcastState.broadcasterId == nil {
-                    room.scalePpt(toFit: .continuous)
-                    room.scaleIframeToFit()
-                }
-            }
+            let widgetMember = AgoraBoardMemberState(member)
+            self.sendMessage(signal: .MemberStateChanged(widgetMember))
+        }
         
-            if let state = state.globalState as? AgoraWhiteboardGlobalState {
-                // 发送初始授权状态的消息
-                dt.updateGlobalState(state: state)
-            }
-            
-            if let sceneState = state.sceneState {
-                // 1. 取真实regionDomain
-                if sceneState.scenes.count > 0,
-                   let ppt = sceneState.scenes[0].ppt,
-                   ppt.src.hasPrefix("pptx://") {
-                    let src = ppt.src
-                    let index = src.index(src.startIndex, offsetBy:7)
-                    let arr = String(src[index...]).split(separator: ".")
-                    dt.regionDomain = (dt.regionDomain == String(arr[0])) ? dt.regionDomain : String(arr[0])
-                }
-                
-                // 2. scenePath 判断
-                let paths = sceneState.scenePath.split(separator: "/")
-                if  paths.count > 0 {
-                    let newScenePath = String(sceneState.scenePath.split(separator: "/")[0])
-                    dt.scenePath = "/(newScenePath)"
-                }
-                
-                // 3. ppt 获取总页数，当前第几页
+        // 老师离开
+        if let broadcastState = state.broadcastState {
+            if broadcastState.broadcasterId == nil {
+                room.scalePpt(toFit: .continuous)
                 room.scaleIframeToFit()
-                if sceneState.scenes[sceneState.index] != nil {
-                    room.scalePpt(toFit: .continuous)
-                }
-                // page改变
-    //            let pageCount = sceneState.scenes.count
-    //            let pageIndex = sceneState.index
-                ifUseLocalCameraConfig()
-                
+            }
+        }
+        
+        if let state = state.globalState as? AgoraWhiteboardGlobalState {
+            // 发送初始授权状态的消息
+            dt.updateGlobalState(state: state)
+        }
+        
+        if let sceneState = state.sceneState {
+            // 1. 取真实regionDomain
+            if sceneState.scenes.count > 0,
+               let ppt = sceneState.scenes[0].ppt,
+               ppt.src.hasPrefix("pptx://") {
+                let src = ppt.src
+                let index = src.index(src.startIndex, offsetBy:7)
+                let arr = String(src[index...]).split(separator: ".")
+                dt.regionDomain = (dt.regionDomain == String(arr[0])) ? dt.regionDomain : String(arr[0])
             }
             
-            if let cameraState = state.cameraState,
-               dt.localGranted {
-                // 如果本地被授权，则是本地自己设置的摄像机视角
-                dt.localCameraConfigs[room.sceneState.scenePath] = cameraState.toWidget()
+            // 2. scenePath 判断
+            let paths = sceneState.scenePath.split(separator: "/")
+            if  paths.count > 0 {
+                let newScenePath = String(sceneState.scenePath.split(separator: "/")[0])
+                dt.scenePath = "/\(newScenePath)"
             }
+            
+            // 3. ppt 获取总页数，当前第几页
+            room.scaleIframeToFit()
+            if sceneState.scenes[sceneState.index] != nil {
+                room.scalePpt(toFit: .continuous)
+            }
+            // page改变
+            //            let pageCount = sceneState.scenes.count
+            //            let pageIndex = sceneState.index
+            ifUseLocalCameraConfig()
+            
+        }
+        
+        if let cameraState = state.cameraState,
+           dt.localGranted {
+            // 如果本地被授权，则是本地自己设置的摄像机视角
+            dt.localCameraConfigs[room.sceneState.scenePath] = cameraState.toWidget()
+        }
     }
     
-//    
-//    public func pushScenes(dir: String,
-//                           scenes: [AgoraEduContextWhiteScene],
-//                           index: UInt) {
-//        let newScenes = scenes.map({ scene -> WhiteScene in
-//            let src = scene.ppt.src
-//            let size = CGSize(width: CGFloat(scene.ppt.width),
-//                              height: CGFloat(scene.ppt.height))
-//            let previewURL = scene.ppt.previewURL
-//            var pptPage: WhitePptPage!
-//            if let url = previewURL {
-//                pptPage = WhitePptPage.init(src: src,
-//                                            preview: url,
-//                                            size: size)
-//            }
-//            else {
-//                pptPage = WhitePptPage.init(src: src,
-//                                            size: size)
-//            }
-//            return WhiteScene(name: scene.name,
-//                              ppt: pptPage)
-//        })
-//        
-//        manager?.putScenes(dir,
-//                           scenes: newScenes,
-//                           index: index)
-//    }
-//    
-//    public func getCoursewares() -> [AgoraEduContextCourseware] {
-//        return dt.getCoursewares()
-//    }
+    //
+    //    public func pushScenes(dir: String,
+    //                           scenes: [AgoraEduContextWhiteScene],
+    //                           index: UInt) {
+    //        let newScenes = scenes.map({ scene -> WhiteScene in
+    //            let src = scene.ppt.src
+    //            let size = CGSize(width: CGFloat(scene.ppt.width),
+    //                              height: CGFloat(scene.ppt.height))
+    //            let previewURL = scene.ppt.previewURL
+    //            var pptPage: WhitePptPage!
+    //            if let url = previewURL {
+    //                pptPage = WhitePptPage.init(src: src,
+    //                                            preview: url,
+    //                                            size: size)
+    //            }
+    //            else {
+    //                pptPage = WhitePptPage.init(src: src,
+    //                                            size: size)
+    //            }
+    //            return WhiteScene(name: scene.name,
+    //                              ppt: pptPage)
+    //        })
+    //
+    //        manager?.putScenes(dir,
+    //                           scenes: newScenes,
+    //                           index: index)
+    //    }
+    //
+    //    public func getCoursewares() -> [AgoraEduContextCourseware] {
+    //        return dt.getCoursewares()
+    //    }
 }

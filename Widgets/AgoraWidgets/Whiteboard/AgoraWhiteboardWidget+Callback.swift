@@ -144,23 +144,20 @@ extension AgoraWhiteboardWidget: AGBoardWidgetDTDelegate {
         room?.setViewMode(localGranted ? .freedom : .follower)
         room?.disableDeviceInputs(!localGranted)
         
-        if localGranted != dt.localGranted {
-            room?.setWritable(localGranted,
-                              completionHandler: {[weak self] isWritable, error in
-                                guard let `self` = self else {
-                                    return
-                                }
-                                self.dt.localGranted = isWritable
-                                if let error = error {
-                                    self.log(.error,
-                                             log: "[Whiteboard widget] setWritable error: \(error.localizedDescription)")
-                                } else {
-                                    self.room?.disableCameraTransform(!isWritable)
-                                    self.ifUseLocalCameraConfig()
-                                    self.room?.setViewMode(isWritable ? .freedom : .follower)
-                                }
-                              })
-        }
+        room?.setWritable(localGranted,
+                          completionHandler: {[weak self] isWritable, error in
+                            guard let `self` = self else {
+                                return
+                            }
+                            if let error = error {
+                                self.log(.error,
+                                         log: "[Whiteboard widget] setWritable error: \(error.localizedDescription)")
+                            } else {
+                                self.room?.disableCameraTransform(!isWritable)
+                                self.ifUseLocalCameraConfig()
+                                self.room?.setViewMode(isWritable ? .freedom : .follower)
+                            }
+                          })
     }
     
     func onScenePathChanged(path: String) {

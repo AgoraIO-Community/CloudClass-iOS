@@ -183,8 +183,7 @@ private extension LoginViewController {
         if let roomName = inputParams.roomName ?? defaultParams.roomName,
            let nickName = inputParams.nickName ?? defaultParams.nickName,
            let _ = inputParams.roomStyle ?? defaultParams.roomStyle,
-           roomName.count > 0, nickName.count > 0,
-           roomName.count >= minInputLength, nickName.count >= minInputLength {
+           roomName.count > 0, nickName.count > 0 {
             enterButton.backgroundColor = UIColor(hexString: "357BF6")
             enterButton.isUserInteractionEnabled = true
         } else {
@@ -619,16 +618,26 @@ extension LoginViewController: RoomInfoCellDelegate {
         let itemType = RoomInfoItemType(rawValue: cell.indexPath.row)
         let pattern = "[a-zA-Z0-9]*$"
         let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
+        
         switch itemType {
         case .roomName:
-            let isVailed = pred.evaluate(with: text)
-            inputParams.roomName = isVailed ? text : nil
-            cell.isTextWaring = !isVailed
+            var isVaild = pred.evaluate(with: text)
+            if text.count > 0 {
+                isVaild = (isVaild && text.count >= minInputLength)
+            }
+            
+            cell.isTextWaring = !isVaild
+            inputParams.roomName = isVaild ? text : nil
         case .nickName:
-            let isVailed = pred.evaluate(with: text)
-            inputParams.nickName = isVailed ? text : nil
-            cell.isTextWaring = !isVailed
-        default: break
+            var isVaild = pred.evaluate(with: text)
+            if text.count > 0 {
+                isVaild = (isVaild && text.count >= minInputLength)
+            }
+            
+            cell.isTextWaring = !isVaild
+            inputParams.nickName = isVaild ? text : nil
+        default:
+            break
         }
         updateEntranceStatus()
     }
