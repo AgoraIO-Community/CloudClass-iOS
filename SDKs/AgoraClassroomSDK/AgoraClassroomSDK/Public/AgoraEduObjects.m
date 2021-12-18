@@ -8,6 +8,7 @@
 #import "AgoraEduObjects.h"
 @import AgoraWidgets;
 @import ChatWidget;
+@import AgoraExtApps;
 
 #pragma mark - Config
 @implementation AgoraClassroomSDKConfig
@@ -15,76 +16,6 @@
     self = [super init];
     if (self) {
         self.appId = appId;
-    }
-    return self;
-}
-@end
-
-#pragma mark - White board
-@implementation AgoraEduPPTPage
-- (instancetype)initWithSource:(NSString *)source
-                          size:(CGSize)size {
-    self = [super init];
-    
-    if (self) {
-        self.source = source;
-        self.height = size.height;
-        self.width = size.width;
-    }
-    
-    return self;
-}
-
-- (instancetype)initWithSource:(NSString *)source
-                    previewURL:(NSString *)url
-                          size:(CGSize)size {
-    self = [super init];
-    
-    if (self) {
-        self.source = source;
-        self.previewURL = url;
-        self.height = size.height;
-        self.width = size.width;
-    }
-    
-    return self;
-}
-@end
-
-@implementation AgoraEduBoardScene
-- (instancetype)initWithName:(NSString *)name
-                     pptPage:(AgoraEduPPTPage * _Nullable)pptPage {
-    self = [super init];
-    
-    if (self) {
-        self.name = name;
-        self.pptPage = pptPage;
-    }
-    
-    return self;
-}
-@end
-
-@implementation AgoraEduCourseware
-- (instancetype)initWithResourceName:(NSString *)resourceName
-                        resourceUuid:(NSString *)resourceUuid
-                           scenePath:(NSString *)scenePath
-                              scenes:(NSArray<AgoraEduBoardScene *> *)scenes
-                         resourceUrl:(NSString *)resourceUrl
-                                 ext:(NSString * _Nonnull)ext
-                                size:(double)size
-                          updateTime:(double)updateTime{
-    self = [super init];
-    
-    if (self) {
-        self.resourceName = resourceName;
-        self.resourceUuid = resourceUuid;
-        self.scenePath = scenePath;
-        self.resourceUrl = resourceUrl;
-        self.scenes = scenes;
-        self.ext = ext;
-        self.size = size;
-        self.updateTime = updateTime;
     }
     return self;
 }
@@ -151,8 +82,7 @@
                          duration:nil
                            region:nil
                      mediaOptions:mediaOptions
-                   userProperties:nil
-                     boardFitMode:AgoraEduBoardFitModeAuto];
+                   userProperties:nil];
 }
 
 - (instancetype)initWithUserName:(NSString *)userName
@@ -166,8 +96,7 @@
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
                     mediaOptions:(AgoraEduMediaOptions *)mediaOptions
-                  userProperties:(NSDictionary * _Nullable)userProperties
-                    boardFitMode:(AgoraEduBoardFitMode)boardFitMode {
+                  userProperties:(NSDictionary * _Nullable)userProperties {
     self = [self init];
     self.userName = userName;
     self.userUuid = userUuid;
@@ -184,18 +113,16 @@
     self.mediaOptions = mediaOptions;
     
     self.userProperties = userProperties;
-    self.boardFitMode = boardFitMode;
     
     self.widgets = [self baseWidgets];
-    // TODO: ext apps 抽出来
-//    self.extApps = [self baseExtApps];
+    self.extApps = [self baseExtApps];
     
     return self;
 }
 
-- (NSMutableDictionary<NSString *,AgoraWidgetConfig *> *)baseWidgets {
+- (NSMutableDictionary<NSString *, AgoraWidgetConfig *> *)baseWidgets {
     // Register widgets
-    NSMutableDictionary<NSString *,AgoraWidgetConfig *> *widgets = [NSMutableDictionary dictionary];
+    NSMutableDictionary<NSString *, AgoraWidgetConfig *> *widgets = [NSMutableDictionary dictionary];
     // TODO: replace rtm to im (chat)
     AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[ChatWidget class]
                                                               widgetId:@"easemobIM"];
@@ -221,6 +148,23 @@
 
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     return widgets;
+}
+
+- (NSMutableDictionary<NSString *, AgoraExtAppConfiguration *> *)baseExtApps {
+    NSMutableDictionary<NSString *, AgoraWidgetConfig *> *exts = [NSMutableDictionary dictionary];
+    AgoraExtAppConfiguration *countdown = [[AgoraExtAppConfiguration alloc] initWithAppIdentifier:@"io.agora.countdown"
+                                                                                      extAppClass:[CountDownExtApp class]
+                                                                                            frame:UIEdgeInsetsZero
+                                                                                         language:@"zh"];
+    
+    AgoraExtAppConfiguration *answerExt = [[AgoraExtAppConfiguration alloc] initWithAppIdentifier:@"io.agora.answer"
+                                                                                      extAppClass:[AnswerSheetExtApp class]
+                                                                                            frame:UIEdgeInsetsZero
+                                                                                         language:@"zh"];
+    exts[countdown.appIdentifier] = countdown;
+    exts[answerExt.appIdentifier] = answerExt;
+    return exts;
+    
 }
 @end
 

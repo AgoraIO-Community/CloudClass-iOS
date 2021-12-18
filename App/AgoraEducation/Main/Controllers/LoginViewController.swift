@@ -13,8 +13,8 @@ import AgoraClassroomSDK
 #endif
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
+import AgoraExtApp
 import AgoraWidget
-import ChatWidget
 import AgoraLog
 import UIKit
 
@@ -191,25 +191,7 @@ private extension LoginViewController {
             enterButton.isUserInteractionEnabled = false
         }
     }
-    
-    func registerExtApps() {
-        let countDown = AgoraExtAppConfiguration(appIdentifier: "io.agora.countdown",
-                                                 extAppClass: CountDownExtApp.self,
-                                                 frame: .zero,
-                                                 language: "zh")
-        countDown.image = UIImage(named: "countdown")
-        
-        let answerExt = AgoraExtAppConfiguration(appIdentifier: "io.agora.answer",
-                                                 extAppClass: AnswerSheetExtApp.self,
-                                                 frame: UIEdgeInsets(top: 0,
-                                                                     left: 0,
-                                                                     bottom: 0,
-                                                                     right: 0),
-                                                 language: "zh")
-        answerExt.image = UIImage(named: "countdown")
-        let apps = [countDown, answerExt]
-        AgoraClassroomSDK.registerExtApps(apps)
-    }
+
     /** 获取选项列表*/
     func optionStrings(form options: [(Any, String)]) -> [String] {
         return options.map {$1}
@@ -314,7 +296,6 @@ private extension LoginViewController {
               let roleType = inputParams.roleType ?? defaultParams.roleType else {
             return
         }
-        registerExtApps()
         
         // roomUuid = roomName + classType
         let roomUuid = "\(room)\(roomStyle.rawValue)"
@@ -354,36 +335,46 @@ private extension LoginViewController {
         requestToken(region: region.rawValue,
                      userUuid: userUuid,
                      success: { [weak self] (response) in
-            guard let `self` = self else {
-                return
-            }
-            
-            let appId = response.appId
-            let rtmToken = response.rtmToken
-            let userUuid = response.userId
-            let sdkConfig = AgoraClassroomSDKConfig(appId: appId)
-            
-            let launchConfig = AgoraEduLaunchConfig(userName: user,
-                                                    userUuid: userUuid,
-                                                    roleType: roleType,
-                                                    roomName: room,
-                                                    roomUuid: roomUuid,
-                                                    roomType: roomStyle,
-                                                    token: rtmToken,
-                                                    startTime: NSNumber(value: startTime),
-                                                    duration: NSNumber(value: duration),
-                                                    region: region.eduType,
-                                                    mediaOptions: mediaOptions,
-                                                    userProperties: nil,
-                                                    boardFitMode: .retain)
-            
-            AgoraClassroomSDK.setConfig(sdkConfig)
-            
-            AgoraClassroomSDK.launch(launchConfig,
-                                     delegate: self,
-                                     success: success,
-                                     failure: failure)
-        }, failure: failure)
+                        guard let `self` = self else {
+                            return
+                        }
+                        
+                        let appId = response.appId
+                        let rtmToken = response.rtmToken
+                        let userUuid = response.userId
+                        let sdkConfig = AgoraClassroomSDKConfig(appId: appId)
+                        
+                        let launchConfig = AgoraEduLaunchConfig(userName: user,
+                                                                userUuid: userUuid,
+                                                                roleType: roleType,
+                                                                roomName: room,
+                                                                roomUuid: roomUuid,
+                                                                roomType: roomStyle,
+                                                                token: rtmToken,
+                                                                startTime: NSNumber(value: startTime),
+                                                                duration: NSNumber(value: duration),
+                                                                region: region.eduType,
+                                                                mediaOptions: mediaOptions,
+                                                                userProperties: nil)
+                        
+                        // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
+                        var extApps = Dictionary<String,AgoraExtAppConfiguration>()
+                        launchConfig.extApps.forEach { (k,v) in
+                            if k == "io.agora.countdown" {
+                                v.image = UIImage(named: "countdown")
+                            }
+                            extApps[k] = v
+                        }
+                        
+                        launchConfig.extApps = extApps
+                        
+                        AgoraClassroomSDK.setConfig(sdkConfig)
+                        
+                        AgoraClassroomSDK.launch(launchConfig,
+                                                 delegate: self,
+                                                 success: success,
+                                                 failure: failure)
+                     }, failure: failure)
     }
     
     @objc func onPushDebugVC() {

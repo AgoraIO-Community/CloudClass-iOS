@@ -16,7 +16,8 @@ import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 @Field def companionReposConfig = [
     "open-cloudclass-ios": "ssh://git@git.agoralab.co/aduc/open-cloudclass-ios.git",
     "apaas-common-libs-ios": "ssh://git@git.agoralab.co/aduc/apaas-common-libs-ios.git",
-    "cloudclass-ios": "ssh://git@git.agoralab.co/aduc/cloudclass-ios.git"
+    "cloudclass-ios": "ssh://git@git.agoralab.co/aduc/cloudclass-ios.git",
+    "open-apaas-extapp-ios": "ssh://git@git.agoralab.co/aduc/open-apaas-extapp-ios.git"
 ]
 
 withWechatNotify {
@@ -36,6 +37,7 @@ withWechatNotify {
                 string(name: 'build_branch', value: branches["cloudclass-ios"] ?: companionBranch),
                 string(name: 'open_cloud_class_branch', value: branches["open-cloudclass-ios"] ?: companionBranch),
                 string(name: 'common_libs_branch', value: branches["apaas-common-libs-ios"] ?: companionBranch),
+                string(name: 'open-widgets-extapp-branch', value: branches["open-apaas-extapp-ios"] ?: companionBranch),
                 string(name: 'rte_branch', value: branches["common-scene-sdk"] ?: companionBranch),
                 string(name: 'ci_branch', value: 'new_ios'),
                 string(name: 'build_env', value: 'Debug'),

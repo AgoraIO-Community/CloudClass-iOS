@@ -53,49 +53,6 @@
 @end
 
 @implementation AgoraClassroomSDK (Internal)
-+ (NSArray<AgoraEduCorePuppetCourseware *> * _Nullable)getPuppetBoardModelCoursewares:(NSArray<AgoraEduCourseware *> *)coursewares {
-    if (coursewares.count <= 0) {
-        return nil;
-    }
-    
-    NSMutableArray<AgoraEduCorePuppetCourseware *> *puppetCoursewares = [NSMutableArray array];
-    
-    for (AgoraEduCourseware *courseware in coursewares) {
-        NSMutableArray *puppetScenes = [NSMutableArray array];
-        
-        // board scene
-        for (AgoraEduBoardScene *scene in courseware.scenes) {
-            // board ppt
-            AgoraEduPPTPage *ppt = scene.pptPage;
-            AgoraEduCorePuppetPPTPage *puppetPPT = nil;
-            
-            if (ppt) {
-                puppetPPT = [[AgoraEduCorePuppetPPTPage alloc] initWithSource:ppt.source
-                                                                   previewURL:ppt.previewURL
-                                                                         size:CGSizeMake(ppt.width,
-                                                                                         ppt.height)];
-            }
-            
-            AgoraEduCorePuppetBoardScene *puppetScene = [[AgoraEduCorePuppetBoardScene alloc] initWithName:scene.name
-                                                                                                   pptPage:puppetPPT];
-            
-            [puppetScenes addObject:puppetScene];
-        }
-        
-        AgoraEduCorePuppetCourseware *puppetCourseware = [[AgoraEduCorePuppetCourseware alloc] initWithResourceName:courseware.resourceName
-                                                                                                       resourceUuid:courseware.resourceUuid
-                                                                                                          scenePath:courseware.scenePath
-                                                                                                        resourceURL:courseware.resourceUrl
-                                                                                                             scenes:puppetScenes
-                                                                                                                ext:courseware.ext
-                                                                                                               size:courseware.size
-                                                                                                         updateTime:courseware.updateTime];
-        [puppetCoursewares addObject:puppetCourseware];
-    }
-    
-    return puppetCoursewares;
-}
-
 + (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraEduMediaOptions *)options {
     AgoraEduCorePuppetVideoConfig *videoConfig = nil;
     if (options.cameraEncoderConfiguration) {

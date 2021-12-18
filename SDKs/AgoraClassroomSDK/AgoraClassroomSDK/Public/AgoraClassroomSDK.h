@@ -11,15 +11,6 @@
 #import "AgoraEduObjects.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-@protocol AgoraEduCoursewareProcess <NSObject>
-@optional
-- (void)courseware:(AgoraEduCourseware *)courseware
- didProcessChanged:(float)process;
-- (void)courseware:(AgoraEduCourseware *)courseware
-      didCompleted:(NSError * _Nullable)error;
-@end
-
 @class AgoraClassroomSDK;
 @protocol AgoraEduClassroomSDKDelegate <NSObject>
 @optional
@@ -34,9 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
       delegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate
        success:(void (^)(void))success
        failure:(void (^)(NSError *))failure;
-
-// 注册容器App
-+ (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)apps;
 
 + (NSString *)version;
 @end

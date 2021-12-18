@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AgoraUIBaseViews
 
 class RoomInfoOptionCell: AgoraBaseUITableViewCell {
     var infoLabel: AgoraBaseUILabel!

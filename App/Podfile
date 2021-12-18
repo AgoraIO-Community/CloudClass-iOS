@@ -55,13 +55,14 @@ def sourcePod
   preRtc
 
   # widgets
-  pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
-  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE']
+  pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets.podspec'
+  pod 'ChatWidget', :path => '../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE']
+  pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/ExtApps/AgoraExtApps.podspec'
 end
 
 def binaryPod
   pod 'AgoraClassroomSDK', :path => '../Products/AgoraClassroomSDK_Binary.podspec'
-  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
+  pod 'ChatWidget', :path => '../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
 
   pod "AgoraRtcEngine_iOS", "3.4.6"
 end
@@ -79,8 +80,9 @@ def halfBinaryPod
   pod 'AgoraWidget', '1.0.0'
 
   # widgets
-  pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
-  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE'] 
+  pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets.podspec'
+  pod 'ChatWidget', :path => '../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE'] 
+  pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/ExtApps/AgoraExtApps.podspec'
 end
 
 workspace 'AgoraEducation.xcworkspace'

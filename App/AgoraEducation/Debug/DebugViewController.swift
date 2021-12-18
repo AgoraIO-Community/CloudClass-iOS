@@ -121,7 +121,7 @@ import UIKit
     }
     
     @IBAction func updateWareList(_ sender: Any) {
-        setCoursewares()
+        
     }
     
     @IBAction func downWareList(_ sender: Any) {
@@ -229,8 +229,7 @@ private extension DebugViewController {
                                                     duration: NSNumber(value: duration),
                                                     region: .CN,
                                                     mediaOptions: mediaOptions,
-                                                    userProperties: nil,
-                                                    boardFitMode: .retain)
+                                                    userProperties: nil)
             
             AgoraClassroomSDK.setConfig(sdkConfig)
 //            self.classroom = AgoraClassroomSDK.launch(launchConfig,
@@ -251,79 +250,5 @@ private extension DebugViewController {
                                     AgoraLoading.hide()
                                     AgoraToast.toast(msg: error.localizedDescription)
                                    })
-    }
-}
-
-// MARK: Fetch BoardResource
-extension DebugViewController {
-    func setCoursewares() {
-        if let data = debugCourware.json.data(using: .utf8) {
-            do {
-                let dict = try JSONSerialization.jsonObject(with: data,
-                                                            options: []) as? [String : Any]
-                guard let data = dict?["data"] as? [String : Any],
-                      let list = data["list"] as? [[String : Any]]  else {
-                    return
-                }
-                
-                var coursewares = [AgoraEduCourseware]()
-                for dic in list {
-                    if let resourceName = dic["resourceName"] as? String,
-                       let resourceUuid = dic["resourceUuid"] as? String,
-                       let resourceUrl = dic["url"] as? String,
-                       let ext = dic["ext"] as? String,
-                       let size = dic["size"] as? Double,
-                       let updateTime = dic["updateTime"] as? Double,
-                       let taskProgress = dic["taskProgress"] as? [String : Any],
-                       let convertedFileList = taskProgress["convertedFileList"] as? [[String : Any]] {
-                        let scenePath = "/" + resourceName
-                        
-                        var scenes = [AgoraEduBoardScene]()
-                        for sceneDict in convertedFileList {
-                            if let name = sceneDict["name"] as? String,
-                               let ppt = sceneDict["ppt"] as? [String : Any],
-                               let width = ppt["width"] as? CGFloat,
-                               let height = ppt["height"] as? CGFloat,
-                               let preview = ppt["preview"] as? String,
-                               let src = ppt["src"] as? String {
-                                let pptPage = AgoraEduPPTPage.init(source: src,
-                                                                   previewURL: preview,
-                                                                   size: CGSize(width: width, height: height))
-                                let scene = AgoraEduBoardScene.init(name: name,
-                                                                    pptPage: pptPage)
-                                scenes.append(scene)
-                            }
-                        }
-                        
-                        let courseware = AgoraEduCourseware(resourceName: resourceName,
-                                                            resourceUuid: resourceUuid,
-                                                            scenePath: scenePath,
-                                                            scenes: scenes,
-                                                            resourceUrl: resourceUrl,
-                                                            ext: ext,
-                                                            size: size,
-                                                            updateTime: updateTime)
-                        coursewares.append(courseware)
-                    }
-                }
-                
-//                AgoraClassroomSDK.configCoursewares(coursewares)
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-    }
-}
-
-// MARK: AgoraEduClassroomDelegate
-extension DebugViewController: AgoraEduCoursewareProcess {
-    func courseware(_ courseware: AgoraEduCourseware,
-                    didProcessChanged process: Float) {
-        downProcess = CGFloat(process)
-    }
-    
-    func courseware(_ courseware: AgoraEduCourseware,
-                    didCompleted error: Error?) {
-        downCompleteSuccess = (error == nil)
     }
 }

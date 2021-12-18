@@ -27,6 +27,7 @@ Pod::Spec.new do |spec|
   spec.dependency "AgoraEduContext"
   spec.dependency "AgoraWidgets"
   spec.dependency "ChatWidget"
+  spec.dependency "AgoraExtApps"
 
   spec.subspec 'PreRtc' do |pre_rtc|
     pre_rtc.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}", "AgoraClassroomSDK/**/*.{swift,h,m}"

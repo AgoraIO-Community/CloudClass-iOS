@@ -23,88 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithAppId:(NSString *)appId;
 @end
 
-#pragma mark - White board
-@interface AgoraEduPPTPage : NSObject
-/**
- 图片的 URL 地址。
- */
-@property (nonatomic, copy) NSString *source;
-/**
- 图片的 URL 宽度。单位为像素。
- */
-@property (nonatomic, assign) CGFloat width;
-/**
- 图片的 URL 高度。单位为像素。
- */
-@property (nonatomic, assign) CGFloat height;
-
-/**
- 预览图片的 URL 地址。
- */
-@property (nonatomic, copy, nullable) NSString *previewURL;
-
-
-/**
- @param source 图片的 URL 地址。
- @param size 图片尺寸。
-
- @return 初始化的 `WhitePptPage` 对象。
- */
-- (instancetype)initWithSource:(NSString *)source
-                          size:(CGSize)size;
-
-/** 设置场景的预览图片信息并初始化一个 `WhitePptPage` 对象。
- @param source 图片的 URL 地址。
- @param url 预览图片的 URL 地址。
- @param size 图片尺寸。
-
- @return 初始化的 `WhitePptPage` 对象。
- */
-- (instancetype)initWithSource:(NSString *)source
-                    previewURL:(NSString *)url
-                          size:(CGSize)size;
-@end
-
-@interface AgoraEduBoardScene : NSObject
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, strong, nullable) AgoraEduPPTPage *pptPage;
-
-- (instancetype)initWithName:(NSString *)name
-                     pptPage:(AgoraEduPPTPage * _Nullable)pptPage;
-@end
-
-/**设置课件预加载配置*/
-@interface AgoraEduCourseware : NSObject
-// 资源名称，必须要"/"开头
-@property (nonatomic, copy) NSString *resourceName;
-// 资源Id
-@property (nonatomic, copy) NSString *resourceUuid;
-// 场景路径，必须要"/"开头，相当于文件目录
-// 建议这样拼接：resourceUuid + "/" + convertedFileList里面第一个对象的name
-@property (nonatomic, copy) NSString *scenePath;
-// 课件下载地址
-// 参考： "https://convertcdn.netless.link/dynamicConvert/{taskUuid}.zip"
-@property (nonatomic, copy) NSString *resourceUrl;
-// 课件文件列表，用于目录里面每页的数据
-// 对应convertedFileList对象
-@property (nonatomic, strong) NSArray<AgoraEduBoardScene *> *scenes;
-/// 原始文件的扩展名
-@property (nonatomic, copy, nullable) NSString *ext;
-/// 原始文件的大小 单位是字节
-@property (nonatomic, assign) double size;
-/// 原始文件的更新时间
-@property (nonatomic, assign) double updateTime;
-
-- (instancetype)initWithResourceName:(NSString *)resourceName
-                        resourceUuid:(NSString *)resourceUuid
-                           scenePath:(NSString *)scenePath
-                              scenes:(NSArray<AgoraEduBoardScene *> *)scenes
-                         resourceUrl:(NSString *)resourceUrl
-                                 ext:(NSString * _Nonnull)ext
-                                size:(double)size
-                          updateTime:(double)updateTime;
-@end
-
 #pragma mark - Media
 /**设置媒体选项*/
 @interface AgoraEduMediaEncryptionConfig : NSObject
@@ -173,14 +91,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) AgoraEduMediaOptions *mediaOptions;
 // 用户自定属性
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, NSString *> * userProperties;
-
-@property (nonatomic, assign) AgoraEduBoardFitMode boardFitMode;
-
 // widgets
-@property (nonatomic, strong) NSMutableDictionary<NSString *,AgoraWidgetConfig *> *widgets;
-
+@property (nonatomic, strong) NSDictionary<NSString *, AgoraWidgetConfig *> *widgets;
 // ext apps
-//@property (nonatomic, strong) NSMutableDictionary<NSString *,AgoraExtAppConfiguration *> *extApps;
+@property (nonatomic, strong) NSDictionary<NSString *, AgoraExtAppConfiguration *> *extApps;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
@@ -201,8 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
                     mediaOptions:(AgoraEduMediaOptions * _Nullable)mediaOptions
-                  userProperties:(NSDictionary * _Nullable)userProperties
-                    boardFitMode:(AgoraEduBoardFitMode)boardFitMode;
+                  userProperties:(NSDictionary * _Nullable)userProperties;
 @end
 
 // 聊天翻译

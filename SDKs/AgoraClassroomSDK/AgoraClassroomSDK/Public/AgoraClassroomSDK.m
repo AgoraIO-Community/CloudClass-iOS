@@ -24,8 +24,6 @@
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
 
 @property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
-@property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *extApps;
-@property (nonatomic, strong) NSArray<AgoraEduCourseware *> *coursewares;
 
 @property (nonatomic, strong) UIViewController *eduUI;
 
@@ -33,7 +31,6 @@
 @property (nonatomic, strong) NSNumber *environment;
 
 @property (nonatomic, weak) id<AgoraEduClassroomSDKDelegate> delegate;
-@property (nonatomic, weak) id<AgoraEduCoursewareProcess> coursewareDelegate;
 @end
 
 static AgoraClassroomSDK *manager = nil;
@@ -121,9 +118,6 @@ static AgoraClassroomSDK *manager = nil;
         [core setParameters:parameters];
     }
     
-    // Board coursewares
-    NSArray<AgoraEduCorePuppetCourseware *> *coursewares = [self getPuppetBoardModelCoursewares:manager.coursewares];
-    
     // Media video encoder config
     AgoraEduCorePuppetMediaOptions *mediaOptions = [self getPuppetMediaOptions:config.mediaOptions];
     
@@ -142,14 +136,12 @@ static AgoraClassroomSDK *manager = nil;
                                                   roomUuid:config.roomUuid
                                                   roomType:config.roomType
                                                   startTime:config.startTime
-                                                  duration:config.duration
-                                                  coursewares:coursewares
-                                                  boardFitMode:config.boardFitMode];
+                                                  duration:config.duration];
     
     __weak AgoraClassroomSDK *weakManager = manager;
 
     [core launchWithConfig:coreConfig
-                   extApps:manager.extApps
+                   extApps:config.extApps.allValues
                    widgets:config.widgets.allValues
                    success:^(id<AgoraEduContextPool> pool) {
         AgoraEduUIManager *eduVC = nil;
@@ -183,21 +175,13 @@ static AgoraClassroomSDK *manager = nil;
     } failure:failure];
 }
 
-+ (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)extApps {
-    [AgoraClassroomSDK share].extApps = [NSArray arrayWithArray:extApps];
-}
-
 - (void)agoraRelease {
     self.core = nil;
     self.eduUI = nil;
-    self.extApps = nil;
-    self.coursewares = nil;
     self.delegate = nil;
-    self.coursewareDelegate = nil;
 }
 
 #pragma mark - AgoraEduUIManagerDelegate
-
 - (void)manager:(AgoraEduUIManager *)manager
       didExited:(enum AgoraClassRoomExitReason)reason {
     AgoraEduExitReason sdkReason = nil;
@@ -216,5 +200,4 @@ static AgoraClassroomSDK *manager = nil;
     }
     [self agoraRelease];
 }
-
 @end

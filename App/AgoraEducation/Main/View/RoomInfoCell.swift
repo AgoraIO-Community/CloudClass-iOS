@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AgoraUIBaseViews
 
 protocol RoomInfoCellDelegate: AnyObject {
     /** 开始编辑cell上的文字*/

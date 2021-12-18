@@ -30,7 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Model translation
 @interface AgoraClassroomSDK (Internal)
-+ (NSArray<AgoraEduCorePuppetCourseware *> * _Nullable)getPuppetBoardModelCoursewares:(NSArray<AgoraEduCourseware *> *)coursewares;
 + (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraEduMediaOptions *)options;
 @end
 
