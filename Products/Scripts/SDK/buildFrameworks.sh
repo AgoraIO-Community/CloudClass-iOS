@@ -52,10 +52,6 @@ do
     if [[ ! ${FileName} =~ "framework" ]]
     then
         continue
-
-    elif [[ ${FileName} == "EduSDK.framework" ]]
-    then
-        continue
     elif [[ ! ${FileName} =~ "Agora" ]]
     then
         rm -fr ${Products_Path}/${FileName}

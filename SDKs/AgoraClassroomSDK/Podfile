@@ -3,7 +3,6 @@
 
 def libVersion
   pod 'Protobuf', '3.17.0'
-  pod "AFNetworking", "4.0.1"
   pod "CocoaLumberjack", "3.6.1"
   pod "AliyunOSSiOS", "2.10.8"
   pod "Armin", "1.0.8"
@@ -19,9 +18,6 @@ end
 
 def preRtc
   pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
-
-  #pod 'AgoraEduCorePuppet/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
-  #pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
   pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
   pod "AgoraRtcEngine_iOS", "3.4.6"
 end
@@ -47,10 +43,6 @@ def widgetsExtApps
 end
 
 def sourcePod
-  # close source libs
-  #pod 'AgoraReport', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraReport/AgoraReport.podspec'
-  #pod 'AgoraRx', :path => '../../../cloudclass-ios/SDKs/Modules/AgoraRx/AgoraRx.podspec'
-	
   # common libs
   pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
   pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
