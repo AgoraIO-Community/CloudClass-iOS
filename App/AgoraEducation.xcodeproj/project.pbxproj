@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15D1CB6F27700021002D4CA0 /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 15D1CB6D27700021002D4CA0 /* UIColor+Addition.m */; };
 		1A44BE7522BF863000766274 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A44BE5722BF863000766274 /* Assets.xcassets */; };
 		1A44BE7A22BF863000766274 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE5E22BF863000766274 /* main.m */; };
 		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
@@ -59,6 +60,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		15D1CB6D27700021002D4CA0 /* UIColor+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Addition.m"; sourceTree = "<group>"; };
+		15D1CB6E27700021002D4CA0 /* UIColor+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Addition.h"; sourceTree = "<group>"; };
 		1A44BE3522BF863000766274 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1A44BE5722BF863000766274 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A44BE5E22BF863000766274 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -268,6 +271,8 @@
 		78D730C423B3853200D2146C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				15D1CB6E27700021002D4CA0 /* UIColor+Addition.h */,
+				15D1CB6D27700021002D4CA0 /* UIColor+Addition.m */,
 				783FB6CC240D0746007298C1 /* AlertView */,
 				783FB6D8240D0746007298C1 /* Toast */,
 				861D3CFA276AE05E00645D6A /* AppExtension.swift */,
@@ -613,6 +618,7 @@
 				6861691726AEAFCF00E26F69 /* TermsAndPolicyViewController.swift in Sources */,
 				68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */,
 				6861690E26AEAC3C00E26F69 /* TermsAndPolicyView.swift in Sources */,
+				15D1CB6F27700021002D4CA0 /* UIColor+Addition.m in Sources */,
 				7801A89C25DB7D9D00C63ABF /* DebugViewController.swift in Sources */,
 				1A44BE7A22BF863000766274 /* main.m in Sources */,
 			);
