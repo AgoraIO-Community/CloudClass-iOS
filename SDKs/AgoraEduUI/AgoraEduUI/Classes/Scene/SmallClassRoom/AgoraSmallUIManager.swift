@@ -243,14 +243,14 @@ private extension AgoraSmallUIManager {
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))
         }
+        boardController.view.mas_makeConstraints { make in
+            make?.height.equalTo()(AgoraFit.scale(307))
+            make?.left.right().bottom().equalTo()(0)
+        }
         renderController.view.mas_makeConstraints { make in
             make?.left.right().equalTo()(0)
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-            make?.height.equalTo()(AgoraFit.scale(52))
-        }
-        boardController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-            make?.left.right().bottom().equalTo()(0)
+            make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-1))
         }
         screenSharingController.view.mas_makeConstraints { make in
             make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
@@ -274,6 +274,13 @@ private extension AgoraSmallUIManager {
     
     func createChatController() {
         chatController = AgoraChatUIController(context: contextPool)
+        chatController.hideMiniButton = true
+        chatController.view.layer.shadowColor = UIColor(rgb: 0x2F4192,
+                                                        alpha: 0.15).cgColor
+        chatController.view.layer.shadowOffset = CGSize(width: 0,
+                                                        height: 2)
+        chatController.view.layer.shadowOpacity = 1
+        chatController.view.layer.shadowRadius = 6
         addChild(chatController)
     }
 }

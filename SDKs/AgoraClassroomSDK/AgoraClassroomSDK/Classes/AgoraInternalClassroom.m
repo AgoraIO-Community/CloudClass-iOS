@@ -44,10 +44,6 @@
         return NO;
     }
     
-    if (self.startTime == nil) {
-        return NO;
-    }
-    
     return YES;
 }
 @end

@@ -37,34 +37,17 @@ extension AgoraUserListModel {
     func updateWithStream(_ stream: AgoraEduContextStreamInfo?) {
         if let `stream` = stream {
             // audio
-            if stream.streamType.hasAudio,
-               stream.audioSourceState == .open {
-                self.micState.state = .on
-            } else if stream.streamType.hasAudio,
-                      stream.audioSourceState == .close {
-                self.micState.state = .off
-            } else if stream.streamType.hasAudio == false,
-                      stream.audioSourceState == .open {
-                self.micState.state = .forbidden
-            } else {
-                self.micState.state = .off
-            }
+            self.micState.hasStream = stream.streamType.hasAudio
+            self.micState.isOn = (stream.audioSourceState == .open)
             // video
-            if stream.streamType.hasVideo,
-               stream.videoSourceState == .open {
-                self.cameraState.state = .on
-            } else if stream.streamType.hasVideo,
-                      stream.videoSourceState == .close {
-                self.cameraState.state = .off
-            } else if stream.streamType.hasVideo == false,
-                      stream.videoSourceState == .open {
-                self.cameraState.state = .forbidden
-            } else {
-                self.cameraState.state = .off
-            }
+            self.cameraState.hasStream = stream.streamType.hasVideo
+            self.cameraState.isOn = (stream.videoSourceState == .open)
+            
         } else {
-            self.micState.state = .off
-            self.cameraState.state = .off
+            self.micState.hasStream = false
+            self.micState.isOn = false
+            self.cameraState.hasStream = false
+            self.cameraState.isOn = false
         }
         self.cameraState.isEnable = false
         self.micState.isEnable = false

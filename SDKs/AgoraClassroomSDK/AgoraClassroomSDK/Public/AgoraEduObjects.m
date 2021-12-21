@@ -124,23 +124,33 @@
     // Register widgets
     NSMutableDictionary<NSString *, AgoraWidgetConfig *> *widgets = [NSMutableDictionary dictionary];
     // TODO: replace rtm to im (chat)
-    AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[ChatWidget class]
-                                                              widgetId:@"easemobIM"];
+    AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc]
+                               initWithClass:[ChatWidget class]
+                               widgetId:@"easemobIM"];
     widgets[chat.widgetId] = chat;
     
     // AgoraSpreadRenderWidget
-    AgoraWidgetConfig *spreadRender = [[AgoraWidgetConfig alloc] initWithClass:[AgoraSpreadRenderWidget class]
-                                                                                    widgetId:@"big-window"];
+    AgoraWidgetConfig *spreadRender = [[AgoraWidgetConfig alloc]
+                                       initWithClass:[AgoraSpreadRenderWidget class]
+                                       widgetId:@"big-window"];
     widgets[spreadRender.widgetId] = spreadRender;
     
     // AgoraCloudWidget
-    AgoraWidgetConfig *cloudWidgetConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
-                                                                                         widgetId:@"AgoraCloudWidget"];
+    AgoraWidgetConfig *cloudWidgetConfig = [[AgoraWidgetConfig alloc]
+                                            initWithClass:[AgoraCloudWidget class]
+                                            widgetId:@"AgoraCloudWidget"];
     widgets[cloudWidgetConfig.widgetId] = cloudWidgetConfig;
     
     // AgoraWhiteboardWidget
-    AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWhiteboardWidget class]
-                                                                          widgetId:@"netlessBoard"];
+    AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc]
+                                           initWithClass:[AgoraWhiteboardWidget class]
+                                           widgetId:@"netlessBoard"];
+    // RTM IM Widget
+    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc]
+                               initWithClass:[AgoraRtmIMWidget class]
+                               widgetId:@"AgoraChatWidget"];
+    widgets[chat.widgetId] = rtm;
+    
     NSString *courseFolder = [NSString stringWithFormat:@"%@/%@",NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0],@"AgoraDownload"];
     whiteboardConfig.extraInfo = @{@"coursewareDirectory":courseFolder,
                                    @"useMultiViews": @YES,

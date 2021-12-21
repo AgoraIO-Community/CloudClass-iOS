@@ -74,6 +74,7 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
+        contextPool.media.registerMediaEventHandler(self)
     }
 }
 

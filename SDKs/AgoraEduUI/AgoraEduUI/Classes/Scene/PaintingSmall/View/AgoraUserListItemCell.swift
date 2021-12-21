@@ -27,9 +27,9 @@ class AgoraUserListModel {
     
     var authState: (isOn: Bool, isEnable: Bool) = (false, false)
     
-    var cameraState: (state: AgoraUserListDeviceState, isEnable: Bool) = (.on, false)
+    var cameraState: (hasStream: Bool, isOn: Bool, isEnable: Bool) = (false, false, false)
     
-    var micState: (state: AgoraUserListDeviceState, isEnable: Bool) = (.on, false)
+    var micState: (hasStream: Bool, isOn: Bool, isEnable: Bool) = (false, false, false)
     
     var rewards: Int = 0
     
@@ -244,23 +244,47 @@ private extension AgoraUserListItemCell {
                 }
                 authButton.isUserInteractionEnabled = model.stageState.isEnable
             case .camera:
-                switch model.cameraState.state {
-                case .on:
-                    cameraButton.tintColor = on
-                case .off:
+                var image: UIImage?
+                if model.cameraState.isOn {
+                    image = UIImage.ag_imageNamed("ic_nameroll_camera_on",
+                                                  in: "AgoraEduUI")
+                } else {
+                    image = UIImage.ag_imageNamed("ic_nameroll_camera_off",
+                                                  in: "AgoraEduUI")
+                }
+                if let i = image?.withRenderingMode(.alwaysTemplate) {
+                    cameraButton.setImageForAllStates(i)
+                }
+                if model.stageState.isOn {
+                    if model.cameraState.hasStream {
+                        cameraButton.tintColor = on
+                    } else {
+                        cameraButton.tintColor = UIColor(hex: 0xF04C36)
+                    }
+                } else {
                     cameraButton.tintColor = UIColor(hex: 0xE2E2EE)
-                case .forbidden:
-                    cameraButton.tintColor = UIColor(hex: 0xF04C36)
                 }
                 cameraButton.isUserInteractionEnabled = model.cameraState.isEnable
             case .mic:
-                switch model.cameraState.state {
-                case .on:
-                    micButton.tintColor = on
-                case .off:
+                var image: UIImage?
+                if model.micState.isOn {
+                    image = UIImage.ag_imageNamed("ic_nameroll_mic_on",
+                                                  in: "AgoraEduUI")
+                } else {
+                    image = UIImage.ag_imageNamed("ic_nameroll_mic_off",
+                                                  in: "AgoraEduUI")
+                }
+                if let i = image?.withRenderingMode(.alwaysTemplate) {
+                    micButton.setImageForAllStates(i)
+                }
+                if model.stageState.isOn {
+                    if model.micState.hasStream {
+                        micButton.tintColor = on
+                    } else {
+                        micButton.tintColor = UIColor(hex: 0xF04C36)
+                    }
+                } else {
                     micButton.tintColor = UIColor(hex: 0xE2E2EE)
-                case .forbidden:
-                    micButton.tintColor = UIColor(hex: 0xF04C36)
                 }
                 micButton.isUserInteractionEnabled = model.micState.isEnable
             case .reward:

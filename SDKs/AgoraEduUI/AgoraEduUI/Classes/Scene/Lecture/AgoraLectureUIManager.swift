@@ -277,7 +277,14 @@ private extension AgoraLectureUIManager {
     
     func createChatController() {
         chatController = AgoraChatUIController(context: contextPool)
+        chatController.hideMiniButton = true
         addChild(chatController)
+        chatController.view.layer.shadowColor = UIColor(rgb: 0x2F4192,
+                                                        alpha: 0.15).cgColor
+        chatController.view.layer.shadowOffset = CGSize(width: 0,
+                                                        height: 2)
+        chatController.view.layer.shadowOpacity = 1
+        chatController.view.layer.shadowRadius = 6
         contentView.addSubview(chatController.view)
         chatController.view.mas_makeConstraints { make in
             make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))

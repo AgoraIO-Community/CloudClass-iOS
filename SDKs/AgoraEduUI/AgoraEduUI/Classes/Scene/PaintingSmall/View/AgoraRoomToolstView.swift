@@ -76,7 +76,7 @@ protocol AgoraRoomToolsViewDelegate: NSObject {
     func toolsViewDidDeselectTool(_ tool: AgoraRoomToolstView.AgoraRoomToolType)
 }
 // MARK: - AgoraToolListView
-private let kButtonSize: CGFloat = AgoraFit.scale(36.0)
+private let kButtonSize: CGFloat = 36.0
 private let kGap: CGFloat = 12.0
 private let kDefaultTag: Int = 3389
 
@@ -194,7 +194,6 @@ private extension AgoraRoomToolstView {
 
 // MARK: - Actions
 extension AgoraRoomToolstView {
-    
     @objc func onClickToolButton(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         if sender.isSelected,
@@ -203,10 +202,6 @@ extension AgoraRoomToolstView {
         } else {
             selectedTool = nil
         }
-    }
-    
-    @objc func onClickHandsup(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
     }
 }
 

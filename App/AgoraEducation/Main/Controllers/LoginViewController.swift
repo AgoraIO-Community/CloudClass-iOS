@@ -302,9 +302,9 @@ private extension LoginViewController {
         
         // userUuid = userName + roleType
         let userUuid = "\(user)\(roleType.rawValue)"
-
-        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
-        let duration = self.defaultParams.duration!
+        
+//        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
+//        let duration = self.defaultParams.duration!
         
         var encryptionConfig: AgoraEduMediaEncryptionConfig?
         if let key = self.inputParams.encryptKey ?? self.defaultParams.encryptKey,
@@ -351,8 +351,8 @@ private extension LoginViewController {
                                                                 roomUuid: roomUuid,
                                                                 roomType: roomStyle,
                                                                 token: rtmToken,
-                                                                startTime: NSNumber(value: startTime),
-                                                                duration: NSNumber(value: duration),
+                                                                startTime: nil,
+                                                                duration: nil,
                                                                 region: region.eduType,
                                                                 mediaOptions: mediaOptions,
                                                                 userProperties: nil)
