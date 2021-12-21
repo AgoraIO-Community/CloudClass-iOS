@@ -36,7 +36,7 @@ fileprivate extension UIColor {
                     green: &green,
                     blue: &blue,
                     alpha: &alpha)
-        return [Int(red),Int(green),Int(blue),Int(alpha)]
+        return [Int(red * 255),Int(green * 255),Int(blue * 255)]
     }
 }
 
