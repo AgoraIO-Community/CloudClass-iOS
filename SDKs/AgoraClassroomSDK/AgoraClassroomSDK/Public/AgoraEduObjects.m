@@ -171,8 +171,15 @@
                                                                                       extAppClass:[AnswerSheetExtApp class]
                                                                                             frame:UIEdgeInsetsZero
                                                                                          language:@"zh"];
+    
+    AgoraExtAppConfiguration *voteExt = [[AgoraExtAppConfiguration alloc] initWithAppIdentifier:@"io.agora.vote"
+                                                                                      extAppClass:[VoteExtApp class]
+                                                                                            frame:UIEdgeInsetsZero
+                                                                                         language:@"zh"];
+    
     exts[countdown.appIdentifier] = countdown;
     exts[answerExt.appIdentifier] = answerExt;
+    exts[answerExt.appIdentifier] = voteExt;
     return exts;
     
 }
