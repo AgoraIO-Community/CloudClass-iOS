@@ -181,7 +181,7 @@ public class AgoraPencilTypeCollection: AgoraBaseUICollectionView,
         var isBySelected: Bool = false {
             didSet {
                 dotView.isHidden = !isBySelected
-                dotView.backgroundColor = UIColor(rgb: 0x868F9F)
+                dotView.backgroundColor = UIColor(hex: 0x868F9F)
             }
         }
     }
@@ -284,7 +284,7 @@ public class AgoraFontCollection: AgoraBaseUICollectionView,
         
         func initViews() {
             fontLabel.layer.borderWidth = 1
-            fontLabel.layer.borderColor = UIColor(rgb: 0xD9D9E7).cgColor
+            fontLabel.layer.borderColor = UIColor(hex: 0xD9D9E7)?.cgColor
             fontLabel.layer.masksToBounds = true
             fontLabel.textAlignment = .center
             fontLabel.font = UIFont.systemFont(ofSize: 14)
@@ -302,8 +302,8 @@ public class AgoraFontCollection: AgoraBaseUICollectionView,
         
         var isBySelected: Bool = false {
             didSet {
-                fontLabel.backgroundColor = isBySelected ? UIColor(rgb: 0x357BF6) : .white
-                fontLabel.textColor = isBySelected ? .white : UIColor(rgb: 0x7B88A0)
+                fontLabel.backgroundColor = isBySelected ? UIColor(hex: 0x357BF6) : .white
+                fontLabel.textColor = isBySelected ? .white : UIColor(hex: 0x7B88A0)
             }
         }
     }

@@ -15,10 +15,10 @@ class AgoraRoomToolZoomButton: UIButton {
         super.init(frame: frame)
         
         backgroundColor = UIColor.white
-        imageView?.tintColor = UIColor(rgb: 0x7B88A0)
+        imageView?.tintColor = UIColor(hex: 0x7B88A0)
         
         layer.cornerRadius = 8
-        layer.shadowColor = UIColor(rgb:0x2F4192).withAlphaComponent(0.15).cgColor
+        layer.shadowColor = UIColor(hex:0x2F4192, transparency: 0.15)?.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 1
         layer.shadowRadius = 6
@@ -37,8 +37,8 @@ class AgoraRoomToolZoomButton: UIButton {
     override var isSelected: Bool {
         willSet {
             if isSelected != newValue {
-                backgroundColor = newValue ? UIColor(rgb: 0x357BF6) : .white
-                imageView?.tintColor = newValue ? .white : UIColor(rgb: 0x7B88A0)
+                backgroundColor = newValue ? UIColor(hex: 0x357BF6) : .white
+                imageView?.tintColor = newValue ? .white : UIColor(hex: 0x7B88A0)
             }
         }
     }

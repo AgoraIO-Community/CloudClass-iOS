@@ -42,7 +42,7 @@ class AgoraRenderVolumeView: UIView {
                                             y: 0,
                                             width: 6,
                                             height: 1))
-            view.backgroundColor = UIColor(rgb: 0x357BF6)
+            view.backgroundColor = UIColor(hex: 0x357BF6)
             contentView.addArrangedSubview(view)
         }
                         

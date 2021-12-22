@@ -116,8 +116,8 @@ private class AgoraAlertController: UIViewController {
         contentView.layer.cornerRadius = 12
         contentView.layer.shadowOpacity = 1
         contentView.layer.shadowRadius = 6
-        contentView.layer.shadowColor = UIColor(rgb: 0x2F4192,
-                                                alpha: 0.15).cgColor
+        contentView.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                                transparency: 0.15)?.cgColor
         contentView.layer.shadowOffset = CGSize(width: 0,
                                                 height: 2)
         view.addSubview(contentView)
@@ -129,7 +129,7 @@ private class AgoraAlertController: UIViewController {
         titleLabel.text = model.title
         titleLabel.numberOfLines = 1
         titleLabel.font = UIFont.systemFont(ofSize: 17)
-        titleLabel.textColor = UIColor(rgb: 0x030303)
+        titleLabel.textColor = UIColor(hex: 0x030303)
         titleLabel.textAlignment = .center
         contentView.addSubview(titleLabel)
         
@@ -137,7 +137,7 @@ private class AgoraAlertController: UIViewController {
         messageLabel.text = model.message
         messageLabel.numberOfLines = 0
         messageLabel.font = UIFont.systemFont(ofSize: 13)
-        messageLabel.textColor = UIColor(rgb: 0x586376)
+        messageLabel.textColor = UIColor(hex: 0x586376)
         messageLabel.textAlignment = .center
         contentView.addSubview(messageLabel)
     }
@@ -164,7 +164,7 @@ private class AgoraAlertController: UIViewController {
             make?.right.equalTo()(-20)
         }
         hLine = UIView()
-        hLine.backgroundColor = UIColor(rgb: 0xEEEEF7)
+        hLine.backgroundColor = UIColor(hex: 0xEEEEF7)
         contentView.addSubview(hLine)
     }
     
@@ -190,7 +190,7 @@ private class AgoraAlertController: UIViewController {
             button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
             button.setTitle(action?.title,
                             for: .normal)
-            button.setTitleColor(UIColor(rgb: 0x357BF6),
+            button.setTitleColor(UIColor(hex: 0x357BF6),
                                  for: .normal)
             button.addTarget(self,
                              action: #selector(onClickActionButton(_:)),
@@ -222,7 +222,7 @@ private class AgoraAlertController: UIViewController {
                 make?.height.equalTo()(44)
             }
             let line = UIView()
-            line.backgroundColor = UIColor(rgb: 0xEEEEF7)
+            line.backgroundColor = UIColor(hex: 0xEEEEF7)
             contentView.addSubview(line)
             line.mas_makeConstraints { make in
                 make?.top.equalTo()(hLine.mas_bottom)
@@ -251,7 +251,7 @@ private class AgoraAlertController: UIViewController {
                 }
                 if lastOne == false {
                     let line = UIView()
-                    line.backgroundColor = UIColor(rgb: 0xEEEEF7)
+                    line.backgroundColor = UIColor(hex: 0xEEEEF7)
                     contentView.addSubview(line)
                     previous = line
                     line.mas_makeConstraints { make in
@@ -270,7 +270,7 @@ private class AgoraAlertController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         button.setTitle(title,
                         for: .normal)
-        button.setTitleColor(UIColor(rgb: 0x357BF6),
+        button.setTitleColor(UIColor(hex: 0x357BF6),
                              for: .normal)
         button.addTarget(self,
                          action: #selector(onClickActionButton(_:)),

@@ -126,7 +126,7 @@ extension AgoraOneToOneStateUIController {
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch info.state {
         case .before:
-            timeLabel.textColor = UIColor(rgb: 0x677386)
+            timeLabel.textColor = UIColor(hex: 0x677386)
             if info.startTime == 0 {
                 timeLabel.text = "title_before_class".ag_localizedIn("AgoraEduUI")
             } else {
@@ -162,7 +162,7 @@ extension AgoraOneToOneStateUIController {
                 AgoraToast.toast(msg: strStart + strMid + strEnd)
             }
         case .during:
-            timeLabel.textColor = UIColor(rgb: 0x677386)
+            timeLabel.textColor = UIColor(hex: 0x677386)
             let time = realTime - info.startTime
             let text = AgoraUILocalizedString("ClassAfterStartText",
                                               object: self)
@@ -258,12 +258,12 @@ private extension AgoraOneToOneStateUIController {
         
         titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 9)
-        titleLabel.textColor = UIColor(rgb: 0x191919)
+        titleLabel.textColor = UIColor(hex: 0x191919)
         view.addSubview(titleLabel)
         
         timeLabel = UILabel()
         timeLabel.font = UIFont.systemFont(ofSize: 9)
-        timeLabel.textColor = UIColor(rgb: 0x677386)
+        timeLabel.textColor = UIColor(hex: 0x677386)
         view.addSubview(timeLabel)
         
         settingButton = UIButton(type: .custom)
@@ -272,7 +272,7 @@ private extension AgoraOneToOneStateUIController {
             .withRenderingMode(.alwaysTemplate) {
             settingButton.setImageForAllStates(settingIMG)
         }
-        settingButton.imageView?.tintColor = UIColor(rgb: 0x7B88A0)
+        settingButton.imageView?.tintColor = UIColor(hex: 0x7B88A0)
         settingButton.addTarget(self, action: #selector(onClickSetting(_:)),
                                 for: .touchUpInside)
         settingButton.layer.cornerRadius = 20 * 0.5

@@ -83,7 +83,7 @@ private extension AgoraRoomStateUIController {
             if themeColor != nil {
                 stateView.timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
             } else {
-                stateView.timeLabel.textColor = UIColor(rgb: 0x677386)
+                stateView.timeLabel.textColor = UIColor(hex: 0x677386)
             }
             if info.startTime == 0 {
                 stateView.timeLabel.text = "title_before_class".ag_localizedIn("AgoraEduUI")
@@ -123,7 +123,7 @@ private extension AgoraRoomStateUIController {
             if themeColor != nil {
                 stateView.timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
             } else {
-                stateView.timeLabel.textColor = UIColor(rgb: 0x677386)
+                stateView.timeLabel.textColor = UIColor(hex: 0x677386)
             }
             let time = realTime - info.startTime
             let text = AgoraUILocalizedString("ClassAfterStartText",

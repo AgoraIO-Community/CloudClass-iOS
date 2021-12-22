@@ -50,7 +50,7 @@ class AgoraHandsUpUIController: UIViewController {
     /** 举手人数的红点提醒*/
     private lazy var redDot: UIView = {
         let redDot = UIView()
-        redDot.backgroundColor = UIColor(rgb: 0xF04C36)
+        redDot.backgroundColor = UIColor(hex: 0xF04C36)
         redDot.layer.cornerRadius = 7
         redDot.clipsToBounds = true
         redDot.isUserInteractionEnabled = false
@@ -89,7 +89,8 @@ class AgoraHandsUpUIController: UIViewController {
     }()
     private lazy var listContentView: UIView = {
         let v = UIView()
-        v.layer.shadowColor = UIColor(rgb: 0x2F4192, alpha: 0.15).cgColor
+        v.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                      transparency: 0.15)?.cgColor
         v.layer.shadowOffset = CGSize(width: 0, height: 2)
         v.layer.shadowOpacity = 1
         v.layer.shadowRadius = 6
@@ -180,13 +181,13 @@ private extension AgoraHandsUpUIController {
     
     @objc func blinkStart() {
         self.perform(#selector(blinkFinish), with: nil, afterDelay: 1)
-        listButton.backgroundColor = UIColor(rgb: 0x357BF6)
+        listButton.backgroundColor = UIColor(hex: 0x357BF6)
         listButton.imageView?.tintColor = .white
     }
     
     @objc func blinkFinish() {
         listButton.backgroundColor = .white
-        listButton.imageView?.tintColor = UIColor(rgb: 0x7B88A0)
+        listButton.imageView?.tintColor = UIColor(hex: 0x7B88A0)
         if isReminding == true {
             self.perform(#selector(blinkStart), with: nil, afterDelay: 1)
         }
@@ -197,8 +198,8 @@ private extension AgoraHandsUpUIController {
 extension AgoraHandsUpUIController {
     @objc func onSelectListButton(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
-        sender.backgroundColor = sender.isSelected ? UIColor(rgb: 0x357BF6) : .white
-        sender.imageView?.tintColor = sender.isSelected ? .white : UIColor(rgb: 0x7B88A0)
+        sender.backgroundColor = sender.isSelected ? UIColor(hex: 0x357BF6) : .white
+        sender.imageView?.tintColor = sender.isSelected ? .white : UIColor(hex: 0x7B88A0)
         if sender.isSelected {
             delegate?.onShowHandsUpList(listContentView)
         } else {

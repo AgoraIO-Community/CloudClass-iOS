@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 import UIKit
+import SwifterSwift
 
 @objc public protocol AgoraBoardViewDelegate: NSObjectProtocol {
     func didCancelDownloadPressed()
@@ -73,7 +74,7 @@ extension AgoraBoardView {
     public func downloadTimeOut() {
         let messageLabel = AgoraAlertLabelModel()
         messageLabel.text = getLocalizedString("BoardWareProcessText")
-        messageLabel.textColor = UIColor(rgb: 0x191919)
+        messageLabel.textColor = UIColor(hex: 0x191919)
         
         let alert = AgoraAlertModel()
         alert.style = .LineLoading
@@ -118,7 +119,7 @@ private extension AgoraBoardView {
         
         let messageLabel = AgoraAlertLabelModel()
         messageLabel.text = getLocalizedString("BoardWareProcessText")
-        messageLabel.textColor = UIColor(rgb: 0x191919)
+        messageLabel.textColor = UIColor(hex: 0x191919)
 
         let styleModel = AgoraAlertModel()
         styleModel.style = .LineLoading
@@ -133,7 +134,7 @@ private extension AgoraBoardView {
         
         // 显示失败
         let alertView = AgoraAlertView(frame: self.bounds)
-        alertView.backgroundColor = UIColor(rgb: 0xffffff, alpha: 0.6)
+        alertView.backgroundColor = UIColor(hex: 0xffffff, transparency: 0.6)
         addSubview(alertView)
         self.alertLineLoadingView = alertView
         
@@ -145,16 +146,16 @@ private extension AgoraBoardView {
         let titleLabel = AgoraAlertLabelModel()
         titleLabel.text = getLocalizedString("BoardWareFailTitleText")
         titleLabel.textFont = UIFont.boldSystemFont(ofSize: UIDevice.current.isPad ? 18 : 16)
-        titleLabel.textColor = UIColor(rgb: 0x191919)
+        titleLabel.textColor = UIColor(hex: 0x191919)
         
         let messageLabel = AgoraAlertLabelModel()
         messageLabel.text = getLocalizedString("BoardWareFailMsgText")
-        messageLabel.textColor = UIColor(rgb: 0x191919)
+        messageLabel.textColor = UIColor(hex: 0x191919)
         
         let leftBtnLabel = AgoraAlertLabelModel()
         leftBtnLabel.text = getLocalizedString("BoardWareCloseText")
         leftBtnLabel.textFont = UIFont.systemFont(ofSize: UIDevice.current.isPad ? 18 : 16)
-        leftBtnLabel.textColor = UIColor(rgb: 0x007AFF)
+        leftBtnLabel.textColor = UIColor(hex: 0x007AFF)
         let leftBtn = AgoraAlertButtonModel()
         leftBtn.titleLabel = leftBtnLabel
         leftBtn.tapActionBlock = { [unowned self] (index) -> Void in
@@ -165,7 +166,7 @@ private extension AgoraBoardView {
         let rightBtnLabel = AgoraAlertLabelModel()
         rightBtnLabel.text = getLocalizedString("BoardWareRetryText")
         rightBtnLabel.textFont = UIFont.systemFont(ofSize:  UIDevice.current.isPad ? 18 : 16)
-        rightBtnLabel.textColor = UIColor(rgb: 0x007AFF)
+        rightBtnLabel.textColor = UIColor(hex: 0x007AFF)
         let rightBtn = AgoraAlertButtonModel()
         rightBtn.titleLabel = rightBtnLabel
         rightBtn.tapActionBlock = { [unowned self] (index) -> Void in
@@ -187,7 +188,7 @@ private extension AgoraBoardView {
         let btnLabel = AgoraAlertLabelModel()
         btnLabel.text = getLocalizedString("BoardWareJumpText")
         btnLabel.textFont = UIFont.systemFont(ofSize: UIDevice.current.isPad ? 18 :  16)
-        btnLabel.textColor = UIColor(rgb: 0x191919)
+        btnLabel.textColor = UIColor(hex: 0x191919)
         
         let btn = AgoraAlertButtonModel()
         btn.titleLabel = btnLabel

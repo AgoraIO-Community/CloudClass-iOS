@@ -31,12 +31,12 @@ class AgoraHandsUpDelayView: UIView {
             switch state {
             case .free:
                 backgroundColor = .white
-                imageView?.tintColor = UIColor(rgb: 0x7B88A0)
+                imageView?.tintColor = UIColor(hex: 0x7B88A0)
             case .hold:
-                backgroundColor = UIColor(rgb: 0x357BF6)
+                backgroundColor = UIColor(hex: 0x357BF6)
                 imageView?.tintColor = .white
             case .counting:
-                backgroundColor = UIColor(rgb: 0x357BF6)
+                backgroundColor = UIColor(hex: 0x357BF6)
                 imageView?.tintColor = .white
             default: break
             }
@@ -50,7 +50,7 @@ class AgoraHandsUpDelayView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         layer.cornerRadius = 8
-        layer.shadowColor = UIColor(rgb:0x2F4192).withAlphaComponent(0.15).cgColor
+        layer.shadowColor = UIColor(hex:0x2F4192, transparency: 0.15)?.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 1
         layer.shadowRadius = 6
@@ -124,7 +124,7 @@ class AgoraHandsUpDelayView: UIView {
         
         let image = AgoraUIImage(object: self, name: "ic_func_hands_up")
         imageView = UIImageView(image: image?.withRenderingMode(.alwaysTemplate))
-        imageView.tintColor = UIColor(rgb: 0x7B88A0)
+        imageView.tintColor = UIColor(hex: 0x7B88A0)
         addSubview(imageView)
         
         delayLabel = UILabel()

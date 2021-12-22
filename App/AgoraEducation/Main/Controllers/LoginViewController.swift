@@ -368,6 +368,10 @@ private extension LoginViewController {
                         
                         launchConfig.extApps = extApps
                         
+                        if region != RoomRegionType.CN {
+                            launchConfig.widgets.removeValue(forKey: "easemobIM")
+                        }
+                        
                         AgoraClassroomSDK.setConfig(sdkConfig)
                         
                         AgoraClassroomSDK.launch(launchConfig,

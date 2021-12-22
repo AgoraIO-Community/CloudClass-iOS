@@ -32,23 +32,23 @@ class AgoraToastTipsView: UIView {
         self.createConstrains()
         switch type {
         case .notice:
-            self.backgroundColor = UIColor(rgb: 0xFAFFFF)
-            self.layer.borderColor = UIColor(rgb: 0x357BF6).cgColor
+            self.backgroundColor = UIColor(hex: 0xFAFFFF)
+            self.layer.borderColor = UIColor(hex: 0x357BF6)?.cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_notice",
                                                          in: "AgoraUIEduBaseViews")
         case .warning:
-            self.backgroundColor = UIColor(rgb: 0xFFFBF4)
-            self.layer.borderColor = UIColor(rgb: 0xF0C996).cgColor
+            self.backgroundColor = UIColor(hex: 0xFFFBF4)
+            self.layer.borderColor = UIColor(hex: 0xF0C996)?.cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_warning",
                                                          in: "AgoraUIEduBaseViews")
         case .erro:
-            self.backgroundColor = UIColor(rgb: 0xFFF2F2)
-            self.layer.borderColor = UIColor(rgb: 0xF07766).cgColor
+            self.backgroundColor = UIColor(hex: 0xFFF2F2)
+            self.layer.borderColor = UIColor(hex: 0xF07766)?.cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_error",
                                                          in: "AgoraUIEduBaseViews")
         case .success:
-            self.backgroundColor = UIColor(rgb: 0xFAFFFF)
-            self.layer.borderColor = UIColor(rgb: 0x357BF6).cgColor
+            self.backgroundColor = UIColor(hex: 0xFAFFFF)
+            self.layer.borderColor = UIColor(hex: 0x357BF6)?.cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_notice",
                                                          in: "AgoraUIEduBaseViews")
         }
@@ -87,8 +87,8 @@ extension AgoraToastTipsView {
         layer.borderColor = UIColor.white.cgColor
         layer.borderWidth = 1
         layer.cornerRadius = 4
-        layer.shadowColor = UIColor(rgb: 0x2F4192,
-                                    alpha: 0.15).cgColor
+        layer.shadowColor = UIColor(hex: 0x2F4192,
+                                    transparency: 0.15)?.cgColor
         layer.shadowOffset = CGSize(width: 0,
                                     height: 2)
         layer.shadowOpacity = 1
@@ -102,7 +102,7 @@ extension AgoraToastTipsView {
         
         titleLabel = UILabel()
         titleLabel.textAlignment = .center
-        titleLabel.textColor = UIColor(rgb: 0x191919)
+        titleLabel.textColor = UIColor(hex: 0x191919)
         titleLabel.font = UIFont.systemFont(ofSize: 14)
         self.addSubview(titleLabel)
     }

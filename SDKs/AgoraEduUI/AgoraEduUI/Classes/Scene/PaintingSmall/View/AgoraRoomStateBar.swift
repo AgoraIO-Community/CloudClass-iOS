@@ -24,9 +24,9 @@ class AgoraRoomStateBar: AgoraBaseUIView {
                 sepLine.backgroundColor = UIColor.white.withAlphaComponent(0.7)
             } else {
                 backgroundColor = .white
-                titleLabel.textColor = UIColor(rgb: 0x191919)
-                timeLabel.textColor = UIColor(rgb: 0x677386)
-                sepLine.backgroundColor = UIColor(rgb: 0xD2D2E2)
+                titleLabel.textColor = UIColor(hex: 0x191919)
+                timeLabel.textColor = UIColor(hex: 0x677386)
+                sepLine.backgroundColor = UIColor(hex: 0xD2D2E2)
             }
         }
     }
@@ -77,16 +77,16 @@ private extension AgoraRoomStateBar {
         
         timeLabel = AgoraBaseUILabel()
         timeLabel.font = UIFont.systemFont(ofSize: 9)
-        timeLabel.textColor = UIColor(rgb: 0x677386)
+        timeLabel.textColor = UIColor(hex: 0x677386)
         addSubview(timeLabel)
         
         sepLine = AgoraBaseUIView()
-        sepLine.backgroundColor = UIColor(rgb: 0xD2D2E2)
+        sepLine.backgroundColor = UIColor(hex: 0xD2D2E2)
         addSubview(sepLine)
         
         titleLabel = AgoraBaseUILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 9)
-        titleLabel.textColor = UIColor(rgb: 0x191919)
+        titleLabel.textColor = UIColor(hex: 0x191919)
         addSubview(titleLabel)
     }
     

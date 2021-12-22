@@ -149,7 +149,7 @@
     AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc]
                                initWithClass:[AgoraRtmIMWidget class]
                                widgetId:@"AgoraChatWidget"];
-    widgets[chat.widgetId] = rtm;
+    widgets[rtm.widgetId] = rtm;
     
     NSString *courseFolder = [NSString stringWithFormat:@"%@/%@",NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0],@"AgoraDownload"];
     whiteboardConfig.extraInfo = @{@"coursewareDirectory":courseFolder,

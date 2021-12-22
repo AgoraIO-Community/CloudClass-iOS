@@ -223,8 +223,8 @@ private extension AgoraSettingUIController {
 // MARK: - Creations
 private extension AgoraSettingUIController {
     func createViews() {
-        view.layer.shadowColor = UIColor(rgb: 0x2F4192,
-                                         alpha: 0.15).cgColor
+        view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
         view.layer.shadowOffset = CGSize(width: 0,
                                          height: 2)
         view.layer.shadowOpacity = 1
@@ -239,11 +239,11 @@ private extension AgoraSettingUIController {
         cameraLabel = UILabel(frame: .zero)
         cameraLabel.text = AgoraKitLocalizedString("CameraText")
         cameraLabel.font = UIFont.systemFont(ofSize: 12)
-        cameraLabel.textColor = UIColor(rgb: 0x191919)
+        cameraLabel.textColor = UIColor(hex: 0x191919)
         view.addSubview(cameraLabel)
         
         cameraSwitch = UISwitch()
-        cameraSwitch.onTintColor = UIColor(rgb: 0x357BF6)
+        cameraSwitch.onTintColor = UIColor(hex: 0x357BF6)
         cameraSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                    y: 0.75)
         cameraSwitch.addTarget(self,
@@ -254,7 +254,7 @@ private extension AgoraSettingUIController {
         directionLabel = UILabel(frame: .zero)
         directionLabel.text = AgoraKitLocalizedString("DirectionText")
         directionLabel.font = UIFont.systemFont(ofSize: 12)
-        directionLabel.textColor = UIColor(rgb: 0x677386)
+        directionLabel.textColor = UIColor(hex: 0x677386)
         view.addSubview(directionLabel)
         
         frontCamButton = UIButton(type: .custom)
@@ -262,15 +262,15 @@ private extension AgoraSettingUIController {
         frontCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         frontCamButton.setTitleColor(.white,
                                      for: .selected)
-        frontCamButton.setTitleColor(UIColor(rgb: 0xB5B5C9),
+        frontCamButton.setTitleColor(UIColor(hex: 0xB5B5C9),
                                      for: .normal)
         frontCamButton.setTitle(AgoraKitLocalizedString("FrontText"),
                                 for: .normal)
-        frontCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0xF4F4F8),
+        frontCamButton.setBackgroundImage(UIImage(color: UIColor(hex: 0xF4F4F8) ?? .white,
                                                   size: CGSize(width: 1,
                                                                height: 1)),
                                           for: .normal)
-        frontCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0x7B88A0),
+        frontCamButton.setBackgroundImage(UIImage(color: UIColor(hex: 0x7B88A0) ?? .white,
                                                   size: CGSize(width: 1,
                                                                height: 1)),
                                           for: .selected)
@@ -285,13 +285,13 @@ private extension AgoraSettingUIController {
         backCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         backCamButton.setTitleColor(.white,
                                     for: .selected)
-        backCamButton.setTitleColor(UIColor(rgb: 0xB5B5C9),
+        backCamButton.setTitleColor(UIColor(hex: 0xB5B5C9),
                                     for: .normal)
-        backCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0xF4F4F8),
+        backCamButton.setBackgroundImage(UIImage(color: UIColor(hex: 0xF4F4F8) ?? .white,
                                                  size: CGSize(width: 1,
                                                               height: 1)),
                                          for: .normal)
-        backCamButton.setBackgroundImage(UIImage(color: UIColor(rgb: 0x7B88A0),
+        backCamButton.setBackgroundImage(UIImage(color: UIColor(hex: 0x7B88A0) ?? .white,
                                                  size: CGSize(width: 1,
                                                               height: 1)),
                                          for: .selected)
@@ -305,17 +305,17 @@ private extension AgoraSettingUIController {
         view.addSubview(backCamButton)
         
         sepLine = UIView(frame: .zero)
-        sepLine.backgroundColor = UIColor(rgb: 0xECECF1)
+        sepLine.backgroundColor = UIColor(hex: 0xECECF1)
         view.addSubview(sepLine)
         
         micLabel = UILabel(frame: .zero)
         micLabel.text = AgoraKitLocalizedString("MicrophoneText")
         micLabel.font = UIFont.systemFont(ofSize: 12)
-        micLabel.textColor = UIColor(rgb: 0x191919)
+        micLabel.textColor = UIColor(hex: 0x191919)
         view.addSubview(micLabel)
         
         micSwitch = UISwitch()
-        micSwitch.onTintColor = UIColor(rgb: 0x357BF6)
+        micSwitch.onTintColor = UIColor(hex: 0x357BF6)
         micSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                 y: 0.75)
         micSwitch.addTarget(self,
@@ -326,11 +326,11 @@ private extension AgoraSettingUIController {
         audioLabel = UILabel(frame: .zero)
         audioLabel.text = AgoraKitLocalizedString("SpeakerText")
         audioLabel.font = UIFont.systemFont(ofSize: 12)
-        audioLabel.textColor = UIColor(rgb: 0x191919)
+        audioLabel.textColor = UIColor(hex: 0x191919)
         view.addSubview(audioLabel)
         
         audioSwitch = UISwitch()
-        audioSwitch.onTintColor = UIColor(rgb: 0x357BF6)
+        audioSwitch.onTintColor = UIColor(hex: 0x357BF6)
         audioSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                   y: 0.75)
         audioSwitch.addTarget(self,
@@ -345,7 +345,7 @@ private extension AgoraSettingUIController {
         exitButton.setTitle(AgoraKitLocalizedString("LeaveText"),
                             for: .normal)
         exitButton.setBackgroundImage(
-            UIImage(color: UIColor(rgb: 0x191919),
+            UIImage(color: UIColor(hex: 0x191919) ?? .white,
                     size: CGSize(width: 1, height: 1)),
             for: .normal)
         exitButton.addTarget(self,

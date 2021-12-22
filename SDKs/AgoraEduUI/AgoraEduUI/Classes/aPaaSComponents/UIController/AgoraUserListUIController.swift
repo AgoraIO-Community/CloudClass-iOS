@@ -405,15 +405,15 @@ extension AgoraUserListUIController: UITableViewDelegate,
 // MARK: - Creations
 extension AgoraUserListUIController {
     func createViews() {
-        view.layer.shadowColor = UIColor(rgb: 0x2F4192,
-                                         alpha: 0.15).cgColor
+        view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
         view.layer.shadowOffset = CGSize(width: 0,
                                          height: 2)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 6
         
         contentView = UIView()
-        contentView.backgroundColor = UIColor(rgb: 0xF9F9FC)
+        contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
         contentView.layer.cornerRadius = 10.0
         contentView.clipsToBounds = true
         view.addSubview(contentView)
@@ -421,7 +421,7 @@ extension AgoraUserListUIController {
         titleLabel = UILabel(frame: .zero)
         titleLabel.text = AgoraKitLocalizedString("UserListMainTitle")
         titleLabel.font = UIFont.systemFont(ofSize: 12)
-        titleLabel.textColor = UIColor(rgb: 0x191919)
+        titleLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(titleLabel)
         
         infoView = UIView(frame: .zero)
@@ -429,29 +429,29 @@ extension AgoraUserListUIController {
         contentView.addSubview(infoView)
         
         topSepLine = UIView()
-        topSepLine.backgroundColor = UIColor(rgb: 0xEEEEF7)
+        topSepLine.backgroundColor = UIColor(hex: 0xEEEEF7)
         contentView.addSubview(topSepLine)
         
         bottomSepLine = UIView()
-        bottomSepLine.backgroundColor = UIColor(rgb: 0xEEEEF7)
+        bottomSepLine.backgroundColor = UIColor(hex: 0xEEEEF7)
         contentView.addSubview(bottomSepLine)
         
         teacherTitleLabel = UILabel(frame: .zero)
         teacherTitleLabel.text = AgoraKitLocalizedString("UserListTeacherName")
         teacherTitleLabel.font = UIFont.systemFont(ofSize: 12)
-        teacherTitleLabel.textColor = UIColor(rgb: 0x7B88A0)
+        teacherTitleLabel.textColor = UIColor(hex: 0x7B88A0)
         contentView.addSubview(teacherTitleLabel)
         
         teacherNameLabel = UILabel(frame: .zero)
         teacherNameLabel.font = UIFont.systemFont(ofSize: 12)
-        teacherNameLabel.textColor = UIColor(rgb: 0x191919)
+        teacherNameLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(teacherNameLabel)
         
         studentTitleLabel = UILabel(frame: .zero)
         studentTitleLabel.text = AgoraKitLocalizedString("UserListName")
         studentTitleLabel.textAlignment = .left
         studentTitleLabel.font = UIFont.systemFont(ofSize: 12)
-        studentTitleLabel.textColor = UIColor(rgb: 0x7B88A0)
+        studentTitleLabel.textColor = UIColor(hex: 0x7B88A0)
         contentView.addSubview(studentTitleLabel)
         
         itemTitlesView = UIStackView(frame: .zero)
@@ -459,7 +459,7 @@ extension AgoraUserListUIController {
         itemTitlesView.axis = .horizontal
         itemTitlesView.distribution = .fillEqually
         itemTitlesView.alignment = .fill
-        itemTitlesView.backgroundColor = UIColor(rgb: 0xF9F9FC)
+        itemTitlesView.backgroundColor = UIColor(hex: 0xF9F9FC)
         contentView.addSubview(itemTitlesView)
         
         for fn in supportFuncs {
@@ -467,7 +467,7 @@ extension AgoraUserListUIController {
             label.text = fn.title()
             label.textAlignment = .center
             label.font = UIFont.systemFont(ofSize: 12)
-            label.textColor = UIColor(rgb: 0x7B88A0)
+            label.textColor = UIColor(hex: 0x7B88A0)
             itemTitlesView.addArrangedSubview(label)
         }
         
@@ -482,7 +482,7 @@ extension AgoraUserListUIController {
         tableView.rowHeight = 40
         tableView.allowsSelection = false
         tableView.separatorInset = .zero
-        tableView.separatorColor = UIColor(rgb: 0xEEEEF7)
+        tableView.separatorColor = UIColor(hex: 0xEEEEF7)
         tableView.register(cellWithClass: AgoraUserListItemCell.self)
         contentView.addSubview(tableView)
     }

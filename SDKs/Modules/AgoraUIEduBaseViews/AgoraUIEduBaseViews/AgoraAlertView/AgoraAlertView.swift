@@ -15,7 +15,7 @@ import AgoraUIBaseViews
 }
 @objcMembers public class AgoraAlertLabelModel: NSObject {
     public var text: String = ""
-    public var textColor: UIColor = UIColor.clear
+    public var textColor: UIColor?
     public var textFont: UIFont = UIFont.systemFont(ofSize:12)
 }
 @objcMembers public class AgoraAlertButtonModel: NSObject {
@@ -72,7 +72,7 @@ import AgoraUIBaseViews
         v.layer.masksToBounds = true
         v.clipsToBounds = false
         
-        v.layer.shadowColor = UIColor(rgb: 0x0E1F2F, alpha: 0.15).cgColor
+        v.layer.shadowColor = UIColor(hex: 0x0E1F2F, transparency: 0.15)?.cgColor
         v.layer.shadowOffset = CGSize(width: 0, height: 4)
         v.layer.shadowOpacity = 1
         v.layer.shadowRadius = 12
@@ -125,7 +125,7 @@ import AgoraUIBaseViews
         label.text = "0%"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: UIDevice.current.isPad ? 14 : 12)
-        label.textColor = UIColor(rgb: 0x5471FE)
+        label.textColor = UIColor(hex: 0x5471FE)
         label.adjustsFontSizeToFitWidth = true
         label.tag = LabelTag
         v.addSubview(label)
@@ -138,8 +138,8 @@ import AgoraUIBaseViews
         }
         
         let pView = UIProgressView(progressViewStyle: .bar)
-        pView.progressTintColor = UIColor(rgb: 0x5471FE)
-        pView.trackTintColor = UIColor(rgb: 0xF0F2F4)
+        pView.progressTintColor = UIColor(hex: 0x5471FE)
+        pView.trackTintColor = UIColor(hex: 0xF0F2F4)
         pView.tag = ProgressTag
         v.addSubview(pView)
         
@@ -246,7 +246,6 @@ extension AgoraAlertView {
             self.cycleView.agora_center_x = 0
             self.cycleView.agora_resize(model.titleImage?.width ?? LoadingViewSize.width, model.titleImage?.height ?? LoadingViewSize.height)
 
-            self.cycleView.progressTintColor(UIColor(rgb: 0xF0F2F4), to: UIColor(rgb: 0x5471FE))
             self.cycleView.startAnimation()
             
             TitleBottom = self.cycleView.agora_y + self.cycleView.agora_height + MessageVGap
@@ -347,7 +346,7 @@ extension AgoraAlertView {
         
             // line
             let hLineV = AgoraBaseUIView()
-            hLineV.backgroundColor = UIColor(rgb: 0xEDEDED)
+            hLineV.backgroundColor = UIColor(hex: 0xEDEDED)
             self.btnView.addSubview(hLineV)
             hLineV.agora_move(0, 0)
             hLineV.agora_right = 0
@@ -367,7 +366,7 @@ extension AgoraAlertView {
                 
                 if (index != btnModels.count - 1) {
                     let vLineV = AgoraBaseUIView()
-                    vLineV.backgroundColor = UIColor(rgb: 0xEDEDED)
+                    vLineV.backgroundColor = UIColor(hex: 0xEDEDED)
                     self.btnView.addSubview(vLineV)
                     vLineV.agora_move(btn.agora_x + btn.agora_width - 1, 0)
                     vLineV.agora_width = 1

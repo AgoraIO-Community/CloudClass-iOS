@@ -260,10 +260,11 @@ fileprivate class AgoraBrushToolButton: UIButton {
         super.init(frame: frame)
         
         backgroundColor = UIColor.white
-        imageView?.tintColor = UIColor(rgb: 0x7B88A0)
+        imageView?.tintColor = UIColor(hex: 0x7B88A0)
         
         layer.cornerRadius = 8
-        layer.shadowColor = UIColor(rgb:0x2F4192).withAlphaComponent(0.15).cgColor
+        layer.shadowColor = UIColor(hex: 0x2F4192,
+                                    transparency: 0.15)?.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 1
         layer.shadowRadius = 6
@@ -610,7 +611,8 @@ extension AgoraBoardToolsUIController: UICollectionViewDelegate, UICollectionVie
 // MARK: - Creations
 private extension AgoraBoardToolsUIController {
     func createViews() {
-        view.layer.shadowColor = UIColor(rgb: 0x2F4192, alpha: 0.15).cgColor
+        view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 6
@@ -659,11 +661,11 @@ private extension AgoraBoardToolsUIController {
         contentView.addSubview(colorCollectionView)
         
         topLine = UIView(frame: .zero)
-        topLine.backgroundColor = UIColor(rgb: 0xECECF1)
+        topLine.backgroundColor = UIColor(hex: 0xECECF1)
         contentView.addSubview(topLine)
         
         bottomLine = UIView(frame: .zero)
-        bottomLine.backgroundColor = UIColor(rgb: 0xECECF1)
+        bottomLine.backgroundColor = UIColor(hex: 0xECECF1)
         contentView.addSubview(bottomLine)
     }
     

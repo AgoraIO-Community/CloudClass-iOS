@@ -27,7 +27,8 @@ class AgoraHandsupTipsView: UIView {
 
 private extension AgoraHandsupTipsView {
     func createViews() {
-        layer.shadowColor = UIColor(rgb: 0x2F4192, alpha: 0.15).cgColor
+        layer.shadowColor = UIColor(hex: 0x2F4192,
+                                    transparency: 0.15)?.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 1
         layer.shadowRadius = 6
@@ -39,7 +40,7 @@ private extension AgoraHandsupTipsView {
         
         label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor(rgb: 0x191919)
+        label.textColor = UIColor(hex: 0x191919)
         label.text = "long_press_to_wave_hands".ag_localizedIn("AgoraEduUI")
         label.textAlignment = .center
         addSubview(label)

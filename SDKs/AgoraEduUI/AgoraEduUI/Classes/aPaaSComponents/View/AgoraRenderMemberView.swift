@@ -346,7 +346,8 @@ private extension AgoraRenderMemberView {
         nameLabel = UILabel()
         nameLabel.textColor = UIColor.white
         nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.layer.shadowColor = UIColor(rgb: 0x0D1D3D, alpha: 0.8).cgColor
+        nameLabel.layer.shadowColor = UIColor(hex: 0x0D1D3D,
+                                              transparency: 0.8)?.cgColor
         nameLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
         nameLabel.layer.shadowOpacity = 1
         nameLabel.layer.shadowRadius = 2

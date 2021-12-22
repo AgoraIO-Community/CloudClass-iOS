@@ -161,7 +161,7 @@ class AgoraUserListItemCell: UITableViewCell {
         }
         v.isUserInteractionEnabled = false
         v.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        v.setTitleColor(UIColor(rgb: 0xBDBDCA),
+        v.setTitleColor(UIColor(hex: 0xBDBDCA),
                         for: .normal)
         v.addTarget(self,
                     action: #selector(onClickReward(_:)),
@@ -359,7 +359,7 @@ private extension AgoraUserListItemCell {
         self.backgroundColor = .white
         
         nameLabel = UILabel()
-        nameLabel.textColor = UIColor(rgb: 0x191919)
+        nameLabel.textColor = UIColor(hex: 0x191919)
         nameLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(nameLabel)
         

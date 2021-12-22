@@ -236,7 +236,8 @@ private extension AgoraRenderMenuUIController {
     func createViews() {
         view.backgroundColor = UIColor.white
         view.layer.cornerRadius = 8
-        view.layer.shadowColor = UIColor(rgb:0x2F4192).withAlphaComponent(0.15).cgColor
+        view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 6

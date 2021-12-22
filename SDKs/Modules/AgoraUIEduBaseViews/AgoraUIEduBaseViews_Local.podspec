@@ -29,6 +29,7 @@ Pod::Spec.new do |spec|
   spec.dependency "AgoraWidget"
 
   spec.dependency "Masonry"
+  spec.dependency "SwifterSwift"
 
   spec.subspec 'Resources' do |ss|
     ss.resource_bundles = {

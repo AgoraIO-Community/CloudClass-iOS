@@ -150,16 +150,16 @@ import AgoraUIBaseViews
     
     fileprivate lazy var pageIndexLabel: AgoraBaseUILabel = {
         let label = AgoraBaseUILabel(frame: .zero)
-        label.backgroundColor = UIColor(rgb: 0xF4F4F8)
+        label.backgroundColor = UIColor(hex: 0xF4F4F8)
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = UIColor(rgb: 0x586376)
+        label.textColor = UIColor(hex: 0x586376)
         return label
     }()
     
     fileprivate lazy var speratorLine: AgoraBaseUIView = {
         let view = AgoraBaseUIView(frame: .zero)
-        view.backgroundColor = UIColor(rgb: 0xE5E5F0)
+        view.backgroundColor = UIColor(hex: 0xE5E5F0)
         return view
     }()
     

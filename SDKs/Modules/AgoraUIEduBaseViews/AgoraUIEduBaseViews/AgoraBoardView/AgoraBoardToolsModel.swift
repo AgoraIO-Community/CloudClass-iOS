@@ -17,7 +17,7 @@ import UIKit
     case red, orange, yellow, green
     case purple, cyan, blue, pink
     
-    public var intValue: UInt32 {
+    public var intValue: Int {
         switch self {
         case .white:     return 0xFFFFFF
         case .lightGray: return 0x9B9B9B
@@ -41,8 +41,8 @@ import UIKit
         return string
     }
     
-    public var value: UIColor {
-        return UIColor(rgb: intValue)
+    public var value: UIColor? {
+        return UIColor(hex: intValue)
     }
 }
 
