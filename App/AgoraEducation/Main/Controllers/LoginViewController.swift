@@ -13,13 +13,14 @@ import AgoraClassroomSDK
 #endif
 import AgoraUIEduBaseViews
 import AgoraUIBaseViews
+import SwifterSwift
 import AgoraExtApp
 import AgoraWidget
 import AgoraLog
 import UIKit
 
 /** 房间信息项*/
-enum RoomInfoItemType: Int, CaseIterable {
+fileprivate enum RoomInfoItemType: Int, CaseIterable {
     // 房间名
     case roomName = 0
     // 昵称
@@ -125,7 +126,9 @@ struct RoomInfoModel {
     
     private var bottomButton: AgoraBaseUIButton!
     
-    private var dataSource = RoomInfoItemType.allCases
+    private var dataSource: [RoomInfoItemType] = [
+        .roomName, .nickName, .roomStyle, .roleType, .region, .encryptKey, .encryptMode
+    ]
     
     private var inputParams = RoomInfoModel()
     
@@ -451,7 +454,7 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         cell.delegate = self
         cell.indexPath = indexPath
         cell.setFocused(indexPath.row == selectedIndex)
-        let rowType = RoomInfoItemType(rawValue: indexPath.row)
+        let rowType = dataSource[indexPath.row]
         switch rowType {
         case .roomName:
             cell.mode = .input
@@ -509,8 +512,6 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                                                            comment: "")
             cell.textField.text = optionDescription(option: inputParams.encryptMode,
                                                          in: kEncryptionOptions)
-        default:
-            break
         }
         return cell
     }
@@ -527,8 +528,7 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
             hideOptions()
             return
         }
-        
-        let rowType = RoomInfoItemType(rawValue: indexPath.row)
+        let rowType = dataSource[indexPath.row]
         if rowType == .roomStyle {
             let options = optionStrings(form: kRoomOptions)
             let index = optionIndex(option: inputParams.roomStyle ?? defaultParams.roomStyle,
