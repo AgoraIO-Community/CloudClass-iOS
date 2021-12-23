@@ -47,7 +47,7 @@ import UIKit
 }
 
 @objc public enum AgoraBoardToolsLineWidth: Int, CaseIterable {
-    case width1 = 1, width2, width3, width4, width5
+    case width1 = 0, width2, width3, width4, width5
     
     public var value: Int {
         switch self {
@@ -80,7 +80,7 @@ import UIKit
 }
 
 @objc public enum AgoraBoardToolsFont: Int, CaseIterable {
-    case font22, font24, font26, font30, font36, font42
+    case font22 = 0, font24, font26, font30, font36, font42
     
     public var value: Int {
         switch self {

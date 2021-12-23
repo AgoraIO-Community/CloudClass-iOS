@@ -189,7 +189,9 @@ enum AgoraBoardToolItem: CaseIterable {
 }
 
 fileprivate extension AgoraBoardToolItem {
-    func toWidgetMemberState(color: UIColor) -> AgoraBoardWidgetMemberState? {
+    func toWidgetMemberState(color: UIColor,
+                             lineConfig: AgoraBoardToolItemLineConfig,
+                             textConfig: AgoraBoardToolItemTextConfig) -> AgoraBoardWidgetMemberState? {
         let colorArr = color.getRGBAArr()
         
         switch self {
@@ -204,26 +206,26 @@ fileprivate extension AgoraBoardToolItem {
                                                strokeColor: colorArr)
         case .laser:
             return AgoraBoardWidgetMemberState(activeApplianceType: .Pointer)
-        case .text(let textConfig):
+        case .text(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Text,
                                                strokeColor: colorArr,
                                                textSize: textConfig.size.fontSize())
-        case .pencil(let lineConfig):
+        case .pencil(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Pencil,
                                                strokeColor: colorArr,
-                                               strokeWidth: lineConfig.size.rawValue)
-        case .line(let lineConfig):
+                                               strokeWidth: lineConfig.size.value)
+        case .line(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Straight,
                                                strokeColor: colorArr,
-                                               strokeWidth: lineConfig.size.rawValue)
-        case .rect(let lineConfig):
+                                               strokeWidth: lineConfig.size.value)
+        case .rect(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Rectangle,
                                                strokeColor: colorArr,
-                                               strokeWidth: lineConfig.size.rawValue)
-        case .cycle(let lineConfig):
+                                               strokeWidth: lineConfig.size.value)
+        case .cycle(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Ellipse,
                                                strokeColor: colorArr,
-                                               strokeWidth: lineConfig.size.rawValue)
+                                               strokeWidth: lineConfig.size.value)
 
         default:
             return nil
@@ -377,14 +379,18 @@ class AgoraBoardToolsUIController: UIViewController {
         }
     }
     
+    var lineConfig = AgoraBoardToolItemLineConfig(size: .width1)
     var brushLevel = 0 {
         didSet {
+            lineConfig = AgoraBoardToolItemLineConfig(size: AgoraBoardToolsLineWidth(rawValue: brushLevel) ?? .width1)
             callbackItemUpdated()
         }
     }
     
+    var textConfig = AgoraBoardToolItemTextConfig(size: .font22)
     var textLevel = 0 {
         didSet {
+            textConfig = AgoraBoardToolItemTextConfig(size: AgoraBoardToolsFont(rawValue: textLevel) ?? .font22)
             callbackItemUpdated()
         }
     }
@@ -440,7 +446,9 @@ class AgoraBoardToolsUIController: UIViewController {
     private func callbackItemUpdated() {
         let color = UIColor(hex: selectColor) ?? .white
         
-        if let memberState = selectedTool.toWidgetMemberState(color: color) {
+        if let memberState = selectedTool.toWidgetMemberState(color: color,
+                                                              lineConfig: lineConfig,
+                                                              textConfig: textConfig) {
             sendMessage(signal: .MemberStateChanged(memberState))
         }
     }
