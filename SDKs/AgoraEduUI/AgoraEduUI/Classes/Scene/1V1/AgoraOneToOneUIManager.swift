@@ -89,10 +89,26 @@ import Masonry
 // MARK: - AgoraOneToOneTabViewDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
     func onChatTabSelectChanged(isSelected: Bool) {
-        chatController?.view.isHidden = !isSelected
+        guard let v = chatController?.view else {
+            return
+        }
+        if isSelected {
+            rightContentView.addSubview(v)
+            v.mas_makeConstraints { make in
+                make?.top.equalTo()(tabSelectView?.mas_bottom)
+                make?.left.right().bottom().equalTo()(0)
+            }
+        } else {
+            v.removeFromSuperview()
+        }
     }
 }
-
+// MARK: - AgoraChatUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraChatUIControllerDelegate {
+    func updateChatRedDot(isShow: Bool) {
+        tabSelectView?.updateChatRedDot(isShow: isShow)
+    }
+}
 // MARK: - AgoraOneToOneStateUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
     func onSettingSelected(isSelected: Bool) {
@@ -220,19 +236,17 @@ private extension AgoraOneToOneUIManager {
         } else {
             controller.hideTopBar = true
         }
-        rightContentView.addSubview(controller.view)
+        addChild(controller)
         if UIDevice.current.isPad {
+            rightContentView.addSubview(controller.view)
             controller.view.mas_makeConstraints { make in
                 make?.left.right().bottom().equalTo()(0)
                 make?.top.equalTo()(rightContentView.mas_centerY)
             }
         } else {
-            controller.view.isHidden = true
-            controller.view.mas_makeConstraints { make in
-                make?.top.equalTo()(tabSelectView?.mas_bottom)
-                make?.left.right().bottom().equalTo()(0)
-            }
+            let _ = controller.view
         }
         chatController = controller
+        chatController?.delegate = self
     }
 }

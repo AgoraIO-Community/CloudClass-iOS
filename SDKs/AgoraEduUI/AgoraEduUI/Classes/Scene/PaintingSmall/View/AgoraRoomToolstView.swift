@@ -125,6 +125,22 @@ class AgoraRoomToolstView: UIView {
                     for: .touchUpInside)
         return v
     }()
+    private lazy var messageRedDot: UIView = {
+        let v = UIView()
+        v.isHidden = true
+        v.isUserInteractionEnabled = false
+        v.backgroundColor = UIColor(hex: 0xF04C36)
+        v.layer.cornerRadius = 2
+        v.clipsToBounds = true
+        self.addSubview(v)
+        messageButton.addSubview(v)
+        v.mas_makeConstraints { make in
+            make?.width.height().equalTo()(4)
+            make?.top.equalTo()(messageButton)?.offset()(5)
+            make?.right.equalTo()(messageButton)?.offset()(-5)
+        }
+        return v
+    }()
     /** 展示的工具*/
     public var tools: [AgoraRoomToolType] = [AgoraRoomToolType]() {
         didSet {
@@ -162,6 +178,10 @@ class AgoraRoomToolstView: UIView {
         if selectedTool != nil {
             selectedTool = nil
         }
+    }
+    
+    public func updateChatRedDot(isShow: Bool) {
+        messageRedDot.isHidden = !isShow
     }
 }
 // MARK: - Private

@@ -153,6 +153,12 @@ extension AgoraSmallUIManager: AgoraRoomToolsViewDelegate {
         ctrlView = nil
     }
 }
+// MARK: - AgoraChatUIControllerDelegate
+extension AgoraSmallUIManager: AgoraChatUIControllerDelegate {
+    func updateChatRedDot(isShow: Bool) {
+        toolsView.updateChatRedDot(isShow: isShow)
+    }
+}
 // MARK: - PaintingToolBoxViewDelegate
 extension AgoraSmallUIManager: AgoraToolBoxUIControllerDelegate {
     func toolBoxDidSelectTool(_ tool: AgoraToolBoxToolType) {
@@ -281,6 +287,7 @@ private extension AgoraSmallUIManager {
                                                         height: 2)
         chatController.view.layer.shadowOpacity = 1
         chatController.view.layer.shadowRadius = 6
+        chatController.delegate = self
         addChild(chatController)
     }
 }

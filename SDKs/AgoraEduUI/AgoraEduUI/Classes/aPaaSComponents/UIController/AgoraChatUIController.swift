@@ -10,21 +10,35 @@ import AgoraWidget
 import Masonry
 import UIKit
 
+protocol AgoraChatUIControllerDelegate: NSObjectProtocol {
+    // 更新聊天红点显示状态
+    func updateChatRedDot(isShow: Bool)
+}
+
 class AgoraChatUIController: UIViewController {
     
-    private let chatWidgetId = "easemobIM"
+    public var delegate: AgoraChatUIControllerDelegate?
     
-    private let RTMWidgetId = "AgoraChatWidget"
+    private var chatWidgetId: String?
     
     private var widget: AgoraBaseWidget?
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
-    
+    // public
     public var hideTopBar = false
     
     public var hideMiniButton = false
     
     public var hideAnnouncement = false
+        
+    private var redDotShow: Bool = false {
+        didSet {
+            self.delegate?.updateChatRedDot(isShow: redDotShow)
+            if redDotShow != oldValue {
+                
+            }
+        }
+    }
     
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
@@ -38,47 +52,76 @@ class AgoraChatUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        widget = createWidget()
+        createWidget()
     }
     
-    public func createWidget() -> AgoraBaseWidget? {
-        var widget: AgoraBaseWidget?
-        if let chatConfig = contextPool.widget.getWidgetConfig(chatWidgetId) {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.redDotShow = false
+    }
+}
+
+// MARK: - AgoraWidgetMessageObserver
+extension AgoraChatUIController: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String) {
+        guard let w = chatWidgetId,
+              w == widgetId else {
+            return
+        }
+        if message == "chatWidgetDidReceiveMessage",
+           isVisible == false {
+            self.redDotShow = true
+        }
+    }
+}
+
+// MARK: - Creations
+private extension AgoraChatUIController {
+    private func createWidget() {
+        let EM = "easemobIM"
+        let RTM = "AgoraChatWidget"
+        if let chatConfig = contextPool.widget.getWidgetConfig(EM) {
             let w = contextPool.widget.create(chatConfig)
             view.addSubview(w.view)
             let userInfo = contextPool.user.getLocalUserInfo()
             if let flexProps = contextPool.user.getUserProperties(userUuid: userInfo.userUuid),
                let url = flexProps["avatarurl"] as? String,
                 let message = ["avatarurl": url].jsonString() {
-                    contextPool.widget.sendMessage(toWidget: chatWidgetId,
+                    contextPool.widget.sendMessage(toWidget: EM,
                                                    message: message)
             }
             if hideTopBar {
-                contextPool.widget.sendMessage(toWidget: chatWidgetId,
+                contextPool.widget.sendMessage(toWidget: EM,
                                                message: "hideTopBar")
             }
             if hideMiniButton {
-                contextPool.widget.sendMessage(toWidget: chatWidgetId,
+                contextPool.widget.sendMessage(toWidget: EM,
                                                message: "hideMiniButton")
             }
             if hideAnnouncement {
-                contextPool.widget.sendMessage(toWidget: chatWidgetId,
+                contextPool.widget.sendMessage(toWidget: EM,
                                                message: "hideAnnouncement")
             }
             widget = w
-        } else if let chatConfig = contextPool.widget.getWidgetConfig(RTMWidgetId) {
+            chatWidgetId = EM
+            contextPool.widget.add(self, widgetId: EM)
+        } else if let chatConfig = contextPool.widget.getWidgetConfig(RTM) {
+            
             let w = contextPool.widget.create(chatConfig)
             view.addSubview(w.view)
             if hideTopBar,
                let param = ["view": ["hideTopBar": true]].jsonString() {
-                contextPool.widget.sendMessage(toWidget: RTMWidgetId,
+                contextPool.widget.sendMessage(toWidget: RTM,
                                                message: param)
             }
             widget = w
+            chatWidgetId = RTM
+            contextPool.widget.add(self, widgetId: RTM)
         }
         widget?.view.mas_makeConstraints { make in
             make?.top.left().right().bottom().equalTo()(0)
         }
-        return widget
     }
 }
