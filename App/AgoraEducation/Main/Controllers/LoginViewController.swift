@@ -295,8 +295,7 @@ private extension LoginViewController {
               let user = inputParams.nickName ?? defaultParams.nickName,
               let roomStyle = inputParams.roomStyle ?? defaultParams.roomStyle,
               let region = inputParams.region ?? defaultParams.region,
-              let encryptionMode = inputParams.encryptMode ?? defaultParams.encryptMode,
-              let roleType = inputParams.roleType ?? defaultParams.roleType else {
+              let encryptionMode = inputParams.encryptMode ?? defaultParams.encryptMode else {
             return
         }
         
@@ -304,7 +303,7 @@ private extension LoginViewController {
         let roomUuid = "\(room)\(roomStyle.rawValue)"
         
         // userUuid = userName + roleType
-        let userUuid = "\(user)\(roleType.rawValue)"
+        let userUuid = "\(user)\(AgoraEduRoleType.student.rawValue)"
         
 //        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
 //        let duration = self.defaultParams.duration!
@@ -318,7 +317,7 @@ private extension LoginViewController {
             }
         }
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
-                                                cameraEncoderConfiguration: nil,
+                                                videoEncoderConfig: nil,
                                                 latencyLevel: .ultraLow,
                                                 videoState: .on,
                                                 audioState: .on)
@@ -349,7 +348,7 @@ private extension LoginViewController {
                         
                         let launchConfig = AgoraEduLaunchConfig(userName: user,
                                                                 userUuid: userUuid,
-                                                                roleType: roleType,
+                                                                userRole: .student,
                                                                 roomName: room,
                                                                 roomUuid: roomUuid,
                                                                 roomType: roomStyle,
@@ -361,8 +360,8 @@ private extension LoginViewController {
                                                                 userProperties: nil)
                         
                         // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
-                        var extApps = Dictionary<String,AgoraExtAppConfiguration>()
-                        launchConfig.extApps.forEach { (k,v) in
+                        var extApps = Dictionary<String, AgoraExtAppConfiguration>()
+                        launchConfig.extApps.forEach { (k, v) in
                             if k == "io.agora.countdown" {
                                 v.image = UIImage(named: "countdown")
                             }

@@ -25,6 +25,10 @@
         return NO;
     }
     
+    if (self.userRole != AgoraEduRoleTypeStudent) {
+        return NO;
+    }
+    
     if (self.roomName.length <= 0) {
         return NO;
     }
@@ -51,12 +55,12 @@
 @implementation AgoraClassroomSDK (Internal)
 + (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraEduMediaOptions *)options {
     AgoraEduCorePuppetVideoConfig *videoConfig = nil;
-    if (options.cameraEncoderConfiguration) {
-        videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithVideoDimensionWidth:options.cameraEncoderConfiguration.width
-                                                                    videoDimensionHeight:options.cameraEncoderConfiguration.height
-                                                                               frameRate:options.cameraEncoderConfiguration.frameRate
-                                                                                 bitRate:options.cameraEncoderConfiguration.bitrate
-                                                                              mirrorMode:options.cameraEncoderConfiguration.mirrorMode];
+    if (options.videoEncoderConfig) {
+        videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithDimensionWidth:options.videoEncoderConfig.dimensionWidth
+                                                                    dimensionHeight:options.videoEncoderConfig.dimensionHeight
+                                                                          frameRate:options.videoEncoderConfig.frameRate
+                                                                            bitRate:options.videoEncoderConfig.bitRate
+                                                                         mirrorMode:options.videoEncoderConfig.mirrorMode];
     }
     AgoraEduCorePuppetMediaEncryptionConfig *encryptionConfig = nil;
     if (options.encryptionConfig) {

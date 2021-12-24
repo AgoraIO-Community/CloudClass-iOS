@@ -202,7 +202,7 @@ private extension DebugViewController {
         //            }
         //        }
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: nil,
-                                                cameraEncoderConfiguration: nil,
+                                                videoEncoderConfig: nil,
                                                 latencyLevel: .ultraLow,
                                                 videoState: .on,
                                                 audioState: .on)
@@ -220,7 +220,7 @@ private extension DebugViewController {
             
             let launchConfig = AgoraEduLaunchConfig(userName: userName,
                                                     userUuid: userUuid,
-                                                    roleType: roleType,
+                                                    userRole: roleType,
                                                     roomName: roomName,
                                                     roomUuid: roomUuid,
                                                     roomType: type,

@@ -7,8 +7,8 @@
 
 #import "AgoraEduObjects.h"
 @import AgoraWidgets;
-@import ChatWidget;
 @import AgoraExtApps;
+@import ChatWidget;
 
 #pragma mark - Config
 @implementation AgoraClassroomSDKConfig
@@ -21,29 +21,29 @@
 }
 @end
 
-@implementation AgoraEduVideoEncoderConfiguration
+@implementation AgoraEduVideoEncoderConfig
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.width = 320;
-        self.height = 240;
+        self.dimensionWidth = 320;
+        self.dimensionHeight = 240;
         self.frameRate = 15;
-        self.bitrate = 200;
+        self.bitRate = 200;
         self.mirrorMode = AgoraEduMirrorModeDisabled;
     }
     return self;
 }
 
-- (instancetype)initWithWidth:(NSUInteger)width
-                       height:(NSUInteger)height
-                    frameRate:(NSUInteger)frameRate
-                      bitrate:(NSUInteger)bitrate
-                   mirrorMode:(AgoraEduMirrorMode)mirrorMode{
+- (instancetype)initWithDimensionWidth:(NSUInteger)dimensionWidth
+                       dimensionHeight:(NSUInteger)dimensionHeight
+                             frameRate:(NSUInteger)frameRate
+                               bitRate:(NSUInteger)bitRate
+                            mirrorMode:(AgoraEduMirrorMode)mirrorMode {
     if (self = [super init]) {
-        self.width = width;
-        self.height = height;
+        self.dimensionWidth = dimensionWidth;
+        self.dimensionHeight = dimensionHeight;
         self.frameRate = frameRate;
-        self.bitrate = bitrate;
+        self.bitRate = bitRate;
         self.mirrorMode = mirrorMode;
     }
     return self;
@@ -51,43 +51,35 @@
 @end
 
 @implementation AgoraEduLaunchConfig
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.roleType = AgoraEduRoleTypeStudent;
-    }
-    return self;
-}
-
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
-                        roleType:(AgoraEduRoleType)roleType
+                        userRole:(AgoraEduRoleType)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
                            token:(NSString *)token {
     AgoraEduMediaOptions *mediaOptions = [[AgoraEduMediaOptions alloc] initWithEncryptionConfig:nil
-                                                                     cameraEncoderConfiguration:nil
+                                                                             videoEncoderConfig:nil
                                                                                    latencyLevel:AgoraEduLatencyLevelUltraLow
-                                                                                     videoState:AgoraEduStreamStateDefault
-                                                                                     audioState:AgoraEduStreamStateDefault];
+                                                                                     videoState:AgoraEduStreamStateOn
+                                                                                     audioState:AgoraEduStreamStateOn];
     return [self initWithUserName:userName
                          userUuid:userUuid
-                         roleType:roleType
+                         userRole:userRole
                          roomName:roomName
                          roomUuid:roomUuid
                          roomType:roomType
                             token:token
                         startTime:nil
                          duration:nil
-                           region:nil
+                           region:AgoraEduRegionCN
                      mediaOptions:mediaOptions
                    userProperties:nil];
 }
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
-                        roleType:(AgoraEduRoleType)roleType
+                        userRole:(AgoraEduRoleType)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
@@ -100,7 +92,7 @@
     self = [self init];
     self.userName = userName;
     self.userUuid = userUuid;
-    self.roleType = roleType;
+    self.userRole = userRole;
     
     self.roomName = roomName;
     self.roomUuid = roomUuid;
@@ -146,8 +138,10 @@
                                                              widgetId:@"AgoraChatWidget"];
     widgets[rtm.widgetId] = rtm;
     
-    NSString *courseFolder = [NSString stringWithFormat:@"%@/%@",NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0],@"AgoraDownload"];
-    whiteboardConfig.extraInfo = @{@"coursewareDirectory":courseFolder,
+    NSString *courseFolder = [NSString stringWithFormat:@"%@/%@", NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
+                                                                                                      NSUserDomainMask,
+                                                                                                      YES)[0], @"AgoraDownload"];
+    whiteboardConfig.extraInfo = @{@"coursewareDirectory": courseFolder,
                                    @"useMultiViews": @YES,
                                    @"autoFit": @NO};
     
@@ -174,7 +168,7 @@
     
     exts[countdown.appIdentifier] = countdown;
     exts[answerExt.appIdentifier] = answerExt;
-    exts[answerExt.appIdentifier] = voteExt;
+    exts[voteExt.appIdentifier] = voteExt;
     return exts;
 }
 @end
@@ -195,8 +189,8 @@
 @end
 
 @implementation AgoraEduMediaOptions
-- (instancetype)initWithEncryptionConfig:(AgoraEduMediaEncryptionConfig *_Nullable)encryptionConfig
-              cameraEncoderConfiguration:(AgoraEduVideoEncoderConfiguration *_Nullable)cameraEncoderConfiguration
+- (instancetype)initWithEncryptionConfig:(AgoraEduMediaEncryptionConfig * _Nullable)encryptionConfig
+                      videoEncoderConfig:(AgoraEduVideoEncoderConfig * _Nullable)videoEncoderConfig
                             latencyLevel:(AgoraEduLatencyLevel)latencyLevel
                               videoState:(AgoraEduStreamState)videoState
                               audioState:(AgoraEduStreamState)audioState {
@@ -204,7 +198,7 @@
     
     if (self) {
         self.encryptionConfig = encryptionConfig;
-        self.cameraEncoderConfiguration = cameraEncoderConfiguration;
+        self.videoEncoderConfig = videoEncoderConfig;
         self.latencyLevel = latencyLevel;
         self.videoState = videoState;
         self.audioState = audioState;
@@ -213,17 +207,3 @@
     return self;
 }
 @end
-
-NSString * const AgoraEduCoreChatTranslationLanAUTO = @"auto";
-NSString * const AgoraEduCoreChatTranslationLanCN = @"zh-CHS";
-NSString * const AgoraEduCoreChatTranslationLanEN = @"en";
-NSString * const AgoraEduCoreChatTranslationLanJA = @"ja";
-NSString * const AgoraEduCoreChatTranslationLanKO = @"ko";
-NSString * const AgoraEduCoreChatTranslationLanFR = @"fr";
-NSString * const AgoraEduCoreChatTranslationLanES = @"es";
-NSString * const AgoraEduCoreChatTranslationLanPT = @"pt";
-NSString * const AgoraEduCoreChatTranslationLanIT = @"it";
-NSString * const AgoraEduCoreChatTranslationLanRU = @"ru";
-NSString * const AgoraEduCoreChatTranslationLanVI = @"vi";
-NSString * const AgoraEduCoreChatTranslationLanDE = @"de";
-NSString * const AgoraEduCoreChatTranslationLanAR = @"ar";
