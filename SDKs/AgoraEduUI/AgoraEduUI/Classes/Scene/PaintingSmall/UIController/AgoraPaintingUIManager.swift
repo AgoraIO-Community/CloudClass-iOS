@@ -153,8 +153,8 @@ extension AgoraPaintingUIManager: AgoraEduMonitorHandler {
     public func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
         switch state {
         case .aborted:
-            AgoraLoading.hide()
             // 踢出
+            AgoraLoading.hide()
             AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
                              type: .erro)
             exitClassRoom(reason: .kickOut)

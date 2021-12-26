@@ -12,14 +12,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma mark - Config
-/**设置全局配置*/
-@interface AgoraClassroomSDKConfig : NSObject
-// 声网App Id
-@property (nonatomic, copy) NSString *appId;
-- (instancetype)initWithAppId:(NSString *)appId;
-@end
-
 #pragma mark - Media
 /**设置媒体选项*/
 @interface AgoraEduMediaEncryptionConfig : NSObject
@@ -63,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 #pragma mark - Launch
-/**启动课堂配置*/
+/**启动配置*/
 @interface AgoraEduLaunchConfig : NSObject
 // 用户名
 @property (nonatomic, copy) NSString *userName;
@@ -77,7 +69,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *roomUuid;
 // 教室类型
 @property (nonatomic, assign) AgoraEduRoomType roomType;
-// 声网RESTfule API token, 是RTMToken
+// 声网App Id
+@property (nonatomic, copy) NSString *appId;
+// 声网Token
 @property (nonatomic, copy) NSString *token;
 // 开始上课的时间（毫秒）
 @property (nonatomic, copy, nullable) NSNumber *startTime;
@@ -85,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSNumber *duration;
 // 区域
 @property (nonatomic, assign) AgoraEduRegion region;
-// 媒体加密
+// 媒体选项
 @property (nonatomic, strong, nullable) AgoraEduMediaOptions *mediaOptions;
 // 用户自定属性
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, id> *userProperties;
@@ -100,6 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
+                           appId:(NSString *)appId
                            token:(NSString *)token;
 
 - (instancetype)initWithUserName:(NSString *)userName
@@ -108,6 +103,7 @@ NS_ASSUME_NONNULL_BEGIN
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
+                           appId:(NSString *)appId
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration

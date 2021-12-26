@@ -21,9 +21,9 @@ typedef NS_ENUM(NSInteger, AgoraEduRegion) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduExitReason) {
-    // 失败
+    // 正常退出
     AgoraEduExitReasonNormal = 0,
-    // 准备完成
+    // 被踢出
     AgoraEduExitReasonKickOut = 1
 };
 
@@ -65,8 +65,7 @@ typedef NS_ENUM(NSInteger, AgoraEduRoleType) {
 typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
     AgoraEduRoomTypeOneToOne      = 0,
     AgoraEduRoomTypeLecture       = 2,
-    AgoraEduRoomTypeSmall         = 4,
-    AgoraEduRoomTypePaintingSmall = 5
+    AgoraEduRoomTypeSmall         = 4
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduStreamState) {

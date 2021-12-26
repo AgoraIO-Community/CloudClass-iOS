@@ -10,13 +10,18 @@
 @import AgoraExtApps;
 @import ChatWidget;
 
-#pragma mark - Config
-@implementation AgoraClassroomSDKConfig
-- (instancetype)initWithAppId:(NSString *)appId {
+#pragma mark - Media
+/**设置媒体选项*/
+@implementation AgoraEduMediaEncryptionConfig
+- (instancetype)initWithMode:(AgoraEduMediaEncryptionMode)mode
+                         key:(NSString *)key {
     self = [super init];
+    
     if (self) {
-        self.appId = appId;
+        self.mode = mode;
+        self.key = key;
     }
+    
     return self;
 }
 @end
@@ -50,6 +55,27 @@
 }
 @end
 
+@implementation AgoraEduMediaOptions
+- (instancetype)initWithEncryptionConfig:(AgoraEduMediaEncryptionConfig * _Nullable)encryptionConfig
+                      videoEncoderConfig:(AgoraEduVideoEncoderConfig * _Nullable)videoEncoderConfig
+                            latencyLevel:(AgoraEduLatencyLevel)latencyLevel
+                              videoState:(AgoraEduStreamState)videoState
+                              audioState:(AgoraEduStreamState)audioState {
+    self = [super init];
+    
+    if (self) {
+        self.encryptionConfig = encryptionConfig;
+        self.videoEncoderConfig = videoEncoderConfig;
+        self.latencyLevel = latencyLevel;
+        self.videoState = videoState;
+        self.audioState = audioState;
+    }
+    
+    return self;
+}
+@end
+
+#pragma mark - Launch
 @implementation AgoraEduLaunchConfig
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
@@ -57,6 +83,7 @@
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
+                           appId:(NSString *)appId
                            token:(NSString *)token {
     AgoraEduMediaOptions *mediaOptions = [[AgoraEduMediaOptions alloc] initWithEncryptionConfig:nil
                                                                              videoEncoderConfig:nil
@@ -69,6 +96,7 @@
                          roomName:roomName
                          roomUuid:roomUuid
                          roomType:roomType
+                            appId:appId
                             token:token
                         startTime:nil
                          duration:nil
@@ -83,6 +111,7 @@
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
+                           appId:(NSString *)appId
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
@@ -97,6 +126,8 @@
     self.roomName = roomName;
     self.roomUuid = roomUuid;
     self.roomType = roomType;
+    
+    self.appId = appId;
     self.token = token;
     
     self.startTime = startTime;
@@ -170,40 +201,5 @@
     exts[answerExt.appIdentifier] = answerExt;
     exts[voteExt.appIdentifier] = voteExt;
     return exts;
-}
-@end
-
-/**设置媒体选项*/
-@implementation AgoraEduMediaEncryptionConfig
-- (instancetype)initWithMode:(AgoraEduMediaEncryptionMode)mode
-                         key:(NSString *)key {
-    self = [super init];
-    
-    if (self) {
-        self.mode = mode;
-        self.key = key;
-    }
-    
-    return self;
-}
-@end
-
-@implementation AgoraEduMediaOptions
-- (instancetype)initWithEncryptionConfig:(AgoraEduMediaEncryptionConfig * _Nullable)encryptionConfig
-                      videoEncoderConfig:(AgoraEduVideoEncoderConfig * _Nullable)videoEncoderConfig
-                            latencyLevel:(AgoraEduLatencyLevel)latencyLevel
-                              videoState:(AgoraEduStreamState)videoState
-                              audioState:(AgoraEduStreamState)audioState {
-    self = [super init];
-    
-    if (self) {
-        self.encryptionConfig = encryptionConfig;
-        self.videoEncoderConfig = videoEncoderConfig;
-        self.latencyLevel = latencyLevel;
-        self.videoState = videoState;
-        self.audioState = audioState;
-    }
-    
-    return self;
 }
 @end

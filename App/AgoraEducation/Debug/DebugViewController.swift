@@ -216,7 +216,7 @@ private extension DebugViewController {
             let appId = response.appId
             let rtmToken = response.rtmToken
             let userUuid = response.userId
-            let sdkConfig = AgoraClassroomSDKConfig(appId: appId)
+           
             
             let launchConfig = AgoraEduLaunchConfig(userName: userName,
                                                     userUuid: userUuid,
@@ -224,6 +224,7 @@ private extension DebugViewController {
                                                     roomName: roomName,
                                                     roomUuid: roomUuid,
                                                     roomType: type,
+                                                    appId: appId,
                                                     token: rtmToken,
                                                     startTime: NSNumber(value: startTime),
                                                     duration: NSNumber(value: duration),
@@ -231,7 +232,7 @@ private extension DebugViewController {
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
             
-            AgoraClassroomSDK.setConfig(sdkConfig)
+            
 //            self.classroom = AgoraClassroomSDK.launch(launchConfig,
 //                                                      delegate: self)
         }

@@ -344,7 +344,6 @@ private extension LoginViewController {
                         let appId = response.appId
                         let rtmToken = response.rtmToken
                         let userUuid = response.userId
-                        let sdkConfig = AgoraClassroomSDKConfig(appId: appId)
                         
                         let launchConfig = AgoraEduLaunchConfig(userName: user,
                                                                 userUuid: userUuid,
@@ -352,6 +351,7 @@ private extension LoginViewController {
                                                                 roomName: room,
                                                                 roomUuid: roomUuid,
                                                                 roomType: roomStyle,
+                                                                appId: appId,
                                                                 token: rtmToken,
                                                                 startTime: nil,
                                                                 duration: nil,
@@ -367,17 +367,16 @@ private extension LoginViewController {
                             }
                             extApps[k] = v
                         }
-                        
+
                         launchConfig.extApps = extApps
                         
                         if region != RoomRegionType.CN {
                             launchConfig.widgets.removeValue(forKey: "easemobIM")
                         }
                         
-                        AgoraClassroomSDK.setConfig(sdkConfig)
+                        AgoraClassroomSDK.setDelegate(self)
                         
                         AgoraClassroomSDK.launch(launchConfig,
-                                                 delegate: self,
                                                  success: success,
                                                  failure: failure)
                      }, failure: failure)
@@ -419,7 +418,7 @@ private extension LoginViewController {
 
 extension LoginViewController: AgoraEduClassroomSDKDelegate {
     public func classroomSDK(_ classroom: AgoraClassroomSDK,
-                             didExited reason: AgoraEduExitReason) {
+                             didExit reason: AgoraEduExitReason) {
         switch reason {
         case .kickOut:
             AgoraToast.toast(msg: "kick out")
@@ -472,7 +471,8 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                                                     in: kRoomOptions)
         case .roleType:
             // 美术小班课可选角色，其他不可选
-            cell.mode = (inputParams.roomStyle == .paintingSmall) ? .option : .unable
+//            cell.mode = (inputParams.roomStyle == .paintingSmall) ? .option : .unable
+            cell.mode = .option
             cell.titleLabel.text = NSLocalizedString("login_title_role",
                                                      comment: "")
             cell.textField.placeholder = optionDescription(option: defaultParams.roleType,
@@ -535,27 +535,30 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                 self.inputParams.roomStyle = v
                 cell.textField.text = str
                 // 不是美术小班课时将角色设置为学生
-                if v != .paintingSmall {
-                    self.inputParams.roleType = .student
-                    tableView.reloadData()
-                }
+//                if v != .paintingSmall {
+//                    self.inputParams.roleType = .student
+//                    tableView.reloadData()
+//                }
                 // 更新入口状态
                 self.updateEntranceStatus()
             }
-        } else if rowType == .roleType,
-                  inputParams.roomStyle == .paintingSmall {
-            // 美术小班课可以选择角色，其他不可以
-            let options = optionStrings(form: kRoleOptions)
-            let index = optionIndex(option: inputParams.roleType ?? defaultParams.roleType, in: kRoleOptions)
-            optionsView.show(beside: cell,
-                             options: options,
-                             index: index) { [unowned self] i in
-                self.hideOptions()
-                let (v, str) = kRoleOptions[i]
-                self.inputParams.roleType = v
-                cell.textField.text = str
-            }
-        }  else if rowType == .region {
+        }
+//        else if rowType == .roleType,
+//                  inputParams.roomStyle == .paintingSmall {
+//            // 美术小班课可以选择角色，其他不可以
+//            let options = optionStrings(form: kRoleOptions)
+//            let index = optionIndex(option: inputParams.roleType ?? defaultParams.roleType, in: kRoleOptions)
+//            optionsView.show(beside: cell,
+//                             options: options,
+//                             index: index) { [unowned self] i in
+//                self.hideOptions()
+//                let (v, str) = kRoleOptions[i]
+//                self.inputParams.roleType = v
+//                cell.textField.text = str
+//            }
+//        }
+        
+        else if rowType == .region {
             let options = optionStrings(form: kRegionOptions)
             let index = optionIndex(option: inputParams.region ?? defaultParams.region, in: kRegionOptions)
             optionsView.show(beside: cell,

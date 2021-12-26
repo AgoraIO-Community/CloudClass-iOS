@@ -15,11 +15,10 @@ import UIKit
 
 @objc public protocol AgoraEduUIManagerCallBack: NSObjectProtocol {
     func manager(_ manager: AgoraEduUIManager,
-                 didExited reason: AgoraClassRoomExitReason)
+                 didExit reason: AgoraClassRoomExitReason)
 }
 
 protocol AgoraClassRoomManagement: NSObjectProtocol {
-    
     func exitClassRoom(reason: AgoraClassRoomExitReason)
 }
 
@@ -120,11 +119,11 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         return .landscapeRight
     }
     
-    public func exitClassRoom(reason: AgoraClassRoomExitReason) {
+    @objc public func exitClassRoom(reason: AgoraClassRoomExitReason) {
         self.dismiss(animated: true) {
             self.contextPool.room.leaveRoom()
             self.delegate?.manager(self,
-                                   didExited: reason)
+                                   didExit: reason)
         }
     }
 }

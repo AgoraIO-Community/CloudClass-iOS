@@ -9,12 +9,6 @@
 #import "AgoraInternalClassroom.h"
 #import "AgoraEduEnums.h"
 
-@implementation AgoraClassroomSDKConfig (Internal)
-- (BOOL)isLegal {
-    return (self.appId.length > 0);
-}
-@end
-
 @implementation AgoraEduLaunchConfig (Internal)
 - (BOOL)isLegal {
     if (self.userName.length <= 0) {
@@ -39,8 +33,11 @@
     
     if (!(self.roomType == AgoraEduRoomTypeOneToOne
           || self.roomType == AgoraEduRoomTypeSmall
-          || self.roomType == AgoraEduRoomTypeLecture
-          || self.roomType == AgoraEduRoomTypePaintingSmall)) {
+          || self.roomType == AgoraEduRoomTypeLecture)) {
+        return NO;
+    }
+    
+    if (self.appId.length <= 0) {
         return NO;
     }
     
@@ -53,6 +50,27 @@
 @end
 
 @implementation AgoraClassroomSDK (Internal)
++ (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraEduLaunchConfig *)config {
+    AgoraEduCorePuppetMediaOptions *mediaOptions = [self getPuppetMediaOptions:config.mediaOptions];
+    
+    AgoraEduCorePuppetRoleType role = config.userRole;
+    
+    AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
+                                                                                                rtmToken:config.token
+                                                                                                  region:config.region
+                                                                                                userName:config.userName
+                                                                                                userUuid:config.userUuid
+                                                                                                userRole:role
+                                                                                          userProperties:config.userProperties
+                                                                                            mediaOptions:mediaOptions
+                                                                                                roomName:config.roomName
+                                                                                                roomUuid:config.roomUuid
+                                                                                                roomType:config.roomType
+                                                                                               startTime:config.startTime
+                                                                                                duration:config.duration];
+    return launchConfig;
+}
+
 + (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraEduMediaOptions *)options {
     AgoraEduCorePuppetVideoConfig *videoConfig = nil;
     if (options.videoEncoderConfig) {

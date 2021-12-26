@@ -21,9 +21,8 @@
 #import "AgoraClassroomSDK.h"
 
 @interface AgoraClassroomSDK () <AgoraEduUIManagerCallBack>
-@property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
-@property (nonatomic, strong) UIViewController *ui;
+@property (nonatomic, strong) AgoraEduUIManager *ui;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSNumber *environment;
 @property (nonatomic, weak) id<AgoraEduClassroomSDKDelegate> delegate;
@@ -69,21 +68,7 @@ static AgoraClassroomSDK *manager = nil;
 }
 
 #pragma mark - Public
-+ (BOOL)setConfig:(AgoraClassroomSDKConfig *)config {
-    if (config == nil) {
-        return NO;
-    }
-    
-    if (config.isLegal) {
-        [AgoraClassroomSDK share].sdkConfig = config;
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
 + (void)launch:(AgoraEduLaunchConfig *)config
-      delegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate
        success:(void (^)(void))success
        failure:(void (^)(NSError *))failure {
     if (config == nil || !config.isLegal) {
@@ -114,32 +99,15 @@ static AgoraClassroomSDK *manager = nil;
         [core setParameters:parameters];
     }
     
-    // Media video encoder config
-    AgoraEduCorePuppetMediaOptions *mediaOptions = [self getPuppetMediaOptions:config.mediaOptions];
-    
-    AgoraEduCorePuppetRoleType role = config.userRole;
-
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [[AgoraEduCorePuppetLaunchConfig alloc]
-                                                  initWithAppId:manager.sdkConfig.appId
-                                                  rtmToken:config.token
-                                                  region:config.region
-                                                  userName:config.userName
-                                                  userUuid:config.userUuid
-                                                  userRole:role
-                                                  userProperties:config.userProperties
-                                                  mediaOptions:mediaOptions
-                                                  roomName:config.roomName
-                                                  roomUuid:config.roomUuid
-                                                  roomType:config.roomType
-                                                  startTime:config.startTime
-                                                  duration:config.duration];
+    // Core config
+    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
     
     __weak AgoraClassroomSDK *weakManager = manager;
 
-    [core launchWithConfig:coreConfig
-                   extApps:config.extApps.allValues
-                   widgets:config.widgets.allValues
-                   success:^(id<AgoraEduContextPool> pool) {
+    [core launch:coreConfig
+         extApps:config.extApps.allValues
+         widgets:config.widgets.allValues
+         success:^(id<AgoraEduContextPool> pool) {
         AgoraEduUIManager *eduVC = nil;
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
@@ -160,7 +128,7 @@ static AgoraClassroomSDK *manager = nil;
                 break;
             default:
                 NSCAssert(true,
-                          @"未实现该教室类型");
+                          @"room type error");
                 break;
         }
         eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
@@ -176,6 +144,22 @@ static AgoraClassroomSDK *manager = nil;
     } failure:failure];
 }
 
++ (void)setDelegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate {
+    manager.delegate = delegate;
+}
+
++ (void)exit {
+    [manager.core exit];
+    
+    __weak AgoraClassroomSDK *weakManager = manager;
+    
+    [manager.ui dismissViewControllerAnimated:YES
+                                   completion:^{
+        [weakManager agoraRelease];
+    }];
+}
+
+#pragma mark - Private
 - (void)agoraRelease {
     self.core = nil;
     self.ui = nil;
@@ -184,7 +168,7 @@ static AgoraClassroomSDK *manager = nil;
 
 #pragma mark - AgoraEduUIManagerDelegate
 - (void)manager:(AgoraEduUIManager *)manager
-      didExited:(enum AgoraClassRoomExitReason)reason {
+        didExit:(enum AgoraClassRoomExitReason)reason {
     AgoraEduExitReason sdkReason = nil;
     switch (reason) {
         case AgoraClassRoomExitReasonNormal:
@@ -195,9 +179,9 @@ static AgoraClassroomSDK *manager = nil;
         default:
             break;
     }
-    if ([_delegate respondsToSelector:@selector(classroomSDK:didExited:)]) {
+    if ([_delegate respondsToSelector:@selector(classroomSDK:didExit:)]) {
         [self.delegate classroomSDK:self
-                          didExited:sdkReason];
+                          didExit:sdkReason];
     }
     [self agoraRelease];
 }

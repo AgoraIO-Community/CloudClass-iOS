@@ -15,16 +15,17 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol AgoraEduClassroomSDKDelegate <NSObject>
 @optional
 - (void)classroomSDK:(AgoraClassroomSDK *)classroom
-           didExited:(AgoraEduExitReason)reason;
+             didExit:(AgoraEduExitReason)reason;
 @end
 
 @interface AgoraClassroomSDK : NSObject
-+ (BOOL)setConfig:(AgoraClassroomSDKConfig *)config;
-
 + (void)launch:(AgoraEduLaunchConfig *)config
-      delegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate
        success:(void (^)(void))success
        failure:(void (^)(NSError *))failure;
+
++ (void)setDelegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate;
+
++ (void)exit;
 
 + (NSString *)version;
 @end
