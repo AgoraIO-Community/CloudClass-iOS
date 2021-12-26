@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import AgoraUIEduBaseViews.AgoraFiles.AgoraAnimatedImage
+import SwifterSwift
 
 public class AgoraAlert: NSObject {
     

@@ -93,8 +93,3 @@ kick_out_cancel = "取消";
 
 one_to_one_tab_video = "视频";
 one_to_one_tab_chat = "聊天";
-
-render_state_camera_off = "摄像头已关闭";
-render_state_camera_disable = "摄像头被禁用";
-render_state_student_off = "学生不在教室";
-render_state_teacher_off = "老师不在教室";

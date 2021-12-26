@@ -99,8 +99,6 @@ class AgoraRenderMemberView: UIView {
     private weak var delegate: AgoraRenderMemberViewDelegate?
     
     private var stateImageView: UIImageView!
-    
-    private var stateLabel: UILabel!
     /** 画布*/
     private var videoView: UIView!
     /** 名字*/
@@ -156,16 +154,6 @@ class AgoraRenderMemberView: UIView {
         }
     }
     
-    public var defaultRole: AgoraRenderMemberModel.AgoraRenderRole = .student {
-        didSet {
-            if defaultRole == .teacher {
-                stateLabel.text = "render_state_teacher_off".ag_localizedIn("AgoraEduUI")
-            } else {
-                stateLabel.text = "render_state_student_off".ag_localizedIn("AgoraEduUI")
-            }
-        }
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -193,11 +181,6 @@ class AgoraRenderMemberView: UIView {
 private extension AgoraRenderMemberView {
     func resetViewState() {
         stateImageView.image = UIImage.ag_imageNamed("ic_member_no_user", in: "AgoraEduUI")
-        if defaultRole == .student {
-            stateLabel.text = "render_state_student_off".ag_localizedIn("AgoraEduUI")
-        } else {
-            stateLabel.text = "render_state_teacher_off".ag_localizedIn("AgoraEduUI")
-        }
         micView.setState(.off)
         self.nameLabel.text = ""
         self.videoView.isHidden = true
@@ -294,17 +277,14 @@ private extension AgoraRenderMemberView {
         case .on:
             stateImageView.image = UIImage.ag_imageNamed("ic_member_device_off",
                                                          in: "AgoraEduUI")
-            stateLabel.text = ""
             videoView.isHidden = false
         case .off, .broken:
             stateImageView.image = UIImage.ag_imageNamed("ic_member_device_off",
                                                          in: "AgoraEduUI")
-            stateLabel.text = "render_state_camera_off".ag_localizedIn("AgoraEduUI")
             videoView.isHidden = true
         case .forbidden:
             stateImageView.image = UIImage.ag_imageNamed("ic_member_device_forbidden",
                                                          in: "AgoraEduUI")
-            stateLabel.text = "render_state_camera_disable".ag_localizedIn("AgoraEduUI")
             videoView.isHidden = true
         }
     }
@@ -330,13 +310,6 @@ private extension AgoraRenderMemberView {
         
         stateImageView = UIImageView(image: UIImage.ag_imageNamed("ic_member_no_user", in: "AgoraEduUI"))
         addSubview(stateImageView)
-        
-        stateLabel = UILabel()
-        stateLabel.font = UIFont.systemFont(ofSize: 12)
-        stateLabel.textColor = UIColor(hex: 0x677386)
-        stateLabel.textAlignment = .center
-        stateLabel.text = "render_state_student_off".ag_localizedIn("AgoraEduUI")
-        addSubview(stateLabel)
         
         videoView = UIView(frame: .zero)
         videoView.backgroundColor = .clear
@@ -371,11 +344,7 @@ private extension AgoraRenderMemberView {
         stateImageView.mas_makeConstraints { make in
             make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.38)
             make?.centerX.equalTo()(0)
-            make?.centerY.equalTo()(AgoraFit.scale(-10))
-        }
-        stateLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(stateImageView.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.centerX.equalTo()(0)
+            make?.centerY.equalTo()
         }
         videoView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
