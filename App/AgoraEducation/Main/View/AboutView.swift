@@ -279,7 +279,7 @@ private extension AboutView {
             contentView.agora_center_x = 0
             contentView.agora_center_y = 0
             contentView.agora_width = 420
-            contentView.agora_height = 320
+            contentView.agora_height = LoginConfig.about_cell_height * CGFloat(LoginConfig.AboutInfoList.count) + LoginConfig.about_title_height
         }
         
         titleView.agora_x = 0

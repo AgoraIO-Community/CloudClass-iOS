@@ -196,8 +196,7 @@ fileprivate extension AgoraBoardToolItem {
         
         switch self {
         case .clicker:
-            return AgoraBoardWidgetMemberState(activeApplianceType: .Arrow,
-                                               strokeColor: colorArr)
+            return AgoraBoardWidgetMemberState(activeApplianceType: .Clicker)
         case .area:
             return AgoraBoardWidgetMemberState(activeApplianceType: .Selector,
                                                strokeColor: colorArr)
