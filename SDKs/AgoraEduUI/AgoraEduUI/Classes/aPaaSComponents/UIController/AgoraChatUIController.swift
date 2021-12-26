@@ -17,7 +17,7 @@ protocol AgoraChatUIControllerDelegate: NSObjectProtocol {
 
 class AgoraChatUIController: UIViewController {
     
-    public var delegate: AgoraChatUIControllerDelegate?
+    public weak var delegate: AgoraChatUIControllerDelegate?
     
     private var chatWidgetId: String?
     

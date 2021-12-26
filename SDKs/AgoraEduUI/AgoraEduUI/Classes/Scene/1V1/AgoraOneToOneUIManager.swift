@@ -40,6 +40,10 @@ import Masonry
     
     private var isJoinedRoom = false
     
+    deinit {
+        print("\(#function): \(self.classForCoder)")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
