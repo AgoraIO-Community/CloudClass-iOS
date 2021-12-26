@@ -56,8 +56,6 @@ About_terms = "用户协议";
 About_disclaimer = "免责声明";
 About_register = "注册声网账号";
 About_version_time = "发版时间";
-About_sdk_version = "SDK版本";
-About_class_version = "灵动课堂版本";
 About_url = "Powered by agora.io";
 
 Privacy_url = "https://www.agora.io/cn/privacy-policy/";

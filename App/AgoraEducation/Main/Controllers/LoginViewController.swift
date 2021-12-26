@@ -124,7 +124,7 @@ struct RoomInfoModel {
     /** 进入房间*/
     private var enterButton: AgoraBaseUIButton!
     
-    private var bottomButton: AgoraBaseUIButton!
+    private var bottomLabel: AgoraBaseUILabel!
     
     private var dataSource: [RoomInfoItemType] = [
         .roomName, .nickName, .roomStyle, .roleType, .region, .encryptKey, .encryptMode
@@ -381,11 +381,6 @@ private extension LoginViewController {
                                                  success: success,
                                                  failure: failure)
                      }, failure: failure)
-    }
-    
-    @objc func onPushDebugVC() {
-        navigationController?.pushViewController(DebugViewController(),
-                                                 animated: true)
     }
 }
 
@@ -685,20 +680,15 @@ private extension LoginViewController {
                               for: .touchUpInside)
         view.addSubview(enterButton)
         
-        bottomButton = AgoraBaseUIButton()
-        
-        let appVersion = "_" + Bundle.main.version
+        let appVersion = "_" + AgoraClassroomSDK.version()
         let loginVersion = NSLocalizedString("Login_version",
                                              comment: "") + appVersion
-        bottomButton.setTitle(loginVersion,
-                              for: .normal)
-        bottomButton.setTitleColor(UIColor(hexString: "7D8798"),
-                                   for: .normal)
-        bottomButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        bottomButton.addTarget(self,
-                               action: #selector(onPushDebugVC),
-                               for: .touchUpInside)
-        view.addSubview(bottomButton)
+        
+        bottomLabel = AgoraBaseUILabel(frame: .zero)
+        bottomLabel.text = loginVersion
+        bottomLabel.textColor = UIColor(hexString: "7D8798")
+        bottomLabel.font = UIFont.systemFont(ofSize: 12)
+        view.addSubview(bottomLabel)
         
         view.addSubview(aboutView)
         
@@ -743,16 +733,16 @@ private extension LoginViewController {
         enterButton.agora_width = 280
         enterButton.agora_y = tableView.agora_y + tableView.agora_height + enter_gap
 
-        bottomButton.agora_center_x = 0
+        bottomLabel.agora_center_x = 0
         if LoginConfig.device == .iPad {
-            bottomButton.agora_bottom = LoginConfig.login_bottom_bottom
+            bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
         } else {
             let height: CGFloat = max(UIScreen.main.bounds.width,
                                       UIScreen.main.bounds.height)
             if enterButton.agora_y > height - LoginConfig.login_bottom_bottom - 30 - enterButton.agora_height {
-                bottomButton.agora_y = enterButton.agora_y + enterButton.agora_height + 30
+                bottomLabel.agora_y = enterButton.agora_y + enterButton.agora_height + 30
             } else {
-                bottomButton.agora_bottom = LoginConfig.login_bottom_bottom
+                bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
             }
         }
     }

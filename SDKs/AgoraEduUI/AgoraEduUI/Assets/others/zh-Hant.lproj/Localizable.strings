@@ -17,12 +17,8 @@ DuplicateLaunchText = "已經啟動了";
 UnInitializedText = " 沒有初始化完成";
 
 // ------------------------------------------------
-ClassTimeHourText = "時";
-ClassTimeMinuteText = "分";
-ClassTimeMinute2Text = "分鐘";
-ClassTimeSecondText = "秒";
 ClassBeforeStartText = "距離上課還有：";
-ClassAfterStartText = "已開始上課：";
+ClassAfterStartText = "已上課：";
 ClassAfterStopText = "課程已結束";
 title_before_class = "課程未開始";
 

@@ -17,10 +17,6 @@ DuplicateLaunchText = "already launched";
 UnInitializedText = " not initialized";
 
 // ------------------------------------------------
-ClassTimeHourText = "h";
-ClassTimeMinuteText = "m";
-ClassTimeMinute2Text = "m";
-ClassTimeSecondText = "s";
 ClassBeforeStartText = "Class will begin after：";
 ClassAfterStartText = "Class begins：";
 ClassAfterStopText = "Class ends：";

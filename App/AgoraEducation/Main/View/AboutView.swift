@@ -97,6 +97,7 @@ import AgoraUIBaseViews
         tab.delegate = self
         tab.showsVerticalScrollIndicator = false
         tab.showsHorizontalScrollIndicator = false
+        tab.separatorColor = UIColor(hexString: "EEEEF7")
         tab.isScrollEnabled = false
         
         tab.tableFooterView = UIView(frame: .zero)

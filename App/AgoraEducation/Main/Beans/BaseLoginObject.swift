@@ -51,9 +51,7 @@ class LoginConfig {
         (NSLocalizedString("About_terms", comment: ""), URL(string: NSLocalizedString("Terms_url", comment: ""))),
         (NSLocalizedString("About_disclaimer", comment: ""),  DisclaimerView(frame: .zero)),
         (NSLocalizedString("About_register", comment: ""), URL(string: NSLocalizedString("Signup_url", comment: ""))),
-        (NSLocalizedString("About_version_time", comment: ""),  version_time),
-        (NSLocalizedString("About_sdk_version", comment: ""),  sdk_version),
-        (NSLocalizedString("About_class_version", comment: ""), class_version)
+        (NSLocalizedString("About_version_time", comment: ""),  version_time)
     ]
     
     static let version_time: String = "2021.12.29"

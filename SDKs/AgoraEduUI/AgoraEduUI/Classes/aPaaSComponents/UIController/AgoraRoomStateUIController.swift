@@ -144,22 +144,13 @@ private extension AgoraRoomStateUIController {
     
     func timeString(from interval: Int64) -> String {
         let time = interval > 0 ? (interval / 1000) : 0
-        let hourInt = time / 3600
-        let minuteInt = (time - 3600 * hourInt) / 60
+        let minuteInt = time / 60
         let secondInt = time % 60
         
-        let hourString = NSString(format: "%02d", hourInt) as String
         let minuteString = NSString(format: "%02d", minuteInt) as String
         let secondString = NSString(format: "%02d", secondInt) as String
         
-        let hourText = AgoraKitLocalizedString("ClassTimeHourText")
-        let minuteText = AgoraKitLocalizedString("ClassTimeMinuteText")
-        let secondText = AgoraKitLocalizedString("ClassTimeSecondText")
-        if hourInt > 0 {
-            return "\(hourString)\(hourText)\(minuteString)\(minuteText)\(secondString)\(secondText)"
-        } else {
-            return "\(minuteString)\(minuteText)\(secondString)\(secondText)"
-        }
+        return "\(minuteString):\(secondString)"
     }
 }
 // MARK: - AgoraEduUserHandler

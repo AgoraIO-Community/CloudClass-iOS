@@ -58,8 +58,6 @@ About_terms = "Terms Of Service";
 About_disclaimer = "Product Disclaimer";
 About_register = "Sign up Agora.io";
 About_version_time = "Version Time";
-About_sdk_version = "SDK Version";
-About_class_version = "Flexible Classroom Version";
 About_url = "www.agora.io";
 
 Privacy_url = "https://www.agora.io/en/privacy-policy/";
