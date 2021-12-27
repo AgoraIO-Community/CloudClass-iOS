@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name             = 'AgoraUIBaseViews'
-  spec.version          = '1.0.0'
+  spec.version          = '2.0.0'
   spec.summary          = 'Agora UIBase Views'
   spec.description      = 'Agora UIBase Views SDK'
 

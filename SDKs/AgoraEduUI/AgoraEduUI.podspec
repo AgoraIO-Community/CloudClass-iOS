@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "AgoraEduUI"
-  s.version      = "1.1.5.1"
+  s.version      = '2.0.0'
   s.summary      = "Agora Edu UI"
   s.description  = "Agora Edu UI SDK"
 
