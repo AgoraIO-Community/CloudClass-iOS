@@ -62,6 +62,10 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - returns: 房间信息
     func getRoomInfo() -> AgoraEduContextRoomInfo
     
+    /// 获取自定义房间属性 (v2.0.0)
+    /// - returns: 自定义房间属性
+    func getRoomProperties() -> [String: Any]?
+    
     /// 更新/增加自定义房间属性 (v2.0.0)
     /// 支持path修改和整体修改
     /// - parameter properties: {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
