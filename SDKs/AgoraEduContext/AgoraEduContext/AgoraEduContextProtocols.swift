@@ -91,9 +91,14 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - returns: 课堂信息
     func getClassInfo() -> AgoraEduContextClassInfo
     
-    /// 事件监听  (v2.0.0)
+    /// 开始事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
     func registerRoomEventHandler(_ handler: AgoraEduRoomHandler)
     
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
     func unregisterRoomEventHandler(_ handler: AgoraEduRoomHandler)
 }
 
@@ -164,15 +169,15 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter enable: 是否可以挥手
     @objc optional func onUserHandsWaveEnable(enable: Bool)
     
-    /// 用户挥手 (v2.0.0)
-    /// - parameter user: 举手用户
-    /// - parameter duration: 举手的时长，单位秒
+    /// 用户开始挥手 (v2.0.0)
+    /// - parameter user: 挥手用户
+    /// - parameter duration: 挥手的时长，单位秒
     @objc optional func onUserHandsWave(user: AgoraEduContextUserInfo,
                                         duration: Int)
     
-    /// 用户手放下，结束上台申请（v2.0.0)
+    /// 用户结束挥手（v2.0.0)
     /// - parameter fromUser: 手放下的用户
-    /// - note: 无论是用户自己取消举手，还是举手申请被接受，都要走这个回调
+    /// - note: 无论是用户自己取消举手，还是举手申请被接受，都会走这个回调
     @objc optional func onUserHandsDown(user: AgoraEduContextUserInfo)
 }
 
@@ -181,8 +186,8 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - returns: 本地用户信息
     func getLocalUserInfo() -> AgoraEduContextUserInfo
     
-    /// 获取所有在线用户信息 (v2.0.0)
-    /// - returns: 用户列表数组
+    /// 获取所有连麦用户信息 (v2.0.0)
+    /// - returns: 连麦用户列表数组
     func getCoHostList() -> [AgoraEduContextUserInfo]?
     
     /// 获取指定角色的用户信息数组 (v2.0.0)
@@ -233,8 +238,6 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     
     /// 是否可以挥手 (v2.0.0)
     /// - parameter enable: 是否可以挥手
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
     /// - returns: Bool, 是否可以挥手
     func getHandsWaveEnable() -> Bool
     
@@ -254,11 +257,14 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     func handsDown(success: AgoraEduContextSuccess?,
                    failure: AgoraEduContextFailure?)
     
-    /// 事件监听
+    /// 开始事件监听 (v2.0.0)
     /// - parameter handler: 监听者
     /// - returns: void
     func registerUserEventHandler(_ handler: AgoraEduUserHandler)
     
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
     func unregisterUserEventHandler(_ handler: AgoraEduUserHandler)
 }
 
@@ -267,21 +273,21 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// 音量变化 (v2.0.0)
     /// - parameter volume: 音量
     /// - parameter streamUuid: 流 Id
-    /// - returns: Void
+    /// - returns: void
     @objc optional  func onVolumeUpdated(volume: Int,
                                          streamUuid: String)
     
     /// 设备状态更新 (v2.0.0)
     /// - parameter device: 设备信息
     /// - parameter state: 设备状态
-    /// - returns: Void
+    /// - returns: void
     @objc optional func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
                                                   state: AgoraEduContextDeviceState)
     
     /// 混音状态变化 (v2.0.0)
     /// - parameter stateCode: 状态码
     /// - parameter errorCode: 错误码
-    /// - returns: Void
+    /// - returns: void
     @objc optional func onAudioMixingStateChanged(stateCode: Int,
                                                   errorCode: Int)
 }
@@ -315,8 +321,8 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// 获取设备状态 (v2.0.0)
     /// - parameter device: 设备信息
     /// - parameter success: 参数正确，返回设备状态
-    /// - parameter fail: 参数错误
-    /// - returns: AgoraEduContextError, 返回错误
+    /// - parameter failure: 参数错误
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
     func getLocalDeviceState(device: AgoraEduContextDeviceInfo,
                              success: (AgoraEduContextDeviceState) -> (),
                              failure: (AgoraEduContextError) -> ())
@@ -325,7 +331,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter view: 渲染视频的容器
     /// - parameter renderConfig: 渲染配置
     /// - parameter streamUuid: 流 Id
-    /// - returns: AgoraEduContextError, 返回错误
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
     func startRenderVideo(view: UIView,
                           renderConfig: AgoraEduContextRenderConfig,
                           streamUuid: String) -> AgoraEduContextError?
@@ -354,10 +360,14 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - Returns: AgoraEduContextError, 返回错误，为空代表成功
     func setAudioMixingPosition(position: Int) -> AgoraEduContextError?
     
-    /// 注册事件监听
-    /// - returns: Void
+    /// 开始事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
     func registerMediaEventHandler(_ handler: AgoraEduMediaHandler)
     
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
     func unregisterMediaEventHandler(_ handler: AgoraEduMediaHandler)
 }
 
@@ -410,42 +420,45 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     func setRemoteVideoStreamSubscribeLevel(streamUuid: String,
                                             level: AgoraEduContextVideoStreamSubscribeLevel) -> AgoraEduContextError?
     
-    /// 注册流事件回调 (v2.0.0)
-    /// - parameter handler: 遵守 AgoraEduStreamHandler 的对象
+    /// 开始事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
     /// - returns: void
     func registerStreamEventHandler(_ handler: AgoraEduStreamHandler)
     
-    /// 注销流事件回调 (v2.0.0)
-    /// - parameter handler: 遵守 AgoraEduStreamHandler 的对象
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
     /// - returns: void
     func unregisterStreamEventHandler(_ handler: AgoraEduStreamHandler)
 }
 
 // MARK: - Monitor
 @objc public protocol AgoraEduMonitorHandler: NSObjectProtocol {
-    /// 本地网络质量更新(v2.0.0)
+    /// 本地网络质量更新 (v2.0.0)
     /// - parameter quality: 网络质量
     /// - returns: void
     @objc optional func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality)
     
-    /// 本地与服务器的连接状态
-    /// - parameter state: 连接
+    /// 本地与服务器的连接状态  (v2.0.0)
+    /// - parameter state: 连接状态
     /// - returns: void
     @objc optional func onLocalConnectionUpdated(state: AgoraEduContextConnectionState)
 }
 
 @objc public protocol AgoraEduMonitorContext: NSObjectProtocol {
-    /// 上传日志(v2.0.0)
+    /// 上传日志 (v2.0.0)
     /// - parameter success: 上传成功，获取日志的id
     /// - parameter failure: 上传失败
     /// - returns: void
     func uploadLog(success: AgoraEduContextSuccessWithString?,
                    failure: AgoraEduContextFailure?)
     
-    /// 注册SDK状态监控事件回调 (v2.0.0)
-    /// - parameter handler: 遵守 AgoraEduMonitorHandler 的对象
+    /// 开始事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
     /// - returns: void
     func registerMonitorEventHandler(_ handler: AgoraEduMonitorHandler)
     
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
     func unregisterMonitorEventHandler(_ handler: AgoraEduMonitorHandler)
 }

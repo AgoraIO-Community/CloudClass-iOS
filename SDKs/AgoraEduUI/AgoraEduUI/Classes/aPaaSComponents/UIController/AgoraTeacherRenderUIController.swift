@@ -74,7 +74,7 @@ extension AgoraTeacherRenderUIController: AgoraRenderMemberViewDelegate {
 // MARK: - AgoraEduUserHandler
 extension AgoraTeacherRenderUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        if user.role == .teacher {
+        if user.userRole == .teacher {
             self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                              uuid: user.userUuid,
                                                              name: user.userName,
@@ -85,7 +85,7 @@ extension AgoraTeacherRenderUIController: AgoraEduUserHandler {
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
-        if user.role == .teacher {
+        if user.userRole == .teacher {
             self.teacherModel = nil
         }
     }

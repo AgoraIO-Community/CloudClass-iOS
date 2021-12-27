@@ -78,7 +78,7 @@ class AgoraUserListUIController: UIViewController {
     private var dataSource = [AgoraUserListModel]()
     /** 支持的选项列表*/
     lazy var supportFuncs: [AgoraUserListFunction] = {
-        if contextPool.user.getLocalUserInfo().role == .teacher {
+        if contextPool.user.getLocalUserInfo().userRole == .teacher {
             return [.stage, .auth, .camera, .mic, .reward, .kick]
         } else {
             return [.stage, .auth, .camera, .mic, .reward]
@@ -135,7 +135,7 @@ class AgoraUserListUIController: UIViewController {
 // MARK: - Private
 private extension AgoraUserListUIController {
     func setup() {
-        let isTeacher = contextPool.user.getLocalUserInfo().role == .teacher
+        let isTeacher = contextPool.user.getLocalUserInfo().userRole == .teacher
         let localUserID = contextPool.user.getLocalUserInfo().userUuid
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             teacherNameLabel.text = teacher.userName
@@ -175,7 +175,7 @@ private extension AgoraUserListUIController {
         guard let model = dataSource.first(where: {$0.uuid == uuid}) else {
             return
         }
-        let isTeacher = contextPool.user.getLocalUserInfo().role == .teacher
+        let isTeacher = contextPool.user.getLocalUserInfo().userRole == .teacher
         let coHosts = contextPool.user.getCoHostList()
         let localUserID = contextPool.user.getLocalUserInfo().userUuid
         var isCoHost = false
@@ -249,11 +249,11 @@ extension AgoraUserListUIController: AgoraWidgetMessageObserver {
 // MARK: - AgoraEduUserHandler
 extension AgoraUserListUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        if user.role == .student {
+        if user.userRole == .student {
             let model = AgoraUserListModel()
             dataSource.append(model)
             sort()
-        } else if user.role == .teacher {
+        } else if user.userRole == .teacher {
             self.teacherNameLabel.text = user.userName
         }
     }
@@ -261,10 +261,10 @@ extension AgoraUserListUIController: AgoraEduUserHandler {
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
-        if user.role == .student {
+        if user.userRole == .student {
             self.dataSource.removeAll(where: {$0.uuid == user.userUuid})
             tableView.reloadData()
-        } else if user.role == .teacher {
+        } else if user.userRole == .teacher {
             self.teacherNameLabel.text = ""
         }
     }

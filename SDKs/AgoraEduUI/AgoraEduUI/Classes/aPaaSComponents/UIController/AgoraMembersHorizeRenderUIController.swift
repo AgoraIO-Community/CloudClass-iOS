@@ -120,7 +120,7 @@ private extension AgoraMembersHorizeRenderUIController {
                                                              name: teacher.userName,
                                                              role: .teacher)
         }
-        if let students = contextPool.user.getCoHostList()?.filter({$0.role == .student}) {
+        if let students = contextPool.user.getCoHostList()?.filter({$0.userRole == .student}) {
             var temp = [AgoraRenderMemberModel]()
             for student in students {
                 let model = AgoraRenderMemberModel.model(with: contextPool,
@@ -216,7 +216,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
-            if user.role == .student {
+            if user.userRole == .student {
                 let model = AgoraRenderMemberModel.model(with: contextPool,
                                                          uuid: user.userUuid,
                                                          name: user.userName,
@@ -230,7 +230,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
     func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                  operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
-            if user.role == .student {
+            if user.userRole == .student {
                 dataSource.removeAll(where: {$0.uuid == user.userUuid})
             }
         }
@@ -238,7 +238,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
     }
     
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        if user.role == .teacher {
+        if user.userRole == .teacher {
             self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                              uuid: user.userUuid,
                                                              name: user.userName,
@@ -249,7 +249,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
-        if user.role == .teacher {
+        if user.userRole == .teacher {
             self.teacherModel = nil
         }
     }

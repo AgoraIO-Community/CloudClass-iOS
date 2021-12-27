@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - Classroom
+/// 房间类型
 @objc public enum AgoraEduContextRoomType: Int {
     /// 1V1
     case oneToOne      = 0
@@ -19,6 +20,7 @@ import Foundation
     case paintingSmall = 5
 }
 
+/// 课堂状态
 @objc public enum AgoraEduContextClassState: Int {
     /// 课前
     case before = 0
@@ -29,6 +31,7 @@ import Foundation
 }
 
 // MARK: - User
+/// 用户角色
 @objc public enum AgoraEduContextUserRole: Int {
     /// 老师
     case teacher   = 1
@@ -38,6 +41,7 @@ import Foundation
     case assistant = 3
 }
 
+/// 用户离开原因
 @objc public enum AgoraEduContextUserLeaveReason: Int {
     /// 正常离开
     case normal  = 0
@@ -46,6 +50,7 @@ import Foundation
 }
 
 // MARK: - Network
+/// 网络质量
 @objc public enum AgoraEduContextNetworkQuality: Int {
     /// 未知
     case unknown
@@ -57,6 +62,7 @@ import Foundation
     case bad
 }
 
+/// 连接状态
 @objc public enum AgoraEduContextConnectionState: Int {
     /// 断开
     case disconnected
@@ -107,6 +113,7 @@ import Foundation
     case open  = 1
 }
 
+/// 系统设备
 @objc public enum AgoraEduContextSystemDevice: Int {
     case frontCamera = 1
     case backCamera  = 2

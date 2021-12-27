@@ -86,9 +86,9 @@ import UIKit
         
         self.createViews()
         self.createConstrains()
-        if self.contextPool.user.getLocalUserInfo().role == .teacher {
+        if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
             self.toolsView.tools = [.setting, .toolBox, .message]
-        } else if self.contextPool.user.getLocalUserInfo().role == .student {
+        } else if self.contextPool.user.getLocalUserInfo().userRole == .student {
             self.toolsView.tools = [.setting, .message]
         }
         self.contextPool.user.registerUserEventHandler(self)
@@ -109,7 +109,7 @@ import UIKit
             if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
                 self.contextPool.media.openLocalDevice(device: mic)
             }
-            if self.contextPool.user.getLocalUserInfo().role == .teacher {
+            if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
                 // TODO: v2.1.0
 //                self.contextPool.room.startClass {
 //                } failure: { error in
@@ -220,7 +220,7 @@ extension AgoraPaintingUIManager: AgoraPaintingRenderUIControllerDelegate {
                          yaxis: CGFloat,
                          width: CGFloat,
                          height: CGFloat) {
-        if contextPool.user.getLocalUserInfo().role != .teacher {
+        if contextPool.user.getLocalUserInfo().userRole != .teacher {
             return
         }
         if firstOpen {
@@ -240,7 +240,7 @@ extension AgoraPaintingUIManager: AgoraPaintingRenderUIControllerDelegate {
     }
 
     func onClickMemberAt(view: UIView, UUID: String) {
-        if contextPool.user.getLocalUserInfo().role != .teacher {
+        if contextPool.user.getLocalUserInfo().userRole != .teacher {
             return
         }
         memberMenuViewController.userUUID = UUID
@@ -267,7 +267,7 @@ extension AgoraPaintingUIManager: AgoraRoomToolsViewDelegate {
                 make?.centerY.equalTo()(toolsView)
             }
         case .toolBox:
-            if contextPool.user.getLocalUserInfo().role != .teacher {
+            if contextPool.user.getLocalUserInfo().userRole != .teacher {
                 break
             }
             ctrlView = toolBoxViewController.view

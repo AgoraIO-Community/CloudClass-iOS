@@ -157,12 +157,12 @@ extension AgoraOneToOneRenderUIController: AgoraRenderMemberViewDelegate {
 extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
     
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        if user.role == .teacher {
+        if user.userRole == .teacher {
             teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: user.userUuid,
                                                         name: user.userName,
                                                         role: .student)
-        } else if user.role == .student {
+        } else if user.userRole == .student {
             studentModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: user.userUuid,
                                                         name: user.userName,
@@ -173,9 +173,9 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
-        if user.role == .teacher {
+        if user.userRole == .teacher {
             teacherModel = nil
-        } else if user.role == .student {
+        } else if user.userRole == .student {
             studentModel = nil
         }
     }

@@ -81,9 +81,9 @@ private extension AgoraRenderMenuUIController {
     func updateView() {
         let user = contextPool.user.getLocalUserInfo()
 
-        if user.role == .teacher {
+        if user.userRole == .teacher {
             items = [.mic, .camera, .stage]
-        } else if user.role == .student {
+        } else if user.userRole == .student {
             items = [.mic, .camera, .stage, .auth, .reward]
         }
         let s = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first

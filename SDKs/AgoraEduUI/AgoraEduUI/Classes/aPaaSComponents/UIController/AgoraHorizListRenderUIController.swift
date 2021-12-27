@@ -222,7 +222,7 @@ extension AgoraHorizListRenderUIController {
         let user = contextPool.user.getLocalUserInfo()
         let point = sender.location(in: collectionView)
         
-        guard user.role == .teacher,
+        guard user.userRole == .teacher,
               sender.state == .ended,
               let indexPath = collectionView.indexPathForItem(at: point),
               let cell = collectionView.cellForItem(at: indexPath),
@@ -253,7 +253,7 @@ extension AgoraHorizListRenderUIController {
     
     @objc func onDoubleClickTeacher(_ sender: UITapGestureRecognizer) {
         let user = contextPool.user.getLocalUserInfo()
-        guard user.role == .teacher,
+        guard user.userRole == .teacher,
               sender.state == .ended,
               let uid = teacherItem?.userUUID,
               let streamId = teacherItem?.streamUUID else {
@@ -328,13 +328,13 @@ private extension AgoraHorizListRenderUIController {
         var tempTeacher: AgoraRenderItemInfoModel?
         let localInfo = contextPool.user.getLocalUserInfo()
         for user in list {
-            if user.role == .teacher {
+            if user.userRole == .teacher {
                 let stream = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first(where: {
                     $0.streamName != "secondary"
                 })
                 tempTeacher = AgoraRenderItemInfoModel(with: user,
                                                        stream: stream)
-            } else if user.role == .student  { // TODO: && user.isCoHost
+            } else if user.userRole == .student  { // TODO: && user.isCoHost
                 let stream = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first
                 if stream?.owner.userUuid == localInfo.userUuid {
                     self.currentStream = stream

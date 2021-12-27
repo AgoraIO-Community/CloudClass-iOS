@@ -49,7 +49,7 @@ class AgoraStudentsRenderUIController: UIViewController {
 // MARK: - Private
 private extension AgoraStudentsRenderUIController {
     func setup() {
-        if let students = contextPool.user.getCoHostList()?.filter({$0.role == .student}) {
+        if let students = contextPool.user.getCoHostList()?.filter({$0.userRole == .student}) {
             var temp = [AgoraRenderMemberModel]()
             for student in students {
                 let model = AgoraRenderMemberModel.model(with: contextPool,
@@ -139,7 +139,7 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
-            if user.role == .student {
+            if user.userRole == .student {
                 let model = AgoraRenderMemberModel.model(with: contextPool,
                                                          uuid: user.userUuid,
                                                          name: user.userName,
@@ -153,7 +153,7 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
     func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                  operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
-            if user.role == .student {
+            if user.userRole == .student {
                 dataSource.removeAll(where: {$0.uuid == user.userUuid})
             }
         }

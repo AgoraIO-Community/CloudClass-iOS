@@ -146,7 +146,7 @@ class AgoraHandsUpUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        if contextPool.user.getLocalUserInfo().role == .teacher {
+        if contextPool.user.getLocalUserInfo().userRole == .teacher {
             listButton.isHidden = false
             contextPool.user.registerUserEventHandler(self)
         } else {
@@ -155,7 +155,7 @@ class AgoraHandsUpUIController: UIViewController {
     }
     
     public func deselect() {
-        guard contextPool.user.getLocalUserInfo().role == .teacher else {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
         listButton.isSelected = false
