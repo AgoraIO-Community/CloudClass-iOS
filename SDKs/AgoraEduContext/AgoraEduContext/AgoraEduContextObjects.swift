@@ -173,15 +173,3 @@ import Foundation
         self.message = message
     }
 }
-
-// MAKR: - Private communication
-@objcMembers public class AgoraEduContextPrivateChatInfo: NSObject {
-    public var fromUser: AgoraEduContextUserInfo
-    public var toUser: AgoraEduContextUserInfo
-    
-    public init(fromUser: AgoraEduContextUserInfo,
-                toUser: AgoraEduContextUserInfo) {
-        self.fromUser = fromUser
-        self.toUser = toUser
-    }
-}

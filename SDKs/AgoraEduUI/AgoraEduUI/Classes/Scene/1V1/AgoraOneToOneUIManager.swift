@@ -63,14 +63,8 @@ import Masonry
             self.isJoinedRoom = true
             self.createChatController()
             // 打开本地音视频设备
-            let cameras = self.contextPool.media.getLocalDevices(deviceType: .camera)
-            if let camera = cameras.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
-                let ero = self.contextPool.media.openLocalDevice(device: camera)
-                print(ero)
-            }
-            if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
-                self.contextPool.media.openLocalDevice(device: mic)
-            }
+            self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            self.contextPool.media.openLocalDevice(systemDevice: .mic)
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)

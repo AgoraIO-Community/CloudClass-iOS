@@ -110,10 +110,11 @@ import UIKit
                 self.contextPool.media.openLocalDevice(device: mic)
             }
             if self.contextPool.user.getLocalUserInfo().role == .teacher {
-                self.contextPool.room.startClass {
-                } failure: { error in
-                    AgoraToast.toast(msg: error.message, type: .erro)
-                }
+                // TODO: v2.1.0
+//                self.contextPool.room.startClass {
+//                } failure: { error in
+//                    AgoraToast.toast(msg: error.message, type: .erro)
+//                }
             }
         } failure: { [weak self] error in
             AgoraLoading.hide()

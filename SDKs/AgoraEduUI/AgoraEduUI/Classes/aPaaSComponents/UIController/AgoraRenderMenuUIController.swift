@@ -170,9 +170,10 @@ extension AgoraRenderMenuUIController {
             return
         }
 
-        contextPool.user.removeCoHost(userUuid: UUID,
-                                       success: nil,
-                                       failure: nil)
+        // TODO: v2.1.0
+//        contextPool.user.removeCoHost(userUuid: UUID,
+//                                       success: nil,
+//                                       failure: nil)
     }
     
     @objc func onClickAuth(_ sender: UIButton) {
@@ -189,9 +190,11 @@ extension AgoraRenderMenuUIController {
         guard let UUID = self.userUUID else {
             return
         }
-        contextPool.user.rewardUsers(userUuidList: [UUID],
-                                     rewardCount: 1,
-                                     success: nil, failure: nil)
+        
+        // TODO: v2.1.0
+//        contextPool.user.rewardUsers(userUuidList: [UUID],
+//                                     rewardCount: 1,
+//                                     success: nil, failure: nil)
     }
 }
 // MARK: - AgoraEduUserHandler

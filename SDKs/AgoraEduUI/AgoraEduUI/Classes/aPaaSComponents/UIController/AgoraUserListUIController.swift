@@ -313,19 +313,21 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
         switch fn {
         case .stage:
             if isOn {
-                contextPool.user.addCoHost(userUuid: user.uuid) { [weak self] in
-                    user.stageState.isOn = true
-                    self?.reloadTableView()
-                } failure: { contextError in
-                    
-                }
+                // TODO: v2.1.0
+//                contextPool.user.addCoHost(userUuid: user.uuid) { [weak self] in
+//                    user.stageState.isOn = true
+//                    self?.reloadTableView()
+//                } failure: { contextError in
+//
+//                }
             } else {
-                contextPool.user.removeCoHost(userUuid: user.uuid) {[weak self] in
-                    user.stageState.isOn = false
-                    self?.reloadTableView()
-                } failure: { contextError in
-                    
-                }
+                // TODO: v2.1.0
+//                contextPool.user.removeCoHost(userUuid: user.uuid) {[weak self] in
+//                    user.stageState.isOn = false
+//                    self?.reloadTableView()
+//                } failure: { contextError in
+//
+//                }
             }
         case .auth:
             // TODO: 白板权限
@@ -372,12 +374,14 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
             // 奖励： 花名册只展示，不操作
             break
         case .kick:
-            AgoraKickOutAlertController.present(by: self, onComplete: { forever in
-                self.contextPool.user.kickOutUser(userUuid: user.uuid,
-                                                  forever: forever,
-                                                  success: nil,
-                                                  failure: nil)
-            }, onCancel: nil)
+            // TODO: v2.1.0
+//            AgoraKickOutAlertController.present(by: self, onComplete: { forever in
+//                self.contextPool.user.kickOutUser(userUuid: user.uuid,
+//                                                  forever: forever,
+//                                                  success: nil,
+//                                                  failure: nil)
+//            }, onCancel: nil)
+            break
         default:  break
         }
     }

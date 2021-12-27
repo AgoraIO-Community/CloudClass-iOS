@@ -256,11 +256,12 @@ extension AgoraHandsUpUIController: AgoraEduUserHandler {
 extension AgoraHandsUpUIController: AgoraHandsUpItemCellDelegate {
     func onClickAcceptAtIndex(_ index: IndexPath) {
         let u = dataSource[index.row]
-        contextPool.user.addCoHost(userUuid: u.userUuid) {
+        // TODO: v2.1.0
+//        contextPool.user.addCoHost(userUuid: u.userUuid) {
             // Do Noting
-        } failure: { ero in
+//        } failure: { ero in
             // Do Noting
-        }
+//        }
     }
 }
 
@@ -290,10 +291,12 @@ extension AgoraHandsUpUIController: UITableViewDataSource, UITableViewDelegate {
                else { // TODO: !u.isCoHost
                   return
               }
-        contextPool.user.addCoHost(userUuid: u.userUuid) {
+        
+        // TODO: v2.1.0
+//        contextPool.user.addCoHost(userUuid: u.userUuid) {
             // TODO 将用户从tableView中移除
-        } failure: { (error) in
-            print("")
-        }
+//        } failure: { (error) in
+//            print("")
+//        }
     }
 }
