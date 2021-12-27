@@ -52,6 +52,9 @@ do
     if [[ ! ${FileName} =~ "framework" ]]
     then
         continue
+    elif [[ ${FileName} =~ "ChatWidget" ]]
+    then
+        continue
     elif [[ ! ${FileName} =~ "Agora" ]]
     then
         rm -fr ${Products_Path}/${FileName}
