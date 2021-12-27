@@ -127,7 +127,7 @@ struct RoomInfoModel {
     private var bottomLabel: AgoraBaseUILabel!
     
     private var dataSource: [RoomInfoItemType] = [
-        .roomName, .nickName, .roomStyle, .roleType, .region, .encryptKey, .encryptMode
+        .roomName, .nickName, .roomStyle, .roleType, .region, .duration, .encryptKey, .encryptMode
     ]
     
     private var inputParams = RoomInfoModel()
@@ -290,7 +290,7 @@ private extension LoginViewController {
         }
     }
     
-    @objc func onTouchJoinRoom() {
+    @objc func onTouchJoinRoom() {        
         guard let room = inputParams.roomName ?? defaultParams.roomName,
               let user = inputParams.nickName ?? defaultParams.nickName,
               let roomStyle = inputParams.roomStyle ?? defaultParams.roomStyle,
@@ -306,7 +306,7 @@ private extension LoginViewController {
         let userUuid = "\(user)\(AgoraEduUserRole.student.rawValue)"
         
 //        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
-//        let duration = self.defaultParams.duration!
+        let duration = self.defaultParams.duration!
         
         var encryptionConfig: AgoraEduMediaEncryptionConfig?
         if let key = self.inputParams.encryptKey ?? self.defaultParams.encryptKey,
@@ -354,7 +354,7 @@ private extension LoginViewController {
                                                                 appId: appId,
                                                                 token: rtmToken,
                                                                 startTime: nil,
-                                                                duration: nil,
+                                                                duration: NSNumber(value: duration),
                                                                 region: region.eduType,
                                                                 mediaOptions: mediaOptions,
                                                                 userProperties: nil)
