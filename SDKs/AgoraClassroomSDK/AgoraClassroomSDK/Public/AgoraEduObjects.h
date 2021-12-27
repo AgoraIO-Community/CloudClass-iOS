@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 用户全局唯一id，需要与你签发token时使用的uid一致
 @property (nonatomic, copy) NSString *userUuid;
 // 角色类型(参考AgoraEduCoreRoleType)
-@property (nonatomic, assign) AgoraEduRoleType userRole;
+@property (nonatomic, assign) AgoraEduUserRole userRole;
 // 教室名称
 @property (nonatomic, copy) NSString *roomName;
 // 全局唯一的教室id
@@ -90,7 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
-                        userRole:(AgoraEduRoleType)userRole
+                        userRole:(AgoraEduUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
@@ -99,7 +99,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
-                        userRole:(AgoraEduRoleType)userRole
+                        userRole:(AgoraEduUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType

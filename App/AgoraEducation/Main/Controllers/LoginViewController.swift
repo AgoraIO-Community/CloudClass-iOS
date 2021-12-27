@@ -62,8 +62,8 @@ fileprivate let kRegionOptions: [(RoomRegionType, String)] = [
 ]
 
 /** 角色可选项*/
-fileprivate let kRoleOptions: [(AgoraEduRoleType, String)] = [
-    (.teacher, NSLocalizedString("login_role_teacher", comment: "")),
+fileprivate let kRoleOptions: [(AgoraEduUserRole, String)] = [
+//    (.teacher, NSLocalizedString("login_role_teacher", comment: "")),
     (.student, NSLocalizedString("login_role_student", comment: "")),
 ]
 
@@ -80,7 +80,7 @@ struct RoomInfoModel {
     var roomName: String?
     var nickName: String?
     var roomStyle: AgoraEduRoomType?
-    var roleType: AgoraEduRoleType?
+    var roleType: AgoraEduUserRole?
     var region: RoomRegionType?
     var duration: Int?
     var encryptKey: String?
@@ -303,7 +303,7 @@ private extension LoginViewController {
         let roomUuid = "\(room)\(roomStyle.rawValue)"
         
         // userUuid = userName + roleType
-        let userUuid = "\(user)\(AgoraEduRoleType.student.rawValue)"
+        let userUuid = "\(user)\(AgoraEduUserRole.student.rawValue)"
         
 //        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
 //        let duration = self.defaultParams.duration!

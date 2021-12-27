@@ -79,7 +79,7 @@
 @implementation AgoraEduLaunchConfig
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
-                        userRole:(AgoraEduRoleType)userRole
+                        userRole:(AgoraEduUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
@@ -107,7 +107,7 @@
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
-                        userRole:(AgoraEduRoleType)userRole
+                        userRole:(AgoraEduUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType

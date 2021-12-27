@@ -19,7 +19,7 @@
         return NO;
     }
     
-    if (self.userRole != AgoraEduRoleTypeStudent) {
+    if (self.userRole != AgoraEduUserRoleStudent) {
         return NO;
     }
     
@@ -53,7 +53,7 @@
 + (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraEduLaunchConfig *)config {
     AgoraEduCorePuppetMediaOptions *mediaOptions = [self getPuppetMediaOptions:config.mediaOptions];
     
-    AgoraEduCorePuppetRoleType role = config.userRole;
+    AgoraEduCorePuppetUserRole role = config.userRole;
     
     AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
                                                                                                 rtmToken:config.token

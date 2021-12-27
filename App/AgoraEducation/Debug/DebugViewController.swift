@@ -187,11 +187,11 @@ private extension DebugViewController {
         let roomUuid = "\(roomId)\(type.rawValue)"
         
         // userUuid = userName + roleType
-        let userUuid = "\(userId)\(AgoraEduRoleType.student.rawValue)"
+        let userUuid = "\(userId)\(AgoraEduUserRole.student.rawValue)"
         
         let duration = durationInt
         
-        let roleType: AgoraEduRoleType = .student
+        let roleType: AgoraEduUserRole = .student
         
         //        var encryptionConfig: AgoraEduMediaEncryptionConfig?
         //        if let key = self.inputParams.encryptKey ?? self.defaultParams.encryptKey,
