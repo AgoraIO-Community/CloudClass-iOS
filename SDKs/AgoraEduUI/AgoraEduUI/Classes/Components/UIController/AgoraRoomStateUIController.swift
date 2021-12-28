@@ -32,6 +32,8 @@ class AgoraRoomStateUIController: UIViewController {
     /** 房间时间信息*/
     private var timeInfo: AgoraClassTimeInfo?
     
+    private var localStream: AgoraEduContextStreamInfo?
+    
     deinit {
         self.timer?.invalidate()
         self.timer = nil
@@ -52,7 +54,9 @@ class AgoraRoomStateUIController: UIViewController {
         
         createViews()
         createConstrains()
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { [weak self] t in
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
+                                          repeats: true,
+                                          block: { [weak self] t in
             self?.updateTimeVisual()
         })
         contextPool.room.registerRoomEventHandler(self)
@@ -153,6 +157,17 @@ private extension AgoraRoomStateUIController {
         
         return "\(minuteString):\(secondString)"
     }
+    
+    func getLocalStream() {
+        let user = contextPool.user.getLocalUserInfo()
+        guard let streams = contextPool.stream.getStreamList(userUuid: user.userUuid) else {
+            return
+        }
+        
+        for stream in streams where stream.videoSourceType == .camera {
+            localStream = stream
+        }
+    }
 }
 // MARK: - AgoraEduUserHandler
 extension AgoraRoomStateUIController: AgoraEduUserHandler {
@@ -170,6 +185,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
                                operatorUser: AgoraEduContextUserInfo?) {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
+            // 老师邀请你上台了，与大家积极互动吧
             AgoraToast.toast(msg: "toast_student_stage_on".ag_localizedIn("AgoraEduUI"),
                              type: .notice)
         }
@@ -179,6 +195,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
                                  operatorUser: AgoraEduContextUserInfo?) {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
+            // 你离开讲台了，暂时无法与大家互动
             AgoraToast.toast(msg: "toast_student_stage_off".ag_localizedIn("AgoraEduUI"),
                              type: .erro)
         }
@@ -187,6 +204,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
+        // 祝贺**获得奖励
         let str = String.init(format: "toast_reward_student_xx".ag_localizedIn("AgoraEduUI"),
                               user.userName)
         AgoraToast.toast(msg: str,
@@ -197,7 +215,8 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        self.setup()
+        setup()
+        getLocalStream()
     }
     
     func onClassStateUpdated(state: AgoraEduContextClassState) {
@@ -220,15 +239,62 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
 }
 // MARK: - AgoraEduStreamContext
 extension AgoraRoomStateUIController: AgoraEduStreamHandler {
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        let localUUID = contextPool.user.getLocalUserInfo().userUuid
+        guard stream.owner.userUuid == localUUID else {
+            return
+        }
+        
+        localStream = stream
+    }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operatorUser: AgoraEduContextUserInfo?) {
+        let localUUID = contextPool.user.getLocalUserInfo().userUuid
+        guard stream.owner.userUuid == localUUID else {
+            return
+        }
+        
+        localStream = nil
+    }
+    
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         guard stream.owner.userUuid == localUUID else {
             return
         }
-        stream.streamType.hasAudio
+        
+        guard let `localStream` = localStream else {
+            self.localStream = stream
+            return
+        }
+        
+        if localStream.streamType.hasAudio != stream.streamType.hasAudio {
+            if stream.streamType.hasAudio {
+                AgoraToast.toast(msg: "老师已打开你的麦克风",
+                                 type: .notice)
+            } else {
+                AgoraToast.toast(msg: "老师已关闭你的麦克风",
+                                 type: .erro)
+            }
+        }
+        
+        if localStream.streamType.hasVideo != stream.streamType.hasVideo {
+            if stream.streamType.hasVideo {
+                AgoraToast.toast(msg: "老师已打开你的摄像头",
+                                 type: .notice)
+            } else {
+                AgoraToast.toast(msg: "老师已关闭你的摄像头",
+                                 type: .erro)
+            }
+        }
+        
+        self.localStream = stream
     }
 }
+
 // MARK: - AgoraEduMonitorHandler
 extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
