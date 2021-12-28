@@ -46,19 +46,17 @@ class AgoraUserListModel {
         if predNum.evaluate(with: c) {
             let n = string.substring(to: string.index(string.startIndex, offsetBy:1))
             let value = n.unicodeScalars.first?.value ?? 150
-            return value + 100
+            return value + 400
         } else if predChar.evaluate(with: c) {
-            return c.lowercased().unicodeScalars.first?.value ?? 150
+            return (c.unicodeScalars.first?.value ?? 0) + 300
         } else {
             let mutableString = NSMutableString.init(string: string)
             CFStringTransform(mutableString as CFMutableString, nil, kCFStringTransformToLatin, false)
             let pinyinString = mutableString.folding(options: String.CompareOptions.diacriticInsensitive, locale: NSLocale.current)
-            let strPinYin = polyphoneStringHandle(nameString: string, pinyinString: pinyinString).uppercased()
+            let strPinYin = polyphoneStringHandle(nameString: string, pinyinString: pinyinString).lowercased()
             let firstString = strPinYin.substring(to: strPinYin.index(strPinYin.startIndex, offsetBy:1))
-            let regexA = "^[A-Z]$"
-            let predA = NSPredicate.init(format: "SELF MATCHES %@", regexA)
             let value = firstString.unicodeScalars.first?.value ?? 150
-            return predA.evaluate(with: firstString) ? value : value + 200
+            return value + 100
         }
     }
     /// 多音字处理

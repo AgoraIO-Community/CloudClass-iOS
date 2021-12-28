@@ -45,11 +45,15 @@ public class AgoraToast: NSObject {
                     make?.top.equalTo()(16)
                 }
                 make?.centerX.equalTo()(0)
+                make?.left.greaterThanOrEqualTo()(16)
+                make?.right.greaterThanOrEqualTo()(-16)
             }
         } else if let last = tipsViews.last {
             tipsView.mas_makeConstraints { make in
                 make?.top.equalTo()(last.mas_bottom)?.offset()(5)
                 make?.centerX.equalTo()(0)
+                make?.left.greaterThanOrEqualTo()(16)
+                make?.right.greaterThanOrEqualTo()(-16)
             }
         }
         tipsViews.append(tipsView)
@@ -72,6 +76,8 @@ extension AgoraToast: AgoraToastTipsViewDelegate {
                     make?.top.equalTo()(16)
                 }
                 make?.centerX.equalTo()(0)
+                make?.left.greaterThanOrEqualTo()(16)
+                make?.right.greaterThanOrEqualTo()(-16)
             }
             UIView.animate(withDuration: 0.2) {
                 next.superview?.layoutIfNeeded()
