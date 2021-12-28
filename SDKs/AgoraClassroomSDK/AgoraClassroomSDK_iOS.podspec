@@ -17,17 +17,15 @@ Pod::Spec.new do |spec|
   spec.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
   spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
-  
-  # common libs
-  spec.dependency "AgoraExtApp"
-  spec.dependency "AgoraWidget"
-
+ 
   # open source libs
-  spec.dependency "AgoraEduUI"
-  spec.dependency "AgoraEduContext"
-  spec.dependency "AgoraWidgets"
-  spec.dependency "ChatWidget"
-  spec.dependency "AgoraExtApps"
+  spec.dependency "AgoraEduUI", '2.0.0'
+  spec.dependency "AgoraEduContext", '2.0.0'
+
+  # open sources widgets and extApps
+  spec.dependency "AgoraWidgets", '>= 2.0.0'
+  spec.dependency "ChatWidget", '>= 2.0.0'
+  spec.dependency "AgoraExtApps", '>= 2.0.0'
 
   spec.subspec 'PreRtc' do |pre_rtc|
     pre_rtc.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}", "AgoraClassroomSDK/**/*.{swift,h,m}"
@@ -48,8 +46,8 @@ Pod::Spec.new do |spec|
     ]
     
     # close source libs
-    re_rtc.dependency "AgoraEduCore/ReRtc"
+    re_rtc.dependency "AgoraEduCore/ReRtc", '2.0.0'
   end
 
-  spec.default_subspecs = 'PreRtc'
+  spec.default_subspecs = 'PreRtc', '2.0.0'
 end

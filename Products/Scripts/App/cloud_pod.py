@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import re
 from enum import Enum
 
 # Base Enum
@@ -48,7 +49,9 @@ BinaryPodContent = """
 end
 """
 
-RePodContent = "pod 'AgoraRtcKit', :path => '../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'"
+RePodContent = """
+    pod 'AgoraRtcKit', :path => '../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'
+"""
 
 BaseParams = {"extcuteDir": "./",
               "podMode": PODMODE.Source,
@@ -61,6 +64,25 @@ def HandlePath(path):
     if os.path.exists(path) == False:
         print  ('Invalid Path!' + path)
         sys.exit(1)
+
+def reRtcHandle(lines):
+    if BaseParams["rtcVersion"] == RTCVERSION.Pre:
+        return
+        
+    print("Replace PreRtc with ReRtc")
+
+    oriRtcPod = "pod 'AgoraRtcEngine_iOS'"
+    preRtcStr = '/PreRtc'
+    reRtcStr = '/ReRtc'
+
+    for index,str in enumerate(lines):
+        if preRtcStr in str:
+            str = str.replace(preRtcStr,reRtcStr)
+
+        if oriRtcPod in str:
+            str = RePodContent
+
+        lines[index] = str
 
 def generatePodfile():
     podFilePath = ExtcuteDir + '%s' % 'Podfile'
@@ -82,14 +104,12 @@ def generatePodfile():
     lines = lines[:foundLine]
     if BaseParams["podMode"] == PODMODE.Source:
         lines.append(SourcePodContent)
-        with open(podFilePath,'w') as f:
-            for data in lines:
-                f.write(data)
-            f.flush()
+        reRtcHandle(lines)
     elif BaseParams["podMode"] == PODMODE.Binary:
         lines.append(BinaryPodContent)
-        with open(podFilePath,'w') as f:
-            f.writelines(lines)
+    
+    with open(podFilePath,'w') as f:
+        f.writelines(lines)
  
 def executePod():
     podFilePath = ExtcuteDir + '/%s' % 'Podfile'
@@ -101,7 +121,7 @@ def executePod():
     # 改变当前工作目录到指定的路径
     os.chdir(ExtcuteDir)
     print  ('====== pod install log ======')
-    if BaseParams["updateFlag"] == "0":
+    if BaseParams["updateFlag"] == True:
         os.system('pod install --repo-update')
     else:
         os.system('pod install --no-repo-update')
@@ -113,8 +133,8 @@ def main():
     print  ('Pod Mode: ' + BaseParams["podMode"].name)
 
     # 若为source pod，开发者模式
-    if PodMode == PODMODE.Source:
-        print BaseParams
+    if BaseParams["podMode"] == PODMODE.Source:
+        print "BaseParams:\n" + str(BaseParams)
         modifyFlag = raw_input("Need Modify Base Paramaters? Yes: 0, NO: Any\n")
 
         if modifyFlag == "0":
