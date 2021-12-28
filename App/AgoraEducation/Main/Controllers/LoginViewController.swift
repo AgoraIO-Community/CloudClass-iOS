@@ -247,55 +247,60 @@ private extension LoginViewController {
         let failure: (Error) -> () = { (error) in
             AgoraLoading.hide()
             AgoraToast.toast(msg: error.localizedDescription,
-                             type: .erro)
+                             type: .error)
         }
         
-        let success: () -> () = {
+        let launchSuccessBlock: () -> () = {
             AgoraLoading.hide()
+        }
+        
+        let tokenSuccessBlock: (TokenBuilder.ServerResp) -> () = {(response) in
+              let appId = response.appId
+              let rtmToken = response.rtmToken
+              let userUuid = response.userId
+              
+              let launchConfig = AgoraEduLaunchConfig(userName: user,
+                                                      userUuid: userUuid,
+                                                      userRole: .student,
+                                                      roomName: room,
+                                                      roomUuid: roomUuid,
+                                                      roomType: roomStyle,
+                                                      appId: appId,
+                                                      token: rtmToken,
+                                                      startTime: nil,
+                                                      duration: NSNumber(value: duration),
+                                                      region: region.eduType,
+                                                      mediaOptions: mediaOptions,
+                                                      userProperties: nil)
+              
+              // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
+              var extApps = Dictionary<String, AgoraExtAppConfiguration>()
+              launchConfig.extApps.forEach { (k, v) in
+                  if k == "io.agora.countdown" {
+                      v.image = UIImage(named: "countdown")
+                  }
+                  extApps[k] = v
+              }
+
+              launchConfig.extApps = extApps
+
+              AgoraClassroomSDK.launch(launchConfig,
+                                       success: launchSuccessBlock,
+                                       failure: failure)
+           
         }
         
         requestToken(region: region.rawValue,
                      userUuid: userUuid,
-                     success: { [weak self] (response) in
-                        guard let `self` = self else {
-                            return
-                        }
-                        
-                        let appId = response.appId
-                        let rtmToken = response.rtmToken
-                        let userUuid = response.userId
-                        
-                        let launchConfig = AgoraEduLaunchConfig(userName: user,
-                                                                userUuid: userUuid,
-                                                                userRole: .student,
-                                                                roomName: room,
-                                                                roomUuid: roomUuid,
-                                                                roomType: roomStyle,
-                                                                appId: appId,
-                                                                token: rtmToken,
-                                                                startTime: nil,
-                                                                duration: NSNumber(value: duration),
-                                                                region: region.eduType,
-                                                                mediaOptions: mediaOptions,
-                                                                userProperties: nil)
-                        
-                        // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
-                        var extApps = Dictionary<String, AgoraExtAppConfiguration>()
-                        launchConfig.extApps.forEach { (k, v) in
-                            if k == "io.agora.countdown" {
-                                v.image = UIImage(named: "countdown")
-                            }
-                            extApps[k] = v
-                        }
-
-                        launchConfig.extApps = extApps
-                        
-                        AgoraClassroomSDK.setDelegate(self)
-                        
-                        AgoraClassroomSDK.launch(launchConfig,
-                                                 success: success,
-                                                 failure: failure)
-                     }, failure: failure)
+                     success: tokenSuccessBlock,
+                     failure: failure)
+        
+// MARK: 目前使用灵动课堂默认AppId和AppCertificate请求token，若需要使用自己的AppId和AppCertificate，可将requestToken方法的执行注释掉，使用下面的方法
+//        buildToken(appId: "Your App Id",
+//                   appCertificate: "Your App Certificate",
+//                   userUuid: userUuid,
+//                   success: tokenSuccessBlock,
+//                   failure: failure)
     }
     
     @objc func onTouchDebug() {

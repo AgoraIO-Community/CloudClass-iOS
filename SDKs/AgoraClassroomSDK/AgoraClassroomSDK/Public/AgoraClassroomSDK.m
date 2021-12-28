@@ -162,8 +162,13 @@ static AgoraClassroomSDK *manager = nil;
 #pragma mark - Private
 - (void)agoraRelease {
     self.core = nil;
-    self.ui = nil;
     self.delegate = nil;
+    
+    __weak AgoraClassroomSDK *weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(),
+                   ^{
+        weakSelf.ui = nil;
+    });
 }
 
 #pragma mark - AgoraEduUIManagerDelegate
@@ -183,6 +188,12 @@ static AgoraClassroomSDK *manager = nil;
         [self.delegate classroomSDK:self
                           didExit:sdkReason];
     }
-    [self agoraRelease];
+    
+    __weak AgoraClassroomSDK *weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                 (int64_t)(0.5 * NSEC_PER_SEC)),
+                   dispatch_get_global_queue(0, 0), ^{
+        [weakSelf agoraRelease];
+    });
 }
 @end

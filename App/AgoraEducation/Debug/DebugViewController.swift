@@ -198,7 +198,7 @@ private extension DebugViewController {
         let failure: (Error) -> () = { (error) in
             AgoraLoading.hide()
             AgoraToast.toast(msg: error.localizedDescription,
-                             type: .erro)
+                             type: .error)
         }
         
         let success: () -> () = {

@@ -7,10 +7,28 @@
 
 import AgoraEduContext
 import AgoraWidget
+import AgoraUIEduBaseViews
 
 class AgoraBoardUIController: UIViewController {
     var boardWidget: AgoraBaseWidget?
     var contextPool: AgoraEduContextPool!
+    
+    private var localGranted = false {
+        didSet {
+            guard localGranted != oldValue else {
+                return
+            }
+            if localGranted {
+                AgoraToast.toast(msg: AgoraUILocalizedString("board_granted",
+                                                             object: self),
+                                 type: .notice)
+            } else {
+                AgoraToast.toast(msg: AgoraUILocalizedString("board_ungranted",
+                                                             object: self),
+                                 type: .error)
+            }
+        }
+    }
     
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
@@ -81,6 +99,15 @@ private extension AgoraBoardUIController {
                                            message: message)
         }
     }
+    
+    func handleGrantUsers(_ list: Array<String>?) {
+        if let users = list,
+           users.contains(contextPool.user.getLocalUserInfo().userUuid) {
+            localGranted = true
+        } else {
+            localGranted = false
+        }
+    }
 }
 
 extension AgoraBoardUIController: AgoraWidgetMessageObserver {
@@ -96,6 +123,8 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
             handleBoardPhase(phase)
         case .BoardAudioMixingRequest(let requestData):
             handleAudioMixing(requestData)
+        case .BoardGrantDataChanged(let list):
+            handleGrantUsers(list)
         default:
             break
         }

@@ -25,7 +25,7 @@ class AgoraOneToOneMemberView: UIView {
     }
     
     enum AgoraOneToOneDeviceState {
-        case off, on, erro
+        case off, on, error
     }
     
     weak var delegate: AgoraOneToOneMemberViewDelegate?
@@ -70,7 +70,7 @@ class AgoraOneToOneMemberView: UIView {
                 cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_off",
                                                               in: "AgoraEduUI")
                 videoView.isHidden = true
-            case .erro:
+            case .error:
                 cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_bad",
                                                               in: "AgoraEduUI")
                 videoView.isHidden = true

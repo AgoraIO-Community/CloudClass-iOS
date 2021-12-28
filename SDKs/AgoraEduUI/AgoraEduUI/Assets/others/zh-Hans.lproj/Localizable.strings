@@ -90,6 +90,7 @@ kick_out_once = "仅移出教室一次";
 kick_out_forever = "禁止再次进入教室";
 kick_out_submit = "确定";
 kick_out_cancel = "取消";
+local_user_kicked_out = "你被移出教室";
 
 one_to_one_tab_video = "视频";
 one_to_one_tab_chat = "聊天";
@@ -105,3 +106,7 @@ toast_student_video_stream_on = "老师已打开你的摄像头，与大家积�
 toast_student_video_stream_off = "老师已关闭你的摄像头，你暂时不能与大家视频互动";
 
 toast_reward_student_xx = "祝贺%@获得奖励";
+
+// board
+board_granted = "你已被老师授权，请使用白板工具互动";
+board_ungranted = "你已被老师收回授权，无法使用白板工具互动";

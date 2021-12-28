@@ -42,7 +42,7 @@ class AgoraToastTipsView: UIView {
             self.layer.borderColor = UIColor(hex: 0xF0C996)?.cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_warning",
                                                          in: "AgoraUIEduBaseViews")
-        case .erro:
+        case .error:
             self.backgroundColor = UIColor(hex: 0xFFF2F2)
             self.layer.borderColor = UIColor(hex: 0xF07766)?.cgColor
             self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_error",

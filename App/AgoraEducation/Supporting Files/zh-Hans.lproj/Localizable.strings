@@ -7,7 +7,7 @@
 */
 
 OneToOneText = "一对一";
-SmallClassText = "小班课";
+SmallClassText = "互动小班课";
 BigClassText = "大班课";
 BreakOutClassText = "超级小班课";
 MediumClassText = "中班课";

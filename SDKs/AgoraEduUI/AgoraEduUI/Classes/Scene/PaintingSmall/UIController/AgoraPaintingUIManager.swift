@@ -113,7 +113,7 @@ import UIKit
                 // TODO: v2.1.0
 //                self.contextPool.room.startClass {
 //                } failure: { error in
-//                    AgoraToast.toast(msg: error.message, type: .erro)
+//                    AgoraToast.toast(msg: error.message, type: .error)
 //                }
             }
         } failure: { [weak self] error in
@@ -157,7 +157,7 @@ extension AgoraPaintingUIManager: AgoraEduMonitorHandler {
             // 踢出
             AgoraLoading.hide()
             AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
-                             type: .erro)
+                             type: .error)
             exitClassRoom(reason: .kickOut)
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
@@ -173,7 +173,7 @@ extension AgoraPaintingUIManager: AgoraEduUserHandler {
     func onKickedOut() {
         AgoraAlert()
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
-            .setMessage(AgoraKitLocalizedString("KickOutText"))
+            .setMessage("local_user_kicked_out".ag_localizedIn("AgoraEduUI"))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
                 self.exitClassRoom(reason: .kickOut)
             }))

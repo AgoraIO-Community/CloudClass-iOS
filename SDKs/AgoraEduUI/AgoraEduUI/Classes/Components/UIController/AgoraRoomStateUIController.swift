@@ -174,7 +174,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
         AgoraAlert()
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
-            .setMessage(AgoraKitLocalizedString("KickOutText"))
+            .setMessage("local_user_kicked_out".ag_localizedIn("AgoraEduUI"))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
                 self.roomDelegate?.exitClassRoom(reason: .kickOut)
             }))
@@ -197,7 +197,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
             // 你离开讲台了，暂时无法与大家互动
             AgoraToast.toast(msg: "toast_student_stage_off".ag_localizedIn("AgoraEduUI"),
-                             type: .erro)
+                             type: .error)
         }
     }
     
@@ -317,7 +317,7 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
             // 踢出
             AgoraLoading.hide()
             AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
-                             type: .erro)
+                             type: .error)
             self.roomDelegate?.exitClassRoom(reason: .kickOut)
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
