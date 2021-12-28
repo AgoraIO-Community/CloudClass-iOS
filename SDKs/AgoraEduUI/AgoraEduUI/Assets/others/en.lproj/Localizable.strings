@@ -81,3 +81,15 @@ kick_out_cancel = "Cancel";
 
 one_to_one_tab_video = "Video";
 one_to_one_tab_chat = "Chat";
+
+// Toast
+toast_student_stage_on = "The teacher invited you to the podium. Let's have a positive interaction with you";
+toast_student_stage_off = "You left the podium and can't interact with everyone for the time being";
+
+toast_student_audio_stream_on = "The teacher has turned on your microphone and you are able to speak now";
+toast_student_audio_stream_off = "The teacher has turned off your microphone. You are not able to speak now";
+
+toast_student_video_stream_on = "The teacher has turned on your camera. Let's have a positive interaction with you";
+toast_student_video_stream_off = "The teacher has turned off your camera. You can't interact with everyone for the time being";
+
+toast_reward_student_xx = "Congratulations to %@ for the award";

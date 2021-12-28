@@ -170,8 +170,8 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
                                operatorUser: AgoraEduContextUserInfo?) {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
-            // 老师邀请你上台了，与大家积极互动吧
-//            AgoraToast.toast(msg: <#T##String?#>, type: <#T##AgoraToastType#>)
+            AgoraToast.toast(msg: "toast_student_stage_on".ag_localizedIn("AgoraEduUI"),
+                             type: .notice)
         }
     }
     
@@ -179,15 +179,18 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
                                  operatorUser: AgoraEduContextUserInfo?) {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
-            // 你离开讲台了，暂时无法与大家互动
+            AgoraToast.toast(msg: "toast_student_stage_off".ag_localizedIn("AgoraEduUI"),
+                             type: .erro)
         }
     }
     
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
-        // 祝贺**获得奖励
-//        AgoraToast.toast(msg: <#T##String?#>, type: <#T##AgoraToastType#>)
+        let str = String.init(format: "toast_reward_student_xx".ag_localizedIn("AgoraEduUI"),
+                              user.userName)
+        AgoraToast.toast(msg: str,
+                         type: .notice)
     }
 }
 
