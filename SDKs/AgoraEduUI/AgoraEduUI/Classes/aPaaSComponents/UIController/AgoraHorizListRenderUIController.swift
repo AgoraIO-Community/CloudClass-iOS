@@ -476,6 +476,7 @@ extension AgoraHorizListRenderUIController: AgoraRenderItemCellDelegate  {
                                    userUUID: String) {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
+        renderConfig.isMirror = true
         contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamID,
                                                               level: .low)
         contextPool.media.startRenderVideo(view: view,

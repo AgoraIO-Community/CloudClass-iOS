@@ -58,6 +58,7 @@ class AgoraRoomStateUIController: UIViewController {
         contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
         contextPool.user.registerUserEventHandler(self)
+        contextPool.stream.registerStreamEventHandler(self)
     }
 }
 
@@ -164,6 +165,30 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
             }))
             .show(in: self)
     }
+    
+    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
+                               operatorUser: AgoraEduContextUserInfo?) {
+        let localUUID = contextPool.user.getLocalUserInfo().userUuid
+        if let _ = userList.first(where: {$0.userUuid == localUUID}) {
+            // 老师邀请你上台了，与大家积极互动吧
+//            AgoraToast.toast(msg: <#T##String?#>, type: <#T##AgoraToastType#>)
+        }
+    }
+    
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        let localUUID = contextPool.user.getLocalUserInfo().userUuid
+        if let _ = userList.first(where: {$0.userUuid == localUUID}) {
+            // 你离开讲台了，暂时无法与大家互动
+        }
+    }
+    
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        // 祝贺**获得奖励
+//        AgoraToast.toast(msg: <#T##String?#>, type: <#T##AgoraToastType#>)
+    }
 }
 
 // MARK: - AgoraEduRoomHandler
@@ -190,7 +215,18 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
             .show(in: self)
     }
 }
-
+// MARK: - AgoraEduStreamContext
+extension AgoraRoomStateUIController: AgoraEduStreamHandler {
+    func onStreamUpdated(stream: AgoraEduContextStreamInfo,
+                         operatorUser: AgoraEduContextUserInfo?) {
+        let localUUID = contextPool.user.getLocalUserInfo().userUuid
+        guard stream.owner.userUuid == localUUID else {
+            return
+        }
+        stream.streamType.hasAudio
+    }
+}
+// MARK: - AgoraEduMonitorHandler
 extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
         switch quality {
