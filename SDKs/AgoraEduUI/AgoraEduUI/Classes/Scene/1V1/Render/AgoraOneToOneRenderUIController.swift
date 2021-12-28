@@ -99,6 +99,21 @@ private extension AgoraOneToOneRenderUIController {
         }
     }
     
+    func updateStream(stream: AgoraEduContextStreamInfo?) {
+        guard stream?.videoSourceType != .screen else {
+            return
+        }
+        
+        if stream?.streamUuid == teacherModel?.streamID {
+            teacherModel?.updateStream(stream)
+        } else if stream?.streamUuid == studentModel?.streamID {
+            studentModel?.updateStream(stream)
+        }
+        if stream?.streamUuid == currentStream?.streamUuid {
+            self.currentStream = stream
+        }
+    }
+    
     func showRewardAnimation() {
         guard let b = Bundle.ag_compentsBundleWithClass(self.classForCoder),
               let url = b.url(forResource: "reward", withExtension: "gif"),
@@ -203,21 +218,19 @@ extension AgoraOneToOneRenderUIController: AgoraEduMediaHandler {
 }
 // MARK: - AgoraEduStreamHandler
 extension AgoraOneToOneRenderUIController: AgoraEduStreamHandler {
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        self.updateStream(stream: stream)
+    }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.videoSourceType != .screen else {
-            return
-        }
-        
-        if stream.streamUuid == teacherModel?.streamID {
-            teacherModel?.updateStream(stream)
-        } else if stream.streamUuid == studentModel?.streamID {
-            studentModel?.updateStream(stream)
-        }
-        if stream.streamUuid == currentStream?.streamUuid {
-            self.currentStream = stream
-        }
+        self.updateStream(stream: stream)
+    }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operatorUser: AgoraEduContextUserInfo?) {
+        self.updateStream(stream: nil)
     }
 }
 // MARK: - AgoraEduRoomHandler

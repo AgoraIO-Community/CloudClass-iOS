@@ -79,6 +79,18 @@ private extension AgoraStudentsRenderUIController {
         collectionView.reloadData()
     }
     
+    func updateStream(stream: AgoraEduContextStreamInfo?) {
+        guard stream?.videoSourceType != .screen else {
+            return
+        }
+        
+        for model in self.dataSource {
+            if stream?.owner.userUuid == model.uuid {
+                model.updateStream(stream)
+            }
+        }
+    }
+    
     func showRewardAnimation() {
         guard let b = Bundle.ag_compentsBundleWithClass(self.classForCoder),
               let url = b.url(forResource: "reward", withExtension: "gif"),
@@ -184,17 +196,19 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
 }
 // MARK: - AgoraEduStreamHandler
 extension AgoraStudentsRenderUIController: AgoraEduStreamHandler {
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        self.updateStream(stream: stream)
+    }
+    
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.videoSourceType != .screen else {
-            return
-        }
-        
-        for model in self.dataSource {
-            if stream.owner.userUuid == model.uuid {
-                model.updateStream(stream)
-            }
-        }
+        self.updateStream(stream: stream)
+    }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operatorUser: AgoraEduContextUserInfo?) {
+        self.updateStream(stream: nil)
     }
 }
 // MARK: - AgoraEduMediaHandler
@@ -250,6 +264,14 @@ extension AgoraStudentsRenderUIController: UICollectionViewDelegate,
         let item = self.dataSource[indexPath.row]
         cell.renderView.setModel(model: item, delegate: self)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        didEndDisplaying cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        if let current = cell as? AgoraRenderMemberCell {
+            current.renderView.setModel(model: nil, delegate: self)
+        }
     }
     
     public func collectionView(_ collectionView: UICollectionView,

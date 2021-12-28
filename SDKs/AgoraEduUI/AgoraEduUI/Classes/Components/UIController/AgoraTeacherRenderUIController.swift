@@ -41,14 +41,25 @@ class AgoraTeacherRenderUIController: UIViewController {
         contextPool.media.registerMediaEventHandler(self)
     }
 }
-
-extension AgoraTeacherRenderUIController {
+// MARK: - Private
+private extension AgoraTeacherRenderUIController {
     func setup() {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                              uuid: teacher.userUuid,
                                                              name: teacher.userName,
                                                              role: .teacher)
+        }
+    }
+    
+    func updateStream(stream: AgoraEduContextStreamInfo?) {
+        guard stream?.videoSourceType != .screen else {
+            return
+        }
+        
+        if let model = teacherModel,
+           stream?.owner.userUuid == model.uuid {
+            model.updateStream(stream)
         }
     }
 }
@@ -93,16 +104,19 @@ extension AgoraTeacherRenderUIController: AgoraEduUserHandler {
 }
 // MARK: - AgoraEduStreamHandler
 extension AgoraTeacherRenderUIController: AgoraEduStreamHandler {
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        self.updateStream(stream: stream)
+    }
+    
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.videoSourceType != .screen else {
-            return
-        }
-        
-        if let model = teacherModel,
-           stream.owner.userUuid == model.uuid {
-            model.updateStream(stream)
-        }
+        self.updateStream(stream: stream)
+    }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operatorUser: AgoraEduContextUserInfo?) {
+        self.updateStream(stream: nil)
     }
 }
 // MARK: - AgoraEduMediaHandler

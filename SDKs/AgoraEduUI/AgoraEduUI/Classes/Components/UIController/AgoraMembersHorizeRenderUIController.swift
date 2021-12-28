@@ -160,6 +160,23 @@ private extension AgoraMembersHorizeRenderUIController {
         collectionView.reloadData()
     }
     
+    func updateStream(stream: AgoraEduContextStreamInfo?) {
+        guard stream?.videoSourceType != .screen else {
+            return
+        }
+        
+        if let model = teacherModel,
+           stream?.owner.userUuid == model.uuid {
+            model.updateStream(stream)
+        } else {
+            for model in self.dataSource {
+                if stream?.owner.userUuid == model.uuid {
+                    model.updateStream(stream)
+                }
+            }
+        }
+    }
+    
     func streamChanged(from: AgoraEduContextStreamInfo?, to: AgoraEduContextStreamInfo?) {
         guard let fromStream = from, let toStream = to else {
             return
@@ -292,22 +309,19 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduMediaHandler {
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        self.updateStream(stream: stream)
+    }
+    
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.videoSourceType != .screen else {
-            return
-        }
-        
-        if let model = teacherModel,
-           stream.owner.userUuid == model.uuid {
-            model.updateStream(stream)
-        } else {
-            for model in self.dataSource {
-                if stream.owner.userUuid == model.uuid {
-                    model.updateStream(stream)
-                }
-            }
-        }
+        self.updateStream(stream: stream)
+    }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operatorUser: AgoraEduContextUserInfo?) {
+        self.updateStream(stream: nil)
     }
 }
 
@@ -355,6 +369,14 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView,
+                        didEndDisplaying cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        if let current = cell as? AgoraRenderMemberCell {
+            current.renderView.setModel(model: nil, delegate: self)
+        }
+    }
+    
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
@@ -364,7 +386,7 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
             delegate?.onClickMemberAt(view: cell, UUID: uuid)
         }
     }
-    
+        
     public func collectionView(_ collectionView: UICollectionView,
                                layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
