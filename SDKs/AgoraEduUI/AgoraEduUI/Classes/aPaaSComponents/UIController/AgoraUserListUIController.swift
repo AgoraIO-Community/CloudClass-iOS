@@ -420,6 +420,8 @@ extension AgoraUserListUIController {
         contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
         contentView.layer.cornerRadius = 10.0
         contentView.clipsToBounds = true
+        contentView.borderWidth = 1
+        contentView.borderColor = UIColor(hex: 0xE3E3EC)
         view.addSubview(contentView)
         
         titleLabel = UILabel(frame: .zero)
@@ -500,7 +502,7 @@ extension AgoraUserListUIController {
         }
         titleLabel.mas_makeConstraints { make in
             make?.top.equalTo()(titleLabel.superview)
-            make?.left.equalTo()(22)
+            make?.left.equalTo()(16)
             make?.height.equalTo()(40)
         }
         infoView.mas_makeConstraints { make in
@@ -526,14 +528,14 @@ extension AgoraUserListUIController {
         }
         studentTitleLabel.mas_makeConstraints { make in
             make?.top.equalTo()(infoView.mas_bottom)
-            make?.left.equalTo()(22)
+            make?.left.equalTo()(16)
             make?.height.equalTo()(40)
             make?.width.equalTo()(60)
         }
         itemTitlesView.mas_makeConstraints { make in
             make?.top.equalTo()(studentTitleLabel)
             make?.left.equalTo()(studentTitleLabel.mas_right)
-            make?.right.equalTo()(-20)
+            make?.right.equalTo()(-16)
             make?.height.equalTo()(studentTitleLabel)
         }
         tableView.mas_makeConstraints { make in

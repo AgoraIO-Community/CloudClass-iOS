@@ -10,7 +10,7 @@
 OK = "确定";
 
 // User List
-UserListMainTitle = "人员列表";
+UserListMainTitle = "花名册";
 UserListTeacherName = "教师姓名:";
 UserListName = "学生姓名";
 UserListCoVideo = "上下台";

@@ -24,19 +24,6 @@ public func AgoraKitImage(object: NSObject,
                                 name: name)
 }
 
-// MARK: - String
-extension String {
-    func agoraKitSize(font: UIFont,
-                      width: CGFloat = CGFloat(MAXFLOAT),
-                      height: CGFloat = CGFloat(MAXFLOAT)) -> CGSize {
-        let size = agora_size(font: font,
-                              width: width,
-                              height: height)
-        return CGSize(width: size.width + 1,
-                      height: size.height + 1)
-    }
-}
-
 // MARK - Localized
 public func AgoraKitLocalizedString(_ key: String) -> String {
     let object = AgoraKitBundleAssistant.shared()

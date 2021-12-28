@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AgoraUIEduBaseViews.AgoraFiles.AgoraAnimatedImage
 import SwifterSwift
 
 public class AgoraAlert: NSObject {
@@ -111,7 +110,7 @@ private class AgoraAlertController: UIViewController {
     }
     
     private func createViews() {
-        self.view.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         
         contentView = UIView()
         contentView.backgroundColor = .white

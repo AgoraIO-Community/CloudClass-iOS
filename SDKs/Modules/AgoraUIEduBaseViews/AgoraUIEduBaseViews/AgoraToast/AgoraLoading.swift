@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraUIEduBaseViews.AgoraFiles.AgoraAnimatedImage
 
 public class AgoraLoading: NSObject {
     

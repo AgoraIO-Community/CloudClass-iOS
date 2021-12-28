@@ -11,6 +11,66 @@ import SwifterSwift
 import AgoraWidget
 import UIKit
 
+@objc public enum AgoraBoardToolsLineWidth: Int, CaseIterable {
+    case width1 = 0, width2, width3, width4, width5
+    
+    public var value: Int {
+        switch self {
+        case .width1: return 4
+        case .width2: return 8
+        case .width3: return 12
+        case .width4: return 18
+        case .width5: return 22
+        }
+    }
+    
+    public static func fromValue(_ value: Int?) -> AgoraBoardToolsLineWidth {
+        guard let v = value else {
+            return .width1
+        }
+        switch v {
+        case 4: return .width1
+        case 8: return .width2
+        case 12: return .width3
+        case 18: return .width4
+        case 22: return .width5
+        default:
+            return .width1
+        }
+    }
+}
+
+@objc public enum AgoraBoardToolsFont: Int, CaseIterable {
+    case font22 = 0, font24, font26, font30, font36, font42
+    
+    public var value: Int {
+        switch self {
+        case .font22: return 22
+        case .font24: return 24
+        case .font26: return 26
+        case .font30: return 30
+        case .font36: return 36
+        case .font42: return 42
+        }
+    }
+    
+    public static func fromValue(_ value: Int?) -> AgoraBoardToolsFont {
+        guard let v = value else {
+            return .font22
+        }
+        switch v {
+        case 22: return .font22
+        case 24: return .font24
+        case 26: return .font26
+        case 30: return .font30
+        case 36: return .font36
+        case 42: return .font42
+        default:
+            return .font22
+        }
+    }
+}
+
 fileprivate extension AgoraBoardToolsFont {
     func fontSize() -> Int {
         switch self {
@@ -247,12 +307,6 @@ private extension AgoraBoardToolItem {
             return nil
         }
     }
-}
-
-private enum AgoraBoardToolsViewState {
-    case toolsOnly
-    case sizeExtension
-    case colorExtension
 }
 
 fileprivate class AgoraBrushToolButton: UIButton {

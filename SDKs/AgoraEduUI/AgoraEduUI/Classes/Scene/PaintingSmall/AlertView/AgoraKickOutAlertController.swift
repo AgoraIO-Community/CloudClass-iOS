@@ -89,7 +89,7 @@ private extension AgoraKickOutAlertController {
 // MARK: - Creation
 extension AgoraKickOutAlertController {
     func createViews() {
-        self.view.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         
         contentView = UIView()
         contentView.backgroundColor = .white

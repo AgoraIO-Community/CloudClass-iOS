@@ -337,6 +337,11 @@ private extension AgoraRenderMemberView {
         rewardLabel.isHidden = true
         rewardLabel.textColor = .white
         rewardLabel.font = UIFont.systemFont(ofSize: 10)
+        rewardLabel.layer.shadowColor = UIColor(hex: 0x0D1D3D,
+                                              transparency: 0.8)?.cgColor
+        rewardLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
+        rewardLabel.layer.shadowOpacity = 1
+        rewardLabel.layer.shadowRadius = 2
         addSubview(rewardLabel)
     }
     

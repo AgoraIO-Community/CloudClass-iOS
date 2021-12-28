@@ -244,46 +244,74 @@ private extension AgoraUserListItemCell {
                 }
                 authButton.isUserInteractionEnabled = model.stageState.isEnable
             case .camera:
-                var image: UIImage?
-                if model.cameraState.isOn {
-                    image = UIImage.ag_imageNamed("ic_nameroll_camera_on",
-                                                  in: "AgoraEduUI")
-                } else {
-                    image = UIImage.ag_imageNamed("ic_nameroll_camera_off",
-                                                  in: "AgoraEduUI")
-                }
-                if let i = image?.withRenderingMode(.alwaysTemplate) {
-                    cameraButton.setImageForAllStates(i)
-                }
-                if model.stageState.isOn {
-                    if model.cameraState.hasStream {
-                        cameraButton.tintColor = on
-                    } else {
-                        cameraButton.tintColor = UIColor(hex: 0xF04C36)
+                if model.stageState.isOn,
+                   model.cameraState.isOn,
+                   model.cameraState.hasStream {
+                    let image = UIImage.ag_imageNamed("ic_nameroll_camera_on",
+                                                      in: "AgoraEduUI")
+                    if let i = image?.withRenderingMode(.alwaysTemplate) {
+                        cameraButton.setImageForAllStates(i)
                     }
-                } else {
+                    cameraButton.tintColor = on
+                } else if model.stageState.isOn,
+                          model.cameraState.isOn,
+                          model.cameraState.hasStream == false {
+                    let image = UIImage.ag_imageNamed("ic_nameroll_camera_off",
+                                                      in: "AgoraEduUI")
+                    if let i = image?.withRenderingMode(.alwaysTemplate) {
+                        cameraButton.setImageForAllStates(i)
+                    }
+                    cameraButton.tintColor = UIColor(hex: 0xF04C36)
+                } else if model.stageState.isOn,
+                          model.cameraState.isOn == false {
+                    let image = UIImage.ag_imageNamed("ic_nameroll_camera_off",
+                                                      in: "AgoraEduUI")
+                    if let i = image?.withRenderingMode(.alwaysTemplate) {
+                        cameraButton.setImageForAllStates(i)
+                    }
+                    cameraButton.tintColor = UIColor(hex: 0xE2E2EE)
+                } else if model.stageState.isOn == false {
+                    let image = UIImage.ag_imageNamed("ic_nameroll_camera_on",
+                                                      in: "AgoraEduUI")
+                    if let i = image?.withRenderingMode(.alwaysTemplate) {
+                        cameraButton.setImageForAllStates(i)
+                    }
                     cameraButton.tintColor = UIColor(hex: 0xE2E2EE)
                 }
                 cameraButton.isUserInteractionEnabled = model.cameraState.isEnable
             case .mic:
-                var image: UIImage?
-                if model.micState.isOn {
-                    image = UIImage.ag_imageNamed("ic_nameroll_mic_on",
-                                                  in: "AgoraEduUI")
-                } else {
-                    image = UIImage.ag_imageNamed("ic_nameroll_mic_off",
-                                                  in: "AgoraEduUI")
-                }
-                if let i = image?.withRenderingMode(.alwaysTemplate) {
-                    micButton.setImageForAllStates(i)
-                }
-                if model.stageState.isOn {
-                    if model.micState.hasStream {
-                        micButton.tintColor = on
-                    } else {
-                        micButton.tintColor = UIColor(hex: 0xF04C36)
+                if model.stageState.isOn,
+                   model.micState.isOn,
+                   model.micState.hasStream {
+                    let image = UIImage.ag_imageNamed("ic_nameroll_mic_on",
+                                                      in: "AgoraEduUI")
+                    if let i = image?.withRenderingMode(.alwaysTemplate) {
+                        micButton.setImageForAllStates(i)
                     }
-                } else {
+                    micButton.tintColor = on
+                } else if model.stageState.isOn,
+                          model.micState.isOn,
+                          model.micState.hasStream == false {
+                    let image = UIImage.ag_imageNamed("ic_nameroll_mic_off",
+                                                      in: "AgoraEduUI")
+                    if let i = image?.withRenderingMode(.alwaysTemplate) {
+                        micButton.setImageForAllStates(i)
+                    }
+                    micButton.tintColor = UIColor(hex: 0xF04C36)
+                } else if model.stageState.isOn,
+                          model.micState.isOn == false {
+                    let image = UIImage.ag_imageNamed("ic_nameroll_mic_off",
+                                                      in: "AgoraEduUI")
+                    if let i = image?.withRenderingMode(.alwaysTemplate) {
+                        micButton.setImageForAllStates(i)
+                    }
+                    micButton.tintColor = UIColor(hex: 0xE2E2EE)
+                } else if model.stageState.isOn == false {
+                    let image = UIImage.ag_imageNamed("ic_nameroll_mic_on",
+                                                      in: "AgoraEduUI")
+                    if let i = image?.withRenderingMode(.alwaysTemplate) {
+                        micButton.setImageForAllStates(i)
+                    }
                     micButton.tintColor = UIColor(hex: 0xE2E2EE)
                 }
                 micButton.isUserInteractionEnabled = model.micState.isEnable
@@ -373,14 +401,14 @@ private extension AgoraUserListItemCell {
     
     func createConstrains() {
         nameLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(22)
+            make?.left.equalTo()(16)
             make?.top.bottom().equalTo()(nameLabel.superview)
             make?.width.equalTo()(60)
         }
         funcsView.mas_makeConstraints { make in
             make?.top.bottom().equalTo()(funcsView.superview)
             make?.left.equalTo()(nameLabel.mas_right)
-            make?.right.equalTo()(-20)
+            make?.right.equalTo()(-16)
         }
     }
 }
