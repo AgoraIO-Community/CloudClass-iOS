@@ -277,7 +277,7 @@ extension AgoraRoomStateUIController: AgoraEduStreamHandler {
                                  type: .notice)
             } else {
                 AgoraToast.toast(msg: "老师已关闭你的麦克风",
-                                 type: .erro)
+                                 type: .error)
             }
         }
         
@@ -287,7 +287,7 @@ extension AgoraRoomStateUIController: AgoraEduStreamHandler {
                                  type: .notice)
             } else {
                 AgoraToast.toast(msg: "老师已关闭你的摄像头",
-                                 type: .erro)
+                                 type: .error)
             }
         }
         

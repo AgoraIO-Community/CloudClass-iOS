@@ -120,8 +120,9 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     }
     
     @objc public func exitClassRoom(reason: AgoraClassRoomExitReason) {
+        self.contextPool.room.leaveRoom()
+        
         self.dismiss(animated: true) {
-            self.contextPool.room.leaveRoom()
             self.delegate?.manager(self,
                                    didExit: reason)
         }
