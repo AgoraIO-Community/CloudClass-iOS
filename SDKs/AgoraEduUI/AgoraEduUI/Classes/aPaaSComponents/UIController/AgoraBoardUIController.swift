@@ -103,7 +103,7 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
 }
 
 extension AgoraBoardUIController: AgoraEduRoomHandler {
-    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         joinBoard()
     }
 }

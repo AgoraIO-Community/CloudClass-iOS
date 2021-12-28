@@ -464,7 +464,7 @@ extension AgoraHorizListRenderUIController: AgoraEduStreamHandler {
 
 // MARK: - AgoraEduRoomHandler
 extension AgoraHorizListRenderUIController: AgoraEduRoomHandler {
-    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         self.updateCoHosts()
     }
 }

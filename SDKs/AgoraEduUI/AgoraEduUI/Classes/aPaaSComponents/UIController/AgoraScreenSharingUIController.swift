@@ -80,7 +80,7 @@ class AgoraScreenSharingUIController: UIViewController {
 }
 
 extension AgoraScreenSharingUIController: AgoraEduRoomHandler {
-    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         initScreenSharing()
     }
 }

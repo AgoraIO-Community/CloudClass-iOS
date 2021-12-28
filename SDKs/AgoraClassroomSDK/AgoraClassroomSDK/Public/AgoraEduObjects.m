@@ -151,16 +151,6 @@
                                                               widgetId:@"easemobIM"];
     widgets[chat.widgetId] = chat;
     
-    // AgoraSpreadRenderWidget
-    AgoraWidgetConfig *spreadRender = [[AgoraWidgetConfig alloc] initWithClass:[AgoraSpreadRenderWidget class]
-                                                                      widgetId:@"big-window"];
-    widgets[spreadRender.widgetId] = spreadRender;
-    
-    // AgoraCloudWidget
-    AgoraWidgetConfig *cloudWidgetConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
-                                                                           widgetId:@"AgoraCloudWidget"];
-    widgets[cloudWidgetConfig.widgetId] = cloudWidgetConfig;
-    
     // AgoraWhiteboardWidget
     AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWhiteboardWidget class]
                                                                           widgetId:@"netlessBoard"];

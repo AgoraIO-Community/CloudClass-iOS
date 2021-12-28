@@ -168,7 +168,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
 
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomStateUIController: AgoraEduRoomHandler {
-    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         self.setup()
     }
     

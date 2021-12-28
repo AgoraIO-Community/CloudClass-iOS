@@ -16,13 +16,13 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 @objc public protocol AgoraEduRoomHandler: NSObjectProtocol {
     /// 加入房间成功 (v2.0.0)
     /// - parameter roomInfo: 房间信息
-    @objc optional func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo)
+    @objc optional func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo)
     
     /// 加入房间失败 (v2.0.0)
     /// - parameter roomInfo: 房间信息
     /// - parameter error: 错误原因
-    @objc optional func onRoomJoinedFail(roomInfo: AgoraEduContextRoomInfo,
-                                         error: AgoraEduContextError)
+    @objc optional func onJoinRoomFailure(roomInfo: AgoraEduContextRoomInfo,
+                                          error: AgoraEduContextError)
     
     /// 房间自定义属性更新 (v2.0.0)
     /// - parameter changedProperties: 本次更新的部分 properties

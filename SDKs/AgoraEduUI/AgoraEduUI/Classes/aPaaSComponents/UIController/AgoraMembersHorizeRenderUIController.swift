@@ -313,7 +313,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
 
 // MARK: - AgoraEduRoomHandler
 extension AgoraMembersHorizeRenderUIController: AgoraEduRoomHandler {
-    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         self.setup()
     }
 }

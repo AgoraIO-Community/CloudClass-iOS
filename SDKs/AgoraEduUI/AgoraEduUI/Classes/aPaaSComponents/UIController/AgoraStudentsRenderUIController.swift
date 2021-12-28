@@ -210,7 +210,7 @@ extension AgoraStudentsRenderUIController: AgoraEduMediaHandler {
 }
 // MARK: - AgoraEduRoomHandler
 extension AgoraStudentsRenderUIController: AgoraEduRoomHandler {
-    func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         self.setup()
     }
 }
