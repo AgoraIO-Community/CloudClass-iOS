@@ -168,3 +168,4 @@ class LoginConfig {
     // Data
     static let USER_DEFAULT_EYE_CARE = "USER_DEFAULT_EYE_CARE"
 }
+

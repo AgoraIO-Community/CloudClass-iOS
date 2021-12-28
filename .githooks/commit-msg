@@ -26,9 +26,9 @@ then
 	project="${f%.*}"
 	project="${project##*/}"
 
-	if [ "$project" = "LoginViewController" ] || [ "$project" = "Podfile" ]; then
+	if [ "$project" = "DebugViewController" ]; then
 		while read line; do
-			if [[ "$line" != *"LoginViewController"* ]] || [[ "$line" != *"Podfile"* ]]
+			if [[ "$line" != *"DebugViewController"* ]]
 			then
 					cat <<EOF
 Error: 注意啦，这是一个特别的文件，你真的要提交吗？

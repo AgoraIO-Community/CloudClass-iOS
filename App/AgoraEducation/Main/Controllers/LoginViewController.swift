@@ -19,87 +19,6 @@ import AgoraWidget
 import AgoraLog
 import UIKit
 
-/** 房间信息项*/
-fileprivate enum RoomInfoItemType: Int, CaseIterable {
-    // 房间名
-    case roomName = 0
-    // 昵称
-    case nickName
-    // 类型
-    case roomStyle
-    // 角色
-    case roleType
-    // 区域
-    case region
-    // 时长
-    case duration
-    // 密钥
-    case encryptKey
-    // 模式
-    case encryptMode
-}
-
-/** 区域选择类型*/
-enum RoomRegionType: String, CaseIterable  {
-    case CN, NA, EU, AP
-}
-
-/** 房间可选项*/
-fileprivate let kRoomOptions: [(AgoraEduRoomType, String)] = [
-    (.oneToOne, NSLocalizedString("Login_onetoone", comment: "")),
-    (.small, NSLocalizedString("Login_small", comment: "")),
-    (.lecture, NSLocalizedString("Login_lecture", comment: "")),
-    // 2.0.0版本去掉美术课
-    //(.paintingSmall, NSLocalizedString("login_painting_small", comment: ""))
-]
-
-/** 区域可选项*/
-fileprivate let kRegionOptions: [(RoomRegionType, String)] = [
-    (.CN, "CN"),
-    (.NA, "NA"),
-    (.EU, "EU"),
-    (.AP, "AP")
-]
-
-/** 角色可选项*/
-fileprivate let kRoleOptions: [(AgoraEduUserRole, String)] = [
-//    (.teacher, NSLocalizedString("login_role_teacher", comment: "")),
-    (.student, NSLocalizedString("login_role_student", comment: "")),
-]
-
-/** 加密方式可选项*/
-fileprivate let kEncryptionOptions: [(AgoraEduMediaEncryptionMode, String)] = [
-    (.none, "None"),
-    (.SM4128ECB, "sm4-128-ecb"),
-    (.AES128GCM2, "aes-128-gcm2"),
-    (.AES256GCM2, "aes-256-gcm2"),
-]
-
-/** 入参模型*/
-struct RoomInfoModel {
-    var roomName: String?
-    var nickName: String?
-    var roomStyle: AgoraEduRoomType?
-    var roleType: AgoraEduUserRole?
-    var region: RoomRegionType?
-    var duration: Int?
-    var encryptKey: String?
-    var encryptMode: AgoraEduMediaEncryptionMode?
-    /** 入参默认值 */
-    static func defaultValue() -> RoomInfoModel {
-        var room = RoomInfoModel()
-        room.roomName = nil
-        room.nickName = nil
-        room.roomStyle = nil
-        room.roleType = .student
-        room.region = .CN
-        room.duration = 1800
-        room.encryptKey = ""
-        room.encryptMode = AgoraEduMediaEncryptionMode.none
-        return room
-    }
-}
-
 // MARK: - Login View Controller
 @objcMembers public class LoginViewController: UIViewController {
     /** 房间信息列表*/
@@ -127,18 +46,18 @@ struct RoomInfoModel {
     private var bottomLabel: AgoraBaseUILabel!
     
     private var dataSource: [RoomInfoItemType] = [
-        .roomName, .nickName, .roomStyle, .roleType, .region, .duration, .encryptKey, .encryptMode
+        .roomName, .nickName, .roomStyle, .roleType
     ]
     
     private var inputParams = RoomInfoModel()
-    
-    private let defaultParams = RoomInfoModel.defaultValue()
     
     private var selectedIndex = -1
     
     private let tokenBuilder = TokenBuilder()
     
     private let minInputLength = 6
+    
+    private var debugButton: AgoraBaseUIButton!
 }
 
 // MARK: - override
@@ -183,9 +102,8 @@ extension LoginViewController {
 // MARK: - Private
 private extension LoginViewController {
     func updateEntranceStatus() {
-        if let roomName = inputParams.roomName ?? defaultParams.roomName,
-           let nickName = inputParams.nickName ?? defaultParams.nickName,
-           let _ = inputParams.roomStyle ?? defaultParams.roomStyle,
+        if let roomName = inputParams.roomName,
+           let nickName = inputParams.nickName,
            roomName.count > 0, nickName.count > 0 {
             enterButton.backgroundColor = UIColor(hexString: "357BF6")
             enterButton.isUserInteractionEnabled = true
@@ -291,13 +209,14 @@ private extension LoginViewController {
     }
     
     @objc func onTouchJoinRoom() {        
-        guard let room = inputParams.roomName ?? defaultParams.roomName,
-              let user = inputParams.nickName ?? defaultParams.nickName,
-              let roomStyle = inputParams.roomStyle ?? defaultParams.roomStyle,
-              let region = inputParams.region ?? defaultParams.region,
-              let encryptionMode = inputParams.encryptMode ?? defaultParams.encryptMode else {
+        guard let room = inputParams.roomName,
+              let user = inputParams.nickName else {
             return
         }
+        
+        let roomStyle = inputParams.roomStyle
+        let region = inputParams.region
+        let encryptionMode = inputParams.encryptMode
         
         // roomUuid = roomName + classType
         let roomUuid = "\(room)\(roomStyle.rawValue)"
@@ -306,14 +225,15 @@ private extension LoginViewController {
         let userUuid = "\(user)\(AgoraEduUserRole.student.rawValue)"
         
 //        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
-        let duration = self.defaultParams.duration!
+        let duration = inputParams.duration
         
         var encryptionConfig: AgoraEduMediaEncryptionConfig?
-        if let key = self.inputParams.encryptKey ?? self.defaultParams.encryptKey,
+        if let key = self.inputParams.encryptKey,
            encryptionMode != .none {
             let tfModeValue = encryptionMode.rawValue
             if tfModeValue > 0 && tfModeValue <= 6 {
-                encryptionConfig = AgoraEduMediaEncryptionConfig(mode: encryptionMode, key: key)
+                encryptionConfig = AgoraEduMediaEncryptionConfig(mode: encryptionMode,
+                                                                 key: key)
             }
         }
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
@@ -370,16 +290,20 @@ private extension LoginViewController {
 
                         launchConfig.extApps = extApps
                         
-                        if region != RoomRegionType.CN {
-                            launchConfig.widgets.removeValue(forKey: "easemobIM")
-                        }
-                        
                         AgoraClassroomSDK.setDelegate(self)
                         
                         AgoraClassroomSDK.launch(launchConfig,
                                                  success: success,
                                                  failure: failure)
                      }, failure: failure)
+    }
+    
+    @objc func onTouchDebug() {
+        let vc = DebugViewController()
+        vc.modalPresentationStyle = .fullScreen
+        present(vc,
+                animated: true,
+                completion: nil)
     }
 }
 
@@ -475,7 +399,7 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
             cell.mode = .option
             cell.titleLabel.text = NSLocalizedString("login_title_role",
                                                      comment: "")
-            cell.textField.placeholder = optionDescription(option: defaultParams.roleType,
+            cell.textField.placeholder = optionDescription(option: inputParams.roleType,
                                                            in: kRoleOptions)
             cell.textField.text = optionDescription(option: inputParams.roleType,
                                                     in: kRoleOptions)
@@ -483,7 +407,7 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
             cell.mode = .option
             cell.titleLabel.text = NSLocalizedString("Login_region_title",
                                                      comment: "")
-            cell.textField.placeholder = defaultParams.region?.rawValue
+            cell.textField.placeholder = inputParams.region.rawValue
             cell.textField.text = optionDescription(option: inputParams.region,
                                                     in: kRegionOptions)
         case .duration:
@@ -506,6 +430,8 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                                                            comment: "")
             cell.textField.text = optionDescription(option: inputParams.encryptMode,
                                                          in: kEncryptionOptions)
+        default:
+            break
         }
         return cell
     }
@@ -525,7 +451,7 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         let rowType = dataSource[indexPath.row]
         if rowType == .roomStyle {
             let options = optionStrings(form: kRoomOptions)
-            let index = optionIndex(option: inputParams.roomStyle ?? defaultParams.roomStyle,
+            let index = optionIndex(option: inputParams.roomStyle,
                                     in: kRoomOptions)
             optionsView.show(beside: cell,
                              options: options,
@@ -560,7 +486,8 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         
         else if rowType == .region {
             let options = optionStrings(form: kRegionOptions)
-            let index = optionIndex(option: inputParams.region ?? defaultParams.region, in: kRegionOptions)
+            let index = optionIndex(option: inputParams.region,
+                                    in: kRegionOptions)
             optionsView.show(beside: cell,
                              options: options,
                              index: index) { [unowned self] i in
@@ -571,7 +498,8 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
             }
         }  else if rowType == .encryptMode {
             let options = optionStrings(form: kEncryptionOptions)
-            let index = optionIndex(option: inputParams.encryptMode ?? defaultParams.encryptMode, in: kEncryptionOptions)
+            let index = optionIndex(option: inputParams.encryptMode,
+                                    in: kEncryptionOptions)
             optionsView.show(beside: cell,
                              options: options,
                              index: index) { [unowned self] i in
@@ -708,6 +636,12 @@ private extension LoginViewController {
         tableView.separatorStyle = .none
         tableView.allowsMultipleSelection = false
         view.addSubview(tableView)
+        
+        debugButton = AgoraBaseUIButton()
+        debugButton.addTarget(self,
+                              action: #selector(onTouchDebug),
+                              for: .touchUpInside)
+        view.addSubview(debugButton)
     }
     
     func createConstrains() {
@@ -724,6 +658,11 @@ private extension LoginViewController {
         aboutButton.agora_height = 20
         aboutButton.agora_y = 46
         aboutButton.agora_right = 15
+        
+        debugButton.agora_width = 20
+        debugButton.agora_height = 20
+        debugButton.agora_x = 15
+        debugButton.agora_y = 46
         
         tableView.agora_center_x = 0
         tableView.agora_width = LoginConfig.login_group_width
@@ -747,17 +686,6 @@ private extension LoginViewController {
             } else {
                 bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
             }
-        }
-    }
-}
-
-fileprivate extension RoomRegionType {
-    var eduType: AgoraEduRegion {
-        switch self {
-        case .CN: return .CN
-        case .NA: return .NA
-        case .EU: return .EU
-        case .AP: return .AP
         }
     }
 }

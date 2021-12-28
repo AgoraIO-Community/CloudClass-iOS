@@ -23,7 +23,7 @@ def main():
     else:
         print("default dev evni in environment.py")
      
-    f = open(App_Path + "/AgoraEducation/Main/Controllers/LoginViewController.swift", 'r+')
+    f = open(App_Path + "/AgoraEducation/Debug/DebugViewController.swift", 'r+')
     content = f.read()
     
     print(App_Path)

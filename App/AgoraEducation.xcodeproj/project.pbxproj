@@ -26,7 +26,6 @@
 		68A5E2F12635557B00E3C37E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A5E2F02635557B00E3C37E /* AboutView.swift */; };
 		75D36FB810CB94F4AEF8D9A2 /* Pods_AgoraEducation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */; };
 		7801A89C25DB7D9D00C63ABF /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */; };
-		7801A89D25DB7D9D00C63ABF /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7801A89B25DB7D9D00C63ABF /* DebugViewController.xib */; };
 		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
 		783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 783FB6CE240D0746007298C1 /* AlertViewUtil.m */; };
 		783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 783FB6DA240D0746007298C1 /* UIView+Toast.m */; };
@@ -37,6 +36,7 @@
 		78DFB69925AEE20B00B01906 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68B25AEE20B00B01906 /* md5.cpp */; };
 		8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 78136271242C81ED00B7D1FE /* libz.tbd */; };
 		86B99C452732B67C0090D013 /* DebugCourware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B99C442732B67C0090D013 /* DebugCourware.swift */; };
+		86D4896D277AE2750062F068 /* LoginModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D4896C277AE2750062F068 /* LoginModels.swift */; };
 		AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */; };
 		AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */; };
 		AB7FFD6926EAFEF2003A50B8 /* RoomInfoOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */; };
@@ -93,7 +93,6 @@
 		68A5E2F02635557B00E3C37E /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEducation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
-		7801A89B25DB7D9D00C63ABF /* DebugViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DebugViewController.xib; sourceTree = "<group>"; };
 		78136271242C81ED00B7D1FE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		78136273242C81FF00B7D1FE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		78136274242C820700B7D1FE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -130,6 +129,7 @@
 		78DFB69725AEE20B00B01906 /* DynamicKey4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey4.h; sourceTree = "<group>"; };
 		861D3CFA276AE05E00645D6A /* AppExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtension.swift; sourceTree = "<group>"; };
 		86B99C442732B67C0090D013 /* DebugCourware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCourware.swift; sourceTree = "<group>"; };
+		86D4896C277AE2750062F068 /* LoginModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModels.swift; sourceTree = "<group>"; };
 		8CD382F7BF039504C1D49C53 /* Pods-AgoraEducation.qatestrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qatestrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qatestrelease.xcconfig"; sourceTree = "<group>"; };
 		A5BFF93D50503E0756F47D98 /* Pods-AgoraEducation.qarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qarelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qarelease.xcconfig"; sourceTree = "<group>"; };
 		AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoCell.swift; sourceTree = "<group>"; };
@@ -220,6 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				68362356262D30C20028F7F5 /* BaseLoginObject.swift */,
+				86D4896C277AE2750062F068 /* LoginModels.swift */,
 			);
 			path = Beans;
 			sourceTree = "<group>";
@@ -229,7 +230,6 @@
 			children = (
 				7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */,
 				86B99C442732B67C0090D013 /* DebugCourware.swift */,
-				7801A89B25DB7D9D00C63ABF /* DebugViewController.xib */,
 			);
 			path = Debug;
 			sourceTree = "<group>";
@@ -512,7 +512,6 @@
 				1A44BE7522BF863000766274 /* Assets.xcassets in Resources */,
 				6861691B26AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf in Resources */,
 				6861691A26AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf in Resources */,
-				7801A89D25DB7D9D00C63ABF /* DebugViewController.xib in Resources */,
 				7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */,
 				6861691126AEAD6B00E26F69 /* privacy.storyboard in Resources */,
 			);
@@ -605,6 +604,7 @@
 				68A5E2F12635557B00E3C37E /* AboutView.swift in Sources */,
 				AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */,
 				68A5E2AB2635143400E3C37E /* AboutTableCell.swift in Sources */,
+				86D4896D277AE2750062F068 /* LoginModels.swift in Sources */,
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
 				683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */,
