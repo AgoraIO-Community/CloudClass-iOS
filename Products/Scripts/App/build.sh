@@ -4,7 +4,7 @@ Envi=$2
 Project_Path="../../../App"
 Local_Path=`pwd`
 
-python cloud_pod.py 1
+python cloud_pod.py 1 1
 cd ${Project_Path}
 
 Product_Path="../Products/App"

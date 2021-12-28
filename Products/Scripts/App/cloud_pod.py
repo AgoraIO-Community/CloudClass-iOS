@@ -127,10 +127,23 @@ def executePod():
         os.system('pod install --no-repo-update')
 
 def main():
-    PodMode = sys.argv[1]
-    # 0为source pod, 1为binary pod
+    paramsLen = len(sys.argv)
+    if paramsLen == 1:
+        sys.exit(1)
+    elif paramsLen == 2:
+        # 0为source pod, 1为binary pod
+        PodMode = sys.argv[1]
+    elif paramsLen == 3:
+        PodMode = sys.argv[1]
+        # 0为大重构rtc, 1为老版本rtc
+        RtcVersion = sys.argv[2]
+        BaseParams["rtcVersion"] = RTCVERSION.Re if RtcVersion == "0" else RTCVERSION.Pre
+        print  ('Rtc Version: ' + BaseParams["rtcVersion"].name)
+    
     BaseParams["podMode"] = PODMODE.Source if PodMode == "0" else PODMODE.Binary
     print  ('Pod Mode: ' + BaseParams["podMode"].name)
+
+   
 
     # 若为source pod，开发者模式
     if BaseParams["podMode"] == PODMODE.Source:
@@ -138,14 +151,6 @@ def main():
         modifyFlag = raw_input("Need Modify Base Paramaters? Yes: 0, NO: Any\n")
 
         if modifyFlag == "0":
-            # 指定rtc版本
-            rtcVersion = raw_input("RtcVersion: PreRtc: 0, ReRtc: 1 \n")
-            if (rtcVersion != "0" and rtcVersion != "1"):
-                print("Invalid input, default to PreRtc")
-                rtcVersion = "0"
-            
-            BaseParams["rtcVersion"] = RTCVERSION.Pre if rtcVersion == "0" else RTCVERSION.Re
-
             # 是否需要更新cocoapods repo
             print ("Update Cocoapods repo: don't update: 0, update: 1")
             updateFlag = raw_input()
