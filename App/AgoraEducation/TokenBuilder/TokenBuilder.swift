@@ -32,11 +32,12 @@ class TokenBuilder {
                        environment: Environment,
                        success: @escaping SuccessCompletion,
                        failure: @escaping FailureCompletion) {
-        if region != "CN" && environment != .dev {
+        if region != "CN" && environment != .pro {
             let error = NSError(domain: "",
                                 code: -1,
                                 userInfo: ["message": "dev and pre only suppurt CN region"])
             failure(error)
+            return
         }
         
         var urlSubFirst: String

@@ -244,7 +244,7 @@ private extension LoginViewController {
         
         AgoraLoading.loading()
 
-        let failure: (Error) -> () = { (error) in
+        let failureBlock: (Error) -> () = { (error) in
             AgoraLoading.hide()
             AgoraToast.toast(msg: error.localizedDescription,
                              type: .error)
@@ -286,14 +286,14 @@ private extension LoginViewController {
 
               AgoraClassroomSDK.launch(launchConfig,
                                        success: launchSuccessBlock,
-                                       failure: failure)
+                                       failure: failureBlock)
            
         }
         
         requestToken(region: region.rawValue,
                      userUuid: userUuid,
                      success: tokenSuccessBlock,
-                     failure: failure)
+                     failure: failureBlock)
         
 // MARK: 目前使用灵动课堂默认AppId和AppCertificate请求token，若需要使用自己的AppId和AppCertificate，可将requestToken方法的执行注释掉，使用下面的方法
 //        buildToken(appId: "Your App Id",
