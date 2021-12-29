@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   
   s.public_header_files = "SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.h", "AgoraEduUI/**/*.h"
   
-  s.source_files = 'AgoraEduUI/Classes/**/*.{h,m,swift}'
+  s.source_files = 'SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.{h,m,swift}', 'AgoraEduUI/Classes/**/*.{h,m,swift}'
 
   s.dependency "AgoraEduContext"
   s.dependency "AgoraUIEduBaseViews"
@@ -32,7 +32,8 @@ Pod::Spec.new do |s|
   
   s.subspec 'Resources' do |ss|
     ss.resource_bundles = {
-      'AgoraEduUI' => ['AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}']
+      'AgoraEduUI' => ['AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}'],
+      'AgoraEduUI' => ['SDKs/AgoraEduUI/AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}']
     }
   end
   
