@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
   s.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
   s.author       = { "Agora Lab" => "developer@agora.io" }
-  s.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'ui_v' + "#{s.version.to_s}" }
+  s.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'AgoraEduUI_v' + "#{s.version.to_s}" }
   s.ios.deployment_target = "10.0"
   s.module_name  = 'AgoraEduUI'
 
