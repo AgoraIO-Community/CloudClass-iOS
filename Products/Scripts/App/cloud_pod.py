@@ -41,6 +41,13 @@ SourcePodContent =  """
     pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets.podspec'
     pod 'ChatWidget', :path => '../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget.podspec'
     pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/ExtApps/AgoraExtApps.podspec'
+
+    pod 'MLeaksFinder'
+    post_install do |installer|
+      ## Fix for XCode 12.5
+      find_and_replace("Pods/FBRetainCycleDetector/FBRetainCycleDetector/Layout/Classes/FBClassStrongLayout.mm",
+        "layoutCache[currentClass] = ivars;", "layoutCache[(id<NSCopying>)currentClass] = ivars;")
+    end
 end
    """
 
@@ -49,12 +56,30 @@ BinaryPodContent = """
 end
 """
 
+PreRtcContent = """
+    pod 'AgoraRtcEngine_iOS', '3.4.6'
+"""
+
 RePodContent = """
     pod 'AgoraRtcKit', :path => '../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'
 """
 
-BaseParams = {"extcuteDir": "./",
-              "podMode": PODMODE.Source,
+LeaksFinderContent = """
+def find_and_replace(dir, findstr, replacestr)
+  Dir[dir].each do |name|
+      text = File.read(name)
+      replace = text.gsub(findstr,replacestr)
+      if text != replace
+          puts "Fix: " + name
+          File.open(name, "w") { |file| file.puts replace }
+          STDOUT.flush
+      end
+  end
+  Dir[dir + '*/'].each(&method(:find_and_replace))
+end
+"""
+
+BaseParams = {"podMode": PODMODE.Source,
               "rtcVersion": RTCVERSION.Pre,
               "updateFlag": False}
 
@@ -65,24 +90,53 @@ def HandlePath(path):
         print  ('Invalid Path!' + path)
         sys.exit(1)
 
-def reRtcHandle(lines):
-    if BaseParams["rtcVersion"] == RTCVERSION.Pre:
-        return
-        
-    print("Replace PreRtc with ReRtc")
-
-    oriRtcPod = "pod 'AgoraRtcEngine_iOS'"
+def rtcHandle(lines):
+    preRtcPod = "pod 'AgoraRtcEngine_iOS'"
+    reRtcPod = "pod 'AgoraRtcKit'"
     preRtcStr = '/PreRtc'
     reRtcStr = '/ReRtc'
+    
+    if BaseParams["rtcVersion"] == RTCVERSION.Pre:
+        print("Replace ReRtc with PreRtc")
+        for index,str in enumerate(lines):
+            if reRtcStr in str:
+                str = str.replace(reRtcStr,preRtcStr)
 
+            if reRtcPod in str:
+                str = PreRtcContent
+
+            lines[index] = str
+    else:    
+        print("Replace PreRtc with ReRtc")
+        for index,str in enumerate(lines):
+            if preRtcStr in str:
+                str = str.replace(preRtcStr,reRtcStr)
+
+            if preRtcPod in str:
+                str = RePodContent
+
+            lines[index] = str
+
+
+def addLeaksFinderFunction(lines):
+    if BaseParams["podMode"] != PODMODE.Source:
+        return
+    
+    print("Add function for MLeaksFinder")
+    keyword = "target"
+    funcName = "find_and_replace"
+    addIndex = -1
     for index,str in enumerate(lines):
-        if preRtcStr in str:
-            str = str.replace(preRtcStr,reRtcStr)
+        if funcName in str:
+            addIndex = -1
+            break
+        if keyword in str:
+            addIndex = index
+    
+    if addIndex != -1:
+        newStr = LeaksFinderContent + "\n" + lines[index]
+        lines[index] = newStr
 
-        if oriRtcPod in str:
-            str = RePodContent
-
-        lines[index] = str
 
 def generatePodfile():
     podFilePath = ExtcuteDir + '%s' % 'Podfile'
@@ -104,9 +158,11 @@ def generatePodfile():
     lines = lines[:foundLine]
     if BaseParams["podMode"] == PODMODE.Source:
         lines.append(SourcePodContent)
-        reRtcHandle(lines)
+        addLeaksFinderFunction(lines)
     elif BaseParams["podMode"] == PODMODE.Binary:
         lines.append(BinaryPodContent)
+
+    rtcHandle(lines)
     
     with open(podFilePath,'w') as f:
         f.writelines(lines)
