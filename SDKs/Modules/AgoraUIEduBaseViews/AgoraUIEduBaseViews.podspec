@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
   spec.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
   spec.author       = { "Agora Lab" => "developer@agora.io" }
-  spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'base_view_v' + "#{spec.version.to_s}" }
+  spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'AgoraUIEduBaseViews_v' + "#{spec.version.to_s}" }
   spec.ios.deployment_target = "10.0"
   
   spec.module_name  = 'AgoraUIEduBaseViews'
@@ -23,17 +23,13 @@ Pod::Spec.new do |spec|
   spec.source_files  = "SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/**/*.{h,m,swift}", "AgoraUIEduBaseViews/**/*.{h,m,swift}"
   spec.public_header_files = "SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/**/*.h", "AgoraUIEduBaseViews/**/*.h"
   
-  spec.dependency "AgoraEduContext"
-  spec.dependency "AgoraUIBaseViews"
-  spec.dependency "AgoraExtApp"
-  spec.dependency "AgoraWidget"
-
-  spec.dependency "Masonry"
+  spec.dependency "AgoraUIBaseViews",'>=2.0.0'
   spec.dependency "SwifterSwift"
+  spec.dependency "Masonry"
 
   spec.subspec 'Resources' do |ss|
     ss.resource_bundles = {
-      'AgoraUIEduBaseViews' => ['AgoraUIEduBaseViews/Assets/**/*.{xcassets,strings,gif,mp3}']
+      'AgoraUIEduBaseViews' => ['SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews/Assets/**/*.{xcassets,strings,gif,mp3}']
     }
   end
   

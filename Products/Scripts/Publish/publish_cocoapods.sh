@@ -7,9 +7,11 @@ SDKs_Path="${SDK_Path}/${SDK_Name}"
 
 cd ${SDKs_Path}
 
-git add ${SDK_Name}.podspec
-git commit -m "[ENH]:${SDK_Name}_v${SDK_Version}"
-git tag ${SDK_Name}_v${SDK_Version}
+Tag=${SDK_Name}_v${SDK_Version}
+
+git tag -d ${Tag}
+git push originGithub :refs/tags/${Tag}
+git tag ${Tag}
 git push originGithub --tags
 
 pod spec lint ${SDK_Name}.podspec --allow-warnings --verbose

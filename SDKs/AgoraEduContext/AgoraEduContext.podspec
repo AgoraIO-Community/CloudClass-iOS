@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
   spec.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
   spec.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
   spec.author       = { "Agora Lab" => "developer@agora.io" }
-  spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'context_v' + "#{spec.version.to_s}" }
+  spec.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'AgoraEduContext_v' + "#{spec.version.to_s}" }
   
   spec.platform    = :ios
   spec.ios.deployment_target = '10.0'
@@ -24,7 +24,7 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
 
-  spec.dependency "AgoraUIBaseViews"
-  spec.dependency "AgoraExtApp"
-  spec.dependency "AgoraWidget"
+  spec.dependency "AgoraUIBaseViews",'>= 2.0.0'
+  spec.dependency "AgoraExtApp",'>= 2.0.0'
+  spec.dependency "AgoraWidget",'>= 2.0.1'
 end

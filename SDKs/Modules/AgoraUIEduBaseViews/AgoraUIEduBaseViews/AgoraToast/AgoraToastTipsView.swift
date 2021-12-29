@@ -5,9 +5,9 @@
 //  Created by Jonathan on 2021/11/16.
 //
 
-import UIKit
 import SwifterSwift
 import Masonry
+import UIKit
 
 protocol AgoraToastTipsViewDelegate: NSObjectProtocol {
     func onDidFinishTips(_ tips: AgoraToastTipsView)
