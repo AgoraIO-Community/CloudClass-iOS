@@ -40,7 +40,7 @@ SourcePodContent =  """
     # widgets
     pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets.podspec'
     pod 'ChatWidget', :path => '../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget.podspec'
-    pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/ExtApps/AgoraExtApps.podspec'
+    pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/ExtApps/AgoraExtApps_Local.podspec'
 
     pod 'MLeaksFinder'
     post_install do |installer|
