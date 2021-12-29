@@ -34,5 +34,5 @@ Pod::Spec.new do |spec|
   spec.dependency "AgoraExtApps", '>= 2.0.0'
 
    # close source libs
-  spec.dependency "AgoraEduCore", '2.0.0'
+  spec.dependency "AgoraEduCore", '2.0.1'
 end
