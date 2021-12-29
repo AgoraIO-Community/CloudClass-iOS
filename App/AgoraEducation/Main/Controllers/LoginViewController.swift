@@ -46,7 +46,7 @@ import UIKit
     private var bottomLabel: AgoraBaseUILabel!
     
     private var dataSource: [RoomInfoItemType] = [
-        .roomName, .nickName, .roomStyle, .roleType
+        .roomName, .nickName, .roomStyle, .roleType, .region
     ]
     
     private var inputParams = RoomInfoModel()
@@ -58,6 +58,7 @@ import UIKit
     private let minInputLength = 6
     
     private var debugButton: AgoraBaseUIButton!
+    private var debugCount: Int = 0
 }
 
 // MARK: - override
@@ -78,6 +79,7 @@ extension LoginViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        updateDefaultRegion()
         createViews()
         createConstrains()
         // 检查协议
@@ -101,6 +103,14 @@ extension LoginViewController {
 
 // MARK: - Private
 private extension LoginViewController {
+    func updateDefaultRegion() {
+        guard !UIDevice.current.isChineseLanguage else {
+            return
+        }
+        
+        inputParams.region = .NA
+    }
+    
     func updateEntranceStatus() {
         if let roomName = inputParams.roomName,
            let nickName = inputParams.nickName,
@@ -208,13 +218,13 @@ private extension LoginViewController {
         }
     }
     
-    @objc func onTouchJoinRoom() {        
+    @objc func onTouchJoinRoom() {
         guard let room = inputParams.roomName,
-              let user = inputParams.nickName else {
+              let user = inputParams.nickName,
+              let roomStyle = inputParams.roomStyle else {
             return
         }
         
-        let roomStyle = inputParams.roomStyle
         let region = inputParams.region
         let encryptionMode = inputParams.encryptMode
         
@@ -254,40 +264,49 @@ private extension LoginViewController {
             AgoraLoading.hide()
         }
         
-        let tokenSuccessBlock: (TokenBuilder.ServerResp) -> () = {(response) in
-              let appId = response.appId
-              let rtmToken = response.rtmToken
-              let userUuid = response.userId
-              
-              let launchConfig = AgoraEduLaunchConfig(userName: user,
-                                                      userUuid: userUuid,
-                                                      userRole: .student,
-                                                      roomName: room,
-                                                      roomUuid: roomUuid,
-                                                      roomType: roomStyle,
-                                                      appId: appId,
-                                                      token: rtmToken,
-                                                      startTime: nil,
-                                                      duration: NSNumber(value: duration),
-                                                      region: region.eduType,
-                                                      mediaOptions: mediaOptions,
-                                                      userProperties: nil)
-              
-              // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
-              var extApps = Dictionary<String, AgoraExtAppConfiguration>()
-              launchConfig.extApps.forEach { (k, v) in
-                  if k == "io.agora.countdown" {
-                      v.image = UIImage(named: "countdown")
-                  }
-                  extApps[k] = v
-              }
-
-              launchConfig.extApps = extApps
-
-              AgoraClassroomSDK.launch(launchConfig,
-                                       success: launchSuccessBlock,
-                                       failure: failureBlock)
-           
+        let tokenSuccessBlock: (TokenBuilder.ServerResp) -> () = { [weak self] (response) in
+            guard let `self` = self else {
+                return
+            }
+            
+            let appId = response.appId
+            let rtmToken = response.rtmToken
+            let userUuid = response.userId
+            
+            let launchConfig = AgoraEduLaunchConfig(userName: user,
+                                                    userUuid: userUuid,
+                                                    userRole: .student,
+                                                    roomName: room,
+                                                    roomUuid: roomUuid,
+                                                    roomType: roomStyle,
+                                                    appId: appId,
+                                                    token: rtmToken,
+                                                    startTime: nil,
+                                                    duration: NSNumber(value: duration),
+                                                    region: region.eduType,
+                                                    mediaOptions: mediaOptions,
+                                                    userProperties: nil)
+            
+            // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
+            var extApps = Dictionary<String, AgoraExtAppConfiguration>()
+            launchConfig.extApps.forEach { (k, v) in
+                if k == "io.agora.countdown" {
+                    v.image = UIImage(named: "countdown")
+                }
+                extApps[k] = v
+            }
+            
+            launchConfig.extApps = extApps
+            
+            if region != .CN {
+                launchConfig.widgets.removeValue(forKey: "easemobIM")
+            }
+            
+            AgoraClassroomSDK.setDelegate(self)
+            
+            AgoraClassroomSDK.launch(launchConfig,
+                                     success: launchSuccessBlock,
+                                     failure: failureBlock)
         }
         
         requestToken(region: region.rawValue,
@@ -300,10 +319,15 @@ private extension LoginViewController {
 //                   appCertificate: "Your App Certificate",
 //                   userUuid: userUuid,
 //                   success: tokenSuccessBlock,
-//                   failure: failure)
+//                   failure: failureBlock)
     }
     
     @objc func onTouchDebug() {
+        guard debugCount >= 10 else {
+            debugCount += 1
+            return
+        }
+        
         let vc = DebugViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc,
@@ -401,7 +425,7 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         case .roleType:
             // 美术小班课可选角色，其他不可选
 //            cell.mode = (inputParams.roomStyle == .paintingSmall) ? .option : .unable
-            cell.mode = .option
+            cell.mode = .unable
             cell.titleLabel.text = NSLocalizedString("login_title_role",
                                                      comment: "")
             cell.textField.placeholder = optionDescription(option: inputParams.roleType,

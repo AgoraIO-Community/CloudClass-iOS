@@ -158,11 +158,11 @@ private extension DebugViewController {
     
     @objc func onTouchJoinRoom() {
         guard let room = inputParams.roomName,
-              let user = inputParams.nickName else {
+              let user = inputParams.nickName,
+              let roomStyle = inputParams.roomStyle else {
             return
         }
         
-        let roomStyle = inputParams.roomStyle
         let region = inputParams.region
         let encryptionMode = inputParams.encryptMode
         let im = inputParams.im
@@ -342,7 +342,7 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
         case .roleType:
             // 美术小班课可选角色，其他不可选
             //            cell.mode = (inputParams.roomStyle == .paintingSmall) ? .option : .unable
-            cell.mode = .option
+            cell.mode = .unable
             cell.titleLabel.text = NSLocalizedString("login_title_role",
                                                      comment: "")
             cell.textField.placeholder = optionDescription(option: inputParams.roleType,

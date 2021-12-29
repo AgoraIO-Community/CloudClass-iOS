@@ -84,7 +84,7 @@ let kEncryptionOptions: [(AgoraEduMediaEncryptionMode, String)] = [
 struct RoomInfoModel {
     var roomName: String?
     var nickName: String?
-    var roomStyle: AgoraEduRoomType = .oneToOne
+    var roomStyle: AgoraEduRoomType?
     var roleType: AgoraEduUserRole = .student
     var region: RoomRegionType = .CN
     var im: IMType = .easemob
