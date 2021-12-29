@@ -10,7 +10,7 @@ cd ${SDKs_Path}
 Tag=${SDK_Name}_v${SDK_Version}
 
 git tag -d ${Tag}
-git push originGithub:refs/tags/${Tag}
+git push originGithub :refs/tags/${Tag}
 git tag ${Tag}
 git push originGithub --tags
 
