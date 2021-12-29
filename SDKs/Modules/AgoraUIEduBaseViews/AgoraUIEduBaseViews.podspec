@@ -29,7 +29,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec 'Resources' do |ss|
     ss.resource_bundles = {
-      'AgoraUIEduBaseViews' => ['AgoraUIEduBaseViews/Assets/**/*.{xcassets,strings,gif,mp3}']
+      'AgoraUIEduBaseViews' => ['SDKs/Modules/AgoraUIEduBaseViews/Assets/**/*.{xcassets,strings,gif,mp3}']
     }
   end
   
