@@ -7,85 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1531CCA825F8757A00FDF2D1 /* AgoraUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1531CCA625F8757A00FDF2D1 /* AgoraUserCell.swift */; };
-		1531CCA925F8757A00FDF2D1 /* AgoraUserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1531CCA725F8757A00FDF2D1 /* AgoraUserListView.swift */; };
-		68E91ED925FB1FDE0018403B /* AgoraHandsUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68E91ED825FB1FDE0018403B /* AgoraHandsUpView.swift */; };
 		68E91F0725FB62AE0018403B /* Pods_AgoraUIEduBaseViews.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF9B7D6A09F4D4289060CB12 /* Pods_AgoraUIEduBaseViews.framework */; };
-		783AAE9B25F4D05700957598 /* AgoraRefreshConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE5825F4D05700957598 /* AgoraRefreshConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAE9C25F4D05700957598 /* UIScrollView+AgoraExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE5925F4D05700957598 /* UIScrollView+AgoraExtension.m */; };
-		783AAE9D25F4D05700957598 /* AgoraRefreshConst.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE5A25F4D05700957598 /* AgoraRefreshConst.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAE9E25F4D05700957598 /* AgoraRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE5B25F4D05700957598 /* AgoraRefresh.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAE9F25F4D05700957598 /* UIScrollView+AgoraRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE5C25F4D05700957598 /* UIScrollView+AgoraRefresh.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEA025F4D05700957598 /* NSBundle+AgoraRefresh.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE5D25F4D05700957598 /* NSBundle+AgoraRefresh.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEA125F4D05700957598 /* UIView+AgoraExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE5E25F4D05700957598 /* UIView+AgoraExtension.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEA325F4D05700957598 /* UIScrollView+AgoraExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE6025F4D05700957598 /* UIScrollView+AgoraExtension.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEA425F4D05700957598 /* AgoraRefreshConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE6125F4D05700957598 /* AgoraRefreshConfig.m */; };
-		783AAEA525F4D05700957598 /* UIScrollView+AgoraRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE6225F4D05700957598 /* UIScrollView+AgoraRefresh.m */; };
-		783AAEA625F4D05700957598 /* AgoraRefreshConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE6325F4D05700957598 /* AgoraRefreshConst.m */; };
-		783AAEA725F4D05700957598 /* AgoraRefreshBackStateFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE6725F4D05700957598 /* AgoraRefreshBackStateFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEA825F4D05700957598 /* AgoraRefreshBackNormalFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE6825F4D05700957598 /* AgoraRefreshBackNormalFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEA925F4D05700957598 /* AgoraRefreshBackGifFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE6925F4D05700957598 /* AgoraRefreshBackGifFooter.m */; };
-		783AAEAA25F4D05700957598 /* AgoraRefreshBackNormalFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE6A25F4D05700957598 /* AgoraRefreshBackNormalFooter.m */; };
-		783AAEAB25F4D05700957598 /* AgoraRefreshBackStateFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE6B25F4D05700957598 /* AgoraRefreshBackStateFooter.m */; };
-		783AAEAC25F4D05700957598 /* AgoraRefreshBackGifFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE6C25F4D05700957598 /* AgoraRefreshBackGifFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEAD25F4D05700957598 /* AgoraRefreshAutoGifFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE6E25F4D05700957598 /* AgoraRefreshAutoGifFooter.m */; };
-		783AAEAE25F4D05700957598 /* AgoraRefreshAutoNormalFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE6F25F4D05700957598 /* AgoraRefreshAutoNormalFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEAF25F4D05700957598 /* AgoraRefreshAutoStateFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE7025F4D05700957598 /* AgoraRefreshAutoStateFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEB025F4D05700957598 /* AgoraRefreshAutoNormalFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE7125F4D05700957598 /* AgoraRefreshAutoNormalFooter.m */; };
-		783AAEB125F4D05700957598 /* AgoraRefreshAutoGifFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE7225F4D05700957598 /* AgoraRefreshAutoGifFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEB225F4D05700957598 /* AgoraRefreshAutoStateFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE7325F4D05700957598 /* AgoraRefreshAutoStateFooter.m */; };
-		783AAEB325F4D05700957598 /* AgoraRefreshStateTrailer.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE7525F4D05700957598 /* AgoraRefreshStateTrailer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEB425F4D05700957598 /* AgoraRefreshNormalTrailer.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE7625F4D05700957598 /* AgoraRefreshNormalTrailer.m */; };
-		783AAEB525F4D05700957598 /* AgoraRefreshStateTrailer.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE7725F4D05700957598 /* AgoraRefreshStateTrailer.m */; };
-		783AAEB625F4D05700957598 /* AgoraRefreshNormalTrailer.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE7825F4D05700957598 /* AgoraRefreshNormalTrailer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEB725F4D05700957598 /* AgoraRefreshStateHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE7A25F4D05700957598 /* AgoraRefreshStateHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEB825F4D05700957598 /* AgoraRefreshGifHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE7B25F4D05700957598 /* AgoraRefreshGifHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEB925F4D05700957598 /* AgoraRefreshNormalHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE7C25F4D05700957598 /* AgoraRefreshNormalHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEBA25F4D05700957598 /* AgoraRefreshGifHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE7D25F4D05700957598 /* AgoraRefreshGifHeader.m */; };
-		783AAEBB25F4D05700957598 /* AgoraRefreshStateHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE7E25F4D05700957598 /* AgoraRefreshStateHeader.m */; };
-		783AAEBC25F4D05700957598 /* AgoraRefreshNormalHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE7F25F4D05700957598 /* AgoraRefreshNormalHeader.m */; };
-		783AAEBD25F4D05700957598 /* NSBundle+AgoraRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE8025F4D05700957598 /* NSBundle+AgoraRefresh.m */; };
-		783AAEBE25F4D05700957598 /* UIView+AgoraExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE8125F4D05700957598 /* UIView+AgoraExtension.m */; };
-		783AAEBF25F4D05700957598 /* AgoraRefreshFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE8325F4D05700957598 /* AgoraRefreshFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEC025F4D05700957598 /* AgoraRefreshHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE8425F4D05700957598 /* AgoraRefreshHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEC125F4D05700957598 /* AgoraRefreshAutoFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE8525F4D05700957598 /* AgoraRefreshAutoFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEC225F4D05700957598 /* AgoraRefreshBackFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE8625F4D05700957598 /* AgoraRefreshBackFooter.m */; };
-		783AAEC325F4D05700957598 /* AgoraRefreshTrailer.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE8725F4D05700957598 /* AgoraRefreshTrailer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEC425F4D05700957598 /* AgoraRefreshComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE8825F4D05700957598 /* AgoraRefreshComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAEC525F4D05700957598 /* AgoraRefreshHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE8925F4D05700957598 /* AgoraRefreshHeader.m */; };
-		783AAEC625F4D05700957598 /* AgoraRefreshFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE8A25F4D05700957598 /* AgoraRefreshFooter.m */; };
-		783AAEC725F4D05700957598 /* AgoraRefreshAutoFooter.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE8B25F4D05700957598 /* AgoraRefreshAutoFooter.m */; };
-		783AAEC825F4D05700957598 /* AgoraRefreshTrailer.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE8C25F4D05700957598 /* AgoraRefreshTrailer.m */; };
-		783AAEC925F4D05700957598 /* AgoraRefreshBackFooter.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE8D25F4D05700957598 /* AgoraRefreshBackFooter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAECA25F4D05700957598 /* AgoraRefreshComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE8E25F4D05700957598 /* AgoraRefreshComponent.m */; };
 		783AAECD25F4D05700957598 /* AgoraUIEduBaseViews.h in Headers */ = {isa = PBXBuildFile; fileRef = 783AAE9225F4D05700957598 /* AgoraUIEduBaseViews.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783AAED425F4D05700957598 /* AgoraUINavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAE9A25F4D05700957598 /* AgoraUINavigationBar.swift */; };
-		783AAEEA25F4D26600957598 /* UIColor+Agora.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAEE725F4D26500957598 /* UIColor+Agora.swift */; };
-		783AAEEB25F4D26600957598 /* AgoraKitUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAEE825F4D26500957598 /* AgoraKitUtils.swift */; };
-		783AAEEC25F4D26600957598 /* AgoraKitDeviceAssistant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAEE925F4D26500957598 /* AgoraKitDeviceAssistant.swift */; };
-		783AAF0D25F4D53C00957598 /* AgoraCourseTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAF0825F4D53C00957598 /* AgoraCourseTipsView.swift */; };
-		783AAF0F25F4D53C00957598 /* AgoraAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAF0B25F4D53C00957598 /* AgoraAlertView.swift */; };
-		783AAF1025F4D53C00957598 /* AgorCycleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 783AAF0C25F4D53C00957598 /* AgorCycleView.swift */; };
-		78658F3726B0531E00BBADA2 /* AgoraUserRenderScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78658F3626B0531E00BBADA2 /* AgoraUserRenderScrollView.swift */; };
-		78A0A27F26047E1500503C17 /* AgoraKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A0A27E26047E1500503C17 /* AgoraKitExtension.swift */; };
-		78A0A3132604B25100503C17 /* AgoraUserRenderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A0A3102604B25100503C17 /* AgoraUserRenderCell.swift */; };
-		78A0A3142604B25100503C17 /* AgoraUserRenderListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A0A3112604B25100503C17 /* AgoraUserRenderListView.swift */; };
-		78D1FA3125F8AF8800F47FB1 /* AgoraFLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D1FA2D25F8AF8800F47FB1 /* AgoraFLAnimatedImage.m */; };
-		78D1FA3225F8AF8800F47FB1 /* AgoraFLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D1FA2E25F8AF8800F47FB1 /* AgoraFLAnimatedImageView.m */; };
-		78D1FA3325F8AF8800F47FB1 /* AgoraFLAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D1FA2F25F8AF8800F47FB1 /* AgoraFLAnimatedImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78D1FA3425F8AF8800F47FB1 /* AgoraFLAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 78D1FA3025F8AF8800F47FB1 /* AgoraFLAnimatedImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		78D1FA4525F9FB2100F47FB1 /* AgoraUIUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78D1FA4425F9FB2100F47FB1 /* AgoraUIUserView.swift */; };
-		78EF58CF25F749270045E98F /* AgoraUISettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78EF58CE25F749270045E98F /* AgoraUISettingView.swift */; };
-		8683140526005886009C78A3 /* AgoraBoardToolsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868313FE26005886009C78A3 /* AgoraBoardToolsModel.swift */; };
-		8683140626005886009C78A3 /* AgoraToolsPopoverContentSubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 868313FF26005886009C78A3 /* AgoraToolsPopoverContentSubs.swift */; };
-		8683140826005886009C78A3 /* AgoraBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8683140126005886009C78A3 /* AgoraBoardView.swift */; };
-		8683140926005886009C78A3 /* AgoraBoardToolsPopoverContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8683140226005886009C78A3 /* AgoraBoardToolsPopoverContent.swift */; };
-		8683140A26005886009C78A3 /* AgoraBoardPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8683140326005886009C78A3 /* AgoraBoardPageControl.swift */; };
-		8683140B26005886009C78A3 /* AgoraBoardToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8683140426005886009C78A3 /* AgoraBoardToolsView.swift */; };
-		86A3D1CB2609EF2F0066BA1E /* AgoraUIEduBaseViews.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78EF586825F601C90045E98F /* AgoraUIEduBaseViews.xcassets */; };
-		86A3D1DD2609F04C0066BA1E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 86A3D1D52609F0430066BA1E /* Localizable.strings */; };
-		86A3D1DE2609F04C0066BA1E /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 86A3D1D82609F0430066BA1E /* loading.gif */; };
 		86A3D1E52609F05B0066BA1E /* AgoraUIEduBaseViews.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 86A3D1C12609EE030066BA1E /* AgoraUIEduBaseViews.bundle */; };
+		86C7CAD4277C83DC00056908 /* AgoraKitExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C7CAC4277C83DC00056908 /* AgoraKitExtension.swift */; };
+		86C7CAD5277C83DC00056908 /* AgoraFLAnimatedImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 86C7CAC6277C83DC00056908 /* AgoraFLAnimatedImage.m */; };
+		86C7CAD6277C83DC00056908 /* AgoraFLAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 86C7CAC7277C83DC00056908 /* AgoraFLAnimatedImageView.m */; };
+		86C7CAD7277C83DC00056908 /* AgoraFLAnimatedImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 86C7CAC8277C83DC00056908 /* AgoraFLAnimatedImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		86C7CAD8277C83DC00056908 /* AgoraFLAnimatedImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = 86C7CAC9277C83DC00056908 /* AgoraFLAnimatedImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		86C7CAD9277C83DC00056908 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 86C7CACB277C83DC00056908 /* Localizable.strings */; };
+		86C7CADA277C83DC00056908 /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 86C7CACE277C83DC00056908 /* loading.gif */; };
+		86C7CADB277C83DC00056908 /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86C7CACF277C83DC00056908 /* images.xcassets */; };
+		86C7CADC277C83DC00056908 /* AgoraToastTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C7CAD1277C83DC00056908 /* AgoraToastTipsView.swift */; };
+		86C7CADD277C83DC00056908 /* AgoraLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C7CAD2277C83DC00056908 /* AgoraLoading.swift */; };
+		86C7CADE277C83DC00056908 /* AgoraToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86C7CAD3277C83DC00056908 /* AgoraToast.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,92 +34,26 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1531CCA625F8757A00FDF2D1 /* AgoraUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserCell.swift; sourceTree = "<group>"; };
-		1531CCA725F8757A00FDF2D1 /* AgoraUserListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserListView.swift; sourceTree = "<group>"; };
 		3BADD57796697298A3ADBCA1 /* Pods-AgoraUIEduBaseViews.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraUIEduBaseViews.debug.xcconfig"; path = "Target Support Files/Pods-AgoraUIEduBaseViews/Pods-AgoraUIEduBaseViews.debug.xcconfig"; sourceTree = "<group>"; };
 		535D56CE66CC7E51E466FB0E /* Pods-AgoraUIEduBaseViews.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraUIEduBaseViews.release.xcconfig"; path = "Target Support Files/Pods-AgoraUIEduBaseViews/Pods-AgoraUIEduBaseViews.release.xcconfig"; sourceTree = "<group>"; };
-		68E91ED825FB1FDE0018403B /* AgoraHandsUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraHandsUpView.swift; sourceTree = "<group>"; };
 		783AAE5625F4D05700957598 /* AgoraUIEduBaseViews.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = AgoraUIEduBaseViews.modulemap; sourceTree = "<group>"; };
-		783AAE5825F4D05700957598 /* AgoraRefreshConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshConfig.h; sourceTree = "<group>"; };
-		783AAE5925F4D05700957598 /* UIScrollView+AgoraExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+AgoraExtension.m"; sourceTree = "<group>"; };
-		783AAE5A25F4D05700957598 /* AgoraRefreshConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshConst.h; sourceTree = "<group>"; };
-		783AAE5B25F4D05700957598 /* AgoraRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefresh.h; sourceTree = "<group>"; };
-		783AAE5C25F4D05700957598 /* UIScrollView+AgoraRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+AgoraRefresh.h"; sourceTree = "<group>"; };
-		783AAE5D25F4D05700957598 /* NSBundle+AgoraRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+AgoraRefresh.h"; sourceTree = "<group>"; };
-		783AAE5E25F4D05700957598 /* UIView+AgoraExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AgoraExtension.h"; sourceTree = "<group>"; };
-		783AAE5F25F4D05700957598 /* AgoraRefresh.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AgoraRefresh.bundle; sourceTree = "<group>"; };
-		783AAE6025F4D05700957598 /* UIScrollView+AgoraExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+AgoraExtension.h"; sourceTree = "<group>"; };
-		783AAE6125F4D05700957598 /* AgoraRefreshConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshConfig.m; sourceTree = "<group>"; };
-		783AAE6225F4D05700957598 /* UIScrollView+AgoraRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+AgoraRefresh.m"; sourceTree = "<group>"; };
-		783AAE6325F4D05700957598 /* AgoraRefreshConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshConst.m; sourceTree = "<group>"; };
-		783AAE6725F4D05700957598 /* AgoraRefreshBackStateFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshBackStateFooter.h; sourceTree = "<group>"; };
-		783AAE6825F4D05700957598 /* AgoraRefreshBackNormalFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshBackNormalFooter.h; sourceTree = "<group>"; };
-		783AAE6925F4D05700957598 /* AgoraRefreshBackGifFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshBackGifFooter.m; sourceTree = "<group>"; };
-		783AAE6A25F4D05700957598 /* AgoraRefreshBackNormalFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshBackNormalFooter.m; sourceTree = "<group>"; };
-		783AAE6B25F4D05700957598 /* AgoraRefreshBackStateFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshBackStateFooter.m; sourceTree = "<group>"; };
-		783AAE6C25F4D05700957598 /* AgoraRefreshBackGifFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshBackGifFooter.h; sourceTree = "<group>"; };
-		783AAE6E25F4D05700957598 /* AgoraRefreshAutoGifFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshAutoGifFooter.m; sourceTree = "<group>"; };
-		783AAE6F25F4D05700957598 /* AgoraRefreshAutoNormalFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshAutoNormalFooter.h; sourceTree = "<group>"; };
-		783AAE7025F4D05700957598 /* AgoraRefreshAutoStateFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshAutoStateFooter.h; sourceTree = "<group>"; };
-		783AAE7125F4D05700957598 /* AgoraRefreshAutoNormalFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshAutoNormalFooter.m; sourceTree = "<group>"; };
-		783AAE7225F4D05700957598 /* AgoraRefreshAutoGifFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshAutoGifFooter.h; sourceTree = "<group>"; };
-		783AAE7325F4D05700957598 /* AgoraRefreshAutoStateFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshAutoStateFooter.m; sourceTree = "<group>"; };
-		783AAE7525F4D05700957598 /* AgoraRefreshStateTrailer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshStateTrailer.h; sourceTree = "<group>"; };
-		783AAE7625F4D05700957598 /* AgoraRefreshNormalTrailer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshNormalTrailer.m; sourceTree = "<group>"; };
-		783AAE7725F4D05700957598 /* AgoraRefreshStateTrailer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshStateTrailer.m; sourceTree = "<group>"; };
-		783AAE7825F4D05700957598 /* AgoraRefreshNormalTrailer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshNormalTrailer.h; sourceTree = "<group>"; };
-		783AAE7A25F4D05700957598 /* AgoraRefreshStateHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshStateHeader.h; sourceTree = "<group>"; };
-		783AAE7B25F4D05700957598 /* AgoraRefreshGifHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshGifHeader.h; sourceTree = "<group>"; };
-		783AAE7C25F4D05700957598 /* AgoraRefreshNormalHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshNormalHeader.h; sourceTree = "<group>"; };
-		783AAE7D25F4D05700957598 /* AgoraRefreshGifHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshGifHeader.m; sourceTree = "<group>"; };
-		783AAE7E25F4D05700957598 /* AgoraRefreshStateHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshStateHeader.m; sourceTree = "<group>"; };
-		783AAE7F25F4D05700957598 /* AgoraRefreshNormalHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshNormalHeader.m; sourceTree = "<group>"; };
-		783AAE8025F4D05700957598 /* NSBundle+AgoraRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+AgoraRefresh.m"; sourceTree = "<group>"; };
-		783AAE8125F4D05700957598 /* UIView+AgoraExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AgoraExtension.m"; sourceTree = "<group>"; };
-		783AAE8325F4D05700957598 /* AgoraRefreshFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshFooter.h; sourceTree = "<group>"; };
-		783AAE8425F4D05700957598 /* AgoraRefreshHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshHeader.h; sourceTree = "<group>"; };
-		783AAE8525F4D05700957598 /* AgoraRefreshAutoFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshAutoFooter.h; sourceTree = "<group>"; };
-		783AAE8625F4D05700957598 /* AgoraRefreshBackFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshBackFooter.m; sourceTree = "<group>"; };
-		783AAE8725F4D05700957598 /* AgoraRefreshTrailer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshTrailer.h; sourceTree = "<group>"; };
-		783AAE8825F4D05700957598 /* AgoraRefreshComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshComponent.h; sourceTree = "<group>"; };
-		783AAE8925F4D05700957598 /* AgoraRefreshHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshHeader.m; sourceTree = "<group>"; };
-		783AAE8A25F4D05700957598 /* AgoraRefreshFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshFooter.m; sourceTree = "<group>"; };
-		783AAE8B25F4D05700957598 /* AgoraRefreshAutoFooter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshAutoFooter.m; sourceTree = "<group>"; };
-		783AAE8C25F4D05700957598 /* AgoraRefreshTrailer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshTrailer.m; sourceTree = "<group>"; };
-		783AAE8D25F4D05700957598 /* AgoraRefreshBackFooter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraRefreshBackFooter.h; sourceTree = "<group>"; };
-		783AAE8E25F4D05700957598 /* AgoraRefreshComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraRefreshComponent.m; sourceTree = "<group>"; };
 		783AAE9225F4D05700957598 /* AgoraUIEduBaseViews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraUIEduBaseViews.h; sourceTree = "<group>"; };
-		783AAE9A25F4D05700957598 /* AgoraUINavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUINavigationBar.swift; sourceTree = "<group>"; };
-		783AAEE725F4D26500957598 /* UIColor+Agora.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Agora.swift"; sourceTree = "<group>"; };
-		783AAEE825F4D26500957598 /* AgoraKitUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraKitUtils.swift; sourceTree = "<group>"; };
-		783AAEE925F4D26500957598 /* AgoraKitDeviceAssistant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraKitDeviceAssistant.swift; sourceTree = "<group>"; };
-		783AAF0825F4D53C00957598 /* AgoraCourseTipsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraCourseTipsView.swift; sourceTree = "<group>"; };
-		783AAF0B25F4D53C00957598 /* AgoraAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraAlertView.swift; sourceTree = "<group>"; };
-		783AAF0C25F4D53C00957598 /* AgorCycleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgorCycleView.swift; sourceTree = "<group>"; };
-		78658F3626B0531E00BBADA2 /* AgoraUserRenderScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserRenderScrollView.swift; sourceTree = "<group>"; };
-		78A0A27E26047E1500503C17 /* AgoraKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraKitExtension.swift; sourceTree = "<group>"; };
-		78A0A3102604B25100503C17 /* AgoraUserRenderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserRenderCell.swift; sourceTree = "<group>"; };
-		78A0A3112604B25100503C17 /* AgoraUserRenderListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserRenderListView.swift; sourceTree = "<group>"; };
-		78D1FA2D25F8AF8800F47FB1 /* AgoraFLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraFLAnimatedImage.m; sourceTree = "<group>"; };
-		78D1FA2E25F8AF8800F47FB1 /* AgoraFLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraFLAnimatedImageView.m; sourceTree = "<group>"; };
-		78D1FA2F25F8AF8800F47FB1 /* AgoraFLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraFLAnimatedImage.h; sourceTree = "<group>"; };
-		78D1FA3025F8AF8800F47FB1 /* AgoraFLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraFLAnimatedImageView.h; sourceTree = "<group>"; };
-		78D1FA4425F9FB2100F47FB1 /* AgoraUIUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraUIUserView.swift; sourceTree = "<group>"; };
-		78EF586825F601C90045E98F /* AgoraUIEduBaseViews.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AgoraUIEduBaseViews.xcassets; sourceTree = "<group>"; };
-		78EF58CE25F749270045E98F /* AgoraUISettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgoraUISettingView.swift; sourceTree = "<group>"; };
-		868313FE26005886009C78A3 /* AgoraBoardToolsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardToolsModel.swift; sourceTree = "<group>"; };
-		868313FF26005886009C78A3 /* AgoraToolsPopoverContentSubs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToolsPopoverContentSubs.swift; sourceTree = "<group>"; };
-		8683140126005886009C78A3 /* AgoraBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardView.swift; sourceTree = "<group>"; };
-		8683140226005886009C78A3 /* AgoraBoardToolsPopoverContent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardToolsPopoverContent.swift; sourceTree = "<group>"; };
-		8683140326005886009C78A3 /* AgoraBoardPageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardPageControl.swift; sourceTree = "<group>"; };
-		8683140426005886009C78A3 /* AgoraBoardToolsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardToolsView.swift; sourceTree = "<group>"; };
 		868D62D225EF7DE600E914F2 /* AgoraUIEduBaseViews.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraUIEduBaseViews.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		868D62D625EF7DE600E914F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86A3D1C12609EE030066BA1E /* AgoraUIEduBaseViews.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgoraUIEduBaseViews.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		86A3D1C32609EE030066BA1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		86A3D1D62609F0430066BA1E /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		86A3D1D72609F0430066BA1E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		86A3D1D82609F0430066BA1E /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
+		86C7CAC4277C83DC00056908 /* AgoraKitExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraKitExtension.swift; sourceTree = "<group>"; };
+		86C7CAC6277C83DC00056908 /* AgoraFLAnimatedImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraFLAnimatedImage.m; sourceTree = "<group>"; };
+		86C7CAC7277C83DC00056908 /* AgoraFLAnimatedImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgoraFLAnimatedImageView.m; sourceTree = "<group>"; };
+		86C7CAC8277C83DC00056908 /* AgoraFLAnimatedImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraFLAnimatedImage.h; sourceTree = "<group>"; };
+		86C7CAC9277C83DC00056908 /* AgoraFLAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraFLAnimatedImageView.h; sourceTree = "<group>"; };
+		86C7CACC277C83DC00056908 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		86C7CACD277C83DC00056908 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		86C7CACE277C83DC00056908 /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
+		86C7CACF277C83DC00056908 /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
+		86C7CAD1277C83DC00056908 /* AgoraToastTipsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToastTipsView.swift; sourceTree = "<group>"; };
+		86C7CAD2277C83DC00056908 /* AgoraLoading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraLoading.swift; sourceTree = "<group>"; };
+		86C7CAD3277C83DC00056908 /* AgoraToast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToast.swift; sourceTree = "<group>"; };
 		BF9B7D6A09F4D4289060CB12 /* Pods_AgoraUIEduBaseViews.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraUIEduBaseViews.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -207,23 +76,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1531CCA525F8757A00FDF2D1 /* AgoraUserListView */ = {
-			isa = PBXGroup;
-			children = (
-				1531CCA625F8757A00FDF2D1 /* AgoraUserCell.swift */,
-				1531CCA725F8757A00FDF2D1 /* AgoraUserListView.swift */,
-			);
-			path = AgoraUserListView;
-			sourceTree = "<group>";
-		};
-		68E91ED625FB1F6D0018403B /* AgoraHandsUpView */ = {
-			isa = PBXGroup;
-			children = (
-				68E91ED825FB1FDE0018403B /* AgoraHandsUpView.swift */,
-			);
-			path = AgoraHandsUpView;
-			sourceTree = "<group>";
-		};
 		765C7DE5D1DF4FFE846238D1 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,196 +83,6 @@
 				535D56CE66CC7E51E466FB0E /* Pods-AgoraUIEduBaseViews.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		783AAE5725F4D05700957598 /* AgoraRefresh */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE5825F4D05700957598 /* AgoraRefreshConfig.h */,
-				783AAE5925F4D05700957598 /* UIScrollView+AgoraExtension.m */,
-				783AAE5A25F4D05700957598 /* AgoraRefreshConst.h */,
-				783AAE5B25F4D05700957598 /* AgoraRefresh.h */,
-				783AAE5C25F4D05700957598 /* UIScrollView+AgoraRefresh.h */,
-				783AAE5D25F4D05700957598 /* NSBundle+AgoraRefresh.h */,
-				783AAE5E25F4D05700957598 /* UIView+AgoraExtension.h */,
-				783AAE5F25F4D05700957598 /* AgoraRefresh.bundle */,
-				783AAE6025F4D05700957598 /* UIScrollView+AgoraExtension.h */,
-				783AAE6125F4D05700957598 /* AgoraRefreshConfig.m */,
-				783AAE6225F4D05700957598 /* UIScrollView+AgoraRefresh.m */,
-				783AAE6325F4D05700957598 /* AgoraRefreshConst.m */,
-				783AAE6425F4D05700957598 /* Custom */,
-				783AAE8025F4D05700957598 /* NSBundle+AgoraRefresh.m */,
-				783AAE8125F4D05700957598 /* UIView+AgoraExtension.m */,
-				783AAE8225F4D05700957598 /* Base */,
-			);
-			path = AgoraRefresh;
-			sourceTree = "<group>";
-		};
-		783AAE6425F4D05700957598 /* Custom */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE6525F4D05700957598 /* Footer */,
-				783AAE7425F4D05700957598 /* Trailer */,
-				783AAE7925F4D05700957598 /* Header */,
-			);
-			path = Custom;
-			sourceTree = "<group>";
-		};
-		783AAE6525F4D05700957598 /* Footer */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE6625F4D05700957598 /* Back */,
-				783AAE6D25F4D05700957598 /* Auto */,
-			);
-			path = Footer;
-			sourceTree = "<group>";
-		};
-		783AAE6625F4D05700957598 /* Back */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE6725F4D05700957598 /* AgoraRefreshBackStateFooter.h */,
-				783AAE6825F4D05700957598 /* AgoraRefreshBackNormalFooter.h */,
-				783AAE6925F4D05700957598 /* AgoraRefreshBackGifFooter.m */,
-				783AAE6A25F4D05700957598 /* AgoraRefreshBackNormalFooter.m */,
-				783AAE6B25F4D05700957598 /* AgoraRefreshBackStateFooter.m */,
-				783AAE6C25F4D05700957598 /* AgoraRefreshBackGifFooter.h */,
-			);
-			path = Back;
-			sourceTree = "<group>";
-		};
-		783AAE6D25F4D05700957598 /* Auto */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE6E25F4D05700957598 /* AgoraRefreshAutoGifFooter.m */,
-				783AAE6F25F4D05700957598 /* AgoraRefreshAutoNormalFooter.h */,
-				783AAE7025F4D05700957598 /* AgoraRefreshAutoStateFooter.h */,
-				783AAE7125F4D05700957598 /* AgoraRefreshAutoNormalFooter.m */,
-				783AAE7225F4D05700957598 /* AgoraRefreshAutoGifFooter.h */,
-				783AAE7325F4D05700957598 /* AgoraRefreshAutoStateFooter.m */,
-			);
-			path = Auto;
-			sourceTree = "<group>";
-		};
-		783AAE7425F4D05700957598 /* Trailer */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE7525F4D05700957598 /* AgoraRefreshStateTrailer.h */,
-				783AAE7625F4D05700957598 /* AgoraRefreshNormalTrailer.m */,
-				783AAE7725F4D05700957598 /* AgoraRefreshStateTrailer.m */,
-				783AAE7825F4D05700957598 /* AgoraRefreshNormalTrailer.h */,
-			);
-			path = Trailer;
-			sourceTree = "<group>";
-		};
-		783AAE7925F4D05700957598 /* Header */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE7A25F4D05700957598 /* AgoraRefreshStateHeader.h */,
-				783AAE7B25F4D05700957598 /* AgoraRefreshGifHeader.h */,
-				783AAE7C25F4D05700957598 /* AgoraRefreshNormalHeader.h */,
-				783AAE7D25F4D05700957598 /* AgoraRefreshGifHeader.m */,
-				783AAE7E25F4D05700957598 /* AgoraRefreshStateHeader.m */,
-				783AAE7F25F4D05700957598 /* AgoraRefreshNormalHeader.m */,
-			);
-			path = Header;
-			sourceTree = "<group>";
-		};
-		783AAE8225F4D05700957598 /* Base */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE8325F4D05700957598 /* AgoraRefreshFooter.h */,
-				783AAE8425F4D05700957598 /* AgoraRefreshHeader.h */,
-				783AAE8525F4D05700957598 /* AgoraRefreshAutoFooter.h */,
-				783AAE8625F4D05700957598 /* AgoraRefreshBackFooter.m */,
-				783AAE8725F4D05700957598 /* AgoraRefreshTrailer.h */,
-				783AAE8825F4D05700957598 /* AgoraRefreshComponent.h */,
-				783AAE8925F4D05700957598 /* AgoraRefreshHeader.m */,
-				783AAE8A25F4D05700957598 /* AgoraRefreshFooter.m */,
-				783AAE8B25F4D05700957598 /* AgoraRefreshAutoFooter.m */,
-				783AAE8C25F4D05700957598 /* AgoraRefreshTrailer.m */,
-				783AAE8D25F4D05700957598 /* AgoraRefreshBackFooter.h */,
-				783AAE8E25F4D05700957598 /* AgoraRefreshComponent.m */,
-			);
-			path = Base;
-			sourceTree = "<group>";
-		};
-		783AAEE625F4D26500957598 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				783AAEE725F4D26500957598 /* UIColor+Agora.swift */,
-				783AAEE825F4D26500957598 /* AgoraKitUtils.swift */,
-				783AAEE925F4D26500957598 /* AgoraKitDeviceAssistant.swift */,
-				78A0A27E26047E1500503C17 /* AgoraKitExtension.swift */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
-		783AAF0725F4D53C00957598 /* AgoraToastView */ = {
-			isa = PBXGroup;
-			children = (
-				783AAF0825F4D53C00957598 /* AgoraCourseTipsView.swift */,
-			);
-			path = AgoraToastView;
-			sourceTree = "<group>";
-		};
-		783AAF0925F4D53C00957598 /* AgoraAlertView */ = {
-			isa = PBXGroup;
-			children = (
-				783AAF0B25F4D53C00957598 /* AgoraAlertView.swift */,
-				783AAF0C25F4D53C00957598 /* AgorCycleView.swift */,
-			);
-			path = AgoraAlertView;
-			sourceTree = "<group>";
-		};
-		78A0A30E2604B25100503C17 /* AgoraUserRenderListView */ = {
-			isa = PBXGroup;
-			children = (
-				78A0A3102604B25100503C17 /* AgoraUserRenderCell.swift */,
-				78A0A3112604B25100503C17 /* AgoraUserRenderListView.swift */,
-				78658F3626B0531E00BBADA2 /* AgoraUserRenderScrollView.swift */,
-			);
-			path = AgoraUserRenderListView;
-			sourceTree = "<group>";
-		};
-		78D1FA2C25F8AF8800F47FB1 /* AgoraAnimatedImage */ = {
-			isa = PBXGroup;
-			children = (
-				78D1FA2D25F8AF8800F47FB1 /* AgoraFLAnimatedImage.m */,
-				78D1FA2E25F8AF8800F47FB1 /* AgoraFLAnimatedImageView.m */,
-				78D1FA2F25F8AF8800F47FB1 /* AgoraFLAnimatedImage.h */,
-				78D1FA3025F8AF8800F47FB1 /* AgoraFLAnimatedImageView.h */,
-			);
-			path = AgoraAnimatedImage;
-			sourceTree = "<group>";
-		};
-		78D1FA4325F9FB0B00F47FB1 /* AgoraUIUserView */ = {
-			isa = PBXGroup;
-			children = (
-				78D1FA4425F9FB2100F47FB1 /* AgoraUIUserView.swift */,
-			);
-			path = AgoraUIUserView;
-			sourceTree = "<group>";
-		};
-		78EF58CD25F748EE0045E98F /* AgoraUINavigationBar */ = {
-			isa = PBXGroup;
-			children = (
-				783AAE9A25F4D05700957598 /* AgoraUINavigationBar.swift */,
-				78EF58CE25F749270045E98F /* AgoraUISettingView.swift */,
-			);
-			path = AgoraUINavigationBar;
-			sourceTree = "<group>";
-		};
-		868313FD26005886009C78A3 /* AgoraBoardView */ = {
-			isa = PBXGroup;
-			children = (
-				868313FE26005886009C78A3 /* AgoraBoardToolsModel.swift */,
-				868313FF26005886009C78A3 /* AgoraToolsPopoverContentSubs.swift */,
-				8683140126005886009C78A3 /* AgoraBoardView.swift */,
-				8683140226005886009C78A3 /* AgoraBoardToolsPopoverContent.swift */,
-				8683140326005886009C78A3 /* AgoraBoardPageControl.swift */,
-				8683140426005886009C78A3 /* AgoraBoardToolsView.swift */,
-			);
-			path = AgoraBoardView;
 			sourceTree = "<group>";
 		};
 		868D62C825EF7DE600E914F2 = {
@@ -446,21 +108,12 @@
 		868D62D425EF7DE600E914F2 /* AgoraUIEduBaseViews */ = {
 			isa = PBXGroup;
 			children = (
-				86A3D1D42609F0430066BA1E /* AgoraResources */,
-				78A0A30E2604B25100503C17 /* AgoraUserRenderListView */,
-				868313FD26005886009C78A3 /* AgoraBoardView */,
-				68E91ED625FB1F6D0018403B /* AgoraHandsUpView */,
-				78D1FA4325F9FB0B00F47FB1 /* AgoraUIUserView */,
-				1531CCA525F8757A00FDF2D1 /* AgoraUserListView */,
-				78D1FA2C25F8AF8800F47FB1 /* AgoraAnimatedImage */,
-				783AAF0925F4D53C00957598 /* AgoraAlertView */,
-				783AAF0725F4D53C00957598 /* AgoraToastView */,
-				783AAEE625F4D26500957598 /* Utils */,
-				783AAE5725F4D05700957598 /* AgoraRefresh */,
+				86C7CAC5277C83DC00056908 /* AgoraAnimatedImage */,
+				86C7CAD0277C83DC00056908 /* AgoraToast */,
+				86C7CACA277C83DC00056908 /* Assets */,
+				86C7CAC3277C83DC00056908 /* Utils */,
 				783AAE9225F4D05700957598 /* AgoraUIEduBaseViews.h */,
-				78EF58CD25F748EE0045E98F /* AgoraUINavigationBar */,
 				783AAE5625F4D05700957598 /* AgoraUIEduBaseViews.modulemap */,
-				78EF586825F601C90045E98F /* AgoraUIEduBaseViews.xcassets */,
 				868D62D625EF7DE600E914F2 /* Info.plist */,
 			);
 			path = AgoraUIEduBaseViews;
@@ -474,13 +127,43 @@
 			path = "AgoraUIEduBaseViews-AgoraUIEduBaseViews";
 			sourceTree = "<group>";
 		};
-		86A3D1D42609F0430066BA1E /* AgoraResources */ = {
+		86C7CAC3277C83DC00056908 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				86A3D1D52609F0430066BA1E /* Localizable.strings */,
-				86A3D1D82609F0430066BA1E /* loading.gif */,
+				86C7CAC4277C83DC00056908 /* AgoraKitExtension.swift */,
 			);
-			path = AgoraResources;
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		86C7CAC5277C83DC00056908 /* AgoraAnimatedImage */ = {
+			isa = PBXGroup;
+			children = (
+				86C7CAC8277C83DC00056908 /* AgoraFLAnimatedImage.h */,
+				86C7CAC6277C83DC00056908 /* AgoraFLAnimatedImage.m */,
+				86C7CAC9277C83DC00056908 /* AgoraFLAnimatedImageView.h */,
+				86C7CAC7277C83DC00056908 /* AgoraFLAnimatedImageView.m */,
+			);
+			path = AgoraAnimatedImage;
+			sourceTree = "<group>";
+		};
+		86C7CACA277C83DC00056908 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				86C7CACB277C83DC00056908 /* Localizable.strings */,
+				86C7CACE277C83DC00056908 /* loading.gif */,
+				86C7CACF277C83DC00056908 /* images.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		86C7CAD0277C83DC00056908 /* AgoraToast */ = {
+			isa = PBXGroup;
+			children = (
+				86C7CAD1277C83DC00056908 /* AgoraToastTipsView.swift */,
+				86C7CAD2277C83DC00056908 /* AgoraLoading.swift */,
+				86C7CAD3277C83DC00056908 /* AgoraToast.swift */,
+			);
+			path = AgoraToast;
 			sourceTree = "<group>";
 		};
 		C95CC0B06AB5B982CB274608 /* Frameworks */ = {
@@ -498,33 +181,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86C7CAD7277C83DC00056908 /* AgoraFLAnimatedImage.h in Headers */,
+				86C7CAD8277C83DC00056908 /* AgoraFLAnimatedImageView.h in Headers */,
 				783AAECD25F4D05700957598 /* AgoraUIEduBaseViews.h in Headers */,
-				783AAE9B25F4D05700957598 /* AgoraRefreshConfig.h in Headers */,
-				78D1FA3325F8AF8800F47FB1 /* AgoraFLAnimatedImage.h in Headers */,
-				78D1FA3425F8AF8800F47FB1 /* AgoraFLAnimatedImageView.h in Headers */,
-				783AAEA325F4D05700957598 /* UIScrollView+AgoraExtension.h in Headers */,
-				783AAEA125F4D05700957598 /* UIView+AgoraExtension.h in Headers */,
-				783AAEC325F4D05700957598 /* AgoraRefreshTrailer.h in Headers */,
-				783AAEB325F4D05700957598 /* AgoraRefreshStateTrailer.h in Headers */,
-				783AAEC125F4D05700957598 /* AgoraRefreshAutoFooter.h in Headers */,
-				783AAEAF25F4D05700957598 /* AgoraRefreshAutoStateFooter.h in Headers */,
-				783AAEBF25F4D05700957598 /* AgoraRefreshFooter.h in Headers */,
-				783AAEC925F4D05700957598 /* AgoraRefreshBackFooter.h in Headers */,
-				783AAEA725F4D05700957598 /* AgoraRefreshBackStateFooter.h in Headers */,
-				783AAEC425F4D05700957598 /* AgoraRefreshComponent.h in Headers */,
-				783AAEC025F4D05700957598 /* AgoraRefreshHeader.h in Headers */,
-				783AAEB725F4D05700957598 /* AgoraRefreshStateHeader.h in Headers */,
-				783AAE9D25F4D05700957598 /* AgoraRefreshConst.h in Headers */,
-				783AAE9F25F4D05700957598 /* UIScrollView+AgoraRefresh.h in Headers */,
-				783AAEA025F4D05700957598 /* NSBundle+AgoraRefresh.h in Headers */,
-				783AAEB625F4D05700957598 /* AgoraRefreshNormalTrailer.h in Headers */,
-				783AAEB125F4D05700957598 /* AgoraRefreshAutoGifFooter.h in Headers */,
-				783AAEAE25F4D05700957598 /* AgoraRefreshAutoNormalFooter.h in Headers */,
-				783AAEAC25F4D05700957598 /* AgoraRefreshBackGifFooter.h in Headers */,
-				783AAEA825F4D05700957598 /* AgoraRefreshBackNormalFooter.h in Headers */,
-				783AAEB825F4D05700957598 /* AgoraRefreshGifHeader.h in Headers */,
-				783AAEB925F4D05700957598 /* AgoraRefreshNormalHeader.h in Headers */,
-				783AAE9E25F4D05700957598 /* AgoraRefresh.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -610,7 +269,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86C7CADA277C83DC00056908 /* loading.gif in Resources */,
+				86C7CADB277C83DC00056908 /* images.xcassets in Resources */,
 				86A3D1E52609F05B0066BA1E /* AgoraUIEduBaseViews.bundle in Resources */,
+				86C7CAD9277C83DC00056908 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -618,9 +280,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86A3D1DD2609F04C0066BA1E /* Localizable.strings in Resources */,
-				86A3D1DE2609F04C0066BA1E /* loading.gif in Resources */,
-				86A3D1CB2609EF2F0066BA1E /* AgoraUIEduBaseViews.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,53 +315,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				783AAF0D25F4D53C00957598 /* AgoraCourseTipsView.swift in Sources */,
-				8683140526005886009C78A3 /* AgoraBoardToolsModel.swift in Sources */,
-				783AAEEA25F4D26600957598 /* UIColor+Agora.swift in Sources */,
-				783AAEC725F4D05700957598 /* AgoraRefreshAutoFooter.m in Sources */,
-				783AAEA425F4D05700957598 /* AgoraRefreshConfig.m in Sources */,
-				783AAEBD25F4D05700957598 /* NSBundle+AgoraRefresh.m in Sources */,
-				783AAEEC25F4D26600957598 /* AgoraKitDeviceAssistant.swift in Sources */,
-				783AAF0F25F4D53C00957598 /* AgoraAlertView.swift in Sources */,
-				783AAEAA25F4D05700957598 /* AgoraRefreshBackNormalFooter.m in Sources */,
-				783AAEB525F4D05700957598 /* AgoraRefreshStateTrailer.m in Sources */,
-				78D1FA3125F8AF8800F47FB1 /* AgoraFLAnimatedImage.m in Sources */,
-				78A0A3132604B25100503C17 /* AgoraUserRenderCell.swift in Sources */,
-				783AAEB225F4D05700957598 /* AgoraRefreshAutoStateFooter.m in Sources */,
-				783AAEA525F4D05700957598 /* UIScrollView+AgoraRefresh.m in Sources */,
-				783AAECA25F4D05700957598 /* AgoraRefreshComponent.m in Sources */,
-				1531CCA825F8757A00FDF2D1 /* AgoraUserCell.swift in Sources */,
-				8683140626005886009C78A3 /* AgoraToolsPopoverContentSubs.swift in Sources */,
-				783AAEC225F4D05700957598 /* AgoraRefreshBackFooter.m in Sources */,
-				783AAEC625F4D05700957598 /* AgoraRefreshFooter.m in Sources */,
-				783AAEBB25F4D05700957598 /* AgoraRefreshStateHeader.m in Sources */,
-				78D1FA4525F9FB2100F47FB1 /* AgoraUIUserView.swift in Sources */,
-				783AAEB025F4D05700957598 /* AgoraRefreshAutoNormalFooter.m in Sources */,
-				783AAF1025F4D53C00957598 /* AgorCycleView.swift in Sources */,
-				783AAED425F4D05700957598 /* AgoraUINavigationBar.swift in Sources */,
-				783AAEBE25F4D05700957598 /* UIView+AgoraExtension.m in Sources */,
-				783AAEA625F4D05700957598 /* AgoraRefreshConst.m in Sources */,
-				78D1FA3225F8AF8800F47FB1 /* AgoraFLAnimatedImageView.m in Sources */,
-				8683140A26005886009C78A3 /* AgoraBoardPageControl.swift in Sources */,
-				783AAEA925F4D05700957598 /* AgoraRefreshBackGifFooter.m in Sources */,
-				783AAEB425F4D05700957598 /* AgoraRefreshNormalTrailer.m in Sources */,
-				8683140926005886009C78A3 /* AgoraBoardToolsPopoverContent.swift in Sources */,
-				783AAEC525F4D05700957598 /* AgoraRefreshHeader.m in Sources */,
-				783AAEAD25F4D05700957598 /* AgoraRefreshAutoGifFooter.m in Sources */,
-				783AAEBA25F4D05700957598 /* AgoraRefreshGifHeader.m in Sources */,
-				783AAEC825F4D05700957598 /* AgoraRefreshTrailer.m in Sources */,
-				8683140826005886009C78A3 /* AgoraBoardView.swift in Sources */,
-				78A0A27F26047E1500503C17 /* AgoraKitExtension.swift in Sources */,
-				1531CCA925F8757A00FDF2D1 /* AgoraUserListView.swift in Sources */,
-				78A0A3142604B25100503C17 /* AgoraUserRenderListView.swift in Sources */,
-				68E91ED925FB1FDE0018403B /* AgoraHandsUpView.swift in Sources */,
-				783AAE9C25F4D05700957598 /* UIScrollView+AgoraExtension.m in Sources */,
-				78658F3726B0531E00BBADA2 /* AgoraUserRenderScrollView.swift in Sources */,
-				78EF58CF25F749270045E98F /* AgoraUISettingView.swift in Sources */,
-				783AAEBC25F4D05700957598 /* AgoraRefreshNormalHeader.m in Sources */,
-				783AAEAB25F4D05700957598 /* AgoraRefreshBackStateFooter.m in Sources */,
-				783AAEEB25F4D26600957598 /* AgoraKitUtils.swift in Sources */,
-				8683140B26005886009C78A3 /* AgoraBoardToolsView.swift in Sources */,
+				86C7CADD277C83DC00056908 /* AgoraLoading.swift in Sources */,
+				86C7CAD4277C83DC00056908 /* AgoraKitExtension.swift in Sources */,
+				86C7CAD5277C83DC00056908 /* AgoraFLAnimatedImage.m in Sources */,
+				86C7CAD6277C83DC00056908 /* AgoraFLAnimatedImageView.m in Sources */,
+				86C7CADE277C83DC00056908 /* AgoraToast.swift in Sources */,
+				86C7CADC277C83DC00056908 /* AgoraToastTipsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -724,11 +342,11 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		86A3D1D52609F0430066BA1E /* Localizable.strings */ = {
+		86C7CACB277C83DC00056908 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				86A3D1D62609F0430066BA1E /* zh-Hans */,
-				86A3D1D72609F0430066BA1E /* en */,
+				86C7CACC277C83DC00056908 /* zh-Hans */,
+				86C7CACD277C83DC00056908 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

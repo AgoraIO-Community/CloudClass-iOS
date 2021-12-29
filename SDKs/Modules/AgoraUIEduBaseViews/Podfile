@@ -13,4 +13,7 @@ target 'AgoraUIEduBaseViews' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   sourcePod
+
+  pod 'Masonry'
+  pod 'SwifterSwift'
 end
