@@ -24,7 +24,7 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
   spec.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
 
-  spec.dependency "AgoraUIBaseViews"
-  spec.dependency "AgoraExtApp"
-  spec.dependency "AgoraWidget"
+  spec.dependency "AgoraUIBaseViews",'>= 2.0.0'
+  spec.dependency "AgoraExtApp",'>= 2.0.0'
+  spec.dependency "AgoraWidget",'>= 2.0.0'
 end
