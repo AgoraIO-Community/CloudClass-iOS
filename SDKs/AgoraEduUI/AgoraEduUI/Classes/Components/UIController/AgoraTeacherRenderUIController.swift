@@ -116,7 +116,15 @@ extension AgoraTeacherRenderUIController: AgoraEduStreamHandler {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: nil)
+        let emptyStream = AgoraEduContextStreamInfo(streamUuid: stream.streamUuid,
+                                                    streamName: stream.streamName,
+                                                    streamType: .none,
+                                                    videoSourceType: .none,
+                                                    audioSourceType: .none,
+                                                    videoSourceState: .error,
+                                                    audioSourceState: .error,
+                                                    owner: stream.owner)
+        self.updateStream(stream: emptyStream)
     }
 }
 // MARK: - AgoraEduMediaHandler
