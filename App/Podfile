@@ -34,7 +34,7 @@ target 'AgoraEducation' do
   # open sources widgets and extApps
   pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets.podspec'
   pod 'ChatWidget', :path => '../../apaas-extapp-ios/Widgets/ChatWidget/ChatWidget.podspec'
-  pod 'AgoraExtApps', :path => '../../apaas-extapp-ios/ExtApps/AgoraExtApps.podspec'
+  pod 'AgoraExtApps', :path => '../../apaas-extapp-ios/ExtApps/AgoraExtApps_Local.podspec'
    
   # close source libs
   pod 'AgoraEduCore', '2.0.1'
