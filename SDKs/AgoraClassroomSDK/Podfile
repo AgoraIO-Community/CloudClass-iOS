@@ -31,14 +31,14 @@ end
 
 def openSourceLibs
   # open source libs
-  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext.podspec' 
-  pod 'AgoraEduUI', :path => '../AgoraEduUI/AgoraEduUI.podspec'
+  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext_Local.podspec' 
+  pod 'AgoraEduUI', :path => '../AgoraEduUI/AgoraEduUI_Local.podspec'
   pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
 end
 
 def widgetsExtApps
-  pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets.podspec'
-  pod 'ChatWidget', :path => '../../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget.podspec'
+  pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets_Local.podspec'
+  pod 'ChatWidget', :path => '../../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget_Local.podspec'
   pod 'AgoraExtApps', :path => '../../../open-apaas-extapp-ios/ExtApps/AgoraExtApps_Local.podspec'
 end
 

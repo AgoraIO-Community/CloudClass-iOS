@@ -1,40 +1,37 @@
-Pod::Spec.new do |s|
-  s.name         = "AgoraEduUI"
-  s.version      = '2.0.0'
-  s.summary      = "Agora Edu UI"
-  s.description  = "Agora Edu UI SDK"
+Pod::Spec.new do |spec|
+  spec.name         = "AgoraEduUI"
+  spec.version      = "2.0.0"
+  spec.summary      = "Agora Edu UI"
+  spec.description  = "Agora Edu UI SDK"
+  spec.homepage     = "https://docs.agora.io/en/agora-class/landing-page?platform=iOS"
+  spec.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
+  spec.author       = { "Agora Lab" => "developer@agora.io" }
+  spec.module_name  = "AgoraEduUI"
 
-  s.homepage     = 'https://docs.agora.io/en/agora-class/landing-page?platform=iOS'
-  s.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
-  s.author       = { "Agora Lab" => "developer@agora.io" }
-  s.source       = { :git => 'git@github.com:AgoraIO-Community/CloudClass-iOS.git', :tag => 'AgoraEduUI_v' + "#{s.version.to_s}" }
-  s.ios.deployment_target = "10.0"
-  s.module_name  = 'AgoraEduUI'
+  spec.ios.deployment_target = "10.0"
+  spec.swift_versions        = ["5.0", "5.1", "5.2", "5.3", "5.4"]
 
-  s.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
-  s.xcconfig = { 'BUILD_LIBRARY_FOR_DISTRIBUTION' => 'YES' }
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64', 'DEFINES_MODULE' => 'YES' }
-  s.pod_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
-  s.user_target_xcconfig = { 'VALID_ARCHS' => 'arm64 armv7 x86_64' }
+  spec.source              = { :git => "git@github.com:AgoraIO-Community/CloudClass-iOS.git", :tag => "AgoraEduUI_v" + "#{spec.version.to_s}" }
+  spec.public_header_files = "SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.h"
+  spec.source_files        = "SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.{h,m,swift}"
   
-  s.public_header_files = "SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.h", "AgoraEduUI/**/*.h"
+  spec.dependency "AgoraUIEduBaseViews", ">=2.0.0"
+  spec.dependency "AgoraUIBaseViews", ">=2.0.0"
+  spec.dependency "AgoraEduContext", "2.0.0"
+  spec.dependency "AgoraExtApp", ">=2.0.0"
+  spec.dependency "AgoraWidget", ">=2.0.0"
+  spec.dependency "SwifterSwift"
+  spec.dependency "Masonry"
   
-  s.source_files = 'SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.{h,m,swift}', 'AgoraEduUI/Classes/**/*.{h,m,swift}'
+  spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
+  spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
+  spec.pod_target_xcconfig  = { "VALID_ARCHS" => "arm64 armv7 x86_64" } 
+  spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
+  spec.xcconfig             = { "BUILD_LIBRARY_FOR_DISTRIBUTION" => "YES" }
 
-  s.dependency "AgoraEduContext"
-  s.dependency "AgoraUIEduBaseViews"
-  s.dependency "AgoraUIBaseViews"
-  s.dependency "AgoraExtApp"
-  s.dependency "AgoraWidget"
-  s.dependency "Masonry"
-  s.dependency "SwifterSwift"
-  
-  s.subspec 'Resources' do |ss|
+  spec.subspec "Resources" do |ss|
     ss.resource_bundles = {
-      'AgoraEduUI' => ['SDKs/AgoraEduUI/AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}'],
-      'AgoraEduUI' => ['AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}']
+      "AgoraEduUI" => ["SDKs/AgoraEduUI/AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}"]
     }
   end
-  
 end

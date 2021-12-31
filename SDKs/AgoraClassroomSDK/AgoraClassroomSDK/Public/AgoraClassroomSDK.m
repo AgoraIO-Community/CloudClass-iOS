@@ -14,9 +14,7 @@
 #endif
 
 #import <AgoraEduContext/AgoraEduContext-Swift.h>
-#import <AgoraWidgets/AgoraWidgets-Swift.h>
 #import <AgoraEduUI/AgoraEduUI-Swift.h>
-#import <AgoraWidget/AgoraWidget.h>
 #import "AgoraInternalClassroom.h"
 #import "AgoraClassroomSDK.h"
 
