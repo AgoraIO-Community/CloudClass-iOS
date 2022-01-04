@@ -124,7 +124,7 @@ def addLeaksFinderFunction(lines):
     
     print("Add function for MLeaksFinder")
     keyword = "target"
-    funcName = "find_and_replace"
+    funcName = "def find_and_replace"
     addIndex = -1
     for index,str in enumerate(lines):
         if funcName in str:
@@ -134,8 +134,8 @@ def addLeaksFinderFunction(lines):
             addIndex = index
     
     if addIndex != -1:
-        newStr = LeaksFinderContent + "\n" + lines[index]
-        lines[index] = newStr
+        newStr = LeaksFinderContent + "\n" + lines[addIndex]
+        lines[addIndex] = newStr
 
 
 def generatePodfile():
