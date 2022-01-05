@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AgoraUIBaseViews
 
 protocol RoomInfoCellDelegate: AnyObject {
     /** 开始编辑cell上的文字*/
@@ -36,7 +37,7 @@ class RoomInfoCell: AgoraBaseUITableViewCell {
     
     var lineView: AgoraBaseUIView!
     
-    var maxInputLenth = 20
+    let maxInputLength = 50
     
     private var indicatorView: AgoraBaseUIImageView!
     
@@ -122,12 +123,14 @@ extension RoomInfoCell: UITextFieldDelegate {
         delegate?.infoCellDidEndEditing(cell: self)
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
         guard let text = textField.text else {
             return false
         }
         let strLength = text.count - range.length + string.count
-        return strLength <= maxInputLenth
+        return strLength <= maxInputLength
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {

@@ -23,7 +23,7 @@ def main():
     else:
         print("default dev evni in environment.py")
      
-    f = open(App_Path + "/AgoraEducation/Main/Controllers/LoginViewController.swift", 'r+')
+    f = open(App_Path + "/AgoraEducation/Debug/DebugViewController.swift", 'r+')
     content = f.read()
     
     print(App_Path)
@@ -38,7 +38,7 @@ def main():
         string = string1 + string2 + string3
     
         content = content[:position] + string + content[position:]
-        content = re.sub(r'environment: .pro,', TokenEnvi, content)
+        content = re.sub(r'environment: .pro', TokenEnvi, content)
         
         f.seek(0)
         f.write(content)

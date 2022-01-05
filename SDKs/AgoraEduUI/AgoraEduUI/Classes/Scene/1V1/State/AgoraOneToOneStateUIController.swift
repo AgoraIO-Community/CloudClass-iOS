@@ -17,6 +17,8 @@ protocol AgoraOneToOneStateUIControllerDelegate: NSObjectProtocol {
 
 class AgoraOneToOneStateUIController: UIViewController {
     
+    public weak var roomDelegate: AgoraClassRoomManagement?
+    
     public weak var delegate: AgoraOneToOneStateUIControllerDelegate?
     
     private var netStateView: UIImageView!
@@ -63,6 +65,7 @@ class AgoraOneToOneStateUIController: UIViewController {
         })
         contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
     }
     
     public func deSelect() {
@@ -82,34 +85,15 @@ extension AgoraOneToOneStateUIController {
                                            closeDelay: info.closeDelay * 1000)
     }
     
-    func classOverAlert() {
-        AgoraAlert()
-            .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
-            .setMessage(AgoraKitLocalizedString("ClassOverText"))
-            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
-            }))
-            .show(in: self)
-    }
-    
     func timeString(from interval: Int64) -> String {
         let time = interval > 0 ? (interval / 1000) : 0
-        let hourInt = time / 3600
-        let minuteInt = (time - 3600 * hourInt) / 60
+        let minuteInt = time / 60
         let secondInt = time % 60
         
-        let hourString = NSString(format: "%02d", hourInt) as String
         let minuteString = NSString(format: "%02d", minuteInt) as String
         let secondString = NSString(format: "%02d", secondInt) as String
-        
-        let hourText = AgoraKitLocalizedString("ClassTimeHourText")
-        let minuteText = AgoraKitLocalizedString("ClassTimeMinuteText")
-        let secondText = AgoraKitLocalizedString("ClassTimeSecondText")
-        if hourInt > 0 {
-            return "\(hourString)\(hourText)\(minuteString)\(minuteText)\(secondString)\(secondText)"
-        } else {
-            return "\(minuteString)\(minuteText)\(secondString)\(secondText)"
-        }
+
+        return "\(minuteString):\(secondString)"
     }
 }
 
@@ -134,7 +118,7 @@ extension AgoraOneToOneStateUIController {
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch info.state {
         case .before:
-            timeLabel.textColor = UIColor(rgb: 0x677386)
+            timeLabel.textColor = UIColor(hex: 0x677386)
             if info.startTime == 0 {
                 timeLabel.text = "title_before_class".ag_localizedIn("AgoraEduUI")
             } else {
@@ -170,7 +154,7 @@ extension AgoraOneToOneStateUIController {
                 AgoraToast.toast(msg: strStart + strMid + strEnd)
             }
         case .during:
-            timeLabel.textColor = UIColor(rgb: 0x677386)
+            timeLabel.textColor = UIColor(hex: 0x677386)
             let time = realTime - info.startTime
             let text = AgoraUILocalizedString("ClassAfterStartText",
                                               object: self)
@@ -200,7 +184,56 @@ extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
     }
     
     func onRoomClosed() {
-        classOverAlert()
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
+            .setMessage(AgoraKitLocalizedString("ClassOverText"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.roomDelegate?.exitClassRoom(reason: .normal)
+            }))
+            .show(in: self)
+    }
+}
+
+// MARK: - AgoraEduUserHandler
+extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
+    func onLocalUserKickedOut() {
+        AgoraAlert()
+            .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
+            .setMessage("local_user_kicked_out".ag_localizedIn("AgoraEduUI"))
+            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+                self.roomDelegate?.exitClassRoom(reason: .kickOut)
+            }))
+            .show(in: self)
+    }
+    
+    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
+                               operatorUser: AgoraEduContextUserInfo?) {
+        let localUUID = contextPool.user.getLocalUserInfo().userUuid
+        if let _ = userList.first(where: {$0.userUuid == localUUID}) {
+            // 老师邀请你上台了，与大家积极互动吧
+            AgoraToast.toast(msg: "toast_student_stage_on".ag_localizedIn("AgoraEduUI"),
+                             type: .notice)
+        }
+    }
+    
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        let localUUID = contextPool.user.getLocalUserInfo().userUuid
+        if let _ = userList.first(where: {$0.userUuid == localUUID}) {
+            // 你离开讲台了，暂时无法与大家互动
+            AgoraToast.toast(msg: "toast_student_stage_off".ag_localizedIn("AgoraEduUI"),
+                             type: .error)
+        }
+    }
+    
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        // 祝贺**获得奖励
+        let str = String.init(format: "toast_reward_student_xx".ag_localizedIn("AgoraEduUI"),
+                              user.userName)
+        AgoraToast.toast(msg: str,
+                         type: .notice)
     }
 }
 
@@ -220,6 +253,23 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
             netStateView.image = UIImage.ag_imageNamed("ic_network_bad",
                                                        in: "AgoraEduUI")
         default: break
+        }
+    }
+    
+    func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
+        switch state {
+        case .aborted:
+            // 踢出
+            AgoraLoading.hide()
+            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
+                             type: .error)
+            self.roomDelegate?.exitClassRoom(reason: .kickOut)
+        case .connecting:
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
+        case .disconnected, .reconnecting:
+            AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
+        case .connected:
+            AgoraLoading.hide()
         }
     }
 }
@@ -243,12 +293,12 @@ private extension AgoraOneToOneStateUIController {
         
         titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 9)
-        titleLabel.textColor = UIColor(rgb: 0x191919)
+        titleLabel.textColor = UIColor(hex: 0x191919)
         view.addSubview(titleLabel)
         
         timeLabel = UILabel()
         timeLabel.font = UIFont.systemFont(ofSize: 9)
-        timeLabel.textColor = UIColor(rgb: 0x677386)
+        timeLabel.textColor = UIColor(hex: 0x677386)
         view.addSubview(timeLabel)
         
         settingButton = UIButton(type: .custom)
@@ -257,7 +307,7 @@ private extension AgoraOneToOneStateUIController {
             .withRenderingMode(.alwaysTemplate) {
             settingButton.setImageForAllStates(settingIMG)
         }
-        settingButton.imageView?.tintColor = UIColor(rgb: 0x7B88A0)
+        settingButton.imageView?.tintColor = UIColor(hex: 0x7B88A0)
         settingButton.addTarget(self, action: #selector(onClickSetting(_:)),
                                 for: .touchUpInside)
         settingButton.layer.cornerRadius = 20 * 0.5

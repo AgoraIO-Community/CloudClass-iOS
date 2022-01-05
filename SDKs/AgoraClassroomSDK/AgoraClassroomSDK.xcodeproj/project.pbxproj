@@ -387,7 +387,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_dylib;
-				MARKETING_VERSION = 1.1.5.2;
+				MARKETING_VERSION = 2.0.0;
 				MODULEMAP_FILE = AgoraClassroomSDK/AgoraClassroomSDK.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraClassroomSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -426,7 +426,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = mh_dylib;
-				MARKETING_VERSION = 1.1.5.2;
+				MARKETING_VERSION = 2.0.0;
 				MODULEMAP_FILE = AgoraClassroomSDK/AgoraClassroomSDK.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraClassroomSDK;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";

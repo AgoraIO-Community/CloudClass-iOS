@@ -63,7 +63,7 @@ class AgoraHandsUpItemCell: UITableViewCell {
 extension AgoraHandsUpItemCell {
     func createViews() {
         nameLabel = UILabel()
-        nameLabel.textColor = UIColor(rgb: 0x191919)
+        nameLabel.textColor = UIColor(hex: 0x191919)
         nameLabel.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(nameLabel)
         

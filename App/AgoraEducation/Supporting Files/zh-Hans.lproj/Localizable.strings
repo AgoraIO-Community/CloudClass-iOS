@@ -7,7 +7,7 @@
 */
 
 OneToOneText = "一对一";
-SmallClassText = "小班课";
+SmallClassText = "互动小班课";
 BigClassText = "大班课";
 BreakOutClassText = "超级小班课";
 MediumClassText = "中班课";
@@ -42,7 +42,7 @@ Login_onetoone = "一对一课堂";
 Login_small = "互动小班课";
 Login_lecture = "大班课";
 login_painting_small = "美术小班课";
-Login_warn = "只能输入字母、数字";
+Login_warn = "只能输入6-50位字符(字母、数字)";
 Login_duration_title = "时长";
 Login_duration_holder = "30分钟";
 login_title_role = "角色";
@@ -56,8 +56,6 @@ About_terms = "用户协议";
 About_disclaimer = "免责声明";
 About_register = "注册声网账号";
 About_version_time = "发版时间";
-About_sdk_version = "SDK版本";
-About_class_version = "灵动课堂版本";
 About_url = "Powered by agora.io";
 
 Privacy_url = "https://www.agora.io/cn/privacy-policy/";
@@ -69,22 +67,3 @@ Disclaimer_detail = "灵动课堂（“本产品”）是由上海兆言网络�
 本产品按“现状”提供，没有任何形式的明示担保，包括但不限于对适配性、特定目的的适用性和非侵权性的担保。无论是由于与本产品或本产品的使用或其他方式有关的任何合同、侵权或其他形式的行为，上海兆言均不对任何索赔、损害或其他责任负责。
 您可以自由选择是否使用本产品提供的服务，如果您下载、安装、使用本产品中所提供的服务，即表明您信任该产品所有人，上海兆言对任何原因在使用本产品中提供的服务时可能对您自身或他人造成的任何形式的损失和伤害不承担任何责任。";
 
-
-// countdown
-Countdown_title = "倒计时";
-
-// Answer sheet
-answer_sheet_title = "答题器";
-answer_sheet_submit_answer = "提交答案";
-answer_sheet_change_answer = "修改答案";
-answer_sheet_begin = "开始答题";
-answer_sheet_restart = "重新开始";
-answer_sheet_end = "结束答题";
-
-answer_sheet_student_name = "学生姓名";
-answer_sheet_student_duration = "答题用时";
-answer_sheet_student_answer = "所选答案";
-answer_sheet_member_count = "已答题人数：";
-answer_sheet_ratio = "正确率：";
-answer_sheet_correct = "正确答案：";
-answer_sheet_mine = "我的答案：";

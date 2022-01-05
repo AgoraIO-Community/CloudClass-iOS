@@ -28,6 +28,8 @@ import AgoraWidget
     private var teacherRenderController: AgoraTeacherRenderUIController!
     /** 白板的渲染 控制器*/
     private var boardController: AgoraBoardUIController!
+    /** 屏幕分享 控制器*/
+    private var screenSharingController: AgoraScreenSharingUIController!
     /** 工具箱 控制器*/
     private lazy var toolBoxViewController: AgoraToolBoxUIController = {
         let vc = AgoraToolBoxUIController(context: contextPool)
@@ -47,25 +49,17 @@ import AgoraWidget
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
-        vc.delegate = self
+        vc.roomDelegate = self
         self.addChild(vc)
         return vc
     }()
     /** 举手 控制器*/
     private var handsUpController: AgoraHandsUpUIController!
+    
+    private var isJoinedRoom = false
         
     deinit {
         print("\(#function): \(self.classForCoder)")
-    }
-    
-    @objc public override init(contextPool: AgoraEduContextPool,
-                               delegate: AgoraEduUIManagerDelegate) {
-        super.init(contextPool: contextPool,
-                   delegate: delegate)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     public override func viewDidLoad() {
@@ -73,25 +67,23 @@ import AgoraWidget
         self.createViews()
         self.createConstrains()
         
-        AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
                 return
             }
+            self.isJoinedRoom = true
             self.createChatController()
-            // 打开本地音视频设备
-            let cameras = self.contextPool.media.getLocalDevices(deviceType: .camera)
-            if let camera = cameras.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
-                let ero = self.contextPool.media.openLocalDevice(device: camera)
-                print(ero)
-            }
-            if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
-                self.contextPool.media.openLocalDevice(device: mic)
-            }
-        } fail: { [weak self] error in
+        } failure: { [weak self] error in
             AgoraLoading.hide()
-            self?.contextPool.room.leaveRoom()
+            self?.exitClassRoom(reason: .normal)
+        }
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isJoinedRoom == false {
+            AgoraLoading.loading()
         }
     }
     
@@ -189,6 +181,7 @@ extension AgoraLectureUIManager: AgoraHandsUpUIControllerDelegate {
 private extension AgoraLectureUIManager {
     func createViews() {
         stateController = AgoraRoomStateUIController(context: contextPool)
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
@@ -210,6 +203,10 @@ private extension AgoraLectureUIManager {
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
+        screenSharingController = AgoraScreenSharingUIController(context: contextPool)
+        addChild(screenSharingController)
+        contentView.addSubview(screenSharingController.view)
+        
         brushToolsController = AgoraBoardToolsUIController(context: contextPool)
         brushToolsController.delegate = self
         self.addChild(brushToolsController)
@@ -222,7 +219,7 @@ private extension AgoraLectureUIManager {
         
         toolsView = AgoraRoomToolstView(frame: view.bounds)
         toolsView.delegate = self
-        toolsView.tools = [.setting, .message]
+        toolsView.tools = [.setting]
         contentView.addSubview(toolsView)
     }
     
@@ -232,6 +229,11 @@ private extension AgoraLectureUIManager {
             make?.height.equalTo()(20)
         }
         boardController.view.mas_makeConstraints { make in
+            make?.left.bottom().equalTo()(0)
+            make?.width.equalTo()(AgoraFit.scale(465))
+            make?.height.equalTo()(AgoraFit.scale(262))
+        }
+        screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(465))
             make?.height.equalTo()(AgoraFit.scale(262))
@@ -265,21 +267,20 @@ private extension AgoraLectureUIManager {
     }
     
     func createChatController() {
-        chatController = AgoraChatUIController()
-        chatController.contextPool = contextPool
+        chatController = AgoraChatUIController(context: contextPool)
+        chatController.hideMiniButton = true
         addChild(chatController)
+        chatController.view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                                        transparency: 0.15)?.cgColor
+        chatController.view.layer.shadowOffset = CGSize(width: 0,
+                                                        height: 2)
+        chatController.view.layer.shadowOpacity = 1
+        chatController.view.layer.shadowRadius = 6
         contentView.addSubview(chatController.view)
         chatController.view.mas_makeConstraints { make in
             make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.equalTo()(boardController.view.mas_right)?.offset()(AgoraFit.scale(2))
             make?.right.bottom().equalTo()(0)
         }
-    }
-}
-
-// MARK: - AgoraSettingUIControllerDelegate
-extension AgoraLectureUIManager: AgoraSettingUIControllerDelegate {
-    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
-        exit(reason: .normal)
     }
 }

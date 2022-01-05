@@ -58,8 +58,8 @@ class AgoraToolBoxUIController: UIViewController {
 // MARK: - UI
 extension AgoraToolBoxUIController {
     func createViews() {
-        view.layer.shadowColor = UIColor(rgb: 0x2F4192,
-                                         alpha: 0.15).cgColor
+        view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 6
@@ -70,7 +70,7 @@ extension AgoraToolBoxUIController {
                                        collectionViewLayout: layout)
         toolBoxView.delegate = self
         toolBoxView.dataSource = self
-        toolBoxView.backgroundColor = UIColor(rgb: 0xEEEEF7)
+        toolBoxView.backgroundColor = UIColor(hex: 0xEEEEF7)
         toolBoxView.layer.cornerRadius = 10.0
         toolBoxView.clipsToBounds = true
         toolBoxView.showsHorizontalScrollIndicator = false
@@ -151,17 +151,17 @@ extension AgoraToolBoxUIController: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         didHighlightItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? AgoraToolBoxItemCell
-        cell?.backgroundColor = UIColor(rgb: 0xF9F9FC)
-        cell?.titleLabel.textColor = UIColor(rgb: 0x191919)
-        cell?.imageView.tintColor = UIColor(rgb: 0x191919)
+        cell?.backgroundColor = UIColor(hex: 0xF9F9FC)
+        cell?.titleLabel.textColor = UIColor(hex: 0x191919)
+        cell?.imageView.tintColor = UIColor(hex: 0x191919)
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         didUnhighlightItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? AgoraToolBoxItemCell
         cell?.backgroundColor = .white
-        cell?.titleLabel.textColor = UIColor(rgb: 0x7B88A0)
-        cell?.imageView.tintColor = UIColor(rgb: 0x7B88A0)
+        cell?.titleLabel.textColor = UIColor(hex: 0x7B88A0)
+        cell?.imageView.tintColor = UIColor(hex: 0x7B88A0)
     }
     
     func collectionView(_ collectionView: UICollectionView,

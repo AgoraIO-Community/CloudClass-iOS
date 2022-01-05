@@ -6,23 +6,25 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-import Foundation
 import AgoraUIBaseViews
 
 @objcMembers public class AboutView: AgoraBaseUIView,
                                      UITableViewDataSource,
-                                     UITableViewDelegate{
+                                     UITableViewDelegate {
     private lazy var contentView: AgoraBaseUIView = {
         var contentView = AgoraBaseUIView()
         contentView.backgroundColor = LoginConfig.device == .iPad ? .white : UIColor(hexString: "F9F9FC")
         
         contentView.layer.cornerRadius = 8
-        //        contentView.layer.backgroundColor = UIColor.white.cgColor
         contentView.layer.borderWidth = 1
         contentView.layer.borderColor = UIColor(hexString: "ECECF1").cgColor
         
-        contentView.layer.shadowColor = UIColor(red: 0.18, green: 0.25, blue: 0.57, alpha: 0.15).cgColor
-        contentView.layer.shadowOffset = CGSize(width: 0, height: 1.5)
+        contentView.layer.shadowColor = UIColor(red: 0.18,
+                                                green: 0.25,
+                                                blue: 0.57,
+                                                alpha: 0.15).cgColor
+        contentView.layer.shadowOffset = CGSize(width: 0,
+                                                height: 1.5)
         contentView.layer.shadowOpacity = 1
         contentView.layer.shadowRadius = 5
         
@@ -35,14 +37,17 @@ import AgoraUIBaseViews
         titleView.layer.cornerRadius = 8
         
         var titleLabel = AgoraBaseUILabel()
-        titleLabel.text = NSLocalizedString("About_title", comment: "")
+        titleLabel.text = NSLocalizedString("About_title",
+                                            comment: "")
         titleLabel.backgroundColor = .white
         titleLabel.textAlignment = .center
         titleLabel.font = LoginConfig.about_title_font
         titleLabel.textColor = UIColor(hexString: "191919")
         
         var backBtn = AgoraBaseUIButton()
-        backBtn.addTarget(self, action: #selector(onTouchBack), for: .touchUpInside)
+        backBtn.addTarget(self,
+                          action: #selector(onTouchBack),
+                          for: .touchUpInside)
         
         titleView.addSubview(titleLabel)
         
@@ -50,8 +55,11 @@ import AgoraUIBaseViews
             titleLabel.agora_center_x = 0
             titleLabel.agora_center_y = 0
             
-            backBtn.setTitle(NSLocalizedString("About_close", comment: ""), for: .normal)
-            backBtn.setTitleColor(UIColor(hexString: "357BF6"), for: .normal)
+            backBtn.setTitle(NSLocalizedString("About_close",
+                                               comment: ""),
+                             for: .normal)
+            backBtn.setTitleColor(UIColor(hexString: "357BF6"),
+                                  for: .normal)
             backBtn.titleLabel?.font = LoginConfig.about_title_font
             titleView.addSubview(backBtn)
             
@@ -60,11 +68,16 @@ import AgoraUIBaseViews
             
             titleView.addBottomLine()
         } else {
-            titleView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.05).cgColor
-            titleView.layer.shadowOffset = CGSize(width: 0, height: 1)
+            titleView.layer.shadowColor = UIColor(red: 0,
+                                                  green: 0,
+                                                  blue: 0,
+                                                  alpha: 0.05).cgColor
+            titleView.layer.shadowOffset = CGSize(width: 0,
+                                                  height: 1)
             titleView.layer.shadowOpacity = 1
             titleView.layer.shadowRadius = 1
-            backBtn.setBackgroundImage(UIImage(named: "about_back"), for: .normal)
+            backBtn.setBackgroundImage(UIImage(named: "about_back"),
+                                       for: .normal)
             
             titleView.addSubview(backBtn)
             
@@ -84,16 +97,19 @@ import AgoraUIBaseViews
         tab.delegate = self
         tab.showsVerticalScrollIndicator = false
         tab.showsHorizontalScrollIndicator = false
+        tab.separatorColor = UIColor(hexString: "EEEEF7")
         tab.isScrollEnabled = false
         
         tab.tableFooterView = UIView(frame: .zero)
-        tab.register(AboutTableCell.self, forCellReuseIdentifier: LoginConfig.About_cell_id)
+        tab.register(AboutTableCell.self,
+                     forCellReuseIdentifier: LoginConfig.About_cell_id)
         return tab
     }()
     
     private lazy var bottomLabel: AgoraBaseUILabel = {
         var label = AgoraBaseUILabel()
-        label.text = NSLocalizedString("About_url", comment: "")
+        label.text = NSLocalizedString("About_url",
+                                       comment: "")
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = UIColor(hexString: "7D8798")
         label.textAlignment = .center
@@ -134,12 +150,15 @@ import AgoraUIBaseViews
     
     
     // MARK: UITableViewDataSource & UITableViewDelegate
-    @objc public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    @objc public func tableView(_ tableView: UITableView,
+                                numberOfRowsInSection section: Int) -> Int {
         return LoginConfig.AboutInfoList.count
     }
     
-    @objc public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let tabCell = tableView.dequeueReusableCell(withIdentifier: LoginConfig.About_cell_id, for: indexPath) as! AboutTableCell
+    @objc public func tableView(_ tableView: UITableView,
+                                cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let tabCell = tableView.dequeueReusableCell(withIdentifier: LoginConfig.About_cell_id,
+                                                    for: indexPath) as! AboutTableCell
         if indexPath.row == (LoginConfig.AboutInfoList.count - 1) &&
             LoginConfig.device == .iPad {
             tabCell.separatorInset = UIEdgeInsets(top: 0,
@@ -153,16 +172,19 @@ import AgoraUIBaseViews
                                                   right: 10)
         }
         
-        tabCell.setInfo(title: LoginConfig.AboutInfoList[indexPath.row].0, detail: LoginConfig.AboutInfoList[indexPath.row].1)
+        tabCell.setInfo(title: LoginConfig.AboutInfoList[indexPath.row].0,
+                        detail: LoginConfig.AboutInfoList[indexPath.row].1)
         
         return tabCell
     }
     
-    @objc public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    @objc public func tableView(_ tableView: UITableView,
+                                heightForRowAt indexPath: IndexPath) -> CGFloat {
         return LoginConfig.about_cell_height
     }
     
-    @objc public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    @objc public func tableView(_ tableView: UITableView,
+                                didSelectRowAt indexPath: IndexPath) {
         guard let detail = LoginConfig.AboutInfoList[indexPath.row].1 else {
             return
         }
@@ -215,7 +237,8 @@ import AgoraUIBaseViews
                                 detailView.agora_right = 0
                                 detailView.agora_bottom = 0
                                 detailView.alpha = 1
-                                detailView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+                                detailView.transform = CGAffineTransform(scaleX: 1.0,
+                                                                         y: 1.0)
                                 detailView.layoutIfNeeded()
                                }, completion: nil)
             }
@@ -225,9 +248,8 @@ import AgoraUIBaseViews
 }
 
 // MARK: UI
-extension AboutView {
-    private func initView(){
-        
+private extension AboutView {
+    func initView() {
         switch LoginConfig.device {
         case .iPhone_Big: fallthrough
         case .iPhone_Small:
@@ -241,10 +263,9 @@ extension AboutView {
         contentView.addSubview(titleView)
         contentView.addSubview(infoTable)
         contentView.addSubview(bottomLabel)
-        
     }
     
-    private func initLayout(){
+    func initLayout() {
         switch LoginConfig.device {
         case .iPhone_Big: fallthrough
         case .iPhone_Small: 
@@ -259,7 +280,7 @@ extension AboutView {
             contentView.agora_center_x = 0
             contentView.agora_center_y = 0
             contentView.agora_width = 420
-            contentView.agora_height = 320
+            contentView.agora_height = LoginConfig.about_cell_height * CGFloat(LoginConfig.AboutInfoList.count) + LoginConfig.about_title_height
         }
         
         titleView.agora_x = 0
@@ -275,7 +296,6 @@ extension AboutView {
         bottomLabel.agora_bottom = 31
         bottomLabel.agora_center_x = 0
     }
-    
 }
 
 extension AgoraBaseUIView {

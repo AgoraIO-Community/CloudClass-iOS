@@ -17,10 +17,6 @@ DuplicateLaunchText = "already launched";
 UnInitializedText = " not initialized";
 
 // ------------------------------------------------
-ClassTimeHourText = "h";
-ClassTimeMinuteText = "m";
-ClassTimeMinute2Text = "m";
-ClassTimeSecondText = "s";
 ClassBeforeStartText = "Class will begin after：";
 ClassAfterStartText = "Class begins：";
 ClassAfterStopText = "Class ends：";
@@ -82,11 +78,23 @@ kick_out_once = "Move out of the classroom only once";
 kick_out_forever = "Prevent re-entry into the classroom";
 kick_out_submit = "Submit";
 kick_out_cancel = "Cancel";
+local_user_kicked_out = "You have been removed from the classroom";
 
 one_to_one_tab_video = "Video";
 one_to_one_tab_chat = "Chat";
 
-render_state_camera_off = "Camera is turned off";
-render_state_camera_disable = "Camera is disabled";
-render_state_student_off = "Student is not in the classroom";
-render_state_teacher_off = "Teacher is not in the classroom";
+// Toast
+toast_student_stage_on = "The teacher invited you to the podium. Let's have a positive interaction with you";
+toast_student_stage_off = "You left the podium and can't interact with everyone for the time being";
+
+toast_student_audio_stream_on = "The teacher has turned on your microphone and you are able to speak now";
+toast_student_audio_stream_off = "The teacher has turned off your microphone. You are not able to speak now";
+
+toast_student_video_stream_on = "The teacher has turned on your camera. Let's have a positive interaction with you";
+toast_student_video_stream_off = "The teacher has turned off your camera. You can't interact with everyone for the time being";
+
+toast_reward_student_xx = "Congratulations to %@ for the award";
+
+// board
+board_granted = "You have been authorized by the teacher. Please use the whiteboard tool to interact";
+board_ungranted = "Your authorization has been cancelled by the teacher. You can't interact with whiteboard tools";

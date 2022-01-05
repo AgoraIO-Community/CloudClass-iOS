@@ -22,6 +22,8 @@ class AgoraOneToOneTabView: UIView {
     
     private var chatRemindLabel: UILabel!
     
+    private var chatRemindDot: UIView!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -43,6 +45,10 @@ class AgoraOneToOneTabView: UIView {
             chatRemindLabel.text = "\(count)"
             chatRemindLabel.isHidden = false
         }
+    }
+    
+    public func updateChatRedDot(isShow: Bool) {
+        chatRemindDot.isHidden = !isShow
     }
     
     @objc private func onClickVideoButton(_ sender: UIButton) {
@@ -101,6 +107,14 @@ class AgoraOneToOneTabView: UIView {
         chatRemindLabel.textColor = .white
         chatRemindLabel.isUserInteractionEnabled = false
         self.addSubview(chatRemindLabel)
+        
+        chatRemindDot = UIView()
+        chatRemindDot.isHidden = true
+        chatRemindDot.isUserInteractionEnabled = false
+        chatRemindDot.backgroundColor = UIColor(hex: 0xF04C36)
+        chatRemindDot.layer.cornerRadius = 2
+        chatRemindDot.clipsToBounds = true
+        self.addSubview(chatRemindDot)
     }
     
     private func createConstrains() {
@@ -117,6 +131,11 @@ class AgoraOneToOneTabView: UIView {
             make?.height.equalTo()(14)
             make?.width.greaterThanOrEqualTo()(14)
             make?.top.right().equalTo()(chatButton)
+        }
+        chatRemindDot.mas_makeConstraints { make in
+            make?.width.height().equalTo()(4)
+            make?.top.equalTo()(chatButton)?.offset()(10)
+            make?.right.equalTo()(chatButton)?.offset()(-10)
         }
     }
 }

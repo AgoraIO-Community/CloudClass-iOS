@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraUIEduBaseViews.AgoraFiles.AgoraAnimatedImage
 
 public class AgoraLoading: NSObject {
     
@@ -124,8 +125,8 @@ fileprivate class AgoraLoadingView: UIView {
         contentView = UIView()
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 15
-        contentView.layer.shadowColor = UIColor(rgb: 0x2F4192,
-                                                alpha: 0.15).cgColor
+        contentView.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                                transparency: 0.15)?.cgColor
         contentView.layer.shadowOffset = CGSize(width: 0,
                                                 height: 2)
         contentView.layer.shadowOpacity = 1

@@ -1,120 +1,41 @@
-# Uncomment the next line to define a global platform for your project
-# source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '10.0'
 inhibit_all_warnings!
-
-def libVersion
-  pod 'Protobuf', '3.17.0'
-  pod "AFNetworking", "4.0.1"
-  pod "CocoaLumberjack", "3.6.1"
-  pod "AliyunOSSiOS", "2.10.8"
-  pod "Armin", "1.0.9"
-  pod "Alamofire", "4.7.3"
-  pod "SSZipArchive", "2.4.2"
-  
-  pod "AgoraRtm_iOS", "1.4.8"
-  pod "Whiteboard", "2.15.1"
-
-  pod "SwifterSwift", "5.2.0" 
-  pod "Masonry"
-
-  pod "HyphenateChat", "3.8.6"
-  pod "SDWebImage", "5.12.0"
-end
-
-def preRtc
-   pod 'AgoraClassroomSDK_iOS/PreRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_iOS.podspec'
-   pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
-   pod 'AgoraRte/PreRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
-   pod "AgoraRtcEngine_iOS", "3.4.6"
-end
-
-def reRtc
-   pod 'AgoraClassroomSDK_iOS/ReRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_iOS.podspec'
-   pod 'AgoraEduCore/ReRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
-   pod 'AgoraRte/ReRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
-   pod 'AgoraRtcKit', :path => '../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'
-end
-
-def openSourceLibs
-  pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext.podspec'
-  pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
-end
-
-def sourcePod
-  # common libs
-  pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
-  pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
-  pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
-
-  # open source libs
-  openSourceLibs
-
-  # rtc
-  preRtc
-
-  # widgets
-  pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
-  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE']
-end
-
-def binaryPod
-  pod 'AgoraClassroomSDK', :path => '../Products/AgoraClassroomSDK_Binary.podspec'
-  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['BINARY']
-
-  pod "AgoraRtcEngine_iOS", "3.4.6"
-end
-
-def halfBinaryPod
-  # open source libs
-  openSourceLibs
-  
-  # close source libs
-  pod 'AgoraEduCore', '1.1.5.4'
-
-  # common libs
-  pod 'AgoraUIBaseViews', '1.0.1'
-  pod 'AgoraExtApp', '1.0.0'
-  pod 'AgoraWidget', '1.0.0'
-
-  # widgets
-  pod 'AgoraWidgets', :path => '../Widgets/AgoraWidgets/AgoraWidgets.podspec'
-  pod 'ChatWidget', :path => '../Widgets/ChatWidget/ChatWidget.podspec', :subspecs => ['SOURCE'] 
-end
-
+ 
 workspace 'AgoraEducation.xcworkspace'
 install! 'cocoapods', :deterministic_uuids => false, :warn_for_unused_master_specs_repo => false
-
-def find_and_replace(dir, findstr, replacestr)
-  Dir[dir].each do |name|
-      text = File.read(name)
-      replace = text.gsub(findstr,replacestr)
-      if text != replace
-          puts "Fix: " + name
-          File.open(name, "w") { |file| file.puts replace }
-          STDOUT.flush
-      end
-  end
-  Dir[dir + '*/'].each(&method(:find_and_replace))
-end
-
+ 
 target 'AgoraEducation' do
   use_frameworks!
-  
-  pod 'MLeaksFinder'
+ 
+  # third libs
   pod 'OpenSSL-Universal', '1.0.2.17'
-  
-  libVersion
-    
-  #sourcePod
-  #binaryPod
-  halfBinaryPod
-  
-  post_install do |installer|
-    ## Fix for XCode 12.5
-    find_and_replace("Pods/FBRetainCycleDetector/FBRetainCycleDetector/Layout/Classes/FBClassStrongLayout.mm",
-      "layoutCache[currentClass] = ivars;", "layoutCache[(id<NSCopying>)currentClass] = ivars;")
-   end
+  pod 'Protobuf', '3.17.0'
+  pod "CocoaLumberjack", '3.6.1'
+  pod 'AliyunOSSiOS',  '2.10.8'
+  pod 'Armin',  '1.0.9'
+  pod 'Alamofire', '4.7.3'
+  pod 'SSZipArchive', '2.4.2'
+  pod 'SwifterSwift', '5.2.0'
+  pod 'Masonry'
+  pod 'SDWebImage', '5.12.0'
+  pod 'WHToast'
+ 
+  # agora libs
+  pod 'AgoraRtm_iOS', '1.4.8'
+  pod 'Whiteboard', '2.15.16'
+  pod 'AgoraRtcEngine_iOS', '3.4.6'
+  pod 'HyphenateChat', '3.8.6'
+ 
+  # open source libs
+  pod 'AgoraClassroomSDK_iOS', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_Local.podspec'
+  pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext_Local.podspec'
+  pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI_Local.podspec'
+   
+  # open sources widgets and extApps
+  pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets_Local.podspec'
+  pod 'ChatWidget', :path => '../../apaas-extapp-ios/Widgets/ChatWidget/ChatWidget_Local.podspec'
+  pod 'AgoraExtApps', :path => '../../apaas-extapp-ios/ExtApps/AgoraExtApps_Local.podspec'
+   
+  # close source libs
+  pod 'AgoraEduCore', '2.0.1'
 end
-

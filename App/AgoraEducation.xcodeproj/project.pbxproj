@@ -7,48 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		15D1CB6F27700021002D4CA0 /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 15D1CB6D27700021002D4CA0 /* UIColor+Addition.m */; };
 		1A44BE7522BF863000766274 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A44BE5722BF863000766274 /* Assets.xcassets */; };
 		1A44BE7A22BF863000766274 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE5E22BF863000766274 /* main.m */; };
 		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
 		2616FAB2271EC4530086397B /* TokenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2616FAB1271EC4530086397B /* TokenBuilder.swift */; };
 		683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683622D5262AC4620028F7F5 /* DisclaimerView.swift */; };
 		68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68362356262D30C20028F7F5 /* BaseLoginObject.swift */; };
+		68403F83276C859800E88214 /* AppExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861D3CFA276AE05E00645D6A /* AppExtension.swift */; };
 		6861690E26AEAC3C00E26F69 /* TermsAndPolicyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6861690D26AEAC3C00E26F69 /* TermsAndPolicyView.swift */; };
 		6861691126AEAD6B00E26F69 /* privacy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6861690F26AEAD6B00E26F69 /* privacy.storyboard */; };
 		6861691726AEAFCF00E26F69 /* TermsAndPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6861691626AEAFCF00E26F69 /* TermsAndPolicyViewController.swift */; };
 		6861691A26AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6861691826AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf */; };
 		6861691B26AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6861691926AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf */; };
-		687AFBAF2646BBAD004E5A34 /* CountDownContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AFBAE2646BBAD004E5A34 /* CountDownContainerView.swift */; };
-		687AFBB22646BC2C004E5A34 /* SingleTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AFBB12646BC2C004E5A34 /* SingleTimeView.swift */; };
-		687AFC2A264AA84A004E5A34 /* SingleTimeGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 687AFC29264AA84A004E5A34 /* SingleTimeGroup.swift */; };
 		6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68880999262825FC00B5FB2A /* LoginViewController.swift */; };
 		688809E82629358800B5FB2A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688809E72629358800B5FB2A /* MainViewController.swift */; };
 		68A5E2AB2635143400E3C37E /* AboutTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A5E2AA2635143400E3C37E /* AboutTableCell.swift */; };
 		68A5E2F12635557B00E3C37E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A5E2F02635557B00E3C37E /* AboutView.swift */; };
 		75D36FB810CB94F4AEF8D9A2 /* Pods_AgoraEducation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */; };
 		7801A89C25DB7D9D00C63ABF /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */; };
-		7801A89D25DB7D9D00C63ABF /* DebugViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7801A89B25DB7D9D00C63ABF /* DebugViewController.xib */; };
 		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
 		783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 783FB6CE240D0746007298C1 /* AlertViewUtil.m */; };
 		783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 783FB6DA240D0746007298C1 /* UIView+Toast.m */; };
-		787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */ = {isa = PBXBuildFile; fileRef = 787485FE25AB176B0022329D /* UIColor+Addition.m */; };
 		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
 		7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4CD23FA735700AF1B4F /* InfoPlist.strings */; };
 		787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 787A004125D10FC10063456F /* AudioToolbox.framework */; };
 		78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68625AEE20B00B01906 /* RtmTokenTool.mm */; };
 		78DFB69925AEE20B00B01906 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB68B25AEE20B00B01906 /* md5.cpp */; };
-		8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */; };
 		8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 78136271242C81ED00B7D1FE /* libz.tbd */; };
 		86B99C452732B67C0090D013 /* DebugCourware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86B99C442732B67C0090D013 /* DebugCourware.swift */; };
-		86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 86F80251262589AF00364FFE /* CountDownExtApp.m */; };
-		AB245B80273A5A1600C01B4C /* AnswerSheetExtApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B78273A5A1600C01B4C /* AnswerSheetExtApp.swift */; };
-		AB245B81273A5A1600C01B4C /* ExtAppTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7A273A5A1600C01B4C /* ExtAppTitleView.swift */; };
-		AB245B82273A5A1600C01B4C /* AnswerSheetSelectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7B273A5A1600C01B4C /* AnswerSheetSelectCell.swift */; };
-		AB245B83273A5A1600C01B4C /* AnswerSheetResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7C273A5A1600C01B4C /* AnswerSheetResultView.swift */; };
-		AB245B84273A5A1600C01B4C /* AnswerSheetSelecterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7D273A5A1600C01B4C /* AnswerSheetSelecterView.swift */; };
-		AB245B85273A5A1600C01B4C /* AnswerSheetResultItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7E273A5A1600C01B4C /* AnswerSheetResultItemCell.swift */; };
-		AB245B86273A5A1600C01B4C /* AnswerSheetSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B7F273A5A1600C01B4C /* AnswerSheetSetupView.swift */; };
-		AB245B88273BB40700C01B4C /* AnswerSheetStudentResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB245B87273BB40700C01B4C /* AnswerSheetStudentResultView.swift */; };
+		86D4896D277AE2750062F068 /* LoginModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D4896C277AE2750062F068 /* LoginModels.swift */; };
 		AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */; };
 		AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */; };
 		AB7FFD6926EAFEF2003A50B8 /* RoomInfoOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */; };
@@ -72,6 +60,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		15D1CB6D27700021002D4CA0 /* UIColor+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Addition.m"; sourceTree = "<group>"; };
+		15D1CB6E27700021002D4CA0 /* UIColor+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Addition.h"; sourceTree = "<group>"; };
 		1A44BE3522BF863000766274 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1A44BE5722BF863000766274 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A44BE5E22BF863000766274 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -97,16 +87,12 @@
 		6861691626AEAFCF00E26F69 /* TermsAndPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndPolicyViewController.swift; sourceTree = "<group>"; };
 		6861691826AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Agora_Privacy_Policy_en.rtf; sourceTree = "<group>"; };
 		6861691926AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Agora_Privacy_Policy_cn.rtf; sourceTree = "<group>"; };
-		687AFBAE2646BBAD004E5A34 /* CountDownContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountDownContainerView.swift; sourceTree = "<group>"; };
-		687AFBB12646BC2C004E5A34 /* SingleTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTimeView.swift; sourceTree = "<group>"; };
-		687AFC29264AA84A004E5A34 /* SingleTimeGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTimeGroup.swift; sourceTree = "<group>"; };
 		68880999262825FC00B5FB2A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		688809E72629358800B5FB2A /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		68A5E2AA2635143400E3C37E /* AboutTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTableCell.swift; sourceTree = "<group>"; };
 		68A5E2F02635557B00E3C37E /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEducation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
-		7801A89B25DB7D9D00C63ABF /* DebugViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DebugViewController.xib; sourceTree = "<group>"; };
 		78136271242C81ED00B7D1FE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		78136273242C81FF00B7D1FE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		78136274242C820700B7D1FE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -118,10 +104,7 @@
 		783FB6D9240D0746007298C1 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
 		783FB6DA240D0746007298C1 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
 		785D12F224CEB24E00F7A8AB /* AgoraReplayUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraReplayUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		785D12F624CEB25200F7A8AB /* AgoraWhiteBoard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AgoraWhiteBoard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		785D12F924CEB25700F7A8AB /* EduSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EduSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		787485FD25AB176B0022329D /* UIColor+Addition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Addition.h"; sourceTree = "<group>"; };
-		787485FE25AB176B0022329D /* UIColor+Addition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Addition.m"; sourceTree = "<group>"; };
 		7878B4C623FA72EE00AF1B4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7878B4C823FA72F200AF1B4F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		7878B4CC23FA735700AF1B4F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -144,21 +127,11 @@
 		78DFB69525AEE20B00B01906 /* RtcTokenBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtcTokenBuilder.h; sourceTree = "<group>"; };
 		78DFB69625AEE20B00B01906 /* DynamicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey.h; sourceTree = "<group>"; };
 		78DFB69725AEE20B00B01906 /* DynamicKey4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey4.h; sourceTree = "<group>"; };
-		8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WhiteBoardExtApp.h; sourceTree = "<group>"; };
-		8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WhiteBoardExtApp.m; sourceTree = "<group>"; };
+		861D3CFA276AE05E00645D6A /* AppExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtension.swift; sourceTree = "<group>"; };
 		86B99C442732B67C0090D013 /* DebugCourware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCourware.swift; sourceTree = "<group>"; };
-		86F80250262589AF00364FFE /* CountDownExtApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CountDownExtApp.h; sourceTree = "<group>"; };
-		86F80251262589AF00364FFE /* CountDownExtApp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CountDownExtApp.m; sourceTree = "<group>"; };
+		86D4896C277AE2750062F068 /* LoginModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModels.swift; sourceTree = "<group>"; };
 		8CD382F7BF039504C1D49C53 /* Pods-AgoraEducation.qatestrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qatestrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qatestrelease.xcconfig"; sourceTree = "<group>"; };
 		A5BFF93D50503E0756F47D98 /* Pods-AgoraEducation.qarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qarelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qarelease.xcconfig"; sourceTree = "<group>"; };
-		AB245B78273A5A1600C01B4C /* AnswerSheetExtApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetExtApp.swift; sourceTree = "<group>"; };
-		AB245B7A273A5A1600C01B4C /* ExtAppTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExtAppTitleView.swift; sourceTree = "<group>"; };
-		AB245B7B273A5A1600C01B4C /* AnswerSheetSelectCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetSelectCell.swift; sourceTree = "<group>"; };
-		AB245B7C273A5A1600C01B4C /* AnswerSheetResultView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetResultView.swift; sourceTree = "<group>"; };
-		AB245B7D273A5A1600C01B4C /* AnswerSheetSelecterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetSelecterView.swift; sourceTree = "<group>"; };
-		AB245B7E273A5A1600C01B4C /* AnswerSheetResultItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetResultItemCell.swift; sourceTree = "<group>"; };
-		AB245B7F273A5A1600C01B4C /* AnswerSheetSetupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnswerSheetSetupView.swift; sourceTree = "<group>"; };
-		AB245B87273BB40700C01B4C /* AnswerSheetStudentResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerSheetStudentResultView.swift; sourceTree = "<group>"; };
 		AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoCell.swift; sourceTree = "<group>"; };
 		AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoOptionsView.swift; sourceTree = "<group>"; };
 		AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoOptionCell.swift; sourceTree = "<group>"; };
@@ -198,7 +171,6 @@
 			children = (
 				78D7312E23B38B0A00D2146C /* Main */,
 				7813B6F223FA5A0300265830 /* StoryBoards */,
-				8654871A261EDF830025ADCB /* ExtApps */,
 				78DFB67425AECAB700B01906 /* TokenBuilder */,
 				7801A89925DB7D7100C63ABF /* Debug */,
 				78D730C423B3853200D2146C /* Utils */,
@@ -248,20 +220,9 @@
 			isa = PBXGroup;
 			children = (
 				68362356262D30C20028F7F5 /* BaseLoginObject.swift */,
+				86D4896C277AE2750062F068 /* LoginModels.swift */,
 			);
 			path = Beans;
-			sourceTree = "<group>";
-		};
-		687AFBB02646BC19004E5A34 /* CountDownExtApp */ = {
-			isa = PBXGroup;
-			children = (
-				86F80250262589AF00364FFE /* CountDownExtApp.h */,
-				86F80251262589AF00364FFE /* CountDownExtApp.m */,
-				687AFBAE2646BBAD004E5A34 /* CountDownContainerView.swift */,
-				687AFBB12646BC2C004E5A34 /* SingleTimeView.swift */,
-				687AFC29264AA84A004E5A34 /* SingleTimeGroup.swift */,
-			);
-			path = CountDownExtApp;
 			sourceTree = "<group>";
 		};
 		7801A89925DB7D7100C63ABF /* Debug */ = {
@@ -269,7 +230,6 @@
 			children = (
 				7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */,
 				86B99C442732B67C0090D013 /* DebugCourware.swift */,
-				7801A89B25DB7D9D00C63ABF /* DebugViewController.xib */,
 			);
 			path = Debug;
 			sourceTree = "<group>";
@@ -308,21 +268,14 @@
 			path = Toast;
 			sourceTree = "<group>";
 		};
-		787485FC25AB176B0022329D /* Color */ = {
-			isa = PBXGroup;
-			children = (
-				787485FD25AB176B0022329D /* UIColor+Addition.h */,
-				787485FE25AB176B0022329D /* UIColor+Addition.m */,
-			);
-			path = Color;
-			sourceTree = "<group>";
-		};
 		78D730C423B3853200D2146C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				787485FC25AB176B0022329D /* Color */,
+				15D1CB6E27700021002D4CA0 /* UIColor+Addition.h */,
+				15D1CB6D27700021002D4CA0 /* UIColor+Addition.m */,
 				783FB6CC240D0746007298C1 /* AlertView */,
 				783FB6D8240D0746007298C1 /* Toast */,
+				861D3CFA276AE05E00645D6A /* AppExtension.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -410,17 +363,6 @@
 			path = md5;
 			sourceTree = "<group>";
 		};
-		8654871A261EDF830025ADCB /* ExtApps */ = {
-			isa = PBXGroup;
-			children = (
-				AB245B77273A5A1600C01B4C /* AnswerSheetExtApp */,
-				687AFBB02646BC19004E5A34 /* CountDownExtApp */,
-				8654871D261EE6C70025ADCB /* WhiteBoardExtApp.h */,
-				8654871E261EE6C70025ADCB /* WhiteBoardExtApp.m */,
-			);
-			path = ExtApps;
-			sourceTree = "<group>";
-		};
 		938D296AAD5470F95D0BD9D5 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -434,35 +376,11 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		AB245B77273A5A1600C01B4C /* AnswerSheetExtApp */ = {
-			isa = PBXGroup;
-			children = (
-				AB245B78273A5A1600C01B4C /* AnswerSheetExtApp.swift */,
-				AB245B79273A5A1600C01B4C /* View */,
-			);
-			path = AnswerSheetExtApp;
-			sourceTree = "<group>";
-		};
-		AB245B79273A5A1600C01B4C /* View */ = {
-			isa = PBXGroup;
-			children = (
-				AB245B7A273A5A1600C01B4C /* ExtAppTitleView.swift */,
-				AB245B7B273A5A1600C01B4C /* AnswerSheetSelectCell.swift */,
-				AB245B7C273A5A1600C01B4C /* AnswerSheetResultView.swift */,
-				AB245B7D273A5A1600C01B4C /* AnswerSheetSelecterView.swift */,
-				AB245B7E273A5A1600C01B4C /* AnswerSheetResultItemCell.swift */,
-				AB245B7F273A5A1600C01B4C /* AnswerSheetSetupView.swift */,
-				AB245B87273BB40700C01B4C /* AnswerSheetStudentResultView.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		E01323DE5BE7ACD24D968F1E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				787A004125D10FC10063456F /* AudioToolbox.framework */,
 				785D12F924CEB25700F7A8AB /* EduSDK.framework */,
-				785D12F624CEB25200F7A8AB /* AgoraWhiteBoard.framework */,
 				785D12F224CEB24E00F7A8AB /* AgoraReplayUI.framework */,
 				78136274242C820700B7D1FE /* Security.framework */,
 				78136273242C81FF00B7D1FE /* libiconv.tbd */,
@@ -594,7 +512,6 @@
 				1A44BE7522BF863000766274 /* Assets.xcassets in Resources */,
 				6861691B26AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf in Resources */,
 				6861691A26AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf in Resources */,
-				7801A89D25DB7D9D00C63ABF /* DebugViewController.xib in Resources */,
 				7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */,
 				6861691126AEAD6B00E26F69 /* privacy.storyboard in Resources */,
 			);
@@ -682,37 +599,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				688809E82629358800B5FB2A /* MainViewController.swift in Sources */,
-				AB245B83273A5A1600C01B4C /* AnswerSheetResultView.swift in Sources */,
-				AB245B80273A5A1600C01B4C /* AnswerSheetExtApp.swift in Sources */,
 				AB7FFD6926EAFEF2003A50B8 /* RoomInfoOptionCell.swift in Sources */,
 				783FB6E0240D0746007298C1 /* UIView+Toast.m in Sources */,
-				687AFBB22646BC2C004E5A34 /* SingleTimeView.swift in Sources */,
 				68A5E2F12635557B00E3C37E /* AboutView.swift in Sources */,
 				AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */,
 				68A5E2AB2635143400E3C37E /* AboutTableCell.swift in Sources */,
+				86D4896D277AE2750062F068 /* LoginModels.swift in Sources */,
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
-				687AFBAF2646BBAD004E5A34 /* CountDownContainerView.swift in Sources */,
-				AB245B88273BB40700C01B4C /* AnswerSheetStudentResultView.swift in Sources */,
 				683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */,
-				AB245B82273A5A1600C01B4C /* AnswerSheetSelectCell.swift in Sources */,
+				68403F83276C859800E88214 /* AppExtension.swift in Sources */,
 				2616FAB2271EC4530086397B /* TokenBuilder.swift in Sources */,
 				6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */,
-				687AFC2A264AA84A004E5A34 /* SingleTimeGroup.swift in Sources */,
 				AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */,
-				AB245B84273A5A1600C01B4C /* AnswerSheetSelecterView.swift in Sources */,
 				78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */,
-				8654871F261EE6C70025ADCB /* WhiteBoardExtApp.m in Sources */,
-				AB245B86273A5A1600C01B4C /* AnswerSheetSetupView.swift in Sources */,
 				783FB6DC240D0746007298C1 /* AlertViewUtil.m in Sources */,
 				86B99C452732B67C0090D013 /* DebugCourware.swift in Sources */,
-				787485FF25AB176C0022329D /* UIColor+Addition.m in Sources */,
 				6861691726AEAFCF00E26F69 /* TermsAndPolicyViewController.swift in Sources */,
 				68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */,
-				86F80252262589AF00364FFE /* CountDownExtApp.m in Sources */,
-				AB245B85273A5A1600C01B4C /* AnswerSheetResultItemCell.swift in Sources */,
 				6861690E26AEAC3C00E26F69 /* TermsAndPolicyView.swift in Sources */,
-				AB245B81273A5A1600C01B4C /* ExtAppTitleView.swift in Sources */,
+				15D1CB6F27700021002D4CA0 /* UIColor+Addition.m in Sources */,
 				7801A89C25DB7D9D00C63ABF /* DebugViewController.swift in Sources */,
 				1A44BE7A22BF863000766274 /* main.m in Sources */,
 			);
@@ -938,7 +844,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
@@ -954,7 +859,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1001,7 +906,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
@@ -1017,7 +921,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraFlexEduDis;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1193,7 +1097,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
@@ -1209,7 +1112,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1348,7 +1251,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
@@ -1364,7 +1266,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATestNew;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1503,7 +1405,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
@@ -1519,7 +1420,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQA;
 				PRODUCT_NAME = AgoraCloudClass;
@@ -1658,7 +1559,6 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraWhiteBoard/AgoraWhiteBoard.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
@@ -1674,7 +1574,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATest;
 				PRODUCT_NAME = AgoraCloudClass;

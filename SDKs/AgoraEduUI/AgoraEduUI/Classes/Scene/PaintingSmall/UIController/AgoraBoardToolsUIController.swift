@@ -7,8 +7,69 @@
 
 import AgoraUIEduBaseViews
 import AgoraEduContext
+import SwifterSwift
 import AgoraWidget
 import UIKit
+
+@objc public enum AgoraBoardToolsLineWidth: Int, CaseIterable {
+    case width1 = 0, width2, width3, width4, width5
+    
+    public var value: Int {
+        switch self {
+        case .width1: return 4
+        case .width2: return 8
+        case .width3: return 12
+        case .width4: return 18
+        case .width5: return 22
+        }
+    }
+    
+    public static func fromValue(_ value: Int?) -> AgoraBoardToolsLineWidth {
+        guard let v = value else {
+            return .width1
+        }
+        switch v {
+        case 4: return .width1
+        case 8: return .width2
+        case 12: return .width3
+        case 18: return .width4
+        case 22: return .width5
+        default:
+            return .width1
+        }
+    }
+}
+
+@objc public enum AgoraBoardToolsFont: Int, CaseIterable {
+    case font22 = 0, font24, font26, font30, font36, font42
+    
+    public var value: Int {
+        switch self {
+        case .font22: return 22
+        case .font24: return 24
+        case .font26: return 26
+        case .font30: return 30
+        case .font36: return 36
+        case .font42: return 42
+        }
+    }
+    
+    public static func fromValue(_ value: Int?) -> AgoraBoardToolsFont {
+        guard let v = value else {
+            return .font22
+        }
+        switch v {
+        case 22: return .font22
+        case 24: return .font24
+        case 26: return .font26
+        case 30: return .font30
+        case 36: return .font36
+        case 42: return .font42
+        default:
+            return .font22
+        }
+    }
+}
 
 fileprivate extension AgoraBoardToolsFont {
     func fontSize() -> Int {
@@ -35,7 +96,53 @@ fileprivate extension UIColor {
                     green: &green,
                     blue: &blue,
                     alpha: &alpha)
-        return [Int(red),Int(green),Int(blue),Int(alpha)]
+        return [Int(red * 255),Int(green * 255),Int(blue * 255)]
+    }
+}
+
+fileprivate extension AgoraBoardWidgetMemberState {
+    func toItem() -> AgoraBoardToolItem? {
+        guard let toolType = self.activeApplianceType else {
+            return nil
+        }
+        
+        let lineConfig = AgoraBoardToolItemLineConfig(size: AgoraBoardToolsLineWidth.fromValue(self.strokeWidth))
+        let textConfig = AgoraBoardToolItemTextConfig(size: AgoraBoardToolsFont.fromValue(self.textSize))
+        switch toolType {
+        case .Clicker:
+            return .clicker
+        case .Selector:
+            return .area
+        case .Text:
+            return .text(textConfig)
+        case .Rectangle:
+            return .rect(lineConfig)
+        case .Ellipse:
+            return .cycle(lineConfig)
+        case .Eraser:
+            return .rubber
+        case .Pencil:
+            return .pencil(lineConfig)
+        case .Straight:
+            return .line(lineConfig)
+        case .Pointer:
+            return .laser
+        default:
+            return nil
+        }
+        return nil
+    }
+    
+    func toColor() -> Int {
+        guard let colorArr = self.strokeColor else {
+            return 0x0073FF
+        }
+        let r = colorArr[0] ?? 0x00
+        let g = colorArr[1] ?? 0x73
+        let b = colorArr[2] ?? 0xFF
+        
+        let color = (r << 16) | (g << 8) | b
+        return color
     }
 }
 
@@ -48,11 +155,11 @@ struct AgoraBoardToolItemLineConfig {
 }
 
 enum AgoraBoardToolItem: CaseIterable {
-    case arrow, area, rubber, laser
+    case clicker, area, rubber, laser
     case text(AgoraBoardToolItemTextConfig), pencil(AgoraBoardToolItemLineConfig), line(AgoraBoardToolItemLineConfig)
     case rect(AgoraBoardToolItemLineConfig), cycle(AgoraBoardToolItemLineConfig)
     
-    static var allCases: [AgoraBoardToolItem] = [.arrow,
+    static var allCases: [AgoraBoardToolItem] = [.clicker,
                                                  .area,
                                                  .text(AgoraBoardToolItemTextConfig()),
                                                  .rubber,
@@ -64,7 +171,7 @@ enum AgoraBoardToolItem: CaseIterable {
     
     var rawValue: Int {
         switch self {
-        case .arrow:  return 1
+        case .clicker:  return 1
         case .area:   return 2
         case .text:   return 3
         case .rubber: return 4
@@ -87,27 +194,6 @@ enum AgoraBoardToolItem: CaseIterable {
         }
     }
     
-    static func fromWidget(_ state: AgoraBoardWidgetMemberState) -> AgoraBoardToolItem? {
-        guard let toolType = state.activeApplianceType else {
-            return nil
-        }
-        
-        let config = AgoraBoardToolItemLineConfig(size: AgoraBoardToolsLineWidth.fromValue(state.strokeWidth))
-        
-        switch toolType {
-        case .Pencil:
-            return AgoraBoardToolItem.pencil(config)
-        case .Straight:
-            return AgoraBoardToolItem.line(config)
-        case .Rectangle:
-            return AgoraBoardToolItem.rect(config)
-        case .Ellipse:
-            return AgoraBoardToolItem.cycle(config)
-        default:
-            return nil
-        }
-    }
-    
     var isShape: Bool {
         switch self {
         case .pencil, .line, .rect, .cycle: return true
@@ -125,50 +211,52 @@ enum AgoraBoardToolItem: CaseIterable {
         return (left.rawValue == right.rawValue)
     }
     
-    func image(_ obj: NSObject) -> UIImage? {
+    func image() -> UIImage? {
+        let bundleName = "AgoraEduUI"
         switch self {
-        case .arrow:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_arrow")
+        case .clicker:
+            return UIImage.ag_imageNamed("ic_brush_arrow",
+                                         in: bundleName)
         case .area:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_area")
+            return UIImage.ag_imageNamed("ic_brush_area",
+                                         in: bundleName)
         case .text:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_text")
+            return UIImage.ag_imageNamed("ic_brush_text",
+                                         in: bundleName)
         case .rubber:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_rubber")
+            return UIImage.ag_imageNamed("ic_brush_rubber",
+                                         in: bundleName)
         case .laser:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_laser")
+            return UIImage.ag_imageNamed("ic_brush_laser",
+                                         in: bundleName)
         case .pencil:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_pencil")
+            return UIImage.ag_imageNamed("ic_brush_pencil",
+                                         in: bundleName)
         case .line:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_line")
+            return UIImage.ag_imageNamed("ic_brush_line",
+                                         in: bundleName)
         case .rect:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_rect")
+            return UIImage.ag_imageNamed("ic_brush_rect",
+                                         in: bundleName)
         case .cycle:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_cycle")
+            return UIImage.ag_imageNamed("ic_brush_cycle",
+                                         in: bundleName)
         default:
-            return AgoraUIImage(object: obj,
-                                name: "ic_brush_arrow")
+            return UIImage.ag_imageNamed("ic_brush_arrow",
+                                         in: bundleName)
         }
     }
 }
 
 fileprivate extension AgoraBoardToolItem {
-    func toWidgetMemberState(color: UIColor) -> AgoraBoardWidgetMemberState? {
+    func toWidgetMemberState(color: UIColor,
+                             lineConfig: AgoraBoardToolItemLineConfig,
+                             textConfig: AgoraBoardToolItemTextConfig) -> AgoraBoardWidgetMemberState? {
         let colorArr = color.getRGBAArr()
         
         switch self {
-        case .arrow:
-            return AgoraBoardWidgetMemberState(activeApplianceType: .Arrow,
-                                               strokeColor: colorArr)
+        case .clicker:
+            return AgoraBoardWidgetMemberState(activeApplianceType: .Clicker)
         case .area:
             return AgoraBoardWidgetMemberState(activeApplianceType: .Selector,
                                                strokeColor: colorArr)
@@ -177,26 +265,26 @@ fileprivate extension AgoraBoardToolItem {
                                                strokeColor: colorArr)
         case .laser:
             return AgoraBoardWidgetMemberState(activeApplianceType: .Pointer)
-        case .text(let textConfig):
+        case .text(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Text,
                                                strokeColor: colorArr,
                                                textSize: textConfig.size.fontSize())
-        case .pencil(let lineConfig):
+        case .pencil(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Pencil,
                                                strokeColor: colorArr,
-                                               strokeWidth: lineConfig.size.rawValue)
-        case .line(let lineConfig):
+                                               strokeWidth: lineConfig.size.value)
+        case .line(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Straight,
                                                strokeColor: colorArr,
-                                               strokeWidth: lineConfig.size.rawValue)
-        case .rect(let lineConfig):
+                                               strokeWidth: lineConfig.size.value)
+        case .rect(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Rectangle,
                                                strokeColor: colorArr,
-                                               strokeWidth: lineConfig.size.rawValue)
-        case .cycle(let lineConfig):
+                                               strokeWidth: lineConfig.size.value)
+        case .cycle(let _):
             return AgoraBoardWidgetMemberState(activeApplianceType: .Ellipse,
                                                strokeColor: colorArr,
-                                               strokeWidth: lineConfig.size.rawValue)
+                                               strokeWidth: lineConfig.size.value)
 
         default:
             return nil
@@ -221,10 +309,55 @@ private extension AgoraBoardToolItem {
     }
 }
 
-private enum AgoraBoardToolsViewState {
-    case toolsOnly
-    case sizeExtension
-    case colorExtension
+fileprivate class AgoraBrushToolButton: UIButton {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        backgroundColor = UIColor.white
+        imageView?.tintColor = UIColor(hex: 0x7B88A0)
+        
+        layer.cornerRadius = 8
+        layer.shadowColor = UIColor(hex: 0x2F4192,
+                                    transparency: 0.15)?.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.shadowOpacity = 1
+        layer.shadowRadius = 6
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        layer.cornerRadius = bounds.height * 0.5
+    }
+    
+    func setImage(_ image: UIImage?) {
+        guard let v = image else {
+            return
+        }
+        setImageForAllStates(v.withRenderingMode(.alwaysTemplate))
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        UIView.animate(withDuration: 0.1,
+                       delay: 0,
+                       options: .curveLinear) {
+            self.transform = CGAffineTransform(scaleX: 1, y: 1)
+        } completion: { finish in
+        }
+    }
 }
 
 protocol AgoraBoardToolsUIControllerDelegate: class {
@@ -236,11 +369,15 @@ private let kBrushSizeCount: Int = 5
 private let kTextSizeCount: Int = 4
 class AgoraBoardToolsUIController: UIViewController {
     
-    public lazy var button: AgoraRoomToolZoomButton = {
-        let v = AgoraRoomToolZoomButton(frame: CGRect(x: 0,
-                                                      y: 0,
-                                                      width: 44,
-                                                      height: 44))
+    public var button: UIButton {
+        return brushButton
+    }
+    
+    private lazy var brushButton: AgoraBrushToolButton = {
+        let v = AgoraBrushToolButton(frame: CGRect(x: 0,
+                                                   y: 0,
+                                                   width: 44,
+                                                   height: 44))
         v.isHidden = true
         v.setImage(AgoraUIImage(object: self,
                                 name: "ic_brush_pencil"))
@@ -250,24 +387,27 @@ class AgoraBoardToolsUIController: UIViewController {
         return v
     }()
     
-    weak var delegate: AgoraBoardToolsUIControllerDelegate?
+    public weak var delegate: AgoraBoardToolsUIControllerDelegate?
     
-    var contentView: UIView!
+    private var contentView: UIView!
     
-    var toolsCollectionView: UICollectionView!
+    private var toolsCollectionView: UICollectionView!
     
-    var topLine: UIView!
+    private var topLine: UIView!
         
-    var sizeCollectionView: UICollectionView!
+    private var sizeCollectionView: UICollectionView!
     
-    var bottomLine: UIView!
+    private var bottomLine: UIView!
     
-    var colorCollectionView: UICollectionView!
+    private var colorCollectionView: UICollectionView!
     /** SDK环境*/
-    var contextPool: AgoraEduContextPool!
+    private var contextPool: AgoraEduContextPool!
     
-    let colors = AgoraBoardToolsColor.allCases
-    
+    private let hexColors: [Int] = [
+        0xFFFFFF, 0x9B9B9B, 0x4A4A4A, 0x000000, 0xD0021B, 0xF5A623,
+        0xF8E71C, 0x7ED321, 0x9013FE, 0x50E3C2, 0x0073FF, 0xFFC8E2
+    ]
+        
     let tools = AgoraBoardToolItem.allCases
     
     private var isSpread = false {
@@ -292,26 +432,36 @@ class AgoraBoardToolsUIController: UIViewController {
         }
     }
     
+    var lineConfig = AgoraBoardToolItemLineConfig(size: .width1)
     var brushLevel = 0 {
         didSet {
+            lineConfig = AgoraBoardToolItemLineConfig(size: AgoraBoardToolsLineWidth(rawValue: brushLevel) ?? .width1)
             callbackItemUpdated()
         }
     }
     
+    var textConfig = AgoraBoardToolItemTextConfig(size: .font22)
     var textLevel = 0 {
         didSet {
+            textConfig = AgoraBoardToolItemTextConfig(size: AgoraBoardToolsFont(rawValue: textLevel) ?? .font22)
             callbackItemUpdated()
         }
     }
     
-    var selectedTool: AgoraBoardToolItem = .arrow {
+    var selectedTool: AgoraBoardToolItem = .clicker {
         didSet {
+            self.brushButton.setImage(selectedTool.image())
             callbackItemUpdated()
         }
     }
     
-    var colorIndex: IndexPath = IndexPath(row: 0, section: 0) {
+    var selectColor: Int = 0xFFFFFF {
         didSet {
+            if selectColor == 0xFFFFFF {
+                self.brushButton.imageView?.tintColor = UIColor(hex: 0xE1E1EA)
+            } else {
+                self.brushButton.imageView?.tintColor = UIColor(hex: selectColor)
+            }
             callbackItemUpdated()
         }
     }
@@ -323,6 +473,9 @@ class AgoraBoardToolsUIController: UIViewController {
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
+
+        contextPool.widget.add(self,
+                               widgetId: "netlessBoard")
     }
     
     required init?(coder: NSCoder) {
@@ -335,14 +488,20 @@ class AgoraBoardToolsUIController: UIViewController {
         
         createViews()
         createConstrains()
-        contextPool.widget.add(self,
-                               widgetId: "netlessBoard")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        isSpread = (selectedTool.expandBarType() != nil)
     }
     
     private func callbackItemUpdated() {
-        let color = AgoraBoardToolsColor.allCases[colorIndex.row].value
+        let color = UIColor(hex: selectColor) ?? .white
         
-        if let memberState = selectedTool.toWidgetMemberState(color: color) {
+        if let memberState = selectedTool.toWidgetMemberState(color: color,
+                                                              lineConfig: lineConfig,
+                                                              textConfig: textConfig) {
             sendMessage(signal: .MemberStateChanged(memberState))
         }
     }
@@ -379,7 +538,7 @@ extension AgoraBoardToolsUIController: UICollectionViewDelegate, UICollectionVie
                 return 0
             }
         } else if collectionView == colorCollectionView {
-            return colors.count
+            return hexColors.count
         } else {
             return 0
         }
@@ -391,24 +550,22 @@ extension AgoraBoardToolsUIController: UICollectionViewDelegate, UICollectionVie
             let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardToolItemCell.self,
                                                           for: indexPath)
             let tool = tools[indexPath.row]
-            cell.setImage(tool.image(self))
+            cell.setImage(tool.image())
             cell.aSelected = (tool == selectedTool)
             return cell
         } else if collectionView == sizeCollectionView {
             if selectedTool.expandBarType() == .text {
                 let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardTextSizeItemCell.self,
                                                               for: indexPath)
-                let color = colors[colorIndex.row]
                 cell.level = indexPath.row
-                cell.color = (color == .white ? nil : color.value)
+                cell.color = (selectColor == 0xFFFFFF ? nil : UIColor(hex: selectColor))
                 cell.aSelected = (indexPath.row == textLevel)
                 return cell
             } else if selectedTool.expandBarType() == .brush {
                 let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardSizeItemCell.self,
                                                               for: indexPath)
-                let color = colors[colorIndex.row]
                 cell.level = indexPath.row
-                cell.color = (color == .white ? nil : color.value)
+                cell.color = (selectColor == 0xFFFFFF ? nil : UIColor(hex: selectColor))
                 cell.aSelected = (indexPath.row == brushLevel)
                 return cell
             } else {
@@ -419,9 +576,9 @@ extension AgoraBoardToolsUIController: UICollectionViewDelegate, UICollectionVie
         } else if collectionView == colorCollectionView {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardColorItemCell.self,
                                                           for: indexPath)
-            let color = colors[indexPath.row]
-            cell.color = (color == .white ? nil : color.value)
-            cell.aSelected = (indexPath == colorIndex)
+            let color = hexColors[indexPath.row]
+            cell.color = (color == 0xFFFFFF ? nil : UIColor(hex: color))
+            cell.aSelected = (selectColor == color)
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NSStringFromClass(AgoraBoardColorItemCell.self),
@@ -453,8 +610,8 @@ extension AgoraBoardToolsUIController: UICollectionViewDelegate, UICollectionVie
             }
             collectionView.reloadData()
         } else if collectionView == colorCollectionView {
-            if colorIndex != indexPath {
-                colorIndex = indexPath
+            if selectColor != hexColors[indexPath.row] {
+                selectColor = hexColors[indexPath.row]
                 collectionView.reloadData()
                 sizeCollectionView.reloadData()
             }
@@ -515,7 +672,8 @@ extension AgoraBoardToolsUIController: UICollectionViewDelegate, UICollectionVie
 // MARK: - Creations
 private extension AgoraBoardToolsUIController {
     func createViews() {
-        view.layer.shadowColor = UIColor(rgb: 0x2F4192, alpha: 0.15).cgColor
+        view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
         view.layer.shadowOpacity = 1
         view.layer.shadowRadius = 6
@@ -564,11 +722,11 @@ private extension AgoraBoardToolsUIController {
         contentView.addSubview(colorCollectionView)
         
         topLine = UIView(frame: .zero)
-        topLine.backgroundColor = UIColor(rgb: 0xECECF1)
+        topLine.backgroundColor = UIColor(hex: 0xECECF1)
         contentView.addSubview(topLine)
         
         bottomLine = UIView(frame: .zero)
-        bottomLine.backgroundColor = UIColor(rgb: 0xECECF1)
+        bottomLine.backgroundColor = UIColor(hex: 0xECECF1)
         contentView.addSubview(bottomLine)
     }
     
@@ -616,13 +774,17 @@ extension AgoraBoardToolsUIController: AgoraWidgetMessageObserver {
         }
         switch signal {
         case .MemberStateChanged(let state):
-            if let item = AgoraBoardToolItem.fromWidget(state) {
+            if let item = state.toItem() {
                 selectedTool = item
             }
+            
+            self.selectColor = state.toColor()
         case .BoardGrantDataChanged(let list):
             if let users = list,
-               users.contains(contextPool.user.getLocalUserInfo().userUuid){
+               users.contains(contextPool.user.getLocalUserInfo().userUuid) {
                 self.button.isHidden = false
+            } else {
+                self.button.isHidden = true
             }
         default:
             break

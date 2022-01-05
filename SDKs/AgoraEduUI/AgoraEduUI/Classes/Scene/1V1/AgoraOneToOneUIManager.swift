@@ -33,19 +33,15 @@ import Masonry
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
-        vc.delegate = self
+        vc.roomDelegate = self
         self.addChild(vc)
         return vc
     }()
     
-    @objc public override init(contextPool: AgoraEduContextPool,
-                               delegate: AgoraEduUIManagerDelegate) {
-        super.init(contextPool: contextPool,
-                   delegate: delegate)
-    }
+    private var isJoinedRoom = false
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    deinit {
+        print("\(#function): \(self.classForCoder)")
     }
     
     public override func viewDidLoad() {
@@ -64,19 +60,21 @@ import Masonry
             guard let `self` = self else {
                 return
             }
+            self.isJoinedRoom = true
             self.createChatController()
             // 打开本地音视频设备
-            let cameras = self.contextPool.media.getLocalDevices(deviceType: .camera)
-            if let camera = cameras.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
-                let ero = self.contextPool.media.openLocalDevice(device: camera)
-                print(ero)
-            }
-            if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
-                self.contextPool.media.openLocalDevice(device: mic)
-            }
-        } fail: { [weak self] error in
+            self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            self.contextPool.media.openLocalDevice(systemDevice: .mic)
+        } failure: { [weak self] error in
             AgoraLoading.hide()
-            self?.contextPool.room.leaveRoom()
+            self?.exitClassRoom(reason: .normal)
+        }
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isJoinedRoom == false {
+            AgoraLoading.loading()
         }
     }
     
@@ -89,10 +87,26 @@ import Masonry
 // MARK: - AgoraOneToOneTabViewDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
     func onChatTabSelectChanged(isSelected: Bool) {
-        chatController?.view.isHidden = !isSelected
+        guard let v = chatController?.view else {
+            return
+        }
+        if isSelected {
+            rightContentView.addSubview(v)
+            v.mas_makeConstraints { make in
+                make?.top.equalTo()(tabSelectView?.mas_bottom)
+                make?.left.right().bottom().equalTo()(0)
+            }
+        } else {
+            v.removeFromSuperview()
+        }
     }
 }
-
+// MARK: - AgoraChatUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraChatUIControllerDelegate {
+    func updateChatRedDot(isShow: Bool) {
+        tabSelectView?.updateChatRedDot(isShow: isShow)
+    }
+}
 // MARK: - AgoraOneToOneStateUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
     func onSettingSelected(isSelected: Bool) {
@@ -129,6 +143,7 @@ private extension AgoraOneToOneUIManager {
     func createViews() {
         stateController = AgoraOneToOneStateUIController(context: contextPool)
         stateController.delegate = self
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
@@ -163,8 +178,8 @@ private extension AgoraOneToOneUIManager {
         }
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(3))
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(3))
+            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
         brushToolsController.button.mas_makeConstraints { make in
             make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
@@ -173,7 +188,7 @@ private extension AgoraOneToOneUIManager {
         }
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(3)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
             make?.right.equalTo()(rightContentView.mas_left)
         }
     }
@@ -194,7 +209,7 @@ private extension AgoraOneToOneUIManager {
             make?.height.equalTo()(AgoraFit.scale(33))
         }
         renderController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(tabSelectView?.mas_bottom)
+            make?.top.equalTo()(tabSelectView?.mas_bottom)?.offset()(AgoraFit.scale(1))
             make?.left.right().bottom().equalTo()(0)
         }
     }
@@ -203,38 +218,33 @@ private extension AgoraOneToOneUIManager {
         rightContentView.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.bottom.right().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(224))
+            make?.width.equalTo()(AgoraFit.scale(170))
         }
         renderController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
+            make?.bottom.equalTo()(rightContentView.mas_centerY)
         }
     }
     
     func createChatController() {
-        let controller = AgoraChatUIController()
-        controller.contextPool = contextPool
-        
-        controller.view.isHidden = true
-        rightContentView.addSubview(controller.view)
-        
+        let controller = AgoraChatUIController(context: contextPool)
         if UIDevice.current.isPad {
+            controller.hideMiniButton = true
+            controller.hideAnnouncement = true
+        } else {
+            controller.hideTopBar = true
+        }
+        addChild(controller)
+        if UIDevice.current.isPad {
+            rightContentView.addSubview(controller.view)
             controller.view.mas_makeConstraints { make in
-                make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
                 make?.left.right().bottom().equalTo()(0)
+                make?.top.equalTo()(rightContentView.mas_centerY)
             }
         } else {
-            controller.view.mas_makeConstraints { make in
-                make?.top.equalTo()(tabSelectView?.mas_bottom)
-                make?.left.right().bottom().equalTo()(0)
-            }
+            let _ = controller.view
         }
         chatController = controller
-    }
-}
-
-// MARK: - AgoraSettingUIControllerDelegate
-extension AgoraOneToOneUIManager: AgoraSettingUIControllerDelegate {
-    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
-        exit(reason: .normal)
+        chatController?.delegate = self
     }
 }

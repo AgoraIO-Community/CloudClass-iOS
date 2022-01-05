@@ -52,8 +52,7 @@ do
     if [[ ! ${FileName} =~ "framework" ]]
     then
         continue
-
-    elif [[ ${FileName} == "EduSDK.framework" ]]
+    elif [[ ${FileName} =~ "ChatWidget" ]]
     then
         continue
     elif [[ ! ${FileName} =~ "Agora" ]]

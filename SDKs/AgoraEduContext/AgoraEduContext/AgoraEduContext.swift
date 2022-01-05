@@ -16,18 +16,18 @@ public typealias AgoraEduWidgetContext = AgoraWidgetProtocol
  * 你可以通过这个对象使用和监听目前灵动课堂提供的各种业务能力
  */
 @objc public protocol AgoraEduContextPool: NSObjectProtocol {
-    // 房间控制
+    /// 房间
     var room: AgoraEduRoomContext { get }
-    // 媒体控制
+    /// 媒体
     var media: AgoraEduMediaContext { get }
-    // 个人
+    /// 用户
     var user: AgoraEduUserContext { get }
-    // 扩展容器：该应用容器提供了生命周期、扩展
+    /// extApp 插件
     var extApp: AgoraEduExtAppContext { get }
-    // 插件， 属于UIKit一部分。 每个插件是一个功能模块。
+    /// widget 插件
     var widget: AgoraEduWidgetContext { get }
-    // 流控制
+    /// 流
     var stream: AgoraEduStreamContext { get }
-    // SDK状态
+    /// 监视器
     var monitor: AgoraEduMonitorContext { get }
 }

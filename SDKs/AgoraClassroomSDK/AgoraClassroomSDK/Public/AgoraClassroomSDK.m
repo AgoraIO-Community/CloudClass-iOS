@@ -14,26 +14,16 @@
 #endif
 
 #import <AgoraEduContext/AgoraEduContext-Swift.h>
-#import <AgoraWidgets/AgoraWidgets-Swift.h>
 #import <AgoraEduUI/AgoraEduUI-Swift.h>
-#import <AgoraWidget/AgoraWidget.h>
 #import "AgoraInternalClassroom.h"
 #import "AgoraClassroomSDK.h"
 
-@interface AgoraClassroomSDK () <AgoraEduUIManagerDelegate>
+@interface AgoraClassroomSDK () <AgoraEduUIManagerCallBack>
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
-
-@property (nonatomic, strong) AgoraClassroomSDKConfig *sdkConfig;
-@property (nonatomic, strong) NSArray<AgoraExtAppConfiguration *> *extApps;
-@property (nonatomic, strong) NSArray<AgoraEduCourseware *> *coursewares;
-
-@property (nonatomic, strong) UIViewController *eduUI;
-
+@property (nonatomic, strong) AgoraEduUIManager *ui;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSNumber *environment;
-
 @property (nonatomic, weak) id<AgoraEduClassroomSDKDelegate> delegate;
-@property (nonatomic, weak) id<AgoraEduCoursewareProcess> coursewareDelegate;
 @end
 
 static AgoraClassroomSDK *manager = nil;
@@ -76,29 +66,15 @@ static AgoraClassroomSDK *manager = nil;
 }
 
 #pragma mark - Public
-+ (BOOL)setConfig:(AgoraClassroomSDKConfig *)config {
-    if (config == nil) {
-        return NO;
-    }
-    
-    if (config.isLegal) {
-        [AgoraClassroomSDK share].sdkConfig = config;
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
 + (void)launch:(AgoraEduLaunchConfig *)config
-      delegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate
        success:(void (^)(void))success
-          fail:(void (^)(NSError *))fail {
+       failure:(void (^)(NSError *))failure {
     if (config == nil || !config.isLegal) {
-        if (fail) {
+        if (failure) {
             NSError *error = [[NSError alloc] initWithDomain:@"config illegal"
                                                         code:-1
                                                     userInfo:nil];
-            fail(error);
+            failure(error);
         }
         
         return;
@@ -121,37 +97,15 @@ static AgoraClassroomSDK *manager = nil;
         [core setParameters:parameters];
     }
     
-    // Board coursewares
-    NSArray<AgoraEduCorePuppetCourseware *> *coursewares = [self getPuppetBoardModelCoursewares:manager.coursewares];
-    
-    // Media video encoder config
-    AgoraEduCorePuppetMediaOptions *mediaOptions = [self getPuppetMediaOptions:config.mediaOptions];
-    
-    AgoraEduCorePuppetRoleType role = config.roleType;
-
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [[AgoraEduCorePuppetLaunchConfig alloc]
-                                                  initWithAppId:manager.sdkConfig.appId
-                                                  rtmToken:config.token
-                                                  region:config.region
-                                                  userName:config.userName
-                                                  userUuid:config.userUuid
-                                                  userRole:role
-                                                  userProperties:config.userProperties
-                                                  mediaOptions:mediaOptions
-                                                  roomName:config.roomName
-                                                  roomUuid:config.roomUuid
-                                                  roomType:config.roomType
-                                                  startTime:config.startTime
-                                                  duration:config.duration
-                                                  coursewares:coursewares
-                                                  boardFitMode:config.boardFitMode];
+    // Core config
+    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
     
     __weak AgoraClassroomSDK *weakManager = manager;
 
-    [core launchWithConfig:coreConfig
-                   extApps:manager.extApps
-                   widgets:config.widgets.allValues
-                   success:^(id<AgoraEduContextPool> pool) {
+    [core launch:coreConfig
+         extApps:config.extApps.allValues
+         widgets:config.widgets.allValues
+         success:^(id<AgoraEduContextPool> pool) {
         AgoraEduUIManager *eduVC = nil;
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
@@ -171,51 +125,63 @@ static AgoraClassroomSDK *manager = nil;
                                                                    delegate:manager];
                 break;
             default:
-                NSCAssert(true, @"未实现该教室类型");
+                NSCAssert(true,
+                          @"room type error");
                 break;
         }
         eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
         UIViewController *topVC = [UIViewController ag_topViewController];
-        manager.eduUI = eduVC;
-        [topVC presentViewController:eduVC animated:true completion:^{
-            !success ?: success();
+        manager.ui = eduVC;
+        [topVC presentViewController:eduVC
+                            animated:true
+                          completion:^{
+            if (success) {
+                success();
+            }
         }];
-    } fail:fail];
+    } failure:failure];
 }
 
-+ (void)registerExtApps:(NSArray<AgoraExtAppConfiguration *> *)extApps {
-    [AgoraClassroomSDK share].extApps = [NSArray arrayWithArray:extApps];
++ (void)setDelegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate {
+    manager.delegate = delegate;
 }
 
++ (void)exit {
+    [manager.core exit];
+    
+    __weak AgoraClassroomSDK *weakManager = manager;
+    
+    [manager.ui dismissViewControllerAnimated:YES
+                                   completion:^{
+        [weakManager agoraRelease];
+    }];
+}
+
+#pragma mark - Private
 - (void)agoraRelease {
     self.core = nil;
-    self.eduUI = nil;
-    self.extApps = nil;
-    self.coursewares = nil;
     self.delegate = nil;
-    self.coursewareDelegate = nil;
+    self.ui = nil;
 }
 
 #pragma mark - AgoraEduUIManagerDelegate
-
 - (void)manager:(AgoraEduUIManager *)manager
-      didExited:(enum AgoraEduUIExitReason)reason {
-    [self.eduUI dismissViewControllerAnimated:true completion:nil];
+        didExit:(enum AgoraClassRoomExitReason)reason {
     AgoraEduExitReason sdkReason = nil;
     switch (reason) {
-        case AgoraEduUIExitReasonNormal:
+        case AgoraClassRoomExitReasonNormal:
             sdkReason = AgoraEduExitReasonNormal;
             break;
-        case AgoraEduExitReasonKickOut:
+        case AgoraClassRoomExitReasonKickOut:
             sdkReason = AgoraEduExitReasonKickOut;
         default:
             break;
     }
-    if ([_delegate respondsToSelector:@selector(classroomSDK:didExited:)]) {
+    if ([_delegate respondsToSelector:@selector(classroomSDK:didExit:)]) {
         [self.delegate classroomSDK:self
-                          didExited:sdkReason];
+                          didExit:sdkReason];
     }
+    
     [self agoraRelease];
 }
-
 @end

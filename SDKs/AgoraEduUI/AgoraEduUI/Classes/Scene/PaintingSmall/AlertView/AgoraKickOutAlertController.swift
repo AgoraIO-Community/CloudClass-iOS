@@ -89,15 +89,15 @@ private extension AgoraKickOutAlertController {
 // MARK: - Creation
 extension AgoraKickOutAlertController {
     func createViews() {
-        self.view.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
         
         contentView = UIView()
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 12
         contentView.layer.shadowOpacity = 1
         contentView.layer.shadowRadius = 6
-        contentView.layer.shadowColor = UIColor(rgb: 0x2F4192,
-                                                alpha: 0.15).cgColor
+        contentView.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                                transparency: 0.15)?.cgColor
         contentView.layer.shadowOffset = CGSize(width: 0,
                                                 height: 2)
         self.view.addSubview(contentView)

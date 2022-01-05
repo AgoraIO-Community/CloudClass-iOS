@@ -20,17 +20,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface AgoraClassroomSDKConfig (Internal)
-- (BOOL)isLegal;
-@end
-
 @interface AgoraEduLaunchConfig (Internal)
 - (BOOL)isLegal;
 @end
 
 #pragma mark - Model translation
 @interface AgoraClassroomSDK (Internal)
-+ (NSArray<AgoraEduCorePuppetCourseware *> * _Nullable)getPuppetBoardModelCoursewares:(NSArray<AgoraEduCourseware *> *)coursewares;
++ (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraEduLaunchConfig *)config;
 + (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraEduMediaOptions *)options;
 @end
 

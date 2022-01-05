@@ -10,7 +10,7 @@
 OK = "确定";
 
 // User List
-UserListMainTitle = "人员列表";
+UserListMainTitle = "花名册";
 UserListTeacherName = "教师姓名:";
 UserListName = "学生姓名";
 UserListCoVideo = "上下台";
@@ -46,7 +46,7 @@ FrontText = "前";
 BackText = "后";
 MicrophoneText = "麦克风";
 SpeakerText = "扬声器";
-LeaveText = "离开教室";
+LeaveText = "退出教室";
 upload_log = "上传日志";
 UploadLog = "发送成功!";
 
@@ -66,7 +66,7 @@ ClassTimeHourText = "时";
 ClassTimeMinuteText = "分";
 ClassTimeSecondText = "秒";
 
-KickOutNoticeText = "移除通知";
+KickOutNoticeText = "移出通知";
 KickOutText = "你已被踢出教室!";
 
 ForbidNoticeText = "禁入通知";

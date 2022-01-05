@@ -22,12 +22,12 @@ class AgoraToolBoxItemCell: UICollectionViewCell {
         backgroundColor = .white
         
         imageView = UIImageView(frame: .zero)
-        imageView.tintColor = UIColor(rgb: 0x7B88A0)
+        imageView.tintColor = UIColor(hex: 0x7B88A0)
         addSubview(imageView)
         
         titleLabel = UILabel(frame: .zero)
         titleLabel.font = UIFont.systemFont(ofSize: 12)
-        titleLabel.textColor = UIColor(rgb: 0x7B88A0)
+        titleLabel.textColor = UIColor(hex: 0x7B88A0)
         titleLabel.textAlignment = .center
         addSubview(titleLabel)
         

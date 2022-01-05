@@ -4,11 +4,8 @@ Envi=$2
 Project_Path="../../../App"
 Local_Path=`pwd`
 
-python pod.py ${Project_Path}
-
+python cloud_pod.py 1 1
 cd ${Project_Path}
-
-pod install
 
 Product_Path="../Products/App"
 Plist_Path="../Products/Plists/exportPlist.plist"
@@ -19,7 +16,7 @@ fi
 
 xcodebuild -quiet clean -workspace "AgoraEducation.xcworkspace" -scheme "AgoraEducation" -configuration ${Mode}
 xcodebuild -quiet archive -workspace "AgoraEducation.xcworkspace" -scheme "AgoraEducation" -configuration ${Mode} -archivePath ${Product_Path}/AgoraEducation_${Mode}.xcarchive
-xcodebuild -quiet -exportArchive -exportOptionsPlist ${Plist_Path} -archivePath ${Product_Path}/AgoraEducation_${Mode}.xcarchive -exportPath ${Product_Path}
+xcodebuild -quiet -exportArchive -exportOptionsPlist ${Plist_Path} -archivePath ${Product_Path}/AgoraEducation_${Mode}.xcarchive -exportPath ${Product_Path} || exit 1
 
 mv ${Product_Path}/AgoraCloudClass.ipa ${Product_Path}/AgoraCloudClass_${Mode}.ipa
 

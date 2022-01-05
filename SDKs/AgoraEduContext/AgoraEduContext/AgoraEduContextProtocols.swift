@@ -10,160 +10,184 @@ import UIKit
 
 public typealias AgoraEduContextSuccess = () -> (Void)
 public typealias AgoraEduContextSuccessWithString = (String) -> (Void)
-public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
+public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 
 // MARK: - Classroom
 @objc public protocol AgoraEduRoomHandler: NSObjectProtocol {
-    /// 加入房间成功
-    ///
+    /// 加入房间成功 (v2.0.0)
     /// - parameter roomInfo: 房间信息
-    @objc optional func onRoomJoinedSuccess(roomInfo: AgoraEduContextRoomInfo)
-    /// 加入房间失败
-    ///
+    @objc optional func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo)
+    
+    /// 加入房间失败 (v2.0.0)
     /// - parameter roomInfo: 房间信息
     /// - parameter error: 错误原因
-    @objc optional func onRoomJoinedFail(roomInfo: AgoraEduContextRoomInfo,
-                                         error: AgoraEduContextError)
-    /// 房间自定义属性更新
-    ///
+    @objc optional func onJoinRoomFailure(roomInfo: AgoraEduContextRoomInfo,
+                                          error: AgoraEduContextError)
+    
+    /// 房间自定义属性更新 (v2.0.0)
     /// - parameter changedProperties: 本次更新的部分 properties
     /// - parameter cause: 更新的原因
-    /// - parameter operator: 该操作的执行者
+    /// - parameter operatorUser: 该操作的执行者
     @objc optional func onRoomPropertiesUpdated(changedProperties: [String: Any],
                                                 cause: [String: Any]?,
-                                                operator: AgoraEduContextUserInfo?)
-    /// 房间自定义属性删除
-    ///
+                                                operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 房间自定义属性删除 (v2.0.0)
     /// - parameter keyPaths: 被删除的属性的key path数组
     /// - parameter cause: 原因
-    /// - parameter operator: 该操作的执行者
+    /// - parameter operatorUser: 该操作的执行者
     @objc optional func onRoomPropertiesDeleted(keyPaths: [String],
                                                 cause: [String: Any]?,
-                                                operator: AgoraEduContextUserInfo?)
-    /// 房间关闭
-    @objc optional func onRoomClosed()
-    /// 课堂状态更新
-    ///
+                                                operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 课堂状态更新 (v2.0.0)
     /// - parameter state: 当前的课堂状态
     @objc optional func onClassStateUpdated(state: AgoraEduContextClassState)
+    
+    /// 房间关闭 (v2.0.0)
+    @objc optional func onRoomClosed()
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
-    /// 加入房间
+    /// 加入房间 (v2.0.0)
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
     func joinRoom(success: (() -> Void)?,
-                  fail: ((AgoraEduContextError) -> Void)?)
-    /// 离开房间
+                  failure: ((AgoraEduContextError) -> Void)?)
+    
+    /// 离开房间 (v2.0.0)
     func leaveRoom()
-    /// 获取房间信息
+    
+    /// 获取房间信息 (v2.0.0)
+    /// - returns: 房间信息
     func getRoomInfo() -> AgoraEduContextRoomInfo
-    /// 更新自定义房间属性，如果没有就增加
+    
+    /// 获取自定义房间属性 (v2.0.0)
+    /// - returns: 自定义房间属性
+    func getRoomProperties() -> [String: Any]?
+    
+    /// 更新/增加自定义房间属性 (v2.0.0)
     /// 支持path修改和整体修改
     /// - parameter properties: {"key.subkey":"1"}  和 {"key":{"subkey":"1"}}
     /// - parameter cause: 修改的原因，可为空
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
     func updateRoomProperties(_ properties: [String: Any],
                               cause: [String: Any]?,
                               success: (() -> Void)?,
-                              fail: ((AgoraEduContextError) -> Void)?)
-    /// 删除房间自定义属性
+                              failure: ((AgoraEduContextError) -> Void)?)
+    
+    /// 删除房间自定义属性 (v2.0.0)
+    /// - parameter keyPaths: key 数组
+    /// - parameter cause: 修改的原因，可为空
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
     func deleteRoomProperties(_ keyPaths: [String],
                               cause: [String: Any]?,
                               success: (() -> Void)?,
-                              fail: ((AgoraEduContextError) -> Void)?)
-    /// 在加入房间后，不立即上课，而是老师手动触发上课
-    func startClass(success: (() -> Void)?,
-                    fail: ((AgoraEduContextError) -> Void)?)
-    /// 获取课堂信息
+                              failure: ((AgoraEduContextError) -> Void)?)
+    
+    /// 获取课堂信息 (v2.0.0)
+    /// - returns: 课堂信息
     func getClassInfo() -> AgoraEduContextClassInfo
     
-    /// 事件监听
+    /// 开始事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
     func registerRoomEventHandler(_ handler: AgoraEduRoomHandler)
+    
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func unregisterRoomEventHandler(_ handler: AgoraEduRoomHandler)
 }
 
 // MARK: - User
 @objc public protocol AgoraEduUserHandler: NSObjectProtocol {
-    /// 远端用户加入(v2.0.0)
+    /// 远端用户加入 (v2.0.0)
     /// - parameter user: 加入的远端用户
     @objc optional func onRemoteUserJoined(user: AgoraEduContextUserInfo)
     
-    /// 远端用户离开(v2.0.0)
+    /// 远端用户离开 (v2.0.0)
     /// - parameter user: 离开的远端用户
-    /// - parameter operator: 操作者，可为空
+    /// - parameter operatorUser: 操作者，可为空
     /// - parameter reason: 离开的原因（默认为normal）
     @objc optional func onRemoteUserLeft(user: AgoraEduContextUserInfo,
-                                         operator: AgoraEduContextUserInfo?,
+                                         operatorUser: AgoraEduContextUserInfo?,
                                          reason: AgoraEduContextUserLeaveReason)
     
-    /// 用户信息更新(v2.0.0)
+    /// 用户信息更新 (v2.0.0)
     /// - parameter user: 更新的用户
-    /// - parameter operator: 操作者，可为空
+    /// - parameter operatorUser: 操作者，可为空
     @objc optional func onUserUpdated(user: AgoraEduContextUserInfo,
                                       operatorUser: AgoraEduContextUserInfo?)
 
-    /// 开始连麦的用户（v2.0.0)
+    /// 开始连麦的用户 (v2.0.0)
     /// - parameter userList: 开始连麦的用户列表
     /// - parameter operatorUser: 操作者
     @objc optional func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                               operatorUser: AgoraEduContextUserInfo?)
     
-    /// 结束连麦的用户（v2.0.0)
+    /// 结束连麦的用户 (v2.0.0)
     /// - parameter userList: 结束连麦的用户列表
     /// - parameter operatorUser: 操作者
     @objc optional func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                                 operatorUser: AgoraEduContextUserInfo?)
     
-    /// 用户自定义属性更新(v2.0.0)
+    /// 用户自定义属性更新 (v2.0.0)
     /// - parameter user: 更新的用户
     /// - parameter changedProperties: 更新的用户属性字典
     /// - parameter cause: 更新的原因，可为空
-    /// - parameter operator: 操作者，可为空
+    /// - parameter operatorUser: 操作者，可为空
     @objc optional func onUserPropertiesUpdated(user: AgoraEduContextUserInfo,
                                                 changedProperties: [String: Any],
                                                 cause: [String: Any]?,
                                                 operatorUser: AgoraEduContextUserInfo?)
     
-    /// 用户自定义属性删除(v2.0.0)
+    /// 用户自定义属性删除 (v2.0.0)
     /// - parameter user: 更新的用户
     /// - parameter deletedProperties: 删除的用户属性列表
     /// - parameter cause: 更新的原因，可为空
-    /// - parameter operator: 操作者，可为空
+    /// - parameter operatorUser: 操作者，可为空
     @objc optional func onUserPropertiesDeleted(user: AgoraEduContextUserInfo,
                                                 deletedProperties: [String],
                                                 cause: [String: Any]?,
                                                 operatorUser: AgoraEduContextUserInfo?)
     
-    /// 用户收到奖励(v2.0.0)
+    /// 用户收到奖励 (v2.0.0)
     /// - parameter user: 用户信息
     /// - parameter rewardCount: 奖励个数
+    /// - parameter operatorUser: 操作者，可为空
     @objc optional func onUserRewarded(user: AgoraEduContextUserInfo,
                                        rewardCount: Int,
                                        operatorUser: AgoraEduContextUserInfo?)
     
-    /// 自己被踢出（v2.0.0)
+    /// 自己被踢出 (v2.0.0)
     @objc optional func onLocalUserKickedOut()
     
-    /// 是否可以挥手（v2.0.0)
+    /// 是否可以挥手 (v2.0.0)
     /// - parameter enable: 是否可以挥手
     @objc optional func onUserHandsWaveEnable(enable: Bool)
     
-    /// 用户挥手（v2.0.0)
-    /// - parameter fromUser: 举手用户
-    /// - parameter duration: 举手的时长，单位秒
+    /// 用户开始挥手 (v2.0.0)
+    /// - parameter user: 挥手用户
+    /// - parameter duration: 挥手的时长，单位秒
     @objc optional func onUserHandsWave(user: AgoraEduContextUserInfo,
                                         duration: Int)
     
-    /// 用户手放下，结束上台申请（v2.0.0)
+    /// 用户结束挥手（v2.0.0)
     /// - parameter fromUser: 手放下的用户
-    /// - note: 无论是用户自己取消举手，还是举手申请被接受，都要走这个回调
+    /// - note: 无论是用户自己取消举手，还是举手申请被接受，都会走这个回调
     @objc optional func onUserHandsDown(user: AgoraEduContextUserInfo)
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
-    /// 获取本地用户信息(v2.0.0)
-    /// - Returns: 本地用户信息
+    /// 获取本地用户信息 (v2.0.0)
+    /// - returns: 本地用户信息
     func getLocalUserInfo() -> AgoraEduContextUserInfo
     
-    /// 获取所有在线用户信息 (v2.0.0)
-    /// - returns: 用户列表数组
+    /// 获取所有连麦用户信息 (v2.0.0)
+    /// - returns: 连麦用户列表数组
     func getCoHostList() -> [AgoraEduContextUserInfo]?
     
     /// 获取指定角色的用户信息数组 (v2.0.0)
@@ -187,7 +211,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
                               properties: [String: Any],
                               cause: [String: Any]?,
                               success: AgoraEduContextSuccess?,
-                              failure: AgoraEduContextFail?)
+                              failure: AgoraEduContextFailure?)
     
     /// 删除用户自定义属性 (v2.0.0)
     /// - parameter userUuid: 用户id
@@ -200,101 +224,48 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
                               keyPaths: [String],
                               cause: [String: Any]?,
                               success: AgoraEduContextSuccess?,
-                              failure: AgoraEduContextFail?)
+                              failure: AgoraEduContextFailure?)
     
     /// 获取用户自定义属性 (v2.0.0)
     /// - parameter userUuid: 用户id
     /// - returns: 用户自定义属性，可为空
     func getUserProperties(userUuid: String) -> [String: Any]?
     
-    /// 指定用户开始连麦 (v2.0.0)
-    /// - parameter userUuid: 用户id
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func addCoHost(userUuid: String,
-                   success: AgoraEduContextSuccess?,
-                   failure: AgoraEduContextFail?)
-    
-    /// 指定用户结束连麦(v2.0.0)
-    /// - parameter userUuid: 用户id
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func removeCoHost(userUuid: String,
-                      success: AgoraEduContextSuccess?,
-                      failure: AgoraEduContextFail?)
-    
-    /// 所有用户结束连麦(v2.0.0)
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func removeAllCoHosts(success: AgoraEduContextSuccess?,
-                          failure: AgoraEduContextFail?)
-    
-    /// 给用户发奖 (v2.0.0)
-    /// - parameter userUuid: 用户id
-    /// - parameter rewardCount: 奖励数
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func rewardUsers(userUuidList: [String],
-                     rewardCount: Int,
-                     success: AgoraEduContextSuccess?,
-                     failure: AgoraEduContextFail?)
-    
     /// 获取用户的发奖数 (v2.0.0)
     /// - parameter userUuid: 用户id
     /// - returns: Int, 奖励数
     func getUserRewardCount(userUuid: String) -> Int
     
-    /// 踢人 (v2.0.0)
-    /// - parameter userUuid: 用户id
-    /// - parameter forever: 是否永久踢出该用户
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func kickOutUser(userUuid: String,
-                     forever: Bool,
-                     success: AgoraEduContextSuccess?,
-                     failure: AgoraEduContextFail?)
-    
-    /// 设置是否可以挥手 (v2.0.0)
-    /// - parameter enable: 是否可以挥手
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func setHandsWaveEnable(enable: Bool,
-                            success: AgoraEduContextSuccess?,
-                            failure: AgoraEduContextFail?)
-    
     /// 是否可以挥手 (v2.0.0)
     /// - parameter enable: 是否可以挥手
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
     /// - returns: Bool, 是否可以挥手
     func getHandsWaveEnable() -> Bool
     
-    /// 举手，申请上台 (v1.2.0)
+    /// 举手，申请上台 (v2.0.0)
     /// - parameter duration: 举手申请的时长，单位秒
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败
     /// - returns: void
     func handsWave(duration: Int,
                    success: AgoraEduContextSuccess?,
-                   failure: AgoraEduContextFail?)
+                   failure: AgoraEduContextFailure?)
 
     /// 手放下，取消申请上台 (v2.0.0)
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败
     /// - returns: void
     func handsDown(success: AgoraEduContextSuccess?,
-                   failure: AgoraEduContextFail?)
+                   failure: AgoraEduContextFailure?)
     
-    /// 事件监听
+    /// 开始事件监听 (v2.0.0)
     /// - parameter handler: 监听者
     /// - returns: void
-    func registerEventHandler(_ handler: AgoraEduUserHandler)
+    func registerUserEventHandler(_ handler: AgoraEduUserHandler)
+    
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func unregisterUserEventHandler(_ handler: AgoraEduUserHandler)
 }
 
 // MARK: - Media
@@ -302,21 +273,21 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// 音量变化 (v2.0.0)
     /// - parameter volume: 音量
     /// - parameter streamUuid: 流 Id
-    /// - returns: Void
+    /// - returns: void
     @objc optional  func onVolumeUpdated(volume: Int,
                                          streamUuid: String)
     
     /// 设备状态更新 (v2.0.0)
     /// - parameter device: 设备信息
     /// - parameter state: 设备状态
-    /// - returns: Void
+    /// - returns: void
     @objc optional func onLocalDeviceStateUpdated(device: AgoraEduContextDeviceInfo,
                                                   state: AgoraEduContextDeviceState)
     
     /// 混音状态变化 (v2.0.0)
     /// - parameter stateCode: 状态码
     /// - parameter errorCode: 错误码
-    /// - returns: Void
+    /// - returns: void
     @objc optional func onAudioMixingStateChanged(stateCode: Int,
                                                   errorCode: Int)
 }
@@ -337,11 +308,21 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - returns: AgoraEduContextError, 返回错误
     func closeLocalDevice(device: AgoraEduContextDeviceInfo) -> AgoraEduContextError?
     
+    /// 打开设备 (v2.0.0)
+    /// - parameter device: 系统设备枚举
+    /// - returns: AgoraEduContextError, 返回错误
+    func openLocalDevice(systemDevice: AgoraEduContextSystemDevice) -> AgoraEduContextError?
+    
+    /// 关闭设备 (v2.0.0)
+    /// - parameter device: 系统设备枚举
+    /// - returns: AgoraEduContextError, 返回错误
+    func closeLocalDevice(systemDevice: AgoraEduContextSystemDevice) -> AgoraEduContextError?
+    
     /// 获取设备状态 (v2.0.0)
     /// - parameter device: 设备信息
     /// - parameter success: 参数正确，返回设备状态
-    /// - parameter fail: 参数错误
-    /// - returns: AgoraEduContextError, 返回错误
+    /// - parameter failure: 参数错误
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
     func getLocalDeviceState(device: AgoraEduContextDeviceInfo,
                              success: (AgoraEduContextDeviceState) -> (),
                              failure: (AgoraEduContextError) -> ())
@@ -350,7 +331,7 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - parameter view: 渲染视频的容器
     /// - parameter renderConfig: 渲染配置
     /// - parameter streamUuid: 流 Id
-    /// - returns: AgoraEduContextError, 返回错误
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
     func startRenderVideo(view: UIView,
                           renderConfig: AgoraEduContextRenderConfig,
                           streamUuid: String) -> AgoraEduContextError?
@@ -379,33 +360,39 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - Returns: AgoraEduContextError, 返回错误，为空代表成功
     func setAudioMixingPosition(position: Int) -> AgoraEduContextError?
     
-    /// 注册事件监听
-    /// - returns: Void
+    /// 开始事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
     func registerMediaEventHandler(_ handler: AgoraEduMediaHandler)
+    
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func unregisterMediaEventHandler(_ handler: AgoraEduMediaHandler)
 }
 
 // MARK: - Stream
 @objc public protocol AgoraEduStreamHandler: NSObjectProtocol {
     /// 远端流加入频道事件 (v2.0.0)
     /// - parameter stream: 流信息
-    /// - parameter operator: 操作人，可以为空
+    /// - parameter operatorUser: 操作人，可以为空
     /// - returns: void
     @objc optional func onStreamJoined(stream: AgoraEduContextStreamInfo,
-                                       operator: AgoraEduContextUserInfo?)
+                                       operatorUser: AgoraEduContextUserInfo?)
     
     /// 远端流离开频道事件 (v2.0.0)
     /// - parameter stream: 流信息
-    /// - parameter operator: 操作人，可以为空
+    /// - parameter operatorUser: 操作人，可以为空
     /// - returns: void
     @objc optional func onStreamLeft(stream: AgoraEduContextStreamInfo,
-                                     operator: AgoraEduContextUserInfo?)
+                                     operatorUser: AgoraEduContextUserInfo?)
     
     /// 远端流更新事件 (v2.0.0)
     /// - parameter stream: 流信息
-    /// - parameter operator: 操作人，可以为空
+    /// - parameter operatorUser: 操作人，可以为空
     /// - returns: void
     @objc optional func onStreamUpdated(stream: AgoraEduContextStreamInfo,
-                                        operator: AgoraEduContextUserInfo?)
+                                        operatorUser: AgoraEduContextUserInfo?)
 }
 
 @objc public protocol AgoraEduStreamContext: NSObjectProtocol {
@@ -419,35 +406,12 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
     func getAllStreamList() -> [AgoraEduContextStreamInfo]?
     
-    /// 授予流的发流权限(v2.0.0)
-    /// - parameter streamUuids: 流Id
-    /// - parameter streamType: 流类型;  streamType 等于 none 为无效参数
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
-    func publishStream(streamUuids: [String],
-                       streamType: AgoraEduContextMediaStreamType,
-                       success: AgoraEduContextSuccess?,
-                       failure: AgoraEduContextFail?)
-    
-    /// 取消流的发流权限 (v2.0.0)
-    /// - parameter streamUuids: 流Id
-    /// - parameter streamType: 流类型;  streamType 等于 none 为无效参数
-    /// - parameter success: 请求成功
-    /// - parameter failure: 请求失败
-    /// - returns: void
-    func muteStream(streamUuids: [String],
-                    streamType: AgoraEduContextMediaStreamType,
-                    success: AgoraEduContextSuccess?,
-                    failure: AgoraEduContextFail?)
-    
     /// 设置本地流的视频配置(v1.2.0)
     /// - parameter streamUuid: 流id
     /// - parameter config: 视频配置
     /// - returns: AgoraEduContextError
     func setLocalVideoConfig(streamUuid: String,
                              config: AgoraEduContextVideoStreamConfig) -> AgoraEduContextError?
-    
     
     /// 选择订阅高/低分辨率的视频流 (v2.0.0)
     /// - parameter streamUuid: 流Id
@@ -456,35 +420,45 @@ public typealias AgoraEduContextFail = (AgoraEduContextError) -> (Void)
     func setRemoteVideoStreamSubscribeLevel(streamUuid: String,
                                             level: AgoraEduContextVideoStreamSubscribeLevel) -> AgoraEduContextError?
     
-    /// 注册流事件回调 (v2.0.0)
-    /// - parameter handler: 遵守 AgoraEduStreamHandler 的对象
+    /// 开始事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
     /// - returns: void
     func registerStreamEventHandler(_ handler: AgoraEduStreamHandler)
+    
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func unregisterStreamEventHandler(_ handler: AgoraEduStreamHandler)
 }
 
 // MARK: - Monitor
-@objc public protocol AgoraEduMonitorContext: NSObjectProtocol {
-    /// 上传日志(v2.0.0)
-    /// - parameter success: 上传成功，获取日志的id
-    /// - parameter failure: 上传失败
-    /// - returns: void
-    func uploadLog(success: AgoraEduContextSuccessWithString?,
-                   failure: AgoraEduContextFail?)
-    
-    /// 注册SDK状态监控事件回调 (v2.0.0)
-    /// - parameter handler: 遵守 AgoraEduMonitorHandler 的对象
-    /// - returns: void
-    func registerMonitorEventHandler(_ handler: AgoraEduMonitorHandler)
-}
-
 @objc public protocol AgoraEduMonitorHandler: NSObjectProtocol {
-    /// 本地网络质量更新(v2.0.0)
+    /// 本地网络质量更新 (v2.0.0)
     /// - parameter quality: 网络质量
     /// - returns: void
     @objc optional func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality)
     
-    /// 本地与服务器的连接状态
-    /// - parameter state: 连接
+    /// 本地与服务器的连接状态  (v2.0.0)
+    /// - parameter state: 连接状态
     /// - returns: void
     @objc optional func onLocalConnectionUpdated(state: AgoraEduContextConnectionState)
+}
+
+@objc public protocol AgoraEduMonitorContext: NSObjectProtocol {
+    /// 上传日志 (v2.0.0)
+    /// - parameter success: 上传成功，获取日志的id
+    /// - parameter failure: 上传失败
+    /// - returns: void
+    func uploadLog(success: AgoraEduContextSuccessWithString?,
+                   failure: AgoraEduContextFailure?)
+    
+    /// 开始事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func registerMonitorEventHandler(_ handler: AgoraEduMonitorHandler)
+    
+    /// 结束事件监听 (v2.0.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func unregisterMonitorEventHandler(_ handler: AgoraEduMonitorHandler)
 }

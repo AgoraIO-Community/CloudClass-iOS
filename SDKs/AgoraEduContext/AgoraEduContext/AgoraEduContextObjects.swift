@@ -8,12 +8,13 @@
 import Foundation
 
 // MARK: - Classroom
+/// 房间信息
 @objcMembers public class AgoraEduContextRoomInfo: NSObject {
-    // 房间Id
+    /// 房间Id
     public var roomUuid: String
-    // 房间名字
+    /// 房间名字
     public var roomName: String
-    
+    /// 房间类型
     public var roomType: AgoraEduContextRoomType
     
     public init(roomUuid: String,
@@ -25,14 +26,15 @@ import Foundation
     }
 }
 
+/// 课堂信息
 @objcMembers public class AgoraEduContextClassInfo: NSObject {
     /// 课堂状态
     public var state: AgoraEduContextClassState = .before
-    
+    /// 开始时间，毫秒
     public var startTime: Int64
-    
+    /// 课堂时长，秒
     public var duration: Int64
-    
+    /// 拖堂时长，秒
     public var closeDelay: Int64
     
     public init(state: AgoraEduContextClassState,
@@ -47,24 +49,26 @@ import Foundation
 }
 
 // MARK: - User
+/// 用户信息
 @objcMembers public class AgoraEduContextUserInfo: NSObject {
     // 用户id
     public var userUuid: String
     // 用户名字
     public var userName: String
     // 用户角色
-    public var role: AgoraEduContextUserRole
+    public var userRole: AgoraEduContextUserRole
     
     public init(userUuid: String,
                 userName: String,
                 role: AgoraEduContextUserRole = .student) {
         self.userUuid = userUuid
         self.userName = userName
-        self.role = role
+        self.userRole = role
     }
 }
 
 // MARK: - Media
+/// 视频流配置
 @objcMembers public class AgoraEduContextVideoStreamConfig: NSObject {
     /// 视频宽
     public var dimensionWidth: UInt = 320
@@ -99,11 +103,13 @@ import Foundation
     }
 }
 
+/// 视频渲染配置
 @objcMembers public class AgoraEduContextRenderConfig: NSObject {
     public var mode: AgoraEduContextVideoRenderMode = .hidden
     public var isMirror: Bool = false
 }
 
+/// 设备信息
 @objcMembers public class AgoraEduContextDeviceInfo: NSObject {
     /// 设备 Id
     public var deviceId: String
@@ -123,6 +129,7 @@ import Foundation
 }
 
 // MARK: - Stream
+/// 流信息
 @objcMembers public class AgoraEduContextStreamInfo: NSObject {
     /// 流 Id
     public let streamUuid: String
@@ -161,6 +168,7 @@ import Foundation
 }
 
 // MARK: - AgoraEduContextError
+/// 错误
 @objcMembers public class AgoraEduContextError: NSObject {
     // 错误Code
     public var code: Int = 0
@@ -171,83 +179,5 @@ import Foundation
                 message: String? = nil) {
         self.code = code
         self.message = message
-    }
-}
-
-// MAKR: - Private communication
-@objcMembers public class AgoraEduContextPrivateChatInfo: NSObject {
-    public var fromUser: AgoraEduContextUserInfo
-    public var toUser: AgoraEduContextUserInfo
-    
-    public init(fromUser: AgoraEduContextUserInfo,
-                toUser: AgoraEduContextUserInfo) {
-        self.fromUser = fromUser
-        self.toUser = toUser
-    }
-}
-
-// MARK: - WhiteBoard
-
-@objcMembers public class AgoraEduContextCourseware: NSObject {
-    public let resourceName: String
-    public let resourceUuid: String
-    public let scenePath: String
-    public let resourceURL: String
-    public let scenes: [AgoraEduContextWhiteScene]
-    /// 原始文件的扩展名
-    public let ext: String
-    /// 原始文件的大小 单位是字节
-    public let size: Double
-    /// 原始文件的更新时间
-    public let updateTime: Double
-    
-    public init(resourceName: String,
-                resourceUuid: String,
-                scenePath: String,
-                resourceURL: String,
-                scenes: [AgoraEduContextWhiteScene],
-                ext: String,
-                size: Double,
-                updateTime: Double) {
-        self.resourceName = resourceName
-        self.resourceUuid = resourceUuid
-        self.scenePath = scenePath
-        self.resourceURL = resourceURL
-        self.scenes = scenes
-        self.ext = ext
-        self.size = size
-        self.updateTime = updateTime
-    }
-}
-
-@objcMembers public class AgoraEduContextWhiteScene: NSObject {
-    public var name: String
-    public var ppt: AgoraEduContextWhitePptPage
-    
-    public init(name: String,
-                ppt: AgoraEduContextWhitePptPage) {
-        self.name = name
-        self.ppt = ppt
-    }
-}
-
-@objcMembers public class AgoraEduContextWhitePptPage: NSObject {
-    /// 图片的 URL 地址。
-    public var src: String
-    /// 图片的 URL 宽度。单位为像素。
-    public var width: Float
-    /// 图片的 URL 高度。单位为像素。
-    public var height: Float
-    /// 预览图片的 URL 地址
-    public var previewURL: String?
-    
-    public init(src: String,
-                width: Float,
-                height: Float,
-                previewURL: String?) {
-        self.src = src
-        self.width = width
-        self.height = height
-        self.previewURL = previewURL
     }
 }

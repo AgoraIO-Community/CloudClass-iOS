@@ -10,9 +10,8 @@ Podfile.lock
 *.xcworkspace
 Pods
 Products/App/
-Products/Libs/
-Products/dSYMs_Simulator/
-Products/dSYMs_iPhone/
+Products/Libs/dSYMs_Simulator/
+Products/Libs/dSYMs_iPhone/
 Package
 XCBuildData
 *.zip

@@ -15,10 +15,10 @@ class AgoraRoomToolZoomButton: UIButton {
         super.init(frame: frame)
         
         backgroundColor = UIColor.white
-        imageView?.tintColor = UIColor(rgb: 0x7B88A0)
+        imageView?.tintColor = UIColor(hex: 0x7B88A0)
         
         layer.cornerRadius = 8
-        layer.shadowColor = UIColor(rgb:0x2F4192).withAlphaComponent(0.15).cgColor
+        layer.shadowColor = UIColor(hex:0x2F4192, transparency: 0.15)?.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 2)
         layer.shadowOpacity = 1
         layer.shadowRadius = 6
@@ -37,8 +37,8 @@ class AgoraRoomToolZoomButton: UIButton {
     override var isSelected: Bool {
         willSet {
             if isSelected != newValue {
-                backgroundColor = newValue ? UIColor(rgb: 0x357BF6) : .white
-                imageView?.tintColor = newValue ? .white : UIColor(rgb: 0x7B88A0)
+                backgroundColor = newValue ? UIColor(hex: 0x357BF6) : .white
+                imageView?.tintColor = newValue ? .white : UIColor(hex: 0x7B88A0)
             }
         }
     }
@@ -76,7 +76,7 @@ protocol AgoraRoomToolsViewDelegate: NSObject {
     func toolsViewDidDeselectTool(_ tool: AgoraRoomToolstView.AgoraRoomToolType)
 }
 // MARK: - AgoraToolListView
-private let kButtonSize: CGFloat = AgoraFit.scale(36.0)
+private let kButtonSize: CGFloat = 36.0
 private let kGap: CGFloat = 12.0
 private let kDefaultTag: Int = 3389
 
@@ -125,6 +125,22 @@ class AgoraRoomToolstView: UIView {
                     for: .touchUpInside)
         return v
     }()
+    private lazy var messageRedDot: UIView = {
+        let v = UIView()
+        v.isHidden = true
+        v.isUserInteractionEnabled = false
+        v.backgroundColor = UIColor(hex: 0xF04C36)
+        v.layer.cornerRadius = 2
+        v.clipsToBounds = true
+        self.addSubview(v)
+        messageButton.addSubview(v)
+        v.mas_makeConstraints { make in
+            make?.width.height().equalTo()(4)
+            make?.top.equalTo()(messageButton)?.offset()(5)
+            make?.right.equalTo()(messageButton)?.offset()(-5)
+        }
+        return v
+    }()
     /** 展示的工具*/
     public var tools: [AgoraRoomToolType] = [AgoraRoomToolType]() {
         didSet {
@@ -163,6 +179,10 @@ class AgoraRoomToolstView: UIView {
             selectedTool = nil
         }
     }
+    
+    public func updateChatRedDot(isShow: Bool) {
+        messageRedDot.isHidden = !isShow
+    }
 }
 // MARK: - Private
 private extension AgoraRoomToolstView {
@@ -194,7 +214,6 @@ private extension AgoraRoomToolstView {
 
 // MARK: - Actions
 extension AgoraRoomToolstView {
-    
     @objc func onClickToolButton(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         if sender.isSelected,
@@ -203,10 +222,6 @@ extension AgoraRoomToolstView {
         } else {
             selectedTool = nil
         }
-    }
-    
-    @objc func onClickHandsup(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
     }
 }
 

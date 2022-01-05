@@ -58,7 +58,7 @@ import UIKit
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
-        vc.delegate = self
+        vc.roomDelegate = self
         self.addChild(vc)
         return vc
     }()
@@ -81,27 +81,17 @@ import UIKit
         print("\(#function): \(self.classForCoder)")
     }
     
-    @objc public override init(contextPool: AgoraEduContextPool,
-                         delegate: AgoraEduUIManagerDelegate) {
-        super.init(contextPool: contextPool,
-                   delegate: delegate)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         self.createViews()
         self.createConstrains()
-        if self.contextPool.user.getLocalUserInfo().role == .teacher {
+        if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
             self.toolsView.tools = [.setting, .toolBox, .message]
-        } else if self.contextPool.user.getLocalUserInfo().role == .student {
+        } else if self.contextPool.user.getLocalUserInfo().userRole == .student {
             self.toolsView.tools = [.setting, .message]
         }
-        self.contextPool.user.registerEventHandler(self)
+        self.contextPool.user.registerUserEventHandler(self)
         
         AgoraLoading.loading()
         contextPool.room.joinRoom { [weak self] in
@@ -119,15 +109,16 @@ import UIKit
             if let mic = self.contextPool.media.getLocalDevices(deviceType: .mic).first {
                 self.contextPool.media.openLocalDevice(device: mic)
             }
-            if self.contextPool.user.getLocalUserInfo().role == .teacher {
-                self.contextPool.room.startClass {
-                } fail: { error in
-                    AgoraToast.toast(msg: error.message, type: .erro)
-                }
+            if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
+                // TODO: v2.1.0
+//                self.contextPool.room.startClass {
+//                } failure: { error in
+//                    AgoraToast.toast(msg: error.message, type: .error)
+//                }
             }
-        } fail: { [weak self] error in
+        } failure: { [weak self] error in
             AgoraLoading.hide()
-            self?.contextPool.room.leaveRoom()
+            self?.exitClassRoom(reason: .normal)
         }
     }
     
@@ -163,11 +154,11 @@ extension AgoraPaintingUIManager: AgoraEduMonitorHandler {
     public func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
         switch state {
         case .aborted:
-            AgoraLoading.hide()
             // 踢出
-            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"))
-            contextPool.room.leaveRoom()
-            exit(reason: .kickOut)
+            AgoraLoading.hide()
+            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
+                             type: .error)
+            exitClassRoom(reason: .kickOut)
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
@@ -182,10 +173,9 @@ extension AgoraPaintingUIManager: AgoraEduUserHandler {
     func onKickedOut() {
         AgoraAlert()
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
-            .setMessage(AgoraKitLocalizedString("KickOutText"))
+            .setMessage("local_user_kicked_out".ag_localizedIn("AgoraEduUI"))
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
-                self.contextPool.room.leaveRoom()
-                self.exit(reason: .kickOut)
+                self.exitClassRoom(reason: .kickOut)
             }))
             .show(in: self)
     }
@@ -230,7 +220,7 @@ extension AgoraPaintingUIManager: AgoraPaintingRenderUIControllerDelegate {
                          yaxis: CGFloat,
                          width: CGFloat,
                          height: CGFloat) {
-        if contextPool.user.getLocalUserInfo().role != .teacher {
+        if contextPool.user.getLocalUserInfo().userRole != .teacher {
             return
         }
         if firstOpen {
@@ -250,7 +240,7 @@ extension AgoraPaintingUIManager: AgoraPaintingRenderUIControllerDelegate {
     }
 
     func onClickMemberAt(view: UIView, UUID: String) {
-        if contextPool.user.getLocalUserInfo().role != .teacher {
+        if contextPool.user.getLocalUserInfo().userRole != .teacher {
             return
         }
         memberMenuViewController.userUUID = UUID
@@ -277,7 +267,7 @@ extension AgoraPaintingUIManager: AgoraRoomToolsViewDelegate {
                 make?.centerY.equalTo()(toolsView)
             }
         case .toolBox:
-            if contextPool.user.getLocalUserInfo().role != .teacher {
+            if contextPool.user.getLocalUserInfo().userRole != .teacher {
                 break
             }
             ctrlView = toolBoxViewController.view
@@ -344,7 +334,7 @@ extension AgoraPaintingUIManager: AgoraToolBoxUIControllerDelegate {
 // MARK: - AgoraBoardToolsUIControllerDelegate
 extension AgoraPaintingUIManager: AgoraBoardToolsUIControllerDelegate {
     func brushToolsViewDidBrushChanged(_ tool: AgoraBoardToolItem) {
-        brushToolButton.setImage(tool.image(self))
+        brushToolButton.setImage(tool.image())
     }
     
     func onShowBrushTools(isShow: Bool) {
@@ -367,16 +357,11 @@ extension AgoraPaintingUIManager: AgoraPaintingBoardUIControllerDelegate {
     }
 }
 
-extension AgoraPaintingUIManager: AgoraSettingUIControllerDelegate {
-    func settingUIControllerDidPressedLeaveRoom(controller: AgoraSettingUIController) {
-        exit(reason: .normal)
-    }
-}
-
 // MARK: - Creations
 private extension AgoraPaintingUIManager {
     func createViews() {
         stateController = AgoraRoomStateUIController(context: contextPool)
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         

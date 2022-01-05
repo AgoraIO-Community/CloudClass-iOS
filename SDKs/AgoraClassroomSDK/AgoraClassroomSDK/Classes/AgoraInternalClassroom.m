@@ -9,12 +9,6 @@
 #import "AgoraInternalClassroom.h"
 #import "AgoraEduEnums.h"
 
-@implementation AgoraClassroomSDKConfig (Internal)
-- (BOOL)isLegal {
-    return (self.appId.length > 0);
-}
-@end
-
 @implementation AgoraEduLaunchConfig (Internal)
 - (BOOL)isLegal {
     if (self.userName.length <= 0) {
@@ -22,6 +16,10 @@
     }
     
     if (self.userUuid.length <= 0) {
+        return NO;
+    }
+    
+    if (self.userRole != AgoraEduUserRoleStudent) {
         return NO;
     }
     
@@ -35,16 +33,15 @@
     
     if (!(self.roomType == AgoraEduRoomTypeOneToOne
           || self.roomType == AgoraEduRoomTypeSmall
-          || self.roomType == AgoraEduRoomTypeLecture
-          || self.roomType == AgoraEduRoomTypePaintingSmall)) {
+          || self.roomType == AgoraEduRoomTypeLecture)) {
+        return NO;
+    }
+    
+    if (self.appId.length <= 0) {
         return NO;
     }
     
     if (self.token.length <= 0) {
-        return NO;
-    }
-    
-    if (self.startTime == nil) {
         return NO;
     }
     
@@ -53,57 +50,35 @@
 @end
 
 @implementation AgoraClassroomSDK (Internal)
-+ (NSArray<AgoraEduCorePuppetCourseware *> * _Nullable)getPuppetBoardModelCoursewares:(NSArray<AgoraEduCourseware *> *)coursewares {
-    if (coursewares.count <= 0) {
-        return nil;
-    }
++ (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraEduLaunchConfig *)config {
+    AgoraEduCorePuppetMediaOptions *mediaOptions = [self getPuppetMediaOptions:config.mediaOptions];
     
-    NSMutableArray<AgoraEduCorePuppetCourseware *> *puppetCoursewares = [NSMutableArray array];
+    AgoraEduCorePuppetUserRole role = config.userRole;
     
-    for (AgoraEduCourseware *courseware in coursewares) {
-        NSMutableArray *puppetScenes = [NSMutableArray array];
-        
-        // board scene
-        for (AgoraEduBoardScene *scene in courseware.scenes) {
-            // board ppt
-            AgoraEduPPTPage *ppt = scene.pptPage;
-            AgoraEduCorePuppetPPTPage *puppetPPT = nil;
-            
-            if (ppt) {
-                puppetPPT = [[AgoraEduCorePuppetPPTPage alloc] initWithSource:ppt.source
-                                                                   previewURL:ppt.previewURL
-                                                                         size:CGSizeMake(ppt.width,
-                                                                                         ppt.height)];
-            }
-            
-            AgoraEduCorePuppetBoardScene *puppetScene = [[AgoraEduCorePuppetBoardScene alloc] initWithName:scene.name
-                                                                                                   pptPage:puppetPPT];
-            
-            [puppetScenes addObject:puppetScene];
-        }
-        
-        AgoraEduCorePuppetCourseware *puppetCourseware = [[AgoraEduCorePuppetCourseware alloc] initWithResourceName:courseware.resourceName
-                                                                                                       resourceUuid:courseware.resourceUuid
-                                                                                                          scenePath:courseware.scenePath
-                                                                                                        resourceURL:courseware.resourceUrl
-                                                                                                             scenes:puppetScenes
-                                                                                                                ext:courseware.ext
-                                                                                                               size:courseware.size
-                                                                                                         updateTime:courseware.updateTime];
-        [puppetCoursewares addObject:puppetCourseware];
-    }
-    
-    return puppetCoursewares;
+    AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
+                                                                                                rtmToken:config.token
+                                                                                                  region:config.region
+                                                                                                userName:config.userName
+                                                                                                userUuid:config.userUuid
+                                                                                                userRole:role
+                                                                                          userProperties:config.userProperties
+                                                                                            mediaOptions:mediaOptions
+                                                                                                roomName:config.roomName
+                                                                                                roomUuid:config.roomUuid
+                                                                                                roomType:config.roomType
+                                                                                               startTime:config.startTime
+                                                                                                duration:config.duration];
+    return launchConfig;
 }
 
 + (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraEduMediaOptions *)options {
     AgoraEduCorePuppetVideoConfig *videoConfig = nil;
-    if (options.cameraEncoderConfiguration) {
-        videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithVideoDimensionWidth:options.cameraEncoderConfiguration.width
-                                                                    videoDimensionHeight:options.cameraEncoderConfiguration.height
-                                                                               frameRate:options.cameraEncoderConfiguration.frameRate
-                                                                                 bitRate:options.cameraEncoderConfiguration.bitrate
-                                                                              mirrorMode:options.cameraEncoderConfiguration.mirrorMode];
+    if (options.videoEncoderConfig) {
+        videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithDimensionWidth:options.videoEncoderConfig.dimensionWidth
+                                                                    dimensionHeight:options.videoEncoderConfig.dimensionHeight
+                                                                          frameRate:options.videoEncoderConfig.frameRate
+                                                                            bitRate:options.videoEncoderConfig.bitRate
+                                                                         mirrorMode:options.videoEncoderConfig.mirrorMode];
     }
     AgoraEduCorePuppetMediaEncryptionConfig *encryptionConfig = nil;
     if (options.encryptionConfig) {
