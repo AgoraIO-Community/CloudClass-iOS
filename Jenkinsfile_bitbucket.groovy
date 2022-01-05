@@ -17,7 +17,8 @@ import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
     "open-cloudclass-ios": "ssh://git@git.agoralab.co/aduc/open-cloudclass-ios.git",
     "apaas-common-libs-ios": "ssh://git@git.agoralab.co/aduc/apaas-common-libs-ios.git",
     "cloudclass-ios": "ssh://git@git.agoralab.co/aduc/cloudclass-ios.git",
-    "open-apaas-extapp-ios": "ssh://git@git.agoralab.co/aduc/open-apaas-extapp-ios.git"
+    "open-apaas-extapp-ios": "ssh://git@git.agoralab.co/aduc/open-apaas-extapp-ios.git",
+    "common-scene-sdk": "ssh://git@git.agoralab.co/aduc/common-scene-sdk.git"
 ]
 
 withWechatNotify {
