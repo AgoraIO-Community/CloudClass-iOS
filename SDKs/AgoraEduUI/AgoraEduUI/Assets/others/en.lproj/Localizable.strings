@@ -24,11 +24,12 @@ title_before_class = "Class will begin";
 
 // Room State
 ClassIDText = "Class ID：";
-ClassSingalGoodText = "Good";
-ClassSingalMediumText = "Medium";
-ClassSingalBadText = "Bad";
-ClassSingalUnknownText = "Unknown";
 ClassLeftText = "Exit classroom";
+
+// Network
+NetworkPoorText = "Poor local network connection,please check the network connection.";
+NetworkDisconnectedText = "The local network is disconnected,please check the network connection.";
+
 // toast
 ClassEndWarningStartText = "The course has ";
 ClassEndWarningEndText = "m to end";

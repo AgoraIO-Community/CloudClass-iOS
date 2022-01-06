@@ -24,11 +24,11 @@ title_before_class = "课程未开始";
 
 // Room State
 ClassIDText = "课程ID：";
-ClassSingalGoodText = "优";
-ClassSingalMediumText = "良";
-ClassSingalBadText = "差";
-ClassSingalUnknownText = "未知";
 ClassLeftText = "离开教室";
+
+// Network
+NetworkPoorText = "当前网络质量不佳,请检查设备网络连接";
+NetworkDisconnectedText = "当前网络已断开,请检查设备网络连接";
 
 // toast
 ClassEndWarningStartText = "课程还有";

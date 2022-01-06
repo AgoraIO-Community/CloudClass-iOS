@@ -306,6 +306,9 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         case .medium:
             self.stateView.setNetworkState(.medium)
         case .bad:
+            AgoraToast.toast(msg: AgoraUILocalizedString("NetworkPoorText",
+                                                         object: self),
+                             type: .warning)
             self.stateView.setNetworkState(.bad)
         default: break
         }
@@ -322,6 +325,9 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
+            AgoraToast.toast(msg: AgoraUILocalizedString("NetworkDisconnectedText",
+                                                         object: self),
+                             type: .error)
             AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
         case .connected:
             AgoraLoading.hide()

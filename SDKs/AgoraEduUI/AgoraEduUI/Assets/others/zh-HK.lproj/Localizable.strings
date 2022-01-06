@@ -25,11 +25,11 @@ title_before_class = "課程未開始";
 
 // Room State
 ClassIDText = "課程ID：";
-ClassSingalGoodText = "優";
-ClassSingalMediumText = "良";
-ClassSingalBadText = "差";
-ClassSingalUnknownText = "未知";
 ClassLeftText = "離開教室";
+
+// Network
+NetworkPoorText = "當前網絡質量不佳,請檢查設備網絡連接";
+NetworkDisconnectedText = "當前網絡已斷開,請檢查設備網絡連接";
 
 // toast
 ClassEndWarningStartText = "課程還有";

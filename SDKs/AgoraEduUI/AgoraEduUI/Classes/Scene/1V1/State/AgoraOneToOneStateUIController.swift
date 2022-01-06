@@ -250,6 +250,9 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
             netStateView.image = UIImage.ag_imageNamed("ic_network_medium",
                                                        in: "AgoraEduUI")
         case .bad:
+            AgoraToast.toast(msg: AgoraUILocalizedString("NetworkPoorText",
+                                                         object: self),
+                             type: .warning)
             netStateView.image = UIImage.ag_imageNamed("ic_network_bad",
                                                        in: "AgoraEduUI")
         default: break
@@ -267,6 +270,9 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
+            AgoraToast.toast(msg: AgoraUILocalizedString("NetworkDisconnectedText",
+                                                         object: self),
+                             type: .error)
             AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
         case .connected:
             AgoraLoading.hide()
