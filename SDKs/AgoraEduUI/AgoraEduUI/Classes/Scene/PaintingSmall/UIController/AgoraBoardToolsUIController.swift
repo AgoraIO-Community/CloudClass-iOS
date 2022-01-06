@@ -513,6 +513,28 @@ class AgoraBoardToolsUIController: UIViewController {
         contextPool.widget.sendMessage(toWidget: "netlessBoard",
                                        message: text)
     }
+    
+    private func handleMemberState(_ state: AgoraBoardWidgetMemberState) {
+        if let item = state.toItem() {
+            selectedTool = item
+            if let collect = toolsCollectionView {
+                collect.reloadData()
+            }
+            isSpread = (selectedTool.expandBarType() != nil)
+        }
+        
+        self.selectColor = state.toColor()
+        self.brushLevel = AgoraBoardToolsLineWidth.fromValue(state.strokeWidth).rawValue
+        self.textLevel = AgoraBoardToolsFont.fromValue(state.textSize).rawValue
+        
+        if let collect = sizeCollectionView {
+            collect.reloadData()
+        }
+        if let collect = colorCollectionView {
+            collect.reloadData()
+        }
+        
+    }
 }
 
 private extension AgoraBoardToolsUIController {
@@ -774,17 +796,20 @@ extension AgoraBoardToolsUIController: AgoraWidgetMessageObserver {
         }
         switch signal {
         case .MemberStateChanged(let state):
-            if let item = state.toItem() {
-                selectedTool = item
-            }
-            
-            self.selectColor = state.toColor()
+            handleMemberState(state)
         case .BoardGrantDataChanged(let list):
             if let users = list,
                users.contains(contextPool.user.getLocalUserInfo().userUuid) {
                 self.button.isHidden = false
+                if let content = contentView {
+                    content.isHidden = false
+                }
+                
             } else {
                 self.button.isHidden = true
+                if let content = contentView {
+                    content.isHidden = true
+                }
             }
         default:
             break
