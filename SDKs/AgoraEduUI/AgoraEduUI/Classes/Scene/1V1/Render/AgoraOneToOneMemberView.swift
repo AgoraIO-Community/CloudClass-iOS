@@ -44,12 +44,10 @@ class AgoraOneToOneMemberView: UIView {
             volumeView.isHidden = (micState != .on)
             switch micState {
             case .on:
-                micView.image = UIImage.ag_imageNamed("ic_mic_status_on",
-                                                      in: "AgoraEduUI")
+                micView.image = UIImage.agedu_named("agedu_named")
                 break
             case .off:
-                micView.image = UIImage.ag_imageNamed("ic_mic_status_off",
-                                                      in: "AgoraEduUI")
+                micView.image = UIImage.agedu_named("ic_mic_status_off")
                 break
             default: break
             }
@@ -63,16 +61,13 @@ class AgoraOneToOneMemberView: UIView {
             }
             switch cameraState {
             case .on:
-                cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_offline",
-                                                              in: "AgoraEduUI")
+                cameraStateView.image = UIImage.agedu_named("ic_member_device_offline")
                 videoView.isHidden = false
             case .off:
-                cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_off",
-                                                              in: "AgoraEduUI")
+                cameraStateView.image = UIImage.agedu_named("ic_member_device_off")
                 videoView.isHidden = true
             case .error:
-                cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_bad",
-                                                              in: "AgoraEduUI")
+                cameraStateView.image = UIImage.agedu_named("ic_member_device_bad")
                 videoView.isHidden = true
             default: break
             }
@@ -140,16 +135,14 @@ private extension AgoraOneToOneMemberView {
         self.clipsToBounds = true
         self.backgroundColor = UIColor(hex: 0xF9F9FC)
         
-        cameraStateView = UIImageView(image: UIImage.ag_imageNamed("ic_member_device_offline",
-                                                                   in: "AgoraEduUI"))
+        cameraStateView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
         addSubview(cameraStateView)
         
         videoView = UIView(frame: .zero)
         videoView.backgroundColor = .clear
         addSubview(videoView)
         
-        micView = UIImageView.init(image: UIImage.ag_imageNamed("ic_mic_status_off",
-                                                                in: "AgoraEduUI"))
+        micView = UIImageView.init(image: UIImage.agedu_named("ic_mic_status_off"))
         addSubview(micView)
         
         volumeView = AgoraRenderVolumeView(frame: .zero)

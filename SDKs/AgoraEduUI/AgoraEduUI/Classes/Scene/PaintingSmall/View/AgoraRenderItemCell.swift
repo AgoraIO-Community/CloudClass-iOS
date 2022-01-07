@@ -180,27 +180,22 @@ public class AgoraRenderItemCell: UICollectionViewCell {
         // camera
         if !itemInfo.isOnline {
             videoView.isHidden = true
-            cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_offline",
-                                                          in: "AgoraEduUI")
+            cameraStateView.image = UIImage.agedu_named("ic_member_device_offline")
         } else if itemInfo.cameraDeviceState == .invalid {
             videoView.isHidden = true
-            cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_bad",
-                                                          in: "AgoraEduUI")
+            cameraStateView.image = UIImage.agedu_named("ic_member_device_bad")
         } else if itemInfo.cameraDeviceState == .close {
             videoView.isHidden = true
-            cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_off",
-                                                          in: "AgoraEduUI")
+            cameraStateView.image = UIImage.agedu_named("ic_member_device_off")
         } else {
             videoView.isHidden = false
         }
         // mic
         if itemInfo.micDeviceState == .available {
-            micView.image = UIImage.ag_imageNamed("ic_mic_status_on",
-                                                  in: "AgoraEduUI")
+            micView.image = UIImage.agedu_named("ic_mic_status_on")
             volumeView.isHidden = !itemInfo.renderEnable
         } else {
-            micView.image = UIImage.ag_imageNamed("ic_mic_status_off",
-                                                  in: "AgoraEduUI")
+            micView.image = UIImage.agedu_named("ic_mic_status_off")
             volumeView.isHidden = !itemInfo.renderEnable
         }
         // reward
@@ -265,14 +260,14 @@ private extension AgoraRenderItemCell {
         videoView.backgroundColor = .clear
         contentView.addSubview(videoView)
         
-        micView = AgoraBaseUIImageView.init(image: AgoraUIImage(object: self, name: "ic_mic_status_on"))
+        micView = AgoraBaseUIImageView.init(image: UIImage.agedu_named("ic_mic_status_on"))
         contentView.addSubview(micView)
         
         volumeView = AgoraRenderVolumeView(frame: .zero)
         volumeView.volume = 0
         contentView.addSubview(volumeView)
         
-        rewardImageView = UIImageView(image: UIImage.ag_imageNamed("ic_member_reward", in: "AgoraEduUI"))
+        rewardImageView = UIImageView(image: UIImage.agedu_named("ic_member_reward"))
         contentView.addSubview(rewardImageView)
         
         rewardLabel = UILabel()

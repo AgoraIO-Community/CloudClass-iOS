@@ -77,7 +77,7 @@ class AgoraOneToOneTabView: UIView {
         videoButton = UIButton(type: .custom)
         videoButton.isSelected = true
         videoButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 12)
-        videoButton.setTitle("one_to_one_tab_video".ag_localizedIn("AgoraEduUI"),
+        videoButton.setTitle("one_to_one_tab_video".agedu_localized(),
                              for: .normal)
         videoButton.setTitleColor(UIColor(hex: 0x7B88A0),
                                   for: .normal)
@@ -91,7 +91,7 @@ class AgoraOneToOneTabView: UIView {
         chatButton = UIButton(type: .custom)
         chatButton.isSelected = false
         chatButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-        chatButton.setTitle("one_to_one_tab_chat".ag_localizedIn("AgoraEduUI"),
+        chatButton.setTitle("one_to_one_tab_chat".agedu_localized(),
                             for: .normal)
         chatButton.setTitleColor(UIColor(hex: 0x7B88A0),
                                  for: .normal)

@@ -353,14 +353,14 @@ private extension AgoraHorizListRenderUIController {
             return
         }
         if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: AgoraUILocalizedString("MicrophoneMuteText", object: self))
+            AgoraToast.toast(msg: "MicrophoneMuteText".agedu_localized())
         } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: AgoraUILocalizedString("MicrophoneUnMuteText", object: self))
+            AgoraToast.toast(msg: "MicrophoneUnMuteText".agedu_localized())
         }
         if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: AgoraUILocalizedString("CameraMuteText", object: self))
+            AgoraToast.toast(msg: "CameraMuteText".agedu_localized())
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: AgoraUILocalizedString("CameraUnMuteText", object: self))
+            AgoraToast.toast(msg: "CameraUnMuteText".agedu_localized())
         }
     }
     
@@ -591,7 +591,7 @@ private extension AgoraHorizListRenderUIController {
         leftButton.addTarget(self,
                              action: #selector(onClickLeft(_:)),
                              for: .touchUpInside)
-        leftButton.setImage(UIImage.ag_imageNamed("ic_member_arrow_left", in: "AgoraEduUI"),
+        leftButton.setImage(UIImage.agedu_named("ic_member_arrow_left"),
                             for: .normal)
         contentView.addSubview(leftButton)
         
@@ -602,7 +602,7 @@ private extension AgoraHorizListRenderUIController {
         rightButton.addTarget(self,
                               action: #selector(onClickRight(_:)),
                               for: .touchUpInside)
-        rightButton.setImage(UIImage.ag_imageNamed("ic_member_arrow_right", in: "AgoraEduUI"),
+        rightButton.setImage(UIImage.agedu_named("ic_member_arrow_right"),
                              for: .normal)
         contentView.addSubview(rightButton)
         

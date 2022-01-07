@@ -7,9 +7,10 @@
 //
 
 import UIKit
+import Masonry
 import AgoraUIBaseViews
 
-class RoomInfoOptionsView: AgoraBaseUIView,  UITableViewDelegate, UITableViewDataSource {
+class RoomInfoOptionsView: UIView, UITableViewDelegate, UITableViewDataSource {
         
     var tableView: UITableView!
     
@@ -41,19 +42,30 @@ class RoomInfoOptionsView: AgoraBaseUIView,  UITableViewDelegate, UITableViewDat
         selectedIndex = index
         tableView.reloadData()
         // 计算本次显示位置
-        let itemHeight: Float = 44.0, insert: Float = 11.0
-        var contentHeight: Float = 0
+        let itemHeight: CGFloat = 44.0, insert: CGFloat = 11.0
+        var contentHeight: CGFloat = 0
         if (options.count > 4) {
             contentHeight = itemHeight * 4 + insert * 2
         } else {
-            contentHeight = itemHeight * Float(options.count) + insert * 2
+            contentHeight = itemHeight * CGFloat(options.count) + insert * 2
         }
-        let rect = beside.convert(beside.bounds, to: superview)
-        agora_y = rect.maxY - 18
-        agora_center_x = 0
-        agora_width = rect.width
-        agora_height = CGFloat(contentHeight)
+        self.mas_remakeConstraints { make in
+            make?.top.equalTo()(beside.mas_bottom)?.offset()(-26)
+            make?.left.right().equalTo()(beside)
+            make?.height.equalTo()(0)
+        }
+        self.superview?.layoutIfNeeded()
+        self.mas_updateConstraints { make in
+            make?.height.equalTo()(contentHeight)
+        }
+        self.alpha = 0.2
         isHidden = false
+        UIView.animate(withDuration: 0.15) {
+            self.superview?.layoutIfNeeded()
+            self.alpha = 1
+        } completion: { finish in
+            
+        }
     }
     // 主动隐藏
     public func hide() {
@@ -105,10 +117,11 @@ extension RoomInfoOptionsView {
     }
 
     func createConstrains() {
-        tableView.agora_x = agora_x
-        tableView.agora_right = agora_right
-        tableView.agora_y = 11
-        tableView.agora_bottom = 11
+        tableView.mas_makeConstraints { make in
+            make?.left.right().equalTo()(0)
+            make?.top.equalTo()(11)
+            make?.bottom.equalTo()(-11)
+        }
     }
 }
 

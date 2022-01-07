@@ -212,38 +212,27 @@ enum AgoraBoardToolItem: CaseIterable {
     }
     
     func image() -> UIImage? {
-        let bundleName = "AgoraEduUI"
         switch self {
         case .clicker:
-            return UIImage.ag_imageNamed("ic_brush_arrow",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_arrow")
         case .area:
-            return UIImage.ag_imageNamed("ic_brush_area",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_area")
         case .text:
-            return UIImage.ag_imageNamed("ic_brush_text",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_text")
         case .rubber:
-            return UIImage.ag_imageNamed("ic_brush_rubber",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_rubber")
         case .laser:
-            return UIImage.ag_imageNamed("ic_brush_laser",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_laser")
         case .pencil:
-            return UIImage.ag_imageNamed("ic_brush_pencil",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_pencil")
         case .line:
-            return UIImage.ag_imageNamed("ic_brush_line",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_line")
         case .rect:
-            return UIImage.ag_imageNamed("ic_brush_rect",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_rect")
         case .cycle:
-            return UIImage.ag_imageNamed("ic_brush_cycle",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_cycle")
         default:
-            return UIImage.ag_imageNamed("ic_brush_arrow",
-                                         in: bundleName)
+            return UIImage.agedu_named("ic_brush_arrow")
         }
     }
 }
@@ -309,83 +298,17 @@ private extension AgoraBoardToolItem {
     }
 }
 
-fileprivate class AgoraBrushToolButton: UIButton {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = UIColor.white
-        imageView?.tintColor = UIColor(hex: 0x7B88A0)
-        
-        layer.cornerRadius = 8
-        layer.shadowColor = UIColor(hex: 0x2F4192,
-                                    transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        layer.cornerRadius = bounds.height * 0.5
-    }
-    
-    func setImage(_ image: UIImage?) {
-        guard let v = image else {
-            return
-        }
-        setImageForAllStates(v.withRenderingMode(.alwaysTemplate))
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>,
-                               with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>,
-                               with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        UIView.animate(withDuration: 0.1,
-                       delay: 0,
-                       options: .curveLinear) {
-            self.transform = CGAffineTransform(scaleX: 1, y: 1)
-        } completion: { finish in
-        }
-    }
-}
-
 protocol AgoraBoardToolsUIControllerDelegate: class {
-    /** 展示或隐藏画笔工具*/
-    func onShowBrushTools(isShow: Bool)
+    /** 更新了画笔设置*/
+    func didUpdateBrushSetting(image: UIImage?,
+                               colorHex: Int)
 }
 
 private let kBrushSizeCount: Int = 5
 private let kTextSizeCount: Int = 4
 class AgoraBoardToolsUIController: UIViewController {
-    
-    public var button: UIButton {
-        return brushButton
-    }
-    
-    private lazy var brushButton: AgoraBrushToolButton = {
-        let v = AgoraBrushToolButton(frame: CGRect(x: 0,
-                                                   y: 0,
-                                                   width: 44,
-                                                   height: 44))
-        v.isHidden = true
-        v.setImage(AgoraUIImage(object: self,
-                                name: "ic_brush_pencil"))
-        v.addTarget(self,
-                    action: #selector(onClickBrushTools(_:)),
-                    for: .touchUpInside)
-        return v
-    }()
+
+    public var suggestSize = CGSize(width: 280, height: 136)
     
     public weak var delegate: AgoraBoardToolsUIControllerDelegate?
     
@@ -415,19 +338,22 @@ class AgoraBoardToolsUIController: UIViewController {
             guard isSpread != oldValue else {
                 return
             }
-            
+            var frame = self.view.frame
             if isSpread {
-                contentView.mas_remakeConstraints { make in
-                    make?.width.equalTo()(280)
-                    make?.height.equalTo()(310)
-                    make?.top.bottom().left().right().equalTo()(contentView.superview)
-                }
+                self.suggestSize = CGSize(width: 280,
+                                          height: 310)
+                frame = CGRect(x: frame.minX,
+                               y: frame.maxY - 310,
+                               width: 280, height: 310)
             } else {
-                contentView.mas_remakeConstraints { make in
-                    make?.width.equalTo()(280)
-                    make?.height.equalTo()(136)
-                    make?.top.bottom().left().right().equalTo()(contentView.superview)
-                }
+                self.suggestSize = CGSize(width: 280,
+                                          height: 136)
+                frame = CGRect(x: frame.minX,
+                               y: frame.maxY - 136,
+                               width: 280, height: 136)
+            }
+            UIView.animate(withDuration: 0.2) {
+                self.view.frame = frame
             }
         }
     }
@@ -450,18 +376,16 @@ class AgoraBoardToolsUIController: UIViewController {
     
     var selectedTool: AgoraBoardToolItem = .clicker {
         didSet {
-            self.brushButton.setImage(selectedTool.image())
+            self.delegate?.didUpdateBrushSetting(image: selectedTool.image(),
+                                                 colorHex: selectColor)
             callbackItemUpdated()
         }
     }
     
     var selectColor: Int = 0xFFFFFF {
         didSet {
-            if selectColor == 0xFFFFFF {
-                self.brushButton.imageView?.tintColor = UIColor(hex: 0xE1E1EA)
-            } else {
-                self.brushButton.imageView?.tintColor = UIColor(hex: selectColor)
-            }
+            self.delegate?.didUpdateBrushSetting(image: selectedTool.image(),
+                                                 colorHex: selectColor)
             callbackItemUpdated()
         }
     }
@@ -512,35 +436,6 @@ class AgoraBoardToolsUIController: UIViewController {
         }
         contextPool.widget.sendMessage(toWidget: "netlessBoard",
                                        message: text)
-    }
-    
-    private func handleMemberState(_ state: AgoraBoardWidgetMemberState) {
-        if let item = state.toItem() {
-            selectedTool = item
-            if let collect = toolsCollectionView {
-                collect.reloadData()
-            }
-            isSpread = (selectedTool.expandBarType() != nil)
-        }
-        
-        self.selectColor = state.toColor()
-        self.brushLevel = AgoraBoardToolsLineWidth.fromValue(state.strokeWidth).rawValue
-        self.textLevel = AgoraBoardToolsFont.fromValue(state.textSize).rawValue
-        
-        if let collect = sizeCollectionView {
-            collect.reloadData()
-        }
-        if let collect = colorCollectionView {
-            collect.reloadData()
-        }
-        
-    }
-}
-
-private extension AgoraBoardToolsUIController {
-    @objc func onClickBrushTools(_ sender: UIButton) {
-        sender.isSelected = !sender.isSelected
-        self.delegate?.onShowBrushTools(isShow: sender.isSelected)
     }
 }
 
@@ -796,21 +691,10 @@ extension AgoraBoardToolsUIController: AgoraWidgetMessageObserver {
         }
         switch signal {
         case .MemberStateChanged(let state):
-            handleMemberState(state)
-        case .BoardGrantDataChanged(let list):
-            if let users = list,
-               users.contains(contextPool.user.getLocalUserInfo().userUuid) {
-                self.button.isHidden = false
-                if let content = contentView {
-                    content.isHidden = false
-                }
-                
-            } else {
-                self.button.isHidden = true
-                if let content = contentView {
-                    content.isHidden = true
-                }
+            if let item = state.toItem() {
+                selectedTool = item
             }
+            self.selectColor = state.toColor()
         default:
             break
         }

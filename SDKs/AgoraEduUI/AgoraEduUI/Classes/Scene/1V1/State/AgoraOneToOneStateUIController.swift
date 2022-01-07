@@ -29,7 +29,7 @@ class AgoraOneToOneStateUIController: UIViewController {
     
     private var timeLabel: UILabel!
     
-    private var settingButton: UIButton!
+    public var settingButton: UIButton!
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
     /** 房间计时器*/
@@ -120,53 +120,43 @@ extension AgoraOneToOneStateUIController {
         case .before:
             timeLabel.textColor = UIColor(hex: 0x677386)
             if info.startTime == 0 {
-                timeLabel.text = "title_before_class".ag_localizedIn("AgoraEduUI")
+                timeLabel.text = "title_before_class".agedu_localized()
             } else {
                 let time = info.startTime - realTime
-                let text = AgoraUILocalizedString("ClassBeforeStartText",
-                                                  object: self)
+                let text = "ClassBeforeStartText".agedu_localized()
                 timeLabel.text = text + timeString(from: time)
             }
         case .after:
             timeLabel.textColor = .red
             let time = realTime - info.startTime
-            let text = AgoraUILocalizedString("ClassAfterStopText",
-                                              object: self)
+            let text = "ClassAfterStopText".agedu_localized()
             timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
             if countDown == info.closeDelay {
-                let strStart = AgoraUILocalizedString("ClassCloseWarningStartText",
-                                                      object: self)
+                let strStart = "ClassCloseWarningStartText".agedu_localized()
                 let minNum = Int(info.closeDelay / 60)
                 let strMid = "\(minNum)"
-                let strMin = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
-                                                    object: self)
-                let strEnd = AgoraUILocalizedString("ClassCloseWarningEndText",
-                                                    object: self)
+                let strMin = "ClassCloseWarningEnd2Text".agedu_localized()
+                let strEnd = "ClassCloseWarningEndText".agedu_localized()
                 AgoraToast.toast(msg: strStart + strMid + strMin + strEnd)
             } else if countDown == 60 {
-                let strStart = AgoraUILocalizedString("ClassCloseWarningStart2Text",
-                                                      object: self)
+                let strStart = "ClassCloseWarningStart2Text".agedu_localized()
                 let strMid = "1"
-                let strEnd = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
-                                                    object: self)
+                let strEnd = "ClassCloseWarningEnd2Text".agedu_localized()
                 AgoraToast.toast(msg: strStart + strMid + strEnd)
             }
         case .during:
             timeLabel.textColor = UIColor(hex: 0x677386)
             let time = realTime - info.startTime
-            let text = AgoraUILocalizedString("ClassAfterStartText",
-                                              object: self)
+            let text = "ClassAfterStartText".agedu_localized()
             timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
             if countDown == 5 * 60 + info.closeDelay {
-                let strStart = AgoraUILocalizedString("ClassEndWarningStartText",
-                                                      object: self)
+                let strStart = "ClassEndWarningStartText".agedu_localized()
                 let strMid = "5"
-                let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
-                                                    object: self)
+                let strEnd = "ClassEndWarningEndText".agedu_localized()
                 AgoraToast.toast(msg: strStart + strMid + strEnd)
             }
         }
@@ -199,7 +189,7 @@ extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
         AgoraAlert()
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
-            .setMessage("local_user_kicked_out".ag_localizedIn("AgoraEduUI"))
+            .setMessage("local_user_kicked_out".agedu_localized())
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
                 self.roomDelegate?.exitClassRoom(reason: .kickOut)
             }))
@@ -211,7 +201,7 @@ extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
             // 老师邀请你上台了，与大家积极互动吧
-            AgoraToast.toast(msg: "toast_student_stage_on".ag_localizedIn("AgoraEduUI"),
+            AgoraToast.toast(msg: "toast_student_stage_on".agedu_localized(),
                              type: .notice)
         }
     }
@@ -221,7 +211,7 @@ extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
             // 你离开讲台了，暂时无法与大家互动
-            AgoraToast.toast(msg: "toast_student_stage_off".ag_localizedIn("AgoraEduUI"),
+            AgoraToast.toast(msg: "toast_student_stage_off".agedu_localized(),
                              type: .error)
         }
     }
@@ -230,7 +220,7 @@ extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
         // 祝贺**获得奖励
-        let str = String.init(format: "toast_reward_student_xx".ag_localizedIn("AgoraEduUI"),
+        let str = String.init(format: "toast_reward_student_xx".agedu_localized(),
                               user.userName)
         AgoraToast.toast(msg: str,
                          type: .notice)
@@ -241,20 +231,13 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
         switch quality {
         case .unknown:
-            netStateView.image = UIImage.ag_imageNamed("ic_network_unknow",
-                                                       in: "AgoraEduUI")
+            netStateView.image = UIImage.agedu_named("ic_network_unknow")
         case .good:
-            netStateView.image = UIImage.ag_imageNamed("ic_network_good",
-                                                       in: "AgoraEduUI")
+            netStateView.image = UIImage.agedu_named("ic_network_good")
         case .medium:
-            netStateView.image = UIImage.ag_imageNamed("ic_network_medium",
-                                                       in: "AgoraEduUI")
+            netStateView.image = UIImage.agedu_named("ic_network_medium")
         case .bad:
-            AgoraToast.toast(msg: AgoraUILocalizedString("NetworkPoorText",
-                                                         object: self),
-                             type: .warning)
-            netStateView.image = UIImage.ag_imageNamed("ic_network_bad",
-                                                       in: "AgoraEduUI")
+            netStateView.image = UIImage.agedu_named("ic_network_bad")
         default: break
         }
     }
@@ -270,9 +253,6 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
-            AgoraToast.toast(msg: AgoraUILocalizedString("NetworkDisconnectedText",
-                                                         object: self),
-                             type: .error)
             AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
         case .connected:
             AgoraLoading.hide()
@@ -289,8 +269,7 @@ private extension AgoraOneToOneStateUIController {
         view.layer.cornerRadius = 2
         view.clipsToBounds = true
         
-        netStateView = UIImageView(image: UIImage.ag_imageNamed("ic_network_unknow",
-                                                                in: "AgoraEduUI"))
+        netStateView = UIImageView(image: UIImage.agedu_named("ic_network_unknow"))
         view.addSubview(netStateView)
         
         lineView = UIView(frame: .zero)
@@ -308,8 +287,7 @@ private extension AgoraOneToOneStateUIController {
         view.addSubview(timeLabel)
         
         settingButton = UIButton(type: .custom)
-        if let settingIMG = UIImage.ag_imageNamed("ic_func_setting",
-                                                  in: "AgoraEduUI")?
+        if let settingIMG = UIImage.agedu_named("ic_func_setting")?
             .withRenderingMode(.alwaysTemplate) {
             settingButton.setImageForAllStates(settingIMG)
         }

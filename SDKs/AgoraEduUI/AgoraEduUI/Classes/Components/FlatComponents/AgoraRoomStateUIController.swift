@@ -91,37 +91,30 @@ private extension AgoraRoomStateUIController {
                 stateView.timeLabel.textColor = UIColor(hex: 0x677386)
             }
             if info.startTime == 0 {
-                stateView.timeLabel.text = "title_before_class".ag_localizedIn("AgoraEduUI")
+                stateView.timeLabel.text = "title_before_class".agedu_localized()
             } else {
                 let time = info.startTime - realTime
-                let text = AgoraUILocalizedString("ClassBeforeStartText",
-                                                  object: self)
+                let text = "ClassBeforeStartText".agedu_localized()
                 stateView.timeLabel.text = text + timeString(from: time)
             }
         case .after:
             stateView.timeLabel.textColor = .red
             let time = realTime - info.startTime
-            let text = AgoraUILocalizedString("ClassAfterStopText",
-                                              object: self)
+            let text = "ClassAfterStopText".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
             if countDown == info.closeDelay {
-                let strStart = AgoraUILocalizedString("ClassCloseWarningStartText",
-                                                      object: self)
+                let strStart = "ClassCloseWarningStartText".agedu_localized()
                 let minNum = Int(info.closeDelay / 60)
                 let strMid = "\(minNum)"
-                let strMin = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
-                                                    object: self)
-                let strEnd = AgoraUILocalizedString("ClassCloseWarningEndText",
-                                                    object: self)
+                let strMin = "ClassCloseWarningEnd2Text".agedu_localized()
+                let strEnd = "ClassCloseWarningEndText".agedu_localized()
                 AgoraToast.toast(msg: strStart + strMid + strMin + strEnd)
             } else if countDown == 60 {
-                let strStart = AgoraUILocalizedString("ClassCloseWarningStart2Text",
-                                                      object: self)
+                let strStart = "ClassCloseWarningStart2Text".agedu_localized()
                 let strMid = "1"
-                let strEnd = AgoraUILocalizedString("ClassCloseWarningEnd2Text",
-                                                    object: self)
+                let strEnd = "ClassCloseWarningEnd2Text".agedu_localized()
                 AgoraToast.toast(msg: strStart + strMid + strEnd)
             }
         case .during:
@@ -131,17 +124,14 @@ private extension AgoraRoomStateUIController {
                 stateView.timeLabel.textColor = UIColor(hex: 0x677386)
             }
             let time = realTime - info.startTime
-            let text = AgoraUILocalizedString("ClassAfterStartText",
-                                              object: self)
+            let text = "ClassAfterStartText".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
             if countDown == 5 * 60 + info.closeDelay {
-                let strStart = AgoraUILocalizedString("ClassEndWarningStartText",
-                                                      object: self)
+                let strStart = "ClassEndWarningStartText".agedu_localized()
                 let strMid = "5"
-                let strEnd = AgoraUILocalizedString("ClassEndWarningEndText",
-                                                    object: self)
+                let strEnd = "ClassEndWarningEndText".agedu_localized()
                 AgoraToast.toast(msg: strStart + strMid + strEnd)
             }
         }
@@ -174,7 +164,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
         AgoraAlert()
             .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
-            .setMessage("local_user_kicked_out".ag_localizedIn("AgoraEduUI"))
+            .setMessage("local_user_kicked_out".agedu_localized())
             .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
                 self.roomDelegate?.exitClassRoom(reason: .kickOut)
             }))
@@ -186,7 +176,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
             // 老师邀请你上台了，与大家积极互动吧
-            AgoraToast.toast(msg: "toast_student_stage_on".ag_localizedIn("AgoraEduUI"),
+            AgoraToast.toast(msg: "toast_student_stage_on".agedu_localized(),
                              type: .notice)
         }
     }
@@ -196,7 +186,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
             // 你离开讲台了，暂时无法与大家互动
-            AgoraToast.toast(msg: "toast_student_stage_off".ag_localizedIn("AgoraEduUI"),
+            AgoraToast.toast(msg: "toast_student_stage_off".agedu_localized(),
                              type: .error)
         }
     }
@@ -205,7 +195,7 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
         // 祝贺**获得奖励
-        let str = String.init(format: "toast_reward_student_xx".ag_localizedIn("AgoraEduUI"),
+        let str = String.init(format: "toast_reward_student_xx".agedu_localized(),
                               user.userName)
         AgoraToast.toast(msg: str,
                          type: .notice)
@@ -306,9 +296,6 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         case .medium:
             self.stateView.setNetworkState(.medium)
         case .bad:
-            AgoraToast.toast(msg: AgoraUILocalizedString("NetworkPoorText",
-                                                         object: self),
-                             type: .warning)
             self.stateView.setNetworkState(.bad)
         default: break
         }
@@ -325,9 +312,6 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
-            AgoraToast.toast(msg: AgoraUILocalizedString("NetworkDisconnectedText",
-                                                         object: self),
-                             type: .error)
             AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
         case .connected:
             AgoraLoading.hide()

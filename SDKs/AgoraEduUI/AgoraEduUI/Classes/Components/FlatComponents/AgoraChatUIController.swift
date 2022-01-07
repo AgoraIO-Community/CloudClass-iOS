@@ -17,6 +17,8 @@ protocol AgoraChatUIControllerDelegate: NSObjectProtocol {
 
 class AgoraChatUIController: UIViewController {
     
+    public let suggestSize = CGSize(width: 200, height: 287)
+    
     public weak var delegate: AgoraChatUIControllerDelegate?
     
     private var chatWidgetId: String?

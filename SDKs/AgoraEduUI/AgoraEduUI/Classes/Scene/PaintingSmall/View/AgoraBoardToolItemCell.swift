@@ -89,8 +89,7 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let image = AgoraUIImage(object: self,
-                                 name: "ic_brush_text")?.withRenderingMode(.alwaysTemplate)
+        let image = UIImage.agedu_named("ic_brush_text")?.withRenderingMode(.alwaysTemplate)
         sizeView = UIImageView(image: image)
         sizeView.contentMode = .scaleToFill
         sizeView.tintColor = UIColor(hex: 0x7B88A0)

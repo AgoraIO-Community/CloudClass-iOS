@@ -258,11 +258,9 @@ private extension AgoraRenderMenuUIController {
         // micButton
         micButton = UIButton(type: .custom)
         micButton.frame = buttonFrame
-        micButton.setImage(AgoraUIImage(object: self,
-                                        name: "ic_member_menu_mic_off"),
+        micButton.setImage(UIImage.agedu_named("ic_member_menu_mic_off"),
                            for: .normal)
-        micButton.setImage(AgoraUIImage(object: self,
-                                        name: "ic_member_menu_mic_on"),
+        micButton.setImage(UIImage.agedu_named("ic_member_menu_mic_on"),
                            for: .selected)
         micButton.addTarget(self,
                             action: #selector(onClickMic(_:)),
@@ -271,11 +269,9 @@ private extension AgoraRenderMenuUIController {
         // cameraButton
         cameraButton = UIButton(type: .custom)
         cameraButton.frame = buttonFrame
-        cameraButton.setImage(AgoraUIImage(object: self,
-                                           name: "ic_member_menu_camera_off"),
+        cameraButton.setImage(UIImage.agedu_named("ic_member_menu_camera_off"),
                               for: .normal)
-        cameraButton.setImage(AgoraUIImage(object: self,
-                                           name: "ic_member_menu_camera_on"),
+        cameraButton.setImage(UIImage.agedu_named("ic_member_menu_camera_on"),
                               for: .selected)
         cameraButton.addTarget(self,
                                action: #selector(onClickCamera(_:)),
@@ -284,8 +280,7 @@ private extension AgoraRenderMenuUIController {
         // stageButton
         stageButton = UIButton(type: .custom)
         stageButton.frame = buttonFrame
-        stageButton.setImage(AgoraUIImage(object: self,
-                                          name: "ic_member_menu_stage"),
+        stageButton.setImage(UIImage.agedu_named("ic_member_menu_stage"),
                              for: .normal)
         stageButton.addTarget(self,
                               action: #selector(onClickStage(_:)),
@@ -294,8 +289,7 @@ private extension AgoraRenderMenuUIController {
         // authButton
         authButton = UIButton(type: .custom)
         authButton.frame = buttonFrame
-        authButton.setImage(AgoraUIImage(object: self,
-                                         name: "ic_member_menu_auth"),
+        authButton.setImage(UIImage.agedu_named("ic_member_menu_auth"),
                             for: .normal)
         authButton.addTarget(self,
                              action: #selector(onClickAuth(_:)),
@@ -304,8 +298,7 @@ private extension AgoraRenderMenuUIController {
         // rewardButton
         rewardButton = UIButton(type: .custom)
         rewardButton.frame = buttonFrame
-        rewardButton.setImage(AgoraUIImage(object: self,
-                                           name: "ic_member_menu_star"),
+        rewardButton.setImage(UIImage.agedu_named("ic_member_menu_star"),
                               for: .normal)
         rewardButton.addTarget(self,
                                action: #selector(onClickReward(_:)),

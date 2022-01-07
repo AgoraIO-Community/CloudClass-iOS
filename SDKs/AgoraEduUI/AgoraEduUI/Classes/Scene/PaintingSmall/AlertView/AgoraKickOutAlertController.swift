@@ -105,7 +105,7 @@ extension AgoraKickOutAlertController {
         titleLable = UILabel()
         titleLable.textColor = UIColor(hex: 0x030303)
         titleLable.textAlignment = .center
-        titleLable.text = "kick_out_student".ag_localizedIn("AgoraEduUI")
+        titleLable.text = "kick_out_student".agedu_localized()
         titleLable.font = UIFont.systemFont(ofSize: 17)
         contentView.addSubview(titleLable)
         
@@ -114,15 +114,15 @@ extension AgoraKickOutAlertController {
         firstButton.addTarget(self,
                               action: #selector(onClickFirstButton(_:)),
                               for: .touchUpInside)
-        firstButton.setImage(UIImage.ag_imageNamed("ic_nameroll_ckeck_box_off", in: "AgoraEduUI"),
+        firstButton.setImage(UIImage.agedu_named("ic_nameroll_ckeck_box_off"),
                              for: .normal)
-        firstButton.setImage(UIImage.ag_imageNamed("ic_nameroll_ckeck_box_on", in: "AgoraEduUI"),
+        firstButton.setImage(UIImage.agedu_named("ic_nameroll_ckeck_box_on"),
                              for: .selected)
         contentView.addSubview(firstButton)
         
         firstLabel = UILabel()
         firstLabel.textColor = UIColor(hex: 0x191919)
-        firstLabel.text = "kick_out_once".ag_localizedIn("AgoraEduUI")
+        firstLabel.text = "kick_out_once".agedu_localized()
         firstLabel.font = UIFont.systemFont(ofSize: 13)
         contentView.addSubview(firstLabel)
         
@@ -131,15 +131,15 @@ extension AgoraKickOutAlertController {
         seconedButton.addTarget(self,
                                 action: #selector(onClickSecondButton(_:)),
                                 for: .touchUpInside)
-        seconedButton.setImage(UIImage.ag_imageNamed("ic_nameroll_ckeck_box_off", in: "AgoraEduUI"),
+        seconedButton.setImage(UIImage.agedu_named("ic_nameroll_ckeck_box_off"),
                                for: .normal)
-        seconedButton.setImage(UIImage.ag_imageNamed("ic_nameroll_ckeck_box_on", in: "AgoraEduUI"),
+        seconedButton.setImage(UIImage.agedu_named("ic_nameroll_ckeck_box_on"),
                                for: .selected)
         contentView.addSubview(seconedButton)
         
         seconedLabel = UILabel()
         seconedLabel.textColor = UIColor(hex: 0x586376)
-        seconedLabel.text = "kick_out_forever".ag_localizedIn("AgoraEduUI")
+        seconedLabel.text = "kick_out_forever".agedu_localized()
         seconedLabel.font = UIFont.systemFont(ofSize: 13)
         contentView.addSubview(seconedLabel)
         
@@ -155,7 +155,7 @@ extension AgoraKickOutAlertController {
         submitButton.addTarget(self,
                                action: #selector(onClickSubmit(_:)),
                                for: .touchUpInside)
-        submitButton.setTitle("kick_out_submit".ag_localizedIn("AgoraEduUI"),
+        submitButton.setTitle("kick_out_submit".agedu_localized(),
                               for: .normal)
         contentView.addSubview(submitButton)
         
@@ -163,7 +163,7 @@ extension AgoraKickOutAlertController {
         cancelButton.addTarget(self,
                                action: #selector(onClickCancel(_:)),
                                for: .touchUpInside)
-        cancelButton.setTitle("kick_out_cancel".ag_localizedIn("AgoraEduUI"),
+        cancelButton.setTitle("kick_out_cancel".agedu_localized(),
                               for: .normal)
         contentView.addSubview(cancelButton)
     }

@@ -7,24 +7,19 @@
 
 import AgoraUIBaseViews
 
-// MARK: - UIImage
-public func AgoraUIImage(object: NSObject,
-                         name: String) -> UIImage? {
-    let resource = "AgoraEduUI"
-    return UIImage.agora_bundle(object: object,
-                                resource: resource,
-                                name: name)
+extension UIImage {
+    class func agedu_named(_ named: String) -> UIImage? {
+        let b = Bundle.ag_compentsBundleNamed("AgoraEduUI")
+        return UIImage.init(named: named, in: b, compatibleWith: nil)
+    }
 }
 
-// MARK - Localized
-public func AgoraUILocalizedString(_ key: String,
-                                   object: NSObject) -> String {
-    let resource = "AgoraEduUI"
-    return String.agora_localized_string(key,
-                                         object: object,
-                                         resource: resource)
+extension String {
+    func agedu_localized() -> String {
+        let bundle = Bundle.ag_compentsBundleNamed("AgoraEduUI") ?? Bundle.main
+        return NSLocalizedString(self, bundle: bundle, comment: "")
+    }
 }
-
 /** 尺寸适配*/
 // 以375*667作为缩放标准
 fileprivate var kScale: CGFloat = {

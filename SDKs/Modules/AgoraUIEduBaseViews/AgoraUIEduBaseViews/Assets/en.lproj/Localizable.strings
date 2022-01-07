@@ -21,24 +21,9 @@ UserListChat = "Silence";
 UserListReward = "Rewards";
 nameroll_kick_out = "Ban";
 
-
-
 // board
 MuteBoardText = "Your cannot use the whiteboard tools.";
 UnMuteBoardText = "You can now use the whiteboard tools.";
-
-// tool box
-toolbox_cloud_storage = "Cloud storage";
-
-toolbox_save_borad = "Save borad";
-
-toolbox_record_class = "Record";
-
-toolbox_vote = "Vote";
-
-toolbox_count_down = "Count down";
-
-toolbox_answer_sheet = "Answer sheet";
 
 // Set
 SetText = "Set";

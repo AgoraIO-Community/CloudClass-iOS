@@ -119,7 +119,6 @@ class LoginConfig {
     
     static let login_group_title_width : CGFloat = 58
     static let login_group_width : CGFloat = (device == .iPhone_Small) ? 260 : 280
-    static let login_group_height : CGFloat = 40
     static var login_bottom_bottom : CGFloat {
         switch device {
         case .iPhone_Big: return 64

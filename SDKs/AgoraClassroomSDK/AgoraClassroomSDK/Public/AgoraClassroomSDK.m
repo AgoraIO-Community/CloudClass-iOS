@@ -121,8 +121,8 @@ static AgoraClassroomSDK *manager = nil;
                                                                   delegate:manager];
                 break;
             case AgoraEduContextRoomTypePaintingSmall:
-                eduVC = [[AgoraPaintingUIManager alloc] initWithContextPool:pool
-                                                                   delegate:manager];
+                eduVC = [[AgoraPaintingSmallUIManager alloc] initWithContextPool:pool
+                                                                        delegate:manager];
                 break;
             default:
                 NSCAssert(true,

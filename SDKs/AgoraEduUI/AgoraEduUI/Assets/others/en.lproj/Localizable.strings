@@ -6,29 +6,10 @@
   Copyright © 2020 Agora. All rights reserved.
 */
 
-NoEmptyText = " parameter cannot be empty";
-ParamErrorText = " parameter error";
-NeedCallText = "you need to call ";
-DismissVCText = "there are other pages on the top of the page";
-
-UserFullText = "The classroom is full";
-
-DuplicateLaunchText = "already launched";
-UnInitializedText = " not initialized";
-
-// ------------------------------------------------
 ClassBeforeStartText = "Class will begin after：";
 ClassAfterStartText = "Class begins：";
 ClassAfterStopText = "Class ends：";
 title_before_class = "Class will begin";
-
-// Room State
-ClassIDText = "Class ID：";
-ClassLeftText = "Exit classroom";
-
-// Network
-NetworkPoorText = "Poor local network connection,please check the network connection.";
-NetworkDisconnectedText = "The local network is disconnected,please check the network connection.";
 
 // toast
 ClassEndWarningStartText = "The course has ";
@@ -44,19 +25,11 @@ ClassExitTipText = "Quit";
 ClassThinkTipText = "Think again";
 ClassExitText = "Are you sure you want to exit the classroom?";
 
-
-// chat
-ChatDisableToastText = "Turn on mute mode";
-ChatEnableToastText = "Turn off mute mode";
-
 // canvas
 CameraMuteText = "Your camera has been turned off";
 MicrophoneMuteText = "Your mic has been turned off";
 CameraUnMuteText = "Your camera has been turned on";
 MicrophoneUnMuteText = "Your mic has been turned on";
-
-// Device
-TeacherVideoFailText = "There may be a problem with the teacher's video";
 
 // CoHost
 HandsUpTimeOutText = "Hands up timeout";
@@ -99,3 +72,16 @@ toast_reward_student_xx = "Congratulations to %@ for the award";
 // board
 board_granted = "You have been authorized by the teacher. Please use the whiteboard tool to interact";
 board_ungranted = "Your authorization has been cancelled by the teacher. You can't interact with whiteboard tools";
+
+// tool box
+toolbox_cloud_storage = "Cloud storage";
+
+toolbox_save_borad = "Save borad";
+
+toolbox_record_class = "Record";
+
+toolbox_vote = "Vote";
+
+toolbox_count_down = "Count down";
+
+toolbox_answer_sheet = "Answer sheet";

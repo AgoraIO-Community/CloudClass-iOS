@@ -12,6 +12,8 @@ import UIKit
 
 class AgoraSettingUIController: UIViewController {
     
+    public let suggestSize = CGSize(width: 201, height: 220)
+    
     public weak var roomDelegate: AgoraClassRoomManagement?
     
     private var contentView: UIView!
@@ -240,7 +242,7 @@ private extension AgoraSettingUIController {
         cameraLabel.text = AgoraKitLocalizedString("CameraText")
         cameraLabel.font = UIFont.systemFont(ofSize: 12)
         cameraLabel.textColor = UIColor(hex: 0x191919)
-        view.addSubview(cameraLabel)
+        contentView.addSubview(cameraLabel)
         
         cameraSwitch = UISwitch()
         cameraSwitch.onTintColor = UIColor(hex: 0x357BF6)
@@ -249,13 +251,13 @@ private extension AgoraSettingUIController {
         cameraSwitch.addTarget(self,
                                action: #selector(onClickCameraSwitch(_:)),
                                for: .touchUpInside)
-        view.addSubview(cameraSwitch)
+        contentView.addSubview(cameraSwitch)
         
         directionLabel = UILabel(frame: .zero)
         directionLabel.text = AgoraKitLocalizedString("DirectionText")
         directionLabel.font = UIFont.systemFont(ofSize: 12)
         directionLabel.textColor = UIColor(hex: 0x677386)
-        view.addSubview(directionLabel)
+        contentView.addSubview(directionLabel)
         
         frontCamButton = UIButton(type: .custom)
         frontCamButton.isSelected = true
@@ -279,7 +281,7 @@ private extension AgoraSettingUIController {
                                  for: .touchUpInside)
         frontCamButton.layer.cornerRadius = 4
         frontCamButton.clipsToBounds = true
-        view.addSubview(frontCamButton)
+        contentView.addSubview(frontCamButton)
         
         backCamButton = UIButton(type: .custom)
         backCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
@@ -302,17 +304,17 @@ private extension AgoraSettingUIController {
                                 for: .touchUpInside)
         backCamButton.layer.cornerRadius = 4
         backCamButton.clipsToBounds = true
-        view.addSubview(backCamButton)
+        contentView.addSubview(backCamButton)
         
         sepLine = UIView(frame: .zero)
         sepLine.backgroundColor = UIColor(hex: 0xECECF1)
-        view.addSubview(sepLine)
+        contentView.addSubview(sepLine)
         
         micLabel = UILabel(frame: .zero)
         micLabel.text = AgoraKitLocalizedString("MicrophoneText")
         micLabel.font = UIFont.systemFont(ofSize: 12)
         micLabel.textColor = UIColor(hex: 0x191919)
-        view.addSubview(micLabel)
+        contentView.addSubview(micLabel)
         
         micSwitch = UISwitch()
         micSwitch.onTintColor = UIColor(hex: 0x357BF6)
@@ -321,13 +323,13 @@ private extension AgoraSettingUIController {
         micSwitch.addTarget(self,
                             action: #selector(onClickMicSwitch(_:)),
                             for: .touchUpInside)
-        view.addSubview(micSwitch)
+        contentView.addSubview(micSwitch)
         
         audioLabel = UILabel(frame: .zero)
         audioLabel.text = AgoraKitLocalizedString("SpeakerText")
         audioLabel.font = UIFont.systemFont(ofSize: 12)
         audioLabel.textColor = UIColor(hex: 0x191919)
-        view.addSubview(audioLabel)
+        contentView.addSubview(audioLabel)
         
         audioSwitch = UISwitch()
         audioSwitch.onTintColor = UIColor(hex: 0x357BF6)
@@ -336,7 +338,7 @@ private extension AgoraSettingUIController {
         audioSwitch.addTarget(self,
                               action: #selector(onClickAudioSwitch(_:)),
                               for: .touchUpInside)
-        view.addSubview(audioSwitch)
+        contentView.addSubview(audioSwitch)
         
         exitButton = UIButton(type: .system)
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
@@ -353,11 +355,13 @@ private extension AgoraSettingUIController {
                              for: .touchUpInside)
         exitButton.layer.cornerRadius = 6
         exitButton.clipsToBounds = true
-        view.addSubview(exitButton)
+        contentView.addSubview(exitButton)
     }
     
     func createConstrains() {
         contentView.mas_makeConstraints { make in
+            make?.width.equalTo()(201)
+            make?.height.equalTo()(220)
             make?.left.right().top().bottom().equalTo()(0)
         }
         cameraLabel.mas_makeConstraints { make in

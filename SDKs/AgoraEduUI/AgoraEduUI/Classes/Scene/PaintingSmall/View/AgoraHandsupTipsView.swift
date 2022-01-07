@@ -33,7 +33,7 @@ private extension AgoraHandsupTipsView {
         layer.shadowOpacity = 1
         layer.shadowRadius = 6
 
-        let tipImage = UIImage.ag_imageNamed("ic_handsup_remind_tip", in: "AgoraEduUI")
+        let tipImage = UIImage.agedu_named("ic_handsup_remind_tip")
         let newImage = tipImage?.resizableImage(withCapInsets: UIEdgeInsets(top: 10, left: 10, bottom: 25, right: 10), resizingMode: .stretch)
         imageView = UIImageView(image: newImage)
         addSubview(imageView)
@@ -41,7 +41,7 @@ private extension AgoraHandsupTipsView {
         label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = UIColor(hex: 0x191919)
-        label.text = "long_press_to_wave_hands".ag_localizedIn("AgoraEduUI")
+        label.text = "long_press_to_wave_hands".agedu_localized()
         label.textAlignment = .center
         addSubview(label)
     }

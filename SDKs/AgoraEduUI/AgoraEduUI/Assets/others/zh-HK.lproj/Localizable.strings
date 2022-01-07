@@ -6,30 +6,10 @@
   Copyright © 2020 Agora. All rights reserved.
 */
 
-
-NoEmptyText = " 參數不能為空";
-ParamErrorText = " 參數錯誤";
-NeedCallText = "你需要先調用";
-DismissVCText = "頁面上層還有其他頁面";
-
-UserFullText = "加入教室失敗，教室人數已滿";
-
-DuplicateLaunchText = "已經啟動了";
-UnInitializedText = " 沒有初始化完成";
-
-// ------------------------------------------------
 ClassBeforeStartText = "距離上課還有：";
 ClassAfterStartText = "已上課：";
 ClassAfterStopText = "課程已結束";
 title_before_class = "課程未開始";
-
-// Room State
-ClassIDText = "課程ID：";
-ClassLeftText = "離開教室";
-
-// Network
-NetworkPoorText = "當前網絡質量不佳,請檢查設備網絡連接";
-NetworkDisconnectedText = "當前網絡已斷開,請檢查設備網絡連接";
 
 // toast
 ClassEndWarningStartText = "課程還有";
@@ -45,18 +25,11 @@ ClassExitTipText = "退出教室";
 ClassThinkTipText = "再想一下";
 ClassExitText = "是否確定要退出教室？";
 
-// chat
-ChatDisableToastText = "禁言模式開啟";
-ChatEnableToastText = "禁言模式關閉";
-
 // canvas
 CameraMuteText = "你的攝像頭被關閉了";
 MicrophoneMuteText = "你的麥克風被關閉了";
 CameraUnMuteText = "你的攝像頭被打開了";
 MicrophoneUnMuteText = "你的麥克風被打開了";
-
-// Device
-TeacherVideoFailText = "There may be a problem with the teacher's video";
 
 // CoHost
 HandsUpTimeOutText = "舉手超時";
@@ -99,3 +72,16 @@ toast_reward_student_xx = "祝賀%@獲得獎勵";
 // board
 board_granted = "你已被老師授權，請使用白板工具互動";
 board_ungranted = "你已被老師收回授權，無法使用白板工具互動";
+
+// tool box
+toolbox_cloud_storage = "雲盤";
+
+toolbox_save_borad = "保存板書";
+
+toolbox_record_class = "錄製";
+
+toolbox_vote = "投票";
+
+toolbox_count_down = "倒計時";
+
+toolbox_answer_sheet = "答題器";

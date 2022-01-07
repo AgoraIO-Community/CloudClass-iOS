@@ -14,7 +14,7 @@ import AgoraWidget
 
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
-@objc public class AgoraLectureUIManager: AgoraEduUIManager {
+@objc public class AgoraPaintingLectureUIManager: AgoraEduUIManager {
     private let roomType: AgoraEduContextRoomType = .lecture
     /** 工具栏*/
     private var toolBarController: AgoraToolBarUIController!
@@ -90,7 +90,7 @@ import AgoraWidget
 }
 
 // MARK: - AgoraToolBarDelegate
-extension AgoraLectureUIManager: AgoraToolBarDelegate {
+extension AgoraPaintingLectureUIManager: AgoraToolBarDelegate {
     
     func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
                                 selectView: UIView) {
@@ -113,7 +113,7 @@ extension AgoraLectureUIManager: AgoraToolBarDelegate {
     }
 }
 // MARK: - AgoraBoardToolsUIControllerDelegate
-extension AgoraLectureUIManager: AgoraBoardToolsUIControllerDelegate {
+extension AgoraPaintingLectureUIManager: AgoraBoardToolsUIControllerDelegate {
     func didUpdateBrushSetting(image: UIImage?,
                                colorHex: Int) {
         toolBarController.updateBrushButton(image: image,
@@ -121,7 +121,7 @@ extension AgoraLectureUIManager: AgoraBoardToolsUIControllerDelegate {
     }
 }
 // MARK: - PaintingToolBoxViewDelegate
-extension AgoraLectureUIManager: AgoraToolBoxUIControllerDelegate {
+extension AgoraPaintingLectureUIManager: AgoraToolBoxUIControllerDelegate {
     func toolBoxDidSelectTool(_ tool: AgoraToolBoxToolType) {
         toolBarController.deselectAll()
         ctrlView = nil
@@ -145,7 +145,7 @@ extension AgoraLectureUIManager: AgoraToolBoxUIControllerDelegate {
     }
 }
 // MARK: - Creations
-private extension AgoraLectureUIManager {
+private extension AgoraPaintingLectureUIManager {
     func createViews() {
         stateController = AgoraRoomStateUIController(context: contextPool)
         stateController.roomDelegate = self

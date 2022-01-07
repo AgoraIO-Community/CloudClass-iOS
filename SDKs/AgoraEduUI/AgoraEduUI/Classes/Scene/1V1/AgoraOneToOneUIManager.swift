@@ -22,8 +22,15 @@ import Masonry
     private var rightContentView: UIView!
     /** 白板 控制器*/
     private var boardController: AgoraBoardUIController!
+    /** 工具栏*/
+    private var toolBarController: AgoraToolBarUIController!
     /** 画板工具 控制器*/
-    private var brushToolsController: AgoraBoardToolsUIController!
+    private lazy var brushToolsController: AgoraBoardToolsUIController = {
+        let vc = AgoraBoardToolsUIController(context: contextPool)
+        vc.delegate = self
+        self.addChild(vc)
+        return vc
+    }()
     /** 聊天 控制器*/
     private var chatController: AgoraChatUIController?
     /** 屏幕分享 控制器*/
@@ -81,7 +88,6 @@ import Masonry
     public override func didClickCtrlMaskView() {
         super.didClickCtrlMaskView()
         stateController.deSelect()
-        brushToolsController.button.isSelected = false
     }
 }
 // MARK: - AgoraOneToOneTabViewDelegate
@@ -101,6 +107,24 @@ extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
         }
     }
 }
+extension AgoraOneToOneUIManager: AgoraToolBarDelegate {
+    
+    func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
+                                selectView: UIView) {
+        switch tool {
+        case .brushTool:
+            brushToolsController.view.frame = CGRect(origin: .zero,
+                                                     size: brushToolsController.suggestSize)
+            ctrlView = brushToolsController.view
+        default: break
+        }
+        ctrlViewAnimationFromView(selectView)
+    }
+    
+    func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
+        ctrlView = nil
+    }
+}
 // MARK: - AgoraChatUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraChatUIControllerDelegate {
     func updateChatRedDot(isShow: Bool) {
@@ -111,31 +135,48 @@ extension AgoraOneToOneUIManager: AgoraChatUIControllerDelegate {
 extension AgoraOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
     func onSettingSelected(isSelected: Bool) {
         if isSelected {
+            settingViewController.view.frame = CGRect(origin: .zero,
+                                                      size: settingViewController.suggestSize)
             ctrlView = settingViewController.view
-            ctrlView?.mas_makeConstraints { make in
-                make?.width.equalTo()(201)
-                make?.height.equalTo()(220)
-                make?.top.equalTo()(AgoraFit.scale(30))
-                make?.right.equalTo()(self.contentView)?.offset()((-10))
-            }
+            settingViewAnimationFromView(stateController.settingButton)
         } else {
             ctrlView = nil
+        }
+    }
+    
+    public func settingViewAnimationFromView(_ formView: UIView) {
+        guard let animaView = ctrlView else {
+            return
+        }
+        // 算出落点的frame
+        let rect = formView.convert(formView.bounds, to: self.view)
+        var point = CGPoint(x: rect.maxX - animaView.frame.size.width, y: rect.maxY + 8)
+        animaView.frame = CGRect(origin: point, size: animaView.frame.size)
+        // 运算动画锚点
+        let anchorConvert = formView.convert(formView.bounds, to: animaView)
+        let anchor = CGPoint(x: anchorConvert.origin.x/animaView.frame.width, y: 0)
+        // 开始动画运算
+        let oldFrame = animaView.frame
+        let position = CGPoint(x: animaView.layer.position.x + (anchor.x - 0.5) * animaView.bounds.width,
+                               y: animaView.layer.position.y + (anchor.y - 0.5) * animaView.bounds.height)
+        animaView.layer.anchorPoint = anchor
+        animaView.frame = oldFrame
+        animaView.alpha = 0.2
+        animaView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.1) {
+            animaView.transform = .identity
+            animaView.alpha = 1
+        } completion: { finish in
         }
     }
 }
 // MARK: - AgoraBoardToolsUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraBoardToolsUIControllerDelegate {
-    func onShowBrushTools(isShow: Bool) {
-        if isShow {
-            stateController.deSelect()
-            ctrlView = brushToolsController.view
-            ctrlView?.mas_makeConstraints { make in
-                make?.right.equalTo()(brushToolsController.button.mas_left)?.offset()(-7)
-                make?.bottom.equalTo()(brushToolsController.button)?.offset()(-10)
-            }
-        } else {
-            ctrlView = nil
-        }
+    func didUpdateBrushSetting(image: UIImage?,
+                               colorHex: Int) {
+        toolBarController.updateBrushButton(image: image,
+                                            colorHex: colorHex)
     }
 }
 // MARK: - Creations
@@ -165,14 +206,14 @@ private extension AgoraOneToOneUIManager {
         addChild(screenSharingController)
         contentView.addSubview(screenSharingController.view)
         
-        brushToolsController = AgoraBoardToolsUIController(context: contextPool)
-        brushToolsController.delegate = self
-        self.addChild(brushToolsController)
-        view.addSubview(brushToolsController.button)
+        toolBarController = AgoraToolBarUIController(context: contextPool)
+        toolBarController.delegate = self
+        toolBarController.tools = [.brushTool]
+        view.addSubview(toolBarController.view)
     }
     
     func createConstrains() {
-        stateController.view.mas_makeConstraints { [unowned self] make in
+        stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(23))
         }
@@ -181,10 +222,9 @@ private extension AgoraOneToOneUIManager {
             make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
-        brushToolsController.button.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
-            make?.bottom.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
-            make?.width.height().equalTo()(36)
+        toolBarController.view.mas_makeConstraints { make in
+            make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
+            make?.bottom.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-15))
         }
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)

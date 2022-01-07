@@ -2,7 +2,7 @@
 //  AgoraEduUI+Small.swift
 //  AgoraEduUI
 //
-//  Created by SRS on 2021/4/16.
+//  Created by HeZhengQing on 2021/4/16.
 //
 
 import AgoraUIEduBaseViews
@@ -16,10 +16,8 @@ import AgoraWidget
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class AgoraSmallUIManager: AgoraEduUIManager {
     private let roomType: AgoraEduContextRoomType = .paintingSmall
-    /// 视图部分，支持feature的UI交互显示
     /** 工具栏*/
-    private var toolsView: AgoraRoomToolstView!
-    /// 控制器部分，除了视图显示，还包含和SDK之间的事件及数据交互
+    private var toolBarController: AgoraToolBarUIController!
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
     /** 远程视窗渲染 控制器*/
@@ -38,7 +36,12 @@ import AgoraWidget
     /** 屏幕分享 控制器*/
     private var screenSharingController: AgoraScreenSharingUIController!
     /** 画板工具 控制器*/
-    private var brushToolsController: AgoraBoardToolsUIController!
+    private lazy var brushToolsController: AgoraBoardToolsUIController = {
+        let vc = AgoraBoardToolsUIController(context: contextPool)
+        vc.delegate = self
+        self.addChild(vc)
+        return vc
+    }()
     /** 聊天窗口 控制器*/
     private var chatController: AgoraChatUIController!
     /** 设置界面 控制器*/
@@ -48,8 +51,6 @@ import AgoraWidget
         self.addChild(vc)
         return vc
     }()
-    /** 举手 控制器*/
-    private var handsUpController: AgoraHandsUpUIController!
     
     private var isJoinedRoom = false
         
@@ -84,76 +85,50 @@ import AgoraWidget
     }
     
     public override func didClickCtrlMaskView() {
-        toolsView.deselectAll()
-        handsUpController.deselect()
-        brushToolsController.button.isSelected = false
+        toolBarController.deselectAll()
     }
 }
 
-// MARK: - HandsUpViewControllerDelegate
-extension AgoraSmallUIManager: AgoraHandsUpUIControllerDelegate {
-    func onShowHandsUpList(_ view: UIView) {
-        toolsView.deselectAll()
-        brushToolsController.button.isSelected = false
-        ctrlView = view
-        view.mas_makeConstraints { make in
-            make?.bottom.equalTo()(handsUpController.view)
-            make?.width.equalTo()(220)
-            make?.height.equalTo()(245)
-            make?.right.equalTo()(handsUpController.view.mas_left)?.offset()(-10)
-        }
-    }
-    func onHideHandsUpList(_ view: UIView) {
-        ctrlView = nil
-    }
-}
-
-// MARK: - AgoraToolListViewDelegate
-extension AgoraSmallUIManager: AgoraRoomToolsViewDelegate {
-    func toolsViewDidSelectTool(_ tool: AgoraRoomToolstView.AgoraRoomToolType) {
-        handsUpController.deselect()
-        brushToolsController.button.isSelected = false
+// MARK: - AgoraToolBarDelegate
+extension AgoraSmallUIManager: AgoraToolBarDelegate {
+    func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
+                                selectView: UIView) {
         switch tool {
         case .setting:
+            settingViewController.view.frame = CGRect(origin: .zero,
+                                                      size: settingViewController.suggestSize)
             ctrlView = settingViewController.view
-            ctrlView?.mas_makeConstraints { make in
-                make?.width.equalTo()(201)
-                make?.height.equalTo()(220)
-                make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
-                make?.centerY.equalTo()(toolsView)
-            }
         case .nameRoll:
+            nameRollController.view.frame = CGRect(origin: .zero,
+                                                   size: nameRollController.suggestSize)
             ctrlView = nameRollController.view
-            ctrlView?.mas_makeConstraints { make in
-                make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
-                make?.centerY.equalTo()(toolsView)
-            }
         case .message:
+            chatController.view.frame = CGRect(origin: .zero,
+                                               size: chatController.suggestSize)
             ctrlView = chatController.view
-            ctrlView?.mas_remakeConstraints { make in
-                make?.right.equalTo()(toolsView.mas_left)?.offset()(-7)
-                make?.centerY.equalTo()(toolsView)
-                make?.width.equalTo()(200)
-                make?.height.equalTo()(287)
-            }
+        case .brushTool:
+            brushToolsController.view.frame = CGRect(origin: .zero,
+                                                     size: brushToolsController.suggestSize)
+            ctrlView = brushToolsController.view
         default: break
         }
+        ctrlViewAnimationFromView(selectView)
     }
     
-    func toolsViewDidDeselectTool(_ tool: AgoraRoomToolstView.AgoraRoomToolType) {
+    func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
         ctrlView = nil
     }
 }
 // MARK: - AgoraChatUIControllerDelegate
 extension AgoraSmallUIManager: AgoraChatUIControllerDelegate {
     func updateChatRedDot(isShow: Bool) {
-        toolsView.updateChatRedDot(isShow: isShow)
+        toolBarController.updateChatRedDot(isShow: isShow)
     }
 }
 // MARK: - PaintingToolBoxViewDelegate
 extension AgoraSmallUIManager: AgoraToolBoxUIControllerDelegate {
     func toolBoxDidSelectTool(_ tool: AgoraToolBoxToolType) {
-        toolsView.deselectAll()
+        toolBarController.deselectAll()
         ctrlView = nil
         switch tool {
         case .cloudStorage:
@@ -177,18 +152,11 @@ extension AgoraSmallUIManager: AgoraToolBoxUIControllerDelegate {
 
 // MARK: - AgoraBoardToolsUIControllerDelegate
 extension AgoraSmallUIManager: AgoraBoardToolsUIControllerDelegate {
-    func onShowBrushTools(isShow: Bool) {
-        if isShow {
-            toolsView.deselectAll()
-            handsUpController.deselect()
-            ctrlView = brushToolsController.view
-            ctrlView?.mas_makeConstraints { make in
-                make?.right.equalTo()(brushToolsController.button.mas_left)?.offset()(-7)
-                make?.bottom.equalTo()(brushToolsController.button)?.offset()(-10)
-            }
-        } else {
-            ctrlView = nil
-        }
+    
+    func didUpdateBrushSetting(image: UIImage?,
+                               colorHex: Int) {
+        toolBarController.updateBrushButton(image: image,
+                                            colorHex: colorHex)
     }
 }
 
@@ -212,24 +180,14 @@ private extension AgoraSmallUIManager {
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
-        brushToolsController = AgoraBoardToolsUIController(context: contextPool)
-        brushToolsController.delegate = self
-        addChild(brushToolsController)
-        view.addSubview(brushToolsController.button)
-        
-        handsUpController = AgoraHandsUpUIController(context: contextPool)
-        handsUpController.delegate = self
-        addChild(handsUpController)
-        view.addSubview(handsUpController.view)
-        
         screenSharingController = AgoraScreenSharingUIController(context: contextPool)
         addChild(screenSharingController)
         contentView.addSubview(screenSharingController.view)
         
-        toolsView = AgoraRoomToolstView(frame: view.bounds)
-        toolsView.delegate = self
-        toolsView.tools = [.setting, .nameRoll, .message]
-        contentView.addSubview(toolsView)
+        toolBarController = AgoraToolBarUIController(context: contextPool)
+        toolBarController.delegate = self
+        toolBarController.tools = [.setting, .nameRoll, .message, .handsup, .brushTool]
+        view.addSubview(toolBarController.view)
         
         nameRollController = AgoraUserListUIController(context: contextPool)
         addChild(nameRollController)
@@ -253,19 +211,9 @@ private extension AgoraSmallUIManager {
             make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
             make?.left.right().bottom().equalTo()(0)
         }
-        brushToolsController.button.mas_makeConstraints { make in
-            make?.right.equalTo()(contentView)?.offset()(AgoraFit.scale(-6))
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-6))
-            make?.width.height().equalTo()(36)
-        }
-        handsUpController.view.mas_makeConstraints { make in
-            make?.width.height().equalTo()(36)
-            make?.centerX.equalTo()(brushToolsController.button)
-            make?.bottom.equalTo()(brushToolsController.button.mas_top)?.offset()(-8)
-        }
-        toolsView.mas_makeConstraints { make in
-            make?.right.equalTo()(brushToolsController.button)
-            make?.bottom.equalTo()(handsUpController.view.mas_top)?.offset()(-8)
+        toolBarController.view.mas_makeConstraints { make in
+            make?.right.equalTo()(contentView)?.offset()(-12)
+            make?.bottom.equalTo()(contentView)?.offset()(-15)
         }
     }
     

@@ -19,12 +19,10 @@ class AgoraBoardUIController: UIViewController {
                 return
             }
             if localGranted {
-                AgoraToast.toast(msg: AgoraUILocalizedString("board_granted",
-                                                             object: self),
+                AgoraToast.toast(msg: "board_granted".agedu_localized(),
                                  type: .notice)
             } else {
-                AgoraToast.toast(msg: AgoraUILocalizedString("board_ungranted",
-                                                             object: self),
+                AgoraToast.toast(msg: "board_ungranted".agedu_localized(),
                                  type: .error)
             }
         }

@@ -25,19 +25,6 @@ nameroll_kick_out = "踢人";
 MuteBoardText = "你现在无权使用白板了";
 UnMuteBoardText = "你可以使用白板了";
 
-// tool box
-toolbox_cloud_storage = "云盘";
-
-toolbox_save_borad = "保存板书";
-
-toolbox_record_class = "录制";
-
-toolbox_vote = "投票";
-
-toolbox_count_down = "倒计时";
-
-toolbox_answer_sheet = "答题器";
-
 // Set
 SetText = "设置";
 CameraText = "摄像头";

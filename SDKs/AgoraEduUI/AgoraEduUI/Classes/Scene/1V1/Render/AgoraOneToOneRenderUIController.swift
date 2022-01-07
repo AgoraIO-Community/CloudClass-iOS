@@ -88,14 +88,14 @@ private extension AgoraOneToOneRenderUIController {
             return
         }
         if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneMuteText".ag_localizedIn("AgoraEduUI"))
+            AgoraToast.toast(msg: "MicrophoneMuteText".agedu_localized())
         } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneUnMuteText".ag_localizedIn("AgoraEduUI"))
+            AgoraToast.toast(msg: "MicrophoneUnMuteText".agedu_localized())
         }
         if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraMuteText".ag_localizedIn("AgoraEduUI"))
+            AgoraToast.toast(msg: "CameraMuteText".agedu_localized())
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraUnMuteText".ag_localizedIn("AgoraEduUI"))
+            AgoraToast.toast(msg: "CameraUnMuteText".agedu_localized())
         }
     }
     

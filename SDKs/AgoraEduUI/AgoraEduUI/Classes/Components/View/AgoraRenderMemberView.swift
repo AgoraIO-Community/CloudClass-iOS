@@ -180,7 +180,7 @@ class AgoraRenderMemberView: UIView {
 // MARK: - Private
 private extension AgoraRenderMemberView {
     func resetViewState() {
-        stateImageView.image = UIImage.ag_imageNamed("ic_member_no_user", in: "AgoraEduUI")
+        stateImageView.image = UIImage.agedu_named("ic_member_no_user")
         micView.setState(.off)
         self.nameLabel.text = ""
         self.videoView.isHidden = true
@@ -275,16 +275,13 @@ private extension AgoraRenderMemberView {
     func updateVideoState(state: AgoraRenderMemberModel.AgoraRenderMediaState) {
         switch state {
         case .on:
-            stateImageView.image = UIImage.ag_imageNamed("ic_member_device_off",
-                                                         in: "AgoraEduUI")
+            stateImageView.image = UIImage.agedu_named("ic_member_device_off")
             videoView.isHidden = false
         case .off, .broken:
-            stateImageView.image = UIImage.ag_imageNamed("ic_member_device_off",
-                                                         in: "AgoraEduUI")
+            stateImageView.image = UIImage.agedu_named("ic_member_device_off")
             videoView.isHidden = true
         case .forbidden:
-            stateImageView.image = UIImage.ag_imageNamed("ic_member_device_forbidden",
-                                                         in: "AgoraEduUI")
+            stateImageView.image = UIImage.agedu_named("ic_member_device_forbidden")
             videoView.isHidden = true
         }
     }
@@ -308,7 +305,7 @@ private extension AgoraRenderMemberView {
         layer.borderWidth = 1
         layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
         
-        stateImageView = UIImageView(image: UIImage.ag_imageNamed("ic_member_no_user", in: "AgoraEduUI"))
+        stateImageView = UIImageView(image: UIImage.agedu_named("ic_member_no_user"))
         addSubview(stateImageView)
         
         videoView = UIView(frame: .zero)
@@ -329,7 +326,7 @@ private extension AgoraRenderMemberView {
         micView = AgoraRenderMicView(frame: .zero)
         addSubview(micView)
         
-        rewardImageView = UIImageView(image: UIImage.ag_imageNamed("ic_member_reward", in: "AgoraEduUI"))
+        rewardImageView = UIImageView(image: UIImage.agedu_named("ic_member_reward"))
         rewardImageView.isHidden = true
         addSubview(rewardImageView)
         

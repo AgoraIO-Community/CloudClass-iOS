@@ -55,6 +55,8 @@ extension AgoraUserListModel {
 }
 
 class AgoraUserListUIController: UIViewController {
+    
+    public var suggestSize = CGSize(width: 300, height: 260)
     /** 容器*/
     private var contentView: UIView!
     /** 页面title*/
@@ -507,6 +509,7 @@ extension AgoraUserListUIController {
     
     func createConstrains() {
         let contentWidth = 68 * supportFuncs.count
+        self.suggestSize = CGSize(width: contentWidth, height: 260)
         contentView.mas_makeConstraints { make in
             make?.width.equalTo()(contentWidth)
             make?.height.equalTo()(260)

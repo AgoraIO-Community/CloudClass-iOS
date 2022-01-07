@@ -22,24 +22,14 @@ class AgoraHandsUpUIController: UIViewController {
     /** 代理*/
     weak var delegate: AgoraHandsUpUIControllerDelegate?
     /** 举手列表控制按钮*/
-    private lazy var listButton: AgoraRoomToolZoomButton = {
-        let v = AgoraRoomToolZoomButton(frame: .zero)
-        let image = AgoraUIImage(object: self, name: "ic_func_hands_up")
+    private lazy var listButton: AgoraZoomButton = {
+        let v = AgoraZoomButton(frame: .zero)
+        let image = UIImage.agedu_named("ic_func_hands_up")
         if let rendering = image?.withRenderingMode(.alwaysTemplate) {
             v.setImageForAllStates(rendering)
         }
         v.addTarget(self, action: #selector(onSelectListButton(_:)),
                     for: .touchUpInside)
-        view.addSubview(v)
-        v.mas_makeConstraints { make in
-            make?.center.equalTo()(v.superview)
-            make?.width.height().equalTo()(v.superview)
-        }
-        return v
-    }()
-    private lazy var ctrlButton: AgoraHandsUpDelayView = {
-        let v = AgoraHandsUpDelayView(frame: .zero)
-        v.delegate = self
         view.addSubview(v)
         v.mas_makeConstraints { make in
             make?.center.equalTo()(v.superview)
@@ -68,23 +58,12 @@ class AgoraHandsUpUIController: UIViewController {
         }
         return redDot
     }()
-    
     private lazy var countLabel: UILabel = {
         let v = UILabel()
         v.textColor = .white
         v.font = UIFont.systemFont(ofSize: 10)
         v.textAlignment = .center
         v.isUserInteractionEnabled = false
-        return v
-    }()
-    /** 举手提示浮层*/
-    private lazy var tipsView: AgoraHandsupTipsView = {
-        let v = AgoraHandsupTipsView()
-        view.addSubview(v)
-        v.mas_makeConstraints { make in
-            make?.right.equalTo()(self.view.mas_left)?.offset()(-5)
-            make?.centerY.equalTo()(v.superview)
-        }
         return v
     }()
     private lazy var listContentView: UIView = {
@@ -115,9 +94,7 @@ class AgoraHandsUpUIController: UIViewController {
         v.clipsToBounds = true
         return v
     }()
-    
-    private var isShowedTips = false
-    
+        
     private var dataSource = [AgoraEduContextUserInfo]()
     
     private var isReminding: Bool = false {
@@ -149,8 +126,6 @@ class AgoraHandsUpUIController: UIViewController {
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             listButton.isHidden = false
             contextPool.user.registerUserEventHandler(self)
-        } else {
-            ctrlButton.isHidden = false
         }
     }
     
@@ -163,22 +138,6 @@ class AgoraHandsUpUIController: UIViewController {
 }
 // MARK: - Private
 private extension AgoraHandsUpUIController {
-    func mayShowTips() {
-        guard self.isShowedTips == false else {
-            return
-        }
-        self.isShowedTips = true
-        self.tipsView.isHidden = false
-        self.tipsView.alpha = 1
-        self.perform(#selector(hideTipsAnimated), with: nil, afterDelay: 2)
-    }
-    
-    @objc func hideTipsAnimated() {
-        UIView.animate(withDuration: 0.3) {
-            self.tipsView.alpha = 0
-        }
-    }
-    
     @objc func blinkStart() {
         self.perform(#selector(blinkFinish), with: nil, afterDelay: 1)
         listButton.backgroundColor = UIColor(hex: 0x357BF6)
@@ -204,24 +163,6 @@ extension AgoraHandsUpUIController {
             delegate?.onShowHandsUpList(listContentView)
         } else {
             delegate?.onHideHandsUpList(listContentView)
-        }
-    }
-}
-// MARK: - HandsUpDelayViewDelegate
-extension AgoraHandsUpUIController: AgoraHandsUpDelayViewDelegate {
-    func onHandsUpViewDidChangeState(_ state: AgoraHandsUpDelayView.ViewState) {
-        switch state {
-        case .hold:
-            mayShowTips()
-            contextPool.user.handsWave(duration: 3) {
-                
-            } failure: { error in
-                
-            }
-            break
-        case .free: break
-        case .counting: break
-        default: break
         }
     }
 }
