@@ -11,6 +11,11 @@ import AgoraEduContext
 import AgoraUIBaseViews
 import AgoraUIEduBaseViews
 
+struct HandsUpUser {
+    var userUuid: String
+    var userName: String
+}
+
 protocol AgoraHandsUpUIControllerDelegate: NSObjectProtocol {
     /** 展示举手列表*/
     func onShowHandsUpList(_ view: UIView)
@@ -94,8 +99,10 @@ class AgoraHandsUpUIController: UIViewController {
         v.clipsToBounds = true
         return v
     }()
-        
-    private var dataSource = [AgoraEduContextUserInfo]()
+
+    private var dataSource = [HandsUpUser]()
+    
+    private var isShowedTips = false
     
     private var isReminding: Bool = false {
         didSet {
@@ -169,14 +176,18 @@ extension AgoraHandsUpUIController {
 
 // MARK: - AgoraEduUserHandler
 extension AgoraHandsUpUIController: AgoraEduUserHandler {
-    
     func onUserHandsWaveEnable(enable: Bool) {
         self.view.isHidden = !enable
     }
 
-    func onUserHandsWave(user: AgoraEduContextUserInfo,
-                         duration: Int) {
-        if dataSource.contains(where: {$0.userUuid == user.userUuid}) == false {
+    func onUserHandsWave(userUuid: String,
+                         duration: Int,
+                         payload: [String : Any]?) {
+        if dataSource.contains(where: {$0.userUuid == userUuid}) == false,
+           let `payload` = payload,
+           let userName = payload["userName"] as? String {
+            let user = HandsUpUser(userUuid: userUuid,
+                                   userName: userName)
             dataSource.append(user)
         }
         redDot.isHidden = (dataSource.count == 0)

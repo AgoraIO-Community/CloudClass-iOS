@@ -172,15 +172,17 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
         reloadData()
     }
     
-    func onUserHandsWave(user: AgoraEduContextUserInfo,
-                         duration: Int) {
-        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+    func onUserHandsWave(userUuid: String,
+                         duration: Int,
+                         payload: [String : Any]?) {
+        if let model = dataSource.first(where: {$0.uuid == userUuid}) {
             model.isHandsUp = true
         }
     }
     
-    func onUserHandsDown(user: AgoraEduContextUserInfo) {
-        if let model = dataSource.first(where: {$0.uuid == user.userUuid}) {
+    func onUserHandsDown(userUuid: String,
+                         payload: [String : Any]?) {
+        if let model = dataSource.first(where: {$0.uuid == userUuid}) {
             model.isHandsUp = false
         }
     }

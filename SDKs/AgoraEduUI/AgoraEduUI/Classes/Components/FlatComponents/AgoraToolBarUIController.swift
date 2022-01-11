@@ -287,9 +287,11 @@ extension AgoraToolBarUIController: AgoraHandsUpDelayViewDelegate {
         switch state {
         case .hold:
             mayShowTips()
-            contextPool.user.handsWave(duration: 3) {
+            let userName = contextPool.user.getLocalUserInfo().userName
+            contextPool.user.handsWave(duration: 3,
+                                       payload: ["userName": userName]) {
                 
-            } failure: { error in
+            } failure: { (_) in
                 
             }
             break
