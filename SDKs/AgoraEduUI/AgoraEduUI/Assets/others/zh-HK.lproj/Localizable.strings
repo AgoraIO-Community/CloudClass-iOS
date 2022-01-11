@@ -85,3 +85,7 @@ toolbox_vote = "投票";
 toolbox_count_down = "倒計時";
 
 toolbox_answer_sheet = "答題器";
+
+// Network
+NetworkPoorText = "當前網絡質量不佳,請檢查設備網絡連接";
+NetworkDisconnectedText = "當前網絡已斷開,請檢查設備網絡連接";

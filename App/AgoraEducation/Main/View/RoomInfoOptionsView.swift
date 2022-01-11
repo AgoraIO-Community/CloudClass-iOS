@@ -60,7 +60,7 @@ class RoomInfoOptionsView: UIView, UITableViewDelegate, UITableViewDataSource {
         }
         self.alpha = 0.2
         isHidden = false
-        UIView.animate(withDuration: 0.15) {
+        UIView.animate(withDuration: 0.1) {
             self.superview?.layoutIfNeeded()
             self.alpha = 1
         } completion: { finish in

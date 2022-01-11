@@ -85,3 +85,7 @@ toolbox_vote = "Vote";
 toolbox_count_down = "Count down";
 
 toolbox_answer_sheet = "Answer sheet";
+
+// Network
+NetworkPoorText = "Poor local network connection,please check the network connection.";
+NetworkDisconnectedText = "The local network is disconnected,please check the network connection.";

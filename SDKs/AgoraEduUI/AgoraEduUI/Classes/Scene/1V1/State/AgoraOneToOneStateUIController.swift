@@ -234,10 +234,12 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
             netStateView.image = UIImage.agedu_named("ic_network_unknow")
         case .good:
             netStateView.image = UIImage.agedu_named("ic_network_good")
-        case .medium:
-            netStateView.image = UIImage.agedu_named("ic_network_medium")
         case .bad:
             netStateView.image = UIImage.agedu_named("ic_network_bad")
+        case .down:
+            AgoraToast.toast(msg:"NetworkDisconnectedText".agedu_localized(),
+                             type: .error)
+            netStateView.image = UIImage.agedu_named("ic_network_down")
         default: break
         }
     }
@@ -253,6 +255,8 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
         case .connecting:
             AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
         case .disconnected, .reconnecting:
+            AgoraToast.toast(msg:"NetworkDisconnectedText".agedu_localized(),
+                             type: .error)
             AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
         case .connected:
             AgoraLoading.hide()
@@ -269,7 +273,8 @@ private extension AgoraOneToOneStateUIController {
         view.layer.cornerRadius = 2
         view.clipsToBounds = true
         
-        netStateView = UIImageView(image: UIImage.agedu_named("ic_network_unknow"))
+        // default network quality is good
+        netStateView = UIImageView(image: UIImage.agedu_named("ic_network_good"))
         view.addSubview(netStateView)
         
         lineView = UIView(frame: .zero)
