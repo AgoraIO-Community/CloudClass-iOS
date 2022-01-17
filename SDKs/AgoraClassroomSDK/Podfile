@@ -3,17 +3,18 @@
 
 def libVersion
   pod 'Protobuf', '3.17.0'
-  pod "CocoaLumberjack", "3.6.1"
-  pod "AliyunOSSiOS", "2.10.8"
-  pod "Armin", "1.0.9"
-  pod "Alamofire", "4.7.3"
-  pod "SSZipArchive", "2.4.2"
+  pod 'CocoaLumberjack', '3.6.1'
+  pod 'AliyunOSSiOS', '2.10.8'
+  pod 'Armin', '1.0.9'
+  pod 'Alamofire', '4.7.3'
+  pod 'SSZipArchive', '2.4.2'
+  pod 'FLAnimatedImage', '1.0.16'
 
-  pod "Whiteboard", "2.15.16"
-  pod "AgoraRtm_iOS", "1.4.8"
+  pod 'Whiteboard', '2.15.16'
+  pod 'AgoraRtm_iOS', '1.4.8'
 
-  pod "SwifterSwift", "5.2.0" 
-  pod "Masonry"
+  pod 'SwifterSwift', "5.2.0" 
+  pod 'Masonry'
 end
 
 def preRtc
