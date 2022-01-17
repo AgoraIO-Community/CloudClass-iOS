@@ -8,7 +8,6 @@
 #import "AgoraEduObjects.h"
 @import AgoraWidgets;
 @import AgoraExtApps;
-@import ChatWidget;
 
 #pragma mark - Media
 /**设置媒体选项*/

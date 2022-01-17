@@ -38,9 +38,8 @@ SourcePodContent =  """
     pod 'AgoraRte/PreRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
 
     # widgets
-    pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets_Local.podspec'
-    pod 'ChatWidget', :path => '../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget_Local.podspec'
-    pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/ExtApps/AgoraExtApps_Local.podspec'
+    pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
+    pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/AgoraExtApps/AgoraExtApps_Local.podspec'
 
     pod 'MLeaksFinder'
     post_install do |installer|

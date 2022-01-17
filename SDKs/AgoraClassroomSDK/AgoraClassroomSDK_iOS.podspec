@@ -22,7 +22,6 @@ Pod::Spec.new do |spec|
 
   # open sources widgets and extApps
   spec.dependency "AgoraWidgets", '>= 2.0.0'
-  spec.dependency "ChatWidget", '>= 2.0.0'
   spec.dependency "AgoraExtApps", '>= 2.0.0'
 
    # close source libs
