@@ -31,7 +31,7 @@ class AgoraBoardUIController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
         view.backgroundColor = .clear
-        initBoardWidget()
+        
         contextPool.room.registerRoomEventHandler(self)
     }
     
@@ -130,6 +130,7 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
 
 extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        initBoardWidget()
         joinBoard()
     }
 }
