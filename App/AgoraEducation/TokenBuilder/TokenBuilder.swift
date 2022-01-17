@@ -32,36 +32,28 @@ class TokenBuilder {
                        environment: Environment,
                        success: @escaping SuccessCompletion,
                        failure: @escaping FailureCompletion) {
-        if region != "CN" && environment != .pro {
-            let error = NSError(domain: "",
-                                code: -1,
-                                userInfo: ["message": "dev and pre only suppurt CN region"])
-            failure(error)
-            return
-        }
-        
         var urlSubFirst: String
         
-        switch region {
-        case "CN":
-            switch environment {
-            case .dev:
-                urlSubFirst = "https://api-solutions-dev.bj2.agoralab.co/edu/v2/users/"
-            case .pre:
-                urlSubFirst = "https://api-solutions-pre.bj2.agoralab.co/edu/v2/users/"
-            case .pro:
-                urlSubFirst = "https://api-solutions.bj2.agoralab.co/edu/v2/users/"
+        switch environment {
+        case .dev:
+            urlSubFirst = "https://api-solutions-dev.bj2.agoralab.co/edu/v2/users"
+        case .pre:
+            urlSubFirst = "https://api-solutions-pre.bj2.agoralab.co/edu/v2/users"
+        case .pro:
+            switch region {
+            case "CN":
+                urlSubFirst = "https://api-solutions.bj2.agoralab.co/edu/v2/users"
+            case "NA":
+                urlSubFirst = "https://api-solutions.sv3sbm.agoralab.co/edu/v2/users"
+            case "EU":
+                urlSubFirst = "https://api-solutions.fr3sbm.agoralab.co/edu/v2/users"
+            case "AP":
+                urlSubFirst = "https://api-solutions.sg3sbm.agoralab.co/edu/v2/users"
+            default:
+                fatalError("buildByServer, not support region: \(region)")
             }
-        case "NA":
-            urlSubFirst = "https://api-solutions.sv3sbm.agoralab.co/edu/v2/users"
-        case "EU":
-            urlSubFirst = "https://api-solutions.fr3sbm.agoralab.co/edu/v2/users"
-        case "AP":
-            urlSubFirst = "https://api-solutions.sg3sbm.agoralab.co/edu/v2/users"
-        default:
-            fatalError("buildByServer, not support region: \(region)")
         }
-        
+                
         let urlString = urlSubFirst + "/\(userUuid)/token"
         let event = ArRequestEvent(name: "TokenBuilder buildByServer")
         let type = ArRequestType.http(.get,
