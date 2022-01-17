@@ -9,7 +9,6 @@ import Masonry
 import AgoraExtApp
 import AgoraEduContext
 import AgoraUIBaseViews
-import AgoraUIEduBaseViews
 
 struct HandsUpUser {
     var userUuid: String

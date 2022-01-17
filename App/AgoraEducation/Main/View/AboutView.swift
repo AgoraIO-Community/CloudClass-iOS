@@ -7,6 +7,7 @@
 //
 
 import AgoraUIBaseViews
+import SwifterSwift
 
 @objcMembers public class AboutView: AgoraBaseUIView,
                                      UITableViewDataSource,
@@ -17,7 +18,7 @@ import AgoraUIBaseViews
         
         contentView.layer.cornerRadius = 8
         contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor(hexString: "ECECF1").cgColor
+        contentView.layer.borderColor = UIColor(hexString: "ECECF1")?.cgColor
         
         contentView.layer.shadowColor = UIColor(red: 0.18,
                                                 green: 0.25,

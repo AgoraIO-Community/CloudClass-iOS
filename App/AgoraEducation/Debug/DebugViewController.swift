@@ -11,13 +11,13 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import SwifterSwift
 import AgoraExtApp
 import AgoraWidget
 import AgoraLog
 import UIKit
+import AgoraEduUI
 
 @objcMembers public class DebugViewController: UIViewController {
     /** 房间信息列表*/

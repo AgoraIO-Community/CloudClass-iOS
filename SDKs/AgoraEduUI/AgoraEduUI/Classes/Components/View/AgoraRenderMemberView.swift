@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
+import FLAnimatedImage
 
 class AgoraRenderMemberModel {
     enum AgoraRenderRole {
@@ -109,7 +109,7 @@ class AgoraRenderMemberView: UIView {
     private var rewardImageView: UIImageView!
     private var rewardLabel: UILabel!
     /** 举手动画视图*/
-    private lazy var waveView: AgoraFLAnimatedImageView =  {
+    private lazy var waveView: FLAnimatedImageView =  {
         guard let bundle = Bundle.agora_bundle(object: self,
                                                resource: "AgoraEduUI"),
               let url = bundle.url(forResource: "hands_up_wave",
@@ -118,10 +118,8 @@ class AgoraRenderMemberView: UIView {
             fatalError()
         }
             
-        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
-        animatedImage?.loopCount = 0
-        
-        let v = AgoraFLAnimatedImageView()
+        let animatedImage = FLAnimatedImage(animatedGIFData: data)        
+        let v = FLAnimatedImageView()
         v.animatedImage = animatedImage
         v.isHidden = true
         self.addSubview(v)

@@ -28,7 +28,6 @@ SourcePodContent =  """
     # open source libs
     pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext_Local.podspec'
     pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI_Local.podspec'
-    pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
     pod 'AgoraReport', :path => '../../apaas-common-libs-ios/SDKs/AgoraReport/AgoraReport.podspec'
     pod 'AgoraRx', :path => '../../apaas-common-libs-ios/SDKs/AgoraRx/AgoraRx.podspec'
 

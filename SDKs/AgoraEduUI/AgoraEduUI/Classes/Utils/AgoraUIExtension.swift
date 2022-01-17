@@ -9,8 +9,14 @@ import AgoraUIBaseViews
 
 extension UIImage {
     class func agedu_named(_ named: String) -> UIImage? {
-        let b = Bundle.ag_compentsBundleNamed("AgoraEduUI")
+        let b = Bundle.agoraEduUI()
         return UIImage.init(named: named, in: b, compatibleWith: nil)
+    }
+}
+
+extension Bundle {
+    class func agoraEduUI() -> Bundle {
+        return Bundle.ag_compentsBundleNamed("AgoraEduUI") ?? Bundle.main
     }
 }
 

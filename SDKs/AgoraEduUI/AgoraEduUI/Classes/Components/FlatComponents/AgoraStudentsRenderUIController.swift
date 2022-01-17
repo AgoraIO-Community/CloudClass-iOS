@@ -7,9 +7,9 @@
 
 import UIKit
 import AudioToolbox
+import FLAnimatedImage
 import AgoraEduContext
 import AgoraUIBaseViews
-import AgoraUIEduBaseViews
 
 private let kItemGap: CGFloat = AgoraFit.scale(2)
 private let kItemMaxCount: CGFloat = 4
@@ -44,6 +44,20 @@ class AgoraStudentsRenderUIController: UIViewController {
         contextPool.stream.registerStreamEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
+    }
+    
+    public func renderViewForUser(with userId: String) -> UIView? {
+        var view: UIView?
+        let indexes = self.collectionView.indexPathsForVisibleItems
+        for (i, model) in self.dataSource.enumerated() {
+            if model.uuid == userId {
+                if let indexPath = indexes.first(where: {$0.row == i}) {
+                    view = self.collectionView.cellForItem(at: indexPath)
+                }
+                break
+            }
+        }
+        return view
     }
 }
 // MARK: - Private
@@ -92,14 +106,12 @@ private extension AgoraStudentsRenderUIController {
     }
     
     func showRewardAnimation() {
-        guard let b = Bundle.ag_compentsBundleWithClass(self.classForCoder),
-              let url = b.url(forResource: "reward", withExtension: "gif"),
+        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward", withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             return
         }
-        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
-        animatedImage?.loopCount = 1
-        let imageView = AgoraFLAnimatedImageView()
+        let animatedImage = FLAnimatedImage(animatedGIFData: data)
+        let imageView = FLAnimatedImageView()
         imageView.animatedImage = animatedImage
         imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
             imageView?.removeFromSuperview()
@@ -113,7 +125,7 @@ private extension AgoraStudentsRenderUIController {
             }
         }
         // sounds
-        guard let rewardUrl = b.url(forResource: "reward", withExtension: "mp3") else {
+        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward", withExtension: "mp3") else {
             return
         }
         var soundId: SystemSoundID = 0;

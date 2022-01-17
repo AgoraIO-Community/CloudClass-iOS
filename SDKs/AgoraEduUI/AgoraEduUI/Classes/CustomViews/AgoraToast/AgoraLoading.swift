@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraUIEduBaseViews.AgoraFiles.AgoraAnimatedImage
+import FLAnimatedImage
 
 public class AgoraLoading: NSObject {
     
@@ -92,7 +92,7 @@ fileprivate class AgoraLoadingView: UIView {
     
     public var label: UILabel!
     
-    private var loadingView: AgoraFLAnimatedImageView!
+    private var loadingView: FLAnimatedImageView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -107,7 +107,8 @@ fileprivate class AgoraLoadingView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let size = min(self.bounds.width, self.bounds.height) * 0.25
+        var size = min(self.bounds.width, self.bounds.height) * 0.25
+        size = size > 90 ? 90 : size
         self.contentView.frame = CGRect(x: 0, y: 0, width: size, height: size)
         self.contentView.layer.cornerRadius = size * 0.12
         self.contentView.center = self.center
@@ -133,14 +134,12 @@ fileprivate class AgoraLoadingView: UIView {
         contentView.layer.shadowRadius = 6
         addSubview(contentView)
         
-        var image: AgoraFLAnimatedImage?
-        if let bundle = Bundle.agoraUIEduBaseBundle() {
-            if let url = bundle.url(forResource: "loading", withExtension: "gif") {
-                let imgData = try? Data(contentsOf: url)
-                image = AgoraFLAnimatedImage.init(animatedGIFData: imgData)
-            }
+        var image: FLAnimatedImage?
+        if let url = Bundle.agoraEduUI().url(forResource: "img_loading", withExtension: "gif") {
+            let imgData = try? Data(contentsOf: url)
+            image = FLAnimatedImage.init(animatedGIFData: imgData)
         }
-        loadingView = AgoraFLAnimatedImageView()
+        loadingView = FLAnimatedImageView()
         loadingView.animatedImage = image
         contentView.addSubview(loadingView)
         

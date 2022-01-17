@@ -35,9 +35,8 @@ class AgoraChatUIController: UIViewController {
         
     private var redDotShow: Bool = false {
         didSet {
-            self.delegate?.updateChatRedDot(isShow: redDotShow)
             if redDotShow != oldValue {
-                
+                self.delegate?.updateChatRedDot(isShow: redDotShow)
             }
         }
     }

@@ -5,7 +5,6 @@
 //  Created by HeZhengQing on 2021/9/28.
 //
 
-import AgoraUIEduBaseViews
 import SwifterSwift
 import Masonry
 import UIKit

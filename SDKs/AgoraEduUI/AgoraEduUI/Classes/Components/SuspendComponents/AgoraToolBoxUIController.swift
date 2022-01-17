@@ -7,7 +7,6 @@
 
 import SwifterSwift
 import AgoraEduContext
-import AgoraUIEduBaseViews
 
 protocol AgoraToolBoxUIControllerDelegate: NSObjectProtocol {
     func toolBoxDidSelectTool(_ tool: AgoraToolBoxToolType)

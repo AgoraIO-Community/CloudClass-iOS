@@ -7,7 +7,6 @@
 
 import AgoraEduContext
 import AgoraWidget
-import AgoraUIEduBaseViews
 
 class AgoraBoardUIController: UIViewController {
     var boardWidget: AgoraBaseWidget?

@@ -166,6 +166,12 @@
                                    @"autoFit": @NO};
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
+    
+    // Render Spread Widget
+    AgoraWidgetConfig *spread = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRenderSpreadWidget class]
+                                                                widgetId:@"streamwindow"];
+    widgets[spread.widgetId] = spread;
+    
     return widgets;
 }
 

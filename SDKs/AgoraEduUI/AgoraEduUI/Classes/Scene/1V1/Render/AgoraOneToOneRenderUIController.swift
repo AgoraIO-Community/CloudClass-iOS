@@ -5,8 +5,8 @@
 //  Created by Jonathan on 2021/11/15.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
+import FLAnimatedImage
 import AgoraEduContext
 import AudioToolbox
 import AgoraWidget
@@ -115,14 +115,12 @@ private extension AgoraOneToOneRenderUIController {
     }
     
     func showRewardAnimation() {
-        guard let b = Bundle.ag_compentsBundleWithClass(self.classForCoder),
-              let url = b.url(forResource: "reward", withExtension: "gif"),
+        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward", withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             return
         }
-        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
-        animatedImage?.loopCount = 1
-        let imageView = AgoraFLAnimatedImageView()
+        let animatedImage = FLAnimatedImage(animatedGIFData: data)
+        let imageView = FLAnimatedImageView()
         imageView.animatedImage = animatedImage
         imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
             imageView?.removeFromSuperview()
@@ -136,7 +134,7 @@ private extension AgoraOneToOneRenderUIController {
             }
         }
         // sounds
-        guard let rewardUrl = b.url(forResource: "reward", withExtension: "mp3") else {
+        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward", withExtension: "mp3") else {
             return
         }
         var soundId: SystemSoundID = 0;

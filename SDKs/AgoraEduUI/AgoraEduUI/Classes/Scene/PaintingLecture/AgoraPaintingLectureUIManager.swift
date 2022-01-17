@@ -5,7 +5,6 @@
 //  Created by Cavan on 2021/4/22.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 import AudioToolbox
@@ -51,6 +50,8 @@ import AgoraWidget
         self.addChild(vc)
         return vc
     }()
+    /** 大窗 控制器*/
+    private var spreadController: AgoraSpreadUIController!
     
     private var isJoinedRoom = false
         
@@ -110,6 +111,37 @@ extension AgoraPaintingLectureUIManager: AgoraToolBarDelegate {
     
     func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
         ctrlView = nil
+    }
+}
+// MARK: - AgoraSpreadUIControllerDelegate
+extension AgoraPaintingLectureUIManager: AgoraSpreadUIControllerDelegate {
+    
+    func startSpreadForUser(with userId: String) -> UIView? {
+        var view: UIView?
+        if let targetView = self.teacherRenderController.renderViewForUser(with: userId) {
+            view = targetView
+        } else if let targetView = self.studentsRenderController.renderViewForUser(with: userId) {
+            view = targetView
+        }
+        return view
+    }
+    
+    func willStopSpreadForUser(with userId: String) -> UIView? {
+        var view: UIView?
+        if let targetView = self.teacherRenderController.renderViewForUser(with: userId) {
+            view = targetView
+        } else if let targetView = self.studentsRenderController.renderViewForUser(with: userId) {
+            view = targetView
+        }
+        return view
+    }
+    
+    func didStopSpreadForUser(with userId: String) {
+        
+    }
+    
+    func discaredSpreadRect() -> CGRect {
+        return stateController.view.frame
     }
 }
 // MARK: - AgoraBoardToolsUIControllerDelegate
@@ -178,6 +210,11 @@ private extension AgoraPaintingLectureUIManager {
         toolBarController.delegate = self
         toolBarController.tools = [.setting, .handsup, .brushTool]
         view.addSubview(toolBarController.view)
+        
+        spreadController = AgoraSpreadUIController(context: contextPool)
+        spreadController.delegate = self
+        addChild(spreadController)
+        contentView.addSubview(spreadController.view)
     }
     
     func createConstrains() {

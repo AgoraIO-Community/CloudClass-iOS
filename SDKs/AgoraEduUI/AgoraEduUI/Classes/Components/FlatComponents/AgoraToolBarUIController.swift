@@ -10,7 +10,6 @@ import AgoraExtApp
 import AgoraWidget
 import AgoraEduContext
 import AgoraUIBaseViews
-import AgoraUIEduBaseViews
 // MARK: - AgoraToolBarRedDotCell
 fileprivate class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
     
@@ -191,7 +190,7 @@ class AgoraToolBarUIController: UIViewController {
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
     /** 画笔图片*/
-    private var brushImage: UIImage?
+    private var brushImage = UIImage.agedu_named("ic_brush_arrow")
     /** 画笔颜色*/
     private var brushColor = UIColor(hex: 0xE1E1EA)
     /** 消息提醒*/
@@ -278,7 +277,15 @@ private extension AgoraToolBarUIController {
             make?.width.equalTo()(kButtonSize)
             make?.height.equalTo()((kButtonSize + kGap) * count - kGap)
         }
-        self.collectionView.reloadData()
+//        self.collectionView.performBatchUpdates {
+//            <#code#>
+//        } completion: { <#Bool#> in
+//            <#code#>
+//        }
+
+        UIView.animate(withDuration: 2) {
+            self.collectionView.reloadData()
+        }
     }
 }
 // MARK: - Student Hands Up
@@ -319,23 +326,27 @@ extension AgoraToolBarUIController: AgoraHandsUpDelayViewDelegate {
 extension AgoraToolBarUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == "netlessBoard",
-              let signal = message.toSignal() else {
-            return
-        }
-        switch signal {
-        case .BoardGrantDataChanged(let list):
-            if let users = list,
-               users.contains(contextPool.user.getLocalUserInfo().userUuid) {
-                self.hiddenTools.removeAll(.brushTool)
-            } else {
-                if self.hiddenTools.contains(where: {$0 == .brushTool}) == false {
-                    self.hiddenTools.append(.brushTool)
+        if widgetId == "netlessBoard",
+           let signal = message.toSignal() {
+            switch signal {
+            case .BoardGrantDataChanged(let list):
+                if let users = list,
+                   users.contains(contextPool.user.getLocalUserInfo().userUuid) {
+                    self.hiddenTools.removeAll(.brushTool)
+                } else {
+                    if self.hiddenTools.contains(where: {$0 == .brushTool}) == false {
+                        self.hiddenTools.append(.brushTool)
+                    }
                 }
+                self.updateDataSource()
+            case .MemberStateChanged(let state):
+                if let item = state.toItem() {
+                    self.brushImage = item.image()
+                }
+                self.brushColor = UIColor(hex: state.toColor())
+            default:
+                break
             }
-            self.updateDataSource()
-        default:
-            break
         }
     }
 }

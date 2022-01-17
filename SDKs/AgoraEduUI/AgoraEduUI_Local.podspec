@@ -15,13 +15,13 @@ Pod::Spec.new do |spec|
   spec.public_header_files = "AgoraEduUI/Classes/**/*.h"
   spec.source_files        = "AgoraEduUI/Classes/**/*.{h,m,swift}"
   
-  spec.dependency "AgoraUIEduBaseViews"
   spec.dependency "AgoraUIBaseViews"
   spec.dependency "AgoraEduContext"
   spec.dependency "AgoraExtApp"
   spec.dependency "AgoraWidget"
   spec.dependency "SwifterSwift"
   spec.dependency "Masonry"
+  spec.dependency "FLAnimatedImage"
   
   spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }

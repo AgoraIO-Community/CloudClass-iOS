@@ -5,7 +5,6 @@
 //  Created by HeZhengQing on 2021/9/23.
 //
 
-import AgoraUIEduBaseViews
 import AgoraEduContext
 import SwifterSwift
 import AgoraWidget
@@ -100,7 +99,7 @@ fileprivate extension UIColor {
     }
 }
 
-fileprivate extension AgoraBoardWidgetMemberState {
+extension AgoraBoardWidgetMemberState {
     func toItem() -> AgoraBoardToolItem? {
         guard let toolType = self.activeApplianceType else {
             return nil
@@ -382,7 +381,7 @@ class AgoraBoardToolsUIController: UIViewController {
         }
     }
     
-    var selectColor: Int = 0xFFFFFF {
+    var selectColor: Int = 0xD0021B {
         didSet {
             self.delegate?.didUpdateBrushSetting(image: selectedTool.image(),
                                                  colorHex: selectColor)

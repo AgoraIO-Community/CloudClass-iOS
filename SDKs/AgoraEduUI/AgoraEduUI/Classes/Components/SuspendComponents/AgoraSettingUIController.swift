@@ -5,7 +5,6 @@
 //  Created by HeZhengQing on 2021/9/25.
 //
 
-import AgoraUIEduBaseViews
 import AgoraEduContext
 import SwifterSwift
 import UIKit
@@ -188,10 +187,10 @@ private extension AgoraSettingUIController {
     
     @objc func onClickExit(_ sender: UIButton) {
         AgoraAlert()
-            .setTitle(AgoraKitLocalizedString("LeaveClassTitleText"))
-            .setMessage(AgoraKitLocalizedString("LeaveClassText"))
-            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("CancelText"), action:nil))
-            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+            .setTitle("LeaveClassTitleText".agedu_localized())
+            .setMessage("LeaveClassText".agedu_localized())
+            .addAction(action: AgoraAlertAction(title: "CancelText".agedu_localized(), action:nil))
+            .addAction(action: AgoraAlertAction(title: "SureText".agedu_localized(), action: {
                 self.roomDelegate?.exitClassRoom(reason: .normal)
             }))
             .show(in: self)
@@ -239,7 +238,7 @@ private extension AgoraSettingUIController {
         view.addSubview(contentView)
         
         cameraLabel = UILabel(frame: .zero)
-        cameraLabel.text = AgoraKitLocalizedString("CameraText")
+        cameraLabel.text = "CameraText".agedu_localized()
         cameraLabel.font = UIFont.systemFont(ofSize: 12)
         cameraLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(cameraLabel)
@@ -254,7 +253,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(cameraSwitch)
         
         directionLabel = UILabel(frame: .zero)
-        directionLabel.text = AgoraKitLocalizedString("DirectionText")
+        directionLabel.text = "DirectionText".agedu_localized()
         directionLabel.font = UIFont.systemFont(ofSize: 12)
         directionLabel.textColor = UIColor(hex: 0x677386)
         contentView.addSubview(directionLabel)
@@ -266,7 +265,7 @@ private extension AgoraSettingUIController {
                                      for: .selected)
         frontCamButton.setTitleColor(UIColor(hex: 0xB5B5C9),
                                      for: .normal)
-        frontCamButton.setTitle(AgoraKitLocalizedString("FrontText"),
+        frontCamButton.setTitle("FrontText".agedu_localized(),
                                 for: .normal)
         frontCamButton.setBackgroundImage(UIImage(color: UIColor(hex: 0xF4F4F8) ?? .white,
                                                   size: CGSize(width: 1,
@@ -297,7 +296,7 @@ private extension AgoraSettingUIController {
                                                  size: CGSize(width: 1,
                                                               height: 1)),
                                          for: .selected)
-        backCamButton.setTitle(AgoraKitLocalizedString("BackText"),
+        backCamButton.setTitle("BackText".agedu_localized(),
                                for: .normal)
         backCamButton.addTarget(self,
                                 action: #selector(onClickBackCamera(_:)),
@@ -311,7 +310,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(sepLine)
         
         micLabel = UILabel(frame: .zero)
-        micLabel.text = AgoraKitLocalizedString("MicrophoneText")
+        micLabel.text = "MicrophoneText".agedu_localized()
         micLabel.font = UIFont.systemFont(ofSize: 12)
         micLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(micLabel)
@@ -326,7 +325,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(micSwitch)
         
         audioLabel = UILabel(frame: .zero)
-        audioLabel.text = AgoraKitLocalizedString("SpeakerText")
+        audioLabel.text = "SpeakerText".agedu_localized()
         audioLabel.font = UIFont.systemFont(ofSize: 12)
         audioLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(audioLabel)
@@ -344,7 +343,7 @@ private extension AgoraSettingUIController {
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
         exitButton.setTitleColor(.white,
                                  for: .normal)
-        exitButton.setTitle(AgoraKitLocalizedString("LeaveText"),
+        exitButton.setTitle("LeaveText".agedu_localized(),
                             for: .normal)
         exitButton.setBackgroundImage(
             UIImage(color: UIColor(hex: 0x191919) ?? .white,
@@ -377,17 +376,17 @@ private extension AgoraSettingUIController {
             make?.left.equalTo()(cameraLabel)
             make?.top.equalTo()(cameraLabel.mas_bottom)?.offset()(20)
         }
-        frontCamButton.mas_makeConstraints { make in
+        backCamButton.mas_makeConstraints { make in
             make?.width.equalTo()(40)
             make?.height.equalTo()(22)
             make?.right.equalTo()(cameraSwitch)
             make?.centerY.equalTo()(directionLabel)
         }
-        backCamButton.mas_makeConstraints { make in
+        frontCamButton.mas_makeConstraints { make in
             make?.width.equalTo()(40)
             make?.height.equalTo()(22)
-            make?.right.equalTo()(frontCamButton.mas_left)?.offset()(-5)
-            make?.centerY.equalTo()(frontCamButton)
+            make?.right.equalTo()(backCamButton.mas_left)?.offset()(-5)
+            make?.centerY.equalTo()(backCamButton)
         }
         sepLine.mas_makeConstraints { make in
             make?.top.equalTo()(directionLabel.mas_bottom)?.offset()(17)

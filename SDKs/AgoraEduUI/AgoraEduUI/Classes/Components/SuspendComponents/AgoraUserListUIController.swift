@@ -5,7 +5,6 @@
 //  Created by Jonathan on 2021/10/9.
 //
 
-import AgoraUIEduBaseViews
 import AgoraEduContext
 import SwifterSwift
 import AgoraWidget
@@ -17,17 +16,17 @@ enum AgoraUserListFunction: Int {
     func title() -> String {
         switch self {
         case .stage:
-            return AgoraKitLocalizedString("UserListCoVideo")
+            return "UserListCoVideo".agedu_localized()
         case .auth:
-            return AgoraKitLocalizedString("UserListBoard")
+            return "UserListBoard".agedu_localized()
         case .camera:
-            return AgoraKitLocalizedString("UserListCamera")
+            return "UserListCamera".agedu_localized()
         case .mic:
-            return AgoraKitLocalizedString("UserListMicro")
+            return "UserListMicro".agedu_localized()
         case .reward:
-            return AgoraKitLocalizedString("UserListReward")
+            return "UserListReward".agedu_localized()
         case .kick:
-            return AgoraKitLocalizedString("nameroll_kick_out")
+            return "nameroll_kick_out".agedu_localized()
         default: return ""
         }
     }
@@ -439,7 +438,7 @@ extension AgoraUserListUIController {
         view.addSubview(contentView)
         
         titleLabel = UILabel(frame: .zero)
-        titleLabel.text = AgoraKitLocalizedString("UserListMainTitle")
+        titleLabel.text = "UserListMainTitle".agedu_localized()
         titleLabel.font = UIFont.systemFont(ofSize: 12)
         titleLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(titleLabel)
@@ -457,7 +456,7 @@ extension AgoraUserListUIController {
         contentView.addSubview(bottomSepLine)
         
         teacherTitleLabel = UILabel(frame: .zero)
-        teacherTitleLabel.text = AgoraKitLocalizedString("UserListTeacherName")
+        teacherTitleLabel.text = "UserListTeacherName".agedu_localized()
         teacherTitleLabel.font = UIFont.systemFont(ofSize: 12)
         teacherTitleLabel.textColor = UIColor(hex: 0x7B88A0)
         contentView.addSubview(teacherTitleLabel)
@@ -468,7 +467,7 @@ extension AgoraUserListUIController {
         contentView.addSubview(teacherNameLabel)
         
         studentTitleLabel = UILabel(frame: .zero)
-        studentTitleLabel.text = AgoraKitLocalizedString("UserListName")
+        studentTitleLabel.text = "UserListName".agedu_localized()
         studentTitleLabel.textAlignment = .left
         studentTitleLabel.font = UIFont.systemFont(ofSize: 12)
         studentTitleLabel.textColor = UIColor(hex: 0x7B88A0)

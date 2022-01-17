@@ -9,7 +9,6 @@ import Masonry
 import AgoraExtApp
 import AgoraEduContext
 import AgoraUIBaseViews
-import AgoraUIEduBaseViews
 
 struct AgoraClassTimeInfo {
     var state: AgoraEduContextClassState
@@ -163,9 +162,9 @@ private extension AgoraRoomStateUIController {
 extension AgoraRoomStateUIController: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
         AgoraAlert()
-            .setTitle(AgoraKitLocalizedString("KickOutNoticeText"))
+            .setTitle("KickOutNoticeText".agedu_localized())
             .setMessage("local_user_kicked_out".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+            .addAction(action: AgoraAlertAction(title: "SureText".agedu_localized(), action: {
                 self.roomDelegate?.exitClassRoom(reason: .kickOut)
             }))
             .show(in: self)
@@ -219,9 +218,9 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     
     func onRoomClosed() {
         AgoraAlert()
-            .setTitle(AgoraKitLocalizedString("ClassOverNoticeText"))
-            .setMessage(AgoraKitLocalizedString("ClassOverText"))
-            .addAction(action: AgoraAlertAction(title: AgoraKitLocalizedString("SureText"), action: {
+            .setTitle("ClassOverNoticeText".agedu_localized())
+            .setMessage("ClassOverText".agedu_localized())
+            .addAction(action: AgoraAlertAction(title: "SureText".agedu_localized(), action: {
                 self.roomDelegate?.exitClassRoom(reason: .normal)
             }))
             .show(in: self)
@@ -308,15 +307,15 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         case .aborted:
             // 踢出
             AgoraLoading.hide()
-            AgoraToast.toast(msg: AgoraKitLocalizedString("LoginOnAnotherDeviceText"),
+            AgoraToast.toast(msg: "LoginOnAnotherDeviceText".agedu_localized(),
                              type: .error)
             self.roomDelegate?.exitClassRoom(reason: .kickOut)
         case .connecting:
-            AgoraLoading.loading(msg: AgoraKitLocalizedString("LoaingText"))
+            AgoraLoading.loading(msg: "LoaingText".agedu_localized())
         case .disconnected, .reconnecting:
             AgoraToast.toast(msg:"NetworkDisconnectedText".agedu_localized(),
                              type: .error)
-            AgoraLoading.loading(msg: AgoraKitLocalizedString("ReconnectingText"))
+            AgoraLoading.loading(msg: "ReconnectingText".agedu_localized())
         case .connected:
             AgoraLoading.hide()
         }

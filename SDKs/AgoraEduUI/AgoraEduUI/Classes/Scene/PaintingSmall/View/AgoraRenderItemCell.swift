@@ -6,8 +6,8 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
+import FLAnimatedImage
 import Masonry
 
 class AgoraRenderItemInfoModel: NSObject {
@@ -94,7 +94,7 @@ public class AgoraRenderItemCell: UICollectionViewCell {
     private var rewardImageView: UIImageView!
     private var rewardLabel: UILabel!
     
-    private lazy var waveView: AgoraFLAnimatedImageView =  {
+    private lazy var waveView: FLAnimatedImageView =  {
         guard let bundle = Bundle.agora_bundle(object: self,
                                                resource: "AgoraEduUI"),
               let url = bundle.url(forResource: "hands_up_wave",
@@ -103,10 +103,8 @@ public class AgoraRenderItemCell: UICollectionViewCell {
             fatalError()
         }
             
-        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
-        animatedImage?.loopCount = 0
-        
-        let imageView = AgoraFLAnimatedImageView()
+        let animatedImage = FLAnimatedImage(animatedGIFData: data)
+        let imageView = FLAnimatedImageView()
         imageView.animatedImage = animatedImage
         imageView.isHidden = true
         
@@ -253,7 +251,7 @@ private extension AgoraRenderItemCell {
         contentView.clipsToBounds = true
         contentView.layer.cornerRadius = UIDevice.current.isPad ? 10 : 4
         
-        cameraStateView = AgoraBaseUIImageView(image: AgoraKitImage("default_offline"))
+        cameraStateView = AgoraBaseUIImageView(image: UIImage.agedu_named("default_offline"))
         contentView.addSubview(cameraStateView)
         
         videoView = UIView(frame: .zero)
@@ -284,7 +282,7 @@ private extension AgoraRenderItemCell {
         nameLabel.layer.shadowRadius = 2
         contentView.addSubview(nameLabel)
         
-        handsupView = AgoraBaseUIImageView(image: AgoraKitImage("ic_member_handsup"))
+        handsupView = AgoraBaseUIImageView(image: UIImage.agedu_named("ic_member_handsup"))
         contentView.addSubview(handsupView)
         
         contentView.addSubview(waveView)

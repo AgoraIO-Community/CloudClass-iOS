@@ -88,3 +88,36 @@ toolbox_answer_sheet = "答題器";
 // Network
 NetworkPoorText = "當前網絡質量不佳,請檢查設備網絡連接";
 NetworkDisconnectedText = "當前網絡已斷開,請檢查設備網絡連接";
+
+// user list
+UserListMainTitle = "花名冊";
+UserListTeacherName = "教師姓名：";
+UserListName = "學生姓名";
+UserListCoVideo = "上下台";
+UserListBoard = "授權";
+UserListCamera = "攝像頭";
+UserListMicro = "麥克風";
+UserListChat = "禁言";
+UserListReward = "獎勵";
+nameroll_kick_out = "踢人";
+// Setting
+CameraText = "攝像頭";
+DirectionText = "方向";
+FrontText = "前";
+BackText = "後";
+MicrophoneText = "麥克風";
+SpeakerText = "揚聲器";
+LeaveText = "退出教室";
+// loading
+LoaingText = "加載中...";
+ReconnectingText = "重連中...";
+LoginOnAnotherDeviceText = "賬號在遠端設備登錄";
+// class state
+LeaveClassTitleText = "下課確認";
+ClassOverNoticeText = "結束通知";
+ClassOverText = "課程已結束";
+LeaveClassText = "你確定要下課嗎?";
+CloseText = "關閉";
+CancelText = "取消";
+SureText = "確認";
+KickOutNoticeText = "移出通知";

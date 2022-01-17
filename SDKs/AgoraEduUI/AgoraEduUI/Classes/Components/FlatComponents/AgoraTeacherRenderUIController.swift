@@ -40,6 +40,14 @@ class AgoraTeacherRenderUIController: UIViewController {
         contextPool.room.registerRoomEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
     }
+    
+    public func renderViewForUser(with userId: String) -> UIView? {
+        if userId == self.teacherModel?.uuid {
+            return self.view
+        } else {
+            return nil
+        }
+    }
 }
 // MARK: - Private
 private extension AgoraTeacherRenderUIController {

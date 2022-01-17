@@ -40,8 +40,6 @@ BoardWareFailTitleText = "课件加载失败!";
 BoardWareFailMsgText = "课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件";
 BoardWareCloseText = "关闭";
 BoardWareRetryText = "重新加载";
-LoaingText = "加载中...";
-ReconnectingText = "重连中...";
 
 // CoHost
 HandsUpTimeOutText = "举手超时";
@@ -101,3 +99,36 @@ toolbox_answer_sheet = "答题器";
 // Network
 NetworkPoorText = "当前网络质量不佳,请检查设备网络连接";
 NetworkDisconnectedText = "当前网络已断开,请检查设备网络连接";
+
+// user list
+UserListMainTitle = "花名册";
+UserListTeacherName = "教师姓名:";
+UserListName = "学生姓名";
+UserListCoVideo = "上下台";
+UserListBoard = "授权";
+UserListCamera = "摄像头";
+UserListMicro = "麦克风";
+UserListChat = "禁言";
+UserListReward = "奖励";
+nameroll_kick_out = "踢人";
+// Setting
+CameraText = "摄像头";
+DirectionText = "方向";
+FrontText = "前";
+BackText = "后";
+MicrophoneText = "麦克风";
+SpeakerText = "扬声器";
+LeaveText = "退出教室";
+// loading
+LoaingText = "加载中...";
+ReconnectingText = "重连中...";
+LoginOnAnotherDeviceText = "账号在远端设备登录";
+// class state
+LeaveClassTitleText = "下课确认";
+ClassOverNoticeText = "结束通知";
+ClassOverText = "课程已结束";
+LeaveClassText = "你确定要下课吗?";
+CloseText = "关闭";
+CancelText = "取消";
+SureText = "确认";
+KickOutNoticeText = "移出通知";

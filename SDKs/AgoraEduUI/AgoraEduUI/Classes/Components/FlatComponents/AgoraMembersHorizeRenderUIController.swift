@@ -5,9 +5,9 @@
 //  Created by Jonathan on 2021/12/10.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
+import FLAnimatedImage
 import AudioToolbox
 import AgoraWidget
 import Foundation
@@ -75,6 +75,24 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         contextPool.stream.registerStreamEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
+    }
+    
+    public func renderViewForUser(with userId: String) -> UIView? {
+        if teacherModel?.uuid == userId {
+            return teacherView
+        } else {
+            var view: UIView?
+            let indexes = self.collectionView.indexPathsForVisibleItems
+            for (i, model) in self.dataSource.enumerated() {
+                if model.uuid == userId {
+                    if let indexPath = indexes.first(where: {$0.row == i}) {
+                        view = self.collectionView.cellForItem(at: indexPath)
+                    }
+                    break
+                }
+            }
+            return view
+        }
     }
 }
 
@@ -194,14 +212,12 @@ private extension AgoraMembersHorizeRenderUIController {
     }
     
     func showRewardAnimation() {
-        guard let b = Bundle.ag_compentsBundleWithClass(self.classForCoder),
-              let url = b.url(forResource: "reward", withExtension: "gif"),
+        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward", withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             return
         }
-        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
-        animatedImage?.loopCount = 1
-        let imageView = AgoraFLAnimatedImageView()
+        let animatedImage = FLAnimatedImage(animatedGIFData: data)
+        let imageView = FLAnimatedImageView()
         imageView.animatedImage = animatedImage
         imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
             imageView?.removeFromSuperview()
@@ -215,7 +231,7 @@ private extension AgoraMembersHorizeRenderUIController {
             }
         }
         // sounds
-        guard let rewardUrl = b.url(forResource: "reward", withExtension: "mp3") else {
+        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward", withExtension: "mp3") else {
             return
         }
         var soundId: SystemSoundID = 0;

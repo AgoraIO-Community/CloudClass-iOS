@@ -35,23 +35,19 @@ class AgoraToastTipsView: UIView {
         case .notice:
             self.backgroundColor = UIColor(hex: 0xFAFFFF)
             self.layer.borderColor = UIColor(hex: 0x357BF6)?.cgColor
-            self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_notice",
-                                                         in: "AgoraUIEduBaseViews")
+            self.imageView.image = UIImage.agedu_named("ic_toast_message_notice")
         case .warning:
             self.backgroundColor = UIColor(hex: 0xFFFBF4)
             self.layer.borderColor = UIColor(hex: 0xF0C996)?.cgColor
-            self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_warning",
-                                                         in: "AgoraUIEduBaseViews")
+            self.imageView.image = UIImage.agedu_named("ic_toast_message_warning")
         case .error:
             self.backgroundColor = UIColor(hex: 0xFFF2F2)
             self.layer.borderColor = UIColor(hex: 0xF07766)?.cgColor
-            self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_error",
-                                                         in: "AgoraUIEduBaseViews")
+            self.imageView.image = UIImage.agedu_named("ic_toast_message_error")
         case .success:
             self.backgroundColor = UIColor(hex: 0xFAFFFF)
             self.layer.borderColor = UIColor(hex: 0x357BF6)?.cgColor
-            self.imageView.image = UIImage.ag_imageNamed("ic_toast_message_notice",
-                                                         in: "AgoraUIEduBaseViews")
+            self.imageView.image = UIImage.agedu_named("ic_toast_message_notice")
         }
     }
     

@@ -11,11 +11,11 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import SwifterSwift
 import AgoraExtApp
 import AgoraWidget
+import AgoraEduUI
 import AgoraLog
 import UIKit
 

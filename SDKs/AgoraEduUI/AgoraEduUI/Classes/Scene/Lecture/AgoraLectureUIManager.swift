@@ -5,7 +5,6 @@
 //  Created by Cavan on 2021/4/22.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 import AudioToolbox

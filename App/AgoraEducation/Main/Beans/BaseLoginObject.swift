@@ -12,6 +12,7 @@ import AgoraClassroomSDK_iOS
 import AgoraClassroomSDK
 #endif
 import Foundation
+import UIKit
 
 enum Device: String {
     case iPhone_Big

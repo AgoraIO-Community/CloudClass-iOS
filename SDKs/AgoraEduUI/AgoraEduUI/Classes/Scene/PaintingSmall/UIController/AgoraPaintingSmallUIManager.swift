@@ -5,7 +5,6 @@
 //  Created by HeZhengQing on 2021/9/22.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 import AudioToolbox
@@ -51,6 +50,8 @@ import AgoraWidget
         self.addChild(vc)
         return vc
     }()
+    /** 大窗 控制器*/
+    private var spreadController: AgoraSpreadUIController!
     
     private var isJoinedRoom = false
         
@@ -149,7 +150,25 @@ extension AgoraPaintingSmallUIManager: AgoraToolBoxUIControllerDelegate {
         }
     }
 }
-
+// MARK: - AgoraSpreadUIControllerDelegate
+extension AgoraPaintingSmallUIManager: AgoraSpreadUIControllerDelegate {
+    
+    func startSpreadForUser(with userId: String) -> UIView? {
+        return self.renderController.renderViewForUser(with: userId)
+    }
+    
+    func willStopSpreadForUser(with userId: String) -> UIView? {
+        return self.renderController.renderViewForUser(with: userId)
+    }
+    
+    func didStopSpreadForUser(with userId: String) {
+        
+    }
+    
+    func discaredSpreadRect() -> CGRect {
+        return stateController.view.frame
+    }
+}
 // MARK: - AgoraBoardToolsUIControllerDelegate
 extension AgoraPaintingSmallUIManager: AgoraBoardToolsUIControllerDelegate {
     
@@ -191,6 +210,11 @@ private extension AgoraPaintingSmallUIManager {
         
         nameRollController = AgoraUserListUIController(context: contextPool)
         addChild(nameRollController)
+        
+        spreadController = AgoraSpreadUIController(context: contextPool)
+        spreadController.delegate = self
+        addChild(spreadController)
+        contentView.addSubview(spreadController.view)
     }
     
     func createConstrains() {

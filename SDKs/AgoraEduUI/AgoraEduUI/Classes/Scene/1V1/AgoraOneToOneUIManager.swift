@@ -5,7 +5,6 @@
 //  Created by Jonathan on 2021/11/15.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import AgoraEduContext
 import AgoraWidget

@@ -33,7 +33,6 @@ def openSourceLibs
   # open source libs
   pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext_Local.podspec' 
   pod 'AgoraEduUI', :path => '../AgoraEduUI/AgoraEduUI_Local.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
 end
 
 def widgetsExtApps

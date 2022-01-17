@@ -6,7 +6,6 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-import AgoraUIEduBaseViews
 import Foundation
 import UIKit
 
