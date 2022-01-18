@@ -15,11 +15,11 @@ import UIKit
     
     public var value: Int {
         switch self {
-        case .width1: return 4
-        case .width2: return 8
-        case .width3: return 12
-        case .width4: return 18
-        case .width5: return 22
+        case .width1: return 8
+        case .width2: return 16
+        case .width3: return 24
+        case .width4: return 30
+        case .width5: return 38
         }
     }
     
@@ -28,44 +28,39 @@ import UIKit
             return .width1
         }
         switch v {
-        case 4: return .width1
-        case 8: return .width2
-        case 12: return .width3
-        case 18: return .width4
-        case 22: return .width5
-        default:
-            return .width1
+        case 8:  return .width1
+        case 16: return .width2
+        case 24: return .width3
+        case 30: return .width4
+        case 38: return .width5
+        default: return .width1
         }
     }
 }
 
 @objc public enum AgoraBoardToolsFont: Int, CaseIterable {
-    case font22 = 0, font24, font26, font30, font36, font42
+    case font10 = 0, font14, font18, font24
     
     public var value: Int {
         switch self {
-        case .font22: return 22
-        case .font24: return 24
-        case .font26: return 26
-        case .font30: return 30
-        case .font36: return 36
-        case .font42: return 42
+        case .font10: return 20
+        case .font14: return 28
+        case .font18: return 36
+        case .font24: return 48
         }
     }
     
     public static func fromValue(_ value: Int?) -> AgoraBoardToolsFont {
         guard let v = value else {
-            return .font22
+            return .font18
         }
         switch v {
-        case 22: return .font22
-        case 24: return .font24
-        case 26: return .font26
-        case 30: return .font30
-        case 36: return .font36
-        case 42: return .font42
+        case 20: return .font10
+        case 28: return .font14
+        case 36: return .font18
+        case 48: return .font24
         default:
-            return .font22
+            return .font18
         }
     }
 }
@@ -73,14 +68,12 @@ import UIKit
 fileprivate extension AgoraBoardToolsFont {
     func fontSize() -> Int {
         switch self {
-        case .font22:  return 22
-        case .font24:  return 24
-        case .font26:  return 26
-        case .font30:  return 30
-        case .font36:  return 36
-        case .font42:  return 42
+        case .font10:  return 20
+        case .font14:  return 28
+        case .font18:  return 36
+        case .font24:  return 48
         default:
-            return 22
+            return 36
         }
     }
 }
@@ -146,7 +139,7 @@ extension AgoraBoardWidgetMemberState {
 }
 
 struct AgoraBoardToolItemTextConfig {
-    var size: AgoraBoardToolsFont = .font22
+    var size: AgoraBoardToolsFont = .font18
 }
 
 struct AgoraBoardToolItemLineConfig {
@@ -357,18 +350,18 @@ class AgoraBoardToolsUIController: UIViewController {
         }
     }
     
-    var lineConfig = AgoraBoardToolItemLineConfig(size: .width1)
-    var brushLevel = 0 {
+    var lineConfig = AgoraBoardToolItemLineConfig(size: .width2)
+    var brushLevel = 1 {
         didSet {
             lineConfig = AgoraBoardToolItemLineConfig(size: AgoraBoardToolsLineWidth(rawValue: brushLevel) ?? .width1)
             callbackItemUpdated()
         }
     }
     
-    var textConfig = AgoraBoardToolItemTextConfig(size: .font22)
-    var textLevel = 0 {
+    var textConfig = AgoraBoardToolItemTextConfig(size: .font18)
+    var textLevel = 2 {
         didSet {
-            textConfig = AgoraBoardToolItemTextConfig(size: AgoraBoardToolsFont(rawValue: textLevel) ?? .font22)
+            textConfig = AgoraBoardToolItemTextConfig(size: AgoraBoardToolsFont(rawValue: textLevel) ?? .font18)
             callbackItemUpdated()
         }
     }
@@ -381,7 +374,7 @@ class AgoraBoardToolsUIController: UIViewController {
         }
     }
     
-    var selectColor: Int = 0xD0021B {
+    var selectColor: Int = 0x0073FF {
         didSet {
             self.delegate?.didUpdateBrushSetting(image: selectedTool.image(),
                                                  colorHex: selectColor)
@@ -694,6 +687,12 @@ extension AgoraBoardToolsUIController: AgoraWidgetMessageObserver {
                 selectedTool = item
             }
             self.selectColor = state.toColor()
+        case .BoardGrantDataChanged(let list):
+            if let users = list  {
+                self.view.isHidden = !users.contains(contextPool.user.getLocalUserInfo().userUuid)
+            } else {
+                self.view.isHidden = true
+            }
         default:
             break
         }
