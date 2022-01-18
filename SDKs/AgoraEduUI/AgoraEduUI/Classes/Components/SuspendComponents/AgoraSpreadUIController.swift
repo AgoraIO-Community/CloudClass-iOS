@@ -78,7 +78,7 @@ class AgoraSpreadUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = UIColor.init(white: 0.5, alpha: 0.5)
+//        self.view.backgroundColor = UIColor.init(white: 0.5, alpha: 0.5)
         
         setupRenderModel()
         
