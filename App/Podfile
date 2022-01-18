@@ -30,6 +30,7 @@ target 'AgoraEducation' do
   pod 'AgoraClassroomSDK_iOS', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_Local.podspec'
   pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext_Local.podspec'
   pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI_Local.podspec'
+  pod 'AgoraUIEduBaseViews', :path => '../SDKs/Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
    
   # open sources widgets and extApps
   pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets_Local.podspec'
