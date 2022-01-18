@@ -33,8 +33,7 @@
     
     if (!(self.roomType == AgoraEduRoomTypeOneToOne
           || self.roomType == AgoraEduRoomTypeSmall
-          || self.roomType == AgoraEduRoomTypeLecture
-          || self.roomType == AgoraEduRoomTypePaintingSmall)) {
+          || self.roomType == AgoraEduRoomTypeLecture)) {
         return NO;
     }
     

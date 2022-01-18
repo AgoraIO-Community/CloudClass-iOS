@@ -239,6 +239,10 @@ private extension AgoraPaintingSmallUIManager {
             make?.right.equalTo()(contentView)?.offset()(-12)
             make?.bottom.equalTo()(contentView)?.offset()(-15)
         }
+        spreadController.view.mas_makeConstraints { make in
+            make?.left.right().bottom().equalTo()(contentView)
+            make?.top.equalTo()(stateController.view.mas_bottom)
+        }
     }
     
     func createChatController() {

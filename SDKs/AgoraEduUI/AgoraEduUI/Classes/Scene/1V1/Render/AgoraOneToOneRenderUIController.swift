@@ -72,14 +72,12 @@ private extension AgoraOneToOneRenderUIController {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: teacher.userUuid,
-                                                        name: teacher.userName,
-                                                        role: .teacher)
+                                                        name: teacher.userName)
         }
         if let student = contextPool.user.getUserList(role: .student)?.first {
             studentModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: student.userUuid,
-                                                        name: student.userName,
-                                                        role: .student)
+                                                        name: student.userName)
         }
     }
     
@@ -174,13 +172,11 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
         if user.userRole == .teacher {
             teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: user.userUuid,
-                                                        name: user.userName,
-                                                        role: .student)
+                                                        name: user.userName)
         } else if user.userRole == .student {
             studentModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: user.userUuid,
-                                                        name: user.userName,
-                                                        role: .teacher)
+                                                        name: user.userName)
         }
     }
     

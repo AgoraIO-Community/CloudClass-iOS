@@ -68,8 +68,7 @@ private extension AgoraStudentsRenderUIController {
             for student in students {
                 let model = AgoraRenderMemberModel.model(with: contextPool,
                                                          uuid: student.userUuid,
-                                                         name: student.userName,
-                                                         role: .student)
+                                                         name: student.userName)
                 temp.append(model)
             }
             dataSource = temp
@@ -166,8 +165,7 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
             if user.userRole == .student {
                 let model = AgoraRenderMemberModel.model(with: contextPool,
                                                          uuid: user.userUuid,
-                                                         name: user.userName,
-                                                         role: .student)
+                                                         name: user.userName)
                 dataSource.append(model)
             }
         }

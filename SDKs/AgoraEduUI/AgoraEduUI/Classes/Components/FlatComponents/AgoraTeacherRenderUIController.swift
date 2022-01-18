@@ -55,8 +55,7 @@ private extension AgoraTeacherRenderUIController {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                              uuid: teacher.userUuid,
-                                                             name: teacher.userName,
-                                                             role: .teacher)
+                                                             name: teacher.userName)
         }
     }
     
@@ -97,8 +96,7 @@ extension AgoraTeacherRenderUIController: AgoraEduUserHandler {
         if user.userRole == .teacher {
             self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                              uuid: user.userUuid,
-                                                             name: user.userName,
-                                                             role: .teacher)
+                                                             name: user.userName)
         }
     }
     

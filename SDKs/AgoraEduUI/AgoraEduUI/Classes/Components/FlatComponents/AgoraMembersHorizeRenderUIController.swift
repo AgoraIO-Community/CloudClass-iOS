@@ -135,16 +135,14 @@ private extension AgoraMembersHorizeRenderUIController {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                              uuid: teacher.userUuid,
-                                                             name: teacher.userName,
-                                                             role: .teacher)
+                                                             name: teacher.userName)
         }
         if let students = contextPool.user.getCoHostList()?.filter({$0.userRole == .student}) {
             var temp = [AgoraRenderMemberModel]()
             for student in students {
                 let model = AgoraRenderMemberModel.model(with: contextPool,
                                                          uuid: student.userUuid,
-                                                         name: student.userName,
-                                                         role: .student)
+                                                         name: student.userName)
                 temp.append(model)
             }
             dataSource = temp
@@ -252,8 +250,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
             if user.userRole == .student {
                 let model = AgoraRenderMemberModel.model(with: contextPool,
                                                          uuid: user.userUuid,
-                                                         name: user.userName,
-                                                         role: .student)
+                                                         name: user.userName)
                 dataSource.append(model)
             }
         }
@@ -274,8 +271,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
         if user.userRole == .teacher {
             self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                              uuid: user.userUuid,
-                                                             name: user.userName,
-                                                             role: .teacher)
+                                                             name: user.userName)
         }
     }
     
@@ -392,14 +388,23 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
                                                       for: indexPath)
         let model = self.dataSource[indexPath.row]
         cell.renderView.setModel(model: model, delegate: self)
+        print("log 1122: \(#function) \(indexPath)")
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
+        print("log 1122: \(#function) \(indexPath)")
         if let current = cell as? AgoraRenderMemberCell {
             current.renderView.setModel(model: nil, delegate: self)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        let model = self.dataSource[indexPath.row]
+        if let current = cell as? AgoraRenderMemberCell {
+            current.renderView.setModel(model: model, delegate: self)
         }
     }
     

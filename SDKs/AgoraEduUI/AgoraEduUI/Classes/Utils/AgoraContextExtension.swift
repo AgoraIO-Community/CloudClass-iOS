@@ -46,12 +46,10 @@ extension AgoraEduContextMediaStreamType {
 extension AgoraRenderMemberModel {
     static func model(with context: AgoraEduContextPool,
                       uuid: String,
-                      name: String,
-                      role: AgoraEduContextUserRole) -> AgoraRenderMemberModel {
+                      name: String) -> AgoraRenderMemberModel {
         var model = AgoraRenderMemberModel()
         model.uuid = uuid
         model.name = name
-        model.role = role == .teacher ? .teacher : .student
         let reward = context.user.getUserRewardCount(userUuid: uuid)
         model.rewardCount = reward
         let stream = context.stream.getStreamList(userUuid: uuid)?.first

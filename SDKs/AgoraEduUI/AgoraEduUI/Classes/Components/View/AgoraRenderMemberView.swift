@@ -26,7 +26,6 @@ class AgoraRenderMemberModel {
             }
         }
     }
-    var role: AgoraRenderRole = .student
     var volume: Int = 0 {
         didSet {
             if volume != oldValue {
@@ -112,7 +111,7 @@ class AgoraRenderMemberView: UIView {
     private lazy var waveView: FLAnimatedImageView =  {
         guard let bundle = Bundle.agora_bundle(object: self,
                                                resource: "AgoraEduUI"),
-              let url = bundle.url(forResource: "hands_up_wave",
+              let url = bundle.url(forResource: "img_hands_wave",
                                    withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             fatalError()
