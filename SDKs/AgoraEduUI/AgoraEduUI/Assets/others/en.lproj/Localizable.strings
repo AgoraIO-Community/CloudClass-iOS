@@ -116,7 +116,7 @@ LoginOnAnotherDeviceText = "Account was logged in from remote device";
 // class state
 LeaveClassTitleText = "Leave Class";
 ClassOverNoticeText = "Over Notification";
-ClassOverText = "Class is end!";
+ClassOverText = "The class has ended.";
 LeaveClassText = "Are you sure you want to end get out of class?";
 CancelText = "Cancel";
 SureText = "Sure";
