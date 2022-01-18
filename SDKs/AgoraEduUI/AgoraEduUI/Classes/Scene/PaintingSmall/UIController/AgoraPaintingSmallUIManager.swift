@@ -154,6 +154,8 @@ extension AgoraPaintingSmallUIManager: AgoraToolBoxUIControllerDelegate {
 extension AgoraPaintingSmallUIManager: AgoraSpreadUIControllerDelegate {
     
     func startSpreadForUser(with userId: String) -> UIView? {
+        self.renderController.setRenderEnable(with: userId,
+                                              rendEnable: false)
         return self.renderController.renderViewForUser(with: userId)
     }
     
@@ -162,11 +164,8 @@ extension AgoraPaintingSmallUIManager: AgoraSpreadUIControllerDelegate {
     }
     
     func didStopSpreadForUser(with userId: String) {
-        
-    }
-    
-    func discaredSpreadRect() -> CGRect {
-        return stateController.view.frame
+        self.renderController.setRenderEnable(with: userId,
+                                              rendEnable: true)
     }
 }
 // MARK: - AgoraBoardToolsUIControllerDelegate

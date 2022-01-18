@@ -20,8 +20,6 @@ protocol AgoraSpreadUIControllerDelegate: NSObjectProtocol {
     func willStopSpreadForUser(with userId: String) -> UIView?
     /** 已经结束展开大窗，目标可以重新渲染*/
     func didStopSpreadForUser(with userId: String)
-    /** 获取父视图需要忽略计算的Rect大小*/
-    func discaredSpreadRect() -> CGRect
 }
 fileprivate class AgoraWidgetContentView: UIView  {
     override func hitTest(_ point: CGPoint,
@@ -50,9 +48,7 @@ class AgoraSpreadUIController: UIViewController {
     weak var delegate: AgoraSpreadUIControllerDelegate?
     
     private var widgetIdPrefix = "streamwindow"
-    
-    private var spreadUserId: String?
-    
+        
     private var dataSource = [AgoraSpreadObject]()
     
     /** SDK环境*/
@@ -77,11 +73,7 @@ class AgoraSpreadUIController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        self.view.backgroundColor = UIColor.init(white: 0.5, alpha: 0.5)
-        
-        setupRenderModel()
-        
+                        
         contextPool.widget.add(self)
         contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
@@ -90,21 +82,6 @@ class AgoraSpreadUIController: UIViewController {
 }
 // MARK: - Private
 private extension AgoraSpreadUIController {
-    
-    func setupRenderModel() {
-        guard let userId = self.spreadUserId,
-        let user = contextPool.user.getAllUserList().first(where: {$0.userUuid == userId}) else {
-            return
-        }
-        let model = AgoraRenderMemberModel.model(with: contextPool,
-                                                 uuid: user.userUuid,
-                                                 name: user.userName)
-//        self.renderModel = model
-//        let stream = contextPool.stream.getStreamList(userUuid: userId)?.first
-//        self.renderModel?.updateStream(stream)
-//        self.renderView.setModel(model: renderModel,
-//                                 delegate: self)
-    }
     
     func updateStream(stream: AgoraEduContextStreamInfo?) {
         guard stream?.videoSourceType != .screen else {
@@ -117,95 +94,108 @@ private extension AgoraSpreadUIController {
         }
     }
     
-    func startSpreadUser(with userId: String,
-                         to rect: CGRect?) {
-        guard let superView = self.view.superview,
-              let frame = rect else {
+    func startSpreadUser(with widgetId: String,
+                         userId: String,
+                         to frame: CGRect) {
+        guard let obj = dataSource.first(where: {$0.widget?.info.widgetId == widgetId}),
+              let targetView = obj.widget?.view else {
                   return
               }
-        superView.bringSubviewToFront(self.view)
-        if let view = self.delegate?.startSpreadForUser(with: userId) {
-            self.view.mas_remakeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(view)
+        
+        self.view.bringSubviewToFront(targetView)
+        if let fromView = self.delegate?.startSpreadForUser(with: userId) {
+            targetView.mas_remakeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(fromView)
             }
         } else {
-            self.view.mas_remakeConstraints { make in
+            targetView.mas_remakeConstraints { make in
                 make?.center.equalTo()(0)
                 make?.width.equalTo()(200)
                 make?.height.equalTo()(160)
             }
         }
-        superView.layoutIfNeeded()
-        self.view.mas_remakeConstraints { make in
+        self.view.layoutIfNeeded()
+        targetView.isHidden = false
+        obj.renderModel = self.renderModel(with: userId)
+        obj.renderView?.setModel(model: obj.renderModel,
+                                 delegate: self)
+        targetView.mas_remakeConstraints { make in
             make?.left.equalTo()(frame.minX)
             make?.top.equalTo()(frame.minY)
             make?.width.equalTo()(frame.width)
             make?.height.equalTo()(frame.height)
         }
         UIView.animate(withDuration: 0.2) {
-            superView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
         }
     }
     
-    func moveSpread(to rect: CGRect?) {
-        guard let superView = self.view.superview,
-              let frame = rect else {
+    func moveSpread(with widgetId: String,
+                    userId: String,
+                    to frame: CGRect) {
+        guard let obj = dataSource.first(where: {$0.widget?.info.widgetId == widgetId}),
+              let targetView = obj.widget?.view else {
                   return
               }
-        superView.bringSubviewToFront(self.view)
-        superView.layoutIfNeeded()
-        self.view.mas_remakeConstraints { make in
+        self.view.bringSubviewToFront(targetView)
+        self.view.layoutIfNeeded()
+        targetView.mas_remakeConstraints { make in
             make?.left.equalTo()(frame.minX)
             make?.top.equalTo()(frame.minY)
             make?.width.equalTo()(frame.width)
             make?.height.equalTo()(frame.height)
         }
         UIView.animate(withDuration: 0.2) {
-            superView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
         }
     }
     
-    func stopSpreadUser() {
-        guard let superView = self.view.superview,
-              let userId = self.spreadUserId else {
-                  return
-              }
-        superView.layoutIfNeeded()
+    func stopSpreadObj(with obj: AgoraSpreadObject) {
+        guard let targetView = obj.widget?.view,
+        let userId = obj.renderModel?.uuid else {
+            return
+        }
+        self.view.layoutIfNeeded()
         if let view = self.delegate?.willStopSpreadForUser(with: userId) {
-            self.view.mas_remakeConstraints { make in
+            targetView.mas_remakeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(view)
             }
         } else {
-            self.view.mas_remakeConstraints { make in
+            targetView.mas_remakeConstraints { make in
                 make?.center.equalTo()(0)
                 make?.width.equalTo()(200)
                 make?.height.equalTo()(160)
             }
         }
         UIView.animate(withDuration: 0.2) {
-            superView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
         } completion: { finish in
             self.delegate?.didStopSpreadForUser(with: userId)
-            self.spreadUserId = nil
+            self.dataSource.removeAll(obj)
+            obj.widget?.view.removeFromSuperview()
         }
     }
     
-    func rectFromDict(_ dict: [String: Any]) -> CGRect? {
-        guard let superView = self.view.superview,
-              let x_rate = dict["xaxis"] as? CGFloat,
-              let y_rate = dict["yaxis"] as? CGFloat,
-              let width_rate = dict["width"] as? CGFloat,
-              let height_rate = dict["height"] as? CGFloat else {
-                  return nil
-              }
-        let discaredRect = delegate?.discaredSpreadRect() ?? .zero
-        let width = superView.width * width_rate
-        let height = (superView.height - discaredRect.height) * height_rate
-        let MEDx = superView.width - width
-        let MEDy = (superView.height - discaredRect.height) - height
-        let x = MEDx * x_rate
-        let y = MEDy * y_rate
+    func frameFromRect(_ rect: CGRect) -> CGRect {
+        let width = self.view.width * rect.width
+        let height = self.view.height * rect.height
+        let MEDx = self.view.width - width
+        let MEDy = self.view.height - height
+        let x = MEDx * rect.minX
+        let y = MEDy * rect.minY
         return CGRect(x: x, y: y, width: width, height: height)
+    }
+    
+    func renderModel(with userId: String) -> AgoraRenderMemberModel {
+        guard let user = contextPool.user.getAllUserList().first(where: {$0.userUuid == userId}) else {
+            return AgoraRenderMemberModel()
+        }
+        let model = AgoraRenderMemberModel.model(with: contextPool,
+                                                 uuid: user.userUuid,
+                                                 name: user.userName)
+        let stream = contextPool.stream.getStreamList(userUuid: userId)?.first
+        model.updateStream(stream)
+        return model
     }
 }
 // MARK: - AgoraWidgetActivityObserver
@@ -220,6 +210,7 @@ extension AgoraSpreadUIController: AgoraWidgetActivityObserver {
             let widget = contextPool.widget.create(config)
             spreadOBJ.widget = widget
             view.addSubview(widget.view)
+            widget.view.isHidden = true
             
             let renderView = AgoraRenderMemberView(frame: .zero)
             widget.view.addSubview(renderView)
@@ -233,7 +224,7 @@ extension AgoraSpreadUIController: AgoraWidgetActivityObserver {
     public func onWidgetInactive(_ widgetId: String) {
         self.dataSource.removeAll { obj in
             if obj.widget?.info.widgetId == widgetId {
-                obj.widget?.view.removeFromSuperview()
+                self.stopSpreadObj(with: obj)
                 return true
             } else {
                 return false
@@ -245,29 +236,18 @@ extension AgoraSpreadUIController: AgoraWidgetActivityObserver {
 extension AgoraSpreadUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-//        guard self.widgetId == widgetId else {
-//            return
-//        }
-        guard let messageDic = message.json(),
-              let action = messageDic["widgetAction"] as? Int,
-              let streamId = messageDic["spreadStreamId"] as? String,
-              let userId = messageDic["operatedUuid"] as? String else {
-                  return
-              }
-        let widgetAction = AgoraSpreadAction.init(rawValue: action)
-        switch widgetAction {
-        case .start:
-            let rect = self.rectFromDict(messageDic)
-            self.startSpreadUser(with: userId,
-                                 to: rect)
-        case .move:
-            let rect = self.rectFromDict(messageDic)
-            self.moveSpread(to: rect)
-        case .change:
-            // Do Noting
+        guard let signal = message.toSpreadSignal() else {
             return
-        case .close:
-            self.stopSpreadUser()
+        }
+        switch signal {
+        case .start(let renderInfo):
+            self.startSpreadUser(with: widgetId,
+                                 userId: renderInfo.user.userId,
+                                 to: self.frameFromRect(renderInfo.frame))
+        case .changeFrame(let renderInfo):
+            self.moveSpread(with: widgetId,
+                            userId: renderInfo.user.userId,
+                            to: self.frameFromRect(renderInfo.frame))
         default: return
         }
     }
@@ -295,20 +275,20 @@ extension AgoraSpreadUIController: AgoraRenderMemberViewDelegate {
 extension AgoraSpreadUIController: AgoraEduUserHandler {
     func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                  operatorUser: AgoraEduContextUserInfo?) {
-        for user in userList {
-            if user.userUuid == self.spreadUserId {
-                self.stopSpreadUser()
-                break
-            }
-        }
+//        for user in userList {
+//            if user.userUuid == self.spreadUserId {
+//                self.stopSpreadUser()
+//                break
+//            }
+//        }
     }
     
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
-        if user.userUuid == self.spreadUserId {
-            self.stopSpreadUser()
-        }
+//        if user.userUuid == self.spreadUserId {
+//            self.stopSpreadUser()
+//        }
     }
 }
 // MARK: - AgoraEduStreamHandler

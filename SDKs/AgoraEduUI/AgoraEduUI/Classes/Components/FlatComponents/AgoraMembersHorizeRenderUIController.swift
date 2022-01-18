@@ -94,6 +94,15 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
             return view
         }
     }
+    
+    public func setRenderEnable(with userId: String, rendEnable: Bool) {
+        if let model = self.teacherModel,
+           model.uuid == userId {
+            model.rendEnable = rendEnable
+        } else if let model = self.dataSource.first(where: {$0.uuid == userId}) {
+            model.rendEnable = rendEnable
+        }
+    }
 }
 
 // MARK: - Actions
@@ -388,20 +397,20 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
                                                       for: indexPath)
         let model = self.dataSource[indexPath.row]
         cell.renderView.setModel(model: model, delegate: self)
-        print("log 1122: \(#function) \(indexPath)")
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        print("log 1122: \(#function) \(indexPath)")
         if let current = cell as? AgoraRenderMemberCell {
             current.renderView.setModel(model: nil, delegate: self)
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
         let model = self.dataSource[indexPath.row]
         if let current = cell as? AgoraRenderMemberCell {
             current.renderView.setModel(model: model, delegate: self)

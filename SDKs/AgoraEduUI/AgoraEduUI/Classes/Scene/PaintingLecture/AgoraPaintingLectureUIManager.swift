@@ -120,8 +120,12 @@ extension AgoraPaintingLectureUIManager: AgoraSpreadUIControllerDelegate {
         var view: UIView?
         if let targetView = self.teacherRenderController.renderViewForUser(with: userId) {
             view = targetView
+            self.teacherRenderController.setRenderEnable(with: userId,
+                                                         rendEnable: false)
         } else if let targetView = self.studentsRenderController.renderViewForUser(with: userId) {
             view = targetView
+            self.studentsRenderController.setRenderEnable(with: userId,
+                                                          rendEnable: false)
         }
         return view
     }
@@ -137,11 +141,10 @@ extension AgoraPaintingLectureUIManager: AgoraSpreadUIControllerDelegate {
     }
     
     func didStopSpreadForUser(with userId: String) {
-        
-    }
-    
-    func discaredSpreadRect() -> CGRect {
-        return stateController.view.frame
+        self.teacherRenderController.setRenderEnable(with: userId,
+                                                     rendEnable: true)
+        self.studentsRenderController.setRenderEnable(with: userId,
+                                                      rendEnable: true)
     }
 }
 // MARK: - AgoraBoardToolsUIControllerDelegate

@@ -59,6 +59,12 @@ class AgoraStudentsRenderUIController: UIViewController {
         }
         return view
     }
+    
+    public func setRenderEnable(with userId: String, rendEnable: Bool) {
+        if let model = self.dataSource.first(where: {$0.uuid == userId}) {
+            model.rendEnable = rendEnable
+        }
+    }
 }
 // MARK: - Private
 private extension AgoraStudentsRenderUIController {
@@ -291,6 +297,15 @@ extension AgoraStudentsRenderUIController: UICollectionViewDelegate,
                         forItemAt indexPath: IndexPath) {
         if let current = cell as? AgoraRenderMemberCell {
             current.renderView.setModel(model: nil, delegate: self)
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        willDisplay cell: UICollectionViewCell,
+                        forItemAt indexPath: IndexPath) {
+        let model = self.dataSource[indexPath.row]
+        if let current = cell as? AgoraRenderMemberCell {
+            current.renderView.setModel(model: model, delegate: self)
         }
     }
     

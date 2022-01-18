@@ -48,6 +48,13 @@ class AgoraTeacherRenderUIController: UIViewController {
             return nil
         }
     }
+    
+    public func setRenderEnable(with userId: String, rendEnable: Bool) {
+        if let model = self.teacherModel,
+           userId == self.teacherModel?.uuid{
+            model.rendEnable = rendEnable
+        }
+    }
 }
 // MARK: - Private
 private extension AgoraTeacherRenderUIController {
