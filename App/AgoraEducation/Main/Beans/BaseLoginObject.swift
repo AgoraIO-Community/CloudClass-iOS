@@ -55,7 +55,7 @@ class LoginConfig {
         (NSLocalizedString("About_version_time", comment: ""),  version_time)
     ]
     
-    static let version_time: String = "2021.12.29"
+    static let version_time: String = "2022.01.19"
     static let sdk_version: String = AgoraClassroomSDK.version()
     static let class_version: String = Bundle.main.version
     
