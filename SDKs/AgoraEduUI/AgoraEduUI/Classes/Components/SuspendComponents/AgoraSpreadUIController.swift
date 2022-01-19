@@ -88,7 +88,7 @@ private extension AgoraSpreadUIController {
             return
         }
         for obj in self.dataSource {
-            if obj.renderModel?.streamID == stream?.streamUuid {
+            if obj.renderModel?.uuid == stream?.owner.userUuid {
                 obj.renderModel?.updateStream(stream)
             }
         }

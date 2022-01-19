@@ -101,10 +101,9 @@ private extension AgoraOneToOneRenderUIController {
         guard stream?.videoSourceType != .screen else {
             return
         }
-        
-        if stream?.streamUuid == teacherModel?.streamID {
+        if stream?.owner.userUuid == teacherModel?.uuid {
             teacherModel?.updateStream(stream)
-        } else if stream?.streamUuid == studentModel?.streamID {
+        } else if stream?.owner.userUuid == studentModel?.uuid {
             studentModel?.updateStream(stream)
         }
         if stream?.streamUuid == currentStream?.streamUuid {

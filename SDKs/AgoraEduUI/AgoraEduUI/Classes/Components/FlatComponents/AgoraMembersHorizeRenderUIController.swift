@@ -189,7 +189,6 @@ private extension AgoraMembersHorizeRenderUIController {
         guard stream?.videoSourceType != .screen else {
             return
         }
-        
         if let model = teacherModel,
            stream?.owner.userUuid == model.uuid {
             model.updateStream(stream)

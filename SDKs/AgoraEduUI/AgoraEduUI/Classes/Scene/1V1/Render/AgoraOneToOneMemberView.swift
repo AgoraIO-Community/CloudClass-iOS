@@ -44,7 +44,8 @@ class AgoraOneToOneMemberView: UIView {
             volumeView.isHidden = (micState != .on)
             switch micState {
             case .on:
-                micView.image = UIImage.agedu_named("agedu_named")
+                micView.image = UIImage.agedu_named("ic_mic_status_on")
+                
                 break
             case .off:
                 micView.image = UIImage.agedu_named("ic_mic_status_off")

@@ -44,7 +44,7 @@ class AgoraRenderMemberModel: NSObject {
     var streamID: String? {
         didSet {
             if streamID != oldValue {
-                self.onUpdateStreamID?(oldValue, streamID)
+                self.onUpdateStreamID?(streamID)
             }
         }
     }
@@ -81,7 +81,7 @@ class AgoraRenderMemberModel: NSObject {
     /** 音量产生变化 注意使用weak*/
     var onUpdateVolume: ((Int) -> Void)?
     /** 渲染产生变化 注意使用weak*/
-    var onUpdateStreamID: ((_ from: String?, _ to: String?) -> Void)?
+    var onUpdateStreamID: ((String?) -> Void)?
     /** 音频状态产生变化 注意使用weak*/
     var onUpdateAudioState: ((AgoraRenderMediaState) -> Void)?
     /** 视频状态产生变化 注意使用weak*/
@@ -160,6 +160,25 @@ class AgoraRenderMemberView: UIView {
     
     private var ableMaskView: AgoraRenderMaskView!
     
+    private var renderID: String? {
+        didSet {
+            guard renderID != oldValue else {
+                return
+            }
+            if let rid = oldValue {
+                self.delegate?.memberViewCancelRender(memberView: self,
+                                                      renderID: rid)
+                self.videoView.isHidden = true
+            }
+            if let rid = renderID {
+                self.delegate?.memberViewRender(memberView: self,
+                                                in: self.videoView,
+                                                renderID: rid)
+                self.videoView.isHidden = false
+            }
+        }
+    }
+    
     private var isWaving = false {
         didSet {
             if isWaving != oldValue {
@@ -174,13 +193,7 @@ class AgoraRenderMemberView: UIView {
         }
     }
     
-    private var memberModel: AgoraRenderMemberModel? {
-        didSet {
-            if memberModel == nil {
-                resetViewState()
-            }
-        }
-    }
+    private var memberModel: AgoraRenderMemberModel?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -195,15 +208,18 @@ class AgoraRenderMemberView: UIView {
     
     public func setModel(model: AgoraRenderMemberModel?,
                          delegate: AgoraRenderMemberViewDelegate) {
-        let oldModel = memberModel
-        let newModel = model
-        self.memberModel = model
-        if let m = oldModel, oldModel != newModel {
-            self.resignOldModel(model: m)
+        guard model != memberModel else {
+            return
         }
+        if let oldModel = memberModel {
+            self.resignOldModel(model: oldModel)
+        }
+        self.memberModel = model
         self.delegate = delegate
-        if let m = newModel, oldModel != newModel {
-            self.registerNewModel(model: m)
+        if let newModel = self.memberModel {
+            self.registerNewModel(model: newModel)
+        } else {
+            self.resetViewState()
         }
     }
 }
@@ -216,14 +232,11 @@ private extension AgoraRenderMemberView {
         self.videoView.isHidden = true
         self.rewardLabel.isHidden = true
         self.rewardImageView.isHidden = true
-        self.ableMaskView.isHidden = false
+        self.ableMaskView.isHidden = true
     }
     
     func resignOldModel(model: AgoraRenderMemberModel) {
-        if let renderID = model.streamID {
-            self.delegate?.memberViewCancelRender(memberView: self,
-                                                  renderID: renderID)
-        }
+        self.renderID = nil
         self.isWaving = false
         model.onUpdateVolume = nil
         model.onUpdateStreamID = nil
@@ -232,6 +245,14 @@ private extension AgoraRenderMemberView {
         model.onUpdateHandsUpState = nil
         model.onUpdateRewardCount = nil
         model.onUpdateRenderEnable = nil
+        
+        stateImageView.image = UIImage.agedu_named("ic_member_no_user")
+        micView.setState(.off)
+        self.nameLabel.text = ""
+        self.videoView.isHidden = true
+        self.rewardLabel.isHidden = true
+        self.rewardImageView.isHidden = true
+        self.ableMaskView.isHidden = true
     }
     
     func registerNewModel(model: AgoraRenderMemberModel) {
@@ -245,13 +266,8 @@ private extension AgoraRenderMemberView {
         self.updateHandsUpState(isHandsUp: model.isHandsUp)
         self.updateRewardCount(count: model.rewardCount)
         self.updateRenderEnable(enable: model.rendEnable)
+        self.updateSteamId(model.streamID)
         
-        if let renderID = model.streamID,
-           model.rendEnable == true {
-            self.delegate?.memberViewRender(memberView: self,
-                                            in: self.videoView,
-                                            renderID: renderID)
-        }
         // 注册回调
         model.onUpdateName = { [weak self] name in
             self?.updateName(name: name)
@@ -259,8 +275,8 @@ private extension AgoraRenderMemberView {
         model.onUpdateVolume = { [weak self] volume in
             self?.updateVolume(volume: volume)
         }
-        model.onUpdateStreamID = { [weak self] from, to in
-            self?.updateSteamId(from: from)
+        model.onUpdateStreamID = { [weak self] streamID in
+            self?.updateSteamId(streamID)
         }
         model.onUpdateAudioState = { [weak self] state in
             self?.updateAudioState(state: state)
@@ -302,14 +318,12 @@ private extension AgoraRenderMemberView {
         switch state {
         case .on:
             stateImageView.image = UIImage.agedu_named("ic_member_device_off")
-            videoView.isHidden = false
         case .off, .broken:
             stateImageView.image = UIImage.agedu_named("ic_member_device_off")
-            videoView.isHidden = true
         case .forbidden:
             stateImageView.image = UIImage.agedu_named("ic_member_device_forbidden")
-            videoView.isHidden = true
         }
+        self.updateRenderState()
     }
     
     func updateHandsUpState(isHandsUp: Bool) {
@@ -327,32 +341,21 @@ private extension AgoraRenderMemberView {
     }
     
     func updateRenderEnable(enable: Bool) {
-        if enable {
-            self.ableMaskView.isHidden = true
-            if let current = self.memberModel?.streamID {
-                self.delegate?.memberViewRender(memberView: self,
-                                                in: self.videoView,
-                                                renderID: current)
-            }
-        } else {
-            self.ableMaskView.isHidden = false
-            if let current = self.memberModel?.streamID {
-                self.delegate?.memberViewCancelRender(memberView: self,
-                                                      renderID: current)
-            }
-        }
+        self.ableMaskView.isHidden = enable
+        self.updateRenderState()
     }
     
-    func updateSteamId(from streamId: String?) {
-        if let from = streamId {
-            self.delegate?.memberViewCancelRender(memberView: self,
-                                                  renderID: from)
-        }
-        if let current = self.memberModel?.streamID,
-           self.memberModel?.rendEnable == true {
-            self.delegate?.memberViewRender(memberView: self,
-                                            in: self.videoView,
-                                            renderID: current)
+    func updateSteamId(_ steamId: String?) {
+        self.updateRenderState()
+    }
+    
+    func updateRenderState() {
+        if self.memberModel?.rendEnable == true,
+           self.memberModel?.videoState == .on,
+           let streamID = self.memberModel?.streamID {
+            self.renderID = streamID
+        } else {
+            self.renderID = nil
         }
     }
 }
