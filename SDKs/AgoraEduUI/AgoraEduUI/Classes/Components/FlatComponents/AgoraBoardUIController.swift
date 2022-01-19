@@ -33,6 +33,7 @@ class AgoraBoardUIController: UIViewController {
         view.backgroundColor = .clear
         
         contextPool.room.registerRoomEventHandler(self)
+        contextPool.media.registerMediaEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
