@@ -13,8 +13,10 @@ def libVersion
   pod 'Whiteboard', '2.15.16'
   pod 'AgoraRtm_iOS', '1.4.8'
 
-  pod 'SwifterSwift', "5.2.0" 
+  pod 'SwifterSwift', '5.2.0' 
   pod 'Masonry'
+
+  pod 'SDWebImage', '5.12.1'
 end
 
 def preRtc
