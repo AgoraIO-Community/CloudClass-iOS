@@ -17,9 +17,9 @@ Pod::Spec.new do |spec|
     "AgoraEduContext/*.h"
   ]
 
-  spec.dependency "AgoraUIBaseViews", ">= 2.0.0"
-  spec.dependency "AgoraExtApp", ">= 2.0.0"
-  spec.dependency "AgoraWidget", ">= 2.0.1"
+  spec.dependency "AgoraUIBaseViews", ">= 2.1.0"
+  spec.dependency "AgoraExtApp", ">= 2.1.0"
+  spec.dependency "AgoraWidget", ">= 2.1.0"
 
   spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
