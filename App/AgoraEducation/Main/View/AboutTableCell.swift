@@ -6,8 +6,9 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-import Foundation
 import AgoraUIBaseViews
+import Foundation
+import UIKit
 
 class AboutTableCell: AgoraBaseUITableViewCell {
     
