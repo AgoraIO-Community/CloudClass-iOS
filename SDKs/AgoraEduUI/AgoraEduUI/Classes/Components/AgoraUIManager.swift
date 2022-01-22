@@ -40,7 +40,6 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
                 ctrlMaskView.isHidden = true
             }
             if let view = newValue {
-                self.view.bringSubviewToFront(self.ctrlMaskView)
                 ctrlMaskView.isHidden = false
                 self.view.addSubview(view)
             }
@@ -105,6 +104,39 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     /** mask空白区域被点击时子类的处理*/
     public func didClickCtrlMaskView() {
         // for override
+    }
+    
+    public func ctrlViewAnimationFromView(_ formView: UIView) {
+        guard let animaView = ctrlView else {
+            return
+        }
+        // 算出落点的frame
+        let rect = formView.convert(formView.bounds, to: self.view)
+        var point = CGPoint(x: rect.minX - 8 - animaView.frame.size.width, y: rect.minY)
+        let estimateFrame = CGRect(origin: point,
+                                 size: animaView.frame.size)
+        if estimateFrame.maxY > self.view.frame.maxY - 10 {
+            // 区域超出
+            point.y = self.view.frame.maxY - 10 - animaView.bounds.height
+        }
+        animaView.frame = CGRect(origin: point, size: animaView.frame.size)
+        // 运算动画锚点
+        let anchorConvert = formView.convert(formView.bounds, to: animaView)
+        let anchor = CGPoint(x: 1, y: anchorConvert.origin.y/animaView.frame.height)
+        // 开始动画运算
+        let oldFrame = animaView.frame
+        let position = CGPoint(x: animaView.layer.position.x + (anchor.x - 0.5) * animaView.bounds.width,
+                               y: animaView.layer.position.y + (anchor.y - 0.5) * animaView.bounds.height)
+        animaView.layer.anchorPoint = anchor
+        animaView.frame = oldFrame
+        animaView.alpha = 0.2
+        animaView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.view.layoutIfNeeded()
+        UIView.animate(withDuration: 0.1) {
+            animaView.transform = .identity
+            animaView.alpha = 1
+        } completion: { finish in
+        }
     }
     
     public override var shouldAutorotate: Bool {

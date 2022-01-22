@@ -16,13 +16,14 @@ target 'AgoraEducation' do
   pod 'Alamofire', '4.7.3'
   pod 'SSZipArchive', '2.4.2'
   pod 'SwifterSwift', '5.2.0'
-  pod 'Masonry'
+  pod 'Masonry', '1.1.0'
   pod 'SDWebImage', '5.12.0'
-  pod 'WHToast'
+  pod 'WHToast', '0.0.7'
+  pod 'FLAnimatedImage', '1.0.16'
  
   # agora libs
   pod 'AgoraRtm_iOS', '1.4.8'
-  pod 'Whiteboard', '2.15.16'
+  pod 'Whiteboard', '2.15.18'
   pod 'AgoraRtcEngine_iOS', '3.4.6'
   pod 'HyphenateChat', '3.8.6'
  
@@ -32,10 +33,9 @@ target 'AgoraEducation' do
   pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI_Local.podspec'
    
   # open sources widgets and extApps
-  pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets_Local.podspec'
-  pod 'ChatWidget', :path => '../../apaas-extapp-ios/Widgets/ChatWidget/ChatWidget_Local.podspec'
-  pod 'AgoraExtApps', :path => '../../apaas-extapp-ios/ExtApps/AgoraExtApps_Local.podspec'
+  pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
+  pod 'AgoraExtApps', :path => '../../apaas-extapp-ios/AgoraExtApps/AgoraExtApps_Local.podspec'
    
   # close source libs
-  pod 'AgoraEduCore', '2.0.1'
+  pod 'AgoraEduCore', '2.1.0'
 end

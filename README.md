@@ -5,7 +5,7 @@ This page introduces how to run the iOS sample project.
 
 - Make sure you have made the preparations mentioned in the  [prerequisites](https://docs.agora.io/en/agora-class/agora_class_prep?platform=iOS).
 - Prepare the development environment:
-  - Xcode 10.0 or later
+  - Xcode 12.0 or later
   - CocoaPods
 
 - Real iOS devices, such as iPhone or iPad.
@@ -13,25 +13,27 @@ This page introduces how to run the iOS sample project.
 ## Run the sample project
 1. [quick start](https://docs.agora.io/en/agora-class/agora_class_quickstart_ios?platform=iOS)
 2. Configure parameters
-Configure the following parameters in the 'keycenter. m' file:
-- The Agora App ID that you get.
-- The Agora RTM Token that you get.
-
+The current Flexible Classroom project uses the default `AppId` and `AppCertificate` in the `LoginViewController` to request tokens, as shown in the code below
 ```
-+ (NSString *)appId {
-    return <#Your Agora App Id#>;
-}
-
-+ (NSString *)rtmToken {
-    return <#Your Agora RTM Token#>;
-}
+requestToken(region: region.rawValue,
+             userUuid: userUuid,
+             success: tokenSuccessBlock,
+             failure: failureBlock)
+```
+To use your own `AppId` and `AppCertificate`, comment out the execution of the `requestToken` method and use the `buildToken` method below
+```
+buildToken(appId: "Your App Id",
+           appCertificate: "Your App Certificate",
+           userUuid: userUuid,
+           success: tokenSuccessBlock,
+           failure: failureBlock)
 ```
 
 ## Connect us
 
-- You can read the full set of documentations and API reference at [Agora Developer Portal](https://docs.agora.io/en/).
+- You can read the full set of documentations and API reference at [Flexible Classroom Documentation](https://docs.agora.io/en/agora-class/landing-page).
 - You can ask for technical support by submitting tickets in [Agora Console](https://dashboard.agora.io/). 
-- You can submit an [issue](https://github.com/AgoraIO-Usecase/eEducation/issues) if you find any bug in the sample project. 
+- You can submit an [issue](https://github.com/AgoraIO-Community/CloudClass-iOS/issues) if you find any bug in the sample project. 
 
 ## License
 

@@ -49,8 +49,6 @@ let kRoomOptions: [(AgoraEduRoomType, String)] = [
     (.oneToOne, NSLocalizedString("Login_onetoone", comment: "")),
     (.small, NSLocalizedString("Login_small", comment: "")),
     (.lecture, NSLocalizedString("Login_lecture", comment: "")),
-    // 2.0.0版本去掉美术课
-    //(.paintingSmall, NSLocalizedString("login_painting_small", comment: ""))
 ]
 
 /** 区域可选项*/

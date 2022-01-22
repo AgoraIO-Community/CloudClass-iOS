@@ -172,13 +172,28 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// 用户开始挥手 (v2.0.0)
     /// - parameter user: 挥手用户
     /// - parameter duration: 挥手的时长，单位秒
+    @available(*, unavailable, message:"Use onUserHandsWave(userUuid:duration:payload) instead")
     @objc optional func onUserHandsWave(user: AgoraEduContextUserInfo,
                                         duration: Int)
+    
+    /// 用户开始挥手 (v2.1.0)
+    /// - parameter user: 挥手用户
+    /// - parameter duration: 挥手的时长，单位秒
+    @objc optional func onUserHandsWave(userUuid: String,
+                                        duration: Int,
+                                        payload: [String: Any]?)
     
     /// 用户结束挥手（v2.0.0)
     /// - parameter fromUser: 手放下的用户
     /// - note: 无论是用户自己取消举手，还是举手申请被接受，都会走这个回调
+    @available(*, unavailable, message:"Use onUserHandsDown(userUuid:payload) instead")
     @objc optional func onUserHandsDown(user: AgoraEduContextUserInfo)
+    
+    /// 用户结束挥手（v2.1.0)
+    /// - parameter fromUser: 手放下的用户
+    /// - note: 无论是用户自己取消举手，还是举手申请被接受，都会走这个回调
+    @objc optional func onUserHandsDown(userUuid: String,
+                                        payload: [String: Any]?)
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
@@ -241,15 +256,26 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - returns: Bool, 是否可以挥手
     func getHandsWaveEnable() -> Bool
     
-    /// 举手，申请上台 (v2.0.0)
+    /// 挥手申请 (v2.0.0)
+    /// - parameter duration: 举手申请的时长，单位秒
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    /// - returns: void
+    @available(*, unavailable, message:"Use handsWave(duration:payload:success:failure) instead")
+    func handsWave(duration: Int,
+                   success: AgoraEduContextSuccess?,
+                   failure: AgoraEduContextFailure?)
+
+    /// 挥手申请 (v2.1.0)
     /// - parameter duration: 举手申请的时长，单位秒
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败
     /// - returns: void
     func handsWave(duration: Int,
+                   payload: [String: Any]?,
                    success: AgoraEduContextSuccess?,
                    failure: AgoraEduContextFailure?)
-
+    
     /// 手放下，取消申请上台 (v2.0.0)
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败

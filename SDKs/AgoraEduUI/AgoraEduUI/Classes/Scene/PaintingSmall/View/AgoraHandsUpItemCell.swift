@@ -24,12 +24,10 @@ class AgoraHandsUpItemCell: UITableViewCell {
         didSet {
             switch state {
             case .waiting:
-                stateButton.setImage(AgoraUIImage(object: self,
-                                                  name: "ic_handsup_off_stage"),
+                stateButton.setImage(UIImage.agedu_named("ic_handsup_off_stage"),
                                      for: .normal)
             case .onStage:
-                stateButton.setImage(AgoraUIImage(object: self,
-                                                  name: "ic_handsup_on_stage"),
+                stateButton.setImage(UIImage.agedu_named("ic_handsup_on_stage"),
                                      for: .normal)
             default: break
             }
@@ -68,8 +66,7 @@ extension AgoraHandsUpItemCell {
         contentView.addSubview(nameLabel)
         
         stateButton = UIButton.init(type: .custom)
-        stateButton.setImage(AgoraUIImage(object: self,
-                                          name: "ic_handsup_off_stage"),
+        stateButton.setImage(UIImage.agedu_named("ic_handsup_off_stage"),
                              for: .normal)
         stateButton.addTarget(self,
                               action: #selector(onClickAcceptButton(_:)),

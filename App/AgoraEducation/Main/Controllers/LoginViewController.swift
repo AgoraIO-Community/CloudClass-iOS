@@ -11,11 +11,11 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
 import SwifterSwift
 import AgoraExtApp
 import AgoraWidget
+import AgoraEduUI
 import AgoraLog
 import UIKit
 
@@ -657,8 +657,8 @@ private extension LoginViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
-        tableView.rowHeight = 60
-        tableView.estimatedRowHeight = 60
+        tableView.rowHeight = 68
+        tableView.estimatedRowHeight = 68
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         tableView.separatorInset = .zero
@@ -695,7 +695,7 @@ private extension LoginViewController {
         
         tableView.agora_center_x = 0
         tableView.agora_width = LoginConfig.login_group_width
-        tableView.agora_height = LoginConfig.login_group_height * 5 + 20 * 4
+        tableView.agora_height = 68 * 5
         tableView.agora_y = LoginConfig.login_first_group_y
         
         let enter_gap: CGFloat = LoginConfig.device == .iPhone_Small ? 30 : 40

@@ -6,29 +6,10 @@
   Copyright © 2020 Agora. All rights reserved.
 */
 
-NoEmptyText = " 参数不能为空";
-ParamErrorText = " 参数错误";
-NeedCallText = "你需要先调用";
-DismissVCText = "页面上层还有其他页面";
-
-UserFullText = "加入教室失败，教室人数已满";
-
-DuplicateLaunchText = "已经启动了";
-UnInitializedText = " 没有初始化完成";
-
-// ------------------------------------------------
 ClassBeforeStartText = "距离上课还有：";
 ClassAfterStartText = "已上课：";
 ClassAfterStopText = "课程已结束：";
 title_before_class = "课程未开始";
-
-// Room State
-ClassIDText = "课程ID：";
-ClassSingalGoodText = "优";
-ClassSingalMediumText = "良";
-ClassSingalBadText = "差";
-ClassSingalUnknownText = "未知";
-ClassLeftText = "离开教室";
 
 // toast
 ClassEndWarningStartText = "课程还有";
@@ -46,18 +27,11 @@ OKText = "確定";
 ClassExitText = "是否确定要退出教室？";
 ClassOverText = "課程已結束";
 
-// chat
-ChatDisableToastText = "禁言模式开启";
-ChatEnableToastText = "禁言模式关闭";
-
 // canvas
 CameraMuteText = "摄像头被关闭";
 MicrophoneMuteText = "你暂时不能发言了";
 CameraUnMuteText = "摄像头被打开";
 MicrophoneUnMuteText = "你可以发言了";
-
-// Device
-TeacherVideoFailText = "老师视频可能出现问题";
 
 // loading
 BoardWareProcessText = "课件加载中，请稍后...";
@@ -66,8 +40,6 @@ BoardWareFailTitleText = "课件加载失败!";
 BoardWareFailMsgText = "课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件";
 BoardWareCloseText = "关闭";
 BoardWareRetryText = "重新加载";
-LoaingText = "加载中...";
-ReconnectingText = "重连中...";
 
 // CoHost
 HandsUpTimeOutText = "举手超时";
@@ -110,3 +82,53 @@ toast_reward_student_xx = "祝贺%@获得奖励";
 // board
 board_granted = "你已被老师授权，请使用白板工具互动";
 board_ungranted = "你已被老师收回授权，无法使用白板工具互动";
+
+// tool box
+toolbox_cloud_storage = "云盘";
+
+toolbox_save_borad = "保存板书";
+
+toolbox_record_class = "录制";
+
+toolbox_vote = "投票";
+
+toolbox_count_down = "倒计时";
+
+toolbox_answer_sheet = "答题器";
+
+// Network
+NetworkPoorText = "当前网络质量不佳,请检查设备网络连接";
+NetworkDisconnectedText = "当前网络已断开,请检查设备网络连接";
+
+// user list
+UserListMainTitle = "花名册";
+UserListTeacherName = "教师姓名:";
+UserListName = "学生姓名";
+UserListCoVideo = "上下台";
+UserListBoard = "授权";
+UserListCamera = "摄像头";
+UserListMicro = "麦克风";
+UserListChat = "禁言";
+UserListReward = "奖励";
+nameroll_kick_out = "踢人";
+// Setting
+CameraText = "摄像头";
+DirectionText = "方向";
+FrontText = "前";
+BackText = "后";
+MicrophoneText = "麦克风";
+SpeakerText = "扬声器";
+LeaveText = "退出教室";
+// loading
+LoaingText = "加载中...";
+ReconnectingText = "重连中...";
+LoginOnAnotherDeviceText = "账号在远端设备登录";
+// class state
+LeaveClassTitleText = "下课确认";
+ClassOverNoticeText = "结束通知";
+ClassOverText = "课程已结束";
+LeaveClassText = "你确定要下课吗?";
+CloseText = "关闭";
+CancelText = "取消";
+SureText = "确认";
+KickOutNoticeText = "移出通知";

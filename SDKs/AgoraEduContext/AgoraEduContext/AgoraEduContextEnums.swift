@@ -60,6 +60,8 @@ import Foundation
     case medium
     /// 差
     case bad
+    /// 断网
+    case down
 }
 
 /// 连接状态

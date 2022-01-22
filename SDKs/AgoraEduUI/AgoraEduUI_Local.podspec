@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraEduUI"
-  spec.version      = "2.0.0"
+  spec.version      = "2.1.0"
   spec.summary      = "Agora Edu UI"
   spec.description  = "Agora Edu UI SDK"
   spec.homepage     = "https://docs.agora.io/en/agora-class/landing-page?platform=iOS"
@@ -15,13 +15,13 @@ Pod::Spec.new do |spec|
   spec.public_header_files = "AgoraEduUI/Classes/**/*.h"
   spec.source_files        = "AgoraEduUI/Classes/**/*.{h,m,swift}"
   
-  spec.dependency "AgoraUIEduBaseViews"
   spec.dependency "AgoraUIBaseViews"
   spec.dependency "AgoraEduContext"
   spec.dependency "AgoraExtApp"
   spec.dependency "AgoraWidget"
   spec.dependency "SwifterSwift"
   spec.dependency "Masonry"
+  spec.dependency "FLAnimatedImage"
   
   spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }

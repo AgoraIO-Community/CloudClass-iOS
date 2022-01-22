@@ -6,8 +6,9 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-import Foundation
 import AgoraUIBaseViews
+import Foundation
+import UIKit
 
 public class DisclaimerView: AgoraBaseUIView {
     public override init(frame: CGRect) {
@@ -27,7 +28,7 @@ public class DisclaimerView: AgoraBaseUIView {
         contentView.layer.cornerRadius = 8
         contentView.layer.backgroundColor = UIColor.white.cgColor
         contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor(hexString: "ECECF1").cgColor
+        contentView.layer.borderColor = UIColor(hexString: "ECECF1")?.cgColor
         
         contentView.layer.shadowColor = UIColor(red: 0.18,
                                                 green: 0.25,

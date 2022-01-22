@@ -8,66 +8,6 @@
 import AgoraUIBaseViews
 import Masonry
 
-// MARK: - AgoraRoomToolZoomButton
-class AgoraRoomToolZoomButton: UIButton {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        backgroundColor = UIColor.white
-        imageView?.tintColor = UIColor(hex: 0x7B88A0)
-        
-        layer.cornerRadius = 8
-        layer.shadowColor = UIColor(hex:0x2F4192, transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        layer.cornerRadius = bounds.height * 0.5
-    }
-    
-    override var isSelected: Bool {
-        willSet {
-            if isSelected != newValue {
-                backgroundColor = newValue ? UIColor(hex: 0x357BF6) : .white
-                imageView?.tintColor = newValue ? .white : UIColor(hex: 0x7B88A0)
-            }
-        }
-    }
-    
-    func setImage(_ image: UIImage?) {
-        guard let v = image else {
-            return
-        }
-        setImageForAllStates(v.withRenderingMode(.alwaysTemplate))
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>,
-                               with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>,
-                               with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        UIView.animate(withDuration: 0.1,
-                       delay: 0,
-                       options: .curveLinear) {
-            self.transform = CGAffineTransform(scaleX: 1, y: 1)
-        } completion: { finish in
-        }
-    }
-}
-
 // MARK: - Protocol
 protocol AgoraRoomToolsViewDelegate: NSObject {
     /** 工具被选取*/
@@ -90,37 +30,37 @@ class AgoraRoomToolstView: UIView {
     
     private var contentView: UIStackView!
     /** 设置按钮*/
-    private lazy var settingButton: AgoraRoomToolZoomButton = {
-        let v = AgoraRoomToolZoomButton(frame: .zero)
+    private lazy var settingButton: AgoraZoomButton = {
+        let v = AgoraZoomButton(frame: .zero)
         v.tag = kDefaultTag + AgoraRoomToolType.setting.rawValue
-        v.setImage(AgoraUIImage(object: self, name: "ic_func_setting"))
+        v.setImage(UIImage.agedu_named("ic_func_setting"))
         v.addTarget(self, action: #selector(onClickToolButton(_:)),
                     for: .touchUpInside)
         return v
     }()
     /** 工具箱按钮*/
-    private lazy var toolBoxButton: AgoraRoomToolZoomButton = {
-        let v = AgoraRoomToolZoomButton(frame: .zero)
+    private lazy var toolBoxButton: AgoraZoomButton = {
+        let v = AgoraZoomButton(frame: .zero)
         v.tag = kDefaultTag + AgoraRoomToolType.toolBox.rawValue
-        v.setImage(AgoraUIImage(object: self, name: "ic_func_toolbox"))
+        v.setImage(UIImage.agedu_named("ic_func_toolbox"))
         v.addTarget(self, action: #selector(onClickToolButton(_:)),
                     for: .touchUpInside)
         return v
     }()
     /** 花名册按钮*/
-    private lazy var nameRollButton: AgoraRoomToolZoomButton = {
-        let v = AgoraRoomToolZoomButton(frame: .zero)
+    private lazy var nameRollButton: AgoraZoomButton = {
+        let v = AgoraZoomButton(frame: .zero)
         v.tag = kDefaultTag + AgoraRoomToolType.nameRoll.rawValue
-        v.setImage(AgoraUIImage(object: self, name: "ic_func_name_roll"))
+        v.setImage(UIImage.agedu_named("ic_func_name_roll"))
         v.addTarget(self, action: #selector(onClickToolButton(_:)),
                     for: .touchUpInside)
         return v
     }()
     /** 消息按钮*/
-    private lazy var messageButton: AgoraRoomToolZoomButton = {
-        let v = AgoraRoomToolZoomButton(frame: .zero)
+    private lazy var messageButton: AgoraZoomButton = {
+        let v = AgoraZoomButton(frame: .zero)
         v.tag = kDefaultTag + AgoraRoomToolType.message.rawValue
-        v.setImage(AgoraUIImage(object: self, name: "ic_func_message"))
+        v.setImage(UIImage.agedu_named("ic_func_message"))
         v.addTarget(self, action: #selector(onClickToolButton(_:)),
                     for: .touchUpInside)
         return v

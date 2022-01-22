@@ -58,16 +58,13 @@ class AgoraRenderMicView: UIView {
         micState = state
         switch state {
         case .on:
-            imageView.image = UIImage.ag_imageNamed("ic_mic_status_on",
-                                                    in: "AgoraEduUI")
+            imageView.image = UIImage.agedu_named("ic_mic_status_on")
             animaView.isHidden = false
         case .off:
-            imageView.image = UIImage.ag_imageNamed("ic_mic_status_off",
-                                                    in: "AgoraEduUI")
+            imageView.image = UIImage.agedu_named("ic_mic_status_off")
             animaView.isHidden = true
         case .forbidden:
-            imageView.image = UIImage.ag_imageNamed("ic_mic_status_forbidden",
-                                                    in: "AgoraEduUI")
+            imageView.image = UIImage.agedu_named("ic_mic_status_forbidden")
             animaView.isHidden = true
         }
     }
@@ -76,13 +73,11 @@ class AgoraRenderMicView: UIView {
 private extension AgoraRenderMicView {
     func createViews() {
         imageView = UIImageView()
-        imageView.image = UIImage.ag_imageNamed("ic_mic_status_off",
-                                                in: "AgoraEduUI")
+        imageView.image = UIImage.agedu_named("ic_mic_status_off")
         addSubview(imageView)
         
         animaView = UIImageView()
-        animaView.image = UIImage.ag_imageNamed("ic_mic_status_volume",
-                                                in: "AgoraEduUI")
+        animaView.image = UIImage.agedu_named("ic_mic_status_volume")
         animaView.isHidden  = true
         addSubview(animaView)
         

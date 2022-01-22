@@ -8,7 +8,6 @@
 #import "AgoraEduObjects.h"
 @import AgoraWidgets;
 @import AgoraExtApps;
-@import ChatWidget;
 
 #pragma mark - Media
 /**设置媒体选项*/
@@ -167,6 +166,12 @@
                                    @"autoFit": @NO};
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
+    
+    // Render Spread Widget
+    AgoraWidgetConfig *spread = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRenderSpreadWidget class]
+                                                                widgetId:@"streamwindow"];
+    widgets[spread.widgetId] = spread;
+    
     return widgets;
 }
 

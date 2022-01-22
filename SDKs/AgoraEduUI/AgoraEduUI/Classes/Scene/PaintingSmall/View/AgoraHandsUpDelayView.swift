@@ -122,7 +122,7 @@ class AgoraHandsUpDelayView: UIView {
     private func createViews() {
         backgroundColor = .white
         
-        let image = AgoraUIImage(object: self, name: "ic_func_hands_up")
+        let image = UIImage.agedu_named("ic_func_hands_up")
         imageView = UIImageView(image: image?.withRenderingMode(.alwaysTemplate))
         imageView.tintColor = UIColor(hex: 0x7B88A0)
         addSubview(imageView)

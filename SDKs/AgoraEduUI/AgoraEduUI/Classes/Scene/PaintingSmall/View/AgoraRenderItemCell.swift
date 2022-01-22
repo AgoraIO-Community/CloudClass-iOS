@@ -6,8 +6,8 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
+import FLAnimatedImage
 import Masonry
 
 class AgoraRenderItemInfoModel: NSObject {
@@ -94,19 +94,17 @@ public class AgoraRenderItemCell: UICollectionViewCell {
     private var rewardImageView: UIImageView!
     private var rewardLabel: UILabel!
     
-    private lazy var waveView: AgoraFLAnimatedImageView =  {
+    private lazy var waveView: FLAnimatedImageView =  {
         guard let bundle = Bundle.agora_bundle(object: self,
                                                resource: "AgoraEduUI"),
-              let url = bundle.url(forResource: "hands_up_wave",
+              let url = bundle.url(forResource: "img_hands_wave",
                                    withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             fatalError()
         }
             
-        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
-        animatedImage?.loopCount = 0
-        
-        let imageView = AgoraFLAnimatedImageView()
+        let animatedImage = FLAnimatedImage(animatedGIFData: data)
+        let imageView = FLAnimatedImageView()
         imageView.animatedImage = animatedImage
         imageView.isHidden = true
         
@@ -180,27 +178,22 @@ public class AgoraRenderItemCell: UICollectionViewCell {
         // camera
         if !itemInfo.isOnline {
             videoView.isHidden = true
-            cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_offline",
-                                                          in: "AgoraEduUI")
+            cameraStateView.image = UIImage.agedu_named("ic_member_device_offline")
         } else if itemInfo.cameraDeviceState == .invalid {
             videoView.isHidden = true
-            cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_bad",
-                                                          in: "AgoraEduUI")
+            cameraStateView.image = UIImage.agedu_named("ic_member_device_bad")
         } else if itemInfo.cameraDeviceState == .close {
             videoView.isHidden = true
-            cameraStateView.image = UIImage.ag_imageNamed("ic_member_device_off",
-                                                          in: "AgoraEduUI")
+            cameraStateView.image = UIImage.agedu_named("ic_member_device_off")
         } else {
             videoView.isHidden = false
         }
         // mic
         if itemInfo.micDeviceState == .available {
-            micView.image = UIImage.ag_imageNamed("ic_mic_status_on",
-                                                  in: "AgoraEduUI")
+            micView.image = UIImage.agedu_named("ic_mic_status_on")
             volumeView.isHidden = !itemInfo.renderEnable
         } else {
-            micView.image = UIImage.ag_imageNamed("ic_mic_status_off",
-                                                  in: "AgoraEduUI")
+            micView.image = UIImage.agedu_named("ic_mic_status_off")
             volumeView.isHidden = !itemInfo.renderEnable
         }
         // reward
@@ -258,21 +251,21 @@ private extension AgoraRenderItemCell {
         contentView.clipsToBounds = true
         contentView.layer.cornerRadius = UIDevice.current.isPad ? 10 : 4
         
-        cameraStateView = AgoraBaseUIImageView(image: AgoraKitImage("default_offline"))
+        cameraStateView = AgoraBaseUIImageView(image: UIImage.agedu_named("default_offline"))
         contentView.addSubview(cameraStateView)
         
         videoView = UIView(frame: .zero)
         videoView.backgroundColor = .clear
         contentView.addSubview(videoView)
         
-        micView = AgoraBaseUIImageView.init(image: AgoraUIImage(object: self, name: "ic_mic_status_on"))
+        micView = AgoraBaseUIImageView.init(image: UIImage.agedu_named("ic_mic_status_on"))
         contentView.addSubview(micView)
         
         volumeView = AgoraRenderVolumeView(frame: .zero)
         volumeView.volume = 0
         contentView.addSubview(volumeView)
         
-        rewardImageView = UIImageView(image: UIImage.ag_imageNamed("ic_member_reward", in: "AgoraEduUI"))
+        rewardImageView = UIImageView(image: UIImage.agedu_named("ic_member_reward"))
         contentView.addSubview(rewardImageView)
         
         rewardLabel = UILabel()
@@ -289,7 +282,7 @@ private extension AgoraRenderItemCell {
         nameLabel.layer.shadowRadius = 2
         contentView.addSubview(nameLabel)
         
-        handsupView = AgoraBaseUIImageView(image: AgoraKitImage("ic_member_handsup"))
+        handsupView = AgoraBaseUIImageView(image: UIImage.agedu_named("ic_member_handsup"))
         contentView.addSubview(handsupView)
         
         contentView.addSubview(waveView)

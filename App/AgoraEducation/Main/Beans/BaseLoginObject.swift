@@ -12,6 +12,7 @@ import AgoraClassroomSDK_iOS
 import AgoraClassroomSDK
 #endif
 import Foundation
+import UIKit
 
 enum Device: String {
     case iPhone_Big
@@ -54,7 +55,7 @@ class LoginConfig {
         (NSLocalizedString("About_version_time", comment: ""),  version_time)
     ]
     
-    static let version_time: String = "2021.12.29"
+    static let version_time: String = "2022.01.19"
     static let sdk_version: String = AgoraClassroomSDK.version()
     static let class_version: String = Bundle.main.version
     
@@ -119,7 +120,6 @@ class LoginConfig {
     
     static let login_group_title_width : CGFloat = 58
     static let login_group_width : CGFloat = (device == .iPhone_Small) ? 260 : 280
-    static let login_group_height : CGFloat = 40
     static var login_bottom_bottom : CGFloat {
         switch device {
         case .iPhone_Big: return 64

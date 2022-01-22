@@ -5,7 +5,6 @@
 //  Created by Cavan on 2021/10/16.
 //
 
-import AgoraUIEduBaseViews
 import AgoraEduContext
 
 let kFrontCameraStr = "front"
@@ -47,12 +46,10 @@ extension AgoraEduContextMediaStreamType {
 extension AgoraRenderMemberModel {
     static func model(with context: AgoraEduContextPool,
                       uuid: String,
-                      name: String,
-                      role: AgoraEduContextUserRole) -> AgoraRenderMemberModel {
+                      name: String) -> AgoraRenderMemberModel {
         var model = AgoraRenderMemberModel()
         model.uuid = uuid
         model.name = name
-        model.role = role == .teacher ? .teacher : .student
         let reward = context.user.getUserRewardCount(userUuid: uuid)
         model.rewardCount = reward
         let stream = context.stream.getStreamList(userUuid: uuid)?.first
@@ -62,7 +59,6 @@ extension AgoraRenderMemberModel {
     
     func updateStream(_ stream: AgoraEduContextStreamInfo?) {
         if let `stream` = stream {
-            self.streamID = stream.streamUuid
             // audio
             if stream.streamType.hasAudio,
                stream.audioSourceState == .open {
@@ -89,6 +85,7 @@ extension AgoraRenderMemberModel {
             } else {
                 self.videoState = .off
             }
+            self.streamID = stream.streamUuid
         } else {
             self.streamID = nil
             self.audioState = .off

@@ -5,8 +5,8 @@
 //  Created by Jonathan on 2021/11/15.
 //
 
-import AgoraUIEduBaseViews
 import AgoraUIBaseViews
+import FLAnimatedImage
 import AgoraEduContext
 import AudioToolbox
 import AgoraWidget
@@ -72,14 +72,12 @@ private extension AgoraOneToOneRenderUIController {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: teacher.userUuid,
-                                                        name: teacher.userName,
-                                                        role: .teacher)
+                                                        name: teacher.userName)
         }
         if let student = contextPool.user.getUserList(role: .student)?.first {
             studentModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: student.userUuid,
-                                                        name: student.userName,
-                                                        role: .student)
+                                                        name: student.userName)
         }
     }
     
@@ -88,14 +86,14 @@ private extension AgoraOneToOneRenderUIController {
             return
         }
         if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneMuteText".ag_localizedIn("AgoraEduUI"))
+            AgoraToast.toast(msg: "MicrophoneMuteText".agedu_localized())
         } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneUnMuteText".ag_localizedIn("AgoraEduUI"))
+            AgoraToast.toast(msg: "MicrophoneUnMuteText".agedu_localized())
         }
         if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraMuteText".ag_localizedIn("AgoraEduUI"))
+            AgoraToast.toast(msg: "CameraMuteText".agedu_localized())
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraUnMuteText".ag_localizedIn("AgoraEduUI"))
+            AgoraToast.toast(msg: "CameraUnMuteText".agedu_localized())
         }
     }
     
@@ -103,10 +101,9 @@ private extension AgoraOneToOneRenderUIController {
         guard stream?.videoSourceType != .screen else {
             return
         }
-        
-        if stream?.streamUuid == teacherModel?.streamID {
+        if stream?.owner.userUuid == teacherModel?.uuid {
             teacherModel?.updateStream(stream)
-        } else if stream?.streamUuid == studentModel?.streamID {
+        } else if stream?.owner.userUuid == studentModel?.uuid {
             studentModel?.updateStream(stream)
         }
         if stream?.streamUuid == currentStream?.streamUuid {
@@ -115,14 +112,12 @@ private extension AgoraOneToOneRenderUIController {
     }
     
     func showRewardAnimation() {
-        guard let b = Bundle.ag_compentsBundleWithClass(self.classForCoder),
-              let url = b.url(forResource: "reward", withExtension: "gif"),
+        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward", withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             return
         }
-        let animatedImage = AgoraFLAnimatedImage(animatedGIFData: data)
-        animatedImage?.loopCount = 1
-        let imageView = AgoraFLAnimatedImageView()
+        let animatedImage = FLAnimatedImage(animatedGIFData: data)
+        let imageView = FLAnimatedImageView()
         imageView.animatedImage = animatedImage
         imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
             imageView?.removeFromSuperview()
@@ -136,7 +131,7 @@ private extension AgoraOneToOneRenderUIController {
             }
         }
         // sounds
-        guard let rewardUrl = b.url(forResource: "reward", withExtension: "mp3") else {
+        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward", withExtension: "mp3") else {
             return
         }
         var soundId: SystemSoundID = 0;
@@ -176,13 +171,11 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
         if user.userRole == .teacher {
             teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: user.userUuid,
-                                                        name: user.userName,
-                                                        role: .student)
+                                                        name: user.userName)
         } else if user.userRole == .student {
             studentModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: user.userUuid,
-                                                        name: user.userName,
-                                                        role: .teacher)
+                                                        name: user.userName)
         }
     }
     

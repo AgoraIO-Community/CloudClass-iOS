@@ -6,8 +6,9 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-import Foundation
 import AgoraUIBaseViews
+import Foundation
+import UIKit
 
 protocol RoomInfoCellDelegate: AnyObject {
     /** 开始编辑cell上的文字*/
@@ -25,32 +26,34 @@ enum RoomInfoCellMode {
     case unable
 }
 
-class RoomInfoCell: AgoraBaseUITableViewCell {
+class RoomInfoCell: UITableViewCell {
     
     var indexPath = IndexPath.init(row: 0, section: 0)
     
     weak var delegate: RoomInfoCellDelegate?
     
-    var titleLabel: AgoraBaseUILabel!
+    var titleLabel: UILabel!
     
-    var textField: AgoraBaseUITextField!
+    var textField: UITextField!
     
-    var lineView: AgoraBaseUIView!
+    var lineView: UIView!
     
     let maxInputLength = 50
     
-    private var indicatorView: AgoraBaseUIImageView!
+    private var indicatorView: UIImageView!
     
-    lazy var warningLabel: AgoraBaseUILabel = {
-        let label = AgoraBaseUILabel()
+    lazy var warningLabel: UILabel = {
+        let label = UILabel()
         label.text = NSLocalizedString("Login_warn", comment: "")
         label.font = UIFont.systemFont(ofSize: 10)
         label.textColor = UIColor(hexString: "#F04C36")
+        label.textAlignment = .center
         label.isHidden = true
         contentView.addSubview(label)
-        
-        label.agora_x = 0
-        label.agora_y = textField.agora_height + lineView.agora_height
+        label.mas_makeConstraints { make in
+            make?.left.right().equalTo()(0)
+            make?.top.equalTo()(lineView.mas_bottom)
+        }
         return label
     }()
     
@@ -107,7 +110,7 @@ class RoomInfoCell: AgoraBaseUITableViewCell {
         }
     }
     
-    func onTextDidChange(_ sender: UITextField) {
+    @objc func onTextDidChange(_ sender: UITextField) {
         delegate?.infoCellInputTextDidChange(cell: self)
     }
     
@@ -141,43 +144,45 @@ extension RoomInfoCell: UITextFieldDelegate {
 // MARK: - Creations
 extension RoomInfoCell {
     func createViews() {
-        titleLabel = AgoraBaseUILabel()
+        titleLabel = UILabel()
         titleLabel.textColor = UIColor(hexString: "8A8A9A")
         titleLabel.font = UIFont.systemFont(ofSize: 14)
         contentView.addSubview(titleLabel)
         
-        textField = AgoraBaseUITextField()
+        textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.keyboardType = .emailAddress
         textField.delegate = self
         textField.addTarget(self, action: #selector(onTextDidChange(_:)), for: .editingChanged)
         contentView.addSubview(textField)
         
-        lineView = AgoraBaseUIView()
+        lineView = UIView()
         lineView.backgroundColor = UIColor(hexString: "#E3E3EC")
         contentView.addSubview(lineView)
         
-        indicatorView = AgoraBaseUIImageView(image: UIImage(named: "show_types"))
+        indicatorView = UIImageView(image: UIImage(named: "show_types"))
         contentView.addSubview(indicatorView)
     }
     
     func createConstrains() {
-        titleLabel.agora_x = 0
-        titleLabel.agora_y = 0
-        titleLabel.agora_height = 40
-        titleLabel.agora_width = 58
-        
-        textField.agora_x = titleLabel.agora_width
-        textField.agora_right = 0
-        textField.agora_y = 0
-        textField.agora_height = 40
-        
-        indicatorView.agora_right = 0
-        indicatorView.agora_equal_to(view: titleLabel, attribute: .centerY)
-        
-        lineView.agora_x = 0
-        lineView.agora_right = 0
-        lineView.agora_height = 1
-        lineView.agora_y = textField.agora_height
+        titleLabel.mas_makeConstraints { make in
+            make?.top.left().equalTo()(0)
+            make?.height.equalTo()(40)
+            make?.width.equalTo()(58)
+        }
+        textField.mas_makeConstraints { make in
+            make?.top.right().equalTo()(0)
+            make?.left.equalTo()(titleLabel.mas_right)
+            make?.height.equalTo()(40)
+        }
+        indicatorView.mas_makeConstraints { make in
+            make?.right.equalTo()(0)
+            make?.centerY.equalTo()(titleLabel)
+        }
+        lineView.mas_makeConstraints { make in
+            make?.top.equalTo()(textField.mas_bottom)
+            make?.left.right().equalTo()(0)
+            make?.height.equalTo()(1)
+        }
     }
 }

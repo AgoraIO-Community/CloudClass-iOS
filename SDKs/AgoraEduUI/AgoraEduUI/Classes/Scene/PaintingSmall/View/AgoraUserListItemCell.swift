@@ -107,8 +107,8 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 上下台*/
     private lazy var stageButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.ag_imageNamed("ic_nameroll_stage",
-                                             in: "AgoraEduUI")?.withRenderingMode(.alwaysTemplate) {
+        if let image = UIImage.agedu_named("ic_nameroll_stage")?
+            .withRenderingMode(.alwaysTemplate) {
             v.setImageForAllStates(image)
         }
         v.addTarget(self,
@@ -119,8 +119,8 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 授权*/
     private lazy var authButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.ag_imageNamed("ic_nameroll_auth",
-                                             in: "AgoraEduUI")?.withRenderingMode(.alwaysTemplate) {
+        if let image = UIImage.agedu_named("ic_nameroll_auth")?
+            .withRenderingMode(.alwaysTemplate) {
             v.setImageForAllStates(image)
         }
         v.addTarget(self,
@@ -131,8 +131,8 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 摄像头*/
     private lazy var cameraButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.ag_imageNamed("ic_nameroll_camera_off",
-                                             in: "AgoraEduUI")?.withRenderingMode(.alwaysTemplate) {
+        if let image = UIImage.agedu_named("ic_nameroll_camera_off")?
+            .withRenderingMode(.alwaysTemplate) {
             v.tintColor = UIColor(hex: 0xE2E2EE)
             v.setImageForAllStates(image)
         }
@@ -142,8 +142,8 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 麦克风*/
     private lazy var micButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.ag_imageNamed("ic_nameroll_mic_off",
-                                             in: "AgoraEduUI")?.withRenderingMode(.alwaysTemplate) {
+        if let image = UIImage.agedu_named("ic_nameroll_mic_off")?
+            .withRenderingMode(.alwaysTemplate) {
             v.tintColor = UIColor(hex: 0xE2E2EE)
             v.setImageForAllStates(image)
         }
@@ -153,8 +153,7 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 奖励*/
     private lazy var rewardButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.ag_imageNamed("ic_nameroll_reward",
-                                             in: "AgoraEduUI") {
+        if let image = UIImage.agedu_named("ic_nameroll_reward") {
             v.setImageForAllStates(image)
         }
         v.isUserInteractionEnabled = false
@@ -169,8 +168,7 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 踢人*/
     private lazy var kickButton: UIButton = {
         let v = UIButton(type: .custom)
-        let img = UIImage.ag_imageNamed("ic_nameroll_kick",
-                                        in: "AgoraEduUI")
+        let img = UIImage.agedu_named("ic_nameroll_kick")
         v.setImage(img, for: .normal)
         v.addTarget(self,
                     action: #selector(onClickkick(_:)),
@@ -245,8 +243,7 @@ private extension AgoraUserListItemCell {
                 if model.stageState.isOn,
                    model.cameraState.isOn,
                    model.cameraState.hasStream {
-                    let image = UIImage.ag_imageNamed("ic_nameroll_camera_on",
-                                                      in: "AgoraEduUI")
+                    let image = UIImage.agedu_named("ic_nameroll_camera_on")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         cameraButton.setImageForAllStates(i)
                     }
@@ -254,23 +251,20 @@ private extension AgoraUserListItemCell {
                 } else if model.stageState.isOn,
                           model.cameraState.isOn,
                           model.cameraState.hasStream == false {
-                    let image = UIImage.ag_imageNamed("ic_nameroll_camera_off",
-                                                      in: "AgoraEduUI")
+                    let image = UIImage.agedu_named("ic_nameroll_camera_off")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         cameraButton.setImageForAllStates(i)
                     }
                     cameraButton.tintColor = UIColor(hex: 0xF04C36)
                 } else if model.stageState.isOn,
                           model.cameraState.isOn == false {
-                    let image = UIImage.ag_imageNamed("ic_nameroll_camera_off",
-                                                      in: "AgoraEduUI")
+                    let image = UIImage.agedu_named("ic_nameroll_camera_off")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         cameraButton.setImageForAllStates(i)
                     }
                     cameraButton.tintColor = UIColor(hex: 0xE2E2EE)
                 } else if model.stageState.isOn == false {
-                    let image = UIImage.ag_imageNamed("ic_nameroll_camera_on",
-                                                      in: "AgoraEduUI")
+                    let image = UIImage.agedu_named("ic_nameroll_camera_on")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         cameraButton.setImageForAllStates(i)
                     }
@@ -281,8 +275,7 @@ private extension AgoraUserListItemCell {
                 if model.stageState.isOn,
                    model.micState.isOn,
                    model.micState.hasStream {
-                    let image = UIImage.ag_imageNamed("ic_nameroll_mic_on",
-                                                      in: "AgoraEduUI")
+                    let image = UIImage.agedu_named("ic_nameroll_mic_on")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         micButton.setImageForAllStates(i)
                     }
@@ -290,23 +283,20 @@ private extension AgoraUserListItemCell {
                 } else if model.stageState.isOn,
                           model.micState.isOn,
                           model.micState.hasStream == false {
-                    let image = UIImage.ag_imageNamed("ic_nameroll_mic_off",
-                                                      in: "AgoraEduUI")
+                    let image = UIImage.agedu_named("ic_nameroll_mic_off")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         micButton.setImageForAllStates(i)
                     }
                     micButton.tintColor = UIColor(hex: 0xF04C36)
                 } else if model.stageState.isOn,
                           model.micState.isOn == false {
-                    let image = UIImage.ag_imageNamed("ic_nameroll_mic_off",
-                                                      in: "AgoraEduUI")
+                    let image = UIImage.agedu_named("ic_nameroll_mic_off")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         micButton.setImageForAllStates(i)
                     }
                     micButton.tintColor = UIColor(hex: 0xE2E2EE)
                 } else if model.stageState.isOn == false {
-                    let image = UIImage.ag_imageNamed("ic_nameroll_mic_on",
-                                                      in: "AgoraEduUI")
+                    let image = UIImage.agedu_named("ic_nameroll_mic_on")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         micButton.setImageForAllStates(i)
                     }

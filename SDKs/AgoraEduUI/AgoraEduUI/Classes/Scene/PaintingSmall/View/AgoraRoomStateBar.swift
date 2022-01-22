@@ -12,7 +12,7 @@ class AgoraRoomStateBar: AgoraBaseUIView {
     
     public enum NetworkQuality: Int {
         // 网络状态：未知、好、一般、差
-        case unknown, good, medium, bad
+        case unknown, good, bad, down
     }
     
     public var themeColor: UIColor? {
@@ -53,17 +53,13 @@ class AgoraRoomStateBar: AgoraBaseUIView {
     func setNetworkState(_ state: NetworkQuality) {
         switch state {
         case .unknown:
-            netStateView.image = AgoraUIImage(object: self,
-                                              name: "ic_network_unknow")
+            netStateView.image = UIImage.agedu_named("ic_network_unknow")
         case .good:
-            netStateView.image = AgoraUIImage(object: self,
-                                              name: "ic_network_good")
-        case .medium:
-            netStateView.image = AgoraUIImage(object: self,
-                                              name: "ic_network_medium")
+            netStateView.image = UIImage.agedu_named("ic_network_good")
         case .bad:
-            netStateView.image = AgoraUIImage(object: self,
-                                              name: "ic_network_bad")
+            netStateView.image = UIImage.agedu_named("ic_network_bad")
+        case .down:
+            netStateView.image = UIImage.agedu_named("ic_network_down")
         default: break
         }
     }
@@ -71,8 +67,7 @@ class AgoraRoomStateBar: AgoraBaseUIView {
 // MARK: - Creations
 private extension AgoraRoomStateBar {
     func createViews() {
-        netStateView = AgoraBaseUIImageView(image: AgoraUIImage(object: self,
-                                                                name: "ic_network_unknow"))
+        netStateView = AgoraBaseUIImageView(image: UIImage.agedu_named("ic_network_good"))
         addSubview(netStateView)
         
         timeLabel = AgoraBaseUILabel()

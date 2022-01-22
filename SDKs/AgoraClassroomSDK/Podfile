@@ -3,17 +3,20 @@
 
 def libVersion
   pod 'Protobuf', '3.17.0'
-  pod "CocoaLumberjack", "3.6.1"
-  pod "AliyunOSSiOS", "2.10.8"
-  pod "Armin", "1.0.9"
-  pod "Alamofire", "4.7.3"
-  pod "SSZipArchive", "2.4.2"
+  pod 'CocoaLumberjack', '3.6.1'
+  pod 'AliyunOSSiOS', '2.10.8'
+  pod 'Armin', '1.0.9'
+  pod 'Alamofire', '4.7.3'
+  pod 'SSZipArchive', '2.4.2'
+  pod 'FLAnimatedImage', '1.0.16'
 
-  pod "Whiteboard", "2.15.16"
-  pod "AgoraRtm_iOS", "1.4.8"
+  pod 'Whiteboard', '2.15.16'
+  pod 'AgoraRtm_iOS', '1.4.8'
 
-  pod "SwifterSwift", "5.2.0" 
-  pod "Masonry"
+  pod 'SwifterSwift', '5.2.0' 
+  pod 'Masonry'
+
+  pod 'SDWebImage', '5.12.1'
 end
 
 def preRtc
@@ -33,13 +36,11 @@ def openSourceLibs
   # open source libs
   pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext_Local.podspec' 
   pod 'AgoraEduUI', :path => '../AgoraEduUI/AgoraEduUI_Local.podspec'
-  pod 'AgoraUIEduBaseViews', :path => '../Modules/AgoraUIEduBaseViews/AgoraUIEduBaseViews_Local.podspec'
 end
 
 def widgetsExtApps
-  pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/Widgets/AgoraWidgets/AgoraWidgets_Local.podspec'
-  pod 'ChatWidget', :path => '../../../open-apaas-extapp-ios/Widgets/ChatWidget/ChatWidget_Local.podspec'
-  pod 'AgoraExtApps', :path => '../../../open-apaas-extapp-ios/ExtApps/AgoraExtApps_Local.podspec'
+  pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
+  pod 'AgoraExtApps', :path => '../../../open-apaas-extapp-ios/AgoraExtApps/AgoraExtApps_Local.podspec'
 end
 
 def sourcePod
