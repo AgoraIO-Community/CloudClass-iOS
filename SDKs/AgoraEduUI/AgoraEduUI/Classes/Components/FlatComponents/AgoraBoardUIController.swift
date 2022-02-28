@@ -9,6 +9,7 @@ import AgoraEduContext
 import AgoraWidget
 
 class AgoraBoardUIController: UIViewController {
+    private let netlessKey = "netlessBoard"
     var boardWidget: AgoraBaseWidget?
     var contextPool: AgoraEduContextPool!
     
@@ -25,7 +26,7 @@ class AgoraBoardUIController: UIViewController {
                                  type: .error)
             }
         }
-    }
+    } 
     
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
@@ -34,6 +35,7 @@ class AgoraBoardUIController: UIViewController {
         
         contextPool.room.registerRoomEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
+        contextPool.widget.add(self)
     }
     
     required init?(coder: NSCoder) {
@@ -44,7 +46,7 @@ class AgoraBoardUIController: UIViewController {
 // MARK: - private
 private extension AgoraBoardUIController {
     func initBoardWidget() {
-        if let boardConfig = contextPool.widget.getWidgetConfig("netlessBoard") {
+        if let boardConfig = contextPool.widget.getWidgetConfig(netlessKey) {
             let boardWidget = contextPool.widget.create(boardConfig)
             contextPool.widget.add(self,
                                    widgetId: boardConfig.widgetId)
@@ -58,9 +60,16 @@ private extension AgoraBoardUIController {
         }
     }
     
+    func deinitBoardWidget() {
+        self.boardWidget?.view.removeFromSuperview()
+        self.boardWidget = nil
+        contextPool.widget.remove(self,
+                                  widgetId: netlessKey)
+    }
+    
     func joinBoard() {
         if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
-            contextPool.widget.sendMessage(toWidget: "netlessBoard",
+            contextPool.widget.sendMessage(toWidget: netlessKey,
                                            message: message)
         }
     }
@@ -93,7 +102,7 @@ private extension AgoraBoardUIController {
         if let error = contextError,
            let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(stateCode: 714,
                                                                                                               errorCode: error.code)).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: "netlessBoard",
+            contextPool.widget.sendMessage(toWidget: netlessKey,
                                            message: message)
         }
     }
@@ -111,7 +120,7 @@ private extension AgoraBoardUIController {
 extension AgoraBoardUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == "netlessBoard",
+        guard widgetId == netlessKey,
               let signal = message.toSignal() else {
             return
         }
@@ -129,6 +138,25 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
     }
 }
 
+extension AgoraBoardUIController: AgoraWidgetActivityObserver {
+    func onWidgetActive(_ widgetId: String) {
+        guard widgetId == netlessKey else {
+            return
+        }
+        
+        initBoardWidget()
+        joinBoard()
+    }
+    
+    func onWidgetInactive(_ widgetId: String) {
+        guard widgetId == netlessKey else {
+            return
+        }
+        
+        deinitBoardWidget()
+    }
+}
+
 extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         initBoardWidget()
@@ -142,7 +170,7 @@ extension AgoraBoardUIController: AgoraEduMediaHandler {
         let data = AgoraBoardWidgetAudioMixingChangeData(stateCode: stateCode,
                                                          errorCode: errorCode)
         if let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(data).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: "netlessBoard",
+            contextPool.widget.sendMessage(toWidget: netlessKey,
                                            message: message)
         }
     }
