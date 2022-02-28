@@ -169,7 +169,7 @@
     
     // Render Spread Widget
     AgoraWidgetConfig *spread = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRenderSpreadWidget class]
-                                                                widgetId:@"streamwindow"];
+                                                                widgetId:@"streamWindow"];
     widgets[spread.widgetId] = spread;
     
     return widgets;

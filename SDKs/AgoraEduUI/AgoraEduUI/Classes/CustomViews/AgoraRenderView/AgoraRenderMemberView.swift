@@ -105,15 +105,22 @@ protocol AgoraRenderMemberViewDelegate: NSObjectProtocol {
 
 fileprivate class AgoraRenderMaskView: UIView {
     
+    public var image: UIImage? {
+        didSet {
+            imageView.image = image
+        }
+    }
+    
+    private var imageView: UIImageView!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = UIColor(hex: 0xF9F9FC)
-        let imageView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
+        imageView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
         addSubview(imageView)
         imageView.mas_makeConstraints { make in
             make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.38)
-            make?.centerX.equalTo()(0)
-            make?.centerY.equalTo()
+            make?.center.equalTo()(0)
         }
     }
     
@@ -125,10 +132,10 @@ fileprivate class AgoraRenderMaskView: UIView {
 class AgoraRenderMemberView: UIView {
     
     private weak var delegate: AgoraRenderMemberViewDelegate?
-    
-    private var stateImageView: UIImageView!
     /** 画布*/
-    private var videoView: UIView!
+    private var videoView: AgoraRenderMaskView!
+    /** 状态遮罩*/
+    private var videoMaskView: AgoraRenderMaskView!
     /** 名字*/
     private var nameLabel: UILabel!
     /** 麦克风视图*/
@@ -157,7 +164,7 @@ class AgoraRenderMemberView: UIView {
         }
         return v
     }()
-    
+    /** 停止渲染遮罩*/
     private var ableMaskView: AgoraRenderMaskView!
     
     private var renderID: String? {
@@ -168,13 +175,11 @@ class AgoraRenderMemberView: UIView {
             if let rid = oldValue {
                 self.delegate?.memberViewCancelRender(memberView: self,
                                                       renderID: rid)
-                self.videoView.isHidden = true
             }
             if let rid = renderID {
                 self.delegate?.memberViewRender(memberView: self,
                                                 in: self.videoView,
                                                 renderID: rid)
-                self.videoView.isHidden = false
             }
         }
     }
@@ -226,13 +231,11 @@ class AgoraRenderMemberView: UIView {
 // MARK: - Private
 private extension AgoraRenderMemberView {
     func resetViewState() {
-        stateImageView.image = UIImage.agedu_named("ic_member_no_user")
+        self.updateRenderState()
         micView.setState(.off)
         self.nameLabel.text = ""
-        self.videoView.isHidden = true
         self.rewardLabel.isHidden = true
         self.rewardImageView.isHidden = true
-        self.ableMaskView.isHidden = true
     }
     
     func resignOldModel(model: AgoraRenderMemberModel) {
@@ -245,14 +248,6 @@ private extension AgoraRenderMemberView {
         model.onUpdateHandsUpState = nil
         model.onUpdateRewardCount = nil
         model.onUpdateRenderEnable = nil
-        
-        stateImageView.image = UIImage.agedu_named("ic_member_no_user")
-        micView.setState(.off)
-        self.nameLabel.text = ""
-        self.videoView.isHidden = true
-        self.rewardLabel.isHidden = true
-        self.rewardImageView.isHidden = true
-        self.ableMaskView.isHidden = true
     }
     
     func registerNewModel(model: AgoraRenderMemberModel) {
@@ -315,14 +310,6 @@ private extension AgoraRenderMemberView {
     }
     
     func updateVideoState(state: AgoraRenderMemberModel.AgoraRenderMediaState) {
-        switch state {
-        case .on:
-            stateImageView.image = UIImage.agedu_named("ic_member_device_off")
-        case .off, .broken:
-            stateImageView.image = UIImage.agedu_named("ic_member_device_off")
-        case .forbidden:
-            stateImageView.image = UIImage.agedu_named("ic_member_device_forbidden")
-        }
         self.updateRenderState()
     }
     
@@ -341,7 +328,6 @@ private extension AgoraRenderMemberView {
     }
     
     func updateRenderEnable(enable: Bool) {
-        self.ableMaskView.isHidden = enable
         self.updateRenderState()
     }
     
@@ -350,12 +336,37 @@ private extension AgoraRenderMemberView {
     }
     
     func updateRenderState() {
-        if self.memberModel?.rendEnable == true,
-           self.memberModel?.videoState == .on,
-           let streamID = self.memberModel?.streamID {
-            self.renderID = streamID
+        guard let model = self.memberModel else {
+            ableMaskView.image = UIImage.agedu_named("ic_member_no_user")
+            ableMaskView.isHidden = false
+            self.renderID = nil
+            return
+        }
+        if model.rendEnable == false {
+            self.renderID = nil
+            self.ableMaskView.image = UIImage.agedu_named("ic_member_device_offline")
+            self.ableMaskView.isHidden = false
+            self.videoMaskView.isHidden = true
+        } else if model.rendEnable == true,
+                  model.videoState == .on,
+                  let streamId = model.streamID {
+            self.renderID = streamId
+            self.ableMaskView.isHidden = true
+            self.videoMaskView.isHidden = true
         } else {
             self.renderID = nil
+            self.ableMaskView.isHidden = true
+            switch model.videoState {
+            case .on:
+                self.videoMaskView.isHidden = true
+                self.videoMaskView.image = UIImage.agedu_named("ic_member_device_off")
+            case .off, .broken:
+                self.videoMaskView.isHidden = false
+                self.videoMaskView.image = UIImage.agedu_named("ic_member_device_off")
+            case .forbidden:
+                self.videoMaskView.isHidden = false
+                self.videoMaskView.image = UIImage.agedu_named("ic_member_device_forbidden")
+            }
         }
     }
 }
@@ -365,14 +376,14 @@ private extension AgoraRenderMemberView {
         backgroundColor = UIColor(hex: 0xF9F9FC)
         layer.borderWidth = 1
         layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
-        
-        stateImageView = UIImageView(image: UIImage.agedu_named("ic_member_no_user"))
-        addSubview(stateImageView)
-        
-        videoView = UIView(frame: .zero)
-        videoView.backgroundColor = .clear
-        videoView.isHidden = true
+                
+        videoView = AgoraRenderMaskView(frame: .zero)
+        videoView.image = UIImage.agedu_named("ic_member_device_off")
         addSubview(videoView)
+        
+        videoMaskView = AgoraRenderMaskView(frame: .zero)
+        videoMaskView.image = UIImage.agedu_named("ic_member_no_user")
+        addSubview(videoMaskView)
         
         nameLabel = UILabel()
         nameLabel.textColor = UIColor.white
@@ -408,10 +419,8 @@ private extension AgoraRenderMemberView {
     }
     
     func createConstrains() {
-        stateImageView.mas_makeConstraints { make in
-            make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.38)
-            make?.centerX.equalTo()(0)
-            make?.centerY.equalTo()
+        videoMaskView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
         }
         videoView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)

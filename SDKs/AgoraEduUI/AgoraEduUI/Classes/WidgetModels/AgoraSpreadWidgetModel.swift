@@ -7,6 +7,7 @@
 
 import Foundation
 
+let kSpreadWidgetId = "streamWindow"
 struct AgoraSpreadWidgetUser: Convertable {
     var userId: String
     var streamId: String

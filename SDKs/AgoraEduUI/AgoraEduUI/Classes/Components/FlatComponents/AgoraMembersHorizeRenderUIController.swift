@@ -17,9 +17,7 @@ import UIKit
 private let kItemGap: CGFloat = AgoraFit.scale(4)
 private let kTeacherIndex: IndexPath = IndexPath(row: -1, section: 0)
 class AgoraMembersHorizeRenderUIController: UIViewController {
-    
-    weak var delegate: AgoraPaintingRenderUIControllerDelegate?
-    
+        
     public var themeColor: UIColor?
     
     var contentView: UIView!
@@ -419,11 +417,7 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
-        let u = dataSource[indexPath.row]
-        if let cell = collectionView.cellForItem(at: indexPath),
-           let uuid = u.uuid {
-            delegate?.onClickMemberAt(view: cell, UUID: uuid)
-        }
+        
     }
         
     public func collectionView(_ collectionView: UICollectionView,

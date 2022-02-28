@@ -251,6 +251,9 @@ private extension AgoraPaintingLectureUIManager {
             make?.right.equalTo()(boardController.view)?.offset()(-12)
             make?.bottom.equalTo()(boardController.view)?.offset()(-15)
         }
+        spreadController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
     }
     
     func createChatController() {

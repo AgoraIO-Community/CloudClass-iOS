@@ -17,6 +17,8 @@ def libVersion
   pod 'Masonry'
 
   pod 'SDWebImage', '5.12.1'
+
+  pod 'HyphenateChat', '3.8.6'
 end
 
 def preRtc
@@ -54,7 +56,7 @@ def sourcePod
   pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'  
 
   # rtc
-  preRtc
+  reRtc
 end
 
 def binaryPod

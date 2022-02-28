@@ -239,8 +239,7 @@ private extension AgoraPaintingSmallUIManager {
             make?.bottom.equalTo()(contentView)?.offset()(-15)
         }
         spreadController.view.mas_makeConstraints { make in
-            make?.left.right().bottom().equalTo()(contentView)
-            make?.top.equalTo()(stateController.view.mas_bottom)
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
     }
     

@@ -59,6 +59,7 @@ extension AgoraRenderMemberModel {
     
     func updateStream(_ stream: AgoraEduContextStreamInfo?) {
         if let `stream` = stream {
+            self.streamID = stream.streamUuid
             // audio
             if stream.streamType.hasAudio,
                stream.audioSourceState == .open {
@@ -85,7 +86,6 @@ extension AgoraRenderMemberModel {
             } else {
                 self.videoState = .off
             }
-            self.streamID = stream.streamUuid
         } else {
             self.streamID = nil
             self.audioState = .off
