@@ -172,6 +172,11 @@
                                                                 widgetId:@"streamWindow"];
     widgets[spread.widgetId] = spread;
     
+    // Cloud Widget
+    AgoraWidgetConfig *cloud = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
+                                                                widgetId:@"AgoraCloudWidget"];
+    widgets[cloud.widgetId] = cloud;
+    
     return widgets;
 }
 

@@ -35,6 +35,7 @@ enum AgoraUserListFunction: Int {
 extension AgoraUserListModel {
     func updateWithStream(_ stream: AgoraEduContextStreamInfo?) {
         if let `stream` = stream {
+            self.streamId = stream.streamUuid
             // audio
             self.micState.hasStream = stream.streamType.hasAudio
             self.micState.isOn = (stream.audioSourceState == .open)
@@ -48,8 +49,6 @@ extension AgoraUserListModel {
             self.cameraState.hasStream = false
             self.cameraState.isOn = false
         }
-        self.cameraState.isEnable = false
-        self.micState.isEnable = false
     }
 }
 
@@ -73,6 +72,24 @@ class AgoraUserListUIController: UIViewController {
     private var studentTitleLabel: UILabel!
     /** 列表项*/
     private var itemTitlesView: UIStackView!
+    /** 轮播 仅教师端*/
+    private lazy var carouselTitle: UILabel = {
+        let carouselTitle = UILabel(frame: .zero)
+        carouselTitle.text = "UserListCarouselTitle".agedu_localized()
+        carouselTitle.font = UIFont.systemFont(ofSize: 12)
+        carouselTitle.textColor = UIColor(hex: 0x7B88A0)
+        return carouselTitle
+    }()
+    private lazy var carouselSwitch: UISwitch = {
+        let carouselSwitch = UISwitch()
+        carouselSwitch.onTintColor = UIColor(hex: 0x357BF6)
+        carouselSwitch.transform = CGAffineTransform(scaleX: 0.75,
+                                                     y: 0.75)
+        carouselSwitch.addTarget(self,
+                                 action: #selector(onClickCarouselSwitch(_:)),
+                                 for: .touchUpInside)
+        return carouselSwitch
+    }()
     /** 表视图*/
     private var tableView: UITableView!
     /** 数据源*/
@@ -100,7 +117,7 @@ class AgoraUserListUIController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
         contextPool.widget.add(self,
-                               widgetId: "netlessBoard")
+                               widgetId: kBoardWidgetId)
     }
     
     required init?(coder: NSCoder) {
@@ -163,6 +180,10 @@ private extension AgoraUserListUIController {
             // enable
             model.stageState.isEnable = isTeacher
             model.authState.isEnable = isTeacher
+            
+            // TODO: 除了isTeacher 之外 判断设备状态
+            model.micState.isEnable = isTeacher
+            model.cameraState.isEnable = isTeacher
             // stream
             let s = contextPool.stream.getStreamList(userUuid: student.userUuid)?.first
             model.updateWithStream(s)
@@ -189,6 +210,7 @@ private extension AgoraUserListUIController {
         // enable
         model.stageState.isEnable = isTeacher
         model.authState.isEnable = isTeacher
+        model.kickEnable = isTeacher
         // stream
         let s = contextPool.stream.getStreamList(userUuid: model.uuid)?.first
         model.updateWithStream(s)
@@ -225,8 +247,8 @@ private extension AgoraUserListUIController {
 extension AgoraUserListUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == "netlessBoard",
-              let signal = message.toSignal() else {
+        guard widgetId == kBoardWidgetId,
+              let signal = message.toBoardSignal() else {
             return
         }
         switch signal {
@@ -326,76 +348,74 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
         switch fn {
         case .stage:
             if isOn {
-                // TODO: v2.1.0
-//                contextPool.user.addCoHost(userUuid: user.uuid) { [weak self] in
-//                    user.stageState.isOn = true
-//                    self?.reloadTableView()
-//                } failure: { contextError in
-//
-//                }
+                contextPool.user.addCoHost(userUuid: user.uuid) { [weak self] in
+                    user.stageState.isOn = true
+                    self?.reloadTableView()
+                } failure: { contextError in
+
+                }
             } else {
-                // TODO: v2.1.0
-//                contextPool.user.removeCoHost(userUuid: user.uuid) {[weak self] in
-//                    user.stageState.isOn = false
-//                    self?.reloadTableView()
-//                } failure: { contextError in
-//
-//                }
+                contextPool.user.removeCoHost(userUuid: user.uuid) {[weak self] in
+                    user.stageState.isOn = false
+                    self?.reloadTableView()
+                } failure: { contextError in
+
+                }
             }
         case .auth:
-            // TODO: 白板权限
-//            contextPool.user.updateBoardGranted(userUuids: [user.uuid],
-//                                                granted: isOn)
-            user.authState.isOn = isOn
-//            reloadTableView()
+            var list: Array<String> = self.boardUsers
+            if isOn,
+               !list.contains(user.uuid) {
+                // 授予白板权限
+                list.append(user.uuid)
+            } else if !isOn,
+                      list.contains(user.uuid){
+                // 收回白板权限
+                list.removeAll(user.uuid)
+            }
+            if let message = AgoraBoardWidgetSignal.BoardGrantDataChanged(list).toMessageString() {
+                contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
+                                               message: message)
+            }
         case .camera:
-//            if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
-//                // TODO:
-////                self.contextPool.device.setCameraDeviceEnable(enable: isOn)
-//                user.camera.isOn = isOn
-//                reloadTableView()
-//            } else {
-                // TODO:
-//                contextPool.stream.muteStream(streamUuids: [user.uuid],
-//                                              streamType: .video,
-//                                              success: { [weak self] () -> (Void) in
-//                                                user.camera.isOn = isOn
-//                                                self?.reloadTableView()
-//                }, failure: nil)
+            guard let streamId = user.streamId else {
+                return
+            }
+            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                            videoPrivilege: !isOn) { [weak self] in
+                user.cameraState.isOn = !isOn
+                self?.reloadTableView()
+            } failure: { error in
                 
-//                contextPool.stream.publishStream(streamUuids: <#T##[String]#>, streamType: <#T##AgoraEduContextMediaStreamType#>, success: <#T##AgoraEduContextSuccess?##AgoraEduContextSuccess?##() -> (Void)#>, failure: <#T##AgoraEduContextFail?##AgoraEduContextFail?##(AgoraEduContextError) -> (Void)#>)
-                
-               
-//            }
-        break
+            }
+            break
         case .mic:
-//            if contextPool.user.getLocalUserInfo().userUuid == user.uuid {
-                // TODO:
-//                self.contextPool.device.setMicDeviceEnable(enable: isOn)
-//                user.mic.isOn = isOn
-//                reloadTableView()
-//            } else {
-                // TODO:
+            guard let streamId = user.streamId else {
+                return
+            }
+            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                            audioPrivilege: !isOn) { [weak self] in
+                user.micState.isOn = !isOn
+                self?.reloadTableView()
+            } failure: { error in
                 
-//                contextPool.stream.muteRemoteAudio(streamUuids: [user.uuid], mute: !isOn, success: { [weak self] in
-//                    user.mic.isOn = isOn
-//                    self?.reloadTableView()
-//                }, failure: nil)
-//            }
-        break
-        case .reward:
-            // 奖励： 花名册只展示，不操作
+            }
             break
         case .kick:
-            // TODO: v2.1.0
-//            AgoraKickOutAlertController.present(by: self, onComplete: { forever in
-//                self.contextPool.user.kickOutUser(userUuid: user.uuid,
-//                                                  forever: forever,
-//                                                  success: nil,
-//                                                  failure: nil)
-//            }, onCancel: nil)
+            AgoraKickOutAlertController.present(by: self,
+                                                onComplete: {[weak self] forever in
+                guard let `self` = self else {
+                    return
+                }
+                self.contextPool.user.kickOutUser(userUuid: user.uuid,
+                                                  forever: forever,
+                                                  success: nil,
+                                                  failure: nil)
+            },
+                                                onCancel: nil)
             break
-        default:  break
+        default:
+            break
         }
     }
 }
@@ -481,6 +501,11 @@ extension AgoraUserListUIController {
         itemTitlesView.backgroundColor = UIColor(hex: 0xF9F9FC)
         contentView.addSubview(itemTitlesView)
         
+        if contextPool.user.getLocalUserInfo().userRole == .teacher {
+            contentView.addSubview(carouselTitle)
+            contentView.addSubview(carouselSwitch)
+        }
+
         for fn in supportFuncs {
             let label = UILabel(frame: .zero)
             label.text = fn.title()
@@ -555,6 +580,38 @@ extension AgoraUserListUIController {
         tableView.mas_makeConstraints { make in
             make?.left.right().bottom().equalTo()(tableView.superview)
             make?.top.equalTo()(studentTitleLabel.mas_bottom)
+        }
+        if contextPool.user.getLocalUserInfo().userRole == .teacher  {
+            carouselSwitch.mas_makeConstraints { make in
+                make?.centerY.equalTo()(titleLabel.mas_centerY)
+                make?.right.equalTo()(-16)
+                make?.height.equalTo()(40)
+            }
+            carouselTitle.mas_makeConstraints { make in
+                make?.centerY.equalTo()(titleLabel.mas_centerY)
+                make?.right.equalTo()(carouselSwitch.mas_left)?.offset()(-12)
+                make?.height.equalTo()(40)
+            }
+        }
+    }
+    
+    @objc func onClickCarouselSwitch(_ sender: UISwitch) {
+        if sender.isOn {
+            contextPool.user.startCoHostCarousel(interval: 20,
+                                                 count: 6,
+                                                 type: .sequence,
+                                                 condition: .cameraOpened) {
+                
+            } failure: { error in
+                sender.isOn = !sender.isOn
+            }
+        } else {
+            contextPool.user.stopCoHostCarousel {
+                
+            } failure: { error in
+                sender.isOn = !sender.isOn
+            }
+
         }
     }
 }

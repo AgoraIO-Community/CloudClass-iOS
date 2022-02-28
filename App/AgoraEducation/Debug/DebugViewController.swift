@@ -45,7 +45,7 @@ import AgoraEduUI
     private var bottomLabel: AgoraBaseUILabel!
     
     private var dataSource: [RoomInfoItemType] = [
-        .roomName, .nickName, .roomStyle, .roleType, .region, .im, .duration, .encryptKey, .encryptMode
+        .roomName, .nickName, .roomStyle, .roleType, .region, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
     ]
     
     private var inputParams = RoomInfoModel()
@@ -81,8 +81,8 @@ extension DebugViewController {
         if !TermsAndPolicyViewController.getPolicyPopped() {
             if let termsVC = TermsAndPolicyViewController.loadFromStoryboard("privacy", "terms") {
                 present(termsVC,
-                             animated: true,
-                             completion: nil)
+                        animated: true,
+                        completion: nil)
             }
         }
     }
@@ -109,7 +109,7 @@ private extension DebugViewController {
             enterButton.isUserInteractionEnabled = false
         }
     }
-
+    
     /** 获取选项列表*/
     func optionStrings(form options: [(Any, String)]) -> [String] {
         return options.map {$1}
@@ -152,29 +152,31 @@ private extension DebugViewController {
 // MARK: - Actions
 private extension DebugViewController {
     @objc func onTouchClose() {
-       dismiss(animated: true,
-               completion: nil)
+        dismiss(animated: true,
+                completion: nil)
     }
     
     @objc func onTouchJoinRoom() {
-        guard let room = inputParams.roomName,
-              let user = inputParams.nickName,
+        guard let roomName = inputParams.roomName,
+              let userName = inputParams.nickName,
               let roomStyle = inputParams.roomStyle else {
-            return
-        }
+                  return
+              }
         
         let region = inputParams.region
         let encryptionMode = inputParams.encryptMode
         let im = inputParams.im
         
         // roomUuid = roomName + classType
-        let roomUuid = "\(room)\(roomStyle.rawValue)"
+        let roomUuid = "\(roomName)\(roomStyle.rawValue)"
         
-        // userUuid = userName + roleType
-        let userUuid = "\(user)\(AgoraEduUserRole.student.rawValue)"
+        // userUuid = userName.md5()
+        let userUuid = userName.md5()
         
-//        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
-        let duration = self.inputParams.duration
+        // startTime
+        let startTime = inputParams.startTime
+        
+        let duration = inputParams.duration
         
         var encryptionConfig: AgoraEduMediaEncryptionConfig?
         
@@ -194,7 +196,7 @@ private extension DebugViewController {
                                                 audioState: .on)
         
         AgoraLoading.loading()
-
+        
         let failure: (Error) -> () = { (error) in
             AgoraLoading.hide()
             AgoraToast.toast(msg: error.localizedDescription,
@@ -208,49 +210,50 @@ private extension DebugViewController {
         requestToken(region: region.rawValue,
                      userUuid: userUuid,
                      success: { [weak self] (response) in
-                        guard let `self` = self else {
-                            return
-                        }
-                        
-                        let appId = response.appId
-                        let rtmToken = response.rtmToken
-                        let userUuid = response.userId
-                        
-                        let launchConfig = AgoraEduLaunchConfig(userName: user,
-                                                                userUuid: userUuid,
-                                                                userRole: .student,
-                                                                roomName: room,
-                                                                roomUuid: roomUuid,
-                                                                roomType: roomStyle,
-                                                                appId: appId,
-                                                                token: rtmToken,
-                                                                startTime: nil,
-                                                                duration: NSNumber(value: duration),
-                                                                region: region.eduType,
-                                                                mediaOptions: mediaOptions,
-                                                                userProperties: nil)
-                        
-                        // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
-                        var extApps = Dictionary<String, AgoraExtAppConfiguration>()
-                        launchConfig.extApps.forEach { (k, v) in
-                            if k == "io.agora.countdown" {
-                                v.image = UIImage(named: "countdown")
-                            }
-                            extApps[k] = v
-                        }
-
-                        launchConfig.extApps = extApps
-                        
-                        if im == .rtm {
-                            launchConfig.widgets.removeValue(forKey: "easemobIM")
-                        }
-                        
-                        AgoraClassroomSDK.setDelegate(self)
-                        
-                        AgoraClassroomSDK.launch(launchConfig,
-                                                 success: success,
-                                                 failure: failure)
-                     }, failure: failure)
+            guard let `self` = self else {
+                return
+            }
+            
+            let appId = response.appId
+            let rtmToken = response.rtmToken
+            let userUuid = response.userId
+            let userRole = self.inputParams.roleType
+            
+            let launchConfig = AgoraEduLaunchConfig(userName: userName,
+                                                    userUuid: userUuid,
+                                                    userRole: .student,
+                                                    roomName: roomName,
+                                                    roomUuid: roomUuid,
+                                                    roomType: roomStyle,
+                                                    appId: appId,
+                                                    token: rtmToken,
+                                                    startTime: startTime,
+                                                    duration: NSNumber(value: duration),
+                                                    region: region.eduType,
+                                                    mediaOptions: mediaOptions,
+                                                    userProperties: nil)
+            
+            // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
+            var extApps = Dictionary<String, AgoraExtAppConfiguration>()
+            launchConfig.extApps.forEach { (k, v) in
+                if k == "io.agora.countdown" {
+                    v.image = UIImage(named: "countdown")
+                }
+                extApps[k] = v
+            }
+            
+            launchConfig.extApps = extApps
+            
+            if im == .rtm {
+                launchConfig.widgets.removeValue(forKey: "easemobIM")
+            }
+            
+            AgoraClassroomSDK.setDelegate(self)
+            
+            AgoraClassroomSDK.launch(launchConfig,
+                                     success: success,
+                                     failure: failure)
+        }, failure: failure)
     }
 }
 
@@ -276,12 +279,12 @@ private extension DebugViewController {
                       failure: @escaping (Error) -> ()) {
         tokenBuilder.buildByServer(region: region,
                                    userUuid: userUuid,
-                                   environment: .pro,
+                                   environment: inputParams.env,
                                    success: { (resp) in
-                                    success(resp)
-                                   }, failure: { (error) in
-                                    failure(error)
-                                   })
+            success(resp)
+        }, failure: { (error) in
+            failure(error)
+        })
     }
 }
 
@@ -340,9 +343,7 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
             cell.textField.text = optionDescription(option: inputParams.roomStyle,
                                                     in: kRoomOptions)
         case .roleType:
-            // 美术小班课可选角色，其他不可选
-            //            cell.mode = (inputParams.roomStyle == .paintingSmall) ? .option : .unable
-            cell.mode = .unable
+            cell.mode = .option
             cell.titleLabel.text = NSLocalizedString("login_title_role",
                                                      comment: "")
             cell.textField.placeholder = optionDescription(option: inputParams.roleType,
@@ -383,6 +384,32 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                                                            comment: "")
             cell.textField.text = optionDescription(option: inputParams.encryptMode,
                                                     in: kEncryptionOptions)
+        case .startTime:
+            cell.mode = .timePick
+            cell.titleLabel.text = NSLocalizedString("Login_startTime_title",
+                                                     comment: "")
+        case .delay:
+            cell.mode = .input
+            cell.titleLabel.text = NSLocalizedString("Login_delay_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_delay_holder",
+                                                           comment: "")
+        case .mediaAuth:
+            cell.mode = .option
+            cell.titleLabel.text = NSLocalizedString("Login_authMedia_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_authMedia_holder",
+                                                           comment: "")
+            cell.textField.text = optionDescription(option: inputParams.mediaAuth,
+                                                    in: kMediaAuthOptions)
+        case .env:
+            cell.mode = .option
+            cell.titleLabel.text = NSLocalizedString("Login_env_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_env_holder",
+                                                           comment: "")
+            cell.textField.text = optionDescription(option: inputParams.env,
+                                                    in: kEnvironmentOptions)
         }
         return cell
     }
@@ -400,7 +427,8 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
             return
         }
         let rowType = dataSource[indexPath.row]
-        if rowType == .roomStyle {
+        switch rowType {
+        case .roomStyle:
             let options = optionStrings(form: kRoomOptions)
             let index = optionIndex(option: inputParams.roomStyle,
                                     in: kRoomOptions)
@@ -411,31 +439,22 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                 let (v, str) = kRoomOptions[i]
                 self.inputParams.roomStyle = v
                 cell.textField.text = str
-                // 不是美术小班课时将角色设置为学生
-//                if v != .paintingSmall {
-//                    self.inputParams.roleType = .student
-//                    tableView.reloadData()
-//                }
                 // 更新入口状态
                 self.updateEntranceStatus()
             }
-        }
-//        else if rowType == .roleType,
-//                  inputParams.roomStyle == .paintingSmall {
-//            // 美术小班课可以选择角色，其他不可以
-//            let options = optionStrings(form: kRoleOptions)
-//            let index = optionIndex(option: inputParams.roleType ?? defaultParams.roleType, in: kRoleOptions)
-//            optionsView.show(beside: cell,
-//                             options: options,
-//                             index: index) { [unowned self] i in
-//                self.hideOptions()
-//                let (v, str) = kRoleOptions[i]
-//                self.inputParams.roleType = v
-//                cell.textField.text = str
-//            }
-//        }
-        
-        else if rowType == .region {
+        case .roleType:
+            let options = optionStrings(form: kRoleOptions)
+            let index = optionIndex(option: inputParams.roleType,
+                                    in: kRoleOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                self.hideOptions()
+                let (v, str) = kRoleOptions[i]
+                self.inputParams.roleType = v
+                cell.textField.text = str
+            }
+        case .region:
             let options = optionStrings(form: kRegionOptions)
             let index = optionIndex(option: inputParams.region,
                                     in: kRegionOptions)
@@ -447,7 +466,7 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                 self.inputParams.region = v
                 cell.textField.text = str
             }
-        }  else if rowType == .encryptMode {
+        case .encryptMode:
             let options = optionStrings(form: kEncryptionOptions)
             let index = optionIndex(option: inputParams.encryptMode,
                                     in: kEncryptionOptions)
@@ -459,7 +478,7 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.textField.text = str
                 self.hideOptions()
             }
-        } else if rowType == .im {
+        case .im:
             let options = optionStrings(form: kIMOptions)
             let index = optionIndex(option: inputParams.im,
                                     in: kIMOptions)
@@ -471,7 +490,31 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.textField.text = str
                 self.hideOptions()
             }
-        } else {
+        case .mediaAuth:
+            let options = optionStrings(form: kMediaAuthOptions)
+            let index = optionIndex(option: inputParams.mediaAuth,
+                                    in: kMediaAuthOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                let (v, str) = kMediaAuthOptions[i]
+                self.inputParams.mediaAuth = v
+                cell.textField.text = str
+                self.hideOptions()
+            }
+        case .env:
+            let options = optionStrings(form: kEnvironmentOptions)
+            let index = optionIndex(option: inputParams.env,
+                                    in: kEnvironmentOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                let (v, str) = kEnvironmentOptions[i]
+                self.inputParams.env = v
+                cell.textField.text = str
+                self.hideOptions()
+            }
+        default:
             hideOptions()
         }
     }
@@ -499,25 +542,28 @@ extension DebugViewController: RoomInfoCellDelegate {
             return
         }
         let itemType = RoomInfoItemType(rawValue: cell.indexPath.row)
-        let pattern = "[a-zA-Z0-9]*$"
-        let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
         
         switch itemType {
         case .roomName:
+            let pattern = "[a-zA-Z0-9]*$"
+            let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
             var isVaild = pred.evaluate(with: text)
             if text.count > 0 {
                 isVaild = (isVaild && text.count >= minInputLength)
             }
             
-            cell.isTextWaring = !isVaild
+            cell.isRoomWarning = !isVaild
             inputParams.roomName = isVaild ? text : nil
         case .nickName:
+            let pattern = "[\u{4e00}-\u{9fa5}a-zA-Z0-9\\s]*$"
+            let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
+            
             var isVaild = pred.evaluate(with: text)
             if text.count > 0 {
                 isVaild = (isVaild && text.count >= minInputLength)
             }
             
-            cell.isTextWaring = !isVaild
+            cell.isUserWarning = !isVaild
             inputParams.nickName = isVaild ? text : nil
         case .encryptKey:
             inputParams.encryptKey = text
@@ -529,6 +575,10 @@ extension DebugViewController: RoomInfoCellDelegate {
     
     func infoCellDidEndEditing(cell: RoomInfoCell) {
         
+    }
+    
+    func timePickerDidEndChoosing(timeInterval: Int64) {
+        inputParams.startTime = NSNumber.init(value: timeInterval)
     }
 }
 
@@ -626,7 +676,7 @@ private extension DebugViewController {
         enterButton.agora_height = 44
         enterButton.agora_width = 280
         enterButton.agora_y = tableView.agora_y + tableView.agora_height + enter_gap
-
+        
         bottomLabel.agora_center_x = 0
         if LoginConfig.device == .iPad {
             bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom

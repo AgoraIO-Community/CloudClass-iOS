@@ -103,6 +103,7 @@ NetworkDisconnectedText = "当前网络已断开,请检查设备网络连接";
 // user list
 UserListMainTitle = "花名册";
 UserListTeacherName = "教师姓名:";
+UserListCarouselTitle = "轮播设置";
 UserListName = "学生姓名";
 UserListCoVideo = "上下台";
 UserListBoard = "授权";

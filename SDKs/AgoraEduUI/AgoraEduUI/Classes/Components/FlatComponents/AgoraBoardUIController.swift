@@ -9,7 +9,6 @@ import AgoraEduContext
 import AgoraWidget
 
 class AgoraBoardUIController: UIViewController {
-    private let netlessKey = "netlessBoard"
     var boardWidget: AgoraBaseWidget?
     var contextPool: AgoraEduContextPool!
     
@@ -18,12 +17,13 @@ class AgoraBoardUIController: UIViewController {
             guard localGranted != oldValue else {
                 return
             }
-            if localGranted {
-                AgoraToast.toast(msg: "board_granted".agedu_localized(),
-                                 type: .notice)
-            } else {
+            if !localGranted {
                 AgoraToast.toast(msg: "board_ungranted".agedu_localized(),
                                  type: .error)
+            } else if localGranted,
+                        contextPool.user.getLocalUserInfo().userRole != .teacher {
+                AgoraToast.toast(msg: "board_granted".agedu_localized(),
+                                 type: .notice)
             }
         }
     } 
@@ -46,7 +46,7 @@ class AgoraBoardUIController: UIViewController {
 // MARK: - private
 private extension AgoraBoardUIController {
     func initBoardWidget() {
-        if let boardConfig = contextPool.widget.getWidgetConfig(netlessKey) {
+        if let boardConfig = contextPool.widget.getWidgetConfig(kBoardWidgetId) {
             let boardWidget = contextPool.widget.create(boardConfig)
             contextPool.widget.add(self,
                                    widgetId: boardConfig.widgetId)
@@ -64,12 +64,12 @@ private extension AgoraBoardUIController {
         self.boardWidget?.view.removeFromSuperview()
         self.boardWidget = nil
         contextPool.widget.remove(self,
-                                  widgetId: netlessKey)
+                                  widgetId: kBoardWidgetId)
     }
     
     func joinBoard() {
         if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
-            contextPool.widget.sendMessage(toWidget: netlessKey,
+            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
                                            message: message)
         }
     }
@@ -102,7 +102,7 @@ private extension AgoraBoardUIController {
         if let error = contextError,
            let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(stateCode: 714,
                                                                                                               errorCode: error.code)).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: netlessKey,
+            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
                                            message: message)
         }
     }
@@ -117,11 +117,12 @@ private extension AgoraBoardUIController {
     }
 }
 
+// MARK: - AgoraWidgetMessageObserver
 extension AgoraBoardUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == netlessKey,
-              let signal = message.toSignal() else {
+        guard widgetId == kBoardWidgetId,
+              let signal = message.toBoardSignal() else {
             return
         }
         
@@ -140,7 +141,7 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
 
 extension AgoraBoardUIController: AgoraWidgetActivityObserver {
     func onWidgetActive(_ widgetId: String) {
-        guard widgetId == netlessKey else {
+        guard widgetId == kBoardWidgetId else {
             return
         }
         
@@ -149,7 +150,7 @@ extension AgoraBoardUIController: AgoraWidgetActivityObserver {
     }
     
     func onWidgetInactive(_ widgetId: String) {
-        guard widgetId == netlessKey else {
+        guard widgetId == kBoardWidgetId else {
             return
         }
         
@@ -170,7 +171,7 @@ extension AgoraBoardUIController: AgoraEduMediaHandler {
         let data = AgoraBoardWidgetAudioMixingChangeData(stateCode: stateCode,
                                                          errorCode: errorCode)
         if let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(data).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: netlessKey,
+            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
                                            message: message)
         }
     }

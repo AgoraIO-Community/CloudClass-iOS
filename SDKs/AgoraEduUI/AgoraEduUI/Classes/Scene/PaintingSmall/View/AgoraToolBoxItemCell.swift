@@ -22,6 +22,7 @@ class AgoraToolBoxItemCell: UICollectionViewCell {
         
         imageView = UIImageView(frame: .zero)
         imageView.tintColor = UIColor(hex: 0x7B88A0)
+        imageView.contentMode = .scaleAspectFit
         addSubview(imageView)
         
         titleLabel = UILabel(frame: .zero)
@@ -54,8 +55,8 @@ class AgoraToolBoxItemCell: UICollectionViewCell {
     }
 }
 
-// MARK: - AgoraToolBoxToolType
-enum AgoraToolBoxToolType {
+// MARK: - AgoraTeachingAidType
+enum AgoraTeachingAidType {
     /** 云盘*/
     case cloudStorage
     /** 保存板书*/
@@ -69,27 +70,27 @@ enum AgoraToolBoxToolType {
     /** 答题器*/
     case answerSheet
     
-    func cellImage(_ obj: NSObject) -> UIImage? {
+    func cellImage() -> UIImage? {
         switch self {
-        case .cloudStorage: return UIImage.agedu_named("ic_toolbox_cloud")
-        case .saveBoard: return UIImage.agedu_named("ic_toolbox_save")
-        case .record: return UIImage.agedu_named("ic_toolbox_record")
-        case .vote: return UIImage.agedu_named("ic_toolbox_vote")
-        case .countDown: return UIImage.agedu_named("ic_toolbox_clock")
-        case .answerSheet: return UIImage.agedu_named("ic_toolbox_answer")
+        case .cloudStorage:     return UIImage.agedu_named("ic_toolbox_cloud")
+        case .saveBoard:        return UIImage.agedu_named("ic_toolbox_save")
+        case .record:           return UIImage.agedu_named("ic_toolbox_record")
+        case .vote:             return UIImage.agedu_named("ic_toolbox_vote")
+        case .countDown:        return UIImage.agedu_named("ic_toolbox_clock")
+        case .answerSheet:      return UIImage.agedu_named("ic_toolbox_answer")
         default: return nil
         }
     }
     
     func cellText() -> String? {
         switch self {
-        case .cloudStorage: return "toolbox_cloud_storage".agedu_localized()
-        case .saveBoard: return "toolbox_save_borad".agedu_localized()
-        case .record: return "toolbox_record_class".agedu_localized()
-        case .vote: return "toolbox_vote".agedu_localized()
-        case .countDown: return "toolbox_count_down".agedu_localized()
-        case .answerSheet: return "toolbox_answer_sheet".agedu_localized()
-        default: return nil
+        case .cloudStorage:     return "toolbox_cloud_storage".agedu_localized()
+        case .saveBoard:        return "toolbox_save_borad".agedu_localized()
+        case .record:           return "toolbox_record_class".agedu_localized()
+        case .vote:             return "toolbox_vote".agedu_localized()
+        case .countDown:        return "toolbox_count_down".agedu_localized()
+        case .answerSheet:      return "toolbox_answer_sheet".agedu_localized()
+        default:                return nil
         }
     }
 }

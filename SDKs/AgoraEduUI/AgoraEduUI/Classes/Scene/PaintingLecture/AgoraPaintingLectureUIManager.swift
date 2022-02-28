@@ -157,7 +157,7 @@ extension AgoraPaintingLectureUIManager: AgoraBoardToolsUIControllerDelegate {
 }
 // MARK: - PaintingToolBoxViewDelegate
 extension AgoraPaintingLectureUIManager: AgoraToolBoxUIControllerDelegate {
-    func toolBoxDidSelectTool(_ tool: AgoraToolBoxToolType) {
+    func toolBoxDidSelectTool(_ tool: AgoraTeachingAidType) {
         toolBarController.deselectAll()
         ctrlView = nil
         switch tool {

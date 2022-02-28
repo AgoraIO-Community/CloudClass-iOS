@@ -20,6 +20,7 @@ extension Convertable {
             dic = try JSONSerialization.jsonObject(with: data,
                                                    options: .allowFragments) as? Dictionary<String, Any>
         } catch {
+            // TODO: error handle
             print(error)
         }
         return dic

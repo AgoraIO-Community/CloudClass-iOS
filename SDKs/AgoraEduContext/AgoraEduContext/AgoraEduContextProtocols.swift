@@ -197,6 +197,67 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
+    /// 开启轮播 (v2.2.0)
+    /// - parameter interval: 轮播的时间间隔，单位秒
+    /// - parameter count: 每次轮播时，更换连麦用户的个数
+    /// - parameter type: 每次轮播时，从用户列表抽取的方式
+    /// - parameter condition: 满足轮播的条件
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func startCoHostCarousel(interval: Int,
+                             count: Int,
+                             type: AgoraEduContextCoHostCarouselType,
+                             condition: AgoraEduContextCoHostCarouselCondition,
+                             success: AgoraEduContextSuccess?,
+                             failure: AgoraEduContextFailure?)
+    /// 关闭轮播 (v2.2.0)
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func stopCoHostCarousel(success: AgoraEduContextSuccess?,
+                            failure: AgoraEduContextFailure?)
+    
+    /// 指定学生上台 (v2.2.0)
+    /// - parameter userUuid: 用户Id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func addCoHost(userUuid: String,
+                   success: AgoraEduContextSuccess?,
+                   failure: AgoraEduContextFailure?)
+    
+    /// 指定学生下台 (v2.2.0)
+    /// - parameter userUuid: 用户Id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func removeCoHost(userUuid: String,
+                      success: AgoraEduContextSuccess?,
+                      failure: AgoraEduContextFailure?)
+    
+    /// 所有学生下台 (v2.2.0)
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func removeAllCoHosts(success: AgoraEduContextSuccess?,
+                          failure: AgoraEduContextFailure?)
+    
+    /// 给学生发奖 (v2.2.0)
+    /// - parameter userUuidList: 用户Uuid的列表
+    /// - parameter rewardCount: 奖杯数量
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func rewardUsers(userUuidList: [String],
+                     rewardCount: Int,
+                     success: AgoraEduContextSuccess?,
+                     failure: AgoraEduContextFailure?)
+    
+    /// 踢人 (v2.2.0)
+    /// - parameter userUuid: 用户Id
+    /// - parameter forever: 是否永久踢人
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func kickOutUser(userUuid: String,
+                     forever: Bool,
+                     success: AgoraEduContextSuccess?,
+                     failure: AgoraEduContextFailure?)
+    
     /// 获取本地用户信息 (v2.0.0)
     /// - returns: 本地用户信息
     func getLocalUserInfo() -> AgoraEduContextUserInfo
@@ -445,6 +506,38 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - returns: void
     func setRemoteVideoStreamSubscribeLevel(streamUuid: String,
                                             level: AgoraEduContextVideoStreamSubscribeLevel) -> AgoraEduContextError?
+    
+    /// 更新用户的发流权限(v2.2.0)
+    /// - parameter streamUuids: 流 Id 数组
+    /// - parameter videoPrivilege: 视频发流权限
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func updateStreamPublishPrivilege(streamUuids: [String],
+                                      videoPrivilege: Bool,
+                                      success: AgoraEduContextSuccess?,
+                                      failure: AgoraEduContextFailure?)
+    
+    /// 更新用户的发流权限(v2.2.0)
+    /// - parameter streamUuids: 流 Id 数组
+    /// - parameter audioPrivilege: 音频发流权限
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func updateStreamPublishPrivilege(streamUuids: [String],
+                                      audioPrivilege: Bool,
+                                      success: AgoraEduContextSuccess?,
+                                      failure: AgoraEduContextFailure?)
+    
+    /// 更新用户的发流权限(v2.2.0)
+    /// - parameter streamUuids: 流 Id 数组
+    /// - parameter videoPrivilege: 视频发流权限
+    /// - parameter audioPrivilege: 音频发流权限
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func updateStreamPublishPrivilege(streamUuids: [String],
+                                      videoPrivilege: Bool,
+                                      audioPrivilege: Bool,
+                                      success: AgoraEduContextSuccess?,
+                                      failure: AgoraEduContextFailure?)
     
     /// 开始事件监听 (v2.0.0)
     /// - parameter handler: 监听者

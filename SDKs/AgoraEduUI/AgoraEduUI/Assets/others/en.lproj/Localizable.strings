@@ -93,6 +93,7 @@ NetworkDisconnectedText = "The local network is disconnected,please check the ne
 // User List
 UserListMainTitle = "Member List";
 UserListTeacherName = "Teacher:";
+UserListCarouselTitle = "Carousel Setting";
 UserListName = "Student";
 UserListCoVideo = "Stage";
 UserListBoard = "Auth";

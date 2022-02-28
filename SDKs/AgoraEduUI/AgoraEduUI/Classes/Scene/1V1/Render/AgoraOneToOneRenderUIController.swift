@@ -15,6 +15,8 @@ import UIKit
 
 class AgoraOneToOneRenderUIController: UIViewController {
     
+    weak var delegate: AgoraRenderUIControllerDelegate?
+    
     var collectionView: AgoraBaseUICollectionView!
         
     var contextPool: AgoraEduContextPool!
@@ -47,8 +49,10 @@ class AgoraOneToOneRenderUIController: UIViewController {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         delegate: AgoraRenderUIControllerDelegate) {
         super.init(nibName: nil, bundle: nil)
+        self.delegate = delegate
         contextPool = context
     }
     
@@ -242,12 +246,41 @@ extension AgoraOneToOneRenderUIController: AgoraEduRoomHandler {
 }
 // MARK: - Creations
 private extension AgoraOneToOneRenderUIController {
+    @objc func onClickTeacher(_ sender: UITapGestureRecognizer) {
+        if let uuid = teacherModel?.uuid {
+            delegate?.onClickMemberAt(view: teacherView,
+                                      UUID: uuid)
+        }
+        
+    }
+    
+    @objc func onClickStudent(_ sender: UITapGestureRecognizer) {
+        if let uuid = studentModel?.uuid {
+            delegate?.onClickMemberAt(view: studentView,
+                                      UUID: uuid)
+        }
+    }
+    
     func createViews() {
         teacherView = AgoraRenderMemberView(frame: .zero)
         view.addSubview(teacherView)
         
         studentView = AgoraRenderMemberView(frame: .zero)
         view.addSubview(studentView)
+        
+        let tapTeacher = UITapGestureRecognizer(target: self,
+                                                action: #selector(onClickTeacher(_:)))
+        tapTeacher.numberOfTapsRequired = 1
+        tapTeacher.numberOfTouchesRequired = 1
+        tapTeacher.delaysTouchesBegan = true
+        teacherView.addGestureRecognizer(tapTeacher)
+        
+        let tapStudent = UITapGestureRecognizer(target: self,
+                                                action: #selector(onClickStudent(_:)))
+        tapStudent.numberOfTapsRequired = 1
+        tapStudent.numberOfTouchesRequired = 1
+        tapStudent.delaysTouchesBegan = true
+        studentView.addGestureRecognizer(tapStudent)
     }
     
     func createConstrains() {

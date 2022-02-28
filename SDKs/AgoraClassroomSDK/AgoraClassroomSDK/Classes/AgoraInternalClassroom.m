@@ -19,10 +19,6 @@
         return NO;
     }
     
-    if (self.userRole != AgoraEduUserRoleStudent) {
-        return NO;
-    }
-    
     if (self.roomName.length <= 0) {
         return NO;
     }

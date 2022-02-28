@@ -10,141 +10,6 @@ import AgoraExtApp
 import AgoraWidget
 import AgoraEduContext
 import AgoraUIBaseViews
-// MARK: - AgoraToolBarRedDotCell
-fileprivate class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
-    
-    var redDot = UIView()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        redDot.isHidden = true
-        redDot.isUserInteractionEnabled = false
-        redDot.backgroundColor = UIColor(hex: 0xF04C36)
-        redDot.layer.cornerRadius = 2
-        redDot.clipsToBounds = true
-        self.addSubview(redDot)
-        redDot.mas_makeConstraints { make in
-            make?.width.height().equalTo()(4)
-            make?.top.equalTo()(5)
-            make?.right.equalTo()(-5)
-        }
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-// MARK: - AgoraToolBarItemCell
-fileprivate class AgoraToolBarItemCell: UICollectionViewCell {
-        
-    var imageView: UIImageView!
-    
-    var aSelected = false {
-        willSet {
-            if aSelected != newValue {
-                contentView.backgroundColor = newValue ? UIColor(hex: 0x357BF6) : .white
-                imageView.tintColor = newValue ? .white : UIColor(hex: 0x7B88A0)
-            }
-        }
-    }
-            
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.backgroundColor = UIColor.white
-        
-        contentView.layer.cornerRadius = 8
-        contentView.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                                transparency: 0.15)?.cgColor
-        contentView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        contentView.layer.shadowOpacity = 1
-        contentView.layer.shadowRadius = 6
-        
-        imageView = UIImageView(frame: .zero)
-        imageView.tintColor = UIColor(hex: 0x7B88A0)
-        contentView.addSubview(imageView)
-        
-        imageView.mas_remakeConstraints { make in
-            make?.center.equalTo()(0)
-            make?.width.height().equalTo()(22)
-        }
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentView.layer.cornerRadius = bounds.height * 0.5
-    }
-    
-    func setImage(_ image: UIImage?) {
-        guard let i = image else {
-            return
-        }
-        imageView.image = i.withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = UIColor(hex: 0x7B88A0)
-    }
-    
-    func highLight() {
-        self.imageView.tintColor = .white
-        self.contentView.backgroundColor = UIColor(hex: 0x357BF6)
-        self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-        self.imageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-    }
-    
-    func normalState() {
-        contentView.backgroundColor = self.aSelected ? UIColor(hex: 0x357BF6) : .white
-        imageView.tintColor = self.aSelected ? .white : UIColor(hex: 0x7B88A0)
-        UIView.animate(withDuration: 0.1,
-                       delay: 0,
-                       options: .curveLinear) {
-            self.transform = .identity
-            self.imageView.transform = .identity
-        } completion: { finish in
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-// MARK: - AgoraToolBarBrushCell
-fileprivate class AgoraToolBarBrushCell: AgoraToolBarItemCell {
-    
-    override func highLight() {
-        self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-        self.imageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-    }
-    
-    override func normalState() {
-        UIView.animate(withDuration: 0.1,
-                       delay: 0,
-                       options: .curveLinear) {
-            self.transform = .identity
-            self.imageView.transform = .identity
-        } completion: { finish in
-        }
-    }
-}
-// MARK: - AgoraToolBarHandsUpCell
-fileprivate class AgoraToolBarHandsUpCell: UICollectionViewCell {
-    
-    var handsupDelayView: AgoraHandsUpDelayView!
-            
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.backgroundColor = UIColor.clear
-        
-        handsupDelayView = AgoraHandsUpDelayView(frame: .zero)
-        contentView.addSubview(handsupDelayView)
-        handsupDelayView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
 
 // MARK: - Protocol
 protocol AgoraToolBarDelegate: NSObject {
@@ -154,8 +19,9 @@ protocol AgoraToolBarDelegate: NSObject {
     /** 工具被取消选取*/
     func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType)
 }
+
 // MARK: - AgoraToolBarUIController
-private let kButtonSize: CGFloat = 36.0
+private let kButtonSize: CGFloat = AgoraFit.scale(32)
 private let kGap: CGFloat = 12.0
 private let kDefaultTag: Int = 3389
 class AgoraToolBarUIController: UIViewController {
@@ -163,24 +29,24 @@ class AgoraToolBarUIController: UIViewController {
     weak var delegate: AgoraToolBarDelegate?
     
     public enum ItemType {
-        case setting, toolBox, nameRoll, message, handsup, brushTool
+        case setting, nameRoll, message, handsup, handsList, brushTool
         
         func cellImage() -> UIImage? {
             switch self {
-            case .setting: return UIImage.agedu_named("ic_func_setting")
-            case .toolBox: return UIImage.agedu_named("ic_func_toolbox")
-            case .nameRoll: return UIImage.agedu_named("ic_func_name_roll")
-            case .message: return UIImage.agedu_named("ic_func_message")
-            case .handsup: return UIImage.agedu_named("ic_func_hands_up")
-            case .brushTool: return UIImage.agedu_named("ic_brush_pencil")
-            default: return nil
+            case .setting:          return UIImage.agedu_named("ic_func_setting")
+            case .nameRoll:         return UIImage.agedu_named("ic_func_name_roll")
+            case .message:          return UIImage.agedu_named("ic_func_message")
+            case .handsup:          return UIImage.agedu_named("ic_func_hands_up")
+            case .handsList:        return UIImage.agedu_named("ic_func_hands_list")
+            case .brushTool:        return UIImage.agedu_named("ic_brush_pencil") // left for painting
+            default:                return nil
             }
         }
     }
     /** 展示的工具*/
     public var tools = [ItemType]()
     
-    private var hiddenTools: [ItemType] = [.brushTool]
+    private var hiddenTools = [ItemType]()
     
     private var dataSource = [ItemType]()
         
@@ -190,11 +56,19 @@ class AgoraToolBarUIController: UIViewController {
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
     /** 画笔图片*/
-    private var brushImage = UIImage.agedu_named("ic_brush_arrow")
+    private var brushImage = UIImage.agedu_named("ic_brush_clicker")
     /** 画笔颜色*/
     private var brushColor = UIColor(hex: 0xE1E1EA)
     /** 消息提醒*/
     private var messageRemind = false
+    /** 举手列表人数*/
+    private var handsListCount = 0 {
+        didSet {
+            if handsListCount != oldValue {
+                collectionView.reloadData()
+            }
+        }
+    }
     /** 举手提示浮层*/
     private lazy var hansupTipsView: AgoraHandsupTipsView = {
         let v = AgoraHandsupTipsView()
@@ -234,9 +108,6 @@ class AgoraToolBarUIController: UIViewController {
         self.createViews()
         self.createConstrains()
         self.updateDataSource()
-        
-        contextPool.widget.add(self,
-                               widgetId: "netlessBoard")
     }
     
     public func deselectAll() {
@@ -255,6 +126,11 @@ class AgoraToolBarUIController: UIViewController {
         self.collectionView.reloadData()
     }
     
+    public func updateHandsListCount(_ count: Int) {
+        handsListCount = count
+    }
+    
+    // left for painting UI manager
     public func updateBrushButton(image: UIImage?,
                                   colorHex: Int) {
         self.brushImage = image
@@ -265,6 +141,7 @@ class AgoraToolBarUIController: UIViewController {
         }
         self.collectionView.reloadData()
     }
+
 }
 // MARK: - Private
 private extension AgoraToolBarUIController {
@@ -277,11 +154,6 @@ private extension AgoraToolBarUIController {
             make?.width.equalTo()(kButtonSize)
             make?.height.equalTo()((kButtonSize + kGap) * count - kGap)
         }
-//        self.collectionView.performBatchUpdates {
-//            <#code#>
-//        } completion: { <#Bool#> in
-//            <#code#>
-//        }
 
         UIView.animate(withDuration: 2) {
             self.collectionView.reloadData()
@@ -323,33 +195,7 @@ extension AgoraToolBarUIController: AgoraHandsUpDelayViewDelegate {
         }
     }
 }
-extension AgoraToolBarUIController: AgoraWidgetMessageObserver {
-    func onMessageReceived(_ message: String,
-                           widgetId: String) {
-        if widgetId == "netlessBoard",
-           let signal = message.toSignal() {
-            switch signal {
-            case .BoardGrantDataChanged(let list):
-                if let users = list,
-                   users.contains(contextPool.user.getLocalUserInfo().userUuid) {
-                    self.hiddenTools.removeAll(.brushTool)
-                } else {
-                    if self.hiddenTools.contains(where: {$0 == .brushTool}) == false {
-                        self.hiddenTools.append(.brushTool)
-                    }
-                }
-                self.updateDataSource()
-            case .MemberStateChanged(let state):
-                if let item = state.toItem() {
-                    self.brushImage = item.image()
-                }
-                self.brushColor = UIColor(hex: state.toColor())
-            default:
-                break
-            }
-        }
-    }
-}
+
 // MARK: - UICollectionViewDataSource
 extension AgoraToolBarUIController: UICollectionViewDelegate,
                                     UICollectionViewDataSource,
@@ -377,12 +223,13 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
                 handsupCell?.handsupDelayView.delegate = self
             }
             return cell
-        } else if tool == .brushTool {
-            let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarBrushCell.self,
+        } else if tool == .handsList {
+            let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarHandsListCell.self,
                                                           for: indexPath)
-            cell.aSelected = false
-            cell.setImage(brushImage)
-            cell.imageView.tintColor = self.brushColor
+            cell.setImage(tool.cellImage())
+            cell.aSelected = (selectedTool == tool)
+            cell.redLabel.text = "\(handsListCount)"
+            cell.redLabel.isHidden = (handsListCount == 0)
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarItemCell.self,
@@ -481,6 +328,7 @@ private extension AgoraToolBarUIController {
         collectionView.register(cellWithClass: AgoraToolBarHandsUpCell.self)
         collectionView.register(cellWithClass: AgoraToolBarRedDotCell.self)
         collectionView.register(cellWithClass: AgoraToolBarBrushCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarHandsListCell.self)
         view.addSubview(collectionView)
     }
     

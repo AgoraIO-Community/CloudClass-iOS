@@ -73,7 +73,7 @@ extension AgoraToast: AgoraToastTipsViewDelegate {
                 }
                 make?.centerX.equalTo()(0)
             }
-            UIView.animate(withDuration: 0.2) {
+            UIView.animate(withDuration: TimeInterval.agora_animation) {
                 next.superview?.layoutIfNeeded()
             }
         }

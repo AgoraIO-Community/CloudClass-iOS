@@ -78,7 +78,7 @@ extension LoginViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
+
         updateDefaultRegion()
         createViews()
         createConstrains()
@@ -219,8 +219,8 @@ private extension LoginViewController {
     }
     
     @objc func onTouchJoinRoom() {
-        guard let room = inputParams.roomName,
-              let user = inputParams.nickName,
+        guard let roomName = inputParams.roomName,
+              let userName = inputParams.nickName,
               let roomStyle = inputParams.roomStyle else {
             return
         }
@@ -229,10 +229,10 @@ private extension LoginViewController {
         let encryptionMode = inputParams.encryptMode
         
         // roomUuid = roomName + classType
-        let roomUuid = "\(room)\(roomStyle.rawValue)"
+        let roomUuid = "\(roomName)\(roomStyle.rawValue)"
         
-        // userUuid = userName + roleType
-        let userUuid = "\(user)\(AgoraEduUserRole.student.rawValue)"
+        // userUuid = userName.md5()
+        let userUuid = userName.md5()
         
 //        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
         let duration = inputParams.duration
@@ -272,11 +272,12 @@ private extension LoginViewController {
             let appId = response.appId
             let rtmToken = response.rtmToken
             let userUuid = response.userId
+            let userRole = self.inputParams.roleType
             
-            let launchConfig = AgoraEduLaunchConfig(userName: user,
+            let launchConfig = AgoraEduLaunchConfig(userName: userName,
                                                     userUuid: userUuid,
-                                                    userRole: .student,
-                                                    roomName: room,
+                                                    userRole: userRole,
+                                                    roomName: roomName,
                                                     roomUuid: roomUuid,
                                                     roomType: roomStyle,
                                                     appId: appId,
@@ -288,6 +289,15 @@ private extension LoginViewController {
                                                     userProperties: nil)
             
             // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
+            var widgets = Dictionary<String,AgoraWidgetConfig>()
+            launchConfig.widgets.forEach {[unowned self] (k,v) in
+                if k == "AgoraCloudWidget" {
+                    v.extraInfo = ["publicCoursewares": self.publicCoursewares()]
+                }
+                widgets[k] = v
+            }
+            launchConfig.widgets = widgets
+            
             var extApps = Dictionary<String, AgoraExtAppConfiguration>()
             launchConfig.extApps.forEach { (k, v) in
                 if k == "io.agora.countdown" {
@@ -302,8 +312,7 @@ private extension LoginViewController {
                 launchConfig.widgets.removeValue(forKey: "easemobIM")
             }
             
-            AgoraClassroomSDK.setDelegate(self)
-            
+
             AgoraClassroomSDK.launch(launchConfig,
                                      success: launchSuccessBlock,
                                      failure: failureBlock)
@@ -327,7 +336,6 @@ private extension LoginViewController {
             debugCount += 1
             return
         }
-        
         let vc = DebugViewController()
         vc.modalPresentationStyle = .fullScreen
         present(vc,
@@ -358,7 +366,7 @@ private extension LoginViewController {
                       failure: @escaping (Error) -> ()) {
         tokenBuilder.buildByServer(region: region,
                                    userUuid: userUuid,
-                                   environment: .pro,
+                                   environment: inputParams.env,
                                    success: { (resp) in
                                     success(resp)
                                    }, failure: { (error) in
@@ -423,9 +431,7 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
             cell.textField.text = optionDescription(option: inputParams.roomStyle,
                                                     in: kRoomOptions)
         case .roleType:
-            // 美术小班课可选角色，其他不可选
-//            cell.mode = (inputParams.roomStyle == .paintingSmall) ? .option : .unable
-            cell.mode = .unable
+            cell.mode = .option
             cell.titleLabel.text = NSLocalizedString("login_title_role",
                                                      comment: "")
             cell.textField.placeholder = optionDescription(option: inputParams.roleType,
@@ -489,31 +495,22 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                 let (v, str) = kRoomOptions[i]
                 self.inputParams.roomStyle = v
                 cell.textField.text = str
-                // 不是美术小班课时将角色设置为学生
-//                if v != .paintingSmall {
-//                    self.inputParams.roleType = .student
-//                    tableView.reloadData()
-//                }
                 // 更新入口状态
                 self.updateEntranceStatus()
             }
-        }
-//        else if rowType == .roleType,
-//                  inputParams.roomStyle == .paintingSmall {
-//            // 美术小班课可以选择角色，其他不可以
-//            let options = optionStrings(form: kRoleOptions)
-//            let index = optionIndex(option: inputParams.roleType ?? defaultParams.roleType, in: kRoleOptions)
-//            optionsView.show(beside: cell,
-//                             options: options,
-//                             index: index) { [unowned self] i in
-//                self.hideOptions()
-//                let (v, str) = kRoleOptions[i]
-//                self.inputParams.roleType = v
-//                cell.textField.text = str
-//            }
-//        }
-        
-        else if rowType == .region {
+        } else if rowType == .roleType {
+            let options = optionStrings(form: kRoleOptions)
+            let index = optionIndex(option: inputParams.roleType,
+                                    in: kRoleOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                self.hideOptions()
+                let (v, str) = kRoleOptions[i]
+                self.inputParams.roleType = v
+                cell.textField.text = str
+            }
+        } else if rowType == .region {
             let options = optionStrings(form: kRegionOptions)
             let index = optionIndex(option: inputParams.region,
                                     in: kRegionOptions)
@@ -555,6 +552,10 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
 
 // MARK: - RoomInfoCellDelegate
 extension LoginViewController: RoomInfoCellDelegate {
+    func timePickerDidEndChoosing(timeInterval: Int64) {
+        
+    }
+    
     func infoCellDidBeginEditing(cell: RoomInfoCell) {
         hideOptions()
         //moveView(move: cell.textField.getType().moveDistance)
@@ -565,25 +566,27 @@ extension LoginViewController: RoomInfoCellDelegate {
             return
         }
         let itemType = RoomInfoItemType(rawValue: cell.indexPath.row)
-        let pattern = "[a-zA-Z0-9]*$"
-        let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
-        
         switch itemType {
         case .roomName:
+            let pattern = "[a-zA-Z0-9]*$"
+            let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
             var isVaild = pred.evaluate(with: text)
             if text.count > 0 {
                 isVaild = (isVaild && text.count >= minInputLength)
             }
             
-            cell.isTextWaring = !isVaild
+            cell.isRoomWarning = !isVaild
             inputParams.roomName = isVaild ? text : nil
         case .nickName:
+            let pattern = "[\u{4e00}-\u{9fa5}a-zA-Z0-9\\s]*$"
+            let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
+            
             var isVaild = pred.evaluate(with: text)
             if text.count > 0 {
                 isVaild = (isVaild && text.count >= minInputLength)
             }
             
-            cell.isTextWaring = !isVaild
+            cell.isUserWarning = !isVaild
             inputParams.nickName = isVaild ? text : nil
         default:
             break
@@ -667,6 +670,7 @@ private extension LoginViewController {
         view.addSubview(tableView)
         
         debugButton = AgoraBaseUIButton()
+        debugButton.backgroundColor = .clear
         debugButton.addTarget(self,
                               action: #selector(onTouchDebug),
                               for: .touchUpInside)
@@ -716,5 +720,12 @@ private extension LoginViewController {
                 bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
             }
         }
+    }
+    
+    func publicCoursewares() -> Array<String> {
+        let publicJson = """
+{"resourceUuid":"9196d03d87ab1e56933f911eafe760c3","resourceName":"AgoraFlexibleClassroomE.pptx","ext":"pptx","size":10914841,"url":"https://agora-adc-artifacts.oss-cn-beijing.aliyuncs.com/cloud-disk/f488493d1886435f963dfb3d95984fd4/jasoncai4/9196d03d87ab1e56933f911eafe760c3.pptx","updateTime":1641805816941,"taskUuid":"203197d071f511ecb84859b705e54fae","conversion":{"type":"dynamic","preview":true,"scale":2,"outputFormat":"png"},"taskProgress":{"status":"Finished","totalPageSize":24,"convertedPageSize":24,"convertedPercentage":100,"currentStep":"Packaging","convertedFileList":[{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/1.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/1.slide"},"name":"1"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/2.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/2.slide"},"name":"2"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/3.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/3.slide"},"name":"3"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/4.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/4.slide"},"name":"4"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/5.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/5.slide"},"name":"5"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/6.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/6.slide"},"name":"6"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/7.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/7.slide"},"name":"7"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/8.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/8.slide"},"name":"8"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/9.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/9.slide"},"name":"9"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/10.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/10.slide"},"name":"10"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/11.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/11.slide"},"name":"11"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/12.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/12.slide"},"name":"12"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/13.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/13.slide"},"name":"13"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/14.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/14.slide"},"name":"14"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/15.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/15.slide"},"name":"15"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/16.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/16.slide"},"name":"16"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/17.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/17.slide"},"name":"17"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/18.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/18.slide"},"name":"18"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/19.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/19.slide"},"name":"19"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/20.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/20.slide"},"name":"20"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/21.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/21.slide"},"name":"21"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/22.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/22.slide"},"name":"22"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/23.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/23.slide"},"name":"23"},{"ppt":{"width":1280,"height":720,"preview":"https://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/preview/24.png","src":"pptx://convertcdn.netless.link/dynamicConvert/203197d071f511ecb84859b705e54fae/24.slide"},"name":"24"}]}}
+"""
+        return [publicJson]
     }
 }

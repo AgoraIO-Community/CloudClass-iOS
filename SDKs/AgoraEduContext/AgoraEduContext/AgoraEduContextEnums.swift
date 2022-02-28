@@ -64,6 +64,22 @@ import Foundation
     case down
 }
 
+/// 每次轮播时，从用户列表抽取的方式
+@objc public enum AgoraEduContextCoHostCarouselType: Int {
+    /// 顺序
+    case sequence = 1
+    /// 随机
+    case random = 2
+}
+
+/// 满足轮播的条件
+@objc public enum AgoraEduContextCoHostCarouselCondition: Int {
+    /// 无条件
+    case none = 1
+    /// 摄像头开启
+    case cameraOpened = 2
+}
+
 /// 连接状态
 @objc public enum AgoraEduContextConnectionState: Int {
     /// 断开

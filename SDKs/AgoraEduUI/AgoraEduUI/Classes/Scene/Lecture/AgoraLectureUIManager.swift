@@ -25,20 +25,19 @@ import AgoraWidget
     private var teacherRenderController: AgoraTeacherRenderUIController!
     /** 白板的渲染 控制器*/
     private var boardController: AgoraBoardUIController!
+    /** 花名册 控制器 （教师端）*/
+    private lazy var nameRollController: AgoraUserListUIController = {
+        return AgoraUserListUIController(context: contextPool)
+    }()
     /** 屏幕分享 控制器*/
     private var screenSharingController: AgoraScreenSharingUIController!
-    /** 工具箱 控制器*/
-    private lazy var toolBoxViewController: AgoraToolBoxUIController = {
-        let vc = AgoraToolBoxUIController(context: contextPool)
-        vc.delegate = self
-        self.addChild(vc)
-        return vc
-    }()
-    /** 画板工具 控制器*/
-    private lazy var brushToolsController: AgoraBoardToolsUIController = {
-        let vc = AgoraBoardToolsUIController(context: contextPool)
-        vc.delegate = self
-        self.addChild(vc)
+    /** 工具集合 控制器*/
+    private var toolCollectionController: AgoraToolCollectionUIController!
+    /** 白板翻页 控制器*/
+    private var boardPageController: AgoraBoardPageUIController!
+    /** 云盘 控制器（仅教师端）*/
+    private lazy var cloudController: AgoraCloudUIController = {
+        let vc = AgoraCloudUIController(context: contextPool)
         return vc
     }()
     /** 聊天窗口 控制器*/
@@ -48,6 +47,19 @@ import AgoraWidget
         let vc = AgoraSettingUIController(context: contextPool)
         vc.roomDelegate = self
         self.addChild(vc)
+        return vc
+    }()
+    /** 举手列表 控制器*/
+    private lazy var handsListController: AgoraHandsListUIController = {
+        let vc = AgoraHandsListUIController(context: contextPool)
+        vc.delegate = self
+        self.addChild(vc)
+        return vc
+    }()
+    /** 视窗菜单 控制器*/
+    private lazy var renderMenuController: AgoraRenderMenuUIController = {
+        let vc = AgoraRenderMenuUIController(context: contextPool)
+        vc.delegate = self
         return vc
     }()
     
@@ -69,6 +81,10 @@ import AgoraWidget
             }
             self.isJoinedRoom = true
             self.createChatController()
+            if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
+                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+                self.contextPool.media.openLocalDevice(systemDevice: .mic)
+            }
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)
@@ -98,11 +114,16 @@ extension AgoraLectureUIManager: AgoraToolBarDelegate {
             settingViewController.view.frame = CGRect(origin: .zero,
                                                       size: settingViewController.suggestSize)
             ctrlView = settingViewController.view
-        case .brushTool:
-            brushToolsController.view.frame = CGRect(origin: .zero,
-                                                     size: brushToolsController.suggestSize)
-            ctrlView = brushToolsController.view
-        default: break
+        case .nameRoll:
+            nameRollController.view.frame = CGRect(origin: .zero,
+                                                   size: nameRollController.suggestSize)
+            ctrlView = nameRollController.view
+        case .handsList:
+            handsListController.view.frame = CGRect(origin: .zero,
+                                                     size: handsListController.suggestSize)
+            ctrlView = handsListController.view
+        default:
+            break
         }
         ctrlViewAnimationFromView(selectView)
     }
@@ -111,38 +132,139 @@ extension AgoraLectureUIManager: AgoraToolBarDelegate {
         ctrlView = nil
     }
 }
-// MARK: - AgoraBoardToolsUIControllerDelegate
-extension AgoraLectureUIManager: AgoraBoardToolsUIControllerDelegate {
-    func didUpdateBrushSetting(image: UIImage?,
-                               colorHex: Int) {
-        toolBarController.updateBrushButton(image: image,
-                                            colorHex: colorHex)
+
+// MARK: - AgoraRenderMenuUIControllerDelegate
+extension AgoraLectureUIManager: AgoraRenderMenuUIControllerDelegate {
+    func onMenuUserLeft() {
+        renderMenuController.dismissView()
     }
 }
-// MARK: - PaintingToolBoxViewDelegate
-extension AgoraLectureUIManager: AgoraToolBoxUIControllerDelegate {
-    func toolBoxDidSelectTool(_ tool: AgoraToolBoxToolType) {
+
+// MARK: - AgoraRenderUIControllerDelegate
+extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
+    func onClickMemberAt(view: UIView,
+                         UUID: String) {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+            return
+        }
+        
+        var role = AgoraEduContextUserRole.student
+        if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
+           teacehr.userUuid == UUID {
+            role = .teacher
+        }
+        
+        if let menuId = renderMenuController.userId,
+           menuId == UUID {
+            // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
+            renderMenuController.view.isHidden = !renderMenuController.view.isHidden
+        } else {
+            // 1. 当前menu的userId不为点击的userId，切换用户
+            // 2. 当前不存在menu，显示
+            renderMenuController.show(roomType: .lecture,
+                                      userUuid: UUID,
+                                      showRoleType: role)
+            renderMenuController.view.mas_remakeConstraints { make in
+                make?.top.equalTo()(view.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.centerX.equalTo()(view.mas_centerX)
+                make?.height.equalTo()(AgoraFit.scale(36))
+                make?.width.equalTo()(renderMenuController.menuWidth)
+            }
+            renderMenuController.view.isHidden = false
+        }
+    }
+    
+    func onRequestSpread(firstOpen: Bool,
+                         userId: String,
+                         streamId: String,
+                         fromView: UIView,
+                         xaxis: CGFloat,
+                         yaxis: CGFloat,
+                         width: CGFloat,
+                         height: CGFloat) {
+        return
+    }
+}
+
+// MARK: - AgoraChatUIControllerDelegate
+extension AgoraLectureUIManager: AgoraHandsListUIControllerDelegate {
+    func updateHandsListRedLabel(_ count: Int) {
+        toolBarController.updateHandsListCount(count)
+    }
+}
+
+// MARK: - AgoraToolCollectionUIControllerDelegate
+extension AgoraLectureUIManager: AgoraToolCollectionUIControllerDelegate {
+    func toolCollectionDidSelectCell(view: UIView) {
         toolBarController.deselectAll()
+        ctrlView = view
+        ctrlViewAnimationFromView(toolCollectionController.view)
+    }
+    
+    func toolCollectionCellNeedSpread(_ spread: Bool) {
+        if spread {
+            toolCollectionController.view.mas_remakeConstraints { make in
+                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
+                make?.width.equalTo()(AgoraFit.scale(32))
+                make?.height.equalTo()(AgoraFit.scale(80))
+            }
+        } else {
+            toolCollectionController.view.mas_remakeConstraints { make in
+                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
+                make?.width.equalTo()(AgoraFit.scale(32))
+                make?.height.equalTo()(AgoraFit.scale(32))
+            }
+        }
+    }
+    
+    func toolCollectionDidDeselectCell() {
         ctrlView = nil
-        switch tool {
+    }
+    
+    func toolCollectionDidSelectTeachingAid(type: AgoraTeachingAidType) {
+        // 选择插件（答题器、投票器...）
+        ctrlView = nil
+        switch type {
         case .cloudStorage:
-            // 云盘工具操作
-            
+            if cloudController.view.isHidden {
+                cloudController.view.mas_makeConstraints { make in
+                    make?.center.equalTo()(boardController.view)
+                    make?.width.equalTo()(AgoraFit.scale(435))
+                    make?.height.equalTo()(AgoraFit.scale(253))
+                }
+            }
+            cloudController.view.isHidden = !cloudController.view.isHidden
+        case .vote:
             break
-        case .saveBoard: break
-        case .record: break
-        case .vote: break
-        case .countDown: break
-        case .answerSheet: // 答题器
+        case .countDown:
+            break
+        case .answerSheet:
             guard let extAppInfos = contextPool.extApp.getExtAppInfos(),
-                  let info = extAppInfos.first(where: {$0.appIdentifier == "io.agora.answerSheet"}) else {
+                  let info = extAppInfos.first(where: {$0.appIdentifier == "io.agora.answer"}) else {
                 return
             }
             contextPool.extApp.willLaunchExtApp(info.appIdentifier)
-        default: break
+        default:
+            break
         }
     }
 }
+
+// MARK: - AgoraBoardPageUIControllerDelegate
+extension AgoraLectureUIManager: AgoraBoardPageUIControllerDelegate {
+    func boardPageUINeedMove(coursewareMin: Bool) {
+        UIView.animate(withDuration: TimeInterval.agora_animation,
+                       delay: 0,
+                       options: .curveEaseInOut,
+                       animations: { [weak self] in
+            self?.boardPageController.view.transform = CGAffineTransform(translationX: coursewareMin ? 32 : 0,
+                                                                         y: 0)
+        }, completion: nil)
+    }
+}
+
 // MARK: - Creations
 private extension AgoraLectureUIManager {
     func createViews() {
@@ -173,16 +295,42 @@ private extension AgoraLectureUIManager {
         addChild(screenSharingController)
         contentView.addSubview(screenSharingController.view)
         
+        toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
+                                                                   delegate: self)
+        contentView.addSubview(toolCollectionController.view)
+        addChild(toolCollectionController)
+        
+        boardPageController = AgoraBoardPageUIController(context: contextPool,
+                                                         delegate: self)
+        contentView.addSubview(boardPageController.view)
+        addChild(boardPageController)
+        
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
-        toolBarController.tools = [.setting, .handsup, .brushTool]
-        view.addSubview(toolBarController.view)
+        if contextPool.user.getLocalUserInfo().userRole == .teacher {
+            toolBarController.tools = [.setting, .nameRoll, .handsList]
+            addChild(nameRollController)
+            addChild(renderMenuController)
+            contentView.addSubview(renderMenuController.view)
+            addChild(cloudController)
+            contentView.addSubview(cloudController.view)
+            
+            renderMenuController.view.isHidden = true
+            cloudController.view.isHidden = true
+            toolCollectionController.view.isHidden = false
+            boardPageController.view.isHidden = false
+        } else {
+            toolBarController.tools = [.setting, .handsup]
+            toolCollectionController.view.isHidden = true
+            boardPageController.view.isHidden = true
+        }
+        contentView.addSubview(toolBarController.view)
     }
     
     func createConstrains() {
         stateController.view.mas_makeConstraints { make in
-            make?.top.left().right().equalTo()(stateController.view.superview)
-            make?.height.equalTo()(20)
+            make?.top.left().right().equalTo()(0)
+            make?.height.equalTo()(AgoraFit.scale(14))
         }
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
@@ -197,7 +345,7 @@ private extension AgoraLectureUIManager {
         studentsRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.equalTo()(0)
-            make?.right.equalTo()(boardController.view)
+            make?.right.equalTo()(boardController.view.mas_right)
             make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-2))
         }
         teacherRenderController.view.mas_makeConstraints { make in
@@ -207,8 +355,20 @@ private extension AgoraLectureUIManager {
             make?.height.equalTo()(AgoraFit.scale(112))
         }
         toolBarController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view)?.offset()(-12)
-            make?.bottom.equalTo()(boardController.view)?.offset()(-15)
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(-6)
+            make?.top.equalTo()(self.boardController.mas_topLayoutGuideTop)?.offset()(AgoraFit.scale(34))
+        }
+        toolCollectionController.view.mas_makeConstraints { make in
+            make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-12))
+            make?.width.equalTo()(AgoraFit.scale(32))
+            make?.height.equalTo()(AgoraFit.scale(80))
+        }
+        boardPageController.view.mas_makeConstraints { make in
+            make?.left.equalTo()(contentView)?.offset()(AgoraFit.scale(12))
+            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
+            make?.height.equalTo()(AgoraFit.scale(32))
+            make?.width.equalTo()(AgoraFit.scale(168))
         }
     }
     

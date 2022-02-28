@@ -9,7 +9,7 @@ import SwifterSwift
 import AgoraEduContext
 
 protocol AgoraToolBoxUIControllerDelegate: NSObjectProtocol {
-    func toolBoxDidSelectTool(_ tool: AgoraToolBoxToolType)
+    func toolBoxDidSelectTool(_ tool: AgoraTeachingAidType)
 }
 
 fileprivate let kGapSize: CGFloat = 1.0
@@ -18,9 +18,16 @@ fileprivate let kItemWidth: CGFloat = 100.0
 
 class AgoraToolBoxUIController: UIViewController {
     
+    public var suggestSize: CGSize {
+        get {
+            return CGSize(width: (kItemWidth + kGapSize) * CGFloat(data.count) - kGapSize,
+                          height: kItemHeight)
+        }
+    }
+    
     weak var delegate: AgoraToolBoxUIControllerDelegate?
     
-    var data: [AgoraToolBoxToolType] = [.cloudStorage, .answerSheet ] {
+    var data: [AgoraTeachingAidType] = [.cloudStorage, .answerSheet ] {
         didSet {
             if data.count != oldValue.count {
                 updateLayout()
@@ -85,6 +92,10 @@ extension AgoraToolBoxUIController {
     }
     
     func updateLayout() {
+        if toolBoxView == nil {
+            // 避免在视图加载完成前对data赋值，触发layout变化
+            return
+        }
         let itemCount = CGFloat(data.count ?? 0)
         let rank: CGFloat = itemCount > 3 ? 3 : itemCount
         let width: CGFloat = (rank * (kItemWidth + 1)) - 1
@@ -113,7 +124,7 @@ extension AgoraToolBoxUIController: UICollectionViewDelegate,
         let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBoxItemCell.self,
                                                       for: indexPath)
         let tool = data[indexPath.row]
-        cell.setImage(tool.cellImage(self))
+        cell.setImage(tool.cellImage())
         cell.titleLabel.text = tool.cellText()
         return cell
     }

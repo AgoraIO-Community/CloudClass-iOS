@@ -23,6 +23,10 @@ import AgoraWidget
     private var renderController: AgoraMembersHorizeRenderUIController!
     /** 白板的渲染 控制器*/
     private var boardController: AgoraBoardUIController!
+    /** 画笔图片*/
+    private var brushImage = UIImage.agedu_named("ic_brush_arrow")
+    /** 画笔颜色*/
+    private var brushColor = UIColor(hex: 0xE1E1EA)
     /** 工具箱 控制器*/
     private lazy var toolBoxViewController: AgoraToolBoxUIController = {
         let vc = AgoraToolBoxUIController(context: contextPool)
@@ -128,7 +132,7 @@ extension AgoraPaintingSmallUIManager: AgoraChatUIControllerDelegate {
 }
 // MARK: - PaintingToolBoxViewDelegate
 extension AgoraPaintingSmallUIManager: AgoraToolBoxUIControllerDelegate {
-    func toolBoxDidSelectTool(_ tool: AgoraToolBoxToolType) {
+    func toolBoxDidSelectTool(_ tool: AgoraTeachingAidType) {
         toolBarController.deselectAll()
         ctrlView = nil
         switch tool {

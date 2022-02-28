@@ -38,15 +38,7 @@ class AgoraRoomToolstView: UIView {
                     for: .touchUpInside)
         return v
     }()
-    /** 工具箱按钮*/
-    private lazy var toolBoxButton: AgoraZoomButton = {
-        let v = AgoraZoomButton(frame: .zero)
-        v.tag = kDefaultTag + AgoraRoomToolType.toolBox.rawValue
-        v.setImage(UIImage.agedu_named("ic_func_toolbox"))
-        v.addTarget(self, action: #selector(onClickToolButton(_:)),
-                    for: .touchUpInside)
-        return v
-    }()
+
     /** 花名册按钮*/
     private lazy var nameRollButton: AgoraZoomButton = {
         let v = AgoraZoomButton(frame: .zero)
@@ -132,13 +124,12 @@ private extension AgoraRoomToolstView {
             switch tool {
             case .setting:
                 tempAry.append(self.settingButton)
-            case .toolBox:
-                tempAry.append(self.toolBoxButton)
             case .nameRoll:
                 tempAry.append(self.nameRollButton)
             case .message:
                 tempAry.append(self.messageButton)
-            default: break
+            default:
+                break
             }
         }
         contentView.removeArrangedSubviews()

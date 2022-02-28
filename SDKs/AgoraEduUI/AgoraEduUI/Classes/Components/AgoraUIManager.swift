@@ -115,9 +115,8 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         var point = CGPoint(x: rect.minX - 8 - animaView.frame.size.width, y: rect.minY)
         let estimateFrame = CGRect(origin: point,
                                  size: animaView.frame.size)
-        if estimateFrame.maxY > self.view.frame.maxY - 10 {
-            // 区域超出
-            point.y = self.view.frame.maxY - 10 - animaView.bounds.height
+        if estimateFrame.maxY > self.contentView.frame.maxY - 10 {
+            point.y = self.contentView.frame.maxY - 10 - animaView.bounds.height
         }
         animaView.frame = CGRect(origin: point, size: animaView.frame.size)
         // 运算动画锚点

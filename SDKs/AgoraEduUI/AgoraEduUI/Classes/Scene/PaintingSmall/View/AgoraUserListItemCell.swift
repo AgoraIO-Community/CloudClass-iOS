@@ -17,6 +17,8 @@ class AgoraUserListModel {
     
     var uuid: String = ""
     
+    var streamId: String?
+    
     var name: String = "" {
         didSet {
             self.sortRank = getFirstLetterRankFromString(aString: name)
@@ -32,6 +34,8 @@ class AgoraUserListModel {
     var micState: (hasStream: Bool, isOn: Bool, isEnable: Bool) = (false, false, false)
     
     var rewards: Int = 0
+    
+    var kickEnable: Bool = false
     
     /** 用作排序的首字母权重*/
     var sortRank: UInt32 = 0
@@ -333,15 +337,15 @@ private extension AgoraUserListItemCell {
         guard let model = itemModel else {
             return
         }
-//        delegateSelectFunc(.camera,
-//                           state: !model.cameraState.isOn)
+        delegateSelectFunc(.camera,
+                           state: !model.cameraState.isOn)
     }
     @objc func onClickMic(_ sender: UIButton) {
         guard let model = itemModel else {
             return
         }
-//        delegateSelectFunc(.mic,
-//                           state: !model.mic.isOn)
+        delegateSelectFunc(.mic,
+                           state: !model.micState.isOn)
     }
 
     @objc func onClickReward(_ sender: UIButton) {

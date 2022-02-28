@@ -27,14 +27,14 @@ extension String {
     }
 }
 /** 尺寸适配*/
-// 以375*667作为缩放标准
+// 以375*812作为缩放标准（设计图都为iPhoneX）
 fileprivate var kScale: CGFloat = {
     let width = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
     let height = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-    if width/height > 667.0/375.0 {
+    if width/height > 812.0/375.0 {
         return height / 375.0
     } else {
-        return width / 667.0
+        return width / 812.0
     }
 }()
 fileprivate let kPad = UIDevice.current.userInterfaceIdiom == .pad

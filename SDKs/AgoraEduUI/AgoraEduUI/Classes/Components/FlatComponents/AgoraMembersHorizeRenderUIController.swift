@@ -14,10 +14,27 @@ import Foundation
 import Masonry
 import UIKit
 
+protocol AgoraRenderUIControllerDelegate: NSObjectProtocol {
+    func onClickMemberAt(view: UIView,
+                         UUID: String)
+    
+    func onRequestSpread(firstOpen: Bool,
+                         userId: String,
+                         streamId: String,
+                         fromView: UIView,
+                         xaxis: CGFloat,
+                         yaxis: CGFloat,
+                         width: CGFloat,
+                         height: CGFloat)
+}
+
 private let kItemGap: CGFloat = AgoraFit.scale(4)
-private let kTeacherIndex: IndexPath = IndexPath(row: -1, section: 0)
+private let kTeacherIndex: IndexPath = IndexPath(row: -1,
+                                                 section: 0)
 class AgoraMembersHorizeRenderUIController: UIViewController {
-        
+    
+    weak var delegate: AgoraRenderUIControllerDelegate?
+    
     public var themeColor: UIColor?
     
     var contentView: UIView!
@@ -110,7 +127,10 @@ extension AgoraMembersHorizeRenderUIController {
     }
     
     @objc func onClickTeacher(_ sender: UITapGestureRecognizer) {
-        
+        if let uuid = teacherModel?.uuid {
+            delegate?.onClickMemberAt(view: teacherView,
+                                      UUID: uuid)
+        }
         
     }
     
@@ -356,6 +376,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
 // MARK: - AgoraEduRoomHandler
 extension AgoraMembersHorizeRenderUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        // model setup
         self.setup()
     }
 }
@@ -365,11 +386,16 @@ extension AgoraMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
     func memberViewRender(memberView: AgoraRenderMemberView,
                           in view: UIView,
                           renderID: String) {
+        let localUid = contextPool.user.getLocalUserInfo().userUuid
+        if let localStreamList = contextPool.stream.getStreamList(userUuid: localUid),
+           !localStreamList.contains(where: {$0.streamUuid == renderID}){
+            contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: renderID,
+                                                                  level: .low)
+        }
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         renderConfig.isMirror = true
-        contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: renderID,
-                                                              level: .low)
+        
         contextPool.media.startRenderVideo(view: view,
                                            renderConfig: renderConfig,
                                            streamUuid: renderID)
@@ -417,7 +443,12 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
-        
+        let u = dataSource[indexPath.row]
+        if let cell = collectionView.cellForItem(at: indexPath),
+           let uuid = u.uuid {
+            delegate?.onClickMemberAt(view: cell,
+                                      UUID: uuid)
+        }
     }
         
     public func collectionView(_ collectionView: UICollectionView,

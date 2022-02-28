@@ -17,6 +17,8 @@ protocol RoomInfoCellDelegate: AnyObject {
     func infoCellInputTextDidChange(cell: RoomInfoCell);
     /** 结束编辑cell上的文字*/
     func infoCellDidEndEditing(cell: RoomInfoCell);
+    /** 结束时间选择*/
+    func timePickerDidEndChoosing(timeInterval: Int64);
 }
 
 enum RoomInfoCellMode {
@@ -24,6 +26,7 @@ enum RoomInfoCellMode {
     case input
     case option
     case unable
+    case timePick
 }
 
 class RoomInfoCell: UITableViewCell {
@@ -42,19 +45,14 @@ class RoomInfoCell: UITableViewCell {
     
     private var indicatorView: UIImageView!
     
-    lazy var warningLabel: UILabel = {
-        let label = UILabel()
-        label.text = NSLocalizedString("Login_warn", comment: "")
-        label.font = UIFont.systemFont(ofSize: 10)
-        label.textColor = UIColor(hexString: "#F04C36")
-        label.textAlignment = .center
-        label.isHidden = true
-        contentView.addSubview(label)
-        label.mas_makeConstraints { make in
-            make?.left.right().equalTo()(0)
-            make?.top.equalTo()(lineView.mas_bottom)
-        }
-        return label
+    private var timePickerView: UIDatePicker!
+    
+    lazy var roomWarningLabel: UILabel = {
+        return createWarningLabel(type: .roomName)
+    }()
+    
+    lazy var userWarningLabel: UILabel = {
+        return createWarningLabel(type: .nickName)
     }()
     
     private var aFocused: Bool = false
@@ -65,27 +63,45 @@ class RoomInfoCell: UITableViewCell {
             case .input:
                 textField.isUserInteractionEnabled = true
                 indicatorView.isHidden = true
+                timePickerView.isHidden = true
             case .option:
                 textField.isUserInteractionEnabled = false
                 indicatorView.isHidden = false
+                timePickerView.isHidden = true
             case .unable:
                 textField.isUserInteractionEnabled = false
                 indicatorView.isHidden = true
+                timePickerView.isHidden = true
+            case .timePick:
+                textField.isUserInteractionEnabled = false
+                indicatorView.isHidden = true
+                timePickerView.isHidden = false
             default: break
             }
         }
     }
     
-    var isTextWaring: Bool = false {
+    var isRoomWarning: Bool = false {
         didSet {
-            if isTextWaring {
+            if isRoomWarning {
                 lineView.backgroundColor = UIColor(hexString: "#F04C36")
-                warningLabel.isHidden = false
+                roomWarningLabel.isHidden = false
             } else {
                 lineView.backgroundColor = UIColor(hexString: "#E3E3EC")
-                warningLabel.isHidden = true
+                roomWarningLabel.isHidden = true
             }
-            
+        }
+    }
+    
+    var isUserWarning: Bool = false {
+        didSet {
+            if isUserWarning {
+                lineView.backgroundColor = UIColor(hexString: "#F04C36")
+                userWarningLabel.isHidden = false
+            } else {
+                lineView.backgroundColor = UIColor(hexString: "#E3E3EC")
+                userWarningLabel.isHidden = true
+            }
         }
     }
         
@@ -114,6 +130,10 @@ class RoomInfoCell: UITableViewCell {
         delegate?.infoCellInputTextDidChange(cell: self)
     }
     
+    @objc func timeChanged(_ datePicker : UIDatePicker){
+        let timeInterval = Int64(datePicker.date.timeIntervalSince1970 * 1000)
+        delegate?.timePickerDidEndChoosing(timeInterval: timeInterval)
+    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -162,6 +182,15 @@ extension RoomInfoCell {
         
         indicatorView = UIImageView(image: UIImage(named: "show_types"))
         contentView.addSubview(indicatorView)
+        
+        timePickerView = UIDatePicker(frame: .zero)
+        timePickerView.locale = Locale.current
+        timePickerView.datePickerMode = .time
+        timePickerView.minimumDate = Date()
+        timePickerView.addTarget(self,
+                                 action: #selector(timeChanged(_:)),
+                             for: .valueChanged)
+        contentView.addSubview(timePickerView)
     }
     
     func createConstrains() {
@@ -184,5 +213,36 @@ extension RoomInfoCell {
             make?.left.right().equalTo()(0)
             make?.height.equalTo()(1)
         }
+        timePickerView.mas_makeConstraints { make in
+            make?.top.equalTo()(0)
+            make?.height.equalTo()(40)
+            make?.left.equalTo()(titleLabel.mas_right)
+            make?.right.equalTo()(0)
+        }
+    }
+    
+    func createWarningLabel(type: RoomInfoItemType) -> UILabel {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 10)
+        label.textColor = UIColor(hexString: "#F04C36")
+        label.textAlignment = .center
+        label.isHidden = true
+        contentView.addSubview(label)
+        label.mas_makeConstraints { make in
+            make?.left.right().equalTo()(0)
+            make?.top.equalTo()(lineView.mas_bottom)
+        }
+
+        switch type {
+        case .roomName:
+            label.text = NSLocalizedString("Login_room_warn",
+                                           comment: "")
+        case .nickName:
+            label.text = NSLocalizedString("Login_user_warn",
+                                           comment: "")
+        default:
+            break
+        }
+        return label
     }
 }

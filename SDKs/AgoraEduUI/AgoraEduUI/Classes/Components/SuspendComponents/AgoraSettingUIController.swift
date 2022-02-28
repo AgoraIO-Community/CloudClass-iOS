@@ -239,7 +239,7 @@ private extension AgoraSettingUIController {
         
         cameraLabel = UILabel(frame: .zero)
         cameraLabel.text = "CameraText".agedu_localized()
-        cameraLabel.font = UIFont.systemFont(ofSize: 12)
+        cameraLabel.font = UIFont.systemFont(ofSize: 13)
         cameraLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(cameraLabel)
         
@@ -254,13 +254,13 @@ private extension AgoraSettingUIController {
         
         directionLabel = UILabel(frame: .zero)
         directionLabel.text = "DirectionText".agedu_localized()
-        directionLabel.font = UIFont.systemFont(ofSize: 12)
+        directionLabel.font = UIFont.systemFont(ofSize: 13)
         directionLabel.textColor = UIColor(hex: 0x677386)
         contentView.addSubview(directionLabel)
         
         frontCamButton = UIButton(type: .custom)
         frontCamButton.isSelected = true
-        frontCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        frontCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         frontCamButton.setTitleColor(.white,
                                      for: .selected)
         frontCamButton.setTitleColor(UIColor(hex: 0xB5B5C9),
@@ -283,7 +283,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(frontCamButton)
         
         backCamButton = UIButton(type: .custom)
-        backCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        backCamButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         backCamButton.setTitleColor(.white,
                                     for: .selected)
         backCamButton.setTitleColor(UIColor(hex: 0xB5B5C9),
@@ -311,7 +311,7 @@ private extension AgoraSettingUIController {
         
         micLabel = UILabel(frame: .zero)
         micLabel.text = "MicrophoneText".agedu_localized()
-        micLabel.font = UIFont.systemFont(ofSize: 12)
+        micLabel.font = UIFont.systemFont(ofSize: 13)
         micLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(micLabel)
         
@@ -326,7 +326,7 @@ private extension AgoraSettingUIController {
         
         audioLabel = UILabel(frame: .zero)
         audioLabel.text = "SpeakerText".agedu_localized()
-        audioLabel.font = UIFont.systemFont(ofSize: 12)
+        audioLabel.font = UIFont.systemFont(ofSize: 13)
         audioLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(audioLabel)
         
@@ -340,7 +340,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(audioSwitch)
         
         exitButton = UIButton(type: .system)
-        exitButton.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        exitButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         exitButton.setTitleColor(.white,
                                  for: .normal)
         exitButton.setTitle("LeaveText".agedu_localized(),

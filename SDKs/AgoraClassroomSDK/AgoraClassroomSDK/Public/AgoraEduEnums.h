@@ -8,6 +8,17 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
+// 上台后音视频是否自动发流权限
+typedef NS_ENUM(NSInteger, AgoraEduMediaAuthOption) {
+    // 无权限
+    AgoraEduMediaAuthOptionNone = 0,
+    // 仅音频权限
+    AgoraEduMediaAuthOptionAudio = 0,
+    // 仅视频权限
+    AgoraEduMediaAuthOptionVideo = 0,
+    // 音频+视频权限
+    AgoraEduMediaAuthOptionBoth = 0,
+};
 
 typedef NS_ENUM(NSInteger, AgoraEduRegion) {
     // 中国大陆
@@ -58,6 +69,7 @@ typedef NS_ENUM(NSInteger, AgoraEduLatencyLevel) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduUserRole) {
+    AgoraEduUserRoleTeacher = 1,
     AgoraEduUserRoleStudent = 2
 };
 
