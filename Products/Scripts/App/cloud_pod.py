@@ -33,7 +33,7 @@ SourcePodContent =  """
 
     # rtc (default pre)
     pod 'AgoraClassroomSDK_iOS/PreRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_Local.podspec'
-    pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
+    pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/AgoraEduCore_Local.podspec'
     pod 'AgoraRte/PreRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
 
     # widgets

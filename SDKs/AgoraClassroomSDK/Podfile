@@ -23,14 +23,13 @@ def libVersion
 end
 
 def preRtc
-  pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
+  pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
   pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
   pod "AgoraRtcEngine_iOS", "3.4.6"
 end
 
 def reRtc
-  pod 'AgoraEduCorePuppet/ReRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCorePuppet/AgoraEduCorePuppet_Local.podspec'
-  pod 'AgoraEduCore/ReRtc', :path => '../../../cloudclass-ios/SDKs/AgoraEduCore/AgoraEduCore_Local.podspec'
+  pod 'AgoraEduCore/ReRtc', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
   pod 'AgoraRte/ReRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
   pod 'AgoraRtcKit', :path => '../../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'  
 end

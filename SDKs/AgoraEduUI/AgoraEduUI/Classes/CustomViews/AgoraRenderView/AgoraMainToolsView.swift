@@ -86,7 +86,7 @@ class AgoraMainToolsView: UIView {
     
     /// 仅教师端
     private lazy var sepLine: UIView = {
-        sepLine = UIView()
+        let sepLine = UIView()
         sepLine.backgroundColor = UIColor(hex: 0xECECF1)
         return sepLine
     }()
