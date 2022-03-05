@@ -22,16 +22,7 @@ fileprivate enum AgoraToolCollectionSelectType: Int {
 }
 
 class AgoraToolCollectionUIController: UIViewController {
-    /// Data 当不同班型需要不同的教具时
-    var teachingAidsList: [AgoraTeachingAidType] = [.vote, .answerSheet, .countDown, .cloudStorage] {
-        willSet {
-            guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
-                return
-            }
-            mainToolsView.teachingAidsList = teachingAidsList
-        }
-    }
-    
+    /// Data
     private weak var delegate: AgoraToolCollectionUIControllerDelegate?
     
     var suggestSize: CGSize = .zero

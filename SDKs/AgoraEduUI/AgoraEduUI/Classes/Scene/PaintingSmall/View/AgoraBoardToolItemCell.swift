@@ -245,14 +245,15 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
     /** 需要先设置颜色才能正常刷出来*/
     public var aSelected: Bool = false {
         willSet {
-            if newValue == true {
-                if let c = color {
-                    sizeView.tintColor = c
-                } else {
-                    sizeView.tintColor = UIColor(hex: 0xE1E1EA)
-                }
+            guard let i = sizeView.image else {
+                return
+            }
+            if newValue == true,
+               let c = color {
+                sizeView.image = i.withRenderingMode(.alwaysTemplate)
+                sizeView.tintColor = c
             } else {
-                sizeView.tintColor = UIColor(hex: 0xE1E1EA)
+                sizeView.image = i.withRenderingMode(.alwaysOriginal)
             }
         }
     }

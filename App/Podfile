@@ -4,6 +4,20 @@ inhibit_all_warnings!
 workspace 'AgoraEducation.xcworkspace'
 install! 'cocoapods', :deterministic_uuids => false, :warn_for_unused_master_specs_repo => false
  
+
+def find_and_replace(dir, findstr, replacestr)
+  Dir[dir].each do |name|
+      text = File.read(name)
+      replace = text.gsub(findstr,replacestr)
+      if text != replace
+          puts "Fix: " + name
+          File.open(name, "w") { |file| file.puts replace }
+          STDOUT.flush
+      end
+  end
+  Dir[dir + '*/'].each(&method(:find_and_replace))
+end
+
 target 'AgoraEducation' do
   use_frameworks!
  

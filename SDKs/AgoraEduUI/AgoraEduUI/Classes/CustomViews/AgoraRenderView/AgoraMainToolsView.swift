@@ -22,8 +22,8 @@ fileprivate let kItemWidth: CGFloat = AgoraFit.scale(30)
 class AgoraMainToolsView: UIView {
     /** Data */
     weak var delegate: AgoraMainToolsViewDelegate?
-    
-    var teachingAidsList: [AgoraTeachingAidType] = [.vote, .answerSheet, .countDown, .cloudStorage] {
+    // TODO: 教师端暂时删除.vote, .answerSheet, .countDown
+    var teachingAidsList: [AgoraTeachingAidType] = [.cloudStorage] {
         didSet {
             if teachingAidsList.count != oldValue.count {
                 updateTeachingAidsLayout()

@@ -88,7 +88,8 @@ extension AgoraBoardPageUIController: AgoraWidgetMessageObserver {
         case .BoardPageChanged(let type):
             switch type {
             case .index(let index):
-                pageIndex = index
+                // index从0开始，UI显示时需要+1
+                pageIndex = index + 1
             case .count(let count):
                 pageCount = count
             }

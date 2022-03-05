@@ -167,6 +167,11 @@
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     
+    // Poller Widget
+    AgoraWidgetConfig *poller = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPollerWidget class]
+                                                                widgetId:@"polling"];
+    widgets[poller.widgetId] = poller;
+    
     // Render Spread Widget
     AgoraWidgetConfig *spread = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRenderSpreadWidget class]
                                                                 widgetId:@"streamWindow"];

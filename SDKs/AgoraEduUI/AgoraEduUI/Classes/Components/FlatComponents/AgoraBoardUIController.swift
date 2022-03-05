@@ -41,6 +41,11 @@ class AgoraBoardUIController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
+        UIApplication.shared.windows[0].endEditing(true)
+    }
 }
 
 // MARK: - private
