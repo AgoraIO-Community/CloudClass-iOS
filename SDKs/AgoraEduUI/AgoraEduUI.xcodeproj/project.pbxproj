@@ -7,50 +7,69 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		864F417527D345AE00A808C6 /* AgoraLectureUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F412B27D345AD00A808C6 /* AgoraLectureUIManager.swift */; };
+		864F417627D345AE00A808C6 /* AgoraOneToOneRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F412E27D345AD00A808C6 /* AgoraOneToOneRenderUIController.swift */; };
+		864F417727D345AE00A808C6 /* AgoraOneToOneTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F412F27D345AD00A808C6 /* AgoraOneToOneTabView.swift */; };
+		864F417827D345AE00A808C6 /* AgoraOneToOneStateUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413127D345AD00A808C6 /* AgoraOneToOneStateUIController.swift */; };
+		864F417927D345AE00A808C6 /* AgoraOneToOneUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413227D345AD00A808C6 /* AgoraOneToOneUIManager.swift */; };
+		864F417A27D345AE00A808C6 /* AgoraPaintingSmallUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413527D345AD00A808C6 /* AgoraPaintingSmallUIManager.swift */; };
+		864F417B27D345AE00A808C6 /* AgoraRoomStateBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413727D345AD00A808C6 /* AgoraRoomStateBar.swift */; };
+		864F417C27D345AE00A808C6 /* AgoraHandsUpDelayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413827D345AD00A808C6 /* AgoraHandsUpDelayView.swift */; };
+		864F417D27D345AE00A808C6 /* AgoraHandsupTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413927D345AD00A808C6 /* AgoraHandsupTipsView.swift */; };
+		864F417E27D345AE00A808C6 /* AgoraBoardToolItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413A27D345AD00A808C6 /* AgoraBoardToolItemCell.swift */; };
+		864F417F27D345AE00A808C6 /* AgoraHandsUpItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413B27D345AD00A808C6 /* AgoraHandsUpItemCell.swift */; };
+		864F418027D345AE00A808C6 /* AgoraToolBoxItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413C27D345AD00A808C6 /* AgoraToolBoxItemCell.swift */; };
+		864F418127D345AE00A808C6 /* AgoraUserListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413D27D345AD00A808C6 /* AgoraUserListItemCell.swift */; };
+		864F418227D345AE00A808C6 /* AgoraRoomToolstView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F413E27D345AD00A808C6 /* AgoraRoomToolstView.swift */; };
+		864F418327D345AE00A808C6 /* AgoraKickOutAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414027D345AD00A808C6 /* AgoraKickOutAlertController.swift */; };
+		864F418427D345AE00A808C6 /* AgoraPaintingLectureUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414227D345AD00A808C6 /* AgoraPaintingLectureUIManager.swift */; };
+		864F418527D345AE00A808C6 /* AgoraSmallUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414427D345AD00A808C6 /* AgoraSmallUIManager.swift */; };
+		864F418627D345AE00A808C6 /* AgoraUIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414627D345AD00A808C6 /* AgoraUIExtension.swift */; };
+		864F418727D345AE00A808C6 /* AgoraContextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414727D345AD00A808C6 /* AgoraContextExtension.swift */; };
+		864F418827D345AE00A808C6 /* AgoraEduExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414827D345AD00A808C6 /* AgoraEduExtension.swift */; };
+		864F418927D345AE00A808C6 /* AgoraMembersHorizeRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414B27D345AD00A808C6 /* AgoraMembersHorizeRenderUIController.swift */; };
+		864F418A27D345AE00A808C6 /* AgoraRoomStateUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414C27D345AD00A808C6 /* AgoraRoomStateUIController.swift */; };
+		864F418B27D345AE00A808C6 /* AgoraToolBarUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414D27D345AD00A808C6 /* AgoraToolBarUIController.swift */; };
+		864F418C27D345AE00A808C6 /* AgoraBoardUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414E27D345AD00A808C6 /* AgoraBoardUIController.swift */; };
+		864F418D27D345AE00A808C6 /* AgoraScreenSharingUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F414F27D345AD00A808C6 /* AgoraScreenSharingUIController.swift */; };
+		864F418E27D345AE00A808C6 /* AgoraStudentsRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415027D345AD00A808C6 /* AgoraStudentsRenderUIController.swift */; };
+		864F418F27D345AE00A808C6 /* AgoraTeacherRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415127D345AD00A808C6 /* AgoraTeacherRenderUIController.swift */; };
+		864F419027D345AE00A808C6 /* AgoraChatUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415227D345AD00A808C6 /* AgoraChatUIController.swift */; };
+		864F419127D345AE00A808C6 /* AgoraBoardToolsUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415427D345AD00A808C6 /* AgoraBoardToolsUIController.swift */; };
+		864F419227D345AE00A808C6 /* AgoraHandsListUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415527D345AD00A808C6 /* AgoraHandsListUIController.swift */; };
+		864F419327D345AE00A808C6 /* AgoraSpreadUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415627D345AD00A808C6 /* AgoraSpreadUIController.swift */; };
+		864F419427D345AE00A808C6 /* AgoraClassToolsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415727D345AD00A808C6 /* AgoraClassToolsViewController.swift */; };
+		864F419527D345AE00A808C6 /* AgoraBoardPageUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415827D345AD00A808C6 /* AgoraBoardPageUIController.swift */; };
+		864F419627D345AE00A808C6 /* AgoraToolBoxUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415927D345AD00A808C6 /* AgoraToolBoxUIController.swift */; };
+		864F419727D345AE00A808C6 /* AgoraSettingUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415A27D345AD00A808C6 /* AgoraSettingUIController.swift */; };
+		864F419827D345AE00A808C6 /* AgoraRenderMenuUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415B27D345AD00A808C6 /* AgoraRenderMenuUIController.swift */; };
+		864F419927D345AE00A808C6 /* AgoraToolCollectionUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415C27D345AD00A808C6 /* AgoraToolCollectionUIController.swift */; };
+		864F419A27D345AE00A808C6 /* AgoraUserListUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415D27D345AD00A808C6 /* AgoraUserListUIController.swift */; };
+		864F419B27D345AE00A808C6 /* AgoraCloudUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415E27D345AD00A808C6 /* AgoraCloudUIController.swift */; };
+		864F419C27D345AE00A808C6 /* AgoraUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F415F27D345AD00A808C6 /* AgoraUIManager.swift */; };
+		864F419D27D345AE00A808C6 /* AgoraAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416227D345AE00A808C6 /* AgoraAlert.swift */; };
+		864F419E27D345AE00A808C6 /* AgoraBoardToolConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416427D345AE00A808C6 /* AgoraBoardToolConfigView.swift */; };
+		864F419F27D345AE00A808C6 /* AgoraRenderMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416527D345AE00A808C6 /* AgoraRenderMemberCell.swift */; };
+		864F41A027D345AE00A808C6 /* AgoraMainToolsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416627D345AE00A808C6 /* AgoraMainToolsView.swift */; };
+		864F41A127D345AE00A808C6 /* AgoraRenderMemberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416727D345AE00A808C6 /* AgoraRenderMemberView.swift */; };
+		864F41A227D345AE00A808C6 /* AgoraToolBarCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416827D345AE00A808C6 /* AgoraToolBarCells.swift */; };
+		864F41A327D345AE00A808C6 /* AgoraRenderMicView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416927D345AE00A808C6 /* AgoraRenderMicView.swift */; };
+		864F41A427D345AE00A808C6 /* AgoraRenderViewReusePool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416A27D345AE00A808C6 /* AgoraRenderViewReusePool.swift */; };
+		864F41A527D345AE00A808C6 /* AgoraZoomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416C27D345AE00A808C6 /* AgoraZoomButton.swift */; };
+		864F41A627D345AE00A808C6 /* AgoraToastTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416E27D345AE00A808C6 /* AgoraToastTipsView.swift */; };
+		864F41A727D345AE00A808C6 /* AgoraLoading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F416F27D345AE00A808C6 /* AgoraLoading.swift */; };
+		864F41A827D345AE00A808C6 /* AgoraToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F417027D345AE00A808C6 /* AgoraToast.swift */; };
+		864F41A927D345AE00A808C6 /* AgoraCloudWidgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F417227D345AE00A808C6 /* AgoraCloudWidgetModel.swift */; };
+		864F41AA27D345AE00A808C6 /* AgoraBoardWidgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F417327D345AE00A808C6 /* AgoraBoardWidgetModel.swift */; };
+		864F41AB27D345AE00A808C6 /* AgoraSpreadWidgetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864F417427D345AE00A808C6 /* AgoraSpreadWidgetModel.swift */; };
+		864F41D527D3467400A808C6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 864F41CB27D3467400A808C6 /* Localizable.strings */; };
+		864F41D627D3467400A808C6 /* img_hands_wave.gif in Resources */ = {isa = PBXBuildFile; fileRef = 864F41CE27D3467400A808C6 /* img_hands_wave.gif */; };
+		864F41D727D3467400A808C6 /* img_loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = 864F41D027D3467400A808C6 /* img_loading.gif */; };
+		864F41D827D3467400A808C6 /* sound_reward.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 864F41D127D3467400A808C6 /* sound_reward.mp3 */; };
+		864F41D927D3467400A808C6 /* img_reward.gif in Resources */ = {isa = PBXBuildFile; fileRef = 864F41D327D3467400A808C6 /* img_reward.gif */; };
+		864F41DA27D3467400A808C6 /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 864F41D427D3467400A808C6 /* images.xcassets */; };
 		86A3D2082609F21E0066BA1E /* AgoraEduUI.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 86A3D1F62609F1BE0066BA1E /* AgoraEduUI.bundle */; };
-		86E33BA6272A7F29009474BA /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 86E33B9F272A7F29009474BA /* Localizable.strings */; };
-		86E33BA7272A7F29009474BA /* reward.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 86E33BA2272A7F29009474BA /* reward.mp3 */; };
-		86E33BA8272A7F29009474BA /* reward.gif in Resources */ = {isa = PBXBuildFile; fileRef = 86E33BA3272A7F29009474BA /* reward.gif */; };
-		86E33BA9272A7F29009474BA /* hands_up_wave.gif in Resources */ = {isa = PBXBuildFile; fileRef = 86E33BA4272A7F29009474BA /* hands_up_wave.gif */; };
-		86E33BAA272A7F29009474BA /* images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 86E33BA5272A7F29009474BA /* images.xcassets */; };
-		86FAE900272A7EE300D86DEC /* AgoraEduUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 86FAE8C4272A7EE300D86DEC /* AgoraEduUI.h */; };
-		86FAE901272A7EE300D86DEC /* AgoraWhiteBoardUIController+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8C6272A7EE300D86DEC /* AgoraWhiteBoardUIController+State.swift */; };
-		86FAE902272A7EE300D86DEC /* AgoraWhiteBoardUIController+UIEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8C7272A7EE300D86DEC /* AgoraWhiteBoardUIController+UIEvent.swift */; };
-		86FAE903272A7EE300D86DEC /* AgoraWhiteBoardUIController+EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8C8272A7EE300D86DEC /* AgoraWhiteBoardUIController+EventHandler.swift */; };
-		86FAE904272A7EE300D86DEC /* AgoraWhiteBoardUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8C9272A7EE300D86DEC /* AgoraWhiteBoardUIController.swift */; };
-		86FAE905272A7EE300D86DEC /* AgoraBoardStates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8CA272A7EE300D86DEC /* AgoraBoardStates.swift */; };
-		86FAE906272A7EE300D86DEC /* AgoraSmallRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8CC272A7EE300D86DEC /* AgoraSmallRenderUIController.swift */; };
-		86FAE907272A7EE300D86DEC /* AgoraSmallRenderUIController+EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8CD272A7EE300D86DEC /* AgoraSmallRenderUIController+EventHandler.swift */; };
-		86FAE908272A7EE300D86DEC /* AgoraLectureRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8CE272A7EE300D86DEC /* AgoraLectureRenderUIController.swift */; };
-		86FAE909272A7EE300D86DEC /* AgoraLectureRenderUIController+UIEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8CF272A7EE300D86DEC /* AgoraLectureRenderUIController+UIEvent.swift */; };
-		86FAE90A272A7EE300D86DEC /* AgoraSmallRenderUIController+UIEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D0272A7EE300D86DEC /* AgoraSmallRenderUIController+UIEvent.swift */; };
-		86FAE90B272A7EE300D86DEC /* AgoraRenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D1272A7EE300D86DEC /* AgoraRenderUIController.swift */; };
-		86FAE90C272A7EE300D86DEC /* AgoraLectureRenderUIController+EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D2272A7EE300D86DEC /* AgoraLectureRenderUIController+EventHandler.swift */; };
-		86FAE90D272A7EE300D86DEC /* AgoraSmallRenderUIController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D3272A7EE300D86DEC /* AgoraSmallRenderUIController+Data.swift */; };
-		86FAE90E272A7EE300D86DEC /* AgoraLectureRenderUIController+Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D4272A7EE300D86DEC /* AgoraLectureRenderUIController+Data.swift */; };
-		86FAE90F272A7EE300D86DEC /* AgoraUIRenderItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D5272A7EE300D86DEC /* AgoraUIRenderItem.swift */; };
-		86FAE910272A7EE300D86DEC /* Agora1V1RenderUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D6272A7EE300D86DEC /* Agora1V1RenderUIController.swift */; };
-		86FAE911272A7EE300D86DEC /* AgoraUIExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D8272A7EE300D86DEC /* AgoraUIExtension.swift */; };
-		86FAE912272A7EE300D86DEC /* AgoraContextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8D9272A7EE300D86DEC /* AgoraContextExtension.swift */; };
-		86FAE914272A7EE300D86DEC /* AgoraScreenUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8DD272A7EE300D86DEC /* AgoraScreenUIController.swift */; };
-		86FAE915272A7EE300D86DEC /* AgoraUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8DE272A7EE300D86DEC /* AgoraUIController.swift */; };
-		86FAE916272A7EE300D86DEC /* AgoraPrivateChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8DF272A7EE300D86DEC /* AgoraPrivateChatController.swift */; };
-		86FAE917272A7EE300D86DEC /* AgoraHandsUpUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8E0272A7EE300D86DEC /* AgoraHandsUpUIController.swift */; };
-		86FAE918272A7EE300D86DEC /* AgoraSetUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8E1272A7EE300D86DEC /* AgoraSetUIController.swift */; };
-		86FAE919272A7EE300D86DEC /* AgoraRoomUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8E2272A7EE300D86DEC /* AgoraRoomUIController.swift */; };
-		86FAE91A272A7EE300D86DEC /* AgoraUserListUIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8E3272A7EE300D86DEC /* AgoraUserListUIController.swift */; };
-		86FAE91B272A7EE300D86DEC /* AgoraRoomStateBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8E7272A7EE300D86DEC /* AgoraRoomStateBar.swift */; };
-		86FAE91D272A7EE300D86DEC /* AgoraHandsUpDelayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8E9272A7EE300D86DEC /* AgoraHandsUpDelayView.swift */; };
-		86FAE91E272A7EE300D86DEC /* AgoraPaintingUserListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8EA272A7EE300D86DEC /* AgoraPaintingUserListItemCell.swift */; };
-		86FAE91F272A7EE300D86DEC /* AgoraHandsupTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8EB272A7EE300D86DEC /* AgoraHandsupTipsView.swift */; };
-		86FAE920272A7EE300D86DEC /* AgoraBoardToolItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8EC272A7EE300D86DEC /* AgoraBoardToolItemCell.swift */; };
-		86FAE921272A7EE300D86DEC /* AgoraHandsUpItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8ED272A7EE300D86DEC /* AgoraHandsUpItemCell.swift */; };
-		86FAE922272A7EE300D86DEC /* AgoraRenderVolumeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8EE272A7EE300D86DEC /* AgoraRenderVolumeView.swift */; };
-		86FAE923272A7EE300D86DEC /* AgoraRenderItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8EF272A7EE300D86DEC /* AgoraRenderItemCell.swift */; };
-		86FAE92E272A7EE300D86DEC /* AgoraEduUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8FC272A7EE300D86DEC /* AgoraEduUI.swift */; };
-		86FAE92F272A7EE300D86DEC /* AgoraSmallUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8FD272A7EE300D86DEC /* AgoraSmallUIManager.swift */; };
-		86FAE930272A7EE300D86DEC /* AgoraLectureUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8FE272A7EE300D86DEC /* AgoraLectureUIManager.swift */; };
-		86FAE931272A7EE300D86DEC /* AgoraOneToOneUIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86FAE8FF272A7EE300D86DEC /* AgoraOneToOneUIManager.swift */; };
+		86FAE900272A7EE300D86DEC /* AgoraEduUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 86FAE8C4272A7EE300D86DEC /* AgoraEduUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D2FDE5A91E108F380FD9461B /* Pods_AgoraEduUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26C9B3EE1F4AB10EA28D390D /* Pods_AgoraEduUI.framework */; };
 /* End PBXBuildFile section */
 
@@ -68,56 +87,75 @@
 		26C9B3EE1F4AB10EA28D390D /* Pods_AgoraEduUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEduUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A3EE2BBBB69C211FC9EC107 /* Pods-AgoraEduUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduUI.release.xcconfig"; path = "Target Support Files/Pods-AgoraEduUI/Pods-AgoraEduUI.release.xcconfig"; sourceTree = "<group>"; };
 		7C43200E3ADA8276A354EFF3 /* Pods-AgoraUIEduAppViews.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraUIEduAppViews.debug.xcconfig"; path = "Target Support Files/Pods-AgoraUIEduAppViews/Pods-AgoraUIEduAppViews.debug.xcconfig"; sourceTree = "<group>"; };
+		864F412B27D345AD00A808C6 /* AgoraLectureUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraLectureUIManager.swift; sourceTree = "<group>"; };
+		864F412E27D345AD00A808C6 /* AgoraOneToOneRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraOneToOneRenderUIController.swift; sourceTree = "<group>"; };
+		864F412F27D345AD00A808C6 /* AgoraOneToOneTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraOneToOneTabView.swift; sourceTree = "<group>"; };
+		864F413127D345AD00A808C6 /* AgoraOneToOneStateUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraOneToOneStateUIController.swift; sourceTree = "<group>"; };
+		864F413227D345AD00A808C6 /* AgoraOneToOneUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraOneToOneUIManager.swift; sourceTree = "<group>"; };
+		864F413527D345AD00A808C6 /* AgoraPaintingSmallUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraPaintingSmallUIManager.swift; sourceTree = "<group>"; };
+		864F413727D345AD00A808C6 /* AgoraRoomStateBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRoomStateBar.swift; sourceTree = "<group>"; };
+		864F413827D345AD00A808C6 /* AgoraHandsUpDelayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraHandsUpDelayView.swift; sourceTree = "<group>"; };
+		864F413927D345AD00A808C6 /* AgoraHandsupTipsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraHandsupTipsView.swift; sourceTree = "<group>"; };
+		864F413A27D345AD00A808C6 /* AgoraBoardToolItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardToolItemCell.swift; sourceTree = "<group>"; };
+		864F413B27D345AD00A808C6 /* AgoraHandsUpItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraHandsUpItemCell.swift; sourceTree = "<group>"; };
+		864F413C27D345AD00A808C6 /* AgoraToolBoxItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToolBoxItemCell.swift; sourceTree = "<group>"; };
+		864F413D27D345AD00A808C6 /* AgoraUserListItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserListItemCell.swift; sourceTree = "<group>"; };
+		864F413E27D345AD00A808C6 /* AgoraRoomToolstView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRoomToolstView.swift; sourceTree = "<group>"; };
+		864F414027D345AD00A808C6 /* AgoraKickOutAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraKickOutAlertController.swift; sourceTree = "<group>"; };
+		864F414227D345AD00A808C6 /* AgoraPaintingLectureUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraPaintingLectureUIManager.swift; sourceTree = "<group>"; };
+		864F414427D345AD00A808C6 /* AgoraSmallUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSmallUIManager.swift; sourceTree = "<group>"; };
+		864F414627D345AD00A808C6 /* AgoraUIExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUIExtension.swift; sourceTree = "<group>"; };
+		864F414727D345AD00A808C6 /* AgoraContextExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraContextExtension.swift; sourceTree = "<group>"; };
+		864F414827D345AD00A808C6 /* AgoraEduExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduExtension.swift; sourceTree = "<group>"; };
+		864F414B27D345AD00A808C6 /* AgoraMembersHorizeRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraMembersHorizeRenderUIController.swift; sourceTree = "<group>"; };
+		864F414C27D345AD00A808C6 /* AgoraRoomStateUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRoomStateUIController.swift; sourceTree = "<group>"; };
+		864F414D27D345AD00A808C6 /* AgoraToolBarUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToolBarUIController.swift; sourceTree = "<group>"; };
+		864F414E27D345AD00A808C6 /* AgoraBoardUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardUIController.swift; sourceTree = "<group>"; };
+		864F414F27D345AD00A808C6 /* AgoraScreenSharingUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraScreenSharingUIController.swift; sourceTree = "<group>"; };
+		864F415027D345AD00A808C6 /* AgoraStudentsRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraStudentsRenderUIController.swift; sourceTree = "<group>"; };
+		864F415127D345AD00A808C6 /* AgoraTeacherRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraTeacherRenderUIController.swift; sourceTree = "<group>"; };
+		864F415227D345AD00A808C6 /* AgoraChatUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraChatUIController.swift; sourceTree = "<group>"; };
+		864F415427D345AD00A808C6 /* AgoraBoardToolsUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardToolsUIController.swift; sourceTree = "<group>"; };
+		864F415527D345AD00A808C6 /* AgoraHandsListUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraHandsListUIController.swift; sourceTree = "<group>"; };
+		864F415627D345AD00A808C6 /* AgoraSpreadUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSpreadUIController.swift; sourceTree = "<group>"; };
+		864F415727D345AD00A808C6 /* AgoraClassToolsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraClassToolsViewController.swift; sourceTree = "<group>"; };
+		864F415827D345AD00A808C6 /* AgoraBoardPageUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardPageUIController.swift; sourceTree = "<group>"; };
+		864F415927D345AD00A808C6 /* AgoraToolBoxUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToolBoxUIController.swift; sourceTree = "<group>"; };
+		864F415A27D345AD00A808C6 /* AgoraSettingUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSettingUIController.swift; sourceTree = "<group>"; };
+		864F415B27D345AD00A808C6 /* AgoraRenderMenuUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderMenuUIController.swift; sourceTree = "<group>"; };
+		864F415C27D345AD00A808C6 /* AgoraToolCollectionUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToolCollectionUIController.swift; sourceTree = "<group>"; };
+		864F415D27D345AD00A808C6 /* AgoraUserListUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserListUIController.swift; sourceTree = "<group>"; };
+		864F415E27D345AD00A808C6 /* AgoraCloudUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraCloudUIController.swift; sourceTree = "<group>"; };
+		864F415F27D345AD00A808C6 /* AgoraUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUIManager.swift; sourceTree = "<group>"; };
+		864F416227D345AE00A808C6 /* AgoraAlert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraAlert.swift; sourceTree = "<group>"; };
+		864F416427D345AE00A808C6 /* AgoraBoardToolConfigView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardToolConfigView.swift; sourceTree = "<group>"; };
+		864F416527D345AE00A808C6 /* AgoraRenderMemberCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderMemberCell.swift; sourceTree = "<group>"; };
+		864F416627D345AE00A808C6 /* AgoraMainToolsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraMainToolsView.swift; sourceTree = "<group>"; };
+		864F416727D345AE00A808C6 /* AgoraRenderMemberView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderMemberView.swift; sourceTree = "<group>"; };
+		864F416827D345AE00A808C6 /* AgoraToolBarCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToolBarCells.swift; sourceTree = "<group>"; };
+		864F416927D345AE00A808C6 /* AgoraRenderMicView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderMicView.swift; sourceTree = "<group>"; };
+		864F416A27D345AE00A808C6 /* AgoraRenderViewReusePool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderViewReusePool.swift; sourceTree = "<group>"; };
+		864F416C27D345AE00A808C6 /* AgoraZoomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraZoomButton.swift; sourceTree = "<group>"; };
+		864F416E27D345AE00A808C6 /* AgoraToastTipsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToastTipsView.swift; sourceTree = "<group>"; };
+		864F416F27D345AE00A808C6 /* AgoraLoading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraLoading.swift; sourceTree = "<group>"; };
+		864F417027D345AE00A808C6 /* AgoraToast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraToast.swift; sourceTree = "<group>"; };
+		864F417227D345AE00A808C6 /* AgoraCloudWidgetModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraCloudWidgetModel.swift; sourceTree = "<group>"; };
+		864F417327D345AE00A808C6 /* AgoraBoardWidgetModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardWidgetModel.swift; sourceTree = "<group>"; };
+		864F417427D345AE00A808C6 /* AgoraSpreadWidgetModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSpreadWidgetModel.swift; sourceTree = "<group>"; };
+		864F41CC27D3467400A808C6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		864F41CD27D3467400A808C6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		864F41CE27D3467400A808C6 /* img_hands_wave.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = img_hands_wave.gif; sourceTree = "<group>"; };
+		864F41CF27D3467400A808C6 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		864F41D027D3467400A808C6 /* img_loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = img_loading.gif; sourceTree = "<group>"; };
+		864F41D127D3467400A808C6 /* sound_reward.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sound_reward.mp3; sourceTree = "<group>"; };
+		864F41D227D3467400A808C6 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		864F41D327D3467400A808C6 /* img_reward.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = img_reward.gif; sourceTree = "<group>"; };
+		864F41D427D3467400A808C6 /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		868D62B225EF7A6200E914F2 /* AgoraEduUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		868D62B625EF7A6200E914F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		86A3D1F62609F1BE0066BA1E /* AgoraEduUI.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgoraEduUI.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		86A3D1F82609F1BE0066BA1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		86E33BA0272A7F29009474BA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		86E33BA1272A7F29009474BA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		86E33BA2272A7F29009474BA /* reward.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = reward.mp3; sourceTree = "<group>"; };
-		86E33BA3272A7F29009474BA /* reward.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = reward.gif; sourceTree = "<group>"; };
-		86E33BA4272A7F29009474BA /* hands_up_wave.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = hands_up_wave.gif; sourceTree = "<group>"; };
-		86E33BA5272A7F29009474BA /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		86FAE8C4272A7EE300D86DEC /* AgoraEduUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgoraEduUI.h; sourceTree = "<group>"; };
-		86FAE8C6272A7EE300D86DEC /* AgoraWhiteBoardUIController+State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraWhiteBoardUIController+State.swift"; sourceTree = "<group>"; };
-		86FAE8C7272A7EE300D86DEC /* AgoraWhiteBoardUIController+UIEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraWhiteBoardUIController+UIEvent.swift"; sourceTree = "<group>"; };
-		86FAE8C8272A7EE300D86DEC /* AgoraWhiteBoardUIController+EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraWhiteBoardUIController+EventHandler.swift"; sourceTree = "<group>"; };
-		86FAE8C9272A7EE300D86DEC /* AgoraWhiteBoardUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraWhiteBoardUIController.swift; sourceTree = "<group>"; };
-		86FAE8CA272A7EE300D86DEC /* AgoraBoardStates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardStates.swift; sourceTree = "<group>"; };
-		86FAE8CC272A7EE300D86DEC /* AgoraSmallRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSmallRenderUIController.swift; sourceTree = "<group>"; };
-		86FAE8CD272A7EE300D86DEC /* AgoraSmallRenderUIController+EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+EventHandler.swift"; sourceTree = "<group>"; };
-		86FAE8CE272A7EE300D86DEC /* AgoraLectureRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraLectureRenderUIController.swift; sourceTree = "<group>"; };
-		86FAE8CF272A7EE300D86DEC /* AgoraLectureRenderUIController+UIEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraLectureRenderUIController+UIEvent.swift"; sourceTree = "<group>"; };
-		86FAE8D0272A7EE300D86DEC /* AgoraSmallRenderUIController+UIEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+UIEvent.swift"; sourceTree = "<group>"; };
-		86FAE8D1272A7EE300D86DEC /* AgoraRenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderUIController.swift; sourceTree = "<group>"; };
-		86FAE8D2272A7EE300D86DEC /* AgoraLectureRenderUIController+EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraLectureRenderUIController+EventHandler.swift"; sourceTree = "<group>"; };
-		86FAE8D3272A7EE300D86DEC /* AgoraSmallRenderUIController+Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraSmallRenderUIController+Data.swift"; sourceTree = "<group>"; };
-		86FAE8D4272A7EE300D86DEC /* AgoraLectureRenderUIController+Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AgoraLectureRenderUIController+Data.swift"; sourceTree = "<group>"; };
-		86FAE8D5272A7EE300D86DEC /* AgoraUIRenderItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUIRenderItem.swift; sourceTree = "<group>"; };
-		86FAE8D6272A7EE300D86DEC /* Agora1V1RenderUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Agora1V1RenderUIController.swift; sourceTree = "<group>"; };
-		86FAE8D8272A7EE300D86DEC /* AgoraUIExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUIExtension.swift; sourceTree = "<group>"; };
-		86FAE8D9272A7EE300D86DEC /* AgoraContextExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraContextExtension.swift; sourceTree = "<group>"; };
-		86FAE8DD272A7EE300D86DEC /* AgoraScreenUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraScreenUIController.swift; sourceTree = "<group>"; };
-		86FAE8DE272A7EE300D86DEC /* AgoraUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUIController.swift; sourceTree = "<group>"; };
-		86FAE8DF272A7EE300D86DEC /* AgoraPrivateChatController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraPrivateChatController.swift; sourceTree = "<group>"; };
-		86FAE8E0272A7EE300D86DEC /* AgoraHandsUpUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraHandsUpUIController.swift; sourceTree = "<group>"; };
-		86FAE8E1272A7EE300D86DEC /* AgoraSetUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSetUIController.swift; sourceTree = "<group>"; };
-		86FAE8E2272A7EE300D86DEC /* AgoraRoomUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRoomUIController.swift; sourceTree = "<group>"; };
-		86FAE8E3272A7EE300D86DEC /* AgoraUserListUIController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraUserListUIController.swift; sourceTree = "<group>"; };
-		86FAE8E7272A7EE300D86DEC /* AgoraRoomStateBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRoomStateBar.swift; sourceTree = "<group>"; };
-		86FAE8E9272A7EE300D86DEC /* AgoraHandsUpDelayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraHandsUpDelayView.swift; sourceTree = "<group>"; };
-		86FAE8EA272A7EE300D86DEC /* AgoraPaintingUserListItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraPaintingUserListItemCell.swift; sourceTree = "<group>"; };
-		86FAE8EB272A7EE300D86DEC /* AgoraHandsupTipsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraHandsupTipsView.swift; sourceTree = "<group>"; };
-		86FAE8EC272A7EE300D86DEC /* AgoraBoardToolItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraBoardToolItemCell.swift; sourceTree = "<group>"; };
-		86FAE8ED272A7EE300D86DEC /* AgoraHandsUpItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraHandsUpItemCell.swift; sourceTree = "<group>"; };
-		86FAE8EE272A7EE300D86DEC /* AgoraRenderVolumeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderVolumeView.swift; sourceTree = "<group>"; };
-		86FAE8EF272A7EE300D86DEC /* AgoraRenderItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraRenderItemCell.swift; sourceTree = "<group>"; };
-		86FAE8FC272A7EE300D86DEC /* AgoraEduUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraEduUI.swift; sourceTree = "<group>"; };
-		86FAE8FD272A7EE300D86DEC /* AgoraSmallUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraSmallUIManager.swift; sourceTree = "<group>"; };
-		86FAE8FE272A7EE300D86DEC /* AgoraLectureUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraLectureUIManager.swift; sourceTree = "<group>"; };
-		86FAE8FF272A7EE300D86DEC /* AgoraOneToOneUIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgoraOneToOneUIManager.swift; sourceTree = "<group>"; };
-		AB245B66272BEAE600C01B4C /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		AB245B67272BEAEC00C01B4C /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EA7FEB30FF237720E7FA8E53 /* Pods-AgoraEduUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduUI.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEduUI/Pods-AgoraEduUI.debug.xcconfig"; sourceTree = "<group>"; };
 		F4711B383231D6501A1CB145 /* Pods-AgoraUIEduAppViews.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraUIEduAppViews.release.xcconfig"; path = "Target Support Files/Pods-AgoraUIEduAppViews/Pods-AgoraUIEduAppViews.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -160,6 +198,245 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		864F412927D345AD00A808C6 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				864F412A27D345AD00A808C6 /* Lecture */,
+				864F412C27D345AD00A808C6 /* 1V1 */,
+				864F413327D345AD00A808C6 /* PaintingSmall */,
+				864F414127D345AD00A808C6 /* PaintingLecture */,
+				864F414327D345AD00A808C6 /* Small */,
+			);
+			path = Scene;
+			sourceTree = "<group>";
+		};
+		864F412A27D345AD00A808C6 /* Lecture */ = {
+			isa = PBXGroup;
+			children = (
+				864F412B27D345AD00A808C6 /* AgoraLectureUIManager.swift */,
+			);
+			path = Lecture;
+			sourceTree = "<group>";
+		};
+		864F412C27D345AD00A808C6 /* 1V1 */ = {
+			isa = PBXGroup;
+			children = (
+				864F412D27D345AD00A808C6 /* Render */,
+				864F413027D345AD00A808C6 /* State */,
+				864F413227D345AD00A808C6 /* AgoraOneToOneUIManager.swift */,
+			);
+			path = 1V1;
+			sourceTree = "<group>";
+		};
+		864F412D27D345AD00A808C6 /* Render */ = {
+			isa = PBXGroup;
+			children = (
+				864F412E27D345AD00A808C6 /* AgoraOneToOneRenderUIController.swift */,
+				864F412F27D345AD00A808C6 /* AgoraOneToOneTabView.swift */,
+			);
+			path = Render;
+			sourceTree = "<group>";
+		};
+		864F413027D345AD00A808C6 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				864F413127D345AD00A808C6 /* AgoraOneToOneStateUIController.swift */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		864F413327D345AD00A808C6 /* PaintingSmall */ = {
+			isa = PBXGroup;
+			children = (
+				864F413427D345AD00A808C6 /* UIController */,
+				864F413627D345AD00A808C6 /* View */,
+				864F413F27D345AD00A808C6 /* AlertView */,
+			);
+			path = PaintingSmall;
+			sourceTree = "<group>";
+		};
+		864F413427D345AD00A808C6 /* UIController */ = {
+			isa = PBXGroup;
+			children = (
+				864F413527D345AD00A808C6 /* AgoraPaintingSmallUIManager.swift */,
+			);
+			path = UIController;
+			sourceTree = "<group>";
+		};
+		864F413627D345AD00A808C6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				864F413727D345AD00A808C6 /* AgoraRoomStateBar.swift */,
+				864F413827D345AD00A808C6 /* AgoraHandsUpDelayView.swift */,
+				864F413927D345AD00A808C6 /* AgoraHandsupTipsView.swift */,
+				864F413A27D345AD00A808C6 /* AgoraBoardToolItemCell.swift */,
+				864F413B27D345AD00A808C6 /* AgoraHandsUpItemCell.swift */,
+				864F413C27D345AD00A808C6 /* AgoraToolBoxItemCell.swift */,
+				864F413D27D345AD00A808C6 /* AgoraUserListItemCell.swift */,
+				864F413E27D345AD00A808C6 /* AgoraRoomToolstView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		864F413F27D345AD00A808C6 /* AlertView */ = {
+			isa = PBXGroup;
+			children = (
+				864F414027D345AD00A808C6 /* AgoraKickOutAlertController.swift */,
+			);
+			path = AlertView;
+			sourceTree = "<group>";
+		};
+		864F414127D345AD00A808C6 /* PaintingLecture */ = {
+			isa = PBXGroup;
+			children = (
+				864F414227D345AD00A808C6 /* AgoraPaintingLectureUIManager.swift */,
+			);
+			path = PaintingLecture;
+			sourceTree = "<group>";
+		};
+		864F414327D345AD00A808C6 /* Small */ = {
+			isa = PBXGroup;
+			children = (
+				864F414427D345AD00A808C6 /* AgoraSmallUIManager.swift */,
+			);
+			path = Small;
+			sourceTree = "<group>";
+		};
+		864F414527D345AD00A808C6 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				864F414627D345AD00A808C6 /* AgoraUIExtension.swift */,
+				864F414727D345AD00A808C6 /* AgoraContextExtension.swift */,
+				864F414827D345AD00A808C6 /* AgoraEduExtension.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		864F414927D345AD00A808C6 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				864F414A27D345AD00A808C6 /* FlatComponents */,
+				864F415327D345AD00A808C6 /* SuspendComponents */,
+				864F415F27D345AD00A808C6 /* AgoraUIManager.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		864F414A27D345AD00A808C6 /* FlatComponents */ = {
+			isa = PBXGroup;
+			children = (
+				864F414B27D345AD00A808C6 /* AgoraMembersHorizeRenderUIController.swift */,
+				864F414C27D345AD00A808C6 /* AgoraRoomStateUIController.swift */,
+				864F414D27D345AD00A808C6 /* AgoraToolBarUIController.swift */,
+				864F414E27D345AD00A808C6 /* AgoraBoardUIController.swift */,
+				864F414F27D345AD00A808C6 /* AgoraScreenSharingUIController.swift */,
+				864F415027D345AD00A808C6 /* AgoraStudentsRenderUIController.swift */,
+				864F415127D345AD00A808C6 /* AgoraTeacherRenderUIController.swift */,
+				864F415227D345AD00A808C6 /* AgoraChatUIController.swift */,
+			);
+			path = FlatComponents;
+			sourceTree = "<group>";
+		};
+		864F415327D345AD00A808C6 /* SuspendComponents */ = {
+			isa = PBXGroup;
+			children = (
+				864F415427D345AD00A808C6 /* AgoraBoardToolsUIController.swift */,
+				864F415527D345AD00A808C6 /* AgoraHandsListUIController.swift */,
+				864F415627D345AD00A808C6 /* AgoraSpreadUIController.swift */,
+				864F415727D345AD00A808C6 /* AgoraClassToolsViewController.swift */,
+				864F415827D345AD00A808C6 /* AgoraBoardPageUIController.swift */,
+				864F415927D345AD00A808C6 /* AgoraToolBoxUIController.swift */,
+				864F415A27D345AD00A808C6 /* AgoraSettingUIController.swift */,
+				864F415B27D345AD00A808C6 /* AgoraRenderMenuUIController.swift */,
+				864F415C27D345AD00A808C6 /* AgoraToolCollectionUIController.swift */,
+				864F415D27D345AD00A808C6 /* AgoraUserListUIController.swift */,
+				864F415E27D345AD00A808C6 /* AgoraCloudUIController.swift */,
+			);
+			path = SuspendComponents;
+			sourceTree = "<group>";
+		};
+		864F416027D345AE00A808C6 /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				864F416127D345AE00A808C6 /* AgoraAlertView */,
+				864F416327D345AE00A808C6 /* AgoraRenderView */,
+				864F416B27D345AE00A808C6 /* AgoraZoomButton */,
+				864F416D27D345AE00A808C6 /* AgoraToast */,
+			);
+			path = CustomViews;
+			sourceTree = "<group>";
+		};
+		864F416127D345AE00A808C6 /* AgoraAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				864F416227D345AE00A808C6 /* AgoraAlert.swift */,
+			);
+			path = AgoraAlertView;
+			sourceTree = "<group>";
+		};
+		864F416327D345AE00A808C6 /* AgoraRenderView */ = {
+			isa = PBXGroup;
+			children = (
+				864F416427D345AE00A808C6 /* AgoraBoardToolConfigView.swift */,
+				864F416527D345AE00A808C6 /* AgoraRenderMemberCell.swift */,
+				864F416627D345AE00A808C6 /* AgoraMainToolsView.swift */,
+				864F416727D345AE00A808C6 /* AgoraRenderMemberView.swift */,
+				864F416827D345AE00A808C6 /* AgoraToolBarCells.swift */,
+				864F416927D345AE00A808C6 /* AgoraRenderMicView.swift */,
+				864F416A27D345AE00A808C6 /* AgoraRenderViewReusePool.swift */,
+			);
+			path = AgoraRenderView;
+			sourceTree = "<group>";
+		};
+		864F416B27D345AE00A808C6 /* AgoraZoomButton */ = {
+			isa = PBXGroup;
+			children = (
+				864F416C27D345AE00A808C6 /* AgoraZoomButton.swift */,
+			);
+			path = AgoraZoomButton;
+			sourceTree = "<group>";
+		};
+		864F416D27D345AE00A808C6 /* AgoraToast */ = {
+			isa = PBXGroup;
+			children = (
+				864F416E27D345AE00A808C6 /* AgoraToastTipsView.swift */,
+				864F416F27D345AE00A808C6 /* AgoraLoading.swift */,
+				864F417027D345AE00A808C6 /* AgoraToast.swift */,
+			);
+			path = AgoraToast;
+			sourceTree = "<group>";
+		};
+		864F417127D345AE00A808C6 /* WidgetModels */ = {
+			isa = PBXGroup;
+			children = (
+				864F417227D345AE00A808C6 /* AgoraCloudWidgetModel.swift */,
+				864F417327D345AE00A808C6 /* AgoraBoardWidgetModel.swift */,
+				864F417427D345AE00A808C6 /* AgoraSpreadWidgetModel.swift */,
+			);
+			path = WidgetModels;
+			sourceTree = "<group>";
+		};
+		864F41C927D3467400A808C6 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				864F41CA27D3467400A808C6 /* others */,
+				864F41D427D3467400A808C6 /* images.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		864F41CA27D3467400A808C6 /* others */ = {
+			isa = PBXGroup;
+			children = (
+				864F41CB27D3467400A808C6 /* Localizable.strings */,
+				864F41CE27D3467400A808C6 /* img_hands_wave.gif */,
+				864F41D027D3467400A808C6 /* img_loading.gif */,
+				864F41D127D3467400A808C6 /* sound_reward.mp3 */,
+				864F41D327D3467400A808C6 /* img_reward.gif */,
+			);
+			path = others;
+			sourceTree = "<group>";
+		};
 		868D62A825EF7A6200E914F2 = {
 			isa = PBXGroup;
 			children = (
@@ -183,8 +460,8 @@
 		868D62B425EF7A6200E914F2 /* AgoraEduUI */ = {
 			isa = PBXGroup;
 			children = (
-				86E33B9D272A7F29009474BA /* Assets */,
 				86FAE8C3272A7EE300D86DEC /* Classes */,
+				864F41C927D3467400A808C6 /* Assets */,
 				868D62B625EF7A6200E914F2 /* Info.plist */,
 			);
 			path = AgoraEduUI;
@@ -198,133 +475,17 @@
 			path = "AgoraEduUI-AgoraEduUI";
 			sourceTree = "<group>";
 		};
-		86E33B9D272A7F29009474BA /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				86E33B9E272A7F29009474BA /* others */,
-				86E33BA5272A7F29009474BA /* images.xcassets */,
-			);
-			path = Assets;
-			sourceTree = "<group>";
-		};
-		86E33B9E272A7F29009474BA /* others */ = {
-			isa = PBXGroup;
-			children = (
-				86E33B9F272A7F29009474BA /* Localizable.strings */,
-				86E33BA2272A7F29009474BA /* reward.mp3 */,
-				86E33BA3272A7F29009474BA /* reward.gif */,
-				86E33BA4272A7F29009474BA /* hands_up_wave.gif */,
-			);
-			path = others;
-			sourceTree = "<group>";
-		};
 		86FAE8C3272A7EE300D86DEC /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				86FAE8C4272A7EE300D86DEC /* AgoraEduUI.h */,
-				86FAE8C5272A7EE300D86DEC /* WhiteBoard */,
-				86FAE8CB272A7EE300D86DEC /* Render */,
-				86FAE8D7272A7EE300D86DEC /* Utils */,
-				86FAE8DC272A7EE300D86DEC /* UIController */,
-				86FAE8E4272A7EE300D86DEC /* Scene */,
-				86FAE8FB272A7EE300D86DEC /* UIManager */,
+				864F414927D345AD00A808C6 /* Components */,
+				864F416027D345AE00A808C6 /* CustomViews */,
+				864F412927D345AD00A808C6 /* Scene */,
+				864F414527D345AD00A808C6 /* Utils */,
+				864F417127D345AE00A808C6 /* WidgetModels */,
 			);
 			path = Classes;
-			sourceTree = "<group>";
-		};
-		86FAE8C5272A7EE300D86DEC /* WhiteBoard */ = {
-			isa = PBXGroup;
-			children = (
-				86FAE8C6272A7EE300D86DEC /* AgoraWhiteBoardUIController+State.swift */,
-				86FAE8C7272A7EE300D86DEC /* AgoraWhiteBoardUIController+UIEvent.swift */,
-				86FAE8C8272A7EE300D86DEC /* AgoraWhiteBoardUIController+EventHandler.swift */,
-				86FAE8C9272A7EE300D86DEC /* AgoraWhiteBoardUIController.swift */,
-				86FAE8CA272A7EE300D86DEC /* AgoraBoardStates.swift */,
-			);
-			path = WhiteBoard;
-			sourceTree = "<group>";
-		};
-		86FAE8CB272A7EE300D86DEC /* Render */ = {
-			isa = PBXGroup;
-			children = (
-				86FAE8CC272A7EE300D86DEC /* AgoraSmallRenderUIController.swift */,
-				86FAE8CD272A7EE300D86DEC /* AgoraSmallRenderUIController+EventHandler.swift */,
-				86FAE8CE272A7EE300D86DEC /* AgoraLectureRenderUIController.swift */,
-				86FAE8CF272A7EE300D86DEC /* AgoraLectureRenderUIController+UIEvent.swift */,
-				86FAE8D0272A7EE300D86DEC /* AgoraSmallRenderUIController+UIEvent.swift */,
-				86FAE8D1272A7EE300D86DEC /* AgoraRenderUIController.swift */,
-				86FAE8D2272A7EE300D86DEC /* AgoraLectureRenderUIController+EventHandler.swift */,
-				86FAE8D3272A7EE300D86DEC /* AgoraSmallRenderUIController+Data.swift */,
-				86FAE8D4272A7EE300D86DEC /* AgoraLectureRenderUIController+Data.swift */,
-				86FAE8D5272A7EE300D86DEC /* AgoraUIRenderItem.swift */,
-				86FAE8D6272A7EE300D86DEC /* Agora1V1RenderUIController.swift */,
-			);
-			path = Render;
-			sourceTree = "<group>";
-		};
-		86FAE8D7272A7EE300D86DEC /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				86FAE8D8272A7EE300D86DEC /* AgoraUIExtension.swift */,
-				86FAE8D9272A7EE300D86DEC /* AgoraContextExtension.swift */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
-		86FAE8DC272A7EE300D86DEC /* UIController */ = {
-			isa = PBXGroup;
-			children = (
-				86FAE8DD272A7EE300D86DEC /* AgoraScreenUIController.swift */,
-				86FAE8DE272A7EE300D86DEC /* AgoraUIController.swift */,
-				86FAE8DF272A7EE300D86DEC /* AgoraPrivateChatController.swift */,
-				86FAE8E0272A7EE300D86DEC /* AgoraHandsUpUIController.swift */,
-				86FAE8E1272A7EE300D86DEC /* AgoraSetUIController.swift */,
-				86FAE8E2272A7EE300D86DEC /* AgoraRoomUIController.swift */,
-				86FAE8E3272A7EE300D86DEC /* AgoraUserListUIController.swift */,
-			);
-			path = UIController;
-			sourceTree = "<group>";
-		};
-		86FAE8E4272A7EE300D86DEC /* Scene */ = {
-			isa = PBXGroup;
-			children = (
-				86FAE8E5272A7EE300D86DEC /* PaintingSmall */,
-			);
-			path = Scene;
-			sourceTree = "<group>";
-		};
-		86FAE8E5272A7EE300D86DEC /* PaintingSmall */ = {
-			isa = PBXGroup;
-			children = (
-				86FAE8E6272A7EE300D86DEC /* View */,
-			);
-			path = PaintingSmall;
-			sourceTree = "<group>";
-		};
-		86FAE8E6272A7EE300D86DEC /* View */ = {
-			isa = PBXGroup;
-			children = (
-				86FAE8E7272A7EE300D86DEC /* AgoraRoomStateBar.swift */,
-				86FAE8E9272A7EE300D86DEC /* AgoraHandsUpDelayView.swift */,
-				86FAE8EA272A7EE300D86DEC /* AgoraPaintingUserListItemCell.swift */,
-				86FAE8EB272A7EE300D86DEC /* AgoraHandsupTipsView.swift */,
-				86FAE8EC272A7EE300D86DEC /* AgoraBoardToolItemCell.swift */,
-				86FAE8ED272A7EE300D86DEC /* AgoraHandsUpItemCell.swift */,
-				86FAE8EE272A7EE300D86DEC /* AgoraRenderVolumeView.swift */,
-				86FAE8EF272A7EE300D86DEC /* AgoraRenderItemCell.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
-		86FAE8FB272A7EE300D86DEC /* UIManager */ = {
-			isa = PBXGroup;
-			children = (
-				86FAE8FC272A7EE300D86DEC /* AgoraEduUI.swift */,
-				86FAE8FD272A7EE300D86DEC /* AgoraSmallUIManager.swift */,
-				86FAE8FE272A7EE300D86DEC /* AgoraLectureUIManager.swift */,
-				86FAE8FF272A7EE300D86DEC /* AgoraOneToOneUIManager.swift */,
-			);
-			path = UIManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -423,11 +584,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				86A3D2082609F21E0066BA1E /* AgoraEduUI.bundle in Resources */,
-				86E33BAA272A7F29009474BA /* images.xcassets in Resources */,
-				86E33BA7272A7F29009474BA /* reward.mp3 in Resources */,
-				86E33BA6272A7F29009474BA /* Localizable.strings in Resources */,
-				86E33BA8272A7F29009474BA /* reward.gif in Resources */,
-				86E33BA9272A7F29009474BA /* hands_up_wave.gif in Resources */,
+				864F41DA27D3467400A808C6 /* images.xcassets in Resources */,
+				864F41D927D3467400A808C6 /* img_reward.gif in Resources */,
+				864F41D827D3467400A808C6 /* sound_reward.mp3 in Resources */,
+				864F41D727D3467400A808C6 /* img_loading.gif in Resources */,
+				864F41D627D3467400A808C6 /* img_hands_wave.gif in Resources */,
+				864F41D527D3467400A808C6 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,43 +632,61 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				86FAE914272A7EE300D86DEC /* AgoraScreenUIController.swift in Sources */,
-				86FAE902272A7EE300D86DEC /* AgoraWhiteBoardUIController+UIEvent.swift in Sources */,
-				86FAE903272A7EE300D86DEC /* AgoraWhiteBoardUIController+EventHandler.swift in Sources */,
-				86FAE91A272A7EE300D86DEC /* AgoraUserListUIController.swift in Sources */,
-				86FAE906272A7EE300D86DEC /* AgoraSmallRenderUIController.swift in Sources */,
-				86FAE919272A7EE300D86DEC /* AgoraRoomUIController.swift in Sources */,
-				86FAE916272A7EE300D86DEC /* AgoraPrivateChatController.swift in Sources */,
-				86FAE901272A7EE300D86DEC /* AgoraWhiteBoardUIController+State.swift in Sources */,
-				86FAE909272A7EE300D86DEC /* AgoraLectureRenderUIController+UIEvent.swift in Sources */,
-				86FAE907272A7EE300D86DEC /* AgoraSmallRenderUIController+EventHandler.swift in Sources */,
-				86FAE90F272A7EE300D86DEC /* AgoraUIRenderItem.swift in Sources */,
-				86FAE91F272A7EE300D86DEC /* AgoraHandsupTipsView.swift in Sources */,
-				86FAE92E272A7EE300D86DEC /* AgoraEduUI.swift in Sources */,
-				86FAE90B272A7EE300D86DEC /* AgoraRenderUIController.swift in Sources */,
-				86FAE90C272A7EE300D86DEC /* AgoraLectureRenderUIController+EventHandler.swift in Sources */,
-				86FAE917272A7EE300D86DEC /* AgoraHandsUpUIController.swift in Sources */,
-				86FAE91B272A7EE300D86DEC /* AgoraRoomStateBar.swift in Sources */,
-				86FAE904272A7EE300D86DEC /* AgoraWhiteBoardUIController.swift in Sources */,
-				86FAE91E272A7EE300D86DEC /* AgoraPaintingUserListItemCell.swift in Sources */,
-				86FAE921272A7EE300D86DEC /* AgoraHandsUpItemCell.swift in Sources */,
-				86FAE923272A7EE300D86DEC /* AgoraRenderItemCell.swift in Sources */,
-				86FAE918272A7EE300D86DEC /* AgoraSetUIController.swift in Sources */,
-				86FAE90E272A7EE300D86DEC /* AgoraLectureRenderUIController+Data.swift in Sources */,
-				86FAE911272A7EE300D86DEC /* AgoraUIExtension.swift in Sources */,
-				86FAE930272A7EE300D86DEC /* AgoraLectureUIManager.swift in Sources */,
-				86FAE90A272A7EE300D86DEC /* AgoraSmallRenderUIController+UIEvent.swift in Sources */,
-				86FAE920272A7EE300D86DEC /* AgoraBoardToolItemCell.swift in Sources */,
-				86FAE91D272A7EE300D86DEC /* AgoraHandsUpDelayView.swift in Sources */,
-				86FAE905272A7EE300D86DEC /* AgoraBoardStates.swift in Sources */,
-				86FAE922272A7EE300D86DEC /* AgoraRenderVolumeView.swift in Sources */,
-				86FAE90D272A7EE300D86DEC /* AgoraSmallRenderUIController+Data.swift in Sources */,
-				86FAE931272A7EE300D86DEC /* AgoraOneToOneUIManager.swift in Sources */,
-				86FAE92F272A7EE300D86DEC /* AgoraSmallUIManager.swift in Sources */,
-				86FAE910272A7EE300D86DEC /* Agora1V1RenderUIController.swift in Sources */,
-				86FAE912272A7EE300D86DEC /* AgoraContextExtension.swift in Sources */,
-				86FAE908272A7EE300D86DEC /* AgoraLectureRenderUIController.swift in Sources */,
-				86FAE915272A7EE300D86DEC /* AgoraUIController.swift in Sources */,
+				864F417A27D345AE00A808C6 /* AgoraPaintingSmallUIManager.swift in Sources */,
+				864F418127D345AE00A808C6 /* AgoraUserListItemCell.swift in Sources */,
+				864F41AB27D345AE00A808C6 /* AgoraSpreadWidgetModel.swift in Sources */,
+				864F41A027D345AE00A808C6 /* AgoraMainToolsView.swift in Sources */,
+				864F41AA27D345AE00A808C6 /* AgoraBoardWidgetModel.swift in Sources */,
+				864F419C27D345AE00A808C6 /* AgoraUIManager.swift in Sources */,
+				864F418E27D345AE00A808C6 /* AgoraStudentsRenderUIController.swift in Sources */,
+				864F41A527D345AE00A808C6 /* AgoraZoomButton.swift in Sources */,
+				864F419827D345AE00A808C6 /* AgoraRenderMenuUIController.swift in Sources */,
+				864F41A227D345AE00A808C6 /* AgoraToolBarCells.swift in Sources */,
+				864F41A827D345AE00A808C6 /* AgoraToast.swift in Sources */,
+				864F418A27D345AE00A808C6 /* AgoraRoomStateUIController.swift in Sources */,
+				864F417727D345AE00A808C6 /* AgoraOneToOneTabView.swift in Sources */,
+				864F417527D345AE00A808C6 /* AgoraLectureUIManager.swift in Sources */,
+				864F419227D345AE00A808C6 /* AgoraHandsListUIController.swift in Sources */,
+				864F417627D345AE00A808C6 /* AgoraOneToOneRenderUIController.swift in Sources */,
+				864F419F27D345AE00A808C6 /* AgoraRenderMemberCell.swift in Sources */,
+				864F417E27D345AE00A808C6 /* AgoraBoardToolItemCell.swift in Sources */,
+				864F419127D345AE00A808C6 /* AgoraBoardToolsUIController.swift in Sources */,
+				864F418627D345AE00A808C6 /* AgoraUIExtension.swift in Sources */,
+				864F417B27D345AE00A808C6 /* AgoraRoomStateBar.swift in Sources */,
+				864F419927D345AE00A808C6 /* AgoraToolCollectionUIController.swift in Sources */,
+				864F419627D345AE00A808C6 /* AgoraToolBoxUIController.swift in Sources */,
+				864F41A127D345AE00A808C6 /* AgoraRenderMemberView.swift in Sources */,
+				864F419027D345AE00A808C6 /* AgoraChatUIController.swift in Sources */,
+				864F418B27D345AE00A808C6 /* AgoraToolBarUIController.swift in Sources */,
+				864F419D27D345AE00A808C6 /* AgoraAlert.swift in Sources */,
+				864F418427D345AE00A808C6 /* AgoraPaintingLectureUIManager.swift in Sources */,
+				864F417C27D345AE00A808C6 /* AgoraHandsUpDelayView.swift in Sources */,
+				864F41A327D345AE00A808C6 /* AgoraRenderMicView.swift in Sources */,
+				864F418927D345AE00A808C6 /* AgoraMembersHorizeRenderUIController.swift in Sources */,
+				864F41A727D345AE00A808C6 /* AgoraLoading.swift in Sources */,
+				864F417F27D345AE00A808C6 /* AgoraHandsUpItemCell.swift in Sources */,
+				864F419727D345AE00A808C6 /* AgoraSettingUIController.swift in Sources */,
+				864F418227D345AE00A808C6 /* AgoraRoomToolstView.swift in Sources */,
+				864F419A27D345AE00A808C6 /* AgoraUserListUIController.swift in Sources */,
+				864F419327D345AE00A808C6 /* AgoraSpreadUIController.swift in Sources */,
+				864F417927D345AE00A808C6 /* AgoraOneToOneUIManager.swift in Sources */,
+				864F418527D345AE00A808C6 /* AgoraSmallUIManager.swift in Sources */,
+				864F418727D345AE00A808C6 /* AgoraContextExtension.swift in Sources */,
+				864F418D27D345AE00A808C6 /* AgoraScreenSharingUIController.swift in Sources */,
+				864F419B27D345AE00A808C6 /* AgoraCloudUIController.swift in Sources */,
+				864F418827D345AE00A808C6 /* AgoraEduExtension.swift in Sources */,
+				864F418C27D345AE00A808C6 /* AgoraBoardUIController.swift in Sources */,
+				864F418F27D345AE00A808C6 /* AgoraTeacherRenderUIController.swift in Sources */,
+				864F418027D345AE00A808C6 /* AgoraToolBoxItemCell.swift in Sources */,
+				864F418327D345AE00A808C6 /* AgoraKickOutAlertController.swift in Sources */,
+				864F417827D345AE00A808C6 /* AgoraOneToOneStateUIController.swift in Sources */,
+				864F419E27D345AE00A808C6 /* AgoraBoardToolConfigView.swift in Sources */,
+				864F41A627D345AE00A808C6 /* AgoraToastTipsView.swift in Sources */,
+				864F41A427D345AE00A808C6 /* AgoraRenderViewReusePool.swift in Sources */,
+				864F419427D345AE00A808C6 /* AgoraClassToolsViewController.swift in Sources */,
+				864F41A927D345AE00A808C6 /* AgoraCloudWidgetModel.swift in Sources */,
+				864F419527D345AE00A808C6 /* AgoraBoardPageUIController.swift in Sources */,
+				864F417D27D345AE00A808C6 /* AgoraHandsupTipsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,13 +708,13 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		86E33B9F272A7F29009474BA /* Localizable.strings */ = {
+		864F41CB27D3467400A808C6 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				86E33BA0272A7F29009474BA /* zh-Hans */,
-				86E33BA1272A7F29009474BA /* en */,
-				AB245B66272BEAE600C01B4C /* zh-HK */,
-				AB245B67272BEAEC00C01B4C /* zh-Hant */,
+				864F41CC27D3467400A808C6 /* zh-Hans */,
+				864F41CD27D3467400A808C6 /* en */,
+				864F41CF27D3467400A808C6 /* zh-HK */,
+				864F41D227D3467400A808C6 /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

@@ -5,7 +5,7 @@
 //  Created by LYY on 2022/1/18.
 //
 
-import Foundation
+import UIKit
 
 let kSpreadWidgetId = "streamWindow"
 struct AgoraSpreadWidgetUser: Convertable {

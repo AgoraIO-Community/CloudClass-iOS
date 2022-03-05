@@ -57,6 +57,8 @@ import AgoraWidget
     /** 大窗 控制器*/
     private var spreadController: AgoraSpreadUIController!
     
+    private var classToolsController: AgoraClassToolsViewController!
+    
     private var isJoinedRoom = false
         
     deinit {
@@ -174,7 +176,6 @@ extension AgoraPaintingSmallUIManager: AgoraSpreadUIControllerDelegate {
 }
 // MARK: - AgoraBoardToolsUIControllerDelegate
 extension AgoraPaintingSmallUIManager: AgoraBoardToolsUIControllerDelegate {
-    
     func didUpdateBrushSetting(image: UIImage?,
                                colorHex: Int) {
         toolBarController.updateBrushButton(image: image,
@@ -218,6 +219,10 @@ private extension AgoraPaintingSmallUIManager {
         spreadController.delegate = self
         addChild(spreadController)
         contentView.addSubview(spreadController.view)
+        
+        classToolsController = AgoraClassToolsViewController(context: contextPool)
+        addChild(classToolsController)
+        contentView.addSubview(classToolsController.view)
     }
     
     func createConstrains() {
@@ -243,6 +248,9 @@ private extension AgoraPaintingSmallUIManager {
             make?.bottom.equalTo()(contentView)?.offset()(-15)
         }
         spreadController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
+        classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
     }

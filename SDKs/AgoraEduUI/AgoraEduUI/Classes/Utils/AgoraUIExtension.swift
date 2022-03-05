@@ -30,6 +30,24 @@ extension String {
                                  comment: "")
     }
 }
+
+// 将 AgoraWidgetInfo.syncFrame 转化为 具体是显示在界面上的 frame
+extension CGRect {
+    func displayFrameFromSyncFrame(superView: UIView,
+                                   syncFrame: CGRect) -> CGRect {
+        let width = superView.width * syncFrame.width
+        let height = superView.height * syncFrame.height
+        let MEDx = superView.width - width
+        let MEDy = superView.height - height
+        let x = MEDx * syncFrame.minX
+        let y = MEDy * syncFrame.minY
+        return CGRect(x: x,
+                      y: y,
+                      width: width,
+                      height: height)
+    }
+}
+
 /** 尺寸适配*/
 // 以375*812作为缩放标准（设计图都为iPhoneX）
 fileprivate var kScale: CGFloat = {

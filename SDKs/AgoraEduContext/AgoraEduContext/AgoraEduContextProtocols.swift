@@ -580,4 +580,8 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter handler: 监听者
     /// - returns: void
     func unregisterMonitorEventHandler(_ handler: AgoraEduMonitorHandler)
+    
+    /// 获取与服务器校对后的时间戳 (v2.2.0)
+    /// - returns: Int64
+    func getSyncTimestamp() -> Int64
 }
