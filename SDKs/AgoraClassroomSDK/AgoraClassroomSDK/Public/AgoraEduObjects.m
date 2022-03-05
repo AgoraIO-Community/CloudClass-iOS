@@ -7,7 +7,6 @@
 
 #import "AgoraEduObjects.h"
 @import AgoraWidgets;
-@import AgoraExtApps;
 
 #pragma mark - Media
 /**设置媒体选项*/
@@ -137,7 +136,6 @@
     self.userProperties = userProperties;
     
     self.widgets = [self baseWidgets];
-    self.extApps = [self baseExtApps];
     
     return self;
 }
@@ -182,29 +180,11 @@
                                                                 widgetId:@"AgoraCloudWidget"];
     widgets[cloud.widgetId] = cloud;
     
+    // Answer Selector
+    AgoraWidgetConfig *answerSelector = [[AgoraWidgetConfig alloc] initWithClass:[AgoraAnswerSelectorWidget class]
+                                                                        widgetId:@"AnswerSelector"];
+    widgets[answerSelector.widgetId] = answerSelector;
+    
     return widgets;
-}
-
-- (NSMutableDictionary<NSString *, AgoraExtAppConfiguration *> *)baseExtApps {
-    NSMutableDictionary<NSString *, AgoraWidgetConfig *> *exts = [NSMutableDictionary dictionary];
-    AgoraExtAppConfiguration *countdown = [[AgoraExtAppConfiguration alloc] initWithAppIdentifier:@"io.agora.countdown"
-                                                                                      extAppClass:[CountDownExtApp class]
-                                                                                            frame:UIEdgeInsetsZero
-                                                                                         language:@"zh"];
-    
-    AgoraExtAppConfiguration *answerExt = [[AgoraExtAppConfiguration alloc] initWithAppIdentifier:@"io.agora.answer"
-                                                                                      extAppClass:[AnswerSheetExtApp class]
-                                                                                            frame:UIEdgeInsetsZero
-                                                                                         language:@"zh"];
-    
-    AgoraExtAppConfiguration *voteExt = [[AgoraExtAppConfiguration alloc] initWithAppIdentifier:@"io.agora.vote"
-                                                                                      extAppClass:[VoteExtApp class]
-                                                                                            frame:UIEdgeInsetsZero
-                                                                                         language:@"zh"];
-    
-    exts[countdown.appIdentifier] = countdown;
-    exts[answerExt.appIdentifier] = answerExt;
-    exts[voteExt.appIdentifier] = voteExt;
-    return exts;
 }
 @end

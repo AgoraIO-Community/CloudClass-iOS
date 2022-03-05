@@ -61,6 +61,8 @@ import AgoraWidget
         return vc
     }()
     
+    private var classToolsController: AgoraClassToolsViewController!
+    
     private var isJoinedRoom = false
         
     deinit {
@@ -335,6 +337,10 @@ private extension AgoraSmallUIManager {
         
         nameRollController = AgoraUserListUIController(context: contextPool)
         addChild(nameRollController)
+        
+        classToolsController = AgoraClassToolsViewController(context: contextPool)
+        addChild(classToolsController)
+        contentView.addSubview(classToolsController.view)
     }
     
     func createConstrains() {
@@ -372,6 +378,9 @@ private extension AgoraSmallUIManager {
             make?.width.equalTo()(AgoraFit.scale(168))
         }
         pollerController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
+        classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
     }

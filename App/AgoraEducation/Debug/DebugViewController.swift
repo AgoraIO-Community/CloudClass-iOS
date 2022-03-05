@@ -233,16 +233,7 @@ private extension DebugViewController {
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
             
-            // MARK: 若对widgets/extApps需要添加或修改时，可获取launchConfig中默认配置的widgets/extApps进行操作并重新赋值给launchConfig
-            var extApps = Dictionary<String, AgoraExtAppConfiguration>()
-            launchConfig.extApps.forEach { (k, v) in
-                if k == "io.agora.countdown" {
-                    v.image = UIImage(named: "countdown")
-                }
-                extApps[k] = v
-            }
-            
-            launchConfig.extApps = extApps
+           
             
             if im == .rtm {
                 launchConfig.widgets.removeValue(forKey: "easemobIM")
