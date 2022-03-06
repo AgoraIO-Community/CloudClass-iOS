@@ -33,14 +33,13 @@ extension String {
 
 // 将 AgoraWidgetInfo.syncFrame 转化为 具体是显示在界面上的 frame
 extension CGRect {
-    func displayFrameFromSyncFrame(superView: UIView,
-                                   syncFrame: CGRect) -> CGRect {
-        let width = superView.width * syncFrame.width
-        let height = superView.height * syncFrame.height
+    func displayFrameFromSyncFrame(superView: UIView) -> CGRect {
+        let width = superView.width * self.width
+        let height = superView.height * self.height
         let MEDx = superView.width - width
         let MEDy = superView.height - height
-        let x = MEDx * syncFrame.minX
-        let y = MEDy * syncFrame.minY
+        let x = MEDx * self.minX
+        let y = MEDy * self.minY
         return CGRect(x: x,
                       y: y,
                       width: width,

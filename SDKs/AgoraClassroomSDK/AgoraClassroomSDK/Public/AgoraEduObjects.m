@@ -165,6 +165,11 @@
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     
+    // Countdown Widget
+    AgoraWidgetConfig *countdown = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownWidget class]
+                                                                widgetId:@"countdown"];
+    widgets[countdown.widgetId] = countdown;
+    
     // Poller Widget
     AgoraWidgetConfig *poller = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPollerWidget class]
                                                                 widgetId:@"polling"];

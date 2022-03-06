@@ -40,7 +40,8 @@ import Masonry
     private var chatController: AgoraChatUIController?
     /** 屏幕分享 控制器*/
     private var screenSharingController: AgoraScreenSharingUIController!
-    
+    /** 教具 控制器*/
+    private var classToolsController: AgoraClassToolsViewController!
     private var tabSelectView: AgoraOneToOneTabView?
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
@@ -327,6 +328,10 @@ private extension AgoraOneToOneUIManager {
         boardPageController.view.isHidden = true
         addChild(boardPageController)
         
+        classToolsController = AgoraClassToolsViewController(context: contextPool)
+        addChild(classToolsController)
+        contentView.addSubview(classToolsController.view)
+        
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             addChild(cloudController)
             contentView.addSubview(cloudController.view)
@@ -366,6 +371,9 @@ private extension AgoraOneToOneUIManager {
             make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
             make?.height.equalTo()(AgoraFit.scale(32))
             make?.width.equalTo()(AgoraFit.scale(168))
+        }
+        classToolsController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
     }
     

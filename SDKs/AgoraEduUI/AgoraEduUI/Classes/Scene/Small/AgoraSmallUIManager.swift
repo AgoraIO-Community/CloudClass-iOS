@@ -44,8 +44,6 @@ import AgoraWidget
     private var boardPageController: AgoraBoardPageUIController!
     /** 聊天窗口 控制器*/
     private var chatController: AgoraChatUIController!
-    /** 投票器 控制器*/
-    private var pollerController: AgoraPollerUIController!
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
@@ -60,7 +58,7 @@ import AgoraWidget
         self.addChild(vc)
         return vc
     }()
-    
+    /** 教具 控制器*/
     private var classToolsController: AgoraClassToolsViewController!
     
     private var isJoinedRoom = false
@@ -313,9 +311,9 @@ private extension AgoraSmallUIManager {
         contentView.addSubview(boardPageController.view)
         addChild(boardPageController)
         
-        pollerController = AgoraPollerUIController(context: contextPool)
-        contentView.addSubview(pollerController.view)
-        addChild(pollerController)
+//        pollerController = AgoraPollerUIController(context: contextPool)
+//        contentView.addSubview(pollerController.view)
+//        addChild(pollerController)
         
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             toolBarController.tools = [.setting, .nameRoll, .message, .handsList]
@@ -376,9 +374,6 @@ private extension AgoraSmallUIManager {
             make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
             make?.height.equalTo()(AgoraFit.scale(32))
             make?.width.equalTo()(AgoraFit.scale(168))
-        }
-        pollerController.view.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)

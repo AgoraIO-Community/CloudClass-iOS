@@ -40,6 +40,8 @@ import AgoraWidget
         let vc = AgoraCloudUIController(context: contextPool)
         return vc
     }()
+    /** 教具 控制器*/
+    private var classToolsController: AgoraClassToolsViewController!
     /** 聊天窗口 控制器*/
     private var chatController: AgoraChatUIController!
     /** 设置界面 控制器*/
@@ -307,6 +309,11 @@ private extension AgoraLectureUIManager {
         
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
+        
+        classToolsController = AgoraClassToolsViewController(context: contextPool)
+        addChild(classToolsController)
+        contentView.addSubview(classToolsController.view)
+        
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             toolBarController.tools = [.setting, .nameRoll, .handsList]
             addChild(nameRollController)
@@ -369,6 +376,9 @@ private extension AgoraLectureUIManager {
             make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
             make?.height.equalTo()(AgoraFit.scale(32))
             make?.width.equalTo()(AgoraFit.scale(168))
+        }
+        classToolsController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
     }
     
