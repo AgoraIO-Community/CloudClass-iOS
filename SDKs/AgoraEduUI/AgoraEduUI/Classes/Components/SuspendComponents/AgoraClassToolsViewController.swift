@@ -159,22 +159,19 @@ private extension AgoraClassToolsViewController {
         let widget = contextPool.widget
         
         guard let config = widget.getWidgetConfig(kAnswerSelectorId) else {
+
             return
         }
         
         let answerSelector = widget.create(config)
         view.addSubview(answerSelector.view)
-        answerSelector.view.backgroundColor = .red
         
-        answerSelector.view.frame = CGRect(x: 100,
-                                           y: 100,
-                                           width: 240,
-                                           height: 208)
-        
-//        answerSelector.view.agora_x = 100
-//        answerSelector.view.agora_y = 100
-//        answerSelector.view.agora_width = 240
-//        answerSelector.view.agora_height = 208
+        answerSelector.view.mas_makeConstraints { (make) in
+            make?.top.equalTo()(100)
+            make?.left.equalTo()(100)
+            make?.width.equalTo()(240)
+            make?.height.equalTo()(180)
+        }
         
         self.answerSelector = answerSelector
     }
