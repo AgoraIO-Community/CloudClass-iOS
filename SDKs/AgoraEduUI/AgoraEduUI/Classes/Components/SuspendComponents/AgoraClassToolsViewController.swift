@@ -43,7 +43,6 @@ class AgoraClassToolsViewController: UIViewController {
     }
 }
 
-
 // MARK: - AgoraEduRoomHandler
 extension AgoraClassToolsViewController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
@@ -56,8 +55,8 @@ extension AgoraClassToolsViewController: AgoraWidgetActivityObserver {
     func onWidgetActive(_ widgetId: String) {
         guard kWidgetIds.contains(widgetId),
               let config = contextPool.widget.getWidgetConfig(widgetId) else {
-                  return
-              }
+            return
+        }
         
         if (widgetId == kPollerWidgetId && pollerWidget != nil) ||
            (widgetId == kCountdownId && countdownWidget != nil) ||
@@ -82,8 +81,25 @@ extension AgoraClassToolsViewController: AgoraWidgetActivityObserver {
             self.answerSelector = widget
         }
         
-        widget.view.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
+        if widgetId != kAnswerSelectorId {
+            widget.view.mas_makeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(0)
+            }
+        } else {
+            let syncTimestamp = contextPool.monitor.getSyncTimestamp()
+            let tsDic = ["syncTimestamp": syncTimestamp]
+            
+            if let string = tsDic.jsonString() {
+                contextPool.widget.sendMessage(toWidget: widgetId,
+                                               message: string)
+            }
+            
+            widget.view.mas_makeConstraints { (make) in
+                make?.top.equalTo()(100)
+                make?.left.equalTo()(100)
+                make?.width.equalTo()(240)
+                make?.height.equalTo()(180)
+            }
         }
     }
     
@@ -124,8 +140,6 @@ extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
         default:
             break
         }
-
-        
     }
 }
 
@@ -159,7 +173,6 @@ private extension AgoraClassToolsViewController {
         let widget = contextPool.widget
         
         guard let config = widget.getWidgetConfig(kAnswerSelectorId) else {
-
             return
         }
         

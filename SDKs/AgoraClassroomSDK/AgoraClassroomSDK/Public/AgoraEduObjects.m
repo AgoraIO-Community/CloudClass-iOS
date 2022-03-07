@@ -187,7 +187,7 @@
     
     // Answer Selector
     AgoraWidgetConfig *answerSelector = [[AgoraWidgetConfig alloc] initWithClass:[AgoraAnswerSelectorWidget class]
-                                                                        widgetId:@"AnswerSelector"];
+                                                                        widgetId:@"selector"];
     widgets[answerSelector.widgetId] = answerSelector;
     
     return widgets;
