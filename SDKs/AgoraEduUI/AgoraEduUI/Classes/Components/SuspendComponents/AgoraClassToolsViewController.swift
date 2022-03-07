@@ -33,7 +33,7 @@ class AgoraClassToolsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+        view.isHidden = true
         contextPool.room.registerRoomEventHandler(self)
         contextPool.widget.add(self)
     }
