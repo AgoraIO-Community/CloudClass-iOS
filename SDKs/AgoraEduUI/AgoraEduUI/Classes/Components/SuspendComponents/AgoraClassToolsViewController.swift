@@ -27,13 +27,16 @@ class AgoraClassToolsViewController: UIViewController {
                    bundle: nil)
     }
     
+    override func loadView() {
+        view = AgoraBaseUIContainer()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
+    } 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.isHidden = true
         contextPool.room.registerRoomEventHandler(self)
         contextPool.widget.add(self)
     }
