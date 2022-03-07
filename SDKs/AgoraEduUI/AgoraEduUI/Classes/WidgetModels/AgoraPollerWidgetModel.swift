@@ -7,7 +7,6 @@
 
 import Foundation
 
-let kPollerWidgetId = "polling"
 enum AgoraPollerWidgetSignal: Convertable {
     case frameChange(CGRect)
     
