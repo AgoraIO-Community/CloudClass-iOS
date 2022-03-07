@@ -20,7 +20,6 @@ Pod::Spec.new do |spec|
   # close source
   spec.dependency "AgoraUIBaseViews"
   spec.dependency "AgoraWidget"
-  spec.dependency "AgoraExtApp"
   
   spec.dependency "AgoraRtcEngine_iOS"
   spec.dependency "AgoraRtm_iOS"

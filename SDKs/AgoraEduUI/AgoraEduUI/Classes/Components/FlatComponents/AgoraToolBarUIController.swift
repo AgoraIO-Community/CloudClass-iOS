@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AgoraExtApp
 import AgoraWidget
 import AgoraEduContext
 import AgoraUIBaseViews

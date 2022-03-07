@@ -6,7 +6,6 @@
 //
 
 import Masonry
-import AgoraExtApp
 import AgoraEduContext
 import AgoraUIBaseViews
 

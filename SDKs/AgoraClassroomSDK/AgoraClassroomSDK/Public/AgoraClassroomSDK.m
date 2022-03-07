@@ -103,7 +103,6 @@ static AgoraClassroomSDK *manager = nil;
     __weak AgoraClassroomSDK *weakManager = manager;
 
     [core launch:coreConfig
-         extApps:config.extApps.allValues
          widgets:config.widgets.allValues
          success:^(id<AgoraEduContextPool> pool) {
         AgoraEduUIManager *eduVC = nil;

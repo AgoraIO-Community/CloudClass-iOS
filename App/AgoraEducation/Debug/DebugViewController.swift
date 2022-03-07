@@ -13,7 +13,6 @@ import AgoraClassroomSDK
 #endif
 import AgoraUIBaseViews
 import SwifterSwift
-import AgoraExtApp
 import AgoraWidget
 import AgoraLog
 import UIKit

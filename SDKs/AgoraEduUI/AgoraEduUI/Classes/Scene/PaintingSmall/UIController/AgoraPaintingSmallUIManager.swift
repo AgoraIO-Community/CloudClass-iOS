@@ -8,7 +8,6 @@
 import AgoraUIBaseViews
 import AgoraEduContext
 import AudioToolbox
-import AgoraExtApp
 import AgoraWidget
 
 /// 房间控制器:
@@ -145,11 +144,7 @@ extension AgoraPaintingSmallUIManager: AgoraToolBoxUIControllerDelegate {
         case .vote: break
         case .countDown: break
         case .answerSheet: // 答题器
-            guard let extAppInfos = contextPool.extApp.getExtAppInfos(),
-                  let info = extAppInfos.first(where: {$0.appIdentifier == "io.agora.answer"}) else {
-                return
-            }
-            contextPool.extApp.willLaunchExtApp(info.appIdentifier)
+            break
         default: break
         }
     }

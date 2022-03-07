@@ -184,11 +184,7 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
         case .countDown:
             break
         case .answerSheet:
-            guard let extAppInfos = contextPool.extApp.getExtAppInfos(),
-                  let info = extAppInfos.first(where: {$0.appIdentifier == "io.agora.answer"}) else {
-                      return
-                  }
-            contextPool.extApp.willLaunchExtApp(info.appIdentifier)
+            break
         default:
             break
         }

@@ -9,7 +9,7 @@ import AgoraEduContext
 import AgoraWidget
 import UIKit
 
-class AgoraClassToolsViewController: UIViewController {    
+class AgoraClassToolsViewController: UIViewController {
     /**Data*/
     private var contextPool: AgoraEduContextPool!
     private let widgetIdList = [PollerWidgetId,
@@ -155,25 +155,19 @@ private extension AgoraClassToolsViewController {
             return
         }
         
-        if widgetId != AnswerSelectorWidgetId {
-            widget.view.mas_makeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(0)
-            }
-        } else {
-            let syncTimestamp = contextPool.monitor.getSyncTimestamp()
-            let tsDic = ["syncTimestamp": syncTimestamp]
-            
-            if let string = tsDic.jsonString() {
-                contextPool.widget.sendMessage(toWidget: widgetId,
-                                               message: string)
-            }
-            
-            widget.view.mas_makeConstraints { (make) in
-                make?.centerX.equalTo()(0)
-                make?.centerY.equalTo()(0)
-                make?.width.equalTo()(240)
-                make?.height.equalTo()(180)
-            }
+        let syncTimestamp = contextPool.monitor.getSyncTimestamp()
+        let tsDic = ["syncTimestamp": syncTimestamp]
+        
+        if let string = tsDic.jsonString() {
+            contextPool.widget.sendMessage(toWidget: widgetId,
+                                           message: string)
+        }
+        
+        widget.view.mas_makeConstraints { (make) in
+            make?.centerX.equalTo()(0)
+            make?.centerY.equalTo()(0)
+            make?.width.equalTo()(240)
+            make?.height.equalTo()(180)
         }
     }
     
