@@ -7,38 +7,53 @@
 
 let kCloudWidgetId = "AgoraCloudWidget"
 // MARK: - Config
-enum AgoraCloudWidgetSignal {
+enum AgoraCloudWidgetSignal: Convertable {
     case OpenCoursewares(AgoraCloudWidgetCoursewareModel)
     case CloseCloud
     
-    var rawValue: Int {
+    private enum CodingKeys: CodingKey {
+        case OpenCoursewares
+        case CloseCloud
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let _ = try? container.decodeNil(forKey: .CloseCloud) {
+            self = .CloseCloud
+        } else if let value = try? container.decode(AgoraCloudWidgetCoursewareModel.self,
+                                                    forKey: .OpenCoursewares) {
+            self = .OpenCoursewares(value)
+        } else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: container.codingPath,
+                    debugDescription: "invalid data"
+                )
+            )
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
         switch self {
-        case .OpenCoursewares(let _):   return 0
-        case .CloseCloud:   return 1
+        case .CloseCloud:
+            try container.encodeNil(forKey: .CloseCloud)
+        case .OpenCoursewares(let x):
+            try container.encode(x,
+                                 forKey: .OpenCoursewares)
         }
     }
     
-    static func getType(rawValue: Int) -> Convertable.Type? {
-        switch rawValue {
-        case 0:   return AgoraCloudWidgetCoursewareModel.self
-        default:  return nil
+    func toMessageString() -> String? {
+        guard let dic = self.toDictionary(),
+           let str = dic.jsonString() else {
+            return nil
         }
+        return str
     }
-    
-    static func makeSignal(rawValue: Int,
-                           body: Convertable?) -> AgoraCloudWidgetSignal? {
-        switch rawValue {
-        case 0:
-            if let x = body as? AgoraCloudWidgetCoursewareModel {
-                return .OpenCoursewares(x)
-            }
-        case 1:
-            return .CloseCloud
-        default:
-            break
-        }
-        return nil
-    }
+
 }
 
 struct AgoraCloudWidgetCoursewareModel: Convertable {
@@ -82,22 +97,11 @@ struct AgoraCloudWidgetPptPage: Convertable {
 extension String {
     func toCloudSignal() -> AgoraCloudWidgetSignal? {
         guard let dic = self.json(),
-              let signalRaw = dic["signal"] as? Int else {
-            return nil
+              let signal = try AgoraCloudWidgetSignal.decode(dic) else {
+                  return nil
               }
         
-        if signalRaw == AgoraCloudWidgetSignal.CloseCloud.rawValue {
-            return .CloseCloud
-        }
-        
-        if let bodyDic = dic["body"] as? [String:Any],
-           let type = AgoraCloudWidgetSignal.getType(rawValue: signalRaw),
-           let obj = try type.decode(bodyDic) {
-            return AgoraCloudWidgetSignal.makeSignal(rawValue: signalRaw,
-                                                     body: obj)
-        }
-        
-        return nil
+        return signal
     }
 }
 
