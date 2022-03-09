@@ -149,6 +149,8 @@ class AgoraRenderMenuUIController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
         
+        contextPool.stream.registerStreamEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
         contextPool.widget.add(self,
                                widgetId: kBoardWidgetId)
     }
@@ -293,29 +295,23 @@ private extension AgoraRenderMenuUIController {
         var cameraState = AgoraRenderMenuModel.AgoraRenderMenuDeviceState.off
         
         // audio
-        if stream.streamType.hasAudio,
-           stream.audioSourceState == .open {
-            micState = .on
-        } else if stream.streamType.hasAudio,
-                  stream.audioSourceState == .close {
-            micState = .off
-        } else if stream.streamType.hasAudio == false,
-                  stream.audioSourceState == .open {
+        if stream.audioSourceState == .close {
             micState = .forbidden
+        } else if stream.streamType.hasAudio {
+            micState = .on
+        } else {
+            micState = .off
         }
         
         // video
-        if stream.streamType.hasVideo,
-           stream.videoSourceState == .open {
-            cameraState = .on
-        } else if stream.streamType.hasVideo,
-                  stream.videoSourceState == .close {
-            cameraState = .off
-        } else if stream.streamType.hasVideo == false,
-                  stream.videoSourceState == .open {
+        if stream.videoSourceState == .close {
             cameraState = .forbidden
+        } else if stream.streamType.hasVideo {
+            cameraState = .on
+        } else {
+            cameraState = .off
         }
-        
+
         model = AgoraRenderMenuModel(micState: micState,
                                      cameraState: cameraState,
                                      stageState: model.stageState,
@@ -358,9 +354,9 @@ extension AgoraRenderMenuUIController {
             } failure: { error in
                 
             }
-        } else if model.micState == .on {
+        } else if model.cameraState == .on {
             contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                            audioPrivilege: false) { [weak self] in
+                                                            videoPrivilege: false) { [weak self] in
                 self?.model.cameraState = .off
             } failure: { error in
                 
@@ -451,22 +447,22 @@ extension AgoraRenderMenuUIController: AgoraEduUserHandler {
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraRenderMenuUIController: AgoraEduStreamHandler {
-    func onStreamJoin(stream: AgoraEduContextStreamInfo,
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        if stream.owner.userUuid == self.userId {
+            updateMediaState()
+        }
+    }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userId {
             updateMediaState()
         }
     }
     
-    func onStreamLeave(stream: AgoraEduContextStreamInfo,
-                       operatorUser: AgoraEduContextUserInfo?) {
-        if stream.owner.userUuid == self.userId {
-            updateMediaState()
-        }
-    }
-    
-    func onStreamUpdate(stream: AgoraEduContextStreamInfo,
-                        operatorUser: AgoraEduContextUserInfo?) {
+    func onStreamUpdated(stream: AgoraEduContextStreamInfo,
+                         operatorUser: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userId {
             updateMediaState()
         }
@@ -507,13 +503,16 @@ private extension AgoraRenderMenuUIController {
         contentView = UIStackView()
         contentView.backgroundColor = .clear
         contentView.axis = .horizontal
-        contentView.spacing = 12
+        contentView.spacing = AgoraFit.scale(12)
         contentView.distribution = .equalSpacing
         contentView.alignment = .center
         contentView.backgroundColor = .white
         view.addSubview(contentView)
         
-        let buttonFrame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        let buttonFrame = CGRect(x: 0,
+                                 y: 0,
+                                 width: AgoraFit.scale(32),
+                                 height: AgoraFit.scale(32))
         // micButton
         micButton = UIButton(type: .custom)
         micButton.frame = buttonFrame
@@ -572,8 +571,8 @@ private extension AgoraRenderMenuUIController {
     
     func createConstrains() {
         contentView.mas_makeConstraints { make in
-            make?.left.equalTo()(14)
-            make?.right.equalTo()(-14)
+            make?.left.equalTo()(AgoraFit.scale(14))
+            make?.right.equalTo()(AgoraFit.scale(-14))
             make?.top.equalTo()(contentView.superview?.mas_top)?.offset()(1)
             make?.bottom.equalTo()(contentView.superview?.mas_bottom)?.offset()(-1)
         }

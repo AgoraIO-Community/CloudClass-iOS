@@ -31,7 +31,7 @@ class AgoraBoardPageUIController: UIViewController {
     private var contextPool: AgoraEduContextPool!
     /** Data */
     private weak var delegate: AgoraBoardPageUIControllerDelegate?
-    private var pageIndex = 0 {
+    private var pageIndex = 1 {
         didSet {
             let text = "\(pageIndex) / \(pageCount)"
             pageLabel.text = text
@@ -208,7 +208,7 @@ extension AgoraBoardPageUIController {
     }
     
     @objc func onClickPrePage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1)
+        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 - 1)
         if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
             contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
                                            message: message)
@@ -216,7 +216,7 @@ extension AgoraBoardPageUIController {
     }
     
     @objc func onClickNextPage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex + 1)
+        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 + 1)
         if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
             contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
                                            message: message)

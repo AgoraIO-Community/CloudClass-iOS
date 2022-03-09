@@ -169,7 +169,7 @@ class AgoraBoardToolConfigView: UIView {
             updateConstrains()
         }
     }
-    var currentPaintTool: AgoraBoardToolPaintType = .line {
+    var currentPaintTool: AgoraBoardToolPaintType = .pencil {
         didSet {
             if currentPaintTool != oldValue {
                 subPaintCollectionView.reloadData()

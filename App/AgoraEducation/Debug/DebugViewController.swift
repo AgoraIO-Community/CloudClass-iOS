@@ -220,7 +220,7 @@ private extension DebugViewController {
             
             let launchConfig = AgoraEduLaunchConfig(userName: userName,
                                                     userUuid: userUuid,
-                                                    userRole: .student,
+                                                    userRole: userRole,
                                                     roomName: roomName,
                                                     roomUuid: roomUuid,
                                                     roomType: roomStyle,
@@ -231,8 +231,15 @@ private extension DebugViewController {
                                                     region: region.eduType,
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
-            
-           
+            // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
+            var widgets = Dictionary<String,AgoraWidgetConfig>()
+            launchConfig.widgets.forEach {[unowned self] (k,v) in
+                if k == "AgoraCloudWidget" {
+                    v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
+                }
+                widgets[k] = v
+            }
+            launchConfig.widgets = widgets
             
             if im == .rtm {
                 launchConfig.widgets.removeValue(forKey: "easemobIM")

@@ -54,7 +54,6 @@ import AgoraWidget
     private lazy var handsListController: AgoraHandsListUIController = {
         let vc = AgoraHandsListUIController(context: contextPool)
         vc.delegate = self
-        self.addChild(vc)
         return vc
     }()
     /** 教具 控制器*/
@@ -317,6 +316,8 @@ private extension AgoraSmallUIManager {
             cloudController.view.isHidden = true
             toolCollectionController.view.isHidden = false
             boardPageController.view.isHidden = false
+            
+            addChild(handsListController)
         } else {
             toolBarController.tools = [.setting, .nameRoll, .message, .handsup]
             toolCollectionController.view.isHidden = true
@@ -337,10 +338,16 @@ private extension AgoraSmallUIManager {
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))
         }
+        let width = max(UIScreen.main.bounds.width,
+                        UIScreen.main.bounds.height)
+        let height = min(UIScreen.main.bounds.width,
+                         UIScreen.main.bounds.height)
+        
         boardController.view.mas_makeConstraints { make in
             make?.height.equalTo()(AgoraFit.scale(307))
             make?.left.right().bottom().equalTo()(0)
         }
+
         renderController.view.mas_makeConstraints { make in
             make?.left.right().equalTo()(0)
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
