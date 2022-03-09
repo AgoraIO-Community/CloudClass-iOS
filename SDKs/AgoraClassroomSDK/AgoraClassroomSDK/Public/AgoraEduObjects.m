@@ -186,9 +186,9 @@
     widgets[cloud.widgetId] = cloud;
     
     // Answer Selector
-    AgoraWidgetConfig *answerSelector = [[AgoraWidgetConfig alloc] initWithClass:[AgoraAnswerSelectorWidget class]
-                                                                        widgetId:@"selector"];
-    widgets[answerSelector.widgetId] = answerSelector;
+    AgoraWidgetConfig *popupQuiz = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPopupQuizWidget class]
+                                                                   widgetId:@"popupQuiz"];
+    widgets[popupQuiz.widgetId] = popupQuiz;
     
     return widgets;
 }

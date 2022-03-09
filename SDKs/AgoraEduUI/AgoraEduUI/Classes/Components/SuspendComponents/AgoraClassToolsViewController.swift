@@ -13,11 +13,11 @@ class AgoraClassToolsViewController: UIViewController {
     /**Data*/
     private var contextPool: AgoraEduContextPool!
     private let widgetIdList = [PollerWidgetId,
-                                AnswerSelectorWidgetId,
+                                PopupQuizWidgetId,
                                 CountdownWidgetId]
     
     /**Widgets**/
-    private var answerSelectorWidget: AgoraBaseWidget?
+    private var popupQuizWidget: AgoraBaseWidget?
     private var pollerWidget: AgoraBaseWidget?
     private var countdownWidget: AgoraBaseWidget?
     
@@ -149,8 +149,8 @@ private extension AgoraClassToolsViewController {
             pollerWidget = widget
         case CountdownWidgetId:
             countdownWidget = widget
-        case AnswerSelectorWidgetId:
-            answerSelectorWidget = widget
+        case PopupQuizWidgetId:
+            popupQuizWidget = widget
         default:
             return
         }
@@ -177,8 +177,8 @@ private extension AgoraClassToolsViewController {
             return pollerWidget
         case CountdownWidgetId:
             return countdownWidget
-        case AnswerSelectorWidgetId:
-            return answerSelectorWidget
+        case PopupQuizWidgetId:
+            return popupQuizWidget
         default:
             return nil
         }
@@ -196,9 +196,9 @@ private extension AgoraClassToolsViewController {
         case CountdownWidgetId:
             countdownWidget?.view.removeFromSuperview()
             countdownWidget = nil
-        case AnswerSelectorWidgetId:
-            answerSelectorWidget?.view.removeFromSuperview()
-            answerSelectorWidget = nil
+        case PopupQuizWidgetId:
+            popupQuizWidget?.view.removeFromSuperview()
+            popupQuizWidget = nil
         default:
             break
         }
