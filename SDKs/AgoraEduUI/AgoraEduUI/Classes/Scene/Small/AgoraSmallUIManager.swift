@@ -306,10 +306,6 @@ private extension AgoraSmallUIManager {
         contentView.addSubview(boardPageController.view)
         addChild(boardPageController)
         
-//        pollerController = AgoraPollerUIController(context: contextPool)
-//        contentView.addSubview(pollerController.view)
-//        addChild(pollerController)
-        
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             toolBarController.tools = [.setting, .nameRoll, .message, .handsList]
             addChild(renderMenuController)

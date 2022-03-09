@@ -166,14 +166,14 @@
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     
     // Countdown Widget
-    AgoraWidgetConfig *countdown = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownWidget class]
+    AgoraWidgetConfig *countdownTimer = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownTimerWidget class]
                                                                 widgetId:@"countdown"];
-    widgets[countdown.widgetId] = countdown;
+    widgets[countdownTimer.widgetId] = countdownTimer;
     
-    // Poller Widget
-    AgoraWidgetConfig *poller = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPollerWidget class]
-                                                                widgetId:@"polling"];
-    widgets[poller.widgetId] = poller;
+    // poll Widget
+    AgoraWidgetConfig *poll = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPollWidget class]
+                                                              widgetId:@"poll"];
+    widgets[poll.widgetId] = poll;
     
     // Render Spread Widget
     AgoraWidgetConfig *spread = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRenderSpreadWidget class]

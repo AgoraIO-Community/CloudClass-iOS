@@ -12,14 +12,14 @@ import UIKit
 class AgoraClassToolsViewController: UIViewController {
     /**Data*/
     private var contextPool: AgoraEduContextPool!
-    private let widgetIdList = [PollerWidgetId,
+    private let widgetIdList = [PollWidgetId,
                                 PopupQuizWidgetId,
-                                CountdownWidgetId]
+                                CountdownTimerWidgetId]
     
     /**Widgets**/
     private var popupQuizWidget: AgoraBaseWidget?
-    private var pollerWidget: AgoraBaseWidget?
-    private var countdownWidget: AgoraBaseWidget?
+    private var pollWidget: AgoraBaseWidget?
+    private var countdownTimerWidget: AgoraBaseWidget?
     
     init(context: AgoraEduContextPool) {
         self.contextPool = context
@@ -71,7 +71,7 @@ extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
         case .getTimestamp:
             let ts = contextPool.monitor.getSyncTimestamp()
             if let message = AgoraCountdownWidgetSignal.sendTimestamp(ts).toMessageString() {
-                contextPool.widget.sendMessage(toWidget: CountdownWidgetId,
+                contextPool.widget.sendMessage(toWidget: CountdownTimerWidgetId,
                                                message: message)
             }
         default:
@@ -145,10 +145,10 @@ private extension AgoraClassToolsViewController {
         view.addSubview(widget.view)
         
         switch widgetId {
-        case PollerWidgetId:
-            pollerWidget = widget
-        case CountdownWidgetId:
-            countdownWidget = widget
+        case PollWidgetId:
+            pollWidget = widget
+        case CountdownTimerWidgetId:
+            countdownTimerWidget = widget
         case PopupQuizWidgetId:
             popupQuizWidget = widget
         default:
@@ -173,10 +173,10 @@ private extension AgoraClassToolsViewController {
     
     func getWidget(_ widgetId: String) -> AgoraBaseWidget? {
         switch widgetId {
-        case PollerWidgetId:
-            return pollerWidget
-        case CountdownWidgetId:
-            return countdownWidget
+        case PollWidgetId:
+            return pollWidget
+        case CountdownTimerWidgetId:
+            return countdownTimerWidget
         case PopupQuizWidgetId:
             return popupQuizWidget
         default:
@@ -190,12 +190,12 @@ private extension AgoraClassToolsViewController {
         }
         
         switch widgetId {
-        case PollerWidgetId:
-            pollerWidget?.view.removeFromSuperview()
-            pollerWidget = nil
-        case CountdownWidgetId:
-            countdownWidget?.view.removeFromSuperview()
-            countdownWidget = nil
+        case PollWidgetId:
+            pollWidget?.view.removeFromSuperview()
+            pollWidget = nil
+        case CountdownTimerWidgetId:
+            countdownTimerWidget?.view.removeFromSuperview()
+            countdownTimerWidget = nil
         case PopupQuizWidgetId:
             popupQuizWidget?.view.removeFromSuperview()
             popupQuizWidget = nil
