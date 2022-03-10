@@ -165,12 +165,12 @@
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     
-    // Countdown Widget
+    // CountdownTimer Widget
     AgoraWidgetConfig *countdownTimer = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownTimerWidget class]
-                                                                widgetId:@"countdown"];
+                                                                        widgetId:@"countdownTimer"];
     widgets[countdownTimer.widgetId] = countdownTimer;
     
-    // poll Widget
+    // Poll Widget
     AgoraWidgetConfig *poll = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPollWidget class]
                                                               widgetId:@"poll"];
     widgets[poll.widgetId] = poll;
@@ -182,10 +182,10 @@
     
     // Cloud Widget
     AgoraWidgetConfig *cloud = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
-                                                                widgetId:@"AgoraCloudWidget"];
+                                                               widgetId:@"AgoraCloudWidget"];
     widgets[cloud.widgetId] = cloud;
     
-    // Answer Selector
+    // PopupQuiz Selector
     AgoraWidgetConfig *popupQuiz = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPopupQuizWidget class]
                                                                    widgetId:@"popupQuiz"];
     widgets[popupQuiz.widgetId] = popupQuiz;
