@@ -132,6 +132,8 @@ fileprivate class AgoraRenderMaskView: UIView {
 class AgoraRenderMemberView: UIView {
     
     private weak var delegate: AgoraRenderMemberViewDelegate?
+    
+    private var baseUIConfig = AkUIConfig()
     /** 画布*/
     private var videoView: AgoraRenderMaskView!
     /** 状态遮罩*/
@@ -200,9 +202,14 @@ class AgoraRenderMemberView: UIView {
     
     private var memberModel: AgoraRenderMemberModel?
     
-    override init(frame: CGRect) {
+    init(frame: CGRect,
+         uiConfig: AkUIConfig? = nil) {
         super.init(frame: frame)
         
+        if let config = uiConfig {
+            self.baseUIConfig = config
+        }
+
         createViews()
         createConstrains()
     }
@@ -373,10 +380,13 @@ private extension AgoraRenderMemberView {
 // MARK: - Creations
 private extension AgoraRenderMemberView {
     func createViews() {
-        backgroundColor = UIColor(hex: 0xF9F9FC)
-        layer.borderWidth = 1
-        layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
-                
+        backgroundColor = baseUIConfig.backgroundColor
+        layer.borderWidth = baseUIConfig.borderWidth
+        layer.borderColor = baseUIConfig.borderColor
+        if let cor = baseUIConfig.cornerRadius {
+            layer.cornerRadius = cor
+        }
+        
         videoView = AgoraRenderMaskView(frame: .zero)
         videoView.image = UIImage.agedu_named("ic_member_device_off")
         addSubview(videoView)
@@ -420,10 +430,12 @@ private extension AgoraRenderMemberView {
     
     func createConstrains() {
         videoMaskView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
+            make?.left.top().bottom().equalTo()(baseUIConfig.borderWidth)
+            make?.right.bottom().equalTo()(-baseUIConfig.borderWidth)
         }
         videoView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
+            make?.left.top().bottom().equalTo()(baseUIConfig.borderWidth)
+            make?.right.bottom().equalTo()(-baseUIConfig.borderWidth)
         }
         micView.mas_makeConstraints { make in
             make?.left.equalTo()(AgoraFit.scale(2))

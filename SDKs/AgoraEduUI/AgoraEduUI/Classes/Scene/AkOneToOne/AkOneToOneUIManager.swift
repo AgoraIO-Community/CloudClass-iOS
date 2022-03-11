@@ -17,6 +17,8 @@ import Masonry
     private var stateController: AkOneToOneStateUIController!
     /** 渲染 控制器*/
     private var renderController: AkOneToOneRenderUIController!
+    /** 工具栏*/
+    private var toolBarController: AgoraToolBarUIController!
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuController: AgoraRenderMenuUIController = {
         let vc = AgoraRenderMenuUIController(context: contextPool)
@@ -26,7 +28,7 @@ import Masonry
     /** 右边用来切圆角和显示背景色的容器视图*/
     private var rightContentView: UIView!
     /** 白板 控制器*/
-    private var boardController: AgoraBoardUIController!
+    private var boardController: AkBoardUIController!
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController: AgoraCloudUIController = {
         let vc = AgoraCloudUIController(context: contextPool)
@@ -37,7 +39,7 @@ import Masonry
     /** 白板翻页 控制器*/
     private var boardPageController: AgoraBoardPageUIController!
     /** 聊天 控制器*/
-    private var chatController: AgoraChatUIController?
+    private var chatController: AgoraChatUIController!
     /** 屏幕分享 控制器*/
     private var screenSharingController: AgoraScreenSharingUIController!
     /** 教具 控制器*/
@@ -45,6 +47,7 @@ import Masonry
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
+        vc.updateBaseTintColor(UIColor(hex: 0xDDB332))
         vc.roomDelegate = self
         self.addChild(vc)
         return vc
@@ -95,13 +98,14 @@ import Masonry
     public override func didClickCtrlMaskView() {
         super.didClickCtrlMaskView()
         stateController.deSelect()
+        toolBarController.deselectAll()
     }
 }
 
 // MARK: - AgoraChatUIControllerDelegate
 extension AkOneToOneUIManager: AgoraChatUIControllerDelegate {
     func updateChatRedDot(isShow: Bool) {
-        
+        toolBarController.updateChatRedDot(isShow: isShow)
     }
 }
 // MARK: - AkOneToOneStateUIControllerDelegate
@@ -122,6 +126,7 @@ extension AkOneToOneUIManager: AkOneToOneStateUIControllerDelegate {
 extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
     func toolCollectionDidSelectCell(view: UIView) {
         renderMenuController.dismissView()
+        toolBarController.deselectAll()
         ctrlView = view
         ctrlViewAnimationFromView(toolCollectionController.view)
     }
@@ -130,14 +135,14 @@ extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
         if spread {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
-                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
+                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-59))
                 make?.width.equalTo()(AgoraFit.scale(32))
                 make?.height.equalTo()(AgoraFit.scale(80))
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
-                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
+                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-59))
                 make?.width.equalTo()(AgoraFit.scale(32))
                 make?.height.equalTo()(AgoraFit.scale(32))
             }
@@ -242,6 +247,26 @@ extension AkOneToOneUIManager: AgoraRenderMenuUIControllerDelegate {
     }
 }
 
+// MARK: - AgoraToolBarDelegate
+extension AkOneToOneUIManager: AgoraToolBarDelegate {
+    func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
+                                selectView: UIView) {
+        switch tool {
+        case .message:
+            chatController.view.frame = CGRect(origin: .zero,
+                                               size: chatController.suggestSize)
+            ctrlView = chatController.view
+        default:
+            break
+        }
+        ctrlViewAnimationFromView(selectView)
+    }
+    
+    func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
+        ctrlView = nil
+    }
+}
+
 // MARK: - Creations
 private extension AkOneToOneUIManager {
     func settingViewAnimationFromView(_ formView: UIView) {
@@ -271,6 +296,7 @@ private extension AkOneToOneUIManager {
         }
     }
     func createViews() {
+        contentView.backgroundColor = UIColor(hex: 0x263487)
         stateController = AkOneToOneStateUIController(context: contextPool)
         
         stateController.delegate = self
@@ -278,7 +304,12 @@ private extension AkOneToOneUIManager {
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        boardController = AgoraBoardUIController(context: contextPool)
+        let config = AkUIConfig(backgroundColor: UIColor(hex: 0x263487),
+                                borderColor: UIColor(hex: 0x75C0FE)?.cgColor,
+                                borderWidth: 2,
+                                cornerRadius: 6)
+        boardController = AkBoardUIController(context: contextPool,
+                                              config: config)
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
@@ -298,8 +329,14 @@ private extension AkOneToOneUIManager {
         addChild(screenSharingController)
         contentView.addSubview(screenSharingController.view)
         
+        toolBarController = AgoraToolBarUIController(context: contextPool)
+        toolBarController.delegate = self
+        toolBarController.tools = [.message]
+        contentView.addSubview(toolBarController.view)
+        
         toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
-                                                                   delegate: self)
+                                                                   delegate: self,
+                                                                   baseColor: UIColor(hex: 0xDDB332))
         toolCollectionController.view.isHidden = true
         view.addSubview(toolCollectionController.view)
         
@@ -336,11 +373,16 @@ private extension AkOneToOneUIManager {
             make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
+        toolBarController.view.mas_makeConstraints { make in
+            make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
+            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-7))
+            make?.width.height().equalTo()(AgoraFit.scale(44))
+        }
         toolCollectionController.view.mas_makeConstraints { make in
             make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
-            make?.bottom.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-15))
+            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-59))
             make?.width.equalTo()(AgoraFit.scale(32))
-            make?.height.equalTo()(AgoraFit.scale(80))
+            make?.height.equalTo()(AgoraFit.scale(32))
         }
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
@@ -364,13 +406,16 @@ private extension AkOneToOneUIManager {
             make?.bottom.right().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
         }
+        logoImageView.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.bottom.equalTo()(0)
+            make?.height.equalTo()(AgoraFit.scale(20))
+            make?.width.equalTo()(AgoraFit.scale(82))
+        }
         renderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(AgoraFit.scale(1))
-            make?.left.right().bottom().equalTo()(0)
-        }
-        logoImageView.mas_makeConstraints { make in
-            make?.bottom.left().right().equalTo()(0)
-            make?.top.equalTo()(renderController.view.mas_bottom)
+            make?.bottom.equalTo()(logoImageView.mas_top)?.offset()(AgoraFit.scale(-6))
+            make?.left.right().equalTo()(0)
         }
     }
     
@@ -380,6 +425,10 @@ private extension AkOneToOneUIManager {
             make?.bottom.right().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
         }
+        logoImageView.mas_makeConstraints { make in
+            make?.bottom.left().right().equalTo()(0)
+            make?.top.equalTo()(renderController.view.mas_bottom)
+        }
         renderController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.bottom.equalTo()(rightContentView.mas_centerY)
@@ -387,25 +436,16 @@ private extension AkOneToOneUIManager {
     }
     
     func createChatController() {
-        let controller = AgoraChatUIController(context: contextPool)
-        controller.hideAnnouncement = true
-        if UIDevice.current.isPad {
-            controller.hideMiniButton = true
-        } else {
-            controller.hideTopBar = true
-        }
-        addChild(controller)
-        if UIDevice.current.isPad {
-            rightContentView.addSubview(controller.view)
-            controller.view.mas_makeConstraints { make in
-                make?.left.right().bottom().equalTo()(0)
-                make?.top.equalTo()(rightContentView.mas_centerY)
-            }
-        } else {
-            let _ = controller.view
-        }
-        chatController = controller
-        chatController?.delegate = self
+        chatController = AgoraChatUIController(context: contextPool)
+        chatController.hideMiniButton = true
+        chatController.view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                                        transparency: 0.15)?.cgColor
+        chatController.view.layer.shadowOffset = CGSize(width: 0,
+                                                        height: 2)
+        chatController.view.layer.shadowOpacity = 1
+        chatController.view.layer.shadowRadius = 6
+        chatController.delegate = self
+        addChild(chatController)
     }
 }
 

@@ -54,6 +54,7 @@ class AgoraToolBarUIController: UIViewController {
     private var handsupCell: AgoraToolBarHandsUpCell?
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
+    private var baseTintColor = UIColor(hex: 0x357BF6)
     /** 画笔图片*/
     private var brushImage = UIImage.agedu_named("ic_brush_clicker")
     /** 画笔颜色*/
@@ -92,8 +93,12 @@ class AgoraToolBarUIController: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         baseColor: UIColor? = nil) {
         super.init(nibName: nil, bundle: nil)
+        if let c = baseColor {
+            baseTintColor = c
+        }
         contextPool = context
     }
     
@@ -210,6 +215,7 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
         if tool == .message {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarRedDotCell.self,
                                                           for: indexPath)
+            cell.baseTintColor = baseTintColor
             cell.setImage(tool.cellImage())
             cell.aSelected = (selectedTool == tool)
             cell.redDot.isHidden = !messageRemind

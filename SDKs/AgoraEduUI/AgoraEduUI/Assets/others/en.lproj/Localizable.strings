@@ -123,3 +123,4 @@ CancelText = "Cancel";
 SureText = "Sure";
 CloseText = "Close";
 KickOutNoticeText = "Remove Notification";
+OneToOneTitle = "One-to-One Classroom";

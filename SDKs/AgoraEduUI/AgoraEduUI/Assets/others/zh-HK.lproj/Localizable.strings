@@ -123,3 +123,4 @@ CloseText = "關閉";
 CancelText = "取消";
 SureText = "確認";
 KickOutNoticeText = "移出通知";
+OneToOneTitle = "一對一課堂";

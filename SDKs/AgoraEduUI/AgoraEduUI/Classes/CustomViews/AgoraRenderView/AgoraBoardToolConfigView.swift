@@ -15,11 +15,11 @@ import UIKit
     
     public var value: Int {
         switch self {
-        case .width1: return 8
-        case .width2: return 16
-        case .width3: return 24
-        case .width4: return 30
-        case .width5: return 38
+        case .width1: return 4
+        case .width2: return 6
+        case .width3: return 10
+        case .width4: return 14
+        case .width5: return 18
         }
     }
     
@@ -28,11 +28,11 @@ import UIKit
             return .width1
         }
         switch v {
-        case 8:  return .width1
-        case 16: return .width2
-        case 24: return .width3
-        case 30: return .width4
-        case 38: return .width5
+        case 4:  return .width1
+        case 6:  return .width2
+        case 10: return .width3
+        case 14: return .width4
+        case 18: return .width5
         default: return .width2
         }
     }

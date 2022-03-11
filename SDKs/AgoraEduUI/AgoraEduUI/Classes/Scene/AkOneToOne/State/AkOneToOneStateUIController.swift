@@ -76,7 +76,7 @@ class AkOneToOneStateUIController: UIViewController {
 // MARK: - Private
 extension AkOneToOneStateUIController {
     func setup() {
-        self.titleLabel.text = self.contextPool.room.getRoomInfo().roomName
+        self.titleLabel.text = "OneToOneTitle".agedu_localized()
         let info = self.contextPool.room.getClassInfo()
         self.timeInfo = AgoraClassTimeInfo(state: info.state,
                                            startTime: info.startTime,
@@ -103,10 +103,10 @@ extension AkOneToOneStateUIController {
         delegate?.onSettingSelected(isSelected: sender.isSelected)
         if sender.isSelected {
             settingButton.imageView?.tintColor = .white
-            settingButton.backgroundColor = UIColor(hex: 0x357BF6)
+            settingButton.backgroundColor = UIColor(hex: 0xDDB332)
         } else {
             settingButton.imageView?.tintColor = UIColor(hex: 0x7B88A0)
-            settingButton.backgroundColor = .white
+            settingButton.backgroundColor = .clear
         }
     }
     
@@ -268,7 +268,7 @@ private extension AkOneToOneStateUIController {
     func createViews() {
         view.backgroundColor = UIColor(hex: 0x1D35AD)
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
+        view.layer.borderColor = UIColor(hex: 0x1D35AD)?.cgColor
         view.layer.cornerRadius = 2
         view.clipsToBounds = true
         

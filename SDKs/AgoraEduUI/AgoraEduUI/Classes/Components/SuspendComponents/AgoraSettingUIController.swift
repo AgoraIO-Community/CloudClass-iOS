@@ -13,6 +13,8 @@ class AgoraSettingUIController: UIViewController {
     
     public let suggestSize = CGSize(width: 201, height: 220)
     
+    private var baseTintColor = UIColor(hex: 0x357BF6)
+    
     public weak var roomDelegate: AgoraClassRoomManagement?
     
     private var contentView: UIView!
@@ -63,6 +65,12 @@ class AgoraSettingUIController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func updateBaseTintColor(_ color: UIColor?) {
+        if let c = color {
+            baseTintColor = c
+        }
     }
         
     override func viewDidLoad() {
@@ -244,7 +252,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(cameraLabel)
         
         cameraSwitch = UISwitch()
-        cameraSwitch.onTintColor = UIColor(hex: 0x357BF6)
+        cameraSwitch.onTintColor = baseTintColor
         cameraSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                    y: 0.75)
         cameraSwitch.addTarget(self,
@@ -316,7 +324,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(micLabel)
         
         micSwitch = UISwitch()
-        micSwitch.onTintColor = UIColor(hex: 0x357BF6)
+        micSwitch.onTintColor = baseTintColor
         micSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                 y: 0.75)
         micSwitch.addTarget(self,
@@ -331,7 +339,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(audioLabel)
         
         audioSwitch = UISwitch()
-        audioSwitch.onTintColor = UIColor(hex: 0x357BF6)
+        audioSwitch.onTintColor = baseTintColor
         audioSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                   y: 0.75)
         audioSwitch.addTarget(self,

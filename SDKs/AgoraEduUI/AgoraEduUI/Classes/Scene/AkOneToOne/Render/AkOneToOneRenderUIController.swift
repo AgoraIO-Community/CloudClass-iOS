@@ -13,6 +13,13 @@ import AgoraWidget
 import Masonry
 import UIKit
 
+struct AkUIConfig {
+    var backgroundColor = UIColor(hex: 0xF9F9FC)
+    var borderColor = UIColor(hex: 0xECECF1)?.cgColor
+    var borderWidth: CGFloat = 0
+    var cornerRadius: CGFloat?
+}
+
 class AkOneToOneRenderUIController: UIViewController {
     
     weak var delegate: AgoraRenderUIControllerDelegate?
@@ -262,10 +269,16 @@ private extension AkOneToOneRenderUIController {
     }
     
     func createViews() {
-        teacherView = AgoraRenderMemberView(frame: .zero)
+        let config = AkUIConfig(backgroundColor: UIColor(hex: 0x263487),
+                                borderColor: UIColor(hex: 0x75C0FE)?.cgColor,
+                                borderWidth: 2,
+                                cornerRadius: 6)
+        teacherView = AgoraRenderMemberView(frame: .zero,
+                                            uiConfig: config)
         view.addSubview(teacherView)
         
-        studentView = AgoraRenderMemberView(frame: .zero)
+        studentView = AgoraRenderMemberView(frame: .zero,
+                                            uiConfig: config)
         view.addSubview(studentView)
         
         let tapTeacher = UITapGestureRecognizer(target: self,

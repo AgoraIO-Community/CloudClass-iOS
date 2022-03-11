@@ -159,8 +159,8 @@ private extension DebugViewController {
         guard let roomName = inputParams.roomName,
               let userName = inputParams.nickName,
               let roomStyle = inputParams.roomStyle else {
-                  return
-              }
+            return
+        }
         
         let region = inputParams.region
         let encryptionMode = inputParams.encryptMode
@@ -209,48 +209,62 @@ private extension DebugViewController {
         requestToken(region: region.rawValue,
                      userUuid: userUuid,
                      success: { [weak self] (response) in
-            guard let `self` = self else {
-                return
-            }
-            
-            let appId = response.appId
-            let rtmToken = response.rtmToken
-            let userUuid = response.userId
-            let userRole = self.inputParams.roleType
-            
-            let launchConfig = AgoraEduLaunchConfig(userName: userName,
-                                                    userUuid: userUuid,
-                                                    userRole: userRole,
-                                                    roomName: roomName,
-                                                    roomUuid: roomUuid,
-                                                    roomType: roomStyle,
-                                                    appId: appId,
-                                                    token: rtmToken,
-                                                    startTime: startTime,
-                                                    duration: NSNumber(value: duration),
-                                                    region: region.eduType,
-                                                    mediaOptions: mediaOptions,
-                                                    userProperties: nil)
-            // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
-            var widgets = Dictionary<String,AgoraWidgetConfig>()
-            launchConfig.widgets.forEach {[unowned self] (k,v) in
-                if k == "AgoraCloudWidget" {
-                    v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
-                }
-                widgets[k] = v
-            }
-            launchConfig.widgets = widgets
-            
-            if im == .rtm {
-                launchConfig.widgets.removeValue(forKey: "easemobIM")
-            }
-            
-            AgoraClassroomSDK.setDelegate(self)
-            
-            AgoraClassroomSDK.launch(launchConfig,
-                                     success: success,
-                                     failure: failure)
-        }, failure: failure)
+                        guard let `self` = self else {
+                            return
+                        }
+                        
+                        let appId = response.appId
+                        let rtmToken = response.rtmToken
+                        let userUuid = response.userId
+                        let userRole = self.inputParams.roleType
+                        
+                        let launchConfig = AgoraEduLaunchConfig(userName: userName,
+                                                                userUuid: userUuid,
+                                                                userRole: userRole,
+                                                                roomName: roomName,
+                                                                roomUuid: roomUuid,
+                                                                roomType: roomStyle,
+                                                                appId: appId,
+                                                                token: rtmToken,
+                                                                startTime: startTime,
+                                                                duration: NSNumber(value: duration),
+                                                                region: region.eduType,
+                                                                mediaOptions: mediaOptions,
+                                                                userProperties: nil)
+                        // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
+                        var widgets = Dictionary<String,AgoraWidgetConfig>()
+                        launchConfig.widgets.forEach {[unowned self] (k,v) in
+                            if k == "AgoraCloudWidget" {
+                                v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
+                            }
+                            widgets[k] = v
+                        }
+                        launchConfig.widgets = widgets
+                        
+                        if im == .rtm {
+                            launchConfig.widgets.removeValue(forKey: "easemobIM")
+                        }
+                        
+                        AgoraClassroomSDK.setDelegate(self)
+                        
+                        // set environment
+                        let sel = NSSelectorFromString("setEnvironment:")
+                        switch self.inputParams.env {
+                        case .pro:
+                            AgoraClassroomSDK.perform(sel,
+                                                      with: 2)
+                        case .pre:
+                            AgoraClassroomSDK.perform(sel,
+                                                      with: 1)
+                        case .dev:
+                            AgoraClassroomSDK.perform(sel,
+                                                      with: 0)
+                        }
+                        
+                        AgoraClassroomSDK.launch(launchConfig,
+                                                 success: success,
+                                                 failure: failure)
+                     }, failure: failure)
     }
 }
 

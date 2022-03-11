@@ -13,11 +13,11 @@ typedef NS_ENUM(NSInteger, AgoraEduMediaAuthOption) {
     // 无权限
     AgoraEduMediaAuthOptionNone = 0,
     // 仅音频权限
-    AgoraEduMediaAuthOptionAudio = 0,
+    AgoraEduMediaAuthOptionAudio = 1,
     // 仅视频权限
-    AgoraEduMediaAuthOptionVideo = 0,
+    AgoraEduMediaAuthOptionVideo = 2,
     // 音频+视频权限
-    AgoraEduMediaAuthOptionBoth = 0,
+    AgoraEduMediaAuthOptionBoth = 3,
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduRegion) {

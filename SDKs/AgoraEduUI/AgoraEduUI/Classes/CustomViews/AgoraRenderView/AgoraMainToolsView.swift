@@ -57,6 +57,9 @@ class AgoraMainToolsView: UIView {
         }
     }
     var curColor = UIColor(hex: 0x357BF6)
+    
+    private var baseTintColor = UIColor(hex: 0x357BF6)
+    
     var redoEnable: Bool = false {
         didSet {
             if redoEnable != oldValue {
@@ -108,6 +111,12 @@ class AgoraMainToolsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func updateBaseTintColor(_ color: UIColor?) {
+        if let c = color {
+            baseTintColor = c
+        }
+    }
 }
 
 extension AgoraMainToolsView: UICollectionViewDelegate,
@@ -131,8 +140,14 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
         
         if collectionView == boardToolsView,
            let tool = AgoraBoardToolMainType(rawValue: indexPath.item) {
-            cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
-                          color: curColor)
+            switch tool {
+            case .paint,.text:
+                cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
+                              color: curColor)
+            default:
+                cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
+                              color: baseTintColor)
+            }
             cell.aSelected = (tool == curBoardTool)
             if tool == .pre {
                 cell.setEnable(undoEnable)

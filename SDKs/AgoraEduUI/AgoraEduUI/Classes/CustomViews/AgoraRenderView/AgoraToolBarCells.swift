@@ -32,16 +32,37 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func highLight() {
+        self.imageView.tintColor = .white
+        self.contentView.backgroundColor = baseTintColor
+        self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+        self.imageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+    }
+    
+    override func normalState() {
+        self.imageView.tintColor = self.aSelected ? .white : nil
+        self.contentView.backgroundColor = self.aSelected ? baseTintColor : .white
+        UIView.animate(withDuration: 0.1,
+                       delay: 0,
+                       options: .curveLinear) {
+            self.transform = .identity
+            self.imageView.transform = .identity
+        } completion: { finish in
+        }
+    }
 }
 // MARK: - AgoraToolBarItemCell
 class AgoraToolBarItemCell: UICollectionViewCell {
         
     var imageView: UIImageView!
     
+    var baseTintColor = UIColor(hex: 0x7B88A0)
+    
     var aSelected = false {
         willSet {
             if aSelected != newValue {
-                contentView.backgroundColor = newValue ? UIColor(hex: 0x357BF6) : .white
+                contentView.backgroundColor = newValue ? baseTintColor : .white
                 imageView.tintColor = newValue ? .white : UIColor(hex: 0x7B88A0)
             }
         }
@@ -82,19 +103,18 @@ class AgoraToolBarItemCell: UICollectionViewCell {
             return
         }
         imageView.image = i.withRenderingMode(.alwaysTemplate)
-        imageView.tintColor = UIColor(hex: 0x7B88A0)
     }
     
     func highLight() {
         self.imageView.tintColor = .white
-        self.contentView.backgroundColor = UIColor(hex: 0x357BF6)
+        self.contentView.backgroundColor = baseTintColor
         self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
         self.imageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
     }
     
     func normalState() {
-        contentView.backgroundColor = self.aSelected ? UIColor(hex: 0x357BF6) : .white
-        imageView.tintColor = self.aSelected ? .white : UIColor(hex: 0x7B88A0)
+        contentView.backgroundColor = self.aSelected ? baseTintColor : .white
+        imageView.tintColor = self.aSelected ? .white : baseTintColor
         UIView.animate(withDuration: 0.1,
                        delay: 0,
                        options: .curveLinear) {
