@@ -83,25 +83,7 @@ extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
 extension AgoraClassToolsViewController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
                                   widgetId: String) {
-        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
-        
-        guard let targetView = getWidget(widgetId)?.view else {
-            return
-        }
-        
-        view.bringSubviewToFront(targetView)
-        view.layoutIfNeeded()
-        
-        targetView.mas_remakeConstraints { make in
-            make?.left.equalTo()(frame.minX)
-            make?.top.equalTo()(frame.minY)
-            make?.width.equalTo()(frame.width)
-            make?.height.equalTo()(frame.height)
-        }
-        
-        UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.view.layoutIfNeeded()
-        }
+        updateWidgetFrame(widgetId)
     }
 }
 
@@ -135,13 +117,12 @@ private extension AgoraClassToolsViewController {
             return
         }
         
-        let widget = contextPool.widget.create(config)
-        contextPool.widget.addObserver(forWidgetSyncFrame: self,
-                                       widgetId: widgetId)
-        contextPool.widget.add(self,
-                               widgetId: widgetId)
+        let widget = widgetController.create(config)
+        widgetController.addObserver(forWidgetSyncFrame: self,
+                                     widgetId: widgetId)
+        widgetController.add(self,
+                             widgetId: widgetId)
         
-        view.isUserInteractionEnabled = true
         view.addSubview(widget.view)
         
         switch widgetId {
@@ -159,16 +140,11 @@ private extension AgoraClassToolsViewController {
         let tsDic = ["syncTimestamp": syncTimestamp]
         
         if let string = tsDic.jsonString() {
-            contextPool.widget.sendMessage(toWidget: widgetId,
-                                           message: string)
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: string)
         }
         
-        widget.view.mas_makeConstraints { (make) in
-            make?.centerX.equalTo()(0)
-            make?.centerY.equalTo()(0)
-            make?.width.equalTo()(240)
-            make?.height.equalTo()(180)
-        }
+        updateWidgetFrame(widgetId)
     }
     
     func getWidget(_ widgetId: String) -> AgoraBaseWidget? {
@@ -209,5 +185,53 @@ private extension AgoraClassToolsViewController {
                       widgetId: widgetId)
         widget.removeObserver(forWidgetSyncFrame: self,
                               widgetId: widgetId)
+    }
+    
+    func updateWidgetFrame(_ widgetId: String) {
+        guard widgetIdList.contains(widgetId) else {
+            return
+        }
+        
+        guard let targetView = getWidget(widgetId)?.view else {
+            return
+        }
+        
+        let widget = contextPool.widget
+        let syncFrame = widget.getWidgetSyncFrame(widgetId)
+        
+        var widgetWidth: CGFloat = 0
+        var widgetHeight: CGFloat = 0
+        
+        switch widgetId {
+        case PollWidgetId:
+            widgetWidth = 240
+            widgetHeight = 238
+        case CountdownTimerWidgetId:
+            widgetWidth = 184
+            widgetHeight = 102
+        case PopupQuizWidgetId:
+            widgetWidth = 240
+            widgetHeight = 180
+        default:
+            return
+        }
+        
+        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view,
+                                                        displayWidth: widgetWidth,
+                                                        displayHeight: widgetHeight)
+        
+        view.bringSubviewToFront(targetView)
+        view.layoutIfNeeded()
+        
+        targetView.mas_remakeConstraints { make in
+            make?.left.equalTo()(frame.origin.x)
+            make?.top.equalTo()(frame.origin.y)
+            make?.width.equalTo()(widgetWidth)
+            make?.height.equalTo()(widgetHeight)
+        }
+        
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
+            self.view.layoutIfNeeded()
+        }
     }
 }

@@ -34,16 +34,44 @@ extension String {
 // 将 AgoraWidgetInfo.syncFrame 转化为 具体是显示在界面上的 frame
 extension CGRect {
     func displayFrameFromSyncFrame(superView: UIView) -> CGRect {
-        let width = superView.width * self.width
-        let height = superView.height * self.height
-        let MEDx = superView.width - width
-        let MEDy = superView.height - height
-        let x = MEDx * self.minX
-        let y = MEDy * self.minY
-        return CGRect(x: x,
-                      y: y,
-                      width: width,
-                      height: height)
+        let ratioWidth = self.width
+        let rationHeight = self.height
+        let xaxis = self.origin.x
+        let yaxis = self.origin.y
+        
+        let displayWidth = ratioWidth * superView.frame.width
+        let displayHeight = rationHeight * superView.frame.height
+        
+        let MEDx = superView.frame.width - displayWidth
+        let MEDy = superView.frame.height - displayHeight
+        
+        let displayX = xaxis * MEDx
+        let displayY = yaxis * MEDy
+        
+        let displayFrame = CGRect(x: displayX,
+                                  y: displayY,
+                                  width: displayWidth,
+                                  height: displayHeight)
+        return displayFrame
+    }
+    
+    func displayFrameFromSyncFrame(superView: UIView,
+                                   displayWidth: CGFloat,
+                                   displayHeight: CGFloat) -> CGRect {
+        let xaxis = self.origin.x
+        let yaxis = self.origin.y
+        
+        let MEDx = superView.frame.width - displayWidth
+        let MEDy = superView.frame.height - displayHeight
+        
+        let displayX = xaxis * MEDx
+        let displayY = yaxis * MEDy
+        
+        let displayFrame = CGRect(x: displayX,
+                                  y: displayY,
+                                  width: displayWidth,
+                                  height: displayHeight)
+        return displayFrame
     }
 }
 
