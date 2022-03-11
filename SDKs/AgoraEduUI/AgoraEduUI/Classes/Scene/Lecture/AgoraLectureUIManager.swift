@@ -138,6 +138,7 @@ extension AgoraLectureUIManager: AgoraToolBarDelegate {
 extension AgoraLectureUIManager: AgoraRenderMenuUIControllerDelegate {
     func onMenuUserLeft() {
         renderMenuController.dismissView()
+        renderMenuController.view.isHidden = true
     }
 }
 
@@ -158,7 +159,7 @@ extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
         if let menuId = renderMenuController.userId,
            menuId == UUID {
             // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
-            renderMenuController.view.isHidden = !renderMenuController.view.isHidden
+            renderMenuController.dismissView()
         } else {
             // 1. 当前menu的userId不为点击的userId，切换用户
             // 2. 当前不存在menu，显示
@@ -171,7 +172,6 @@ extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
                 make?.height.equalTo()(AgoraFit.scale(36))
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }
-            renderMenuController.view.isHidden = false
         }
     }
     
@@ -197,6 +197,7 @@ extension AgoraLectureUIManager: AgoraHandsListUIControllerDelegate {
 // MARK: - AgoraToolCollectionUIControllerDelegate
 extension AgoraLectureUIManager: AgoraToolCollectionUIControllerDelegate {
     func toolCollectionDidSelectCell(view: UIView) {
+        renderMenuController.dismissView()
         toolBarController.deselectAll()
         ctrlView = view
         ctrlViewAnimationFromView(toolCollectionController.view)
@@ -270,11 +271,13 @@ private extension AgoraLectureUIManager {
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        studentsRenderController = AgoraStudentsRenderUIController(context: contextPool)
+        studentsRenderController = AgoraStudentsRenderUIController(context: contextPool,
+                                                                   delegate: self)
         addChild(studentsRenderController)
         contentView.addSubview(studentsRenderController.view)
         
-        teacherRenderController = AgoraTeacherRenderUIController(context: contextPool)
+        teacherRenderController = AgoraTeacherRenderUIController(context: contextPool,
+                                                                 delegate: self)
         teacherRenderController.view.layer.cornerRadius = AgoraFit.scale(2)
         teacherRenderController.view.clipsToBounds = true
         addChild(teacherRenderController)
@@ -311,6 +314,7 @@ private extension AgoraLectureUIManager {
         
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             toolBarController.tools = [.setting, .nameRoll, .handsList]
+            addChild(handsListController)
             addChild(nameRollController)
             addChild(renderMenuController)
             contentView.addSubview(renderMenuController.view)
@@ -388,6 +392,7 @@ private extension AgoraLectureUIManager {
         chatController.view.layer.shadowOpacity = 1
         chatController.view.layer.shadowRadius = 6
         contentView.addSubview(chatController.view)
+        contentView.sendSubviewToBack(chatController.view)
         chatController.view.mas_makeConstraints { make in
             make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.equalTo()(boardController.view.mas_right)?.offset()(AgoraFit.scale(2))

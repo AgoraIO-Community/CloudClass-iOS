@@ -15,8 +15,7 @@ protocol AgoraRenderMenuUIControllerDelegate: NSObjectProtocol {
     func onMenuUserLeft()
 }
 
-struct AgoraRenderMenuModel: Equatable {
-    
+struct AgoraRenderMenuModel {
     enum AgoraRenderMenuDeviceState {
         case on, off, forbidden
         
@@ -46,40 +45,11 @@ struct AgoraRenderMenuModel: Equatable {
             }
         }
     }
-    
-    // UI
-    var stageImage: UIImage? {
-        return UIImage.agedu_named("ic_nameroll_stage")?.withRenderingMode(.alwaysTemplate)
-    }
-    
-    var noneStageImage: UIImage? {
-        return UIImage.agedu_named("ic_member_menu_stage_off")
-    }
-    
-    var authImage: UIImage? {
-        return UIImage.agedu_named("ic_nameroll_auth")?.withRenderingMode(.alwaysTemplate)
-    }
-    
-    var rewardImage: UIImage? {
-        return UIImage.agedu_named("ic_member_menu_reward")
-    }
-    
+
     // Data
     var micState = AgoraRenderMenuDeviceState.off
     var cameraState = AgoraRenderMenuDeviceState.off
-    var stageState = false
     var authState = false
-    
-    static func ==(left: AgoraRenderMenuModel,
-                   right: AgoraRenderMenuModel) -> Bool {
-        guard left.micState == right.micState,
-              left.cameraState == right.cameraState,
-              left.stageState == right.stageState,
-              left.authState == right.authState else {
-            return false
-        }
-        return true
-    }
 }
 
 class AgoraRenderMenuUIController: UIViewController {
@@ -137,11 +107,9 @@ class AgoraRenderMenuUIController: UIViewController {
         }
     }
     
-    private var model = AgoraRenderMenuModel() {
+    private var model: AgoraRenderMenuModel? {
         didSet {
-            if model != oldValue {
-                updateMenu()
-            }
+            updateMenu()
         }
     }
     
@@ -158,8 +126,10 @@ class AgoraRenderMenuUIController: UIViewController {
     func show(roomType: AgoraEduContextRoomType,
               userUuid: String,
               showRoleType: AgoraEduContextUserRole) {
+        view.isHidden = false
+
         userId = userUuid
-        model.authState = self.boardUsers.contains(userUuid)
+
         switch roomType {
         case .oneToOne:
             if showRoleType == .teacher {
@@ -184,10 +154,11 @@ class AgoraRenderMenuUIController: UIViewController {
         }
         
         // show VC,主动更新model信息
-        updateMediaState()
+        updateModelState()
     }
     
     func dismissView() {
+        view.isHidden = true
         self.userId = nil
         self.model = AgoraRenderMenuModel()
     }
@@ -212,6 +183,9 @@ class AgoraRenderMenuUIController: UIViewController {
 // MARK: - Private
 private extension AgoraRenderMenuUIController {
     func updateMenu() {
+        guard let `model` = model else {
+            return
+        }
         // 设置按钮的状态
         for item in items {
             switch item {
@@ -224,29 +198,22 @@ private extension AgoraRenderMenuUIController {
                     cameraButton.setImageForAllStates(img)
                 }
             case .auth:
-                guard let img = model.authImage else {
+                guard let img = UIImage.agedu_named("ic_nameroll_auth")?.withRenderingMode(.alwaysTemplate) else {
                     return
                 }
                 authButton.tintColor = model.authState ? UIColor(hex: 0x0073FF) : UIColor(hex: 0xB3D6FF)
                 authButton.setImageForAllStates(img)
             case .stage:
-                guard let img = model.stageImage else {
-                    return
-                }
-                stageButton.tintColor = model.stageState ? UIColor(hex: 0x0073FF) : UIColor(hex: 0xB3D6FF)
-                stageButton.setImageForAllStates(img)
+                stageButton.setImage(UIImage.agedu_named("ic_nameroll_stage"),
+                                     for: .normal)
             case .allOffStage:
+                allStageOffButton.setImage(UIImage.agedu_named("ic_member_menu_stage_off"),
+                                           for: .normal)
                 if let coHostList = contextPool.user.getCoHostList(),
                    coHostList.count > 0 {
                     allStageOffButton.isUserInteractionEnabled = true
-                    allStageOffButton.tintColor = UIColor(hex: 0x0073FF)
-                    allStageOffButton.setImage(model.stageImage,
-                                               for: .normal)
                 } else {
                     allStageOffButton.isUserInteractionEnabled = false
-                    allStageOffButton.tintColor = UIColor(hex: 0xB3D6FF)
-                    allStageOffButton.setImage(model.noneStageImage,
-                                               for: .normal)
                 }
             default:
                 break
@@ -286,56 +253,62 @@ private extension AgoraRenderMenuUIController {
         }
     }
     
-    func updateMediaState() {
-        guard let uid = userId,
-              let stream = contextPool.stream.getStreamList(userUuid: uid)?.first else {
+    func updateModelState() {
+        // board auth
+        
+        
+        // Media
+        guard let uid = userId else {
             return
         }
+        let authState = self.boardUsers.contains(uid)
         var micState = AgoraRenderMenuModel.AgoraRenderMenuDeviceState.off
         var cameraState = AgoraRenderMenuModel.AgoraRenderMenuDeviceState.off
         
-        // audio
-        if stream.audioSourceState == .close {
-            micState = .forbidden
-        } else if stream.streamType.hasAudio {
-            micState = .on
-        } else {
-            micState = .off
-        }
-        
-        // video
-        if stream.videoSourceState == .close {
-            cameraState = .forbidden
-        } else if stream.streamType.hasVideo {
-            cameraState = .on
-        } else {
-            cameraState = .off
+        if let stream = contextPool.stream.getStreamList(userUuid: uid)?.first {
+            // audio
+            if stream.audioSourceState == .close {
+                micState = .forbidden
+            } else if stream.streamType.hasAudio {
+                micState = .on
+            } else {
+                micState = .off
+            }
+            
+            // video
+            if stream.videoSourceState == .close {
+                cameraState = .forbidden
+            } else if stream.streamType.hasVideo {
+                cameraState = .on
+            } else {
+                cameraState = .off
+            }
         }
 
         model = AgoraRenderMenuModel(micState: micState,
                                      cameraState: cameraState,
-                                     stageState: model.stageState,
-                                     authState: model.authState)
+                                     authState: authState)
     }
 }
 // MARK: - Actions
 extension AgoraRenderMenuUIController {
     @objc func onClickMic(_ sender: UIButton) {
         guard let UUID = self.userId,
-              let `streamId` = self.streamId else {
+              let `streamId` = self.streamId,
+              let `model` = model else {
             return
         }
         if model.micState == .off {
             contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                             audioPrivilege: true) { [weak self] in
-                self?.model.micState = .on
+                self?.model?.micState = .on
             } failure: { error in
                 
             }
         } else if model.micState == .on {
             contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                             audioPrivilege: false) { [weak self] in
-                self?.model.micState = .off
+                self?.model?.micState = .off
             } failure: { error in
                 
             }
@@ -344,20 +317,21 @@ extension AgoraRenderMenuUIController {
     
     @objc func onClickCamera(_ sender: UIButton) {
         guard let UUID = self.userId,
-              let `streamId` = self.streamId else {
+              let `streamId` = self.streamId,
+              let `model` = model else {
             return
         }
         if model.cameraState == .off {
             contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                             videoPrivilege: true) { [weak self] in
-                self?.model.cameraState = .on
+                self?.model?.cameraState = .on
             } failure: { error in
                 
             }
         } else if model.cameraState == .on {
             contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                             videoPrivilege: false) { [weak self] in
-                self?.model.cameraState = .off
+                self?.model?.cameraState = .off
             } failure: { error in
                 
             }
@@ -365,15 +339,13 @@ extension AgoraRenderMenuUIController {
     }
     
     @objc func onClickStage(_ sender: UIButton) {
-        guard let UUID = self.userId else {
+        guard let UUID = self.userId,
+              let `model` = self.model else {
             return
         }
         
         contextPool.user.removeCoHost(userUuid: UUID) { [weak self] in
-            guard let `self` = self else {
-                return
-            }
-            self.model.authState = false
+            self?.model?.authState = false
         } failure: { error in
             
         }
@@ -381,17 +353,15 @@ extension AgoraRenderMenuUIController {
     
     @objc func onClickAllStageOff(_ sender: UIButton) {
         contextPool.user.removeAllCoHosts { [weak self] in
-            guard let `self` = self else {
-                return
-            }
-            self.updateMenu()
+            self?.updateMenu()
         } failure: { error in
             
         }
     }
     
     @objc func onClickAuth(_ sender: UIButton) {
-        guard let UUID = self.userId else {
+        guard let UUID = self.userId,
+              let `model` = self.model else {
             return
         }
         
@@ -450,21 +420,21 @@ extension AgoraRenderMenuUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userId {
-            updateMediaState()
+            updateModelState()
         }
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userId {
-            updateMediaState()
+            updateModelState()
         }
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
         if stream.owner.userUuid == self.userId {
-            updateMediaState()
+            updateModelState()
         }
     }
 }
@@ -481,7 +451,7 @@ extension AgoraRenderMenuUIController: AgoraWidgetMessageObserver {
         case .BoardGrantDataChanged(let list):
             self.boardUsers = list ?? [String]()
             if let uid = self.userId {
-                model.authState = self.boardUsers.contains(uid)
+                model?.authState = self.boardUsers.contains(uid)
             }
         default:
             break
@@ -516,8 +486,6 @@ private extension AgoraRenderMenuUIController {
         // micButton
         micButton = UIButton(type: .custom)
         micButton.frame = buttonFrame
-        micButton.setImage(model.micState.micImage,
-                             for: .normal)
         micButton.addTarget(self,
                             action: #selector(onClickMic(_:)),
                             for: .touchUpInside)
@@ -525,8 +493,6 @@ private extension AgoraRenderMenuUIController {
         // cameraButton
         cameraButton = UIButton(type: .custom)
         cameraButton.frame = buttonFrame
-        cameraButton.setImage(model.cameraState.cameraImage,
-                             for: .normal)
         cameraButton.addTarget(self,
                                action: #selector(onClickCamera(_:)),
                                for: .touchUpInside)
@@ -534,8 +500,6 @@ private extension AgoraRenderMenuUIController {
         // stageButton
         stageButton = UIButton(type: .custom)
         stageButton.frame = buttonFrame
-        stageButton.setImage(model.stageImage,
-                             for: .normal)
         stageButton.addTarget(self,
                               action: #selector(onClickStage(_:)),
                               for: .touchUpInside)
@@ -543,8 +507,6 @@ private extension AgoraRenderMenuUIController {
         // allStageOffButton
         allStageOffButton = UIButton(type: .custom)
         allStageOffButton.frame = buttonFrame
-        allStageOffButton.setImage(model.stageImage,
-                             for: .normal)
         allStageOffButton.addTarget(self,
                               action: #selector(onClickAllStageOff(_:)),
                               for: .touchUpInside)
@@ -552,8 +514,6 @@ private extension AgoraRenderMenuUIController {
         // authButton
         authButton = UIButton(type: .custom)
         authButton.frame = buttonFrame
-        authButton.setImage(model.authImage,
-                             for: .normal)
         authButton.addTarget(self,
                              action: #selector(onClickAuth(_:)),
                              for: .touchUpInside)
@@ -561,7 +521,7 @@ private extension AgoraRenderMenuUIController {
         // rewardButton
         rewardButton = UIButton(type: .custom)
         rewardButton.frame = buttonFrame
-        rewardButton.setImage(model.rewardImage,
+        rewardButton.setImage(UIImage.agedu_named("ic_member_menu_reward"),
                               for: .normal)
         rewardButton.addTarget(self,
                                action: #selector(onClickReward(_:)),

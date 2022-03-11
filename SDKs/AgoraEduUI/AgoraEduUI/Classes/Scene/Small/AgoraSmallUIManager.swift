@@ -217,7 +217,7 @@ extension AgoraSmallUIManager: AgoraRenderUIControllerDelegate {
         if let menuId = renderMenuController.userId,
            menuId == UUID {
             // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
-            renderMenuController.view.isHidden = !renderMenuController.view.isHidden
+            renderMenuController.dismissView()
         } else {
             // 1. 当前menu的userId不为点击的userId，切换用户
             // 2. 当前不存在menu，显示
@@ -230,7 +230,6 @@ extension AgoraSmallUIManager: AgoraRenderUIControllerDelegate {
                 make?.height.equalTo()(AgoraFit.scale(36))
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }
-            renderMenuController.view.isHidden = false
         }
     }
     

@@ -10,19 +10,24 @@ import AgoraEduContext
 
 class AgoraTeacherRenderUIController: UIViewController {
     
+    private weak var delegate: AgoraRenderUIControllerDelegate?
+    
     private var renderView: AgoraRenderMemberView!
 
     private var contextPool: AgoraEduContextPool!
     
     private var teacherModel: AgoraRenderMemberModel? {
         didSet {
-            self.renderView.setModel(model: teacherModel, delegate: self)
+            self.renderView.setModel(model: teacherModel,
+                                     delegate: self)
         }
     }
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         delegate: AgoraRenderUIControllerDelegate? = nil) {
         super.init(nibName: nil, bundle: nil)
-        contextPool = context
+        self.contextPool = context
+        self.delegate = delegate
     }
     
     required init?(coder: NSCoder) {
@@ -161,11 +166,26 @@ private extension AgoraTeacherRenderUIController {
     func createViews() {
         renderView = AgoraRenderMemberView(frame: .zero)
         view.addSubview(renderView)
+        
+        let tapTeacher = UITapGestureRecognizer(target: self,
+                                                action: #selector(onClickTeacher(_:)))
+        tapTeacher.numberOfTapsRequired = 1
+        tapTeacher.numberOfTouchesRequired = 1
+        tapTeacher.delaysTouchesBegan = true
+        renderView.addGestureRecognizer(tapTeacher)
     }
     
     func createConstrains() {
         renderView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
+    }
+    
+    @objc func onClickTeacher(_ sender: UITapGestureRecognizer) {
+        if let uuid = teacherModel?.uuid {
+            delegate?.onClickMemberAt(view: renderView,
+                                      UUID: uuid)
+        }
+        
     }
 }

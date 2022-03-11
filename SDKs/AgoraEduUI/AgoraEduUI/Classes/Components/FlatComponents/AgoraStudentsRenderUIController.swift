@@ -14,6 +14,8 @@ import AgoraUIBaseViews
 private let kItemGap: CGFloat = AgoraFit.scale(2)
 private let kItemMaxCount: CGFloat = 4
 class AgoraStudentsRenderUIController: UIViewController {
+    
+    private weak var delegate: AgoraRenderUIControllerDelegate?
         
     var collectionView: UICollectionView!    
     
@@ -25,9 +27,11 @@ class AgoraStudentsRenderUIController: UIViewController {
     
     var contextPool: AgoraEduContextPool!
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         delegate: AgoraRenderUIControllerDelegate? = nil) {
         super.init(nibName: nil, bundle: nil)
-        contextPool = context
+        self.contextPool = context
+        self.delegate = delegate
     }
     
     required init?(coder: NSCoder) {
@@ -313,10 +317,11 @@ extension AgoraStudentsRenderUIController: UICollectionViewDelegate,
                                didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: false)
         let u = dataSource[indexPath.row]
-//        if let cell = collectionView.cellForItem(at: indexPath),
-//           let UUID = u.userUUID {
-//            delegate?.onClickMemberAt(view: cell, UUID: UUID)
-//        }
+        if let cell = collectionView.cellForItem(at: indexPath),
+           let UUID = u.uuid {
+            delegate?.onClickMemberAt(view: cell,
+                                      UUID: UUID)
+        }
     }
     
     public func collectionView(_ collectionView: UICollectionView,

@@ -245,11 +245,15 @@ private extension LoginViewController {
                                                                  key: key)
             }
         }
+        
+        let videoState: AgoraEduStreamState = (inputParams.mediaAuth == .video || inputParams.mediaAuth == .both) ? .on : .off
+        let audioState: AgoraEduStreamState = (inputParams.mediaAuth == .audio || inputParams.mediaAuth == .both) ? .on : .off
+
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
                                                 videoEncoderConfig: nil,
                                                 latencyLevel: .ultraLow,
-                                                videoState: .on,
-                                                audioState: .on)
+                                                videoState: videoState,
+                                                audioState: audioState)
         
         AgoraLoading.loading()
 
