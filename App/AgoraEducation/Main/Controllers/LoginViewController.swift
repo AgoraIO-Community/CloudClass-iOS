@@ -80,7 +80,7 @@ extension LoginViewController {
 
         updateDefaultRegion()
         createViews()
-        createConstrains()
+        createConstraint()
         // 检查协议
         if !TermsAndPolicyViewController.getPolicyPopped() {
             if let termsVC = TermsAndPolicyViewController.loadFromStoryboard("privacy", "terms") {
@@ -670,7 +670,7 @@ private extension LoginViewController {
         view.addSubview(debugButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         if LoginConfig.device != .iPad {
             topImageView.agora_x = 0
             topImageView.agora_right = 0

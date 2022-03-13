@@ -43,7 +43,7 @@ class AgoraRoomStateBar: AgoraBaseUIView {
         super.init(frame: frame)
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -85,7 +85,7 @@ private extension AgoraRoomStateBar {
         addSubview(titleLabel)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         netStateView.mas_makeConstraints { make in
             if #available(iOS 11.0, *) {
                 make?.left.equalTo()(self.mas_safeAreaLayoutGuideLeft)?.offset()(10)

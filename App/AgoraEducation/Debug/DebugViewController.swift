@@ -75,7 +75,7 @@ extension DebugViewController {
         view.backgroundColor = .white
         
         createViews()
-        createConstrains()
+        createConstraint()
         // 检查协议
         if !TermsAndPolicyViewController.getPolicyPopped() {
             if let termsVC = TermsAndPolicyViewController.loadFromStoryboard("privacy", "terms") {
@@ -665,7 +665,7 @@ private extension DebugViewController {
         view.addSubview(tableView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         if LoginConfig.device != .iPad {
             topImageView.agora_x = 0
             topImageView.agora_right = 0

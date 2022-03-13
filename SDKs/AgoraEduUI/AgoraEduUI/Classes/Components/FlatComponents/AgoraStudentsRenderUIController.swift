@@ -42,7 +42,7 @@ class AgoraStudentsRenderUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         
         contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
@@ -384,7 +384,7 @@ private extension AgoraStudentsRenderUIController {
         view.addSubview(rightButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         collectionView.mas_makeConstraints { make in
             make?.centerX.top().bottom().equalTo()(0)
             make?.width.equalTo()(0)

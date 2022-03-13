@@ -77,7 +77,7 @@ class AgoraSettingUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -365,7 +365,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(exitButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.width.equalTo()(201)
             make?.height.equalTo()(220)

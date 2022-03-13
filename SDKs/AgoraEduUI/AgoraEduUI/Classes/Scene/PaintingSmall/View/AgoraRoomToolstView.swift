@@ -99,7 +99,7 @@ class AgoraRoomToolstView: UIView {
         super.init(frame: frame)
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -168,7 +168,7 @@ private extension AgoraRoomToolstView {
         addSubview(contentView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_remakeConstraints { make in
             make?.left.right().top().bottom().equalTo()(self)
             make?.width.equalTo()(kButtonSize)

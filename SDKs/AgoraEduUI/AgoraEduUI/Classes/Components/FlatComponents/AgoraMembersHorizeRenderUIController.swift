@@ -85,7 +85,7 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
@@ -542,7 +542,7 @@ private extension AgoraMembersHorizeRenderUIController {
         collectionView.addGestureRecognizer(tap)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.top.equalTo()(0)

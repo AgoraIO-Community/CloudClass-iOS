@@ -116,7 +116,7 @@ class AgoraToolCollectionUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
 }
 
@@ -255,7 +255,7 @@ private extension AgoraToolCollectionUIController {
         updateImage()
     }
     
-    func createConstrains() {
+    func createConstraint() {
         if currentMainTool == .paint ||
             currentMainTool == .text {
             contentView.mas_remakeConstraints { make in
@@ -297,7 +297,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             
             if oldValue == .paint || oldValue == .text {
-                createConstrains()
+                createConstraint()
                 delegate?.toolCollectionCellNeedSpread(false)
             }
             if let type = currentMainTool.boardWidgetToolType {
@@ -308,7 +308,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             if oldValue != .paint,
                oldValue != .text {
-                createConstrains()
+                createConstraint()
                 delegate?.toolCollectionCellNeedSpread(true)
             }
             if let shape = currentSubTool.boardWidgetShapeType {
@@ -322,7 +322,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             if oldValue != .paint,
                oldValue != .text {
-                createConstrains()
+                createConstraint()
                 delegate?.toolCollectionCellNeedSpread(true)
             }
             if let type = currentMainTool.boardWidgetToolType {
@@ -384,7 +384,7 @@ private extension AgoraToolCollectionUIController {
         }
         
         updateImage()
-        createConstrains()
+        createConstraint()
     }
     
     func handleBoardWidgetGrantUsers(_ list: [String]?) {

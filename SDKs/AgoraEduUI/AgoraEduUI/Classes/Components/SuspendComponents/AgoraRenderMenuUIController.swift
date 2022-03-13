@@ -170,7 +170,7 @@ class AgoraRenderMenuUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createViews()
-        createConstrains()
+        createConstraint()
         contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
     }
@@ -529,7 +529,7 @@ private extension AgoraRenderMenuUIController {
         contentView.addArrangedSubview(rewardButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.left.equalTo()(AgoraFit.scale(14))
             make?.right.equalTo()(AgoraFit.scale(-14))

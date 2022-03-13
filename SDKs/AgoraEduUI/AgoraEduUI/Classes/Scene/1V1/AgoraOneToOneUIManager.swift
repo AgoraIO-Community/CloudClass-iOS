@@ -62,7 +62,7 @@ import Masonry
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
         self.createViews()
-        self.createConstrains()
+        self.createConstraint()
         if UIDevice.current.isPad {
             self.createPadViews()
         } else {
@@ -339,7 +339,7 @@ private extension AgoraOneToOneUIManager {
         }
     }
     
-    func createConstrains() {
+    func createConstraint() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(23))

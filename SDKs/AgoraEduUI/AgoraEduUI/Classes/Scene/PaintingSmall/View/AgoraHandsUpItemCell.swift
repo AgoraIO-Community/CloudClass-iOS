@@ -43,7 +43,7 @@ class AgoraHandsUpItemCell: UITableViewCell {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -74,7 +74,7 @@ extension AgoraHandsUpItemCell {
         contentView.addSubview(stateButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         nameLabel.mas_makeConstraints { make in
             make?.left.equalTo()(15)
             make?.centerY.equalTo()(nameLabel.superview)

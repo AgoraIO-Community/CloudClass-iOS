@@ -73,7 +73,7 @@ import AgoraWidget
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.createViews()
-        self.createConstrains()
+        self.createConstraint()
         
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -333,7 +333,7 @@ private extension AgoraLectureUIManager {
         contentView.addSubview(toolBarController.view)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))

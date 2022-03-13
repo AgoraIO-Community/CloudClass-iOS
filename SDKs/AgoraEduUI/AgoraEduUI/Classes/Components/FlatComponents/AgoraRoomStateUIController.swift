@@ -51,7 +51,7 @@ class AgoraRoomStateUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
                                           repeats: true,
                                           block: { [weak self] t in
@@ -335,7 +335,7 @@ private extension AgoraRoomStateUIController {
         view.addSubview(stateView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         stateView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }

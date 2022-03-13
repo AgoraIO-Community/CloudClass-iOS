@@ -55,7 +55,7 @@ class AkOneToOneStateUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         setup()
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
                                           repeats: true,
@@ -303,7 +303,7 @@ private extension AkOneToOneStateUIController {
         view.addSubview(settingButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         netStateView.mas_makeConstraints { make in
             make?.left.equalTo()(self.view)?.offset()(AgoraFit.scale(10))
             make?.width.height().equalTo()(20)

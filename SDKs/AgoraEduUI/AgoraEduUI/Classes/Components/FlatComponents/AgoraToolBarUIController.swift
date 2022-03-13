@@ -110,7 +110,7 @@ class AgoraToolBarUIController: UIViewController {
         super.viewDidLoad()
         
         self.createViews()
-        self.createConstrains()
+        self.createConstraint()
         self.updateDataSource()
     }
     
@@ -337,7 +337,7 @@ private extension AgoraToolBarUIController {
         view.addSubview(collectionView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         collectionView.mas_remakeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
             make?.width.equalTo()(kButtonSize)

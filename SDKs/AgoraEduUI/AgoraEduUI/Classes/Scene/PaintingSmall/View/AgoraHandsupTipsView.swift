@@ -17,7 +17,7 @@ class AgoraHandsupTipsView: UIView {
         super.init(frame: frame)
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -46,7 +46,7 @@ private extension AgoraHandsupTipsView {
         addSubview(label)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         label.mas_makeConstraints { make in
             make?.left.equalTo()(12)
             make?.right.equalTo()(-10)

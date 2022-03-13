@@ -105,7 +105,7 @@ class AgoraMainToolsView: UIView {
         super.init(frame: .zero)
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -226,7 +226,7 @@ private extension AgoraMainToolsView {
         }
     }
     
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(contentView.superview)
         }

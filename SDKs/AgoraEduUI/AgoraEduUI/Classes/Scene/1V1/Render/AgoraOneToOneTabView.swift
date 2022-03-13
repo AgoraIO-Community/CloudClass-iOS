@@ -28,7 +28,7 @@ class AgoraOneToOneTabView: UIView {
         super.init(frame: frame)
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -117,7 +117,7 @@ class AgoraOneToOneTabView: UIView {
         self.addSubview(chatRemindDot)
     }
     
-    private func createConstrains() {
+    private func createConstraint() {
         videoButton.mas_makeConstraints { make in
             make?.left.top().bottom().equalTo()(0)
             make?.width.equalTo()(50)

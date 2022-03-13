@@ -98,7 +98,7 @@ fileprivate class AgoraLoadingView: UIView {
         super.init(frame: frame)
         
         self.createViews()
-        self.createConstrains()
+        self.createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -149,7 +149,7 @@ fileprivate class AgoraLoadingView: UIView {
         contentView.addSubview(label)
     }
     
-    private func createConstrains() {
+    private func createConstraint() {
         loadingView.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.centerY.equalTo()(0)

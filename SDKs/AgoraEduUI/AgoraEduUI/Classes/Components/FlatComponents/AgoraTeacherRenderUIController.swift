@@ -38,7 +38,7 @@ class AgoraTeacherRenderUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         
         contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
@@ -175,7 +175,7 @@ private extension AgoraTeacherRenderUIController {
         renderView.addGestureRecognizer(tapTeacher)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         renderView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }

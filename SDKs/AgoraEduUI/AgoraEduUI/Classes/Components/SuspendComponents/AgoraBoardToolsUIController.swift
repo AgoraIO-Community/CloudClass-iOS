@@ -391,7 +391,7 @@ class AgoraBoardToolsUIController: UIViewController {
         view.backgroundColor = .clear
 
         createViews()
-        createConstrains()
+        createConstraint()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -627,7 +627,7 @@ private extension AgoraBoardToolsUIController {
         contentView.addSubview(bottomLine)
     }
 
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.width.equalTo()(280)
             make?.height.equalTo()(136)

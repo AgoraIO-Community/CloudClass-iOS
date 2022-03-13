@@ -61,7 +61,7 @@ import AgoraWidget
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.createViews()
-        self.createConstrains()
+        self.createConstraint()
         
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -215,7 +215,7 @@ private extension AgoraPaintingLectureUIManager {
         contentView.addSubview(spreadController.view)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(stateController.view.superview)
             make?.height.equalTo()(20)

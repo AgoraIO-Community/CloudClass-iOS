@@ -128,7 +128,7 @@ class AgoraUserListUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -531,7 +531,7 @@ extension AgoraUserListUIController {
         contentView.addSubview(tableView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         let contentWidth = 68 * supportFuncs.count
         self.suggestSize = CGSize(width: contentWidth, height: 260)
         contentView.mas_makeConstraints { make in

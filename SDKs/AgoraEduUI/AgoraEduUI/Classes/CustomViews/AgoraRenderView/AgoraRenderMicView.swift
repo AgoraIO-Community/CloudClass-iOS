@@ -25,7 +25,7 @@ class AgoraRenderMicView: UIView {
         super.init(frame: frame)
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -89,7 +89,7 @@ private extension AgoraRenderMicView {
         animaView.layer.mask = progressLayer
     }
     
-    func createConstrains() {
+    func createConstraint() {
         imageView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }

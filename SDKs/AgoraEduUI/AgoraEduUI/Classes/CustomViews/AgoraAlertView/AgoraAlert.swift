@@ -98,7 +98,7 @@ private class AgoraAlertController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         createActionButtons()
     }
     
@@ -143,7 +143,7 @@ private class AgoraAlertController: UIViewController {
         contentView.addSubview(messageLabel)
     }
     
-    private func createConstrains() {
+    private func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.width.equalTo()(240)
             make?.height.mas_greaterThanOrEqualTo()(100)

@@ -72,7 +72,7 @@ class AgoraBoardPageUIController: UIViewController {
         view.backgroundColor = .clear
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
 }
 
@@ -164,7 +164,7 @@ extension AgoraBoardPageUIController {
         view.addSubview(nextBtn)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         addBtn.mas_remakeConstraints { make in
             make?.centerY.equalTo()(self.view)
             make?.left.equalTo()(AgoraFit.scale(10))

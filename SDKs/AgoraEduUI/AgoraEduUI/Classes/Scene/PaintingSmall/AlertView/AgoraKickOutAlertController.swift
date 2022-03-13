@@ -63,7 +63,7 @@ class AgoraKickOutAlertController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
 }
 // MARK: - Actions
@@ -168,7 +168,7 @@ extension AgoraKickOutAlertController {
         contentView.addSubview(cancelButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.center.equalTo()(0)
             make?.width.equalTo()(270)

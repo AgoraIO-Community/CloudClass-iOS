@@ -55,7 +55,7 @@ class AgoraHandsUpDelayView: UIView {
         layer.shadowOpacity = 1
         layer.shadowRadius = 6
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     override func layoutSubviews() {
@@ -134,7 +134,7 @@ class AgoraHandsUpDelayView: UIView {
         addSubview(delayLabel)
     }
     
-    private func createConstrains() {
+    private func createConstraint() {
         imageView.mas_makeConstraints { make in
             make?.center.equalTo()(imageView.superview)
         }

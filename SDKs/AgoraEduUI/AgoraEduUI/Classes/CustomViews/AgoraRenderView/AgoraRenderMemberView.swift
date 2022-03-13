@@ -211,7 +211,7 @@ class AgoraRenderMemberView: UIView {
         }
 
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -428,7 +428,7 @@ private extension AgoraRenderMemberView {
         addSubview(ableMaskView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         videoMaskView.mas_makeConstraints { make in
             make?.left.top().bottom().equalTo()(baseUIConfig.borderWidth)
             make?.right.bottom().equalTo()(-baseUIConfig.borderWidth)

@@ -56,7 +56,7 @@ class AgoraHandsListUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
 }
 
@@ -178,7 +178,7 @@ extension AgoraHandsListUIController {
         tableView = tab
     }
     
-    func createConstrains() {
+    func createConstraint() {
         guard let content = listContentView,
               let tab = tableView else {
                   return

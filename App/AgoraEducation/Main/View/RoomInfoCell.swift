@@ -110,7 +110,7 @@ class RoomInfoCell: UITableViewCell {
         selectionStyle = .none
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -193,7 +193,7 @@ extension RoomInfoCell {
         contentView.addSubview(timePickerView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         titleLabel.mas_makeConstraints { make in
             make?.top.left().equalTo()(0)
             make?.height.equalTo()(40)

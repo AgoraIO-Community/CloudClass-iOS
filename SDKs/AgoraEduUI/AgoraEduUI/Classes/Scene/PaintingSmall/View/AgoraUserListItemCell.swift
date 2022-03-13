@@ -184,7 +184,7 @@ class AgoraUserListItemCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -391,7 +391,7 @@ private extension AgoraUserListItemCell {
         contentView.addSubview(funcsView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         nameLabel.mas_makeConstraints { make in
             make?.left.equalTo()(16)
             make?.top.bottom().equalTo()(nameLabel.superview)
