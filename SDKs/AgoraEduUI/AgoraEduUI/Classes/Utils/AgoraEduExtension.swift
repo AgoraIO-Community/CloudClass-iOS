@@ -27,7 +27,7 @@ extension Convertable {
     }
 }
 
-extension Array : Convertable where Element == String {
+extension Array: Convertable where Element == String {
     
 }
 

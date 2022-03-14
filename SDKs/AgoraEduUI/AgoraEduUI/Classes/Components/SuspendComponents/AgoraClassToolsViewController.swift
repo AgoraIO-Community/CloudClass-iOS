@@ -15,6 +15,10 @@ class AgoraClassToolsViewController: UIViewController {
     private let widgetIdList = [PollWidgetId,
                                 PopupQuizWidgetId,
                                 CountdownTimerWidgetId]
+    /**Frame*/
+    private var pollSize = CGSize.zero
+    private var popupQuizSize = CGSize.zero
+    private var countdownTimeSize = CGSize.zero
     
     /**Widgets**/
     private var popupQuizWidget: AgoraBaseWidget?
@@ -64,6 +68,12 @@ extension AgoraClassToolsViewController: AgoraWidgetActivityObserver {
 extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
+        if let size = parseSizeMessage(widgetId: widgetId,
+                                       message: message) {
+            updateWidgetFrame(widgetId,
+                              size: size)
+        }
+        
         guard let signal = message.toCountdownSignal() else {
             return
         }
@@ -83,7 +93,9 @@ extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
 extension AgoraClassToolsViewController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
                                   widgetId: String) {
-        updateWidgetFrame(widgetId)
+        let size = getWidgetSize(widgetId)
+        updateWidgetFrame(widgetId,
+                          size: size)
     }
 }
 
@@ -105,6 +117,45 @@ private extension AgoraClassToolsViewController {
         }
     }
     
+    func parseSizeMessage(widgetId: String,
+                          message: String) -> CGSize? {
+        guard let json = message.json(),
+           let sizeDic = json["size"] as? [String: Any],
+           let width = sizeDic["width"] as? CGFloat,
+           let height = sizeDic["height"] as? CGFloat else {
+            return nil
+        }
+        
+        let size = CGSize(width: width,
+                          height: height)
+        
+        switch widgetId {
+        case PollWidgetId:
+            pollSize = size
+        case PopupQuizWidgetId:
+            popupQuizSize = size
+        case CountdownTimerWidgetId:
+            countdownTimeSize = size
+        default:
+            break
+        }
+        
+        return size
+    }
+    
+    func getWidgetSize(_ widgetId: String) -> CGSize {
+        switch widgetId {
+        case PollWidgetId:
+            return pollSize
+        case PopupQuizWidgetId:
+            return popupQuizSize
+        case CountdownTimerWidgetId:
+            return countdownTimeSize
+        default:
+            return .zero
+        }
+    }
+    
     func createWidget(_ widgetId: String) {
         let widgetController = contextPool.widget
         
@@ -117,11 +168,12 @@ private extension AgoraClassToolsViewController {
             return
         }
         
-        let widget = widgetController.create(config)
         widgetController.addObserver(forWidgetSyncFrame: self,
                                      widgetId: widgetId)
         widgetController.add(self,
                              widgetId: widgetId)
+        
+        let widget = widgetController.create(config)
         
         view.addSubview(widget.view)
         
@@ -143,8 +195,6 @@ private extension AgoraClassToolsViewController {
             widgetController.sendMessage(toWidget: widgetId,
                                          message: string)
         }
-        
-        updateWidgetFrame(widgetId)
     }
     
     func getWidget(_ widgetId: String) -> AgoraBaseWidget? {
@@ -187,7 +237,8 @@ private extension AgoraClassToolsViewController {
                               widgetId: widgetId)
     }
     
-    func updateWidgetFrame(_ widgetId: String) {
+    func updateWidgetFrame(_ widgetId: String,
+                           size: CGSize) {
         guard widgetIdList.contains(widgetId) else {
             return
         }
@@ -199,26 +250,9 @@ private extension AgoraClassToolsViewController {
         let widget = contextPool.widget
         let syncFrame = widget.getWidgetSyncFrame(widgetId)
         
-        var widgetWidth: CGFloat = 0
-        var widgetHeight: CGFloat = 0
-        
-        switch widgetId {
-        case PollWidgetId:
-            widgetWidth = 240
-            widgetHeight = 238
-        case CountdownTimerWidgetId:
-            widgetWidth = 184
-            widgetHeight = 102
-        case PopupQuizWidgetId:
-            widgetWidth = 240
-            widgetHeight = 180
-        default:
-            return
-        }
-        
         let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view,
-                                                        displayWidth: widgetWidth,
-                                                        displayHeight: widgetHeight)
+                                                        displayWidth: size.width,
+                                                        displayHeight: size.height)
         
         view.bringSubviewToFront(targetView)
         view.layoutIfNeeded()
@@ -226,8 +260,8 @@ private extension AgoraClassToolsViewController {
         targetView.mas_remakeConstraints { make in
             make?.left.equalTo()(frame.origin.x)
             make?.top.equalTo()(frame.origin.y)
-            make?.width.equalTo()(widgetWidth)
-            make?.height.equalTo()(widgetHeight)
+            make?.width.equalTo()(size.width)
+            make?.height.equalTo()(size.height)
         }
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
