@@ -73,20 +73,6 @@ extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
             updateWidgetFrame(widgetId,
                               size: size)
         }
-        
-        guard let signal = message.toCountdownSignal() else {
-            return
-        }
-        switch signal {
-        case .getTimestamp:
-            let ts = contextPool.monitor.getSyncTimestamp()
-            if let message = AgoraCountdownWidgetSignal.sendTimestamp(ts).toMessageString() {
-                contextPool.widget.sendMessage(toWidget: CountdownTimerWidgetId,
-                                               message: message)
-            }
-        default:
-            break
-        }
     }
 }
 
@@ -188,13 +174,7 @@ private extension AgoraClassToolsViewController {
             return
         }
         
-        let syncTimestamp = contextPool.monitor.getSyncTimestamp()
-        let tsDic = ["syncTimestamp": syncTimestamp]
-        
-        if let string = tsDic.jsonString() {
-            widgetController.sendMessage(toWidget: widgetId,
-                                         message: string)
-        }
+        sendWidgetCurrentTimestamp(widgetId)
     }
     
     func getWidget(_ widgetId: String) -> AgoraBaseWidget? {
@@ -266,6 +246,16 @@ private extension AgoraClassToolsViewController {
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {
             self.view.layoutIfNeeded()
+        }
+    }
+    
+    func sendWidgetCurrentTimestamp(_ widgetId: String) {
+        let syncTimestamp = contextPool.monitor.getSyncTimestamp()
+        let tsDic = ["syncTimestamp": syncTimestamp]
+        
+        if let string = tsDic.jsonString() {
+            contextPool.widget.sendMessage(toWidget: widgetId,
+                                           message: string)
         }
     }
 }
