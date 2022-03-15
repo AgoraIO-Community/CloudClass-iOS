@@ -172,9 +172,7 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
         case .cloudStorage:
             if cloudController.view.isHidden {
                 cloudController.view.mas_remakeConstraints { make in
-                    make?.center.equalTo()(boardController.view)
-                    make?.width.equalTo()(AgoraFit.scale(435))
-                    make?.height.equalTo()(AgoraFit.scale(253))
+                    make?.left.right().top().bottom().equalTo()(boardController.view)
                 }
             }
             cloudController.view.isHidden = !cloudController.view.isHidden
@@ -363,8 +361,8 @@ private extension AgoraOneToOneUIManager {
         boardPageController.view.mas_makeConstraints { make in
             make?.left.equalTo()(contentView)?.offset()(AgoraFit.scale(12))
             make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-            make?.height.equalTo()(AgoraFit.scale(32))
-            make?.width.equalTo()(AgoraFit.scale(168))
+            make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+            make?.width.equalTo()(168)
         }
         classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)

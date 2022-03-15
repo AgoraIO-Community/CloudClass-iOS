@@ -167,35 +167,34 @@ extension AgoraBoardPageUIController {
     func createConstraint() {
         addBtn.mas_remakeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(AgoraFit.scale(10))
+            make?.left.equalTo()(10)
             make?.width.height().equalTo()(kButtonWidth)
         }
         
         sepLine.mas_makeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.addBtn.mas_right)?.offset()(AgoraFit.scale(4))
-            make?.top.equalTo()(AgoraFit.scale(8))
-            make?.bottom.equalTo()(AgoraFit.scale(-8))
-            make?.width.equalTo()(AgoraFit.scale(1))
+            make?.left.equalTo()(self.addBtn.mas_right)?.offset()(4)
+            make?.top.equalTo()(8)
+            make?.bottom.equalTo()(-8)
+            make?.width.equalTo()(1)
         }
 
         preBtn.mas_remakeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.sepLine.mas_right)?.offset()(AgoraFit.scale(3))
+            make?.left.equalTo()(self.sepLine.mas_right)?.offset()(3)
             make?.width.height().equalTo()(kButtonWidth)
         }
         
         nextBtn.mas_makeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.right.equalTo()(AgoraFit.scale(-10))
+            make?.right.equalTo()(-10)
             make?.width.height().equalTo()(kButtonWidth)
         }
         
-        pageLabel.mas_remakeConstraints { make in
+        pageLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.preBtn.mas_right)?.offset()(AgoraFit.scale(4))
-            make?.right.equalTo()(self.nextBtn.mas_left)?.offset()(AgoraFit.scale(-4))
-            make?.height.equalTo()(AgoraFit.scale(16))
+            make?.left.equalTo()(self.preBtn.mas_right)?.offset()(4)
+            make?.right.equalTo()(self.nextBtn.mas_left)?.offset()(-4)
         }
     }
     

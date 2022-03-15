@@ -92,7 +92,7 @@ NetworkDisconnectedText = "當前網絡已斷開,請檢查設備網絡連接";
 // user list
 UserListMainTitle = "花名冊";
 UserListTeacherName = "教師姓名：";
-UserListCarouselTitle = "輪播設置";
+UserListCarouselTitle = "輪播";
 UserListName = "學生姓名";
 UserListCoVideo = "上下台";
 UserListBoard = "授權";

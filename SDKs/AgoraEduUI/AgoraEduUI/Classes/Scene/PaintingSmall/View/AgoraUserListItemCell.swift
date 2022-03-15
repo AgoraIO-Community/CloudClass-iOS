@@ -29,16 +29,23 @@ class AgoraUserListModel {
     
     var authState: (isOn: Bool, isEnable: Bool) = (false, false)
     
-    var cameraState: (hasStream: Bool, isOn: Bool, isEnable: Bool) = (false, false, false)
+    var cameraState: (streamOn: Bool, deviceOn: Bool, isEnable: Bool) = (false, false, false)
     
-    var micState: (hasStream: Bool, isOn: Bool, isEnable: Bool) = (false, false, false)
+    var micState: (streamOn: Bool, deviceOn: Bool, isEnable: Bool) = (false, false, false)
     
     var rewards: Int = 0
+    
+    var rewardEnable: Bool = false
     
     var kickEnable: Bool = false
     
     /** 用作排序的首字母权重*/
     var sortRank: UInt32 = 0
+    
+    init(contextUser: AgoraEduContextUserInfo) {
+        self.name = contextUser.userName
+        self.uuid = contextUser.userUuid
+    }
     
     func getFirstLetterRankFromString(aString: String) -> UInt32 {
         let string = aString.trimmingCharacters(in: .whitespaces)
@@ -160,7 +167,6 @@ class AgoraUserListItemCell: UITableViewCell {
         if let image = UIImage.agedu_named("ic_nameroll_reward") {
             v.setImageForAllStates(image)
         }
-        v.isUserInteractionEnabled = false
         v.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         v.setTitleColor(UIColor(hex: 0xBDBDCA),
                         for: .normal)
@@ -225,86 +231,86 @@ private extension AgoraUserListItemCell {
             return
         }
         nameLabel.text = model.name
-        let on = UIColor(hex: 0x0073FF)
-        let off = UIColor(hex: 0xB3D6FF)
+        let onColor = UIColor(hex: 0x0073FF)
+        let offColor = UIColor(hex: 0xF04C36)
+        let authOffColor = UIColor(hex: 0xB3D6FF)
+        let disabledColor = UIColor(hex: 0xE2E2EE)
         for fn in fns {
             switch fn {
             case .stage:
                 if model.stageState.isOn {
-                    stageButton.tintColor = on
+                    stageButton.tintColor = onColor
                 } else {
-                    stageButton.tintColor = off
+                    stageButton.tintColor = authOffColor
                 }
                 stageButton.isUserInteractionEnabled = model.stageState.isEnable
             case .auth:
                 if model.authState.isOn {
-                    authButton.tintColor = on
+                    authButton.tintColor = onColor
                 } else {
-                    authButton.tintColor = off
+                    authButton.tintColor = authOffColor
                 }
                 authButton.isUserInteractionEnabled = model.stageState.isEnable
             case .camera:
-                if model.stageState.isOn,
-                   model.cameraState.isOn,
-                   model.cameraState.hasStream {
+                if !model.stageState.isOn {
+                    // 未上台
                     let image = UIImage.agedu_named("ic_nameroll_camera_on")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         cameraButton.setImageForAllStates(i)
                     }
-                    cameraButton.tintColor = on
-                } else if model.stageState.isOn,
-                          model.cameraState.isOn,
-                          model.cameraState.hasStream == false {
+                    cameraButton.tintColor = disabledColor
+                } else if !model.cameraState.deviceOn {
+                    // 上台+设备关闭
                     let image = UIImage.agedu_named("ic_nameroll_camera_off")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         cameraButton.setImageForAllStates(i)
                     }
-                    cameraButton.tintColor = UIColor(hex: 0xF04C36)
-                } else if model.stageState.isOn,
-                          model.cameraState.isOn == false {
+                    cameraButton.tintColor = disabledColor
+                } else if !model.cameraState.streamOn {
+                    // 上台+设备开启+无流权限
                     let image = UIImage.agedu_named("ic_nameroll_camera_off")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         cameraButton.setImageForAllStates(i)
                     }
-                    cameraButton.tintColor = UIColor(hex: 0xE2E2EE)
-                } else if model.stageState.isOn == false {
+                    cameraButton.tintColor = offColor
+                } else {
+                    // 上台+设备开启+有流权限
                     let image = UIImage.agedu_named("ic_nameroll_camera_on")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         cameraButton.setImageForAllStates(i)
                     }
-                    cameraButton.tintColor = UIColor(hex: 0xE2E2EE)
+                    cameraButton.tintColor = onColor
                 }
                 cameraButton.isUserInteractionEnabled = model.cameraState.isEnable
             case .mic:
-                if model.stageState.isOn,
-                   model.micState.isOn,
-                   model.micState.hasStream {
+                if !model.stageState.isOn {
+                    // 未上台
                     let image = UIImage.agedu_named("ic_nameroll_mic_on")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         micButton.setImageForAllStates(i)
                     }
-                    micButton.tintColor = on
-                } else if model.stageState.isOn,
-                          model.micState.isOn,
-                          model.micState.hasStream == false {
+                    micButton.tintColor = disabledColor
+                } else if !model.micState.deviceOn {
+                    // 上台+设备关闭
                     let image = UIImage.agedu_named("ic_nameroll_mic_off")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         micButton.setImageForAllStates(i)
                     }
-                    micButton.tintColor = UIColor(hex: 0xF04C36)
-                } else if model.stageState.isOn,
-                          model.micState.isOn == false {
+                    micButton.tintColor = disabledColor
+                } else if !model.micState.streamOn {
+                    // 上台+设备开启+无流权限
                     let image = UIImage.agedu_named("ic_nameroll_mic_off")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         micButton.setImageForAllStates(i)
                     }
-                    micButton.tintColor = UIColor(hex: 0xE2E2EE)
-                } else if model.stageState.isOn == false {
+                    micButton.tintColor = offColor
+                } else {
+                    // 上台+设备开启+有流权限
                     let image = UIImage.agedu_named("ic_nameroll_mic_on")
                     if let i = image?.withRenderingMode(.alwaysTemplate) {
                         micButton.setImageForAllStates(i)
                     }
-                    micButton.tintColor = UIColor(hex: 0xE2E2EE)
+                    micButton.tintColor = onColor
                 }
                 micButton.isUserInteractionEnabled = model.micState.isEnable
             case .reward:
@@ -338,14 +344,14 @@ private extension AgoraUserListItemCell {
             return
         }
         delegateSelectFunc(.camera,
-                           state: !model.cameraState.isOn)
+                           state: !model.cameraState.streamOn)
     }
     @objc func onClickMic(_ sender: UIButton) {
         guard let model = itemModel else {
             return
         }
         delegateSelectFunc(.mic,
-                           state: !model.micState.isOn)
+                           state: !model.micState.streamOn)
     }
 
     @objc func onClickReward(_ sender: UIButton) {
@@ -381,6 +387,7 @@ private extension AgoraUserListItemCell {
         nameLabel = UILabel()
         nameLabel.textColor = UIColor(hex: 0x191919)
         nameLabel.font = UIFont.systemFont(ofSize: 12)
+        nameLabel.textAlignment = .center
         contentView.addSubview(nameLabel)
         
         funcsView = UIStackView(frame: .zero)
@@ -393,14 +400,14 @@ private extension AgoraUserListItemCell {
     
     func createConstraint() {
         nameLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(16)
+            make?.left.equalTo()(0)
             make?.top.bottom().equalTo()(nameLabel.superview)
-            make?.width.equalTo()(60)
+            make?.width.equalTo()(100)
         }
         funcsView.mas_makeConstraints { make in
             make?.top.bottom().equalTo()(funcsView.superview)
             make?.left.equalTo()(nameLabel.mas_right)
-            make?.right.equalTo()(-16)
+            make?.right.equalTo()(0)
         }
     }
 }
