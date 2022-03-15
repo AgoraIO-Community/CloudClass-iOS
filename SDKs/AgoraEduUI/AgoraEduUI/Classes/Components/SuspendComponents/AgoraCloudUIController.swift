@@ -115,13 +115,14 @@ extension AgoraCloudUIController {
     func initData(){
         switch contextPool.room.getRoomInfo().roomType {
         case .oneToOne:
-            widgetSize = CGSize(width: 435, height: 253)
+            widgetSize = CGSize(width: 435,
+                                height: 253)
         case .lecture:
-            widgetSize = CGSize(width: 435, height: 253)
+            widgetSize = CGSize(width: 360,
+                                height: 214)
         default:
-            widgetSize = CGSize(width: 435, height: 253)
+            widgetSize = CGSize(width: 435,
+                                height: 253)
         }
-        
-        
     }
 }
