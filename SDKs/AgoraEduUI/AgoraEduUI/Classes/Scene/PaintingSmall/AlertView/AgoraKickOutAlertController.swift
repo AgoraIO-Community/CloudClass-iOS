@@ -107,7 +107,7 @@ extension AgoraKickOutAlertController {
         titleLable = UILabel()
         titleLable.textColor = UIColor(hex: 0x030303)
         titleLable.textAlignment = .center
-        titleLable.text = "kick_out_student".agedu_localized()
+        titleLable.text = "fcr_user_kick_out".agedu_localized()
         titleLable.font = UIFont.systemFont(ofSize: 17)
         contentView.addSubview(titleLable)
         
@@ -124,7 +124,7 @@ extension AgoraKickOutAlertController {
         
         firstLabel = UILabel()
         firstLabel.textColor = UIColor(hex: 0x191919)
-        firstLabel.text = "kick_out_once".agedu_localized()
+        firstLabel.text = "fcr_user_kick_out_once".agedu_localized()
         firstLabel.font = UIFont.systemFont(ofSize: 13)
         contentView.addSubview(firstLabel)
         
@@ -141,7 +141,7 @@ extension AgoraKickOutAlertController {
         
         seconedLabel = UILabel()
         seconedLabel.textColor = UIColor(hex: 0x586376)
-        seconedLabel.text = "kick_out_forever".agedu_localized()
+        seconedLabel.text = "fcr_user_kick_out_forever".agedu_localized()
         seconedLabel.font = UIFont.systemFont(ofSize: 13)
         contentView.addSubview(seconedLabel)
         
@@ -157,7 +157,7 @@ extension AgoraKickOutAlertController {
         submitButton.addTarget(self,
                                action: #selector(onClickSubmit(_:)),
                                for: .touchUpInside)
-        submitButton.setTitle("kick_out_submit".agedu_localized(),
+        submitButton.setTitle("fcr_user_kick_out_submit".agedu_localized(),
                               for: .normal)
         contentView.addSubview(submitButton)
         
@@ -165,7 +165,7 @@ extension AgoraKickOutAlertController {
         cancelButton.addTarget(self,
                                action: #selector(onClickCancel(_:)),
                                for: .touchUpInside)
-        cancelButton.setTitle("kick_out_cancel".agedu_localized(),
+        cancelButton.setTitle("fcr_user_kick_out_cancel".agedu_localized(),
                               for: .normal)
         contentView.addSubview(cancelButton)
     }

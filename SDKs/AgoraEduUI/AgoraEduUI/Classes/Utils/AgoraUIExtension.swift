@@ -23,6 +23,10 @@ extension Bundle {
 }
 
 extension String {
+    static func agedu_localized_replacing() -> String {
+        return "{xxx}"
+    }
+    
     func agedu_localized() -> String {
         let bundle = Bundle.ag_compentsBundleNamed("AgoraEduUI") ?? Bundle.main
         return NSLocalizedString(self,

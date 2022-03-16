@@ -41,7 +41,7 @@ private extension AgoraHandsupTipsView {
         label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = UIColor(hex: 0x191919)
-        label.text = "long_press_to_wave_hands".agedu_localized()
+        label.text = "fcr_user_hands".agedu_localized()
         label.textAlignment = .center
         addSubview(label)
     }

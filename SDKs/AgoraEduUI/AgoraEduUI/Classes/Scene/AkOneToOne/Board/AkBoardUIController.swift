@@ -19,11 +19,11 @@ class AkBoardUIController: UIViewController {
                 return
             }
             if !localGranted {
-                AgoraToast.toast(msg: "board_ungranted".agedu_localized(),
+                AgoraToast.toast(msg: "fcr_netless_board_ungranted".agedu_localized(),
                                  type: .error)
             } else if localGranted,
                         contextPool.user.getLocalUserInfo().userRole != .teacher {
-                AgoraToast.toast(msg: "board_granted".agedu_localized(),
+                AgoraToast.toast(msg: "fcr_netless_board_granted".agedu_localized(),
                                  type: .notice)
             }
         }

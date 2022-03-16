@@ -14,19 +14,17 @@ protocol AgoraBoardPageUIControllerDelegate: NSObjectProtocol {
     func boardPageUINeedMove(coursewareMin: Bool)
 }
 
-fileprivate let kButtonWidth = AgoraFit.scale(30)
-fileprivate let kButtonHeight = AgoraFit.scale(30)
-
 class AgoraBoardPageUIController: UIViewController {
     /** Views*/
-    public var suggestSize = CGSize(width: AgoraFit.scale(168),
-                                    height: AgoraFit.scale(32))
-    
     private var addBtn: UIButton!
     private var sepLine: UIView!
     private var pageLabel: UILabel!
     private var preBtn: UIButton!
     private var nextBtn: UIButton!
+    
+    private let kButtonWidth = 30
+    private let kButtonHeight = 30
+    
     /** SDK*/
     private var contextPool: AgoraEduContextPool!
     /** Data */

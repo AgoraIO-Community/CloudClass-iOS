@@ -16,17 +16,17 @@ enum AgoraUserListFunction: Int {
     func title() -> String {
         switch self {
         case .stage:
-            return "UserListCoVideo".agedu_localized()
+            return "fcr_user_list_stage".agedu_localized()
         case .auth:
-            return "UserListBoard".agedu_localized()
+            return "fcr_user_list_auth".agedu_localized()
         case .camera:
-            return "UserListCamera".agedu_localized()
+            return "fcr_user_list_video".agedu_localized()
         case .mic:
-            return "UserListMicro".agedu_localized()
+            return "fcr_user_list_audio".agedu_localized()
         case .reward:
-            return "UserListReward".agedu_localized()
+            return "fcr_user_list_reward".agedu_localized()
         case .kick:
-            return "nameroll_kick_out".agedu_localized()
+            return "fcr_user_list_ban".agedu_localized()
         default: return ""
         }
     }
@@ -81,7 +81,7 @@ class AgoraUserListUIController: UIViewController {
     /** 轮播 仅教师端*/
     private lazy var carouselTitle: UILabel = {
         let carouselTitle = UILabel(frame: .zero)
-        carouselTitle.text = "UserListCarouselTitle".agedu_localized()
+        carouselTitle.text = "fcr_user_list_carousel_setting".agedu_localized()
         carouselTitle.font = UIFont.systemFont(ofSize: 12)
         carouselTitle.textColor = UIColor(hex: 0x7B88A0)
         return carouselTitle
@@ -256,6 +256,8 @@ private extension AgoraUserListUIController {
 
         model.authState.isOn = boardUsers.contains(model.uuid)
         // enable
+        model.micState.isEnable = isTeacher
+        model.cameraState.isEnable = isTeacher
         model.stageState.isEnable = isTeacher
         model.authState.isEnable = isTeacher
         model.rewardEnable = isTeacher
@@ -525,7 +527,7 @@ extension AgoraUserListUIController {
         view.addSubview(contentView)
         
         titleLabel = UILabel(frame: .zero)
-        titleLabel.text = "UserListMainTitle".agedu_localized()
+        titleLabel.text = "fcr_user_list".agedu_localized()
         titleLabel.font = UIFont.systemFont(ofSize: 12)
         titleLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(titleLabel)
@@ -543,7 +545,7 @@ extension AgoraUserListUIController {
         contentView.addSubview(bottomSepLine)
         
         teacherTitleLabel = UILabel(frame: .zero)
-        teacherTitleLabel.text = "UserListTeacherName".agedu_localized()
+        teacherTitleLabel.text = "fcr_user_list_teacher_name".agedu_localized()
         teacherTitleLabel.font = UIFont.systemFont(ofSize: 12)
         teacherTitleLabel.textColor = UIColor(hex: 0x7B88A0)
         contentView.addSubview(teacherTitleLabel)
@@ -554,7 +556,7 @@ extension AgoraUserListUIController {
         contentView.addSubview(teacherNameLabel)
         
         studentTitleLabel = UILabel(frame: .zero)
-        studentTitleLabel.text = "UserListName".agedu_localized()
+        studentTitleLabel.text = "fcr_user_list_student_name".agedu_localized()
         studentTitleLabel.textAlignment = .center
         studentTitleLabel.font = UIFont.systemFont(ofSize: 12)
         studentTitleLabel.textColor = UIColor(hex: 0x7B88A0)

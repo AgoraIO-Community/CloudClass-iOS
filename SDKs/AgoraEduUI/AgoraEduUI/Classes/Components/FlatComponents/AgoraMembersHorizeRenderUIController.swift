@@ -224,14 +224,14 @@ private extension AgoraMembersHorizeRenderUIController {
             return
         }
         if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_stop_audio".agedu_localized())
         } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneUnMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_start_audio".agedu_localized())
         }
         if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_stop_video".agedu_localized())
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraUnMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_start_video".agedu_localized())
         }
     }
     

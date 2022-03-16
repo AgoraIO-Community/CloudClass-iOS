@@ -84,12 +84,12 @@ enum AgoraTeachingAidType {
     
     func cellText() -> String? {
         switch self {
-        case .cloudStorage:     return "toolbox_cloud_storage".agedu_localized()
+        case .cloudStorage:     return "fcr_tool_box_cloud_storage".agedu_localized()
         case .saveBoard:        return "toolbox_save_borad".agedu_localized()
-        case .record:           return "toolbox_record_class".agedu_localized()
-        case .vote:             return "toolbox_vote".agedu_localized()
-        case .countDown:        return "toolbox_count_down".agedu_localized()
-        case .answerSheet:      return "toolbox_answer_sheet".agedu_localized()
+        case .record:           return "fcr_tool_box_record_class".agedu_localized()
+        case .vote:             return "fcr_tool_box_poll".agedu_localized()
+        case .countDown:        return "fcr_tool_box_count_down".agedu_localized()
+        case .answerSheet:      return "fcr_tool_box_popup_quiz".agedu_localized()
         default:                return nil
         }
     }

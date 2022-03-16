@@ -387,8 +387,8 @@ private extension AkOneToOneUIManager {
             make?.right.equalTo()(rightContentView.mas_left)
         }
         boardPageController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(contentView)?.offset()(AgoraFit.scale(12))
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
+            make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
             make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
             make?.width.equalTo()(168)
         }

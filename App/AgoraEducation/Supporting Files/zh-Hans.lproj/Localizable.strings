@@ -12,8 +12,6 @@ BigClassText = "大班课";
 BreakOutClassText = "超级小班课";
 MediumClassText = "中班课";
 
-OKText = "确定";
-CancelText = "取消";
 EyeProtectionText = "护眼模式";
 SettingText = "设置";
 

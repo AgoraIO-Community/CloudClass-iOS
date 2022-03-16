@@ -303,7 +303,7 @@ private extension AgoraSmallUIManager {
         addChild(boardPageController)
         
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
-            toolBarController.tools = [.setting, .nameRoll, .message, .handsList]
+            toolBarController.tools = [.setting, .message,.nameRoll, .handsList]
             addChild(renderMenuController)
             contentView.addSubview(renderMenuController.view)
             renderMenuController.view.isHidden = true
@@ -316,7 +316,7 @@ private extension AgoraSmallUIManager {
             
             addChild(handsListController)
         } else {
-            toolBarController.tools = [.setting, .nameRoll, .message, .handsup]
+            toolBarController.tools = [.setting, .message, .nameRoll, .handsup]
             toolCollectionController.view.isHidden = true
             boardPageController.view.isHidden = true
         }
@@ -365,8 +365,8 @@ private extension AgoraSmallUIManager {
             make?.height.equalTo()(AgoraFit.scale(80))
         }
         boardPageController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(contentView)?.offset()(AgoraFit.scale(12))
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
+            make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
             make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
             make?.width.equalTo()(168)
         }
