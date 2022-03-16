@@ -13,7 +13,7 @@ import AgoraWidget
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class AgoraPaintingSmallUIManager: AgoraEduUIManager {
-    private let roomType: AgoraEduContextRoomType = .paintingSmall
+    private let roomType: AgoraEduContextRoomType = .small
     /** 工具栏*/
     private var toolBarController: AgoraToolBarUIController!
     /** 房间状态 控制器*/

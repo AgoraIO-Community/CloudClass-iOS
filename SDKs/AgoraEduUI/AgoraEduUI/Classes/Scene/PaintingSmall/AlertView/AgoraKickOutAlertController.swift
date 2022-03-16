@@ -5,8 +5,8 @@
 //  Created by Jonathan on 2021/11/3.
 //
 
-import UIKit
 import Masonry
+import UIKit
 
 class AgoraKickOutAlertController: UIViewController {
     
@@ -50,7 +50,9 @@ class AgoraKickOutAlertController: UIViewController {
         }
     }
     
-    public class func present(by viewController: UIViewController, onComplete: ((_ forever: Bool) -> Void)?, onCancel: (() -> Void)?) {
+    public class func present(by viewController: UIViewController,
+                              onComplete: ((_ forever: Bool) -> Void)?,
+                              onCancel: (() -> Void)?) {
         let vc = AgoraKickOutAlertController()
         vc.modalPresentationStyle = .overFullScreen
         vc.modalTransitionStyle = .crossDissolve
