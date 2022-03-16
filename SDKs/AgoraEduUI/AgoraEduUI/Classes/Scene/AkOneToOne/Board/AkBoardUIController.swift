@@ -35,6 +35,7 @@ class AkBoardUIController: UIViewController {
         contextPool = context
         
         uiConfig = config
+        
         view.backgroundColor = config.backgroundColor
         view.layer.borderWidth = config.borderWidth
         view.layer.borderColor = config.borderColor
@@ -66,6 +67,17 @@ private extension AkBoardUIController {
                                    widgetId: boardConfig.widgetId)
             view.isUserInteractionEnabled = true
             view.addSubview(boardWidget.view)
+            
+//            if let config = uiConfig {
+//                boardWidget.view.backgroundColor = config.backgroundColor
+//                boardWidget.view.layer.borderWidth = config.borderWidth
+//                boardWidget.view.layer.borderColor = config.borderColor
+//
+//                if let cor = config.cornerRadius {
+//                    boardWidget.view.layer.cornerRadius = cor
+//                }
+//            }
+            
             self.boardWidget = boardWidget
 
             var borderWidth = uiConfig?.borderWidth ?? 0

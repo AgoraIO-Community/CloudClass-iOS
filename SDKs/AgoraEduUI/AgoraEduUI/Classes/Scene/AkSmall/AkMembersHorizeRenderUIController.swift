@@ -1,5 +1,5 @@
 //
-//  AgoraMembersHorizeRenderUIController.swift
+//  AkMembersHorizeRenderUIController.swift
 //  AgoraEduUI
 //
 //  Created by Jonathan on 2021/12/10.
@@ -14,24 +14,11 @@ import Foundation
 import Masonry
 import UIKit
 
-protocol AgoraRenderUIControllerDelegate: NSObjectProtocol {
-    func onClickMemberAt(view: UIView,
-                         UUID: String)
-    
-    func onRequestSpread(firstOpen: Bool,
-                         userId: String,
-                         streamId: String,
-                         fromView: UIView,
-                         xaxis: CGFloat,
-                         yaxis: CGFloat,
-                         width: CGFloat,
-                         height: CGFloat)
-}
-
 private let kItemGap: CGFloat = AgoraFit.scale(4)
 private let kTeacherIndex: IndexPath = IndexPath(row: -1,
                                                  section: 0)
-class AgoraMembersHorizeRenderUIController: UIViewController {
+class AkMembersHorizeRenderUIController: UIViewController {
+    private var uiConfig: AkUIConfig?
     
     weak var delegate: AgoraRenderUIControllerDelegate?
     
@@ -53,8 +40,12 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         didSet {
             teacherView.setModel(model: teacherModel, delegate: self)
             teacherView.isHidden = (teacherModel == nil)
-            teacherView.layer.borderWidth = 1
-            teacherView.layer.borderColor = UIColor.red.cgColor
+            
+            if let config = uiConfig {
+                teacherView.layer.borderWidth = config.borderWidth
+                teacherView.layer.borderColor = config.borderColor
+            }
+            
             self.reloadData()
         }
     }
@@ -74,9 +65,12 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         config: AkUIConfig) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
+        
+        uiConfig = config
     }
     
     required init?(coder: NSCoder) {
@@ -123,7 +117,7 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
 }
 
 // MARK: - Actions
-extension AgoraMembersHorizeRenderUIController {
+extension AkMembersHorizeRenderUIController {
     @objc func onDoubleClick(_ sender: UITapGestureRecognizer) {
         
     }
@@ -159,7 +153,7 @@ extension AgoraMembersHorizeRenderUIController {
     }
 }
 // MARK: - Private
-private extension AgoraMembersHorizeRenderUIController {
+private extension AkMembersHorizeRenderUIController {
     func setup() {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
@@ -226,14 +220,14 @@ private extension AgoraMembersHorizeRenderUIController {
             return
         }
         if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "fcr_stream_stop_audio".agedu_localized())
+            AgoraToast.toast(msg: "MicrophoneMuteText".agedu_localized())
         } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "fcr_stream_start_audio".agedu_localized())
+            AgoraToast.toast(msg: "MicrophoneUnMuteText".agedu_localized())
         }
         if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "fcr_stream_stop_video".agedu_localized())
+            AgoraToast.toast(msg: "CameraMuteText".agedu_localized())
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "fcr_stream_start_video".agedu_localized())
+            AgoraToast.toast(msg: "CameraUnMuteText".agedu_localized())
         }
     }
     
@@ -271,7 +265,7 @@ private extension AgoraMembersHorizeRenderUIController {
     }
 }
 // MARK: - AgoraEduUserHandler
-extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
+extension AkMembersHorizeRenderUIController: AgoraEduUserHandler {
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
@@ -337,7 +331,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
 }
 
 // MARK: - AgoraEduMediaHandler
-extension AgoraMembersHorizeRenderUIController: AgoraEduMediaHandler {
+extension AkMembersHorizeRenderUIController: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
                          streamUuid: String) {
         if teacherModel?.streamID == streamUuid {
@@ -350,7 +344,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduMediaHandler {
 }
 
 // MARK: - AgoraEduStreamHandler
-extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
+extension AkMembersHorizeRenderUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
         self.updateStream(stream: stream)
@@ -376,7 +370,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
 }
 
 // MARK: - AgoraEduRoomHandler
-extension AgoraMembersHorizeRenderUIController: AgoraEduRoomHandler {
+extension AkMembersHorizeRenderUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         // model setup
         self.setup()
@@ -384,7 +378,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduRoomHandler {
 }
 
 // MARK: - AgoraRenderMemberViewDelegate
-extension AgoraMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
+extension AkMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
     func memberViewRender(memberView: AgoraRenderMemberView,
                           in view: UIView,
                           renderID: String) {
@@ -408,7 +402,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
     }
 }
 // MARK: - UICollectionView Call Back
-extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
+extension AkMembersHorizeRenderUIController: UICollectionViewDelegate,
                                            UICollectionViewDataSource,
                                            UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView,
@@ -420,8 +414,16 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
                                cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withClass: AgoraRenderMemberCell.self,
                                                       for: indexPath)
-        cell.contentView.borderWidth = 1
-        cell.contentView.layer.borderColor = UIColor.red.cgColor
+        
+        if let config = uiConfig {
+            cell.contentView.layer.borderWidth = config.borderWidth
+            cell.contentView.layer.borderColor = config.borderColor
+            
+            if let radius = config.cornerRadius {
+                cell.contentView.layer.cornerRadius = radius
+            }
+        }
+        
         let model = self.dataSource[indexPath.row]
         cell.renderView.setModel(model: model, delegate: self)
         return cell
@@ -476,7 +478,7 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
 }
 
 // MARK: - Creations
-private extension AgoraMembersHorizeRenderUIController {
+private extension AkMembersHorizeRenderUIController {
     func createViews() {
         contentView = UIView()
         view.addSubview(contentView)

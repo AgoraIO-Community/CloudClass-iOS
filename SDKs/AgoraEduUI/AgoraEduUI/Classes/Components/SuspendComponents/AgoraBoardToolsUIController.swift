@@ -152,14 +152,14 @@ enum AgoraBoardToolItem: CaseIterable {
     var rawValue: Int {
         switch self {
         case .clicker:  return 1
-        case .area:   return 2
-        case .text:   return 3
-        case .rubber: return 4
-        case .laser:  return 5
-        case .pencil: return 6
-        case .line:   return 7
-        case .rect:   return 8
-        case .cycle:  return 9
+        case .area:     return 2
+        case .text:     return 3
+        case .rubber:   return 4
+        case .laser:    return 5
+        case .pencil:   return 6
+        case .line:     return 7
+        case .rect:     return 8
+        case .cycle:    return 9
         }
     }
 
