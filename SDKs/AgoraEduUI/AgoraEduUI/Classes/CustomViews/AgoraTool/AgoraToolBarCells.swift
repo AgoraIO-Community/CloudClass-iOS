@@ -41,7 +41,7 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
     }
     
     override func normalState() {
-        self.imageView.tintColor = self.aSelected ? .white : nil
+        self.imageView.tintColor = self.aSelected ? .white : UIColor(hex: 0x7B88A0)
         self.contentView.backgroundColor = self.aSelected ? baseTintColor : .white
         UIView.animate(withDuration: 0.1,
                        delay: 0,
@@ -57,7 +57,7 @@ class AgoraToolBarItemCell: UICollectionViewCell {
         
     var imageView: UIImageView!
     
-    var baseTintColor = UIColor(hex: 0x7B88A0)
+    var baseTintColor = UIColor(hex: 0x357BF6)
     
     var aSelected = false {
         willSet {
@@ -114,7 +114,7 @@ class AgoraToolBarItemCell: UICollectionViewCell {
     
     func normalState() {
         contentView.backgroundColor = self.aSelected ? baseTintColor : .white
-        imageView.tintColor = self.aSelected ? .white : baseTintColor
+        imageView.tintColor = self.aSelected ? .white : UIColor(hex: 0x7B88A0)
         UIView.animate(withDuration: 0.1,
                        delay: 0,
                        options: .curveLinear) {

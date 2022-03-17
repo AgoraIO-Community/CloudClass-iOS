@@ -151,10 +151,6 @@
     // AgoraWhiteboardWidget
     AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWhiteboardWidget class]
                                                                           widgetId:@"netlessBoard"];
-    // RTM IM Widget
-    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRtmIMWidget class]
-                                                             widgetId:@"AgoraChatWidget"];
-    widgets[rtm.widgetId] = rtm;
     
     NSString *courseFolder = [NSString stringWithFormat:@"%@/%@", NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
                                                                                                       NSUserDomainMask,
@@ -164,6 +160,12 @@
                                    @"autoFit": @NO};
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
+    
+    // RTM IM Widget
+    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRtmIMWidget class]
+                                                             widgetId:@"AgoraChatWidget"];
+    widgets[rtm.widgetId] = rtm;
+
     
     // CountdownTimer Widget
     AgoraWidgetConfig *countdownTimer = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownTimerWidget class]

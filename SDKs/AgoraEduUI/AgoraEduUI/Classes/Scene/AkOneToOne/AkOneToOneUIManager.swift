@@ -134,17 +134,16 @@ extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
     func toolCollectionCellNeedSpread(_ spread: Bool) {
         if spread {
             toolCollectionController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
-                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-59))
-                make?.width.equalTo()(AgoraFit.scale(32))
-                make?.height.equalTo()(AgoraFit.scale(80))
+                make?.right.equalTo()(boardController.view)?.offset()(-12)
+                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-60))
+                make?.width.equalTo()(toolCollectionController.suggestLength)
+                make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
-                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-59))
-                make?.width.equalTo()(AgoraFit.scale(32))
-                make?.height.equalTo()(AgoraFit.scale(32))
+                make?.right.equalTo()(boardController.view)?.offset()(-12)
+                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-60))
+                make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
     }
@@ -371,15 +370,15 @@ private extension AkOneToOneUIManager {
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
         toolBarController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-6))
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-7))
-            make?.width.height().equalTo()(AgoraFit.scale(44))
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(-12)
+            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-12))
+            make?.width.equalTo()(toolBarController.suggestSize.width)
+            make?.height.equalTo()(toolBarController.suggestSize.height)
         }
         toolCollectionController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-59))
-            make?.width.equalTo()(AgoraFit.scale(32))
-            make?.height.equalTo()(AgoraFit.scale(32))
+            make?.right.equalTo()(boardController.view)?.offset()(-12)
+            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-60))
+            make?.width.height().equalTo()(toolCollectionController.suggestLength)
         }
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)

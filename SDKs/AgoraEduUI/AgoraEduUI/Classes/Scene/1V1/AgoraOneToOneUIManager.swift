@@ -148,15 +148,14 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
                 make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-                make?.width.equalTo()(AgoraFit.scale(32))
-                make?.height.equalTo()(AgoraFit.scale(80))
+                make?.width.equalTo()(toolCollectionController.suggestLength)
+                make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
                 make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-                make?.width.equalTo()(AgoraFit.scale(32))
-                make?.height.equalTo()(AgoraFit.scale(32))
+                make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
     }
@@ -349,9 +348,8 @@ private extension AgoraOneToOneUIManager {
         }
         toolCollectionController.view.mas_makeConstraints { make in
             make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
-            make?.bottom.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-15))
-            make?.width.equalTo()(AgoraFit.scale(32))
-            make?.height.equalTo()(AgoraFit.scale(80))
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.width.height().equalTo()(toolCollectionController.suggestLength)
         }
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)

@@ -233,8 +233,10 @@ private extension AgoraPaintingSmallUIManager {
             make?.left.right().bottom().equalTo()(0)
         }
         toolBarController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(contentView)?.offset()(-12)
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -9 : -6)
             make?.bottom.equalTo()(contentView)?.offset()(-15)
+            make?.width.equalTo()(toolBarController.suggestSize.width)
+            make?.height.equalTo()(toolBarController.suggestSize.height)
         }
         spreadController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)

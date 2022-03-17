@@ -98,26 +98,26 @@ protocol AgoraBoardToolConfigViewDelegate: class {
 
 fileprivate let kTextSizeCount: Int = 4
 
-fileprivate let kToolLength: CGFloat = AgoraFit.scale(30)
-fileprivate let kFontLength: CGFloat = AgoraFit.scale(30)
-fileprivate let kWidthLength: CGFloat = AgoraFit.scale(28)
-fileprivate let kColorLength: CGFloat = AgoraFit.scale(22)
+fileprivate let kToolLength: CGFloat = UIDevice.current.isPad ? 34 : 30
+fileprivate let kFontLength: CGFloat = UIDevice.current.isPad ? 34 : 30
+fileprivate let kWidthLength: CGFloat = 28
+fileprivate let kColorLength: CGFloat = 22
 
-fileprivate let kGapLength: CGFloat = AgoraFit.scale(12)
-fileprivate let kToolHGap: CGFloat = kGapLength
-fileprivate let kFontHGap: CGFloat = kGapLength
-fileprivate let kWidthHGap: CGFloat = AgoraFit.scale(4)
-fileprivate let kColorHGap: CGFloat = AgoraFit.scale(20)
+fileprivate let kGapLength: CGFloat = 12
+fileprivate let kToolHGap: CGFloat = 12
+fileprivate let kFontHGap: CGFloat = 12
+fileprivate let kWidthHGap: CGFloat = UIDevice.current.isPad ? 8 : 4
+fileprivate let kColorHGap: CGFloat = UIDevice.current.isPad ? 28 : 20
 /// only shows when curMainTool is Text or Paint
 class AgoraBoardToolConfigView: UIView {
     /** UI*/
     public var suggestSize: CGSize {
         get {
             if isCurrentPaint {
-                return CGSize(width: kColorLength * 4 + kColorHGap * 3 + kGapLength * 2,
+                return CGSize(width: UIDevice.current.isPad ? 196 : 172,
                               height: toolCollectionHeight + lineCollectionHeight + colorCollectionHeight + AgoraFit.scale(1) * 2)
             } else {
-                return CGSize(width: kColorLength * 4 + kColorHGap * 3 + kGapLength * 2,
+                return CGSize(width: UIDevice.current.isPad ? 196 : 172,
                               height: textCollectionHeight + colorCollectionHeight + AgoraFit.scale(1))
             }
         }
@@ -333,19 +333,21 @@ private extension AgoraBoardToolConfigView {
         contentView.borderColor = UIColor(hex: 0xE3E3EC)
         addSubview(contentView)
         
+        
+        let toolLeft: CGFloat = UIDevice.current.isPad ? 12 : 8
         subPaintCollectionView = makeCollectionView(space: kToolHGap,
                                                     sectionInset: UIEdgeInsets(top: kGapLength,
-                                                                               left: AgoraFit.scale(8),
+                                                                               left: toolLeft,
                                                                                bottom: kGapLength,
-                                                                               right: AgoraFit.scale(8)))
+                                                                               right: toolLeft))
         subPaintCollectionView.register(cellWithClass: AgoraToolCollectionToolCell.self)
         contentView.addSubview(subPaintCollectionView)
         
         lineWidthCollectionView = makeCollectionView(space: kWidthHGap,
                                                      sectionInset: UIEdgeInsets(top: kGapLength,
-                                                                                left: AgoraFit.scale(8),
+                                                                                left: toolLeft,
                                                                                 bottom: kGapLength,
-                                                                                right: AgoraFit.scale(8)))
+                                                                                right: toolLeft))
         lineWidthCollectionView.register(cellWithClass: AgoraBoardLineWidthCell.self)
         contentView.addSubview(lineWidthCollectionView)
         
@@ -359,9 +361,9 @@ private extension AgoraBoardToolConfigView {
         
         textSizecollectionView = makeCollectionView(space: kFontHGap,
                                                     sectionInset: UIEdgeInsets(top: kGapLength,
-                                                                               left: AgoraFit.scale(8),
+                                                                               left: toolLeft,
                                                                                bottom: kGapLength,
-                                                                               right: AgoraFit.scale(8)))
+                                                                               right: toolLeft))
         textSizecollectionView.register(cellWithClass: AgoraBoardTextSizeItemCell.self)
         contentView.addSubview(textSizecollectionView)
         
@@ -441,6 +443,7 @@ private extension AgoraBoardToolConfigView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.sectionInset = sectionInset
+        layout.minimumInteritemSpacing = space
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false

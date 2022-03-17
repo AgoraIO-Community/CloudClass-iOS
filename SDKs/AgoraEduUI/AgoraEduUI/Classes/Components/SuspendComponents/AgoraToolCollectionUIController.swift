@@ -25,7 +25,8 @@ class AgoraToolCollectionUIController: UIViewController {
     /// Data
     private weak var delegate: AgoraToolCollectionUIControllerDelegate?
     
-    var suggestSize: CGSize = .zero
+    var suggestLength: CGFloat = UIDevice.current.isPad ? 34 : 32
+    var suggestSpreadHeight: CGFloat = 80
     
     private var baseTintColor = UIColor(hex: 0x357BF6)
     
@@ -212,9 +213,6 @@ private extension AgoraToolCollectionUIController {
         mainToolsView.updateBaseTintColor(baseTintColor)
         subToolsView = AgoraBoardToolConfigView(delegate: self)
         mainToolsView.curColor = UIColor(hex: subToolsView.currentColor)
-        
-        // 默认为mainToolsView的窗口大小
-        suggestSize = mainToolsView.suggestSize
     }
     
     func createViews() {
@@ -262,29 +260,28 @@ private extension AgoraToolCollectionUIController {
                 make?.left.right().top().bottom().equalTo()(0)
             }
             subCell.mas_remakeConstraints { make in
-                make?.top.equalTo()(5)
+                make?.top.equalTo()(0)
                 make?.centerX.equalTo()(0)
-                make?.width.height().equalTo()(AgoraFit.scale(30))
+                make?.width.height().equalTo()(suggestLength)
             }
             sepLine.mas_remakeConstraints { make in
-                make?.top.equalTo()(subCell.mas_bottom)
+                make?.centerY.equalTo()(self.view.mas_centerY)
                 make?.centerX.equalTo()(self.view.mas_centerX)
                 make?.width.equalTo()(20)
                 make?.height.equalTo()(1)
             }
             mainCell.mas_remakeConstraints { make in
-                make?.bottom.equalTo()(-5)
+                make?.bottom.equalTo()(0)
                 make?.centerX.equalTo()(0)
-                make?.width.height().equalTo()(AgoraFit.scale(30))
+                make?.width.height().equalTo()(suggestLength)
             }
         } else {
             contentView.mas_remakeConstraints { make in
-                make?.left.right().bottom().equalTo()(0)
-                make?.height.equalTo()(AgoraFit.scale(32))
+                make?.left.right().top().bottom().equalTo()(0)
             }
             mainCell.mas_remakeConstraints { make in
                 make?.centerX.centerY().equalTo()(0)
-                make?.width.height().equalTo()(AgoraFit.scale(30))
+                make?.width.height().equalTo()(suggestLength)
             }
         }
     }

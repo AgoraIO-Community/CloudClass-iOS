@@ -28,7 +28,7 @@ class AgoraHandsListUIController: UIViewController {
     /** 举手列表*/
     private var tableView: UITableView?
 
-    private var dataSource = [HandsUpUser]() {
+    private(set) var dataSource = [HandsUpUser]() {
         didSet {
             delegate?.updateHandsListRedLabel(dataSource.count)
             tableView?.reloadData()

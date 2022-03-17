@@ -118,9 +118,11 @@ extension AgoraSmallUIManager: AgoraToolBarDelegate {
                                                size: chatController.suggestSize)
             ctrlView = chatController.view
         case .handsList:
-            handsListController.view.frame = CGRect(origin: .zero,
-                                                     size: handsListController.suggestSize)
-            ctrlView = handsListController.view
+            if handsListController.dataSource.count > 0 {
+                handsListController.view.frame = CGRect(origin: .zero,
+                                                         size: handsListController.suggestSize)
+                ctrlView = handsListController.view
+            }
         default:
             break
         }
@@ -145,15 +147,14 @@ extension AgoraSmallUIManager: AgoraToolCollectionUIControllerDelegate {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
                 make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-                make?.width.equalTo()(AgoraFit.scale(32))
-                make?.height.equalTo()(AgoraFit.scale(80))
+                make?.width.equalTo()(toolCollectionController.suggestLength)
+                make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
                 make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-                make?.width.equalTo()(AgoraFit.scale(32))
-                make?.height.equalTo()(AgoraFit.scale(32))
+                make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
     }
@@ -355,14 +356,15 @@ private extension AgoraSmallUIManager {
             make?.left.right().bottom().equalTo()(0)
         }
         toolBarController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(contentView)?.offset()(-6)
-            make?.top.equalTo()(self.boardController.mas_topLayoutGuideTop)?.offset()(AgoraFit.scale(32))
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -9 : -6)
+            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -107 : -99)
+            make?.width.equalTo()(toolBarController.suggestSize.width)
+            make?.height.equalTo()(toolBarController.suggestSize.height)
         }
         toolCollectionController.view.mas_makeConstraints { make in
             make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-            make?.width.equalTo()(AgoraFit.scale(32))
-            make?.height.equalTo()(AgoraFit.scale(80))
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.width.height().equalTo()(toolCollectionController.suggestLength)
         }
         boardPageController.view.mas_makeConstraints { make in
             make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
