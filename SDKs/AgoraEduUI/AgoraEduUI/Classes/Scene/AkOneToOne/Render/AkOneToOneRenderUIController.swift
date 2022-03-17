@@ -273,12 +273,10 @@ private extension AkOneToOneRenderUIController {
                                 borderColor: UIColor(hex: 0x75C0FE)?.cgColor,
                                 borderWidth: 2,
                                 cornerRadius: 6)
-        teacherView = AgoraRenderMemberView(frame: .zero,
-                                            uiConfig: config)
+        teacherView = AgoraRenderMemberView(frame: .zero)
         view.addSubview(teacherView)
         
-        studentView = AgoraRenderMemberView(frame: .zero,
-                                            uiConfig: config)
+        studentView = AgoraRenderMemberView(frame: .zero)
         view.addSubview(studentView)
         
         let tapTeacher = UITapGestureRecognizer(target: self,

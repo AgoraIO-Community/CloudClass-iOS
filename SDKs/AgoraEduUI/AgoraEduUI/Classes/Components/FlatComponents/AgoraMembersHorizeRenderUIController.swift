@@ -53,8 +53,6 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         didSet {
             teacherView.setModel(model: teacherModel, delegate: self)
             teacherView.isHidden = (teacherModel == nil)
-            teacherView.layer.borderWidth = 1
-            teacherView.layer.borderColor = UIColor.red.cgColor
             self.reloadData()
         }
     }
@@ -420,8 +418,6 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
                                cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withClass: AgoraRenderMemberCell.self,
                                                       for: indexPath)
-        cell.contentView.borderWidth = 1
-        cell.contentView.layer.borderColor = UIColor.red.cgColor
         let model = self.dataSource[indexPath.row]
         cell.renderView.setModel(model: model, delegate: self)
         return cell

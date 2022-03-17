@@ -113,11 +113,11 @@ static AgoraClassroomSDK *manager = nil;
                 break;
             case AgoraEduContextRoomTypeSmall:
                 eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool
-                                                                        delegate:manager];
+                                                                delegate:manager];
                 break;
             case AgoraEduContextRoomTypeLecture:
                 eduVC = [[AgoraLectureUIManager alloc] initWithContextPool:pool
-                                                                          delegate:manager];
+                                                                  delegate:manager];
                 break;
             default:
                 NSCAssert(true,

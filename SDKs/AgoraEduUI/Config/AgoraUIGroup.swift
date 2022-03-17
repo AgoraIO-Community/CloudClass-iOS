@@ -9,10 +9,10 @@ import AgoraUIBaseViews
 import UIKit
 
 fileprivate enum AgoraUIMode {
-    case agoraWhite, akasuo
+    case  agoraLight, akasuo
 }
 
-fileprivate let mode: AgoraUIMode = .agoraWhite
+fileprivate let mode: AgoraUIMode = .agoraLight
 
 struct AgoraUIGroup {
     private(set) lazy var color = AgoraColorGroup(mode: mode)
@@ -20,12 +20,12 @@ struct AgoraUIGroup {
 }
 
 struct AgoraColorGroup {
-    fileprivate var mode: AgoraUIMode = .agoraWhite
+    fileprivate var mode: AgoraUIMode = .agoraLight
     
     // Tool bar
     var tool_bar_button_normal_color: UIColor {
         switch mode {
-        case .agoraWhite:  return UIColor(hex: 0xECECF1)!
+        case .agoraLight:  return UIColor(hex: 0xECECF1)!
         case .akasuo:      return UIColor(hexString: "#75C0FE")!
         }
     }
@@ -33,7 +33,7 @@ struct AgoraColorGroup {
     // Render
     var render_cell_border_color: UIColor {
         switch mode {
-        case .agoraWhite:  return UIColor(hex: 0xECECF1)!
+        case .agoraLight:  return UIColor(hex: 0xECECF1)!
         case .akasuo:      return UIColor(hexString: "#75C0FE")!
         }
     }
@@ -41,33 +41,33 @@ struct AgoraColorGroup {
     // Room state bar
     var room_state_label_color: UIColor {
         switch mode {
-        case .agoraWhite:  return UIColor.white
+        case .agoraLight:  return UIColor.white
         case .akasuo:      return UIColor(hexString: "#C2D5E5")!
         }
     }
 }
 
 struct AgoraFrameGroup {
-    fileprivate var mode: AgoraUIMode = .agoraWhite
+    fileprivate var mode: AgoraUIMode = .agoraLight
     
     // Render
     var render_cell_border_width: CGFloat {
         switch mode {
-        case .agoraWhite:  return 1
+        case .agoraLight:  return 1
         case .akasuo:      return 2
         }
     }
     
     var one_one_to_render_cell_corner_radius: CGFloat {
         switch mode {
-        case .agoraWhite:  return 1
+        case .agoraLight:  return 1
         case .akasuo:      return 6
         }
     }
     
     var small_render_cell_corner_radius: CGFloat {
         switch mode {
-        case .agoraWhite:  return 2
+        case .agoraLight:  return 2
         case .akasuo:      return 2
         }
     }
@@ -75,14 +75,14 @@ struct AgoraFrameGroup {
     // Board
     var board_border_width: CGFloat {
         switch mode {
-        case .agoraWhite:  return 1
+        case .agoraLight:  return 1
         case .akasuo:      return 2
         }
     }
     
     var board_corner_radius: CGFloat {
         switch mode {
-        case .agoraWhite:  return 1
+        case .agoraLight:  return 1
         case .akasuo:      return 2
         }
     }
@@ -90,14 +90,14 @@ struct AgoraFrameGroup {
     // Room state bar
     var room_state_radius: CGFloat {
         switch mode {
-        case .agoraWhite:  return 2
+        case .agoraLight:  return 2
         case .akasuo:      return 2
         }
     }
     
     var room_state_label_color: CGFloat {
         switch mode {
-        case .agoraWhite:  return 2
+        case .agoraLight:  return 2
         case .akasuo:      return 2
         }
     }

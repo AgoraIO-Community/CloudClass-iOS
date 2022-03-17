@@ -130,10 +130,7 @@ fileprivate class AgoraRenderMaskView: UIView {
 }
 
 class AgoraRenderMemberView: UIView {
-    
     private weak var delegate: AgoraRenderMemberViewDelegate?
-    
-    private var baseUIConfig = AkUIConfig()
     /** 画布*/
     private var videoView: AgoraRenderMaskView!
     /** 状态遮罩*/
@@ -202,14 +199,9 @@ class AgoraRenderMemberView: UIView {
     
     private var memberModel: AgoraRenderMemberModel?
     
-    init(frame: CGRect,
-         uiConfig: AkUIConfig? = nil) {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         
-        if let config = uiConfig {
-            self.baseUIConfig = config
-        }
-
         createViews()
         createConstraint()
     }
@@ -380,12 +372,9 @@ private extension AgoraRenderMemberView {
 // MARK: - Creations
 private extension AgoraRenderMemberView {
     func createViews() {
-        backgroundColor = baseUIConfig.backgroundColor
-        layer.borderWidth = baseUIConfig.borderWidth
-        layer.borderColor = baseUIConfig.borderColor
-        if let cor = baseUIConfig.cornerRadius {
-            layer.cornerRadius = cor
-        }
+        backgroundColor = UIColor(hex: 0xF9F9FC)
+        layer.borderWidth = 1
+        layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
         
         videoView = AgoraRenderMaskView(frame: .zero)
         videoView.image = UIImage.agedu_named("ic_member_device_off")
@@ -430,12 +419,10 @@ private extension AgoraRenderMemberView {
     
     func createConstraint() {
         videoMaskView.mas_makeConstraints { make in
-            make?.left.top().bottom().equalTo()(baseUIConfig.borderWidth)
-            make?.right.bottom().equalTo()(-baseUIConfig.borderWidth)
+            make?.left.right().top().bottom()?.equalTo()(0)
         }
         videoView.mas_makeConstraints { make in
-            make?.left.top().bottom().equalTo()(baseUIConfig.borderWidth)
-            make?.right.bottom().equalTo()(-baseUIConfig.borderWidth)
+            make?.left.right().top().bottom()?.equalTo()(0)
         }
         micView.mas_makeConstraints { make in
             make?.left.equalTo()(AgoraFit.scale(2))
