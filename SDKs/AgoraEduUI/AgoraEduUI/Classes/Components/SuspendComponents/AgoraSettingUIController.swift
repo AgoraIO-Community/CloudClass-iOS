@@ -10,10 +10,8 @@ import SwifterSwift
 import UIKit
 
 class AgoraSettingUIController: UIViewController {
-    
-    public let suggestSize = CGSize(width: 201, height: 220)
-    
-    private var baseTintColor = UIColor(hex: 0x357BF6)
+    public let suggestSize = CGSize(width: 201,
+                                    height: 220)
     
     public weak var roomDelegate: AgoraClassRoomManagement?
     
@@ -67,12 +65,6 @@ class AgoraSettingUIController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateBaseTintColor(_ color: UIColor?) {
-        if let c = color {
-            baseTintColor = c
-        }
-    }
-        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -232,6 +224,10 @@ private extension AgoraSettingUIController {
 // MARK: - Creations
 private extension AgoraSettingUIController {
     func createViews() {
+        let group = AgoraColorGroup()
+        let switchTintColor = group.setting_switch_tint_color
+        let exitColor = group.setting_exit_button_color
+        
         view.layer.shadowColor = UIColor(hex: 0x2F4192,
                                          transparency: 0.15)?.cgColor
         view.layer.shadowOffset = CGSize(width: 0,
@@ -252,7 +248,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(cameraLabel)
         
         cameraSwitch = UISwitch()
-        cameraSwitch.onTintColor = baseTintColor
+        cameraSwitch.onTintColor = switchTintColor
         cameraSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                    y: 0.75)
         cameraSwitch.addTarget(self,
@@ -324,7 +320,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(micLabel)
         
         micSwitch = UISwitch()
-        micSwitch.onTintColor = baseTintColor
+        micSwitch.onTintColor = switchTintColor
         micSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                 y: 0.75)
         micSwitch.addTarget(self,
@@ -339,7 +335,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(audioLabel)
         
         audioSwitch = UISwitch()
-        audioSwitch.onTintColor = baseTintColor
+        audioSwitch.onTintColor = switchTintColor
         audioSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                   y: 0.75)
         audioSwitch.addTarget(self,
@@ -354,7 +350,7 @@ private extension AgoraSettingUIController {
         exitButton.setTitle("fcr_room_leave_room".agedu_localized(),
                             for: .normal)
         exitButton.setBackgroundImage(
-            UIImage(color: UIColor(hex: 0x191919) ?? .white,
+            UIImage(color: exitColor,
                     size: CGSize(width: 1, height: 1)),
             for: .normal)
         exitButton.addTarget(self,

@@ -27,17 +27,19 @@ class AgoraHandsUpDelayView: UIView {
             guard state != oldValue else {
                 return
             }
+            
             delegate?.onHandsUpViewDidChangeState(state)
+            
             switch state {
             case .free:
-                backgroundColor = .white
-                imageView?.tintColor = UIColor(hex: 0x7B88A0)
+                backgroundColor = itemBackgroundUnselectedColor
+                imageView?.tintColor = itemUnselectedColor
             case .hold:
-                backgroundColor = UIColor(hex: 0x357BF6)
-                imageView?.tintColor = .white
+                backgroundColor = itemBackgroundSelectedColor
+                imageView?.tintColor = itemSelectedColor
             case .counting:
-                backgroundColor = UIColor(hex: 0x357BF6)
-                imageView?.tintColor = .white
+                backgroundColor = itemBackgroundSelectedColor
+                imageView?.tintColor = itemSelectedColor
             default: break
             }
         }
@@ -47,13 +49,21 @@ class AgoraHandsUpDelayView: UIView {
     
     private var count = 3
         
+    private var itemSelectedColor: UIColor
+    private var itemUnselectedColor: UIColor
+    private var itemBackgroundSelectedColor: UIColor
+    private var itemBackgroundUnselectedColor: UIColor
+    
     override init(frame: CGRect) {
+        let group = AgoraColorGroup()
+        
+        itemSelectedColor = group.tool_bar_item_selected_color
+        itemUnselectedColor = group.tool_bar_item_unselected_color
+        itemBackgroundSelectedColor = group.tool_bar_item_background_selected_color
+        itemBackgroundUnselectedColor = group.tool_bar_item_background_unselected_color
+        
         super.init(frame: frame)
-        layer.cornerRadius = 8
-        layer.shadowColor = UIColor(hex:0x2F4192, transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
+        
         createViews()
         createConstraint()
     }
@@ -72,7 +82,8 @@ class AgoraHandsUpDelayView: UIView {
         guard state == .free else {
             return
         }
-        self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+        self.transform = CGAffineTransform(scaleX: 1.1,
+                                           y: 1.1)
         stopTimer()
         state = .hold
     }
@@ -85,15 +96,17 @@ class AgoraHandsUpDelayView: UIView {
         UIView.animate(withDuration: 0.1,
                        delay: 0,
                        options: .curveLinear) {
-            self.transform = CGAffineTransform(scaleX: 1, y: 1)
-        } completion: { finish in
+            self.transform = CGAffineTransform(scaleX: 1,
+                                               y: 1)
         }
         
         state = .counting
         imageView.isHidden = true
         delayLabel.isHidden = false
         delayLabel.text = "\(count)"
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 1,
+                                     repeats: true,
+                                     block: { [weak self] _ in
             self?.countDown()
         })
     }
@@ -120,11 +133,19 @@ class AgoraHandsUpDelayView: UIView {
     }
     
     private func createViews() {
-        backgroundColor = .white
+        backgroundColor = itemBackgroundUnselectedColor
+        
+        layer.cornerRadius = 8
+        layer.shadowColor = UIColor(hex:0x2F4192,
+                                    transparency: 0.15)?.cgColor
+        layer.shadowOffset = CGSize(width: 0,
+                                    height: 2)
+        layer.shadowOpacity = 1
+        layer.shadowRadius = 6
         
         let image = UIImage.agedu_named("ic_func_hands_up")
         imageView = UIImageView(image: image?.withRenderingMode(.alwaysTemplate))
-        imageView.tintColor = UIColor(hex: 0x7B88A0)
+        imageView?.tintColor = itemUnselectedColor
         addSubview(imageView)
         
         delayLabel = UILabel()

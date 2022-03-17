@@ -9,7 +9,6 @@ import AgoraUIBaseViews
 
 // MARK: - AgoraToolBarRedDotCell
 class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
-    
     var redDot = UIView()
     
     override init(frame: CGRect) {
@@ -21,12 +20,12 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
         redDot.layer.cornerRadius = 2
         redDot.clipsToBounds = true
         self.addSubview(redDot)
+        
         redDot.mas_makeConstraints { make in
             make?.width.height().equalTo()(4)
             make?.top.equalTo()(5)
             make?.right.equalTo()(-5)
         }
-        
     }
     
     required init?(coder: NSCoder) {
@@ -34,15 +33,17 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
     }
     
     override func highLight() {
-        self.imageView.tintColor = .white
-        self.contentView.backgroundColor = baseTintColor
-        self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-        self.imageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.imageView.tintColor = itemHighlightColor
+        self.contentView.backgroundColor = itemBackgroundHighlightColor
+        self.transform = CGAffineTransform(scaleX: 1.2,
+                                           y: 1.2)
+        self.imageView.transform = CGAffineTransform(scaleX: 0.8,
+                                                     y: 0.8)
     }
     
     override func normalState() {
-        self.imageView.tintColor = self.aSelected ? .white : UIColor(hex: 0x7B88A0)
-        self.contentView.backgroundColor = self.aSelected ? baseTintColor : .white
+        self.imageView.tintColor = self.aSelected ? itemSelectedColor : itemUnselectedColor
+        self.contentView.backgroundColor = self.aSelected ? itemBackgroundSelectedColor : itemBackgroundUnselectedColor
         UIView.animate(withDuration: 0.1,
                        delay: 0,
                        options: .curveLinear) {
@@ -54,24 +55,36 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
 }
 // MARK: - AgoraToolBarItemCell
 class AgoraToolBarItemCell: UICollectionViewCell {
-        
     var imageView: UIImageView!
     
-    var baseTintColor = UIColor(hex: 0x357BF6)
+    var itemSelectedColor: UIColor
+    var itemUnselectedColor: UIColor
+    var itemBackgroundSelectedColor: UIColor
+    var itemBackgroundUnselectedColor: UIColor
+    var itemHighlightColor: UIColor
+    var itemBackgroundHighlightColor: UIColor
     
     var aSelected = false {
         willSet {
             if aSelected != newValue {
-                contentView.backgroundColor = newValue ? baseTintColor : .white
-                imageView.tintColor = newValue ? .white : UIColor(hex: 0x7B88A0)
+                contentView.backgroundColor = newValue ? itemBackgroundSelectedColor : itemBackgroundUnselectedColor
+                imageView.tintColor = newValue ? itemSelectedColor : itemUnselectedColor
             }
         }
     }
             
     override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.backgroundColor = UIColor.white
+        let group = AgoraColorGroup()
+        itemSelectedColor = group.tool_bar_item_selected_color
+        itemUnselectedColor = group.tool_bar_item_unselected_color
+        itemBackgroundSelectedColor = group.tool_bar_item_background_selected_color
+        itemBackgroundUnselectedColor = group.tool_bar_item_background_unselected_color
+        itemHighlightColor = group.tool_bar_item_highlight_color
+        itemBackgroundHighlightColor = group.tool_bar_item_background_highlight_color
         
+        super.init(frame: frame)
+        
+        contentView.backgroundColor = itemBackgroundUnselectedColor
         contentView.layer.cornerRadius = 8
         contentView.layer.shadowColor = UIColor(hex: 0x2F4192,
                                                 transparency: 0.15)?.cgColor
@@ -80,7 +93,7 @@ class AgoraToolBarItemCell: UICollectionViewCell {
         contentView.layer.shadowRadius = 6
         
         imageView = UIImageView(frame: .zero)
-        imageView.tintColor = UIColor(hex: 0x7B88A0)
+        imageView.tintColor = itemUnselectedColor
         contentView.addSubview(imageView)
         
         imageView.mas_remakeConstraints { make in
@@ -106,15 +119,17 @@ class AgoraToolBarItemCell: UICollectionViewCell {
     }
     
     func highLight() {
-        self.imageView.tintColor = .white
-        self.contentView.backgroundColor = baseTintColor
-        self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-        self.imageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.imageView.tintColor = itemHighlightColor
+        self.contentView.backgroundColor = itemBackgroundHighlightColor
+        self.transform = CGAffineTransform(scaleX: 1.2,
+                                           y: 1.2)
+        self.imageView.transform = CGAffineTransform(scaleX: 0.8,
+                                                     y: 0.8)
     }
     
     func normalState() {
-        contentView.backgroundColor = self.aSelected ? baseTintColor : .white
-        imageView.tintColor = self.aSelected ? .white : UIColor(hex: 0x7B88A0)
+        contentView.backgroundColor = self.aSelected ? itemBackgroundSelectedColor : itemBackgroundUnselectedColor
+        imageView.tintColor = self.aSelected ? itemSelectedColor: itemUnselectedColor
         UIView.animate(withDuration: 0.1,
                        delay: 0,
                        options: .curveLinear) {
@@ -129,8 +144,10 @@ class AgoraToolBarItemCell: UICollectionViewCell {
 class AgoraToolBarBrushCell: AgoraToolBarItemCell {
     
     override func highLight() {
-        self.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-        self.imageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        self.transform = CGAffineTransform(scaleX: 1.2,
+                                           y: 1.2)
+        self.imageView.transform = CGAffineTransform(scaleX: 0.8,
+                                                     y: 0.8)
     }
     
     override func normalState() {
@@ -146,7 +163,6 @@ class AgoraToolBarBrushCell: AgoraToolBarItemCell {
 
 // MARK: - AgoraToolBarHandsUpCell
 class AgoraToolBarHandsUpCell: UICollectionViewCell {
-    
     var handsupDelayView: AgoraHandsUpDelayView!
             
     override init(frame: CGRect) {

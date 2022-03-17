@@ -285,8 +285,7 @@ private extension AkSmallUIManager {
         addChild(screenSharingController)
         contentView.addSubview(screenSharingController.view)
         
-        toolBarController = AgoraToolBarUIController(context: contextPool,
-                                                     baseColor: UIColor(hex: 0xDDB332))
+        toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
         
         toolCollectionController = AgoraToolCollectionUIController(context: contextPool,

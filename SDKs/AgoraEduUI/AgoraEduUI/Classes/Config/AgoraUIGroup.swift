@@ -9,10 +9,10 @@ import AgoraUIBaseViews
 import UIKit
 
 fileprivate enum AgoraUIMode {
-    case  agoraLight, akasuo
+    case agoraLight, akasuo
 }
 
-fileprivate let Mode: AgoraUIMode = .akasuo
+fileprivate let Mode: AgoraUIMode = .agoraLight
 
 class AgoraUIGroup {
     private(set) lazy var color = AgoraColorGroup()
@@ -21,8 +21,8 @@ class AgoraUIGroup {
 
 class AgoraColorGroup {
     init() {
-            self.mode = Mode
-        }
+        self.mode = Mode
+    }
     
     fileprivate var mode: AgoraUIMode = .agoraLight
     
@@ -34,6 +34,52 @@ class AgoraColorGroup {
         }
     }
     
+    // Tool bar
+    var tool_bar_item_selected_color: UIColor {
+        switch mode {
+        case .agoraLight:  return .white
+        case .akasuo:      return .white
+        }
+    }
+    
+    var tool_bar_item_unselected_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0x7B88A0)!
+        case .akasuo:      return UIColor(hex: 0x7B88A0)!
+        }
+    }
+    
+    var tool_bar_item_highlight_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0x357BF6)!
+        case .akasuo:      return UIColor(hexString: "#DDB332")!
+        }
+    }
+    
+    var tool_bar_item_background_selected_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0x357BF6)!
+        case .akasuo:      return UIColor(hexString: "#DDB332")!
+        }
+    }
+    
+    var tool_bar_item_background_unselected_color: UIColor {
+        switch mode {
+        case .agoraLight:  return .white
+        case .akasuo:      return .white
+        }
+    }
+    
+    var tool_bar_item_background_highlight_color: UIColor {
+        switch mode {
+        case .agoraLight:  return .white
+        case .akasuo:      return .white
+        }
+    }
+    
+    
+    // Room state bar
+
     // board
     var board_bg_color: UIColor {
         switch mode {
@@ -71,7 +117,7 @@ class AgoraColorGroup {
     }
     
     var render_left_right_button_color: UIColor {
-        return .black.withAlphaComponent(0.3)
+        return UIColor.black.withAlphaComponent(0.3)
     }
     
     // Room state bar
@@ -131,6 +177,21 @@ class AgoraColorGroup {
         }
     }
     
+    // Setting
+    var setting_switch_tint_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0x357BF6)!
+        case .akasuo:      return UIColor(hexString: "#DDB332")!
+        }
+    }
+    
+    var setting_exit_button_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0x191919)!
+        case .akasuo:      return UIColor(hexString: "#1D35AD")!
+        }
+    }
+            
     var small_room_state_border_color: CGColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!.cgColor
@@ -212,7 +273,6 @@ struct AgoraFrameGroup {
         }
     }
     
-    
     var render_left_right_button_radius: CGFloat {
         return 2
     }
@@ -241,6 +301,7 @@ struct AgoraFrameGroup {
     }
     
     var room_state_corner_radius: CGFloat {
+
         switch mode {
         case .agoraLight:  return 2
         case .akasuo:      return 2

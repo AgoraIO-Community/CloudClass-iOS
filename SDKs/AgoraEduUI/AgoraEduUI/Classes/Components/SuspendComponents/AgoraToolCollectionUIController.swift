@@ -28,6 +28,8 @@ class AgoraToolCollectionUIController: UIViewController {
     var suggestLength: CGFloat = UIDevice.current.isPad ? 34 : 32
     var suggestSpreadHeight: CGFloat = 80
     
+    private var baseTintColor: UIColor
+    
     private var curSelectedCell: AgoraToolCollectionSelectType = .none {
         didSet {
             guard curSelectedCell != oldValue else {
@@ -89,12 +91,16 @@ class AgoraToolCollectionUIController: UIViewController {
 
     init(context: AgoraEduContextPool,
          delegate: AgoraToolCollectionUIControllerDelegate) {
-        super.init(nibName: nil, bundle: nil)
+        let group = AgoraColorGroup()
+        
+        baseTintColor = group.tool_bar_item_highlight_color
+        
+        super.init(nibName: nil,
+                   bundle: nil)
         contextPool = context
         contextPool.widget.add(self,
                                widgetId: kBoardWidgetId)
         self.delegate = delegate
-
         
         initCtrlViews()
     }
