@@ -47,7 +47,6 @@ import Masonry
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool)
-        vc.updateBaseTintColor(UIColor(hex: 0xDDB332))
         vc.roomDelegate = self
         self.addChild(vc)
         return vc
@@ -299,13 +298,8 @@ private extension AkOneToOneUIManager {
         stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
-        
-        let config = AkUIConfig(backgroundColor: UIColor(hex: 0x263487),
-                                borderColor: UIColor(hex: 0x75C0FE)?.cgColor,
-                                borderWidth: 2,
-                                cornerRadius: 6)
-        boardController = AkBoardUIController(context: contextPool,
-                                              config: config)
+
+        boardController = AkBoardUIController(context: contextPool)
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
@@ -331,8 +325,7 @@ private extension AkOneToOneUIManager {
         contentView.addSubview(toolBarController.view)
         
         toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
-                                                                   delegate: self,
-                                                                   baseColor: UIColor(hex: 0xDDB332))
+                                                                   delegate: self)
         toolCollectionController.view.isHidden = true
         view.addSubview(toolCollectionController.view)
         

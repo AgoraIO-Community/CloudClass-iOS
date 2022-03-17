@@ -82,8 +82,31 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
     
     func onUserHandsDown(userUuid: String,
                          payload: [String : Any]?) {
-        // TODO: 待验证，上台用户是否会走该回调
         dataSource.removeAll(where: {$0.userUuid == userUuid})
+    }
+    
+    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
+                               operatorUser: AgoraEduContextUserInfo?) {
+        for userInfo in userList {
+            guard dataSource.contains(where: {$0.userUuid == userInfo.userUuid}) else{
+                continue
+            }
+            // TODO: 验证是否触发didSet
+            var handsUpUser = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
+            handsUpUser.isCoHost = true
+        }
+    }
+    
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        for userInfo in userList {
+            guard dataSource.contains(where: {$0.userUuid == userInfo.userUuid}) else{
+                continue
+            }
+            // TODO: 验证是否触发didSet
+            var handsUpUser = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
+            handsUpUser.isCoHost = false
+        }
     }
 }
 // MARK: - HandsUpItemCellDelegate

@@ -115,7 +115,7 @@ fileprivate class AgoraRenderMaskView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor(hex: 0xF9F9FC)
+        backgroundColor = AgoraColorGroup().render_cell_bg_color
         imageView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
         addSubview(imageView)
         imageView.mas_makeConstraints { make in
@@ -372,9 +372,11 @@ private extension AgoraRenderMemberView {
 // MARK: - Creations
 private extension AgoraRenderMemberView {
     func createViews() {
-        backgroundColor = UIColor(hex: 0xF9F9FC)
-        layer.borderWidth = 1
-        layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
+        let ui = AgoraUIGroup()
+        
+        backgroundColor = ui.color.render_cell_bg_color
+        layer.borderWidth = ui.frame.render_cell_border_width
+        layer.borderColor = ui.color.render_cell_border_color
         
         videoView = AgoraRenderMaskView(frame: .zero)
         videoView.image = UIImage.agedu_named("ic_member_device_off")
@@ -385,13 +387,12 @@ private extension AgoraRenderMemberView {
         addSubview(videoMaskView)
         
         nameLabel = UILabel()
-        nameLabel.textColor = UIColor.white
+        nameLabel.textColor = ui.color.render_label_color
         nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.layer.shadowColor = UIColor(hex: 0x0D1D3D,
-                                              transparency: 0.8)?.cgColor
+        nameLabel.layer.shadowColor = ui.color.render_label_shadow_color
         nameLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
-        nameLabel.layer.shadowOpacity = 1
-        nameLabel.layer.shadowRadius = 2
+        nameLabel.layer.shadowOpacity = ui.color.render_label_shadow_opacity
+        nameLabel.layer.shadowRadius = ui.frame.render_label_shadow_radius
         addSubview(nameLabel)
         
         micView = AgoraRenderMicView(frame: .zero)
@@ -403,13 +404,12 @@ private extension AgoraRenderMemberView {
         
         rewardLabel = UILabel()
         rewardLabel.isHidden = true
-        rewardLabel.textColor = .white
+        rewardLabel.textColor = ui.color.render_label_color
         rewardLabel.font = UIFont.systemFont(ofSize: 10)
-        rewardLabel.layer.shadowColor = UIColor(hex: 0x0D1D3D,
-                                              transparency: 0.8)?.cgColor
+        rewardLabel.layer.shadowColor = ui.color.render_label_shadow_color
         rewardLabel.layer.shadowOffset = CGSize(width: 0, height: 1)
-        rewardLabel.layer.shadowOpacity = 1
-        rewardLabel.layer.shadowRadius = 2
+        rewardLabel.layer.shadowOpacity = ui.color.render_label_shadow_opacity
+        rewardLabel.layer.shadowRadius = ui.frame.render_label_shadow_radius
         addSubview(rewardLabel)
         
         ableMaskView = AgoraRenderMaskView(frame: .zero)

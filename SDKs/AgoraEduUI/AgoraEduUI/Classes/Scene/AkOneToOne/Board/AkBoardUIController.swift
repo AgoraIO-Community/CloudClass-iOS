@@ -11,7 +11,6 @@ import AgoraWidget
 class AkBoardUIController: UIViewController {
     var boardWidget: AgoraBaseWidget?
     var contextPool: AgoraEduContextPool!
-    private var uiConfig: AkUIConfig?
     
     private var localGranted = false {
         didSet {
@@ -29,19 +28,15 @@ class AkBoardUIController: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool,
-         config: AkUIConfig) {
+    init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
         
-        uiConfig = config
-        
-        view.backgroundColor = config.backgroundColor
-        view.layer.borderWidth = config.borderWidth
-        view.layer.borderColor = config.borderColor
-        if let cor = config.cornerRadius {
-            view.layer.cornerRadius = cor
-        }
+        let ui = AgoraUIGroup()
+        view.backgroundColor = ui.color.board_bg_color
+        view.layer.borderWidth = ui.frame.board_border_width
+        view.layer.borderColor = ui.color.render_cell_border_color
+        view.layer.cornerRadius = ui.frame.board_corner_radius
         
         contextPool.room.registerRoomEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
@@ -67,20 +62,9 @@ private extension AkBoardUIController {
                                    widgetId: boardConfig.widgetId)
             view.isUserInteractionEnabled = true
             view.addSubview(boardWidget.view)
-            
-//            if let config = uiConfig {
-//                boardWidget.view.backgroundColor = config.backgroundColor
-//                boardWidget.view.layer.borderWidth = config.borderWidth
-//                boardWidget.view.layer.borderColor = config.borderColor
-//
-//                if let cor = config.cornerRadius {
-//                    boardWidget.view.layer.cornerRadius = cor
-//                }
-//            }
-            
             self.boardWidget = boardWidget
 
-            var borderWidth = uiConfig?.borderWidth ?? 0
+            var borderWidth = AgoraFrameGroup().board_border_width
             boardWidget.view.mas_makeConstraints { make in
                 make?.left.top().equalTo()(borderWidth)
                 make?.right.bottom().equalTo()(-borderWidth)

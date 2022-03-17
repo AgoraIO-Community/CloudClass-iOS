@@ -21,8 +21,6 @@ class AgoraRoomStateUIController: UIViewController {
     public weak var roomDelegate: AgoraClassRoomManagement?
     /** 状态栏*/
     private var stateView: AgoraRoomStateBar!
-    
-    public var themeColor: UIColor?
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
     /** 房间计时器*/
@@ -39,7 +37,8 @@ class AgoraRoomStateUIController: UIViewController {
     }
     
     init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
         contextPool = context
     }
     
@@ -80,14 +79,12 @@ private extension AgoraRoomStateUIController {
             return
         }
         
+        let color = AgoraColorGroup()
+        
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch info.state {
         case .before:
-            if themeColor != nil {
-                stateView.timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
-            } else {
-                stateView.timeLabel.textColor = UIColor(hex: 0x677386)
-            }
+            stateView.timeLabel.textColor = color.room_state_label_before_color
             if info.startTime == 0 {
                 stateView.timeLabel.text = "fcr_room_class_not_start".agedu_localized()
             } else {
@@ -96,7 +93,7 @@ private extension AgoraRoomStateUIController {
                 stateView.timeLabel.text = text + timeString(from: time)
             }
         case .after:
-            stateView.timeLabel.textColor = .red
+            stateView.timeLabel.textColor = color.room_state_label_after_color
             let time = realTime - info.startTime
             let text = "fcr_room_class_over".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)
@@ -117,11 +114,7 @@ private extension AgoraRoomStateUIController {
                 AgoraToast.toast(msg: final)
             }
         case .during:
-            if themeColor != nil {
-                stateView.timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
-            } else {
-                stateView.timeLabel.textColor = UIColor(hex: 0x677386)
-            }
+            stateView.timeLabel.textColor = color.room_state_label_during_color
             let time = realTime - info.startTime
             let text = "fcr_room_class_started".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)
@@ -326,14 +319,14 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
 // MARK: - Creations
 private extension AgoraRoomStateUIController {
     func createViews() {
+        let ui = AgoraUIGroup()
         view.backgroundColor = .white
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
-        view.layer.cornerRadius = 2
+        view.layer.borderWidth = ui.frame.room_state_border_width
+        view.layer.borderColor = ui.color.small_room_state_border_color
+        view.layer.cornerRadius = ui.frame.room_state_corner_radius
         view.clipsToBounds = true
         
         stateView = AgoraRoomStateBar(frame: .zero)
-        stateView.themeColor = themeColor ?? .white
         view.addSubview(stateView)
     }
     

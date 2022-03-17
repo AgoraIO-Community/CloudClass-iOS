@@ -11,11 +11,12 @@ import FLAnimatedImage
 import AgoraEduContext
 import AgoraUIBaseViews
 
-private let kItemGap: CGFloat = AgoraFit.scale(2)
-private let kItemMaxCount: CGFloat = 4
 class AgoraStudentsRenderUIController: UIViewController {
     
     private weak var delegate: AgoraRenderUIControllerDelegate?
+    
+    private let kItemGap: CGFloat = AgoraFit.scale(2)
+    private let kItemMaxCount: CGFloat = 4
         
     var collectionView: UICollectionView!    
     
@@ -346,6 +347,8 @@ extension AgoraStudentsRenderUIController: UICollectionViewDelegate,
 // MARK: - Creations
 private extension AgoraStudentsRenderUIController {
     func createViews() {
+        let ui = AgoraUIGroup()
+        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         collectionView = UICollectionView(frame: .zero,
@@ -361,9 +364,9 @@ private extension AgoraStudentsRenderUIController {
         
         leftButton = UIButton(type: .custom)
         leftButton.isHidden = true
-        leftButton.layer.cornerRadius = 2.0
+        leftButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
         leftButton.clipsToBounds = true
-        leftButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        leftButton.backgroundColor = ui.color.render_left_right_button_color
         leftButton.addTarget(self,
                              action: #selector(onClickLeft(_:)),
                              for: .touchUpInside)
@@ -373,9 +376,9 @@ private extension AgoraStudentsRenderUIController {
         
         rightButton = UIButton(type: .custom)
         rightButton.isHidden = true
-        rightButton.layer.cornerRadius = 2.0
+        rightButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
         rightButton.clipsToBounds = true
-        rightButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        rightButton.backgroundColor = ui.color.render_left_right_button_color
         rightButton.addTarget(self,
                               action: #selector(onClickRight(_:)),
                               for: .touchUpInside)

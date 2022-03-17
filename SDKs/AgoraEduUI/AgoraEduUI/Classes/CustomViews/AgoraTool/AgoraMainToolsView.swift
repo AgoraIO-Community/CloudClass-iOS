@@ -32,6 +32,7 @@ class AgoraMainToolsView: UIView {
     }
     private var containAids: Bool = false
     /** UI */
+    let color = AgoraColorGroup()
     private let boardToolsHeight = (kItemHeight + kGapSize) * ceil(CGFloat(AgoraBoardToolMainType.allCases.count) / 4) + kGapSize
     private var aidsHeight: CGFloat {
         get {
@@ -57,9 +58,7 @@ class AgoraMainToolsView: UIView {
         }
     }
     var curColor = UIColor(hex: 0x357BF6)
-    
-    private var baseTintColor = UIColor(hex: 0x357BF6)
-    
+        
     var redoEnable: Bool = false {
         didSet {
             if redoEnable != oldValue {
@@ -111,12 +110,6 @@ class AgoraMainToolsView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func updateBaseTintColor(_ color: UIColor?) {
-        if let c = color {
-            baseTintColor = c
-        }
-    }
 }
 
 extension AgoraMainToolsView: UICollectionViewDelegate,
@@ -146,7 +139,7 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
                               color: curColor)
             default:
                 cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
-                              color: baseTintColor)
+                              color: color.common_base_tint_color)
             }
             cell.aSelected = (tool == curBoardTool)
             if tool == .pre {

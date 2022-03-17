@@ -15,6 +15,11 @@ import Masonry
     private let roomType: AgoraEduContextRoomType = .oneToOne
     /** 状态栏 控制器*/
     private var stateController: AgoraOneToOneStateUIController!
+    /** 课堂状态 控制器（仅教师端）*/
+    private lazy var classStateController: AgoraClassStateUIController = {
+        return AgoraClassStateUIController(context: contextPool,
+                                           delegate: self)
+    }()
     /** 渲染 控制器*/
     private var renderController: AgoraOneToOneRenderUIController!
     /** 视窗菜单 控制器（仅教师端）*/
@@ -251,6 +256,23 @@ extension AgoraOneToOneUIManager: AgoraRenderMenuUIControllerDelegate {
     func onMenuUserLeft() {
         renderMenuController.dismissView()
         renderMenuController.view.isHidden = true
+    }
+}
+
+// MARK: - AgoraClassStateUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraClassStateUIControllerDelegate {
+    func onShowStartClass() {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+            return
+        }
+        addChild(classStateController)
+        contentView.addSubview(classStateController.view)
+        
+        classStateController.view.mas_makeConstraints { make in
+            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(15)
+            make?.bottom.equalTo()(boardPageController.view.mas_bottom)
+            make?.size.equalTo()(classStateController.suggestSize)
+        }
     }
 }
 

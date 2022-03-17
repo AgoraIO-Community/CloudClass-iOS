@@ -474,11 +474,12 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
 // MARK: - Creations
 private extension AgoraMembersHorizeRenderUIController {
     func createViews() {
+        var ui = AgoraUIGroup()
         contentView = UIView()
         view.addSubview(contentView)
         
         teacherView = AgoraRenderMemberView(frame: .zero)
-        teacherView.layer.cornerRadius = AgoraFit.scale(2)
+        teacherView.layer.cornerRadius = ui.frame.small_render_cell_corner_radius
         teacherView.clipsToBounds = true
         teacherView.isHidden = true
         contentView.addSubview(teacherView)
@@ -513,9 +514,9 @@ private extension AgoraMembersHorizeRenderUIController {
         
         leftButton = UIButton(type: .custom)
         leftButton.isHidden = true
-        leftButton.layer.cornerRadius = 2.0
+        leftButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
         leftButton.clipsToBounds = true
-        leftButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        leftButton.backgroundColor = ui.color.render_left_right_button_color
         leftButton.addTarget(self,
                              action: #selector(onClickLeft(_:)),
                              for: .touchUpInside)
@@ -525,9 +526,9 @@ private extension AgoraMembersHorizeRenderUIController {
         
         rightButton = UIButton(type: .custom)
         rightButton.isHidden = true
-        rightButton.layer.cornerRadius = 2.0
+        rightButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
         rightButton.clipsToBounds = true
-        rightButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        rightButton.backgroundColor = ui.color.render_left_right_button_color
         rightButton.addTarget(self,
                               action: #selector(onClickRight(_:)),
                               for: .touchUpInside)

@@ -18,8 +18,6 @@ private let kItemGap: CGFloat = AgoraFit.scale(4)
 private let kTeacherIndex: IndexPath = IndexPath(row: -1,
                                                  section: 0)
 class AkMembersHorizeRenderUIController: UIViewController {
-    private var uiConfig: AkUIConfig?
-    
     weak var delegate: AgoraRenderUIControllerDelegate?
     
     public var themeColor: UIColor?
@@ -40,15 +38,14 @@ class AkMembersHorizeRenderUIController: UIViewController {
         didSet {
             teacherView.setModel(model: teacherModel, delegate: self)
             teacherView.isHidden = (teacherModel == nil)
-            
-            if let config = uiConfig {
-                teacherView.layer.borderWidth = config.borderWidth
-                teacherView.layer.borderColor = config.borderColor
-            }
+            teacherView.layer.borderWidth = ui.frame.render_cell_border_width
+            teacherView.layer.borderColor = ui.color.render_cell_border_color
             
             self.reloadData()
         }
     }
+    
+    let ui = AgoraUIGroup()
     
     var dataSource = [AgoraRenderMemberModel]() {
         didSet {
@@ -65,12 +62,9 @@ class AkMembersHorizeRenderUIController: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool,
-         config: AkUIConfig) {
+    init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
-        
-        uiConfig = config
     }
     
     required init?(coder: NSCoder) {
@@ -415,14 +409,9 @@ extension AkMembersHorizeRenderUIController: UICollectionViewDelegate,
         let cell = collectionView.dequeueReusableCell(withClass: AgoraRenderMemberCell.self,
                                                       for: indexPath)
         
-        if let config = uiConfig {
-            cell.contentView.layer.borderWidth = config.borderWidth
-            cell.contentView.layer.borderColor = config.borderColor
-            
-            if let radius = config.cornerRadius {
-                cell.contentView.layer.cornerRadius = radius
-            }
-        }
+        cell.contentView.layer.borderWidth = ui.frame.board_border_width
+        cell.contentView.layer.borderColor = ui.color.render_cell_border_color
+        cell.contentView.layer.cornerRadius = ui.frame.small_render_cell_corner_radius
         
         let model = self.dataSource[indexPath.row]
         cell.renderView.setModel(model: model, delegate: self)

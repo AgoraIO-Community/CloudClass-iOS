@@ -28,8 +28,6 @@ class AgoraToolCollectionUIController: UIViewController {
     var suggestLength: CGFloat = UIDevice.current.isPad ? 34 : 32
     var suggestSpreadHeight: CGFloat = 80
     
-    private var baseTintColor = UIColor(hex: 0x357BF6)
-    
     private var curSelectedCell: AgoraToolCollectionSelectType = .none {
         didSet {
             guard curSelectedCell != oldValue else {
@@ -80,6 +78,8 @@ class AgoraToolCollectionUIController: UIViewController {
     // 白板工具配置CollectionView
     private var subToolsView: AgoraBoardToolConfigView!
     
+    let color = AgoraColorGroup()
+    
     /** SDK环境*/
     var contextPool: AgoraEduContextPool!
     
@@ -88,29 +88,19 @@ class AgoraToolCollectionUIController: UIViewController {
     }
 
     init(context: AgoraEduContextPool,
-         delegate: AgoraToolCollectionUIControllerDelegate,
-         baseColor: UIColor? = nil) {
+         delegate: AgoraToolCollectionUIControllerDelegate) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
         contextPool.widget.add(self,
                                widgetId: kBoardWidgetId)
         self.delegate = delegate
-        
-        if let c = baseColor {
-            self.baseTintColor = c
-        }
+
         
         initCtrlViews()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func updateBaseTintColor(_ color: UIColor?) {
-        if let c = color {
-            baseTintColor = c
-        }
     }
         
     override func viewDidLoad() {
@@ -210,7 +200,6 @@ private extension AgoraToolCollectionUIController {
     func initCtrlViews() {
         mainToolsView = AgoraMainToolsView(containAids: contextPool.user.getLocalUserInfo().userRole == .teacher,
                                            delegate: self)
-        mainToolsView.updateBaseTintColor(baseTintColor)
         subToolsView = AgoraBoardToolConfigView(delegate: self)
         mainToolsView.curColor = UIColor(hex: subToolsView.currentColor)
     }
@@ -231,7 +220,7 @@ private extension AgoraToolCollectionUIController {
         view.addSubview(contentView)
         
         mainCell = AgoraToolCollectionCell(isMain: true,
-                                           color: UIColor(hex: subToolsView.currentColor) ?? baseTintColor,
+                                           color: UIColor(hex: subToolsView.currentColor) ?? color.common_base_tint_color,
                                            image: currentMainTool.image)
         mainCell.addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                                   action: #selector(didSelectMain)))
@@ -426,7 +415,7 @@ private extension AgoraToolCollectionUIController {
                               color: UIColor(hex: subToolsView.currentColor))
         } else {
             mainCell.setImage(mainSelectedImage,
-                              color: baseTintColor)
+                              color: color.common_base_tint_color)
             
             subCell.isHidden = true
             sepLine.isHidden = true

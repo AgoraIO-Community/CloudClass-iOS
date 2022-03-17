@@ -267,24 +267,17 @@ extension AkSmallUIManager: AgoraBoardPageUIControllerDelegate {
 // MARK: - Creations
 private extension AkSmallUIManager {
     func createViews() {
-        let config = AkUIConfig(backgroundColor: .white,
-                                borderColor: UIColor(hexString: "#75C0FE")?.cgColor,
-                                borderWidth: 2,
-                                cornerRadius: 2)
-        
         stateController = AkRoomStateUIController(context: contextPool)
         stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        renderController = AkMembersHorizeRenderUIController(context: contextPool,
-                                                             config: config)
+        renderController = AkMembersHorizeRenderUIController(context: contextPool)
         renderController.delegate = self
         addChild(renderController)
         contentView.addSubview(renderController.view)
         
-        boardController = AkBoardUIController(context: contextPool,
-                                              config: config)
+        boardController = AkBoardUIController(context: contextPool)
         addChild(boardController)
         contentView.addSubview(boardController.view)
         

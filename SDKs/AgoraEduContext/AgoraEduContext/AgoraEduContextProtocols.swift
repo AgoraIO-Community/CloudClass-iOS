@@ -50,6 +50,12 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
+    /// 开始上课 (v2.2.0)
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func startClass(success: (() -> Void)?,
+                    failure: ((AgoraEduContextError) -> Void)?)
+    
     /// 加入房间 (v2.0.0)
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败

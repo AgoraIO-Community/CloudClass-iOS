@@ -15,22 +15,6 @@ class AgoraRoomStateBar: AgoraBaseUIView {
         case unknown, good, bad, down
     }
     
-    public var themeColor: UIColor? {
-        didSet {
-            if themeColor != nil, themeColor != .white {
-                backgroundColor = themeColor
-                titleLabel.textColor = UIColor.white.withAlphaComponent(0.7)
-                timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
-                sepLine.backgroundColor = UIColor.white.withAlphaComponent(0.7)
-            } else {
-                backgroundColor = .white
-                titleLabel.textColor = UIColor(hex: 0x191919)
-                timeLabel.textColor = UIColor(hex: 0x677386)
-                sepLine.backgroundColor = UIColor(hex: 0xD2D2E2)
-            }
-        }
-    }
-    
     var timeLabel: AgoraBaseUILabel!
     
     var titleLabel: AgoraBaseUILabel!
@@ -67,21 +51,24 @@ class AgoraRoomStateBar: AgoraBaseUIView {
 // MARK: - Creations
 private extension AgoraRoomStateBar {
     func createViews() {
+        let ui = AgoraUIGroup()
+        backgroundColor = .white
+        
         netStateView = AgoraBaseUIImageView(image: UIImage.agedu_named("ic_network_good"))
         addSubview(netStateView)
         
         timeLabel = AgoraBaseUILabel()
         timeLabel.font = UIFont.systemFont(ofSize: 9)
-        timeLabel.textColor = UIColor(hex: 0x677386)
+        timeLabel.textColor = ui.color.room_state_label_before_color
         addSubview(timeLabel)
         
         sepLine = AgoraBaseUIView()
-        sepLine.backgroundColor = UIColor(hex: 0xD2D2E2)
+        sepLine.backgroundColor = ui.color.room_state_sep_line_color
         addSubview(sepLine)
         
         titleLabel = AgoraBaseUILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 9)
-        titleLabel.textColor = UIColor(hex: 0x191919)
+        titleLabel.textColor = ui.color.room_state_time_color
         addSubview(titleLabel)
     }
     

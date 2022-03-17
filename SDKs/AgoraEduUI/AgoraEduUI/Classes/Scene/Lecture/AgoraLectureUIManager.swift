@@ -18,6 +18,11 @@ import AgoraWidget
     private var toolBarController: AgoraToolBarUIController!
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
+    /** 课堂状态 控制器（仅教师端）*/
+    private lazy var classStateController: AgoraClassStateUIController = {
+        return AgoraClassStateUIController(context: contextPool,
+                                           delegate: self)
+    }()
     /** 学生列表渲染 控制器*/
     private var studentsRenderController: AgoraStudentsRenderUIController!
     /** 老师渲染 控制器*/
@@ -259,6 +264,23 @@ extension AgoraLectureUIManager: AgoraBoardPageUIControllerDelegate {
             self?.boardPageController.view.transform = CGAffineTransform(translationX: coursewareMin ? 32 : 0,
                                                                          y: 0)
         }, completion: nil)
+    }
+}
+
+// MARK: - AgoraClassStateUIControllerDelegate
+extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
+    func onShowStartClass() {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+            return
+        }
+        addChild(classStateController)
+        contentView.addSubview(classStateController.view)
+        
+        classStateController.view.mas_makeConstraints { make in
+            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(15)
+            make?.bottom.equalTo()(boardPageController.view.mas_bottom)
+            make?.size.equalTo()(classStateController.suggestSize)
+        }
     }
 }
 

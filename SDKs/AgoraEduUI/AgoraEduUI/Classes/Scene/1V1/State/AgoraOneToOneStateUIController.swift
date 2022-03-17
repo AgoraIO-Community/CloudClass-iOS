@@ -101,12 +101,13 @@ extension AgoraOneToOneStateUIController {
     @objc func onClickSetting(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         delegate?.onSettingSelected(isSelected: sender.isSelected)
+        let color = AgoraColorGroup()
         if sender.isSelected {
-            settingButton.imageView?.tintColor = .white
-            settingButton.backgroundColor = UIColor(hex: 0x357BF6)
+            settingButton.imageView?.tintColor = color.one_room_setting_selected_tint_color
+            settingButton.backgroundColor = color.one_room_setting_selected_bg_color
         } else {
-            settingButton.imageView?.tintColor = UIColor(hex: 0x7B88A0)
-            settingButton.backgroundColor = .white
+            settingButton.imageView?.tintColor = color.one_room_setting_unselected_tint_color
+            settingButton.backgroundColor = color.one_room_setting_unselected_bg_color
         }
     }
     
@@ -268,10 +269,12 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
 // MARK: - Creaions
 private extension AgoraOneToOneStateUIController {
     func createViews() {
-        view.backgroundColor = .white
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
-        view.layer.cornerRadius = 2
+        let ui = AgoraUIGroup()
+        
+        view.backgroundColor = ui.color.room_state_bg_color
+        view.layer.borderWidth = ui.frame.room_state_border_width
+        view.layer.borderColor = ui.color.room_state_border_color
+        view.layer.cornerRadius = ui.frame.room_state_corner_radius
         view.clipsToBounds = true
         
         // default network quality is good
@@ -279,17 +282,17 @@ private extension AgoraOneToOneStateUIController {
         view.addSubview(netStateView)
         
         lineView = UIView(frame: .zero)
-        lineView.backgroundColor = UIColor(hex: 0xECECF1)
+        lineView.backgroundColor = ui.color.room_state_line_color
         view.addSubview(lineView)
         
         titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 9)
-        titleLabel.textColor = UIColor(hex: 0x191919)
+        titleLabel.textColor = ui.color.one_room_state_title_color
         view.addSubview(titleLabel)
         
         timeLabel = UILabel()
         timeLabel.font = UIFont.systemFont(ofSize: 9)
-        timeLabel.textColor = UIColor(hex: 0x677386)
+        timeLabel.textColor = ui.color.one_room_state_time_color
         view.addSubview(timeLabel)
         
         settingButton = UIButton(type: .custom)
