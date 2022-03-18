@@ -15,7 +15,6 @@ protocol AgoraOneToOneStateUIControllerDelegate: NSObjectProtocol {
 }
 
 class AgoraOneToOneStateUIController: UIViewController {
-    
     public weak var roomDelegate: AgoraClassRoomManagement?
     
     public weak var delegate: AgoraOneToOneStateUIControllerDelegate?
@@ -115,10 +114,13 @@ extension AgoraOneToOneStateUIController {
         guard let info = self.timeInfo else {
             return
         }
+        
+        let group = AgoraColorGroup()
+        
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch info.state {
         case .before:
-            timeLabel.textColor = UIColor(hex: 0x677386)
+            timeLabel.textColor = group.room_state_label_before_color
             if info.startTime == 0 {
                 timeLabel.text = "fcr_room_class_not_start".agedu_localized()
             } else {
@@ -127,7 +129,7 @@ extension AgoraOneToOneStateUIController {
                 timeLabel.text = text + timeString(from: time)
             }
         case .after:
-            timeLabel.textColor = .red
+            timeLabel.textColor = group.room_state_label_after_color
             let time = realTime - info.startTime
             let text = "fcr_room_class_over".agedu_localized()
             timeLabel.text = text + timeString(from: time)
@@ -148,7 +150,7 @@ extension AgoraOneToOneStateUIController {
                 AgoraToast.toast(msg: final)
             }
         case .during:
-            timeLabel.textColor = UIColor(hex: 0x677386)
+            timeLabel.textColor = group.room_state_label_during_color
             let time = realTime - info.startTime
             let text = "fcr_room_class_started".agedu_localized()
             timeLabel.text = text + timeString(from: time)

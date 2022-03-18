@@ -327,6 +327,10 @@ private extension AgoraRoomStateUIController {
         view.clipsToBounds = true
         
         stateView = AgoraRoomStateBar(frame: .zero)
+        stateView.backgroundColor = ui.color.room_state_bg_color
+        stateView.titleLabel.textColor = ui.color.room_state_label_before_color
+        stateView.timeLabel.textColor = ui.color.room_state_label_before_color
+        
         view.addSubview(stateView)
     }
     

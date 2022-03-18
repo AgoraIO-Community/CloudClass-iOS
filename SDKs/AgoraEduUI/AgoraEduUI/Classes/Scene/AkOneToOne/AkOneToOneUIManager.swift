@@ -11,10 +11,9 @@ import AgoraWidget
 import Masonry
 
 @objc public class AkOneToOneUIManager: AgoraEduUIManager {
-    
     private let roomType: AgoraEduContextRoomType = .oneToOne
     /** 状态栏 控制器*/
-    private var stateController: AkOneToOneStateUIController!
+    private var stateController: AgoraOneToOneStateUIController!
     /** 渲染 控制器*/
     private var renderController: AkOneToOneRenderUIController!
     /** 工具栏*/
@@ -28,7 +27,7 @@ import Masonry
     /** 右边用来切圆角和显示背景色的容器视图*/
     private var rightContentView: UIView!
     /** 白板 控制器*/
-    private var boardController: AkBoardUIController!
+    private var boardController: AgoraBoardUIController!
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController: AgoraCloudUIController = {
         let vc = AgoraCloudUIController(context: contextPool)
@@ -107,8 +106,9 @@ extension AkOneToOneUIManager: AgoraChatUIControllerDelegate {
         toolBarController.updateChatRedDot(isShow: isShow)
     }
 }
+
 // MARK: - AkOneToOneStateUIControllerDelegate
-extension AkOneToOneUIManager: AkOneToOneStateUIControllerDelegate {
+extension AkOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
     func onSettingSelected(isSelected: Bool) {
         renderMenuController.dismissView()
         if isSelected {
@@ -172,7 +172,6 @@ extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
         default:
             break
         }
-        
     }
 }
 
@@ -292,14 +291,14 @@ private extension AkOneToOneUIManager {
     }
     func createViews() {
         contentView.backgroundColor = UIColor(hex: 0x263487)
-        stateController = AkOneToOneStateUIController(context: contextPool)
+        stateController = AgoraOneToOneStateUIController(context: contextPool)
         
         stateController.delegate = self
         stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
 
-        boardController = AkBoardUIController(context: contextPool)
+        boardController = AgoraBoardUIController(context: contextPool)
         addChild(boardController)
         contentView.addSubview(boardController.view)
         

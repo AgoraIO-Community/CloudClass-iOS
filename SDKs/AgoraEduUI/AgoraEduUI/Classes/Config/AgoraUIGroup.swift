@@ -24,7 +24,7 @@ class AgoraColorGroup {
         self.mode = Mode
     }
     
-    fileprivate var mode: AgoraUIMode = .agoraLight
+    fileprivate var mode: AgoraUIMode
     
     // Common
     var common_base_tint_color: UIColor {
@@ -77,14 +77,18 @@ class AgoraColorGroup {
         }
     }
     
-    
-    // Room state bar
-
-    // board
+    // Board
     var board_bg_color: UIColor {
         switch mode {
-        case .agoraLight:   return UIColor(hex: 0x357BF6)!
-        case .akasuo:       return UIColor(hex: 0x263487)!
+        case .agoraLight:   return .white
+        case .akasuo:       return .white
+        }
+    }
+    
+    var board_border_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hexString: "#ECECF1")!
+        case .akasuo:       return UIColor(hexString: "#75C0FE")!
         }
     }
     
@@ -109,6 +113,7 @@ class AgoraColorGroup {
         case .akasuo:      return UIColor(hex: 0xF9F9FC)!
         }
     }
+    
     var render_cell_border_color: CGColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!.cgColor
@@ -247,7 +252,7 @@ struct AgoraFrameGroup {
         self.mode = Mode
     }
     
-    fileprivate var mode: AgoraUIMode = .agoraLight
+    fileprivate var mode: AgoraUIMode
     
     // Render
     var render_label_shadow_radius: CGFloat = 2
@@ -301,7 +306,6 @@ struct AgoraFrameGroup {
     }
     
     var room_state_corner_radius: CGFloat {
-
         switch mode {
         case .agoraLight:  return 2
         case .akasuo:      return 2
