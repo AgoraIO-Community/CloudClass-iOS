@@ -61,7 +61,7 @@ private extension AgoraBoardUIController {
                                widgetId: boardConfig.widgetId)
         let group = AgoraUIGroup()
         boardWidget.view.backgroundColor = group.color.board_bg_color
-        boardWidget.view.layer.borderColor = group.color.board_border_color.cgColor
+        boardWidget.view.layer.borderColor = group.color.board_border_color
         boardWidget.view.layer.borderWidth = group.frame.board_border_width
         boardWidget.view.layer.cornerRadius = group.frame.board_corner_radius
         boardWidget.view.layer.masksToBounds = true

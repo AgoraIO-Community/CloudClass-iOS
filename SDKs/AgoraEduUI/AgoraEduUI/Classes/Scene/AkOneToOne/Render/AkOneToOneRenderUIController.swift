@@ -262,10 +262,13 @@ private extension AkOneToOneRenderUIController {
     }
     
     func createViews() {
+        let ui_frame = AgoraFrameGroup()
         teacherView = AgoraRenderMemberView(frame: .zero)
+        teacherView.layer.cornerRadius = ui_frame.one_one_to_render_cell_corner_radius
         view.addSubview(teacherView)
         
         studentView = AgoraRenderMemberView(frame: .zero)
+        studentView.layer.cornerRadius = ui_frame.one_one_to_render_cell_corner_radius
         view.addSubview(studentView)
         
         let tapTeacher = UITapGestureRecognizer(target: self,

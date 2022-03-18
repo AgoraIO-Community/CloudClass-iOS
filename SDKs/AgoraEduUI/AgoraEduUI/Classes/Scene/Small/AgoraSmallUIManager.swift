@@ -301,9 +301,6 @@ private extension AgoraSmallUIManager {
         contentView.addSubview(renderController.view)
         
         boardController = AgoraBoardUIController(context: contextPool)
-        boardController.view.layer.cornerRadius = AgoraFit.scale(2)
-        boardController.view.borderWidth = 1
-        boardController.view.borderColor = UIColor(hex: 0xECECF1)
         boardController.view.clipsToBounds = true
         addChild(boardController)
         contentView.addSubview(boardController.view)

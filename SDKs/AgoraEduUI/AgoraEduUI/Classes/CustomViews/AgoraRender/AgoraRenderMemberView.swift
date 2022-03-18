@@ -115,7 +115,10 @@ fileprivate class AgoraRenderMaskView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = AgoraColorGroup().render_cell_bg_color
+        let ui = AgoraUIGroup()
+        backgroundColor = ui.color.render_cell_bg_color
+        layer.cornerRadius = max(ui.frame.one_one_to_render_cell_corner_radius,
+                                 ui.frame.small_render_cell_corner_radius)
         imageView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
         addSubview(imageView)
         imageView.mas_makeConstraints { make in

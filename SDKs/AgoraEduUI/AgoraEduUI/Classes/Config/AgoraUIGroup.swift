@@ -85,10 +85,10 @@ class AgoraColorGroup {
         }
     }
     
-    var board_border_color: UIColor {
+    var board_border_color: CGColor {
         switch mode {
-        case .agoraLight:   return UIColor(hexString: "#ECECF1")!
-        case .akasuo:       return UIColor(hexString: "#75C0FE")!
+        case .agoraLight:   return UIColor(hexString: "#ECECF1")!.cgColor
+        case .akasuo:       return UIColor(hexString: "#75C0FE")!.cgColor
         }
     }
     
@@ -107,6 +107,19 @@ class AgoraColorGroup {
     
     var render_label_shadow_color: CGColor = UIColor(hex: 0x0D1D3D,
                                                      transparency: 0.8)!.cgColor
+    var room_border_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xECECF1)!
+        case .akasuo:       return UIColor.clear
+        }
+    }
+    var room_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0xF9F9FC)!
+        case .akasuo:      return UIColor(hex: 0x263487)!
+        }
+    }
+    
     var render_cell_bg_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xF9F9FC)!
@@ -200,7 +213,7 @@ class AgoraColorGroup {
     var small_room_state_border_color: CGColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!.cgColor
-        case .akasuo:      return UIColor(hexString: "#C2D5E5")!.cgColor
+        case .akasuo:      return UIColor(hex: 0x1D35AD)!.cgColor
         }
     }
     
@@ -254,6 +267,8 @@ struct AgoraFrameGroup {
     
     fileprivate var mode: AgoraUIMode
     
+    // room
+    var room_border_width: CGFloat = 1
     // Render
     var render_label_shadow_radius: CGFloat = 2
     
@@ -266,7 +281,7 @@ struct AgoraFrameGroup {
     
     var one_one_to_render_cell_corner_radius: CGFloat {
         switch mode {
-        case .agoraLight:  return 1
+        case .agoraLight:  return 2
         case .akasuo:      return 6
         }
     }
@@ -293,7 +308,7 @@ struct AgoraFrameGroup {
     var board_corner_radius: CGFloat {
         switch mode {
         case .agoraLight:  return 1
-        case .akasuo:      return 2
+        case .akasuo:      return 6
         }
     }
     

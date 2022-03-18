@@ -69,9 +69,12 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(hex: 0xF9F9FC)
         // create content view
+        let ui = AgoraUIGroup()
+        
         self.contentView = UIView()
-        contentView.borderWidth = 1
-        contentView.borderColor = UIColor(hex: 0xECECF1)
+        contentView.borderWidth = ui.frame.room_border_width
+        contentView.borderColor = ui.color.room_border_color
+        contentView.backgroundColor = ui.color.room_bg_color
         self.view.addSubview(self.contentView)
         let width = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         let height = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)

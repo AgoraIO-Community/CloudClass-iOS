@@ -427,7 +427,8 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
                         didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
         if let current = cell as? AgoraRenderMemberCell {
-            current.renderView.setModel(model: nil, delegate: self)
+            current.renderView.setModel(model: nil,
+                                        delegate: self)
         }
     }
     
