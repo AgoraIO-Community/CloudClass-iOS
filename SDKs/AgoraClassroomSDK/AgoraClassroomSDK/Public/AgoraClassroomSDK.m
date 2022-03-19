@@ -108,8 +108,8 @@ static AgoraClassroomSDK *manager = nil;
         AgoraEduUIManager *eduVC = nil;
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
-                eduVC = [[AgoraOneToOneUIManager alloc] initWithContextPool:pool
-                                                                   delegate:manager];
+                eduVC = [[AkOneToOneUIManager alloc] initWithContextPool:pool
+                                                                delegate:manager];
                 break;
             case AgoraEduContextRoomTypeSmall:
                 eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool

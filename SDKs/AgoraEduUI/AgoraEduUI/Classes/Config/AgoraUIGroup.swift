@@ -12,7 +12,7 @@ fileprivate enum AgoraUIMode {
     case agoraLight, akasuo
 }
 
-fileprivate let Mode: AgoraUIMode = .agoraLight
+fileprivate let Mode: AgoraUIMode = .akasuo
 
 class AgoraUIGroup {
     private(set) lazy var color = AgoraColorGroup()
