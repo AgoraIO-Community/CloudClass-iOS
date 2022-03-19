@@ -17,7 +17,7 @@ def libVersion
 
   # agora libs
   pod 'AgoraRtm_iOS', '1.4.8'
-  pod 'Whiteboard', '2.16.2'
+  pod 'Whiteboard', '2.16.6'
   pod 'AgoraRtcEngine_iOS', '3.4.6'
   pod 'HyphenateChat', '3.8.6'
 end
@@ -40,9 +40,8 @@ def openSourceLibs
   pod 'AgoraEduUI', :path => '../AgoraEduUI/AgoraEduUI_Local.podspec'
 end
 
-def widgetsExtApps
+def widgets
   pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
-  pod 'AgoraExtApps', :path => '../../../open-apaas-extapp-ios/AgoraExtApps/AgoraExtApps_Local.podspec'
 end
 
 def sourcePod
@@ -52,7 +51,6 @@ def sourcePod
 	
   # common libs
   pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
-  pod 'AgoraExtApp', :path => '../../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
   pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'  
 
   # rtc
@@ -65,7 +63,6 @@ def binaryPod
   # common libs
   pod 'AgoraUIBaseViews'
   pod 'AgoraWidget'
-  pod 'AgoraExtApp'
 end
 
 target 'AgoraClassroomSDK' do
@@ -75,7 +72,7 @@ target 'AgoraClassroomSDK' do
   libVersion
   
   openSourceLibs
-  widgetsExtApps
+  widgets
 
   sourcePod
   #binaryPod

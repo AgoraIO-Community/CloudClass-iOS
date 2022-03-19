@@ -25,7 +25,7 @@ class RoomInfoOptionsView: UIView, UITableViewDelegate, UITableViewDataSource {
         super.init(frame: frame)
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     required init?(coder: NSCoder) {
@@ -117,7 +117,7 @@ extension RoomInfoOptionsView {
         addSubview(tableView)
     }
 
-    func createConstrains() {
+    func createConstraint() {
         tableView.mas_makeConstraints { make in
             make?.left.right().equalTo()(0)
             make?.top.equalTo()(11)

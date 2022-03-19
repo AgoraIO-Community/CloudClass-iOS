@@ -6,7 +6,6 @@
 //
 
 import Masonry
-import AgoraExtApp
 import AgoraEduContext
 import AgoraUIBaseViews
 
@@ -25,39 +24,14 @@ class AgoraHandsListUIController: UIViewController {
     /** 代理*/
     weak var delegate: AgoraHandsListUIControllerDelegate?
 
-    private lazy var listContentView: UIView = {
-        let v = UIView()
-        v.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                      transparency: 0.15)?.cgColor
-        v.layer.shadowOffset = CGSize(width: 0, height: 2)
-        v.layer.shadowOpacity = 1
-        v.layer.shadowRadius = 6
-        v.addSubview(tableView)
-        tableView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(tableView.superview)
-        }
-        return v
-    }()
+    private var listContentView: UIView?
     /** 举手列表*/
-    private lazy var tableView: UITableView = {
-        let v = UITableView.init(frame: .zero, style: .plain)
-        v.delegate = self
-        v.dataSource = self
-        v.tableFooterView = UIView.init(frame: CGRect(x: 0, y: 0, width: 1, height: 0.01))
-        v.rowHeight = 40
-        v.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
-        v.separatorColor = UIColor(hexString: "#EEEEF7")
-        v.allowsSelection = false
-        v.register(cellWithClass: AgoraHandsUpItemCell.self)
-        v.layer.cornerRadius = 12
-        v.clipsToBounds = true
-        return v
-    }()
+    private var tableView: UITableView?
 
-    private var dataSource = [HandsUpUser]() {
+    private(set) var dataSource = [HandsUpUser]() {
         didSet {
             delegate?.updateHandsListRedLabel(dataSource.count)
-            tableView.reloadData()
+            tableView?.reloadData()
         }
     }
         
@@ -70,23 +44,19 @@ class AgoraHandsListUIController: UIViewController {
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
+        
+        contextPool.user.registerUserEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(listContentView)
-        tableView.mas_remakeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
-        
-        if contextPool.user.getLocalUserInfo().userRole == .teacher {
-            contextPool.user.registerUserEventHandler(self)
-        }
+        createViews()
+        createConstraint()
     }
 }
 
@@ -112,8 +82,31 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
     
     func onUserHandsDown(userUuid: String,
                          payload: [String : Any]?) {
-        // TODO: 待验证，上台用户是否会走该回调
         dataSource.removeAll(where: {$0.userUuid == userUuid})
+    }
+    
+    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
+                               operatorUser: AgoraEduContextUserInfo?) {
+        for userInfo in userList {
+            guard dataSource.contains(where: {$0.userUuid == userInfo.userUuid}) else{
+                continue
+            }
+            // TODO: 验证是否触发didSet
+            var handsUpUser = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
+            handsUpUser.isCoHost = true
+        }
+    }
+    
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        for userInfo in userList {
+            guard dataSource.contains(where: {$0.userUuid == userInfo.userUuid}) else{
+                continue
+            }
+            // TODO: 验证是否触发didSet
+            var handsUpUser = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
+            handsUpUser.isCoHost = false
+        }
     }
 }
 // MARK: - HandsUpItemCellDelegate
@@ -156,5 +149,68 @@ extension AgoraHandsListUIController: UITableViewDataSource, UITableViewDelegate
         contextPool.user.addCoHost(userUuid: u.userUuid,
                                    success: nil,
                                    failure: nil)
+    }
+}
+
+// MARK: - private
+extension AgoraHandsListUIController {
+    func createViews() {
+        view.layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
+        view.layer.shadowOffset = CGSize(width: 0,
+                                         height: 2)
+        view.layer.shadowOpacity = 1
+        view.layer.shadowRadius = 6
+        
+        let contentView = UIView()
+        contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
+        contentView.layer.cornerRadius = 10.0
+        contentView.clipsToBounds = true
+        contentView.borderWidth = 1
+        contentView.borderColor = UIColor(hex: 0xE3E3EC)
+        contentView.isUserInteractionEnabled = true
+        
+//        listContentView = UIView()
+//        listContentView.backgroundColor = UIColor(hex: 0xF9F9FC)
+//        listContentView.layer.shadowColor = UIColor(hex: 0x2F4192,
+//                                      transparency: 0.15)?.cgColor
+//        listContentView.layer.shadowOffset = CGSize(width: 0, height: 2)
+//        listContentView.layer.shadowOpacity = 1
+//        listContentView.layer.shadowRadius = 6
+        
+        view.addSubview(contentView)
+
+        
+        let tab = UITableView.init(frame: .zero, style: .plain)
+        tab.backgroundColor = UIColor(hex: 0xF9F9FC)
+        tab.delegate = self
+        tab.dataSource = self
+        tab.tableFooterView = UIView.init(frame: CGRect(x: 0, y: 0, width: 1, height: 0.01))
+        tab.rowHeight = 40
+        tab.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
+        tab.separatorColor = UIColor(hexString: "#EEEEF7")
+        tab.allowsSelection = false
+        tab.register(cellWithClass: AgoraHandsUpItemCell.self)
+        tab.layer.cornerRadius = 12
+        tab.clipsToBounds = true
+        tab.isUserInteractionEnabled = true
+        
+        contentView.addSubview(tab)
+        
+        listContentView = contentView
+        tableView = tab
+    }
+    
+    func createConstraint() {
+        guard let content = listContentView,
+              let tab = tableView else {
+                  return
+              }
+        content.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(content.superview)
+        }
+        tab.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(tab.superview)
+        }
     }
 }

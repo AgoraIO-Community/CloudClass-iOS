@@ -14,24 +14,22 @@ protocol AgoraBoardPageUIControllerDelegate: NSObjectProtocol {
     func boardPageUINeedMove(coursewareMin: Bool)
 }
 
-fileprivate let kButtonWidth = AgoraFit.scale(30)
-fileprivate let kButtonHeight = AgoraFit.scale(30)
-
 class AgoraBoardPageUIController: UIViewController {
     /** Views*/
-    public var suggestSize = CGSize(width: AgoraFit.scale(168),
-                                    height: AgoraFit.scale(32))
-    
     private var addBtn: UIButton!
     private var sepLine: UIView!
     private var pageLabel: UILabel!
     private var preBtn: UIButton!
     private var nextBtn: UIButton!
+    
+    private let kButtonWidth = 30
+    private let kButtonHeight = 30
+    
     /** SDK*/
     private var contextPool: AgoraEduContextPool!
     /** Data */
     private weak var delegate: AgoraBoardPageUIControllerDelegate?
-    private var pageIndex = 0 {
+    private var pageIndex = 1 {
         didSet {
             let text = "\(pageIndex) / \(pageCount)"
             pageLabel.text = text
@@ -72,7 +70,7 @@ class AgoraBoardPageUIController: UIViewController {
         view.backgroundColor = .clear
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
 }
 
@@ -164,38 +162,37 @@ extension AgoraBoardPageUIController {
         view.addSubview(nextBtn)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         addBtn.mas_remakeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(AgoraFit.scale(10))
+            make?.left.equalTo()(10)
             make?.width.height().equalTo()(kButtonWidth)
         }
         
         sepLine.mas_makeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.addBtn.mas_right)?.offset()(AgoraFit.scale(4))
-            make?.top.equalTo()(AgoraFit.scale(8))
-            make?.bottom.equalTo()(AgoraFit.scale(-8))
-            make?.width.equalTo()(AgoraFit.scale(1))
+            make?.left.equalTo()(self.addBtn.mas_right)?.offset()(4)
+            make?.top.equalTo()(8)
+            make?.bottom.equalTo()(-8)
+            make?.width.equalTo()(1)
         }
 
         preBtn.mas_remakeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.sepLine.mas_right)?.offset()(AgoraFit.scale(3))
+            make?.left.equalTo()(self.sepLine.mas_right)?.offset()(3)
             make?.width.height().equalTo()(kButtonWidth)
         }
         
         nextBtn.mas_makeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.right.equalTo()(AgoraFit.scale(-10))
+            make?.right.equalTo()(-10)
             make?.width.height().equalTo()(kButtonWidth)
         }
         
-        pageLabel.mas_remakeConstraints { make in
+        pageLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.preBtn.mas_right)?.offset()(AgoraFit.scale(4))
-            make?.right.equalTo()(self.nextBtn.mas_left)?.offset()(AgoraFit.scale(-4))
-            make?.height.equalTo()(AgoraFit.scale(16))
+            make?.left.equalTo()(self.preBtn.mas_right)?.offset()(4)
+            make?.right.equalTo()(self.nextBtn.mas_left)?.offset()(-4)
         }
     }
     
@@ -208,7 +205,7 @@ extension AgoraBoardPageUIController {
     }
     
     @objc func onClickPrePage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1)
+        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 - 1)
         if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
             contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
                                            message: message)
@@ -216,7 +213,7 @@ extension AgoraBoardPageUIController {
     }
     
     @objc func onClickNextPage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex + 1)
+        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 + 1)
         if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
             contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
                                            message: message)

@@ -15,7 +15,6 @@ protocol AgoraOneToOneStateUIControllerDelegate: NSObjectProtocol {
 }
 
 class AgoraOneToOneStateUIController: UIViewController {
-    
     public weak var roomDelegate: AgoraClassRoomManagement?
     
     public weak var delegate: AgoraOneToOneStateUIControllerDelegate?
@@ -55,7 +54,7 @@ class AgoraOneToOneStateUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         setup()
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
                                           repeats: true,
@@ -101,12 +100,13 @@ extension AgoraOneToOneStateUIController {
     @objc func onClickSetting(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         delegate?.onSettingSelected(isSelected: sender.isSelected)
+        let color = AgoraColorGroup()
         if sender.isSelected {
-            settingButton.imageView?.tintColor = .white
-            settingButton.backgroundColor = UIColor(hex: 0x357BF6)
+            settingButton.imageView?.tintColor = color.one_room_setting_selected_tint_color
+            settingButton.backgroundColor = color.one_room_setting_selected_bg_color
         } else {
-            settingButton.imageView?.tintColor = UIColor(hex: 0x7B88A0)
-            settingButton.backgroundColor = .white
+            settingButton.imageView?.tintColor = color.one_room_setting_unselected_tint_color
+            settingButton.backgroundColor = color.one_room_setting_unselected_bg_color
         }
     }
     
@@ -114,49 +114,53 @@ extension AgoraOneToOneStateUIController {
         guard let info = self.timeInfo else {
             return
         }
+        
+        let group = AgoraColorGroup()
+        
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch info.state {
         case .before:
-            timeLabel.textColor = UIColor(hex: 0x677386)
+            timeLabel.textColor = group.room_state_label_before_color
             if info.startTime == 0 {
-                timeLabel.text = "title_before_class".agedu_localized()
+                timeLabel.text = "fcr_room_class_not_start".agedu_localized()
             } else {
                 let time = info.startTime - realTime
-                let text = "ClassBeforeStartText".agedu_localized()
+                let text = "fcr_room_class_time_away".agedu_localized()
                 timeLabel.text = text + timeString(from: time)
             }
         case .after:
-            timeLabel.textColor = .red
+            timeLabel.textColor = group.room_state_label_after_color
             let time = realTime - info.startTime
-            let text = "ClassAfterStopText".agedu_localized()
+            let text = "fcr_room_class_over".agedu_localized()
             timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
             if countDown == info.closeDelay {
-                let strStart = "ClassCloseWarningStartText".agedu_localized()
                 let minNum = Int(info.closeDelay / 60)
                 let strMid = "\(minNum)"
-                let strMin = "ClassCloseWarningEnd2Text".agedu_localized()
-                let strEnd = "ClassCloseWarningEndText".agedu_localized()
-                AgoraToast.toast(msg: strStart + strMid + strMin + strEnd)
+                
+                let str = "fcr_room_close_warning".agedu_localized()
+                let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
+                                                     with: strMid)
+                AgoraToast.toast(msg: final)
             } else if countDown == 60 {
-                let strStart = "ClassCloseWarningStart2Text".agedu_localized()
-                let strMid = "1"
-                let strEnd = "ClassCloseWarningEnd2Text".agedu_localized()
-                AgoraToast.toast(msg: strStart + strMid + strEnd)
+                let str = "fcr_room_close_warning".agedu_localized()
+                let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
+                                                     with: "1")
+                AgoraToast.toast(msg: final)
             }
         case .during:
-            timeLabel.textColor = UIColor(hex: 0x677386)
+            timeLabel.textColor = group.room_state_label_during_color
             let time = realTime - info.startTime
-            let text = "ClassAfterStartText".agedu_localized()
+            let text = "fcr_room_class_started".agedu_localized()
             timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
             if countDown == 5 * 60 + info.closeDelay {
-                let strStart = "ClassEndWarningStartText".agedu_localized()
-                let strMid = "5"
-                let strEnd = "ClassEndWarningEndText".agedu_localized()
-                AgoraToast.toast(msg: strStart + strMid + strEnd)
+                let str = "fcr_room_class_end_warning".agedu_localized()
+                let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
+                                                     with: "5")
+                AgoraToast.toast(msg: final)
             }
         }
     }
@@ -174,9 +178,9 @@ extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
     
     func onRoomClosed() {
         AgoraAlert()
-            .setTitle("ClassOverNoticeText".agedu_localized())
-            .setMessage("ClassOverText".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: "SureText".agedu_localized(), action: {
+            .setTitle("fcr_room_class_over_notice".agedu_localized())
+            .setMessage("fcr_room_class_over".agedu_localized())
+            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
                 self.roomDelegate?.exitClassRoom(reason: .normal)
             }))
             .show(in: self)
@@ -187,9 +191,9 @@ extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
 extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
         AgoraAlert()
-            .setTitle("KickOutNoticeText".agedu_localized())
-            .setMessage("local_user_kicked_out".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: "SureText".agedu_localized(), action: {
+            .setTitle("fcr_user_local_kick_out_notice".agedu_localized())
+            .setMessage("fcr_user_local_kick_out".agedu_localized())
+            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
                 self.roomDelegate?.exitClassRoom(reason: .kickOut)
             }))
             .show(in: self)
@@ -200,7 +204,7 @@ extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
             // 老师邀请你上台了，与大家积极互动吧
-            AgoraToast.toast(msg: "toast_student_stage_on".agedu_localized(),
+            AgoraToast.toast(msg: "fcr_user_local_start_co_hosting".agedu_localized(),
                              type: .notice)
         }
     }
@@ -210,7 +214,7 @@ extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
         if let _ = userList.first(where: {$0.userUuid == localUUID}) {
             // 你离开讲台了，暂时无法与大家互动
-            AgoraToast.toast(msg: "toast_student_stage_off".agedu_localized(),
+            AgoraToast.toast(msg: "fcr_user_local_stop_co_hosting".agedu_localized(),
                              type: .error)
         }
     }
@@ -219,9 +223,10 @@ extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
         // 祝贺**获得奖励
-        let str = String.init(format: "toast_reward_student_xx".agedu_localized(),
-                              user.userName)
-        AgoraToast.toast(msg: str,
+        let str = "fcr_user_congratulation".agedu_localized()
+        let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
+                                             with: user.userName)
+        AgoraToast.toast(msg: final,
                          type: .notice)
     }
 }
@@ -236,7 +241,7 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
         case .bad:
             netStateView.image = UIImage.agedu_named("ic_network_bad")
         case .down:
-            AgoraToast.toast(msg:"NetworkDisconnectedText".agedu_localized(),
+            AgoraToast.toast(msg:"fcr_monitor_network_disconnected".agedu_localized(),
                              type: .error)
             netStateView.image = UIImage.agedu_named("ic_network_down")
         default: break
@@ -248,15 +253,15 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
         case .aborted:
             // 踢出
             AgoraLoading.hide()
-            AgoraToast.toast(msg: "LoginOnAnotherDeviceText".agedu_localized(),
+            AgoraToast.toast(msg: "fcr_monitor_login_remote_device".agedu_localized(),
                              type: .error)
             self.roomDelegate?.exitClassRoom(reason: .kickOut)
         case .connecting:
-            AgoraLoading.loading(msg: "LoaingText".agedu_localized())
+            AgoraLoading.loading(msg: "fcr_room_loading".agedu_localized())
         case .disconnected, .reconnecting:
-            AgoraToast.toast(msg:"NetworkDisconnectedText".agedu_localized(),
+            AgoraToast.toast(msg:"fcr_monitor_network_disconnected".agedu_localized(),
                              type: .error)
-            AgoraLoading.loading(msg: "ReconnectingText".agedu_localized())
+            AgoraLoading.loading(msg: "fcr_monitor_network_reconnecting".agedu_localized())
         case .connected:
             AgoraLoading.hide()
         }
@@ -266,10 +271,12 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
 // MARK: - Creaions
 private extension AgoraOneToOneStateUIController {
     func createViews() {
-        view.backgroundColor = .white
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor(hex: 0xECECF1)?.cgColor
-        view.layer.cornerRadius = 2
+        let ui = AgoraUIGroup()
+        
+        view.backgroundColor = ui.color.room_state_bg_color
+        view.layer.borderWidth = ui.frame.room_state_border_width
+        view.layer.borderColor = ui.color.room_state_border_color
+        view.layer.cornerRadius = ui.frame.room_state_corner_radius
         view.clipsToBounds = true
         
         // default network quality is good
@@ -277,17 +284,17 @@ private extension AgoraOneToOneStateUIController {
         view.addSubview(netStateView)
         
         lineView = UIView(frame: .zero)
-        lineView.backgroundColor = UIColor(hex: 0xECECF1)
+        lineView.backgroundColor = ui.color.room_state_line_color
         view.addSubview(lineView)
         
         titleLabel = UILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 9)
-        titleLabel.textColor = UIColor(hex: 0x191919)
+        titleLabel.textColor = ui.color.one_room_state_title_color
         view.addSubview(titleLabel)
         
         timeLabel = UILabel()
         timeLabel.font = UIFont.systemFont(ofSize: 9)
-        timeLabel.textColor = UIColor(hex: 0x677386)
+        timeLabel.textColor = ui.color.one_room_state_time_color
         view.addSubview(timeLabel)
         
         settingButton = UIButton(type: .custom)
@@ -303,7 +310,7 @@ private extension AgoraOneToOneStateUIController {
         view.addSubview(settingButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         netStateView.mas_makeConstraints { make in
             make?.left.equalTo()(self.view)?.offset()(AgoraFit.scale(10))
             make?.width.height().equalTo()(20)

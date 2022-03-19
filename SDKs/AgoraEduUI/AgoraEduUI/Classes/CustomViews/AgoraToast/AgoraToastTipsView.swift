@@ -30,7 +30,7 @@ class AgoraToastTipsView: UIView {
         self.isUserInteractionEnabled = false
         self.createViews()
         self.titleLabel.text = msg
-        self.createConstrains()
+        self.createConstraint()
         switch type {
         case .notice:
             self.backgroundColor = UIColor(hex: 0xFAFFFF)
@@ -104,7 +104,7 @@ extension AgoraToastTipsView {
         self.addSubview(titleLabel)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         let minWidth: CGFloat = 180
         if let width = titleLabel.text?.agora_size(font: titleLabel.font).width,
            width > minWidth {

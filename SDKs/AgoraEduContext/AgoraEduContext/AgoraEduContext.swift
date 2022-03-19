@@ -5,11 +5,9 @@
 //  Created by SRS on 2021/4/16.
 //
 
-import AgoraExtApp
 import AgoraWidget
 import Foundation
 
-public typealias AgoraEduExtAppContext = AgoraExtAppProtocol
 public typealias AgoraEduWidgetContext = AgoraWidgetProtocol
 
 /* AgoraEduContextPool: 能力池
@@ -22,8 +20,6 @@ public typealias AgoraEduWidgetContext = AgoraWidgetProtocol
     var media: AgoraEduMediaContext { get }
     /// 用户
     var user: AgoraEduUserContext { get }
-    /// extApp 插件
-    var extApp: AgoraEduExtAppContext { get }
     /// widget 插件
     var widget: AgoraEduWidgetContext { get }
     /// 流

@@ -25,7 +25,10 @@ class AgoraToolCollectionUIController: UIViewController {
     /// Data
     private weak var delegate: AgoraToolCollectionUIControllerDelegate?
     
-    var suggestSize: CGSize = .zero
+    var suggestLength: CGFloat = UIDevice.current.isPad ? 34 : 32
+    var suggestSpreadHeight: CGFloat = 80
+    
+    private var baseTintColor: UIColor
     
     private var curSelectedCell: AgoraToolCollectionSelectType = .none {
         didSet {
@@ -77,6 +80,8 @@ class AgoraToolCollectionUIController: UIViewController {
     // 白板工具配置CollectionView
     private var subToolsView: AgoraBoardToolConfigView!
     
+    let color = AgoraColorGroup()
+    
     /** SDK环境*/
     var contextPool: AgoraEduContextPool!
     
@@ -86,7 +91,12 @@ class AgoraToolCollectionUIController: UIViewController {
 
     init(context: AgoraEduContextPool,
          delegate: AgoraToolCollectionUIControllerDelegate) {
-        super.init(nibName: nil, bundle: nil)
+        let group = AgoraColorGroup()
+        
+        baseTintColor = group.tool_bar_item_highlight_color
+        
+        super.init(nibName: nil,
+                   bundle: nil)
         contextPool = context
         contextPool.widget.add(self,
                                widgetId: kBoardWidgetId)
@@ -103,7 +113,7 @@ class AgoraToolCollectionUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
 }
 
@@ -198,9 +208,6 @@ private extension AgoraToolCollectionUIController {
                                            delegate: self)
         subToolsView = AgoraBoardToolConfigView(delegate: self)
         mainToolsView.curColor = UIColor(hex: subToolsView.currentColor)
-        
-        // 默认为mainToolsView的窗口大小
-        suggestSize = mainToolsView.suggestSize
     }
     
     func createViews() {
@@ -219,7 +226,7 @@ private extension AgoraToolCollectionUIController {
         view.addSubview(contentView)
         
         mainCell = AgoraToolCollectionCell(isMain: true,
-                                           color: UIColor(hex: subToolsView.currentColor) ?? UIColor(hex: 0x357BF6),
+                                           color: UIColor(hex: subToolsView.currentColor) ?? color.common_base_tint_color,
                                            image: currentMainTool.image)
         mainCell.addGestureRecognizer(UITapGestureRecognizer(target: self,
                                                                   action: #selector(didSelectMain)))
@@ -241,36 +248,35 @@ private extension AgoraToolCollectionUIController {
         updateImage()
     }
     
-    func createConstrains() {
+    func createConstraint() {
         if currentMainTool == .paint ||
             currentMainTool == .text {
             contentView.mas_remakeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(0)
             }
             subCell.mas_remakeConstraints { make in
-                make?.top.equalTo()(5)
+                make?.top.equalTo()(0)
                 make?.centerX.equalTo()(0)
-                make?.width.height().equalTo()(AgoraFit.scale(30))
+                make?.width.height().equalTo()(suggestLength)
             }
             sepLine.mas_remakeConstraints { make in
-                make?.top.equalTo()(subCell.mas_bottom)
+                make?.centerY.equalTo()(self.view.mas_centerY)
                 make?.centerX.equalTo()(self.view.mas_centerX)
                 make?.width.equalTo()(20)
                 make?.height.equalTo()(1)
             }
             mainCell.mas_remakeConstraints { make in
-                make?.bottom.equalTo()(-5)
+                make?.bottom.equalTo()(0)
                 make?.centerX.equalTo()(0)
-                make?.width.height().equalTo()(AgoraFit.scale(30))
+                make?.width.height().equalTo()(suggestLength)
             }
         } else {
             contentView.mas_remakeConstraints { make in
-                make?.left.right().bottom().equalTo()(0)
-                make?.height.equalTo()(AgoraFit.scale(32))
+                make?.left.right().top().bottom().equalTo()(0)
             }
             mainCell.mas_remakeConstraints { make in
                 make?.centerX.centerY().equalTo()(0)
-                make?.width.height().equalTo()(AgoraFit.scale(30))
+                make?.width.height().equalTo()(suggestLength)
             }
         }
     }
@@ -283,7 +289,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             
             if oldValue == .paint || oldValue == .text {
-                createConstrains()
+                createConstraint()
                 delegate?.toolCollectionCellNeedSpread(false)
             }
             if let type = currentMainTool.boardWidgetToolType {
@@ -294,7 +300,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             if oldValue != .paint,
                oldValue != .text {
-                createConstrains()
+                createConstraint()
                 delegate?.toolCollectionCellNeedSpread(true)
             }
             if let shape = currentSubTool.boardWidgetShapeType {
@@ -308,7 +314,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             if oldValue != .paint,
                oldValue != .text {
-                createConstrains()
+                createConstraint()
                 delegate?.toolCollectionCellNeedSpread(true)
             }
             if let type = currentMainTool.boardWidgetToolType {
@@ -370,7 +376,7 @@ private extension AgoraToolCollectionUIController {
         }
         
         updateImage()
-        createConstrains()
+        createConstraint()
     }
     
     func handleBoardWidgetGrantUsers(_ list: [String]?) {
@@ -415,7 +421,7 @@ private extension AgoraToolCollectionUIController {
                               color: UIColor(hex: subToolsView.currentColor))
         } else {
             mainCell.setImage(mainSelectedImage,
-                              color: UIColor(hex: 0x357BF6))
+                              color: color.common_base_tint_color)
             
             subCell.isHidden = true
             sepLine.isHidden = true

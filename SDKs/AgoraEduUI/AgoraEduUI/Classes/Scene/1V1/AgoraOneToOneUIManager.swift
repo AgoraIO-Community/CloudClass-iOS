@@ -15,6 +15,11 @@ import Masonry
     private let roomType: AgoraEduContextRoomType = .oneToOne
     /** 状态栏 控制器*/
     private var stateController: AgoraOneToOneStateUIController!
+    /** 课堂状态 控制器（仅教师端）*/
+    private lazy var classStateController: AgoraClassStateUIController = {
+        return AgoraClassStateUIController(context: contextPool,
+                                           delegate: self)
+    }()
     /** 渲染 控制器*/
     private var renderController: AgoraOneToOneRenderUIController!
     /** 视窗菜单 控制器（仅教师端）*/
@@ -62,7 +67,7 @@ import Masonry
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
         self.createViews()
-        self.createConstrains()
+        self.createConstraint()
         if UIDevice.current.isPad {
             self.createPadViews()
         } else {
@@ -148,15 +153,14 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
                 make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-                make?.width.equalTo()(AgoraFit.scale(32))
-                make?.height.equalTo()(AgoraFit.scale(80))
+                make?.width.equalTo()(toolCollectionController.suggestLength)
+                make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
                 make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-                make?.width.equalTo()(AgoraFit.scale(32))
-                make?.height.equalTo()(AgoraFit.scale(32))
+                make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
     }
@@ -166,16 +170,13 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
     }
     
     func toolCollectionDidSelectTeachingAid(type: AgoraTeachingAidType) {
-        renderMenuController.dismissView()
         // 选择插件（答题器、投票器...）
         ctrlView = nil
         switch type {
         case .cloudStorage:
             if cloudController.view.isHidden {
                 cloudController.view.mas_remakeConstraints { make in
-                    make?.center.equalTo()(boardController.view)
-                    make?.width.equalTo()(AgoraFit.scale(435))
-                    make?.height.equalTo()(AgoraFit.scale(253))
+                    make?.left.right().top().bottom().equalTo()(boardController.view)
                 }
             }
             cloudController.view.isHidden = !cloudController.view.isHidden
@@ -184,11 +185,7 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
         case .countDown:
             break
         case .answerSheet:
-            guard let extAppInfos = contextPool.extApp.getExtAppInfos(),
-                  let info = extAppInfos.first(where: {$0.appIdentifier == "io.agora.answer"}) else {
-                      return
-                  }
-            contextPool.extApp.willLaunchExtApp(info.appIdentifier)
+            break
         default:
             break
         }
@@ -226,7 +223,7 @@ extension AgoraOneToOneUIManager: AgoraRenderUIControllerDelegate {
         if let menuId = renderMenuController.userId,
            menuId == UUID {
             // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
-            renderMenuController.view.isHidden = !renderMenuController.view.isHidden
+            renderMenuController.dismissView()
         } else {
             // 1. 当前menu的userId不为点击的userId，切换用户
             // 2. 当前不存在menu，显示
@@ -239,7 +236,6 @@ extension AgoraOneToOneUIManager: AgoraRenderUIControllerDelegate {
                 make?.height.equalTo()(AgoraFit.scale(36))
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }
-            renderMenuController.view.isHidden = false
         }
     }
     
@@ -263,6 +259,22 @@ extension AgoraOneToOneUIManager: AgoraRenderMenuUIControllerDelegate {
     }
 }
 
+// MARK: - AgoraClassStateUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraClassStateUIControllerDelegate {
+    func onShowStartClass() {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+            return
+        }
+        contentView.addSubview(classStateController.view)
+        
+        classStateController.view.mas_makeConstraints { make in
+            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(15)
+            make?.bottom.equalTo()(boardPageController.view.mas_bottom)
+            make?.size.equalTo()(classStateController.suggestSize)
+        }
+    }
+}
+
 // MARK: - Creations
 private extension AgoraOneToOneUIManager {
     func settingViewAnimationFromView(_ formView: UIView) {
@@ -270,7 +282,8 @@ private extension AgoraOneToOneUIManager {
             return
         }
         // 算出落点的frame
-        let rect = formView.convert(formView.bounds, to: self.view)
+        let rect = formView.convert(formView.bounds,
+                                    to: self.view)
         var point = CGPoint(x: rect.maxX - animaView.frame.size.width, y: rect.maxY + 8)
         animaView.frame = CGRect(origin: point, size: animaView.frame.size)
         // 运算动画锚点
@@ -333,6 +346,7 @@ private extension AgoraOneToOneUIManager {
         contentView.addSubview(classToolsController.view)
         
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
+            addChild(classStateController)
             addChild(cloudController)
             contentView.addSubview(cloudController.view)
             addChild(renderMenuController)
@@ -345,7 +359,7 @@ private extension AgoraOneToOneUIManager {
         }
     }
     
-    func createConstrains() {
+    func createConstraint() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(23))
@@ -357,9 +371,8 @@ private extension AgoraOneToOneUIManager {
         }
         toolCollectionController.view.mas_makeConstraints { make in
             make?.right.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-12))
-            make?.bottom.equalTo()(boardController.view)?.offset()(AgoraFit.scale(-15))
-            make?.width.equalTo()(AgoraFit.scale(32))
-            make?.height.equalTo()(AgoraFit.scale(80))
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.width.height().equalTo()(toolCollectionController.suggestLength)
         }
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
@@ -367,10 +380,10 @@ private extension AgoraOneToOneUIManager {
             make?.right.equalTo()(rightContentView.mas_left)
         }
         boardPageController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(contentView)?.offset()(AgoraFit.scale(12))
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-15))
-            make?.height.equalTo()(AgoraFit.scale(32))
-            make?.width.equalTo()(AgoraFit.scale(168))
+            make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+            make?.width.equalTo()(168)
         }
         classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)

@@ -103,7 +103,6 @@ static AgoraClassroomSDK *manager = nil;
     __weak AgoraClassroomSDK *weakManager = manager;
 
     [core launch:coreConfig
-         extApps:config.extApps.allValues
          widgets:config.widgets.allValues
          success:^(id<AgoraEduContextPool> pool) {
         AgoraEduUIManager *eduVC = nil;
@@ -114,11 +113,11 @@ static AgoraClassroomSDK *manager = nil;
                 break;
             case AgoraEduContextRoomTypeSmall:
                 eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool
-                                                                        delegate:manager];
+                                                                delegate:manager];
                 break;
             case AgoraEduContextRoomTypeLecture:
                 eduVC = [[AgoraLectureUIManager alloc] initWithContextPool:pool
-                                                                          delegate:manager];
+                                                                  delegate:manager];
                 break;
             default:
                 NSCAssert(true,

@@ -7,9 +7,6 @@
 
 import Foundation
 
-//    fileprivate let kAnswerSelectorId = "AnswerSelector"
-//    fileprivate let kCountdownId = "CountdownTimer"
-
-let AnswerSelectorWidgetId = "selector"
-let CountdownWidgetId = "countdown"
-let PollerWidgetId = "polling"
+let PopupQuizWidgetId = "popupQuiz"
+let CountdownTimerWidgetId = "countdownTimer"
+let PollWidgetId = "poll"

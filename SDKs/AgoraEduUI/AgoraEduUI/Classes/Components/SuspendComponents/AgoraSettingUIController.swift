@@ -10,8 +10,8 @@ import SwifterSwift
 import UIKit
 
 class AgoraSettingUIController: UIViewController {
-    
-    public let suggestSize = CGSize(width: 201, height: 220)
+    public let suggestSize = CGSize(width: 201,
+                                    height: 220)
     
     public weak var roomDelegate: AgoraClassRoomManagement?
     
@@ -64,12 +64,12 @@ class AgoraSettingUIController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -187,10 +187,10 @@ private extension AgoraSettingUIController {
     
     @objc func onClickExit(_ sender: UIButton) {
         AgoraAlert()
-            .setTitle("LeaveClassTitleText".agedu_localized())
-            .setMessage("LeaveClassText".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: "CancelText".agedu_localized(), action:nil))
-            .addAction(action: AgoraAlertAction(title: "SureText".agedu_localized(), action: {
+            .setTitle("fcr_room_class_leave_class_title".agedu_localized())
+            .setMessage("fcr_room_exit_warning".agedu_localized())
+            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_cancel".agedu_localized(), action:nil))
+            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
                 self.roomDelegate?.exitClassRoom(reason: .normal)
             }))
             .show(in: self)
@@ -224,6 +224,10 @@ private extension AgoraSettingUIController {
 // MARK: - Creations
 private extension AgoraSettingUIController {
     func createViews() {
+        let group = AgoraColorGroup()
+        let switchTintColor = group.setting_switch_tint_color
+        let exitColor = group.setting_exit_button_color
+        
         view.layer.shadowColor = UIColor(hex: 0x2F4192,
                                          transparency: 0.15)?.cgColor
         view.layer.shadowOffset = CGSize(width: 0,
@@ -238,13 +242,13 @@ private extension AgoraSettingUIController {
         view.addSubview(contentView)
         
         cameraLabel = UILabel(frame: .zero)
-        cameraLabel.text = "CameraText".agedu_localized()
+        cameraLabel.text = "fcr_media_camera".agedu_localized()
         cameraLabel.font = UIFont.systemFont(ofSize: 13)
         cameraLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(cameraLabel)
         
         cameraSwitch = UISwitch()
-        cameraSwitch.onTintColor = UIColor(hex: 0x357BF6)
+        cameraSwitch.onTintColor = switchTintColor
         cameraSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                    y: 0.75)
         cameraSwitch.addTarget(self,
@@ -253,7 +257,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(cameraSwitch)
         
         directionLabel = UILabel(frame: .zero)
-        directionLabel.text = "DirectionText".agedu_localized()
+        directionLabel.text = "fcr_media_camera_direction".agedu_localized()
         directionLabel.font = UIFont.systemFont(ofSize: 13)
         directionLabel.textColor = UIColor(hex: 0x677386)
         contentView.addSubview(directionLabel)
@@ -265,7 +269,7 @@ private extension AgoraSettingUIController {
                                      for: .selected)
         frontCamButton.setTitleColor(UIColor(hex: 0xB5B5C9),
                                      for: .normal)
-        frontCamButton.setTitle("FrontText".agedu_localized(),
+        frontCamButton.setTitle("fcr_media_camera_direction_front".agedu_localized(),
                                 for: .normal)
         frontCamButton.setBackgroundImage(UIImage(color: UIColor(hex: 0xF4F4F8) ?? .white,
                                                   size: CGSize(width: 1,
@@ -296,7 +300,7 @@ private extension AgoraSettingUIController {
                                                  size: CGSize(width: 1,
                                                               height: 1)),
                                          for: .selected)
-        backCamButton.setTitle("BackText".agedu_localized(),
+        backCamButton.setTitle("fcr_media_camera_direction_back".agedu_localized(),
                                for: .normal)
         backCamButton.addTarget(self,
                                 action: #selector(onClickBackCamera(_:)),
@@ -310,13 +314,13 @@ private extension AgoraSettingUIController {
         contentView.addSubview(sepLine)
         
         micLabel = UILabel(frame: .zero)
-        micLabel.text = "MicrophoneText".agedu_localized()
+        micLabel.text = "fcr_media_mic".agedu_localized()
         micLabel.font = UIFont.systemFont(ofSize: 13)
         micLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(micLabel)
         
         micSwitch = UISwitch()
-        micSwitch.onTintColor = UIColor(hex: 0x357BF6)
+        micSwitch.onTintColor = switchTintColor
         micSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                 y: 0.75)
         micSwitch.addTarget(self,
@@ -325,13 +329,13 @@ private extension AgoraSettingUIController {
         contentView.addSubview(micSwitch)
         
         audioLabel = UILabel(frame: .zero)
-        audioLabel.text = "SpeakerText".agedu_localized()
+        audioLabel.text = "fcr_media_speaker".agedu_localized()
         audioLabel.font = UIFont.systemFont(ofSize: 13)
         audioLabel.textColor = UIColor(hex: 0x191919)
         contentView.addSubview(audioLabel)
         
         audioSwitch = UISwitch()
-        audioSwitch.onTintColor = UIColor(hex: 0x357BF6)
+        audioSwitch.onTintColor = switchTintColor
         audioSwitch.transform = CGAffineTransform(scaleX: 0.75,
                                                   y: 0.75)
         audioSwitch.addTarget(self,
@@ -343,10 +347,10 @@ private extension AgoraSettingUIController {
         exitButton.titleLabel?.font = UIFont.systemFont(ofSize: 13)
         exitButton.setTitleColor(.white,
                                  for: .normal)
-        exitButton.setTitle("LeaveText".agedu_localized(),
+        exitButton.setTitle("fcr_room_leave_room".agedu_localized(),
                             for: .normal)
         exitButton.setBackgroundImage(
-            UIImage(color: UIColor(hex: 0x191919) ?? .white,
+            UIImage(color: exitColor,
                     size: CGSize(width: 1, height: 1)),
             for: .normal)
         exitButton.addTarget(self,
@@ -357,7 +361,7 @@ private extension AgoraSettingUIController {
         contentView.addSubview(exitButton)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.width.equalTo()(201)
             make?.height.equalTo()(220)

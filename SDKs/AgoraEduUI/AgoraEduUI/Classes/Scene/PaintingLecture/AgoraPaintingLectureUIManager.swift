@@ -8,7 +8,6 @@
 import AgoraUIBaseViews
 import AgoraEduContext
 import AudioToolbox
-import AgoraExtApp
 import AgoraWidget
 
 /// 房间控制器:
@@ -62,7 +61,7 @@ import AgoraWidget
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.createViews()
-        self.createConstrains()
+        self.createConstraint()
         
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -170,11 +169,7 @@ extension AgoraPaintingLectureUIManager: AgoraToolBoxUIControllerDelegate {
         case .vote: break
         case .countDown: break
         case .answerSheet: // 答题器
-            guard let extAppInfos = contextPool.extApp.getExtAppInfos(),
-                  let info = extAppInfos.first(where: {$0.appIdentifier == "io.agora.answerSheet"}) else {
-                return
-            }
-            contextPool.extApp.willLaunchExtApp(info.appIdentifier)
+            break
         default: break
         }
     }
@@ -220,7 +215,7 @@ private extension AgoraPaintingLectureUIManager {
         contentView.addSubview(spreadController.view)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(stateController.view.superview)
             make?.height.equalTo()(20)
@@ -248,8 +243,10 @@ private extension AgoraPaintingLectureUIManager {
             make?.height.equalTo()(AgoraFit.scale(112))
         }
         toolBarController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view)?.offset()(-12)
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -9 : -6)
             make?.bottom.equalTo()(boardController.view)?.offset()(-15)
+            make?.width.equalTo()(toolBarController.suggestSize.width)
+            make?.height.equalTo()(toolBarController.suggestSize.height)
         }
         spreadController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)

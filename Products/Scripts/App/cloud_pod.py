@@ -22,7 +22,6 @@ BaseProjPath = ExtcuteDir + "AgoraEducation" + ".xcodeproj"
 SourcePodContent =  """
     # common libs
     pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
-    pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
     pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
 
     # open source libs
@@ -38,7 +37,6 @@ SourcePodContent =  """
 
     # widgets
     pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
-    pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/AgoraExtApps/AgoraExtApps_Local.podspec'
 
     pod 'MLeaksFinder'
     post_install do |installer|

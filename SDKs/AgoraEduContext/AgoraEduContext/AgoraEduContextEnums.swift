@@ -16,8 +16,6 @@ import Foundation
     case small         = 4
     /// 大班课
     case lecture       = 2
-    /// 美术课
-    case paintingSmall = 5
 }
 
 /// 课堂状态

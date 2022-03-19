@@ -56,7 +56,7 @@ class AgoraToolBoxUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         updateLayout()
     }
 }
@@ -85,7 +85,7 @@ extension AgoraToolBoxUIController {
         view.addSubview(toolBoxView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         toolBoxView.mas_makeConstraints {[weak self] make in
             make?.left.right().top().bottom().equalTo()(self?.view)
         }

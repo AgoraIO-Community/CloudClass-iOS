@@ -6,120 +6,80 @@
   Copyright © 2020 Agora. All rights reserved.
 */
 
-ClassBeforeStartText = "Class will begin after：";
-ClassAfterStartText = "Class begins：";
-ClassAfterStopText = "Class ends：";
-title_before_class = "Class will begin";
+// room
+fcr_room_class_time_away = "Class will begin after：";
+fcr_room_class_started = "Class begins：";
+fcr_room_class_over = "The class has ended.";
+fcr_room_class_not_start = "Class will begin";
+fcr_room_class_end_warning = "The course has {xxx} m to end";
+fcr_room_close_warning = "The class is over, there are {xxx} to close the classroom";
+fcr_room_exit_warning = "Are you sure you want to quit the classroom?";
+fcr_room_exit = "Quit";
+fcr_room_start_class = "Start Class";
+fcr_room_one_to_one_tab_video = "Video";
+fcr_room_one_to_one_tab_chat = "Chat";
+fcr_room_leave_room = "Leave Classroom";
+fcr_room_loading = "Loading...";
+fcr_room_class_leave_class_title = "Leave Class";
+fcr_room_class_over_notice = "Over Notification";
+fcr_room_class_over = "The class has ended.";
+fcr_room_class_leave_cancel = "Cancel";
+fcr_room_class_leave_sure = "Sure";
+fcr_room_one_to_one_title = "One-to-One Classroom";
+fcr_room_small_title = "Small Classroom";
 
-// toast
-ClassEndWarningStartText = "The course has ";
-ClassEndWarningEndText = "m to end";
-ClassCloseWarningStartText = "The class is over, there are ";
-ClassCloseWarningEndText = " to close the classroom";
-ClassCloseWarningStart2Text = " ";
-ClassCloseWarningEnd2Text = "m before the classroom is closed";
-//CoursewareFullOnText = "The teacher turned on the full screen of the courseware";
-//CoursewareFullOffText = "The teacher turned off the full screen of the courseware";
-ClassExitWarningText = "Class is not end, are you sure you want to quit the classroom?";
-ClassExitTipText = "Quit";
-ClassThinkTipText = "Think again";
-ClassExitText = "Are you sure you want to exit the classroom?";
-
-// canvas
-CameraMuteText = "Your camera has been turned off";
-MicrophoneMuteText = "Your mic has been turned off";
-CameraUnMuteText = "Your camera has been turned on";
-MicrophoneUnMuteText = "Your mic has been turned on";
-
-// CoHost
-HandsUpTimeOutText = "Hands up timeout";
-RejectedCoHostText = "Teacher rejected your application";
-AcceptedCoHostText = "The teacher has invited you to stage，you can interact with others now";
-RemovedCoHostText = "You are not on stage now and you can not interact with others";
-HandsUpSuccessText = "Hands up successfully";
-HandsDownSuccessText = "Hands down successfully";
-CloseHandsUpText = "Teacher closed hands up mode";
-OpenHandsUpText = "Teacher opened hands up mode";
-
-// screenshare
-ScreensharedBySb = "The teacher starts to the screenshare";
-ScreenshareStoppedBySb = "The teacher stops the screenshare";
-
-long_press_to_wave_hands = "Long press to wave hands";
-
-kick_out_student = "Move out student";
-kick_out_once = "Move out of the classroom only once";
-kick_out_forever = "Prevent re-entry into the classroom";
-kick_out_submit = "Submit";
-kick_out_cancel = "Cancel";
-local_user_kicked_out = "You have been removed from the classroom";
-
-one_to_one_tab_video = "Video";
-one_to_one_tab_chat = "Chat";
-
-// Toast
-toast_student_stage_on = "The teacher invited you to the podium. Let's have a positive interaction with you";
-toast_student_stage_off = "You left the podium and can't interact with everyone for the time being";
-
-toast_student_audio_stream_on = "The teacher has turned on your microphone and you are able to speak now";
-toast_student_audio_stream_off = "The teacher has turned off your microphone. You are not able to speak now";
-
-toast_student_video_stream_on = "The teacher has turned on your camera. Let's have a positive interaction with you";
-toast_student_video_stream_off = "The teacher has turned off your camera. You can't interact with everyone for the time being";
-
-toast_reward_student_xx = "Congratulations to %@ for the award";
-
-// board
-board_granted = "You have been authorized by the teacher. Please use the whiteboard tool to interact";
-board_ungranted = "Your authorization has been cancelled by the teacher. You can't interact with whiteboard tools";
-
-// tool box
-toolbox_cloud_storage = "Cloud storage";
-
-toolbox_save_borad = "Save borad";
-
-toolbox_record_class = "Record";
-
-toolbox_vote = "Vote";
-
-toolbox_count_down = "Count down";
-
-toolbox_answer_sheet = "Answer sheet";
-
-// Network
-NetworkPoorText = "Poor local network connection,please check the network connection.";
-NetworkDisconnectedText = "The local network is disconnected,please check the network connection.";
+// user
+fcr_user_local_kick_out_notice = "Remove Notification";
+fcr_user_hands = "Long press to wave hands";
+fcr_user_kick_out = "Move out student";
+fcr_user_kick_out_once = "Move out of the classroom only once";
+fcr_user_kick_out_forever = "Prevent re-entry into the classroom";
+fcr_user_kick_out_submit = "Submit";
+fcr_user_kick_out_cancel = "Cancel";
+fcr_user_local_kick_out = "You have been removed from the classroom";
+fcr_user_local_start_co_hosting = "The teacher invited you to the podium. Let's have a positive interaction with you";
+fcr_user_local_stop_co_hosting = "You left the podium and can't interact with everyone for the time being";
+fcr_user_congratulation = "Congratulations to {xxx} for the award";
 
 // User List
-UserListMainTitle = "Member List";
-UserListTeacherName = "Teacher:";
-UserListCarouselTitle = "Carousel Setting";
-UserListName = "Student";
-UserListCoVideo = "Stage";
-UserListBoard = "Auth";
-UserListCamera = "Camera";
-UserListMicro = "Mute";
-UserListChat = "Silence";
-UserListReward = "Rewards";
-nameroll_kick_out = "Ban";
-// Setting
-CameraText = "Camera";
-DirectionText = "Direction";
-FrontText = "Front";
-BackText = "Back";
-MicrophoneText = "Microphone";
-SpeakerText = "Speaker";
-LeaveText = "Leave Classroom";
-// loading
-LoaingText = "Loading...";
-ReconnectingText = "reconnecting...";
-LoginOnAnotherDeviceText = "Account was logged in from remote device";
-// class state
-LeaveClassTitleText = "Leave Class";
-ClassOverNoticeText = "Over Notification";
-ClassOverText = "The class has ended.";
-LeaveClassText = "Are you sure you want to end get out of class?";
-CancelText = "Cancel";
-SureText = "Sure";
-CloseText = "Close";
-KickOutNoticeText = "Remove Notification";
+fcr_user_list = "Member List";
+fcr_user_list_teacher_name = "Teacher:";
+fcr_user_list_carousel_setting = "Carousel";
+fcr_user_list_student_name = "Student";
+fcr_user_list_stage = "Stage";
+fcr_user_list_auth = "Auth";
+fcr_user_list_video = "Camera";
+fcr_user_list_audio = "Microphone";
+fcr_user_list_reward = "Rewards";
+fcr_user_list_ban = "Ban";
+
+// stream
+fcr_stream_stop_video = "Your camera has been turned off";
+fcr_stream_stop_audio = "Your mic has been turned off";
+fcr_stream_start_video = "Your camera has been turned on";
+fcr_stream_start_audio = "Your mic has been turned on";
+
+// board
+fcr_netless_board_granted = "You have been authorized by the teacher. Please use the whiteboard tool to interact";
+fcr_netless_board_ungranted = "Your authorization has been cancelled by the teacher. You can't interact with whiteboard tools";
+
+// tool box
+fcr_tool_box_cloud_storage = "Cloud storage";
+fcr_tool_box_record_class = "Record";
+fcr_tool_box_poll = "Poll";
+fcr_tool_box_count_down = "Countdown";
+fcr_tool_box_popup_quiz = "Pop-up Quiz";
+
+// Media
+fcr_media_camera = "Camera";
+fcr_media_mic = "Microphone";
+fcr_media_camera_direction = "Direction";
+fcr_media_camera_direction_front = "Front";
+fcr_media_camera_direction_back = "Back";
+fcr_media_speaker = "Speaker";
+
+// Monitor
+fcr_monitor_network_poor = "Poor local network connection,please check the network connection.";
+fcr_monitor_network_disconnected = "The local network is disconnected,please check the network connection.";
+fcr_monitor_network_reconnecting = "reconnecting...";
+fcr_monitor_login_remote_device = "Account was logged in from remote device";

@@ -1,5 +1,5 @@
 //
-//  AgoraPollerWidgetModel.swift
+//  AgoraPollWidgetModel.swift
 //  AgoraEduUI
 //
 //  Created by LYY on 2022/3/2.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AgoraPollerWidgetSignal: Convertable {
+enum AgoraPollWidgetSignal: Convertable {
     case frameChange(CGRect)
     
     private enum CodingKeys: CodingKey {
@@ -44,9 +44,9 @@ enum AgoraPollerWidgetSignal: Convertable {
 }
 
 extension String {
-    func toPollerSignal() -> AgoraPollerWidgetSignal? {
+    func toPollSignal() -> AgoraPollWidgetSignal? {
         guard let messageDic = self.json(),
-              let signal = try AgoraPollerWidgetSignal.decode(messageDic) else {
+              let signal = try AgoraPollWidgetSignal.decode(messageDic) else {
                   return nil
               }
         return signal

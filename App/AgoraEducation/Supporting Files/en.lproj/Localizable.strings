@@ -12,8 +12,6 @@ BigClassText = "Lecture Hall";
 BreakOutClassText = "Break Out Classroom";
 MediumClassText = "Medium Classroom";
 
-OKText = "OK";
-CancelText = "Cancel";
 EyeProtectionText = "Eye protection";
 SettingText = "Setting";
 

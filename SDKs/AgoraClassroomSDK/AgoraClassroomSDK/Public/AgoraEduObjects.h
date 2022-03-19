@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <AgoraExtApp/AgoraExtApp.h>
 #import <AgoraWidget/AgoraWidget.h>
 #import "AgoraEduEnums.h"
 
@@ -85,8 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, id> *userProperties;
 // widgets
 @property (nonatomic, strong) NSDictionary<NSString *, AgoraWidgetConfig *> *widgets;
-// ext apps
-@property (nonatomic, strong) NSDictionary<NSString *, AgoraExtAppConfiguration *> *extApps;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid

@@ -63,7 +63,7 @@ class AgoraOneToOneRenderUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         createViews()
-        createConstrains()
+        createConstraint()
         contextPool.user.registerUserEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
@@ -90,14 +90,14 @@ private extension AgoraOneToOneRenderUIController {
             return
         }
         if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_stop_audio".agedu_localized())
         } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneUnMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_start_audio".agedu_localized())
         }
         if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_stop_video".agedu_localized())
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraUnMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_start_video".agedu_localized())
         }
     }
     
@@ -283,7 +283,7 @@ private extension AgoraOneToOneRenderUIController {
         studentView.addGestureRecognizer(tapStudent)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         if UIDevice.current.isPad {
             teacherView.mas_remakeConstraints { make in
                 make?.top.left().right().equalTo()(0)

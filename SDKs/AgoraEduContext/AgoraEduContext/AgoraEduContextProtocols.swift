@@ -9,6 +9,7 @@ import AgoraWidget
 import UIKit
 
 public typealias AgoraEduContextSuccess = () -> (Void)
+public typealias AgoraEduContextSuccessWithUsers = (Array<AgoraEduContextUserInfo>) -> (Void)
 public typealias AgoraEduContextSuccessWithString = (String) -> (Void)
 public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 
@@ -49,6 +50,12 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
+    /// 开始上课 (v2.2.0)
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func startClass(success: (() -> Void)?,
+                    failure: ((AgoraEduContextError) -> Void)?)
+    
     /// 加入房间 (v2.0.0)
     /// - parameter success: 请求成功
     /// - parameter failure: 请求失败
@@ -197,6 +204,23 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
+    /// 分页获取房间用户列表 (v2.2.0)
+    /// - parameter roleList: 角色列表
+    /// - parameter pageIndex: 页数
+    /// - parameter pageSize: 每页的用户个数
+    /// - parameter success: 上传成功，获取用户信息列表
+    /// - parameter failure: 上传失败
+    /// - returns: 用户信息数组
+    func getUserList(roleList: Array<AgoraEduContextUserRole.RawValue>,
+                     pageIndex: Int,
+                     pageSize: Int,
+                     success: AgoraEduContextSuccessWithUsers?,
+                     failure: AgoraEduContextFailure?)
+    
+    /// 获取轮播信息 (v2.2.0)
+    /// - returns: 轮播信息
+    func getCoHostCarouselInfo() -> AgoraEduContextCarouselInfo
+    
     /// 开启轮播 (v2.2.0)
     /// - parameter interval: 轮播的时间间隔，单位秒
     /// - parameter count: 每次轮播时，更换连麦用户的个数

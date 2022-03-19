@@ -151,10 +151,6 @@
     // AgoraWhiteboardWidget
     AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWhiteboardWidget class]
                                                                           widgetId:@"netlessBoard"];
-    // RTM IM Widget
-    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRtmIMWidget class]
-                                                             widgetId:@"AgoraChatWidget"];
-    widgets[rtm.widgetId] = rtm;
     
     NSString *courseFolder = [NSString stringWithFormat:@"%@/%@", NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
                                                                                                       NSUserDomainMask,
@@ -165,15 +161,21 @@
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     
-    // Countdown Widget
-    AgoraWidgetConfig *countdown = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownWidget class]
-                                                                widgetId:@"countdown"];
-    widgets[countdown.widgetId] = countdown;
+    // RTM IM Widget
+    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRtmIMWidget class]
+                                                             widgetId:@"AgoraChatWidget"];
+    widgets[rtm.widgetId] = rtm;
+
     
-    // Poller Widget
-    AgoraWidgetConfig *poller = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPollerWidget class]
-                                                                widgetId:@"polling"];
-    widgets[poller.widgetId] = poller;
+    // CountdownTimer Widget
+    AgoraWidgetConfig *countdownTimer = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownTimerWidget class]
+                                                                        widgetId:@"countdownTimer"];
+    widgets[countdownTimer.widgetId] = countdownTimer;
+    
+    // Poll Widget
+    AgoraWidgetConfig *poll = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPollWidget class]
+                                                              widgetId:@"poll"];
+    widgets[poll.widgetId] = poll;
     
     // Render Spread Widget
     AgoraWidgetConfig *spread = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRenderSpreadWidget class]
@@ -182,13 +184,13 @@
     
     // Cloud Widget
     AgoraWidgetConfig *cloud = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
-                                                                widgetId:@"AgoraCloudWidget"];
+                                                               widgetId:@"AgoraCloudWidget"];
     widgets[cloud.widgetId] = cloud;
     
-    // Answer Selector
-    AgoraWidgetConfig *answerSelector = [[AgoraWidgetConfig alloc] initWithClass:[AgoraAnswerSelectorWidget class]
-                                                                        widgetId:@"selector"];
-    widgets[answerSelector.widgetId] = answerSelector;
+    // PopupQuiz Selector
+    AgoraWidgetConfig *popupQuiz = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPopupQuizWidget class]
+                                                                   widgetId:@"popupQuiz"];
+    widgets[popupQuiz.widgetId] = popupQuiz;
     
     return widgets;
 }

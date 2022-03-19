@@ -18,64 +18,70 @@ struct AgoraSpreadWidgetInfo: Convertable {
     var user: AgoraSpreadWidgetUser
 }
 
-enum AgoraSpreadWidgetSignal {
+enum AgoraSpreadWidgetSignal: Convertable {
     case start(AgoraSpreadWidgetInfo)
     case changeFrame(AgoraSpreadWidgetInfo)
     case stop
     
-    var rawValue: Int {
-        switch self {
-        case .start(_):         return 0
-        case .changeFrame(_):   return 1
-        case .stop:             return 2
-        default:                return -1
+    
+    private enum CodingKeys: CodingKey {
+        case start
+        case changeFrame
+        case stop
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let _ = try? container.decodeNil(forKey: .stop) {
+            self = .stop
+        } else if let value = try? container.decode(AgoraSpreadWidgetInfo.self,
+                                                    forKey: .start) {
+            self = .start(value)
+        } else if let value = try? container.decode(AgoraSpreadWidgetInfo.self,
+                                                    forKey: .changeFrame) {
+            self = .changeFrame(value)
+        } else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: container.codingPath,
+                    debugDescription: "invalid data"
+                )
+            )
         }
     }
     
-    static func getType(rawValue: Int) -> Convertable.Type? {
-        switch rawValue {
-        case 0,1: return AgoraSpreadWidgetInfo.self
-        default:
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        switch self {
+        case .stop:
+            try container.encodeNil(forKey: .stop)
+        case .start(let x):
+            try container.encode(x,
+                                 forKey: .start)
+        case .changeFrame(let x):
+            try container.encode(x,
+                                 forKey: .changeFrame)
+        }
+    }
+    
+    func toMessageString() -> String? {
+        guard let dic = self.toDictionary(),
+           let str = dic.jsonString() else {
             return nil
         }
-    }
-    
-    static func makeSignal(rawValue: Int,
-                           body: Convertable?) -> AgoraSpreadWidgetSignal? {
-        switch rawValue {
-        case 0:
-            if let x = body as? AgoraSpreadWidgetInfo {
-                return .start(x)
-            }
-        case 1:
-            if let x = body as? AgoraSpreadWidgetInfo {
-                return .changeFrame(x)
-            }
-        default:
-            break
-        }
-        return nil
+        return str
     }
 }
-
 
 extension String {
     func toSpreadSignal() -> AgoraSpreadWidgetSignal? {
         guard let dic = self.json(),
-              let signalRaw = dic["signal"] as? Int else {
+              let signal = try AgoraSpreadWidgetSignal.decode(dic) else {
                   return nil
               }
-        if signalRaw == AgoraSpreadWidgetSignal.stop.rawValue {
-            return .stop
-        }
         
-        if let bodyDic = dic["body"] as? [String:Any],
-           let type = AgoraSpreadWidgetSignal.getType(rawValue: signalRaw),
-           let obj = try type.decode(bodyDic) {
-            return AgoraSpreadWidgetSignal.makeSignal(rawValue: signalRaw,
-                                                      body: obj)
-        }
-        
-        return nil
+        return signal
     }
 }

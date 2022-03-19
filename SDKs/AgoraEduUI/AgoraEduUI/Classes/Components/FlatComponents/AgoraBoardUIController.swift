@@ -9,8 +9,8 @@ import AgoraEduContext
 import AgoraWidget
 
 class AgoraBoardUIController: UIViewController {
-    var boardWidget: AgoraBaseWidget?
-    var contextPool: AgoraEduContextPool!
+    private var boardWidget: AgoraBaseWidget?
+    private var contextPool: AgoraEduContextPool!
     
     private var localGranted = false {
         didSet {
@@ -18,18 +18,19 @@ class AgoraBoardUIController: UIViewController {
                 return
             }
             if !localGranted {
-                AgoraToast.toast(msg: "board_ungranted".agedu_localized(),
+                AgoraToast.toast(msg: "fcr_netless_board_ungranted".agedu_localized(),
                                  type: .error)
             } else if localGranted,
                         contextPool.user.getLocalUserInfo().userRole != .teacher {
-                AgoraToast.toast(msg: "board_granted".agedu_localized(),
+                AgoraToast.toast(msg: "fcr_netless_board_granted".agedu_localized(),
                                  type: .notice)
             }
         }
     } 
     
     init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
         contextPool = context
         view.backgroundColor = .clear
         
@@ -51,17 +52,25 @@ class AgoraBoardUIController: UIViewController {
 // MARK: - private
 private extension AgoraBoardUIController {
     func initBoardWidget() {
-        if let boardConfig = contextPool.widget.getWidgetConfig(kBoardWidgetId) {
-            let boardWidget = contextPool.widget.create(boardConfig)
-            contextPool.widget.add(self,
-                                   widgetId: boardConfig.widgetId)
-            view.isUserInteractionEnabled = true
-            view.addSubview(boardWidget.view)
-            self.boardWidget = boardWidget
+        guard let boardConfig = contextPool.widget.getWidgetConfig(kBoardWidgetId) else {
+            return
+        }
+        
+        let boardWidget = contextPool.widget.create(boardConfig)
+        contextPool.widget.add(self,
+                               widgetId: boardConfig.widgetId)
+        let group = AgoraUIGroup()
+        boardWidget.view.backgroundColor = group.color.board_bg_color
+        boardWidget.view.layer.borderColor = group.color.board_border_color
+        boardWidget.view.layer.borderWidth = group.frame.board_border_width
+        boardWidget.view.layer.cornerRadius = group.frame.board_corner_radius
+        boardWidget.view.layer.masksToBounds = true
+        
+        view.addSubview(boardWidget.view)
+        self.boardWidget = boardWidget
 
-            boardWidget.view.mas_makeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(0)
-            }
+        boardWidget.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
         }
     }
     

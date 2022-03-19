@@ -37,7 +37,7 @@ target 'AgoraEducation' do
  
   # agora libs
   pod 'AgoraRtm_iOS', '1.4.8'
-  pod 'Whiteboard', '2.16.2'
+  pod 'Whiteboard', '2.16.6'
   pod 'AgoraRtcEngine_iOS', '3.4.6'
   pod 'HyphenateChat', '3.8.6'
  
@@ -45,7 +45,6 @@ target 'AgoraEducation' do
 
     # common libs
     pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
-    pod 'AgoraExtApp', :path => '../../apaas-common-libs-ios/SDKs/AgoraExtApp/AgoraExtApp_Local.podspec'
     pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
 
     # open source libs
@@ -61,7 +60,6 @@ target 'AgoraEducation' do
 
     # widgets
     pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
-    pod 'AgoraExtApps', :path => '../../open-apaas-extapp-ios/AgoraExtApps/AgoraExtApps_Local.podspec'
 
     pod 'MLeaksFinder'
     post_install do |installer|

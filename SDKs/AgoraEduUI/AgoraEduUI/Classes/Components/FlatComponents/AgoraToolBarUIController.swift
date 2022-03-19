@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AgoraExtApp
 import AgoraWidget
 import AgoraEduContext
 import AgoraUIBaseViews
@@ -21,13 +20,15 @@ protocol AgoraToolBarDelegate: NSObject {
 }
 
 // MARK: - AgoraToolBarUIController
-private let kButtonSize: CGFloat = AgoraFit.scale(32)
-private let kGap: CGFloat = 12.0
-private let kDefaultTag: Int = 3389
 class AgoraToolBarUIController: UIViewController {
     
     weak var delegate: AgoraToolBarDelegate?
-    
+    var suggestSize: CGSize {
+        get {
+            return CGSize(width: UIDevice.current.isPad ? 34 : 30,
+                          height: CGFloat(tools.count) * (kButtonLength + kGap) - kGap)
+        }
+    }
     public enum ItemType {
         case setting, nameRoll, message, handsup, handsList, brushTool
         
@@ -43,6 +44,10 @@ class AgoraToolBarUIController: UIViewController {
             }
         }
     }
+    private let kButtonLength: CGFloat = UIDevice.current.isPad ? 34 : 32
+    private let kGap: CGFloat = 12.0
+    private let kDefaultTag: Int = 3389
+    
     /** 展示的工具*/
     public var tools = [ItemType]()
     
@@ -55,6 +60,7 @@ class AgoraToolBarUIController: UIViewController {
     private var handsupCell: AgoraToolBarHandsUpCell?
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
+    
     /** 画笔图片*/
     private var brushImage = UIImage.agedu_named("ic_brush_clicker")
     /** 画笔颜色*/
@@ -94,7 +100,8 @@ class AgoraToolBarUIController: UIViewController {
     }
     
     init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: nil,
+                   bundle: nil)
         contextPool = context
     }
     
@@ -106,7 +113,7 @@ class AgoraToolBarUIController: UIViewController {
         super.viewDidLoad()
         
         self.createViews()
-        self.createConstrains()
+        self.createConstraint()
         self.updateDataSource()
     }
     
@@ -151,8 +158,7 @@ private extension AgoraToolBarUIController {
         let count = CGFloat(self.dataSource.count)
         collectionView.mas_remakeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
-            make?.width.equalTo()(kButtonSize)
-            make?.height.equalTo()((kButtonSize + kGap) * count - kGap)
+            make?.height.equalTo()((kButtonLength + kGap) * count - kGap)
         }
 
         UIView.animate(withDuration: 2) {
@@ -211,6 +217,7 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
         if tool == .message {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarRedDotCell.self,
                                                           for: indexPath)
+//            cell.baseTintColor = baseTintColor
             cell.setImage(tool.cellImage())
             cell.aSelected = (selectedTool == tool)
             cell.redDot.isHidden = !messageRemind
@@ -270,8 +277,8 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: kButtonSize,
-                      height: kButtonSize)
+        return CGSize(width: kButtonLength,
+                      height: kButtonLength)
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -332,11 +339,13 @@ private extension AgoraToolBarUIController {
         view.addSubview(collectionView)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         collectionView.mas_remakeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-            make?.width.equalTo()(kButtonSize)
-            make?.height.equalTo()((kButtonSize + kGap) * 5 - kGap)
+            make?.top.bottom().equalTo()(0)
+            make?.left.equalTo()(kGap / 2)
+            make?.right.equalTo()(-kGap / 2)
+            make?.width.equalTo()(kButtonLength)
+            make?.height.equalTo()((kButtonLength + kGap) * 5 - kGap)
         }
     }
 }

@@ -27,10 +27,6 @@ extension Convertable {
     }
 }
 
-extension Array : Convertable where Element == String {
-    
-}
-
 extension Decodable {
     public static func decode(_ dic: [String : Any]) -> Self? {
         guard JSONSerialization.isValidJSONObject(dic),

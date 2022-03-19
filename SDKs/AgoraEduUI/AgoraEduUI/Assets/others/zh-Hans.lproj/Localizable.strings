@@ -6,130 +6,85 @@
   Copyright © 2020 Agora. All rights reserved.
 */
 
-ClassBeforeStartText = "距离上课还有：";
-ClassAfterStartText = "已上课：";
-ClassAfterStopText = "课程已结束：";
-title_before_class = "课程未开始";
+/*
+ * 需要替换的字符串统一为"{xxx}"
+ */
 
-// toast
-ClassEndWarningStartText = "课程还有";
-ClassEndWarningEndText = "分钟结束";
-ClassCloseWarningStartText = "课程结束咯，还有";
-ClassCloseWarningEndText = "关闭教室";
-ClassCloseWarningStart2Text = "距离教室关闭还有";
-ClassCloseWarningEnd2Text = "分钟";
-//CoursewareFullOnText = "老师开启了课件全屏";
-//CoursewareFullOffText = "老师关闭了课件全屏";
-ClassExitWarningText = "课程还没结束，是否确定要退出教室？";
-ClassExitTipText = "退出教室";
-ClassThinkTipText = "再想一下";
-OKText = "確定";
-ClassExitText = "是否确定要退出教室？";
-ClassOverText = "課程已結束";
+// room
+fcr_room_class_time_away = "距离上课还有：";
+fcr_room_class_started = "已上课：";
+fcr_room_class_over = "课程已结束：";
+fcr_room_class_not_start = "课程未开始";
+fcr_room_class_end_warning = "课程还有{xxx}分钟结束";
+fcr_room_close_warning = "距离教室关闭还有{xxx}分钟";
+fcr_room_exit_warning = "是否确定要退出教室？";
+fcr_room_exit = "退出教室";
+fcr_room_class_over = "課程已結束";
+fcr_room_start_class = "开始上课";
+fcr_room_one_to_one_tab_video = "视频";
+fcr_room_one_to_one_tab_chat = "聊天";
+fcr_room_leave_room = "退出教室";
+fcr_room_loading = "加载中...";
+fcr_room_class_leave_class_title = "下课确认";
+fcr_room_class_over_notice = "结束通知";
+fcr_room_class_over = "课程已结束";
+fcr_room_class_leave_cancel = "取消";
+fcr_room_class_leave_sure = "确认";
+fcr_room_one_to_one_title = "一对一课堂";
+fcr_room_small_title = "小班课";
 
-// canvas
-CameraMuteText = "摄像头被关闭";
-MicrophoneMuteText = "你暂时不能发言了";
-CameraUnMuteText = "摄像头被打开";
-MicrophoneUnMuteText = "你可以发言了";
-
-// loading
-BoardWareProcessText = "课件加载中，请稍后...";
-BoardWareJumpText = "跳过";
-BoardWareFailTitleText = "课件加载失败!";
-BoardWareFailMsgText = "课件未能加载成功，您可以点击重新加载重试，或者从云盘中播放课件";
-BoardWareCloseText = "关闭";
-BoardWareRetryText = "重新加载";
-
-// CoHost
-HandsUpTimeOutText = "举手超时";
-RejectedCoHostText = "老师拒绝了你的举手申请";
-AcceptedCoHostText = "你已被老师邀请上台，请积极互动哦";
-RemovedCoHostText = "你已下台，暂时不能进行互动了哦";
-HandsUpSuccessText = "举手成功";
-HandsDownSuccessText = "取消举手成功";
-CloseHandsUpText = "老师关闭了举手功能";
-OpenHandsUpText = "老师开启了举手功能";
-
-// screenshare
-ScreensharedBySb = "老师发起了屏幕共享";
-ScreenshareStoppedBySb = "老师停止了屏幕共享";
-
-long_press_to_wave_hands = "举手请长按";
-
-kick_out_student = "移出学生";
-kick_out_once = "仅移出教室一次";
-kick_out_forever = "禁止再次进入教室";
-kick_out_submit = "确定";
-kick_out_cancel = "取消";
-local_user_kicked_out = "你被移出教室";
-
-one_to_one_tab_video = "视频";
-one_to_one_tab_chat = "聊天";
-
-// Toast
-toast_student_stage_on = "老师邀请你上台了，与大家积极互动吧";
-toast_student_stage_off = "你离开讲台了，暂时无法与大家互动";
-
-toast_student_audio_stream_on = "老师已打开你的麦克风，你可以自由发言了";
-toast_student_audio_stream_off = "老师已关闭你的麦克风，你暂时不能发言了";
-
-toast_student_video_stream_on = "老师已打开你的摄像头，与大家积极互动吧";
-toast_student_video_stream_off = "老师已关闭你的摄像头，你暂时不能与大家视频互动";
-
-toast_reward_student_xx = "祝贺%@获得奖励";
-
-// board
-board_granted = "你已被老师授权，请使用白板工具互动";
-board_ungranted = "你已被老师收回授权，无法使用白板工具互动";
-
-// tool box
-toolbox_cloud_storage = "云盘";
-
-toolbox_save_borad = "保存板书";
-
-toolbox_record_class = "录制";
-
-toolbox_vote = "投票";
-
-toolbox_count_down = "倒计时";
-
-toolbox_answer_sheet = "答题器";
-
-// Network
-NetworkPoorText = "当前网络质量不佳,请检查设备网络连接";
-NetworkDisconnectedText = "当前网络已断开,请检查设备网络连接";
+// user
+fcr_user_local_kick_out_notice = "移出通知";
+fcr_user_hands = "举手请长按";
+fcr_user_kick_out = "移出学生";
+fcr_user_kick_out_once = "仅移出教室一次";
+fcr_user_kick_out_forever = "禁止再次进入教室";
+fcr_user_kick_out_submit = "确定";
+fcr_user_kick_out_cancel = "取消";
+fcr_user_local_kick_out = "你被移出教室";
+fcr_user_local_start_co_hosting = "老师邀请你上台了，与大家积极互动吧";
+fcr_user_local_stop_co_hosting = "你离开讲台了，暂时无法与大家互动";
+fcr_user_congratulation = "祝贺{xxx}获得奖励";
 
 // user list
-UserListMainTitle = "花名册";
-UserListTeacherName = "教师姓名:";
-UserListCarouselTitle = "轮播设置";
-UserListName = "学生姓名";
-UserListCoVideo = "上下台";
-UserListBoard = "授权";
-UserListCamera = "摄像头";
-UserListMicro = "麦克风";
-UserListChat = "禁言";
-UserListReward = "奖励";
-nameroll_kick_out = "踢人";
-// Setting
-CameraText = "摄像头";
-DirectionText = "方向";
-FrontText = "前";
-BackText = "后";
-MicrophoneText = "麦克风";
-SpeakerText = "扬声器";
-LeaveText = "退出教室";
-// loading
-LoaingText = "加载中...";
-ReconnectingText = "重连中...";
-LoginOnAnotherDeviceText = "账号在远端设备登录";
-// class state
-LeaveClassTitleText = "下课确认";
-ClassOverNoticeText = "结束通知";
-ClassOverText = "课程已结束";
-LeaveClassText = "你确定要下课吗?";
-CloseText = "关闭";
-CancelText = "取消";
-SureText = "确认";
-KickOutNoticeText = "移出通知";
+fcr_user_list = "花名册";
+fcr_user_list_teacher_name = "教师姓名:";
+fcr_user_list_carousel_setting = "轮播";
+fcr_user_list_student_name = "学生姓名";
+fcr_user_list_stage = "上下台";
+fcr_user_list_auth = "授权";
+fcr_user_list_video = "摄像头";
+fcr_user_list_audio = "麦克风";
+fcr_user_list_reward = "奖励";
+fcr_user_list_ban = "踢人";
+
+// stream
+fcr_stream_stop_video = "你的视频被老师停止了";
+fcr_stream_stop_audio = "你暂时不能发言了";
+fcr_stream_start_video = "你的视频被老师启用了";
+fcr_stream_start_audio = "你可以发言了";
+
+// board
+fcr_netless_board_granted = "你已被老师授权，请使用白板工具互动";
+fcr_netless_board_ungranted = "你已被老师收回授权，无法使用白板工具互动";
+
+// tool box
+fcr_tool_box_cloud_storage = "云盘";
+fcr_tool_box_record_class = "录制";
+fcr_tool_box_poll = "投票";
+fcr_tool_box_count_down = "倒计时";
+fcr_tool_box_popup_quiz = "答题器";
+
+// Media
+fcr_media_camera = "摄像头";
+fcr_media_mic = "麦克风";
+fcr_media_camera_direction = "方向";
+fcr_media_camera_direction_front = "前";
+fcr_media_camera_direction_back = "后";
+fcr_media_speaker = "扬声器";
+
+// Monitor
+fcr_monitor_network_poor = "当前网络质量不佳,请检查设备网络连接";
+fcr_monitor_network_disconnected = "当前网络已断开,请检查设备网络连接";
+fcr_monitor_network_reconnecting = "重连中...";
+fcr_monitor_login_remote_device = "账号在远端设备登录";

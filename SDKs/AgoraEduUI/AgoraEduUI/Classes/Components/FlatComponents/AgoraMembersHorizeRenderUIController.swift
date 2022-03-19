@@ -85,7 +85,7 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         super.viewDidLoad()
         
         createViews()
-        createConstrains()
+        createConstraint()
         contextPool.user.registerUserEventHandler(self)
         contextPool.stream.registerStreamEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
@@ -224,14 +224,14 @@ private extension AgoraMembersHorizeRenderUIController {
             return
         }
         if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_stop_audio".agedu_localized())
         } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
-            AgoraToast.toast(msg: "MicrophoneUnMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_start_audio".agedu_localized())
         }
         if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_stop_video".agedu_localized())
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
-            AgoraToast.toast(msg: "CameraUnMuteText".agedu_localized())
+            AgoraToast.toast(msg: "fcr_stream_start_video".agedu_localized())
         }
     }
     
@@ -427,7 +427,8 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
                         didEndDisplaying cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
         if let current = cell as? AgoraRenderMemberCell {
-            current.renderView.setModel(model: nil, delegate: self)
+            current.renderView.setModel(model: nil,
+                                        delegate: self)
         }
     }
     
@@ -474,11 +475,12 @@ extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
 // MARK: - Creations
 private extension AgoraMembersHorizeRenderUIController {
     func createViews() {
+        var ui = AgoraUIGroup()
         contentView = UIView()
         view.addSubview(contentView)
         
         teacherView = AgoraRenderMemberView(frame: .zero)
-        teacherView.layer.cornerRadius = AgoraFit.scale(2)
+        teacherView.layer.cornerRadius = ui.frame.small_render_cell_corner_radius
         teacherView.clipsToBounds = true
         teacherView.isHidden = true
         contentView.addSubview(teacherView)
@@ -513,9 +515,9 @@ private extension AgoraMembersHorizeRenderUIController {
         
         leftButton = UIButton(type: .custom)
         leftButton.isHidden = true
-        leftButton.layer.cornerRadius = 2.0
+        leftButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
         leftButton.clipsToBounds = true
-        leftButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        leftButton.backgroundColor = ui.color.render_left_right_button_color
         leftButton.addTarget(self,
                              action: #selector(onClickLeft(_:)),
                              for: .touchUpInside)
@@ -525,9 +527,9 @@ private extension AgoraMembersHorizeRenderUIController {
         
         rightButton = UIButton(type: .custom)
         rightButton.isHidden = true
-        rightButton.layer.cornerRadius = 2.0
+        rightButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
         rightButton.clipsToBounds = true
-        rightButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        rightButton.backgroundColor = ui.color.render_left_right_button_color
         rightButton.addTarget(self,
                               action: #selector(onClickRight(_:)),
                               for: .touchUpInside)
@@ -542,7 +544,7 @@ private extension AgoraMembersHorizeRenderUIController {
         collectionView.addGestureRecognizer(tap)
     }
     
-    func createConstrains() {
+    func createConstraint() {
         contentView.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.top.equalTo()(0)

@@ -67,6 +67,39 @@ import Foundation
     }
 }
 
+@objcMembers public class AgoraEduContextCarouselInfo: NSObject {
+    // 轮播是否开启
+    public var state: Bool
+    // 每次轮播时，从用户列表抽取的方式
+    public var type: AgoraEduContextCoHostCarouselType
+    // 满足轮播的条件
+    public var condition: AgoraEduContextCoHostCarouselCondition
+    // 轮播的时间间隔，单位秒
+    public var interval: Int
+    // 每次轮播时，更换连麦用户的个数
+    public var count: Int
+    
+    public init(state: Bool,
+                type: AgoraEduContextCoHostCarouselType,
+                condition: AgoraEduContextCoHostCarouselCondition,
+                interval: Int,
+                count: Int) {
+        self.state = state
+        self.type = type
+        self.condition = condition
+        self.interval = interval
+        self.count = count
+    }
+    
+    public static func defaultConfig() -> AgoraEduContextCarouselInfo {
+        return AgoraEduContextCarouselInfo(state: false,
+                                           type: .sequence,
+                                           condition: .none,
+                                           interval: 0,
+                                           count: 0)
+    }
+}
+
 // MARK: - Media
 /// 视频流配置
 @objcMembers public class AgoraEduContextVideoStreamConfig: NSObject {

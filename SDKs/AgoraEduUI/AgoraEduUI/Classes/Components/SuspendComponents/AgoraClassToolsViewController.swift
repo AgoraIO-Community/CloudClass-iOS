@@ -9,17 +9,21 @@ import AgoraEduContext
 import AgoraWidget
 import UIKit
 
-class AgoraClassToolsViewController: UIViewController {    
+class AgoraClassToolsViewController: UIViewController {
     /**Data*/
     private var contextPool: AgoraEduContextPool!
-    private let widgetIdList = [PollerWidgetId,
-                                AnswerSelectorWidgetId,
-                                CountdownWidgetId]
+    private let widgetIdList = [PollWidgetId,
+                                PopupQuizWidgetId,
+                                CountdownTimerWidgetId]
+    /**Frame*/
+    private var pollSize = CGSize.zero
+    private var popupQuizSize = CGSize.zero
+    private var countdownTimeSize = CGSize.zero
     
     /**Widgets**/
-    private var answerSelectorWidget: AgoraBaseWidget?
-    private var pollerWidget: AgoraBaseWidget?
-    private var countdownWidget: AgoraBaseWidget?
+    private var popupQuizWidget: AgoraBaseWidget?
+    private var pollWidget: AgoraBaseWidget?
+    private var countdownTimerWidget: AgoraBaseWidget?
     
     init(context: AgoraEduContextPool) {
         self.contextPool = context
@@ -27,13 +31,16 @@ class AgoraClassToolsViewController: UIViewController {
                    bundle: nil)
     }
     
+    override func loadView() {
+        view = AgoraBaseUIContainer()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
+    } 
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
         contextPool.room.registerRoomEventHandler(self)
         contextPool.widget.add(self)
     }
@@ -61,18 +68,10 @@ extension AgoraClassToolsViewController: AgoraWidgetActivityObserver {
 extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard let signal = message.toCountdownSignal() else {
-            return
-        }
-        switch signal {
-        case .getTimestamp:
-            let ts = contextPool.monitor.getSyncTimestamp()
-            if let message = AgoraCountdownWidgetSignal.sendTimestamp(ts).toMessageString() {
-                contextPool.widget.sendMessage(toWidget: CountdownWidgetId,
-                                               message: message)
-            }
-        default:
-            break
+        if let size = parseSizeMessage(widgetId: widgetId,
+                                       message: message) {
+            updateWidgetFrame(widgetId,
+                              size: size)
         }
     }
 }
@@ -80,25 +79,9 @@ extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
 extension AgoraClassToolsViewController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
                                   widgetId: String) {
-        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
-        
-        guard let targetView = getWidget(widgetId)?.view else {
-            return
-        }
-        
-        view.bringSubviewToFront(targetView)
-        view.layoutIfNeeded()
-        
-        targetView.mas_remakeConstraints { make in
-            make?.left.equalTo()(frame.minX)
-            make?.top.equalTo()(frame.minY)
-            make?.width.equalTo()(frame.width)
-            make?.height.equalTo()(frame.height)
-        }
-        
-        UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.view.layoutIfNeeded()
-        }
+        let size = getWidgetSize(widgetId)
+        updateWidgetFrame(widgetId,
+                          size: size)
     }
 }
 
@@ -120,6 +103,45 @@ private extension AgoraClassToolsViewController {
         }
     }
     
+    func parseSizeMessage(widgetId: String,
+                          message: String) -> CGSize? {
+        guard let json = message.json(),
+           let sizeDic = json["size"] as? [String: Any],
+           let width = sizeDic["width"] as? CGFloat,
+           let height = sizeDic["height"] as? CGFloat else {
+            return nil
+        }
+        
+        let size = CGSize(width: width,
+                          height: height)
+        
+        switch widgetId {
+        case PollWidgetId:
+            pollSize = size
+        case PopupQuizWidgetId:
+            popupQuizSize = size
+        case CountdownTimerWidgetId:
+            countdownTimeSize = size
+        default:
+            break
+        }
+        
+        return size
+    }
+    
+    func getWidgetSize(_ widgetId: String) -> CGSize {
+        switch widgetId {
+        case PollWidgetId:
+            return pollSize
+        case PopupQuizWidgetId:
+            return popupQuizSize
+        case CountdownTimerWidgetId:
+            return countdownTimeSize
+        default:
+            return .zero
+        }
+    }
+    
     func createWidget(_ widgetId: String) {
         let widgetController = contextPool.widget
         
@@ -132,56 +154,37 @@ private extension AgoraClassToolsViewController {
             return
         }
         
-        let widget = contextPool.widget.create(config)
-        contextPool.widget.addObserver(forWidgetSyncFrame: self,
-                                       widgetId: widgetId)
-        contextPool.widget.add(self,
-                               widgetId: widgetId)
+        widgetController.addObserver(forWidgetSyncFrame: self,
+                                     widgetId: widgetId)
+        widgetController.add(self,
+                             widgetId: widgetId)
         
-        view.isUserInteractionEnabled = true
+        let widget = widgetController.create(config)
+        
         view.addSubview(widget.view)
         
         switch widgetId {
-        case PollerWidgetId:
-            pollerWidget = widget
-        case CountdownWidgetId:
-            countdownWidget = widget
-        case AnswerSelectorWidgetId:
-            answerSelectorWidget = widget
+        case PollWidgetId:
+            pollWidget = widget
+        case CountdownTimerWidgetId:
+            countdownTimerWidget = widget
+        case PopupQuizWidgetId:
+            popupQuizWidget = widget
         default:
             return
         }
         
-        if widgetId != AnswerSelectorWidgetId {
-            widget.view.mas_makeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(0)
-            }
-        } else {
-            let syncTimestamp = contextPool.monitor.getSyncTimestamp()
-            let tsDic = ["syncTimestamp": syncTimestamp]
-            
-            if let string = tsDic.jsonString() {
-                contextPool.widget.sendMessage(toWidget: widgetId,
-                                               message: string)
-            }
-            
-            widget.view.mas_makeConstraints { (make) in
-                make?.centerX.equalTo()(0)
-                make?.centerY.equalTo()(0)
-                make?.width.equalTo()(240)
-                make?.height.equalTo()(180)
-            }
-        }
+        sendWidgetCurrentTimestamp(widgetId)
     }
     
     func getWidget(_ widgetId: String) -> AgoraBaseWidget? {
         switch widgetId {
-        case PollerWidgetId:
-            return pollerWidget
-        case CountdownWidgetId:
-            return countdownWidget
-        case AnswerSelectorWidgetId:
-            return answerSelectorWidget
+        case PollWidgetId:
+            return pollWidget
+        case CountdownTimerWidgetId:
+            return countdownTimerWidget
+        case PopupQuizWidgetId:
+            return popupQuizWidget
         default:
             return nil
         }
@@ -193,15 +196,15 @@ private extension AgoraClassToolsViewController {
         }
         
         switch widgetId {
-        case PollerWidgetId:
-            pollerWidget?.view.removeFromSuperview()
-            pollerWidget = nil
-        case CountdownWidgetId:
-            countdownWidget?.view.removeFromSuperview()
-            countdownWidget = nil
-        case AnswerSelectorWidgetId:
-            answerSelectorWidget?.view.removeFromSuperview()
-            answerSelectorWidget = nil
+        case PollWidgetId:
+            pollWidget?.view.removeFromSuperview()
+            pollWidget = nil
+        case CountdownTimerWidgetId:
+            countdownTimerWidget?.view.removeFromSuperview()
+            countdownTimerWidget = nil
+        case PopupQuizWidgetId:
+            popupQuizWidget?.view.removeFromSuperview()
+            popupQuizWidget = nil
         default:
             break
         }
@@ -212,5 +215,47 @@ private extension AgoraClassToolsViewController {
                       widgetId: widgetId)
         widget.removeObserver(forWidgetSyncFrame: self,
                               widgetId: widgetId)
+    }
+    
+    func updateWidgetFrame(_ widgetId: String,
+                           size: CGSize) {
+        guard widgetIdList.contains(widgetId) else {
+            return
+        }
+        
+        guard let targetView = getWidget(widgetId)?.view else {
+            return
+        }
+        
+        let widget = contextPool.widget
+        let syncFrame = widget.getWidgetSyncFrame(widgetId)
+        
+        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view,
+                                                        displayWidth: size.width,
+                                                        displayHeight: size.height)
+        
+        view.bringSubviewToFront(targetView)
+        view.layoutIfNeeded()
+        
+        targetView.mas_remakeConstraints { make in
+            make?.left.equalTo()(frame.origin.x)
+            make?.top.equalTo()(frame.origin.y)
+            make?.width.equalTo()(size.width)
+            make?.height.equalTo()(size.height)
+        }
+        
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func sendWidgetCurrentTimestamp(_ widgetId: String) {
+        let syncTimestamp = contextPool.monitor.getSyncTimestamp()
+        let tsDic = ["syncTimestamp": syncTimestamp]
+        
+        if let string = tsDic.jsonString() {
+            contextPool.widget.sendMessage(toWidget: widgetId,
+                                           message: string)
+        }
     }
 }
