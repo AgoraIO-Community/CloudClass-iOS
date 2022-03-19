@@ -117,12 +117,14 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
             return
         }
         // 算出落点的frame
-        let rect = formView.convert(formView.bounds, to: self.view)
+        let rect = formView.convert(formView.bounds,
+                                    to: self.view)
         var point = CGPoint(x: rect.minX - 8 - animaView.frame.size.width, y: rect.minY)
         let estimateFrame = CGRect(origin: point,
                                  size: animaView.frame.size)
         if estimateFrame.maxY > self.contentView.frame.maxY - 10 {
-            point.y = self.contentView.frame.maxY - 10 - animaView.bounds.height
+            let gap: CGFloat = UIDevice.current.isPad ? 20 : 15
+            point.y = self.contentView.frame.maxY - gap - animaView.bounds.height
         }
         animaView.frame = CGRect(origin: point, size: animaView.frame.size)
         // 运算动画锚点

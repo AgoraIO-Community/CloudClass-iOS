@@ -66,7 +66,6 @@ class AgoraRoomStateUIController: UIViewController {
 // MARK: - Private
 private extension AgoraRoomStateUIController {
     func setup() {
-        self.stateView.titleLabel.text = self.contextPool.room.getRoomInfo().roomName
         let info = self.contextPool.room.getClassInfo()
         self.timeInfo = AgoraClassTimeInfo(state: info.state,
                                            startTime: info.startTime,
@@ -328,6 +327,7 @@ private extension AgoraRoomStateUIController {
         
         stateView = AgoraRoomStateBar(frame: .zero)
         stateView.backgroundColor = ui.color.room_state_bg_color
+        self.stateView.titleLabel.text = "fcr_room_small_title".agedu_localized()
         stateView.titleLabel.textColor = ui.color.room_state_label_before_color
         stateView.timeLabel.textColor = ui.color.room_state_label_before_color
         

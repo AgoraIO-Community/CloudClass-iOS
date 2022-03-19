@@ -68,7 +68,7 @@ private extension AgoraRoomStateBar {
         
         titleLabel = AgoraBaseUILabel()
         titleLabel.font = UIFont.systemFont(ofSize: 9)
-        titleLabel.textColor = ui.color.room_state_time_color
+        titleLabel.textColor = ui.color.room_state_title_color
         addSubview(titleLabel)
     }
     
@@ -83,12 +83,12 @@ private extension AgoraRoomStateBar {
             make?.centerY.equalTo()(netStateView.superview)
         }
         timeLabel.mas_makeConstraints { make in
-            make?.width.greaterThanOrEqualTo()(84)
+            make?.width.greaterThanOrEqualTo()(60)
             make?.centerY.equalTo()(timeLabel.superview)
             if #available(iOS 11.0, *) {
-                make?.right.equalTo()(self.mas_safeAreaLayoutGuideRight)?.offset()(-5)
+                make?.right.equalTo()(self.mas_safeAreaLayoutGuideRight)?.offset()(UIDevice.current.isPad ? -12 : -6)
             } else {
-                make?.right.equalTo()(self)?.offset()(-5)
+                make?.right.equalTo()(self)?.offset()(UIDevice.current.isPad ? -12 : -6)
             }
         }
         sepLine.mas_makeConstraints { make in

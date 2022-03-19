@@ -273,7 +273,6 @@ extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
-        addChild(classStateController)
         contentView.addSubview(classStateController.view)
         
         classStateController.view.mas_makeConstraints { make in
@@ -335,6 +334,7 @@ private extension AgoraLectureUIManager {
         
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             toolBarController.tools = [.setting, .nameRoll, .handsList]
+            addChild(classStateController)
             addChild(handsListController)
             addChild(nameRollController)
             addChild(renderMenuController)
@@ -382,7 +382,7 @@ private extension AgoraLectureUIManager {
             make?.height.equalTo()(AgoraFit.scale(112))
         }
         toolBarController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -9 : -6)
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
             make?.top.equalTo()(self.boardController.mas_topLayoutGuideTop)?.offset()(AgoraFit.scale(34))
             make?.width.equalTo()(toolBarController.suggestSize.width)
             make?.height.equalTo()(toolBarController.suggestSize.height)

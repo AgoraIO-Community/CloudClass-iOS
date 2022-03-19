@@ -231,7 +231,8 @@ private extension LoginViewController {
         let roomUuid = "\(roomName)\(roomStyle.rawValue)"
         
         // userUuid = userName.md5()
-        let userUuid = userName.md5()
+        let userRole = self.inputParams.roleType
+        let userUuid = "\(userName)\(userRole)"
         
 //        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
         let duration = inputParams.duration
@@ -275,7 +276,6 @@ private extension LoginViewController {
             let appId = response.appId
             let rtmToken = response.rtmToken
             let userUuid = response.userId
-            let userRole = self.inputParams.roleType
             
             let launchConfig = AgoraEduLaunchConfig(userName: userName,
                                                     userUuid: userUuid,
@@ -296,6 +296,12 @@ private extension LoginViewController {
             launchConfig.widgets.forEach {[unowned self] (k,v) in
                 if k == "AgoraCloudWidget" {
                     v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
+                }
+                if k == "netlessBoard",
+                   v.extraInfo != nil {
+                    var newExtra = v.extraInfo as! Dictionary<String, Any>
+                    newExtra["coursewareList"] = self.inputParams.publicCoursewares()
+                    v.extraInfo = newExtra
                 }
                 widgets[k] = v
             }

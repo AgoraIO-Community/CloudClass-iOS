@@ -276,7 +276,6 @@ extension AgoraSmallUIManager: AgoraClassStateUIControllerDelegate {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
-        addChild(classStateController)
         contentView.addSubview(classStateController.view)
         
         classStateController.view.mas_makeConstraints { make in
@@ -327,7 +326,7 @@ private extension AgoraSmallUIManager {
             addChild(renderMenuController)
             contentView.addSubview(renderMenuController.view)
             renderMenuController.view.isHidden = true
-            
+            addChild(classStateController)
             addChild(cloudController)
             contentView.addSubview(cloudController.view)
             cloudController.view.isHidden = true
@@ -375,7 +374,7 @@ private extension AgoraSmallUIManager {
             make?.left.right().bottom().equalTo()(0)
         }
         toolBarController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -9 : -6)
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
             make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -107 : -99)
             make?.width.equalTo()(toolBarController.suggestSize.width)
             make?.height.equalTo()(toolBarController.suggestSize.height)

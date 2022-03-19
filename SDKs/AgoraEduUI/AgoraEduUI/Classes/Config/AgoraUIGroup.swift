@@ -166,8 +166,7 @@ class AgoraColorGroup {
         case .akasuo:      return UIColor(hex: 0xECECF1)!
         }
     }
-    
-    var room_state_time_color: UIColor {
+    var room_state_title_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x191919)!
         case .akasuo:      return UIColor(hex: 0x191919)!

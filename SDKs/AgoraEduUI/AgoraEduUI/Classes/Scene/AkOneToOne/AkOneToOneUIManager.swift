@@ -240,7 +240,8 @@ private extension AkOneToOneUIManager {
             return
         }
         // 算出落点的frame
-        let rect = formView.convert(formView.bounds, to: self.view)
+        let rect = formView.convert(formView.bounds,
+                                    to: self.view)
         var point = CGPoint(x: rect.maxX - animaView.frame.size.width, y: rect.maxY + 8)
         animaView.frame = CGRect(origin: point, size: animaView.frame.size)
         // 运算动画锚点

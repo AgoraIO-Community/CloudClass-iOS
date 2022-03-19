@@ -22,7 +22,7 @@ class AgoraClassStateUIController: UIViewController {
     private weak var delegate: AgoraClassStateUIControllerDelegate?
     private var contextPool: AgoraEduContextPool!
     /**Views*/
-    private var startButton: UIButton!
+    private var startButton = UIButton()
     
     init(context: AgoraEduContextPool,
          delegate: AgoraClassStateUIControllerDelegate?) {
@@ -30,6 +30,8 @@ class AgoraClassStateUIController: UIViewController {
                    bundle: nil)
         self.contextPool = context
         self.delegate = delegate
+        
+        contextPool.room.registerRoomEventHandler(self)
     }
     
     func dismissView() {
@@ -44,8 +46,6 @@ class AgoraClassStateUIController: UIViewController {
         super.viewDidLoad()
         createViews()
         createConstraint()
-        
-        contextPool.room.registerRoomEventHandler(self)
     }
 }
 
@@ -69,7 +69,8 @@ private extension AgoraClassStateUIController {
     func createViews() {
         let ui = AgoraUIGroup()
         
-        startButton.titleLabel?.text = "fcr_room_start_class".agedu_localized()
+        startButton.setTitle("fcr_room_start_class".agedu_localized(),
+                             for: .normal)
         startButton.titleLabel?.font = .systemFont(ofSize: 13)
         startButton.backgroundColor = ui.color.common_base_tint_color
         startButton.setTitleColor(.white,

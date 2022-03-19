@@ -265,7 +265,6 @@ extension AgoraOneToOneUIManager: AgoraClassStateUIControllerDelegate {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
-        addChild(classStateController)
         contentView.addSubview(classStateController.view)
         
         classStateController.view.mas_makeConstraints { make in
@@ -283,7 +282,8 @@ private extension AgoraOneToOneUIManager {
             return
         }
         // 算出落点的frame
-        let rect = formView.convert(formView.bounds, to: self.view)
+        let rect = formView.convert(formView.bounds,
+                                    to: self.view)
         var point = CGPoint(x: rect.maxX - animaView.frame.size.width, y: rect.maxY + 8)
         animaView.frame = CGRect(origin: point, size: animaView.frame.size)
         // 运算动画锚点
@@ -346,6 +346,7 @@ private extension AgoraOneToOneUIManager {
         contentView.addSubview(classToolsController.view)
         
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
+            addChild(classStateController)
             addChild(cloudController)
             contentView.addSubview(cloudController.view)
             addChild(renderMenuController)

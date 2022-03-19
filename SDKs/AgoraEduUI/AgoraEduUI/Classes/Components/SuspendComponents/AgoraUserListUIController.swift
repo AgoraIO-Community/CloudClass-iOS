@@ -57,8 +57,9 @@ class AgoraUserListUIController: UIViewController {
     public var suggestSize: CGSize {
         get {
             // 学生姓名为100，其余为60
-            let contentWidth = 60 * (supportFuncs.count - 1) + 100
-            return CGSize(width: contentWidth, height: 260)
+            let contentWidth = 60 * supportFuncs.count + 100
+            return CGSize(width: contentWidth,
+                          height: 253)
         }
     }
     /** 容器*/
@@ -608,12 +609,12 @@ extension AgoraUserListUIController {
         titleLabel.mas_makeConstraints { make in
             make?.top.equalTo()(titleLabel.superview)
             make?.left.equalTo()(16)
-            make?.height.equalTo()(40)
+            make?.height.equalTo()(30)
         }
         infoView.mas_makeConstraints { make in
             make?.top.equalTo()(titleLabel.mas_bottom)
             make?.left.right().equalTo()(infoView.superview)
-            make?.height.equalTo()(40)
+            make?.height.equalTo()(30)
         }
         topSepLine.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(infoView)
@@ -634,7 +635,7 @@ extension AgoraUserListUIController {
         studentTitleLabel.mas_makeConstraints { make in
             make?.top.equalTo()(infoView.mas_bottom)
             make?.left.equalTo()(0)
-            make?.height.equalTo()(40)
+            make?.height.equalTo()(30)
             make?.width.equalTo()(100)
         }
         itemTitlesView.mas_makeConstraints { make in
@@ -652,12 +653,12 @@ extension AgoraUserListUIController {
             carouselSwitch.mas_makeConstraints { make in
                 make?.centerY.equalTo()(titleLabel.mas_centerY)
                 make?.right.equalTo()(-16)
-                make?.height.equalTo()(40)
+                make?.height.equalTo()(30)
             }
             carouselTitle.mas_makeConstraints { make in
                 make?.centerY.equalTo()(titleLabel.mas_centerY)
                 make?.right.equalTo()(carouselSwitch.mas_left)?.offset()(-12)
-                make?.height.equalTo()(40)
+                make?.height.equalTo()(30)
             }
         }
     }
