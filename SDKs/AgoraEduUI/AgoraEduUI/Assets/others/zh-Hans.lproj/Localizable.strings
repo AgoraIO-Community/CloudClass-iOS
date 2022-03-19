@@ -87,18 +87,3 @@ fcr_monitor_network_poor = "当前网络质量不佳,请检查设备网络连接
 fcr_monitor_network_disconnected = "当前网络已断开,请检查设备网络连接";
 fcr_monitor_network_reconnecting = "重连中...";
 fcr_monitor_login_remote_device = "账号在远端设备登录";
-
-
-// CoHost
-HandsUpTimeOutText = "举手超时";
-RejectedCoHostText = "老师拒绝了你的举手申请";
-AcceptedCoHostText = "你已被老师邀请上台，请积极互动哦";
-RemovedCoHostText = "你已下台，暂时不能进行互动了哦";
-HandsUpSuccessText = "举手成功";
-HandsDownSuccessText = "取消举手成功";
-CloseHandsUpText = "老师关闭了举手功能";
-OpenHandsUpText = "老师开启了举手功能";
-
-// screenshare
-ScreensharedBySb = "老师发起了屏幕共享";
-ScreenshareStoppedBySb = "老师停止了屏幕共享";
