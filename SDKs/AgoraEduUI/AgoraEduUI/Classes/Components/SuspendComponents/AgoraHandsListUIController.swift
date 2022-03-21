@@ -84,38 +84,22 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
                          payload: [String : Any]?) {
         dataSource.removeAll(where: {$0.userUuid == userUuid})
     }
-    
-    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
-                               operatorUser: AgoraEduContextUserInfo?) {
-        for userInfo in userList {
-            guard dataSource.contains(where: {$0.userUuid == userInfo.userUuid}) else{
-                continue
-            }
-            // TODO: 验证是否触发didSet
-            var handsUpUser = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
-            handsUpUser.isCoHost = true
-        }
-    }
-    
-    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
-                                 operatorUser: AgoraEduContextUserInfo?) {
-        for userInfo in userList {
-            guard dataSource.contains(where: {$0.userUuid == userInfo.userUuid}) else{
-                continue
-            }
-            // TODO: 验证是否触发didSet
-            var handsUpUser = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
-            handsUpUser.isCoHost = false
-        }
-    }
 }
 // MARK: - HandsUpItemCellDelegate
 extension AgoraHandsListUIController: AgoraHandsUpItemCellDelegate {
     func onClickAcceptAtIndex(_ index: IndexPath) {
         let u = dataSource[index.row]
-        contextPool.user.addCoHost(userUuid: u.userUuid,
-                                   success: nil,
-                                   failure: nil)
+        guard !u.isCoHost else {
+            return
+        }
+        contextPool.user.addCoHost(userUuid: u.userUuid) { [weak self] in
+            guard let `self` = self else {
+                return
+            }
+            self.dataSource[index.row].isCoHost = true
+        } failure: { contextError in
+
+        }
     }
 }
 
@@ -135,20 +119,6 @@ extension AgoraHandsListUIController: UITableViewDataSource, UITableViewDelegate
         cell.delegate = self
         cell.indexPath = indexPath
         return cell
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath,
-                              animated: true)
-        guard let u = dataSource[indexPath.row] as? HandsUpUser,
-              u.isCoHost == false else {
-                  return
-        }
-        
-        contextPool.user.addCoHost(userUuid: u.userUuid,
-                                   success: nil,
-                                   failure: nil)
     }
 }
 
@@ -170,17 +140,8 @@ extension AgoraHandsListUIController {
         contentView.borderColor = UIColor(hex: 0xE3E3EC)
         contentView.isUserInteractionEnabled = true
         
-//        listContentView = UIView()
-//        listContentView.backgroundColor = UIColor(hex: 0xF9F9FC)
-//        listContentView.layer.shadowColor = UIColor(hex: 0x2F4192,
-//                                      transparency: 0.15)?.cgColor
-//        listContentView.layer.shadowOffset = CGSize(width: 0, height: 2)
-//        listContentView.layer.shadowOpacity = 1
-//        listContentView.layer.shadowRadius = 6
-        
         view.addSubview(contentView)
 
-        
         let tab = UITableView.init(frame: .zero, style: .plain)
         tab.backgroundColor = UIColor(hex: 0xF9F9FC)
         tab.delegate = self
