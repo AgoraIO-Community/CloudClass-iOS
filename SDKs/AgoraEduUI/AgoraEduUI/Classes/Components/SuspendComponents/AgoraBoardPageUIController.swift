@@ -191,8 +191,8 @@ extension AgoraBoardPageUIController {
         
         pageLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.preBtn.mas_right)?.offset()(4)
-            make?.right.equalTo()(self.nextBtn.mas_left)?.offset()(-4)
+            make?.left.equalTo()(self.preBtn.mas_right)?.offset()(0)
+            make?.right.equalTo()(self.nextBtn.mas_left)?.offset()(0)
         }
     }
     
