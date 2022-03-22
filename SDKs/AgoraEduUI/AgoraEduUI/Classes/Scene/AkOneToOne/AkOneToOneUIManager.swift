@@ -13,7 +13,7 @@ import Masonry
 @objc public class AkOneToOneUIManager: AgoraEduUIManager {
     private let roomType: AgoraEduContextRoomType = .oneToOne
     /** 状态栏 控制器*/
-    private var stateController: AgoraOneToOneStateUIController!
+    private var stateController: AgoraRoomStateUIController!
     /** 渲染 控制器*/
     private var renderController: AkOneToOneRenderUIController!
     /** 工具栏*/
@@ -96,7 +96,6 @@ import Masonry
     
     public override func didClickCtrlMaskView() {
         super.didClickCtrlMaskView()
-        stateController.deSelect()
         toolBarController.deselectAll()
     }
 }
@@ -108,19 +107,6 @@ extension AkOneToOneUIManager: AgoraChatUIControllerDelegate {
     }
 }
 
-// MARK: - AkOneToOneStateUIControllerDelegate
-extension AkOneToOneUIManager: AgoraOneToOneStateUIControllerDelegate {
-    func onSettingSelected(isSelected: Bool) {
-        if isSelected {
-            settingViewController.view.frame = CGRect(origin: .zero,
-                                                      size: settingViewController.suggestSize)
-            ctrlView = settingViewController.view
-            settingViewAnimationFromView(stateController.settingButton)
-        } else {
-            ctrlView = nil
-        }
-    }
-}
 // MARK: - AgoraToolCollectionUIControllerDelegate
 extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
     func toolCollectionDidSelectCell(view: UIView) {
@@ -132,15 +118,15 @@ extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
     func toolCollectionCellNeedSpread(_ spread: Bool) {
         if spread {
             toolCollectionController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(boardController.view)?.offset()(-12)
-                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-60))
+                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
                 make?.width.equalTo()(toolCollectionController.suggestLength)
                 make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(boardController.view)?.offset()(-12)
-                make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-60))
+                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
@@ -171,18 +157,33 @@ extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
             break
         }
     }
-}
-
-// MARK: - AgoraBoardPageUIControllerDelegate
-extension AkOneToOneUIManager: AgoraBoardPageUIControllerDelegate {
-    func boardPageUINeedMove(coursewareMin: Bool) {
+    
+    func toolCollectionDidChangeAppearance(_ appear: Bool) {
         UIView.animate(withDuration: TimeInterval.agora_animation,
                        delay: 0,
                        options: .curveEaseInOut,
                        animations: { [weak self] in
-            self?.boardPageController.view.transform = CGAffineTransform(translationX: coursewareMin ? 32 : 0,
-                                                                         y: 0)
-        }, completion: nil)
+                        guard let `self` = self else {
+                            return
+                        }
+                        
+                        if appear {
+                            self.toolBarController.view.mas_remakeConstraints { make in
+                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                                make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+                            }
+                        } else {
+                            self.toolBarController.view.mas_remakeConstraints { make in
+                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                                make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+                            }
+                        }
+                       }, completion: nil)
+
     }
 }
 
@@ -218,6 +219,10 @@ extension AkOneToOneUIManager: AgoraToolBarDelegate {
     func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
                                 selectView: UIView) {
         switch tool {
+        case .setting:
+            settingViewController.view.frame = CGRect(origin: .zero,
+                                                      size: settingViewController.suggestSize)
+            ctrlView = settingViewController.view
         case .message:
             chatController.view.frame = CGRect(origin: .zero,
                                                size: chatController.suggestSize)
@@ -264,9 +269,8 @@ private extension AkOneToOneUIManager {
     }
     func createViews() {
         contentView.backgroundColor = UIColor(hex: 0x263487)
-        stateController = AgoraOneToOneStateUIController(context: contextPool)
         
-        stateController.delegate = self
+        stateController = AgoraRoomStateUIController(context: contextPool)
         stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
@@ -287,10 +291,6 @@ private extension AkOneToOneUIManager {
         rightContentView.addSubview(renderController.view)
         rightContentView.addSubview(logoImageView)
         
-        screenSharingController = AgoraScreenSharingUIController(context: contextPool)
-        addChild(screenSharingController)
-        contentView.addSubview(screenSharingController.view)
-        
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
         toolBarController.tools = [.message]
@@ -301,8 +301,7 @@ private extension AkOneToOneUIManager {
         toolCollectionController.view.isHidden = true
         view.addSubview(toolCollectionController.view)
         
-        boardPageController = AgoraBoardPageUIController(context: contextPool,
-                                                         delegate: self)
+        boardPageController = AgoraBoardPageUIController(context: contextPool)
         contentView.addSubview(boardPageController.view)
         boardPageController.view.isHidden = true
         addChild(boardPageController)
@@ -322,6 +321,10 @@ private extension AkOneToOneUIManager {
             toolCollectionController.view.isHidden = false
             boardPageController.view.isHidden = false
         }
+        
+        screenSharingController = AgoraScreenSharingUIController(context: contextPool)
+        addChild(screenSharingController)
+        contentView.addSubview(screenSharingController.view)
     }
     
     func createConstraint() {
@@ -334,11 +337,20 @@ private extension AkOneToOneUIManager {
             make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
-        toolBarController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view.mas_right)?.offset()(-12)
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-12))
-            make?.width.equalTo()(toolBarController.suggestSize.width)
-            make?.height.equalTo()(toolBarController.suggestSize.height)
+        if contextPool.user.getLocalUserInfo().userRole == .teacher {
+            self.toolBarController.view.mas_remakeConstraints { make in
+                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+            }
+        } else {
+            self.toolBarController.view.mas_remakeConstraints { make in
+                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+            }
         }
         toolCollectionController.view.mas_makeConstraints { make in
             make?.right.equalTo()(boardController.view)?.offset()(-12)

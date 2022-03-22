@@ -232,7 +232,7 @@ private extension LoginViewController {
         
         // userUuid = userName.md5()
         let userRole = self.inputParams.roleType
-        let userUuid = "\(userName)\(userRole)"
+        let userUuid = "\(userName.md5())\(userRole.rawValue)"
         
 //        let startTime = Int64(NSDate().timeIntervalSince1970 * 1000)
         let duration = inputParams.duration

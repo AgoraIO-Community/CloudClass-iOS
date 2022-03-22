@@ -10,10 +10,6 @@ import SwifterSwift
 import AgoraWidget
 import UIKit
 
-protocol AgoraBoardPageUIControllerDelegate: NSObjectProtocol {
-    func boardPageUINeedMove(coursewareMin: Bool)
-}
-
 class AgoraBoardPageUIController: UIViewController {
     /** Views*/
     private var addBtn: UIButton!
@@ -28,7 +24,6 @@ class AgoraBoardPageUIController: UIViewController {
     /** SDK*/
     private var contextPool: AgoraEduContextPool!
     /** Data */
-    private weak var delegate: AgoraBoardPageUIControllerDelegate?
     private var pageIndex = 1 {
         didSet {
             let text = "\(pageIndex) / \(pageCount)"
@@ -46,16 +41,24 @@ class AgoraBoardPageUIController: UIViewController {
     private var positionMoveFlag: Bool = false {
         didSet {
             if positionMoveFlag != oldValue {
-                delegate?.boardPageUINeedMove(coursewareMin: positionMoveFlag)
+                UIView.animate(withDuration: TimeInterval.agora_animation,
+                               delay: 0,
+                               options: .curveEaseInOut,
+                               animations: { [weak self] in
+                                guard let `self` = self else {
+                                    return
+                                }
+                                let move: CGFloat = UIDevice.current.isPad ? 49 : 44
+                                self.view.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
+                                                                         y: 0)
+                               }, completion: nil)
             }
         }
     }
     
-    init(context: AgoraEduContextPool,
-         delegate: AgoraBoardPageUIControllerDelegate) {
+    init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         self.contextPool = context
-        self.delegate = delegate
         
         contextPool.widget.add(self,
                                widgetId: kBoardWidgetId)

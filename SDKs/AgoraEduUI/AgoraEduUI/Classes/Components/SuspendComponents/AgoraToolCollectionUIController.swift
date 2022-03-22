@@ -15,6 +15,7 @@ protocol AgoraToolCollectionUIControllerDelegate: NSObjectProtocol {
     func toolCollectionCellNeedSpread(_ spread: Bool)
     func toolCollectionDidDeselectCell()
     func toolCollectionDidSelectTeachingAid(type: AgoraTeachingAidType)
+    func toolCollectionDidChangeAppearance(_ appear: Bool)
 }
 
 fileprivate enum AgoraToolCollectionSelectType: Int {
@@ -384,9 +385,12 @@ private extension AgoraToolCollectionUIController {
             return
         }
         if let users = list  {
-            view.isHidden = !users.contains(contextPool.user.getLocalUserInfo().userUuid)
+            let auth = users.contains(contextPool.user.getLocalUserInfo().userUuid)
+            view.isHidden = !auth
+            delegate?.toolCollectionDidChangeAppearance(auth)
         } else {
             view.isHidden = true
+            delegate?.toolCollectionDidChangeAppearance(false)
         }
     }
     

@@ -170,7 +170,8 @@ private extension DebugViewController {
         let roomUuid = "\(roomName)\(roomStyle.rawValue)"
         
         // userUuid = userName.md5()
-        let userUuid = userName.md5()
+        let userRole = self.inputParams.roleType
+        let userUuid = "\(userName.md5())\(userRole.rawValue)"
         
         // startTime
         let startTime = inputParams.startTime
@@ -239,6 +240,12 @@ private extension DebugViewController {
                         launchConfig.widgets.forEach {[unowned self] (k,v) in
                             if k == "AgoraCloudWidget" {
                                 v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
+                            }
+                            if k == "netlessBoard",
+                               v.extraInfo != nil {
+                                var newExtra = v.extraInfo as! Dictionary<String, Any>
+                                newExtra["coursewareList"] = self.inputParams.publicCoursewares()
+                                v.extraInfo = newExtra
                             }
                             widgets[k] = v
                         }

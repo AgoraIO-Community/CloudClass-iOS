@@ -32,6 +32,7 @@ fcr_room_class_leave_cancel = "取消";
 fcr_room_class_leave_sure = "确认";
 fcr_room_one_to_one_title = "一对一课堂";
 fcr_room_small_title = "小班课";
+fcr_room_lecture_title = "大班课";
 
 // user
 fcr_user_local_kick_out_notice = "移出通知";

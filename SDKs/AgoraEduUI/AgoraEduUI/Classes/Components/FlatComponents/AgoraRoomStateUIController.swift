@@ -327,7 +327,14 @@ private extension AgoraRoomStateUIController {
         
         stateView = AgoraRoomStateBar(frame: .zero)
         stateView.backgroundColor = ui.color.room_state_bg_color
-        self.stateView.titleLabel.text = "fcr_room_small_title".agedu_localized()
+        
+        var roomTitle = ""
+        switch contextPool.room.getRoomInfo().roomType {
+        case .oneToOne: roomTitle = "fcr_room_one_to_one_title".agedu_localized()
+        case .small:    roomTitle = "fcr_room_small_title".agedu_localized()
+        case .lecture:  roomTitle = "fcr_room_lecture_title".agedu_localized()
+        }
+        self.stateView.titleLabel.text = roomTitle
         stateView.titleLabel.textColor = ui.color.room_state_label_before_color
         stateView.timeLabel.textColor = ui.color.room_state_label_before_color
         
