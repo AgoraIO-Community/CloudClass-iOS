@@ -236,7 +236,7 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
                                                           for: indexPath)
             if let tool = AgoraBoardToolPaintType(rawValue: indexPath.row) {
                 cell.setImage(image: (tool == currentPaintTool) ? tool.selectedImage : tool.image,
-                              color: UIColor(hex: currentColor))
+                              color: UIColor.fakeWhite(UIColor(hex: currentColor)))
                 cell.aSelected = (tool == currentPaintTool)
             }
             return cell
@@ -251,7 +251,7 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
             let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardTextSizeItemCell.self,
                                                           for: indexPath)
             cell.level = indexPath.row
-            cell.color = UIColor(hex: currentColor)
+            cell.color = UIColor.fakeWhite(UIColor(hex: currentColor))
             cell.aSelected = (AgoraBoardToolsFont(rawValue: indexPath.row) == curTextFont)
             return cell
         } else if collectionView == colorCollectionView {

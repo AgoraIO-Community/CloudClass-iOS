@@ -57,7 +57,11 @@ class AgoraMainToolsView: UIView {
             boardToolsView.reloadData()
         }
     }
-    var curColor = UIColor(hex: 0x357BF6)
+    var curColor = UIColor(hex: 0x357BF6) {
+        didSet {
+            boardToolsView.reloadData()
+        }
+    }
         
     var redoEnable: Bool = false {
         didSet {
@@ -136,7 +140,7 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
             switch tool {
             case .paint,.text:
                 cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
-                              color: curColor)
+                              color: UIColor.fakeWhite(curColor))
             default:
                 cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
                               color: color.common_base_tint_color)

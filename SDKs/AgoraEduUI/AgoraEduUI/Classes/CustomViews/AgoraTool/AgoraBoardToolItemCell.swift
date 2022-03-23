@@ -173,13 +173,15 @@ class AgoraBoardToolItemCell: UICollectionViewCell {
 // MARK: - AgoraToolCollectionToolCell
 class AgoraToolCollectionToolCell: UICollectionViewCell {
     private var imageView: UIImageView!
-    private var selectedColor = UIColor(hex: 0x357BF6)
+    private var selectedColor: UIColor?
+    
+    // for pre/next
     private var enable: Bool = true {
         didSet {
             guard let i = imageView.image else {
                 return
             }
-            if enable{
+            if enable {
                 imageView.tintColor = nil
             } else {
                 imageView.tintColor = UIColor(hex: 0xE2E2EE)
@@ -190,11 +192,10 @@ class AgoraToolCollectionToolCell: UICollectionViewCell {
     
     var aSelected: Bool = false {
         willSet {
-            if newValue {
+            if newValue,
+               let i = imageView.image {
+                imageView.image = i.withRenderingMode(.alwaysTemplate)
                 imageView.tintColor = selectedColor
-                if let i = imageView.image {
-                    imageView.image = i.withRenderingMode(.alwaysTemplate)
-                }
             } else {
                 imageView.tintColor = nil
             }
@@ -281,6 +282,7 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
 
 // MARK: - BrushSizeItemCell
 class AgoraBoardLineWidthCell: UICollectionViewCell {
+    private var unselectedColor = AgoraColorGroup().tool_unselected_color
     public var level: Int = 0 {
         willSet {
             if level != newValue {
@@ -298,11 +300,18 @@ class AgoraBoardLineWidthCell: UICollectionViewCell {
             if newValue == true {
                 if let c = color {
                     sizeView.backgroundColor = c
+                    if c == UIColor(hex: 0xFFFFFF)! {
+                        sizeView.borderWidth = 1
+                        sizeView.borderColor = unselectedColor
+                    } else {
+                        sizeView.borderWidth = 0
+                        sizeView.borderColor = nil
+                    }
                 } else {
-                    sizeView.backgroundColor = UIColor(hex: 0xE1E1EA)
+                    sizeView.backgroundColor = unselectedColor
                 }
             } else {
-                sizeView.backgroundColor = UIColor(hex: 0xE1E1EA)
+                sizeView.backgroundColor = unselectedColor
             }
         }
     }
@@ -313,7 +322,7 @@ class AgoraBoardLineWidthCell: UICollectionViewCell {
         super.init(frame: frame)
         
         sizeView = UIView(frame: .zero)
-        sizeView.backgroundColor = UIColor(hex: 0xE1E1EA)
+        sizeView.backgroundColor = unselectedColor
         sizeView.cornerRadius = 3
         addSubview(sizeView)
         sizeView.mas_makeConstraints { make in

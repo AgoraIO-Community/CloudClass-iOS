@@ -138,6 +138,10 @@ class AgoraColorGroup {
         return UIColor.black.withAlphaComponent(0.3)
     }
     
+    // board tool
+    var tool_unselected_color: UIColor = UIColor(hex: 0xE1E1EA)!
+    var tool_fake_white_color: UIColor = UIColor(hex: 0xE1E1EA)!
+    
     // Room state bar
     var room_state_bg_color: UIColor {
         switch mode {
@@ -329,7 +333,5 @@ struct AgoraFrameGroup {
     var room_state_border_width: CGFloat = 1
     
     // class state
-    var class_state_button_corner_radius: CGFloat {
-        return 20
-    }
+    var class_state_button_corner_radius: CGFloat = 17
 }

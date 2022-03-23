@@ -273,19 +273,20 @@ class AgoraToolCollectionCell: UIView {
     // 对于子配置cell，若设置图片，则隐藏font视图，显示image和color视图
     func setImage(_ image: UIImage?,
                   color: UIColor?) {
+        let finalColor = UIColor.fakeWhite(color)
         if isMain {
             guard let i = image else {
                 return
             }
             imageView.image = i.withRenderingMode(.alwaysTemplate)
-            imageView.tintColor = color
+            imageView.tintColor = finalColor
         } else {
             imageView.image = image
             
             fontLabel.isHidden = true
             imageView.isHidden = false
             colorView.isHidden = false
-            colorView.backgroundColor = color
+            colorView.backgroundColor = finalColor
         }
     }
     

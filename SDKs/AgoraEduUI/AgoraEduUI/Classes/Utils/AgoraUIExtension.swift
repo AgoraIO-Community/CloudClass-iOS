@@ -187,3 +187,16 @@ extension UIViewController {
         return window
     }
 }
+
+extension UIColor {
+    static func fakeWhite(_ ori: UIColor?) -> UIColor? {
+        guard let color = ori else {
+            return nil
+        }
+        
+        if color == UIColor(hex: 0xFFFFFF) {
+            return AgoraColorGroup().tool_fake_white_color
+        }
+        return color
+    }
+}
