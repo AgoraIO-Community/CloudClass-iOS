@@ -237,7 +237,8 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
         willSet {
             if level != newValue {
                 let scale = CGFloat(truncating: pow(1.4, newValue) as NSNumber)
-                sizeView.transform = CGAffineTransform(scaleX: scale, y: scale)
+                sizeView.transform = CGAffineTransform(scaleX: scale,
+                                                       y: scale)
             }
         }
     }

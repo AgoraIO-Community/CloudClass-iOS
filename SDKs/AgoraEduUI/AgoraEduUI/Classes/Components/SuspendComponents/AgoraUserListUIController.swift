@@ -651,13 +651,13 @@ extension AgoraUserListUIController {
         if contextPool.user.getLocalUserInfo().userRole == .teacher,
            contextPool.room.getRoomInfo().roomType == .small {
             carouselSwitch.mas_makeConstraints { make in
-                make?.centerY.equalTo()(titleLabel.mas_centerY)
+                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
                 make?.right.equalTo()(-16)
                 make?.height.equalTo()(30)
             }
             carouselTitle.mas_makeConstraints { make in
-                make?.centerY.equalTo()(titleLabel.mas_centerY)
-                make?.right.equalTo()(carouselSwitch.mas_left)?.offset()(-12)
+                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
+                make?.right.equalTo()(carouselSwitch.mas_left)?.offset()(-6)
                 make?.height.equalTo()(30)
             }
         }

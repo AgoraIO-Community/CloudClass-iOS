@@ -198,6 +198,9 @@ class AgoraColorGroup {
         }
     }
     
+    // class state
+    var class_state_shadow_color: CGColor = UIColor(hex: 0x2F4192)!.cgColor
+    
     // Setting
     var setting_switch_tint_color: UIColor {
         switch mode {

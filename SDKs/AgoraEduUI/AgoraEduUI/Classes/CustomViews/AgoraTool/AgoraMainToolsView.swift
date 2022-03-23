@@ -201,7 +201,7 @@ private extension AgoraMainToolsView {
         layer.shadowRadius = 6
         
         contentView = UIView()
-        contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
+        contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 10.0
         contentView.clipsToBounds = true
         contentView.borderWidth = 1
@@ -273,7 +273,7 @@ private extension AgoraMainToolsView {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = .clear
+        collectionView.backgroundColor = .white
         collectionView.bounces = false
         collectionView.delegate = self
         collectionView.dataSource = self

@@ -174,9 +174,9 @@ extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
                                       userUuid: UUID,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
-                make?.top.equalTo()(view.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.top.equalTo()(view.mas_bottom)?.offset()(1)
                 make?.centerX.equalTo()(view.mas_centerX)
-                make?.height.equalTo()(AgoraFit.scale(36))
+                make?.height.equalTo()(30)
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }
         }
