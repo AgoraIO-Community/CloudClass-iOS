@@ -84,12 +84,7 @@ extension AgoraToastTipsView {
         layer.borderColor = UIColor.white.cgColor
         layer.borderWidth = 1
         layer.cornerRadius = 4
-        layer.shadowColor = UIColor(hex: 0x2F4192,
-                                    transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0,
-                                    height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: layer)
         
         contentView = UIView()
         self.addSubview(contentView)

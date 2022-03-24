@@ -411,12 +411,7 @@ private extension AkOneToOneUIManager {
     func createChatController() {
         chatController = AgoraChatUIController(context: contextPool)
         chatController.hideMiniButton = true
-        chatController.view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                                        transparency: 0.15)?.cgColor
-        chatController.view.layer.shadowOffset = CGSize(width: 0,
-                                                        height: 2)
-        chatController.view.layer.shadowOpacity = 1
-        chatController.view.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
         chatController.delegate = self
         addChild(chatController)
     }

@@ -16,10 +16,7 @@ public class AgoraZoomButton: UIButton {
         imageView?.tintColor = UIColor(hex: 0x7B88A0)
         
         layer.cornerRadius = 8
-        layer.shadowColor = UIColor(hex:0x2F4192, transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: layer)
     }
     
     required init?(coder: NSCoder) {

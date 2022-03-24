@@ -264,6 +264,15 @@ class AgoraColorGroup {
         case .akasuo:      return .clear
         }
     }
+    
+    func borderSet(layer: CALayer) {
+        layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
+        layer.shadowOffset = CGSize(width: 0,
+                                    height: 2)
+        layer.shadowOpacity = 1
+        layer.shadowRadius = 6
+    }
 }
 
 struct AgoraFrameGroup {

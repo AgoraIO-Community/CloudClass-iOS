@@ -155,9 +155,14 @@ class AgoraRenderMenuUIController: UIViewController {
         
         // show VC,主动更新model信息
         updateModelState()
+        
+        // 5s后自动消失
+        self.perform(#selector(dismissView),
+                     with: nil,
+                     afterDelay: 5)
     }
     
-    func dismissView() {
+    @objc func dismissView() {
         view.isHidden = true
         self.userId = nil
         self.model = AgoraRenderMenuModel()
@@ -463,11 +468,7 @@ private extension AgoraRenderMenuUIController {
     func createViews() {
         view.backgroundColor = UIColor.white
         view.layer.cornerRadius = 8
-        view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: view.layer)
         
         // contentView
         contentView = UIStackView()
