@@ -119,12 +119,7 @@ extension AgoraBoardPageUIController {
         view.backgroundColor = .white
         
         view.layer.cornerRadius = 17
-        view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        view.layer.shadowOffset = CGSize(width: 0,
-                                         height: 2)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: view.layer)
         
         addBtn = UIButton(type: .custom)
         if let image = UIImage.agedu_named("ic_board_page_add") {

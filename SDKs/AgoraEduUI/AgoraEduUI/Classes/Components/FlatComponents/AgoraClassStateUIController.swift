@@ -115,6 +115,13 @@ private extension AgoraClassStateUIController {
         startButton.setTitleColor(.white,
                                   for: .normal)
         startButton.layer.cornerRadius = ui.frame.class_state_button_corner_radius
+        
+        startButton.layer.shadowColor = ui.color.class_state_shadow_color
+        startButton.layer.shadowOffset = CGSize(width: 0,
+                                                height: 1.5)
+        startButton.layer.shadowOpacity = 0.15
+        startButton.layer.shadowRadius = 5
+        
         startButton.addTarget(self,
                               action: #selector(onClickStart(_:)),
                               for: .touchUpInside)

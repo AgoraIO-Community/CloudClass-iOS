@@ -218,11 +218,7 @@ private extension AgoraToolCollectionUIController {
         contentView.backgroundColor = UIColor.white
         
         contentView.layer.cornerRadius = 16
-        contentView.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        contentView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        contentView.layer.shadowOpacity = 1
-        contentView.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: contentView.layer)
         
         view.addSubview(contentView)
         
@@ -256,7 +252,7 @@ private extension AgoraToolCollectionUIController {
                 make?.left.right().top().bottom().equalTo()(0)
             }
             subCell.mas_remakeConstraints { make in
-                make?.top.equalTo()(0)
+                make?.top.equalTo()(4)
                 make?.centerX.equalTo()(0)
                 make?.width.height().equalTo()(suggestLength)
             }
@@ -267,7 +263,7 @@ private extension AgoraToolCollectionUIController {
                 make?.height.equalTo()(1)
             }
             mainCell.mas_remakeConstraints { make in
-                make?.bottom.equalTo()(0)
+                make?.bottom.equalTo()(-4)
                 make?.centerX.equalTo()(0)
                 make?.width.height().equalTo()(suggestLength)
             }

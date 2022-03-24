@@ -569,11 +569,7 @@ extension AgoraBoardToolsUIController: UICollectionViewDelegate, UICollectionVie
 // MARK: - Creations
 private extension AgoraBoardToolsUIController {
     func createViews() {
-        view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: view.layer)
 
         contentView = UIView(frame: .zero)
         contentView.backgroundColor = .white

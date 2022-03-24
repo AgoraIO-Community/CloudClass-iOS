@@ -198,6 +198,9 @@ class AgoraColorGroup {
         }
     }
     
+    // class state
+    var class_state_shadow_color: CGColor = UIColor(hex: 0x2F4192)!.cgColor
+    
     // Setting
     var setting_switch_tint_color: UIColor {
         switch mode {
@@ -260,6 +263,15 @@ class AgoraColorGroup {
         case .agoraLight:  return .white
         case .akasuo:      return .clear
         }
+    }
+    
+    func borderSet(layer: CALayer) {
+        layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
+        layer.shadowOffset = CGSize(width: 0,
+                                    height: 2)
+        layer.shadowOpacity = 1
+        layer.shadowRadius = 6
     }
 }
 
