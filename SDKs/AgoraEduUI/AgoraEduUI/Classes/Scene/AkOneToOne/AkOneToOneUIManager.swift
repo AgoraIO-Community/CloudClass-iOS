@@ -382,7 +382,7 @@ private extension AkOneToOneUIManager {
     
     func createPhoneViews() {
         rightContentView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
             make?.bottom.right().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
         }
@@ -401,7 +401,7 @@ private extension AkOneToOneUIManager {
     
     func createPadViews() {
         rightContentView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
             make?.bottom.right().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
         }
@@ -427,9 +427,8 @@ private extension AkOneToOneUIManager {
             rightContentView.addSubview(chatController.view)
             chatController.view.mas_makeConstraints { make in
                 make?.left.right().bottom().equalTo()(0)
-                make?.top.equalTo()(rightContentView.mas_centerY)
+                make?.top.equalTo()(rightContentView.mas_centerY)?.offset()(2)
             }
         }
     }
 }
-
