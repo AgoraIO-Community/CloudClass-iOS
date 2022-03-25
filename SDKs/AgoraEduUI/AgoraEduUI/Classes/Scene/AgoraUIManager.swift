@@ -67,9 +67,10 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(hex: 0xF9F9FC)
-        // create content view
+        
         let ui = AgoraUIGroup()
+        self.view.backgroundColor = ui.color.screen_bg_color
+        // create content view
         
         self.contentView = UIView()
         contentView.borderWidth = ui.frame.room_border_width

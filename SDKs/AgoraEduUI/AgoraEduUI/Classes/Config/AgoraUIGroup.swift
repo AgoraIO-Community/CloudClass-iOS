@@ -113,6 +113,14 @@ class AgoraColorGroup {
         case .akasuo:       return UIColor.clear
         }
     }
+    
+    var screen_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0xF9F9FC)!
+        case .akasuo:      return .black
+        }
+    }
+    
     var room_bg_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xF9F9FC)!

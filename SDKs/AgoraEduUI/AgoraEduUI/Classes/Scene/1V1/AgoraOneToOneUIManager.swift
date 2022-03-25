@@ -66,7 +66,6 @@ import Masonry
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
         self.createViews()
         self.createConstraint()
@@ -329,6 +328,8 @@ private extension AgoraOneToOneUIManager {
         }
     }
     func createViews() {
+        view.backgroundColor = AgoraColorGroup().room_bg_color
+        
         stateController = AgoraRoomStateUIController(context: contextPool)
         stateController.roomDelegate = self
         addChild(stateController)

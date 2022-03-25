@@ -52,7 +52,11 @@ import Masonry
         return vc
     }()
     
-    private var logoImageView = UIImageView(image: UIImage.agedu_named("ak_log"))
+    private lazy var logoImageView: UIImageView = {
+        let imgView = UIImageView()
+        imgView.image = UIImage.agedu_named(UIDevice.current.isPad ? "ak_ipad_logo" : "ak_iphone_logo")
+        return imgView
+    }()
     
     private var isJoinedRoom = false
     
@@ -62,7 +66,6 @@ import Masonry
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
         self.createViews()
         self.createConstraint()
@@ -268,8 +271,6 @@ private extension AkOneToOneUIManager {
         }
     }
     func createViews() {
-        contentView.backgroundColor = UIColor(hex: 0x263487)
-        
         stateController = AgoraRoomStateUIController(context: contextPool)
         stateController.roomDelegate = self
         addChild(stateController)
@@ -280,7 +281,7 @@ private extension AkOneToOneUIManager {
         contentView.addSubview(boardController.view)
         
         rightContentView = UIView()
-        rightContentView.backgroundColor = UIColor(hex: 0x263487)
+        rightContentView.backgroundColor = AgoraColorGroup().room_bg_color
         rightContentView.layer.cornerRadius = 4.0
         rightContentView.clipsToBounds = true
         contentView.addSubview(rightContentView)
@@ -289,11 +290,15 @@ private extension AkOneToOneUIManager {
                                                            delegate: self)
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
-        rightContentView.addSubview(logoImageView)
+        if UIDevice.current.isPad {
+            stateController.view.addSubview(logoImageView)
+        } else {
+            rightContentView.addSubview(logoImageView)
+        }
         
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
-        toolBarController.tools = [.message]
+        toolBarController.tools = [.setting]
         contentView.addSubview(toolBarController.view)
         
         toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
@@ -330,12 +335,12 @@ private extension AkOneToOneUIManager {
     func createConstraint() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(23))
+            make?.height.equalTo()(24)
         }
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.right.equalTo()(rightContentView.mas_left)?.offset()(-2)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
         }
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             self.toolBarController.view.mas_remakeConstraints { make in
@@ -353,8 +358,8 @@ private extension AkOneToOneUIManager {
             }
         }
         toolCollectionController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view)?.offset()(-12)
-            make?.bottom.equalTo()(contentView)?.offset()(AgoraFit.scale(-60))
+            make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
             make?.width.height().equalTo()(toolCollectionController.suggestLength)
         }
         screenSharingController.view.mas_makeConstraints { make in
@@ -399,8 +404,7 @@ private extension AkOneToOneUIManager {
             make?.width.equalTo()(AgoraFit.scale(170))
         }
         logoImageView.mas_makeConstraints { make in
-            make?.bottom.left().right().equalTo()(0)
-            make?.top.equalTo()(renderController.view.mas_bottom)
+            make?.centerX.centerY().equalTo()(stateController.view)
         }
         renderController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
@@ -410,10 +414,20 @@ private extension AkOneToOneUIManager {
     
     func createChatController() {
         chatController = AgoraChatUIController(context: contextPool)
+        chatController.hideAnnouncement = true
         chatController.hideMiniButton = true
-        AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
+        
         chatController.delegate = self
+        
+        AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
         addChild(chatController)
+        if UIDevice.current.isPad {
+            rightContentView.addSubview(chatController.view)
+            chatController.view.mas_makeConstraints { make in
+                make?.left.right().bottom().equalTo()(0)
+                make?.top.equalTo()(rightContentView.mas_centerY)
+            }
+        }
     }
 }
 
