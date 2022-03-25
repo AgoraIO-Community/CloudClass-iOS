@@ -62,7 +62,6 @@ import Masonry
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
         self.createViews()
         self.createConstraint()
@@ -268,7 +267,9 @@ private extension AkOneToOneUIManager {
         }
     }
     func createViews() {
-        contentView.backgroundColor = UIColor(hex: 0x263487)
+        let bgColor = AgoraColorGroup().room_bg_color
+        view.backgroundColor = bgColor
+        contentView.backgroundColor = bgColor
         
         stateController = AgoraRoomStateUIController(context: contextPool)
         stateController.roomDelegate = self
@@ -280,7 +281,7 @@ private extension AkOneToOneUIManager {
         contentView.addSubview(boardController.view)
         
         rightContentView = UIView()
-        rightContentView.backgroundColor = UIColor(hex: 0x263487)
+        rightContentView.backgroundColor = bgColor
         rightContentView.layer.cornerRadius = 4.0
         rightContentView.clipsToBounds = true
         contentView.addSubview(rightContentView)
@@ -289,7 +290,9 @@ private extension AkOneToOneUIManager {
                                                            delegate: self)
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
-        rightContentView.addSubview(logoImageView)
+        if !UIDevice.current.isPad {
+            rightContentView.addSubview(logoImageView)
+        }
         
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
@@ -398,10 +401,6 @@ private extension AkOneToOneUIManager {
             make?.bottom.right().equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
         }
-        logoImageView.mas_makeConstraints { make in
-            make?.bottom.left().right().equalTo()(0)
-            make?.top.equalTo()(renderController.view.mas_bottom)
-        }
         renderController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.bottom.equalTo()(rightContentView.mas_centerY)
@@ -410,10 +409,16 @@ private extension AkOneToOneUIManager {
     
     func createChatController() {
         chatController = AgoraChatUIController(context: contextPool)
-        chatController.hideMiniButton = true
         AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
         chatController.delegate = self
         addChild(chatController)
+        if UIDevice.current.isPad {
+            rightContentView.addSubview(chatController.view)
+            chatController.view.mas_makeConstraints { make in
+                make?.left.right().bottom().equalTo()(0)
+                make?.top.equalTo()(rightContentView.mas_centerY)
+            }
+        }
     }
 }
 
