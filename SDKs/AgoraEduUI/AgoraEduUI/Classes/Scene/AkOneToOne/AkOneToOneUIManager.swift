@@ -290,17 +290,19 @@ private extension AkOneToOneUIManager {
                                                            delegate: self)
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
-        if UIDevice.current.isPad {
-            stateController.view.addSubview(logoImageView)
-        } else {
-            rightContentView.addSubview(logoImageView)
-        }
         
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
-        toolBarController.tools = [.setting]
-        contentView.addSubview(toolBarController.view)
         
+        if UIDevice.current.isPad {
+            stateController.view.addSubview(logoImageView)
+            toolBarController.tools = [.setting]
+        } else {
+            rightContentView.addSubview(logoImageView)
+            toolBarController.tools = [.setting, .message]
+        }
+        
+        contentView.addSubview(toolBarController.view)
         toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
                                                                    delegate: self)
         toolCollectionController.view.isHidden = true

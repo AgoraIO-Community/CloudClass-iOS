@@ -287,24 +287,13 @@ private extension AkOneToOneRenderUIController {
     }
     
     func createConstraint() {
-        if UIDevice.current.isPad {
-            teacherView.mas_remakeConstraints { make in
-                make?.top.left().right().equalTo()(0)
-                make?.bottom.equalTo()(view.mas_centerY)
-            }
-            studentView.mas_remakeConstraints { make in
-                make?.bottom.left().right().equalTo()(0)
-                make?.top.equalTo()(view.mas_centerY)
-            }
-        } else {
-            teacherView.mas_remakeConstraints { make in
-                make?.top.left().right().equalTo()(0)
-                make?.bottom.equalTo()(self.view.mas_centerY)?.offset()(AgoraFit.scale(-1))
-            }
-            studentView.mas_remakeConstraints { make in
-                make?.bottom.left().right().equalTo()(0)
-                make?.top.equalTo()(self.view.mas_centerY)?.offset()(AgoraFit.scale(1))
-            }
+        teacherView.mas_remakeConstraints { make in
+            make?.top.left().right().equalTo()(0)
+            make?.bottom.equalTo()(self.view.mas_centerY)?.offset()(-1)
+        }
+        studentView.mas_remakeConstraints { make in
+            make?.bottom.left().right().equalTo()(0)
+            make?.top.equalTo()(self.view.mas_centerY)?.offset()(1)
         }
     }
 }
