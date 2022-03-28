@@ -146,12 +146,12 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
                               color: color.common_base_tint_color)
             }
             cell.aSelected = (tool == curBoardTool)
-            if tool == .pre {
-                cell.setEnable(undoEnable)
-            }
-            if tool == .next {
-                cell.setEnable(redoEnable)
-            }
+//            if tool == .pre {
+//                cell.setEnable(undoEnable)
+//            }
+//            if tool == .next {
+//                cell.setEnable(redoEnable)
+//            }
         } else if collectionView == teachingAidsView {
             let tool = teachingAidsList[indexPath.row]
             cell.setImage(image: tool.cellImage(),

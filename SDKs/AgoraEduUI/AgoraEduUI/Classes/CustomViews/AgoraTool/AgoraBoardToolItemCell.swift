@@ -61,7 +61,8 @@ enum AgoraBoardToolPaintType: Int, CaseIterable {
 }
 
 enum AgoraBoardToolMainType: Int, CaseIterable {
-    case clicker, area, paint, text, rubber, clear, pre, next
+    case clicker, area, paint, text, rubber
+    // TODO: akasuo 暂时删除clear, pre, next
     
     var image: UIImage? {
         switch self {
@@ -70,9 +71,9 @@ enum AgoraBoardToolMainType: Int, CaseIterable {
         case .paint:    return UIImage.agedu_named("ic_brush_paint")
         case .text:     return UIImage.agedu_named("ic_brush_text")
         case .rubber:   return UIImage.agedu_named("ic_brush_rubber")
-        case .clear:    return UIImage.agedu_named("ic_brush_clear")
-        case .pre:      return UIImage.agedu_named("ic_brush_pre")
-        case .next:     return UIImage.agedu_named("ic_brush_next")
+//        case .clear:    return UIImage.agedu_named("ic_brush_clear")
+//        case .pre:      return UIImage.agedu_named("ic_brush_pre")
+//        case .next:     return UIImage.agedu_named("ic_brush_next")
         }
     }
     
@@ -83,9 +84,9 @@ enum AgoraBoardToolMainType: Int, CaseIterable {
         case .paint:    return UIImage.agedu_named("ic_brush_paint_selected")
         case .text:     return UIImage.agedu_named("ic_brush_text")
         case .rubber:   return UIImage.agedu_named("ic_brush_rubber_selected")
-        case .clear:    return UIImage.agedu_named("ic_brush_clear")
-        case .pre:      return UIImage.agedu_named("ic_brush_pre")
-        case .next:     return UIImage.agedu_named("ic_brush_next")
+//        case .clear:    return UIImage.agedu_named("ic_brush_clear")
+//        case .pre:      return UIImage.agedu_named("ic_brush_pre")
+//        case .next:     return UIImage.agedu_named("ic_brush_next")
         }
     }
     
@@ -112,7 +113,7 @@ enum AgoraBoardToolMainType: Int, CaseIterable {
     var needUpdateCell: Bool {
         switch self {
         case .clicker, .area, .paint, .text, .rubber:  return true
-        case .clear, .pre ,.next:                      return false
+        default:                                       return false
         }
     }
 }

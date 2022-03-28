@@ -159,24 +159,25 @@ extension AgoraToolCollectionUIController: AgoraMainToolsViewDelegate,
     func didSelectBoardTool(type: AgoraBoardToolMainType) {
         if type.needUpdateCell {
             currentMainTool = type
-        } else {
-            var signal: AgoraBoardWidgetSignal?
-            switch type {
-            case .clear:
-                signal = AgoraBoardWidgetSignal.ClearBoard
-            case .pre:
-                signal = AgoraBoardWidgetSignal.BoardStepChanged(.pre(1))
-            case .next:
-                signal = AgoraBoardWidgetSignal.BoardStepChanged(.next(1))
-            default:
-                break
-            }
-            if let boardSignal = signal,
-               let message = boardSignal.toMessageString() {
-                contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                               message: message)
-            }
         }
+//        else {
+//            var signal: AgoraBoardWidgetSignal?
+//            switch type {
+//            case .clear:
+//                signal = AgoraBoardWidgetSignal.ClearBoard
+//            case .pre:
+//                signal = AgoraBoardWidgetSignal.BoardStepChanged(.pre(1))
+//            case .next:
+//                signal = AgoraBoardWidgetSignal.BoardStepChanged(.next(1))
+//            default:
+//                break
+//            }
+//            if let boardSignal = signal,
+//               let message = boardSignal.toMessageString() {
+//                contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
+//                                               message: message)
+//            }
+//        }
     }
     
     // MARK: - AgoraBoardToolConfigViewDelegate
