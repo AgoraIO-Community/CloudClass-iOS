@@ -54,7 +54,7 @@ import AgoraWidget
         return vc
     }()
     /** 大窗 控制器*/
-    private var spreadController: AgoraSpreadUIController!
+    private var spreadController: AgoraWindowUIController!
     
     private var isJoinedRoom = false
         
@@ -149,8 +149,8 @@ extension AgoraPaintingSmallUIManager: AgoraToolBoxUIControllerDelegate {
         }
     }
 }
-// MARK: - AgoraSpreadUIControllerDelegate
-extension AgoraPaintingSmallUIManager: AgoraSpreadUIControllerDelegate {
+// MARK: - AgoraWindowUIControllerDelegate
+extension AgoraPaintingSmallUIManager: AgoraWindowUIControllerDelegate {
     
     func startSpreadForUser(with userId: String) -> UIView? {
         self.renderController.setRenderEnable(with: userId,
@@ -208,7 +208,7 @@ private extension AgoraPaintingSmallUIManager {
         nameRollController = AgoraUserListUIController(context: contextPool)
         addChild(nameRollController)
         
-        spreadController = AgoraSpreadUIController(context: contextPool)
+        spreadController = AgoraWindowUIController(context: contextPool)
         spreadController.delegate = self
         addChild(spreadController)
         contentView.addSubview(spreadController.view)

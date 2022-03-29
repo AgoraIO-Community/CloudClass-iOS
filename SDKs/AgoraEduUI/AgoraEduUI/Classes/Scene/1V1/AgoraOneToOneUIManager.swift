@@ -45,10 +45,10 @@ import Masonry
     private var boardPageController: AgoraBoardPageUIController!
     /** 聊天 控制器*/
     private var chatController: AgoraChatUIController?
-    /** 屏幕分享 控制器*/
-    private var screenSharingController: AgoraScreenSharingUIController!
     /** 教具 控制器*/
     private var classToolsController: AgoraClassToolsViewController!
+    /** 大窗 控制器*/
+    private var windowController: AgoraWindowUIController!
     private var tabSelectView: AgoraOneToOneTabView?
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
@@ -152,6 +152,35 @@ extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
             }
         } else {
             v.removeFromSuperview()
+        }
+    }
+}
+
+// MARK: - AgoraWindowUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraWindowUIControllerDelegate {
+    func startSpreadForUser(with userId: String) -> UIView? {
+        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
+            self.renderController.teacherModel?.rendEnable = false
+            return self.renderController.teacherView
+        } else {
+            self.renderController.studentModel?.rendEnable = false
+            return self.renderController.studentView
+        }
+    }
+    
+    func willStopSpreadForUser(with userId: String) -> UIView? {
+        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
+            return self.renderController.teacherView
+        } else {
+            return self.renderController.studentView
+        }
+    }
+    
+    func didStopSpreadForUser(with userId: String) {
+        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
+            self.renderController.teacherModel?.rendEnable = false
+        } else {
+            self.renderController.studentModel?.rendEnable = false
         }
     }
 }
@@ -367,9 +396,15 @@ private extension AgoraOneToOneUIManager {
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
+        // 视图层级：白板，大窗，工具
         boardController = AgoraBoardUIController(context: contextPool)
         addChild(boardController)
         contentView.addSubview(boardController.view)
+        
+        windowController = AgoraWindowUIController(context: contextPool)
+        windowController.delegate = self
+        addChild(windowController)
+        contentView.addSubview(windowController.view)
         
         rightContentView = UIView()
         rightContentView.backgroundColor = .white
@@ -413,10 +448,6 @@ private extension AgoraOneToOneUIManager {
             toolCollectionController.view.isHidden = false
             boardPageController.view.isHidden = false
         }
-        
-        screenSharingController = AgoraScreenSharingUIController(context: contextPool)
-        addChild(screenSharingController)
-        contentView.addSubview(screenSharingController.view)
     }
     
     func createConstraint() {
@@ -428,6 +459,9 @@ private extension AgoraOneToOneUIManager {
             make?.left.bottom().equalTo()(0)
             make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+        }
+        windowController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
 
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
@@ -449,11 +483,6 @@ private extension AgoraOneToOneUIManager {
             make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
             make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
             make?.width.height().equalTo()(toolCollectionController.suggestLength)
-        }
-        screenSharingController.view.mas_makeConstraints { make in
-            make?.left.bottom().equalTo()(0)
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
-            make?.right.equalTo()(rightContentView.mas_left)
         }
         boardPageController.view.mas_makeConstraints { make in
             make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)

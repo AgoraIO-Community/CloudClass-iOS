@@ -178,9 +178,9 @@
     widgets[poll.widgetId] = poll;
     
     // Render Spread Widget
-    AgoraWidgetConfig *spread = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRenderSpreadWidget class]
+    AgoraWidgetConfig *window = [[AgoraWidgetConfig alloc] initWithClass:[AgoraStreamWindowWidget class]
                                                                 widgetId:@"streamWindow"];
-    widgets[spread.widgetId] = spread;
+    widgets[window.widgetId] = window;
     
     // Cloud Widget
     AgoraWidgetConfig *cloud = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]

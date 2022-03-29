@@ -7,7 +7,6 @@
 
 import Foundation
 
-let kBoardWidgetId = "netlessBoard"
 // MARK: - Config
 enum AgoraBoardWidgetSignal: Convertable {
     case JoinBoard

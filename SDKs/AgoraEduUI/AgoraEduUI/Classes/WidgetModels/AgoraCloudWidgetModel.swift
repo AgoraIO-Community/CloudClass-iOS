@@ -5,7 +5,6 @@
 //  Created by DoubleCircle on 2022/2/7.
 //
 
-let kCloudWidgetId = "AgoraCloudWidget"
 // MARK: - Config
 enum AgoraCloudWidgetSignal: Convertable {
     case OpenCourseware(AgoraCloudWidgetCoursewareModel)

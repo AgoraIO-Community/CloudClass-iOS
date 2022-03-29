@@ -50,7 +50,7 @@ import AgoraWidget
         return vc
     }()
     /** 大窗 控制器*/
-    private var spreadController: AgoraSpreadUIController!
+    private var spreadController: AgoraWindowUIController!
     
     private var isJoinedRoom = false
         
@@ -112,8 +112,8 @@ extension AgoraPaintingLectureUIManager: AgoraToolBarDelegate {
         ctrlView = nil
     }
 }
-// MARK: - AgoraSpreadUIControllerDelegate
-extension AgoraPaintingLectureUIManager: AgoraSpreadUIControllerDelegate {
+// MARK: - AgoraWindowUIControllerDelegate
+extension AgoraPaintingLectureUIManager: AgoraWindowUIControllerDelegate {
     
     func startSpreadForUser(with userId: String) -> UIView? {
         var view: UIView?
@@ -209,7 +209,7 @@ private extension AgoraPaintingLectureUIManager {
         toolBarController.tools = [.setting, .handsup, .brushTool]
         view.addSubview(toolBarController.view)
         
-        spreadController = AgoraSpreadUIController(context: contextPool)
+        spreadController = AgoraWindowUIController(context: contextPool)
         spreadController.delegate = self
         addChild(spreadController)
         contentView.addSubview(spreadController.view)

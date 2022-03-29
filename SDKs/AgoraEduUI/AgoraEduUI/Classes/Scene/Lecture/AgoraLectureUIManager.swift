@@ -33,12 +33,12 @@ import AgoraWidget
     private lazy var nameRollController: AgoraUserListUIController = {
         return AgoraUserListUIController(context: contextPool)
     }()
-    /** 屏幕分享 控制器*/
-    private var screenSharingController: AgoraScreenSharingUIController!
     /** 工具集合 控制器*/
     private var toolCollectionController: AgoraToolCollectionUIController!
     /** 白板翻页 控制器*/
     private var boardPageController: AgoraBoardPageUIController!
+    /** 大窗 控制器*/
+    private var windowController: AgoraWindowUIController!
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController: AgoraCloudUIController = {
         let vc = AgoraCloudUIController(context: contextPool)
@@ -110,9 +110,41 @@ import AgoraWidget
     }
 }
 
+// MARK: - AgoraWindowUIControllerDelegate
+extension AgoraLectureUIManager: AgoraWindowUIControllerDelegate {
+    func startSpreadForUser(with userId: String) -> UIView? {
+        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
+            self.teacherRenderController.setRenderEnable(with: userId,
+                                                         rendEnable: false)
+            return self.teacherRenderController.renderViewForUser(with: userId)
+        } else {
+            self.studentsRenderController.setRenderEnable(with: userId,
+                                                          rendEnable: false)
+            return self.studentsRenderController.renderViewForUser(with: userId)
+        }
+    }
+    
+    func willStopSpreadForUser(with userId: String) -> UIView? {
+        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
+            return self.teacherRenderController.renderViewForUser(with: userId)
+        } else {
+            return self.studentsRenderController.renderViewForUser(with: userId)
+        }
+    }
+    
+    func didStopSpreadForUser(with userId: String) {
+        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
+            self.teacherRenderController.setRenderEnable(with: userId,
+                                                         rendEnable: true)
+        } else {
+            self.studentsRenderController.setRenderEnable(with: userId,
+                                                          rendEnable: true)
+        }
+    }
+}
+
 // MARK: - AgoraToolBarDelegate
 extension AgoraLectureUIManager: AgoraToolBarDelegate {
-    
     func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
                                 selectView: UIView) {
         switch tool {
@@ -318,6 +350,7 @@ private extension AgoraLectureUIManager {
         addChild(teacherRenderController)
         contentView.addSubview(teacherRenderController.view)
         
+        // 视图层级：白板，大窗，工具
         boardController = AgoraBoardUIController(context: contextPool)
         boardController.view.layer.cornerRadius = AgoraFit.scale(2)
         boardController.view.borderWidth = 1
@@ -325,6 +358,11 @@ private extension AgoraLectureUIManager {
         boardController.view.clipsToBounds = true
         addChild(boardController)
         contentView.addSubview(boardController.view)
+        
+        windowController = AgoraWindowUIController(context: contextPool)
+        windowController.delegate = self
+        addChild(windowController)
+        contentView.addSubview(windowController.view)
         
         toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
                                                                    delegate: self)
@@ -362,10 +400,6 @@ private extension AgoraLectureUIManager {
             boardPageController.view.isHidden = true
         }
         contentView.addSubview(toolBarController.view)
-        
-        screenSharingController = AgoraScreenSharingUIController(context: contextPool)
-        addChild(screenSharingController)
-        contentView.addSubview(screenSharingController.view)
     }
     
     func createConstraint() {
@@ -378,10 +412,8 @@ private extension AgoraLectureUIManager {
             make?.width.equalTo()(AgoraFit.scale(465))
             make?.height.equalTo()(AgoraFit.scale(262))
         }
-        screenSharingController.view.mas_makeConstraints { make in
-            make?.left.bottom().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(465))
-            make?.height.equalTo()(AgoraFit.scale(262))
+        windowController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         studentsRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))

@@ -157,7 +157,26 @@ extension AgoraToolCollectionUIController: AgoraMainToolsViewDelegate,
     }
     
     func didSelectBoardTool(type: AgoraBoardToolMainType) {
-        currentMainTool = type
+        if type.needUpdateCell {
+            currentMainTool = type
+        } else {
+            var signal: AgoraBoardWidgetSignal?
+            switch type {
+            case .clear:
+                signal = AgoraBoardWidgetSignal.ClearBoard
+            case .pre:
+                signal = AgoraBoardWidgetSignal.BoardStepChanged(.pre(1))
+            case .next:
+                signal = AgoraBoardWidgetSignal.BoardStepChanged(.next(1))
+            default:
+                break
+            }
+            if let boardSignal = signal,
+               let message = boardSignal.toMessageString() {
+                contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
+                                               message: message)
+            }
+        }
     }
     
     // MARK: - AgoraBoardToolConfigViewDelegate
@@ -317,12 +336,6 @@ private extension AgoraToolCollectionUIController {
             if let type = currentMainTool.boardWidgetToolType {
                 signal = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: type))
             }
-        case .clear:
-            signal = AgoraBoardWidgetSignal.ClearBoard
-        case .pre:
-            signal = AgoraBoardWidgetSignal.BoardStepChanged(.pre(1))
-        case .next:
-            signal = AgoraBoardWidgetSignal.BoardStepChanged(.next(1))
         default:
             break
         }

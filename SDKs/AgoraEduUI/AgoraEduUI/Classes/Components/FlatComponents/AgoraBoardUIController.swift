@@ -14,14 +14,14 @@ class AgoraBoardUIController: UIViewController {
     
     private var localGranted = false {
         didSet {
-            guard localGranted != oldValue else {
+            guard localGranted != oldValue,
+                  contextPool.user.getLocalUserInfo().userRole != .teacher else {
                 return
             }
             if !localGranted {
                 AgoraToast.toast(msg: "fcr_netless_board_ungranted".agedu_localized(),
                                  type: .error)
-            } else if localGranted,
-                        contextPool.user.getLocalUserInfo().userRole != .teacher {
+            } else {
                 AgoraToast.toast(msg: "fcr_netless_board_granted".agedu_localized(),
                                  type: .notice)
             }
@@ -174,8 +174,10 @@ extension AgoraBoardUIController: AgoraWidgetActivityObserver {
 
 extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        initBoardWidget()
-        joinBoard()
+        if contextPool.widget.getWidgetActivity(kBoardWidgetId) {
+            initBoardWidget()
+            joinBoard()
+        }
     }
 }
 

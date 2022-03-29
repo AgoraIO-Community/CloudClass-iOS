@@ -10,10 +10,6 @@ import SwifterSwift
 import AgoraWidget
 import UIKit
 
-protocol AgoraBoardPageUIControllerDelegate: NSObjectProtocol {
-    func boardPageUINeedMove(coursewareMin: Bool)
-}
-
 class AgoraBoardPageUIController: UIViewController {
     /** Views*/
     private var addBtn: UIButton!
@@ -28,8 +24,6 @@ class AgoraBoardPageUIController: UIViewController {
     /** SDK*/
     private var contextPool: AgoraEduContextPool!
     /** Data */
-    private weak var delegate: AgoraBoardPageUIControllerDelegate?
-
     private var pageIndex = 1 {
         didSet {
             let text = "\(pageIndex) / \(pageCount)"

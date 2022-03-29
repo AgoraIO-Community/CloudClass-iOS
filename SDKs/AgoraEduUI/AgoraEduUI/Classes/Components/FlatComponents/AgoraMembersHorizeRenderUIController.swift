@@ -110,7 +110,8 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
         }
     }
     
-    public func setRenderEnable(with userId: String, rendEnable: Bool) {
+    public func setRenderEnable(with userId: String,
+                                rendEnable: Bool) {
         if let model = self.teacherModel,
            model.uuid == userId {
             model.rendEnable = rendEnable

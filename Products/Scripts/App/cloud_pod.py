@@ -195,20 +195,12 @@ def main():
     BaseParams["podMode"] = PODMODE.Source if PodMode == "0" else PODMODE.Binary
     print  ('Pod Mode: ' + BaseParams["podMode"].name)
 
-   
-
     # 若为source pod，开发者模式
     if BaseParams["podMode"] == PODMODE.Source:
-        print "BaseParams:\n" + str(BaseParams)
-        modifyFlag = raw_input("Need Modify Base Paramaters? Yes: 0, NO: Any\n")
+        modifyFlag = input("Need Update pod repo? Yes: 0, NO: Any\n")
 
+        # 是否需要更新cocoapods repo
         if modifyFlag == "0":
-            # 是否需要更新cocoapods repo
-            print ("Update Cocoapods repo: don't update: 0, update: 1")
-            updateFlag = raw_input()
-            if (updateFlag != "0" and updateFlag != "1"):
-                print("Invalid input, don't update dafaultly")
-                updateFlag = "0"
             BaseParams["updateFlag"] = False if updateFlag == "0" else True
     
     executePod()

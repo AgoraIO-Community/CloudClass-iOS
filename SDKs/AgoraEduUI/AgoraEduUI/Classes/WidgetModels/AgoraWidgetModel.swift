@@ -10,3 +10,6 @@ import Foundation
 let PopupQuizWidgetId = "popupQuiz"
 let CountdownTimerWidgetId = "countdownTimer"
 let PollWidgetId = "poll"
+let kWindowWidgetId = "streamWindow"
+let kBoardWidgetId = "netlessBoard"
+let kCloudWidgetId = "AgoraCloudWidget"

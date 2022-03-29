@@ -34,8 +34,6 @@ import AgoraWidget
     }()
     /** 花名册 控制器*/
     private var nameRollController: AgoraUserListUIController!
-    /** 屏幕分享 控制器*/
-    private var screenSharingController: AgoraScreenSharingUIController!
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuController: AgoraRenderMenuUIController = {
         let vc = AgoraRenderMenuUIController(context: contextPool)
@@ -63,6 +61,8 @@ import AgoraWidget
     }()
     /** 教具 控制器*/
     private var classToolsController: AgoraClassToolsViewController!
+    /** 大窗 控制器*/
+    private var windowController: AgoraWindowUIController!
     
     private var isJoinedRoom = false
         
@@ -137,6 +137,24 @@ extension AgoraSmallUIManager: AgoraToolBarDelegate {
     
     func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
         ctrlView = nil
+    }
+}
+
+// MARK: - AgoraWindowUIControllerDelegate
+extension AgoraSmallUIManager: AgoraWindowUIControllerDelegate {
+    func startSpreadForUser(with userId: String) -> UIView? {
+        self.renderController.setRenderEnable(with: userId,
+                                              rendEnable: false)
+        return self.renderController.renderViewForUser(with: userId)
+    }
+    
+    func willStopSpreadForUser(with userId: String) -> UIView? {
+        return self.renderController.renderViewForUser(with: userId)
+    }
+    
+    func didStopSpreadForUser(with userId: String) {
+        self.renderController.setRenderEnable(with: userId,
+                                              rendEnable: true)
     }
 }
 
@@ -315,10 +333,16 @@ private extension AgoraSmallUIManager {
         addChild(renderController)
         contentView.addSubview(renderController.view)
         
+        // 视图层级：白板，大窗，工具
         boardController = AgoraBoardUIController(context: contextPool)
         boardController.view.clipsToBounds = true
         addChild(boardController)
         contentView.addSubview(boardController.view)
+        
+        windowController = AgoraWindowUIController(context: contextPool)
+        windowController.delegate = self
+        addChild(windowController)
+        contentView.addSubview(windowController.view)
         
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
@@ -358,10 +382,6 @@ private extension AgoraSmallUIManager {
         classToolsController = AgoraClassToolsViewController(context: contextPool)
         addChild(classToolsController)
         contentView.addSubview(classToolsController.view)
-        
-        screenSharingController = AgoraScreenSharingUIController(context: contextPool)
-        addChild(screenSharingController)
-        contentView.addSubview(screenSharingController.view)
     }
     
     func createConstraint() {
@@ -383,10 +403,6 @@ private extension AgoraSmallUIManager {
             make?.left.right().equalTo()(0)
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
             make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-1))
-        }
-        screenSharingController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-            make?.left.right().bottom().equalTo()(0)
         }
         if contextPool.user.getLocalUserInfo().userRole == .teacher {
             self.toolBarController.view.mas_remakeConstraints { make in
@@ -414,6 +430,11 @@ private extension AgoraSmallUIManager {
             make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
             make?.width.equalTo()(168)
         }
+        
+        windowController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
+        
         classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
