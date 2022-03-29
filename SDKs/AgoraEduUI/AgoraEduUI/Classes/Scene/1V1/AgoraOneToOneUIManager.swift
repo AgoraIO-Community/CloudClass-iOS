@@ -58,7 +58,10 @@ import Masonry
     
     private var isJoinedRoom = false
     
+    private var fileWriter = FcrUIFileWriter()
+    
     deinit {
+        stopTestAudioData()
         print("\(#function): \(self.classForCoder)")
     }
     
@@ -83,6 +86,9 @@ import Masonry
             // 打开本地音视频设备
             self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
             self.contextPool.media.openLocalDevice(systemDevice: .mic)
+            
+            // Test audio data
+            self.startTestAudioData()
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)
@@ -100,7 +106,36 @@ import Masonry
         super.didClickCtrlMaskView()
         stateController.deSelect()
     }
+    
+    private func startTestAudioData() {
+        let media = contextPool.media
+        let config = FcrAudioRawDataConfig()
+        
+        let sampleSize: Int32 = 2
+        let duration: Int32 = 10 // second
+        
+        fileWriter.byteLimit = Int64(config.sampleRate * Int32(config.channels) * sampleSize * duration)
+        
+        media.setAudioRawDataConfig(config: config,
+                                    position: .record)
+        media.addAudioRawDataObserver(observer: self,
+                                      position: .record)
+    }
+    
+    private func stopTestAudioData() {
+        let media = contextPool.media
+        media.removeAudioRawDataObserver(observer: self,
+                                         position: .record)
+    }
 }
+
+extension AgoraOneToOneUIManager: FcrAudioRawDataObserver {
+    public func onAudioRawDataRecorded(data: FcrAudioRawData) {
+        fileWriter.write(data: data.buffer,
+                         to: "audiorawdata.pcm")
+    }
+}
+
 // MARK: - AgoraOneToOneTabViewDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
     func onChatTabSelectChanged(isSelected: Bool) {
@@ -189,7 +224,6 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
         default:
             break
         }
-        
     }
 }
 

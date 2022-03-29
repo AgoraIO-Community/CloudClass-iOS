@@ -403,6 +403,13 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
                                                   errorCode: Int)
 }
 
+@objc public protocol FcrAudioRawDataObserver: NSObjectProtocol {
+    /// 录制后的原始音频数据 (v2.3.0)
+    /// - parameter data: 音频数据
+    /// - returns: void
+    @objc optional func onAudioRawDataRecorded(data: FcrAudioRawData)
+}
+
 @objc public protocol AgoraEduMediaContext: NSObjectProtocol {
     /// 获取设备列表 (v2.0.0)
     /// - parameter deviceType: 设备类型
@@ -480,6 +487,27 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter handler: 监听者
     /// - returns: void
     func unregisterMediaEventHandler(_ handler: AgoraEduMediaHandler)
+    
+    /// 设置音频管道中每个位置的输出配置 (v2.3.0)
+    /// - parameter config: 配置
+    /// - parameter position: 位置
+    /// - returns: void
+    func setAudioRawDataConfig(config: FcrAudioRawDataConfig,
+                               position: FcrAudioRawDataPosition) -> AgoraEduContextError?
+    
+    /// 添加音频管道中某个位置的观察者 (v2.3.0)
+    /// - parameter observer: 观察者
+    /// - parameter position: 位置
+    /// - returns: void
+    func addAudioRawDataObserver(observer: FcrAudioRawDataObserver,
+                                 position: FcrAudioRawDataPosition) -> AgoraEduContextError?
+    
+    /// 移除音频管道中某个位置的观察者 (v2.3.0)
+    /// - parameter observer: 观察者
+    /// - parameter position: 位置
+    /// - returns: void
+    func removeAudioRawDataObserver(observer: FcrAudioRawDataObserver,
+                                    position: FcrAudioRawDataPosition) -> AgoraEduContextError?
 }
 
 // MARK: - Stream

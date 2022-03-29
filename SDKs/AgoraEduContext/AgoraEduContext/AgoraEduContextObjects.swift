@@ -161,6 +161,38 @@ import Foundation
     }
 }
 
+/// 音频原始数据配置
+@objcMembers public class FcrAudioRawDataConfig: NSObject {
+    public var sampleRate: Int32 = 48000
+    public var samplesPerChannel: Int64 = 1024
+    public var channels: Int8 = 1
+    public var mode: FcrMediaRawDataOperationMode = .readOnly
+}
+
+/// 音频原始数据信息
+@objcMembers public class FcrAudioRawData: NSObject {
+    public let sampleRate: Int32
+    public let samplesPerChannel: Int64
+    public let channels: Int8
+    public let bytesPerSample: Int8
+    public let timestamp: Int64
+    public let buffer: NSData
+    
+    public init(sampleRate: Int32,
+                samplesPerChannel: Int64,
+                channels: Int8,
+                bytesPerSample: Int8,
+                timestamp: Int64,
+                buffer: NSData) {
+        self.sampleRate = sampleRate
+        self.samplesPerChannel = samplesPerChannel
+        self.channels = channels
+        self.bytesPerSample = bytesPerSample
+        self.timestamp = timestamp
+        self.buffer = buffer
+    }
+}
+
 // MARK: - Stream
 /// 流信息
 @objcMembers public class AgoraEduContextStreamInfo: NSObject {

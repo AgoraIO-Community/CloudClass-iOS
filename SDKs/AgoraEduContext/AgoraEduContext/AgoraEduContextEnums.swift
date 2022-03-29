@@ -137,6 +137,15 @@ import Foundation
     case speaker     = 4
 }
 
+/// 媒体原始数据操作
+@objc public enum FcrMediaRawDataOperationMode: Int {
+    case readOnly = 0
+}
+
+@objc public enum FcrAudioRawDataPosition: Int {
+    case record = 2
+}
+
 // MARK: - Stream
 /// 视频源
 @objc public enum AgoraEduContextVideoSourceType: Int {
