@@ -228,12 +228,7 @@ private extension AgoraSettingUIController {
         let switchTintColor = group.setting_switch_tint_color
         let exitColor = group.setting_exit_button_color
         
-        view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        view.layer.shadowOffset = CGSize(width: 0,
-                                         height: 2)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowRadius = 6
+        group.borderSet(layer: view.layer)
         
         contentView = UIView()
         contentView.backgroundColor = .white

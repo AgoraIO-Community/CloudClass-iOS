@@ -86,11 +86,7 @@ class AgoraToolBarItemCell: UICollectionViewCell {
         
         contentView.backgroundColor = itemBackgroundUnselectedColor
         contentView.layer.cornerRadius = 8
-        contentView.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                                transparency: 0.15)?.cgColor
-        contentView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        contentView.layer.shadowOpacity = 1
-        contentView.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: contentView.layer)
         
         imageView = UIImageView(frame: .zero)
         imageView.tintColor = itemUnselectedColor
@@ -244,7 +240,8 @@ class AgoraToolCollectionCell: UIView {
         addSubview(imageView)
         
         imageView.mas_remakeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
+            make?.center.equalTo()(0)
+            make?.width.height().equalTo()(UIDevice.current.isPad ? 32 : 30)
         }
         
         if !isMain {
@@ -273,19 +270,20 @@ class AgoraToolCollectionCell: UIView {
     // 对于子配置cell，若设置图片，则隐藏font视图，显示image和color视图
     func setImage(_ image: UIImage?,
                   color: UIColor?) {
+        let finalColor = UIColor.fakeWhite(color)
         if isMain {
             guard let i = image else {
                 return
             }
             imageView.image = i.withRenderingMode(.alwaysTemplate)
-            imageView.tintColor = color
+            imageView.tintColor = finalColor
         } else {
             imageView.image = image
             
             fontLabel.isHidden = true
             imageView.isHidden = false
             colorView.isHidden = false
-            colorView.backgroundColor = color
+            colorView.backgroundColor = finalColor
         }
     }
     

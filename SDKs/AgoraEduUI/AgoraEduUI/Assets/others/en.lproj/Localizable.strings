@@ -27,6 +27,7 @@ fcr_room_class_leave_cancel = "Cancel";
 fcr_room_class_leave_sure = "Sure";
 fcr_room_one_to_one_title = "One-to-One Classroom";
 fcr_room_small_title = "Small Classroom";
+fcr_room_lecture_title = "Lecture Classroom";
 
 // user
 fcr_user_local_kick_out_notice = "Remove Notification";

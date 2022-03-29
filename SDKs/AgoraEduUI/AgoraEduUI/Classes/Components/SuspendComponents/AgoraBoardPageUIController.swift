@@ -29,6 +29,7 @@ class AgoraBoardPageUIController: UIViewController {
     private var contextPool: AgoraEduContextPool!
     /** Data */
     private weak var delegate: AgoraBoardPageUIControllerDelegate?
+
     private var pageIndex = 1 {
         didSet {
             let text = "\(pageIndex) / \(pageCount)"
@@ -46,16 +47,24 @@ class AgoraBoardPageUIController: UIViewController {
     private var positionMoveFlag: Bool = false {
         didSet {
             if positionMoveFlag != oldValue {
-                delegate?.boardPageUINeedMove(coursewareMin: positionMoveFlag)
+                UIView.animate(withDuration: TimeInterval.agora_animation,
+                               delay: 0,
+                               options: .curveEaseInOut,
+                               animations: { [weak self] in
+                                guard let `self` = self else {
+                                    return
+                                }
+                                let move: CGFloat = UIDevice.current.isPad ? 49 : 44
+                                self.view.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
+                                                                         y: 0)
+                               }, completion: nil)
             }
         }
     }
     
-    init(context: AgoraEduContextPool,
-         delegate: AgoraBoardPageUIControllerDelegate) {
+    init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         self.contextPool = context
-        self.delegate = delegate
         
         contextPool.widget.add(self,
                                widgetId: kBoardWidgetId)
@@ -116,12 +125,7 @@ extension AgoraBoardPageUIController {
         view.backgroundColor = .white
         
         view.layer.cornerRadius = 17
-        view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        view.layer.shadowOffset = CGSize(width: 0,
-                                         height: 2)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: view.layer)
         
         addBtn = UIButton(type: .custom)
         if let image = UIImage.agedu_named("ic_board_page_add") {

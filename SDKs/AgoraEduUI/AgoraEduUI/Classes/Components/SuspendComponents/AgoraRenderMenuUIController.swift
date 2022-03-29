@@ -133,21 +133,21 @@ class AgoraRenderMenuUIController: UIViewController {
         switch roomType {
         case .oneToOne:
             if showRoleType == .teacher {
-                items = [.mic, .camera]
+                items = [.camera, .mic]
             } else if showRoleType == .student {
-                items = [.mic, .camera, .reward, .auth]
+                items = [.camera, .mic, .reward, .auth]
             }
         case .small:
             if showRoleType == .teacher {
-                items = [.mic, .camera, .allOffStage]
+                items = [.camera, .mic, .allOffStage]
             } else if showRoleType == .student {
-                items = [.mic, .camera, .stage, .reward, .auth]
+                items = [.camera, .mic, .stage, .reward, .auth]
             }
         case .lecture:
             if showRoleType == .teacher {
-                items = [.mic, .camera, .allOffStage]
+                items = [.camera, .mic, .allOffStage]
             } else if showRoleType == .student {
-                items = [.mic, .camera, .stage]
+                items = [.camera, .mic, .stage]
             }
         default:
             break
@@ -155,9 +155,14 @@ class AgoraRenderMenuUIController: UIViewController {
         
         // show VC,主动更新model信息
         updateModelState()
+        
+        // 5s后自动消失
+        self.perform(#selector(dismissView),
+                     with: nil,
+                     afterDelay: 5)
     }
     
-    func dismissView() {
+    @objc func dismissView() {
         view.isHidden = true
         self.userId = nil
         self.model = AgoraRenderMenuModel()
@@ -242,8 +247,8 @@ private extension AgoraRenderMenuUIController {
         contentView.removeSubviews()
         contentView.addArrangedSubviews(views)
         
-        menuWidth =  CGFloat(items.count) * AgoraFit.scale(22) + CGFloat(items.count + 1) * AgoraFit.scale(12)
-        let stackWidth = CGFloat(items.count) * AgoraFit.scale(22) + CGFloat(items.count - 1) * AgoraFit.scale(12)
+        menuWidth =  CGFloat(items.count) * 22 + CGFloat(items.count + 1) * 10
+        let stackWidth = CGFloat(items.count) * 22 + CGFloat(items.count - 1) * 10
         
         self.contentView.mas_remakeConstraints { make in
             make?.width.equalTo()(stackWidth)
@@ -463,17 +468,14 @@ private extension AgoraRenderMenuUIController {
     func createViews() {
         view.backgroundColor = UIColor.white
         view.layer.cornerRadius = 8
-        view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        view.layer.shadowOffset = CGSize(width: 0, height: 2)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: view.layer)
         
         // contentView
         contentView = UIStackView()
         contentView.backgroundColor = .clear
         contentView.axis = .horizontal
-        contentView.spacing = AgoraFit.scale(12)
+        contentView.spacing = 10
+
         contentView.distribution = .equalSpacing
         contentView.alignment = .center
         contentView.backgroundColor = .white
@@ -481,8 +483,9 @@ private extension AgoraRenderMenuUIController {
         
         let buttonFrame = CGRect(x: 0,
                                  y: 0,
-                                 width: AgoraFit.scale(32),
-                                 height: AgoraFit.scale(32))
+                                 width: 22,
+                                 height: 22)
+
         // micButton
         micButton = UIButton(type: .custom)
         micButton.frame = buttonFrame
@@ -531,8 +534,8 @@ private extension AgoraRenderMenuUIController {
     
     func createConstraint() {
         contentView.mas_makeConstraints { make in
-            make?.left.equalTo()(AgoraFit.scale(14))
-            make?.right.equalTo()(AgoraFit.scale(-14))
+            make?.left.equalTo()(10)
+            make?.right.equalTo()(10)
             make?.top.equalTo()(contentView.superview?.mas_top)?.offset()(1)
             make?.bottom.equalTo()(contentView.superview?.mas_bottom)?.offset()(-1)
         }

@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 import AgoraEduContext
+import AgoraWidget
 import Masonry
 import UIKit
 
@@ -24,6 +25,24 @@ class AgoraClassStateUIController: UIViewController {
     /**Views*/
     private var startButton = UIButton()
     
+    private var positionMoveFlag: Bool = false {
+        didSet {
+            if positionMoveFlag != oldValue {
+                UIView.animate(withDuration: TimeInterval.agora_animation,
+                               delay: 0,
+                               options: .curveEaseInOut,
+                               animations: { [weak self] in
+                                guard let `self` = self else {
+                                    return
+                                }
+                                let move: CGFloat = UIDevice.current.isPad ? 49 : 44
+                                self.startButton.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
+                                                                         y: 0)
+                               }, completion: nil)
+            }
+        }
+    }
+    
     init(context: AgoraEduContextPool,
          delegate: AgoraClassStateUIControllerDelegate?) {
         super.init(nibName: nil,
@@ -32,6 +51,8 @@ class AgoraClassStateUIController: UIViewController {
         self.delegate = delegate
         
         contextPool.room.registerRoomEventHandler(self)
+        contextPool.widget.add(self,
+                               widgetId: kBoardWidgetId)
     }
     
     func dismissView() {
@@ -49,10 +70,28 @@ class AgoraClassStateUIController: UIViewController {
     }
 }
 
+// MARK: - AgoraEduRoomHandler
 extension AgoraClassStateUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         if contextPool.room.getClassInfo().state == .before {
             delegate?.onShowStartClass()
+        }
+    }
+}
+
+// MARK: - AgoraWidgetMessageObserver
+extension AgoraClassStateUIController: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String) {
+        guard widgetId == kBoardWidgetId,
+              let signal = message.toBoardSignal() else {
+                  return
+              }
+        switch signal {
+        case .WindowStateChanged(let state):
+            positionMoveFlag = (state == .min)
+        default:
+            break
         }
     }
 }
@@ -76,6 +115,12 @@ private extension AgoraClassStateUIController {
         startButton.setTitleColor(.white,
                                   for: .normal)
         startButton.layer.cornerRadius = ui.frame.class_state_button_corner_radius
+        startButton.layer.shadowColor = ui.color.class_state_shadow_color
+        startButton.layer.shadowOffset = CGSize(width: 0,
+                                                height: 1.5)
+        startButton.layer.shadowOpacity = 0.15
+        startButton.layer.shadowRadius = 5
+        
         startButton.addTarget(self,
                               action: #selector(onClickStart(_:)),
                               for: .touchUpInside)

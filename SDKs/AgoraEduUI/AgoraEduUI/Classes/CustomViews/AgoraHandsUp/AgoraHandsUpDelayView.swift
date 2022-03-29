@@ -134,14 +134,9 @@ class AgoraHandsUpDelayView: UIView {
     
     private func createViews() {
         backgroundColor = itemBackgroundUnselectedColor
-        
         layer.cornerRadius = 8
-        layer.shadowColor = UIColor(hex:0x2F4192,
-                                    transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0,
-                                    height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
+        
+        AgoraUIGroup().color.borderSet(layer: layer)
         
         let image = UIImage.agedu_named("ic_func_hands_up")
         imageView = UIImageView(image: image?.withRenderingMode(.alwaysTemplate))

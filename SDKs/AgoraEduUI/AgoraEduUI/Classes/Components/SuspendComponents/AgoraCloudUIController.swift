@@ -63,7 +63,7 @@ extension AgoraCloudUIController: AgoraWidgetMessageObserver{
         if widgetId == kCloudWidgetId,
         let signal = message.toCloudSignal() {
             switch signal {
-            case .OpenCoursewares(let courseware):
+            case .OpenCourseware(let courseware):
                 if let message = AgoraBoardWidgetSignal.OpenCourseware(courseware.toBoard()).toMessageString() {
                     contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
                                                    message: message)

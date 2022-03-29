@@ -115,12 +115,7 @@ private class AgoraAlertController: UIViewController {
         contentView = UIView()
         contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 12
-        contentView.layer.shadowOpacity = 1
-        contentView.layer.shadowRadius = 6
-        contentView.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                                transparency: 0.15)?.cgColor
-        contentView.layer.shadowOffset = CGSize(width: 0,
-                                                height: 2)
+        AgoraUIGroup().color.borderSet(layer: contentView.layer)
         view.addSubview(contentView)
         
         imageView = UIImageView()

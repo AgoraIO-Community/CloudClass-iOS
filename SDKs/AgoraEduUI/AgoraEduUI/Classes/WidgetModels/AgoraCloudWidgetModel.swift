@@ -8,11 +8,11 @@
 let kCloudWidgetId = "AgoraCloudWidget"
 // MARK: - Config
 enum AgoraCloudWidgetSignal: Convertable {
-    case OpenCoursewares(AgoraCloudWidgetCoursewareModel)
+    case OpenCourseware(AgoraCloudWidgetCoursewareModel)
     case CloseCloud
     
     private enum CodingKeys: CodingKey {
-        case OpenCoursewares
+        case OpenCourseware
         case CloseCloud
     }
     
@@ -22,8 +22,8 @@ enum AgoraCloudWidgetSignal: Convertable {
         if let _ = try? container.decodeNil(forKey: .CloseCloud) {
             self = .CloseCloud
         } else if let value = try? container.decode(AgoraCloudWidgetCoursewareModel.self,
-                                                    forKey: .OpenCoursewares) {
-            self = .OpenCoursewares(value)
+                                                    forKey: .OpenCourseware) {
+            self = .OpenCourseware(value)
         } else {
             throw DecodingError.dataCorrupted(
                 .init(
@@ -40,9 +40,9 @@ enum AgoraCloudWidgetSignal: Convertable {
         switch self {
         case .CloseCloud:
             try container.encodeNil(forKey: .CloseCloud)
-        case .OpenCoursewares(let x):
+        case .OpenCourseware(let x):
             try container.encode(x,
-                                 forKey: .OpenCoursewares)
+                                 forKey: .OpenCourseware)
         }
     }
     
@@ -59,13 +59,15 @@ enum AgoraCloudWidgetSignal: Convertable {
 struct AgoraCloudWidgetCoursewareModel: Convertable {
     var resourceUuid: String
     var resourceName: String
-    var scenes: [AgoraCloudWidgetConvertedFile]
+    var resourceUrl: String
+    var scenes: [AgoraCloudWidgetConvertedFile]?
     var convert: Bool?
     
     func toBoard() -> AgoraBoardWidgetCoursewareInfo {
         let info = AgoraBoardWidgetCoursewareInfo(resourceUuid: self.resourceUuid,
                                                   resourceName: self.resourceName,
-                                                  scenes: self.scenes.toBoard(),
+                                                  resourceUrl: self.resourceUrl,
+                                                  scenes: self.scenes?.toBoard(),
                                                   convert: self.convert)
         return info
     }

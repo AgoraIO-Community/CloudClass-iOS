@@ -138,6 +138,10 @@ class AgoraColorGroup {
         return UIColor.black.withAlphaComponent(0.3)
     }
     
+    // board tool
+    var tool_unselected_color: UIColor = UIColor(hex: 0xE1E1EA)!
+    var tool_fake_white_color: UIColor = UIColor(hex: 0xE1E1EA)!
+    
     // Room state bar
     var room_state_bg_color: UIColor {
         switch mode {
@@ -193,6 +197,9 @@ class AgoraColorGroup {
         case .akasuo:      return UIColor(hexString: "#C2D5E5")!
         }
     }
+    
+    // class state
+    var class_state_shadow_color: CGColor = UIColor(hex: 0x2F4192)!.cgColor
     
     // Setting
     var setting_switch_tint_color: UIColor {
@@ -256,6 +263,15 @@ class AgoraColorGroup {
         case .agoraLight:  return .white
         case .akasuo:      return .clear
         }
+    }
+
+    func borderSet(layer: CALayer) {
+        layer.shadowColor = UIColor(hex: 0x2F4192,
+                                         transparency: 0.15)?.cgColor
+        layer.shadowOffset = CGSize(width: 0,
+                                    height: 2)
+        layer.shadowOpacity = 1
+        layer.shadowRadius = 6
     }
 }
 
@@ -329,7 +345,5 @@ struct AgoraFrameGroup {
     var room_state_border_width: CGFloat = 1
     
     // class state
-    var class_state_button_corner_radius: CGFloat {
-        return 20
-    }
+    var class_state_button_corner_radius: CGFloat = 17
 }

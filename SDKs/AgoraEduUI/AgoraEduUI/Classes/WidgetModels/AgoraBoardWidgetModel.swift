@@ -347,7 +347,8 @@ enum AgoraBoardWidgetStepChangeType: Convertable {
 struct AgoraBoardWidgetCoursewareInfo: Convertable {
     var resourceUuid: String
     var resourceName: String
-    var scenes: [AgoraBoardWidgetWhiteScene]
+    var resourceUrl: String
+    var scenes: [AgoraBoardWidgetWhiteScene]?
     var convert: Bool?
 }
 

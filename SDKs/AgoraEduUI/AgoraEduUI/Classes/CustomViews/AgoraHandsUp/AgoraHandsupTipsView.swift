@@ -27,11 +27,7 @@ class AgoraHandsupTipsView: UIView {
 
 private extension AgoraHandsupTipsView {
     func createViews() {
-        layer.shadowColor = UIColor(hex: 0x2F4192,
-                                    transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: layer)
 
         let tipImage = UIImage.agedu_named("ic_handsup_remind_tip")
         let newImage = tipImage?.resizableImage(withCapInsets: UIEdgeInsets(top: 10, left: 10, bottom: 25, right: 10), resizingMode: .stretch)

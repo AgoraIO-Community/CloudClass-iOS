@@ -57,7 +57,12 @@ class AgoraMainToolsView: UIView {
             boardToolsView.reloadData()
         }
     }
-    var curColor = UIColor(hex: 0x357BF6)
+    
+    var curColor = UIColor(hex: 0x357BF6) {
+        didSet {
+            boardToolsView.reloadData()
+        }
+    }
         
     var redoEnable: Bool = false {
         didSet {
@@ -136,7 +141,7 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
             switch tool {
             case .paint,.text:
                 cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
-                              color: curColor)
+                              color: UIColor.fakeWhite(curColor))
             default:
                 cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
                               color: color.common_base_tint_color)
@@ -189,19 +194,14 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
 // MARK: - UI
 private extension AgoraMainToolsView {
     func createViews() {
-        layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0,
-                                    height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: layer)
         
         contentView = UIView()
-        contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
+        contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 10.0
         contentView.clipsToBounds = true
         contentView.borderWidth = 1
-        contentView.borderColor = UIColor(hex: 0xE3E3EC)
+        contentView.borderColor = .white
         addSubview(contentView)
         
         boardToolsView = makeCollectionView(space: kGapSize,
@@ -269,7 +269,7 @@ private extension AgoraMainToolsView {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = .clear
+        collectionView.backgroundColor = .white
         collectionView.bounces = false
         collectionView.delegate = self
         collectionView.dataSource = self

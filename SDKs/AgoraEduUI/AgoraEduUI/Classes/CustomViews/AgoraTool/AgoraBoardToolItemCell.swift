@@ -173,13 +173,15 @@ class AgoraBoardToolItemCell: UICollectionViewCell {
 // MARK: - AgoraToolCollectionToolCell
 class AgoraToolCollectionToolCell: UICollectionViewCell {
     private var imageView: UIImageView!
-    private var selectedColor = UIColor(hex: 0x357BF6)
+    private var selectedColor: UIColor?
+    
+    // for pre/next
     private var enable: Bool = true {
         didSet {
             guard let i = imageView.image else {
                 return
             }
-            if enable{
+            if enable {
                 imageView.tintColor = nil
             } else {
                 imageView.tintColor = UIColor(hex: 0xE2E2EE)
@@ -190,11 +192,10 @@ class AgoraToolCollectionToolCell: UICollectionViewCell {
     
     var aSelected: Bool = false {
         willSet {
-            if newValue {
+            if newValue,
+               let i = imageView.image {
+                imageView.image = i.withRenderingMode(.alwaysTemplate)
                 imageView.tintColor = selectedColor
-                if let i = imageView.image {
-                    imageView.image = i.withRenderingMode(.alwaysTemplate)
-                }
             } else {
                 imageView.tintColor = nil
             }
@@ -210,6 +211,7 @@ class AgoraToolCollectionToolCell: UICollectionViewCell {
         
         imageView.mas_makeConstraints { make in
             make?.center.equalTo()(self)
+            make?.width.height().equalTo()(UIDevice.current.isPad ? 34 : 30)
         }
     }
     
@@ -232,11 +234,12 @@ class AgoraToolCollectionToolCell: UICollectionViewCell {
 
 // MARK: - AgoraBoardTextSizeItemCell
 class AgoraBoardTextSizeItemCell: UICollectionViewCell {
-    public var level: Int = 0 {
+    public var level: Int = -1 {
         willSet {
             if level != newValue {
-                let scale = CGFloat(truncating: pow(1.4, newValue) as NSNumber)
-                sizeView.transform = CGAffineTransform(scaleX: scale, y: scale)
+                let scale: CGFloat = (10 + 2 * CGFloat(newValue)) / 16
+                sizeView.transform = CGAffineTransform(scaleX: scale,
+                                                       y: scale)
             }
         }
     }
@@ -265,11 +268,11 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
         
         let image = UIImage.agedu_named("ic_brush_text")
         sizeView = UIImageView(image: image)
-        sizeView.contentMode = .scaleAspectFit
+        sizeView.contentMode = .scaleAspectFill
         addSubview(sizeView)
         sizeView.mas_makeConstraints { make in
             make?.center.equalTo()(sizeView.superview)
-            make?.width.height().equalTo()(12)
+            make?.width.height().equalTo()(sizeView.superview)
         }
     }
     
@@ -281,12 +284,14 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
 
 // MARK: - BrushSizeItemCell
 class AgoraBoardLineWidthCell: UICollectionViewCell {
-    public var level: Int = 0 {
+    private var unselectedColor = AgoraColorGroup().tool_unselected_color
+    private var scales: [CGFloat] = [1, 4/3, 2, 7/3, 3]
+    public var level: Int = -1 {
         willSet {
             if level != newValue {
-                let scale = CGFloat(truncating: pow(1.4, newValue) as NSNumber)
-                sizeView.transform = CGAffineTransform(scaleX: scale,
-                                                       y: scale)
+                sizeView.transform = CGAffineTransform(scaleX: scales[newValue],
+                                                       y: scales[newValue])
+                sizeView.borderWidth = 1 / scales[newValue]
             }
         }
     }
@@ -298,11 +303,16 @@ class AgoraBoardLineWidthCell: UICollectionViewCell {
             if newValue == true {
                 if let c = color {
                     sizeView.backgroundColor = c
+                    if c == UIColor(hex: 0xFFFFFF)! {
+                        sizeView.borderColor = unselectedColor
+                    } else {
+                        sizeView.borderColor = .clear
+                    }
                 } else {
-                    sizeView.backgroundColor = UIColor(hex: 0xE1E1EA)
+                    sizeView.backgroundColor = unselectedColor
                 }
             } else {
-                sizeView.backgroundColor = UIColor(hex: 0xE1E1EA)
+                sizeView.backgroundColor = unselectedColor
             }
         }
     }
@@ -313,8 +323,10 @@ class AgoraBoardLineWidthCell: UICollectionViewCell {
         super.init(frame: frame)
         
         sizeView = UIView(frame: .zero)
-        sizeView.backgroundColor = UIColor(hex: 0xE1E1EA)
+        sizeView.backgroundColor = unselectedColor
         sizeView.cornerRadius = 3
+        sizeView.borderWidth = 1
+        sizeView.borderColor = .clear
         addSubview(sizeView)
         sizeView.mas_makeConstraints { make in
             make?.center.equalTo()(sizeView.superview)

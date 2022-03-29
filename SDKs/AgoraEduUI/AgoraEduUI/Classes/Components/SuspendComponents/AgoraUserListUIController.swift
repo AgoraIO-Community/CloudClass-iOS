@@ -90,8 +90,8 @@ class AgoraUserListUIController: UIViewController {
     private lazy var carouselSwitch: UISwitch = {
         let carouselSwitch = UISwitch()
         carouselSwitch.onTintColor = UIColor(hex: 0x357BF6)
-        carouselSwitch.transform = CGAffineTransform(scaleX: 0.75,
-                                                     y: 0.75)
+        carouselSwitch.transform = CGAffineTransform(scaleX: 0.59,
+                                                     y: 0.59)
         carouselSwitch.isOn = contextPool.user.getCoHostCarouselInfo().state
         carouselSwitch.addTarget(self,
                                  action: #selector(onClickCarouselSwitch(_:)),
@@ -512,12 +512,7 @@ extension AgoraUserListUIController: UITableViewDelegate,
 // MARK: - Creations
 extension AgoraUserListUIController {
     func createViews() {
-        view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        view.layer.shadowOffset = CGSize(width: 0,
-                                         height: 2)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: view.layer)
         
         contentView = UIView()
         contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
@@ -651,13 +646,13 @@ extension AgoraUserListUIController {
         if contextPool.user.getLocalUserInfo().userRole == .teacher,
            contextPool.room.getRoomInfo().roomType == .small {
             carouselSwitch.mas_makeConstraints { make in
-                make?.centerY.equalTo()(titleLabel.mas_centerY)
-                make?.right.equalTo()(-16)
+                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
+                make?.right.equalTo()(-10)
                 make?.height.equalTo()(30)
             }
             carouselTitle.mas_makeConstraints { make in
-                make?.centerY.equalTo()(titleLabel.mas_centerY)
-                make?.right.equalTo()(carouselSwitch.mas_left)?.offset()(-12)
+                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
+                make?.right.equalTo()(carouselSwitch.mas_left)
                 make?.height.equalTo()(30)
             }
         }

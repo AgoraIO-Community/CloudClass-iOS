@@ -113,9 +113,17 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
 extension AgoraHandsListUIController: AgoraHandsUpItemCellDelegate {
     func onClickAcceptAtIndex(_ index: IndexPath) {
         let u = dataSource[index.row]
-        contextPool.user.addCoHost(userUuid: u.userUuid,
-                                   success: nil,
-                                   failure: nil)
+        guard !u.isCoHost else {
+            return
+        }
+        contextPool.user.addCoHost(userUuid: u.userUuid) { [weak self] in
+            guard let `self` = self else {
+                return
+            }
+            self.dataSource[index.row].isCoHost = true
+        } failure: { contextError in
+
+        }
     }
 }
 
@@ -136,31 +144,12 @@ extension AgoraHandsListUIController: UITableViewDataSource, UITableViewDelegate
         cell.indexPath = indexPath
         return cell
     }
-    
-    func tableView(_ tableView: UITableView,
-                   didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath,
-                              animated: true)
-        guard let u = dataSource[indexPath.row] as? HandsUpUser,
-              u.isCoHost == false else {
-                  return
-        }
-        
-        contextPool.user.addCoHost(userUuid: u.userUuid,
-                                   success: nil,
-                                   failure: nil)
-    }
 }
 
 // MARK: - private
 extension AgoraHandsListUIController {
     func createViews() {
-        view.layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        view.layer.shadowOffset = CGSize(width: 0,
-                                         height: 2)
-        view.layer.shadowOpacity = 1
-        view.layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: view.layer)
         
         let contentView = UIView()
         contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
@@ -170,17 +159,8 @@ extension AgoraHandsListUIController {
         contentView.borderColor = UIColor(hex: 0xE3E3EC)
         contentView.isUserInteractionEnabled = true
         
-//        listContentView = UIView()
-//        listContentView.backgroundColor = UIColor(hex: 0xF9F9FC)
-//        listContentView.layer.shadowColor = UIColor(hex: 0x2F4192,
-//                                      transparency: 0.15)?.cgColor
-//        listContentView.layer.shadowOffset = CGSize(width: 0, height: 2)
-//        listContentView.layer.shadowOpacity = 1
-//        listContentView.layer.shadowRadius = 6
-        
         view.addSubview(contentView)
 
-        
         let tab = UITableView.init(frame: .zero, style: .plain)
         tab.backgroundColor = UIColor(hex: 0xF9F9FC)
         tab.delegate = self

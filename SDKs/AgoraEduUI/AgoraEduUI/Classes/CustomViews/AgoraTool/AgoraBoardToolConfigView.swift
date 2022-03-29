@@ -236,7 +236,7 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
                                                           for: indexPath)
             if let tool = AgoraBoardToolPaintType(rawValue: indexPath.row) {
                 cell.setImage(image: (tool == currentPaintTool) ? tool.selectedImage : tool.image,
-                              color: UIColor(hex: currentColor))
+                              color: UIColor.fakeWhite(UIColor(hex: currentColor)))
                 cell.aSelected = (tool == currentPaintTool)
             }
             return cell
@@ -251,7 +251,7 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
             let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardTextSizeItemCell.self,
                                                           for: indexPath)
             cell.level = indexPath.row
-            cell.color = UIColor(hex: currentColor)
+            cell.color = UIColor.fakeWhite(UIColor(hex: currentColor))
             cell.aSelected = (AgoraBoardToolsFont(rawValue: indexPath.row) == curTextFont)
             return cell
         } else if collectionView == colorCollectionView {
@@ -317,20 +317,14 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
 // MARK: - Creations
 private extension AgoraBoardToolConfigView {
     func createViews() {
-        backgroundColor = .clear
-        layer.shadowColor = UIColor(hex: 0x2F4192,
-                                         transparency: 0.15)?.cgColor
-        layer.shadowOffset = CGSize(width: 0,
-                                    height: 2)
-        layer.shadowOpacity = 1
-        layer.shadowRadius = 6
+        AgoraUIGroup().color.borderSet(layer: layer)
         
         contentView = UIView()
-        contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
+        contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 10.0
         contentView.clipsToBounds = true
         contentView.borderWidth = 1
-        contentView.borderColor = UIColor(hex: 0xE3E3EC)
+        contentView.borderColor = .white
         addSubview(contentView)
         
         
@@ -447,7 +441,7 @@ private extension AgoraBoardToolConfigView {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .clear
         collectionView.bounces = false
         collectionView.delegate = self
         collectionView.dataSource = self

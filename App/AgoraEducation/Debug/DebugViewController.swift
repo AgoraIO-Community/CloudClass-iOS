@@ -240,6 +240,14 @@ private extension DebugViewController {
                             if k == "AgoraCloudWidget" {
                                 v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
                             }
+
+                            if k == "netlessBoard",
+                               v.extraInfo != nil {
+                                var newExtra = v.extraInfo as! Dictionary<String, Any>
+                                newExtra["coursewareList"] = self.inputParams.publicCoursewares()
+                                v.extraInfo = newExtra
+                            }
+
                             widgets[k] = v
                         }
                         launchConfig.widgets = widgets
