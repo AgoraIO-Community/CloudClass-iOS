@@ -4,20 +4,6 @@ inhibit_all_warnings!
 workspace 'AgoraEducation.xcworkspace'
 install! 'cocoapods', :deterministic_uuids => false, :warn_for_unused_master_specs_repo => false
  
-
-def find_and_replace(dir, findstr, replacestr)
-  Dir[dir].each do |name|
-      text = File.read(name)
-      replace = text.gsub(findstr,replacestr)
-      if text != replace
-          puts "Fix: " + name
-          File.open(name, "w") { |file| file.puts replace }
-          STDOUT.flush
-      end
-  end
-  Dir[dir + '*/'].each(&method(:find_and_replace))
-end
-
 target 'AgoraEducation' do
   use_frameworks!
  
@@ -36,36 +22,19 @@ target 'AgoraEducation' do
   pod 'FLAnimatedImage', '1.0.16'
  
   # agora libs
-  pod 'AgoraRtm_iOS', '1.4.8'
-  pod 'Whiteboard', '2.16.11'
   pod 'AgoraRtcEngine_iOS', '3.4.6'
+  pod 'AgoraRtm_iOS', '1.4.8'
   pod 'HyphenateChat', '3.8.6'
+  pod 'Whiteboard', '2.16.11'
  
   # open source libs
-
-    # common libs
-    pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
-    pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
-
-    # open source libs
-    pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext_Local.podspec'
-    pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI_Local.podspec'
-    pod 'AgoraReport', :path => '../../apaas-common-libs-ios/SDKs/AgoraReport/AgoraReport.podspec'
-    pod 'AgoraRx', :path => '../../apaas-common-libs-ios/SDKs/AgoraRx/AgoraRx.podspec'
-
-    # rtc (default pre)
-    pod 'AgoraClassroomSDK_iOS/PreRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_Local.podspec'
-    pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/SDKs/AgoraEduCoreFull.podspec'
-    pod 'AgoraRte/PreRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
-
-    # widgets
-    pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
-
-    pod 'MLeaksFinder'
-    post_install do |installer|
-      ## Fix for XCode 12.5
-      find_and_replace("Pods/FBRetainCycleDetector/FBRetainCycleDetector/Layout/Classes/FBClassStrongLayout.mm",
-        "layoutCache[currentClass] = ivars;", "layoutCache[(id<NSCopying>)currentClass] = ivars;")
-    end
-end
+  pod 'AgoraClassroomSDK_iOS', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_Local.podspec'
+  pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext_Local.podspec'
+  pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI_Local.podspec'
    
+  # open sources widgets and extApps
+  pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
+   
+  # close source libs
+  pod 'AgoraEduCore', '2.2.0'
+end
