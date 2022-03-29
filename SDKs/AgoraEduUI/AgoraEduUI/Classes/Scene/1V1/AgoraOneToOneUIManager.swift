@@ -61,7 +61,6 @@ import Masonry
     private var fileWriter = FcrUIFileWriter()
     
     deinit {
-        stopTestAudioData()
         print("\(#function): \(self.classForCoder)")
     }
     
