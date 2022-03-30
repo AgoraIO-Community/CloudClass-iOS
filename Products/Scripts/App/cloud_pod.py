@@ -201,7 +201,7 @@ def main():
 
         # 是否需要更新cocoapods repo
         if modifyFlag == "0":
-            BaseParams["updateFlag"] = False if updateFlag == "0" else True
+            BaseParams["updateFlag"] = True
     
     executePod()
 

@@ -178,9 +178,9 @@ extension AgoraOneToOneUIManager: AgoraWindowUIControllerDelegate {
     
     func didStopSpreadForUser(with userId: String) {
         if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
-            self.renderController.teacherModel?.rendEnable = false
+            self.renderController.teacherModel?.rendEnable = true
         } else {
-            self.renderController.studentModel?.rendEnable = false
+            self.renderController.studentModel?.rendEnable = true
         }
     }
 }

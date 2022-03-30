@@ -362,15 +362,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        let emptyStream = AgoraEduContextStreamInfo(streamUuid: stream.streamUuid,
-                                                    streamName: stream.streamName,
-                                                    streamType: .none,
-                                                    videoSourceType: .none,
-                                                    audioSourceType: .none,
-                                                    videoSourceState: .error,
-                                                    audioSourceState: .error,
-                                                    owner: stream.owner)
-        self.updateStream(stream: emptyStream)
+        self.updateStream(stream: stream.toEmptyStream())
     }
 }
 

@@ -346,7 +346,7 @@ private extension AgoraRenderMemberView {
         }
         if model.rendEnable == false {
             self.renderID = nil
-            self.ableMaskView.image = UIImage.agedu_named("ic_member_device_offline")
+            self.ableMaskView.image = UIImage.agedu_named("ic_member_empty")
             self.ableMaskView.isHidden = false
             self.videoMaskView.isHidden = true
         } else if model.rendEnable == true,

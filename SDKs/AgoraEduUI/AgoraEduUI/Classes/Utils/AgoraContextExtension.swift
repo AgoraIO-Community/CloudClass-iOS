@@ -93,3 +93,18 @@ extension AgoraRenderMemberModel {
         }
     }
 }
+
+extension AgoraEduContextStreamInfo {
+    func toEmptyStream() -> AgoraEduContextStreamInfo {
+        let videoSourceType: AgoraEduContextVideoSourceType = (self.videoSourceType == .screen) ? .screen : .none
+        let emptyStream = AgoraEduContextStreamInfo(streamUuid: self.streamUuid,
+                                                    streamName: self.streamName,
+                                                    streamType: .none,
+                                                    videoSourceType: videoSourceType,
+                                                    audioSourceType: .none,
+                                                    videoSourceState: .error,
+                                                    audioSourceState: .error,
+                                                    owner: self.owner)
+        return emptyStream
+    }
+}

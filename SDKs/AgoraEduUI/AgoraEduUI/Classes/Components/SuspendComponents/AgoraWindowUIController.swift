@@ -122,7 +122,7 @@ extension AgoraWindowUIController: AgoraWidgetActivityObserver {
                            y: 0,
                            width: self.view.width,
                            height: self.view.height)
-        print(">>>> onWidgetActive:\(widgetId) ")
+        
         widget.view.mas_makeConstraints { make in
             make?.left.equalTo()(frame.minX)
             make?.top.equalTo()(frame.minY)
@@ -137,8 +137,14 @@ extension AgoraWindowUIController: AgoraWidgetActivityObserver {
             return
         }
         // stop render
-        contextPool.media.stopRenderVideo(streamUuid: streamId)
-        print(">>>> onWidgetInactive:\(widgetId) ")
+        var isCamera = false
+        if let type = modelDic[widgetId],
+           case AgoraStreamWindowType.video(let renderInfo) = type {
+            isCamera = true
+        }
+        stopRenderOnWindow(streamId: streamId,
+                           isCamera: isCamera)
+        
         // TODO: 2.3.0暂时不需要动画，后期大窗需要stopSpreadObj(widgetId: widgetId)
         widget.view.removeFromSuperview()
         widgetDic.removeValue(forKey: widgetId)
@@ -214,12 +220,13 @@ extension AgoraWindowUIController: AgoraRenderMemberViewDelegate {
                           in view: UIView,
                           renderID: String) {
         startRenderOnWindow(view,
+                            isCamera: true,
                             streamId: renderID)
     }
 
     func memberViewCancelRender(memberView: AgoraRenderMemberView,
                                 renderID: String) {
-        stopRenderOnWindow(streamId: renderID)
+        
     }
 }
 
@@ -258,15 +265,7 @@ extension AgoraWindowUIController: AgoraEduStreamHandler {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        let emptyStream = AgoraEduContextStreamInfo(streamUuid: stream.streamUuid,
-                                                    streamName: stream.streamName,
-                                                    streamType: .none,
-                                                    videoSourceType: .none,
-                                                    audioSourceType: .none,
-                                                    videoSourceState: .error,
-                                                    audioSourceState: .error,
-                                                    owner: stream.owner)
-        self.updateStreamInfo(emptyStream)
+        self.updateStreamInfo(stream.toEmptyStream())
     }
 }
 // MARK: - AgoraEduMediaHandler
@@ -317,6 +316,7 @@ private extension AgoraWindowUIController {
         modelDic[widget.info.widgetId] = .screen(sharingInfo)
         // 开启渲染屏幕共享
         startRenderOnWindow(targetView,
+                            isCamera: false,
                             streamId: renderInfo.streamId)
     }
     
@@ -361,8 +361,10 @@ private extension AgoraWindowUIController {
     }
     
     func startRenderOnWindow(_ view: UIView,
+                             isCamera: Bool,
                              streamId: String) {
-        if let uid = getUidWithStreamId(streamId) {
+        if let uid = getUidWithStreamId(streamId),
+           isCamera {
             delegate?.startSpreadForUser(with: uid)
         }
         
@@ -376,8 +378,10 @@ private extension AgoraWindowUIController {
                                            streamUuid: streamId)
     }
     
-    func stopRenderOnWindow(streamId: String) {
-        if let uid = getUidWithStreamId(streamId) {
+    func stopRenderOnWindow(streamId: String,
+                            isCamera: Bool) {
+        if let uid = getUidWithStreamId(streamId),
+           isCamera {
             delegate?.didStopSpreadForUser(with: uid)
         }
         contextPool.media.stopRenderVideo(streamUuid: streamId)
