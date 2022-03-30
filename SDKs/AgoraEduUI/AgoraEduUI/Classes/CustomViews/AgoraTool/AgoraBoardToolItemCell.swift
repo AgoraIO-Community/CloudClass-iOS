@@ -101,7 +101,7 @@ enum AgoraBoardToolMainType: Int, CaseIterable {
     var boardWidgetToolType: AgoraBoardWidgetToolType? {
         switch self {
         case .clicker:  return .Clicker
-        case .area:     return .Rectangle
+        case .area:     return .Selector
         case .text:     return .Text
         case .rubber:   return .Eraser
         default:
