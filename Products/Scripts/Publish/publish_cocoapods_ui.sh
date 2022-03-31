@@ -7,6 +7,5 @@ if [ ${#SDK_Version} -le 0 ]; then
 fi
 
 SDK_Name="AgoraEduUI"
-SDK_Path="../../../SDKs"
 
-./publish_cocoapods.sh ${SDK_Name} ${SDK_Path} ${SDK_Version}
+./publish_cocoapods.sh ${SDK_Name} ${SDK_Version}
