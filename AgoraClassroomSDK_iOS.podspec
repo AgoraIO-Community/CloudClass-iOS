@@ -15,9 +15,11 @@ Pod::Spec.new do |spec|
   spec.dependency "AgoraEduUI", ">=2.3.0"
   spec.dependency "AgoraEduContext", ">=2.3.0"
 
-  # open sources widgets and extApps
+  # open sources widgets
   spec.dependency "AgoraWidgets", ">=2.3.0"
   
+  # close source libs
+  spec.dependency "AgoraEduCore", ">=2.3.0"
   spec.dependency "AgoraWidget", ">=2.3.0"
 
   spec.frameworks = "AudioToolbox", "Foundation", "UIKit"
@@ -28,35 +30,8 @@ Pod::Spec.new do |spec|
   spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
   spec.xcconfig             = { "BUILD_LIBRARY_FOR_DISTRIBUTION" => "YES" }
 
-  spec.subspec "PreRtc" do |pre_rtc|
-    pre_rtc.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}"
-    pre_rtc.public_header_files = [
+  spec.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}"
+  spec.public_header_files = [
       "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
-    ]
-    
-    # close source libs
-    pre_rtc.dependency "AgoraEduCore/PreRtc"
-  end
-  
-  spec.subspec "ReRtc" do |re_rtc|
-    re_rtc.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}"
-    re_rtc.public_header_files = [
-      "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
-    ]
-    
-    # close source libs
-    re_rtc.dependency "AgoraEduCore/ReRtc"
-  end
-  
-  spec.subspec "Customer" do |customer|
-    customer.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}"
-    customer.public_header_files = [
-      "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
-    ]
-    
-    # close source libs
-    customer.dependency "AgoraEduCore", ">=2.3.0"
-  end
-
-  spec.default_subspecs = "Customer"
+  ]
 end
