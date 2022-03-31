@@ -1,18 +1,29 @@
 #!/bin/sh
 SDK_Name=$1
-SDK_Path=$2
-SDK_Version=$3
+SDK_Version=$2
 
-SDKs_Path="${SDK_Path}/${SDK_Name}"
+if [ ${#SDK_Name} -le 0 ]; then
+    echo "parameter 1 nil"
+    exit -1
+fi
 
-cd ${SDKs_Path}
+if [ ${#SDK_Version} -le 0 ]; then
+    echo "parameter 2 nil"
+    exit -1
+fi
+
+cd ../../../
+
+pod spec lint ${SDK_Name}.podspec --allow-warnings --verbose
+pod trunk push ${SDK_Name}.podspec --allow-warnings --verbose
 
 Tag=${SDK_Name}_v${SDK_Version}
 
+git add ${SDK_Name}.podspec
+git commit -m "[ENH]:${Tag}"
 git tag -d ${Tag}
 git push originGithub :refs/tags/${Tag}
 git tag ${Tag}
 git push originGithub --tags
 
-pod spec lint ${SDK_Name}.podspec --allow-warnings --verbose
-pod trunk push ${SDK_Name}.podspec --allow-warnings --verbose
+pod trunk info ${SDK_Name}
