@@ -87,9 +87,6 @@ import Masonry
             // 打开本地音视频设备
             self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
             self.contextPool.media.openLocalDevice(systemDevice: .mic)
-            
-            // Test audio data
-            self.startTestAudioData()
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)
