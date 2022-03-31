@@ -141,7 +141,7 @@ class AgoraRenderMenuUIController: UIViewController {
             if showRoleType == .teacher {
                 items = [.camera, .mic, .allOffStage]
             } else if showRoleType == .student {
-                items = [.camera, .mic, .stage, .reward, .auth]
+                items = [.camera, .mic, .reward, .auth, .stage]
             }
         case .lecture:
             if showRoleType == .teacher {
