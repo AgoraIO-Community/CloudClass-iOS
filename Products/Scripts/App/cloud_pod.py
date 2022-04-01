@@ -27,13 +27,13 @@ SourcePodContent =  """
     pod 'AgoraRx', :path => '../../apaas-common-libs-ios/SDKs/AgoraRx/AgoraRx.podspec'
 
     # rtc (default pre)
-    pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/AgoraEduCore_Local.podspec'
-    pod 'AgoraRte/PreRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
+    pod 'AgoraEduCore', :path => '../../cloudclass-ios/AgoraEduCore_Local.podspec'
+    pod 'AgoraRte', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
 
     # open source libs
     pod 'AgoraEduContext', :path => '../AgoraEduContext.podspec'
     pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
-    pod 'AgoraClassroomSDK_iOS/PreRtc', :path => '../AgoraClassroomSDK_iOS.podspec'
+    pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
     
     # widgets
     pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets.podspec'

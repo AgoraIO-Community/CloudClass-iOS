@@ -339,7 +339,6 @@ private extension AgoraWindowUIController {
         model.uuid = user.userUuid
         model.name = user.userName
         model.updateStream(stream)
-        // TODO: 在这里设置合适吗
         model.rendEnable = true
         return model
     }
@@ -369,7 +368,7 @@ private extension AgoraWindowUIController {
         }
         
         let renderConfig = AgoraEduContextRenderConfig()
-        renderConfig.mode = .hidden
+        renderConfig.mode = .fit
         renderConfig.isMirror = false
         contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
                                                               level: .high)
