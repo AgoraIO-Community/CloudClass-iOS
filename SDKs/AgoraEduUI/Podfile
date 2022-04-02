@@ -2,7 +2,7 @@
  platform :ios, '10.0'
 
 def openSourceLibs
-  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext_Local.podspec'
+  pod 'AgoraEduContext', :path => '../../AgoraEduContext.podspec'
 end
 
 def sourcePod

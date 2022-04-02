@@ -23,20 +23,20 @@ SourcePodContent =  """
     # common libs
     pod 'AgoraUIBaseViews', :path => '../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'
     pod 'AgoraWidget', :path => '../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
-
-    # open source libs
-    pod 'AgoraEduContext', :path => '../SDKs/AgoraEduContext/AgoraEduContext_Local.podspec'
-    pod 'AgoraEduUI', :path => '../SDKs/AgoraEduUI/AgoraEduUI_Local.podspec'
     pod 'AgoraReport', :path => '../../apaas-common-libs-ios/SDKs/AgoraReport/AgoraReport.podspec'
     pod 'AgoraRx', :path => '../../apaas-common-libs-ios/SDKs/AgoraRx/AgoraRx.podspec'
 
     # rtc (default pre)
-    pod 'AgoraClassroomSDK_iOS/PreRtc', :path => '../SDKs/AgoraClassroomSDK/AgoraClassroomSDK_Local.podspec'
-    pod 'AgoraEduCore/PreRtc', :path => '../../cloudclass-ios/AgoraEduCore_Local.podspec'
-    pod 'AgoraRte/PreRtc', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
+    pod 'AgoraEduCore', :path => '../../cloudclass-ios/AgoraEduCore_Local.podspec'
+    pod 'AgoraRte', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
 
+    # open source libs
+    pod 'AgoraEduContext', :path => '../AgoraEduContext.podspec'
+    pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
+    pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
+    
     # widgets
-    pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
+    pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets.podspec'
 
     pod 'MLeaksFinder'
     post_install do |installer|

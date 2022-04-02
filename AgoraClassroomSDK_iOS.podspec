@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraClassroomSDK_iOS"
-  spec.version      = "2.1.0"
+  spec.version      = "2.3.0"
   spec.summary      = "Education scene SDK"
   spec.description  = "Agora Classroom SDK"
   spec.homepage     = "https://docs.agora.io/en/agora-class/landing-page?platform=iOS"
@@ -11,20 +11,16 @@ Pod::Spec.new do |spec|
   spec.platform              = :ios
   spec.ios.deployment_target = "10.0"
   
-  spec.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}"
-  spec.public_header_files = [
-      "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
-  ]
-
   # open source libs
-  spec.dependency "AgoraEduUI", ">=2.1.0"
-  spec.dependency "AgoraEduContext", "2.1.0"
+  spec.dependency "AgoraEduUI", ">=2.3.0"
+  spec.dependency "AgoraEduContext", ">=2.3.0"
 
-  # open sources widgets and extApps
-  spec.dependency "AgoraWidgets", ">= 2.1.1"
+  # open sources widgets
+  spec.dependency "AgoraWidgets", ">=2.3.0"
   
-   # close source libs
-  spec.dependency "AgoraEduCore", ">=2.1.0"
+  # close source libs
+  spec.dependency "AgoraEduCore", ">=2.3.0"
+  spec.dependency "AgoraWidget", ">=2.3.0"
 
   spec.frameworks = "AudioToolbox", "Foundation", "UIKit"
 
@@ -33,4 +29,9 @@ Pod::Spec.new do |spec|
   spec.pod_target_xcconfig  = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
   spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
   spec.xcconfig             = { "BUILD_LIBRARY_FOR_DISTRIBUTION" => "YES" }
+
+  spec.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}"
+  spec.public_header_files = [
+      "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
+  ]
 end

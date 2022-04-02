@@ -52,7 +52,7 @@ extension AgoraRenderMemberModel {
         model.name = name
         let reward = context.user.getUserRewardCount(userUuid: uuid)
         model.rewardCount = reward
-        let stream = context.stream.getStreamList(userUuid: uuid)?.first
+        let stream = context.stream.getStreamList(userUuid: uuid)?.first{$0.videoSourceType != .screen}
         model.updateStream(stream)
         return model
     }

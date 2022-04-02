@@ -6,7 +6,7 @@ def libVersion
   pod 'Protobuf', '3.17.0'
   pod "CocoaLumberjack", '3.6.1'
   pod 'AliyunOSSiOS',  '2.10.8'
-  pod 'Armin',  '1.0.9'
+  pod 'Armin',  '1.0.10'
   pod 'Alamofire', '4.7.3'
   pod 'SSZipArchive', '2.4.2'
   pod 'SwifterSwift', '5.2.0'
@@ -36,12 +36,12 @@ end
 
 def openSourceLibs
   # open source libs
-  pod 'AgoraEduContext', :path => '../AgoraEduContext/AgoraEduContext_Local.podspec' 
-  pod 'AgoraEduUI', :path => '../AgoraEduUI/AgoraEduUI_Local.podspec'
+  pod 'AgoraEduContext', :path => '../../AgoraEduContext.podspec' 
+  pod 'AgoraEduUI', :path => '../../AgoraEduUI.podspec'
 end
 
 def widgets
-  pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/AgoraWidgets/AgoraWidgets_Local.podspec'
+  pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/AgoraWidgets.podspec'
 end
 
 def sourcePod
