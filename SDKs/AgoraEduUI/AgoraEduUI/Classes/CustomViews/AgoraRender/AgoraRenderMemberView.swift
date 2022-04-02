@@ -119,7 +119,7 @@ fileprivate class AgoraRenderMaskView: UIView {
         backgroundColor = ui.color.render_cell_bg_color
         layer.cornerRadius = max(ui.frame.one_one_to_render_cell_corner_radius,
                                  ui.frame.small_render_cell_corner_radius)
-        imageView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
+        imageView = UIImageView()
         addSubview(imageView)
         imageView.mas_makeConstraints { make in
             make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.38)
@@ -382,7 +382,6 @@ private extension AgoraRenderMemberView {
         layer.borderColor = ui.color.render_cell_border_color
         
         videoView = AgoraRenderMaskView(frame: .zero)
-        videoView.image = UIImage.agedu_named("ic_member_device_off")
         addSubview(videoView)
         
         videoMaskView = AgoraRenderMaskView(frame: .zero)
