@@ -368,7 +368,7 @@ private extension AgoraWindowUIController {
         }
         
         let renderConfig = AgoraEduContextRenderConfig()
-        renderConfig.mode = .fit
+        renderConfig.mode = isCamera ? .hidden : .fit
         renderConfig.isMirror = false
         contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
                                                               level: .high)
