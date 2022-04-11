@@ -161,6 +161,11 @@ private extension AgoraClassToolsViewController {
         
         let widget = widgetController.create(config)
         
+        if contextPool.user.getLocalUserInfo().userRole == .observer {
+            contextPool.widget.sendMessage(toWidget: widgetId,
+                                           message: "hideSubmit")
+        }
+        
         view.addSubview(widget.view)
         
         switch widgetId {

@@ -69,8 +69,9 @@ typedef NS_ENUM(NSInteger, AgoraEduLatencyLevel) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduUserRole) {
-    AgoraEduUserRoleTeacher = 1,
-    AgoraEduUserRoleStudent = 2
+    AgoraEduUserRoleTeacher  = 1,
+    AgoraEduUserRoleStudent  = 2,
+    AgoraEduUserRoleObserver = 4
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduRoomType) {

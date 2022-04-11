@@ -9,6 +9,7 @@ import AgoraUIBaseViews
 import AgoraEduContext
 import AgoraWidget
 import Masonry
+import UIKit
 
 @objc public class AgoraOneToOneUIManager: AgoraEduUIManager {
     
@@ -39,9 +40,9 @@ import Masonry
         let vc = AgoraCloudUIController(context: contextPool)
         return vc
     }()
-    /** 工具集合 控制器*/
+    /** 工具集合 控制器（观众端没有）*/
     private var toolCollectionController: AgoraToolCollectionUIController!
-    /** 白板翻页 控制器*/
+    /** 白板翻页 控制器（观众端没有）*/
     private var boardPageController: AgoraBoardPageUIController!
     /** 聊天 控制器*/
     private var chatController: AgoraChatUIController?
@@ -85,8 +86,10 @@ import Masonry
             self.isJoinedRoom = true
             self.createChatController()
             // 打开本地音视频设备
-            self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
-            self.contextPool.media.openLocalDevice(systemDevice: .mic)
+            if self.contextPool.user.getLocalUserInfo().userRole != .observer {
+                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+                self.contextPool.media.openLocalDevice(systemDevice: .mic)
+            }
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)
@@ -388,6 +391,7 @@ private extension AgoraOneToOneUIManager {
         }
     }
     func createViews() {
+        let userRole = contextPool.user.getLocalUserInfo().userRole
         stateController = AgoraRoomStateUIController(context: contextPool)
         stateController.roomDelegate = self
         addChild(stateController)
@@ -397,11 +401,6 @@ private extension AgoraOneToOneUIManager {
         boardController = AgoraBoardUIController(context: contextPool)
         addChild(boardController)
         contentView.addSubview(boardController.view)
-        
-        windowController = AgoraWindowUIController(context: contextPool)
-        windowController.delegate = self
-        addChild(windowController)
-        contentView.addSubview(windowController.view)
         
         rightContentView = UIView()
         rightContentView.backgroundColor = .white
@@ -414,26 +413,33 @@ private extension AgoraOneToOneUIManager {
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
         
+        windowController = AgoraWindowUIController(context: contextPool)
+        windowController.delegate = self
+        addChild(windowController)
+        contentView.addSubview(windowController.view)
+        
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
         toolBarController.tools = [.setting]
         contentView.addSubview(toolBarController.view)
         
-        toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
-                                                                   delegate: self)
-        toolCollectionController.view.isHidden = true
-        view.addSubview(toolCollectionController.view)
-        
-        boardPageController = AgoraBoardPageUIController(context: contextPool)
-        contentView.addSubview(boardPageController.view)
-        boardPageController.view.isHidden = true
-        addChild(boardPageController)
-        
         classToolsController = AgoraClassToolsViewController(context: contextPool)
         addChild(classToolsController)
         contentView.addSubview(classToolsController.view)
         
-        if contextPool.user.getLocalUserInfo().userRole == .teacher {
+        if userRole != .observer {
+            toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
+                                                                       delegate: self)
+            toolCollectionController.view.isHidden = true
+            view.addSubview(toolCollectionController.view)
+            
+            boardPageController = AgoraBoardPageUIController(context: contextPool)
+            contentView.addSubview(boardPageController.view)
+            boardPageController.view.isHidden = true
+            addChild(boardPageController)
+        }
+        
+        if userRole == .teacher {
             addChild(classStateController)
             addChild(cloudController)
             contentView.addSubview(cloudController.view)
@@ -448,6 +454,7 @@ private extension AgoraOneToOneUIManager {
     }
     
     func createConstraint() {
+        let userRole = contextPool.user.getLocalUserInfo().userRole
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(23))
@@ -460,8 +467,11 @@ private extension AgoraOneToOneUIManager {
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
-
-        if contextPool.user.getLocalUserInfo().userRole == .teacher {
+        classToolsController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
+        
+        if userRole == .teacher {
             self.toolBarController.view.mas_remakeConstraints { make in
                 make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
                 make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
@@ -476,19 +486,19 @@ private extension AgoraOneToOneUIManager {
                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
             }
         }
-        toolCollectionController.view.mas_makeConstraints { make in
-            make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
-            make?.width.height().equalTo()(toolCollectionController.suggestLength)
-        }
-        boardPageController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
-            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
-            make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
-            make?.width.equalTo()(168)
-        }
-        classToolsController.view.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(boardController.view)
+        
+        if userRole != .observer {
+            toolCollectionController.view.mas_makeConstraints { make in
+                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.width.height().equalTo()(toolCollectionController.suggestLength)
+            }
+            boardPageController.view.mas_makeConstraints { make in
+                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+                make?.width.equalTo()(168)
+            }
         }
     }
     
@@ -532,6 +542,9 @@ private extension AgoraOneToOneUIManager {
             controller.hideAnnouncement = true
         } else {
             controller.hideTopBar = true
+        }
+        if contextPool.user.getLocalUserInfo().userRole == .observer {
+            controller.hideInput = true
         }
         addChild(controller)
         if UIDevice.current.isPad {

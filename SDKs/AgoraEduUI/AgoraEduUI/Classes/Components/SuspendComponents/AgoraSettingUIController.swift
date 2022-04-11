@@ -146,6 +146,9 @@ extension AgoraSettingUIController: AgoraEduMediaHandler {
 // MARK: - Actions
 private extension AgoraSettingUIController {
     @objc func onClickCameraSwitch(_ sender: UISwitch) {
+        guard contextPool.user.getLocalUserInfo().userRole != .observer else {
+            return
+        }
         self.isCamerOn = sender.isOn
         let devices = contextPool.media.getLocalDevices(deviceType: .camera)
         var camera: AgoraEduContextDeviceInfo?
@@ -164,7 +167,8 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickMicSwitch(_ sender: UISwitch) {
-        guard let d = self.contextPool.media.getLocalDevices(deviceType: .mic).first else {
+        guard contextPool.user.getLocalUserInfo().userRole != .observer,
+              let d = self.contextPool.media.getLocalDevices(deviceType: .mic).first else {
             return
         }
         if sender.isOn {
@@ -175,7 +179,8 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickAudioSwitch(_ sender: UISwitch) {
-        guard let d = self.contextPool.media.getLocalDevices(deviceType: .speaker).first else {
+        guard contextPool.user.getLocalUserInfo().userRole != .observer,
+              let d = self.contextPool.media.getLocalDevices(deviceType: .speaker).first else {
             return
         }
         if sender.isOn {
@@ -203,7 +208,8 @@ private extension AgoraSettingUIController {
         sender.isSelected = true
         backCamButton.isSelected = false
         let devices = self.contextPool.media.getLocalDevices(deviceType: .camera)
-        if let camera = devices.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
+        if let camera = devices.first(where: {$0.deviceName.contains(kFrontCameraStr)}),
+           contextPool.user.getLocalUserInfo().userRole != .observer {
             contextPool.media.openLocalDevice(device: camera)
         }
     }
@@ -215,7 +221,8 @@ private extension AgoraSettingUIController {
         sender.isSelected = true
         frontCamButton.isSelected = false
         let devices = self.contextPool.media.getLocalDevices(deviceType: .camera)
-        if let camera = devices.first(where: {$0.deviceName.contains(kBackCameraStr)}) {
+        if let camera = devices.first(where: {$0.deviceName.contains(kBackCameraStr)}),
+           contextPool.user.getLocalUserInfo().userRole != .observer {
             contextPool.media.openLocalDevice(device: camera)
         }
     }

@@ -379,11 +379,11 @@ private extension AgoraWindowUIController {
     
     func stopRenderOnWindow(streamId: String,
                             isCamera: Bool) {
+        contextPool.media.stopRenderVideo(streamUuid: streamId)
         if let uid = getUidWithStreamId(streamId),
            isCamera {
             delegate?.didStopSpreadForUser(with: uid)
         }
-        contextPool.media.stopRenderVideo(streamUuid: streamId)
     }
 }
 

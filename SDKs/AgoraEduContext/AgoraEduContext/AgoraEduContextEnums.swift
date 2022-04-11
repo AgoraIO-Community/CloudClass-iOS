@@ -37,6 +37,8 @@ import Foundation
     case student   = 2
     /// 助教
     case assistant = 3
+    /// 观众
+    case observer  = 4
 }
 
 /// 用户离开原因

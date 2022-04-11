@@ -32,6 +32,8 @@ class AgoraChatUIController: UIViewController {
     public var hideMiniButton = false
     
     public var hideAnnouncement = false
+    
+    public var hideInput = false
         
     private var redDotShow: Bool = false {
         didSet {
@@ -105,6 +107,11 @@ private extension AgoraChatUIController {
                 contextPool.widget.sendMessage(toWidget: EM,
                                                message: "hideAnnouncement")
             }
+            
+            if hideInput {
+                contextPool.widget.sendMessage(toWidget: EM,
+                                               message: "hideInput")
+            }
             widget = w
             chatWidgetId = EM
             contextPool.widget.add(self, widgetId: EM)
@@ -112,8 +119,8 @@ private extension AgoraChatUIController {
             
             let w = contextPool.widget.create(chatConfig)
             view.addSubview(w.view)
-            if hideTopBar,
-               let param = ["view": ["hideTopBar": true]].jsonString() {
+            if let param = ["view": ["hideTopBar": hideTopBar,
+                                     "hideInput": hideInput]].jsonString() {
                 contextPool.widget.sendMessage(toWidget: RTM,
                                                message: param)
             }

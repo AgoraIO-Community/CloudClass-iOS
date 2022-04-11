@@ -71,6 +71,7 @@ let kRegionOptions: [(RoomRegionType, String)] = [
 let kRoleOptions: [(AgoraEduUserRole, String)] = [
     (.student, NSLocalizedString("login_role_student", comment: "")),
     (.teacher, NSLocalizedString("login_role_teacher", comment: "")),
+    (.observer, NSLocalizedString("login_role_observer", comment: "")),
 ]
 
 let kIMOptions: [(IMType, String)] = [
