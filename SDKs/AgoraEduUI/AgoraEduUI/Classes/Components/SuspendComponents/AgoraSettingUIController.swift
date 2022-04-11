@@ -179,8 +179,7 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickAudioSwitch(_ sender: UISwitch) {
-        guard contextPool.user.getLocalUserInfo().userRole != .observer,
-              let d = self.contextPool.media.getLocalDevices(deviceType: .speaker).first else {
+        guard let d = self.contextPool.media.getLocalDevices(deviceType: .speaker).first else {
             return
         }
         if sender.isOn {
