@@ -111,6 +111,18 @@ fileprivate class AgoraRenderMaskView: UIView {
         }
     }
     
+    public var promtText: String? {
+        didSet {
+            if let text = promtText {
+                promptLabel.isHidden = false
+                promptLabel.text = promtText
+            } else {
+                promptLabel.isHidden = true
+            }
+        }
+    }
+    
+    private var promptLabel: UILabel!
     private var imageView: UIImageView!
     
     override init(frame: CGRect) {
@@ -121,10 +133,22 @@ fileprivate class AgoraRenderMaskView: UIView {
                                  ui.frame.small_render_cell_corner_radius)
         imageView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
         addSubview(imageView)
+        
+        promptLabel = UILabel(text: promtText)
+        promptLabel.textColor = UIColor(hex: 0x022491)
+        promptLabel.font = .systemFont(ofSize: 12)
+        
+        addSubview(promptLabel)
         imageView.mas_makeConstraints { make in
             make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.38)
             make?.center.equalTo()(0)
         }
+        promptLabel.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.top.equalTo()(imageView.mas_bottom)?.offset()(3)
+        }
+        
+        promptLabel.isHidden = true
     }
     
     required init?(coder: NSCoder) {
@@ -168,6 +192,8 @@ class AgoraRenderMemberView: UIView {
     }()
     /** 停止渲染遮罩*/
     private var ableMaskView: AgoraRenderMaskView!
+    /** 无人提示*/
+    private var promptLabel: UILabel?
     
     private var renderID: String? {
         didSet {
@@ -202,10 +228,15 @@ class AgoraRenderMemberView: UIView {
     
     private var memberModel: AgoraRenderMemberModel?
     
-    override init(frame: CGRect) {
+    private var memberRole: AgoraRenderMemberModel.AgoraRenderRole
+    
+    init(frame: CGRect,
+         role: AgoraRenderMemberModel.AgoraRenderRole = .student) {
+        self.memberRole = role
+        
         super.init(frame: frame)
         
-        createViews()
+        createViews(role: role)
         createConstraint()
     }
     
@@ -340,6 +371,7 @@ private extension AgoraRenderMemberView {
     func updateRenderState() {
         guard let model = self.memberModel else {
             ableMaskView.image = UIImage.agedu_named("ic_member_no_user")
+            ableMaskView.promtText = (memberRole == .teacher) ? "fcr_user_no_teacher".agedu_localized() : "fcr_user_no_student".agedu_localized()
             ableMaskView.isHidden = false
             self.renderID = nil
             return
@@ -374,7 +406,7 @@ private extension AgoraRenderMemberView {
 }
 // MARK: - Creations
 private extension AgoraRenderMemberView {
-    func createViews() {
+    func createViews(role: AgoraRenderMemberModel.AgoraRenderRole) {
         let ui = AgoraUIGroup()
         
         backgroundColor = ui.color.render_cell_bg_color
@@ -387,6 +419,7 @@ private extension AgoraRenderMemberView {
         
         videoMaskView = AgoraRenderMaskView(frame: .zero)
         videoMaskView.image = UIImage.agedu_named("ic_member_no_user")
+        videoMaskView.promtText = (role == .teacher) ? "fcr_user_no_teacher".agedu_localized() : "fcr_user_no_student".agedu_localized()
         addSubview(videoMaskView)
         
         nameLabel = UILabel()

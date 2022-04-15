@@ -263,7 +263,8 @@ private extension AkOneToOneRenderUIController {
     
     func createViews() {
         let ui_frame = AgoraFrameGroup()
-        teacherView = AgoraRenderMemberView(frame: .zero)
+        teacherView = AgoraRenderMemberView(frame: .zero,
+                                            role: .teacher)
         teacherView.layer.cornerRadius = ui_frame.one_one_to_render_cell_corner_radius
         view.addSubview(teacherView)
         

@@ -19,7 +19,7 @@ fcr_room_start_class = "Start Class";
 fcr_room_one_to_one_tab_video = "Video";
 fcr_room_one_to_one_tab_chat = "Chat";
 fcr_room_leave_room = "Leave Classroom";
-fcr_room_loading = "Loading...";
+fcr_room_loading = "Loading";
 fcr_room_class_leave_class_title = "Leave Class";
 fcr_room_class_over_notice = "Over Notification";
 fcr_room_class_over = "The class has ended.";
@@ -41,6 +41,8 @@ fcr_user_local_kick_out = "You have been removed from the classroom";
 fcr_user_local_start_co_hosting = "The teacher invited you to the podium. Let's have a positive interaction with you";
 fcr_user_local_stop_co_hosting = "You left the podium and can't interact with everyone for the time being";
 fcr_user_congratulation = "Congratulations to {xxx} for the award";
+fcr_user_no_teacher = "The tutor leaved the classroom";
+fcr_user_no_student = "Waiting for student to enter the classroom";
 
 // User List
 fcr_user_list = "Member List";

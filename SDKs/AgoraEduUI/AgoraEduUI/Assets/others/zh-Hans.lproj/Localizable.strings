@@ -24,7 +24,7 @@ fcr_room_start_class = "开始上课";
 fcr_room_one_to_one_tab_video = "视频";
 fcr_room_one_to_one_tab_chat = "聊天";
 fcr_room_leave_room = "退出教室";
-fcr_room_loading = "加载中...";
+fcr_room_loading = "加载中";
 fcr_room_class_leave_class_title = "下课确认";
 fcr_room_class_over_notice = "结束通知";
 fcr_room_class_over = "课程已结束";
@@ -46,6 +46,8 @@ fcr_user_local_kick_out = "你被移出教室";
 fcr_user_local_start_co_hosting = "老师邀请你上台了，与大家积极互动吧";
 fcr_user_local_stop_co_hosting = "你离开讲台了，暂时无法与大家互动";
 fcr_user_congratulation = "祝贺{xxx}获得奖励";
+fcr_user_no_teacher = "外教已离开教室";
+fcr_user_no_student = "等待学生进入教室";
 
 // user list
 fcr_user_list = "花名册";

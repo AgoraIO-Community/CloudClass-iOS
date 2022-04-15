@@ -93,7 +93,7 @@ import Masonry
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isJoinedRoom == false {
-            AgoraLoading.loading()
+            AgoraLoading.loading(msg: "fcr_room_loading".agedu_localized())
         }
     }
     
