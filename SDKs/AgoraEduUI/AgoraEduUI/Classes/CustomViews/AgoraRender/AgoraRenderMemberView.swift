@@ -369,6 +369,7 @@ private extension AgoraRenderMemberView {
     }
     
     func updateRenderState() {
+        videoMaskView.promtText = nil
         guard let model = self.memberModel else {
             ableMaskView.image = UIImage.agedu_named("ic_member_no_user")
             ableMaskView.promtText = (memberRole == .teacher) ? "fcr_user_no_teacher".agedu_localized() : "fcr_user_no_student".agedu_localized()
@@ -376,6 +377,7 @@ private extension AgoraRenderMemberView {
             self.renderID = nil
             return
         }
+        ableMaskView.promtText = nil
         if model.rendEnable == false {
             self.renderID = nil
             self.ableMaskView.image = UIImage.agedu_named("ic_member_device_offline")
