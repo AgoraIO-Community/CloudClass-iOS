@@ -229,6 +229,10 @@ extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
 // MARK: - AgoraChatUIControllerDelegate
 extension AgoraLectureUIManager: AgoraHandsListUIControllerDelegate {
     func updateHandsListRedLabel(_ count: Int) {
+        if count == 0,
+           ctrlView == handsListController.view {
+            ctrlView = nil
+        }
         toolBarController.updateHandsListCount(count)
     }
 }

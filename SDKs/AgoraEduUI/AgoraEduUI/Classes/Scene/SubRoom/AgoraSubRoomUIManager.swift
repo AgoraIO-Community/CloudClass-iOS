@@ -313,6 +313,10 @@ extension AgoraSubRoomUIManager: AgoraToolCollectionUIControllerDelegate {
 // MARK: - AgoraChatUIControllerDelegate
 extension AgoraSubRoomUIManager: AgoraHandsListUIControllerDelegate {
     func updateHandsListRedLabel(_ count: Int) {
+        if count == 0,
+           ctrlView == handsListController.view {
+            ctrlView = nil
+        }
         toolBarController.updateHandsListCount(count)
     }
 }

@@ -276,6 +276,8 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
             cell.redLabel.isHidden = (handsListCount == 0)
             if handsListCount > 0  {
                 cell.aSelected = (selectedTool == tool)
+            } else {
+                cell.aSelected = false
             }
             return cell
         } else if tool == .help {
