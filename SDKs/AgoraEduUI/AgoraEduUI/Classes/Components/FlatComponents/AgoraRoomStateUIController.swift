@@ -210,6 +210,24 @@ private extension AgoraRoomStateUIController {
             localStream = stream
         }
     }
+    
+    func toastFlag(uid: String) -> Bool {
+        var flag = true
+        let groupState = contextPool.group.getGroupInfo().state
+        if groupState,
+           subRoom == nil,
+           let subRoomList = contextPool.group.getSubRoomList() {
+            for item in subRoomList {
+                if let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
+                   userList.contains(uid) {
+                    flag = false
+                    break
+                }
+            }
+        }
+
+        return flag
+    }
 }
 // MARK: - AgoraEduUserHandler
 extension AgoraRoomStateUIController: AgoraEduUserHandler {
@@ -227,7 +245,9 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
-        if let _ = userList.first(where: {$0.userUuid == localUUID}) {
+        if let _ = userList.first(where: {$0.userUuid == localUUID}),
+           let op = operatorUser,
+           op.userRole == .teacher {
             // 老师邀请你上台了，与大家积极互动吧
             AgoraToast.toast(msg: "fcr_user_local_start_co_hosting".agedu_localized(),
                              type: .notice)
@@ -237,7 +257,8 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
     func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                  operatorUser: AgoraEduContextUserInfo?) {
         let localUUID = contextPool.user.getLocalUserInfo().userUuid
-        if let _ = userList.first(where: {$0.userUuid == localUUID}) {
+        if let _ = userList.first(where: {$0.userUuid == localUUID}),
+           toastFlag(uid: localUUID) {
             // 你离开讲台了，暂时无法与大家互动
             AgoraToast.toast(msg: "fcr_user_local_stop_co_hosting".agedu_localized(),
                              type: .error)

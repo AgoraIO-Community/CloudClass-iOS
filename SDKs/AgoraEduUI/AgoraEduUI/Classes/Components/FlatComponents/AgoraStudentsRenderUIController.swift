@@ -290,7 +290,7 @@ extension AgoraStudentsRenderUIController: AgoraRenderMemberViewDelegate {
                           renderID: String) {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        renderConfig.isMirror = true
+        renderConfig.isMirror = false
         contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: renderID,
                                                               level: .low)
         contextPool.media.startRenderVideo(view: view,

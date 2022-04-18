@@ -221,17 +221,8 @@ private extension AgoraMembersHorizeRenderUIController {
         if let teacher = userController.getUserList(role: .teacher)?.first,
            let subRoomList = contextPool.group.getSubRoomList() {
             var renderTeacher = false
-            
-            if subRoomList.count > 0 {
-                for subRoomInfo in subRoomList {
-                    if let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoomInfo.subRoomUuid),
-                       userList.contains(teacher.userUuid),
-                       userList.contains(localUserId) {
-                        renderTeacher = true
-                        break
-                    }
-                }
-            } else {
+            if let list = streamController.getStreamList(userUuid: teacher.userUuid),
+                list.count > 0 {
                 renderTeacher = true
             }
 
@@ -597,7 +588,7 @@ extension AgoraMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
         
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        renderConfig.isMirror = true
+        renderConfig.isMirror = false
         
         let media = contextPool.media
         
