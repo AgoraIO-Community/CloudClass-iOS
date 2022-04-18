@@ -255,6 +255,13 @@ private extension AgoraMembersHorizeRenderUIController {
             }
             dataSource = temp
         }
+        
+        if let streamList = streamController.getAllStreamList() {
+            for stream in streamList {
+                handleAudioOfStream(stream)
+            }
+        }
+        
         self.reloadData()
     }
     
@@ -269,6 +276,24 @@ private extension AgoraMembersHorizeRenderUIController {
         for stream in streamList {
             contextPool.media.stopRenderVideo(roomUuid: roomId,
                                               streamUuid: stream.streamUuid)
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
+        }
+    }
+    
+    func handleAudioOfStream(_ stream: AgoraEduContextStreamInfo,
+                             isLeft: Bool = false) {
+        guard isLeft == false else {
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
+            return
+        }
+        
+        switch stream.audioSourceState {
+        case .open:
+            contextPool.media.startPlayAudio(roomUuid: roomId,
+                                             streamUuid: stream.streamUuid)
+        default:
             contextPool.media.stopPlayAudio(roomUuid: roomId,
                                             streamUuid: stream.streamUuid)
         }
@@ -515,17 +540,21 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduMediaHandler {
 extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream)
+        handleAudioOfStream(stream)
+        updateStream(stream: stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream)
+        handleAudioOfStream(stream)
+        updateStream(stream: stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream.toEmptyStream())
+        handleAudioOfStream(stream,
+                            isLeft: true)
+        updateStream(stream: stream.toEmptyStream())
     }
 }
 
@@ -576,9 +605,6 @@ extension AgoraMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
                                view: view,
                                renderConfig: renderConfig,
                                streamUuid: renderID)
-        
-        media.startPlayAudio(roomUuid: roomId,
-                             streamUuid: renderID)
     }
 
     func memberViewCancelRender(memberView: AgoraRenderMemberView,
@@ -587,9 +613,6 @@ extension AgoraMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
         
         media.stopRenderVideo(roomUuid: roomId,
                               streamUuid: renderID)
-        
-        media.stopPlayAudio(roomUuid: roomId,
-                            streamUuid: renderID)
     }
 }
 // MARK: - UICollectionView Call Back

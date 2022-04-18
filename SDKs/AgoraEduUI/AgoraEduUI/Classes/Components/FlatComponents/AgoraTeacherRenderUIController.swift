@@ -70,6 +70,32 @@ private extension AgoraTeacherRenderUIController {
                                                              uuid: teacher.userUuid,
                                                              name: teacher.userName)
         }
+        
+        if let streamList = contextPool.stream.getAllStreamList() {
+            for stream in streamList {
+                handleAudioOfStream(stream)
+            }
+        }
+    }
+    
+    func handleAudioOfStream(_ stream: AgoraEduContextStreamInfo,
+                             isLeft: Bool = false) {
+        let roomId = contextPool.room.getRoomInfo().roomUuid
+        
+        guard isLeft == false else {
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
+            return
+        }
+ 
+        switch stream.audioSourceState {
+        case .open:
+            contextPool.media.startPlayAudio(roomUuid: roomId,
+                                             streamUuid: stream.streamUuid)
+        default:
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
+        }
     }
     
     func updateStream(stream: AgoraEduContextStreamInfo?) {
@@ -126,17 +152,21 @@ extension AgoraTeacherRenderUIController: AgoraEduUserHandler {
 extension AgoraTeacherRenderUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream)
+        handleAudioOfStream(stream)
+        updateStream(stream: stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream)
+        handleAudioOfStream(stream)
+        updateStream(stream: stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream.toEmptyStream())
+        handleAudioOfStream(stream,
+                            isLeft: true)
+        updateStream(stream: stream.toEmptyStream())
     }
 }
 // MARK: - AgoraEduMediaHandler

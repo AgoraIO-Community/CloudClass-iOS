@@ -79,11 +79,18 @@ private extension AgoraOneToOneRenderUIController {
                                                         uuid: teacher.userUuid,
                                                         name: teacher.userName)
         }
+        
         if let student = contextPool.user.getUserList(role: .student)?.first {
             studentModel = AgoraRenderMemberModel.model(with: contextPool.user,
                                                         streamController: contextPool.stream,
                                                         uuid: student.userUuid,
                                                         name: student.userName)
+        }
+        
+        if let streamList = contextPool.stream.getAllStreamList() {
+            for stream in streamList {
+                handleAudioOfStream(stream)
+            }
         }
     }
     
@@ -100,6 +107,26 @@ private extension AgoraOneToOneRenderUIController {
             AgoraToast.toast(msg: "fcr_stream_stop_video".agedu_localized())
         } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
             AgoraToast.toast(msg: "fcr_stream_start_video".agedu_localized())
+        }
+    }
+    
+    func handleAudioOfStream(_ stream: AgoraEduContextStreamInfo,
+                             isLeft: Bool = false) {
+        let roomId = contextPool.room.getRoomInfo().roomUuid
+        
+        guard isLeft == false else {
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
+            return
+        }
+ 
+        switch stream.audioSourceState {
+        case .open:
+            contextPool.media.startPlayAudio(roomUuid: roomId,
+                                             streamUuid: stream.streamUuid)
+        default:
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
         }
     }
     
@@ -221,17 +248,21 @@ extension AgoraOneToOneRenderUIController: AgoraEduMediaHandler {
 extension AgoraOneToOneRenderUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream)
+        handleAudioOfStream(stream)
+        updateStream(stream: stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream)
+        handleAudioOfStream(stream)
+        updateStream(stream: stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream.toEmptyStream())
+        handleAudioOfStream(stream,
+                            isLeft: true)
+        updateStream(stream: stream.toEmptyStream())
     }
 }
 // MARK: - AgoraEduRoomHandler
