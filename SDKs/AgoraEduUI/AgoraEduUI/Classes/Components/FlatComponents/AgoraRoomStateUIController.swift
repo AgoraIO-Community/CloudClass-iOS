@@ -257,7 +257,8 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
     
     // 小房间内，老师加入/离开的 toast
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        guard let _ = subRoom else {
+        guard let _ = subRoom,
+              user.userRole == .teacher else {
             return
         }
         
@@ -270,7 +271,8 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
-        guard let _ = subRoom else {
+        guard let _ = subRoom,
+              user.userRole == .teacher else {
             return
         }
         
@@ -455,7 +457,7 @@ extension AgoraRoomStateUIController: AgoraEduGroupHandler {
             .show(in: self)
     }
     
-    func onUserListRejuectedToSubRoom(userList: [String],
+    func onUserListRejectedToSubRoom(userList: [String],
                                       subRoomUuid: String,
                                       operatorUser: AgoraEduContextUserInfo?) {
         guard let teacher = contextPool.user.getUserList(role: .teacher)?.first else {
@@ -482,13 +484,13 @@ extension AgoraRoomStateUIController: AgoraEduGroupHandler {
         delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoomUuid)
     }
     
-    func onUserMovedToSubRoom(userList: Array<String>,
+    func onUserMovedToSubRoom(userUuid: String,
                               fromSubRoomUuid: String,
                               toSubRoomUuid: String,
                               operatorUser: AgoraEduContextUserInfo?) {
         // 主房间消息
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
-        guard userList.contains(localUserId) else {
+        guard userUuid == localUserId else {
             return
         }
         delegate?.onLocalUserRemovedFromSubRoom(subRoomId: fromSubRoomUuid)

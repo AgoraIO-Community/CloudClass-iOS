@@ -45,7 +45,7 @@ fcr_user_congratulation = "Congratulations to {xxx} for the award";
 // User List
 fcr_user_list = "Member List";
 fcr_user_list_teacher_name = "Teacher:";
-fcr_user_list_carousel_setting = "Carousel";
+fcr_user_list_carousel_setting = "Video Rotation";
 fcr_user_list_student_name = "Student";
 fcr_user_list_stage = "Stage";
 fcr_user_list_auth = "Auth";

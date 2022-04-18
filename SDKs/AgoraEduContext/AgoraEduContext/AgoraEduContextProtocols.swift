@@ -139,9 +139,9 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter userList: 用户 Id列表
     /// - parameter subRoomUuid: 子房间Id
     /// - parameter operatorUser: 操作人，可以为空
-    @objc optional func onUserListRejuectedToSubRoom(userList: [String],
-                                                     subRoomUuid: String,
-                                                     operatorUser: AgoraEduContextUserInfo?)
+    @objc optional func onUserListRejectedToSubRoom(userList: [String],
+                                                    subRoomUuid: String,
+                                                    operatorUser: AgoraEduContextUserInfo?)
     
     /// 用户被添加到子房间  (v2.4.0)
     /// - parameter userList: 用户 Id列表
@@ -152,11 +152,11 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
                                                  operatorUser: AgoraEduContextUserInfo?)
     
     /// 用户被从一个子房间移动到另一个子房间  (v2.4.0)
-    /// - parameter userList: 用户 Id列表
+    /// - parameter userUuid: 用户 Id
     /// - parameter fromSubRoomUuid: 来自子房间的 Id
     /// - parameter toSubRoomUuid: 移动到的子房间 Id
     /// - parameter operatorUser: 操作人，可以为空
-    @objc optional func onUserMovedToSubRoom(userList: [String],
+    @objc optional func onUserMovedToSubRoom(userUuid: String,
                                              fromSubRoomUuid: String,
                                              toSubRoomUuid: String,
                                              operatorUser: AgoraEduContextUserInfo?)
