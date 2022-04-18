@@ -173,6 +173,7 @@ def executePod():
     # 改变当前工作目录到指定的路径
     os.chdir(ExtcuteDir)
     print  ('====== pod install log ======')
+    os.system('rm -rf Podfile.lock')
     if BaseParams["updateFlag"] == True:
         os.system('pod install --repo-update')
     else:
