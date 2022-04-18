@@ -23,6 +23,26 @@ fileprivate enum AgoraToolCollectionSelectType: Int {
 }
 
 class AgoraToolCollectionUIController: UIViewController {
+    /** SDK环境*/
+    private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
     /// Data
     private weak var delegate: AgoraToolCollectionUIControllerDelegate?
     
@@ -83,24 +103,26 @@ class AgoraToolCollectionUIController: UIViewController {
     
     let color = AgoraColorGroup()
     
-    /** SDK环境*/
-    var contextPool: AgoraEduContextPool!
-    
     deinit {
         print("\(#function): \(self.classForCoder)")
     }
 
     init(context: AgoraEduContextPool,
-         delegate: AgoraToolCollectionUIControllerDelegate) {
+         delegate: AgoraToolCollectionUIControllerDelegate,
+         subRoom: AgoraEduSubRoomContext? = nil) {
         let group = AgoraColorGroup()
         
         baseTintColor = group.tool_bar_item_highlight_color
         
         super.init(nibName: nil,
                    bundle: nil)
-        contextPool = context
-        contextPool.widget.add(self,
-                               widgetId: kBoardWidgetId)
+        
+        self.contextPool = context
+        self.subRoom = subRoom
+        
+        widgetController.add(self,
+                             widgetId: kBoardWidgetId)
+        
         self.delegate = delegate
         
         initCtrlViews()
@@ -173,8 +195,8 @@ extension AgoraToolCollectionUIController: AgoraMainToolsViewDelegate,
             }
             if let boardSignal = signal,
                let message = boardSignal.toMessageString() {
-                contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                               message: message)
+                widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                             message: message)
             }
         }
     }
@@ -185,16 +207,16 @@ extension AgoraToolCollectionUIController: AgoraMainToolsViewDelegate,
         updateImage()
         let colorArr = UIColor(hex: hex)?.getRGBAArr()
         if let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(strokeColor: colorArr)).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
     func didSelectTextFont(fontSize: Int) {
         updateImage()
         if let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(textSize: fontSize)).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
@@ -204,8 +226,8 @@ extension AgoraToolCollectionUIController: AgoraMainToolsViewDelegate,
     
     func didSelectLineWidth(lineWidth: Int) {
         if let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(strokeWidth: lineWidth)).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
 }
@@ -224,7 +246,9 @@ private extension AgoraToolCollectionUIController {
 // MARK: - UI
 private extension AgoraToolCollectionUIController {
     func initCtrlViews() {
-        mainToolsView = AgoraMainToolsView(containAids: contextPool.user.getLocalUserInfo().userRole == .teacher,
+        let containAids = (userController.getLocalUserInfo().userRole == .teacher)
+        
+        mainToolsView = AgoraMainToolsView(containAids: containAids,
                                            delegate: self)
         subToolsView = AgoraBoardToolConfigView(delegate: self)
         mainToolsView.curColor = UIColor(hex: subToolsView.currentColor)
@@ -342,8 +366,8 @@ private extension AgoraToolCollectionUIController {
         
         if let boardSignal = signal,
            let message = boardSignal.toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
@@ -352,14 +376,14 @@ private extension AgoraToolCollectionUIController {
         if let shape = currentSubTool.boardWidgetShapeType,
            let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: .Shape,
                                                                                                shapeType: shape)).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
         
         if let tool = currentSubTool.boardWidgetToolType,
            let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: tool)).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
@@ -390,11 +414,11 @@ private extension AgoraToolCollectionUIController {
     }
     
     func handleBoardWidgetGrantUsers(_ list: [String]?) {
-        guard contextPool.user.getLocalUserInfo().userRole == .student else {
+        guard userController.getLocalUserInfo().userRole == .student else {
             return
         }
         if let users = list  {
-            let auth = users.contains(contextPool.user.getLocalUserInfo().userUuid)
+            let auth = users.contains(userController.getLocalUserInfo().userUuid)
             view.isHidden = !auth
             delegate?.toolCollectionDidChangeAppearance(auth)
         } else {

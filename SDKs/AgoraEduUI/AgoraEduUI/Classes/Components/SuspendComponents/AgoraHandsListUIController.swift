@@ -5,9 +5,10 @@
 //  Created by 何正卿 on 2021/10/21.
 //
 
-import Masonry
+
 import AgoraEduContext
 import AgoraUIBaseViews
+import Masonry
 
 struct HandsUpUser {
     var userUuid: String
@@ -20,7 +21,19 @@ protocol AgoraHandsListUIControllerDelegate: NSObjectProtocol {
 }
 
 class AgoraHandsListUIController: UIViewController {
-    public var suggestSize = CGSize(width: 220, height: 245)
+    private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
+    public var suggestSize = CGSize(width: 220,
+                                    height: 245)
     /** 代理*/
     weak var delegate: AgoraHandsListUIControllerDelegate?
 
@@ -34,18 +47,20 @@ class AgoraHandsListUIController: UIViewController {
             tableView?.reloadData()
         }
     }
-        
-    private var contextPool: AgoraEduContextPool!
+    
     // MARK: - Life Cycle
     deinit {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
-        contextPool = context
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
+        super.init(nibName: nil,
+                   bundle: nil)
+        self.contextPool = context
+        self.subRoom = subRoom
         
-        contextPool.user.registerUserEventHandler(self)
+        userController.registerUserEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
@@ -69,7 +84,7 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
            let `payload` = payload,
            let userName = payload["userName"] as? String {
             var isCoHost = false
-            if let list = contextPool.user.getCoHostList(),
+            if let list = userController.getCoHostList(),
                list.contains(where: {$0.userUuid == userUuid}){
                 isCoHost = true
             }
@@ -116,7 +131,8 @@ extension AgoraHandsListUIController: AgoraHandsUpItemCellDelegate {
         guard !u.isCoHost else {
             return
         }
-        contextPool.user.addCoHost(userUuid: u.userUuid) { [weak self] in
+        
+        userController.addCoHost(userUuid: u.userUuid) { [weak self] in
             guard let `self` = self else {
                 return
             }

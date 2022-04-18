@@ -12,6 +12,24 @@ import UIKit
 class AgoraClassToolsViewController: UIViewController {
     /**Data*/
     private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
     private let widgetIdList = [PollWidgetId,
                                 PopupQuizWidgetId,
                                 CountdownTimerWidgetId]
@@ -25,8 +43,11 @@ class AgoraClassToolsViewController: UIViewController {
     private var pollWidget: AgoraBaseWidget?
     private var countdownTimerWidget: AgoraBaseWidget?
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
         self.contextPool = context
+        self.subRoom = subRoom
+        
         super.init(nibName: nil,
                    bundle: nil)
     }
@@ -41,15 +62,35 @@ class AgoraClassToolsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        contextPool.room.registerRoomEventHandler(self)
-        contextPool.widget.add(self)
+        
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.room.registerRoomEventHandler(self)
+        }
+    }
+    
+    func viewWillActive() {
+        widgetController.add(self)
+        createAllActiveWidgets()
+    }
+    
+    func viewWillInactive() {
+        widgetController.remove(self)
+        relaseAllWidgets()
     }
 }
 
 // MARK: - AgoraEduRoomHandler
 extension AgoraClassToolsViewController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        setup()
+        viewWillActive()
+    }
+}
+
+extension AgoraClassToolsViewController: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        viewWillActive()
     }
 }
 
@@ -87,28 +128,12 @@ extension AgoraClassToolsViewController: AgoraWidgetSyncFrameObserver {
 
 // MARK: - private
 private extension AgoraClassToolsViewController {
-    func setup() {
-        let allWidgetActivity = contextPool.widget.getAllWidgetActivity()
-        
-        guard allWidgetActivity.count > 0 else {
-            return
-        }
-        
-        for (widgetId, activityNumber) in allWidgetActivity {
-            let active = activityNumber.boolValue
-            
-            if active == true {
-                createWidget(widgetId)
-            }
-        }
-    }
-    
     func parseSizeMessage(widgetId: String,
                           message: String) -> CGSize? {
         guard let json = message.json(),
-           let sizeDic = json["size"] as? [String: Any],
-           let width = sizeDic["width"] as? CGFloat,
-           let height = sizeDic["height"] as? CGFloat else {
+              let sizeDic = json["size"] as? [String: Any],
+              let width = sizeDic["width"] as? CGFloat,
+              let height = sizeDic["height"] as? CGFloat else {
             return nil
         }
         
@@ -142,9 +167,29 @@ private extension AgoraClassToolsViewController {
         }
     }
     
-    func createWidget(_ widgetId: String) {
-        let widgetController = contextPool.widget
+    func createAllActiveWidgets() {
+        let allWidgetActivity = widgetController.getAllWidgetActivity()
         
+        guard allWidgetActivity.count > 0 else {
+            return
+        }
+        
+        for (widgetId, activityNumber) in allWidgetActivity {
+            let active = activityNumber.boolValue
+            
+            if active == true {
+                createWidget(widgetId)
+            }
+        }
+    }
+    
+    func relaseAllWidgets() {
+        releaseWidget(PollWidgetId)
+        releaseWidget(PopupQuizWidgetId)
+        releaseWidget(CountdownTimerWidgetId)
+    }
+    
+    func createWidget(_ widgetId: String) {
         guard widgetIdList.contains(widgetId),
               let config = widgetController.getWidgetConfig(widgetId) else {
             return
@@ -160,6 +205,11 @@ private extension AgoraClassToolsViewController {
                              widgetId: widgetId)
         
         let widget = widgetController.create(config)
+        
+        if userController.getLocalUserInfo().userRole == .observer {
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: "hideSubmit")
+        }
         
         view.addSubview(widget.view)
         
@@ -209,12 +259,10 @@ private extension AgoraClassToolsViewController {
             break
         }
         
-        let widget = contextPool.widget
-        
-        widget.remove(self,
-                      widgetId: widgetId)
-        widget.removeObserver(forWidgetSyncFrame: self,
-                              widgetId: widgetId)
+        widgetController.remove(self,
+                                widgetId: widgetId)
+        widgetController.removeObserver(forWidgetSyncFrame: self,
+                                        widgetId: widgetId)
     }
     
     func updateWidgetFrame(_ widgetId: String,
@@ -227,8 +275,7 @@ private extension AgoraClassToolsViewController {
             return
         }
         
-        let widget = contextPool.widget
-        let syncFrame = widget.getWidgetSyncFrame(widgetId)
+        let syncFrame = widgetController.getWidgetSyncFrame(widgetId)
         
         let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view,
                                                         displayWidth: size.width,
@@ -254,8 +301,8 @@ private extension AgoraClassToolsViewController {
         let tsDic = ["syncTimestamp": syncTimestamp]
         
         if let string = tsDic.jsonString() {
-            contextPool.widget.sendMessage(toWidget: widgetId,
-                                           message: string)
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: string)
         }
     }
 }

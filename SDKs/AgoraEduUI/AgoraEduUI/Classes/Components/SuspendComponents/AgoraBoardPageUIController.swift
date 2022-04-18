@@ -23,6 +23,16 @@ class AgoraBoardPageUIController: UIViewController {
     
     /** SDK*/
     private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
     /** Data */
     private var pageIndex = 1 {
         didSet {
@@ -40,28 +50,33 @@ class AgoraBoardPageUIController: UIViewController {
     
     private var positionMoveFlag: Bool = false {
         didSet {
-            if positionMoveFlag != oldValue {
-                UIView.animate(withDuration: TimeInterval.agora_animation,
-                               delay: 0,
-                               options: .curveEaseInOut,
-                               animations: { [weak self] in
-                                guard let `self` = self else {
-                                    return
-                                }
-                                let move: CGFloat = UIDevice.current.isPad ? 49 : 44
-                                self.view.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
-                                                                         y: 0)
-                               }, completion: nil)
+            guard positionMoveFlag != oldValue else {
+                return
             }
+            
+            UIView.animate(withDuration: TimeInterval.agora_animation,
+                           delay: 0,
+                           options: .curveEaseInOut,
+                           animations: { [weak self] in
+                            guard let `self` = self else {
+                                return
+                            }
+                            let move: CGFloat = UIDevice.current.isPad ? 49 : 44
+                            self.view.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
+                                                                    y: 0)
+                           }, completion: nil)
         }
     }
     
-    init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
+        super.init(nibName: nil,
+                   bundle: nil)
         self.contextPool = context
+        self.subRoom = subRoom
         
-        contextPool.widget.add(self,
-                               widgetId: kBoardWidgetId)
+        widgetController.add(self,
+                             widgetId: kBoardWidgetId)
     }
     
     required init?(coder: NSCoder) {
@@ -197,24 +212,24 @@ extension AgoraBoardPageUIController {
     @objc func onClickAddPage(_ sender: UIButton) {
         let changeType = AgoraBoardWidgetPageChangeType.count(pageCount + 1)
         if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
     @objc func onClickPrePage(_ sender: UIButton) {
         let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 - 1)
         if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
     @objc func onClickNextPage(_ sender: UIButton) {
         let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 + 1)
         if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
 }

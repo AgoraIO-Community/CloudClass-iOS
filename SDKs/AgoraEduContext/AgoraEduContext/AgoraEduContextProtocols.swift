@@ -9,7 +9,7 @@ import AgoraWidget
 import UIKit
 
 public typealias AgoraEduContextSuccess = () -> (Void)
-public typealias AgoraEduContextSuccessWithUsers = (Array<AgoraEduContextUserInfo>) -> (Void)
+public typealias AgoraEduContextSuccessWithUsers = ([AgoraEduContextUserInfo]) -> (Void)
 public typealias AgoraEduContextSuccessWithString = (String) -> (Void)
 public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 
@@ -109,6 +109,264 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     func unregisterRoomEventHandler(_ handler: AgoraEduRoomHandler)
 }
 
+// MARK: - Group
+@objc public protocol AgoraEduGroupHandler: NSObjectProtocol {
+    /// 分组信息更新 (v2.4.0)
+    /// - parameter groupInfo: 分组信息
+    @objc optional func onGroupInfoUpdated(groupInfo: AgoraEduContextGroupInfo)
+    
+    /// 新增的子房间列表 (v2.4.0)
+    /// - parameter subRoomList: 新增的子房间信息列表
+    @objc optional func onSubRoomListAdded(subRoomList: [AgoraEduContextSubRoomInfo])
+    
+    /// 移除的子房间列表  (v2.4.0)
+    /// - parameter subRoomList: 移除的子房间信息列表
+    @objc optional func onSubRoomListRemoved(subRoomList: [AgoraEduContextSubRoomInfo])
+    
+    /// 更新的子房间列表  (v2.4.0)
+    /// - parameter subRoomList: 更新的子房间信息列表
+    @objc optional func onSubRoomListUpdated(subRoomList: [AgoraEduContextSubRoomInfo])
+    
+    /// 用户被邀请加入子房间（还未加入）  (v2.4.0)
+    /// - parameter userList: 用户 Id列表
+    /// - parameter subRoomUuid: 子房间Id
+    /// - parameter operatorUser: 操作人，可以为空
+    @objc optional func onUserListInvitedToSubRoom(userList: [String],
+                                                   subRoomUuid: String,
+                                                   operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 用户拒绝加入子房间  (v2.4.0)
+    /// - parameter userList: 用户 Id列表
+    /// - parameter subRoomUuid: 子房间Id
+    /// - parameter operatorUser: 操作人，可以为空
+    @objc optional func onUserListRejuectedToSubRoom(userList: [String],
+                                                     subRoomUuid: String,
+                                                     operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 用户被添加到子房间  (v2.4.0)
+    /// - parameter userList: 用户 Id列表
+    /// - parameter subRoomUuid: 子房间Id
+    /// - parameter operatorUser: 操作人，可以为空
+    @objc optional func onUserListAddedToSubRoom(userList: [String],
+                                                 subRoomUuid: String,
+                                                 operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 用户被从一个子房间移动到另一个子房间  (v2.4.0)
+    /// - parameter userList: 用户 Id列表
+    /// - parameter fromSubRoomUuid: 来自子房间的 Id
+    /// - parameter toSubRoomUuid: 移动到的子房间 Id
+    /// - parameter operatorUser: 操作人，可以为空
+    @objc optional func onUserMovedToSubRoom(userList: [String],
+                                             fromSubRoomUuid: String,
+                                             toSubRoomUuid: String,
+                                             operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 用户被从子房间移除  (v2.4.0)
+    /// - parameter userList: 用户列表
+    /// - parameter subRoomUuid: 子房间 Id
+    @objc optional func onUserListRemovedFromSubRoom(userList: [AgoraEduContextSubRoomRemovedUserEvent],
+                                                     subRoomUuid: String)
+}
+
+@objc public protocol AgoraEduGroupContext: NSObjectProtocol {
+    /// 获取分组信息 (v2.4.0)
+    /// - returns: 分组信息
+    @objc func getGroupInfo() -> AgoraEduContextGroupInfo
+    
+    /// 创建子房间 (v2.4.0)
+    ///  - parameter configs: 创建子房间配置数组
+    ///  - parameter success: 请求成功
+    ///  - parameter failure: 请求失败，返回 ContextError
+    @objc func addSubRoomList(configs: [AgoraEduContextSubRoomCreateConfig],
+                              success: AgoraEduContextSuccess?,
+                              failure: AgoraEduContextFailure?)
+    
+    /// 移除子房间 (v2.4.0)
+    ///  - parameter subRoomList: 子房间 Id 列表
+    ///  - parameter success: 请求成功
+    ///  - parameter failure: 请求失败，返回 ContextError
+    @objc func removeSubRoomList(subRoomList: [String],
+                                 success: AgoraEduContextSuccess?,
+                                 failure: AgoraEduContextFailure?)
+    
+    /// 移除所有子房间 (v2.4.0)
+    ///  - parameter success: 请求成功
+    ///  - parameter failure: 请求失败，返回 ContextError
+    @objc func removeAllSubRoomList(success: AgoraEduContextSuccess?,
+                                    failure: AgoraEduContextFailure?)
+    
+    /// 获取子房间列表 (v2.4.0)
+    /// - returns: 子房间列表
+    @objc func getSubRoomList() -> [AgoraEduContextSubRoomInfo]?
+    
+    /// 创建子房间对象，由外界管理该对象的生命周期 (v2.4.0)
+    ///  - parameter subRoomUuid: 子房间 id
+    /// - returns:  AgoraEduSubRoomContext 子房间对象，可为空
+    @objc func createSubRoomObject(subRoomUuid: String) -> AgoraEduSubRoomContext?
+    
+    /// 获取子房间用户列表 (v2.4.0)
+    /// - parameter subRoomUuid: 子房间 id
+    /// - returns: 用户的userUuid列表
+    @objc func getUserListFromSubRoom(subRoomUuid: String) -> [String]?
+    
+    /// 邀请用户加入子房间 (v2.4.0)
+    /// - parameter userList: 用户 id 列表
+    /// - parameter subRoomUuid: 子房间 id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败，返回 ContextError
+    @objc func inviteUserListToSubRoom(userList: [String],
+                                       subRoomUuid: String,
+                                       success: AgoraEduContextSuccess?,
+                                       failure: AgoraEduContextFailure?)
+    
+    /// 用户接受邀请进入子房间 (v2.4.0)
+    /// - parameter userList: 用户 id 列表
+    /// - parameter subRoomUuid: 子房间 id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败，返回 ContextError
+    @objc func userListAcceptInvitationToSubRoom(userList: [String],
+                                                 subRoomUuid: String,
+                                                 success: AgoraEduContextSuccess?,
+                                                 failure: AgoraEduContextFailure?)
+    
+    /// 用户拒绝邀请进入子房间 (v2.4.0)
+    /// - parameter userList: 用户 id 列表
+    /// - parameter subRoomUuid: 子房间 id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败，返回 ContextError
+    @objc func userListRejectInvitationToSubRoom(userList: [String],
+                                                 subRoomUuid: String,
+                                                 success: AgoraEduContextSuccess?,
+                                                 failure: AgoraEduContextFailure?)
+    
+    /// 将用户从子房间里移除(v2.4.0)
+    /// - parameter userList: 用户 id 列表
+    /// - parameter subRoomUuid: 子房间 id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败，返回 ContextError
+    @objc func removeUserListFromSubRoom(userList: [String],
+                                         subRoomUuid: String,
+                                         success: AgoraEduContextSuccess?,
+                                         failure: AgoraEduContextFailure?)
+    
+    /// 将用户移入子房间，跳过邀请步骤 (v2.4.0)
+    /// - parameter userList: 用户 id 列表
+    /// - parameter subRoomUuid: 子房间 id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败，返回 ContextError
+    @objc func addUserListToSubRoom(userList: [String],
+                                    subRoomUuid: String,
+                                    success: AgoraEduContextSuccess?,
+                                    failure: AgoraEduContextFailure?)
+    
+    /// 将用户从原来的子房间里移动到目标的子房间 (v2.4.0)
+    /// - parameter userList: 用户 id 列表
+    /// - parameter fromSubRoomUuid: 原子房间 id
+    /// - parameter toSubRoomUuid: 目标子房间 id
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败，返回 ContextError
+    @objc func moveUserListToSubRoom(userList: [String],
+                                     fromSubRoomUuid: String,
+                                     toSubRoomUuid: String,
+                                     success: AgoraEduContextSuccess?,
+                                     failure: AgoraEduContextFailure?)
+    
+    /// 开始事件监听 (v2.4.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func registerGroupEventHandler(_ handler: AgoraEduGroupHandler)
+    
+    /// 结束事件监听 (v2.4.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func unregisterGroupEventHandler(_ handler: AgoraEduGroupHandler)
+}
+
+// MARK: - SubRoom
+@objc public protocol AgoraEduSubRoomHandler: NSObjectProtocol {
+    /// 加入子房间成功 (v2.4.0)
+    /// - parameter roomInfo: 房间信息
+    @objc optional func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo)
+    
+    /// 加入子房间失败 (v2.4.0)
+    /// - parameter roomInfo: 房间信息
+    /// - parameter error: 错误原因
+    @objc optional func onJoinSubRoomFailure(roomInfo: AgoraEduContextRoomInfo,
+                                             error: AgoraEduContextError)
+    
+    /// 子房间自定义属性更新 (v2.4.0)
+    /// - parameter changedProperties: 本次更新的部分 properties
+    /// - parameter cause: 更新的原因，可为空
+    /// - parameter operatorUser: 该操作的执行者，可为空
+    @objc optional func onSubRoomPropertiesUpdated(changedProperties: [String: Any],
+                                                   cause: [String: Any]?,
+                                                   operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 子房间自定义属性更新 (v2.4.0)
+    /// - parameter keyPaths: 被删除的属性的key path数组
+    /// - parameter cause: 更新的原因，可为空
+    /// - parameter operatorUser: 该操作的执行者，可为空
+    @objc optional func onSubRoomPropertiesDeleted(keyPaths: [String],
+                                                   cause: [String: Any]?,
+                                                   operatorUser: AgoraEduContextUserInfo?)
+    
+    /// 子房间关闭 (v2.4.0)
+    @objc optional func onSubRoomClosed()
+}
+
+@objc public protocol AgoraEduSubRoomContext: NSObjectProtocol {
+    var user: AgoraEduUserContext { get }
+    var stream: AgoraEduStreamContext { get }
+    var widget: AgoraEduWidgetContext { get }
+    
+    /// 加入子房间 (v2.4.0)
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    @objc func joinSubRoom(success: AgoraEduContextSuccess?,
+                           failure: AgoraEduContextFailure?)
+    
+    /// 离开子房间 (v2.4.0)
+    @objc func leaveSubRoom()
+    
+    /// 获取子房间消息 (v2.4.0)
+    /// - returns: 子房间信息
+    @objc func getSubRoomInfo() -> AgoraEduContextSubRoomInfo
+    
+    /// 获取子房间自定义属性(v2.4.0)
+    /// - returns: 子房间自定义属性，可以返回空
+    @objc func getSubRoomProperties() -> [String: Any]?
+    
+    /// 更新子房间自定义属性 (v2.4.0)
+    /// - parameter properties: 更新属性
+    /// - parameter cause: 更新的原因，可为空
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    @objc func updateSubRoomProperties(properties: [String: Any],
+                                       cause: [String: Any]?,
+                                       success: AgoraEduContextSuccess?,
+                                       failure: AgoraEduContextFailure?)
+    
+    /// 删除子房间自定义属性 (v2.4.0)
+    /// - parameter keyPaths: 要删除属性的key path数组
+    /// - parameter cause: 删除的原因，可为空
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    @objc func deleteSubRoomProperties(keyPaths: [String],
+                                       cause: [String: Any]?,
+                                       success: AgoraEduContextSuccess?,
+                                       failure: AgoraEduContextFailure?)
+    
+    /// 开始事件监听 (v2.4.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func registerSubRoomEventHandler(_ handler: AgoraEduSubRoomHandler)
+    
+    /// 结束事件监听 (v2.4.0)
+    /// - parameter handler: 监听者
+    /// - returns: void
+    func unregisterSubRoomEventHandler(_ handler: AgoraEduSubRoomHandler)
+}
+
 // MARK: - User
 @objc public protocol AgoraEduUserHandler: NSObjectProtocol {
     /// 远端用户加入 (v2.0.0)
@@ -128,7 +386,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter operatorUser: 操作者，可为空
     @objc optional func onUserUpdated(user: AgoraEduContextUserInfo,
                                       operatorUser: AgoraEduContextUserInfo?)
-
+    
     /// 开始连麦的用户 (v2.0.0)
     /// - parameter userList: 开始连麦的用户列表
     /// - parameter operatorUser: 操作者
@@ -211,7 +469,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter success: 上传成功，获取用户信息列表
     /// - parameter failure: 上传失败
     /// - returns: 用户信息数组
-    func getUserList(roleList: Array<AgoraEduContextUserRole.RawValue>,
+    func getUserList(roleList: [AgoraEduContextUserRole.RawValue],
                      pageIndex: Int,
                      pageSize: Int,
                      success: AgoraEduContextSuccessWithUsers?,
@@ -286,6 +544,10 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - returns: 本地用户信息
     func getLocalUserInfo() -> AgoraEduContextUserInfo
     
+    /// 获取用户信息 (v2.4.0)
+    /// - returns: 用户信息
+    func getUserInfo(userUuid: String) -> AgoraEduContextUserInfo?
+    
     /// 获取所有连麦用户信息 (v2.0.0)
     /// - returns: 连麦用户列表数组
     func getCoHostList() -> [AgoraEduContextUserInfo]?
@@ -350,7 +612,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     func handsWave(duration: Int,
                    success: AgoraEduContextSuccess?,
                    failure: AgoraEduContextFailure?)
-
+    
     /// 挥手申请 (v2.1.0)
     /// - parameter duration: 举手申请的时长，单位秒
     /// - parameter success: 请求成功
@@ -445,7 +707,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
                              success: (AgoraEduContextDeviceState) -> (),
                              failure: (AgoraEduContextError) -> ())
     
-    /// 渲染视频流 (v2.0.0)
+    /// 开始渲染视频流 (v2.0.0)
     /// - parameter view: 渲染视频的容器
     /// - parameter renderConfig: 渲染配置
     /// - parameter streamUuid: 流 Id
@@ -458,6 +720,38 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter streamUuid: 流 Id
     /// - returns: AgoraEduContextError, 返回错误
     func stopRenderVideo(streamUuid: String) -> AgoraEduContextError?
+    
+    /// 开始渲染视频流 (v2.4.0)
+    /// - parameter roomUuid: 房间 id
+    /// - parameter view: 渲染视频的容器
+    /// - parameter renderConfig: 渲染配置
+    /// - parameter streamUuid: 流 Id
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
+    func startRenderVideo(roomUuid: String,
+                          view: UIView,
+                          renderConfig: AgoraEduContextRenderConfig,
+                          streamUuid: String) -> AgoraEduContextError?
+    
+    /// 停止渲染视频流 (v2.4.0)
+    /// - parameter roomUuid: 房间 id
+    /// - parameter streamUuid: 流 Id
+    /// - returns: AgoraEduContextError, 返回错误
+    func stopRenderVideo(roomUuid: String,
+                         streamUuid: String) -> AgoraEduContextError?
+    
+    /// 开始播放音频流 (v2.4.0)
+    /// - parameter roomUuid: 房间 id
+    /// - parameter streamUuid: 流 Id
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
+    func startPlayAudio(roomUuid: String,
+                        streamUuid: String) -> AgoraEduContextError?
+    
+    /// 停止播放音频流 (v2.4.0)
+    /// - parameter roomUuid: 房间 id
+    /// - parameter streamUuid: 流 Id
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
+    func stopPlayAudio(roomUuid: String,
+                       streamUuid: String) -> AgoraEduContextError?
     
     /// 开启混音 (v2.0.0)
     /// - parameter filePath: 需要混音的文件路径

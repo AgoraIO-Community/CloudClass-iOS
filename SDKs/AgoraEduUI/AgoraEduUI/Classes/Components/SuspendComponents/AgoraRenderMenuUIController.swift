@@ -53,6 +53,32 @@ struct AgoraRenderMenuModel {
 }
 
 class AgoraRenderMenuUIController: UIViewController {
+    private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
+    private var streamController: AgoraEduStreamContext {
+        if let `subRoom` = subRoom {
+            return subRoom.stream
+        } else {
+            return contextPool.stream
+        }
+    }
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
     
     var menuWidth: CGFloat = 0
     
@@ -61,8 +87,6 @@ class AgoraRenderMenuUIController: UIViewController {
     }
     
     public weak var delegate: AgoraRenderMenuUIControllerDelegate?
-    
-    private var contextPool: AgoraEduContextPool!
     
     private var boardUsers = [String]()
     
@@ -95,15 +119,18 @@ class AgoraRenderMenuUIController: UIViewController {
             guard let uid = self.userId else {
                 return nil
             }
-            return contextPool.stream.getStreamList(userUuid: uid)?.first?.streamUuid
+            return streamController.getStreamList(userUuid: uid)?.first?.streamUuid
         }
     }
     
     private(set) var userId: String? {
         didSet {
-            if userId != nil, contentView != nil {
-                updateMenu()
+            guard userId != nil,
+                  contentView != nil else {
+                return
             }
+            
+            updateMenu()
         }
     }
     
@@ -113,21 +140,22 @@ class AgoraRenderMenuUIController: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
-        contextPool = context
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
+        super.init(nibName: nil,
+                   bundle: nil)
+        self.contextPool = context
+        self.subRoom = subRoom
         
-        contextPool.stream.registerStreamEventHandler(self)
-        contextPool.user.registerUserEventHandler(self)
-        contextPool.widget.add(self,
-                               widgetId: kBoardWidgetId)
+        streamController.registerStreamEventHandler(self)
+        userController.registerUserEventHandler(self)
+        widgetController.add(self,
+                             widgetId: kBoardWidgetId)
     }
     
     func show(roomType: AgoraEduContextRoomType,
               userUuid: String,
               showRoleType: AgoraEduContextUserRole) {
-        view.isHidden = false
-
         userId = userUuid
 
         switch roomType {
@@ -153,13 +181,18 @@ class AgoraRenderMenuUIController: UIViewController {
             break
         }
         
+        guard items.count > 0 else {
+            view.isHidden = true
+            return
+        }
+        view.isHidden = false
         // show VC,主动更新model信息
         updateModelState()
         
         // 5s后自动消失
-        self.perform(#selector(dismissView),
-                     with: nil,
-                     afterDelay: 5)
+        perform(#selector(dismissView),
+                with: nil,
+                afterDelay: 5)
     }
     
     @objc func dismissView() {
@@ -176,8 +209,8 @@ class AgoraRenderMenuUIController: UIViewController {
         super.viewDidLoad()
         createViews()
         createConstraint()
-        contextPool.user.registerUserEventHandler(self)
-        contextPool.stream.registerStreamEventHandler(self)
+        userController.registerUserEventHandler(self)
+        streamController.registerStreamEventHandler(self)
     }
     
     override func viewDidLayoutSubviews() {
@@ -214,7 +247,7 @@ private extension AgoraRenderMenuUIController {
             case .allOffStage:
                 allStageOffButton.setImage(UIImage.agedu_named("ic_member_menu_stage_off"),
                                            for: .normal)
-                if let coHostList = contextPool.user.getCoHostList(),
+                if let coHostList = userController.getCoHostList(),
                    coHostList.count > 0 {
                     allStageOffButton.isUserInteractionEnabled = true
                 } else {
@@ -270,7 +303,7 @@ private extension AgoraRenderMenuUIController {
         var micState = AgoraRenderMenuModel.AgoraRenderMenuDeviceState.off
         var cameraState = AgoraRenderMenuModel.AgoraRenderMenuDeviceState.off
         
-        if let stream = contextPool.stream.getStreamList(userUuid: uid)?.first {
+        if let stream = streamController.getStreamList(userUuid: uid)?.first {
             // audio
             if stream.audioSourceState == .close {
                 micState = .forbidden
@@ -304,15 +337,15 @@ extension AgoraRenderMenuUIController {
             return
         }
         if model.micState == .off {
-            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                            audioPrivilege: true) { [weak self] in
+            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                          audioPrivilege: true) { [weak self] in
                 self?.model?.micState = .on
             } failure: { error in
                 
             }
         } else if model.micState == .on {
-            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                            audioPrivilege: false) { [weak self] in
+            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                          audioPrivilege: false) { [weak self] in
                 self?.model?.micState = .off
             } failure: { error in
                 
@@ -327,15 +360,15 @@ extension AgoraRenderMenuUIController {
             return
         }
         if model.cameraState == .off {
-            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                            videoPrivilege: true) { [weak self] in
+            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                          videoPrivilege: true) { [weak self] in
                 self?.model?.cameraState = .on
             } failure: { error in
                 
             }
         } else if model.cameraState == .on {
-            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                            videoPrivilege: false) { [weak self] in
+            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                          videoPrivilege: false) { [weak self] in
                 self?.model?.cameraState = .off
             } failure: { error in
                 
@@ -349,7 +382,7 @@ extension AgoraRenderMenuUIController {
             return
         }
         
-        contextPool.user.removeCoHost(userUuid: UUID) { [weak self] in
+        userController.removeCoHost(userUuid: UUID) { [weak self] in
             self?.model?.authState = false
         } failure: { error in
             
@@ -357,7 +390,7 @@ extension AgoraRenderMenuUIController {
     }
     
     @objc func onClickAllStageOff(_ sender: UIButton) {
-        contextPool.user.removeAllCoHosts { [weak self] in
+        userController.removeAllCoHosts { [weak self] in
             self?.updateMenu()
         } failure: { error in
             
@@ -381,8 +414,8 @@ extension AgoraRenderMenuUIController {
             list.removeAll(UUID)
         }
         if let message = AgoraBoardWidgetSignal.BoardGrantDataChanged(list).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
@@ -391,10 +424,10 @@ extension AgoraRenderMenuUIController {
             return
         }
         
-        contextPool.user.rewardUsers(userUuidList: [UUID],
-                                     rewardCount: 1,
-                                     success: nil,
-                                     failure: nil)
+        userController.rewardUsers(userUuidList: [UUID],
+                                   rewardCount: 1,
+                                   success: nil,
+                                   failure: nil)
     }
 }
 

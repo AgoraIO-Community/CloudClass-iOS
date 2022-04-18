@@ -32,26 +32,56 @@ private let kItemGap: CGFloat = AgoraFit.scale(4)
 private let kTeacherIndex: IndexPath = IndexPath(row: -1,
                                                  section: 0)
 class AgoraMembersHorizeRenderUIController: UIViewController {
+    private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
+    private var streamController: AgoraEduStreamContext {
+        if let `subRoom` = subRoom {
+            return subRoom.stream
+        } else {
+            return contextPool.stream
+        }
+    }
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
+    private var roomId: String {
+        if let `subRoom` = subRoom {
+            return subRoom.getSubRoomInfo().subRoomUuid
+        } else {
+            return contextPool.room.getRoomInfo().roomUuid
+        }
+    }
+    
+    private var isActive: Bool = true
     
     weak var delegate: AgoraRenderUIControllerDelegate?
     
-    public var themeColor: UIColor?
-    
-    var contentView: UIView!
-        
-    var teacherView: AgoraRenderMemberView!
-    
-    var collectionView: UICollectionView!
-    
-    var leftButton: UIButton!
-    
-    var rightButton: UIButton!
-        
-    var contextPool: AgoraEduContextPool!
+    /** View */
+    private var contentView: UIView!
+    private var teacherView: AgoraRenderMemberView!
+    private var collectionView: UICollectionView!
+    private var leftButton: UIButton!
+    private var rightButton: UIButton!
     
     var teacherModel: AgoraRenderMemberModel? {
         didSet {
-            teacherView.setModel(model: teacherModel, delegate: self)
+            teacherView.setModel(model: teacherModel,
+                                 delegate: self)
             teacherView.isHidden = (teacherModel == nil)
             self.reloadData()
         }
@@ -68,13 +98,17 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
     /** 用来记录当前流是否被老师操作*/
     var currentStream: AgoraEduContextStreamInfo? {
         didSet {
-            streamChanged(from: oldValue, to: currentStream)
+            streamChanged(from: oldValue,
+                          to: currentStream)
         }
     }
     
-    init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
-        contextPool = context
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
+        super.init(nibName: nil,
+                   bundle: nil)
+        self.contextPool = context
+        self.subRoom = subRoom
     }
     
     required init?(coder: NSCoder) {
@@ -83,13 +117,36 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         createViews()
         createConstraint()
-        contextPool.user.registerUserEventHandler(self)
-        contextPool.stream.registerStreamEventHandler(self)
-        contextPool.room.registerRoomEventHandler(self)
+        
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.room.registerRoomEventHandler(self)
+        }
+    }
+    
+    func viewWillActive() {
+        isActive = true
+        
+        userController.registerUserEventHandler(self)
+        streamController.registerStreamEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)
+        contextPool.group.registerGroupEventHandler(self)
+        
+        createAllRender()
+    }
+    
+    func viewWillInactive() {
+        isActive = false
+        
+        userController.unregisterUserEventHandler(self)
+        streamController.unregisterStreamEventHandler(self)
+        contextPool.media.unregisterMediaEventHandler(self)
+        contextPool.group.unregisterGroupEventHandler(self)
+        
+        releaseAllRender()
     }
     
     public func renderViewForUser(with userId: String) -> UIView? {
@@ -132,7 +189,6 @@ extension AgoraMembersHorizeRenderUIController {
             delegate?.onClickMemberAt(view: teacherView,
                                       UUID: uuid)
         }
-        
     }
     
     @objc func onDoubleClickTeacher(_ sender: UITapGestureRecognizer) {
@@ -157,18 +213,42 @@ extension AgoraMembersHorizeRenderUIController {
         }
     }
 }
+
 // MARK: - Private
 private extension AgoraMembersHorizeRenderUIController {
-    func setup() {
-        if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
-            self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
-                                                             uuid: teacher.userUuid,
-                                                             name: teacher.userName)
+    func createAllRender() {
+        let localUserId = userController.getLocalUserInfo().userUuid
+        if let teacher = userController.getUserList(role: .teacher)?.first,
+           let subRoomList = contextPool.group.getSubRoomList() {
+            var renderTeacher = false
+            
+            if subRoomList.count > 0 {
+                for subRoomInfo in subRoomList {
+                    if let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoomInfo.subRoomUuid),
+                       userList.contains(teacher.userUuid),
+                       userList.contains(localUserId) {
+                        renderTeacher = true
+                        break
+                    }
+                }
+            } else {
+                renderTeacher = true
+            }
+
+            if renderTeacher {
+                // 老师在小组内
+                self.teacherModel = AgoraRenderMemberModel.model(with: userController,
+                                                                 streamController: streamController,
+                                                                 uuid: teacher.userUuid,
+                                                                 name: teacher.userName)
+            }
         }
-        if let students = contextPool.user.getCoHostList()?.filter({$0.userRole == .student}) {
+
+        if let students = userController.getCoHostList()?.filter({$0.userRole == .student}) {
             var temp = [AgoraRenderMemberModel]()
             for student in students {
-                let model = AgoraRenderMemberModel.model(with: contextPool,
+                let model = AgoraRenderMemberModel.model(with: userController,
+                                                         streamController: streamController,
                                                          uuid: student.userUuid,
                                                          name: student.userName)
                 temp.append(model)
@@ -176,6 +256,43 @@ private extension AgoraMembersHorizeRenderUIController {
             dataSource = temp
         }
         self.reloadData()
+    }
+    
+    func releaseAllRender() {
+        dataSource = []
+        self.reloadData()
+        
+        guard let streamList = streamController.getAllStreamList() else {
+            return
+        }
+        
+        for stream in streamList {
+            contextPool.media.stopRenderVideo(roomUuid: roomId,
+                                              streamUuid: stream.streamUuid)
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
+        }
+    }
+    
+    func setTeacherModel() {
+        guard teacherModel == nil,
+              let teacherInfo = contextPool.user.getUserList(role: .teacher)?.first else {
+            return
+        }
+        if !widgetController.getAllWidgetActivity().keys.contains(where: {$0.contains(kWindowWidgetId)}) {
+            // 原始状态为未开启大窗
+            self.teacherModel = AgoraRenderMemberModel.model(with: userController,
+                                                             streamController: streamController,
+                                                             uuid: teacherInfo.userUuid,
+                                                             name: teacherInfo.userName)
+        } else {
+            // 原始状态为已开启大窗
+            self.teacherModel = AgoraRenderMemberModel.model(with: userController,
+                                                             streamController: streamController,
+                                                             uuid: teacherInfo.userUuid,
+                                                             name: teacherInfo.userName,
+                                                             rendEnable: false)
+        }
     }
     
     // 更新视图
@@ -220,18 +337,25 @@ private extension AgoraMembersHorizeRenderUIController {
         }
     }
     
-    func streamChanged(from: AgoraEduContextStreamInfo?, to: AgoraEduContextStreamInfo?) {
+    func streamChanged(from: AgoraEduContextStreamInfo?,
+                       to: AgoraEduContextStreamInfo?) {
         guard let fromStream = from, let toStream = to else {
             return
         }
-        if fromStream.streamType.hasAudio, !toStream.streamType.hasAudio {
+        
+        if fromStream.streamType.hasAudio,
+           !toStream.streamType.hasAudio {
             AgoraToast.toast(msg: "fcr_stream_stop_audio".agedu_localized())
-        } else if !fromStream.streamType.hasAudio, toStream.streamType.hasAudio {
+        } else if !fromStream.streamType.hasAudio,
+                  toStream.streamType.hasAudio {
             AgoraToast.toast(msg: "fcr_stream_start_audio".agedu_localized())
         }
-        if fromStream.streamType.hasVideo, !toStream.streamType.hasVideo {
+        
+        if fromStream.streamType.hasVideo,
+           !toStream.streamType.hasVideo {
             AgoraToast.toast(msg: "fcr_stream_stop_video".agedu_localized())
-        } else if !fromStream.streamType.hasVideo, toStream.streamType.hasVideo {
+        } else if !fromStream.streamType.hasVideo,
+                  toStream.streamType.hasVideo {
             AgoraToast.toast(msg: "fcr_stream_start_video".agedu_localized())
         }
     }
@@ -256,9 +380,11 @@ private extension AgoraMembersHorizeRenderUIController {
             }
         }
         // sounds
-        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward", withExtension: "mp3") else {
+        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward",
+                                                      withExtension: "mp3") else {
             return
         }
+        
         var soundId: SystemSoundID = 0;
         AudioServicesCreateSystemSoundID(rewardUrl as CFURL,
                                          &soundId);
@@ -269,13 +395,49 @@ private extension AgoraMembersHorizeRenderUIController {
         AudioServicesPlaySystemSound(soundId)
     }
 }
+
+// MARK: - AgoraEduGroupHandler
+extension AgoraMembersHorizeRenderUIController: AgoraEduGroupHandler {
+    func onUserListAddedToSubRoom(userList: Array<String>,
+                                  subRoomUuid: String,
+                                  operatorUser: AgoraEduContextUserInfo?) {
+        // 学生加入子房间会走coHost
+        guard subRoom == nil,
+              let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
+              userList.contains(teacherId) else {
+            return
+        }
+        // 老师未开启大窗
+        teacherModel = nil
+    }
+    
+    func onUserListRemovedFromSubRoom(userList: Array<AgoraEduContextSubRoomRemovedUserEvent>,
+                                      subRoomUuid: String) {
+        guard subRoom == nil,
+              let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+              userList.contains(where: {$0.userUuid == teacherId}) else {
+            return
+        }
+        setTeacherModel()
+    }
+    
+    func onGroupInfoUpdated(groupInfo: AgoraEduContextGroupInfo) {
+        guard !groupInfo.state else {
+            return
+        }
+        setTeacherModel()
+    }
+}
+
 // MARK: - AgoraEduUserHandler
 extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
-            if user.userRole == .student {
-                let model = AgoraRenderMemberModel.model(with: contextPool,
+            if !dataSource.contains(where: {$0.uuid == user.userUuid}),
+               user.userRole == .student {
+                let model = AgoraRenderMemberModel.model(with: userController,
+                                                         streamController: streamController,
                                                          uuid: user.userUuid,
                                                          name: user.userName)
                 dataSource.append(model)
@@ -296,7 +458,8 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduUserHandler {
     
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         if user.userRole == .teacher {
-            self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
+            self.teacherModel = AgoraRenderMemberModel.model(with: userController,
+                                                             streamController: streamController,
                                                              uuid: user.userUuid,
                                                              name: user.userName)
         }
@@ -369,8 +532,21 @@ extension AgoraMembersHorizeRenderUIController: AgoraEduStreamHandler {
 // MARK: - AgoraEduRoomHandler
 extension AgoraMembersHorizeRenderUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        // model setup
-        self.setup()
+        guard isActive == true else {
+            return
+        }
+        
+        viewWillActive()
+    }
+}
+
+extension AgoraMembersHorizeRenderUIController: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        guard isActive == true else {
+            return
+        }
+        
+        viewWillActive()
     }
 }
 
@@ -379,23 +555,41 @@ extension AgoraMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
     func memberViewRender(memberView: AgoraRenderMemberView,
                           in view: UIView,
                           renderID: String) {
-        let localUid = contextPool.user.getLocalUserInfo().userUuid
-        if let localStreamList = contextPool.stream.getStreamList(userUuid: localUid),
+        let localUid = userController.getLocalUserInfo().userUuid
+        if let localStreamList = streamController.getStreamList(userUuid: localUid),
            !localStreamList.contains(where: {$0.streamUuid == renderID}){
-            contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: renderID,
-                                                                  level: .low)
+            streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: renderID,
+                                                                level: .low)
         }
+        
+        if view.width < 1 || view.height < 1 {
+            memberView.layoutIfNeeded()
+        }
+        
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         renderConfig.isMirror = true
         
-        contextPool.media.startRenderVideo(view: view,
-                                           renderConfig: renderConfig,
-                                           streamUuid: renderID)
+        let media = contextPool.media
+        
+        media.startRenderVideo(roomUuid: roomId,
+                               view: view,
+                               renderConfig: renderConfig,
+                               streamUuid: renderID)
+        
+        media.startPlayAudio(roomUuid: roomId,
+                             streamUuid: renderID)
     }
 
-    func memberViewCancelRender(memberView: AgoraRenderMemberView, renderID: String) {
-        contextPool.media.stopRenderVideo(streamUuid: renderID)
+    func memberViewCancelRender(memberView: AgoraRenderMemberView,
+                                renderID: String) {
+        let media = contextPool.media
+        
+        media.stopRenderVideo(roomUuid: roomId,
+                              streamUuid: renderID)
+        
+        media.stopPlayAudio(roomUuid: roomId,
+                            streamUuid: renderID)
     }
 }
 // MARK: - UICollectionView Call Back

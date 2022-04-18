@@ -16,22 +16,42 @@ protocol AgoraChatUIControllerDelegate: NSObjectProtocol {
 }
 
 class AgoraChatUIController: UIViewController {
+    /** SDK环境*/
+    private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    private var widget: AgoraBaseWidget?
     
-    public let suggestSize = CGSize(width: 200, height: 287)
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
+    public let suggestSize = CGSize(width: 200,
+                                    height: 287)
     
     public weak var delegate: AgoraChatUIControllerDelegate?
     
     private var chatWidgetId: String?
     
-    private var widget: AgoraBaseWidget?
-    /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
     // public
     public var hideTopBar = false
     
     public var hideMiniButton = false
     
     public var hideAnnouncement = false
+    
+    public var hideInput = false
         
     private var redDotShow: Bool = false {
         didSet {
@@ -41,9 +61,12 @@ class AgoraChatUIController: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
-        contextPool = context
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
+        super.init(nibName: nil,
+                   bundle: nil)
+        self.contextPool = context
+        self.subRoom = subRoom
     }
     
     required init?(coder: NSCoder) {
@@ -53,13 +76,36 @@ class AgoraChatUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createWidget()
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.room.registerRoomEventHandler(self)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         self.redDotShow = false
+    }
+    
+    func viewWillActive() {
+        createWidget()
+    }
+    
+    func viewWillInactive() {
+        releaseWidget()
+    }
+}
+
+extension AgoraChatUIController: AgoraEduRoomHandler {
+    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        createWidget()
+    }
+}
+
+extension AgoraChatUIController: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        createWidget()
     }
 }
 
@@ -71,6 +117,7 @@ extension AgoraChatUIController: AgoraWidgetMessageObserver {
               w == widgetId else {
             return
         }
+        
         if message == "chatWidgetDidReceiveMessage",
            isVisible == false {
             self.redDotShow = true
@@ -80,49 +127,69 @@ extension AgoraChatUIController: AgoraWidgetMessageObserver {
 
 // MARK: - Creations
 private extension AgoraChatUIController {
-    private func createWidget() {
-        let EM = "easemobIM"
-        let RTM = "AgoraChatWidget"
-        if let chatConfig = contextPool.widget.getWidgetConfig(EM) {
-            let w = contextPool.widget.create(chatConfig)
+    func createWidget() {
+        let EM = EasemobWidgetId
+        let RTM = AgoraChatWidgetId
+        
+        if let chatConfig = widgetController.getWidgetConfig(EM) {
+            let w = widgetController.create(chatConfig)
             view.addSubview(w.view)
-            let userInfo = contextPool.user.getLocalUserInfo()
-            if let flexProps = contextPool.user.getUserProperties(userUuid: userInfo.userUuid),
+            let userInfo = userController.getLocalUserInfo()
+            
+            if let flexProps = userController.getUserProperties(userUuid: userInfo.userUuid),
                let url = flexProps["avatarurl"] as? String,
-                let message = ["avatarurl": url].jsonString() {
-                    contextPool.widget.sendMessage(toWidget: EM,
-                                                   message: message)
+               let message = ["avatarurl": url].jsonString() {
+                widgetController.sendMessage(toWidget: EM,
+                                             message: message)
             }
+            
             if hideTopBar {
-                contextPool.widget.sendMessage(toWidget: EM,
-                                               message: "hideTopBar")
+                widgetController.sendMessage(toWidget: EM,
+                                             message: "hideTopBar")
             }
+            
             if hideMiniButton {
-                contextPool.widget.sendMessage(toWidget: EM,
-                                               message: "hideMiniButton")
+                widgetController.sendMessage(toWidget: EM,
+                                             message: "hideMiniButton")
             }
+            
             if hideAnnouncement {
-                contextPool.widget.sendMessage(toWidget: EM,
-                                               message: "hideAnnouncement")
+                widgetController.sendMessage(toWidget: EM,
+                                             message: "hideAnnouncement")
+            }
+            
+            if hideInput {
+                widgetController.sendMessage(toWidget: EM,
+                                             message: "hideInput")
             }
             widget = w
             chatWidgetId = EM
-            contextPool.widget.add(self, widgetId: EM)
-        } else if let chatConfig = contextPool.widget.getWidgetConfig(RTM) {
+            widgetController.add(self,
+                                 widgetId: EM)
             
-            let w = contextPool.widget.create(chatConfig)
+        } else if let chatConfig = widgetController.getWidgetConfig(RTM) {
+            
+            let w = widgetController.create(chatConfig)
             view.addSubview(w.view)
-            if hideTopBar,
-               let param = ["view": ["hideTopBar": true]].jsonString() {
-                contextPool.widget.sendMessage(toWidget: RTM,
-                                               message: param)
+            if let param = ["view": ["hideTopBar": hideTopBar,
+                                     "hideInput": hideInput]].jsonString() {
+                widgetController.sendMessage(toWidget: RTM,
+                                             message: param)
             }
+            
             widget = w
             chatWidgetId = RTM
-            contextPool.widget.add(self, widgetId: RTM)
+            widgetController.add(self,
+                                 widgetId: RTM)
         }
+        
         widget?.view.mas_makeConstraints { make in
             make?.top.left().right().bottom().equalTo()(0)
         }
+    }
+    
+    func releaseWidget() {
+        widget?.view.removeFromSuperview()
+        widget = nil
     }
 }

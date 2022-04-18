@@ -74,12 +74,14 @@ class AgoraOneToOneRenderUIController: UIViewController {
 private extension AgoraOneToOneRenderUIController {
     func setup() {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
-            teacherModel = AgoraRenderMemberModel.model(with: contextPool,
+            teacherModel = AgoraRenderMemberModel.model(with: contextPool.user,
+                                                        streamController: contextPool.stream,
                                                         uuid: teacher.userUuid,
                                                         name: teacher.userName)
         }
         if let student = contextPool.user.getUserList(role: .student)?.first {
-            studentModel = AgoraRenderMemberModel.model(with: contextPool,
+            studentModel = AgoraRenderMemberModel.model(with: contextPool.user,
+                                                        streamController: contextPool.stream,
                                                         uuid: student.userUuid,
                                                         name: student.userName)
         }
@@ -173,11 +175,13 @@ extension AgoraOneToOneRenderUIController: AgoraEduUserHandler {
     
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         if user.userRole == .teacher {
-            teacherModel = AgoraRenderMemberModel.model(with: contextPool,
+            teacherModel = AgoraRenderMemberModel.model(with: contextPool.user,
+                                                        streamController: contextPool.stream,
                                                         uuid: user.userUuid,
                                                         name: user.userName)
         } else if user.userRole == .student {
-            studentModel = AgoraRenderMemberModel.model(with: contextPool,
+            studentModel = AgoraRenderMemberModel.model(with: contextPool.user,
+                                                        streamController: contextPool.stream,
                                                         uuid: user.userUuid,
                                                         name: user.userName)
         }

@@ -26,4 +26,6 @@ public typealias AgoraEduWidgetContext = AgoraWidgetProtocol
     var stream: AgoraEduStreamContext { get }
     /// 监视器
     var monitor: AgoraEduMonitorContext { get }
+    /// 分组
+    var group: AgoraEduGroupContext { get }
 }

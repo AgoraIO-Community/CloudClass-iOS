@@ -13,13 +13,18 @@ import UIKit
     case normal, kickOut
 }
 
+@objc public enum AgoraClassRoomExitRoomType: Int {
+    case main, sub
+}
+
 @objc public protocol AgoraEduUIManagerCallBack: NSObjectProtocol {
     func manager(_ manager: AgoraEduUIManager,
                  didExit reason: AgoraClassRoomExitReason)
 }
 
 protocol AgoraClassRoomManagement: NSObjectProtocol {
-    func exitClassRoom(reason: AgoraClassRoomExitReason)
+    func exitClassRoom(reason: AgoraClassRoomExitReason,
+                       roomType: AgoraClassRoomExitRoomType)
 }
 
 @objc public class AgoraEduUIManager: UIViewController, AgoraClassRoomManagement {
@@ -54,7 +59,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     }
     
     @objc public init(contextPool: AgoraEduContextPool,
-                      delegate: AgoraEduUIManagerCallBack) {
+                      delegate: AgoraEduUIManagerCallBack?) {
         super.init(nibName: nil,
                    bundle: nil)
         self.contextPool = contextPool
@@ -158,13 +163,24 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         return .landscapeRight
     }
     
-    @objc public func exitClassRoom(reason: AgoraClassRoomExitReason) {
-        self.contextPool.room.leaveRoom()
-        
-        self.dismiss(animated: true) {
-            self.delegate?.manager(self,
-                                   didExit: reason)
+    @objc public func exitClassRoom(reason: AgoraClassRoomExitReason,
+                                    roomType: AgoraClassRoomExitRoomType = .main) {
+        switch roomType {
+        case .main:
+            self.contextPool.room.leaveRoom()
+            
+            self.dismiss(animated: true) { [weak self] in
+                guard let `self` = self else {
+                    return
+                }
+                
+                self.delegate?.manager(self,
+                                       didExit: reason)
+            }
+        default:
+            break
         }
+
     }
 }
 

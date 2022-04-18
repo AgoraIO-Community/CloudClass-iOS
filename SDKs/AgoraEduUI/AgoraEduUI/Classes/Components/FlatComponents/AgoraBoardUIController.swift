@@ -9,8 +9,26 @@ import AgoraEduContext
 import AgoraWidget
 
 class AgoraBoardUIController: UIViewController {
-    private var boardWidget: AgoraBaseWidget?
     private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    private var boardWidget: AgoraBaseWidget?
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    private var grantUsers = [String]() {
+        didSet {
+            if grantUsers.contains(contextPool.user.getLocalUserInfo().userUuid) {
+                localGranted = true
+            } else {
+                localGranted = false
+            }
+        }
+    }
     
     private var localGranted = false {
         didSet {
@@ -28,15 +46,21 @@ class AgoraBoardUIController: UIViewController {
         }
     } 
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
         super.init(nibName: nil,
                    bundle: nil)
-        contextPool = context
+        self.contextPool = context
+        self.subRoom = subRoom
         view.backgroundColor = .white
         
-        contextPool.room.registerRoomEventHandler(self)
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.room.registerRoomEventHandler(self)
+        }
+        
         contextPool.media.registerMediaEventHandler(self)
-        contextPool.widget.add(self)
     }
     
     required init?(coder: NSCoder) {
@@ -47,44 +71,65 @@ class AgoraBoardUIController: UIViewController {
                                with event: UIEvent?) {
         UIApplication.shared.windows[0].endEditing(true)
     }
+    
+    func viewWillActive() {
+        guard widgetController.getWidgetActivity(kBoardWidgetId) else {
+            return
+        }
+        
+        widgetController.add(self)
+        
+        initBoardWidget()
+        joinBoard()
+    }
+    
+    func viewWillInactive() {
+        widgetController.remove(self)
+        
+        deinitBoardWidget()
+    }
 }
 
 // MARK: - private
 private extension AgoraBoardUIController {
     func initBoardWidget() {
-        guard let boardConfig = contextPool.widget.getWidgetConfig(kBoardWidgetId) else {
+        guard let boardConfig = widgetController.getWidgetConfig(kBoardWidgetId),
+              self.boardWidget == nil else {
             return
         }
         
-        let boardWidget = contextPool.widget.create(boardConfig)
-        contextPool.widget.add(self,
-                               widgetId: boardConfig.widgetId)
-        let group = AgoraUIGroup()
-        boardWidget.view.backgroundColor = group.color.board_bg_color
-        boardWidget.view.layer.borderColor = group.color.board_border_color
-        boardWidget.view.layer.borderWidth = group.frame.board_border_width
-        boardWidget.view.layer.cornerRadius = group.frame.board_corner_radius
-        boardWidget.view.layer.masksToBounds = true
+        let widget = widgetController.create(boardConfig)
+        widgetController.add(self,
+                             widgetId: boardConfig.widgetId)
         
-        view.addSubview(boardWidget.view)
-        self.boardWidget = boardWidget
+        let group = AgoraUIGroup()
+        widget.view.backgroundColor = group.color.board_bg_color
+        widget.view.layer.borderColor = group.color.board_border_color
+        widget.view.layer.borderWidth = group.frame.board_border_width
+        widget.view.layer.cornerRadius = group.frame.board_corner_radius
+        widget.view.layer.masksToBounds = true
+        
+        view.addSubview(widget.view)
+        boardWidget = widget
 
-        boardWidget.view.mas_makeConstraints { make in
+        widget.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
+        
+//        self.view.layoutIfNeeded()
     }
     
     func deinitBoardWidget() {
-        self.boardWidget?.view.removeFromSuperview()
-        self.boardWidget = nil
-        contextPool.widget.remove(self,
-                                  widgetId: kBoardWidgetId)
+        boardWidget?.view.removeFromSuperview()
+        boardWidget = nil
+        widgetController.remove(self,
+                                widgetId: kBoardWidgetId)
     }
     
     func joinBoard() {
         if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
@@ -116,17 +161,14 @@ private extension AgoraBoardUIController {
         if let error = contextError,
            let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(stateCode: 714,
                                                                                                               errorCode: error.code)).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
     
     func handleGrantUsers(_ list: Array<String>?) {
-        if let users = list,
-           users.contains(contextPool.user.getLocalUserInfo().userUuid) {
-            localGranted = true
-        } else {
-            localGranted = false
+        if let users = list {
+            grantUsers = users
         }
     }
 }
@@ -172,23 +214,44 @@ extension AgoraBoardUIController: AgoraWidgetActivityObserver {
     }
 }
 
+// MARK: - AgoraEduRoomHandler
 extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        if contextPool.widget.getWidgetActivity(kBoardWidgetId) {
-            initBoardWidget()
-            joinBoard()
-        }
+        viewWillActive()
     }
 }
 
+// MARK: - AgoraEduSubRoomHandler
+extension AgoraBoardUIController: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        viewWillActive()
+        
+        guard !localGranted else {
+            return
+        }
+        var arr = grantUsers
+        arr.append(contextPool.user.getLocalUserInfo().userUuid)
+
+        if let message = AgoraBoardWidgetSignal.BoardGrantDataChanged(arr).toMessageString() {
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
+        }
+    }
+    
+    func onSubRoomClosed() {
+        deinitBoardWidget()
+    }
+}
+
+// MARK: - AgoraEduMediaHandler
 extension AgoraBoardUIController: AgoraEduMediaHandler {
     public func onAudioMixingStateChanged(stateCode: Int,
                                           errorCode: Int) {
         let data = AgoraBoardWidgetAudioMixingChangeData(stateCode: stateCode,
                                                          errorCode: errorCode)
         if let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(data).toMessageString() {
-            contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                           message: message)
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import AgoraUIBaseViews
+import UIKit
 
 // MARK: - AgoraToolBarRedDotCell
 class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
@@ -174,6 +175,31 @@ class AgoraToolBarHandsUpCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - AgoraToolBarHelpCell
+class AgoraToolBarHelpCell: AgoraToolBarItemCell {
+    var touchable: Bool = true {
+        didSet {
+            if touchable {
+                normalState()
+            } else {
+                unTouchableState()
+            }
+        }
+    }
+    
+    private func unTouchableState() {
+        contentView.backgroundColor = .white
+        imageView.tintColor = UIColor(hex: 0xECECF1)
+        UIView.animate(withDuration: 0.1,
+                       delay: 0,
+                       options: .curveLinear) {
+            self.transform = .identity
+            self.imageView.transform = .identity
+        } completion: { finish in
+        }
     }
 }
 

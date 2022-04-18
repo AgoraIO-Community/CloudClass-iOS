@@ -77,7 +77,8 @@ private extension AgoraStudentsRenderUIController {
         if let students = contextPool.user.getCoHostList()?.filter({$0.userRole == .student}) {
             var temp = [AgoraRenderMemberModel]()
             for student in students {
-                let model = AgoraRenderMemberModel.model(with: contextPool,
+                let model = AgoraRenderMemberModel.model(with: contextPool.user,
+                                                         streamController: contextPool.stream,
                                                          uuid: student.userUuid,
                                                          name: student.userName)
                 temp.append(model)
@@ -174,7 +175,8 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
                                operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
             if user.userRole == .student {
-                let model = AgoraRenderMemberModel.model(with: contextPool,
+                let model = AgoraRenderMemberModel.model(with: contextPool.user,
+                                                         streamController: contextPool.stream,
                                                          uuid: user.userUuid,
                                                          name: user.userName)
                 dataSource.append(model)

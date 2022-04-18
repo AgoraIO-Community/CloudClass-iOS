@@ -346,4 +346,13 @@ struct AgoraFrameGroup {
     
     // class state
     var class_state_button_corner_radius: CGFloat = 17
+    
+    // subRoom
+    var subRoom_option_label_left_space: CGFloat {
+        return 37
+    }
+    
+    var subRoom_option_label_right_space: CGFloat {
+        return 15
+    }
 }

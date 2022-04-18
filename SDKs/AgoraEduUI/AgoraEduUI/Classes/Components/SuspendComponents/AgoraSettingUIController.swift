@@ -52,13 +52,17 @@ class AgoraSettingUIController: UIViewController {
     /** SDK环境*/
     var contextPool: AgoraEduContextPool!
     
+    private var subRoom: AgoraEduSubRoomContext?
+    
     deinit {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
         super.init(nibName: nil, bundle: nil)
-        contextPool = context
+        self.contextPool = context
+        self.subRoom = subRoom
     }
     
     required init?(coder: NSCoder) {
@@ -146,6 +150,9 @@ extension AgoraSettingUIController: AgoraEduMediaHandler {
 // MARK: - Actions
 private extension AgoraSettingUIController {
     @objc func onClickCameraSwitch(_ sender: UISwitch) {
+        guard contextPool.user.getLocalUserInfo().userRole != .observer else {
+            return
+        }
         self.isCamerOn = sender.isOn
         let devices = contextPool.media.getLocalDevices(deviceType: .camera)
         var camera: AgoraEduContextDeviceInfo?
@@ -164,7 +171,8 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickMicSwitch(_ sender: UISwitch) {
-        guard let d = self.contextPool.media.getLocalDevices(deviceType: .mic).first else {
+        guard contextPool.user.getLocalUserInfo().userRole != .observer,
+              let d = self.contextPool.media.getLocalDevices(deviceType: .mic).first else {
             return
         }
         if sender.isOn {
@@ -186,14 +194,31 @@ private extension AgoraSettingUIController {
     }
     
     @objc func onClickExit(_ sender: UIButton) {
-        AgoraAlert()
-            .setTitle("fcr_room_class_leave_class_title".agedu_localized())
-            .setMessage("fcr_room_exit_warning".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_cancel".agedu_localized(), action:nil))
-            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitClassRoom(reason: .normal)
-            }))
-            .show(in: self)
+        if let sub = subRoom {
+            AgoraAlertModel()
+                .setTitle("fcr_group_back_exit".agedu_localized())
+                .setStyle(.Choice)
+                .addAction(action: AgoraAlertAction(title: "fcr_group_back_to_main_room".agedu_localized(), action: {
+                    self.roomDelegate?.exitClassRoom(reason: .normal,
+                                                     roomType: .sub)
+                }))
+                .addAction(action: AgoraAlertAction(title: "fcr_group_exit_room".agedu_localized(), action: {
+                    self.roomDelegate?.exitClassRoom(reason: .normal,
+                                                     roomType: .main)
+                    
+                }))
+                .show(in: self)
+        } else {
+            AgoraAlertModel()
+                .setTitle("fcr_room_class_leave_class_title".agedu_localized())
+                .setMessage("fcr_room_exit_warning".agedu_localized())
+                .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_cancel".agedu_localized(), action:nil))
+                .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
+                    self.roomDelegate?.exitClassRoom(reason: .normal,
+                                                     roomType: .main)
+                }))
+                .show(in: self)
+        }
     }
     
     @objc func onClickFrontCamera(_ sender: UIButton) {
@@ -203,7 +228,8 @@ private extension AgoraSettingUIController {
         sender.isSelected = true
         backCamButton.isSelected = false
         let devices = self.contextPool.media.getLocalDevices(deviceType: .camera)
-        if let camera = devices.first(where: {$0.deviceName.contains(kFrontCameraStr)}) {
+        if let camera = devices.first(where: {$0.deviceName.contains(kFrontCameraStr)}),
+           contextPool.user.getLocalUserInfo().userRole != .observer {
             contextPool.media.openLocalDevice(device: camera)
         }
     }
@@ -215,7 +241,8 @@ private extension AgoraSettingUIController {
         sender.isSelected = true
         frontCamButton.isSelected = false
         let devices = self.contextPool.media.getLocalDevices(deviceType: .camera)
-        if let camera = devices.first(where: {$0.deviceName.contains(kBackCameraStr)}) {
+        if let camera = devices.first(where: {$0.deviceName.contains(kBackCameraStr)}),
+           contextPool.user.getLocalUserInfo().userRole != .observer {
             contextPool.media.openLocalDevice(device: camera)
         }
     }

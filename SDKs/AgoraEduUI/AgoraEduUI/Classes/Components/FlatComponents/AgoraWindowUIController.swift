@@ -47,14 +47,50 @@ fileprivate enum AgoraStreamWindowType: Equatable {
     static func == (lhs: Self,
                     rhs: Self) -> Bool {
         switch (lhs, rhs) {
-        case (let .video(_),let .video(_)):   return true
-        case (let .screen(_),let .screen(_)): return true
-        default:                              return false
+        case (let .video(_), let .video(_)):   return true
+        case (let .screen(_), let .screen(_)): return true
+        default:                               return false
         }
     }
 }
 
 class AgoraWindowUIController: UIViewController {
+    /** SDK环境*/
+    private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
+    private var streamController: AgoraEduStreamContext {
+        if let `subRoom` = subRoom {
+            return subRoom.stream
+        } else {
+            return contextPool.stream
+        }
+    }
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
+    private var roomId: String {
+        if let `subRoom` = subRoom {
+            return subRoom.getSubRoomInfo().subRoomUuid
+        } else {
+            return contextPool.room.getRoomInfo().roomUuid
+        }
+    }
+    
     weak var delegate: AgoraWindowUIControllerDelegate?
     
     /**widgetId: AgoraBaseWidget **/
@@ -66,17 +102,12 @@ class AgoraWindowUIController: UIViewController {
     /**widgetId: AgoraStreamWindowType **/
     private var modelDic = [String: AgoraStreamWindowType]()
     
-    /** SDK环境*/
-    var contextPool: AgoraEduContextPool!
-    
-    deinit {
-        print("\(#function): \(self.classForCoder)")
-    }
-    
-    init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
-        
-        contextPool = context
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
+        super.init(nibName: nil,
+                   bundle: nil)
+        self.contextPool = context
+        self.subRoom = subRoom
     }
     
     override func loadView() {
@@ -89,71 +120,76 @@ class AgoraWindowUIController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-                        
-        contextPool.widget.add(self)
-        contextPool.stream.registerStreamEventHandler(self)
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.room.registerRoomEventHandler(self)
+        }
+        
         contextPool.media.registerMediaEventHandler(self)
-        contextPool.room.registerRoomEventHandler(self)
+    }
+    
+    deinit {
+        print("\(#function): \(self.classForCoder)")
+    }
+    
+    func viewWillActive() {
+        widgetController.add(self)
+        streamController.registerStreamEventHandler(self)
+        contextPool.group.registerGroupEventHandler(self)
+        createAllActiveWidgets()
+    }
+    
+    func viewWillInactive() {
+        widgetController.remove(self)
+        streamController.unregisterStreamEventHandler(self)
+        contextPool.group.unregisterGroupEventHandler(self)
+        releaseAllWidgets()
+    }
+}
+
+// MARK: - AgoraEduRoomHandler
+extension AgoraWindowUIController: AgoraEduRoomHandler {
+    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        viewWillActive()
+    }
+}
+
+extension AgoraWindowUIController: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        viewWillActive()
     }
 }
 
 // MARK: - AgoraWidgetActivityObserver
 extension AgoraWindowUIController: AgoraWidgetActivityObserver {
     public func onWidgetActive(_ widgetId: String) {
-        guard widgetId.hasPrefix(kWindowWidgetId),
-              !self.widgetDic.keys.contains(widgetId),
-              let config = contextPool.widget.getWidgetConfig(kWindowWidgetId),
-              let streamId = widgetId.splitStreamId() else {
-            return
-        }
-        
-        config.widgetId = widgetId
-        contextPool.widget.add(self,
-                               widgetId: widgetId)
-        
-        let widget = contextPool.widget.create(config)
-        self.widgetDic[widgetId] = widget
-        
-        view.addSubview(widget.view)
-        // TODO: v2.3.0暂时铺满
-//        let syncFrame = contextPool.widget.getWidgetSyncFrame(widget.info.widgetId)
-//        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
-        let frame = CGRect(x: 0,
-                           y: 0,
-                           width: self.view.width,
-                           height: self.view.height)
-        
-        widget.view.mas_makeConstraints { make in
-            make?.left.equalTo()(frame.minX)
-            make?.top.equalTo()(frame.minY)
-            make?.width.equalTo()(frame.width)
-            make?.height.equalTo()(frame.height)
-        }
+        createWidget(widgetId)
     }
     
     public func onWidgetInactive(_ widgetId: String) {
-        guard let widget = widgetDic[widgetId],
-              let streamId = widgetId.splitStreamId() else {
+        releaseWidget(widgetId)
+    }
+}
+
+// MARK: - AgoraEduGroupHandler
+extension AgoraWindowUIController: AgoraEduGroupHandler {
+    func onUserListAddedToSubRoom(userList: Array<String>,
+                                  subRoomUuid: String,
+                                  operatorUser: AgoraEduContextUserInfo?) {
+        guard let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+              userList.contains(teacherId) else {
             return
         }
-        // stop render
-        var isCamera = false
-        if let type = modelDic[widgetId],
-           case AgoraStreamWindowType.video(let renderInfo) = type {
-            isCamera = true
-        }
-        stopRenderOnWindow(streamId: streamId,
-                           isCamera: isCamera)
-        
-        // TODO: 2.3.0暂时不需要动画，后期大窗需要stopSpreadObj(widgetId: widgetId)
-        widget.view.removeFromSuperview()
-        widgetDic.removeValue(forKey: widgetId)
-        modelDic.removeValue(forKey: widgetId)
-        
-        contextPool.widget.remove(self,
-                                  widgetId: widgetId)
-        contextPool.widget.removeObserver(forWidgetSyncFrame: self,
-                                          widgetId: widgetId)
+        // 学生加入子房间会走coHost
+        view.isHidden = true
+    }
+    
+    func onGroupInfoUpdated(groupInfo: AgoraEduContextGroupInfo) {
+        if !groupInfo.state,
+           widgetDic.count > 0 {
+               view.isHidden = false
+           }
     }
 }
 
@@ -196,7 +232,7 @@ extension AgoraWindowUIController: AgoraWidgetMessageObserver {
         
         switch signal {
         case .RenderInfo(let renderInfo):
-            guard let stream = contextPool.stream.getStreamList(userUuid: renderInfo.userUuid)?.first(where: {$0.streamUuid == renderInfo.streamId}) else {
+            guard let stream = streamController.getStreamList(userUuid: renderInfo.userUuid)?.first(where: {$0.streamUuid == renderInfo.streamId}) else {
                 return
             }
             switch stream.videoSourceType {
@@ -230,27 +266,7 @@ extension AgoraWindowUIController: AgoraRenderMemberViewDelegate {
     }
 }
 
-// MARK: - AgoraEduRoomHandler
-extension AgoraWindowUIController: AgoraEduRoomHandler {
-    func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        let allWidgetActivity = contextPool.widget.getAllWidgetActivity()
-        
-        guard allWidgetActivity.count > 0 else {
-            return
-        }
-        
-        for (widgetId, activityNumber) in allWidgetActivity {
-            let active = activityNumber.boolValue
-            
-            guard widgetId.hasPrefix(kWindowWidgetId),
-                  active == true else {
-                continue
-            }
-            
-            self.onWidgetActive(widgetId)
-        }
-    }
-}
+
 // MARK: - AgoraEduStreamHandler
 extension AgoraWindowUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
@@ -268,6 +284,7 @@ extension AgoraWindowUIController: AgoraEduStreamHandler {
         self.updateStreamInfo(stream.toEmptyStream())
     }
 }
+
 // MARK: - AgoraEduMediaHandler
 extension AgoraWindowUIController: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
@@ -278,6 +295,93 @@ extension AgoraWindowUIController: AgoraEduMediaHandler {
                   return
               }
         renderInfo.renderModel.volume = volume
+    }
+}
+
+// MARK: - Widget create & relase
+private extension AgoraWindowUIController {
+    func createAllActiveWidgets() {
+        let allWidgetActivity = widgetController.getAllWidgetActivity()
+        
+        guard allWidgetActivity.count > 0 else {
+            return
+        }
+        
+        for (widgetId, activityNumber) in allWidgetActivity {
+            let active = activityNumber.boolValue
+            
+            guard widgetId.hasPrefix(kWindowWidgetId),
+                  active == true else {
+                continue
+            }
+            
+            createWidget(widgetId)
+        }
+    }
+    
+    func releaseAllWidgets() {
+        for widgetId in widgetDic.keys {
+            releaseWidget(widgetId)
+        }
+    }
+    
+    func createWidget(_ widgetId: String) {
+        guard widgetId.hasPrefix(kWindowWidgetId),
+              !self.widgetDic.keys.contains(widgetId),
+              let config = widgetController.getWidgetConfig(kWindowWidgetId),
+              let streamId = widgetId.splitStreamId() else {
+            return
+        }
+        
+        config.widgetId = widgetId
+        widgetController.add(self,
+                             widgetId: widgetId)
+        
+        let widget = widgetController.create(config)
+        self.widgetDic[widgetId] = widget
+        
+        view.addSubview(widget.view)
+        
+        // TODO: v2.3.0暂时铺满
+//        let syncFrame = contextPool.widget.getWidgetSyncFrame(widget.info.widgetId)
+//        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
+        let frame = CGRect(x: 0,
+                           y: 0,
+                           width: self.view.width,
+                           height: self.view.height)
+        
+        widget.view.mas_makeConstraints { make in
+            make?.left.equalTo()(frame.minX)
+            make?.top.equalTo()(frame.minY)
+            make?.width.equalTo()(frame.width)
+            make?.height.equalTo()(frame.height)
+        }
+    }
+    
+    func releaseWidget(_ widgetId: String) {
+        guard let widget = widgetDic[widgetId],
+              let streamId = widgetId.splitStreamId() else {
+            return
+        }
+        
+        // stop render
+        var isCamera = false
+        if let type = modelDic[widgetId],
+           case AgoraStreamWindowType.video(let renderInfo) = type {
+            isCamera = true
+        }
+        stopRenderOnWindow(streamId: streamId,
+                           isCamera: isCamera)
+        
+        // TODO: 2.3.0暂时不需要动画，后期大窗需要stopSpreadObj(widgetId: widgetId)
+        widget.view.removeFromSuperview()
+        widgetDic.removeValue(forKey: widgetId)
+        modelDic.removeValue(forKey: widgetId)
+        
+        widgetController.remove(self,
+                                widgetId: widgetId)
+        widgetController.removeObserver(forWidgetSyncFrame: self,
+                                        widgetId: widgetId)
     }
 }
 
@@ -332,7 +436,7 @@ private extension AgoraWindowUIController {
     
     func makeRenderModel(userId: String,
                          stream: AgoraEduContextStreamInfo) -> AgoraRenderMemberModel {
-        guard let user = contextPool.user.getAllUserList().first(where: {$0.userUuid == userId}) else {
+        guard let user = userController.getAllUserList().first(where: {$0.userUuid == userId}) else {
             return AgoraRenderMemberModel()
         }
         var model = AgoraRenderMemberModel()
@@ -368,22 +472,24 @@ private extension AgoraWindowUIController {
         }
         
         let renderConfig = AgoraEduContextRenderConfig()
-        renderConfig.mode = .fit
+        renderConfig.mode = isCamera ? .hidden : .fit
         renderConfig.isMirror = false
-        contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
-                                                              level: .high)
-        contextPool.media.startRenderVideo(view: view,
+        streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
+                                                            level: .high)
+        
+        contextPool.media.startRenderVideo(roomUuid: roomId,
+                                           view: view,
                                            renderConfig: renderConfig,
                                            streamUuid: streamId)
     }
     
     func stopRenderOnWindow(streamId: String,
                             isCamera: Bool) {
+        contextPool.media.stopRenderVideo(streamUuid: streamId)
         if let uid = getUidWithStreamId(streamId),
            isCamera {
             delegate?.didStopSpreadForUser(with: uid)
         }
-        contextPool.media.stopRenderVideo(streamUuid: streamId)
     }
 }
 

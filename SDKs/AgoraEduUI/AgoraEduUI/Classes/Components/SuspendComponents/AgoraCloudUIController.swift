@@ -9,18 +9,43 @@ import AgoraEduContext
 import AgoraWidget
 
 class AgoraCloudUIController: UIViewController {
-    var cloudWidget: AgoraBaseWidget?
-    var contextPool: AgoraEduContextPool!
+    private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    private var cloudWidget: AgoraBaseWidget?
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
     
     private var widgetSize: CGSize!
     
-    init(context: AgoraEduContextPool) {
-        super.init(nibName: nil, bundle: nil)
-        contextPool = context
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
+        super.init(nibName: nil,
+                   bundle: nil)
+        self.contextPool = context
+        self.subRoom = subRoom
+        
         initData()
         view.backgroundColor = .clear
         
-        contextPool.room.registerRoomEventHandler(self)
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.room.registerRoomEventHandler(self)
+        }
     }
     
     override func loadView() {
@@ -35,24 +60,13 @@ class AgoraCloudUIController: UIViewController {
 // MARK: - AgoraEduRoomHandler
 extension AgoraCloudUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        if contextPool.user.getLocalUserInfo().userRole == .teacher,
-           let cloudConfig = contextPool.widget.getWidgetConfig(kCloudWidgetId) {
-            let cloudWidget = contextPool.widget.create(cloudConfig)
-            contextPool.widget.add(self,
-                                   widgetId: kCloudWidgetId)
-            view.isUserInteractionEnabled = true
-            view.addSubview(cloudWidget.view)
-            self.cloudWidget = cloudWidget
-            
-            let gesture = UIPanGestureRecognizer(target: self,
-                                                 action: #selector(didDragTab(_:)))
-            cloudWidget.view.addGestureRecognizer(gesture)
-            cloudWidget.view.mas_remakeConstraints { make in
-                make?.center.equalTo()(view)
-                make?.width.equalTo()(widgetSize.width)
-                make?.height.equalTo()(widgetSize.height)
-            }
-        }
+        initWidget()
+    }
+}
+
+extension AgoraCloudUIController: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        initWidget()
     }
 }
 
@@ -65,8 +79,8 @@ extension AgoraCloudUIController: AgoraWidgetMessageObserver{
             switch signal {
             case .OpenCourseware(let courseware):
                 if let message = AgoraBoardWidgetSignal.OpenCourseware(courseware.toBoard()).toMessageString() {
-                    contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                                   message: message)
+                    widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                                 message: message)
                 }
             case .CloseCloud:
                 view.isHidden = true
@@ -112,7 +126,7 @@ extension AgoraCloudUIController {
         }
     }
     
-    func initData(){
+    func initData() {
         switch contextPool.room.getRoomInfo().roomType {
         case .oneToOne:
             widgetSize = CGSize(width: 435,
@@ -123,6 +137,29 @@ extension AgoraCloudUIController {
         default:
             widgetSize = CGSize(width: 435,
                                 height: 253)
+        }
+    }
+    
+    func initWidget() {
+        guard userController.getLocalUserInfo().userRole == .teacher,
+           let cloudConfig = widgetController.getWidgetConfig(kCloudWidgetId) else {
+            return
+        }
+        
+        let cloudWidget = widgetController.create(cloudConfig)
+        widgetController.add(self,
+                             widgetId: kCloudWidgetId)
+        view.isUserInteractionEnabled = true
+        view.addSubview(cloudWidget.view)
+        self.cloudWidget = cloudWidget
+        
+        let gesture = UIPanGestureRecognizer(target: self,
+                                             action: #selector(didDragTab(_:)))
+        cloudWidget.view.addGestureRecognizer(gesture)
+        cloudWidget.view.mas_remakeConstraints { make in
+            make?.center.equalTo()(view)
+            make?.width.equalTo()(widgetSize.width)
+            make?.height.equalTo()(widgetSize.height)
         }
     }
 }

@@ -16,13 +16,38 @@ struct AgoraClassTimeInfo {
     var closeDelay: Int64
 }
 
+protocol AgoraRoomStateUIControllerDelegate: NSObjectProtocol {
+    func onLocalUserAddedToSubRoom(subRoomId: String)
+    func onLocalUserRemovedFromSubRoom(subRoomId: String)
+    func onGroupStateChanged(_ state: Bool)
+}
+
 class AgoraRoomStateUIController: UIViewController {
-    
-    public weak var roomDelegate: AgoraClassRoomManagement?
-    /** 状态栏*/
-    private var stateView: AgoraRoomStateBar!
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
+    private var streamController: AgoraEduStreamContext {
+        if let `subRoom` = subRoom {
+            return subRoom.stream
+        } else {
+            return contextPool.stream
+        }
+    }
+    
+    public weak var roomDelegate: AgoraClassRoomManagement?
+    
+    private weak var delegate: AgoraRoomStateUIControllerDelegate?
+    /** 状态栏*/
+    private var stateView: AgoraRoomStateBar!
     /** 房间计时器*/
     private var timer: Timer?
     /** 房间时间信息*/
@@ -36,10 +61,14 @@ class AgoraRoomStateUIController: UIViewController {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         delegate: AgoraRoomStateUIControllerDelegate?,
+         subRoom: AgoraEduSubRoomContext? = nil) {
         super.init(nibName: nil,
                    bundle: nil)
-        contextPool = context
+        self.contextPool = context
+        self.subRoom = subRoom
+        self.delegate = delegate
     }
     
     required init?(coder: NSCoder) {
@@ -48,18 +77,26 @@ class AgoraRoomStateUIController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         createViews()
         createConstraint()
+        
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
                                           repeats: true,
                                           block: { [weak self] t in
             self?.updateTimeVisual()
         })
+        
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.group.registerGroupEventHandler(self)
+        }
+        
+        userController.registerUserEventHandler(self)
+        streamController.registerStreamEventHandler(self)
+        
         contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
-        contextPool.user.registerUserEventHandler(self)
-        contextPool.stream.registerStreamEventHandler(self)
     }
 }
 
@@ -71,7 +108,30 @@ private extension AgoraRoomStateUIController {
                                            startTime: info.startTime,
                                            duration: info.duration * 1000,
                                            closeDelay: info.closeDelay * 1000)
-        stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
+        if let sub = subRoom {
+            stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
+        } else {
+            stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
+        }
+        
+        getLocalStream()
+    }
+    
+    func checkNeedJoinSubRoom() {
+        // Group
+        guard contextPool.group.getGroupInfo().state,
+              let subRoomList = contextPool.group.getSubRoomList() else {
+            return
+        }
+        
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
+        for info in subRoomList {
+            if let list = contextPool.group.getUserListFromSubRoom(subRoomUuid: info.subRoomUuid),
+               list.contains(localUserId) {
+                delegate?.onLocalUserAddedToSubRoom(subRoomId: info.subRoomUuid)
+            }
+        }
     }
     
     @objc func updateTimeVisual() {
@@ -154,11 +214,12 @@ private extension AgoraRoomStateUIController {
 // MARK: - AgoraEduUserHandler
 extension AgoraRoomStateUIController: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
-        AgoraAlert()
+        AgoraAlertModel()
             .setTitle("fcr_user_local_kick_out_notice".agedu_localized())
             .setMessage("fcr_user_local_kick_out".agedu_localized())
             .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitClassRoom(reason: .kickOut)
+                self.roomDelegate?.exitClassRoom(reason: .kickOut,
+                                                 roomType: .main)
             }))
             .show(in: self)
     }
@@ -193,13 +254,38 @@ extension AgoraRoomStateUIController: AgoraEduUserHandler {
         AgoraToast.toast(msg: final,
                          type: .notice)
     }
+    
+    // 小房间内，老师加入/离开的 toast
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        guard let _ = subRoom else {
+            return
+        }
+        
+        let text = "fcr_group_enter_group".agedu_localized()
+        
+        AgoraToast.toast(msg: text,
+                         type: .notice)
+    }
+    
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operatorUser: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        guard let _ = subRoom else {
+            return
+        }
+        
+        let text = "fcr_group_exit_group".agedu_localized()
+        
+        AgoraToast.toast(msg: text,
+                         type: .notice)
+    }
 }
 
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         setup()
-        getLocalStream()
+        checkNeedJoinSubRoom()
     }
     
     func onClassStateUpdated(state: AgoraEduContextClassState) {
@@ -211,15 +297,35 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     }
     
     func onRoomClosed() {
-        AgoraAlert()
+        AgoraAlertModel()
             .setTitle("fcr_room_class_over_notice".agedu_localized())
             .setMessage("fcr_room_class_over".agedu_localized())
             .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitClassRoom(reason: .normal)
+                self.roomDelegate?.exitClassRoom(reason: .normal,
+                                                 roomType: .main)
             }))
             .show(in: self)
     }
 }
+
+// MARK: - AgoraEduSubRoomHandler
+extension AgoraRoomStateUIController: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        setup()
+    }
+    
+    func onSubRoomClosed() {
+        AgoraAlertModel()
+            .setTitle("fcr_room_class_over_notice".agedu_localized())
+            .setMessage("fcr_room_class_over".agedu_localized())
+            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
+                self.roomDelegate?.exitClassRoom(reason: .normal,
+                                                 roomType: .sub)
+            }))
+            .show(in: self)
+    }
+}
+
 // MARK: - AgoraEduStreamContext
 extension AgoraRoomStateUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
@@ -304,7 +410,8 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
             AgoraLoading.hide()
             AgoraToast.toast(msg: "fcr_monitor_login_remote_device".agedu_localized(),
                              type: .error)
-            self.roomDelegate?.exitClassRoom(reason: .kickOut)
+            self.roomDelegate?.exitClassRoom(reason: .kickOut,
+                                             roomType: .main)
         case .connecting:
             AgoraLoading.loading(msg: "fcr_room_loading".agedu_localized())
         case .disconnected, .reconnecting:
@@ -316,6 +423,107 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         }
     }
 }
+
+// MARK: - AgoraEduGroupHandler
+extension AgoraRoomStateUIController: AgoraEduGroupHandler {
+    func onGroupInfoUpdated(groupInfo: AgoraEduContextGroupInfo) {
+        delegate?.onGroupStateChanged(groupInfo.state)
+    }
+    
+    func onUserListInvitedToSubRoom(userList: Array<String>,
+                                    subRoomUuid: String,
+                                    operatorUser: AgoraEduContextUserInfo?) {
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        guard userList.contains(localUserId),
+              let subRoomList = contextPool.group.getSubRoomList(),
+              let subRoomInfo = subRoomList.first(where: {$0.subRoomUuid == subRoomUuid}) else {
+            return
+        }
+        var str = "fcr_group_invitation".agedu_localized()
+        let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
+                                             with: subRoomInfo.subRoomName)
+        AgoraAlertModel()
+            .setTitle("fcr_group_join".agedu_localized())
+            .setMessage(final)
+            .addAction(action: AgoraAlertAction(title: "fcr_group_button_later".agedu_localized(), action:nil))
+            .addAction(action: AgoraAlertAction(title: "fcr_group_button_join".agedu_localized(), action: { [weak self] in
+                self?.contextPool.group.userListAcceptInvitationToSubRoom(userList: [localUserId],
+                                                                          subRoomUuid: subRoomUuid,
+                                                                          success: nil,
+                                                                          failure: nil)
+            }))
+            .show(in: self)
+    }
+    
+    func onUserListRejuectedToSubRoom(userList: [String],
+                                      subRoomUuid: String,
+                                      operatorUser: AgoraEduContextUserInfo?) {
+        guard let teacher = contextPool.user.getUserList(role: .teacher)?.first else {
+            return
+        }
+        
+        let teacherId = teacher.userUuid
+        
+        guard userList.contains(teacherId) else {
+            return
+        }
+        
+        AgoraToast.toast(msg: "fcr_group_help_teacher_busy_msg".agedu_localized(),
+                         type: .warning)
+    }
+    
+    func onUserListAddedToSubRoom(userList: Array<String>,
+                                  subRoomUuid: String,
+                                  operatorUser: AgoraEduContextUserInfo?) {
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        guard userList.contains(localUserId) else {
+            return
+        }
+        delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoomUuid)
+    }
+    
+    func onUserMovedToSubRoom(userList: Array<String>,
+                              fromSubRoomUuid: String,
+                              toSubRoomUuid: String,
+                              operatorUser: AgoraEduContextUserInfo?) {
+        // 主房间消息
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        guard userList.contains(localUserId) else {
+            return
+        }
+        delegate?.onLocalUserRemovedFromSubRoom(subRoomId: fromSubRoomUuid)
+        delegate?.onLocalUserAddedToSubRoom(subRoomId: toSubRoomUuid)
+    }
+    
+    func onUserListRemovedFromSubRoom(userList: Array<AgoraEduContextSubRoomRemovedUserEvent>,
+                                      subRoomUuid: String) {
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        let list = userList.map({ return $0.userUuid })
+        
+        guard list.contains(localUserId) else {
+            return
+        }
+        
+        delegate?.onLocalUserRemovedFromSubRoom(subRoomId: subRoomUuid)
+    }
+    
+    func onSubRoomListRemoved(subRoomList: Array<AgoraEduContextSubRoomInfo>) {
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
+        for room in subRoomList {
+            let roomId = room.subRoomUuid
+            
+            guard let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: roomId) else {
+                return
+            }
+            
+            if userList.contains(localUserId) {
+                delegate?.onLocalUserRemovedFromSubRoom(subRoomId: roomId)
+            }
+        }
+    }
+}
+
 // MARK: - Creations
 private extension AgoraRoomStateUIController {
     func createViews() {

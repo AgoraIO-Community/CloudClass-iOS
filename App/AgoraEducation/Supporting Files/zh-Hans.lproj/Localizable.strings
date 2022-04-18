@@ -54,6 +54,7 @@ Login_duration_holder = "30分钟";
 login_title_role = "角色";
 login_role_teacher = "老师";
 login_role_student = "学生";
+login_role_observer = "观众";
 login_env_test = "测试环境";
 login_pre_test = "预生产环境";
 login_pro_test = "生产环境";

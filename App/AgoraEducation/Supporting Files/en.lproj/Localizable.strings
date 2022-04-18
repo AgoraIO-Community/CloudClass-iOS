@@ -56,6 +56,7 @@ Login_duration_holder = "30mins";
 login_title_role = "Role";
 login_role_teacher = "Teacher";
 login_role_student = "Student";
+login_role_observer = "Audience";
 login_env_test = "Test Environment";
 login_pre_test = "Pre-Production Environment";
 login_pro_test = "Production Environment";

@@ -28,6 +28,15 @@ import Foundation
     case after  = 2
 }
 
+// MARK: - SubRoom
+/// 
+@objc public enum AgoraEduContextSubRoomRemovedUserReason: Int {
+    /// 用户自己移除
+    case normal = 0
+    /// 用户被他人移除
+    case kickOut = 1
+}
+
 // MARK: - User
 /// 用户角色
 @objc public enum AgoraEduContextUserRole: Int {
@@ -37,6 +46,8 @@ import Foundation
     case student   = 2
     /// 助教
     case assistant = 3
+    /// 观众
+    case observer  = 4
 }
 
 /// 用户离开原因

@@ -65,7 +65,8 @@ class AgoraTeacherRenderUIController: UIViewController {
 private extension AgoraTeacherRenderUIController {
     func setup() {
         if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
-            self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
+            self.teacherModel = AgoraRenderMemberModel.model(with: contextPool.user,
+                                                             streamController: contextPool.stream,
                                                              uuid: teacher.userUuid,
                                                              name: teacher.userName)
         }
@@ -106,7 +107,8 @@ extension AgoraTeacherRenderUIController: AgoraRenderMemberViewDelegate {
 extension AgoraTeacherRenderUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         if user.userRole == .teacher {
-            self.teacherModel = AgoraRenderMemberModel.model(with: contextPool,
+            self.teacherModel = AgoraRenderMemberModel.model(with: contextPool.user,
+                                                             streamController: contextPool.stream,
                                                              uuid: user.userUuid,
                                                              name: user.userName)
         }

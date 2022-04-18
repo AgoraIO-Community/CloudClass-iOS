@@ -48,6 +48,65 @@ import Foundation
     }
 }
 
+// MARK: - Group
+/// 分组信息
+@objcMembers public class AgoraEduContextGroupInfo: NSObject {
+    // 是否开启分组
+    public var state: Bool
+    
+    public init(state: Bool) {
+        self.state = state
+    }
+}
+
+// MARK: - SubRoom
+@objcMembers public class AgoraEduContextSubRoomCreateConfig: NSObject {
+    // 子房间名
+    public var subRoomName: String
+    // 邀请加入子房间的用户 Id 列表，数组可以为空
+    public var invitationUserList: [String]?
+    // 子房间自定义属性，可以为空
+    public var subRoomProperties: [String: Any]?
+    
+    public init(subRoomName: String,
+                invitationUserList: [String]?,
+                subRoomProperties: [String: Any]?) {
+        self.subRoomName = subRoomName
+        self.invitationUserList = invitationUserList
+        self.subRoomProperties = subRoomProperties
+    }
+}
+
+@objcMembers public class AgoraEduContextSubRoomInfo: NSObject {
+    // 子房间 Id
+    public var subRoomUuid: String
+    // 子房间名
+    public var subRoomName: String
+    
+    public init(subRoomUuid: String,
+                subRoomName: String) {
+        self.subRoomUuid = subRoomUuid
+        self.subRoomName = subRoomName
+    }
+}
+
+@objcMembers public class AgoraEduContextSubRoomRemovedUserEvent: NSObject {
+    // 用户id
+    public var userUuid: String
+    // 用户移除的原因
+    public var reason: AgoraEduContextSubRoomRemovedUserReason
+    // 操作人，可以为空
+    public var operatorUser: AgoraEduContextUserInfo?
+    
+    public init(userUuid: String,
+                reason: AgoraEduContextSubRoomRemovedUserReason,
+                operatorUser: AgoraEduContextUserInfo?) {
+        self.userUuid = userUuid
+        self.reason = reason
+        self.operatorUser = operatorUser
+    }
+}
+
 // MARK: - User
 /// 用户信息
 @objcMembers public class AgoraEduContextUserInfo: NSObject {

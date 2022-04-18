@@ -44,21 +44,26 @@ extension AgoraEduContextMediaStreamType {
 }
 
 extension AgoraRenderMemberModel {
-    static func model(with context: AgoraEduContextPool,
+    static func model(with userController: AgoraEduUserContext,
+                      streamController: AgoraEduStreamContext,
                       uuid: String,
-                      name: String) -> AgoraRenderMemberModel {
+                      name: String,
+                      rendEnable: Bool = true) -> AgoraRenderMemberModel {
         var model = AgoraRenderMemberModel()
         model.uuid = uuid
         model.name = name
-        let reward = context.user.getUserRewardCount(userUuid: uuid)
+        let reward = userController.getUserRewardCount(userUuid: uuid)
         model.rewardCount = reward
-        let stream = context.stream.getStreamList(userUuid: uuid)?.first{$0.videoSourceType != .screen}
-        model.updateStream(stream)
+        let stream = streamController.getStreamList(userUuid: uuid)?.first{$0.videoSourceType != .screen}
+        model.updateStream(stream,
+                           rendEnable: rendEnable)
         return model
     }
     
-    func updateStream(_ stream: AgoraEduContextStreamInfo?) {
+    func updateStream(_ stream: AgoraEduContextStreamInfo?,
+                      rendEnable: Bool = true) {
         if let `stream` = stream {
+            self.rendEnable = rendEnable
             self.streamID = stream.streamUuid
             // audio
             if stream.streamType.hasAudio,

@@ -21,16 +21,8 @@ protocol AgoraToolBarDelegate: NSObject {
 
 // MARK: - AgoraToolBarUIController
 class AgoraToolBarUIController: UIViewController {
-    
-    weak var delegate: AgoraToolBarDelegate?
-    var suggestSize: CGSize {
-        get {
-            return CGSize(width: UIDevice.current.isPad ? 34 : 30,
-                          height: CGFloat(tools.count) * (kButtonLength + kGap) - kGap)
-        }
-    }
-    public enum ItemType {
-        case setting, nameRoll, message, handsup, handsList, brushTool
+    enum ItemType {
+        case setting, nameRoll, message, handsup, handsList, brushTool, help
         
         func cellImage() -> UIImage? {
             switch self {
@@ -40,13 +32,37 @@ class AgoraToolBarUIController: UIViewController {
             case .handsup:          return UIImage.agedu_named("ic_func_hands_up")
             case .handsList:        return UIImage.agedu_named("ic_func_hands_list")
             case .brushTool:        return UIImage.agedu_named("ic_brush_pencil") // left for painting
+            case .help:             return UIImage.agedu_named("ic_func_help")
             default:                return nil
             }
         }
     }
+    
+    weak var delegate: AgoraToolBarDelegate?
+    
+    /** SDK环境*/
+    private var contextPool: AgoraEduContextPool!
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
+    /** Size*/
     private let kButtonLength: CGFloat = UIDevice.current.isPad ? 34 : 32
     private let kGap: CGFloat = 12.0
     private let kDefaultTag: Int = 3389
+    
+    var suggestSize: CGSize {
+        get {
+            return CGSize(width: UIDevice.current.isPad ? 34 : 30,
+                          height: CGFloat(tools.count) * (kButtonLength + kGap) - kGap)
+        }
+    }
     
     /** 展示的工具*/
     public var tools = [ItemType]()
@@ -58,8 +74,6 @@ class AgoraToolBarUIController: UIViewController {
     private var collectionView: UICollectionView!
     
     private var handsupCell: AgoraToolBarHandsUpCell?
-    /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
     
     /** 画笔图片*/
     private var brushImage = UIImage.agedu_named("ic_brush_clicker")
@@ -99,10 +113,12 @@ class AgoraToolBarUIController: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool) {
+    init(context: AgoraEduContextPool,
+         subRoom: AgoraEduSubRoomContext? = nil) {
         super.init(nibName: nil,
                    bundle: nil)
-        contextPool = context
+        self.contextPool = context
+        self.subRoom = subRoom
     }
     
     required init?(coder: NSCoder) {
@@ -112,6 +128,7 @@ class AgoraToolBarUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        contextPool.group.registerGroupEventHandler(self)
         self.createViews()
         self.createConstraint()
         self.updateDataSource()
@@ -148,8 +165,29 @@ class AgoraToolBarUIController: UIViewController {
         }
         self.collectionView.reloadData()
     }
-
 }
+
+// MARK: - AgoraEduGroupHandler
+extension AgoraToolBarUIController: AgoraEduGroupHandler {
+    func onUserListAddedToSubRoom(userList: [String],
+                                  subRoomUuid: String,
+                                  operatorUser: AgoraEduContextUserInfo?) {
+        if let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+            userList.contains(teacherId),
+            teacherInLocalSubRoom() {
+            collectionView.reloadData()
+        }
+    }
+    
+    func onUserListRemovedFromSubRoom(userList: [AgoraEduContextSubRoomRemovedUserEvent],
+                                      subRoomUuid: String) {
+        if let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+           userList.contains(where: {$0.userUuid == teacherId}) {
+            collectionView.reloadData()
+        }
+    }
+}
+
 // MARK: - Private
 private extension AgoraToolBarUIController {
     func updateDataSource() {
@@ -166,14 +204,15 @@ private extension AgoraToolBarUIController {
         }
     }
 }
+
 // MARK: - Student Hands Up
 extension AgoraToolBarUIController: AgoraHandsUpDelayViewDelegate {
     func onHandsUpViewDidChangeState(_ state: AgoraHandsUpDelayView.ViewState) {
         switch state {
         case .hold:
             mayShowTips()
-            let userName = contextPool.user.getLocalUserInfo().userName
-            contextPool.user.handsWave(duration: 3,
+            let userName = userController.getLocalUserInfo().userName
+            userController.handsWave(duration: 3,
                                        payload: ["userName": userName]) {
                 
             } failure: { (_) in
@@ -217,7 +256,6 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
         if tool == .message {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarRedDotCell.self,
                                                           for: indexPath)
-//            cell.baseTintColor = baseTintColor
             cell.setImage(tool.cellImage())
             cell.aSelected = (selectedTool == tool)
             cell.redDot.isHidden = !messageRemind
@@ -239,6 +277,12 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
             if handsListCount > 0  {
                 cell.aSelected = (selectedTool == tool)
             }
+            return cell
+        } else if tool == .help {
+            let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarHelpCell.self,
+                                                          for: indexPath)
+            cell.setImage(tool.cellImage())
+            cell.touchable = !teacherInLocalSubRoom()
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarItemCell.self,
@@ -338,6 +382,7 @@ private extension AgoraToolBarUIController {
         collectionView.register(cellWithClass: AgoraToolBarRedDotCell.self)
         collectionView.register(cellWithClass: AgoraToolBarBrushCell.self)
         collectionView.register(cellWithClass: AgoraToolBarHandsListCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarHelpCell.self)
         view.addSubview(collectionView)
     }
     
@@ -349,5 +394,22 @@ private extension AgoraToolBarUIController {
             make?.width.equalTo()(kButtonLength)
             make?.height.equalTo()((kButtonLength + kGap) * 5 - kGap)
         }
+    }
+    
+    func teacherInLocalSubRoom() -> Bool {
+        var flag = false
+        guard let subRoomList = contextPool.group.getSubRoomList(),
+              let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
+            return flag
+        }
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        for item in subRoomList {
+            if let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
+               userList.contains([localUserId,teacherId]) {
+                flag = true
+                break
+            }
+        }
+        return flag
     }
 }

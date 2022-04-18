@@ -84,3 +84,35 @@ fcr_monitor_network_poor = "Poor local network connection,please check the netwo
 fcr_monitor_network_disconnected = "The local network is disconnected,please check the network connection.";
 fcr_monitor_network_reconnecting = "reconnecting...";
 fcr_monitor_login_remote_device = "Account was logged in from remote device";
+
+// Group
+fcr_group_help_title = "Ask for help";
+fcr_group_help_content = "You can invite the teacher to this group for assistance.";
+fcr_group_help_teacher_busy_msg = "The teacher is currently helping others. Please try again later.";
+fcr_group_teacher_is_helping_others_msg = "The teacher is helping other group, Please wait for minutes.";
+fcr_group_teacher_exist_hint = "The teacher is already in the group";
+
+fcr_group_invite = "Invite";
+fcr_group_invitation = "The teacher invites you to join {xxx}";
+fcr_group_button_join = "Join";
+fcr_group_button_later = "Later";
+
+fcr_group_joining = "Joining {xxx}";
+fcr_group_join = "Join discussion group";
+fcr_group_enter_welcome = "welcome to join {xxx} and discuss with everyone";
+fcr_group_enter_group = "The teacher has joined group";
+fcr_group_exit_group = "The teacher has left group";
+
+fcr_group_close_group = "The teacher closed breakout rooms";
+fcr_group_invite_back_main_room = "The teacher is inviting you to return to main session";
+fcr_group_back_main_room = "Returning to main session...";
+
+fcr_group_back_sure = "Sure";
+fcr_group_back_cancel = "Cancel";
+fcr_group_back_exit = "Exit";
+fcr_group_back_to_main_room = "Return to main session";
+fcr_group_exit_room = "Leave Room";
+
+// alert
+fcr_alert_sure = "Sure";
+fcr_alert_cancel = "Cancel";

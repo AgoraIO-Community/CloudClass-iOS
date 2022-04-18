@@ -177,11 +177,12 @@ extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
     }
     
     func onRoomClosed() {
-        AgoraAlert()
+        AgoraAlertModel()
             .setTitle("fcr_room_class_over_notice".agedu_localized())
             .setMessage("fcr_room_class_over".agedu_localized())
             .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitClassRoom(reason: .normal)
+                self.roomDelegate?.exitClassRoom(reason: .normal,
+                                                 roomType: .main)
             }))
             .show(in: self)
     }
@@ -190,11 +191,12 @@ extension AgoraOneToOneStateUIController: AgoraEduRoomHandler {
 // MARK: - AgoraEduUserHandler
 extension AgoraOneToOneStateUIController: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
-        AgoraAlert()
+        AgoraAlertModel()
             .setTitle("fcr_user_local_kick_out_notice".agedu_localized())
             .setMessage("fcr_user_local_kick_out".agedu_localized())
             .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitClassRoom(reason: .kickOut)
+                self.roomDelegate?.exitClassRoom(reason: .kickOut,
+                                                 roomType: .main)
             }))
             .show(in: self)
     }
@@ -255,7 +257,8 @@ extension AgoraOneToOneStateUIController: AgoraEduMonitorHandler {
             AgoraLoading.hide()
             AgoraToast.toast(msg: "fcr_monitor_login_remote_device".agedu_localized(),
                              type: .error)
-            self.roomDelegate?.exitClassRoom(reason: .kickOut)
+            self.roomDelegate?.exitClassRoom(reason: .kickOut,
+                                             roomType: .main)
         case .connecting:
             AgoraLoading.loading(msg: "fcr_room_loading".agedu_localized())
         case .disconnected, .reconnecting:
