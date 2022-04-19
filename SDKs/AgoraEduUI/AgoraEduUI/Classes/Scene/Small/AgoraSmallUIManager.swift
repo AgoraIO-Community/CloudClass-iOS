@@ -233,7 +233,6 @@ extension AgoraSmallUIManager: AgoraToolCollectionUIControllerDelegate {
                             }
                         }
                        }, completion: nil)
-
     }
 }
 // MARK: - AgoraChatUIControllerDelegate

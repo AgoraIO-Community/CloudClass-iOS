@@ -166,10 +166,8 @@ private extension AgoraBoardUIController {
         }
     }
     
-    func handleGrantUsers(_ list: Array<String>?) {
-        if let users = list {
-            grantUsers = users
-        }
+    func handleGrantUsers(_ list: Array<String>) {
+        grantUsers = list
     }
 }
 
@@ -187,7 +185,7 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
             handleBoardPhase(phase)
         case .BoardAudioMixingRequest(let requestData):
             handleAudioMixing(requestData)
-        case .BoardGrantDataChanged(let list):
+        case .GetBoardGrantedUsers(let list):
             handleGrantUsers(list)
         default:
             break
@@ -225,14 +223,15 @@ extension AgoraBoardUIController: AgoraEduRoomHandler {
 extension AgoraBoardUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
+        let localUserInfo = contextPool.user.getLocalUserInfo()
         
-        guard !localGranted else {
+        guard !localGranted,
+              localUserInfo.userRole != .teacher else {
             return
         }
-        var arr = grantUsers
-        arr.append(contextPool.user.getLocalUserInfo().userUuid)
+        let type = AgoraBoardWidgetSignal.UpdateGrantedUsers(.add([localUserInfo.userUuid]))
 
-        if let message = AgoraBoardWidgetSignal.BoardGrantDataChanged(arr).toMessageString() {
+        if let message = type.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }

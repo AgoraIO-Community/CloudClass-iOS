@@ -404,16 +404,15 @@ extension AgoraRenderMenuUIController {
         }
         
         var list: Array<String> = self.boardUsers
+
+        var ifAdd = false
         if model.authState == false,
            !list.contains(UUID) {
             // 授予白板权限
-            list.append(UUID)
-        } else if model.authState == true,
-                  list.contains(UUID){
-            // 收回白板权限
-            list.removeAll(UUID)
+            ifAdd = true
         }
-        if let message = AgoraBoardWidgetSignal.BoardGrantDataChanged(list).toMessageString() {
+        let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(ifAdd ? .add([UUID]) : .delete([UUID]))
+        if let message = signal.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -486,8 +485,8 @@ extension AgoraRenderMenuUIController: AgoraWidgetMessageObserver {
                   return
               }
         switch signal {
-        case .BoardGrantDataChanged(let list):
-            self.boardUsers = list ?? [String]()
+        case .GetBoardGrantedUsers(let list):
+            self.boardUsers = list
             if let uid = self.userId {
                 model?.authState = self.boardUsers.contains(uid)
             }
