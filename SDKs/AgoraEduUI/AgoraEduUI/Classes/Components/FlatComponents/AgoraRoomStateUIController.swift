@@ -19,7 +19,11 @@ struct AgoraClassTimeInfo {
 protocol AgoraRoomStateUIControllerDelegate: NSObjectProtocol {
     func onLocalUserAddedToSubRoom(subRoomId: String)
     func onLocalUserRemovedFromSubRoom(subRoomId: String)
-    func onGroupStateChanged(_ state: Bool)
+}
+
+extension AgoraRoomStateUIControllerDelegate {
+    func onLocalUserAddedToSubRoom(subRoomId: String) { }
+    func onLocalUserRemovedFromSubRoom(subRoomId: String) { }
 }
 
 class AgoraRoomStateUIController: UIViewController {
@@ -88,13 +92,11 @@ class AgoraRoomStateUIController: UIViewController {
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
-        } else {
-            contextPool.group.registerGroupEventHandler(self)
         }
         
         userController.registerUserEventHandler(self)
         streamController.registerStreamEventHandler(self)
-        
+        contextPool.group.registerGroupEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
     }
@@ -449,13 +451,13 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
 
 // MARK: - AgoraEduGroupHandler
 extension AgoraRoomStateUIController: AgoraEduGroupHandler {
-    func onGroupInfoUpdated(groupInfo: AgoraEduContextGroupInfo) {
-        delegate?.onGroupStateChanged(groupInfo.state)
-    }
-    
     func onUserListInvitedToSubRoom(userList: Array<String>,
                                     subRoomUuid: String,
                                     operatorUser: AgoraEduContextUserInfo?) {
+        guard subRoom == nil else {
+            return
+        }
+        
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
         guard userList.contains(localUserId),
               let subRoomList = contextPool.group.getSubRoomList(),
@@ -481,6 +483,10 @@ extension AgoraRoomStateUIController: AgoraEduGroupHandler {
     func onUserListRejectedToSubRoom(userList: [String],
                                       subRoomUuid: String,
                                       operatorUser: AgoraEduContextUserInfo?) {
+        guard let _ = subRoom else {
+            return
+        }
+        
         guard let teacher = contextPool.user.getUserList(role: .teacher)?.first else {
             return
         }
@@ -498,6 +504,10 @@ extension AgoraRoomStateUIController: AgoraEduGroupHandler {
     func onUserListAddedToSubRoom(userList: Array<String>,
                                   subRoomUuid: String,
                                   operatorUser: AgoraEduContextUserInfo?) {
+        guard subRoom == nil else {
+            return
+        }
+        
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
         guard userList.contains(localUserId) else {
             return
@@ -505,21 +515,12 @@ extension AgoraRoomStateUIController: AgoraEduGroupHandler {
         delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoomUuid)
     }
     
-    func onUserMovedToSubRoom(userUuid: String,
-                              fromSubRoomUuid: String,
-                              toSubRoomUuid: String,
-                              operatorUser: AgoraEduContextUserInfo?) {
-        // 主房间消息
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
-        guard userUuid == localUserId else {
-            return
-        }
-        delegate?.onLocalUserRemovedFromSubRoom(subRoomId: fromSubRoomUuid)
-        delegate?.onLocalUserAddedToSubRoom(subRoomId: toSubRoomUuid)
-    }
-    
     func onUserListRemovedFromSubRoom(userList: Array<AgoraEduContextSubRoomRemovedUserEvent>,
                                       subRoomUuid: String) {
+        guard subRoom == nil else {
+            return
+        }
+        
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
         let list = userList.map({ return $0.userUuid })
         
@@ -530,20 +531,34 @@ extension AgoraRoomStateUIController: AgoraEduGroupHandler {
         delegate?.onLocalUserRemovedFromSubRoom(subRoomId: subRoomUuid)
     }
     
-    func onSubRoomListRemoved(subRoomList: Array<AgoraEduContextSubRoomInfo>) {
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
-        
-        for room in subRoomList {
-            let roomId = room.subRoomUuid
-            
-            guard let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: roomId) else {
-                return
-            }
-            
-            if userList.contains(localUserId) {
-                delegate?.onLocalUserRemovedFromSubRoom(subRoomId: roomId)
-            }
+    func onSubRoomListUpdated(subRoomList: [AgoraEduContextSubRoomInfo]) {
+        guard let `subRoom` = subRoom else {
+            return
         }
+        
+        let roomId = subRoom.getSubRoomInfo().subRoomUuid
+        let list = subRoomList.map( {$0.subRoomUuid } )
+        
+        guard list.contains(roomId) else {
+            return
+        }
+        
+        stateView.titleLabel.text = subRoom.getSubRoomInfo().subRoomName
+    }
+    
+    func onSubRoomListRemoved(subRoomList: [AgoraEduContextSubRoomInfo]) {
+        guard let `subRoom` = subRoom else {
+            return
+        }
+        
+        let roomId = subRoom.getSubRoomInfo().subRoomUuid
+        let list = subRoomList.map( {$0.subRoomUuid } )
+        
+        guard list.contains(roomId) else {
+            return
+        }
+        
+        delegate?.onLocalUserRemovedFromSubRoom(subRoomId: roomId)
     }
 }
 

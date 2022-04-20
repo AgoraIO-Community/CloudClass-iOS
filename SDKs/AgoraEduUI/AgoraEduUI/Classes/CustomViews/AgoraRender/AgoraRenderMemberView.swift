@@ -48,14 +48,14 @@ class AgoraRenderMemberModel: NSObject {
             }
         }
     }
-    var audioState: AgoraRenderMediaState = .on {
+    var audioState: AgoraRenderMediaState = .off {
         didSet {
             if audioState != oldValue {
                 self.onUpdateAudioState?(audioState)
             }
         }
     }
-    var videoState: AgoraRenderMediaState = .on {
+    var videoState: AgoraRenderMediaState = .off {
         didSet {
             if videoState != oldValue {
                 self.onUpdateVideoState?(videoState)

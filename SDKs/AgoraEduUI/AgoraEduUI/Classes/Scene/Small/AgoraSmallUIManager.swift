@@ -355,17 +355,6 @@ extension AgoraSmallUIManager: AgoraRoomStateUIControllerDelegate {
         subRoom.dismiss(reason: .kickOut,
                         animated: true)
     }
-    
-    func onGroupStateChanged(_ state: Bool) {
-        guard !state,
-              let vc = presentedViewController,
-              let subRoom = vc as? AgoraSubRoomUIManager else {
-            return
-        }
-        
-        subRoom.dismiss(reason: .kickOut,
-                        animated: true)
-    }
 }
 
 // MARK: - AgoraEduUIManagerCallBack
