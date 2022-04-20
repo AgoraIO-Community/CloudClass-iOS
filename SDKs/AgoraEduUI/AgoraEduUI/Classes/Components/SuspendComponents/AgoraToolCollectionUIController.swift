@@ -160,10 +160,13 @@ extension AgoraToolCollectionUIController: AgoraWidgetActivityObserver,
         switch signal {
         case .MemberStateChanged(let state):
             handleBoardWidgetMemberState(state)
-        case .BoardGrantDataChanged(let list):
+        case .GetBoardGrantedUsers(let list):
             handleBoardWidgetGrantUsers(list)
         case .BoardStepChanged(let changeType):
             handleBoardWidgetStep(changeType)
+        case .CloseBoard:
+            view.isHidden = true
+            delegate?.toolCollectionDidChangeAppearance(false)
         default:
             break
         }
@@ -389,6 +392,7 @@ private extension AgoraToolCollectionUIController {
     
     func handleBoardWidgetMemberState(_ state: AgoraBoardWidgetMemberState) {
         if let main = state.activeApplianceType?.toMainType() {
+            currentMainTool = main
             mainToolsView.curBoardTool = main
             if main == .paint {
                 if let sub = state.shapeType?.toPaintType() {
@@ -413,18 +417,13 @@ private extension AgoraToolCollectionUIController {
         createConstraint()
     }
     
-    func handleBoardWidgetGrantUsers(_ list: [String]?) {
+    func handleBoardWidgetGrantUsers(_ list: [String]) {
         guard userController.getLocalUserInfo().userRole == .student else {
             return
         }
-        if let users = list  {
-            let auth = users.contains(userController.getLocalUserInfo().userUuid)
-            view.isHidden = !auth
-            delegate?.toolCollectionDidChangeAppearance(auth)
-        } else {
-            view.isHidden = true
-            delegate?.toolCollectionDidChangeAppearance(false)
-        }
+        let auth = list.contains(userController.getLocalUserInfo().userUuid)
+        view.isHidden = !auth
+        delegate?.toolCollectionDidChangeAppearance(auth)
     }
     
     func handleBoardWidgetStep(_ changeType: AgoraBoardWidgetStepChangeType) {

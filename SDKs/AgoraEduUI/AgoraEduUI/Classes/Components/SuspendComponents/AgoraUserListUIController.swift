@@ -336,17 +336,15 @@ extension AgoraUserListUIController: AgoraWidgetMessageObserver {
             return
         }
         switch signal {
-        case .BoardGrantDataChanged(let list):
-            if let userIDs = list {
-                self.boardUsers = userIDs
-                guard isViewShow else {
-                    return
-                }
-                for model in dataSource {
-                    model.authState.isOn = userIDs.contains(model.uuid)
-                }
-                tableView.reloadData()
+        case .GetBoardGrantedUsers(let list):
+            self.boardUsers = list
+            guard isViewShow else {
+                return
             }
+            for model in dataSource {
+                model.authState.isOn = list.contains(model.uuid)
+            }
+            tableView.reloadData()
         default:
             break
         }
@@ -453,16 +451,14 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
                 return
             }
             var list: Array<String> = self.boardUsers
+            var ifAdd = false
             if isOn,
                !list.contains(user.uuid) {
                 // 授予白板权限
-                list.append(user.uuid)
-            } else if !isOn,
-                      list.contains(user.uuid){
-                // 收回白板权限
-                list.removeAll(user.uuid)
+                ifAdd = true
             }
-            if let message = AgoraBoardWidgetSignal.BoardGrantDataChanged(list).toMessageString() {
+            let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(ifAdd ? .add([user.uuid]) : .delete([user.uuid]))
+            if let message = signal.toMessageString() {
                 widgetController.sendMessage(toWidget: kBoardWidgetId,
                                              message: message)
             }

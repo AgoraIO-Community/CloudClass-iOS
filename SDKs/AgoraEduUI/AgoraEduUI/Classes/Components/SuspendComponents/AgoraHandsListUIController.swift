@@ -133,7 +133,8 @@ extension AgoraHandsListUIController: AgoraHandsUpItemCellDelegate {
         }
         
         userController.addCoHost(userUuid: u.userUuid) { [weak self] in
-            guard let `self` = self else {
+            guard let `self` = self,
+                  self.dataSource.count > index.row else {
                 return
             }
             self.dataSource[index.row].isCoHost = true

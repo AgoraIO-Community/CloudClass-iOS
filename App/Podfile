@@ -36,5 +36,5 @@ target 'AgoraEducation' do
   pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/AgoraWidgets.podspec'
    
   # close source libs
-  pod 'AgoraEduCore', '2.3.0'
+  pod 'AgoraEduCore', '2.4.0'
 end

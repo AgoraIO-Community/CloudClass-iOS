@@ -109,13 +109,12 @@ extension AgoraBoardPageUIController: AgoraWidgetMessageObserver {
             case .count(let count):
                 pageCount = count
             }
-        case .BoardGrantDataChanged(let list):
+        case .GetBoardGrantedUsers(let list):
             let localUser = contextPool.user.getLocalUserInfo()
             guard localUser.userRole != .teacher else {
                 break
             }
-            if let grantList = list,
-               grantList.contains(localUser.userUuid) {
+            if list.contains(localUser.userUuid) {
                 view.isHidden = false
             } else {
                 view.isHidden = true

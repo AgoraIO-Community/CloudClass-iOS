@@ -86,6 +86,12 @@ private extension AgoraStudentsRenderUIController {
             dataSource = temp
             self.reloadData()
         }
+        
+        if let streamList = contextPool.stream.getAllStreamList() {
+            for stream in streamList {
+                handleAudioOfStream(stream)
+            }
+        }
     }
     
     func reloadData() {
@@ -113,6 +119,26 @@ private extension AgoraStudentsRenderUIController {
             if stream?.owner.userUuid == model.uuid {
                 model.updateStream(stream)
             }
+        }
+    }
+    
+    func handleAudioOfStream(_ stream: AgoraEduContextStreamInfo,
+                             isLeft: Bool = false) {
+        let roomId = contextPool.room.getRoomInfo().roomUuid
+        
+        guard isLeft == false else {
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
+            return
+        }
+        
+        switch stream.audioSourceState {
+        case .open:
+            contextPool.media.startPlayAudio(roomUuid: roomId,
+                                             streamUuid: stream.streamUuid)
+        default:
+            contextPool.media.stopPlayAudio(roomUuid: roomId,
+                                            streamUuid: stream.streamUuid)
         }
     }
     
@@ -223,17 +249,21 @@ extension AgoraStudentsRenderUIController: AgoraEduUserHandler {
 extension AgoraStudentsRenderUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream)
+        handleAudioOfStream(stream)
+        updateStream(stream: stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream)
+        handleAudioOfStream(stream)
+        updateStream(stream: stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStream(stream: stream.toEmptyStream())
+        handleAudioOfStream(stream,
+                            isLeft: true)
+        updateStream(stream: stream.toEmptyStream())
     }
 }
 // MARK: - AgoraEduMediaHandler
@@ -260,7 +290,7 @@ extension AgoraStudentsRenderUIController: AgoraRenderMemberViewDelegate {
                           renderID: String) {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        renderConfig.isMirror = true
+        renderConfig.isMirror = false
         contextPool.stream.setRemoteVideoStreamSubscribeLevel(streamUuid: renderID,
                                                               level: .low)
         contextPool.media.startRenderVideo(view: view,
