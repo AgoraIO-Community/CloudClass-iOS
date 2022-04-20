@@ -197,26 +197,25 @@ extension AgoraWindowUIController: AgoraEduGroupHandler {
 extension AgoraWindowUIController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
                                   widgetId: String) {
-        // TODO: 2.3.0暂不需移动，缩放和动画
-//        guard let targetView = widgetDic[widgetId]?.view else {
-//            return
-//        }
-//
-//        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
-//
-//        self.view.bringSubviewToFront(targetView)
-//        self.view.layoutIfNeeded()
-//
-//        targetView.mas_remakeConstraints { make in
-//            make?.left.equalTo()(frame.minX)
-//            make?.top.equalTo()(frame.minY)
-//            make?.width.equalTo()(frame.width)
-//            make?.height.equalTo()(frame.height)
-//        }
-//
-//        UIView.animate(withDuration: TimeInterval.agora_animation) {
-//            self.view.layoutIfNeeded()
-//        }
+        guard let targetView = widgetDic[widgetId]?.view else {
+            return
+        }
+
+        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
+
+        self.view.bringSubviewToFront(targetView)
+        self.view.layoutIfNeeded()
+
+        targetView.mas_remakeConstraints { make in
+            make?.left.equalTo()(frame.minX)
+            make?.top.equalTo()(frame.minY)
+            make?.width.equalTo()(frame.width)
+            make?.height.equalTo()(frame.height)
+        }
+
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
+            self.view.layoutIfNeeded()
+        }
     }
 }
 
@@ -342,13 +341,12 @@ private extension AgoraWindowUIController {
         
         view.addSubview(widget.view)
         
-        // TODO: v2.3.0暂时铺满
-//        let syncFrame = contextPool.widget.getWidgetSyncFrame(widget.info.widgetId)
-//        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
-        let frame = CGRect(x: 0,
-                           y: 0,
-                           width: self.view.width,
-                           height: self.view.height)
+        let syncFrame = contextPool.widget.getWidgetSyncFrame(widget.info.widgetId)
+        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
+//        let frame = CGRect(x: 0,
+//                           y: 0,
+//                           width: self.view.width,
+//                           height: self.view.height)
         
         widget.view.mas_makeConstraints { make in
             make?.left.equalTo()(frame.minX)
