@@ -5,7 +5,7 @@ This page introduces how to run the iOS sample project.
 
 - Make sure you have made the preparations mentioned in the  [prerequisites](https://docs.agora.io/en/agora-class/agora_class_prep?platform=iOS).
 - Prepare the development environment:
-  - Xcode 12.0 or later
+  - Xcode 12.5 or later
   - CocoaPods
 
 - Real iOS devices, such as iPhone or iPad.
