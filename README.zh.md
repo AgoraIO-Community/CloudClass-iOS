@@ -6,7 +6,7 @@
 
 - 准备工作：请确保你已经完成[前提条件](https://docs.agora.io/cn/agora-class/agora_class_prep?platform=iOS)中的准备工作。
 - 开发环境：
-  - Xcode 12.0 及以上
+  - Xcode 12.5 及以上
   - Cocoapods
   - If you are developing using Swift, use Swift 5.0 or later.
 - iOS 真机（iPhone 或 iPad）
