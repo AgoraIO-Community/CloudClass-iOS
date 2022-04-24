@@ -1,25 +1,18 @@
 //
-//  AgoraRenderMicView.swift
+//  AgoraRenderMemberMicView.swift
 //  AgoraEduUI
 //
-//  Created by Jonathan on 2021/12/8.
+//  Created by DoubleCircle on 2022/4/24.
 //
 
 import UIKit
 
-class AgoraRenderMicView: UIView {
-    
-    enum AgoraRenderMicViewState {
-        case on, off, forbidden
-    }
-    
+class AgoraRenderMemberMicView: UIView {
     private var imageView: UIImageView!
     
     private var animaView: UIImageView!
     
     private var progressLayer: CAShapeLayer!
-    
-    private var micState: AgoraRenderMicViewState = .off
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -44,33 +37,33 @@ class AgoraRenderMicView: UIView {
     }
         
     public func setVolume(_ value: Int) {
-        guard micState == .on else {
-            return
-        }
+//        guard micState == .on else {
+//            return
+//        }
         let floatValue = CGFloat(value)
         self.progressLayer.strokeEnd = CGFloat(floatValue - 55.0) / (255.0 - 55.0)
     }
     
-    public func setState(_ state: AgoraRenderMicViewState) {
-        guard micState != state else {
-            return
-        }
-        micState = state
-        switch state {
-        case .on:
-            imageView.image = UIImage.agedu_named("ic_mic_status_on")
-            animaView.isHidden = false
-        case .off:
-            imageView.image = UIImage.agedu_named("ic_mic_status_off")
-            animaView.isHidden = true
-        case .forbidden:
-            imageView.image = UIImage.agedu_named("ic_mic_status_forbidden")
-            animaView.isHidden = true
-        }
-    }
+//    public func setState(_ state: AgoraRenderMicViewState) {
+//        guard micState != state else {
+//            return
+//        }
+//        micState = state
+//        switch state {
+//        case .on:
+//            imageView.image = UIImage.agedu_named("ic_mic_status_on")
+//            animaView.isHidden = false
+//        case .off:
+//            imageView.image = UIImage.agedu_named("ic_mic_status_off")
+//            animaView.isHidden = true
+//        case .forbidden:
+//            imageView.image = UIImage.agedu_named("ic_mic_status_forbidden")
+//            animaView.isHidden = true
+//        }
+//    }
 }
 
-private extension AgoraRenderMicView {
+private extension AgoraRenderMemberMicView {
     func createViews() {
         imageView = UIImageView()
         imageView.image = UIImage.agedu_named("ic_mic_status_off")
@@ -98,3 +91,4 @@ private extension AgoraRenderMicView {
         }
     }
 }
+

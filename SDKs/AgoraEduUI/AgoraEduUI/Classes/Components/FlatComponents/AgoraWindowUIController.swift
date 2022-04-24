@@ -19,10 +19,10 @@ protocol AgoraWindowUIControllerDelegate: NSObjectProtocol {
 }
 
 fileprivate class AgoraCameraWindowInfo: NSObject {
-    var renderModel: AgoraRenderMemberModel
+    var renderModel: AgoraRenderMemberViewModel
     var renderView: AgoraRenderMemberView
     
-    init(renderModel: AgoraRenderMemberModel,
+    init(renderModel: AgoraRenderMemberViewModel,
          renderView: AgoraRenderMemberView) {
         self.renderModel = renderModel
         self.renderView = renderView
@@ -402,6 +402,10 @@ private extension AgoraWindowUIController {
         }
         
         modelDic[widget.info.widgetId] = .video(spreadInfo)
+        if let stream = contextPool.stream.getStreamList(userUuid: renderInfo.userUuid)?.first(where: {$0.streamUuid == renderInfo.streamId}),
+           stream.videoSourceType != .screen {
+            delegate?.startSpreadForUser(with: renderInfo.userUuid)
+        }
         // 开启渲染视频窗大流
         renderView.setModel(model: renderModel,
                             delegate: self)
@@ -433,11 +437,11 @@ private extension AgoraWindowUIController {
     }
     
     func makeRenderModel(userId: String,
-                         stream: AgoraEduContextStreamInfo) -> AgoraRenderMemberModel {
+                         stream: AgoraEduContextStreamInfo) -> AgoraRenderMemberViewModel {
         guard let user = userController.getAllUserList().first(where: {$0.userUuid == userId}) else {
-            return AgoraRenderMemberModel()
+            return AgoraRenderMemberViewModel()
         }
-        var model = AgoraRenderMemberModel()
+        var model = AgoraRenderMemberViewModel()
         model.uuid = user.userUuid
         model.name = user.userName
         model.updateStream(stream)
@@ -464,10 +468,7 @@ private extension AgoraWindowUIController {
     func startRenderOnWindow(_ view: UIView,
                              isCamera: Bool,
                              streamId: String) {
-        if let uid = getUidWithStreamId(streamId),
-           isCamera {
-            delegate?.startSpreadForUser(with: uid)
-        }
+
         
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = isCamera ? .hidden : .fit
