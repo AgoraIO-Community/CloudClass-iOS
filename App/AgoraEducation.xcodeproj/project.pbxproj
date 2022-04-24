@@ -1234,9 +1234,9 @@
 				);
 				MARKETING_VERSION = 2.4.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATestNew;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.WayangQA;
 				PRODUCT_NAME = AgoraCloudClass;
-				PROVISIONING_PROFILE_SPECIFIER = AgoraQA2021;
+				PROVISIONING_PROFILE_SPECIFIER = AgoraQA2022C;
 				STRIP_STYLE = "non-global";
 				STRIP_SWIFT_SYMBOLS = NO;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";

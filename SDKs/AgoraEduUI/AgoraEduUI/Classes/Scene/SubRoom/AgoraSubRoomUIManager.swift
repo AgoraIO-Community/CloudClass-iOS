@@ -143,7 +143,6 @@ import AgoraWidget
                                                         success: nil,
                                                         failure: nil)
         }
-
     }
     
     func dismiss(reason: AgoraClassRoomExitReason,
@@ -162,6 +161,13 @@ import AgoraWidget
             
             completion?()
         }
+    }
+}
+
+extension AgoraSubRoomUIManager: AgoraRoomStateUIControllerDelegate {
+    func onLocalUserRemovedFromSubRoom(subRoomId: String) {
+        dismiss(reason: .normal,
+                animated: true)
     }
 }
 
@@ -400,7 +406,7 @@ extension AgoraSubRoomUIManager: AgoraClassStateUIControllerDelegate {
 private extension AgoraSubRoomUIManager {
     func createViews() {
         stateController = AgoraRoomStateUIController(context: contextPool,
-                                                     delegate: nil,
+                                                     delegate: self,
                                                      subRoom: subRoom)
         stateController.roomDelegate = self
         addChild(stateController)
