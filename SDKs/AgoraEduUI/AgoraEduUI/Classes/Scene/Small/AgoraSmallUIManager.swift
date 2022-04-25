@@ -18,6 +18,8 @@ import AgoraWidget
     private var toolBarController: AgoraToolBarUIController!
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
+    /** 全局状态 控制器（自身不包含UI）*/
+    private var globalController: AgoraRoomGlobalUIController!
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateController: AgoraClassStateUIController = {
         return AgoraClassStateUIController(context: contextPool,
@@ -322,8 +324,8 @@ extension AgoraSmallUIManager: AgoraClassStateUIControllerDelegate {
     }
 }
 
-// MARK: - AgoraRoomStateUIControllerDelegate
-extension AgoraSmallUIManager: AgoraRoomStateUIControllerDelegate {
+// MARK: - AgoraRoomGlobalUIControllerDelegate
+extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
     func onLocalUserAddedToSubRoom(subRoomId: String) {
         guard let subRoom = self.contextPool.group.createSubRoomObject(subRoomUuid: subRoomId) else {
             fatalError()
@@ -391,11 +393,13 @@ extension AgoraSmallUIManager: AgoraEduUISubManagerCallBack {
 private extension AgoraSmallUIManager {
     func createViews() {
         let userRole = contextPool.user.getLocalUserInfo().userRole
-        stateController = AgoraRoomStateUIController(context: contextPool,
-                                                     delegate: self)
-        stateController.roomDelegate = self
+        stateController = AgoraRoomStateUIController(context: contextPool)
         addChild(stateController)
         contentView.addSubview(stateController.view)
+        
+        globalController = AgoraRoomGlobalUIController(context: contextPool,
+                                                       delegate: self)
+        globalController.roomDelegate = self
         
         renderController = AgoraMembersHorizeRenderUIController(context: contextPool)
         renderController.delegate = self

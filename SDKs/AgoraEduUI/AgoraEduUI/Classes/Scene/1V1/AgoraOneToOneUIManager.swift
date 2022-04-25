@@ -16,6 +16,8 @@ import UIKit
     private let roomType: AgoraEduContextRoomType = .oneToOne
     /** 状态栏 控制器*/
     private var stateController: AgoraRoomStateUIController!
+    /** 全局状态 控制器（自身不包含UI）*/
+    private var globalController: AgoraRoomGlobalUIController!
     /** 工具栏*/
     private var toolBarController: AgoraToolBarUIController!
     /** 课堂状态 控制器（仅教师端）*/
@@ -392,11 +394,14 @@ private extension AgoraOneToOneUIManager {
     }
     func createViews() {
         let userRole = contextPool.user.getLocalUserInfo().userRole
-        stateController = AgoraRoomStateUIController(context: contextPool,
-													delegate: nil)
-        stateController.roomDelegate = self
+        stateController = AgoraRoomStateUIController(context: contextPool)
         addChild(stateController)
         contentView.addSubview(stateController.view)
+        
+        globalController = AgoraRoomGlobalUIController(context: contextPool,
+                                                       delegate: nil,
+                                                       subRoom: subRoom)
+        globalController.roomDelegate = self
         
         // 视图层级：白板，大窗，工具
         boardController = AgoraBoardUIController(context: contextPool)

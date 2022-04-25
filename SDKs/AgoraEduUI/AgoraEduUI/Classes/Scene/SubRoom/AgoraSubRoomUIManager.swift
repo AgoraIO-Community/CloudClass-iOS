@@ -23,6 +23,8 @@ import AgoraWidget
     private var toolBarController: AgoraToolBarUIController!
     /** 房间状态 控制器*/
     private var stateController: AgoraRoomStateUIController!
+    /** 全局状态 控制器（自身不包含UI）*/
+    private var globalController: AgoraRoomGlobalUIController!
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateController: AgoraClassStateUIController = {
         return AgoraClassStateUIController(context: contextPool,
@@ -400,11 +402,14 @@ extension AgoraSubRoomUIManager: AgoraClassStateUIControllerDelegate {
 private extension AgoraSubRoomUIManager {
     func createViews() {
         stateController = AgoraRoomStateUIController(context: contextPool,
-                                                     delegate: nil,
                                                      subRoom: subRoom)
-        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
+        
+        globalController = AgoraRoomGlobalUIController(context: contextPool,
+                                                       delegate: nil,
+                                                       subRoom: subRoom)
+        globalController.roomDelegate = self
         
         renderController = AgoraMembersHorizeRenderUIController(context: contextPool,
                                                                 subRoom: subRoom)
