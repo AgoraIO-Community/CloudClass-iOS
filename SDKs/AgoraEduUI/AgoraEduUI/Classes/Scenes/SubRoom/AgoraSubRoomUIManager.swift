@@ -16,44 +16,18 @@ import AgoraWidget
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class AgoraSubRoomUIManager: AgoraEduUIManager {
-    private let roomType: AgoraEduContextRoomType = .small
-    
-    private weak var mainDelegate: AgoraEduUISubManagerCallBack?
-    /** 工具栏*/
-    private var toolBarController: AgoraToolBarUIController!
-    /** 房间状态 控制器*/
-    private var stateController: AgoraRoomStateUIController!
-    /** 全局状态 控制器（自身不包含UI）*/
-    private var globalController: AgoraRoomGlobalUIController!
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateController: AgoraClassStateUIController = {
         return AgoraClassStateUIController(context: contextPool,
                                            delegate: self)
     }()
-    /** 远程视窗渲染 控制器*/
-    private var renderController: AgoraMembersHorizeRenderUIController!
-    /** 白板的渲染 控制器*/
-    private var boardController: AgoraBoardUIController!
+    
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController: AgoraCloudUIController = {
         let vc = AgoraCloudUIController(context: contextPool)
         return vc
     }()
-    /** 花名册 控制器*/
-    private var nameRollController: AgoraUserListUIController!
-    /** 视窗菜单 控制器（仅教师端）*/
-    private lazy var renderMenuController: AgoraRenderMenuUIController = {
-        let vc = AgoraRenderMenuUIController(context: contextPool,
-                                             subRoom: subRoom)
-        vc.delegate = self
-        return vc
-    }()
-    /** 工具集合 控制器*/
-    private var toolCollectionController: AgoraToolCollectionUIController!
-    /** 白板翻页 控制器*/
-    private var boardPageController: AgoraBoardPageUIController!
-    /** 聊天窗口 控制器*/
-    private var chatController: AgoraChatUIController!
+    
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
         let vc = AgoraSettingUIController(context: contextPool,
@@ -62,6 +36,7 @@ import AgoraWidget
         self.addChild(vc)
         return vc
     }()
+    
     /** 举手列表 控制器*/
     private lazy var handsListController: AgoraHandsListUIController = {
         let vc = AgoraHandsListUIController(context: contextPool,
@@ -69,11 +44,49 @@ import AgoraWidget
         vc.delegate = self
         return vc
     }()
+    
+    /** 视窗菜单 控制器（仅教师端）*/
+    private lazy var renderMenuController: AgoraRenderMenuUIController = {
+        let vc = AgoraRenderMenuUIController(context: contextPool,
+                                             subRoom: subRoom)
+        vc.delegate = self
+        return vc
+    }()
+    
+    /** 工具栏*/
+    private var toolBarController: AgoraToolBarUIController!
+    
+    /** 房间状态 控制器*/
+    private var stateController: AgoraRoomStateUIController!
+    
+    /** 全局状态 控制器（自身不包含UI）*/
+    private var globalController: AgoraRoomGlobalUIController!
+   
+    /** 远程视窗渲染 控制器*/
+    private var renderController: AgoraMembersHorizeRenderUIController!
+    
+    /** 白板的渲染 控制器*/
+    private var boardController: AgoraBoardUIController!
+  
+    /** 花名册 控制器*/
+    private var nameRollController: AgoraUserListUIController!
+  
+    /** 工具集合 控制器*/
+    private var toolCollectionController: AgoraToolCollectionUIController!
+    
+    /** 白板翻页 控制器*/
+    private var boardPageController: AgoraBoardPageUIController!
+    
+    /** 聊天窗口 控制器*/
+    private var chatController: AgoraChatUIController!
+    
     /** 教具 控制器*/
     private var classToolsController: AgoraClassToolsViewController!
     /** 大窗 控制器*/
     private var windowController: AgoraWindowUIController!
         
+    private weak var mainDelegate: AgoraEduUISubManagerCallBack?
+    
     private var subRoom: AgoraEduSubRoomContext
     
     deinit {
@@ -145,7 +158,6 @@ import AgoraWidget
                                                         success: nil,
                                                         failure: nil)
         }
-
     }
     
     func dismiss(reason: AgoraClassRoomExitReason,
