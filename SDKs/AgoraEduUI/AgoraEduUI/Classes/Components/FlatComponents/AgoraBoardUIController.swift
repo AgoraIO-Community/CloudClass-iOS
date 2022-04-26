@@ -115,8 +115,6 @@ private extension AgoraBoardUIController {
         widget.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
-        
-//        self.view.layoutIfNeeded()
     }
     
     func deinitBoardWidget() {

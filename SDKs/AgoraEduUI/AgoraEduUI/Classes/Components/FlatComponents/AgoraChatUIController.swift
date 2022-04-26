@@ -37,14 +37,12 @@ class AgoraChatUIController: UIViewController {
         }
     }
     
+    // public
     public let suggestSize = CGSize(width: 200,
                                     height: 287)
     
     public weak var delegate: AgoraChatUIControllerDelegate?
     
-    private var chatWidgetId: String?
-    
-    // public
     public var hideTopBar = false
     
     public var hideMiniButton = false
@@ -55,9 +53,11 @@ class AgoraChatUIController: UIViewController {
         
     private var redDotShow: Bool = false {
         didSet {
-            if redDotShow != oldValue {
-                self.delegate?.updateChatRedDot(isShow: redDotShow)
+            guard redDotShow != oldValue else {
+                return
             }
+             
+            delegate?.updateChatRedDot(isShow: redDotShow)
         }
     }
     
@@ -85,7 +85,7 @@ class AgoraChatUIController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.redDotShow = false
+        redDotShow = false
     }
     
     func viewWillActive() {
@@ -113,79 +113,103 @@ extension AgoraChatUIController: AgoraEduSubRoomHandler {
 extension AgoraChatUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard let w = chatWidgetId,
-              w == widgetId else {
+        guard widgetId == EasemobWidgetId || widgetId == AgoraChatWidgetId else {
             return
         }
         
-        if message == "chatWidgetDidReceiveMessage",
-           isVisible == false {
-            self.redDotShow = true
+        guard message == "chatWidgetDidReceiveMessage",
+              isVisible == false else {
+            return
         }
+        
+        redDotShow = true
     }
 }
 
 // MARK: - Creations
 private extension AgoraChatUIController {
     func createWidget() {
-        let EM = EasemobWidgetId
-        let RTM = AgoraChatWidgetId
+        var widget: AgoraBaseWidget?
         
-        if let chatConfig = widgetController.getWidgetConfig(EM) {
-            let w = widgetController.create(chatConfig)
-            view.addSubview(w.view)
-            let userInfo = userController.getLocalUserInfo()
-            
-            if let flexProps = userController.getUserProperties(userUuid: userInfo.userUuid),
-               let url = flexProps["avatarurl"] as? String,
-               let message = ["avatarurl": url].jsonString() {
-                widgetController.sendMessage(toWidget: EM,
-                                             message: message)
-            }
-            
-            if hideTopBar {
-                widgetController.sendMessage(toWidget: EM,
-                                             message: "hideTopBar")
-            }
-            
-            if hideMiniButton {
-                widgetController.sendMessage(toWidget: EM,
-                                             message: "hideMiniButton")
-            }
-            
-            if hideAnnouncement {
-                widgetController.sendMessage(toWidget: EM,
-                                             message: "hideAnnouncement")
-            }
-            
-            if hideInput {
-                widgetController.sendMessage(toWidget: EM,
-                                             message: "hideInput")
-            }
-            widget = w
-            chatWidgetId = EM
-            widgetController.add(self,
-                                 widgetId: EM)
-            
-        } else if let chatConfig = widgetController.getWidgetConfig(RTM) {
-            
-            let w = widgetController.create(chatConfig)
-            view.addSubview(w.view)
-            if let param = ["view": ["hideTopBar": hideTopBar,
-                                     "hideInput": hideInput]].jsonString() {
-                widgetController.sendMessage(toWidget: RTM,
-                                             message: param)
-            }
-            
-            widget = w
-            chatWidgetId = RTM
-            widgetController.add(self,
-                                 widgetId: RTM)
+        if let object = createHyWidget() {
+            widget = object
+        } else if let object = createAgWidget() {
+            widget = object
         }
         
-        widget?.view.mas_makeConstraints { make in
+        guard let `widget` = widget else {
+            return
+        }
+        
+        view.addSubview(widget.view)
+        
+        widget.view.mas_makeConstraints { make in
             make?.top.left().right().bottom().equalTo()(0)
         }
+    }
+    
+    func createHyWidget() -> AgoraBaseWidget? {
+        let widgetId = EasemobWidgetId
+        
+        guard let config = widgetController.getWidgetConfig(widgetId) else {
+            return nil
+        }
+        
+        let widget = widgetController.create(config)
+        let userInfo = userController.getLocalUserInfo()
+        
+        if let flexProps = userController.getUserProperties(userUuid: userInfo.userUuid),
+           let url = flexProps["avatarurl"] as? String,
+           let message = ["avatarurl": url].jsonString() {
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: message)
+        }
+        
+        if hideTopBar {
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: "hideTopBar")
+        }
+        
+        if hideMiniButton {
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: "hideMiniButton")
+        }
+        
+        if hideAnnouncement {
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: "hideAnnouncement")
+        }
+        
+        if hideInput {
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: "hideInput")
+        }
+        
+        widgetController.add(self,
+                             widgetId: widgetId)
+        
+        return widget
+    }
+    
+    func createAgWidget() -> AgoraBaseWidget? {
+        let widgetId = AgoraChatWidgetId
+        
+        guard let config = widgetController.getWidgetConfig(widgetId) else {
+            return nil
+        }
+        
+        let widget = widgetController.create(config)
+        
+        if let param = ["view": ["hideTopBar": hideTopBar,
+                                 "hideInput": hideInput]].jsonString() {
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: param)
+        }
+        
+        widgetController.add(self,
+                             widgetId: widgetId)
+        
+        return widget
     }
     
     func releaseWidget() {
