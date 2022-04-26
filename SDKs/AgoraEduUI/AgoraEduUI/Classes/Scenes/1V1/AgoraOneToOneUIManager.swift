@@ -12,36 +12,48 @@ import Masonry
 import UIKit
 
 @objc public class AgoraOneToOneUIManager: AgoraEduUIManager {
-    
-    private let roomType: AgoraEduContextRoomType = .oneToOne
-    /** 状态栏 控制器*/
-    private var stateController: AgoraRoomStateUIController!
-    /** 全局状态 控制器（自身不包含UI）*/
-    private var globalController: AgoraRoomGlobalUIController!
-    /** 工具栏*/
-    private var toolBarController: AgoraToolBarUIController!
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateController: AgoraClassStateUIController = {
         return AgoraClassStateUIController(context: contextPool,
                                            delegate: self)
     }()
-    /** 渲染 控制器*/
-    private var renderController: AgoraOneToOneRenderUIController!
+    
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuController: AgoraRenderMenuUIController = {
         let vc = AgoraRenderMenuUIController(context: contextPool)
         vc.delegate = self
         return vc
     }()
-    /** 右边用来切圆角和显示背景色的容器视图*/
-    private var rightContentView: UIView!
-    /** 白板 控制器*/
-    private var boardController: AgoraBoardUIController!
+    
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController: AgoraCloudUIController = {
         let vc = AgoraCloudUIController(context: contextPool)
         return vc
     }()
+    
+    /** 设置界面 控制器*/
+    private lazy var settingViewController: AgoraSettingUIController = {
+        let vc = AgoraSettingUIController(context: contextPool)
+        vc.roomDelegate = self
+        self.addChild(vc)
+        return vc
+    }()
+    
+    /** 状态栏 控制器*/
+    private var stateController: AgoraRoomStateUIController!
+    /** 全局状态 控制器（自身不包含UI）*/
+    private var globalController: AgoraRoomGlobalUIController!
+    /** 工具栏*/
+    private var toolBarController: AgoraToolBarUIController!
+   
+    /** 渲染 控制器*/
+    private var renderController: AgoraOneToOneRenderUIController!
+    
+    /** 右边用来切圆角和显示背景色的容器视图*/
+    private var rightContentView: UIView!
+    /** 白板 控制器*/
+    private var boardController: AgoraBoardUIController!
+   
     /** 工具集合 控制器（观众端没有）*/
     private var toolCollectionController: AgoraToolCollectionUIController!
     /** 白板翻页 控制器（观众端没有）*/
@@ -53,13 +65,6 @@ import UIKit
     /** 大窗 控制器*/
     private var windowController: AgoraWindowUIController!
     private var tabSelectView: AgoraOneToOneTabView?
-    /** 设置界面 控制器*/
-    private lazy var settingViewController: AgoraSettingUIController = {
-        let vc = AgoraSettingUIController(context: contextPool)
-        vc.roomDelegate = self
-        self.addChild(vc)
-        return vc
-    }()
     
     private var isJoinedRoom = false
     
