@@ -200,3 +200,98 @@ extension UIColor {
         return color
     }
 }
+
+// MARK: - Code
+protocol Convertable: Codable {
+    
+}
+
+extension Convertable {
+    func toDictionary() -> Dictionary<String, Any>? {
+        var dic: Dictionary<String,Any>?
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(self)
+            dic = try JSONSerialization.jsonObject(with: data,
+                                                   options: .allowFragments) as? Dictionary<String, Any>
+        } catch {
+            // TODO: error handle
+            print(error)
+        }
+        return dic
+    }
+}
+
+extension Decodable {
+    public static func decode(_ dic: [String : Any]) -> Self? {
+        guard JSONSerialization.isValidJSONObject(dic),
+              let data = try? JSONSerialization.data(withJSONObject: dic,
+                                                      options: []),
+              let model = try? JSONDecoder().decode(Self.self,
+                                                    from: data) else {
+                  return nil
+              }
+        return model
+    }
+}
+
+extension Dictionary {
+    func jsonString() -> String? {
+        guard let data = try? JSONSerialization.data(withJSONObject: self,
+                                                     options: .prettyPrinted) else {
+            return nil
+        }
+
+        guard let jsonString = String(data: data,
+                                      encoding: .utf8) else {
+            return nil
+        }
+        return jsonString
+    }
+}
+
+extension String {
+    func json() -> [String: Any]? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+
+        return data.dic()
+    }
+    
+    func toArr() -> [Any]? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+        
+        return data.toArr()
+    }
+}
+
+extension Data {
+    func dic() -> [String: Any]? {
+        guard let object = try? JSONSerialization.jsonObject(with: self,
+                                                             options: [.mutableContainers]) else {
+            return nil
+        }
+
+        guard let dic = object as? [String: Any] else {
+            return nil
+        }
+
+        return dic
+    }
+    
+    func toArr() -> [Any]? {
+        guard let object = try? JSONSerialization.jsonObject(with: self,
+                                                             options: [.mutableContainers]) else {
+            return nil
+        }
+
+        guard let arr = object as? [Any] else {
+            return nil
+        }
+        
+        return arr
+    }
+}

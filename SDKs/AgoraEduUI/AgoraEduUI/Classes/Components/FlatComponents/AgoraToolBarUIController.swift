@@ -90,8 +90,8 @@ class AgoraToolBarUIController: UIViewController {
         }
     }
     /** 举手提示浮层*/
-    private lazy var hansupTipsView: AgoraHandsupTipsView = {
-        let v = AgoraHandsupTipsView()
+    private lazy var hansupTipsView: AgoraHandsUpTipsView = {
+        let v = AgoraHandsUpTipsView()
         v.isHidden = true
         view.addSubview(v)
         if let index = self.dataSource.firstIndex(of: .handsup) {

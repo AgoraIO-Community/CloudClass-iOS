@@ -8,7 +8,7 @@
 import AgoraUIBaseViews
 import UIKit
 
-class AgoraHandsupTipsView: UIView {
+class AgoraHandsUpTipsView: UIView {
     var imageView: UIImageView!
     
     var label: UILabel!
@@ -25,7 +25,7 @@ class AgoraHandsupTipsView: UIView {
     }
 }
 
-private extension AgoraHandsupTipsView {
+private extension AgoraHandsUpTipsView {
     func createViews() {
         AgoraUIGroup().color.borderSet(layer: layer)
 
