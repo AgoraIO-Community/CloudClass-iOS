@@ -180,6 +180,5 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         default:
             break
         }
-
     }
 }

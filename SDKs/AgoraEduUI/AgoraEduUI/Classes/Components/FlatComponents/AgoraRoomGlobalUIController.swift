@@ -134,46 +134,63 @@ extension AgoraRoomGlobalUIController: AgoraEduSubRoomHandler {
 // MARK: - AgoraEduUserHandler
 extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
+        let action = AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
+            self.roomDelegate?.exitClassRoom(reason: .kickOut,
+                                             roomType: .main)
+        })
+        
+        let title = "fcr_user_local_kick_out_notice".agedu_localized()
+        let message = "fcr_user_local_kick_out".agedu_localized()
+        
         AgoraAlertModel()
-            .setTitle("fcr_user_local_kick_out_notice".agedu_localized())
-            .setMessage("fcr_user_local_kick_out".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitClassRoom(reason: .kickOut,
-                                                 roomType: .main)
-            }))
+            .setTitle(title)
+            .setMessage(message)
+            .addAction(action: action)
             .show(in: self)
     }
     
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
-        let localUUID = contextPool.user.getLocalUserInfo().userUuid
-        if let _ = userList.first(where: {$0.userUuid == localUUID}),
-           let op = operatorUser,
-           op.userRole == .teacher {
-            // 老师邀请你上台了，与大家积极互动吧
-            AgoraToast.toast(msg: "fcr_user_local_start_co_hosting".agedu_localized(),
-                             type: .notice)
+        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let list = userList.map( {$0.userUuid } )
+        
+        guard list.contains(userId),
+              let `operatorUser` = operatorUser,
+              operatorUser.userRole == .teacher else {
+            return
         }
+        
+        // 老师邀请你上台了，与大家积极互动吧
+        let message = "fcr_user_local_start_co_hosting".agedu_localized()
+        
+        AgoraToast.toast(msg: message,
+                         type: .notice)
     }
     
     func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                  operatorUser: AgoraEduContextUserInfo?) {
-        let localUUID = contextPool.user.getLocalUserInfo().userUuid
-        if let _ = userList.first(where: {$0.userUuid == localUUID}),
-           toastFlag(uid: localUUID) {
-            // 你离开讲台了，暂时无法与大家互动
-            AgoraToast.toast(msg: "fcr_user_local_stop_co_hosting".agedu_localized(),
-                             type: .error)
+        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let list = userList.map( {$0.userUuid } )
+        
+        guard list.contains(userId),
+              toastFlag(uid: userId) else {
+            return
         }
+        
+        // 你离开讲台了，暂时无法与大家互动
+        let message = "fcr_user_local_stop_co_hosting".agedu_localized()
+        
+        AgoraToast.toast(msg: message,
+                         type: .error)
     }
     
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
         // 祝贺**获得奖励
-        let str = "fcr_user_congratulation".agedu_localized()
-        let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
-                                             with: user.userName)
+        let message = "fcr_user_congratulation".agedu_localized()
+        let final = message.replacingOccurrences(of: String.agedu_localized_replacing(),
+                                                 with: user.userName)
         AgoraToast.toast(msg: final,
                          type: .notice)
     }
@@ -185,9 +202,9 @@ extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
             return
         }
         
-        let text = "fcr_group_enter_group".agedu_localized()
+        let message = "fcr_group_enter_group".agedu_localized()
         
-        AgoraToast.toast(msg: text,
+        AgoraToast.toast(msg: message,
                          type: .notice)
     }
     
@@ -199,9 +216,9 @@ extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
             return
         }
         
-        let text = "fcr_group_exit_group".agedu_localized()
+        let message = "fcr_group_exit_group".agedu_localized()
         
-        AgoraToast.toast(msg: text,
+        AgoraToast.toast(msg: message,
                          type: .notice)
     }
 }
@@ -213,16 +230,24 @@ extension AgoraRoomGlobalUIController: AgoraEduMonitorHandler {
         case .aborted:
             // 踢出
             AgoraLoading.hide()
-            AgoraToast.toast(msg: "fcr_monitor_login_remote_device".agedu_localized(),
+            
+            let message = "fcr_monitor_login_remote_device".agedu_localized()
+            
+            AgoraToast.toast(msg: message,
                              type: .error)
+            
             self.roomDelegate?.exitClassRoom(reason: .kickOut,
                                              roomType: .main)
         case .connecting:
-            AgoraLoading.loading(msg: "fcr_room_loading".agedu_localized())
+            let message = "fcr_room_loading".agedu_localized()
+            AgoraLoading.loading(msg: message)
         case .disconnected, .reconnecting:
-            AgoraToast.toast(msg:"fcr_monitor_network_disconnected".agedu_localized(),
+            let toastMessage = "fcr_monitor_network_disconnected".agedu_localized()
+            AgoraToast.toast(msg: toastMessage,
                              type: .error)
-            AgoraLoading.loading(msg: "fcr_monitor_network_reconnecting".agedu_localized())
+            
+            let loadingMessage = "fcr_monitor_network_reconnecting".agedu_localized()
+            AgoraLoading.loading(msg: loadingMessage)
         case .connected:
             AgoraLoading.hide()
         }
@@ -239,24 +264,37 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
                                     subRoomUuid: String,
                                     operatorUser: AgoraEduContextUserInfo?) {
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
         guard userList.contains(localUserId),
               let subRoomList = contextPool.group.getSubRoomList(),
               let subRoomInfo = subRoomList.first(where: {$0.subRoomUuid == subRoomUuid}) else {
             return
         }
-        var str = "fcr_group_invitation".agedu_localized()
-        let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
-                                             with: subRoomInfo.subRoomName)
+        
+        var message = "fcr_group_invitation".agedu_localized()
+        let final = message.replacingOccurrences(of: String.agedu_localized_replacing(),
+                                                 with: subRoomInfo.subRoomName)
+        let title = "fcr_group_join".agedu_localized()
+        
+        let laterActionTitle = "fcr_group_button_later".agedu_localized()
+        let laterAction = AgoraAlertAction(title: laterActionTitle)
+        
+        let joinActionTitle = "fcr_group_button_join".agedu_localized()
+        let joinAction = AgoraAlertAction(title: joinActionTitle,
+                                          action: { [weak self] in
+                                            let group = self?.contextPool.group
+                                            
+                                            group?.userListAcceptInvitationToSubRoom(userList: [localUserId],
+                                                                                     subRoomUuid: subRoomUuid,
+                                                                                     success: nil,
+                                                                                     failure: nil)
+                                          })
+        
         AgoraAlertModel()
-            .setTitle("fcr_group_join".agedu_localized())
+            .setTitle(title)
             .setMessage(final)
-            .addAction(action: AgoraAlertAction(title: "fcr_group_button_later".agedu_localized(), action:nil))
-            .addAction(action: AgoraAlertAction(title: "fcr_group_button_join".agedu_localized(), action: { [weak self] in
-                self?.contextPool.group.userListAcceptInvitationToSubRoom(userList: [localUserId],
-                                                                          subRoomUuid: subRoomUuid,
-                                                                          success: nil,
-                                                                          failure: nil)
-            }))
+            .addAction(action: laterAction)
+            .addAction(action: joinAction)
             .show(in: self)
     }
     
@@ -273,7 +311,9 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
             return
         }
         
-        AgoraToast.toast(msg: "fcr_group_help_teacher_busy_msg".agedu_localized(),
+        let message = "fcr_group_help_teacher_busy_msg".agedu_localized()
+        
+        AgoraToast.toast(msg: message,
                          type: .warning)
     }
     
@@ -281,9 +321,11 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
                                   subRoomUuid: String,
                                   operatorUser: AgoraEduContextUserInfo?) {
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
         guard userList.contains(localUserId) else {
             return
         }
+        
         delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoomUuid)
     }
     
@@ -293,9 +335,11 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
                               operatorUser: AgoraEduContextUserInfo?) {
         // 主房间消息
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
         guard userUuid == localUserId else {
             return
         }
+        
         delegate?.onLocalUserRemovedFromSubRoom(subRoomId: fromSubRoomUuid)
         delegate?.onLocalUserAddedToSubRoom(subRoomId: toSubRoomUuid)
     }
@@ -333,8 +377,9 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
 extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        let localUUID = contextPool.user.getLocalUserInfo().userUuid
-        guard stream.owner.userUuid == localUUID else {
+        let userId = contextPool.user.getLocalUserInfo().userUuid
+        
+        guard stream.owner.userUuid == userId else {
             return
         }
         
@@ -343,8 +388,9 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        let localUUID = contextPool.user.getLocalUserInfo().userUuid
-        guard stream.owner.userUuid == localUUID else {
+        let userId = contextPool.user.getLocalUserInfo().userUuid
+        
+        guard stream.owner.userUuid == userId else {
             return
         }
         
@@ -353,8 +399,9 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        let localUUID = contextPool.user.getLocalUserInfo().userUuid
-        guard stream.owner.userUuid == localUUID,
+        let userId = contextPool.user.getLocalUserInfo().userUuid
+        
+        guard stream.owner.userUuid == userId,
               stream.owner.userRole == .student else {
             return
         }
@@ -366,20 +413,28 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
         
         if localStream.streamType.hasAudio != stream.streamType.hasAudio {
             if stream.streamType.hasAudio {
-                AgoraToast.toast(msg:"fcr_stream_start_audio".agedu_localized(),
+                let message = "fcr_stream_start_audio".agedu_localized()
+                
+                AgoraToast.toast(msg: message,
                                  type: .notice)
             } else {
-                AgoraToast.toast(msg:"fcr_stream_stop_audio".agedu_localized(),
+                let message = "fcr_stream_stop_audio".agedu_localized()
+                
+                AgoraToast.toast(msg: message,
                                  type: .error)
             }
         }
         
         if localStream.streamType.hasVideo != stream.streamType.hasVideo {
             if stream.streamType.hasVideo {
-                AgoraToast.toast(msg:"fcr_stream_start_video".agedu_localized(),
+                let message = "fcr_stream_start_video".agedu_localized()
+                
+                AgoraToast.toast(msg: message,
                                  type: .error)
             } else {
-                AgoraToast.toast(msg:"fcr_stream_stop_video".agedu_localized(),
+                let message = "fcr_stream_stop_video".agedu_localized()
+                
+                AgoraToast.toast(msg: message,
                                  type: .error)
             }
         }
@@ -391,6 +446,7 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
 private extension AgoraRoomGlobalUIController {
     func setUp() {
         let user = contextPool.user.getLocalUserInfo()
+        
         guard let streams = contextPool.stream.getStreamList(userUuid: user.userUuid) else {
             return
         }
@@ -401,16 +457,19 @@ private extension AgoraRoomGlobalUIController {
     }
     
     func showReward() {
-        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward", withExtension: "gif"),
+        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward",
+                                                withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             return
         }
+        
         let animatedImage = FLAnimatedImage(animatedGIFData: data)
         let imageView = FLAnimatedImageView()
         imageView.animatedImage = animatedImage
-        imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
+        imageView.loopCompletionBlock = { [weak imageView] (loopCountRemaining) -> Void in
             imageView?.removeFromSuperview()
         }
+        
         if let window = UIApplication.shared.keyWindow {
             window.addSubview(imageView)
             imageView.mas_makeConstraints { make in
@@ -419,6 +478,7 @@ private extension AgoraRoomGlobalUIController {
                 make?.height.equalTo()(AgoraFit.scale(238))
             }
         }
+        
         // sounds
         guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward",
                                                       withExtension: "mp3") else {
@@ -427,11 +487,13 @@ private extension AgoraRoomGlobalUIController {
         
         var soundId: SystemSoundID = 0;
         AudioServicesCreateSystemSoundID(rewardUrl as CFURL,
-                                         &soundId);
-        AudioServicesAddSystemSoundCompletion(soundId, nil, nil, {
-            (soundId, clientData) -> Void in
-            AudioServicesDisposeSystemSoundID(soundId)
-        }, nil)
+                                         &soundId)
+        
+        AudioServicesAddSystemSoundCompletion(soundId,
+                                              nil,
+                                              nil, { (soundId, clientData) -> Void in
+                                                AudioServicesDisposeSystemSoundID(soundId)
+                                              }, nil)
         AudioServicesPlaySystemSound(soundId)
     }
     
