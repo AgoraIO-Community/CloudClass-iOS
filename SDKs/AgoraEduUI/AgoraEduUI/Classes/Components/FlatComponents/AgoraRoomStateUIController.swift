@@ -59,6 +59,7 @@ class AgoraRoomStateUIController: UIViewController {
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
+            contextPool.group.registerGroupEventHandler(self)
         }
         
         contextPool.room.registerRoomEventHandler(self)
@@ -167,6 +168,22 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
 extension AgoraRoomStateUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         setup()
+    }
+}
+
+extension AgoraRoomStateUIController: AgoraEduGroupHandler {
+    func onSubRoomListUpdated(subRoomList: [AgoraEduContextSubRoomInfo]) {
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
+        for subRoom in subRoomList {
+            guard let list = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
+               list.contains(localUserId) else {
+               return
+            }
+        
+            stateView.titleLabel.text = subRoom.subRoomName
+            break
+        }
     }
 }
 
