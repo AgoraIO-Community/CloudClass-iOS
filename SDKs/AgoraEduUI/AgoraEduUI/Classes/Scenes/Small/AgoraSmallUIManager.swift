@@ -341,7 +341,6 @@ extension AgoraSmallUIManager: AgoraClassStateUIControllerDelegate {
 extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
     func onLocalUserAddedToSubRoom(subRoomId: String) {
         guard let subRoom = self.contextPool.group.createSubRoomObject(subRoomUuid: subRoomId) else {
-            fatalError()
             return
         }
         
@@ -370,17 +369,6 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
         subRoom.dismiss(reason: .kickOut,
                         animated: true)
     }
-    
-    func onGroupStateChanged(_ state: Bool) {
-        guard !state,
-              let vc = presentedViewController,
-              let subRoom = vc as? AgoraSubRoomUIManager else {
-            return
-        }
-        
-        subRoom.dismiss(reason: .kickOut,
-                        animated: true)
-    }
 }
 
 // MARK: - AgoraEduUIManagerCallBack
@@ -402,6 +390,7 @@ extension AgoraSmallUIManager: AgoraEduUISubManagerCallBack {
                             roomType: .main)
     }
 }
+
 // MARK: - Creations
 private extension AgoraSmallUIManager {
     func createViews() {
