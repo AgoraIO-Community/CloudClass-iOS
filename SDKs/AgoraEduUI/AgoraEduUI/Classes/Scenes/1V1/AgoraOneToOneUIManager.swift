@@ -47,7 +47,7 @@ import UIKit
     private var toolBarController: AgoraToolBarUIController!
    
     /** 渲染 控制器*/
-    private var renderController: AgoraOneToOneRenderUIController!
+    private var renderController: AgoraRenderMembersUIController!
     
     /** 右边用来切圆角和显示背景色的容器视图*/
     private var rightContentView: UIView!
@@ -166,29 +166,18 @@ extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
 // MARK: - AgoraWindowUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraWindowUIControllerDelegate {
     func startSpreadForUser(with userId: String) -> UIView? {
-        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
-            self.renderController.teacherModel?.rendEnable = false
-            return self.renderController.teacherView
-        } else {
-            self.renderController.studentModel?.rendEnable = false
-            return self.renderController.studentView
-        }
+        self.renderController.setRenderEnable(with: userId,
+                                              rendEnable: false)
+        return self.renderController.getRenderViewForUser(with: userId)
     }
     
     func willStopSpreadForUser(with userId: String) -> UIView? {
-        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
-            return self.renderController.teacherView
-        } else {
-            return self.renderController.studentView
-        }
+        return self.renderController.getRenderViewForUser(with: userId)
     }
     
     func didStopSpreadForUser(with userId: String) {
-        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
-            self.renderController.teacherModel?.rendEnable = true
-        } else {
-            self.renderController.studentModel?.rendEnable = true
-        }
+        self.renderController.setRenderEnable(with: userId,
+                                              rendEnable: true)
     }
 }
 
@@ -331,17 +320,6 @@ extension AgoraOneToOneUIManager: AgoraRenderUIControllerDelegate {
             }
         }
     }
-    
-    func onRequestSpread(firstOpen: Bool,
-                         userId: String,
-                         streamId: String,
-                         fromView: UIView,
-                         xaxis: CGFloat,
-                         yaxis: CGFloat,
-                         width: CGFloat,
-                         height: CGFloat) {
-        return
-    }
 }
 
 // MARK: - AgoraRenderMenuUIControllerDelegate
@@ -404,8 +382,7 @@ private extension AgoraOneToOneUIManager {
         contentView.addSubview(stateController.view)
         
         globalController = AgoraRoomGlobalUIController(context: contextPool,
-                                                       delegate: nil,
-                                                       subRoom: subRoom)
+                                                       delegate: nil)
         globalController.roomDelegate = self
         
         // 视图层级：白板，大窗，工具
@@ -419,8 +396,11 @@ private extension AgoraOneToOneUIManager {
         rightContentView.clipsToBounds = true
         contentView.addSubview(rightContentView)
         
-        renderController = AgoraOneToOneRenderUIController(context: contextPool,
-                                                           delegate: self)
+        renderController = AgoraRenderMembersUIController(context: contextPool,
+                                                          delegate: self,
+                                                          containRoles: [.student,.teacher],
+                                                          dataSource: [AgoraRenderMemberViewModel.defaultNilValue(),
+                                                                       AgoraRenderMemberViewModel.defaultNilValue()])
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
         

@@ -50,10 +50,8 @@ import AgoraWidget
         return AgoraClassStateUIController(context: contextPool,
                                            delegate: self)
     }()
-    /** 学生列表渲染 控制器*/
-    private var studentsRenderController: AgoraStudentsRenderUIController!
     /** 老师渲染 控制器*/
-    private var teacherRenderController: AgoraTeacherRenderUIController!
+    private var teacherRenderController: AgoraRenderMembersUIController!
     /** 白板 控制器*/
     private var boardController: AgoraBoardUIController!
     
@@ -118,33 +116,27 @@ import AgoraWidget
 // MARK: - AgoraWindowUIControllerDelegate
 extension AgoraLectureUIManager: AgoraWindowUIControllerDelegate {
     func startSpreadForUser(with userId: String) -> UIView? {
-        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
-            self.teacherRenderController.setRenderEnable(with: userId,
-                                                         rendEnable: false)
-            return self.teacherRenderController.renderViewForUser(with: userId)
-        } else {
-            self.studentsRenderController.setRenderEnable(with: userId,
-                                                          rendEnable: false)
-            return self.studentsRenderController.renderViewForUser(with: userId)
+        guard userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
+            return nil
         }
+        self.teacherRenderController.setRenderEnable(with: userId,
+                                                     rendEnable: false)
+        return self.teacherRenderController.getRenderViewForUser(with: userId)
     }
     
     func willStopSpreadForUser(with userId: String) -> UIView? {
-        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
-            return self.teacherRenderController.renderViewForUser(with: userId)
-        } else {
-            return self.studentsRenderController.renderViewForUser(with: userId)
+        guard userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
+            return nil
         }
+        return self.teacherRenderController.getRenderViewForUser(with: userId)
     }
     
     func didStopSpreadForUser(with userId: String) {
-        if userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid {
-            self.teacherRenderController.setRenderEnable(with: userId,
-                                                         rendEnable: true)
-        } else {
-            self.studentsRenderController.setRenderEnable(with: userId,
-                                                          rendEnable: true)
+        guard userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
+            return
         }
+        self.teacherRenderController.setRenderEnable(with: userId,
+                                                     rendEnable: true)
     }
 }
 
@@ -217,17 +209,6 @@ extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }
         }
-    }
-    
-    func onRequestSpread(firstOpen: Bool,
-                         userId: String,
-                         streamId: String,
-                         fromView: UIView,
-                         xaxis: CGFloat,
-                         yaxis: CGFloat,
-                         width: CGFloat,
-                         height: CGFloat) {
-        return
     }
 }
 
@@ -349,17 +330,13 @@ private extension AgoraLectureUIManager {
         contentView.addSubview(stateController.view)
         
         globalController = AgoraRoomGlobalUIController(context: contextPool,
-                                                       delegate: nil,
-                                                       subRoom: subRoom)
+                                                       delegate: nil)
         globalController.roomDelegate = self
         
-        studentsRenderController = AgoraStudentsRenderUIController(context: contextPool,
-                                                                   delegate: self)
-        addChild(studentsRenderController)
-        contentView.addSubview(studentsRenderController.view)
-        
-        teacherRenderController = AgoraTeacherRenderUIController(context: contextPool,
-                                                                 delegate: self)
+        teacherRenderController = AgoraRenderMembersUIController(context: contextPool,
+                                                                 delegate: self,
+                                                                 containRoles: [.teacher],
+                                                                 dataSource: [AgoraRenderMemberViewModel.defaultNilValue()])
         teacherRenderController.view.layer.cornerRadius = AgoraFit.scale(2)
         teacherRenderController.view.clipsToBounds = true
         addChild(teacherRenderController)
@@ -453,15 +430,9 @@ private extension AgoraLectureUIManager {
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
-        studentsRenderController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.left.equalTo()(0)
-            make?.right.equalTo()(boardController.view.mas_right)
-            make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-2))
-        }
         teacherRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.left.equalTo()(studentsRenderController.view.mas_right)?.offset()(AgoraFit.scale(2))
+            make?.left.equalTo()(boardController.view.mas_right)?.offset()(AgoraFit.scale(2))
             make?.right.equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(112))
         }

@@ -249,22 +249,6 @@ extension AgoraWindowUIController: AgoraWidgetMessageObserver {
         }
     }
 }
-// MARK: - AgoraRenderMemberViewDelegate
-extension AgoraWindowUIController: AgoraRenderMemberViewDelegate {
-    func memberViewRender(memberView: AgoraRenderMemberView,
-                          in view: UIView,
-                          renderID: String) {
-        startRenderOnWindow(view,
-                            isCamera: true,
-                            streamId: renderID)
-    }
-
-    func memberViewCancelRender(memberView: AgoraRenderMemberView,
-                                renderID: String) {
-        
-    }
-}
-
 
 // MARK: - AgoraEduStreamHandler
 extension AgoraWindowUIController: AgoraEduStreamHandler {
@@ -293,7 +277,7 @@ extension AgoraWindowUIController: AgoraEduMediaHandler {
               case AgoraStreamWindowType.video(let renderInfo) = type else {
                   return
               }
-        renderInfo.renderModel.volume = volume
+        renderInfo.renderView.updateVolume(volume)
     }
 }
 
@@ -407,8 +391,9 @@ private extension AgoraWindowUIController {
             delegate?.startSpreadForUser(with: renderInfo.userUuid)
         }
         // 开启渲染视频窗大流
-        renderView.setModel(model: renderModel,
-                            delegate: self)
+        startRenderOnWindow(renderView,
+                            isCamera: true,
+                            streamId: stream.streamUuid)
     }
     
     func addScreenSharingInfo(stream: AgoraEduContextStreamInfo,
@@ -433,19 +418,20 @@ private extension AgoraWindowUIController {
         case AgoraStreamWindowType.video(let renderInfo) = type else {
             return
         }
-        renderInfo.renderModel.updateStream(stream)
+        let oldValue = renderInfo.renderModel
+        renderInfo.renderModel = AgoraRenderMemberViewModel.model(oldValue: oldValue,
+                                                                  stream: stream,
+                                                                  windowFlag: true)
     }
     
     func makeRenderModel(userId: String,
                          stream: AgoraEduContextStreamInfo) -> AgoraRenderMemberViewModel {
         guard let user = userController.getAllUserList().first(where: {$0.userUuid == userId}) else {
-            return AgoraRenderMemberViewModel()
+            return AgoraRenderMemberViewModel.defaultNilValue()
         }
-        var model = AgoraRenderMemberViewModel()
-        model.uuid = user.userUuid
-        model.name = user.userName
-        model.updateStream(stream)
-        model.rendEnable = true
+        var model = AgoraRenderMemberViewModel.model(user: user,
+                                                     stream: stream,
+                                                     windowFlag: false)
         return model
     }
     
@@ -458,7 +444,7 @@ private extension AgoraWindowUIController {
         var userId: String?
         switch type {
         case .video(let cameraInfo):
-            userId = cameraInfo.renderModel.uuid
+            userId = cameraInfo.renderModel.userId
         case .screen(let screenInfo):
             userId = screenInfo.userUuid
         }

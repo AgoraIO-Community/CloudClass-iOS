@@ -63,7 +63,7 @@ import AgoraWidget
     private var globalController: AgoraRoomGlobalUIController!
    
     /** 远程视窗渲染 控制器*/
-    private var renderController: AgoraMembersHorizeRenderUIController!
+    private var renderController: AgoraSmallMembersUIController!
     
     /** 白板的渲染 控制器*/
     private var boardController: AgoraBoardUIController!
@@ -232,11 +232,11 @@ extension AgoraSubRoomUIManager: AgoraWindowUIControllerDelegate {
     func startSpreadForUser(with userId: String) -> UIView? {
         self.renderController.setRenderEnable(with: userId,
                                               rendEnable: false)
-        return self.renderController.renderViewForUser(with: userId)
+        return self.renderController.getRenderViewForUser(with: userId)
     }
     
     func willStopSpreadForUser(with userId: String) -> UIView? {
-        return self.renderController.renderViewForUser(with: userId)
+        return self.renderController.getRenderViewForUser(with: userId)
     }
     
     func didStopSpreadForUser(with userId: String) {
@@ -423,9 +423,10 @@ private extension AgoraSubRoomUIManager {
                                                        subRoom: subRoom)
         globalController.roomDelegate = self
         
-        renderController = AgoraMembersHorizeRenderUIController(context: contextPool,
-                                                                subRoom: subRoom)
-        renderController.delegate = self
+        renderController = AgoraSmallMembersUIController(context: contextPool,
+                                                         delegate: self,
+                                                         containRoles: [.student],
+                                                         subRoom: subRoom)
         addChild(renderController)
         contentView.addSubview(renderController.view)
         

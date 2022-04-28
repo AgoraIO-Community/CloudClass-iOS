@@ -169,6 +169,8 @@ extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
                                                  with: user.userName)
         AgoraToast.toast(msg: final,
                          type: .notice)
+        
+        showRewardAnimation()
     }
 }
 

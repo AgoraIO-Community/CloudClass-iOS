@@ -43,61 +43,74 @@ extension AgoraEduContextMediaStreamType {
     }
 }
 
-//extension AgoraRenderMemberViewModel {
-//    static func model(with userController: AgoraEduUserContext,
-//                      streamController: AgoraEduStreamContext,
-//                      uuid: String,
-//                      name: String,
-//                      rendEnable: Bool = true) -> AgoraRenderMemberViewModel {
-//        var model = AgoraRenderMemberViewModel()
-//        model.uuid = uuid
-//        model.name = name
-//        let reward = userController.getUserRewardCount(userUuid: uuid)
-//        model.rewardCount = reward
-//        let stream = streamController.getStreamList(userUuid: uuid)?.first{$0.videoSourceType != .screen}
-//        model.updateStream(stream,
-//                           rendEnable: rendEnable)
-//        return model
-//    }
-//
-//    func updateStream(_ stream: AgoraEduContextStreamInfo?,
-//                      rendEnable: Bool = true) {
-//        if let `stream` = stream {
-//            self.rendEnable = rendEnable
-//            self.streamID = stream.streamUuid
-//            // audio
-//            if stream.streamType.hasAudio,
-//               stream.audioSourceState == .open {
-//                self.audioState = .on
-//            } else if stream.streamType.hasAudio,
-//                      stream.audioSourceState == .close {
-//                self.audioState = .off
-//            } else if stream.streamType.hasAudio == false,
-//                      stream.audioSourceState == .open {
-//                self.audioState = .forbidden
-//            } else {
-//                self.audioState = .off
-//            }
-//            // video
-//            if stream.streamType.hasVideo,
-//               stream.videoSourceState == .open {
-//                self.videoState = .on
-//            } else if stream.streamType.hasVideo,
-//                      stream.videoSourceState == .close {
-//                self.videoState = .off
-//            } else if stream.streamType.hasVideo == false,
-//                      stream.videoSourceState == .open {
-//                self.videoState = .forbidden
-//            } else {
-//                self.videoState = .off
-//            }
-//        } else {
-//            self.streamID = nil
-//            self.audioState = .off
-//            self.videoState = .off
-//        }
-//    }
-//}
+// MARK: - AgoraRenderMemberViewModel
+extension AgoraRenderMemberViewModel {
+    static func model(user: AgoraEduContextUserInfo,
+                      stream: AgoraEduContextStreamInfo?,
+                      windowFlag: Bool = false) -> AgoraRenderMemberViewModel {
+        var model = AgoraRenderMemberViewModel.defaultNilValue()
+        /// user
+        model.userId = user.userUuid
+        model.userName = user.userName
+        model.userState = windowFlag ? .window : .normal
+        
+        model.updateStream(stream: stream)
+        
+        return model
+    }
+    
+    static func model(oldValue: AgoraRenderMemberViewModel,
+                      stream: AgoraEduContextStreamInfo?,
+                      windowFlag: Bool = false) -> AgoraRenderMemberViewModel {
+        var model = AgoraRenderMemberViewModel.defaultNilValue()
+        /// user
+        model.userId = oldValue.userId
+        model.userName = oldValue.userName
+        model.userState = windowFlag ? .window : .normal
+        
+        model.updateStream(stream: stream)
+        
+        return model
+    }
+    
+    private mutating func updateStream(stream: AgoraEduContextStreamInfo?) {
+        /// stream
+        guard let `stream` = stream else {
+            self.streamId = nil
+            self.audioState = .deviceOff
+            self.videoState = .deviceOff
+            return
+        }
+        
+        self.streamId = stream.streamUuid
+        // audio
+        if stream.streamType.hasAudio,
+           stream.audioSourceState == .open {
+            self.audioState = .normal
+        } else if stream.streamType.hasAudio,
+                  stream.audioSourceState == .close {
+            self.audioState = .deviceOff
+        } else if stream.streamType.hasAudio == false,
+                  stream.audioSourceState == .open {
+            self.audioState = .streamForbidden
+        } else {
+            self.audioState = .deviceOff
+        }
+        // video
+        if stream.streamType.hasVideo,
+           stream.videoSourceState == .open {
+            self.videoState = .normal
+        } else if stream.streamType.hasVideo,
+                  stream.videoSourceState == .close {
+            self.videoState = .deviceOff
+        } else if stream.streamType.hasVideo == false,
+                  stream.videoSourceState == .open {
+            self.videoState = .streamForbidden
+        } else {
+            self.videoState = .deviceOff
+        }
+    }
+}
 
 extension AgoraEduContextStreamInfo {
     func toEmptyStream() -> AgoraEduContextStreamInfo {
