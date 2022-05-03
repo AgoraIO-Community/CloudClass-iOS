@@ -8,9 +8,9 @@
 import UIKit
 
 class AgoraRenderMemberMicView: UIView {
-    private var imageView: UIImageView!
+    var imageView: UIImageView!
     
-    private var animaView: UIImageView!
+    var animaView: UIImageView!
     
     private var progressLayer: CAShapeLayer!
     
@@ -37,30 +37,9 @@ class AgoraRenderMemberMicView: UIView {
     }
         
     public func setVolume(_ value: Int) {
-//        guard micState == .on else {
-//            return
-//        }
         let floatValue = CGFloat(value)
         self.progressLayer.strokeEnd = CGFloat(floatValue - 55.0) / (255.0 - 55.0)
     }
-    
-//    public func setState(_ state: AgoraRenderMicViewState) {
-//        guard micState != state else {
-//            return
-//        }
-//        micState = state
-//        switch state {
-//        case .on:
-//            imageView.image = UIImage.agedu_named("ic_mic_status_on")
-//            animaView.isHidden = false
-//        case .off:
-//            imageView.image = UIImage.agedu_named("ic_mic_status_off")
-//            animaView.isHidden = true
-//        case .forbidden:
-//            imageView.image = UIImage.agedu_named("ic_mic_status_forbidden")
-//            animaView.isHidden = true
-//        }
-//    }
 }
 
 private extension AgoraRenderMemberMicView {

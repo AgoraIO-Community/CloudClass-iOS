@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 
+// MARK: - Render
 enum AgoraRenderUserState {
     case normal, none, window
     
@@ -21,27 +22,19 @@ enum AgoraRenderUserState {
 
 enum AgoraRenderMediaState {
     case normal, deviceOff, streamForbidden
+}
+
+// MARK: - StreamWindow
+enum AgoraStreamWindowType: Equatable {
+    case video(AgoraStreamWindowCameraInfo)
+    case screen(AgoraStreamWindowSharingInfo)
     
-    enum AgoraRenderMediaType {
-        case video, audio
-    }
-    
-    func image(_ type: AgoraRenderMediaType) -> UIImage? {
-        var imageName = ""
-        switch type {
-        case .video:
-            switch self {
-            case .deviceOff:        imageName = "ic_member_device_off"
-            case .streamForbidden:  imageName = "ic_member_device_forbidden"
-            default:                break
-            }
-        case .audio:
-            switch self {
-            case .normal:           imageName = "ic_mic_status_on"
-            case .deviceOff:        imageName = "ic_mic_status_off"
-            case .streamForbidden:  imageName = "ic_mic_status_forbidden"
-            }
+    static func == (lhs: Self,
+                    rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case (let .video(_), let .video(_)):   return true
+        case (let .screen(_), let .screen(_)): return true
+        default:                               return false
         }
-        return UIImage.agedu_named(imageName)
     }
 }

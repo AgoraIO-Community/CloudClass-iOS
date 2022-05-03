@@ -18,42 +18,6 @@ protocol AgoraWindowUIControllerDelegate: NSObjectProtocol {
     func didStopSpreadForUser(with userId: String)
 }
 
-fileprivate class AgoraCameraWindowInfo: NSObject {
-    var renderModel: AgoraRenderMemberViewModel
-    var renderView: AgoraRenderMemberView
-    
-    init(renderModel: AgoraRenderMemberViewModel,
-         renderView: AgoraRenderMemberView) {
-        self.renderModel = renderModel
-        self.renderView = renderView
-    }
-}
-
-fileprivate class AgoraSharingWindowInfo: NSObject {
-    var userUuid: String
-    var streamUuid: String
-    
-    init(userUuid: String,
-         streamUuid: String) {
-        self.userUuid = userUuid
-        self.streamUuid = streamUuid
-    }
-}
-
-fileprivate enum AgoraStreamWindowType: Equatable {
-    case video(AgoraCameraWindowInfo)
-    case screen(AgoraSharingWindowInfo)
-    
-    static func == (lhs: Self,
-                    rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case (let .video(_), let .video(_)):   return true
-        case (let .screen(_), let .screen(_)): return true
-        default:                               return false
-        }
-    }
-}
-
 class AgoraWindowUIController: UIViewController {
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
@@ -142,6 +106,8 @@ class AgoraWindowUIController: UIViewController {
     
     func viewWillInactive() {
         widgetController.remove(self)
+        widgetController.removeObserver(forWidgetSyncFrame: self,
+                                        widgetId: kWindowWidgetId)
         streamController.unregisterStreamEventHandler(self)
         contextPool.group.unregisterGroupEventHandler(self)
         releaseAllWidgets()
@@ -203,9 +169,10 @@ extension AgoraWindowUIController: AgoraWidgetSyncFrameObserver {
 
         let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
 
+        // zIndexs
         self.view.bringSubviewToFront(targetView)
         self.view.layoutIfNeeded()
-
+        
         targetView.mas_remakeConstraints { make in
             make?.left.equalTo()(frame.minX)
             make?.top.equalTo()(frame.minY)
@@ -254,17 +221,17 @@ extension AgoraWindowUIController: AgoraWidgetMessageObserver {
 extension AgoraWindowUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStreamInfo(stream)
+        self.updateCameraRenderInfo(stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStreamInfo(stream)
+        self.updateCameraRenderInfo(stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        self.updateStreamInfo(stream.toEmptyStream())
+        self.updateCameraRenderInfo(stream.toEmptyStream())
     }
 }
 
@@ -325,12 +292,8 @@ private extension AgoraWindowUIController {
         
         view.addSubview(widget.view)
         
-        let syncFrame = contextPool.widget.getWidgetSyncFrame(widget.info.widgetId)
+        let syncFrame = widgetController.getWidgetSyncFrame(widget.info.widgetId)
         let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
-//        let frame = CGRect(x: 0,
-//                           y: 0,
-//                           width: self.view.width,
-//                           height: self.view.height)
         
         widget.view.mas_makeConstraints { make in
             make?.left.equalTo()(frame.minX)
@@ -338,6 +301,9 @@ private extension AgoraWindowUIController {
             make?.width.equalTo()(frame.width)
             make?.height.equalTo()(frame.height)
         }
+        
+        widgetController.addObserver(forWidgetSyncFrame: self,
+                                     widgetId: widgetId)
     }
     
     func releaseWidget(_ widgetId: String) {
@@ -376,11 +342,10 @@ private extension AgoraWindowUIController {
                                           stream: stream)
         let renderView = AgoraRenderMemberView(frame: .zero)
         
-        let spreadInfo = AgoraCameraWindowInfo(renderModel: renderModel,
-                                               renderView: renderView)
+        let spreadInfo = AgoraStreamWindowCameraInfo(renderModel: renderModel,
+                                                     renderView: renderView)
 
         widget.view.addSubview(renderView)
-        spreadInfo.renderView = renderView
         renderView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
@@ -391,9 +356,10 @@ private extension AgoraWindowUIController {
             delegate?.startSpreadForUser(with: renderInfo.userUuid)
         }
         // 开启渲染视频窗大流
-        startRenderOnWindow(renderView,
-                            isCamera: true,
-                            streamId: stream.streamUuid)
+        startHandleVideoOnWindow(renderView,
+                                 isCamera: true,
+                                 renderMemberModel: renderModel,
+                                 streamId: stream.streamUuid)
     }
     
     func addScreenSharingInfo(stream: AgoraEduContextStreamInfo,
@@ -402,20 +368,20 @@ private extension AgoraWindowUIController {
         guard let targetView =  widgetDic[widget.info.widgetId]?.view else {
             return
         }
-        let sharingInfo = AgoraSharingWindowInfo(userUuid: renderInfo.userUuid,
+        let sharingInfo = AgoraStreamWindowSharingInfo(userUuid: renderInfo.userUuid,
                                                  streamUuid: renderInfo.streamId)
         modelDic[widget.info.widgetId] = .screen(sharingInfo)
         // 开启渲染屏幕共享
-        startRenderOnWindow(targetView,
-                            isCamera: false,
-                            streamId: renderInfo.streamId)
+        startHandleVideoOnWindow(targetView,
+                                 isCamera: false,
+                                 streamId: renderInfo.streamId)
     }
     
-    func updateStreamInfo(_ stream: AgoraEduContextStreamInfo) {
+    func updateCameraRenderInfo(_ stream: AgoraEduContextStreamInfo) {
         let widgetId = stream.streamUuid.makeWidgetId()
         guard stream.videoSourceType != .screen,
         let type = modelDic[widgetId],
-        case AgoraStreamWindowType.video(let renderInfo) = type else {
+        case AgoraStreamWindowType.video(var renderInfo) = type else {
             return
         }
         let oldValue = renderInfo.renderModel
@@ -451,21 +417,39 @@ private extension AgoraWindowUIController {
         return userId
     }
     
-    func startRenderOnWindow(_ view: UIView,
-                             isCamera: Bool,
-                             streamId: String) {
-
-        
-        let renderConfig = AgoraEduContextRenderConfig()
-        renderConfig.mode = isCamera ? .hidden : .fit
-        renderConfig.isMirror = false
-        streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
-                                                            level: .high)
-        
-        contextPool.media.startRenderVideo(roomUuid: roomId,
-                                           view: view,
-                                           renderConfig: renderConfig,
-                                           streamUuid: streamId)
+    func startHandleVideoOnWindow(_ view: UIView,
+                                  isCamera: Bool,
+                                  renderMemberModel: AgoraRenderMemberViewModel? = nil,
+                                  streamId: String) {
+        if isCamera {
+            guard let model = renderMemberModel,
+                  let renderView = view as? AgoraRenderMemberView else {
+                return
+            }
+            model.setRenderMemberView(view: renderView)
+            
+            let renderConfig = AgoraEduContextRenderConfig()
+            renderConfig.mode = .hidden
+            renderConfig.isMirror = false
+            streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
+                                                                level: .high)
+            
+            contextPool.media.startRenderVideo(roomUuid: roomId,
+                                               view: renderView.videoView,
+                                               renderConfig: renderConfig,
+                                               streamUuid: streamId)
+        } else {
+            let renderConfig = AgoraEduContextRenderConfig()
+            renderConfig.mode = .fit
+            renderConfig.isMirror = false
+            streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
+                                                                level: .high)
+            
+            contextPool.media.startRenderVideo(roomUuid: roomId,
+                                               view: view,
+                                               renderConfig: renderConfig,
+                                               streamUuid: streamId)
+        }
     }
     
     func stopRenderOnWindow(streamId: String,
@@ -475,6 +459,11 @@ private extension AgoraWindowUIController {
            isCamera {
             delegate?.didStopSpreadForUser(with: uid)
         }
+    }
+    
+    func setRenderMemberView(model: AgoraRenderMemberViewModel,
+                             view: AgoraRenderMemberView) {
+        
     }
 }
 

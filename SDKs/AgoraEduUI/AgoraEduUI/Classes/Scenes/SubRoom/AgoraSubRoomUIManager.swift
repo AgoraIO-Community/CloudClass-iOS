@@ -111,6 +111,7 @@ import AgoraWidget
         super.viewDidLoad()
         createViews()
         createConstraint()
+        updateRenderCollectionLayout()
         
         AgoraLoading.hide()
         AgoraLoading.loading()
@@ -426,6 +427,7 @@ private extension AgoraSubRoomUIManager {
         renderController = AgoraSmallMembersUIController(context: contextPool,
                                                          delegate: self,
                                                          containRoles: [.student],
+                                                         max: 6,
                                                          subRoom: subRoom)
         addChild(renderController)
         contentView.addSubview(renderController.view)
@@ -556,6 +558,21 @@ private extension AgoraSubRoomUIManager {
         }
     }
     
+    func updateRenderCollectionLayout() {
+        view.layoutIfNeeded()
+        let kItemGap: CGFloat = AgoraFit.scale(4)
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        let itemWidth = (renderController.view.bounds.width + kItemGap) / 7.0 - kItemGap
+        
+        layout.itemSize = CGSize(width: itemWidth,
+                                 height: renderController.view.bounds.height)
+        layout.minimumLineSpacing = kItemGap
+        renderController.updateLayout(layout)
+    }
+    
     func teacherInLocalSubRoom() -> Bool {
         var flag = false
         guard let subRoomList = contextPool.group.getSubRoomList(),
@@ -573,4 +590,3 @@ private extension AgoraSubRoomUIManager {
         return flag
     }
 }
-

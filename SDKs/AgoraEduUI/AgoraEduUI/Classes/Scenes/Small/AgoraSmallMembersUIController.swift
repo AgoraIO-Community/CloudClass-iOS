@@ -11,18 +11,16 @@ import Foundation
 
 class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
     private var teacherModel: AgoraRenderMemberViewModel? {
-        willSet {
-            if let new = newValue {
-                handleMedia(model: new)
-            } else if let streamId = teacherModel?.streamId {
-                contextPool.media.stopRenderVideo(roomUuid: roomId,
-                                                  streamUuid: streamId)
-                contextPool.media.stopPlayAudio(roomUuid: roomId,
-                                                streamUuid: streamId)
+        didSet {
+            teacherView.isHidden = (teacherModel == nil)
+            if let model = teacherModel {
+                setViewWithModel(view: teacherView,
+                                 model: model)
             }
+            updateConstraint()
         }
     }
-    private var teacherView: AgoraRenderMemberView?
+    private lazy var teacherView = AgoraRenderMemberView(frame: .zero)
     
     override func viewWillActive() {
         contextPool.group.registerGroupEventHandler(self)
@@ -62,20 +60,97 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
                                   rendEnable: Bool) {
         if let model = self.teacherModel,
            model.userId == userId {
-            self.teacherModel?.userState = .window
+            if !rendEnable {
+                windowArr.append(userId)
+            } else {
+                windowArr.removeAll(userId)
+            }
+            updateModel(userId: userId)
         } else {
             super.setRenderEnable(with: userId,
                                   rendEnable: rendEnable)
         }
     }
     
-    override func updateStream(stream: AgoraEduContextStreamInfo?) {
+    override func updateModel(userId: String) {
         if let model = teacherModel,
-           stream?.owner.userUuid == model.userId {
-            teacherModel = makeModel(userId: model.userId,
-                                     windowFlag: (model.userState == .window))
+           model.userId == userId {
+            teacherModel = makeModel(userId: model.userId)
         } else {
-            super.updateStream(stream: stream)
+            super.updateModel(userId: userId)
+        }
+    }
+    
+    override func updateConstraint() {
+        let sigleWidth = (layout.scrollDirection == .horizontal) ? layout.itemSize.width : layout.itemSize.height
+        let kItemGap = layout.minimumLineSpacing
+        
+        let teacherWidth = (teacherModel == nil) ? 0 : sigleWidth
+        if teacherView.width != teacherWidth {
+            teacherView.mas_remakeConstraints { make in
+                make?.top.left().bottom().equalTo()(teacherView.superview)
+                make?.width.equalTo()(teacherWidth)
+            }
+        }
+        // 最多显示六个学生
+        let f_count = CGFloat(self.dataSource.count > maxCount ? maxCount: self.dataSource.count)
+        let studentWidth = (sigleWidth + kItemGap) * f_count - kItemGap
+        if collectionView.width != studentWidth {
+            collectionView.mas_remakeConstraints { make in
+                make?.right.top().bottom().equalTo()(contentView)
+                make?.left.equalTo()(teacherView.mas_right)?.offset()(kItemGap)
+                make?.width.equalTo()(studentWidth)
+            }
+        }
+        let pageEnable = (self.dataSource.count <= maxCount)
+        self.leftButton?.isHidden = pageEnable
+        self.rightButton?.isHidden = pageEnable
+    }
+    
+    override func createViews() {
+        super.createViews()
+        
+        let ui = AgoraUIGroup()
+        teacherView.layer.cornerRadius = ui.frame.small_render_cell_corner_radius
+        teacherView.clipsToBounds = true
+        teacherView.isHidden = true
+        contentView.addSubview(teacherView)
+        
+        let tapTeacher = UITapGestureRecognizer(target: self,
+                                                action: #selector(onClickTeacher(_:)))
+        tapTeacher.numberOfTapsRequired = 1
+        tapTeacher.numberOfTouchesRequired = 1
+        tapTeacher.delaysTouchesBegan = true
+        teacherView.addGestureRecognizer(tapTeacher)
+    }
+    
+    override func createConstraint() {
+        contentView.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.top.equalTo()(0)
+            make?.bottom.equalTo()(0)
+        }
+        
+        collectionView.mas_makeConstraints { make in
+            make?.right.top().bottom().equalTo()(0)
+            make?.left.equalTo()(contentView.mas_right)
+        }
+
+        teacherView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
+        
+        guard expandFlag else {
+            return
+        }
+        
+        leftButton?.mas_makeConstraints { make in
+            make?.left.top().bottom().equalTo()(collectionView)
+            make?.width.equalTo()(24)
+        }
+        rightButton?.mas_makeConstraints { make in
+            make?.right.top().bottom().equalTo()(collectionView)
+            make?.width.equalTo()(24)
         }
     }
 }
@@ -119,10 +194,7 @@ extension AgoraSmallMembersUIController {
         guard user.userRole == .teacher else {
             return
         }
-        let stream = contextPool.stream.getStreamList(userUuid: user.userUuid)?.first(where: {$0.videoSourceType == .camera})
-        self.teacherModel = AgoraRenderMemberViewModel.model(user: user,
-                                                             stream: stream,
-                                                             windowFlag: false)
+        setTeacherModel()
     }
     
     override func onRemoteUserLeft(user: AgoraEduContextUserInfo,
@@ -138,30 +210,31 @@ extension AgoraSmallMembersUIController {
 extension AgoraSmallMembersUIController {
     override func onVolumeUpdated(volume: Int,
                                   streamUuid: String) {
-        super.onVolumeUpdated(volume: volume,
-                              streamUuid: streamUuid)
-        
-        guard let model = teacherModel,
-              model.streamId == streamUuid,
-              let view = teacherView else {
-            return
+        if let model = teacherModel,
+              model.streamId == streamUuid {
+            teacherView.updateVolume(volume)
+        } else {
+            super.onVolumeUpdated(volume: volume,
+                                  streamUuid: streamUuid)
         }
-        view.updateVolume(volume)
     }
 }
 
 // MARK: - private
 private extension AgoraSmallMembersUIController {
+    @objc func onClickTeacher(_ sender: UIView) {
+        guard let model = teacherModel else {
+            return
+        }
+        delegate?.onClickMemberAt(view: teacherView,
+                                  UUID: model.userId)
+    }
+    
     func setTeacherModel() {
         guard teacherModel == nil,
               let teacherInfo = contextPool.user.getUserList(role: .teacher)?.first else {
             return
         }
-        let windowActive = !widgetController.getAllWidgetActivity().keys.contains(where: {$0.contains(kWindowWidgetId)})
-        let windowContains = windowArr.contains(teacherInfo.userUuid)
-        let stream = contextPool.stream.getStreamList(userUuid: teacherInfo.userUuid)?.first(where: {$0.videoSourceType == .camera})
-        self.teacherModel = AgoraRenderMemberViewModel.model(user: teacherInfo,
-                                                             stream: stream,
-                                                             windowFlag: (windowActive && windowContains))
+        self.teacherModel = makeModel(userId: teacherInfo.userUuid)
     }
 }

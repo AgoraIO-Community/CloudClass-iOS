@@ -75,10 +75,15 @@ private extension AgoraRenderMemberView {
         layer.borderWidth = ui.frame.render_cell_border_width
         layer.borderColor = ui.color.render_cell_border_color
         
-        addSubview(videoView)
-        
+        videoMaskView.backgroundColor = ui.color.render_cell_bg_color
         videoMaskView.image = UIImage.agedu_named("ic_member_no_user")
         addSubview(videoMaskView)
+        
+        videoView.backgroundColor = ui.color.render_cell_bg_color
+        videoView.layer.borderWidth = ui.frame.render_cell_border_width
+        videoView.layer.cornerRadius = max(ui.frame.one_one_to_render_cell_corner_radius,
+                                           ui.frame.small_render_cell_corner_radius)
+        addSubview(videoView)
         
         nameLabel.textColor = ui.color.render_label_color
         nameLabel.font = UIFont.systemFont(ofSize: 12)
@@ -97,7 +102,8 @@ private extension AgoraRenderMemberView {
             make?.left.right().top().bottom()?.equalTo()(0)
         }
         videoMaskView.mas_makeConstraints { make in
-            make?.left.right().top().bottom()?.equalTo()(0)
+            make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.38)
+            make?.center.equalTo()(0)
         }
         micView.mas_makeConstraints { make in
             make?.left.equalTo()(2)

@@ -336,6 +336,7 @@ private extension AgoraLectureUIManager {
         teacherRenderController = AgoraRenderMembersUIController(context: contextPool,
                                                                  delegate: self,
                                                                  containRoles: [.teacher],
+                                                                 max: 1,
                                                                  dataSource: [AgoraRenderMemberViewModel.defaultNilValue()])
         teacherRenderController.view.layer.cornerRadius = AgoraFit.scale(2)
         teacherRenderController.view.clipsToBounds = true

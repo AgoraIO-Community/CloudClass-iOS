@@ -8,10 +8,15 @@
 import AgoraEduContext
 import AgoraWidget
 
+protocol AgoraBoardUIControllerDelegate: NSObjectProtocol {
+    func onStageStateChanged(stageOn: Bool)
+}
+
 class AgoraBoardUIController: UIViewController {
     private var contextPool: AgoraEduContextPool!
     private var subRoom: AgoraEduSubRoomContext?
     private var boardWidget: AgoraBaseWidget?
+    private weak var delegate: AgoraBoardUIControllerDelegate?
     
     private var widgetController: AgoraEduWidgetContext {
         if let `subRoom` = subRoom {
@@ -47,11 +52,13 @@ class AgoraBoardUIController: UIViewController {
     } 
     
     init(context: AgoraEduContextPool,
+         delegate: AgoraBoardUIControllerDelegate? = nil,
          subRoom: AgoraEduSubRoomContext? = nil) {
         super.init(nibName: nil,
                    bundle: nil)
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
         view.backgroundColor = .white
         
         if let `subRoom` = subRoom {
@@ -214,6 +221,26 @@ extension AgoraBoardUIController: AgoraWidgetActivityObserver {
 extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
+    }
+    
+    func onRoomPropertiesUpdated(changedProperties: [String : Any],
+                                 cause: [String : Any]?,
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        // 讲台开关
+        guard let stageState = changedProperties["stage"] as? Int else {
+            return
+        }
+        if stageState == 1 {
+            delegate?.onStageStateChanged(stageOn: true)
+        } else {
+            delegate?.onStageStateChanged(stageOn: false)
+        }
+    }
+    
+    func onRoomPropertiesDeleted(keyPaths: [String],
+                                 cause: [String : Any]?,
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        
     }
 }
 

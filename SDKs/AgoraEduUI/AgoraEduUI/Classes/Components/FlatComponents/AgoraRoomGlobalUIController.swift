@@ -447,4 +447,39 @@ private extension AgoraRoomGlobalUIController {
             break
         }
     }
+    
+    func showRewardAnimation() {
+        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward", withExtension: "gif"),
+              let data = try? Data(contentsOf: url) else {
+            return
+        }
+        let animatedImage = FLAnimatedImage(animatedGIFData: data)
+        let imageView = FLAnimatedImageView()
+        imageView.animatedImage = animatedImage
+        imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
+            imageView?.removeFromSuperview()
+        }
+        if let window = UIApplication.shared.keyWindow {
+            window.addSubview(imageView)
+            imageView.mas_makeConstraints { make in
+                make?.center.equalTo()(0)
+                make?.width.equalTo()(AgoraFit.scale(238))
+                make?.height.equalTo()(AgoraFit.scale(238))
+            }
+        }
+        // sounds
+        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward",
+                                                      withExtension: "mp3") else {
+            return
+        }
+        
+        var soundId: SystemSoundID = 0;
+        AudioServicesCreateSystemSoundID(rewardUrl as CFURL,
+                                         &soundId);
+        AudioServicesAddSystemSoundCompletion(soundId, nil, nil, {
+            (soundId, clientData) -> Void in
+            AudioServicesDisposeSystemSoundID(soundId)
+        }, nil)
+        AudioServicesPlaySystemSound(soundId)
+    }
 }

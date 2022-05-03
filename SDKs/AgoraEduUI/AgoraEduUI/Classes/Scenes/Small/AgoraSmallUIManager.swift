@@ -80,6 +80,7 @@ import AgoraWidget
     private var windowController: AgoraWindowUIController!
     
     private var isJoinedRoom = false
+    private var curStageOn = true
     
     deinit {
         print("\(#function): \(self.classForCoder)")
@@ -88,8 +89,9 @@ import AgoraWidget
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.createViews()
-        self.createConstraint()
+        createViews()
+        createConstraint()
+        updateRenderCollectionLayout()
         
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -344,6 +346,7 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
             return
         }
         
+        globalController.viewWillInactive()
         boardController.viewWillInactive()
         renderController.viewWillInactive()
         windowController.viewWillInactive()
@@ -368,6 +371,35 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
         
         subRoom.dismiss(reason: .kickOut,
                         animated: true)
+    }
+}
+
+extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
+    func onStageStateChanged(stageOn: Bool) {
+        guard curStageOn != stageOn else {
+            return
+        }
+        curStageOn = stageOn
+        if curStageOn {
+            renderController.view.isHidden = false
+            boardController.view.mas_remakeConstraints { make in
+                make?.height.equalTo()(AgoraFit.scale(307))
+                make?.left.right().bottom().equalTo()(0)
+            }
+
+            renderController.view.mas_remakeConstraints { make in
+                make?.left.right().equalTo()(0)
+                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-1))
+            }
+        } else {
+            renderController.view.isHidden = true
+            boardController.view.mas_remakeConstraints { make in
+                make?.height.equalTo()(AgoraFit.scale(307))
+                make?.left.right().equalTo()(0)
+                make?.centerY.equalTo()(contentView.mas_centerY)?.offset()(UIDevice.current.isPad ? 10 : 7)
+            }
+        }
     }
 }
 
@@ -402,15 +434,18 @@ private extension AgoraSmallUIManager {
         globalController = AgoraRoomGlobalUIController(context: contextPool,
                                                        delegate: self)
         globalController.roomDelegate = self
+        contentView.addSubview(globalController.view)
         
         renderController = AgoraSmallMembersUIController(context: contextPool,
                                                          delegate: self,
-                                                         containRoles: [.student])
+                                                         containRoles: [.student],
+                                                         max: 6)
         addChild(renderController)
         contentView.addSubview(renderController.view)
         
         // 视图层级：白板，大窗，工具
-        boardController = AgoraBoardUIController(context: contextPool)
+        boardController = AgoraBoardUIController(context: contextPool,
+                                                 delegate: self)
         boardController.view.clipsToBounds = true
         addChild(boardController)
         contentView.addSubview(boardController.view)
@@ -480,10 +515,6 @@ private extension AgoraSmallUIManager {
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(UIDevice.current.isPad ? 20 : 14)
         }
-        let width = max(UIScreen.main.bounds.width,
-                        UIScreen.main.bounds.height)
-        let height = min(UIScreen.main.bounds.width,
-                         UIScreen.main.bounds.height)
         
         boardController.view.mas_makeConstraints { make in
             make?.height.equalTo()(AgoraFit.scale(307))
@@ -532,5 +563,20 @@ private extension AgoraSmallUIManager {
         classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
+    }
+    
+    func updateRenderCollectionLayout() {
+        view.layoutIfNeeded()
+        let kItemGap: CGFloat = AgoraFit.scale(4)
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        let itemWidth = (renderController.view.bounds.width + kItemGap) / 7.0 - kItemGap
+        
+        layout.itemSize = CGSize(width: itemWidth,
+                                 height: renderController.view.bounds.height)
+        layout.minimumLineSpacing = kItemGap
+        renderController.updateLayout(layout)
     }
 }

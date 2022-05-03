@@ -85,6 +85,9 @@ import UIKit
         } else {
             self.createPhoneViews()
         }
+        
+        self.updateRenderLayout()
+         
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
@@ -396,11 +399,24 @@ private extension AgoraOneToOneUIManager {
         rightContentView.clipsToBounds = true
         contentView.addSubview(rightContentView)
         
+        // 1V1中需要默认两个model
+        var models = [AgoraRenderMemberViewModel]()
+        let localInfo = contextPool.user.getLocalUserInfo()
+        let localStream = contextPool.stream.getStreamList(userUuid: localInfo.userUuid)?.first(where: {$0.videoSourceType == .camera})
+        if localInfo.userRole == .student {
+            models.append(AgoraRenderMemberViewModel.defaultNilValue())
+            models.append(AgoraRenderMemberViewModel.model(user: localInfo,
+                                                           stream: localStream))
+        } else {
+            models.append(AgoraRenderMemberViewModel.model(user: localInfo,
+                                                           stream: localStream))
+            models.append(AgoraRenderMemberViewModel.defaultNilValue())
+        }
         renderController = AgoraRenderMembersUIController(context: contextPool,
                                                           delegate: self,
                                                           containRoles: [.student,.teacher],
-                                                          dataSource: [AgoraRenderMemberViewModel.defaultNilValue(),
-                                                                       AgoraRenderMemberViewModel.defaultNilValue()])
+                                                          max: 2,
+                                                          dataSource: models)
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
         
@@ -526,6 +542,17 @@ private extension AgoraOneToOneUIManager {
             make?.top.left().right().equalTo()(0)
             make?.bottom.equalTo()(rightContentView.mas_centerY)
         }
+    }
+    
+    func updateRenderLayout() {
+        view.layoutIfNeeded()
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        
+        layout.itemSize = CGSize(width: AgoraFit.scale(170),
+                                 height: (renderController.view.height - 2) / 2)
+        layout.minimumLineSpacing = 2
+        renderController.updateLayout(layout)
     }
     
     func createChatController() {
