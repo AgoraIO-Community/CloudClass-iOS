@@ -103,3 +103,58 @@ private extension AgoraRoomStateBar {
         }
     }
 }
+
+class FcrRecordingStateView: UIView {
+    private let redView = UIView()
+    let label = UILabel()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func initViews() {
+        addSubview(redView)
+        addSubview(label)
+        
+        // TODO: 合并 flex 分支后，将这些移动到 config 里
+        updateViewProperties()
+        updateViewFrame()
+    }
+    
+    private func updateViewProperties() {
+        let redViewWidth: CGFloat = 6
+        let redViewCornerRadius: CGFloat = (redViewWidth * 0.5)
+        
+        redView.layer.cornerRadius = redViewCornerRadius
+        redView.backgroundColor = UIColor(hexString: "#F04C36")
+        
+        let textColor = UIColor(hexString: "#677386" )
+        let font = UIFont.systemFont(ofSize: 9)
+        label.textColor = textColor
+        label.font = font
+    }
+    
+    private func updateViewFrame() {
+        let redViewHeight: CGFloat = 6
+        let redViewWidth: CGFloat = 6
+        let redViewCornerRadius: CGFloat = (redViewWidth * 0.5)
+        
+        redView.mas_makeConstraints { make in
+            make?.left.equalTo()(0)
+            make?.centerY.equalTo()(0)
+            make?.width.equalTo()(redViewWidth)
+            make?.height.equalTo()(redViewHeight)
+        }
+        
+        label.mas_makeConstraints { make in
+            make?.right.equalTo()(0)
+            make?.top.equalTo()(0)
+            make?.bottom.equalTo()(0)
+            make?.left.equalTo()(redView.mas_right)?.offset()(-10)
+        }
+    }
+}

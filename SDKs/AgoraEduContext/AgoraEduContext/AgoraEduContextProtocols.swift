@@ -47,6 +47,9 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     
     /// 房间关闭 (v2.0.0)
     @objc optional func onRoomClosed()
+    
+    /// Recording state (v2.5.0)
+    @objc optional func onRecordingStateUpdated(state: FcrRecordingState)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
@@ -97,6 +100,10 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// 获取课堂信息 (v2.0.0)
     /// - returns: 课堂信息
     func getClassInfo() -> AgoraEduContextClassInfo
+    
+    /// 获取录制状态 (v2.5.0)
+    /// - returns: 录制状态
+    func getRecordingState() -> FcrRecordingState
     
     /// 开始事件监听 (v2.0.0)
     /// - parameter handler: 监听者

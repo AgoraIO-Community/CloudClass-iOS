@@ -170,7 +170,7 @@ extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
         AgoraToast.toast(msg: final,
                          type: .notice)
         
-        showRewardAnimation()
+        showReward()
     }
 }
 

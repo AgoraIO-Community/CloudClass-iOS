@@ -28,6 +28,13 @@ import Foundation
     case after  = 2
 }
 
+/// 录制状态
+@objc public enum FcrRecordingState: Int {
+    case unstart   = 0
+    case loading   = 1
+    case recording = 2
+}
+
 // MARK: - SubRoom
 /// 
 @objc public enum AgoraEduContextSubRoomRemovedUserReason: Int {
