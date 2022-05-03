@@ -11,3 +11,9 @@ protocol AgoraUIActivity {
     func viewWillActive()
     func viewWillInactive()
 }
+
+protocol AgoraUIContentContainer {
+    func initViews()
+    func updateViewProperties()
+    func updateViewFrame()
+}

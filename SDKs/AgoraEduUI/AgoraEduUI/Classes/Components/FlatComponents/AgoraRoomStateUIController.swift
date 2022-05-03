@@ -16,13 +16,14 @@ struct AgoraClassTimeInfo {
     var closeDelay: Int64
 }
 
-class AgoraRoomStateUIController: UIViewController {
+class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer {
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
     private var subRoom: AgoraEduSubRoomContext?
     
     /** 状态栏*/
-    private var stateView: AgoraRoomStateBar!
+    private var stateView = AgoraRoomStateBar(frame: .zero)
+    
     /** 房间计时器*/
     private var timer: Timer?
     /** 房间时间信息*/
@@ -48,8 +49,7 @@ class AgoraRoomStateUIController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        createViews()
-        createConstraint()
+        initViews()
         
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
                                           repeats: true,
@@ -64,6 +64,51 @@ class AgoraRoomStateUIController: UIViewController {
         
         contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
+    }
+    
+    func initViews() {
+        view.addSubview(stateView)
+        
+        updateViewProperties()
+        updateViewFrame()
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        let color = ui.color
+        let frame = ui.frame
+        
+        view.backgroundColor = .white
+        view.layer.borderWidth = frame.room_state_border_width
+        view.layer.borderColor = color.small_room_state_border_color
+        view.layer.cornerRadius = frame.room_state_corner_radius
+        view.clipsToBounds = true
+        
+        stateView.backgroundColor = color.room_state_bg_color
+        
+        var roomTitle: String
+        switch contextPool.room.getRoomInfo().roomType {
+        case .oneToOne: roomTitle = "fcr_room_one_to_one_title".agedu_localized()
+        case .small:    roomTitle = "fcr_room_small_title".agedu_localized()
+        case .lecture:  roomTitle = "fcr_room_lecture_title".agedu_localized()
+        }
+        stateView.titleLabel.text = roomTitle
+        
+        stateView.titleLabel.textColor = color.room_state_label_before_color
+        stateView.timeLabel.textColor = color.room_state_label_before_color
+        
+        let recordingTitle = "fcr_record_recording".agedu_localized()
+        stateView.recordingLabel.text = recordingTitle
+        
+        let isHidden: Bool = !((contextPool.room.getRecordingState() == .recording))
+        stateView.recordingStateView.isHidden = isHidden
+        stateView.recordingLabel.isHidden = isHidden
+    }
+    
+    func updateViewFrame() {
+        stateView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
     }
 }
 
@@ -156,11 +201,18 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     }
     
     func onClassStateUpdated(state: AgoraEduContextClassState) {
-        let info = self.contextPool.room.getClassInfo()
-        self.timeInfo = AgoraClassTimeInfo(state: info.state,
-                                           startTime: info.startTime,
-                                           duration: info.duration * 1000,
-                                           closeDelay: info.closeDelay * 1000)
+        let info = contextPool.room.getClassInfo()
+        timeInfo = AgoraClassTimeInfo(state: info.state,
+                                      startTime: info.startTime,
+                                      duration: info.duration * 1000,
+                                      closeDelay: info.closeDelay * 1000)
+    }
+    
+    func onRecordingStateUpdated(state: FcrRecordingState) {
+        let isHidden: Bool = !(state == .recording)
+        
+        stateView.recordingLabel.isHidden = isHidden
+        stateView.recordingStateView.isHidden = isHidden
     }
 }
 
@@ -190,52 +242,25 @@ extension AgoraRoomStateUIController: AgoraEduGroupHandler {
 // MARK: - AgoraEduMonitorHandler
 extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
+        var image: UIImage?
+        
         switch quality {
         case .unknown:
-            self.stateView.setNetworkState(.unknown)
+            image = UIImage.agedu_named("ic_network_unknow")
         case .good:
-            self.stateView.setNetworkState(.good)
+            image = UIImage.agedu_named("ic_network_good")
         case .bad:
-            self.stateView.setNetworkState(.bad)
+            image = UIImage.agedu_named("ic_network_bad")
         case .down:
-            AgoraToast.toast(msg:"fcr_monitor_network_disconnected".agedu_localized(),
+            image = UIImage.agedu_named("ic_network_down")
+            
+            let message = "fcr_monitor_network_disconnected".agedu_localized()
+            AgoraToast.toast(msg: message,
                              type: .error)
-            self.stateView.setNetworkState(.down)
-        default: break
+        default:
+            return
         }
-    }
-}
-
-// MARK: - Creations
-private extension AgoraRoomStateUIController {
-    func createViews() {
-        let ui = AgoraUIGroup()
-        view.backgroundColor = .white
-        view.layer.borderWidth = ui.frame.room_state_border_width
-        view.layer.borderColor = ui.color.small_room_state_border_color
-        view.layer.cornerRadius = ui.frame.room_state_corner_radius
-        view.clipsToBounds = true
         
-        stateView = AgoraRoomStateBar(frame: .zero)
-        stateView.backgroundColor = ui.color.room_state_bg_color
-        
-        var roomTitle = ""
-        switch contextPool.room.getRoomInfo().roomType {
-        case .oneToOne: roomTitle = "fcr_room_one_to_one_title".agedu_localized()
-        case .small:    roomTitle = "fcr_room_small_title".agedu_localized()
-        case .lecture:  roomTitle = "fcr_room_lecture_title".agedu_localized()
-        }
-        self.stateView.titleLabel.text = roomTitle
-        
-        stateView.titleLabel.textColor = ui.color.room_state_label_before_color
-        stateView.timeLabel.textColor = ui.color.room_state_label_before_color
-        
-        view.addSubview(stateView)
-    }
-    
-    func createConstraint() {
-        stateView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
+        stateView.netStateView.image = image
     }
 }

@@ -121,3 +121,6 @@ fcr_group_exit_room = "离开教室";
 // alert
 fcr_alert_sure = "确定";
 fcr_alert_cancel = "取消";
+
+// Record
+fcr_record_recording = "录制中";
