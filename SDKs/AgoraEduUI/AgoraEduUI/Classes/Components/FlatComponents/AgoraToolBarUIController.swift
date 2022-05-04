@@ -20,7 +20,7 @@ protocol AgoraToolBarDelegate: NSObject {
 }
 
 // MARK: - AgoraToolBarUIController
-class AgoraToolBarUIController: UIViewController {
+class AgoraToolBarUIController: UIViewController, AgoraUIContentContainer {
     enum ItemType {
         case setting, nameRoll, message, handsup, handsList, brushTool, help
         
@@ -65,7 +65,11 @@ class AgoraToolBarUIController: UIViewController {
     }
     
     /** 展示的工具*/
-    public var tools = [ItemType]()
+    public var tools = [ItemType]() {
+        didSet {
+            updateDataSource()
+        }
+    }
     
     private var hiddenTools = [ItemType]()
     
@@ -114,9 +118,11 @@ class AgoraToolBarUIController: UIViewController {
     }
     
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraToolBarDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
         super.init(nibName: nil,
                    bundle: nil)
     }
@@ -127,11 +133,47 @@ class AgoraToolBarUIController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
         
         contextPool.group.registerGroupEventHandler(self)
-        self.createViews()
-        self.createConstraint()
-        self.updateDataSource()
+    }
+    
+    func initViews() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        collectionView = UICollectionView(frame: .zero,
+                                          collectionViewLayout: layout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.isScrollEnabled = false
+        
+        collectionView.allowsMultipleSelection = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.bounces = false
+        collectionView.clipsToBounds = false
+        collectionView.register(cellWithClass: AgoraToolBarItemCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarHandsUpCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarRedDotCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarBrushCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarHandsListCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarHelpCell.self)
+        view.addSubview(collectionView)
+    }
+    
+    func initViewFrame() {
+        collectionView.mas_remakeConstraints { make in
+            make?.top.bottom().equalTo()(0)
+            make?.left.equalTo()(kGap / 2)
+            make?.right.equalTo()(-kGap / 2)
+            make?.width.equalTo()(kButtonLength)
+            make?.height.equalTo()((kButtonLength + kGap) * 5 - kGap)
+        }
+    }
+    
+    func updateViewProperties() {
+        collectionView.backgroundColor = .clear
     }
     
     public func deselectAll() {
@@ -369,38 +411,6 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
 
 // MARK: - Creations
 private extension AgoraToolBarUIController {
-    func createViews() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        collectionView = UICollectionView(frame: .zero,
-                                          collectionViewLayout: layout)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.isScrollEnabled = false
-        collectionView.backgroundColor = .clear
-        collectionView.allowsMultipleSelection = false
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.bounces = false
-        collectionView.clipsToBounds = false
-        collectionView.register(cellWithClass: AgoraToolBarItemCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarHandsUpCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarRedDotCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarBrushCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarHandsListCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarHelpCell.self)
-        view.addSubview(collectionView)
-    }
-    
-    func createConstraint() {
-        collectionView.mas_remakeConstraints { make in
-            make?.top.bottom().equalTo()(0)
-            make?.left.equalTo()(kGap / 2)
-            make?.right.equalTo()(-kGap / 2)
-            make?.width.equalTo()(kButtonLength)
-            make?.height.equalTo()((kButtonLength + kGap) * 5 - kGap)
-        }
-    }
-    
     func teacherInLocalSubRoom() -> Bool {
         let group = contextPool.group
         let user = contextPool.user

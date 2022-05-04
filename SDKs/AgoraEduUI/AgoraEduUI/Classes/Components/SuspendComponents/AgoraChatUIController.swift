@@ -16,8 +16,6 @@ protocol AgoraChatUIControllerDelegate: NSObjectProtocol {
 }
 
 class AgoraChatUIController: UIViewController, AgoraUIActivity {
-    
-    
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
             return subRoom.user
@@ -64,9 +62,11 @@ class AgoraChatUIController: UIViewController, AgoraUIActivity {
     public var hideInput = false
     
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraChatUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
         super.init(nibName: nil,
                    bundle: nil)
     }

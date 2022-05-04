@@ -117,8 +117,9 @@ extension AgoraClassStateUIController: AgoraWidgetMessageObserver {
                            widgetId: String) {
         guard widgetId == kBoardWidgetId,
               let signal = message.toBoardSignal() else {
-                  return
-              }
+            return
+        }
+        
         switch signal {
         case .WindowStateChanged(let state):
             positionMoveFlag = (state == .min)

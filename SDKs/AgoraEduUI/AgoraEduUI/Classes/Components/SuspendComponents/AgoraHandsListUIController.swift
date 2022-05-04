@@ -21,9 +21,6 @@ protocol AgoraHandsListUIControllerDelegate: NSObjectProtocol {
 }
 
 class AgoraHandsListUIController: UIViewController {
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
             return subRoom.user
@@ -31,6 +28,9 @@ class AgoraHandsListUIController: UIViewController {
             return contextPool.user
         }
     }
+    
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
     
     public var suggestSize = CGSize(width: 220,
                                     height: 245)
@@ -54,13 +54,14 @@ class AgoraHandsListUIController: UIViewController {
     }
     
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraHandsListUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
         
-        userController.registerUserEventHandler(self)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -72,6 +73,8 @@ class AgoraHandsListUIController: UIViewController {
         
         createViews()
         createConstraint()
+        
+        userController.registerUserEventHandler(self)
     }
 }
 

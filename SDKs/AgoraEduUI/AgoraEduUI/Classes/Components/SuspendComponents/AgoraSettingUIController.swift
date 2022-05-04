@@ -10,6 +10,11 @@ import SwifterSwift
 import UIKit
 
 class AgoraSettingUIController: UIViewController {
+    /** SDK环境*/
+    private var contextPool: AgoraEduContextPool
+    
+    private var subRoom: AgoraEduSubRoomContext?
+    
     public let suggestSize = CGSize(width: 201,
                                     height: 220)
     
@@ -49,25 +54,24 @@ class AgoraSettingUIController: UIViewController {
             backCamButton.isEnabled = isCamerOn
         }
     }
-    /** SDK环境*/
-    var contextPool: AgoraEduContextPool!
-    
-    private var subRoom: AgoraEduSubRoomContext?
-    
-    deinit {
-        print("\(#function): \(self.classForCoder)")
-    }
     
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil, bundle: nil)
+         subRoom: AgoraEduSubRoomContext? = nil,
+         roomDelegate: AgoraClassRoomManagement? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    deinit {
+        print("\(#function): \(self.classForCoder)")
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()

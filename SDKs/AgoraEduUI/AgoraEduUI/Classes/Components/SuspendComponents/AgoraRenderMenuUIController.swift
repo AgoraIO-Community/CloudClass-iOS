@@ -53,8 +53,9 @@ struct AgoraRenderMenuModel {
 }
 
 class AgoraRenderMenuUIController: UIViewController {
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
+    private enum AgoraRenderMenuItemType {
+        case mic, camera, stage, allOffStage, auth, reward
+    }
     
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
@@ -80,11 +81,10 @@ class AgoraRenderMenuUIController: UIViewController {
         }
     }
     
-    var menuWidth: CGFloat = 0
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
     
-    private enum AgoraRenderMenuItemType {
-        case mic, camera, stage, allOffStage, auth, reward
-    }
+    var menuWidth: CGFloat = 0
     
     public weak var delegate: AgoraRenderMenuUIControllerDelegate?
     
@@ -141,16 +141,34 @@ class AgoraRenderMenuUIController: UIViewController {
     }
     
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraRenderMenuUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
+        
+        super.init(nibName: nil,
+                   bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        createViews()
+        createConstraint()
         
         streamController.registerStreamEventHandler(self)
         userController.registerUserEventHandler(self)
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.layer.cornerRadius = self.view.bounds.height * 0.5
     }
     
     func show(roomType: AgoraEduContextRoomType,
@@ -200,24 +218,8 @@ class AgoraRenderMenuUIController: UIViewController {
         self.userId = nil
         self.model = AgoraRenderMenuModel()
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        createViews()
-        createConstraint()
-        userController.registerUserEventHandler(self)
-        streamController.registerStreamEventHandler(self)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.layer.cornerRadius = self.view.bounds.height * 0.5
-    }
 }
+
 // MARK: - Private
 private extension AgoraRenderMenuUIController {
     func updateMenu() {

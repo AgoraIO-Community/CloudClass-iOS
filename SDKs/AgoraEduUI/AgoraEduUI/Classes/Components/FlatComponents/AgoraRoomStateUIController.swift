@@ -29,13 +29,6 @@ class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer, Ago
     /** 房间时间信息*/
     private var timeInfo: AgoraClassTimeInfo?
     
-    var isActive: Bool = true
-    
-    deinit {
-        viewWillInactive()
-        print("\(#function): \(self.classForCoder)")
-    }
-    
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil) {
         self.contextPool = context
@@ -46,6 +39,11 @@ class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer, Ago
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        viewWillInactive()
+        print("\(#function): \(self.classForCoder)")
     }
     
     override func viewDidLoad() {
@@ -203,10 +201,6 @@ private extension AgoraRoomStateUIController {
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        guard isActive else {
-            return
-        }
-        
         viewWillActive()
     }
     
@@ -229,10 +223,6 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
 // MARK: - AgoraEduSubRoomHandler
 extension AgoraRoomStateUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        guard isActive else {
-            return
-        }
-        
         viewWillActive()
     }
 }

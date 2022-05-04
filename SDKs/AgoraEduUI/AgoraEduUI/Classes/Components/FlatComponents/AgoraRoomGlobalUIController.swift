@@ -49,11 +49,15 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
          delegate: AgoraRoomGlobalUIControllerDelegate?,
          subRoom: AgoraEduSubRoomContext? = nil) {
         self.contextPool = context
-        self.delegate = delegate
         self.subRoom = subRoom
+        self.delegate = delegate
         
         super.init(nibName: nil,
                    bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -71,17 +75,13 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
         userController.registerUserEventHandler(self)
         streamController.registerStreamEventHandler(self)
         
-        setup()
+        initData()
         checkNeedJoinSubRoom()
     }
     
     func viewWillInactive() {
         userController.unregisterUserEventHandler(self)
         streamController.unregisterStreamEventHandler(self)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
 
@@ -375,7 +375,7 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
 }
 
 private extension AgoraRoomGlobalUIController {
-    func setup() {
+    func initData() {
         let user = userController.getLocalUserInfo()
         
         guard let streams = streamController.getStreamList(userUuid: user.userUuid) else {

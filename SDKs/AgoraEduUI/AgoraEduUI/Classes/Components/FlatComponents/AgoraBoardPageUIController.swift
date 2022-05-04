@@ -10,21 +10,8 @@ import SwifterSwift
 import AgoraWidget
 import UIKit
 
-class AgoraBoardPageUIController: UIViewController {
-    /** Views*/
-    private var addBtn: UIButton!
-    private var sepLine: UIView!
-    private var pageLabel: UILabel!
-    private var preBtn: UIButton!
-    private var nextBtn: UIButton!
-    
-    private let kButtonWidth = 30
-    private let kButtonHeight = 30
-    
+class AgoraBoardPageUIController: UIViewController, AgoraUIContentContainer {
     /** SDK*/
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    
     private var widgetController: AgoraEduWidgetContext {
         if let `subRoom` = subRoom {
             return subRoom.widget
@@ -32,6 +19,16 @@ class AgoraBoardPageUIController: UIViewController {
             return contextPool.widget
         }
     }
+    
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
+    
+    /** Views*/
+    private var addBtn: UIButton = UIButton(type: .custom)
+    private var sepLine: UIView = UIView(frame: .zero)
+    private var pageLabel: UILabel = UILabel(frame: .zero)
+    private var preBtn: UIButton = UIButton(type: .custom)
+    private var nextBtn: UIButton = UIButton(type: .custom)
     
     /** Data */
     private var pageIndex = 1 {
@@ -68,15 +65,16 @@ class AgoraBoardPageUIController: UIViewController {
         }
     }
     
+    private let kButtonWidth = 30
+    private let kButtonHeight = 30
+    
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
         self.contextPool = context
         self.subRoom = subRoom
         
-        widgetController.add(self,
-                             widgetId: kBoardWidgetId)
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -85,10 +83,95 @@ class AgoraBoardPageUIController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .clear
+        initViews()
+        initViewFrame()
+        updateViewProperties()
         
-        createViews()
-        createConstraint()
+        widgetController.add(self,
+                             widgetId: kBoardWidgetId)
+    }
+    
+    func initViews() {
+        addBtn.addTarget(self,
+                          action: #selector(onClickAddPage(_:)),
+                          for: .touchUpInside)
+        view.addSubview(addBtn)
+        
+        view.addSubview(sepLine)
+        
+        preBtn.addTarget(self,
+                          action: #selector(onClickPrePage(_:)),
+                          for: .touchUpInside)
+        view.addSubview(preBtn)
+        
+        view.addSubview(pageLabel)
+        
+       
+        nextBtn.addTarget(self,
+                           action: #selector(onClickNextPage(_:)),
+                           for: .touchUpInside)
+        view.addSubview(nextBtn)
+    }
+    
+    func initViewFrame() {
+        addBtn.mas_remakeConstraints { make in
+            make?.centerY.equalTo()(self.view)
+            make?.left.equalTo()(10)
+            make?.width.height().equalTo()(kButtonWidth)
+        }
+        
+        sepLine.mas_makeConstraints { make in
+            make?.centerY.equalTo()(self.view)
+            make?.left.equalTo()(self.addBtn.mas_right)?.offset()(4)
+            make?.top.equalTo()(8)
+            make?.bottom.equalTo()(-8)
+            make?.width.equalTo()(1)
+        }
+
+        preBtn.mas_remakeConstraints { make in
+            make?.centerY.equalTo()(self.view)
+            make?.left.equalTo()(self.sepLine.mas_right)?.offset()(3)
+            make?.width.height().equalTo()(kButtonWidth)
+        }
+        
+        nextBtn.mas_makeConstraints { make in
+            make?.centerY.equalTo()(self.view)
+            make?.right.equalTo()(-10)
+            make?.width.height().equalTo()(kButtonWidth)
+        }
+        
+        pageLabel.mas_makeConstraints { make in
+            make?.centerY.equalTo()(self.view)
+            make?.left.equalTo()(self.preBtn.mas_right)?.offset()(0)
+            make?.right.equalTo()(self.nextBtn.mas_left)?.offset()(0)
+        }
+    }
+    
+    func updateViewProperties() {
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 17
+        
+        AgoraUIGroup().color.borderSet(layer: view.layer)
+        
+        if let image = UIImage.agedu_named("ic_board_page_add") {
+            addBtn.setImageForAllStates(image)
+        }
+        
+        sepLine.backgroundColor = UIColor(hex: 0xE5E5F0)
+        
+        if let image = UIImage.agedu_named("ic_board_page_pre") {
+            preBtn.setImageForAllStates(image)
+        }
+        
+        pageLabel.text = "1 / 1"
+        pageLabel.textAlignment = .center
+        pageLabel.font = UIFont.systemFont(ofSize: 14)
+        pageLabel.textColor = UIColor(hex:0x586376)
+        
+        
+         if let image = UIImage.agedu_named("ic_board_page_next") {
+             nextBtn.setImageForAllStates(image)
+         }
     }
 }
 
@@ -129,85 +212,6 @@ extension AgoraBoardPageUIController: AgoraWidgetMessageObserver {
 
 // MARK: - private
 extension AgoraBoardPageUIController {
-    func createViews() {
-        view.backgroundColor = .white
-        
-        view.layer.cornerRadius = 17
-        AgoraUIGroup().color.borderSet(layer: view.layer)
-        
-        addBtn = UIButton(type: .custom)
-        if let image = UIImage.agedu_named("ic_board_page_add") {
-            addBtn.setImageForAllStates(image)
-        }
-        addBtn.addTarget(self,
-                          action: #selector(onClickAddPage(_:)),
-                          for: .touchUpInside)
-        view.addSubview(addBtn)
-        
-        sepLine = UIView(frame: .zero)
-        sepLine.backgroundColor = UIColor(hex: 0xE5E5F0)
-        view.addSubview(sepLine)
-        
-        preBtn = UIButton(type: .custom)
-        if let image = UIImage.agedu_named("ic_board_page_pre") {
-            preBtn.setImageForAllStates(image)
-        }
-        preBtn.addTarget(self,
-                          action: #selector(onClickPrePage(_:)),
-                          for: .touchUpInside)
-        view.addSubview(preBtn)
-        
-        pageLabel = UILabel(frame: .zero)
-        pageLabel.text = "1 / 1"
-        pageLabel.textAlignment = .center
-        pageLabel.font = UIFont.systemFont(ofSize: 14)
-        pageLabel.textColor = UIColor(hex:0x586376)
-        view.addSubview(pageLabel)
-        
-        nextBtn = UIButton(type: .custom)
-        if let image = UIImage.agedu_named("ic_board_page_next") {
-            nextBtn.setImageForAllStates(image)
-        }
-        nextBtn.addTarget(self,
-                           action: #selector(onClickNextPage(_:)),
-                           for: .touchUpInside)
-        view.addSubview(nextBtn)
-    }
-    
-    func createConstraint() {
-        addBtn.mas_remakeConstraints { make in
-            make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(10)
-            make?.width.height().equalTo()(kButtonWidth)
-        }
-        
-        sepLine.mas_makeConstraints { make in
-            make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.addBtn.mas_right)?.offset()(4)
-            make?.top.equalTo()(8)
-            make?.bottom.equalTo()(-8)
-            make?.width.equalTo()(1)
-        }
-
-        preBtn.mas_remakeConstraints { make in
-            make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.sepLine.mas_right)?.offset()(3)
-            make?.width.height().equalTo()(kButtonWidth)
-        }
-        
-        nextBtn.mas_makeConstraints { make in
-            make?.centerY.equalTo()(self.view)
-            make?.right.equalTo()(-10)
-            make?.width.height().equalTo()(kButtonWidth)
-        }
-        
-        pageLabel.mas_makeConstraints { make in
-            make?.centerY.equalTo()(self.view)
-            make?.left.equalTo()(self.preBtn.mas_right)?.offset()(0)
-            make?.right.equalTo()(self.nextBtn.mas_left)?.offset()(0)
-        }
-    }
-    
     @objc func onClickAddPage(_ sender: UIButton) {
         let changeType = AgoraBoardWidgetPageChangeType.count(pageCount + 1)
         if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {

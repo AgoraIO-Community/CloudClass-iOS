@@ -66,9 +66,11 @@ class AgoraWindowUIController: UIViewController, AgoraUIActivity {
     private var modelDic = [String: AgoraStreamWindowType]()
     
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraWindowUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
         super.init(nibName: nil,
                    bundle: nil)
     }
