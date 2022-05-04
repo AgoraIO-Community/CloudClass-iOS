@@ -142,7 +142,7 @@ extension AgoraSmallUIManager: AgoraToolBarDelegate {
         case .handsList:
             if handsListController.dataSource.count > 0 {
                 handsListController.view.frame = CGRect(origin: .zero,
-                                                         size: handsListController.suggestSize)
+                                                        size: handsListController.suggestSize)
                 ctrlView = handsListController.view
             }
         default:
@@ -363,13 +363,16 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
                 animated: true)
     }
     
-    func onLocalUserRemovedFromSubRoom(subRoomId: String) {
+    func onLocalUserRemovedFromSubRoom(subRoomId: String,
+                                       isKickOut: Bool) {
         guard let vc = presentedViewController,
               let subRoom = vc as? AgoraSubRoomUIManager else {
             return
         }
         
-        subRoom.dismiss(reason: .kickOut,
+        let reason: AgoraClassRoomExitReason = (isKickOut ? .kickOut : .normal)
+        
+        subRoom.dismiss(reason: reason,
                         animated: true)
     }
 }
@@ -404,7 +407,7 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
 }
 
 // MARK: - AgoraEduUIManagerCallBack
-extension AgoraSmallUIManager: AgoraEduUIManagerCallBack {
+extension AgoraSmallUIManager: AgoraEduUIManagerCallback {
     public func manager(_ manager: AgoraEduUIManager,
                         didExit reason: AgoraClassRoomExitReason) {
         boardController.viewWillActive()
@@ -416,10 +419,10 @@ extension AgoraSmallUIManager: AgoraEduUIManagerCallBack {
 }
 
 // MARK: - AgoraEduUISubManagerCallBack
-extension AgoraSmallUIManager: AgoraEduUISubManagerCallBack {
+extension AgoraSmallUIManager: AgoraEduUISubManagerCallback {
     public func subNeedExitAllRooms(reason: AgoraClassRoomExitReason) {
-        super.exitClassRoom(reason: reason,
-                            roomType: .main)
+        exitClassRoom(reason: reason,
+                      roomType: .main)
     }
 }
 
@@ -434,7 +437,8 @@ private extension AgoraSmallUIManager {
         globalController = AgoraRoomGlobalUIController(context: contextPool,
                                                        delegate: self)
         globalController.roomDelegate = self
-        contentView.addSubview(globalController.view)
+        addChild(globalController)
+        globalController.viewDidLoad()
         
         renderController = AgoraSmallMembersUIController(context: contextPool,
                                                          delegate: self,

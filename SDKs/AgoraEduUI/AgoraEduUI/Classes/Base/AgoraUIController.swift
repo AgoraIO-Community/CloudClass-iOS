@@ -8,6 +8,8 @@
 import Foundation
 
 protocol AgoraUIActivity {
+    var isActive: Bool {get set}
+    
     func viewWillActive()
     func viewWillInactive()
 }

@@ -332,6 +332,8 @@ private extension AgoraLectureUIManager {
         globalController = AgoraRoomGlobalUIController(context: contextPool,
                                                        delegate: nil)
         globalController.roomDelegate = self
+        addChild(globalController)
+        globalController.viewDidLoad()
         
         teacherRenderController = AgoraRenderMembersUIController(context: contextPool,
                                                                  delegate: self,

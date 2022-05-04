@@ -10,7 +10,7 @@ import AgoraEduContext
 import AudioToolbox
 import AgoraWidget
 
-@objc public protocol AgoraEduUISubManagerCallBack: NSObjectProtocol {
+@objc public protocol AgoraEduUISubManagerCallback: NSObjectProtocol {
     func subNeedExitAllRooms(reason: AgoraClassRoomExitReason)
 }
 /// 房间控制器:
@@ -85,7 +85,7 @@ import AgoraWidget
     /** 大窗 控制器*/
     private var windowController: AgoraWindowUIController!
         
-    private weak var mainDelegate: AgoraEduUISubManagerCallBack?
+    private weak var mainDelegate: AgoraEduUISubManagerCallback?
     
     private var subRoom: AgoraEduSubRoomContext
     
@@ -95,8 +95,8 @@ import AgoraWidget
     
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
-         subDelegate: AgoraEduUIManagerCallBack?,
-         mainDelegate: AgoraEduUISubManagerCallBack?) {
+         subDelegate: AgoraEduUIManagerCallback?,
+         mainDelegate: AgoraEduUISubManagerCallback?) {
         self.subRoom = subRoom
         self.mainDelegate = mainDelegate
         super.init(contextPool: contextPool,
@@ -142,9 +142,7 @@ import AgoraWidget
                                              roomType: AgoraClassRoomExitRoomType) {
         switch roomType {
         case .main:
-            self.contextPool.room.leaveRoom()
-            
-            self.dismiss(animated: true) { [weak self] in
+            dismiss(animated: true) { [weak self] in
                 guard let `self` = self else {
                     return
                 }
@@ -158,6 +156,8 @@ import AgoraWidget
                                                         subRoomUuid: roomId,
                                                         success: nil,
                                                         failure: nil)
+            dismiss(reason: .normal,
+                    animated: true)
         }
     }
     
@@ -423,6 +423,8 @@ private extension AgoraSubRoomUIManager {
                                                        delegate: nil,
                                                        subRoom: subRoom)
         globalController.roomDelegate = self
+        addChild(globalController)
+        globalController.viewDidLoad()
         
         renderController = AgoraSmallMembersUIController(context: contextPool,
                                                          delegate: self,

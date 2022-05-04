@@ -17,7 +17,7 @@ import UIKit
     case main, sub
 }
 
-@objc public protocol AgoraEduUIManagerCallBack: NSObjectProtocol {
+@objc public protocol AgoraEduUIManagerCallback: NSObjectProtocol {
     func manager(_ manager: AgoraEduUIManager,
                  didExit reason: AgoraClassRoomExitReason)
 }
@@ -31,7 +31,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     /** 容器视图，用来框出一块16：9的适配区域*/
     public var contentView: UIView!
     
-    weak var delegate: AgoraEduUIManagerCallBack?
+    weak var delegate: AgoraEduUIManagerCallback?
     
     var contextPool: AgoraEduContextPool!
     /// 弹窗控制器
@@ -59,7 +59,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     }
     
     @objc public init(contextPool: AgoraEduContextPool,
-                      delegate: AgoraEduUIManagerCallBack?) {
+                      delegate: AgoraEduUIManagerCallback?) {
         super.init(nibName: nil,
                    bundle: nil)
         self.contextPool = contextPool

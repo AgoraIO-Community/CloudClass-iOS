@@ -387,6 +387,8 @@ private extension AgoraOneToOneUIManager {
         globalController = AgoraRoomGlobalUIController(context: contextPool,
                                                        delegate: nil)
         globalController.roomDelegate = self
+        addChild(globalController)
+        globalController.viewDidLoad()
         
         // 视图层级：白板，大窗，工具
         boardController = AgoraBoardUIController(context: contextPool)

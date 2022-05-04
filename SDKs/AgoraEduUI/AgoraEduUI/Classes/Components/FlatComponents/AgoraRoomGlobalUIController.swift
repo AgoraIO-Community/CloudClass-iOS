@@ -12,7 +12,8 @@ import AudioToolbox
 
 protocol AgoraRoomGlobalUIControllerDelegate: NSObjectProtocol {
     func onLocalUserAddedToSubRoom(subRoomId: String)
-    func onLocalUserRemovedFromSubRoom(subRoomId: String)
+    func onLocalUserRemovedFromSubRoom(subRoomId: String,
+                                       isKickOut: Bool)
 }
 
 // 作为全局状态监听，展示toast，动图等，自身不包含UI
@@ -43,6 +44,8 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
     
     private var localStream: AgoraEduContextStreamInfo?
     private var hasJoinedSubRoomId: String?
+        
+    var isActive: Bool = true
     
     init(context: AgoraEduContextPool,
          delegate: AgoraRoomGlobalUIControllerDelegate?,
@@ -67,6 +70,8 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
     }
     
     func viewWillActive() {
+        isActive = true
+        
         userController.registerUserEventHandler(self)
         streamController.registerStreamEventHandler(self)
         
@@ -75,6 +80,8 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
     }
     
     func viewWillInactive() {
+        isActive = false
+        
         userController.unregisterUserEventHandler(self)
         streamController.unregisterStreamEventHandler(self)
     }
@@ -87,6 +94,10 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomGlobalUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        guard isActive else {
+            return
+        }
+        
         viewWillActive()
     }
     
@@ -262,15 +273,14 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
     func onUserListRemovedFromSubRoom(userList: [AgoraEduContextSubRoomRemovedUserEvent],
                                       subRoomUuid: String) {
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
-        let list = userList.map( {return $0.userUuid} )
         
-        guard list.contains(localUserId) else {
-            return
+        for event in userList where event.userUuid == localUserId {
+            hasJoinedSubRoomId = nil
+            
+            let isKickOut = (event.reason == .kickOut)
+            delegate?.onLocalUserRemovedFromSubRoom(subRoomId: subRoomUuid,
+                                                    isKickOut: isKickOut)
         }
-        
-        hasJoinedSubRoomId = nil
-        
-        delegate?.onLocalUserRemovedFromSubRoom(subRoomId: subRoomUuid)
     }
     
     func onSubRoomListAdded(subRoomList: [AgoraEduContextSubRoomInfo]) {
@@ -299,7 +309,8 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
         
         hasJoinedSubRoomId = nil
         
-        delegate?.onLocalUserRemovedFromSubRoom(subRoomId: hasJoined)
+        delegate?.onLocalUserRemovedFromSubRoom(subRoomId: hasJoined,
+                                                isKickOut: false)
     }
 }
 
@@ -440,7 +451,7 @@ private extension AgoraRoomGlobalUIController {
         for subRoom in subRoomList {
             guard let list = group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
                list.contains(localUserId) else {
-               return
+               continue
             }
         
             delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoom.subRoomUuid)
