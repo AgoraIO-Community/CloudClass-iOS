@@ -46,8 +46,8 @@ class AgoraRoomGlobalUIController: UIViewController {
     private var hasJoinedSubRoomId: String?
     
     init(context: AgoraEduContextPool,
-         delegate: AgoraRoomGlobalUIControllerDelegate?,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraRoomGlobalUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
         self.delegate = delegate
