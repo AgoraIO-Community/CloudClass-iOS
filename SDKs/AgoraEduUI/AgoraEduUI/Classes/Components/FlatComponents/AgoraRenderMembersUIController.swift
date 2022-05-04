@@ -54,7 +54,6 @@ class AgoraRenderMembersUIController: UIViewController {
     // data
     private(set) weak var delegate: AgoraRenderUIControllerDelegate?
     private var containRoles: [AgoraEduContextUserRole]
-    private var isActive: Bool = true
     private(set) var expandFlag: Bool = false
     private(set) var maxCount: Int = 6
     var windowArr = [String]()
@@ -69,8 +68,8 @@ class AgoraRenderMembersUIController: UIViewController {
     private(set) var layout: UICollectionViewFlowLayout
     
     private(set) var collectionView: UICollectionView!
-    private(set) var leftButton: UIButton?
-    private(set) var rightButton: UIButton?
+    private(set) lazy var leftButton = UIButton(type: .custom)
+    private(set) lazy var rightButton = UIButton(type: .custom)
     
     // MARK: - public
     init(context: AgoraEduContextPool,
@@ -115,54 +114,9 @@ class AgoraRenderMembersUIController: UIViewController {
         updateModel(userId: userId)
     }
     
-    // MARK: - common
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        createViews()
-        createConstraint()
-        
-        if let `subRoom` = subRoom {
-            subRoom.registerSubRoomEventHandler(self)
-        } else {
-            contextPool.room.registerRoomEventHandler(self)
-        }
-        updateConstraint()
-        collectionView.setCollectionViewLayout(layout,
-                                               animated: true)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func viewWillActive() {
-        isActive = true
-        
-        widgetController.add(self)
-        userController.registerUserEventHandler(self)
-        streamController.registerStreamEventHandler(self)
-        contextPool.media.registerMediaEventHandler(self)
-        
-        createAllRender()
-    }
-    
-    func viewWillInactive() {
-        isActive = false
-        
-        widgetController.remove(self)
-        userController.unregisterUserEventHandler(self)
-        streamController.unregisterStreamEventHandler(self)
-        contextPool.media.unregisterMediaEventHandler(self)
-        
-        releaseAllRender()
-    }
-    
     func updateLayout(_ layout: UICollectionViewFlowLayout) {
         self.layout = layout
-        guard isActive else {
-            return
-        }
-        updateConstraint()
+        updateViewFrame()
         collectionView.setCollectionViewLayout(layout,
                                                animated: true)
     }
@@ -179,6 +133,27 @@ class AgoraRenderMembersUIController: UIViewController {
             }
         }
         return view
+    }
+    
+    // MARK: - common
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        initViews()
+        updateViewProperties()
+        initViewFrame()
+        
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.room.registerRoomEventHandler(self)
+        }
+        updateViewFrame()
+        collectionView.setCollectionViewLayout(layout,
+                                               animated: true)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - for sub class
@@ -199,7 +174,7 @@ class AgoraRenderMembersUIController: UIViewController {
             indexs.append(indexPath)
         }
 
-        updateConstraint()
+        updateViewFrame()
         collectionView.insertItems(at: indexs)
     }
     
@@ -239,7 +214,7 @@ class AgoraRenderMembersUIController: UIViewController {
                                view: nil,
                                streamId: model.streamId)
         }
-        updateConstraint()
+        updateViewFrame()
         collectionView.deleteItems(at: indexs)
     }
     
@@ -256,7 +231,7 @@ class AgoraRenderMembersUIController: UIViewController {
                                                 windowFlag: windowFlag)
     }
     
-    func updateConstraint() {
+    func updateViewFrame() {
         let singleLength = (layout.scrollDirection == .horizontal) ? layout.itemSize.width : layout.itemSize.height
         let kItemGap = layout.minimumLineSpacing
         
@@ -269,11 +244,13 @@ class AgoraRenderMembersUIController: UIViewController {
                 make?.width.equalTo()(studentWidth)
             }
         }
-        if expandFlag {
-            let pageEnable = (self.dataSource.count <= maxCount)
-            self.leftButton?.isHidden = pageEnable
-            self.rightButton?.isHidden = pageEnable
+        
+        guard expandFlag else {
+            return
         }
+        let pageEnable = (self.dataSource.count <= maxCount)
+        self.leftButton.isHidden = pageEnable
+        self.rightButton.isHidden = pageEnable
     }
     
     // model to view
@@ -289,10 +266,31 @@ class AgoraRenderMembersUIController: UIViewController {
                            view: view.videoView,
                            streamId: streamId)
     }
+}
+
+// MARK: - AgoraUIActivity & AgoraUIContentContainer
+@objc extension AgoraRenderMembersUIController: AgoraUIActivity, AgoraUIContentContainer {
+    // AgoraUIActivity
+    func viewWillActive() {
+        widgetController.add(self)
+        userController.registerUserEventHandler(self)
+        streamController.registerStreamEventHandler(self)
+        contextPool.media.registerMediaEventHandler(self)
+        
+        createAllRender()
+    }
     
-    // ui
-    func createViews() {
-        let ui = AgoraUIGroup()
+    func viewWillInactive() {
+        widgetController.remove(self)
+        userController.unregisterUserEventHandler(self)
+        streamController.unregisterStreamEventHandler(self)
+        contextPool.media.unregisterMediaEventHandler(self)
+        
+        releaseAllRender()
+    }
+    
+    // AgoraUIContentContainer
+    func initViews() {
         contentView = UIView()
         view.addSubview(contentView)
         
@@ -310,35 +308,27 @@ class AgoraRenderMembersUIController: UIViewController {
         guard expandFlag else {
             return
         }
-        let l_button = UIButton(type: .custom)
         
-        l_button.isHidden = true
-        l_button.layer.cornerRadius = ui.frame.render_left_right_button_radius
-        l_button.clipsToBounds = true
-        l_button.backgroundColor = ui.color.render_left_right_button_color
-        l_button.addTarget(self,
-                             action: #selector(onClickLeft(_:)),
-                             for: .touchUpInside)
-        l_button.setImage(UIImage.agedu_named("ic_member_arrow_left"),
-                            for: .normal)
-        leftButton = l_button
-        collectionView.addSubview(l_button)
+        leftButton.isHidden = true
+        leftButton.clipsToBounds = true
+        leftButton.addTarget(self,
+                           action: #selector(onClickLeft(_:)),
+                           for: .touchUpInside)
+        leftButton.setImage(UIImage.agedu_named("ic_member_arrow_left"),
+                          for: .normal)
+        collectionView.addSubview(leftButton)
         
-        let r_button = UIButton(type: .custom)
-        r_button.isHidden = true
-        r_button.layer.cornerRadius = ui.frame.render_left_right_button_radius
-        r_button.clipsToBounds = true
-        r_button.backgroundColor = ui.color.render_left_right_button_color
-        r_button.addTarget(self,
-                              action: #selector(onClickRight(_:)),
-                              for: .touchUpInside)
-        r_button.setImage(UIImage.agedu_named("ic_member_arrow_right"),
-                             for: .normal)
-        rightButton = r_button
-        collectionView.addSubview(r_button)
+        rightButton.isHidden = true
+        rightButton.clipsToBounds = true
+        rightButton.addTarget(self,
+                           action: #selector(onClickRight(_:)),
+                           for: .touchUpInside)
+        rightButton.setImage(UIImage.agedu_named("ic_member_arrow_right"),
+                          for: .normal)
+        collectionView.addSubview(rightButton)
     }
     
-    func createConstraint() {
+    func initViewFrame() {
         contentView.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.top.equalTo()(0)
@@ -352,14 +342,25 @@ class AgoraRenderMembersUIController: UIViewController {
             return
         }
         
-        leftButton?.mas_makeConstraints { make in
+        leftButton.mas_makeConstraints { make in
             make?.left.top().bottom().equalTo()(collectionView)
             make?.width.equalTo()(24)
         }
-        rightButton?.mas_makeConstraints { make in
+        rightButton.mas_makeConstraints { make in
             make?.right.top().bottom().equalTo()(collectionView)
             make?.width.equalTo()(24)
         }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        guard expandFlag else {
+            return
+        }
+        leftButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
+        leftButton.backgroundColor = ui.color.render_left_right_button_color
+        rightButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
+        rightButton.backgroundColor = ui.color.render_left_right_button_color
     }
 }
 
@@ -510,20 +511,12 @@ extension AgoraRenderMembersUIController: AgoraEduStreamHandler {
 // MARK: - AgoraEduRoomHandler
 extension AgoraRenderMembersUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        guard isActive == true else {
-            return
-        }
-        
         viewWillActive()
     }
 }
 
 extension AgoraRenderMembersUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        guard isActive == true else {
-            return
-        }
-        
         viewWillActive()
     }
 }
@@ -559,7 +552,7 @@ private extension AgoraRenderMembersUIController {
             let userList = students.map({return $0.userUuid})
             addModels(userList: userList)
         }
-        updateConstraint()
+        updateViewFrame()
         collectionView.reloadData()
     }
     
@@ -569,7 +562,7 @@ private extension AgoraRenderMembersUIController {
             deleteModels(userList: userList)
         }
         
-        updateConstraint()
+        updateViewFrame()
         collectionView.reloadData()
     }
     
@@ -616,8 +609,3 @@ private extension AgoraRenderMembersUIController {
         }
     }
 }
-
-
-// new model -> view -> handle media -> cell
-// update -> get origin model -> handle media -> cell(reload index of)
-// delete -> delete cell

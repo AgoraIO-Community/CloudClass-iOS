@@ -17,7 +17,7 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
                 setViewWithModel(view: teacherView,
                                  model: model)
             }
-            updateConstraint()
+            updateViewFrame()
         }
     }
     private lazy var teacherView = AgoraRenderMemberView(frame: .zero)
@@ -81,7 +81,7 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
         }
     }
     
-    override func updateConstraint() {
+    override func updateViewFrame() {
         let sigleWidth = (layout.scrollDirection == .horizontal) ? layout.itemSize.width : layout.itemSize.height
         let kItemGap = layout.minimumLineSpacing
         
@@ -103,12 +103,12 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
             }
         }
         let pageEnable = (self.dataSource.count <= maxCount)
-        self.leftButton?.isHidden = pageEnable
-        self.rightButton?.isHidden = pageEnable
+        self.leftButton.isHidden = pageEnable
+        self.rightButton.isHidden = pageEnable
     }
     
-    override func createViews() {
-        super.createViews()
+    override func initViews() {
+        super.initViews()
         
         let ui = AgoraUIGroup()
         teacherView.layer.cornerRadius = ui.frame.small_render_cell_corner_radius
@@ -124,7 +124,7 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
         teacherView.addGestureRecognizer(tapTeacher)
     }
     
-    override func createConstraint() {
+    override func initViewFrame() {
         contentView.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.top.equalTo()(0)
@@ -144,11 +144,11 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
             return
         }
         
-        leftButton?.mas_makeConstraints { make in
+        leftButton.mas_makeConstraints { make in
             make?.left.top().bottom().equalTo()(collectionView)
             make?.width.equalTo()(24)
         }
-        rightButton?.mas_makeConstraints { make in
+        rightButton.mas_makeConstraints { make in
             make?.right.top().bottom().equalTo()(collectionView)
             make?.width.equalTo()(24)
         }

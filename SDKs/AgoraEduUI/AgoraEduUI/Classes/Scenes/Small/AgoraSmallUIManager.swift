@@ -17,11 +17,6 @@ import AgoraWidget
     private lazy var classStateController = AgoraClassStateUIController(context: contextPool,
                                                                         delegate: self)
     
-    private lazy var classStateController: AgoraClassStateUIController = {
-        return AgoraClassStateUIController(context: contextPool,
-                                           delegate: self)
-    }()
-    
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuController: AgoraRenderMenuUIController = {
         let vc = AgoraRenderMenuUIController(context: contextPool)

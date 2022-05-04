@@ -7,12 +7,12 @@
 
 import Foundation
 
-protocol AgoraUIActivity {
+protocol AgoraUIActivity: NSObjectProtocol {
     func viewWillActive()
     func viewWillInactive()
 }
 
-protocol AgoraUIContentContainer {
+protocol AgoraUIContentContainer: NSObjectProtocol {
     func initViews()
     func initViewFrame()
     func updateViewProperties()
