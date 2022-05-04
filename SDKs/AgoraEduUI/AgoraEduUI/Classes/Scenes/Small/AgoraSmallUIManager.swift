@@ -443,7 +443,8 @@ private extension AgoraSmallUIManager {
         renderController = AgoraSmallMembersUIController(context: contextPool,
                                                          delegate: self,
                                                          containRoles: [.student],
-                                                         max: 6)
+                                                         max: 6,
+                                                         expandFlag: true)
         addChild(renderController)
         contentView.addSubview(renderController.view)
         
@@ -540,7 +541,7 @@ private extension AgoraSmallUIManager {
         } else {
             self.toolBarController.view.mas_remakeConstraints { make in
                 make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(self.boardController.view)?.offset()(UIDevice.current.isPad ? -20 : -15)
                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
             }
@@ -549,12 +550,12 @@ private extension AgoraSmallUIManager {
         if userRole != .observer {
             toolCollectionController.view.mas_makeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(boardController.view)?.offset()(UIDevice.current.isPad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
             boardPageController.view.mas_makeConstraints { make in
                 make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(boardController.view)?.offset()(UIDevice.current.isPad ? -20 : -15)
                 make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
                 make?.width.equalTo()(168)
             }

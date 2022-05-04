@@ -322,7 +322,7 @@ class AgoraRenderMembersUIController: UIViewController {
         l_button.setImage(UIImage.agedu_named("ic_member_arrow_left"),
                             for: .normal)
         leftButton = l_button
-        contentView.addSubview(l_button)
+        collectionView.addSubview(l_button)
         
         let r_button = UIButton(type: .custom)
         r_button.isHidden = true
@@ -335,7 +335,7 @@ class AgoraRenderMembersUIController: UIViewController {
         r_button.setImage(UIImage.agedu_named("ic_member_arrow_right"),
                              for: .normal)
         rightButton = r_button
-        contentView.addSubview(r_button)
+        collectionView.addSubview(r_button)
     }
     
     func createConstraint() {
