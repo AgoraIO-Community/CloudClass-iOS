@@ -20,7 +20,7 @@ protocol AgoraToolBarDelegate: NSObject {
 }
 
 // MARK: - AgoraToolBarUIController
-class AgoraToolBarUIController: UIViewController, AgoraUIContentContainer {
+class AgoraToolBarUIController: UIViewController {
     enum ItemType {
         case setting, nameRoll, message, handsup, handsList, brushTool, help
         
@@ -140,6 +140,40 @@ class AgoraToolBarUIController: UIViewController, AgoraUIContentContainer {
         contextPool.group.registerGroupEventHandler(self)
     }
     
+    public func deselectAll() {
+        guard selectedTool != nil else {
+            return
+        }
+        selectedTool = nil
+        collectionView.reloadData()
+    }
+    
+    public func updateChatRedDot(isShow: Bool) {
+        guard messageRemind != isShow else {
+            return
+        }
+        messageRemind = isShow
+        self.collectionView.reloadData()
+    }
+    
+    public func updateHandsListCount(_ count: Int) {
+        handsListCount = count
+    }
+    
+    // left for painting UI manager
+    public func updateBrushButton(image: UIImage?,
+                                  colorHex: Int) {
+        self.brushImage = image
+        if colorHex == 0xFFFFFF {
+            self.brushColor = UIColor(hex: 0xE1E1EA)
+        } else {
+            self.brushColor = UIColor(hex: colorHex)
+        }
+        self.collectionView.reloadData()
+    }
+}
+
+extension AgoraToolBarUIController: AgoraUIContentContainer {
     func initViews() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -174,38 +208,6 @@ class AgoraToolBarUIController: UIViewController, AgoraUIContentContainer {
     
     func updateViewProperties() {
         collectionView.backgroundColor = .clear
-    }
-    
-    public func deselectAll() {
-        guard selectedTool != nil else {
-            return
-        }
-        selectedTool = nil
-        collectionView.reloadData()
-    }
-    
-    public func updateChatRedDot(isShow: Bool) {
-        guard messageRemind != isShow else {
-            return
-        }
-        messageRemind = isShow
-        self.collectionView.reloadData()
-    }
-    
-    public func updateHandsListCount(_ count: Int) {
-        handsListCount = count
-    }
-    
-    // left for painting UI manager
-    public func updateBrushButton(image: UIImage?,
-                                  colorHex: Int) {
-        self.brushImage = image
-        if colorHex == 0xFFFFFF {
-            self.brushColor = UIColor(hex: 0xE1E1EA)
-        } else {
-            self.brushColor = UIColor(hex: colorHex)
-        }
-        self.collectionView.reloadData()
     }
 }
 

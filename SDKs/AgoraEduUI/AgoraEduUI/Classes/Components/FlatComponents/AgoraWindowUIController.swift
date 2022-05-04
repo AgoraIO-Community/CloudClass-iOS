@@ -18,7 +18,7 @@ protocol AgoraWindowUIControllerDelegate: NSObjectProtocol {
     func didStopSpreadForUser(with userId: String)
 }
 
-class AgoraWindowUIController: UIViewController, AgoraUIActivity {
+class AgoraWindowUIController: UIViewController {
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
             return subRoom.user
@@ -75,6 +75,10 @@ class AgoraWindowUIController: UIViewController, AgoraUIActivity {
                    bundle: nil)
     }
     
+    deinit {
+        print("\(#function): \(self.classForCoder)")
+    }
+    
     override func loadView() {
         view = AgoraBaseUIContainer()
     }
@@ -93,11 +97,9 @@ class AgoraWindowUIController: UIViewController, AgoraUIActivity {
         
         contextPool.media.registerMediaEventHandler(self)
     }
-    
-    deinit {
-        print("\(#function): \(self.classForCoder)")
-    }
-    
+}
+
+extension AgoraWindowUIController: AgoraUIActivity {
     func viewWillActive() {
         widgetController.add(self)
         streamController.registerStreamEventHandler(self)

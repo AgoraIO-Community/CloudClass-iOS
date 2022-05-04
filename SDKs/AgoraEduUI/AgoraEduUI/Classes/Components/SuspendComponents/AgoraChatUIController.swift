@@ -15,7 +15,7 @@ protocol AgoraChatUIControllerDelegate: NSObjectProtocol {
     func updateChatRedDot(isShow: Bool)
 }
 
-class AgoraChatUIController: UIViewController, AgoraUIActivity {
+class AgoraChatUIController: UIViewController {
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
             return subRoom.user
@@ -89,7 +89,10 @@ class AgoraChatUIController: UIViewController, AgoraUIActivity {
         super.viewDidAppear(animated)
         redDotShow = false
     }
-    
+}
+
+// MARK: - AgoraUIActivity
+extension AgoraChatUIController: AgoraUIActivity {
     func viewWillActive() {
         createWidget()
     }
@@ -99,12 +102,14 @@ class AgoraChatUIController: UIViewController, AgoraUIActivity {
     }
 }
 
+// MARK: - AgoraEduRoomHandler
 extension AgoraChatUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
     }
 }
 
+// MARK: - AgoraEduSubRoomHandler
 extension AgoraChatUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()

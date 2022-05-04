@@ -10,7 +10,7 @@ import SwifterSwift
 import AgoraWidget
 import UIKit
 
-class AgoraBoardPageUIController: UIViewController, AgoraUIContentContainer {
+class AgoraBoardPageUIController: UIViewController {
     /** SDK*/
     private var widgetController: AgoraEduWidgetContext {
         if let `subRoom` = subRoom {
@@ -90,7 +90,9 @@ class AgoraBoardPageUIController: UIViewController, AgoraUIContentContainer {
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
     }
-    
+}
+
+extension AgoraBoardPageUIController: AgoraUIContentContainer {
     func initViews() {
         addBtn.addTarget(self,
                           action: #selector(onClickAddPage(_:)),

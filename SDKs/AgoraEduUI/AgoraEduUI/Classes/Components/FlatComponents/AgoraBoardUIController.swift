@@ -12,7 +12,7 @@ protocol AgoraBoardUIControllerDelegate: NSObjectProtocol {
     func onStageStateChanged(stageOn: Bool)
 }
 
-class AgoraBoardUIController: UIViewController, AgoraUIActivity {
+class AgoraBoardUIController: UIViewController {
     private var grantUsers = [String]() {
         didSet {
             if grantUsers.contains(contextPool.user.getLocalUserInfo().userUuid) {
@@ -84,7 +84,10 @@ class AgoraBoardUIController: UIViewController, AgoraUIActivity {
                                with event: UIEvent?) {
         UIApplication.shared.windows[0].endEditing(true)
     }
-    
+}
+
+// MARK: - AgoraUIActivity
+extension AgoraBoardUIController: AgoraUIActivity {
     func viewWillActive() {
         guard widgetController.getWidgetActivity(kBoardWidgetId) else {
             return

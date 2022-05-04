@@ -15,7 +15,7 @@ protocol AgoraClassStateUIControllerDelegate: NSObjectProtocol {
     func onShowStartClass()
 }
 
-class AgoraClassStateUIController: UIViewController, AgoraUIContentContainer {
+class AgoraClassStateUIController: UIViewController {
     private var positionMoveFlag: Bool = false {
         didSet {
             if positionMoveFlag != oldValue {
@@ -67,6 +67,13 @@ class AgoraClassStateUIController: UIViewController, AgoraUIContentContainer {
                                widgetId: kBoardWidgetId)
     }
     
+    func dismissView() {
+        view.isHidden = true
+    }
+}
+
+// MARK: - AgoraUIContentContainer
+extension AgoraClassStateUIController: AgoraUIContentContainer {
     func initViews() {
         startButton.addTarget(self,
                               action: #selector(onClickStart(_:)),
@@ -97,9 +104,6 @@ class AgoraClassStateUIController: UIViewController, AgoraUIContentContainer {
         startButton.layer.shadowRadius = 5
     }
     
-    func dismissView() {
-        view.isHidden = true
-    }
 }
 
 // MARK: - AgoraEduRoomHandler

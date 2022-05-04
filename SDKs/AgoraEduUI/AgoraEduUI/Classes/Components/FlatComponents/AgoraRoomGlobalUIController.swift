@@ -17,7 +17,7 @@ protocol AgoraRoomGlobalUIControllerDelegate: NSObjectProtocol {
 }
 
 // 作为全局状态监听，展示toast，动图等，自身不包含UI
-class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
+class AgoraRoomGlobalUIController: UIViewController {
     /** SDK环境*/
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
@@ -70,7 +70,10 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
         contextPool.room.registerRoomEventHandler(self)
         contextPool.group.registerGroupEventHandler(self)
     }
-    
+}
+
+// MARK: - AgoraUIActivity
+extension AgoraRoomGlobalUIController: AgoraUIActivity {
     func viewWillActive() {
         userController.registerUserEventHandler(self)
         streamController.registerStreamEventHandler(self)

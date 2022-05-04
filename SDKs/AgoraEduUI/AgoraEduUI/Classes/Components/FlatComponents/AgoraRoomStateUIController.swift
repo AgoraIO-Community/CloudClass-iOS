@@ -16,7 +16,7 @@ struct AgoraClassTimeInfo {
     var closeDelay: Int64
 }
 
-class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer, AgoraUIActivity {
+class AgoraRoomStateUIController: UIViewController {
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool
     private var subRoom: AgoraEduSubRoomContext?
@@ -60,7 +60,9 @@ class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer, Ago
         contextPool.room.registerRoomEventHandler(self)
         contextPool.monitor.registerMonitorEventHandler(self)
     }
-    
+}
+
+extension AgoraRoomStateUIController: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
         view.addSubview(stateView)
     }

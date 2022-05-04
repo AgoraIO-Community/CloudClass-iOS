@@ -9,7 +9,7 @@ import AgoraEduContext
 import AgoraWidget
 import UIKit
 
-class AgoraClassToolsUIController: UIViewController, AgoraUIActivity {
+class AgoraClassToolsUIController: UIViewController {
     private var widgetController: AgoraEduWidgetContext {
         if let `subRoom` = subRoom {
             return subRoom.widget
@@ -69,6 +69,11 @@ class AgoraClassToolsUIController: UIViewController, AgoraUIActivity {
         }
     }
     
+    
+}
+
+// MARK: - AgoraUIActivity
+extension AgoraClassToolsUIController: AgoraUIActivity {
     func viewWillActive() {
         widgetController.add(self)
         createAllActiveWidgets()
