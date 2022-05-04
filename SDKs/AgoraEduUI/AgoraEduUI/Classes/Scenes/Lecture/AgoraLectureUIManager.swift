@@ -254,6 +254,15 @@ import AgoraWidget
         classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
+        
+        view.layoutIfNeeded()
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        
+        layout.itemSize = CGSize(width: teacherRenderController.view.width - 2,
+                                 height: teacherRenderController.view.height - 2)
+        layout.minimumLineSpacing = 2
+        teacherRenderController.updateLayout(layout)
     }
     
     func updateViewProperties() {

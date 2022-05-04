@@ -96,7 +96,10 @@ class AgoraRenderMembersUIController: UIViewController {
            data.count > 0 {
             self.dataSource = data
             for model in data {
-                viewsDic[model.userId] = AgoraRenderMemberView(frame: .zero)
+                let newView = AgoraRenderMemberView(frame: .zero)
+                viewsDic[model.userId] = newView
+                setViewWithModel(view: newView,
+                                 model: model)
             }
         }
     }
@@ -336,6 +339,11 @@ class AgoraRenderMembersUIController: UIViewController {
         }
         collectionView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
+        }
+        
+        if dataSource.count > 0 {
+            updateViewFrame()
+            collectionView.reloadData()
         }
         
         guard expandFlag else {
