@@ -9,11 +9,7 @@ import AgoraEduContext
 import AgoraWidget
 import UIKit
 
-class AgoraClassToolsViewController: UIViewController {
-    /**Data*/
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    
+class AgoraClassToolsUIController: UIViewController, AgoraUIActivity {
     private var widgetController: AgoraEduWidgetContext {
         if let `subRoom` = subRoom {
             return subRoom.widget
@@ -29,6 +25,9 @@ class AgoraClassToolsViewController: UIViewController {
             return contextPool.user
         }
     }
+    
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
     
     private let widgetIdList = [PollWidgetId,
                                 PopupQuizWidgetId,
@@ -82,20 +81,20 @@ class AgoraClassToolsViewController: UIViewController {
 }
 
 // MARK: - AgoraEduRoomHandler
-extension AgoraClassToolsViewController: AgoraEduRoomHandler {
+extension AgoraClassToolsUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
     }
 }
 
-extension AgoraClassToolsViewController: AgoraEduSubRoomHandler {
+extension AgoraClassToolsUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
     }
 }
 
 // MARK: - AgoraWidgetActivityObserver
-extension AgoraClassToolsViewController: AgoraWidgetActivityObserver {
+extension AgoraClassToolsUIController: AgoraWidgetActivityObserver {
     func onWidgetActive(_ widgetId: String) {
         createWidget(widgetId)
     }
@@ -106,18 +105,20 @@ extension AgoraClassToolsViewController: AgoraWidgetActivityObserver {
 }
 
 // MARK: - AgoraWidgetMessageObserver
-extension AgoraClassToolsViewController: AgoraWidgetMessageObserver {
+extension AgoraClassToolsUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        if let size = parseSizeMessage(widgetId: widgetId,
-                                       message: message) {
-            updateWidgetFrame(widgetId,
-                              size: size)
+        guard let size = parseSizeMessage(widgetId: widgetId,
+                                          message: message) else {
+            return
         }
+        
+        updateWidgetFrame(widgetId,
+                          size: size)
     }
 }
 
-extension AgoraClassToolsViewController: AgoraWidgetSyncFrameObserver {
+extension AgoraClassToolsUIController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
                                   widgetId: String) {
         let size = getWidgetSize(widgetId)
@@ -127,7 +128,7 @@ extension AgoraClassToolsViewController: AgoraWidgetSyncFrameObserver {
 }
 
 // MARK: - private
-private extension AgoraClassToolsViewController {
+private extension AgoraClassToolsUIController {
     func parseSizeMessage(widgetId: String,
                           message: String) -> CGSize? {
         guard let json = message.json(),

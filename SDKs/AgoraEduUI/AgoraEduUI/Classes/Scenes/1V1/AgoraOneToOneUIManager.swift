@@ -61,7 +61,7 @@ import UIKit
     /** 聊天 控制器*/
     private var chatController: AgoraChatUIController?
     /** 教具 控制器*/
-    private var classToolsController: AgoraClassToolsViewController!
+    private var classToolsController: AgoraClassToolsUIController!
     /** 大窗 控制器*/
     private var windowController: AgoraWindowUIController!
     private var tabSelectView: AgoraOneToOneTabView?
@@ -432,7 +432,7 @@ private extension AgoraOneToOneUIManager {
         toolBarController.tools = [.setting]
         contentView.addSubview(toolBarController.view)
         
-        classToolsController = AgoraClassToolsViewController(context: contextPool)
+        classToolsController = AgoraClassToolsUIController(context: contextPool)
         addChild(classToolsController)
         contentView.addSubview(classToolsController.view)
         

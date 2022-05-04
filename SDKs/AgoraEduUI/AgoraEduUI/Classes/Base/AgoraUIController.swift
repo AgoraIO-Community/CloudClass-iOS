@@ -8,14 +8,12 @@
 import Foundation
 
 protocol AgoraUIActivity {
-    var isActive: Bool {get set}
-    
     func viewWillActive()
     func viewWillInactive()
 }
 
 protocol AgoraUIContentContainer {
     func initViews()
+    func initViewFrame()
     func updateViewProperties()
-    func updateViewFrame()
 }

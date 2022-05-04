@@ -44,8 +44,6 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
     
     private var localStream: AgoraEduContextStreamInfo?
     private var hasJoinedSubRoomId: String?
-        
-    var isActive: Bool = true
     
     init(context: AgoraEduContextPool,
          delegate: AgoraRoomGlobalUIControllerDelegate?,
@@ -70,8 +68,6 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
     }
     
     func viewWillActive() {
-        isActive = true
-        
         userController.registerUserEventHandler(self)
         streamController.registerStreamEventHandler(self)
         
@@ -80,8 +76,6 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
     }
     
     func viewWillInactive() {
-        isActive = false
-        
         userController.unregisterUserEventHandler(self)
         streamController.unregisterStreamEventHandler(self)
     }
@@ -106,10 +100,6 @@ class AgoraRoomGlobalUIController: UIViewController, AgoraUIActivity {
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomGlobalUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        guard isActive else {
-            return
-        }
-        
         viewWillActive()
     }
     

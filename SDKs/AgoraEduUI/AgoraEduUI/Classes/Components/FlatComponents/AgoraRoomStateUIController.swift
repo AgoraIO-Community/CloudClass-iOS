@@ -16,9 +16,9 @@ struct AgoraClassTimeInfo {
     var closeDelay: Int64
 }
 
-class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer {
+class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer, AgoraUIActivity {
     /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
+    private var contextPool: AgoraEduContextPool
     private var subRoom: AgoraEduSubRoomContext?
     
     /** 状态栏*/
@@ -29,18 +29,19 @@ class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer {
     /** 房间时间信息*/
     private var timeInfo: AgoraClassTimeInfo?
     
+    var isActive: Bool = true
+    
     deinit {
-        self.timer?.invalidate()
-        self.timer = nil
+        viewWillInactive()
         print("\(#function): \(self.classForCoder)")
     }
     
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
         self.contextPool = context
         self.subRoom = subRoom
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -50,12 +51,8 @@ class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer {
     override func viewDidLoad() {
         super.viewDidLoad()
         initViews()
-        
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
-                                          repeats: true,
-                                          block: { [weak self] t in
-            self?.updateTimeVisual()
-        })
+        initViewFrame()
+        updateViewProperties()
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
@@ -68,9 +65,12 @@ class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer {
     
     func initViews() {
         view.addSubview(stateView)
-        
-        updateViewProperties()
-        updateViewFrame()
+    }
+    
+    func initViewFrame() {
+        stateView.mas_remakeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
     }
     
     func updateViewProperties() {
@@ -103,23 +103,7 @@ class AgoraRoomStateUIController: UIViewController, AgoraUIContentContainer {
         let isHidden: Bool = !((contextPool.room.getRecordingState() == .recording))
         stateView.recordingStateView.isHidden = isHidden
         stateView.recordingLabel.isHidden = isHidden
-    }
-    
-    func updateViewFrame() {
-        stateView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
-    }
-}
-
-// MARK: - Private
-private extension AgoraRoomStateUIController {
-    func setup() {
-        let info = self.contextPool.room.getClassInfo()
-        self.timeInfo = AgoraClassTimeInfo(state: info.state,
-                                           startTime: info.startTime,
-                                           duration: info.duration * 1000,
-                                           closeDelay: info.closeDelay * 1000)
+        
         if let sub = subRoom {
             stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
         } else {
@@ -127,6 +111,28 @@ private extension AgoraRoomStateUIController {
         }
     }
     
+    func viewWillActive() {
+        let info = self.contextPool.room.getClassInfo()
+        self.timeInfo = AgoraClassTimeInfo(state: info.state,
+                                           startTime: info.startTime,
+                                           duration: info.duration * 1000,
+                                           closeDelay: info.closeDelay * 1000)
+        
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0,
+                                          repeats: true,
+                                          block: { [weak self] t in
+            self?.updateTimeVisual()
+        })
+    }
+    
+    func viewWillInactive() {
+        self.timer?.invalidate()
+        self.timer = nil
+    }
+}
+
+// MARK: - Private
+private extension AgoraRoomStateUIController {
     @objc func updateTimeVisual() {
         guard let info = self.timeInfo else {
             return
@@ -197,7 +203,11 @@ private extension AgoraRoomStateUIController {
 // MARK: - AgoraEduRoomHandler
 extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        setup()
+        guard isActive else {
+            return
+        }
+        
+        viewWillActive()
     }
     
     func onClassStateUpdated(state: AgoraEduContextClassState) {
@@ -219,7 +229,11 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
 // MARK: - AgoraEduSubRoomHandler
 extension AgoraRoomStateUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        setup()
+        guard isActive else {
+            return
+        }
+        
+        viewWillActive()
     }
 }
 

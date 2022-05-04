@@ -14,6 +14,9 @@ import AgoraWidget
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class AgoraSmallUIManager: AgoraEduUIManager {
     /** 课堂状态 控制器（仅教师端）*/
+    private lazy var classStateController = AgoraClassStateUIController(context: contextPool,
+                                                                        delegate: self)
+    
     private lazy var classStateController: AgoraClassStateUIController = {
         return AgoraClassStateUIController(context: contextPool,
                                            delegate: self)
@@ -74,7 +77,7 @@ import AgoraWidget
     private var chatController: AgoraChatUIController!
     
     /** 教具 控制器*/
-    private var classToolsController: AgoraClassToolsViewController!
+    private var classToolsController: AgoraClassToolsUIController!
     
     /** 大窗 控制器*/
     private var windowController: AgoraWindowUIController!
@@ -430,6 +433,8 @@ extension AgoraSmallUIManager: AgoraEduUISubManagerCallback {
 private extension AgoraSmallUIManager {
     func createViews() {
         let userRole = contextPool.user.getLocalUserInfo().userRole
+        
+        // Flat components
         stateController = AgoraRoomStateUIController(context: contextPool)
         addChild(stateController)
         contentView.addSubview(stateController.view)
@@ -448,7 +453,6 @@ private extension AgoraSmallUIManager {
         addChild(renderController)
         contentView.addSubview(renderController.view)
         
-        // 视图层级：白板，大窗，工具
         boardController = AgoraBoardUIController(context: contextPool,
                                                  delegate: self)
         boardController.view.clipsToBounds = true
@@ -462,44 +466,69 @@ private extension AgoraSmallUIManager {
         
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
+        contentView.addSubview(toolBarController.view)
         
+        // 视图层级：白板，大窗，工具
+        
+        
+        // Suspend components
         if userRole != .observer {
             toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
                                                                        delegate: self)
-            contentView.addSubview(toolCollectionController.view)
             addChild(toolCollectionController)
+            contentView.addSubview(toolCollectionController.view)
             
             boardPageController = AgoraBoardPageUIController(context: contextPool)
-            contentView.addSubview(boardPageController.view)
             addChild(boardPageController)
+            contentView.addSubview(boardPageController.view)
             
             nameRollController = AgoraUserListUIController(context: contextPool)
             addChild(nameRollController)
         }
         
-        if userRole == .teacher {
-            toolBarController.tools = [.setting, .message,.nameRoll, .handsList]
+        
+        switch userRole {
+        case .teacher:
+            // Tool bar
+            toolBarController.tools = [.setting,
+                                       .message,
+                                       .nameRoll,
+                                       .handsList]
+            
+            // Render menu
             addChild(renderMenuController)
-            contentView.addSubview(renderMenuController.view)
             renderMenuController.view.isHidden = true
+            contentView.addSubview(renderMenuController.view)
+            
+            // Class state
             addChild(classStateController)
+            
+            // Cloud
             addChild(cloudController)
-            contentView.addSubview(cloudController.view)
             cloudController.view.isHidden = true
+            contentView.addSubview(cloudController.view)
+            
+            // Tool
             toolCollectionController.view.isHidden = false
             boardPageController.view.isHidden = false
             
             addChild(handsListController)
-        } else if userRole == .student {
-            toolBarController.tools = [.setting, .message, .nameRoll, .handsup]
+        case .student:
+            toolBarController.tools = [.setting,
+                                       .message,
+                                       .nameRoll,
+                                       .handsup]
             toolCollectionController.view.isHidden = true
             boardPageController.view.isHidden = true
-        } else {
-            toolBarController.tools = [.setting, .message]
+        default:
+            toolBarController.tools = [.setting,
+                                       .message]
         }
-        contentView.addSubview(toolBarController.view)
         
-        classToolsController = AgoraClassToolsViewController(context: contextPool)
+        
+        
+        
+        classToolsController = AgoraClassToolsUIController(context: contextPool)
         addChild(classToolsController)
         contentView.addSubview(classToolsController.view)
         

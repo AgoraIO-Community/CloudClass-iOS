@@ -81,7 +81,7 @@ import AgoraWidget
     private var chatController: AgoraChatUIController!
     
     /** 教具 控制器*/
-    private var classToolsController: AgoraClassToolsViewController!
+    private var classToolsController: AgoraClassToolsUIController!
     /** 大窗 控制器*/
     private var windowController: AgoraWindowUIController!
         
@@ -486,7 +486,7 @@ private extension AgoraSubRoomUIManager {
                                                        subRoom: subRoom)
         addChild(nameRollController)
         
-        classToolsController = AgoraClassToolsViewController(context: contextPool,
+        classToolsController = AgoraClassToolsUIController(context: contextPool,
                                                              subRoom: subRoom)
         addChild(classToolsController)
         contentView.addSubview(classToolsController.view)

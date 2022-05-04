@@ -38,12 +38,6 @@ class AgoraToolBarUIController: UIViewController {
         }
     }
     
-    weak var delegate: AgoraToolBarDelegate?
-    
-    /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
             return subRoom.user
@@ -52,10 +46,16 @@ class AgoraToolBarUIController: UIViewController {
         }
     }
     
+    /** SDK环境*/
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
+    
     /** Size*/
     private let kButtonLength: CGFloat = UIDevice.current.isPad ? 34 : 32
     private let kGap: CGFloat = 12.0
     private let kDefaultTag: Int = 3389
+    
+    weak var delegate: AgoraToolBarDelegate?
     
     var suggestSize: CGSize {
         get {
@@ -115,10 +115,10 @@ class AgoraToolBarUIController: UIViewController {
     
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
         self.contextPool = context
         self.subRoom = subRoom
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -219,9 +219,12 @@ extension AgoraToolBarUIController: AgoraHandsUpDelayViewDelegate {
                 
             }
             break
-        case .free: break
-        case .counting: break
-        default: break
+        case .free:
+            break
+        case .counting:
+            break
+        default:
+            break
         }
     }
     
@@ -399,19 +402,26 @@ private extension AgoraToolBarUIController {
     }
     
     func teacherInLocalSubRoom() -> Bool {
-        var flag = false
-        guard let subRoomList = contextPool.group.getSubRoomList(),
-              let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
-            return flag
+        let group = contextPool.group
+        let user = contextPool.user
+        
+        guard let subRoomList = group.getSubRoomList(),
+              let teacher = user.getUserList(role: .teacher)?.first else {
+            return true
         }
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
+        let localUserId = user.getLocalUserInfo().userUuid
+        let teacherId = teacher.userUuid
+        
         for item in subRoomList {
-            if let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
-               userList.contains([localUserId,teacherId]) {
-                flag = true
-                break
+            guard let userList = group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
+                  userList.contains([localUserId,teacherId]) else {
+                continue
             }
+            
+            return true
         }
-        return flag
+        
+        return true
     }
 }

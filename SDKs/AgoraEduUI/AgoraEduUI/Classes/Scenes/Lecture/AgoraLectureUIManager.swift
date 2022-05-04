@@ -67,7 +67,7 @@ import AgoraWidget
         return vc
     }()
     /** 教具 控制器*/
-    private var classToolsController: AgoraClassToolsViewController!
+    private var classToolsController: AgoraClassToolsUIController!
     /** 聊天窗口 控制器*/
     private var chatController: AgoraChatUIController!
     
@@ -362,7 +362,7 @@ private extension AgoraLectureUIManager {
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
         
-        classToolsController = AgoraClassToolsViewController(context: contextPool)
+        classToolsController = AgoraClassToolsUIController(context: contextPool)
         addChild(classToolsController)
         contentView.addSubview(classToolsController.view)
 

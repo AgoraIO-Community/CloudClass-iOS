@@ -18,11 +18,7 @@ protocol AgoraWindowUIControllerDelegate: NSObjectProtocol {
     func didStopSpreadForUser(with userId: String)
 }
 
-class AgoraWindowUIController: UIViewController {
-    /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    
+class AgoraWindowUIController: UIViewController, AgoraUIActivity {
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
             return subRoom.user
@@ -55,12 +51,15 @@ class AgoraWindowUIController: UIViewController {
         }
     }
     
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
+    
     weak var delegate: AgoraWindowUIControllerDelegate?
     
     /**widgetId: AgoraBaseWidget **/
     private var widgetDic = [String: AgoraBaseWidget]() {
         didSet {
-            self.view.isHidden = (widgetDic.count == 0)
+            view.isHidden = (widgetDic.count == 0)
         }
     }
     /**widgetId: AgoraStreamWindowType **/
@@ -68,10 +67,10 @@ class AgoraWindowUIController: UIViewController {
     
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
         self.contextPool = context
         self.subRoom = subRoom
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     
     override func loadView() {
@@ -100,8 +99,13 @@ class AgoraWindowUIController: UIViewController {
     func viewWillActive() {
         widgetController.add(self)
         streamController.registerStreamEventHandler(self)
-        contextPool.group.registerGroupEventHandler(self)
         createAllActiveWidgets()
+        
+        guard widgetDic.count > 0 else {
+            return
+        }
+        
+        view.isHidden = false
     }
     
     func viewWillInactive() {
@@ -109,8 +113,9 @@ class AgoraWindowUIController: UIViewController {
         widgetController.removeObserver(forWidgetSyncFrame: self,
                                         widgetId: kWindowWidgetId)
         streamController.unregisterStreamEventHandler(self)
-        contextPool.group.unregisterGroupEventHandler(self)
         releaseAllWidgets()
+        
+        view.isHidden = true
     }
 }
 
@@ -138,27 +143,6 @@ extension AgoraWindowUIController: AgoraWidgetActivityObserver {
     }
 }
 
-// MARK: - AgoraEduGroupHandler
-extension AgoraWindowUIController: AgoraEduGroupHandler {
-    func onUserListAddedToSubRoom(userList: Array<String>,
-                                  subRoomUuid: String,
-                                  operatorUser: AgoraEduContextUserInfo?) {
-        guard let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
-              userList.contains(teacherId) else {
-            return
-        }
-        // 学生加入子房间会走coHost
-        view.isHidden = true
-    }
-    
-    func onGroupInfoUpdated(groupInfo: AgoraEduContextGroupInfo) {
-        if !groupInfo.state,
-           widgetDic.count > 0 {
-               view.isHidden = false
-           }
-    }
-}
-
 // MARK: - AgoraWidgetSyncFrameObserver
 extension AgoraWindowUIController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
@@ -170,8 +154,8 @@ extension AgoraWindowUIController: AgoraWidgetSyncFrameObserver {
         let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
 
         // zIndexs
-        self.view.bringSubviewToFront(targetView)
-        self.view.layoutIfNeeded()
+        view.bringSubviewToFront(targetView)
+        view.layoutIfNeeded()
         
         targetView.mas_remakeConstraints { make in
             make?.left.equalTo()(frame.minX)
@@ -221,17 +205,17 @@ extension AgoraWindowUIController: AgoraWidgetMessageObserver {
 extension AgoraWindowUIController: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        self.updateCameraRenderInfo(stream)
+        updateCameraRenderInfo(stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        self.updateCameraRenderInfo(stream)
+        updateCameraRenderInfo(stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        self.updateCameraRenderInfo(stream.toEmptyStream())
+        updateCameraRenderInfo(stream.toEmptyStream())
     }
 }
 

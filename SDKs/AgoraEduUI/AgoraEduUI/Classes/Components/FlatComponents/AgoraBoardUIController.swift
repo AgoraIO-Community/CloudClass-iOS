@@ -12,19 +12,7 @@ protocol AgoraBoardUIControllerDelegate: NSObjectProtocol {
     func onStageStateChanged(stageOn: Bool)
 }
 
-class AgoraBoardUIController: UIViewController {
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    private var boardWidget: AgoraBaseWidget?
-    private weak var delegate: AgoraBoardUIControllerDelegate?
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
+class AgoraBoardUIController: UIViewController, AgoraUIActivity {
     private var grantUsers = [String]() {
         didSet {
             if grantUsers.contains(contextPool.user.getLocalUserInfo().userUuid) {
@@ -49,16 +37,34 @@ class AgoraBoardUIController: UIViewController {
                                  type: .notice)
             }
         }
-    } 
+    }
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
+    private var boardWidget: AgoraBaseWidget?
+    private weak var delegate: AgoraBoardUIControllerDelegate?
     
     init(context: AgoraEduContextPool,
          delegate: AgoraBoardUIControllerDelegate? = nil,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
         self.contextPool = context
         self.subRoom = subRoom
         self.delegate = delegate
+        
+        super.init(nibName: nil,
+                   bundle: nil)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         view.backgroundColor = .white
         
         if let `subRoom` = subRoom {
@@ -248,12 +254,14 @@ extension AgoraBoardUIController: AgoraEduRoomHandler {
 extension AgoraBoardUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
+        
         let localUserInfo = contextPool.user.getLocalUserInfo()
         
         guard !localGranted,
               localUserInfo.userRole != .teacher else {
             return
         }
+        
         let type = AgoraBoardWidgetSignal.UpdateGrantedUsers(.add([localUserInfo.userUuid]))
 
         if let message = type.toMessageString() {

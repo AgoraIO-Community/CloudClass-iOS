@@ -20,6 +20,8 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
     override init(frame: CGRect) {
         super.init(frame: frame)
         initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     required init?(coder: NSCoder) {
@@ -33,33 +35,9 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
         addSubview(titleLabel)
         addSubview(recordingStateView)
         addSubview(recordingLabel)
-        
-        updateViewProperties()
-        updateViewFrame()
     }
     
-    func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        let frame = ui.frame
-        let color = ui.color
-        
-        let font = frame.room_state_bar_font
-        
-        timeLabel.font = font
-        timeLabel.textColor = color.room_state_label_before_color
-        
-        sepLine.backgroundColor = color.room_state_sep_line_color
-        
-        titleLabel.font = font
-        titleLabel.textColor = color.room_state_title_color
-        
-        recordingStateView.backgroundColor = color.room_state_bar_recording_state_background_color
-        
-        recordingLabel.textColor = color.room_state_bar_recording_text_color
-        recordingLabel.font = font
-    }
-    
-    func updateViewFrame() {
+    func initViewFrame() {
         netStateView.mas_makeConstraints { make in
             if #available(iOS 11.0, *) {
                 make?.left.equalTo()(self.mas_safeAreaLayoutGuideLeft)?.offset()(10)
@@ -116,5 +94,26 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
         }
         
         recordingStateView.layer.cornerRadius = redViewCornerRadius
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        let frame = ui.frame
+        let color = ui.color
+        
+        let font = frame.room_state_bar_font
+        
+        timeLabel.font = font
+        timeLabel.textColor = color.room_state_label_before_color
+        
+        sepLine.backgroundColor = color.room_state_sep_line_color
+        
+        titleLabel.font = font
+        titleLabel.textColor = color.room_state_title_color
+        
+        recordingStateView.backgroundColor = color.room_state_bar_recording_state_background_color
+        
+        recordingLabel.textColor = color.room_state_bar_recording_text_color
+        recordingLabel.font = font
     }
 }

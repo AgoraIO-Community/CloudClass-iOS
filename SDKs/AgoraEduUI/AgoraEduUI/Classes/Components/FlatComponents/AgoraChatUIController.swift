@@ -15,11 +15,8 @@ protocol AgoraChatUIControllerDelegate: NSObjectProtocol {
     func updateChatRedDot(isShow: Bool)
 }
 
-class AgoraChatUIController: UIViewController {
-    /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    private var widget: AgoraBaseWidget?
+class AgoraChatUIController: UIViewController, AgoraUIActivity {
+    
     
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
@@ -37,6 +34,21 @@ class AgoraChatUIController: UIViewController {
         }
     }
     
+    private var redDotShow: Bool = false {
+        didSet {
+            guard redDotShow != oldValue else {
+                return
+            }
+             
+            delegate?.updateChatRedDot(isShow: redDotShow)
+        }
+    }
+    
+    /** SDK环境*/
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
+    private var widget: AgoraBaseWidget?
+    
     // public
     public let suggestSize = CGSize(width: 200,
                                     height: 287)
@@ -50,23 +62,13 @@ class AgoraChatUIController: UIViewController {
     public var hideAnnouncement = false
     
     public var hideInput = false
-        
-    private var redDotShow: Bool = false {
-        didSet {
-            guard redDotShow != oldValue else {
-                return
-            }
-             
-            delegate?.updateChatRedDot(isShow: redDotShow)
-        }
-    }
     
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
         self.contextPool = context
         self.subRoom = subRoom
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -99,13 +101,13 @@ class AgoraChatUIController: UIViewController {
 
 extension AgoraChatUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        createWidget()
+        viewWillActive()
     }
 }
 
 extension AgoraChatUIController: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        createWidget()
+        viewWillActive()
     }
 }
 
