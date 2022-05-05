@@ -24,8 +24,11 @@ class AgoraOneToOneTabView: UIView {
     
     private var chatRemindDot: UIView!
     
-    override init(frame: CGRect) {
+    init(frame: CGRect,
+         delegate: AgoraOneToOneTabViewDelegate? ) {
         super.init(frame: frame)
+        
+        self.delegate = delegate
         
         createViews()
         createConstraint()

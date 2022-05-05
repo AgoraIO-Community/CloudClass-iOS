@@ -21,6 +21,16 @@ extension AgoraEduContextUserInfo {
     }
 }
 
+extension AgoraEduContextUserRole {
+    var toRender: AgoraRenderUserRole {
+        switch self {
+        case .teacher:  return .teacher
+        case .student:  return .student
+        default:        return .student
+        }
+    }
+}
+
 extension AgoraEduContextMediaStreamType {
     var hasAudio: Bool {
         switch self {

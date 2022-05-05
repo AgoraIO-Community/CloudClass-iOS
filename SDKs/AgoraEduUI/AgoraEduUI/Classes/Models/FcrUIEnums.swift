@@ -8,14 +8,17 @@
 import AgoraUIBaseViews
 
 // MARK: - Render
+enum AgoraRenderUserRole {
+    case teacher, student
+}
+
 enum AgoraRenderUserState {
     case normal, none, window
     
     var image: UIImage? {
         switch self {
-        case .normal: return nil
         case .none:   return UIImage.agedu_named("ic_member_no_user")
-        case .window: return UIImage.agedu_named("ic_member_empty")
+        default:      return nil
         }
     }
 }

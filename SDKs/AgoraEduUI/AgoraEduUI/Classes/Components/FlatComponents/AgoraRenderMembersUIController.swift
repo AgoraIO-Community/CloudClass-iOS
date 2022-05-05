@@ -11,7 +11,7 @@ import AgoraWidget
 
 protocol AgoraRenderUIControllerDelegate: NSObjectProtocol {
     func onClickMemberAt(view: UIView,
-                         UUID: String)
+                         userId: String)
 }
 
 class AgoraRenderMembersUIController: UIViewController {
@@ -56,12 +56,13 @@ class AgoraRenderMembersUIController: UIViewController {
     private var containRoles: [AgoraEduContextUserRole]
     private(set) var expandFlag: Bool = false
     private(set) var maxCount: Int = 6
-    var windowArr = [String]()
+    var windowList = [String]()
     
-    var dataSource: [AgoraRenderMemberViewModel] = []
-    var viewsDic: [String : AgoraRenderMemberView] = [:]
-    // streamId
-    var renderingList = [String]()
+    var dataSource = [AgoraRenderMemberViewModel]()
+    var viewsMap = [String : AgoraRenderMemberView]()
+    // streamId: bool
+    var videoRenderingList = [String]()
+    var audioPlayingList = [String]()
     
     // views
     private(set) var contentView: UIView!
@@ -97,7 +98,7 @@ class AgoraRenderMembersUIController: UIViewController {
             self.dataSource = data
             for model in data {
                 let newView = AgoraRenderMemberView(frame: .zero)
-                viewsDic[model.userId] = newView
+                viewsMap[model.userId] = newView
                 setViewWithModel(view: newView,
                                  model: model)
             }
@@ -110,9 +111,9 @@ class AgoraRenderMembersUIController: UIViewController {
             return
         }
         if !rendEnable {
-            windowArr.append(userId)
+            windowList.append(userId)
         } else {
-            windowArr.removeAll(userId)
+            windowList.removeAll(userId)
         }
         updateModel(userId: userId)
     }
@@ -126,14 +127,14 @@ class AgoraRenderMembersUIController: UIViewController {
     
     func getRenderViewForUser(with userId: String) -> UIView? {
         var view: UIView?
-        let indexes = self.collectionView.indexPathsForVisibleItems
-        for (i, model) in self.dataSource.enumerated() {
-            if model.userId == userId {
-                if let indexPath = indexes.first(where: {$0.row == i}) {
-                    view = self.collectionView.cellForItem(at: indexPath)
-                }
-                break
+        for (i, model) in dataSource.enumerated() {
+            guard model.userId == userId else {
+                continue
             }
+            let indexPath = IndexPath(item: i,
+                                      section: 0)
+            view = collectionView.cellForItem(at: indexPath)
+            break
         }
         return view
     }
@@ -162,14 +163,15 @@ class AgoraRenderMembersUIController: UIViewController {
     // MARK: - for sub class
     func addModels(userList: [String]) {
         var indexs = [IndexPath]()
-        for (i,userId) in userList.enumerated() {
+        for (i, userId) in userList.enumerated() {
             guard !dataSource.contains(where: {$0.userId == userId}) else {
                 continue
             }
-            let model = makeModel(userId: userId)
+            let model = makeModel(userId: userId,
+                                  role: .student)
             dataSource.append(model)
             let newView = AgoraRenderMemberView(frame: .zero)
-            viewsDic[userId] = newView
+            viewsMap[userId] = newView
             setViewWithModel(view: newView,
                              model: model)
             let indexPath = IndexPath(item: dataSource.count - 1,
@@ -183,15 +185,16 @@ class AgoraRenderMembersUIController: UIViewController {
     
     func updateModel(userId: String) {
         guard dataSource.contains(where: {$0.userId == userId}),
-              let view = viewsDic[userId] else {
+              let view = viewsMap[userId] else {
             return
         }
         
-        for (i,model) in dataSource.enumerated() {
+        for (i, model) in dataSource.enumerated() {
             guard userId == model.userId else {
                 continue
             }
-            let model = makeModel(userId: userId)
+            let model = makeModel(userId: userId,
+                                  role: model.userRole)
             dataSource[i] = model
             setViewWithModel(view: view,
                              model: model)
@@ -202,7 +205,7 @@ class AgoraRenderMembersUIController: UIViewController {
     
     func deleteModels(userList: [String]) {
         var indexs = [IndexPath]()
-        for (i,userId) in userList.enumerated() {
+        for (i, userId) in userList.enumerated() {
             guard let model = dataSource.first(where: {$0.userId == userId}) else {
                 continue
             }
@@ -211,7 +214,7 @@ class AgoraRenderMembersUIController: UIViewController {
             indexs.append(indexPath)
             
             dataSource.removeAll(where: {$0.userId == userId})
-            viewsDic.removeValue(forKey: userId)
+            viewsMap.removeValue(forKey: userId)
             contextMediaHandle(videoOn: false,
                                audioOn: false,
                                view: nil,
@@ -221,14 +224,15 @@ class AgoraRenderMembersUIController: UIViewController {
         collectionView.deleteItems(at: indexs)
     }
     
-    func makeModel(userId: String) -> AgoraRenderMemberViewModel {
+    func makeModel(userId: String,
+                   role: AgoraRenderUserRole = .student) -> AgoraRenderMemberViewModel {
         guard let user = userController.getUserInfo(userUuid: userId) else {
-            return AgoraRenderMemberViewModel.defaultNilValue()
+            return AgoraRenderMemberViewModel.defaultNilValue(role: role)
         }
         let streamList = streamController.getStreamList(userUuid: userId)
         let stream = streamList?.first(where: {$0.videoSourceType == .camera})
         
-        let windowFlag = windowArr.contains(userId)
+        let windowFlag = windowList.contains(userId)
         return AgoraRenderMemberViewModel.model(user: user,
                                                 stream: stream,
                                                 windowFlag: windowFlag)
@@ -385,7 +389,7 @@ extension AgoraRenderMembersUIController: UICollectionViewDataSource, UICollecti
         let cell = collectionView.dequeueReusableCell(withClass: UICollectionViewCell.self,
                                                       for: indexPath)
         let model = dataSource[indexPath.item]
-        guard let view = viewsDic[model.userId] else {
+        guard let view = viewsMap[model.userId] else {
             return cell
         }
         
@@ -405,7 +409,7 @@ extension AgoraRenderMembersUIController: UICollectionViewDataSource, UICollecti
         if let cell = collectionView.cellForItem(at: indexPath),
            u.userId != "" {
             delegate?.onClickMemberAt(view: cell,
-                                      UUID: u.userId)
+                                      userId: u.userId)
         }
     }
 }
@@ -417,7 +421,7 @@ extension AgoraRenderMembersUIController: AgoraWidgetActivityObserver {
     }
     
     public func onWidgetInactive(_ widgetId: String) {
-        windowArr = [String]()
+        windowList = [String]()
     }
 }
 
@@ -442,8 +446,8 @@ extension AgoraRenderMembersUIController: AgoraEduUserHandler {
     }
     
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
-        let localUserRole = userController.getLocalUserInfo().userRole
-        guard let model = dataSource.first(where: {$0.userId == user.userUuid}) else {
+        guard containRoles.contains(.teacher),
+              let model = dataSource.first(where: {$0.userId == user.userUuid}) else {
             return
         }
         updateModel(userId: model.userId)
@@ -452,17 +456,21 @@ extension AgoraRenderMembersUIController: AgoraEduUserHandler {
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
-        // TODO: - 1V1，小班课老师，大班课老师
-        let localUserRole = userController.getLocalUserInfo().userRole
-        guard containRoles.contains([.student,.teacher]) else {
+        guard containRoles.contains([.teacher]),
+              let model = dataSource.first(where: {$0.userId == user.userUuid}) else {
             return
         }
-        if localUserRole == .student,
-           user.userRole == .teacher {
-            
-        } else if localUserRole == .student,
-                  user.userRole == .teacher {
-            
+        let roomType = contextPool.room.getRoomInfo().roomType
+        switch roomType {
+        case .oneToOne:
+            updateModel(userId: user.userUuid)
+        case .lecture:
+            guard user.userRole == .teacher else {
+                return
+            }
+            updateModel(userId: user.userUuid)
+        default:
+            break
         }
     }
     
@@ -470,7 +478,7 @@ extension AgoraRenderMembersUIController: AgoraEduUserHandler {
                          duration: Int,
                          payload: [String : Any]?) {
         guard let model = dataSource.first(where: {$0.userId == userUuid}),
-           let view = viewsDic[model.userId] else {
+           let view = viewsMap[model.userId] else {
             return
         }
         view.startWaving()
@@ -479,7 +487,7 @@ extension AgoraRenderMembersUIController: AgoraEduUserHandler {
     func onUserHandsDown(userUuid: String,
                          payload: [String : Any]?) {
         guard let model = dataSource.first(where: {$0.userId == userUuid}),
-           let view = viewsDic[model.userId] else {
+           let view = viewsMap[model.userId] else {
             return
         }
         view.stopWaving()
@@ -491,7 +499,7 @@ extension AgoraRenderMembersUIController: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
                          streamUuid: String) {
         guard let model = self.dataSource.first { $0.streamId == streamUuid },
-        let view = viewsDic[model.userId] else {
+        let view = viewsMap[model.userId] else {
             return
         }
         view.updateVolume(volume)
@@ -554,12 +562,40 @@ extension AgoraRenderMembersUIController {
 // MARK: - private
 private extension AgoraRenderMembersUIController {
     func createAllRender() {
-        // TODO: remake userlist
-        if containRoles.contains(.student),
-           let students = userController.getCoHostList()?.filter({$0.userRole == .student}) {
-            let userList = students.map({return $0.userUuid})
-            addModels(userList: userList)
+        // 此处仅处理dataSource预设值情况
+        guard containRoles.contains(.teacher),
+              dataSource.contains(where: {$0.userRole == .teacher}) else {
+            return
         }
+        
+        let teacherInfo = userController.getUserList(role: .teacher)?.first
+        let studentFlag = (containRoles.contains(.teacher) && dataSource.contains(where: {$0.userRole == .student}))
+        
+        for (i, model) in dataSource.enumerated() {
+            if model.userRole == .teacher,
+               let `teacherInfo` = teacherInfo {
+                let model = makeModel(userId: teacherInfo.userUuid,
+                                      role: .teacher)
+                let newView = AgoraRenderMemberView(frame: .zero)
+                dataSource[i] = model
+                viewsMap[teacherInfo.userUuid] = newView
+                setViewWithModel(view: newView,
+                                 model: model)
+            }
+            
+            if studentFlag,
+               model.userRole == .student,
+               let studentInfo = userController.getUserList(role: .student)?.first {
+                let model = makeModel(userId: studentInfo.userUuid,
+                                      role: .teacher)
+                let newView = AgoraRenderMemberView(frame: .zero)
+                dataSource[i] = model
+                viewsMap[studentInfo.userUuid] = newView
+                setViewWithModel(view: newView,
+                                 model: model)
+            }
+        }
+        
         updateViewFrame()
         collectionView.reloadData()
     }
@@ -582,8 +618,10 @@ private extension AgoraRenderMembersUIController {
         guard let streamId = streamId else {
             return
         }
+        
+        // video on
         if videoOn,
-           !renderingList.contains(streamId),
+           !videoRenderingList.contains(streamId),
            let renderView = view {
             let localUid = userController.getLocalUserInfo().userUuid
             if let localStreamList = streamController.getStreamList(userUuid: localUid),
@@ -601,17 +639,26 @@ private extension AgoraRenderMembersUIController {
                                                renderConfig: renderConfig,
                                                streamUuid: streamId)
             
-            renderingList.append(streamId)
-        } else if !videoOn {
-            contextPool.media.stopRenderVideo(roomUuid: roomId,
-                                              streamUuid: streamId)
-            renderingList.removeAll(streamId)
+            videoRenderingList.append(streamId)
         }
         
-        if audioOn {
+        // video off
+        if !videoOn,
+           videoRenderingList.contains(streamId) {
+            contextPool.media.stopRenderVideo(roomUuid: roomId,
+                                              streamUuid: streamId)
+            videoRenderingList.removeAll(streamId)
+        }
+        
+        // audio on
+        if audioOn,
+           !audioPlayingList.contains(streamId) {
             contextPool.media.startPlayAudio(roomUuid: roomId,
                                              streamUuid: streamId)
-        } else {
+        }
+        // audio off
+        if !audioOn,
+           audioPlayingList.contains(streamId) {
             contextPool.media.stopPlayAudio(roomUuid: roomId,
                                             streamUuid: streamId)
         }

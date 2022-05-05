@@ -208,6 +208,8 @@ extension AgoraToolBarUIController: AgoraUIContentContainer {
     
     func updateViewProperties() {
         collectionView.backgroundColor = .clear
+        
+        updateDataSource()
     }
 }
 
@@ -235,6 +237,9 @@ extension AgoraToolBarUIController: AgoraEduGroupHandler {
 // MARK: - Private
 private extension AgoraToolBarUIController {
     func updateDataSource() {
+        guard collectionView != nil else {
+            return
+        }
         var temp = self.tools
         self.dataSource = temp.removeAll(self.hiddenTools)
         let count = CGFloat(self.dataSource.count)

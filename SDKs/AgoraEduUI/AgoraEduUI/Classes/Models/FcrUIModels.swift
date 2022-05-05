@@ -12,6 +12,7 @@ import AgoraEduContext
 struct AgoraRenderMemberViewModel {
     var userId: String
     var userName: String
+    var userRole: AgoraRenderUserRole
     var streamId: String?
     var userState: AgoraRenderUserState
     var videoState: AgoraRenderMediaState
@@ -19,21 +20,22 @@ struct AgoraRenderMemberViewModel {
     
     private var curWindow: Bool = false
     
-    static func defaultNilValue(curWindow: Bool = false) -> AgoraRenderMemberViewModel {
+    static func defaultNilValue(role: AgoraRenderUserRole) -> AgoraRenderMemberViewModel {
         return AgoraRenderMemberViewModel(userId: "",
                                           userName: "",
+                                          userRole: role,
                                           streamId: nil,
                                           userState: .none,
                                           videoState: .deviceOff,
                                           audioState: .deviceOff,
-                                          curWindow: curWindow)
+                                          curWindow: false)
     }
     
     static func model(user: AgoraEduContextUserInfo,
                       stream: AgoraEduContextStreamInfo?,
                       windowFlag: Bool = false,
                       curWindow: Bool = false) -> AgoraRenderMemberViewModel {
-        var model = AgoraRenderMemberViewModel.defaultNilValue()
+        var model = AgoraRenderMemberViewModel.defaultNilValue(role: user.userRole.toRender)
         /// user
         model.userId = user.userUuid
         model.userName = user.userName
@@ -49,7 +51,7 @@ struct AgoraRenderMemberViewModel {
                       stream: AgoraEduContextStreamInfo?,
                       windowFlag: Bool = false,
                       curWindow: Bool = false) -> AgoraRenderMemberViewModel {
-        var model = AgoraRenderMemberViewModel.defaultNilValue()
+        var model = AgoraRenderMemberViewModel.defaultNilValue(role: oldValue.userRole)
         /// user
         model.userId = oldValue.userId
         model.userName = oldValue.userName
@@ -100,8 +102,8 @@ struct AgoraRenderMemberViewModel {
     }
 
     func videoImage() -> UIImage? {
-        if let image = userState.image {
-            return image
+        if userState != .normal {
+            return userState.image
         } else {
             var imageName = ""
             switch videoState {
@@ -127,7 +129,6 @@ struct AgoraRenderMemberViewModel {
     }
     
     func setRenderMemberView(view: AgoraRenderMemberView) {
-        // TODO: 判断hide，更新文档
         // user
         var hideNameAudioFlag = true
         if (curWindow && userState == .window) ||
@@ -138,7 +139,8 @@ struct AgoraRenderMemberViewModel {
         view.nameLabel.text = self.userName
         // video
         view.videoView.isHidden = (hideNameAudioFlag || videoState != .normal)
-        view.videoMaskView.image = self.videoImage()
+        view.videoMaskView.isHidden = (!curWindow && userState == .window)
+        view.videoMaskView.imageView.image = self.videoImage()
         
         // audio
         view.micView.isHidden = hideNameAudioFlag

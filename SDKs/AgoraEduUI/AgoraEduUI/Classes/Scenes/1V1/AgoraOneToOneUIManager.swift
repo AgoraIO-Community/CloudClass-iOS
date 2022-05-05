@@ -13,10 +13,8 @@ import UIKit
 
 @objc public class AgoraOneToOneUIManager: AgoraEduUIManager {
     /** 课堂状态 控制器（仅教师端）*/
-    private lazy var classStateController: AgoraClassStateUIController = {
-        return AgoraClassStateUIController(context: contextPool,
-                                           delegate: self)
-    }()
+    private lazy var classStateController = AgoraClassStateUIController(context: contextPool,
+                                                                        delegate: self)
     
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuController: AgoraRenderMenuUIController = {
@@ -26,10 +24,7 @@ import UIKit
     }()
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudController: AgoraCloudUIController = {
-        let vc = AgoraCloudUIController(context: contextPool)
-        return vc
-    }()
+    private lazy var cloudController = AgoraCloudUIController(context: contextPool)
     
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
@@ -40,31 +35,54 @@ import UIKit
     }()
     
     /** 状态栏 控制器*/
-    private var stateController: AgoraRoomStateUIController!
+    private lazy var stateController = AgoraRoomStateUIController(context: contextPool)
     /** 全局状态 控制器（自身不包含UI）*/
-    private var globalController: AgoraRoomGlobalUIController!
+    private lazy var globalController = AgoraRoomGlobalUIController(context: contextPool,
+                                                                    delegate: nil)
     /** 工具栏*/
-    private var toolBarController: AgoraToolBarUIController!
-   
+    private lazy var toolBarController = AgoraToolBarUIController(context: contextPool)
+    
     /** 渲染 控制器*/
-    private var renderController: AgoraRenderMembersUIController!
+    private lazy var renderController: AgoraRenderMembersUIController = {
+        // 1V1中需要默认两个model
+        var models = [AgoraRenderMemberViewModel]()
+        let localInfo = contextPool.user.getLocalUserInfo()
+        let localStream = contextPool.stream.getStreamList(userUuid: localInfo.userUuid)?.first(where: {$0.videoSourceType == .camera})
+        if localInfo.userRole == .student {
+            models.append(AgoraRenderMemberViewModel.defaultNilValue(role: .teacher))
+            models.append(AgoraRenderMemberViewModel.model(user: localInfo,
+                                                           stream: localStream))
+        } else {
+            models.append(AgoraRenderMemberViewModel.model(user: localInfo,
+                                                           stream: localStream))
+            models.append(AgoraRenderMemberViewModel.defaultNilValue(role: .student))
+        }
+        let renderController = AgoraRenderMembersUIController(context: contextPool,
+                                                         delegate: self,
+                                                         containRoles: [.student,.teacher],
+                                                         max: 2,
+                                                         dataSource: models)
+        return renderController
+    }()
     
     /** 右边用来切圆角和显示背景色的容器视图*/
-    private var rightContentView: UIView!
+    private lazy var rightContentView = UIView()
     /** 白板 控制器*/
-    private var boardController: AgoraBoardUIController!
+    private lazy var boardController = AgoraBoardUIController(context: contextPool)
    
     /** 工具集合 控制器（观众端没有）*/
-    private var toolCollectionController: AgoraToolCollectionUIController!
+    private lazy var toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
+                                                                                delegate: self)
     /** 白板翻页 控制器（观众端没有）*/
-    private var boardPageController: AgoraBoardPageUIController!
+    private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool)
     /** 聊天 控制器*/
-    private var chatController: AgoraChatUIController?
+    private lazy var chatController = AgoraChatUIController(context: contextPool)
     /** 教具 控制器*/
-    private var classToolsController: AgoraClassToolsUIController!
+    private lazy var classToolsController = AgoraClassToolsUIController(context: contextPool)
     /** 大窗 控制器*/
-    private var windowController: AgoraWindowUIController!
-    private var tabSelectView: AgoraOneToOneTabView?
+    private lazy var windowController = AgoraWindowUIController(context: contextPool)
+    private lazy var tabSelectView = AgoraOneToOneTabView(frame: .zero,
+                                                     delegate: self)
     
     private var isJoinedRoom = false
     
@@ -78,15 +96,9 @@ import UIKit
         super.viewDidLoad()
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
-        self.createViews()
-        self.createConstraint()
-        if UIDevice.current.isPad {
-            self.createPadViews()
-        } else {
-            self.createPhoneViews()
-        }
-        
-        self.updateRenderLayout()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
          
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -146,18 +158,164 @@ extension AgoraOneToOneUIManager: FcrAudioRawDataObserver {
                          to: "audiorawdata.pcm")
     }
 }
+// MARK: - AgoraUIContentContainer
+extension AgoraOneToOneUIManager: AgoraUIContentContainer {
+    func initViews() {
+        let userRole = contextPool.user.getLocalUserInfo().userRole
+        
+        addChild(stateController)
+        contentView.addSubview(stateController.view)
+        
+        globalController.roomDelegate = self
+        addChild(globalController)
+        globalController.viewDidLoad()
+        
+        // 视图层级：白板，大窗，工具
+        addChild(boardController)
+        contentView.addSubview(boardController.view)
+        
+        rightContentView.clipsToBounds = true
+        contentView.addSubview(rightContentView)
+        
+        addChild(renderController)
+        rightContentView.addSubview(renderController.view)
+        
+        windowController.delegate = self
+        addChild(windowController)
+        contentView.addSubview(windowController.view)
+        
+        toolBarController.delegate = self
+        toolBarController.tools = [.setting]
+        contentView.addSubview(toolBarController.view)
+        
+        addChild(classToolsController)
+        contentView.addSubview(classToolsController.view)
+        
+        if userRole != .observer {
+            toolCollectionController.view.isHidden = true
+            view.addSubview(toolCollectionController.view)
+            
+            contentView.addSubview(boardPageController.view)
+            boardPageController.view.isHidden = true
+            addChild(boardPageController)
+        }
+        
+        if userRole == .teacher {
+            addChild(classStateController)
+            addChild(cloudController)
+            contentView.addSubview(cloudController.view)
+            addChild(renderMenuController)
+            contentView.addSubview(renderMenuController.view)
+            
+            renderMenuController.view.isHidden = true
+            cloudController.view.isHidden = true
+            toolCollectionController.view.isHidden = false
+            boardPageController.view.isHidden = false
+        }
+        
+        createChatController()
+        
+        if !UIDevice.current.isPad {
+            rightContentView.addSubview(tabSelectView)
+        }
+    }
+    
+    func initViewFrame() {
+        let userRole = contextPool.user.getLocalUserInfo().userRole
+        stateController.view.mas_makeConstraints { make in
+            make?.top.left().right().equalTo()(0)
+            make?.height.equalTo()(AgoraFit.scale(23))
+        }
+        boardController.view.mas_makeConstraints { make in
+            make?.left.bottom().equalTo()(0)
+            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+        }
+        windowController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
+        classToolsController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
+        
+        if userRole == .teacher {
+            self.toolBarController.view.mas_remakeConstraints { make in
+                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+            }
+        } else {
+            self.toolBarController.view.mas_remakeConstraints { make in
+                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+            }
+        }
+        
+        if userRole != .observer {
+            toolCollectionController.view.mas_makeConstraints { make in
+                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.width.height().equalTo()(toolCollectionController.suggestLength)
+            }
+            boardPageController.view.mas_makeConstraints { make in
+                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+                make?.width.equalTo()(168)
+            }
+        }
+        
+        if UIDevice.current.isPad {
+            rightContentView.mas_makeConstraints { make in
+                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+                make?.bottom.right().equalTo()(0)
+                make?.width.equalTo()(AgoraFit.scale(170))
+            }
+            renderController.view.mas_makeConstraints { make in
+                make?.top.left().right().equalTo()(0)
+                make?.bottom.equalTo()(rightContentView.mas_centerY)
+            }
+        } else {
+            rightContentView.mas_makeConstraints { make in
+                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+                make?.bottom.right().equalTo()(0)
+                make?.width.equalTo()(AgoraFit.scale(170))
+            }
+            tabSelectView.mas_makeConstraints { make in
+                make?.top.left().right().equalTo()(0)
+                make?.height.equalTo()(AgoraFit.scale(33))
+            }
+            renderController.view.mas_makeConstraints { make in
+                make?.top.equalTo()(tabSelectView.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.left.right().bottom().equalTo()(0)
+            }
+        }
+        
+        updateRenderLayout()
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        
+        rightContentView.backgroundColor = ui.color.one_right_content_bg_color
+        rightContentView.layer.cornerRadius = ui.frame.one_room_right_corner_radius
+    }
+}
 
 // MARK: - AgoraOneToOneTabViewDelegate
 extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
     func onChatTabSelectChanged(isSelected: Bool) {
         renderMenuController.dismissView()
-        guard let v = chatController?.view else {
+        guard let v = chatController.view else {
             return
         }
         if isSelected {
             rightContentView.addSubview(v)
             v.mas_makeConstraints { make in
-                make?.top.equalTo()(tabSelectView?.mas_bottom)
+                make?.top.equalTo()(tabSelectView.mas_bottom)
                 make?.left.right().bottom().equalTo()(0)
             }
         } else {
@@ -207,7 +365,7 @@ extension AgoraOneToOneUIManager: AgoraToolBarDelegate {
 // MARK: - AgoraChatUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraChatUIControllerDelegate {
     func updateChatRedDot(isShow: Bool) {
-        tabSelectView?.updateChatRedDot(isShow: isShow)
+        tabSelectView.updateChatRedDot(isShow: isShow)
     }
 }
 
@@ -294,26 +452,26 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
 // MARK: - AgoraRenderUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraRenderUIControllerDelegate {
     func onClickMemberAt(view: UIView,
-                         UUID: String) {
+                         userId: String) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
         
         var role = AgoraEduContextUserRole.student
         if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
-           teacehr.userUuid == UUID {
+           teacehr.userUuid == userId {
             role = .teacher
         }
         
         if let menuId = renderMenuController.userId,
-           menuId == UUID {
+           menuId == userId {
             // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
             renderMenuController.dismissView()
         } else {
             // 1. 当前menu的userId不为点击的userId，切换用户
             // 2. 当前不存在menu，显示
             renderMenuController.show(roomType: .oneToOne,
-                                      userUuid: UUID,
+                                      userUuid: userId,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
                 make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
@@ -378,174 +536,7 @@ private extension AgoraOneToOneUIManager {
         } completion: { finish in
         }
     }
-    func createViews() {
-        let userRole = contextPool.user.getLocalUserInfo().userRole
-        stateController = AgoraRoomStateUIController(context: contextPool)
-        addChild(stateController)
-        contentView.addSubview(stateController.view)
-        
-        globalController = AgoraRoomGlobalUIController(context: contextPool,
-                                                       delegate: nil)
-        globalController.roomDelegate = self
-        addChild(globalController)
-        globalController.viewDidLoad()
-        
-        // 视图层级：白板，大窗，工具
-        boardController = AgoraBoardUIController(context: contextPool)
-        addChild(boardController)
-        contentView.addSubview(boardController.view)
-        
-        rightContentView = UIView()
-        rightContentView.backgroundColor = .white
-        rightContentView.layer.cornerRadius = 4.0
-        rightContentView.clipsToBounds = true
-        contentView.addSubview(rightContentView)
-        
-        // 1V1中需要默认两个model
-        var models = [AgoraRenderMemberViewModel]()
-        let localInfo = contextPool.user.getLocalUserInfo()
-        let localStream = contextPool.stream.getStreamList(userUuid: localInfo.userUuid)?.first(where: {$0.videoSourceType == .camera})
-        if localInfo.userRole == .student {
-            models.append(AgoraRenderMemberViewModel.defaultNilValue())
-            models.append(AgoraRenderMemberViewModel.model(user: localInfo,
-                                                           stream: localStream))
-        } else {
-            models.append(AgoraRenderMemberViewModel.model(user: localInfo,
-                                                           stream: localStream))
-            models.append(AgoraRenderMemberViewModel.defaultNilValue())
-        }
-        renderController = AgoraRenderMembersUIController(context: contextPool,
-                                                          delegate: self,
-                                                          containRoles: [.student,.teacher],
-                                                          max: 2,
-                                                          dataSource: models)
-        addChild(renderController)
-        rightContentView.addSubview(renderController.view)
-        
-        windowController = AgoraWindowUIController(context: contextPool)
-        windowController.delegate = self
-        addChild(windowController)
-        contentView.addSubview(windowController.view)
-        
-        toolBarController = AgoraToolBarUIController(context: contextPool)
-        toolBarController.delegate = self
-        toolBarController.tools = [.setting]
-        contentView.addSubview(toolBarController.view)
-        
-        classToolsController = AgoraClassToolsUIController(context: contextPool)
-        addChild(classToolsController)
-        contentView.addSubview(classToolsController.view)
-        
-        if userRole != .observer {
-            toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
-                                                                       delegate: self)
-            toolCollectionController.view.isHidden = true
-            view.addSubview(toolCollectionController.view)
-            
-            boardPageController = AgoraBoardPageUIController(context: contextPool)
-            contentView.addSubview(boardPageController.view)
-            boardPageController.view.isHidden = true
-            addChild(boardPageController)
-        }
-        
-        if userRole == .teacher {
-            addChild(classStateController)
-            addChild(cloudController)
-            contentView.addSubview(cloudController.view)
-            addChild(renderMenuController)
-            contentView.addSubview(renderMenuController.view)
-            
-            renderMenuController.view.isHidden = true
-            cloudController.view.isHidden = true
-            toolCollectionController.view.isHidden = false
-            boardPageController.view.isHidden = false
-        }
-        
-        createChatController()
-    }
-    
-    func createConstraint() {
-        let userRole = contextPool.user.getLocalUserInfo().userRole
-        stateController.view.mas_makeConstraints { make in
-            make?.top.left().right().equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(23))
-        }
-        boardController.view.mas_makeConstraints { make in
-            make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-        }
-        windowController.view.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(boardController.view)
-        }
-        classToolsController.view.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(boardController.view)
-        }
-        
-        if userRole == .teacher {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
-        } else {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
-        }
-        
-        if userRole != .observer {
-            toolCollectionController.view.mas_makeConstraints { make in
-                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.width.height().equalTo()(toolCollectionController.suggestLength)
-            }
-            boardPageController.view.mas_makeConstraints { make in
-                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
-                make?.width.equalTo()(168)
-            }
-        }
-    }
-    
-    func createPhoneViews() {
-        let v = AgoraOneToOneTabView(frame: .zero)
-        v.delegate = self
-        rightContentView.addSubview(v)
-        tabSelectView = v
-        
-        rightContentView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.bottom.right().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(170))
-        }
-        tabSelectView?.mas_makeConstraints { make in
-            make?.top.left().right().equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(33))
-        }
-        renderController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(tabSelectView?.mas_bottom)?.offset()(AgoraFit.scale(1))
-            make?.left.right().bottom().equalTo()(0)
-        }
-    }
-    
-    func createPadViews() {
-        rightContentView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.bottom.right().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(170))
-        }
-        renderController.view.mas_makeConstraints { make in
-            make?.top.left().right().equalTo()(0)
-            make?.bottom.equalTo()(rightContentView.mas_centerY)
-        }
-    }
-    
+
     func updateRenderLayout() {
         view.layoutIfNeeded()
         let layout = UICollectionViewFlowLayout()
@@ -558,27 +549,26 @@ private extension AgoraOneToOneUIManager {
     }
     
     func createChatController() {
-        let controller = AgoraChatUIController(context: contextPool)
         if UIDevice.current.isPad {
-            controller.hideMiniButton = true
-            controller.hideAnnouncement = true
+            chatController.hideMiniButton = true
+            chatController.hideAnnouncement = true
         } else {
-            controller.hideTopBar = true
+            chatController.hideTopBar = true
         }
         if contextPool.user.getLocalUserInfo().userRole == .observer {
-            controller.hideInput = true
+            chatController.hideInput = true
         }
-        addChild(controller)
+        addChild(chatController)
         if UIDevice.current.isPad {
-            rightContentView.addSubview(controller.view)
-            controller.view.mas_makeConstraints { make in
+            rightContentView.addSubview(chatController.view)
+            chatController.view.mas_makeConstraints { make in
                 make?.left.right().bottom().equalTo()(0)
                 make?.top.equalTo()(rightContentView.mas_centerY)
             }
         } else {
-            let _ = controller.view
+            let _ = chatController.view
         }
-        chatController = controller
-        chatController?.delegate = self
+
+        chatController.delegate = self
     }
 }

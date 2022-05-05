@@ -509,26 +509,26 @@ extension AgoraSubRoomUIManager: AgoraChatUIControllerDelegate {
 // MARK: - AgoraRenderUIControllerDelegate
 extension AgoraSubRoomUIManager: AgoraRenderUIControllerDelegate {
     func onClickMemberAt(view: UIView,
-                         UUID: String) {
+                         userId: String) {
         guard subRoom.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
         
         var role = AgoraEduContextUserRole.student
         if let teacehr = subRoom.user.getUserList(role: .teacher)?.first,
-           teacehr.userUuid == UUID {
+           teacehr.userUuid == userId {
             role = .teacher
         }
         
         if let menuId = renderMenuController.userId,
-           menuId == UUID {
+           menuId == userId {
             // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
             renderMenuController.dismissView()
         } else {
             // 1. 当前menu的userId不为点击的userId，切换用户
             // 2. 当前不存在menu，显示
             renderMenuController.show(roomType: .small,
-                                      userUuid: UUID,
+                                      userUuid: userId,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
                 make?.top.equalTo()(view.mas_bottom)?.offset()(1)

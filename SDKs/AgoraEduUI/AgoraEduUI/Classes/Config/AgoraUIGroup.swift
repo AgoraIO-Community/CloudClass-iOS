@@ -115,9 +115,15 @@ class AgoraColorGroup {
         }
     }
     
-    var render_cell_border_color: CGColor {
+    var render_mask_border_color: CGColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!.cgColor
+        }
+    }
+    
+    var render_view_border_color: CGColor {
+        switch mode {
+        case .agoraLight:  return UIColor.clear.cgColor
         }
     }
     
@@ -226,6 +232,12 @@ class AgoraColorGroup {
         }
     }
     
+    var one_right_content_bg_color: UIColor {
+        switch mode {
+        case .agoraLight: return .white
+        }
+    }
+    
     var one_room_setting_selected_bg_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x357BF6)!
@@ -263,6 +275,8 @@ struct AgoraFrameGroup {
     
     // room
     var room_border_width: CGFloat = 1
+    
+    var one_room_right_corner_radius: CGFloat = 4
     // Render
     var render_label_shadow_radius: CGFloat = 2
     

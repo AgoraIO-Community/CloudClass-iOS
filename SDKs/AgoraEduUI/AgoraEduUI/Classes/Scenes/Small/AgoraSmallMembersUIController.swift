@@ -24,7 +24,7 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
     
     override func viewWillActive() {
         contextPool.group.registerGroupEventHandler(self)
-        super.viewWillActive()
+ 
         let localUserId = userController.getLocalUserInfo().userUuid
         if let teacher = userController.getUserList(role: .teacher)?.first,
            let subRoomList = contextPool.group.getSubRoomList() {
@@ -41,6 +41,13 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
                                                                 stream: stream)
             }
         }
+        
+        if let students = userController.getCoHostList()?.filter({$0.userRole == .student}) {
+            let userList = students.map({return $0.userUuid})
+            addModels(userList: userList)
+        }
+        updateViewFrame()
+        collectionView.reloadData()
     }
     
     override func viewWillInactive() {
@@ -61,9 +68,9 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
         if let model = self.teacherModel,
            model.userId == userId {
             if !rendEnable {
-                windowArr.append(userId)
+                windowList.append(userId)
             } else {
-                windowArr.removeAll(userId)
+                windowList.removeAll(userId)
             }
             updateModel(userId: userId)
         } else {
@@ -200,9 +207,10 @@ extension AgoraSmallMembersUIController {
     override func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
-        if user.userRole == .teacher {
-            self.teacherModel = nil
+        guard user.userRole == .teacher else {
+            return
         }
+        self.teacherModel = nil
     }
 }
 
@@ -227,7 +235,7 @@ private extension AgoraSmallMembersUIController {
             return
         }
         delegate?.onClickMemberAt(view: teacherView,
-                                  UUID: model.userId)
+                                  userId: model.userId)
     }
     
     func setTeacherModel() {

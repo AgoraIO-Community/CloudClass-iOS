@@ -381,7 +381,8 @@ private extension AgoraWindowUIController {
     func makeRenderModel(userId: String,
                          stream: AgoraEduContextStreamInfo) -> AgoraRenderMemberViewModel {
         guard let user = userController.getAllUserList().first(where: {$0.userUuid == userId}) else {
-            return AgoraRenderMemberViewModel.defaultNilValue()
+            // TODO: 
+            return AgoraRenderMemberViewModel.defaultNilValue(role: .student)
         }
         var model = AgoraRenderMemberViewModel.model(user: user,
                                                      stream: stream,

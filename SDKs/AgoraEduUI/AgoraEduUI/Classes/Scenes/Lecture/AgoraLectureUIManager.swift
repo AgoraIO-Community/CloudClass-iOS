@@ -52,7 +52,7 @@ import AgoraWidget
                                                                               delegate: self,
                                                                               containRoles: [.teacher],
                                                                               max: 1,
-                                                                              dataSource: [AgoraRenderMemberViewModel.defaultNilValue()])
+                                                                              dataSource: [AgoraRenderMemberViewModel.defaultNilValue(role: .teacher)])
     /** 白板 控制器*/
     private lazy var boardController = AgoraBoardUIController(context: contextPool)
     
@@ -148,8 +148,8 @@ import AgoraWidget
         contentView.addSubview(classToolsController.view)
 
         if userRole == .teacher {
-            contentView.addSubview(toolCollectionController.view)
             addChild(toolCollectionController)
+            contentView.addSubview(toolCollectionController.view)
             
             contentView.addSubview(boardPageController.view)
             addChild(boardPageController)
@@ -168,12 +168,9 @@ import AgoraWidget
             toolCollectionController.view.isHidden = false
             boardPageController.view.isHidden = false
         } else if userRole == .student {
-            toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
-                                                                       delegate: self)
-            contentView.addSubview(toolCollectionController.view)
             addChild(toolCollectionController)
+            contentView.addSubview(toolCollectionController.view)
             
-            boardPageController = AgoraBoardPageUIController(context: contextPool)
             contentView.addSubview(boardPageController.view)
             addChild(boardPageController)
             
@@ -202,19 +199,19 @@ import AgoraWidget
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))
         }
-        boardController.view.mas_makeConstraints { make in
-            make?.left.bottom().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(465))
-            make?.height.equalTo()(AgoraFit.scale(262))
-        }
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         teacherRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.left.equalTo()(boardController.view.mas_right)?.offset()(AgoraFit.scale(2))
             make?.right.equalTo()(0)
+            make?.width.equalTo()(AgoraFit.scale(170))
             make?.height.equalTo()(AgoraFit.scale(112))
+        }
+        boardController.view.mas_makeConstraints { make in
+            make?.left.bottom().equalTo()(0)
+            make?.right.equalTo()(teacherRenderController.view.mas_left)?.offset()(AgoraFit.scale(-2))
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
         if userRole == .teacher {
             self.toolBarController.view.mas_remakeConstraints { make in
@@ -247,8 +244,7 @@ import AgoraWidget
 
         chatController.view.mas_makeConstraints { make in
             make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.left.equalTo()(boardController.view.mas_right)?.offset()(AgoraFit.scale(2))
-            make?.right.bottom().equalTo()(0)
+            make?.left.right().equalTo()(teacherRenderController.view)
         }
         
         classToolsController.view.mas_makeConstraints { make in
@@ -338,26 +334,26 @@ extension AgoraLectureUIManager: AgoraRenderMenuUIControllerDelegate {
 // MARK: - AgoraRenderUIControllerDelegate
 extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
     func onClickMemberAt(view: UIView,
-                         UUID: String) {
+                         userId: String) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
         
         var role = AgoraEduContextUserRole.student
         if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
-           teacehr.userUuid == UUID {
+           teacehr.userUuid == userId {
             role = .teacher
         }
         
         if let menuId = renderMenuController.userId,
-           menuId == UUID {
+           menuId == userId {
             // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
             renderMenuController.dismissView()
         } else {
             // 1. 当前menu的userId不为点击的userId，切换用户
             // 2. 当前不存在menu，显示
             renderMenuController.show(roomType: .lecture,
-                                      userUuid: UUID,
+                                      userUuid: userId,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
                 make?.top.equalTo()(view.mas_bottom)?.offset()(1)
