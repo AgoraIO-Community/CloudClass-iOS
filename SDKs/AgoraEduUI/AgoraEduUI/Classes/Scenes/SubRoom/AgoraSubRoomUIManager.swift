@@ -144,26 +144,26 @@ import AgoraWidget
     
     @objc public override func exitClassRoom(reason: AgoraClassRoomExitReason,
                                              roomType: AgoraClassRoomExitRoomType) {
+        let roomId = subRoom.getSubRoomInfo().subRoomUuid
+        let userId = subRoom.user.getLocalUserInfo().userUuid
+        let group = contextPool.group
+        
         switch roomType {
         case .main:
-            subRoom.leaveSubRoom()
-            
-            dismiss(animated: true) { [weak self] in
-                guard let `self` = self else {
-                    return
-                }
-                
-                self.mainDelegate?.subNeedExitAllRooms(reason: reason)
-            }
+            group.removeUserListFromSubRoom(userList: [userId],
+                                            subRoomUuid: roomId,
+                                            success: { [weak self] in
+                                                guard let `self` = self else {
+                                                    return
+                                                }
+                                                
+                                                self.mainDelegate?.subNeedExitAllRooms(reason: reason)
+                                            }, failure: nil)
         case .sub:
-            let roomId = subRoom.getSubRoomInfo().subRoomUuid
-            let userId = subRoom.user.getLocalUserInfo().userUuid
-            contextPool.group.removeUserListFromSubRoom(userList: [userId],
-                                                        subRoomUuid: roomId,
-                                                        success: nil,
-                                                        failure: nil)
-            dismiss(reason: reason,
-                    animated: true)
+            group.removeUserListFromSubRoom(userList: [userId],
+                                            subRoomUuid: roomId,
+                                            success: nil,
+                                            failure: nil)
         }
     }
     
