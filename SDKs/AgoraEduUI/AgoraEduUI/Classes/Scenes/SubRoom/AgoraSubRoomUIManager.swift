@@ -91,7 +91,9 @@ import AgoraWidget
     private weak var mainDelegate: AgoraEduUISubManagerCallback?
     
     private var subRoom: AgoraEduSubRoomContext
-    
+
+    private var isJoinedRoom = false
+        
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
          subDelegate: AgoraEduUIManagerCallback?,
@@ -118,13 +120,15 @@ import AgoraWidget
         updateRenderCollectionLayout()
         
         AgoraLoading.hide()
-        AgoraLoading.loading()
         
         subRoom.joinSubRoom { [weak self] in
             AgoraLoading.hide()
+            
             guard let `self` = self else {
                 return
             }
+            
+            self.isJoinedRoom = true
             
             if self.subRoom.user.getLocalUserInfo().userRole == .teacher {
                 self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
@@ -134,6 +138,13 @@ import AgoraWidget
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal,
                                 roomType: .sub)
+        }
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isJoinedRoom == false {
+            AgoraLoading.loading()
         }
     }
     
