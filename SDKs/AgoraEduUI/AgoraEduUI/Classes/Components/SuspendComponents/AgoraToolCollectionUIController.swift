@@ -108,8 +108,8 @@ class AgoraToolCollectionUIController: UIViewController {
     }
 
     init(context: AgoraEduContextPool,
-         delegate: AgoraToolCollectionUIControllerDelegate,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraToolCollectionUIControllerDelegate? = nil) {
         let group = AgoraColorGroup()
         
         baseTintColor = group.tool_bar_item_highlight_color
