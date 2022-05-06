@@ -118,4 +118,4 @@ fcr_alert_sure = "Sure";
 fcr_alert_cancel = "Cancel";
 
 // Record
-fcr_record_recording = "Recording";
+fcr_record_recording = "Recording...";
