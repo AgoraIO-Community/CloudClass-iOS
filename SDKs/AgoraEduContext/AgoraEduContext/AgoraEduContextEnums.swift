@@ -30,9 +30,12 @@ import Foundation
 
 /// 录制状态
 @objc public enum FcrRecordingState: Int {
-    case unstart   = 0
-    case loading   = 1
-    case recording = 2
+    /// 未录制
+    case stopped  = 0
+    /// 录制启动中
+    case starting = 1
+    /// 正在录制
+    case started  = 2
 }
 
 // MARK: - SubRoom
