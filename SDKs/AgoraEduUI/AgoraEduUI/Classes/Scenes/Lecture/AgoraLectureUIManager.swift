@@ -245,6 +245,7 @@ import AgoraWidget
         chatController.view.mas_makeConstraints { make in
             make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.right().equalTo()(teacherRenderController.view)
+            make?.bottom.equalTo()(0)
         }
         
         classToolsController.view.mas_makeConstraints { make in

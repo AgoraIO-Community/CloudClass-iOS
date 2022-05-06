@@ -136,8 +136,6 @@ extension AgoraChatUIController: AgoraWidgetMessageObserver {
 // MARK: - Creations
 private extension AgoraChatUIController {
     func createWidget() {
-        var widget: AgoraBaseWidget?
-        
         if let object = createHyWidget() {
             widget = object
         } else if let object = createAgWidget() {
