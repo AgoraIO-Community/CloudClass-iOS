@@ -204,24 +204,31 @@ class AgoraRenderMembersUIController: UIViewController {
     }
     
     func deleteModels(userList: [String]) {
-        var indexs = [IndexPath]()
+        var indexsToDelete = [IndexPath]()
+        
+        let collectionViewIndexs = collectionView.indexPathsForVisibleItems
         for (i, userId) in userList.enumerated() {
-            guard let model = dataSource.first(where: {$0.userId == userId}) else {
+            guard let model = dataSource.first(where: {$0.userId == userId}),
+                  let indexPath = collectionViewIndexs.first(where: {$0.item == i}),
+                  !collectionView.isHidden else {
                 continue
             }
-            let indexPath = IndexPath(item: dataSource.count - 1,
-                                      section: 0)
-            indexs.append(indexPath)
-            
-            dataSource.removeAll(where: {$0.userId == userId})
+
+            indexsToDelete.append(indexPath)
             viewsMap.removeValue(forKey: userId)
             contextMediaHandle(videoOn: false,
                                audioOn: false,
                                view: nil,
                                streamId: model.streamId)
         }
+        
+        guard indexsToDelete.count > 0 else {
+            return
+        }
         updateViewFrame()
-        collectionView.deleteItems(at: indexs)
+        collectionView.deleteItems(at: indexsToDelete)
+        // 由于collectionView调用deleteItems时会走到numberOfItemsInSection的回调，所以dataSource需要在collectionView处理完后再删除
+        dataSource.removeAll(where: {userList.contains($0.userId)})
     }
     
     func makeModel(userId: String,
