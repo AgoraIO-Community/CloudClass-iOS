@@ -91,7 +91,9 @@ import AgoraWidget
     private weak var mainDelegate: AgoraEduUISubManagerCallback?
     
     private var subRoom: AgoraEduSubRoomContext
-    
+
+    private var isJoinedRoom = false
+        
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
          subDelegate: AgoraEduUIManagerCallback?,
@@ -118,13 +120,15 @@ import AgoraWidget
         updateRenderCollectionLayout()
         
         AgoraLoading.hide()
-        AgoraLoading.loading()
         
         subRoom.joinSubRoom { [weak self] in
             AgoraLoading.hide()
+            
             guard let `self` = self else {
                 return
             }
+            
+            self.isJoinedRoom = true
             
             if self.subRoom.user.getLocalUserInfo().userRole == .teacher {
                 self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
@@ -137,6 +141,13 @@ import AgoraWidget
         }
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isJoinedRoom == false {
+            AgoraLoading.loading()
+        }
+    }
+    
     public override func didClickCtrlMaskView() {
         super.didClickCtrlMaskView()
         toolBarController.deselectAll()
@@ -144,26 +155,26 @@ import AgoraWidget
     
     @objc public override func exitClassRoom(reason: AgoraClassRoomExitReason,
                                              roomType: AgoraClassRoomExitRoomType) {
+        let roomId = subRoom.getSubRoomInfo().subRoomUuid
+        let userId = subRoom.user.getLocalUserInfo().userUuid
+        let group = contextPool.group
+        
         switch roomType {
         case .main:
-            subRoom.leaveSubRoom()
-            
-            dismiss(animated: true) { [weak self] in
-                guard let `self` = self else {
-                    return
-                }
-                
-                self.mainDelegate?.subNeedExitAllRooms(reason: reason)
-            }
+            group.removeUserListFromSubRoom(userList: [userId],
+                                            subRoomUuid: roomId,
+                                            success: { [weak self] in
+                                                guard let `self` = self else {
+                                                    return
+                                                }
+                                                
+                                                self.mainDelegate?.subNeedExitAllRooms(reason: reason)
+                                            }, failure: nil)
         case .sub:
-            let roomId = subRoom.getSubRoomInfo().subRoomUuid
-            let userId = subRoom.user.getLocalUserInfo().userUuid
-            contextPool.group.removeUserListFromSubRoom(userList: [userId],
-                                                        subRoomUuid: roomId,
-                                                        success: nil,
-                                                        failure: nil)
-            dismiss(reason: reason,
-                    animated: true)
+            group.removeUserListFromSubRoom(userList: [userId],
+                                            subRoomUuid: roomId,
+                                            success: nil,
+                                            failure: nil)
         }
     }
     

@@ -100,7 +100,7 @@ extension AgoraRoomStateUIController: AgoraUIContentContainer, AgoraUIActivity {
         let recordingTitle = "fcr_record_recording".agedu_localized()
         stateView.recordingLabel.text = recordingTitle
         
-        let isHidden: Bool = !((contextPool.room.getRecordingState() == .recording))
+        let isHidden: Bool = !((contextPool.room.getRecordingState() == .started))
         stateView.recordingStateView.isHidden = isHidden
         stateView.recordingLabel.isHidden = isHidden
         
@@ -215,7 +215,7 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     }
     
     func onRecordingStateUpdated(state: FcrRecordingState) {
-        let isHidden: Bool = !(state == .recording)
+        let isHidden: Bool = !(state == .started)
         
         stateView.recordingLabel.isHidden = isHidden
         stateView.recordingStateView.isHidden = isHidden
