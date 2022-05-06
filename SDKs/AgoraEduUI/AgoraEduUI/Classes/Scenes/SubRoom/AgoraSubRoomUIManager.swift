@@ -146,8 +146,9 @@ import AgoraWidget
                                              roomType: AgoraClassRoomExitRoomType) {
         switch roomType {
         case .main:
-            dismiss(reason: reason,
-                    animated: true) { [weak self] in
+            subRoom.leaveSubRoom()
+            
+            dismiss(animated: true) { [weak self] in
                 guard let `self` = self else {
                     return
                 }
