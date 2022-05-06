@@ -18,8 +18,8 @@ import AgoraWidget
     
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
-        let vc = AgoraSettingUIController(context: contextPool)
-        vc.roomDelegate = self
+        let vc = AgoraSettingUIController(context: contextPool,
+                                          roomDelegate: self)
         self.addChild(vc)
         return vc
     }()

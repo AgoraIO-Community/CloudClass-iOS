@@ -22,9 +22,13 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
     }
     private lazy var teacherView = AgoraRenderMemberView(frame: .zero)
     
-    override func viewWillActive() {
+    // viewWillActive
+    override func registerHandlers() {
+        super.registerHandlers()
         contextPool.group.registerGroupEventHandler(self)
- 
+    }
+    
+    override func createAllRender() {
         let localUserId = userController.getLocalUserInfo().userUuid
         if let teacher = userController.getUserList(role: .teacher)?.first,
            let subRoomList = contextPool.group.getSubRoomList() {
@@ -50,11 +54,17 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
         collectionView.reloadData()
     }
     
-    override func viewWillInactive() {
+    // viewWillInactive
+    override func unregisterHandlers() {
+        super.unregisterHandlers()
         contextPool.group.unregisterGroupEventHandler(self)
-        super.viewWillInactive()
     }
     
+    override func releaseAllRender() {
+        teacherModel = nil
+        super.releaseAllRender()
+    }
+
     override func getRenderViewForUser(with userId: String) -> UIView? {
         if teacherModel?.userId == userId {
             return teacherView
@@ -210,7 +220,7 @@ extension AgoraSmallMembersUIController {
         guard user.userRole == .teacher else {
             return
         }
-        self.teacherModel = nil
+        teacherModel = nil
     }
 }
 

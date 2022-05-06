@@ -18,7 +18,7 @@ class AgoraSettingUIController: UIViewController {
     public let suggestSize = CGSize(width: 201,
                                     height: 220)
     
-    public weak var roomDelegate: AgoraClassRoomManagement?
+    private weak var roomDelegate: AgoraClassRoomManagement?
     
     private var contentView: UIView!
     
@@ -60,6 +60,8 @@ class AgoraSettingUIController: UIViewController {
          roomDelegate: AgoraClassRoomManagement? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.roomDelegate = roomDelegate
+        
         super.init(nibName: nil,
                    bundle: nil)
     }
