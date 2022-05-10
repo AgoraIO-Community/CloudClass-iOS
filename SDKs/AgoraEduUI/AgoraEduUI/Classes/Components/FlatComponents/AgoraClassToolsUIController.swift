@@ -93,7 +93,7 @@ extension AgoraClassToolsUIController: AgoraEduRoomHandler {
 }
 
 extension AgoraClassToolsUIController: AgoraEduSubRoomHandler {
-    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         viewWillActive()
     }
 }

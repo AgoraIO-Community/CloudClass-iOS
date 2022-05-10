@@ -111,7 +111,7 @@ extension AgoraChatUIController: AgoraEduRoomHandler {
 
 // MARK: - AgoraEduSubRoomHandler
 extension AgoraChatUIController: AgoraEduSubRoomHandler {
-    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         viewWillActive()
     }
 }

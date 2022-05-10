@@ -224,7 +224,7 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
 
 // MARK: - AgoraEduSubRoomHandler
 extension AgoraRoomStateUIController: AgoraEduSubRoomHandler {
-    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         viewWillActive()
     }
 }

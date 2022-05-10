@@ -591,7 +591,7 @@ extension AgoraRenderMembersUIController: AgoraEduRoomHandler {
 }
 
 extension AgoraRenderMembersUIController: AgoraEduSubRoomHandler {
-    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         viewWillActive()
     }
 }

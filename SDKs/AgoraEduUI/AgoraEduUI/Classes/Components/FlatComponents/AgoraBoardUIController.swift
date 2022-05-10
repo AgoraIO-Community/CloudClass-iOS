@@ -255,7 +255,7 @@ extension AgoraBoardUIController: AgoraEduRoomHandler {
 
 // MARK: - AgoraEduSubRoomHandler
 extension AgoraBoardUIController: AgoraEduSubRoomHandler {
-    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         viewWillActive()
         
         let localUserInfo = contextPool.user.getLocalUserInfo()

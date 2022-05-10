@@ -522,6 +522,8 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
             vc.viewWillInactive()
         }
         
+        ctrlView = nil
+        
         let vc = AgoraSubRoomUIManager(contextPool: contextPool,
                                        subRoom: subRoom,
                                        subDelegate: self,
