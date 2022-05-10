@@ -10,48 +10,6 @@ import SwifterSwift
 import AgoraWidget
 import UIKit
 
-enum AgoraUserListFunction: Int {
-    case stage = 0, auth, camera, mic, reward, kick
-    
-    func title() -> String {
-        switch self {
-        case .stage:
-            return "fcr_user_list_stage".agedu_localized()
-        case .auth:
-            return "fcr_user_list_auth".agedu_localized()
-        case .camera:
-            return "fcr_user_list_video".agedu_localized()
-        case .mic:
-            return "fcr_user_list_audio".agedu_localized()
-        case .reward:
-            return "fcr_user_list_reward".agedu_localized()
-        case .kick:
-            return "fcr_user_list_ban".agedu_localized()
-        default: return ""
-        }
-    }
-}
-
-extension AgoraUserListModel {
-    func updateWithStream(_ stream: AgoraEduContextStreamInfo?) {
-        if let `stream` = stream {
-            self.streamId = stream.streamUuid
-            // audio
-            self.micState.streamOn = stream.streamType.hasAudio
-            self.micState.deviceOn = (stream.audioSourceState == .open)
-            // video
-            self.cameraState.streamOn = stream.streamType.hasVideo
-            self.cameraState.deviceOn = (stream.videoSourceState == .open)
-            
-        } else {
-            self.micState.streamOn = false
-            self.micState.deviceOn = false
-            self.cameraState.streamOn = false
-            self.cameraState.deviceOn = false
-        }
-    }
-}
-
 class AgoraUserListUIController: UIViewController {
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
@@ -91,45 +49,29 @@ class AgoraUserListUIController: UIViewController {
         }
     }
     /** 容器*/
-    private var contentView: UIView!
+    private lazy var contentView = UIView(frame: .zero)
     /** 页面title*/
-    private var titleLabel: UILabel!
+    private lazy var titleLabel = UILabel(frame: .zero)
     /** 教师信息*/
-    private var infoView: UIView!
+    private lazy var infoView = UIView(frame: .zero)
     /** 分割线*/
-    private var topSepLine: UIView!
-    private var bottomSepLine: UIView!
+    private lazy var topSepLine = UIView(frame: .zero)
+    private lazy var bottomSepLine = UIView(frame: .zero)
     /** 教师姓名 标签*/
-    private var teacherTitleLabel: UILabel!
+    private lazy var teacherTitleLabel = UILabel(frame: .zero)
     /** 教师姓名 姓名*/
-    private var teacherNameLabel: UILabel!
+    private lazy var teacherNameLabel = UILabel(frame: .zero)
     /** 学生姓名*/
-    private var studentTitleLabel: UILabel!
+    private lazy var studentTitleLabel = UILabel(frame: .zero)
     /** 列表项*/
-    private var itemTitlesView: UIStackView!
+    private lazy var itemTitlesView = UIStackView(frame: .zero)
     /** 轮播 仅教师端*/
-    private lazy var carouselTitle: UILabel = {
-        let carouselTitle = UILabel(frame: .zero)
-        carouselTitle.text = "fcr_user_list_carousel_setting".agedu_localized()
-        carouselTitle.font = UIFont.systemFont(ofSize: 12)
-        carouselTitle.textColor = UIColor(hex: 0x7B88A0)
-        return carouselTitle
-    }()
-    
-    private lazy var carouselSwitch: UISwitch = {
-        let carouselSwitch = UISwitch()
-        carouselSwitch.onTintColor = UIColor(hex: 0x357BF6)
-        carouselSwitch.transform = CGAffineTransform(scaleX: 0.59,
-                                                     y: 0.59)
-        carouselSwitch.isOn = userController.getCoHostCarouselInfo().state
-        carouselSwitch.addTarget(self,
-                                 action: #selector(onClickCarouselSwitch(_:)),
-                                 for: .touchUpInside)
-        return carouselSwitch
-    }()
+    private lazy var carouselTitle = UILabel(frame: .zero)
+    private lazy var carouselSwitch = UISwitch()
     
     /** 表视图*/
-    private var tableView: UITableView!
+    private var tableView = UITableView.init(frame: .zero,
+                                             style: .plain)
     /** 数据源*/
     private var dataSource = [AgoraUserListModel]()
     /** 支持的选项列表*/
@@ -174,8 +116,9 @@ class AgoraUserListUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -202,6 +145,190 @@ class AgoraUserListUIController: UIViewController {
         userController.unregisterUserEventHandler(self)
         streamController.unregisterStreamEventHandler(self)
     }
+}
+
+// MARK: - AgoraUIActivity & AgoraUIContentContainer
+@objc extension AgoraUserListUIController: AgoraUIActivity, AgoraUIContentContainer {
+    // AgoraUIActivity
+    func viewWillActive() {
+        
+    }
+    func viewWillInactive() {
+        
+    }
+    // AgoraUIContentContainer
+    func initViews() {
+        view.addSubview(contentView)
+        
+        titleLabel.text = "fcr_user_list".agedu_localized()
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(infoView)
+        contentView.addSubview(topSepLine)
+        contentView.addSubview(bottomSepLine)
+        
+        teacherTitleLabel.text = "fcr_user_list_teacher_name".agedu_localized()
+        contentView.addSubview(teacherTitleLabel)
+        
+        contentView.addSubview(teacherNameLabel)
+        
+        studentTitleLabel.textAlignment = .center
+        studentTitleLabel.text = "fcr_user_list_student_name".agedu_localized()
+        contentView.addSubview(studentTitleLabel)
+        
+        itemTitlesView.backgroundColor = .clear
+        itemTitlesView.axis = .horizontal
+        itemTitlesView.distribution = .fillEqually
+        itemTitlesView.alignment = .center
+        contentView.addSubview(itemTitlesView)
+        
+        if userController.getLocalUserInfo().userRole == .teacher,
+           contextPool.room.getRoomInfo().roomType == .small {
+            carouselTitle.text = "fcr_user_list_carousel_setting".agedu_localized()
+            contentView.addSubview(carouselTitle)
+            
+            carouselSwitch.transform = CGAffineTransform(scaleX: 0.59,
+                                                         y: 0.59)
+            carouselSwitch.isOn = userController.getCoHostCarouselInfo().state
+            carouselSwitch.addTarget(self,
+                                     action: #selector(onClickCarouselSwitch(_:)),
+                                     for: .touchUpInside)
+            contentView.addSubview(carouselSwitch)
+        }
+        
+        for fn in supportFuncs {
+            let label = UILabel(frame: .zero)
+            label.text = fn.title()
+            label.textAlignment = .center
+            itemTitlesView.addArrangedSubview(label)
+        }
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.tableFooterView = UIView.init(frame: CGRect(x: 0,
+                                                              y: 0,
+                                                              width: 1,
+                                                              height: 0.01))
+        tableView.rowHeight = 40
+        tableView.allowsSelection = false
+        tableView.separatorInset = .zero
+        tableView.register(cellWithClass: AgoraUserListItemCell.self)
+        contentView.addSubview(tableView)
+    }
+    
+    func initViewFrame() {
+        contentView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(contentView.superview)
+        }
+        titleLabel.mas_makeConstraints { make in
+            make?.top.equalTo()(titleLabel.superview)
+            make?.left.equalTo()(16)
+            make?.height.equalTo()(30)
+        }
+        infoView.mas_makeConstraints { make in
+            make?.top.equalTo()(titleLabel.mas_bottom)
+            make?.left.right().equalTo()(infoView.superview)
+            make?.height.equalTo()(30)
+        }
+        topSepLine.mas_makeConstraints { make in
+            make?.top.left().right().equalTo()(infoView)
+            make?.height.equalTo()(1)
+        }
+        bottomSepLine.mas_makeConstraints { make in
+            make?.bottom.left().right().equalTo()(infoView)
+            make?.height.equalTo()(1)
+        }
+        teacherTitleLabel.mas_makeConstraints { make in
+            make?.left.equalTo()(titleLabel)
+            make?.top.bottom().equalTo()(infoView)
+        }
+        teacherNameLabel.mas_makeConstraints { make in
+            make?.left.equalTo()(teacherTitleLabel.mas_right)?.offset()(6)
+            make?.top.bottom().equalTo()(infoView)
+        }
+        studentTitleLabel.mas_makeConstraints { make in
+            make?.top.equalTo()(infoView.mas_bottom)
+            make?.left.equalTo()(0)
+            make?.height.equalTo()(30)
+            make?.width.equalTo()(100)
+        }
+        itemTitlesView.mas_makeConstraints { make in
+            make?.top.equalTo()(studentTitleLabel)
+            make?.left.equalTo()(studentTitleLabel.mas_right)
+            make?.right.equalTo()(0)
+            make?.height.equalTo()(studentTitleLabel)
+        }
+        tableView.mas_makeConstraints { make in
+            make?.left.right().bottom().equalTo()(tableView.superview)
+            make?.top.equalTo()(studentTitleLabel.mas_bottom)
+        }
+        if userController.getLocalUserInfo().userRole == .teacher,
+           contextPool.room.getRoomInfo().roomType == .small {
+            carouselSwitch.mas_makeConstraints { make in
+                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
+                make?.right.equalTo()(-10)
+                make?.height.equalTo()(30)
+            }
+            carouselTitle.mas_makeConstraints { make in
+                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
+                make?.right.equalTo()(carouselSwitch.mas_left)
+                make?.height.equalTo()(30)
+            }
+        }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        let contentLabelColor = ui.color.user_list_content_label_color
+        let titleLabelColor = ui.color.user_list_title_label_color
+        let labelFont = ui.frame.user_list_font_size
+        
+        ui.color.borderSet(layer: view.layer)
+        
+        contentView.backgroundColor = ui.color.user_list_bg_color
+        contentView.layer.cornerRadius = ui.frame.user_list_content_corner_radius
+        contentView.clipsToBounds = true
+        contentView.borderWidth = ui.frame.user_list_content_border_width
+        contentView.borderColor = ui.color.user_list_border_color
+        
+        
+        titleLabel.font = labelFont
+        titleLabel.textColor = titleLabelColor
+        
+        infoView.backgroundColor = ui.color.user_list_info_bg_color
+        
+        let sepColor = ui.color.user_list_sep_color
+        topSepLine.backgroundColor = sepColor
+        bottomSepLine.backgroundColor = sepColor
+        
+        teacherTitleLabel.font = labelFont
+        teacherTitleLabel.textColor = contentLabelColor
+        
+        teacherNameLabel.font = labelFont
+        teacherNameLabel.textColor = titleLabelColor
+        
+        studentTitleLabel.font = labelFont
+        studentTitleLabel.textColor = contentLabelColor
+        itemTitlesView.backgroundColor = ui.color.user_list_item_title_bg_color
+        
+        tableView.separatorColor = ui.color.user_list_table_sep_color
+        
+        for view in itemTitlesView.arrangedSubviews {
+            guard let label = view as? UILabel else {
+                return
+            }
+            label.font = labelFont
+            label.textColor = contentLabelColor
+        }
+        
+        if userController.getLocalUserInfo().userRole == .teacher,
+           contextPool.room.getRoomInfo().roomType == .small {
+            carouselTitle.font = labelFont
+            carouselTitle.textColor = contentLabelColor
+            
+            carouselSwitch.onTintColor = ui.color.user_list_carousel_switch_tint_color
+        }
+    }
+    
 }
 // MARK: - Private
 private extension AgoraUserListUIController {
@@ -537,155 +664,8 @@ extension AgoraUserListUIController: UITableViewDelegate,
     }
 }
 
-// MARK: - Creations
+// MARK: - Actions
 extension AgoraUserListUIController {
-    func createViews() {
-        AgoraUIGroup().color.borderSet(layer: view.layer)
-        
-        contentView = UIView()
-        contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
-        contentView.layer.cornerRadius = 10.0
-        contentView.clipsToBounds = true
-        contentView.borderWidth = 1
-        contentView.borderColor = UIColor(hex: 0xE3E3EC)
-        view.addSubview(contentView)
-        
-        titleLabel = UILabel(frame: .zero)
-        titleLabel.text = "fcr_user_list".agedu_localized()
-        titleLabel.font = UIFont.systemFont(ofSize: 12)
-        titleLabel.textColor = UIColor(hex: 0x191919)
-        contentView.addSubview(titleLabel)
-        
-        infoView = UIView(frame: .zero)
-        infoView.backgroundColor = .white
-        contentView.addSubview(infoView)
-        
-        topSepLine = UIView()
-        topSepLine.backgroundColor = UIColor(hex: 0xEEEEF7)
-        contentView.addSubview(topSepLine)
-        
-        bottomSepLine = UIView()
-        bottomSepLine.backgroundColor = UIColor(hex: 0xEEEEF7)
-        contentView.addSubview(bottomSepLine)
-        
-        teacherTitleLabel = UILabel(frame: .zero)
-        teacherTitleLabel.text = "fcr_user_list_teacher_name".agedu_localized()
-        teacherTitleLabel.font = UIFont.systemFont(ofSize: 12)
-        teacherTitleLabel.textColor = UIColor(hex: 0x7B88A0)
-        contentView.addSubview(teacherTitleLabel)
-        
-        teacherNameLabel = UILabel(frame: .zero)
-        teacherNameLabel.font = UIFont.systemFont(ofSize: 12)
-        teacherNameLabel.textColor = UIColor(hex: 0x191919)
-        contentView.addSubview(teacherNameLabel)
-        
-        studentTitleLabel = UILabel(frame: .zero)
-        studentTitleLabel.text = "fcr_user_list_student_name".agedu_localized()
-        studentTitleLabel.textAlignment = .center
-        studentTitleLabel.font = UIFont.systemFont(ofSize: 12)
-        studentTitleLabel.textColor = UIColor(hex: 0x7B88A0)
-        contentView.addSubview(studentTitleLabel)
-        
-        itemTitlesView = UIStackView(frame: .zero)
-        itemTitlesView.backgroundColor = .clear
-        itemTitlesView.axis = .horizontal
-        itemTitlesView.distribution = .fillEqually
-        itemTitlesView.alignment = .center
-        itemTitlesView.backgroundColor = UIColor(hex: 0xF9F9FC)
-        contentView.addSubview(itemTitlesView)
-        
-        if userController.getLocalUserInfo().userRole == .teacher,
-           contextPool.room.getRoomInfo().roomType == .small {
-            contentView.addSubview(carouselTitle)
-            contentView.addSubview(carouselSwitch)
-        }
-        
-        for fn in supportFuncs {
-            let label = UILabel(frame: .zero)
-            label.text = fn.title()
-            label.textAlignment = .center
-            label.font = UIFont.systemFont(ofSize: 12)
-            label.textColor = UIColor(hex: 0x7B88A0)
-            itemTitlesView.addArrangedSubview(label)
-        }
-        
-        tableView = UITableView.init(frame: .zero,
-                                     style: .plain)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.tableFooterView = UIView.init(frame: CGRect(x: 0,
-                                                              y: 0,
-                                                              width: 1,
-                                                              height: 0.01))
-        tableView.rowHeight = 40
-        tableView.allowsSelection = false
-        tableView.separatorInset = .zero
-        tableView.separatorColor = UIColor(hex: 0xEEEEF7)
-        tableView.register(cellWithClass: AgoraUserListItemCell.self)
-        contentView.addSubview(tableView)
-    }
-    
-    func createConstraint() {
-        contentView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(contentView.superview)
-        }
-        titleLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(titleLabel.superview)
-            make?.left.equalTo()(16)
-            make?.height.equalTo()(30)
-        }
-        infoView.mas_makeConstraints { make in
-            make?.top.equalTo()(titleLabel.mas_bottom)
-            make?.left.right().equalTo()(infoView.superview)
-            make?.height.equalTo()(30)
-        }
-        topSepLine.mas_makeConstraints { make in
-            make?.top.left().right().equalTo()(infoView)
-            make?.height.equalTo()(1)
-        }
-        bottomSepLine.mas_makeConstraints { make in
-            make?.bottom.left().right().equalTo()(infoView)
-            make?.height.equalTo()(1)
-        }
-        teacherTitleLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(titleLabel)
-            make?.top.bottom().equalTo()(infoView)
-        }
-        teacherNameLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(teacherTitleLabel.mas_right)?.offset()(6)
-            make?.top.bottom().equalTo()(infoView)
-        }
-        studentTitleLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(infoView.mas_bottom)
-            make?.left.equalTo()(0)
-            make?.height.equalTo()(30)
-            make?.width.equalTo()(100)
-        }
-        itemTitlesView.mas_makeConstraints { make in
-            make?.top.equalTo()(studentTitleLabel)
-            make?.left.equalTo()(studentTitleLabel.mas_right)
-            make?.right.equalTo()(0)
-            make?.height.equalTo()(studentTitleLabel)
-        }
-        tableView.mas_makeConstraints { make in
-            make?.left.right().bottom().equalTo()(tableView.superview)
-            make?.top.equalTo()(studentTitleLabel.mas_bottom)
-        }
-        if userController.getLocalUserInfo().userRole == .teacher,
-           contextPool.room.getRoomInfo().roomType == .small {
-            carouselSwitch.mas_makeConstraints { make in
-                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
-                make?.right.equalTo()(-10)
-                make?.height.equalTo()(30)
-            }
-            carouselTitle.mas_makeConstraints { make in
-                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
-                make?.right.equalTo()(carouselSwitch.mas_left)
-                make?.height.equalTo()(30)
-            }
-        }
-    }
-    
     @objc func onClickCarouselSwitch(_ sender: UISwitch) {
         if sender.isOn {
             userController.startCoHostCarousel(interval: 20,

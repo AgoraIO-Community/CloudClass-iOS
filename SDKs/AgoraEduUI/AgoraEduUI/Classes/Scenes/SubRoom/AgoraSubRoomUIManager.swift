@@ -18,41 +18,39 @@ import AgoraWidget
 @objc public class AgoraSubRoomUIManager: AgoraEduUIManager {
     // MARK: - Flat components
     /** 房间状态 控制器*/
-    private lazy var stateController: AgoraRoomStateUIController = AgoraRoomStateUIController(context: contextPool,
-                                                                                              subRoom: subRoom)
+    private lazy var stateController = AgoraRoomStateUIController(context: contextPool,
+                                                                  subRoom: subRoom)
     
     /** 视窗渲染 控制器*/
-    private lazy var renderController: AgoraSmallMembersUIController = AgoraSmallMembersUIController(context: contextPool,
-                                                                                                     delegate: self,
-                                                                                                     containRoles: [.student],
-                                                                                                     max: 6,
-                                                                                                     subRoom: subRoom,
-                                                                                                     expandFlag: true)
+    private lazy var renderController = AgoraSmallMembersUIController(context: contextPool,
+                                                                      delegate: self,
+                                                                      subRoom: subRoom,
+                                                                      expandFlag: true)
     
     /** 白板的渲染 控制器*/
-    private lazy var boardController: AgoraBoardUIController = AgoraBoardUIController(context: contextPool, subRoom: subRoom)
+    private lazy var boardController = AgoraBoardUIController(context: contextPool, subRoom: subRoom)
     
     /** 白板翻页 控制器（观众端没有）*/
-    private lazy var boardPageController: AgoraBoardPageUIController = AgoraBoardPageUIController(context: contextPool, subRoom: subRoom)
+    private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool, subRoom: subRoom)
     
     
     /** 大窗 控制器*/
-    private lazy var windowController: AgoraWindowUIController = AgoraWindowUIController(context: contextPool,
-                                                                                         subRoom: subRoom,
-                                                                                         delegate: self)
+    private lazy var windowController = AgoraWindowUIController(context: contextPool,
+                                                                subRoom: subRoom,
+                                                                delegate: self)
     
     /** 工具栏*/
-    private lazy var toolBarController: AgoraToolBarUIController = AgoraToolBarUIController(context: contextPool,
-                                                                                            subRoom: subRoom,
-                                                                                            delegate: self)
+    private lazy var toolBarController = AgoraToolBarUIController(context: contextPool,
+                                                                  subRoom: subRoom,
+                                                                  delegate: self)
     
     /** 教具 控制器*/
-    private lazy var classToolsController: AgoraClassToolsUIController = AgoraClassToolsUIController(context: contextPool,
-                                                                                                     subRoom: subRoom)
+    private lazy var classToolsController = AgoraClassToolsUIController(context: contextPool,
+                                                                        subRoom: subRoom)
     
     /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalController: AgoraRoomGlobalUIController = AgoraRoomGlobalUIController(context: contextPool,
-                                                                                                 subRoom: subRoom)
+    private lazy var globalController = AgoraRoomGlobalUIController(context: contextPool,
+                                                                    subRoom: subRoom)
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
@@ -61,18 +59,18 @@ import AgoraWidget
                                                                   roomDelegate: self)
     
     /** 聊天窗口 控制器*/
-    private lazy var chatController: AgoraChatUIController = AgoraChatUIController(context: contextPool,
-                                                                                   subRoom: subRoom,
-                                                                                   delegate: self)
+    private lazy var chatController = AgoraChatUIController(context: contextPool,
+                                                            subRoom: subRoom,
+                                                            delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
-    private lazy var toolCollectionController: AgoraToolCollectionUIController = AgoraToolCollectionUIController(context: contextPool,
-                                                                                                                 subRoom: subRoom,
-                                                                                                                 delegate: self)
+    private lazy var toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
+                                                                                subRoom: subRoom,
+                                                                                delegate: self)
     
     /** 花名册 控制器*/
-    private lazy var nameRollController: AgoraUserListUIController = AgoraUserListUIController(context: contextPool,
-                                                                                               subRoom: subRoom)
+    private lazy var nameRollController = AgoraUserListUIController(context: contextPool,
+                                                                    subRoom: subRoom)
     
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuController = AgoraRenderMenuUIController(context: contextPool,
@@ -87,13 +85,13 @@ import AgoraWidget
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController = AgoraCloudUIController(context: contextPool,
                                                               subRoom: subRoom)
-        
+    
     private weak var mainDelegate: AgoraEduUISubManagerCallback?
     
     private var subRoom: AgoraEduSubRoomContext
-
+    
     private var isJoinedRoom = false
-        
+    
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
          subDelegate: AgoraEduUIManagerCallback?,
@@ -164,12 +162,12 @@ import AgoraWidget
             group.removeUserListFromSubRoom(userList: [userId],
                                             subRoomUuid: roomId,
                                             success: { [weak self] in
-                                                guard let `self` = self else {
-                                                    return
-                                                }
-                                                
-                                                self.mainDelegate?.subNeedExitAllRooms(reason: reason)
-                                            }, failure: nil)
+                guard let `self` = self else {
+                    return
+                }
+                
+                self.mainDelegate?.subNeedExitAllRooms(reason: reason)
+            }, failure: nil)
         case .sub:
             group.removeUserListFromSubRoom(userList: [userId],
                                             subRoomUuid: roomId,
@@ -303,7 +301,7 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
             make?.height.equalTo()(AgoraFit.scale(307))
             make?.left.right().bottom().equalTo()(0)
         }
-
+        
         renderController.view.mas_makeConstraints { make in
             make?.left.right().equalTo()(0)
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
@@ -340,7 +338,7 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
                 make?.width.equalTo()(168)
             }
         }
-
+        
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
@@ -375,7 +373,7 @@ extension AgoraSubRoomUIManager: AgoraToolBarDelegate {
         case .handsList:
             if handsListController.dataSource.count > 0 {
                 handsListController.view.frame = CGRect(origin: .zero,
-                                                         size: handsListController.suggestSize)
+                                                        size: handsListController.suggestSize)
                 ctrlView = handsListController.view
             }
         case .help:
@@ -428,27 +426,27 @@ extension AgoraSubRoomUIManager: AgoraToolCollectionUIControllerDelegate {
                        delay: 0,
                        options: .curveEaseInOut,
                        animations: { [weak self] in
-                        guard let `self` = self else {
-                            return
-                        }
-                        
-                        if appear {
-                            self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-                            }
-                        } else {
-                            self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-                            }
-                        }
-                       }, completion: nil)
-
+            guard let `self` = self else {
+                return
+            }
+            
+            if appear {
+                self.toolBarController.view.mas_remakeConstraints { make in
+                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                    make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                    make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                    make?.height.equalTo()(self.toolBarController.suggestSize.height)
+                }
+            } else {
+                self.toolBarController.view.mas_remakeConstraints { make in
+                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                    make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                    make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                    make?.height.equalTo()(self.toolBarController.suggestSize.height)
+                }
+            }
+        }, completion: nil)
+        
     }
     
     func toolCollectionDidSelectCell(view: UIView) {

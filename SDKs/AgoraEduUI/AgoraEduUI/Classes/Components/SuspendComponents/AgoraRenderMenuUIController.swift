@@ -15,48 +15,7 @@ protocol AgoraRenderMenuUIControllerDelegate: NSObjectProtocol {
     func onMenuUserLeft()
 }
 
-struct AgoraRenderMenuModel {
-    enum AgoraRenderMenuDeviceState {
-        case on, off, forbidden
-        
-        var micImage: UIImage? {
-            switch self {
-            case .on:
-                return UIImage.agedu_named("ic_nameroll_mic_on")
-            case .off:
-                return UIImage.agedu_named("ic_nameroll_mic_off")
-            case .forbidden:
-                return UIImage.agedu_named("ic_member_menu_mic_forbidden")
-            default:
-                return nil
-            }
-        }
-        
-        var cameraImage: UIImage? {
-            switch self {
-            case .on:
-                return UIImage.agedu_named("ic_nameroll_camera_on")
-            case .off:
-                return UIImage.agedu_named("ic_nameroll_camera_off")
-            case .forbidden:
-                return UIImage.agedu_named("ic_member_menu_camera_forbidden")
-            default:
-                return nil
-            }
-        }
-    }
-
-    // Data
-    var micState = AgoraRenderMenuDeviceState.off
-    var cameraState = AgoraRenderMenuDeviceState.off
-    var authState = false
-}
-
 class AgoraRenderMenuUIController: UIViewController {
-    private enum AgoraRenderMenuItemType {
-        case mic, camera, stage, allOffStage, auth, reward
-    }
-    
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
             return subRoom.user
@@ -91,19 +50,19 @@ class AgoraRenderMenuUIController: UIViewController {
     private var boardUsers = [String]()
     
     // Views
-    private var contentView: UIStackView!
+    private lazy var contentView = UIStackView()
     
-    private var micButton: UIButton!
+    private lazy var micButton = UIButton(type: .custom)
     
-    private var cameraButton: UIButton!
+    private lazy var cameraButton = UIButton(type: .custom)
     
-    private var stageButton: UIButton!
+    private lazy var stageButton = UIButton(type: .custom)
     
-    private var allStageOffButton: UIButton!
+    private lazy var allStageOffButton = UIButton(type: .custom)
     
-    private var authButton: UIButton!
+    private lazy var authButton = UIButton(type: .custom)
     
-    private var rewardButton: UIButton!
+    private lazy var rewardButton = UIButton(type: .custom)
     
     // Data sources
     private var items: [AgoraRenderMenuItemType] = [] {
@@ -157,8 +116,9 @@ class AgoraRenderMenuUIController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
         
         streamController.registerStreamEventHandler(self)
         userController.registerUserEventHandler(self)
@@ -217,6 +177,92 @@ class AgoraRenderMenuUIController: UIViewController {
         view.isHidden = true
         self.userId = nil
         self.model = AgoraRenderMenuModel()
+    }
+}
+
+// MARK: - AgoraUIActivity & AgoraUIContentContainer
+@objc extension AgoraRenderMenuUIController: AgoraUIActivity, AgoraUIContentContainer {
+    // AgoraUIActivity
+    func viewWillActive() {
+        
+    }
+    
+    func viewWillInactive() {
+        dismissView()
+    }
+    
+    // AgoraUIContentContainer
+    func initViews() {
+        contentView.axis = .horizontal
+        contentView.spacing = 10
+        
+        contentView.distribution = .equalSpacing
+        contentView.alignment = .center
+        view.addSubview(contentView)
+        
+        let buttonFrame = CGRect(x: 0,
+                                 y: 0,
+                                 width: 22,
+                                 height: 22)
+        
+        // micButton
+        micButton.frame = buttonFrame
+        micButton.addTarget(self,
+                            action: #selector(onClickMic(_:)),
+                            for: .touchUpInside)
+        contentView.addArrangedSubview(micButton)
+        // cameraButton
+        cameraButton.frame = buttonFrame
+        cameraButton.addTarget(self,
+                               action: #selector(onClickCamera(_:)),
+                               for: .touchUpInside)
+        contentView.addArrangedSubview(cameraButton)
+        // stageButton
+        stageButton.frame = buttonFrame
+        stageButton.addTarget(self,
+                              action: #selector(onClickStage(_:)),
+                              for: .touchUpInside)
+        contentView.addArrangedSubview(stageButton)
+        // allStageOffButton
+        allStageOffButton.frame = buttonFrame
+        allStageOffButton.addTarget(self,
+                                    action: #selector(onClickAllStageOff(_:)),
+                                    for: .touchUpInside)
+        contentView.addArrangedSubview(allStageOffButton)
+        // authButton
+        authButton.frame = buttonFrame
+        authButton.addTarget(self,
+                             action: #selector(onClickAuth(_:)),
+                             for: .touchUpInside)
+        contentView.addArrangedSubview(authButton)
+        // rewardButton
+        rewardButton.frame = buttonFrame
+        rewardButton.setImage(UIImage.agedu_named("ic_member_menu_reward"),
+                              for: .normal)
+        rewardButton.addTarget(self,
+                               action: #selector(onClickReward(_:)),
+                               for: .touchUpInside)
+        contentView.addArrangedSubview(rewardButton)
+    }
+    
+    func initViewFrame() {
+        contentView.mas_makeConstraints { make in
+            make?.left.equalTo()(10)
+            make?.right.equalTo()(10)
+            make?.top.equalTo()(contentView.superview?.mas_top)?.offset()(1)
+            make?.bottom.equalTo()(contentView.superview?.mas_bottom)?.offset()(-1)
+        }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        
+        view.backgroundColor = ui.color.render_menu_bg_color
+        view.layer.cornerRadius = ui.frame.render_menu_corner_radius
+        
+        contentView.backgroundColor = ui.color.render_menu_bg_color
+        
+        AgoraUIGroup().color.borderSet(layer: view.layer)
     }
 }
 
@@ -494,84 +540,6 @@ extension AgoraRenderMenuUIController: AgoraWidgetMessageObserver {
             }
         default:
             break
-        }
-    }
-}
-// MARK: - Creations
-private extension AgoraRenderMenuUIController {
-    func createViews() {
-        view.backgroundColor = UIColor.white
-        view.layer.cornerRadius = 8
-        AgoraUIGroup().color.borderSet(layer: view.layer)
-        
-        // contentView
-        contentView = UIStackView()
-        contentView.backgroundColor = .clear
-        contentView.axis = .horizontal
-        contentView.spacing = 10
-
-        contentView.distribution = .equalSpacing
-        contentView.alignment = .center
-        contentView.backgroundColor = .white
-        view.addSubview(contentView)
-        
-        let buttonFrame = CGRect(x: 0,
-                                 y: 0,
-                                 width: 22,
-                                 height: 22)
-
-        // micButton
-        micButton = UIButton(type: .custom)
-        micButton.frame = buttonFrame
-        micButton.addTarget(self,
-                            action: #selector(onClickMic(_:)),
-                            for: .touchUpInside)
-        contentView.addArrangedSubview(micButton)
-        // cameraButton
-        cameraButton = UIButton(type: .custom)
-        cameraButton.frame = buttonFrame
-        cameraButton.addTarget(self,
-                               action: #selector(onClickCamera(_:)),
-                               for: .touchUpInside)
-        contentView.addArrangedSubview(cameraButton)
-        // stageButton
-        stageButton = UIButton(type: .custom)
-        stageButton.frame = buttonFrame
-        stageButton.addTarget(self,
-                              action: #selector(onClickStage(_:)),
-                              for: .touchUpInside)
-        contentView.addArrangedSubview(stageButton)
-        // allStageOffButton
-        allStageOffButton = UIButton(type: .custom)
-        allStageOffButton.frame = buttonFrame
-        allStageOffButton.addTarget(self,
-                              action: #selector(onClickAllStageOff(_:)),
-                              for: .touchUpInside)
-        contentView.addArrangedSubview(allStageOffButton)
-        // authButton
-        authButton = UIButton(type: .custom)
-        authButton.frame = buttonFrame
-        authButton.addTarget(self,
-                             action: #selector(onClickAuth(_:)),
-                             for: .touchUpInside)
-        contentView.addArrangedSubview(authButton)
-        // rewardButton
-        rewardButton = UIButton(type: .custom)
-        rewardButton.frame = buttonFrame
-        rewardButton.setImage(UIImage.agedu_named("ic_member_menu_reward"),
-                              for: .normal)
-        rewardButton.addTarget(self,
-                               action: #selector(onClickReward(_:)),
-                               for: .touchUpInside)
-        contentView.addArrangedSubview(rewardButton)
-    }
-    
-    func createConstraint() {
-        contentView.mas_makeConstraints { make in
-            make?.left.equalTo()(10)
-            make?.right.equalTo()(10)
-            make?.top.equalTo()(contentView.superview?.mas_top)?.offset()(1)
-            make?.bottom.equalTo()(contentView.superview?.mas_bottom)?.offset()(-1)
         }
     }
 }

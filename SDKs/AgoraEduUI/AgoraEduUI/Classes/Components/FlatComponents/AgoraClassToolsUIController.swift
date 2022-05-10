@@ -68,8 +68,6 @@ class AgoraClassToolsUIController: UIViewController {
             contextPool.room.registerRoomEventHandler(self)
         }
     }
-    
-    
 }
 
 // MARK: - AgoraUIActivity

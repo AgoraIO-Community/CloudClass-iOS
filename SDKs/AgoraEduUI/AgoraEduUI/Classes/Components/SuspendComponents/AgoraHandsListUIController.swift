@@ -10,12 +10,6 @@ import AgoraEduContext
 import AgoraUIBaseViews
 import Masonry
 
-struct HandsUpUser {
-    var userUuid: String
-    var userName: String
-    var isCoHost: Bool
-}
-
 protocol AgoraHandsListUIControllerDelegate: NSObjectProtocol {
     func updateHandsListRedLabel(_ count: Int)
 }
@@ -41,7 +35,7 @@ class AgoraHandsListUIController: UIViewController {
     /** 举手列表*/
     private var tableView: UITableView?
 
-    private(set) var dataSource = [HandsUpUser]() {
+    private(set) var dataSource = [AgoraHandsUpListUserInfo]() {
         didSet {
             delegate?.updateHandsListRedLabel(dataSource.count)
             tableView?.reloadData()
@@ -91,7 +85,7 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
                list.contains(where: {$0.userUuid == userUuid}){
                 isCoHost = true
             }
-            let user = HandsUpUser(userUuid: userUuid,
+            let user = AgoraHandsUpListUserInfo(userUuid: userUuid,
                                    userName: userName,
                                    isCoHost: isCoHost)
             dataSource.append(user)
@@ -109,9 +103,9 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
             guard dataSource.contains(where: {$0.userUuid == userInfo.userUuid}) else{
                 continue
             }
-            // TODO: 验证是否触发didSet
-            var handsUpUser = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
-            handsUpUser.isCoHost = true
+            
+            var AgoraHandsUpListUserInfo = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
+            AgoraHandsUpListUserInfo.isCoHost = true
         }
     }
     
@@ -121,9 +115,9 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
             guard dataSource.contains(where: {$0.userUuid == userInfo.userUuid}) else{
                 continue
             }
-            // TODO: 验证是否触发didSet
-            var handsUpUser = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
-            handsUpUser.isCoHost = false
+            
+            var AgoraHandsUpListUserInfo = dataSource.first(where: {$0.userUuid == userInfo.userUuid})!
+            AgoraHandsUpListUserInfo.isCoHost = false
         }
     }
 }
@@ -181,13 +175,20 @@ extension AgoraHandsListUIController {
         
         view.addSubview(contentView)
 
-        let tab = UITableView.init(frame: .zero, style: .plain)
+        let tab = UITableView.init(frame: .zero,
+                                   style: .plain)
         tab.backgroundColor = UIColor(hex: 0xF9F9FC)
         tab.delegate = self
         tab.dataSource = self
-        tab.tableFooterView = UIView.init(frame: CGRect(x: 0, y: 0, width: 1, height: 0.01))
+        tab.tableFooterView = UIView.init(frame: CGRect(x: 0,
+                                                        y: 0,
+                                                        width: 1,
+                                                        height: 0.01))
         tab.rowHeight = 40
-        tab.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15)
+        tab.separatorInset = UIEdgeInsets(top: 0,
+                                          left: 0,
+                                          bottom: 0,
+                                          right: 15)
         tab.separatorColor = UIColor(hexString: "#EEEEF7")
         tab.allowsSelection = false
         tab.register(cellWithClass: AgoraHandsUpItemCell.self)

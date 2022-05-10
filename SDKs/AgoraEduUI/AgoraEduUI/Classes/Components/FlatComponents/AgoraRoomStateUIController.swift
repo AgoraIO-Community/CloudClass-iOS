@@ -88,9 +88,10 @@ extension AgoraRoomStateUIController: AgoraUIContentContainer, AgoraUIActivity {
         
         var roomTitle: String
         switch contextPool.room.getRoomInfo().roomType {
-        case .oneToOne: roomTitle = "fcr_room_one_to_one_title".agedu_localized()
-        case .small:    roomTitle = "fcr_room_small_title".agedu_localized()
-        case .lecture:  roomTitle = "fcr_room_lecture_title".agedu_localized()
+        case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".agedu_localized()
+        case .small:        roomTitle = "fcr_room_small_title".agedu_localized()
+        case .lecture:      roomTitle = "fcr_room_lecture_title".agedu_localized()
+        @unknown default:   roomTitle = "fcr_room_small_title".agedu_localized()
         }
         stateView.titleLabel.text = roomTitle
         

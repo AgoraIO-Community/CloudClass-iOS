@@ -22,9 +22,26 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
     }
     private lazy var teacherView = AgoraRenderMemberView(frame: .zero)
     
+    override init(context: AgoraEduContextPool,
+                  delegate: AgoraRenderUIControllerDelegate?,
+                  subRoom: AgoraEduSubRoomContext? = nil,
+                  expandFlag: Bool = false) {
+        super.init(context: context,
+                   delegate: delegate,
+                   subRoom: subRoom,
+                   expandFlag: expandFlag)
+        self.maxCount = 6
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // viewWillActive
     override func registerHandlers() {
         super.registerHandlers()
+        
+        userController.registerUserEventHandler(self)
         contextPool.group.registerGroupEventHandler(self)
     }
     
@@ -50,13 +67,15 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
             let userList = students.map({return $0.userUuid})
             addModels(userList: userList)
         }
-        updateViewFrame()
-        collectionView.reloadData()
+        
+        super.createAllRender()
     }
     
     // viewWillInactive
     override func unregisterHandlers() {
         super.unregisterHandlers()
+
+        userController.unregisterUserEventHandler(self)
         contextPool.group.unregisterGroupEventHandler(self)
     }
     
@@ -206,21 +225,52 @@ extension AgoraSmallMembersUIController: AgoraEduGroupHandler {
 }
 
 // MARK: - AgoraEduUserHandler
-extension AgoraSmallMembersUIController {
-    override func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+extension AgoraSmallMembersUIController: AgoraEduUserHandler{
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         guard user.userRole == .teacher else {
             return
         }
         setTeacherModel()
     }
     
-    override func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
                           operatorUser: AgoraEduContextUserInfo?,
                           reason: AgoraEduContextUserLeaveReason) {
         guard user.userRole == .teacher else {
             return
         }
         teacherModel = nil
+    }
+    
+    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
+                               operatorUser: AgoraEduContextUserInfo?) {
+        let list = userList.map({return $0.userUuid})
+        addModels(userList: list)
+    }
+    
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        let list = userList.map({return $0.userUuid})
+        deleteModels(userList: list)
+    }
+    
+    func onUserHandsWave(userUuid: String,
+                         duration: Int,
+                         payload: [String : Any]?) {
+        guard let model = dataSource.first(where: {$0.userId == userUuid}),
+           let view = viewsMap[model.userId] else {
+            return
+        }
+        view.startWaving()
+    }
+    
+    func onUserHandsDown(userUuid: String,
+                         payload: [String : Any]?) {
+        guard let model = dataSource.first(where: {$0.userId == userUuid}),
+           let view = viewsMap[model.userId] else {
+            return
+        }
+        view.stopWaving()
     }
 }
 

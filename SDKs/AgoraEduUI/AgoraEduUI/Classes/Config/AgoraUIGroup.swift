@@ -105,7 +105,14 @@ class AgoraColorGroup {
     
     var room_bg_color: UIColor {
         switch mode {
-        case .agoraLight:  return UIColor(hex: 0xF9F9FC)!
+        case .agoraLight:   return UIColor(hex: 0xF9F9FC)!
+        }
+    }
+    
+    // Render menu
+    var render_menu_bg_color: UIColor {
+        switch mode {
+        case .agoraLight: return .white
         }
     }
     
@@ -192,7 +199,20 @@ class AgoraColorGroup {
         return UIColor(hexString: "#F04C36")!
     }
     
-    // class state
+    // Tool collection
+    var tool_collection_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return .white
+        }
+    }
+    
+    var tool_collection_sep_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xD2D2E2)!
+        }
+    }
+    
+    // Class state
     var class_state_shadow_color: CGColor = UIColor(hex: 0x2F4192)!.cgColor
     
     // Setting
@@ -207,7 +227,57 @@ class AgoraColorGroup {
         case .agoraLight:  return UIColor(hex: 0x191919)!
         }
     }
-            
+    
+    var setting_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return .white
+        }
+    }
+    
+    var setting_camera_button_normal_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xF4F4F8)!
+        }
+    }
+    
+    var setting_camera_button_selected_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x7B88A0)!
+        }
+    }
+    
+    var setting_button_normal_title_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xB5B5C9)!
+        }
+    }
+    
+    var setting_button_selected_title_color: UIColor {
+        switch mode {
+        case .agoraLight:
+            return .white
+        }
+    }
+    
+    var setting_label_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x191919)!
+        }
+    }
+    
+    var setting_sep_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xECECF1)!
+        }
+    }
+    
+    var setting_direction_label_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x677386)!
+        }
+    }
+    
+    // Room State
     var small_room_state_border_color: CGColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!.cgColor
@@ -255,6 +325,58 @@ class AgoraColorGroup {
         case .agoraLight:  return .white
         }
     }
+    
+    // User List
+    var user_list_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0xF9F9FC)!
+        }
+    }
+    
+    var user_list_border_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0xE3E3EC)!
+        }
+    }
+    
+    var user_list_sep_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0xEEEEF7)!
+        }
+    }
+    
+    var user_list_info_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:  return .white
+        }
+    }
+    var user_list_title_label_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x191919)!
+        }
+    }
+    var user_list_content_label_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x7B88A0)!
+        }
+    }
+    var user_list_item_title_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xF9F9FC)!
+        }
+    }
+    
+    var user_list_table_sep_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xEEEEF7)!
+        }
+    }
+    
+    var user_list_carousel_switch_tint_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x357BF6)!
+        }
+    }
 
     func borderSet(layer: CALayer) {
         layer.shadowColor = UIColor(hex: 0x2F4192,
@@ -272,11 +394,21 @@ struct AgoraFrameGroup {
     }
     
     fileprivate var mode: AgoraUIMode
-    
-    // room
+
+    // Room
     var room_border_width: CGFloat = 1
     
     var one_room_right_corner_radius: CGFloat = 4
+    // Render menu
+    var render_menu_corner_radius: CGFloat = 8
+    // Setting
+    var setting_corner_radius: CGFloat = 10
+    
+    var setting_camera_font: UIFont = .systemFont(ofSize: 13)
+    
+    var setting_camera_button_corner_radius: CGFloat = 4
+    
+    var setting_exit_corner_radius: CGFloat = 6
     // Render
     var render_label_shadow_radius: CGFloat = 2
     
@@ -334,10 +466,13 @@ struct AgoraFrameGroup {
     
     var room_state_border_width: CGFloat = 1
     
-    // class state
+    // Tool collection
+    var tool_collection_corner_radius: CGFloat = 16
+    
+    // Class state
     var class_state_button_corner_radius: CGFloat = 17
     
-    // subRoom
+    // SubRoom
     var subRoom_option_label_left_space: CGFloat {
         return 37
     }
@@ -345,4 +480,8 @@ struct AgoraFrameGroup {
     var subRoom_option_label_right_space: CGFloat {
         return 15
     }
+    // User List
+    var user_list_content_corner_radius: CGFloat = 10
+    var user_list_content_border_width: CGFloat = 1
+    var user_list_font_size: UIFont = .systemFont(ofSize: 12)
 }

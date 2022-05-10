@@ -48,11 +48,8 @@ import AgoraWidget
     private lazy var classStateController = AgoraClassStateUIController(context: contextPool,
                                                                         delegate: self)
     /** 老师渲染 控制器*/
-    private lazy var teacherRenderController = AgoraRenderMembersUIController(context: contextPool,
-                                                                              delegate: self,
-                                                                              containRoles: [.teacher],
-                                                                              max: 1,
-                                                                              dataSource: [AgoraRenderMemberViewModel.defaultNilValue(role: .teacher)])
+    private lazy var teacherRenderController = AgoraLectureMembersUIController(context: contextPool,
+                                                                               delegate: self)
     /** 白板 控制器*/
     private lazy var boardController = AgoraBoardUIController(context: contextPool)
     
@@ -252,14 +249,7 @@ import AgoraWidget
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         
-        view.layoutIfNeeded()
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        
-        layout.itemSize = CGSize(width: teacherRenderController.view.width - 2,
-                                 height: teacherRenderController.view.height - 2)
-        layout.minimumLineSpacing = 2
-        teacherRenderController.updateLayout(layout)
+        updateRenderLayout()
     }
     
     func updateViewProperties() {
@@ -471,5 +461,19 @@ extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
             make?.bottom.equalTo()(boardPageController.view.mas_bottom)
             make?.size.equalTo()(classStateController.suggestSize)
         }
+    }
+}
+
+
+private extension AgoraLectureUIManager {
+    func updateRenderLayout() {
+        view.layoutIfNeeded()
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        layout.itemSize = CGSize(width: AgoraFit.scale(170),
+                                 height: teacherRenderController.view.height - 2)
+        layout.minimumLineSpacing = 2
+        teacherRenderController.updateLayout(layout)
     }
 }

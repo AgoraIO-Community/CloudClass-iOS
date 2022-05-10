@@ -33,7 +33,7 @@ class AgoraRenderMemberView: UIView {
     let nameLabel = UILabel()
     let micView = AgoraRenderMemberMicView()
     /** 举手动画视图*/
-    lazy var waveView: FLAnimatedImageView =  {
+    private lazy var waveView: FLAnimatedImageView =  {
         guard let bundle = Bundle.agora_bundle(object: self,
                                                resource: "AgoraEduUI"),
               let url = bundle.url(forResource: "img_hands_wave",
@@ -45,7 +45,7 @@ class AgoraRenderMemberView: UIView {
         let animatedImage = FLAnimatedImage(animatedGIFData: data)
         let v = FLAnimatedImageView()
         v.animatedImage = animatedImage
-        v.isHidden = true
+        
         self.addSubview(v)
         v.mas_makeConstraints { make in
             make?.width.height().equalTo()(self.mas_height)
@@ -70,13 +70,15 @@ class AgoraRenderMemberView: UIView {
             return
         }
         waveView.startAnimating()
+        waveView.isHidden = false
     }
     
     func stopWaving() {
         guard waveView.isAnimating else {
             return
         }
-        self.waveView.stopAnimating()
+        waveView.isHidden = true
+        waveView.stopAnimating()
     }
     
     required init?(coder: NSCoder) {
@@ -137,4 +139,26 @@ private extension AgoraRenderMemberView {
             make?.right.lessThanOrEqualTo()(0)
         }
     }
+}
+
+
+class AgoraRenderMemberCell: UICollectionViewCell {
+    
+    private let videoMaskView = AgoraRenderMaskView(frame: .zero)
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        contentView.backgroundColor = .clear
+        videoMaskView.layer.cornerRadius = AgoraFrameGroup().small_render_cell_corner_radius
+        videoMaskView.imageView.image = UIImage.agedu_named("ic_member_no_user")
+        contentView.addSubview(videoMaskView)
+        videoMaskView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }

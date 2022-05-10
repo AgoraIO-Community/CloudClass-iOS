@@ -43,27 +43,8 @@ import UIKit
     private lazy var toolBarController = AgoraToolBarUIController(context: contextPool)
     
     /** 渲染 控制器*/
-    private lazy var renderController: AgoraRenderMembersUIController = {
-        // 1V1中需要默认两个model
-        var models = [AgoraRenderMemberViewModel]()
-        let localInfo = contextPool.user.getLocalUserInfo()
-        let localStream = contextPool.stream.getStreamList(userUuid: localInfo.userUuid)?.first(where: {$0.videoSourceType == .camera})
-        if localInfo.userRole == .student {
-            models.append(AgoraRenderMemberViewModel.defaultNilValue(role: .teacher))
-            models.append(AgoraRenderMemberViewModel.model(user: localInfo,
-                                                           stream: localStream))
-        } else {
-            models.append(AgoraRenderMemberViewModel.model(user: localInfo,
-                                                           stream: localStream))
-            models.append(AgoraRenderMemberViewModel.defaultNilValue(role: .student))
-        }
-        let renderController = AgoraRenderMembersUIController(context: contextPool,
-                                                         delegate: self,
-                                                         containRoles: [.student,.teacher],
-                                                         max: 2,
-                                                         dataSource: models)
-        return renderController
-    }()
+    private lazy var renderController = AgoraOneToOneMembersUIController(context: contextPool,
+                                                                         delegate: self)
     
     /** 右边用来切圆角和显示背景色的容器视图*/
     private lazy var rightContentView = UIView()
@@ -509,34 +490,6 @@ extension AgoraOneToOneUIManager: AgoraClassStateUIControllerDelegate {
 
 // MARK: - Creations
 private extension AgoraOneToOneUIManager {
-    func settingViewAnimationFromView(_ formView: UIView) {
-        guard let animaView = ctrlView else {
-            return
-        }
-        // 算出落点的frame
-        let rect = formView.convert(formView.bounds,
-                                    to: self.view)
-        var point = CGPoint(x: rect.maxX - animaView.frame.size.width, y: rect.maxY + 8)
-        animaView.frame = CGRect(origin: point, size: animaView.frame.size)
-        // 运算动画锚点
-        let anchorConvert = formView.convert(formView.bounds, to: animaView)
-        let anchor = CGPoint(x: anchorConvert.origin.x/animaView.frame.width, y: 0)
-        // 开始动画运算
-        let oldFrame = animaView.frame
-        let position = CGPoint(x: animaView.layer.position.x + (anchor.x - 0.5) * animaView.bounds.width,
-                               y: animaView.layer.position.y + (anchor.y - 0.5) * animaView.bounds.height)
-        animaView.layer.anchorPoint = anchor
-        animaView.frame = oldFrame
-        animaView.alpha = 0.2
-        animaView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        self.view.layoutIfNeeded()
-        UIView.animate(withDuration: 0.1) {
-            animaView.transform = .identity
-            animaView.alpha = 1
-        } completion: { finish in
-        }
-    }
-
     func updateRenderLayout() {
         view.layoutIfNeeded()
         let layout = UICollectionViewFlowLayout()

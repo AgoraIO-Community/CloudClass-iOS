@@ -31,6 +31,24 @@ extension AgoraEduContextUserRole {
     }
 }
 
+extension AgoraEduContextVideoStreamConfig {
+    static func small(isMirror: Bool = false) -> AgoraEduContextVideoStreamConfig {
+        return AgoraEduContextVideoStreamConfig(dimensionWidth: 320,
+                                                dimensionHeight: 240,
+                                                frameRate: 15,
+                                                bitRate: 200,
+                                                isMirror: isMirror)
+    }
+    
+    static func large(isMirror: Bool = false) -> AgoraEduContextVideoStreamConfig {
+        return AgoraEduContextVideoStreamConfig(dimensionWidth: 640,
+                                                dimensionHeight: 480,
+                                                frameRate: 15,
+                                                bitRate: 1000,
+                                                isMirror: isMirror)
+    }
+}
+
 extension AgoraEduContextMediaStreamType {
     var hasAudio: Bool {
         switch self {

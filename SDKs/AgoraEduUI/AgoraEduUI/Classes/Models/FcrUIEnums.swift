@@ -29,8 +29,8 @@ enum AgoraRenderMediaState {
 
 // MARK: - StreamWindow
 enum AgoraStreamWindowType: Equatable {
-    case video(AgoraStreamWindowCameraInfo)
-    case screen(AgoraStreamWindowSharingInfo)
+    case video(cameraInfo: AgoraStreamWindowCameraInfo)
+    case screen(sharingInfo:AgoraStreamWindowSharingInfo)
     
     static func == (lhs: Self,
                     rhs: Self) -> Bool {
@@ -38,6 +38,34 @@ enum AgoraStreamWindowType: Equatable {
         case (let .video(_), let .video(_)):   return true
         case (let .screen(_), let .screen(_)): return true
         default:                               return false
+        }
+    }
+}
+
+
+// MARK: - RenderMenu
+enum AgoraRenderMenuItemType {
+    case mic, camera, stage, allOffStage, auth, reward
+}
+
+// MARK: - ToolCollection
+enum AgoraToolCollectionSelectType: Int {
+    case none, main, sub
+}
+
+// MARK: - UserList
+enum AgoraUserListFunction: Int {
+    case stage = 0, auth, camera, mic, reward, kick
+    
+    func title() -> String {
+        switch self {
+        case .stage:    return "fcr_user_list_stage".agedu_localized()
+        case .auth:     return "fcr_user_list_auth".agedu_localized()
+        case .camera:   return "fcr_user_list_video".agedu_localized()
+        case .mic:      return "fcr_user_list_audio".agedu_localized()
+        case .reward:   return "fcr_user_list_reward".agedu_localized()
+        case .kick:     return "fcr_user_list_ban".agedu_localized()
+        default:        return ""
         }
     }
 }
