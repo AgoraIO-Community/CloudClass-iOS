@@ -10,13 +10,16 @@ import UIKit
 struct AgoraStreamWindowWidgetRenderInfo: Convertable {
     var userUuid: String
     var streamId: String
+    var zIndex: Int?
 }
 
 enum AgoraStreamWindowWidgetSignal: Convertable {
     case RenderInfo(AgoraStreamWindowWidgetRenderInfo)
+    case ViewZIndex(Int)
     
     private enum CodingKeys: CodingKey {
         case RenderInfo
+        case ViewZIndex
     }
     
     init(from decoder: Decoder) throws {
@@ -25,6 +28,9 @@ enum AgoraStreamWindowWidgetSignal: Convertable {
         if let value = try? container.decode(AgoraStreamWindowWidgetRenderInfo.self,
                                              forKey: .RenderInfo) {
             self = .RenderInfo(value)
+        } else if let value = try? container.decode(Int.self,
+                                                    forKey: .ViewZIndex) {
+            self = .ViewZIndex(value)
         } else {
             throw DecodingError.dataCorrupted(
                 .init(
@@ -42,6 +48,9 @@ enum AgoraStreamWindowWidgetSignal: Convertable {
         case .RenderInfo(let x):
             try container.encode(x,
                                  forKey: .RenderInfo)
+        case .ViewZIndex(let x):
+            try container.encode(x,
+                                 forKey: .ViewZIndex)
         }
     }
     

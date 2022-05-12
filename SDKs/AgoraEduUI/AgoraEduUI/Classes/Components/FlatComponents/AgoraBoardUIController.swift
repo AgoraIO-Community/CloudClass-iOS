@@ -95,6 +95,7 @@ extension AgoraBoardUIController: AgoraUIActivity {
         
         widgetController.add(self)
         
+        setUp()
         initBoardWidget()
         joinBoard()
     }
@@ -144,6 +145,18 @@ private extension AgoraBoardUIController {
         if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
+        }
+    }
+    
+    func setUp() {
+        guard let props = contextPool.room.getRoomProperties(),
+              let stageState = props["stage"] as? Int else {
+            return
+        }
+        if stageState == 1 {
+            delegate?.onStageStateChanged(stageOn: true)
+        } else {
+            delegate?.onStageStateChanged(stageOn: false)
         }
     }
     

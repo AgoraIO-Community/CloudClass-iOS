@@ -64,6 +64,9 @@ class AgoraWindowUIController: UIViewController {
     }
     /**widgetId: AgoraStreamWindowType **/
     private var modelDic = [String: AgoraStreamWindowType]()
+
+    private let kScreenViewIndex = -1
+    private var curMaxZIndexTuple: (zIndex: Int,topWidget: AgoraBaseWidget)?
     
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
@@ -151,26 +154,10 @@ extension AgoraWindowUIController: AgoraWidgetActivityObserver {
 extension AgoraWindowUIController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
                                   widgetId: String) {
-        guard let targetView = widgetDic[widgetId]?.view else {
+        guard let widget = widgetDic[widgetId] else {
             return
         }
-
-        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
-
-        // zIndexs
-        view.bringSubviewToFront(targetView)
-        view.layoutIfNeeded()
-        
-        targetView.mas_remakeConstraints { make in
-            make?.left.equalTo()(frame.minX)
-            make?.top.equalTo()(frame.minY)
-            make?.width.equalTo()(frame.width)
-            make?.height.equalTo()(frame.height)
-        }
-
-        UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.view.layoutIfNeeded()
-        }
+        handleSyncFrame(widget: widget)
     }
 }
 
@@ -179,21 +166,22 @@ extension AgoraWindowUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
         guard let widget = widgetDic[widgetId],
-              let signal = message.toWindowSignal(),
-              !modelDic.keys.contains(widgetId) else {
+              let signal = message.toWindowSignal() else {
                   return
               }
         
         switch signal {
         case .RenderInfo(let renderInfo):
-            guard let stream = streamController.getStreamList(userUuid: renderInfo.userUuid)?.first(where: {$0.streamUuid == renderInfo.streamId}) else {
+            guard !modelDic.keys.contains(widgetId),
+                  let stream = streamController.getStreamList(userUuid: renderInfo.userUuid)?.first(where: {$0.streamUuid == renderInfo.streamId}) else {
                 return
             }
             switch stream.videoSourceType {
             case .camera:
                 addCameraRenderInfo(stream: stream,
                                     renderInfo: renderInfo,
-                                    widget: widget)
+                                    widget: widget,
+                                    zIndex: renderInfo.zIndex)
             case .screen:
                 addScreenSharingInfo(stream: stream,
                                      renderInfo: renderInfo,
@@ -201,6 +189,9 @@ extension AgoraWindowUIController: AgoraWidgetMessageObserver {
             default:
                 break
             }
+        case .ViewZIndex(let zIndex):
+            handleVideoZIndex(zIndex: zIndex,
+                              widget: widget)
         }
     }
 }
@@ -314,18 +305,6 @@ private extension AgoraWindowUIController {
         let widget = widgetController.create(config)
         self.widgetDic[widgetId] = widget
         
-        view.addSubview(widget.view)
-        
-        let syncFrame = widgetController.getWidgetSyncFrame(widget.info.widgetId)
-        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
-        
-        widget.view.mas_makeConstraints { make in
-            make?.left.equalTo()(frame.minX)
-            make?.top.equalTo()(frame.minY)
-            make?.width.equalTo()(frame.width)
-            make?.height.equalTo()(frame.height)
-        }
-        
         widgetController.addObserver(forWidgetSyncFrame: self,
                                      widgetId: widgetId)
     }
@@ -347,6 +326,12 @@ private extension AgoraWindowUIController {
         
         // TODO: 2.3.0暂时不需要动画，后期大窗需要stopSpreadObj(widgetId: widgetId)
         widget.view.removeFromSuperview()
+
+        if let tuple = curMaxZIndexTuple,
+           tuple.topWidget.info.widgetId == widgetId {
+            curMaxZIndexTuple = nil
+        }
+        curMaxZIndexTuple = nil
         widgetDic.removeValue(forKey: widgetId)
         modelDic.removeValue(forKey: widgetId)
         
@@ -361,18 +346,26 @@ private extension AgoraWindowUIController {
 private extension AgoraWindowUIController {
     func addCameraRenderInfo(stream: AgoraEduContextStreamInfo,
                              renderInfo: AgoraStreamWindowWidgetRenderInfo,
-                             widget: AgoraBaseWidget) {
+                             widget: AgoraBaseWidget,
+                             zIndex: Int?) {
         let renderModel = makeRenderModel(userId: renderInfo.userUuid,
                                           stream: stream)
         let renderView = AgoraRenderMemberView(frame: .zero)
         
         let spreadInfo = AgoraStreamWindowCameraInfo(renderModel: renderModel,
                                                      renderView: renderView)
-
+        
         widget.view.addSubview(renderView)
         renderView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
+        
+        view.addSubview(widget.view)
+        
+        handleSyncFrame(widget: widget)
+        
+        handleVideoZIndex(zIndex: zIndex,
+                          widget: widget)
         
         modelDic[widget.info.widgetId] = .video(cameraInfo: spreadInfo)
         if let streamList = streamController.getStreamList(userUuid: renderInfo.userUuid),
@@ -390,11 +383,9 @@ private extension AgoraWindowUIController {
     func addScreenSharingInfo(stream: AgoraEduContextStreamInfo,
                               renderInfo: AgoraStreamWindowWidgetRenderInfo,
                               widget: AgoraBaseWidget) {
-        guard let targetView =  widgetDic[widget.info.widgetId]?.view else {
-            return
-        }
-        // TODO: 屏幕共享默认全屏，是否需要统一逻辑处理
-        targetView.mas_makeConstraints { make in
+        view.addSubview(widget.view)
+        
+        widget.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         
@@ -402,7 +393,7 @@ private extension AgoraWindowUIController {
                                                  streamUuid: renderInfo.streamId)
         modelDic[widget.info.widgetId] = .screen(sharingInfo: sharingInfo)
         // 开启渲染屏幕共享
-        startHandleVideoOnWindow(targetView,
+        startHandleVideoOnWindow(widget.view,
                                  isCamera: false,
                                  streamId: renderInfo.streamId)
     }
@@ -523,9 +514,32 @@ private extension AgoraWindowUIController {
         }
     }
     
-    func setRenderMemberView(model: AgoraRenderMemberViewModel,
-                             view: AgoraRenderMemberView) {
-        
+    func handleSyncFrame(widget: AgoraBaseWidget) {
+        let syncFrame = widgetController.getWidgetSyncFrame(widget.info.widgetId)
+        let frame = syncFrame.displayFrameFromSyncFrame(superView: self.view)
+
+        widget.view.mas_remakeConstraints { make in
+            make?.left.equalTo()(frame.minX)
+            make?.top.equalTo()(frame.minY)
+            make?.width.equalTo()(frame.width)
+            make?.height.equalTo()(frame.height)
+        }
+
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func handleVideoZIndex(zIndex: Int?,
+                           widget: AgoraBaseWidget) {
+        let finalZIndex = zIndex ?? 0
+        if curMaxZIndexTuple != nil,
+           finalZIndex <= curMaxZIndexTuple!.zIndex {
+            view.bringSubviewToFront(curMaxZIndexTuple!.topWidget.view)
+        } else {
+            curMaxZIndexTuple = (finalZIndex, widget)
+            view.bringSubviewToFront(widget.view)
+        }
     }
 }
 
