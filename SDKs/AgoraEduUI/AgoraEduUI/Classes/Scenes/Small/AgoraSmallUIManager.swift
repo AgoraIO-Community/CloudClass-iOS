@@ -180,7 +180,6 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         }
         
         chatController.hideMiniButton = true
-        chatController.viewDidLoad()
         addChild(chatController)
         
         switch userRole {
@@ -602,7 +601,7 @@ extension AgoraSmallUIManager: AgoraEduUISubManagerCallback {
 private extension AgoraSmallUIManager {
     func updateRenderCollectionLayout() {
         view.layoutIfNeeded()
-        let kItemGap: CGFloat = AgoraFit.scale(4)
+        let kItemGap: CGFloat = 2
         
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal

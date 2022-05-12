@@ -14,6 +14,14 @@ class AgoraRenderMaskView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        let ui = AgoraUIGroup()
+        
+        backgroundColor = ui.color.render_cell_bg_color
+        imageView.image = UIImage.agedu_named("ic_member_no_user")
+        layer.cornerRadius = ui.frame.small_render_cell_corner_radius
+        layer.borderWidth = ui.frame.render_cell_border_width
+        layer.borderColor = ui.color.render_mask_border_color
+        
         addSubview(imageView)
         imageView.mas_makeConstraints { make in
             make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.38)
@@ -89,17 +97,8 @@ class AgoraRenderMemberView: UIView {
 // MARK: - private
 private extension AgoraRenderMemberView {
     func createViews() {
+        backgroundColor = .clear
         let ui = AgoraUIGroup()
-        
-        backgroundColor = .clear
-//        layer.borderWidth = ui.frame.render_cell_border_width
-//        layer.borderColor = ui.color.render_cell_border_color
-        backgroundColor = .clear
-        
-        videoMaskView.backgroundColor = ui.color.render_cell_bg_color
-        videoMaskView.imageView.image = UIImage.agedu_named("ic_member_no_user")
-        videoMaskView.layer.borderWidth = ui.frame.render_cell_border_width
-        videoMaskView.layer.borderColor = ui.color.render_mask_border_color
         addSubview(videoMaskView)
         
         videoView.backgroundColor = ui.color.render_cell_bg_color

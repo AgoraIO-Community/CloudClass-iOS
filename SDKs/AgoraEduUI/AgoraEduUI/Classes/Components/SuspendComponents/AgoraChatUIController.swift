@@ -67,8 +67,15 @@ class AgoraChatUIController: UIViewController {
         self.contextPool = context
         self.subRoom = subRoom
         self.delegate = delegate
+        
         super.init(nibName: nil,
                    bundle: nil)
+        
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            contextPool.room.registerRoomEventHandler(self)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -77,12 +84,6 @@ class AgoraChatUIController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if let `subRoom` = subRoom {
-            subRoom.registerSubRoomEventHandler(self)
-        } else {
-            contextPool.room.registerRoomEventHandler(self)
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
