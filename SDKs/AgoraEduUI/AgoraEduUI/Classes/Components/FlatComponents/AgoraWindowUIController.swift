@@ -294,7 +294,9 @@ private extension AgoraWindowUIController {
         guard widgetId.hasPrefix(kWindowWidgetId),
               !self.widgetDic.keys.contains(widgetId),
               let config = widgetController.getWidgetConfig(kWindowWidgetId),
-              let streamId = widgetId.splitStreamId() else {
+              let streamId = widgetId.splitStreamId(),
+              let streamList = streamController.getAllStreamList(),
+              streamList.contains(where: {$0.streamUuid == streamId}) else {
             return
         }
         

@@ -104,8 +104,7 @@ private extension AgoraRenderMemberView {
         videoView.backgroundColor = ui.color.render_cell_bg_color
         videoView.layer.borderWidth = ui.frame.render_cell_border_width
         videoView.layer.borderColor = ui.color.render_view_border_color
-        videoView.layer.cornerRadius = max(ui.frame.one_one_to_render_cell_corner_radius,
-                                           ui.frame.small_render_cell_corner_radius)
+        videoView.layer.cornerRadius = ui.frame.small_render_cell_corner_radius
         addSubview(videoView)
         
         nameLabel.textColor = ui.color.render_label_color
