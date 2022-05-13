@@ -430,22 +430,15 @@ private extension AgoraWindowUIController {
     
     func contextMediaHandle(streamId: String,
                             renderView: AgoraRenderMemberView) {
-        let localUid = userController.getLocalUserInfo().userUuid
-        if let localStreamList = streamController.getStreamList(userUuid: localUid) {
-            if !localStreamList.contains(where: {$0.streamUuid == streamId}) {
-                streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
-                                                                    level: .high)
-            } else {
-                streamController.setLocalVideoConfig(streamUuid: streamId,
-                                                     config: AgoraEduContextVideoStreamConfig.large())
-            }
+        
+        if !isLocalStream(streamId) {
+            streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
+                                                                level: .high)
         }
         
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         renderConfig.isMirror = false
-        streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
-                                                            level: .high)
         
         contextPool.media.startRenderVideo(roomUuid: roomId,
                                            view: renderView.videoView,
@@ -541,6 +534,17 @@ private extension AgoraWindowUIController {
         } else {
             curMaxZIndexTuple = (finalZIndex, widget)
             view.bringSubviewToFront(widget.view)
+        }
+    }
+    
+    func isLocalStream(_ streamId: String) -> Bool {
+        let localUid = userController.getLocalUserInfo().userUuid
+        
+        if let localStreamList = streamController.getStreamList(userUuid: localUid),
+           localStreamList.contains(where: {$0.streamUuid == streamId}) {
+            return true
+        } else {
+            return false
         }
     }
 }

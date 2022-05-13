@@ -105,17 +105,7 @@ class AgoraRenderMembersUIController: UIViewController {
     }
     
     func getRenderViewForUser(with userId: String) -> UIView? {
-        var view: UIView?
-        for (i, model) in dataSource.enumerated() {
-            guard model.userId == userId else {
-                continue
-            }
-            let indexPath = IndexPath(item: i,
-                                      section: 0)
-            view = collectionView.cellForItem(at: indexPath)
-            break
-        }
-        return view
+        return viewsMap[userId]
     }
     
     // MARK: - common
@@ -254,14 +244,11 @@ class AgoraRenderMembersUIController: UIViewController {
                           model: AgoraRenderMemberViewModel) {
         model.setRenderMemberView(view: view)
         
-        guard let streamId = model.streamId else {
-            return
-        }
         let videoOn = (model.userState != .window && model.videoState == .normal)
         contextMediaHandle(videoOn: videoOn,
                            audioOn: (model.audioState == .normal),
                            view: view.videoView,
-                           streamId: streamId)
+                           streamId: model.streamId)
     }
     
     func createAllRender() {
