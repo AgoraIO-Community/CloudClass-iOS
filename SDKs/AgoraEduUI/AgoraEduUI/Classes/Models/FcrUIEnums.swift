@@ -42,7 +42,6 @@ enum AgoraStreamWindowType: Equatable {
     }
 }
 
-
 // MARK: - RenderMenu
 enum AgoraRenderMenuItemType {
     case mic, camera, stage, allOffStage, auth, reward

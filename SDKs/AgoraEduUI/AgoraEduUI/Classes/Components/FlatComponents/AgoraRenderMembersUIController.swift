@@ -16,7 +16,7 @@ protocol AgoraRenderUIControllerDelegate: NSObjectProtocol {
 
 class AgoraRenderMembersUIController: UIViewController {
     // context
-    private(set) var contextPool: AgoraEduContextPool!
+    private(set) var contextPool: AgoraEduContextPool
     private(set) var subRoom: AgoraEduSubRoomContext?
     
     var userController: AgoraEduUserContext {
@@ -483,21 +483,33 @@ extension AgoraRenderMembersUIController: AgoraEduSubRoomHandler {
 // MARK: - actions
 extension AgoraRenderMembersUIController {
     @objc func onClickLeft(_ sender: UIButton) {
-        let idxs = collectionView.indexPathsForVisibleItems
-        if let min = idxs.min(),
-           min.row > 0 {
-            let previous = IndexPath(row: min.row - 1 , section: 0)
-            collectionView.scrollToItem(at: previous, at: .left, animated: true)
+        let indexs = collectionView.indexPathsForVisibleItems
+        
+        guard let min = indexs.min(),
+              min.row > 0 else {
+            return
         }
+        
+        let previous = IndexPath(row: min.row - 1 ,
+                                 section: 0)
+        collectionView.scrollToItem(at: previous,
+                                    at: .left,
+                                    animated: true)
     }
     
     @objc func onClickRight(_ sender: UIButton) {
-        let idxs = collectionView.indexPathsForVisibleItems
-        if let max = idxs.max(),
-           max.row < dataSource.count - 1 {
-            let next = IndexPath(row: max.row + 1 , section: 0)
-            collectionView.scrollToItem(at: next, at: .right, animated: true)
+        let indexs = collectionView.indexPathsForVisibleItems
+        
+        guard let max = indexs.max(),
+              max.row < dataSource.count - 1 else {
+            return
         }
+        
+        let next = IndexPath(row: max.row + 1 ,
+                             section: 0)
+        collectionView.scrollToItem(at: next,
+                                    at: .right,
+                                    animated: true)
     }
 }
 
@@ -516,14 +528,10 @@ private extension AgoraRenderMembersUIController {
         if videoOn,
            !videoRenderingList.contains(streamId),
            let renderView = view {
-            let localUid = userController.getLocalUserInfo().userUuid
-            if let localStreamList = streamController.getStreamList(userUuid: localUid),
-               !localStreamList.contains(where: {$0.streamUuid == streamId}){
+            
+            if !isLocalStream(streamId) {
                 streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
                                                                     level: .low)
-            } else {
-                streamController.setLocalVideoConfig(streamUuid: streamId,
-                                                     config: AgoraEduContextVideoStreamConfig.small())
             }
             
             let renderConfig = AgoraEduContextRenderConfig()
@@ -552,11 +560,23 @@ private extension AgoraRenderMembersUIController {
             contextPool.media.startPlayAudio(roomUuid: roomId,
                                              streamUuid: streamId)
         }
+        
         // audio off
         if !audioOn,
            audioPlayingList.contains(streamId) {
             contextPool.media.stopPlayAudio(roomUuid: roomId,
                                             streamUuid: streamId)
+        }
+    }
+    
+    func isLocalStream(_ streamId: String) -> Bool {
+        let localUid = userController.getLocalUserInfo().userUuid
+        
+        if let localStreamList = streamController.getStreamList(userUuid: localUid),
+           localStreamList.contains(where: {$0.streamUuid == streamId}) {
+            return true
+        } else {
+            return false
         }
     }
 }
