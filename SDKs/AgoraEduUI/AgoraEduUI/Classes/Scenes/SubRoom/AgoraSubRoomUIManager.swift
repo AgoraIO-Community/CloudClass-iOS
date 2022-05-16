@@ -403,19 +403,25 @@ extension AgoraSubRoomUIManager: AgoraToolBarDelegate {
 
 // MARK: - AgoraWindowUIControllerDelegate
 extension AgoraSubRoomUIManager: AgoraWindowUIControllerDelegate {
-    func startSpreadForUser(with userId: String) -> UIView? {
-        self.renderController.setRenderEnable(with: userId,
-                                              rendEnable: false)
-        return self.renderController.getRenderViewForUser(with: userId)
+    func getTargetView(with userId: String) -> UIView? {
+        return renderController.getRenderViewForUser(with: userId)
     }
     
-    func willStopSpreadForUser(with userId: String) -> UIView? {
-        return self.renderController.getRenderViewForUser(with: userId)
+    func getTargetSuperView() -> UIView? {
+        guard !renderController.view.isHidden else {
+            return nil
+        }
+        return renderController.view
     }
     
-    func didStopSpreadForUser(with userId: String) {
-        self.renderController.setRenderEnable(with: userId,
-                                              rendEnable: true)
+    func startSpreadForUser(with userId: String) {
+        renderController.setRenderEnable(with: userId,
+                                         rendEnable: false)
+    }
+    
+    func stopSpreadForUser(with userId: String) {
+        renderController.setRenderEnable(with: userId,
+                                         rendEnable: true)
     }
 }
 
@@ -587,11 +593,11 @@ private extension AgoraSubRoomUIManager {
     
     func teacherInLocalSubRoom() -> Bool {
         let group = contextPool.group
-        let user = contextPool.user
+        let user = subRoom.user
         
         guard let subRoomList = group.getSubRoomList(),
               let teacher = user.getUserList(role: .teacher)?.first else {
-            return true
+            return false
         }
         
         let localUserId = user.getLocalUserInfo().userUuid
@@ -606,6 +612,6 @@ private extension AgoraSubRoomUIManager {
             return true
         }
         
-        return true
+        return false
     }
 }

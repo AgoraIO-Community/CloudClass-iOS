@@ -64,10 +64,11 @@ class AgoraRenderMembersUIController: UIViewController {
     var audioPlayingList = [String]()
     
     // views
-    private(set) var contentView: UIView!
-    var layout = UICollectionViewFlowLayout()
+    private(set) var contentView = UIView()
+    private(set) var layout = UICollectionViewFlowLayout()
     
-    private(set) var collectionView: UICollectionView!
+    private(set) lazy var collectionView = UICollectionView(frame: .zero,
+                                                            collectionViewLayout: layout)
     private(set) lazy var leftButton = UIButton(type: .custom)
     private(set) lazy var rightButton = UIButton(type: .custom)
     
@@ -79,6 +80,7 @@ class AgoraRenderMembersUIController: UIViewController {
         self.contextPool = context
         self.delegate = delegate
         self.subRoom = subRoom
+        self.expandFlag = expandFlag
         
         super.init(nibName: nil,
                    bundle: nil)
@@ -112,17 +114,15 @@ class AgoraRenderMembersUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initViews()
-        updateViewProperties()
         initViewFrame()
+        updateViewProperties()
+        updateViewFrame()
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
             contextPool.room.registerRoomEventHandler(self)
         }
-        updateViewFrame()
-        collectionView.setCollectionViewLayout(layout,
-                                               animated: true)
     }
     
     required init?(coder: NSCoder) {
@@ -222,8 +222,10 @@ class AgoraRenderMembersUIController: UIViewController {
         let kItemGap = layout.minimumLineSpacing
         
         let f_count = CGFloat(self.dataSource.count > maxCount ? maxCount: self.dataSource.count)
+        
         let studentWidth = (singleLength + kItemGap) * f_count - kItemGap
         let collectionLength = (singleLength + kItemGap) * f_count - kItemGap
+        
         if collectionView.width != studentWidth {
             collectionView.mas_remakeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(contentView)
@@ -234,9 +236,10 @@ class AgoraRenderMembersUIController: UIViewController {
         guard expandFlag else {
             return
         }
-        let pageEnable = (self.dataSource.count <= maxCount)
-        self.leftButton.isHidden = pageEnable
-        self.rightButton.isHidden = pageEnable
+        
+        let pageEnable = (dataSource.count <= maxCount)
+        leftButton.isHidden = pageEnable
+        rightButton.isHidden = pageEnable
     }
     
     // model to view
@@ -245,6 +248,7 @@ class AgoraRenderMembersUIController: UIViewController {
         model.setRenderMemberView(view: view)
         
         let videoOn = (model.userState != .window && model.videoState == .normal)
+        
         contextMediaHandle(videoOn: videoOn,
                            audioOn: (model.audioState == .normal),
                            view: view.videoView,
@@ -295,11 +299,8 @@ class AgoraRenderMembersUIController: UIViewController {
     
     // AgoraUIContentContainer
     func initViews() {
-        contentView = UIView()
         view.addSubview(contentView)
         
-        collectionView = UICollectionView(frame: .zero,
-                                          collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
@@ -316,19 +317,19 @@ class AgoraRenderMembersUIController: UIViewController {
         leftButton.isHidden = true
         leftButton.clipsToBounds = true
         leftButton.addTarget(self,
-                           action: #selector(onClickLeft(_:)),
-                           for: .touchUpInside)
+                             action: #selector(onClickLeft(_:)),
+                             for: .touchUpInside)
         leftButton.setImage(UIImage.agedu_named("ic_member_arrow_left"),
-                          for: .normal)
+                            for: .normal)
         collectionView.addSubview(leftButton)
         
         rightButton.isHidden = true
         rightButton.clipsToBounds = true
         rightButton.addTarget(self,
-                           action: #selector(onClickRight(_:)),
-                           for: .touchUpInside)
+                              action: #selector(onClickRight(_:)),
+                              for: .touchUpInside)
         rightButton.setImage(UIImage.agedu_named("ic_member_arrow_right"),
-                          for: .normal)
+                             for: .normal)
         collectionView.addSubview(rightButton)
     }
     
@@ -363,9 +364,11 @@ class AgoraRenderMembersUIController: UIViewController {
     
     func updateViewProperties() {
         let ui = AgoraUIGroup()
+        
         guard expandFlag else {
             return
         }
+        
         leftButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
         leftButton.backgroundColor = ui.color.render_left_right_button_color
         rightButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
@@ -387,23 +390,29 @@ extension AgoraRenderMembersUIController: UICollectionViewDataSource, UICollecti
                                                       for: indexPath)
         let model = dataSource[indexPath.item]
         cell.contentView.isHidden = (model.userState == .window)
+        
         guard let view = viewsMap[model.userId] else {
             return cell
         }
         
         cell.contentView.removeSubviews()
         cell.contentView.addSubview(view)
+        
         view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
+        
         return cell
     }
     
     // UICollectionViewDelegate
     public func collectionView(_ collectionView: UICollectionView,
                                didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: false)
+        collectionView.deselectItem(at: indexPath,
+                                    animated: false)
+        
         let u = dataSource[indexPath.row]
+        
         if let cell = collectionView.cellForItem(at: indexPath),
            u.userId != "" {
             delegate?.onClickMemberAt(view: cell,

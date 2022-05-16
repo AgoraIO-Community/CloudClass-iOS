@@ -218,7 +218,7 @@ extension AgoraToolBarUIController: AgoraEduGroupHandler {
     func onUserListAddedToSubRoom(userList: [String],
                                   subRoomUuid: String,
                                   operatorUser: AgoraEduContextUserInfo?) {
-        if let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+        if let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
             userList.contains(teacherId),
             teacherInLocalSubRoom() {
             collectionView.reloadData()
@@ -361,7 +361,7 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
                                                       selectView: cell)
             }
         }
-        collectionView.reloadData()
+        collectionView.reloadItems(at: [indexPath])
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -424,21 +424,24 @@ private extension AgoraToolBarUIController {
         
         guard let subRoomList = group.getSubRoomList(),
               let teacher = user.getUserList(role: .teacher)?.first else {
-            return true
+            return false
         }
         
         let localUserId = user.getLocalUserInfo().userUuid
         let teacherId = teacher.userUuid
         
+        let contains = [localUserId,
+                        teacherId]
+        
         for item in subRoomList {
             guard let userList = group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
-                  userList.contains([localUserId,teacherId]) else {
+                  userList.contains(contains) else {
                 continue
             }
             
             return true
         }
         
-        return true
+        return false
     }
 }

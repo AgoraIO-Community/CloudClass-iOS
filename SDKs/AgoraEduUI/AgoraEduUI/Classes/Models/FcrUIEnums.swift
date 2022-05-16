@@ -30,7 +30,7 @@ enum AgoraRenderMediaState {
 // MARK: - StreamWindow
 enum AgoraStreamWindowType: Equatable {
     case video(cameraInfo: AgoraStreamWindowCameraInfo)
-    case screen(sharingInfo:AgoraStreamWindowSharingInfo)
+    case screen(sharingInfo: AgoraStreamWindowSharingInfo)
     
     static func == (lhs: Self,
                     rhs: Self) -> Bool {

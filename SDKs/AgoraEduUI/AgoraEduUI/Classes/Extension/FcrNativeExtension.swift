@@ -87,7 +87,7 @@ fileprivate var kScale: CGFloat = {
     let height = min(UIScreen.main.bounds.width,
                      UIScreen.main.bounds.height)
     
-    if width / height > 667.0/375.0 {
+    if width / height > 667.0 / 375.0 {
         return height / 375.0
     } else {
         return width / 667.0

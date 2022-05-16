@@ -319,17 +319,23 @@ extension AgoraSmallUIManager: AgoraToolBarDelegate {
 
 // MARK: - AgoraWindowUIControllerDelegate
 extension AgoraSmallUIManager: AgoraWindowUIControllerDelegate {
-    func startSpreadForUser(with userId: String) -> UIView? {
+    func getTargetView(with userId: String) -> UIView? {
+        return renderController.getRenderViewForUser(with: userId)
+    }
+    
+    func getTargetSuperView() -> UIView? {
+        guard !renderController.view.isHidden else {
+            return nil
+        }
+        return renderController.view
+    }
+    
+    func startSpreadForUser(with userId: String) {
         renderController.setRenderEnable(with: userId,
                                          rendEnable: false)
-        return renderController.getRenderViewForUser(with: userId)
     }
     
-    func willStopSpreadForUser(with userId: String) -> UIView? {
-        return renderController.getRenderViewForUser(with: userId)
-    }
-    
-    func didStopSpreadForUser(with userId: String) {
+    func stopSpreadForUser(with userId: String) {
         renderController.setRenderEnable(with: userId,
                                          rendEnable: true)
     }

@@ -25,8 +25,8 @@ import AgoraWidget
     }()
     /** 举手列表 控制器（仅教师端）*/
     private lazy var handsListController: AgoraHandsListUIController = {
-        let vc = AgoraHandsListUIController(context: contextPool)
-        vc.delegate = self
+        let vc = AgoraHandsListUIController(context: contextPool,
+                                            delegate: self)
         self.addChild(vc)
         return vc
     }()
@@ -259,28 +259,22 @@ import AgoraWidget
 
 // MARK: - AgoraWindowUIControllerDelegate
 extension AgoraLectureUIManager: AgoraWindowUIControllerDelegate {
-    func startSpreadForUser(with userId: String) -> UIView? {
-        guard userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
-            return nil
-        }
-        self.teacherRenderController.setRenderEnable(with: userId,
-                                                     rendEnable: false)
-        return self.teacherRenderController.getRenderViewForUser(with: userId)
+    func getTargetView(with userId: String) -> UIView? {
+        return teacherRenderController.getRenderViewForUser(with: userId)
     }
     
-    func willStopSpreadForUser(with userId: String) -> UIView? {
-        guard userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
-            return nil
-        }
-        return self.teacherRenderController.getRenderViewForUser(with: userId)
+    func getTargetSuperView() -> UIView? {
+        return teacherRenderController.view
     }
     
-    func didStopSpreadForUser(with userId: String) {
-        guard userId == contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
-            return
-        }
-        self.teacherRenderController.setRenderEnable(with: userId,
-                                                     rendEnable: true)
+    func startSpreadForUser(with userId: String) {
+        teacherRenderController.setRenderEnable(with: userId,
+                                                rendEnable: false)
+    }
+    
+    func stopSpreadForUser(with userId: String) {
+        teacherRenderController.setRenderEnable(with: userId,
+                                                rendEnable: true)
     }
 }
 

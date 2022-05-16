@@ -56,6 +56,7 @@ class AgoraHandsListUIController: UIViewController {
         
         super.init(nibName: nil,
                    bundle: nil)
+        self.userController.registerUserEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
@@ -67,8 +68,6 @@ class AgoraHandsListUIController: UIViewController {
         
         createViews()
         createConstraint()
-        
-        userController.registerUserEventHandler(self)
     }
 }
 

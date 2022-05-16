@@ -307,19 +307,22 @@ extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
 
 // MARK: - AgoraWindowUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraWindowUIControllerDelegate {
-    func startSpreadForUser(with userId: String) -> UIView? {
-        self.renderController.setRenderEnable(with: userId,
-                                              rendEnable: false)
-        return self.renderController.getRenderViewForUser(with: userId)
+    func getTargetView(with userId: String) -> UIView? {
+        return renderController.getRenderViewForUser(with: userId)
     }
     
-    func willStopSpreadForUser(with userId: String) -> UIView? {
-        return self.renderController.getRenderViewForUser(with: userId)
+    func getTargetSuperView() -> UIView? {
+        return renderController.view
     }
     
-    func didStopSpreadForUser(with userId: String) {
-        self.renderController.setRenderEnable(with: userId,
-                                              rendEnable: true)
+    func startSpreadForUser(with userId: String) {
+        renderController.setRenderEnable(with: userId,
+                                         rendEnable: false)
+    }
+    
+    func stopSpreadForUser(with userId: String) {
+        renderController.setRenderEnable(with: userId,
+                                         rendEnable: true)
     }
 }
 

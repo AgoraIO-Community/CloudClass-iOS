@@ -18,7 +18,7 @@ class AgoraRenderMaskView: UIView {
         
         backgroundColor = ui.color.render_cell_bg_color
         imageView.image = UIImage.agedu_named("ic_member_no_user")
-        layer.cornerRadius = ui.frame.small_render_cell_corner_radius
+        layer.cornerRadius = ui.frame.render_cell_corner_radius
         layer.borderWidth = ui.frame.render_cell_border_width
         layer.borderColor = ui.color.render_mask_border_color
         
@@ -104,7 +104,7 @@ private extension AgoraRenderMemberView {
         videoView.backgroundColor = ui.color.render_cell_bg_color
         videoView.layer.borderWidth = ui.frame.render_cell_border_width
         videoView.layer.borderColor = ui.color.render_view_border_color
-        videoView.layer.cornerRadius = ui.frame.small_render_cell_corner_radius
+        videoView.layer.cornerRadius = ui.frame.render_cell_corner_radius
         addSubview(videoView)
         
         nameLabel.textColor = ui.color.render_label_color
@@ -147,7 +147,7 @@ class AgoraRenderMemberCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
-        videoMaskView.layer.cornerRadius = AgoraFrameGroup().small_render_cell_corner_radius
+        videoMaskView.layer.cornerRadius = AgoraFrameGroup().render_cell_corner_radius
         videoMaskView.clipsToBounds = true
         videoMaskView.imageView.image = UIImage.agedu_named("ic_member_no_user")
         contentView.addSubview(videoMaskView)

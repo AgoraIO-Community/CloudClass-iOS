@@ -418,13 +418,7 @@ struct AgoraFrameGroup {
         }
     }
     
-    var one_one_to_render_cell_corner_radius: CGFloat {
-        switch mode {
-        case .agoraLight:  return 2
-        }
-    }
-    
-    var small_render_cell_corner_radius: CGFloat {
+    var render_cell_corner_radius: CGFloat {
         switch mode {
         case .agoraLight:  return 2
         }
