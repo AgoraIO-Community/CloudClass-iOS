@@ -447,6 +447,8 @@ private extension AgoraRoomGlobalUIController {
                continue
             }
         
+            hasJoinedSubRoomId = subRoom.subRoomUuid
+            
             delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoom.subRoomUuid)
             break
         }
