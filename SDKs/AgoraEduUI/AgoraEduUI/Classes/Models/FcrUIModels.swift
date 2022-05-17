@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 import AgoraEduContext
+import AgoraWidget
 
 // MARK: - Render
 struct AgoraRenderMemberViewModel {
@@ -162,6 +163,12 @@ struct AgoraStreamWindowCameraInfo {
 struct AgoraStreamWindowSharingInfo {
     var userUuid: String
     var streamUuid: String
+}
+
+struct FcrWindowWidgetItem {
+    var widgetId: String
+    var object: AgoraBaseWidget
+    var zIndex: Int
 }
 
 // MARK: - HandsList
