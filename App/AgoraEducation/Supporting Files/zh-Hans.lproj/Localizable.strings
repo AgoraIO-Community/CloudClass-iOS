@@ -62,6 +62,7 @@ login_auth_none = "不自动发流";
 login_auth_audio = "仅发音频流";
 login_auth_video = "仅发视频流";
 login_auth_both = "发音视频流";
+login_lecture_teacher_warning = "老师大班课功能暂未开放，敬请期待";
 
 About_title = "关于";
 About_close = "关闭";

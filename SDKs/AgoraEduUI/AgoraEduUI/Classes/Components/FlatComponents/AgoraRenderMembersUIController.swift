@@ -88,9 +88,6 @@ class AgoraRenderMembersUIController: UIViewController {
     
     public func setRenderEnable(with userId: String,
                                 rendEnable: Bool) {
-        guard var model = dataSource.first(where: {$0.userId == userId}) else {
-            return
-        }
         if !rendEnable {
             windowList.append(userId)
         } else {
@@ -428,7 +425,7 @@ extension AgoraRenderMembersUIController: AgoraWidgetActivityObserver {
     }
     
     public func onWidgetInactive(_ widgetId: String) {
-        windowList = [String]()
+
     }
 }
 

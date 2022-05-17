@@ -64,6 +64,7 @@ login_auth_none = "None";
 login_auth_audio = "Only Audio";
 login_auth_video = "Only Video";
 login_auth_both = "Both Audio & Video";
+login_lecture_teacher_warning = "The teacher's lecture Hall has not been opened. Coming soon";
 
 About_title = "About";
 About_close = "Close";

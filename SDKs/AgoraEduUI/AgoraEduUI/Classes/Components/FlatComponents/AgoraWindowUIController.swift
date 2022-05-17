@@ -388,9 +388,9 @@ private extension AgoraWindowUIController {
         let frame = syncFrame.displayFrameFromSyncFrame(superView: view)
         view.addSubview(widget.view)
         
+        delegate?.startSpreadForUser(with: renderInfo.userUuid)
         if let targetView = delegate?.getTargetView(with: renderInfo.userUuid),
            let targetSuperView = delegate?.getTargetSuperView() {
-            delegate?.startSpreadForUser(with: renderInfo.userUuid)
             startHandleVideoOnWindow(renderView,
                                      isCamera: true,
                                      renderMemberModel: renderModel,
