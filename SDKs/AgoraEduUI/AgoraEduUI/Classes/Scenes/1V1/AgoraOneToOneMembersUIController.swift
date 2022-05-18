@@ -10,7 +10,7 @@ import AgoraEduContext
 
 class AgoraOneToOneMembersUIController: AgoraRenderMembersUIController {
     private let teacherIndex = 0
-    private let studentIndex = 0
+    private let studentIndex = 1
     
     override init(context: AgoraEduContextPool,
                   delegate: AgoraRenderUIControllerDelegate?,
