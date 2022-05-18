@@ -598,8 +598,18 @@ extension AgoraSmallUIManager: AgoraEduUIManagerCallback {
 // MARK: - AgoraEduUISubManagerCallBack
 extension AgoraSmallUIManager: AgoraEduUISubManagerCallback {
     public func subNeedExitAllRooms(reason: AgoraClassRoomExitReason) {
-        exitClassRoom(reason: reason,
-                      roomType: .main)
+        if let vc = presentedViewController,
+           let subRoom = vc as? AgoraSubRoomUIManager {
+            
+            subRoom.dismiss(reason: reason,
+                            animated: false) { [weak self] in
+                self?.exitClassRoom(reason: reason,
+                                    roomType: .main)
+            }
+        } else {
+            exitClassRoom(reason: reason,
+                          roomType: .main)
+        }
     }
 }
 
