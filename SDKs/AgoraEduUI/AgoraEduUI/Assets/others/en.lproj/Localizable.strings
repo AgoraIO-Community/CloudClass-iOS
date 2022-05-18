@@ -41,7 +41,8 @@ fcr_user_local_kick_out = "You have been removed from the classroom";
 fcr_user_local_start_co_hosting = "The teacher invited you to the podium. Let's have a positive interaction with you";
 fcr_user_local_stop_co_hosting = "You left the podium and can't interact with everyone for the time being";
 fcr_user_congratulation = "Congratulations to {xxx} for the award";
-fcr_user_no_teacher = "The tutor leaved the classroom";
+fcr_user_waiting_teacher = "外教未进入教室";
+fcr_user_teacher_left = "The tutor leaved the classroom";
 fcr_user_no_student = "Waiting for student to enter the classroom";
 
 // User List

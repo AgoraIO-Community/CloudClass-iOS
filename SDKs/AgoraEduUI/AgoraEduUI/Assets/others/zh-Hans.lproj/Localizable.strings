@@ -46,7 +46,8 @@ fcr_user_local_kick_out = "你被移出教室";
 fcr_user_local_start_co_hosting = "老师邀请你上台了，与大家积极互动吧";
 fcr_user_local_stop_co_hosting = "你离开讲台了，暂时无法与大家互动";
 fcr_user_congratulation = "祝贺{xxx}获得奖励";
-fcr_user_no_teacher = "外教已离开教室";
+fcr_user_waiting_teacher = "外教未进入教室";
+fcr_user_teacher_left = "外教离开教室";
 fcr_user_no_student = "等待学生进入教室";
 
 // user list

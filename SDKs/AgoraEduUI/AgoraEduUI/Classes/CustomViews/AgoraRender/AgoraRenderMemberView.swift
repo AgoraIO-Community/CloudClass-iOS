@@ -372,7 +372,7 @@ private extension AgoraRenderMemberView {
         videoMaskView.promtText = nil
         guard let model = self.memberModel else {
             ableMaskView.image = UIImage.agedu_named("ic_member_no_user")
-            ableMaskView.promtText = (memberRole == .teacher) ? "fcr_user_no_teacher".agedu_localized() : "fcr_user_no_student".agedu_localized()
+            ableMaskView.promtText = (memberRole == .teacher) ? "fcr_user_teacher_left".agedu_localized() : "fcr_user_no_student".agedu_localized()
             ableMaskView.isHidden = false
             self.renderID = nil
             return
@@ -421,7 +421,7 @@ private extension AgoraRenderMemberView {
         
         videoMaskView = AgoraRenderMaskView(frame: .zero)
         videoMaskView.image = UIImage.agedu_named("ic_member_no_user")
-        videoMaskView.promtText = (role == .teacher) ? "fcr_user_no_teacher".agedu_localized() : "fcr_user_no_student".agedu_localized()
+        videoMaskView.promtText = (role == .teacher) ? "fcr_user_teacher_left".agedu_localized() : "fcr_user_no_student".agedu_localized()
         addSubview(videoMaskView)
         
         nameLabel = UILabel()
