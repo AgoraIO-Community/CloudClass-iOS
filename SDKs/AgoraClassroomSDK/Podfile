@@ -75,6 +75,8 @@ target 'AgoraClassroomSDK' do
 
   sourcePod
   #binaryPod
+
+  source 'https://github.com/CocoaPods/Specs.git'
   
   post_install do |installer|
      installer.pods_project.targets.each do |target|
