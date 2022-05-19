@@ -224,6 +224,13 @@ private extension LoginViewController {
             return
         }
         
+        guard !(roomStyle == .lecture && inputParams.roleType == .teacher) else {
+            AgoraToast.toast(msg: NSLocalizedString("login_lecture_teacher_warning",
+                                                    comment: ""),
+                             type: .warning)
+            return
+        }
+        
         let region = inputParams.region
         let encryptionMode = inputParams.encryptMode
         

@@ -8,18 +8,11 @@
 import AgoraEduContext
 import AgoraWidget
 
+protocol AgoraBoardUIControllerDelegate: NSObjectProtocol {
+    func onStageStateChanged(stageOn: Bool)
+}
+
 class AgoraBoardUIController: UIViewController {
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    private var boardWidget: AgoraBaseWidget?
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
     private var grantUsers = [String]() {
         didSet {
             if grantUsers.contains(contextPool.user.getLocalUserInfo().userUuid) {
@@ -44,14 +37,34 @@ class AgoraBoardUIController: UIViewController {
                                  type: .notice)
             }
         }
-    } 
+    }
+    
+    private var widgetController: AgoraEduWidgetContext {
+        if let `subRoom` = subRoom {
+            return subRoom.widget
+        } else {
+            return contextPool.widget
+        }
+    }
+    
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
+    private var boardWidget: AgoraBaseWidget?
+    private weak var delegate: AgoraBoardUIControllerDelegate?
     
     init(context: AgoraEduContextPool,
+         delegate: AgoraBoardUIControllerDelegate? = nil,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
+        
+        super.init(nibName: nil,
+                   bundle: nil)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         view.backgroundColor = .white
         
         if let `subRoom` = subRoom {
@@ -71,7 +84,10 @@ class AgoraBoardUIController: UIViewController {
                                with event: UIEvent?) {
         UIApplication.shared.windows[0].endEditing(true)
     }
-    
+}
+
+// MARK: - AgoraUIActivity
+extension AgoraBoardUIController: AgoraUIActivity {
     func viewWillActive() {
         guard widgetController.getWidgetActivity(kBoardWidgetId) else {
             return
@@ -79,6 +95,7 @@ class AgoraBoardUIController: UIViewController {
         
         widgetController.add(self)
         
+        setUp()
         initBoardWidget()
         joinBoard()
     }
@@ -115,8 +132,6 @@ private extension AgoraBoardUIController {
         widget.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
-        
-//        self.view.layoutIfNeeded()
     }
     
     func deinitBoardWidget() {
@@ -130,6 +145,18 @@ private extension AgoraBoardUIController {
         if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
+        }
+    }
+    
+    func setUp() {
+        guard let props = contextPool.room.getRoomProperties(),
+              let stageState = props["stage"] as? Int else {
+            return
+        }
+        if stageState == 1 {
+            delegate?.onStageStateChanged(stageOn: true)
+        } else {
+            delegate?.onStageStateChanged(stageOn: false)
         }
     }
     
@@ -217,18 +244,40 @@ extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
     }
+    
+    func onRoomPropertiesUpdated(changedProperties: [String : Any],
+                                 cause: [String : Any]?,
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        // 讲台开关
+        guard let stageState = changedProperties["stage"] as? Int else {
+            return
+        }
+        if stageState == 1 {
+            delegate?.onStageStateChanged(stageOn: true)
+        } else {
+            delegate?.onStageStateChanged(stageOn: false)
+        }
+    }
+    
+    func onRoomPropertiesDeleted(keyPaths: [String],
+                                 cause: [String : Any]?,
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        
+    }
 }
 
 // MARK: - AgoraEduSubRoomHandler
 extension AgoraBoardUIController: AgoraEduSubRoomHandler {
-    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         viewWillActive()
+        
         let localUserInfo = contextPool.user.getLocalUserInfo()
         
         guard !localGranted,
               localUserInfo.userRole != .teacher else {
             return
         }
+        
         let type = AgoraBoardWidgetSignal.UpdateGrantedUsers(.add([localUserInfo.userUuid]))
 
         if let message = type.toMessageString() {

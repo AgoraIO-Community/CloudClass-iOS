@@ -38,12 +38,6 @@ class AgoraToolBarUIController: UIViewController {
         }
     }
     
-    weak var delegate: AgoraToolBarDelegate?
-    
-    /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
-    
     private var userController: AgoraEduUserContext {
         if let `subRoom` = subRoom {
             return subRoom.user
@@ -52,10 +46,16 @@ class AgoraToolBarUIController: UIViewController {
         }
     }
     
+    /** SDK环境*/
+    private var contextPool: AgoraEduContextPool
+    private var subRoom: AgoraEduSubRoomContext?
+    
     /** Size*/
     private let kButtonLength: CGFloat = UIDevice.current.isPad ? 34 : 32
     private let kGap: CGFloat = 12.0
     private let kDefaultTag: Int = 3389
+    
+    weak var delegate: AgoraToolBarDelegate?
     
     var suggestSize: CGSize {
         get {
@@ -65,7 +65,11 @@ class AgoraToolBarUIController: UIViewController {
     }
     
     /** 展示的工具*/
-    public var tools = [ItemType]()
+    public var tools = [ItemType]() {
+        didSet {
+            updateDataSource()
+        }
+    }
     
     private var hiddenTools = [ItemType]()
     
@@ -90,8 +94,8 @@ class AgoraToolBarUIController: UIViewController {
         }
     }
     /** 举手提示浮层*/
-    private lazy var hansupTipsView: AgoraHandsupTipsView = {
-        let v = AgoraHandsupTipsView()
+    private lazy var hansupTipsView: AgoraHandsUpTipsView = {
+        let v = AgoraHandsUpTipsView()
         v.isHidden = true
         view.addSubview(v)
         if let index = self.dataSource.firstIndex(of: .handsup) {
@@ -114,11 +118,13 @@ class AgoraToolBarUIController: UIViewController {
     }
     
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraToolBarDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
+        super.init(nibName: nil,
+                   bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -127,11 +133,11 @@ class AgoraToolBarUIController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
         
         contextPool.group.registerGroupEventHandler(self)
-        self.createViews()
-        self.createConstraint()
-        self.updateDataSource()
     }
     
     public func deselectAll() {
@@ -167,12 +173,52 @@ class AgoraToolBarUIController: UIViewController {
     }
 }
 
+extension AgoraToolBarUIController: AgoraUIContentContainer {
+    func initViews() {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        collectionView = UICollectionView(frame: .zero,
+                                          collectionViewLayout: layout)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.isScrollEnabled = false
+        
+        collectionView.allowsMultipleSelection = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.bounces = false
+        collectionView.clipsToBounds = false
+        collectionView.register(cellWithClass: AgoraToolBarItemCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarHandsUpCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarRedDotCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarBrushCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarHandsListCell.self)
+        collectionView.register(cellWithClass: AgoraToolBarHelpCell.self)
+        view.addSubview(collectionView)
+    }
+    
+    func initViewFrame() {
+        collectionView.mas_remakeConstraints { make in
+            make?.top.bottom().equalTo()(0)
+            make?.left.equalTo()(kGap / 2)
+            make?.right.equalTo()(-kGap / 2)
+            make?.width.equalTo()(kButtonLength)
+            make?.height.equalTo()((kButtonLength + kGap) * 5 - kGap)
+        }
+    }
+    
+    func updateViewProperties() {
+        collectionView.backgroundColor = .clear
+        
+        updateDataSource()
+    }
+}
+
 // MARK: - AgoraEduGroupHandler
 extension AgoraToolBarUIController: AgoraEduGroupHandler {
     func onUserListAddedToSubRoom(userList: [String],
                                   subRoomUuid: String,
                                   operatorUser: AgoraEduContextUserInfo?) {
-        if let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+        if let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
             userList.contains(teacherId),
             teacherInLocalSubRoom() {
             collectionView.reloadData()
@@ -191,6 +237,9 @@ extension AgoraToolBarUIController: AgoraEduGroupHandler {
 // MARK: - Private
 private extension AgoraToolBarUIController {
     func updateDataSource() {
+        guard collectionView != nil else {
+            return
+        }
         var temp = self.tools
         self.dataSource = temp.removeAll(self.hiddenTools)
         let count = CGFloat(self.dataSource.count)
@@ -219,9 +268,12 @@ extension AgoraToolBarUIController: AgoraHandsUpDelayViewDelegate {
                 
             }
             break
-        case .free: break
-        case .counting: break
-        default: break
+        case .free:
+            break
+        case .counting:
+            break
+        default:
+            break
         }
     }
     
@@ -309,7 +361,7 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
                                                       selectView: cell)
             }
         }
-        collectionView.reloadData()
+        collectionView.reloadItems(at: [indexPath])
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -366,52 +418,30 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
 
 // MARK: - Creations
 private extension AgoraToolBarUIController {
-    func createViews() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        collectionView = UICollectionView(frame: .zero,
-                                          collectionViewLayout: layout)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.isScrollEnabled = false
-        collectionView.backgroundColor = .clear
-        collectionView.allowsMultipleSelection = false
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.bounces = false
-        collectionView.clipsToBounds = false
-        collectionView.register(cellWithClass: AgoraToolBarItemCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarHandsUpCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarRedDotCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarBrushCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarHandsListCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarHelpCell.self)
-        view.addSubview(collectionView)
-    }
-    
-    func createConstraint() {
-        collectionView.mas_remakeConstraints { make in
-            make?.top.bottom().equalTo()(0)
-            make?.left.equalTo()(kGap / 2)
-            make?.right.equalTo()(-kGap / 2)
-            make?.width.equalTo()(kButtonLength)
-            make?.height.equalTo()((kButtonLength + kGap) * 5 - kGap)
-        }
-    }
-    
     func teacherInLocalSubRoom() -> Bool {
-        var flag = false
-        guard let subRoomList = contextPool.group.getSubRoomList(),
-              let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid else {
-            return flag
+        let group = contextPool.group
+        let user = contextPool.user
+        
+        guard let subRoomList = group.getSubRoomList(),
+              let teacher = user.getUserList(role: .teacher)?.first else {
+            return false
         }
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
+        let localUserId = user.getLocalUserInfo().userUuid
+        let teacherId = teacher.userUuid
+        
+        let contains = [localUserId,
+                        teacherId]
+        
         for item in subRoomList {
-            if let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
-               userList.contains([localUserId,teacherId]) {
-                flag = true
-                break
+            guard let userList = group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
+                  userList.contains(contains) else {
+                continue
             }
+            
+            return true
         }
-        return flag
+        
+        return false
     }
 }

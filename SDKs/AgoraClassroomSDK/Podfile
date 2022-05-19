@@ -6,8 +6,7 @@ def libVersion
   pod 'Protobuf', '3.17.0'
   pod "CocoaLumberjack", '3.6.1'
   pod 'AliyunOSSiOS',  '2.10.8'
-  pod 'Armin',  '1.0.10'
-  pod 'Alamofire', '4.7.3'
+  pod 'Armin',  '1.1.0'
   pod 'SSZipArchive', '2.4.2'
   pod 'SwifterSwift', '5.2.0'
   pod 'Masonry', '1.1.0'
@@ -17,7 +16,7 @@ def libVersion
 
   # agora libs
   pod 'AgoraRtm_iOS', '1.4.8'
-  pod 'Whiteboard', '2.16.17'
+  pod 'Whiteboard', '2.16.18'
   pod 'AgoraRtcEngine_iOS', '3.4.6'
   pod 'HyphenateChat', '3.8.6'
 end

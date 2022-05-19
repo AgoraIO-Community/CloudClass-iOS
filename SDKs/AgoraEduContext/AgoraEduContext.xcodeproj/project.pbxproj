@@ -340,6 +340,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.5.0;
 				MODULEMAP_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEduContext;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -370,6 +371,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.5.0;
 				MODULEMAP_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEduContext;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";

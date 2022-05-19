@@ -9,7 +9,7 @@ import AgoraUIBaseViews
 import UIKit
 
 fileprivate enum AgoraUIMode {
-    case agoraLight, akasuo
+    case agoraLight
 }
 
 fileprivate let Mode: AgoraUIMode = .agoraLight
@@ -30,7 +30,6 @@ class AgoraColorGroup {
     var common_base_tint_color: UIColor {
         switch mode {
         case .agoraLight:   return UIColor(hex: 0x357BF6)!
-        case .akasuo:       return UIColor(hex: 0xDDB332)!
         }
     }
     
@@ -38,42 +37,36 @@ class AgoraColorGroup {
     var tool_bar_item_selected_color: UIColor {
         switch mode {
         case .agoraLight:  return .white
-        case .akasuo:      return .white
         }
     }
     
     var tool_bar_item_unselected_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x7B88A0)!
-        case .akasuo:      return UIColor(hex: 0x7B88A0)!
         }
     }
     
     var tool_bar_item_highlight_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x357BF6)!
-        case .akasuo:      return UIColor(hexString: "#DDB332")!
         }
     }
     
     var tool_bar_item_background_selected_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x357BF6)!
-        case .akasuo:      return UIColor(hexString: "#DDB332")!
         }
     }
     
     var tool_bar_item_background_unselected_color: UIColor {
         switch mode {
         case .agoraLight:  return .white
-        case .akasuo:      return .white
         }
     }
     
     var tool_bar_item_background_highlight_color: UIColor {
         switch mode {
         case .agoraLight:  return .white
-        case .akasuo:      return .white
         }
     }
     
@@ -81,14 +74,12 @@ class AgoraColorGroup {
     var board_bg_color: UIColor {
         switch mode {
         case .agoraLight:   return .white
-        case .akasuo:       return .white
         }
     }
     
     var board_border_color: CGColor {
         switch mode {
         case .agoraLight:   return UIColor(hexString: "#ECECF1")!.cgColor
-        case .akasuo:       return UIColor(hexString: "#75C0FE")!.cgColor
         }
     }
     
@@ -96,7 +87,6 @@ class AgoraColorGroup {
     var tool_bar_button_normal_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!
-        case .akasuo:      return UIColor(hexString: "#75C0FE")!
         }
     }
     
@@ -110,27 +100,37 @@ class AgoraColorGroup {
     var room_border_color: UIColor {
         switch mode {
         case .agoraLight:   return UIColor(hex: 0xECECF1)!
-        case .akasuo:       return UIColor.clear
         }
     }
+    
     var room_bg_color: UIColor {
         switch mode {
-        case .agoraLight:  return UIColor(hex: 0xF9F9FC)!
-        case .akasuo:      return UIColor(hex: 0x263487)!
+        case .agoraLight:   return UIColor(hex: 0xF9F9FC)!
+        }
+    }
+    
+    // Render menu
+    var render_menu_bg_color: UIColor {
+        switch mode {
+        case .agoraLight: return .white
         }
     }
     
     var render_cell_bg_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xF9F9FC)!
-        case .akasuo:      return UIColor(hex: 0xF9F9FC)!
         }
     }
     
-    var render_cell_border_color: CGColor {
+    var render_mask_border_color: CGColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!.cgColor
-        case .akasuo:      return UIColor(hex: 0x75C0FE)!.cgColor
+        }
+    }
+    
+    var render_view_border_color: CGColor {
+        switch mode {
+        case .agoraLight:  return UIColor.clear.cgColor
         }
     }
     
@@ -146,122 +146,235 @@ class AgoraColorGroup {
     var room_state_bg_color: UIColor {
         switch mode {
         case .agoraLight:  return .white
-        case .akasuo:      return UIColor(hex: 0x1D35AD)!
         }
     }
     
     var room_state_border_color: CGColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!.cgColor
-        case .akasuo:      return UIColor(hex: 0x1D35AD)!.cgColor
         }
     }
     
     var room_state_label_before_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x677386)!
-        case .akasuo:      return UIColor(hexString: "#C2D5E5")!
         }
     }
     
     var room_state_line_color : UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!
-        case .akasuo:      return UIColor(hex: 0xECECF1)!
         }
     }
+    
     var room_state_title_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x191919)!
-        case .akasuo:      return UIColor(hex: 0x191919)!
         }
     }
     
     var room_state_sep_line_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xD2D2E2)!
-        case .akasuo:      return UIColor(hex: 0xD2D2E2)!
         }
     }
     
     var room_state_label_during_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x677386)!
-        case .akasuo:      return UIColor(hexString: "#C2D5E5")!
         }
     }
     
     var room_state_label_after_color: UIColor {
         switch mode {
         case .agoraLight:  return .red
-        case .akasuo:      return UIColor(hexString: "#C2D5E5")!
         }
     }
     
-    // class state
+    var room_state_bar_recording_text_color: UIColor {
+        return UIColor(hexString: "#677386")!
+    }
+    
+    var room_state_bar_recording_state_background_color: UIColor {
+        return UIColor(hexString: "#F04C36")!
+    }
+    
+    // Tool collection
+    var tool_collection_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return .white
+        }
+    }
+    
+    var tool_collection_sep_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xD2D2E2)!
+        }
+    }
+    
+    // Class state
     var class_state_shadow_color: CGColor = UIColor(hex: 0x2F4192)!.cgColor
     
     // Setting
     var setting_switch_tint_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x357BF6)!
-        case .akasuo:      return UIColor(hexString: "#DDB332")!
         }
     }
     
     var setting_exit_button_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x191919)!
-        case .akasuo:      return UIColor(hexString: "#1D35AD")!
         }
     }
-            
+    
+    var setting_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return .white
+        }
+    }
+    
+    var setting_camera_button_normal_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xF4F4F8)!
+        }
+    }
+    
+    var setting_camera_button_selected_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x7B88A0)!
+        }
+    }
+    
+    var setting_button_normal_title_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xB5B5C9)!
+        }
+    }
+    
+    var setting_button_selected_title_color: UIColor {
+        switch mode {
+        case .agoraLight:
+            return .white
+        }
+    }
+    
+    var setting_label_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x191919)!
+        }
+    }
+    
+    var setting_sep_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xECECF1)!
+        }
+    }
+    
+    var setting_direction_label_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x677386)!
+        }
+    }
+    
+    // Room State
     var small_room_state_border_color: CGColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0xECECF1)!.cgColor
-        case .akasuo:      return UIColor(hex: 0x1D35AD)!.cgColor
         }
     }
     
     var one_room_state_title_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x191919)!
-        case .akasuo:      return UIColor(hex: 0xC2D5E5)!
         }
     }
     
     var one_room_state_time_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x677386)!
-        case .akasuo:      return UIColor(hex: 0xC2D5E5)!
         }
     }
     
     var one_room_setting_selected_tint_color: UIColor {
         switch mode {
         case .agoraLight:  return .white
-        case .akasuo:      return .white
+        }
+    }
+    
+    var one_right_content_bg_color: UIColor {
+        switch mode {
+        case .agoraLight: return .white
         }
     }
     
     var one_room_setting_selected_bg_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x357BF6)!
-        case .akasuo:      return UIColor(hex: 0xDDB332)!
         }
     }
     
     var one_room_setting_unselected_tint_color: UIColor {
         switch mode {
         case .agoraLight:  return UIColor(hex: 0x7B88A0)!
-        case .akasuo:      return UIColor(hex: 0x7B88A0)!
         }
     }
     
     var one_room_setting_unselected_bg_color: UIColor {
         switch mode {
         case .agoraLight:  return .white
-        case .akasuo:      return .clear
+        }
+    }
+    
+    // User List
+    var user_list_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0xF9F9FC)!
+        }
+    }
+    
+    var user_list_border_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0xE3E3EC)!
+        }
+    }
+    
+    var user_list_sep_color: UIColor {
+        switch mode {
+        case .agoraLight:  return UIColor(hex: 0xEEEEF7)!
+        }
+    }
+    
+    var user_list_info_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:  return .white
+        }
+    }
+    var user_list_title_label_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x191919)!
+        }
+    }
+    var user_list_content_label_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x7B88A0)!
+        }
+    }
+    var user_list_item_title_bg_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xF9F9FC)!
+        }
+    }
+    
+    var user_list_table_sep_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0xEEEEF7)!
+        }
+    }
+    
+    var user_list_carousel_switch_tint_color: UIColor {
+        switch mode {
+        case .agoraLight:   return UIColor(hex: 0x357BF6)!
         }
     }
 
@@ -281,30 +394,33 @@ struct AgoraFrameGroup {
     }
     
     fileprivate var mode: AgoraUIMode
-    
-    // room
+
+    // Room
     var room_border_width: CGFloat = 1
+    
+    var one_room_right_corner_radius: CGFloat = 4
+    // Render menu
+    var render_menu_corner_radius: CGFloat = 8
+    // Setting
+    var setting_corner_radius: CGFloat = 10
+    
+    var setting_camera_font: UIFont = .systemFont(ofSize: 13)
+    
+    var setting_camera_button_corner_radius: CGFloat = 4
+    
+    var setting_exit_corner_radius: CGFloat = 6
     // Render
     var render_label_shadow_radius: CGFloat = 2
     
     var render_cell_border_width: CGFloat {
         switch mode {
         case .agoraLight:  return 1
-        case .akasuo:      return 2
         }
     }
     
-    var one_one_to_render_cell_corner_radius: CGFloat {
+    var render_cell_corner_radius: CGFloat {
         switch mode {
         case .agoraLight:  return 2
-        case .akasuo:      return 6
-        }
-    }
-    
-    var small_render_cell_corner_radius: CGFloat {
-        switch mode {
-        case .agoraLight:  return 2
-        case .akasuo:      return 2
         }
     }
     
@@ -316,14 +432,12 @@ struct AgoraFrameGroup {
     var board_border_width: CGFloat {
         switch mode {
         case .agoraLight:  return 1
-        case .akasuo:      return 2
         }
     }
     
     var board_corner_radius: CGFloat {
         switch mode {
         case .agoraLight:  return 1
-        case .akasuo:      return 6
         }
     }
     
@@ -331,23 +445,28 @@ struct AgoraFrameGroup {
     var room_state_radius: CGFloat {
         switch mode {
         case .agoraLight:  return 2
-        case .akasuo:      return 2
         }
     }
     
     var room_state_corner_radius: CGFloat {
         switch mode {
         case .agoraLight:  return 2
-        case .akasuo:      return 2
         }
+    }
+    
+    var room_state_bar_font: UIFont {
+        return UIFont.systemFont(ofSize: 9)
     }
     
     var room_state_border_width: CGFloat = 1
     
-    // class state
+    // Tool collection
+    var tool_collection_corner_radius: CGFloat = 16
+    
+    // Class state
     var class_state_button_corner_radius: CGFloat = 17
     
-    // subRoom
+    // SubRoom
     var subRoom_option_label_left_space: CGFloat {
         return 37
     }
@@ -355,4 +474,8 @@ struct AgoraFrameGroup {
     var subRoom_option_label_right_space: CGFloat {
         return 15
     }
+    // User List
+    var user_list_content_corner_radius: CGFloat = 10
+    var user_list_content_border_width: CGFloat = 1
+    var user_list_font_size: UIFont = .systemFont(ofSize: 12)
 }

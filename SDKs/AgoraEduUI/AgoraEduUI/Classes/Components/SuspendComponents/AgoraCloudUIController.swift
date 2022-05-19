@@ -65,7 +65,7 @@ extension AgoraCloudUIController: AgoraEduRoomHandler {
 }
 
 extension AgoraCloudUIController: AgoraEduSubRoomHandler {
-    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         initWidget()
     }
 }

@@ -18,10 +18,6 @@ protocol AgoraToolCollectionUIControllerDelegate: NSObjectProtocol {
     func toolCollectionDidChangeAppearance(_ appear: Bool)
 }
 
-fileprivate enum AgoraToolCollectionSelectType: Int {
-    case none, main, sub
-}
-
 class AgoraToolCollectionUIController: UIViewController {
     /** SDK环境*/
     private var contextPool: AgoraEduContextPool!
@@ -91,10 +87,15 @@ class AgoraToolCollectionUIController: UIViewController {
     
     /// UI
     // AgoraToolCollectionUIController自身视图为教室中的cell，同时控制工具栏和配置栏
-    private var contentView: UIView!
-    private var subCell: AgoraToolCollectionCell!
-    private var sepLine: UIView!
-    private var mainCell: AgoraToolCollectionCell!
+    private lazy var contentView = UIView(frame: .zero)
+    private lazy var subCell = AgoraToolCollectionCell(isMain: false,
+                                                       color: UIColor(hex: subToolsView.currentColor) ?? UIColor(hex: 0x357BF6),
+                                                       image: currentSubTool.image,
+                                                       font: subToolsView.curTextFont.value / 2)
+    private lazy var sepLine = UIView()
+    private lazy var mainCell = AgoraToolCollectionCell(isMain: true,
+                                                        color: UIColor(hex: subToolsView.currentColor) ?? color.common_base_tint_color,
+                                                        image: currentMainTool.image)
     
     // 主要工具栏CollectionView（包含教具、白板工具）
     private var mainToolsView: AgoraMainToolsView!
@@ -108,8 +109,8 @@ class AgoraToolCollectionUIController: UIViewController {
     }
 
     init(context: AgoraEduContextPool,
-         delegate: AgoraToolCollectionUIControllerDelegate,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraToolCollectionUIControllerDelegate? = nil) {
         let group = AgoraColorGroup()
         
         baseTintColor = group.tool_bar_item_highlight_color
@@ -135,11 +136,79 @@ class AgoraToolCollectionUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
 }
-
+// MARK: - AgoraUIActivity & AgoraUIContentContainer
+@objc extension AgoraToolCollectionUIController: AgoraUIActivity, AgoraUIContentContainer {
+    // AgoraUIActivity
+    func viewWillActive() {
+        
+    }
+    
+    func viewWillInactive() {
+        
+    }
+    
+    // AgoraUIContentContainer
+    func initViews() {
+        view.addSubview(contentView)
+        
+        mainCell.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                                  action: #selector(didSelectMain)))
+        contentView.addSubview(mainCell)
+        contentView.addSubview(sepLine)
+        
+        subCell.addGestureRecognizer(UITapGestureRecognizer(target: self,
+                                                                  action: #selector(didSelectSub)))
+        contentView.addSubview(subCell)
+        
+        updateImage()
+    }
+    
+    func initViewFrame() {
+        if currentMainTool == .paint ||
+            currentMainTool == .text {
+            contentView.mas_remakeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(0)
+            }
+            subCell.mas_remakeConstraints { make in
+                make?.top.equalTo()(4)
+                make?.centerX.equalTo()(0)
+                make?.width.height().equalTo()(suggestLength)
+            }
+            sepLine.mas_remakeConstraints { make in
+                make?.centerY.equalTo()(self.view.mas_centerY)
+                make?.centerX.equalTo()(self.view.mas_centerX)
+                make?.width.equalTo()(20)
+                make?.height.equalTo()(1)
+            }
+            mainCell.mas_remakeConstraints { make in
+                make?.bottom.equalTo()(-4)
+                make?.centerX.equalTo()(0)
+                make?.width.height().equalTo()(suggestLength)
+            }
+        } else {
+            contentView.mas_remakeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(0)
+            }
+            mainCell.mas_remakeConstraints { make in
+                make?.centerX.centerY().equalTo()(0)
+                make?.width.height().equalTo()(suggestLength)
+            }
+        }
+    }
+    
+    func updateViewProperties() {
+        view.backgroundColor = .clear
+        color.borderSet(layer: contentView.layer)
+        contentView.backgroundColor = color.tool_collection_bg_color
+        contentView.layer.cornerRadius = AgoraFrameGroup().tool_collection_corner_radius
+        sepLine.backgroundColor = color.tool_collection_sep_color
+    }
+}
 // MARK: - Widget
 extension AgoraToolCollectionUIController: AgoraWidgetActivityObserver,
                                            AgoraWidgetMessageObserver {
@@ -257,73 +326,6 @@ private extension AgoraToolCollectionUIController {
         mainToolsView.curColor = UIColor(hex: subToolsView.currentColor)
     }
     
-    func createViews() {
-        view.backgroundColor = .clear
-        
-        contentView = UIView(frame: .zero)
-        contentView.backgroundColor = UIColor.white
-        
-        contentView.layer.cornerRadius = 16
-        AgoraUIGroup().color.borderSet(layer: contentView.layer)
-        
-        view.addSubview(contentView)
-        
-        mainCell = AgoraToolCollectionCell(isMain: true,
-                                           color: UIColor(hex: subToolsView.currentColor) ?? color.common_base_tint_color,
-                                           image: currentMainTool.image)
-        mainCell.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                                  action: #selector(didSelectMain)))
-        contentView.addSubview(mainCell)
-        
-        sepLine = UIView()
-        sepLine.backgroundColor = UIColor(hex: 0xD2D2E2)
-        contentView.addSubview(sepLine)
-        
-        subCell = AgoraToolCollectionCell(isMain: false,
-                                          color: UIColor(hex: subToolsView.currentColor) ?? UIColor(hex: 0x357BF6),
-                                          image: currentSubTool.image,
-                                          font: subToolsView.curTextFont.value / 2)
-        
-        subCell.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                                  action: #selector(didSelectSub)))
-        contentView.addSubview(subCell)
-        
-        updateImage()
-    }
-    
-    func createConstraint() {
-        if currentMainTool == .paint ||
-            currentMainTool == .text {
-            contentView.mas_remakeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(0)
-            }
-            subCell.mas_remakeConstraints { make in
-                make?.top.equalTo()(4)
-                make?.centerX.equalTo()(0)
-                make?.width.height().equalTo()(suggestLength)
-            }
-            sepLine.mas_remakeConstraints { make in
-                make?.centerY.equalTo()(self.view.mas_centerY)
-                make?.centerX.equalTo()(self.view.mas_centerX)
-                make?.width.equalTo()(20)
-                make?.height.equalTo()(1)
-            }
-            mainCell.mas_remakeConstraints { make in
-                make?.bottom.equalTo()(-4)
-                make?.centerX.equalTo()(0)
-                make?.width.height().equalTo()(suggestLength)
-            }
-        } else {
-            contentView.mas_remakeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(0)
-            }
-            mainCell.mas_remakeConstraints { make in
-                make?.centerX.centerY().equalTo()(0)
-                make?.width.height().equalTo()(suggestLength)
-            }
-        }
-    }
-    
     func handleCurrentMainToolChange(oldValue: AgoraBoardToolMainType) {
         var signal: AgoraBoardWidgetSignal?
         
@@ -332,7 +334,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             
             if oldValue == .paint || oldValue == .text {
-                createConstraint()
+                initViewFrame()
                 delegate?.toolCollectionCellNeedSpread(false)
             }
             if let type = currentMainTool.boardWidgetToolType {
@@ -343,7 +345,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             if oldValue != .paint,
                oldValue != .text {
-                createConstraint()
+                initViewFrame()
                 delegate?.toolCollectionCellNeedSpread(true)
             }
             if let shape = currentSubTool.boardWidgetShapeType {
@@ -357,7 +359,7 @@ private extension AgoraToolCollectionUIController {
             updateImage()
             if oldValue != .paint,
                oldValue != .text {
-                createConstraint()
+                initViewFrame()
                 delegate?.toolCollectionCellNeedSpread(true)
             }
             if let type = currentMainTool.boardWidgetToolType {
@@ -414,7 +416,7 @@ private extension AgoraToolCollectionUIController {
         }
         
         updateImage()
-        createConstraint()
+        initViewFrame()
     }
     
     func handleBoardWidgetGrantUsers(_ list: [String]) {

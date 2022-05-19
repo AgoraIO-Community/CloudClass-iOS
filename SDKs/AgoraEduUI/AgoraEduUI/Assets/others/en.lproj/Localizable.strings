@@ -116,3 +116,6 @@ fcr_group_exit_room = "Leave Room";
 // alert
 fcr_alert_sure = "Sure";
 fcr_alert_cancel = "Cancel";
+
+// Record
+fcr_record_recording = "Recording...";

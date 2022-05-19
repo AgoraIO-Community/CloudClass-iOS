@@ -18,7 +18,7 @@
 #import "AgoraInternalClassroom.h"
 #import "AgoraClassroomSDK.h"
 
-@interface AgoraClassroomSDK () <AgoraEduUIManagerCallBack>
+@interface AgoraClassroomSDK () <AgoraEduUIManagerCallback>
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
 @property (nonatomic, strong) AgoraEduUIManager *ui;
 @property (nonatomic, strong) NSNumber *consoleState;

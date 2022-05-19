@@ -47,6 +47,9 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     
     /// 房间关闭 (v2.0.0)
     @objc optional func onRoomClosed()
+    
+    /// Recording state (v2.5.0)
+    @objc optional func onRecordingStateUpdated(state: FcrRecordingState)
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
@@ -97,6 +100,10 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// 获取课堂信息 (v2.0.0)
     /// - returns: 课堂信息
     func getClassInfo() -> AgoraEduContextClassInfo
+    
+    /// 获取录制状态 (v2.5.0)
+    /// - returns: 录制状态
+    func getRecordingState() -> FcrRecordingState
     
     /// 开始事件监听 (v2.0.0)
     /// - parameter handler: 监听者
@@ -286,12 +293,12 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 @objc public protocol AgoraEduSubRoomHandler: NSObjectProtocol {
     /// 加入子房间成功 (v2.4.0)
     /// - parameter roomInfo: 房间信息
-    @objc optional func onJoinSubRoomSuccess(roomInfo: AgoraEduContextRoomInfo)
+    @objc optional func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo)
     
     /// 加入子房间失败 (v2.4.0)
     /// - parameter roomInfo: 房间信息
     /// - parameter error: 错误原因
-    @objc optional func onJoinSubRoomFailure(roomInfo: AgoraEduContextRoomInfo,
+    @objc optional func onJoinSubRoomFailure(roomInfo: AgoraEduContextSubRoomInfo,
                                              error: AgoraEduContextError)
     
     /// 子房间自定义属性更新 (v2.4.0)
