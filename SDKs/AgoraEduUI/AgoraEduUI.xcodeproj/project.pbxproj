@@ -84,6 +84,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		15ED9C08283629BB00AE96DD /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		15ED9C09283629C000AE96DD /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		26C9B3EE1F4AB10EA28D390D /* Pods_AgoraEduUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEduUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A3EE2BBBB69C211FC9EC107 /* Pods-AgoraEduUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEduUI.release.xcconfig"; path = "Target Support Files/Pods-AgoraEduUI/Pods-AgoraEduUI.release.xcconfig"; sourceTree = "<group>"; };
 		7C43200E3ADA8276A354EFF3 /* Pods-AgoraUIEduAppViews.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraUIEduAppViews.debug.xcconfig"; path = "Target Support Files/Pods-AgoraUIEduAppViews/Pods-AgoraUIEduAppViews.debug.xcconfig"; sourceTree = "<group>"; };
@@ -145,10 +147,8 @@
 		864F41CC27D3467400A808C6 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		864F41CD27D3467400A808C6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		864F41CE27D3467400A808C6 /* img_hands_wave.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = img_hands_wave.gif; sourceTree = "<group>"; };
-		864F41CF27D3467400A808C6 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		864F41D027D3467400A808C6 /* img_loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = img_loading.gif; sourceTree = "<group>"; };
 		864F41D127D3467400A808C6 /* sound_reward.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = sound_reward.mp3; sourceTree = "<group>"; };
-		864F41D227D3467400A808C6 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		864F41D327D3467400A808C6 /* img_reward.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = img_reward.gif; sourceTree = "<group>"; };
 		864F41D427D3467400A808C6 /* images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = images.xcassets; sourceTree = "<group>"; };
 		868D62B225EF7A6200E914F2 /* AgoraEduUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AgoraEduUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -713,8 +713,8 @@
 			children = (
 				864F41CC27D3467400A808C6 /* zh-Hans */,
 				864F41CD27D3467400A808C6 /* en */,
-				864F41CF27D3467400A808C6 /* zh-HK */,
-				864F41D227D3467400A808C6 /* zh-Hant */,
+				15ED9C08283629BB00AE96DD /* zh-HK */,
+				15ED9C09283629C000AE96DD /* zh-Hant */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

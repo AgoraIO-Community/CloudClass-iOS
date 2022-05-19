@@ -2,13 +2,9 @@
   Localizable.strings
   AgoraEducation
 
-  Created by SRS on 2020/2/17.
+  Created by Lyy on 2022/5/19.
   Copyright © 2020 Agora. All rights reserved.
 */
-
-/*
- * 需要替换的字符串统一为"{xxx}"
- */
 
 // room
 fcr_room_class_time_away = "距離上課還有：";
