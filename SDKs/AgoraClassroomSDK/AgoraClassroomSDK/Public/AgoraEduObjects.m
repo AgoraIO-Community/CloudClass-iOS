@@ -82,7 +82,8 @@
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
                            appId:(NSString *)appId
-                           token:(NSString *)token {
+                           token:(NSString *)token
+                  videoDirection:(AgoraEduVideoDirection)videoDirection {
     AgoraEduMediaOptions *mediaOptions = [[AgoraEduMediaOptions alloc] initWithEncryptionConfig:nil
                                                                              videoEncoderConfig:nil
                                                                                    latencyLevel:AgoraEduLatencyLevelUltraLow
@@ -99,6 +100,7 @@
                         startTime:nil
                          duration:nil
                            region:AgoraEduRegionCN
+                   videoDirection:videoDirection
                      mediaOptions:mediaOptions
                    userProperties:nil];
 }
@@ -114,6 +116,7 @@
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
+                  videoDirection:(AgoraEduVideoDirection)videoDirection
                     mediaOptions:(AgoraEduMediaOptions *)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties {
     self = [self init];
@@ -132,6 +135,10 @@
     self.duration = duration;
     self.region = region;
     self.mediaOptions = mediaOptions;
+    
+    self.videoDirection = videoDirection;
+    self.recordLanguage = AgoraEduRecordLanguageSimplified;
+    self.recordDirection = AgoraEduRecordDirectionLeft;
     
     self.userProperties = userProperties;
     

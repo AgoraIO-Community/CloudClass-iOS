@@ -80,6 +80,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) AgoraEduRegion region;
 // 媒体选项
 @property (nonatomic, strong, nullable) AgoraEduMediaOptions *mediaOptions;
+// 录制语言
+@property (nonatomic, assign) AgoraEduRecordLanguage recordLanguage;
+// 录制方向
+@property (nonatomic, assign) AgoraEduRecordDirection recordDirection;
+// 视频窗方向
+@property (nonatomic, assign) AgoraEduVideoDirection videoDirection;
 // 用户自定属性
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, id> *userProperties;
 // widgets
@@ -92,7 +98,8 @@ NS_ASSUME_NONNULL_BEGIN
                         roomUuid:(NSString *)roomUuid
                         roomType:(AgoraEduRoomType)roomType
                            appId:(NSString *)appId
-                           token:(NSString *)token;
+                           token:(NSString *)token
+                  videoDirection:(AgoraEduVideoDirection)videoDirection;
 
 - (instancetype)initWithUserName:(NSString *)userName
                         userUuid:(NSString *)userUuid
@@ -105,6 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
+                  videoDirection:(AgoraEduVideoDirection)videoDirection
                     mediaOptions:(AgoraEduMediaOptions * _Nullable)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties;
 @end

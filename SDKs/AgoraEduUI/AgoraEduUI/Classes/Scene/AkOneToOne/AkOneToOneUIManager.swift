@@ -26,7 +26,7 @@ import Masonry
         return vc
     }()
     /** 右边用来切圆角和显示背景色的容器视图*/
-    private var rightContentView: UIView!
+    private var sideContentView: UIView!
     /** 白板 控制器*/
     private var boardController: AgoraBoardUIController!
     /** 云盘 控制器（仅教师端）*/
@@ -60,20 +60,35 @@ import Masonry
     
     private var isJoinedRoom = false
     
+    private let videoRight: Bool
+    
     deinit {
         print("\(#function): \(self.classForCoder)")
+    }
+    
+    @objc public init(contextPool: AgoraEduContextPool,
+                delegate: AgoraEduUIManagerCallBack,
+                videoRight: Bool) {
+        self.videoRight = videoRight
+        super.init(contextPool: contextPool,
+                   delegate: delegate)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
         self.createViews()
-        self.createConstraint()
-        if UIDevice.current.isPad {
-            self.createPadViews()
+        
+        if videoRight {
+            createVideoRightConstraint()
         } else {
-            self.createPhoneViews()
+            createVideoLeftConstraint()
         }
+
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
@@ -84,6 +99,7 @@ import Masonry
             // 打开本地音视频设备
             self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
             self.contextPool.media.openLocalDevice(systemDevice: .mic)
+            self.updateFirstLoginState()
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)
@@ -166,27 +182,28 @@ extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
                        delay: 0,
                        options: .curveEaseInOut,
                        animations: { [weak self] in
-                        guard let `self` = self else {
-                            return
-                        }
-                        
-                        if appear {
-                            self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-                            }
-                        } else {
-                            self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-                            }
-                        }
-                       }, completion: nil)
-
+            guard let `self` = self else {
+                return
+            }
+            let side: CGFloat = (UIDevice.current.isPad ? -15 : -12)
+            let bottomAppear: CGFloat = (UIDevice.current.isPad ? -15 : -12)
+            let bottomDisappear: CGFloat = (UIDevice.current.isPad ? -20 : -15)
+            
+            let videoInRight = self.videoRight
+            
+            self.toolBarController.view.mas_remakeConstraints { make in
+                if videoInRight {
+                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(side)
+                } else {
+                    make?.left.equalTo()(self.boardController.view.mas_left)?.offset()(-side)
+                }
+                
+                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(appear ? bottomAppear : bottomDisappear)
+                make?.width.equalTo()(self.toolBarController.suggestSize.width)
+                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+            }
+        }, completion: nil)
+        
     }
 }
 
@@ -280,16 +297,16 @@ private extension AkOneToOneUIManager {
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
-        rightContentView = UIView()
-        rightContentView.backgroundColor = AgoraColorGroup().room_bg_color
-        rightContentView.layer.cornerRadius = 4.0
-        rightContentView.clipsToBounds = true
-        contentView.addSubview(rightContentView)
+        sideContentView = UIView()
+        sideContentView.backgroundColor = AgoraColorGroup().room_bg_color
+        sideContentView.layer.cornerRadius = 4.0
+        sideContentView.clipsToBounds = true
+        contentView.addSubview(sideContentView)
         
         renderController = AkOneToOneRenderUIController(context: contextPool,
-                                                           delegate: self)
+                                                        delegate: self)
         addChild(renderController)
-        rightContentView.addSubview(renderController.view)
+        sideContentView.addSubview(renderController.view)
         
         toolBarController = AgoraToolBarUIController(context: contextPool)
         toolBarController.delegate = self
@@ -298,7 +315,7 @@ private extension AkOneToOneUIManager {
             stateController.view.addSubview(logoImageView)
             toolBarController.tools = [.setting]
         } else {
-            rightContentView.addSubview(logoImageView)
+            sideContentView.addSubview(logoImageView)
             toolBarController.tools = [.setting, .message]
         }
         
@@ -334,31 +351,104 @@ private extension AkOneToOneUIManager {
         contentView.addSubview(screenSharingController.view)
     }
     
-    func createConstraint() {
+    func createVideoRightConstraint() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(24)
         }
+        
+        sideContentView.mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+            make?.bottom.right().equalTo()(0)
+            make?.width.equalTo()(AgoraFit.scale(170))
+        }
+        
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(rightContentView.mas_left)?.offset()(-2)
+            make?.right.equalTo()(sideContentView.mas_left)?.offset()(-2)
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
         }
-        if contextPool.user.getLocalUserInfo().userRole == .teacher {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+        
+        let toolBarSide: CGFloat = (UIDevice.current.isPad ? -15 : -12)
+        let toolBarBottomTeacher: CGFloat = (UIDevice.current.isPad ?  -20 : -15)
+        let toolBarBottomStudent: CGFloat = (UIDevice.current.isPad ?  -15 : -12)
+        let toolBarBottom: CGFloat = (contextPool.user.getLocalUserInfo().userRole == .teacher) ? toolBarBottomTeacher : toolBarBottomStudent
+        toolBarController.view.mas_remakeConstraints { make in
+            make?.left.equalTo()(self.boardController.view.mas_left)?.offset()(toolBarSide)
+            make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(toolBarBottom)
+            make?.width.equalTo()(self.toolBarController.suggestSize.width)
+            make?.height.equalTo()(self.toolBarController.suggestSize.height)
+        }
+        
+        toolCollectionController.view.mas_makeConstraints { make in
+            make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.width.height().equalTo()(toolCollectionController.suggestLength)
+        }
+        screenSharingController.view.mas_makeConstraints { make in
+            make?.right.bottom().equalTo()(0)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
+            make?.left.equalTo()(sideContentView.mas_left)
+        }
+        boardPageController.view.mas_makeConstraints { make in
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+            make?.width.equalTo()(168)
+        }
+        classToolsController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
+        
+        if UIDevice.current.isPad {
+            renderController.view.mas_makeConstraints { make in
+                make?.top.left().right().equalTo()(0)
+                make?.bottom.equalTo()(sideContentView.mas_centerY)
             }
         } else {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
+            logoImageView.mas_makeConstraints { make in
+                make?.centerX.equalTo()(0)
+                make?.bottom.equalTo()(0)
+                make?.height.equalTo()(AgoraFit.scale(20))
+                make?.width.equalTo()(AgoraFit.scale(82))
+            }
+            renderController.view.mas_makeConstraints { make in
+                make?.top.equalTo()(AgoraFit.scale(1))
+                make?.bottom.equalTo()(logoImageView.mas_top)?.offset()(AgoraFit.scale(-6))
+                make?.left.right().equalTo()(0)
             }
         }
+    }
+    
+    func createVideoLeftConstraint() {
+        stateController.view.mas_makeConstraints { make in
+            make?.top.left().right().equalTo()(0)
+            make?.height.equalTo()(24)
+        }
+        
+        sideContentView.mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+            make?.bottom.left().equalTo()(0)
+            make?.width.equalTo()(AgoraFit.scale(170))
+        }
+        
+        boardController.view.mas_makeConstraints { make in
+            make?.right.bottom().equalTo()(0)
+            make?.left.equalTo()(sideContentView.mas_right)?.offset()(-2)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
+        }
+        
+        let toolBarSide: CGFloat = (UIDevice.current.isPad ? 15 : 12)
+        let toolBarBottomTeacher: CGFloat = (UIDevice.current.isPad ?  -20 : -15)
+        let toolBarBottomStudent: CGFloat = (UIDevice.current.isPad ?  -15 : -12)
+        let toolBarBottom: CGFloat = (contextPool.user.getLocalUserInfo().userRole == .teacher) ? toolBarBottomTeacher : toolBarBottomStudent
+        self.toolBarController.view.mas_remakeConstraints { make in
+            make?.left.equalTo()(self.boardController.view.mas_left)?.offset()(toolBarSide)
+            make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(toolBarBottom)
+            make?.width.equalTo()(self.toolBarController.suggestSize.width)
+            make?.height.equalTo()(self.toolBarController.suggestSize.height)
+        }
+        
         toolCollectionController.view.mas_makeConstraints { make in
             make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
             make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
@@ -367,10 +457,10 @@ private extension AkOneToOneUIManager {
         screenSharingController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
-            make?.right.equalTo()(rightContentView.mas_left)
+            make?.right.equalTo()(sideContentView.mas_left)
         }
         boardPageController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
+            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
             make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
             make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
             make?.width.equalTo()(168)
@@ -378,39 +468,24 @@ private extension AkOneToOneUIManager {
         classToolsController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
-    }
-    
-    func createPhoneViews() {
-        rightContentView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
-            make?.bottom.right().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(170))
-        }
-        logoImageView.mas_makeConstraints { make in
-            make?.centerX.equalTo()(0)
-            make?.bottom.equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(20))
-            make?.width.equalTo()(AgoraFit.scale(82))
-        }
-        renderController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(AgoraFit.scale(1))
-            make?.bottom.equalTo()(logoImageView.mas_top)?.offset()(AgoraFit.scale(-6))
-            make?.left.right().equalTo()(0)
-        }
-    }
-    
-    func createPadViews() {
-        rightContentView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
-            make?.bottom.right().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(170))
-        }
-        logoImageView.mas_makeConstraints { make in
-            make?.centerX.centerY().equalTo()(stateController.view)
-        }
-        renderController.view.mas_makeConstraints { make in
-            make?.top.left().right().equalTo()(0)
-            make?.bottom.equalTo()(rightContentView.mas_centerY)
+        
+        if UIDevice.current.isPad {
+            renderController.view.mas_makeConstraints { make in
+                make?.top.left().right().equalTo()(0)
+                make?.bottom.equalTo()(sideContentView.mas_centerY)
+            }
+        } else {
+            logoImageView.mas_makeConstraints { make in
+                make?.centerX.equalTo()(0)
+                make?.bottom.equalTo()(0)
+                make?.height.equalTo()(AgoraFit.scale(20))
+                make?.width.equalTo()(AgoraFit.scale(82))
+            }
+            renderController.view.mas_makeConstraints { make in
+                make?.top.equalTo()(AgoraFit.scale(1))
+                make?.bottom.equalTo()(logoImageView.mas_top)?.offset()(AgoraFit.scale(-6))
+                make?.left.right().equalTo()(0)
+            }
         }
     }
     
@@ -424,11 +499,20 @@ private extension AkOneToOneUIManager {
         AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
         addChild(chatController)
         if UIDevice.current.isPad {
-            rightContentView.addSubview(chatController.view)
+            sideContentView.addSubview(chatController.view)
             chatController.view.mas_makeConstraints { make in
                 make?.left.right().bottom().equalTo()(0)
-                make?.top.equalTo()(rightContentView.mas_centerY)?.offset()(2)
+                make?.top.equalTo()(sideContentView.mas_centerY)?.offset()(2)
             }
         }
+    }
+    
+    func updateFirstLoginState() {
+        let role = contextPool.user.getLocalUserInfo().userRole
+        let paramName = (role == .teacher) ? "teacherFirstLogin" : "studentFirstLogin"
+        contextPool.room.updateRoomProperties(["paramName":true],
+                                              cause: nil,
+                                              success: nil,
+                                              failure: nil)
     }
 }

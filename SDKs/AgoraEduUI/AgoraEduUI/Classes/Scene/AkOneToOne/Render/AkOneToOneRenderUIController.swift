@@ -38,6 +38,23 @@ class AkOneToOneRenderUIController: UIViewController {
                                  delegate: self)
         }
     }
+    var teacherFirstLogin: Bool = false {
+        didSet {
+            guard teacherFirstLogin != oldValue else {
+                return
+            }
+            teacherView.promptText = teacherFirstLogin ? "fcr_user_teacher_left".agedu_localized() : "fcr_user_waitting_tutor".agedu_localized()
+        }
+    }
+    var studentFirstLogin: Bool = false {
+        didSet {
+            guard studentFirstLogin != oldValue else {
+                return
+            }
+            studentView.promptText = studentFirstLogin ? "fcr_user_student_left".agedu_localized() : "fcr_user_waiting_student".agedu_localized()
+        }
+    }
+    
     /** 用来记录当前流是否被老师操作*/
     var currentStream: AgoraEduContextStreamInfo? {
         didSet {
@@ -170,7 +187,6 @@ extension AkOneToOneRenderUIController: AgoraRenderMemberViewDelegate {
 
 // MARK: - AgoraEduUserHandler
 extension AkOneToOneRenderUIController: AgoraEduUserHandler {
-    
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         if user.userRole == .teacher {
             teacherModel = AgoraRenderMemberModel.model(with: contextPool,
@@ -180,6 +196,24 @@ extension AkOneToOneRenderUIController: AgoraEduUserHandler {
             studentModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: user.userUuid,
                                                         name: user.userName)
+        }
+        
+        guard let roomFlexProps = contextPool.room.getRoomProperties() else {
+            return
+        }
+        
+        if let teacherFirstLogin = roomFlexProps["teacherFirstLogin"] as? Bool,
+           teacherFirstLogin {
+            self.teacherFirstLogin = true
+        } else {
+            self.teacherFirstLogin = false
+        }
+        
+        if let studentFirstLogin = roomFlexProps["studentFirstLogin"] as? Bool,
+           studentFirstLogin {
+            self.studentFirstLogin = true
+        } else {
+            self.studentFirstLogin = false
         }
     }
     
@@ -285,6 +319,29 @@ private extension AkOneToOneRenderUIController {
         tapStudent.numberOfTouchesRequired = 1
         tapStudent.delaysTouchesBegan = true
         studentView.addGestureRecognizer(tapStudent)
+        
+        teacherView.promptText = teacherFirstLogin ? "fcr_user_teacher_left".agedu_localized() : "fcr_user_waitting_tutor".agedu_localized()
+        
+        studentView.promptText = studentFirstLogin ? "fcr_user_student_left".agedu_localized() : "fcr_user_waiting_student".agedu_localized()
+        
+        
+        guard let roomFlexProps = contextPool.room.getRoomProperties() else {
+            return
+        }
+        
+        if let teacherFirstLogin = roomFlexProps["teacherFirstLogin"] as? Bool,
+           teacherFirstLogin {
+            self.teacherFirstLogin = true
+        } else {
+            self.teacherFirstLogin = false
+        }
+        
+        if let studentFirstLogin = roomFlexProps["studentFirstLogin"] as? Bool,
+           studentFirstLogin {
+            self.studentFirstLogin = true
+        } else {
+            self.studentFirstLogin = false
+        }
     }
     
     func createConstraint() {

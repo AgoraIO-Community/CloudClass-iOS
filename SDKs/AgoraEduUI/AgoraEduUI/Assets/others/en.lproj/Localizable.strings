@@ -43,7 +43,7 @@ fcr_user_congratulation = "Congratulations to {xxx} for the award";
 fcr_user_waiting_student = "Waiting for student to enter the classroom";
 fcr_user_waitting_tutor = "Waiting for tutor to enter the classroom";
 fcr_user_teacher_left = "The tutor leaved the classroom";
-fcr_user_no_student = "Waiting for student to enter the classroom";
+fcr_user_student_left = "The student has left the classroom";
 
 // User List
 fcr_user_list = "Member List";

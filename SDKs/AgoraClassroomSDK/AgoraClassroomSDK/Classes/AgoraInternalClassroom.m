@@ -63,7 +63,10 @@
                                                                                                 roomUuid:config.roomUuid
                                                                                                 roomType:config.roomType
                                                                                                startTime:config.startTime
-                                                                                                duration:config.duration];
+                                                                                                duration:config.duration
+                                                                                          recordLanguage:config.recordLanguage
+                                                                                         recordDirection:config.recordDirection
+                                                                                          videoDirection:config.videoDirection];
     return launchConfig;
 }
 

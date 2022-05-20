@@ -84,4 +84,20 @@ typedef NS_ENUM(NSInteger, AgoraEduStreamState) {
     AgoraEduStreamStateOn      = 1
 };
 
+typedef NS_ENUM(NSInteger, AgoraEduRecordLanguage) {
+    AgoraEduRecordLanguageSimplified     = 0,
+    AgoraEduRecordLanguageEnglish        = 1,
+    AgoraEduRecordLanguageUnsimplified   = 2
+};
+
+typedef NS_ENUM(NSInteger, AgoraEduRecordDirection) {
+    AgoraEduRecordDirectionLeft     = 0,
+    AgoraEduRecordDirectionRight    = 1
+};
+
+typedef NS_ENUM(NSInteger, AgoraEduVideoDirection) {
+    AgoraEduVideoDirectionLeft     = 0,
+    AgoraEduVideoDirectionRight    = 1
+};
+
 NS_ASSUME_NONNULL_END

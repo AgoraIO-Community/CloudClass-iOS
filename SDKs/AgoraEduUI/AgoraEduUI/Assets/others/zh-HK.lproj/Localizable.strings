@@ -45,7 +45,7 @@ fcr_user_congratulation = "祝賀{xxx}獲得獎勵";
 fcr_user_waiting_student = "等待學生進入教室";
 fcr_user_waitting_tutor = "等待外教進入教室";
 fcr_user_teacher_left = "外教已離開教室";
-fcr_user_no_student = "等待學生進入教室";
+fcr_user_student_left = "學生已離開教室";
 
 // user list
 fcr_user_list = "花名冊";

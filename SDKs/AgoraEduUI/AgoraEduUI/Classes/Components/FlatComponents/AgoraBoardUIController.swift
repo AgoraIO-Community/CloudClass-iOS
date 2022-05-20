@@ -32,7 +32,7 @@ class AgoraBoardUIController: UIViewController {
         super.init(nibName: nil,
                    bundle: nil)
         contextPool = context
-        view.backgroundColor = .clear
+        view.backgroundColor = .white
         
         contextPool.room.registerRoomEventHandler(self)
         contextPool.media.registerMediaEventHandler(self)

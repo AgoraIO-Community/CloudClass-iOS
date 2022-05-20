@@ -288,6 +288,7 @@ private extension LoginViewController {
                                                     startTime: nil,
                                                     duration: NSNumber(value: duration),
                                                     region: region.eduType,
+                                                    videoDirection: .left,
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
             

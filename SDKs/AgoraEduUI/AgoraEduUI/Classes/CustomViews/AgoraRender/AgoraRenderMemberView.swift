@@ -111,18 +111,18 @@ fileprivate class AgoraRenderMaskView: UIView {
         }
     }
     
-    public var promtText: String? {
+    var promptText: String? {
         didSet {
-            if let text = promtText {
+            if let text = promptText {
                 promptLabel.isHidden = false
-                promptLabel.text = promtText
+                promptLabel.text = promptText
             } else {
                 promptLabel.isHidden = true
             }
         }
     }
     
-    private var promptLabel: UILabel!
+    var promptLabel: UILabel!
     private var imageView: UIImageView!
     
     override init(frame: CGRect) {
@@ -134,7 +134,7 @@ fileprivate class AgoraRenderMaskView: UIView {
         imageView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
         addSubview(imageView)
         
-        promptLabel = UILabel(text: promtText)
+        promptLabel = UILabel(text: promptText)
         promptLabel.textColor = UIColor(hex: 0x022491)
         promptLabel.font = .systemFont(ofSize: 12)
         
@@ -148,7 +148,7 @@ fileprivate class AgoraRenderMaskView: UIView {
             make?.top.equalTo()(imageView.mas_bottom)?.offset()(3)
         }
         
-        promptLabel.isHidden = true
+        promptLabel.isHidden = false
     }
     
     required init?(coder: NSCoder) {
@@ -193,7 +193,11 @@ class AgoraRenderMemberView: UIView {
     /** 停止渲染遮罩*/
     private var ableMaskView: AgoraRenderMaskView!
     /** 无人提示*/
-    private var promptLabel: UILabel?
+    var promptText: String? {
+        didSet {
+            videoMaskView.promptText = promptText
+        }
+    }
     
     private var renderID: String? {
         didSet {
@@ -369,15 +373,17 @@ private extension AgoraRenderMemberView {
     }
     
     func updateRenderState() {
-        videoMaskView.promtText = nil
+        videoMaskView.promptText = nil
         guard let model = self.memberModel else {
-            ableMaskView.image = UIImage.agedu_named("ic_member_no_user")
-            ableMaskView.promtText = (memberRole == .teacher) ? "fcr_user_teacher_left".agedu_localized() : "fcr_user_no_student".agedu_localized()
-            ableMaskView.isHidden = false
+            ableMaskView.isHidden = true
+            videoMaskView.isHidden = false
+            videoMaskView.image = UIImage.agedu_named("ic_member_no_user")
+            videoMaskView.promptLabel.isHidden = false
+            videoMaskView.promptText = promptText
             self.renderID = nil
             return
         }
-        ableMaskView.promtText = nil
+        videoMaskView.promptLabel.isHidden = true
         if model.rendEnable == false {
             self.renderID = nil
             self.ableMaskView.image = UIImage.agedu_named("ic_member_device_offline")
@@ -421,7 +427,6 @@ private extension AgoraRenderMemberView {
         
         videoMaskView = AgoraRenderMaskView(frame: .zero)
         videoMaskView.image = UIImage.agedu_named("ic_member_no_user")
-        videoMaskView.promtText = (role == .teacher) ? "fcr_user_teacher_left".agedu_localized() : "fcr_user_no_student".agedu_localized()
         addSubview(videoMaskView)
         
         nameLabel = UILabel()

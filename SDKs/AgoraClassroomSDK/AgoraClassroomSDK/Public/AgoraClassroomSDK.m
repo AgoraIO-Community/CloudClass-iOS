@@ -109,7 +109,8 @@ static AgoraClassroomSDK *manager = nil;
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
                 eduVC = [[AkOneToOneUIManager alloc] initWithContextPool:pool
-                                                                delegate:manager];
+                                                                delegate:manager
+                                                              videoRight:(coreConfig.videoDirection == AgoraEduCorePuppetVideoDirectionRight)];
                 break;
             case AgoraEduContextRoomTypeSmall:
                 eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool
