@@ -41,6 +41,12 @@ enum RoomInfoItemType: Int, CaseIterable {
     case mediaAuth
     // 环境
     case env
+    // 录制语言
+    case recordLanguage
+    // 录制方向
+    case recordDirection
+    // 1V1视频窗口方向
+    case videoDirection
 }
 
 /** 区域选择类型*/
@@ -101,6 +107,12 @@ let kMediaAuthOptions: [(AgoraEduMediaAuthOption, String)] = [
     (.both, NSLocalizedString("login_auth_both", comment: ""))
 ]
 
+/** 环境可选项*/
+let kVideoDirectionOptions: [(AgoraEduVideoDirection, String)] = [
+    (.left, NSLocalizedString("login_video_left", comment: "")),
+    (.right, NSLocalizedString("login_video_right", comment: ""))
+]
+
 /** 入参模型*/
 struct RoomInfoModel {
     var roomName: String?
@@ -116,6 +128,10 @@ struct RoomInfoModel {
     var startTime: NSNumber?
     var env: TokenBuilder.Environment = .pro
     var mediaAuth: AgoraEduMediaAuthOption = .both
+    
+    var recordLanguage: AgoraEduRecordLanguage = .simplified
+    var recordDirection: AgoraEduRecordDirection = .left
+    var videoDirection: AgoraEduVideoDirection = .left
 
     /** 入参默认值 */
     static func defaultValue() -> RoomInfoModel {

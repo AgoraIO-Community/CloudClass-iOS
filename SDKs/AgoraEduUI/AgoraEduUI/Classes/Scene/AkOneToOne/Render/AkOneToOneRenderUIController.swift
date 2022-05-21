@@ -197,24 +197,6 @@ extension AkOneToOneRenderUIController: AgoraEduUserHandler {
                                                         uuid: user.userUuid,
                                                         name: user.userName)
         }
-        
-        guard let roomFlexProps = contextPool.room.getRoomProperties() else {
-            return
-        }
-        
-        if let teacherFirstLogin = roomFlexProps["teacherFirstLogin"] as? Bool,
-           teacherFirstLogin {
-            self.teacherFirstLogin = true
-        } else {
-            self.teacherFirstLogin = false
-        }
-        
-        if let studentFirstLogin = roomFlexProps["studentFirstLogin"] as? Bool,
-           studentFirstLogin {
-            self.studentFirstLogin = true
-        } else {
-            self.studentFirstLogin = false
-        }
     }
     
     func onRemoteUserLeft(user: AgoraEduContextUserInfo,
@@ -276,6 +258,7 @@ extension AkOneToOneRenderUIController: AgoraEduStreamHandler {
 extension AkOneToOneRenderUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         self.setup()
+        firstLoginState()
     }
 }
 // MARK: - Creations
@@ -323,9 +306,23 @@ private extension AkOneToOneRenderUIController {
         teacherView.promptText = teacherFirstLogin ? "fcr_user_teacher_left".agedu_localized() : "fcr_user_waitting_tutor".agedu_localized()
         
         studentView.promptText = studentFirstLogin ? "fcr_user_student_left".agedu_localized() : "fcr_user_waiting_student".agedu_localized()
-        
-        
+    }
+    
+    func createConstraint() {
+        teacherView.mas_remakeConstraints { make in
+            make?.top.left().right().equalTo()(0)
+            make?.bottom.equalTo()(self.view.mas_centerY)?.offset()(-1)
+        }
+        studentView.mas_remakeConstraints { make in
+            make?.bottom.left().right().equalTo()(0)
+            make?.top.equalTo()(self.view.mas_centerY)?.offset()(1)
+        }
+    }
+    
+    func firstLoginState() {
         guard let roomFlexProps = contextPool.room.getRoomProperties() else {
+            self.teacherFirstLogin = false
+            self.studentFirstLogin = false
             return
         }
         
@@ -341,17 +338,6 @@ private extension AkOneToOneRenderUIController {
             self.studentFirstLogin = true
         } else {
             self.studentFirstLogin = false
-        }
-    }
-    
-    func createConstraint() {
-        teacherView.mas_remakeConstraints { make in
-            make?.top.left().right().equalTo()(0)
-            make?.bottom.equalTo()(self.view.mas_centerY)?.offset()(-1)
-        }
-        studentView.mas_remakeConstraints { make in
-            make?.bottom.left().right().equalTo()(0)
-            make?.top.equalTo()(self.view.mas_centerY)?.offset()(1)
         }
     }
 }

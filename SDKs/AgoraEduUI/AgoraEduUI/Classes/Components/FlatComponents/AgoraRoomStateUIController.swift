@@ -71,6 +71,7 @@ private extension AgoraRoomStateUIController {
                                            startTime: info.startTime,
                                            duration: info.duration * 1000,
                                            closeDelay: info.closeDelay * 1000)
+        stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
     }
     
     @objc func updateTimeVisual() {

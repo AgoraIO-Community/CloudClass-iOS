@@ -198,7 +198,12 @@ extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
                     make?.left.equalTo()(self.boardController.view.mas_left)?.offset()(-side)
                 }
                 
-                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(appear ? bottomAppear : bottomDisappear)
+                if appear {
+                    make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(appear ? bottomAppear : bottomDisappear)
+                } else {
+                    make?.bottom.equalTo()(self.contentView)?.offset()(appear ? bottomAppear : bottomDisappear)
+                }
+
                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
             }
@@ -374,8 +379,8 @@ private extension AkOneToOneUIManager {
         let toolBarBottomStudent: CGFloat = (UIDevice.current.isPad ?  -15 : -12)
         let toolBarBottom: CGFloat = (contextPool.user.getLocalUserInfo().userRole == .teacher) ? toolBarBottomTeacher : toolBarBottomStudent
         toolBarController.view.mas_remakeConstraints { make in
-            make?.left.equalTo()(self.boardController.view.mas_left)?.offset()(toolBarSide)
-            make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(toolBarBottom)
+            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(toolBarSide)
+            make?.bottom.equalTo()(self.contentView.mas_bottom)?.offset()(toolBarBottom)
             make?.width.equalTo()(self.toolBarController.suggestSize.width)
             make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
@@ -391,7 +396,7 @@ private extension AkOneToOneUIManager {
             make?.left.equalTo()(sideContentView.mas_left)
         }
         boardPageController.view.mas_makeConstraints { make in
-            make?.right.equalTo()(boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+            make?.left.equalTo()(boardController.view.mas_left)?.offset()(UIDevice.current.isPad ? 15 : 12)
             make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
             make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
             make?.width.equalTo()(168)
@@ -444,7 +449,7 @@ private extension AkOneToOneUIManager {
         let toolBarBottom: CGFloat = (contextPool.user.getLocalUserInfo().userRole == .teacher) ? toolBarBottomTeacher : toolBarBottomStudent
         self.toolBarController.view.mas_remakeConstraints { make in
             make?.left.equalTo()(self.boardController.view.mas_left)?.offset()(toolBarSide)
-            make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(toolBarBottom)
+            make?.bottom.equalTo()(self.contentView.mas_bottom)?.offset()(toolBarBottom)
             make?.width.equalTo()(self.toolBarController.suggestSize.width)
             make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
@@ -510,7 +515,7 @@ private extension AkOneToOneUIManager {
     func updateFirstLoginState() {
         let role = contextPool.user.getLocalUserInfo().userRole
         let paramName = (role == .teacher) ? "teacherFirstLogin" : "studentFirstLogin"
-        contextPool.room.updateRoomProperties(["paramName":true],
+        contextPool.room.updateRoomProperties([paramName:true],
                                               cause: nil,
                                               success: nil,
                                               failure: nil)

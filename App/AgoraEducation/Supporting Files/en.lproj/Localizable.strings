@@ -43,6 +43,8 @@ Login_authMedia_title = "Media Auth";
 Login_authMedia_holder = "Please select if git authourity to media";
 Login_env_title = "Environment";
 Login_env_holder = "Please select running environment";
+Login_video_direction_title = "Video Direction";
+Login_video_direction_holder = "Please select 1v1 video direction";
 Login_enter = "Enter";
 Login_version = "Version: Flexible Classroom";
 Login_onetoone = "One-to-One Classroom";
@@ -63,6 +65,8 @@ login_auth_none = "None";
 login_auth_audio = "Only Audio";
 login_auth_video = "Only Video";
 login_auth_both = "Both Audio & Video";
+login_video_left = "Left";
+login_video_right = "Right";
 
 About_title = "About";
 About_close = "Close";

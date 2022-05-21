@@ -44,7 +44,7 @@ import AgoraEduUI
     private var bottomLabel: AgoraBaseUILabel!
     
     private var dataSource: [RoomInfoItemType] = [
-        .roomName, .nickName, .roomStyle, .roleType, .region, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
+        .roomName, .nickName, .roomStyle, .roleType, .region, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env, .videoDirection
     ]
     
     private var inputParams = RoomInfoModel()
@@ -197,6 +197,8 @@ private extension DebugViewController {
                                                 latencyLevel: .ultraLow,
                                                 videoState: videoState,
                                                 audioState: audioState)
+
+        let videoDirection = self.inputParams.videoDirection
         
         AgoraLoading.loading()
         
@@ -220,7 +222,7 @@ private extension DebugViewController {
                         let appId = response.appId
                         let rtmToken = response.rtmToken
                         let userUuid = response.userId
-                        let userRole = self.inputParams.roleType
+
                         
                         let launchConfig = AgoraEduLaunchConfig(userName: userName,
                                                                 userUuid: userUuid,
@@ -233,7 +235,7 @@ private extension DebugViewController {
                                                                 startTime: startTime,
                                                                 duration: NSNumber(value: duration),
                                                                 region: region.eduType,
-                                                                videoDirection: .left,
+                                                                videoDirection: videoDirection,
                                                                 mediaOptions: mediaOptions,
                                                                 userProperties: nil)
                         // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
@@ -432,6 +434,16 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                                                            comment: "")
             cell.textField.text = optionDescription(option: inputParams.env,
                                                     in: kEnvironmentOptions)
+        case .videoDirection:
+            cell.mode = .option
+            cell.titleLabel.text = NSLocalizedString("Login_video_direction_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_video_direction_holder",
+                                                           comment: "")
+            cell.textField.text = optionDescription(option: inputParams.videoDirection,
+                                                    in: kVideoDirectionOptions)
+        default:
+            break
         }
         return cell
     }
@@ -533,6 +545,18 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                              index: index) { [unowned self] i in
                 let (v, str) = kEnvironmentOptions[i]
                 self.inputParams.env = v
+                cell.textField.text = str
+                self.hideOptions()
+            }
+        case .videoDirection:
+            let options = optionStrings(form: kVideoDirectionOptions)
+            let index = optionIndex(option: inputParams.videoDirection,
+                                    in: kVideoDirectionOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                let (v, str) = kVideoDirectionOptions[i]
+                self.inputParams.videoDirection = v
                 cell.textField.text = str
                 self.hideOptions()
             }

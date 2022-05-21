@@ -41,6 +41,8 @@ Login_authMedia_title = "音视频授权";
 Login_authMedia_holder = "请选择上台是否直接授权音视频发流权限";
 Login_env_title = "环境";
 Login_env_holder = "请选择运行环境";
+Login_video_direction_title = "视频方向";
+Login_video_direction_holder = "请选择1v1教室视频窗方向";
 Login_enter = "进入教室";
 Login_version = "Version: Flexible Classroom";
 Login_onetoone = "一对一课堂";
@@ -61,6 +63,8 @@ login_auth_none = "不自动发流";
 login_auth_audio = "仅发音频流";
 login_auth_video = "仅发视频流";
 login_auth_both = "发音视频流";
+login_video_left = "左";
+login_video_right = "右";
 
 About_title = "关于";
 About_close = "关闭";
