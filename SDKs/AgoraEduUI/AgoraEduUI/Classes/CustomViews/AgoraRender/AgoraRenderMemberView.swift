@@ -119,12 +119,7 @@ fileprivate class AgoraRenderMaskView: UIView {
     
     var promptText: String? {
         didSet {
-            if let text = promptText {
-                promptLabel.isHidden = false
-                promptLabel.text = promptText
-            } else {
-                promptLabel.isHidden = true
-            }
+            promptLabel.text = promptText
         }
     }
     
@@ -383,14 +378,12 @@ private extension AgoraRenderMemberView {
     }
     
     func updateRenderState() {
-        videoMaskView.promptText = nil
         guard let model = self.memberModel else {
             ableMaskView.isHidden = true
             videoMaskView.isHidden = false
             micView.isHidden = true
             videoMaskView.image = UIImage.agedu_named("ic_member_no_user")
             videoMaskView.promptLabel.isHidden = false
-            videoMaskView.promptText = promptText
             self.renderID = nil
             return
         }

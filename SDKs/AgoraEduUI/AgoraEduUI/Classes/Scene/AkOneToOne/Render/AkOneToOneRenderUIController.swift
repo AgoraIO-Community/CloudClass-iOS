@@ -190,6 +190,7 @@ extension AkOneToOneRenderUIController: AgoraRenderMemberViewDelegate {
 // MARK: - AgoraEduUserHandler
 extension AkOneToOneRenderUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        firstLoginState()
         if user.userRole == .teacher {
             teacherModel = AgoraRenderMemberModel.model(with: contextPool,
                                                         uuid: user.userUuid,
