@@ -347,7 +347,7 @@ enum AgoraBoardWidgetStepChangeType: Convertable {
 struct AgoraBoardWidgetCoursewareInfo: Convertable {
     var resourceUuid: String
     var resourceName: String
-    var resourceUrl: String
+    var url: String
     // 纯媒体文件没有下述参数
     var scenes: [AgoraBoardWidgetWhiteScene]?
     var convert: Bool?
@@ -366,5 +366,5 @@ struct AgoraBoardWidgetWhitePptPage: Convertable {
     /// 图片的 URL 高度。单位为像素。
     var height: Float
     /// 预览图片的 URL 地址
-    var previewURL: String?
+    var preview: String?
 }

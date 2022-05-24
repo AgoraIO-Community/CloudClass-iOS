@@ -387,12 +387,14 @@ private extension AgoraRenderMemberView {
         guard let model = self.memberModel else {
             ableMaskView.isHidden = true
             videoMaskView.isHidden = false
+            micView.isHidden = true
             videoMaskView.image = UIImage.agedu_named("ic_member_no_user")
             videoMaskView.promptLabel.isHidden = false
             videoMaskView.promptText = promptText
             self.renderID = nil
             return
         }
+        micView.isHidden = false
         videoMaskView.promptLabel.isHidden = true
         if model.rendEnable == false {
             self.renderID = nil
@@ -448,6 +450,7 @@ private extension AgoraRenderMemberView {
         addSubview(nameLabel)
         
         micView = AgoraRenderMicView(frame: .zero)
+        micView.isHidden = true
         addSubview(micView)
         
         rewardImageView = UIImageView(image: UIImage.agedu_named("ic_member_reward"))

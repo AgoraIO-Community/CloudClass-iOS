@@ -59,14 +59,14 @@ enum AgoraCloudWidgetSignal: Convertable {
 struct AgoraCloudWidgetCoursewareModel: Convertable {
     var resourceUuid: String
     var resourceName: String
-    var resourceUrl: String
+    var url: String
     var scenes: [AgoraCloudWidgetConvertedFile]?
     var convert: Bool?
     
     func toBoard() -> AgoraBoardWidgetCoursewareInfo {
         let info = AgoraBoardWidgetCoursewareInfo(resourceUuid: self.resourceUuid,
                                                   resourceName: self.resourceName,
-                                                  resourceUrl: self.resourceUrl,
+                                                  url: self.url,
                                                   scenes: self.scenes?.toBoard(),
                                                   convert: self.convert)
         return info
@@ -92,7 +92,7 @@ struct AgoraCloudWidgetPptPage: Convertable {
         return AgoraBoardWidgetWhitePptPage(src: src,
                                             width: width,
                                             height: height,
-                                            previewURL: preview)
+                                            preview: preview)
     }
 }
 
