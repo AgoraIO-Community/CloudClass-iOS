@@ -10,9 +10,6 @@ import AgoraUIBaseViews
 import FLAnimatedImage
 
 class AgoraRenderMemberModel: NSObject {
-    enum AgoraRenderRole {
-        case student, teacher
-    }
     enum AgoraRenderMediaState {
         // 开，关，禁用，损坏
         case on, off, forbidden, broken
@@ -76,6 +73,13 @@ class AgoraRenderMemberModel: NSObject {
             }
         }
     }
+    var boardAuth: Bool = false {
+        didSet {
+            if boardAuth != oldValue {
+                self.onUpdateBoardAuth?(boardAuth)
+            }
+        }
+    }
     /** 名字产生变化 注意使用weak*/
     var onUpdateName: ((String) -> Void)?
     /** 音量产生变化 注意使用weak*/
@@ -92,6 +96,8 @@ class AgoraRenderMemberModel: NSObject {
     var onUpdateRewardCount: ((Int) -> Void)?
     /** 是否开启渲染*/
     var onUpdateRenderEnable: ((Bool) -> Void)?
+    /** 是否拥有白板授权*/
+    var onUpdateBoardAuth: ((Bool) -> Void)?
 }
 
 protocol AgoraRenderMemberViewDelegate: NSObjectProtocol {
@@ -131,7 +137,7 @@ fileprivate class AgoraRenderMaskView: UIView {
         backgroundColor = ui.color.render_cell_bg_color
         layer.cornerRadius = max(ui.frame.one_one_to_render_cell_corner_radius,
                                  ui.frame.small_render_cell_corner_radius)
-        imageView = UIImageView(image: UIImage.agedu_named("ic_member_device_offline"))
+        imageView = UIImageView()
         addSubview(imageView)
         
         promptLabel = UILabel(text: promptText)
@@ -162,6 +168,7 @@ class AgoraRenderMemberView: UIView {
     private var videoView: AgoraRenderMaskView!
     /** 状态遮罩*/
     private var videoMaskView: AgoraRenderMaskView!
+    private let authView = UIImageView(image: UIImage.agedu_named("ic_member_auth"))
     /** 名字*/
     private var nameLabel: UILabel!
     /** 麦克风视图*/
@@ -231,16 +238,12 @@ class AgoraRenderMemberView: UIView {
     }
     
     private var memberModel: AgoraRenderMemberModel?
-    
-    private var memberRole: AgoraRenderMemberModel.AgoraRenderRole
-    
-    init(frame: CGRect,
-         role: AgoraRenderMemberModel.AgoraRenderRole = .student) {
-        self.memberRole = role
+        
+    override init(frame: CGRect) {
         
         super.init(frame: frame)
         
-        createViews(role: role)
+        createViews()
         createConstraint()
     }
     
@@ -285,6 +288,7 @@ private extension AgoraRenderMemberView {
         model.onUpdateHandsUpState = nil
         model.onUpdateRewardCount = nil
         model.onUpdateRenderEnable = nil
+        model.onUpdateBoardAuth = nil
     }
     
     func registerNewModel(model: AgoraRenderMemberModel) {
@@ -325,8 +329,10 @@ private extension AgoraRenderMemberView {
         model.onUpdateRenderEnable = { [weak self] enable in
             self?.updateRenderEnable(enable: enable)
         }
+        model.onUpdateBoardAuth = { [weak self] auth in
+            self?.updateBoardAuth(auth)
+        }
     }
-    
     func updateName(name: String) {
         nameLabel.text = name
     }
@@ -364,6 +370,10 @@ private extension AgoraRenderMemberView {
         }
     }
     
+    func updateBoardAuth(_ auth: Bool) {
+        authView.isHidden = !auth
+    }
+    
     func updateRenderEnable(enable: Bool) {
         self.updateRenderState()
     }
@@ -386,7 +396,7 @@ private extension AgoraRenderMemberView {
         videoMaskView.promptLabel.isHidden = true
         if model.rendEnable == false {
             self.renderID = nil
-            self.ableMaskView.image = UIImage.agedu_named("ic_member_device_offline")
+            self.ableMaskView.image = UIImage.agedu_named("ic_member_device_off")
             self.ableMaskView.isHidden = false
             self.videoMaskView.isHidden = true
         } else if model.rendEnable == true,
@@ -414,7 +424,7 @@ private extension AgoraRenderMemberView {
 }
 // MARK: - Creations
 private extension AgoraRenderMemberView {
-    func createViews(role: AgoraRenderMemberModel.AgoraRenderRole) {
+    func createViews() {
         let ui = AgoraUIGroup()
         
         backgroundColor = ui.color.render_cell_bg_color
@@ -422,7 +432,6 @@ private extension AgoraRenderMemberView {
         layer.borderColor = ui.color.render_cell_border_color
         
         videoView = AgoraRenderMaskView(frame: .zero)
-        videoView.image = UIImage.agedu_named("ic_member_device_off")
         addSubview(videoView)
         
         videoMaskView = AgoraRenderMaskView(frame: .zero)
@@ -455,6 +464,9 @@ private extension AgoraRenderMemberView {
         rewardLabel.layer.shadowRadius = ui.frame.render_label_shadow_radius
         addSubview(rewardLabel)
         
+        authView.isHidden = true
+        addSubview(authView)
+        
         ableMaskView = AgoraRenderMaskView(frame: .zero)
         ableMaskView.isHidden = true
         addSubview(ableMaskView)
@@ -468,13 +480,19 @@ private extension AgoraRenderMemberView {
             make?.left.right().top().bottom()?.equalTo()(0)
         }
         micView.mas_makeConstraints { make in
-            make?.left.equalTo()(AgoraFit.scale(2))
-            make?.bottom.equalTo()(AgoraFit.scale(-2))
-            make?.width.height().equalTo()(AgoraFit.scale(16))
+            make?.right.equalTo()(-6)
+            make?.bottom.equalTo()(-6)
+            make?.width.height().equalTo()(16)
+        }
+        authView.mas_makeConstraints { make in
+            make?.centerY.equalTo()(micView)
+            make?.right.equalTo()(micView.mas_left)?.offset()(-6)
+            make?.height.equalTo()(18)
+            make?.width.equalTo()(16)
         }
         nameLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(micView)
-            make?.left.equalTo()(micView.mas_right)?.offset()(AgoraFit.scale(2))
+            make?.left.equalTo()(6)
             make?.right.lessThanOrEqualTo()(0)
         }
         rewardLabel.mas_makeConstraints { make in

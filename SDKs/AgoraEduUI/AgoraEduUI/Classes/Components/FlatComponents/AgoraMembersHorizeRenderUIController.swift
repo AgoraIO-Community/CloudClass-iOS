@@ -75,6 +75,8 @@ class AgoraMembersHorizeRenderUIController: UIViewController {
     init(context: AgoraEduContextPool) {
         super.init(nibName: nil, bundle: nil)
         contextPool = context
+        contextPool.widget.add(self,
+                               widgetId: kBoardWidgetId)
     }
     
     required init?(coder: NSCoder) {
@@ -405,6 +407,34 @@ extension AgoraMembersHorizeRenderUIController: AgoraRenderMemberViewDelegate {
         contextPool.media.stopRenderVideo(streamUuid: renderID)
     }
 }
+
+// MARK: - AgoraWidgetMessageObserver
+extension AgoraMembersHorizeRenderUIController: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String) {
+        guard widgetId == kBoardWidgetId,
+              let signal = message.toBoardSignal() else {
+            return
+        }
+        switch signal {
+        case .BoardGrantDataChanged(let list):
+            guard let userIds = list else {
+                return
+            }
+            
+            for model in dataSource {
+                guard let userId = model.uuid else {
+                    model.boardAuth = false
+                    continue
+                }
+                model.boardAuth = userIds.contains(userId)
+            }
+        default:
+            break
+        }
+    }
+}
+
 // MARK: - UICollectionView Call Back
 extension AgoraMembersHorizeRenderUIController: UICollectionViewDelegate,
                                            UICollectionViewDataSource,

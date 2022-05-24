@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AgoraWidget
 import AudioToolbox
 import FLAnimatedImage
 import AgoraEduContext
@@ -33,6 +34,8 @@ class AgoraStudentsRenderUIController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         self.contextPool = context
         self.delegate = delegate
+        contextPool.widget.add(self,
+                               widgetId: kBoardWidgetId)
     }
     
     required init?(coder: NSCoder) {
@@ -276,6 +279,32 @@ extension AgoraStudentsRenderUIController: AgoraRenderMemberViewDelegate {
 
     func memberViewCancelRender(memberView: AgoraRenderMemberView, renderID: String) {
         contextPool.media.stopRenderVideo(streamUuid: renderID)
+    }
+}
+// MARK: - AgoraWidgetMessageObserver
+extension AgoraStudentsRenderUIController: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String) {
+        guard widgetId == kBoardWidgetId,
+              let signal = message.toBoardSignal() else {
+            return
+        }
+        switch signal {
+        case .BoardGrantDataChanged(let list):
+            guard let userIds = list else {
+                return
+            }
+            
+            for model in dataSource {
+                guard let userId = model.uuid else {
+                    model.boardAuth = false
+                    continue
+                }
+                model.boardAuth = userIds.contains(userId)
+            }
+        default:
+            break
+        }
     }
 }
 

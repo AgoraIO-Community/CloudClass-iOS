@@ -113,14 +113,19 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         // for override
     }
     
-    public func ctrlViewAnimationFromView(_ formView: UIView) {
+    public func ctrlViewAnimationFromView(_ formView: UIView,
+                                          toLeft: Bool = true) {
         guard let animaView = ctrlView else {
             return
         }
         // 算出落点的frame
         let rect = formView.convert(formView.bounds,
                                     to: self.view)
-        var point = CGPoint(x: rect.minX - 8 - animaView.frame.size.width, y: rect.minY)
+        var pointToLeft = CGPoint(x: rect.minX - 8 - animaView.frame.size.width,
+                            y: rect.minY)
+        var pointToRight = CGPoint(x: rect.maxX + 8,
+                                   y: rect.minY)
+        var point = toLeft ? pointToLeft : pointToRight
         let estimateFrame = CGRect(origin: point,
                                  size: animaView.frame.size)
         if estimateFrame.maxY > self.contentView.frame.maxY - 10 {
@@ -130,11 +135,10 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         animaView.frame = CGRect(origin: point, size: animaView.frame.size)
         // 运算动画锚点
         let anchorConvert = formView.convert(formView.bounds, to: animaView)
-        let anchor = CGPoint(x: 1, y: anchorConvert.origin.y/animaView.frame.height)
+        let anchor = CGPoint(x: toLeft ? 1 : 0,
+                             y: anchorConvert.origin.y/animaView.frame.height)
         // 开始动画运算
         let oldFrame = animaView.frame
-        let position = CGPoint(x: animaView.layer.position.x + (anchor.x - 0.5) * animaView.bounds.width,
-                               y: animaView.layer.position.y + (anchor.y - 0.5) * animaView.bounds.height)
         animaView.layer.anchorPoint = anchor
         animaView.frame = oldFrame
         animaView.alpha = 0.2

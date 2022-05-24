@@ -19,9 +19,8 @@ import Masonry
     /** 工具栏*/
     private var toolBarController: AgoraToolBarUIController!
     /** 视窗菜单 控制器（仅教师端）*/
-    private lazy var renderMenuController: AkOneToOneRenderUIController = {
-        let vc = AkOneToOneRenderUIController(context: contextPool,
-                                              delegate: self)
+    private lazy var renderMenuController: AgoraRenderMenuUIController = {
+        let vc = AgoraRenderMenuUIController(context: contextPool)
         vc.delegate = self
         return vc
     }()
@@ -126,12 +125,21 @@ extension AkOneToOneUIManager: AgoraChatUIControllerDelegate {
     }
 }
 
+// MARK: - AgoraRenderMenuUIControllerDelegate
+extension AkOneToOneUIManager: AgoraRenderMenuUIControllerDelegate {
+    func onMenuUserLeft() {
+        renderMenuController.dismissView()
+        renderMenuController.view.isHidden = true
+    }
+}
+
 // MARK: - AgoraToolCollectionUIControllerDelegate
 extension AkOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
     func toolCollectionDidSelectCell(view: UIView) {
         toolBarController.deselectAll()
         ctrlView = view
-        ctrlViewAnimationFromView(toolCollectionController.view)
+        ctrlViewAnimationFromView(toolCollectionController.view,
+                                  toLeft: videoRight)
     }
     
     func toolCollectionCellNeedSpread(_ spread: Bool) {
@@ -225,6 +233,24 @@ extension AkOneToOneUIManager: AgoraRenderUIControllerDelegate {
            teacehr.userUuid == UUID {
             role = .teacher
         }
+        
+        if let menuId = renderMenuController.userId,
+           menuId == UUID {
+            // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
+            renderMenuController.dismissView()
+        } else {
+            // 1. 当前menu的userId不为点击的userId，切换用户
+            // 2. 当前不存在menu，显示
+            renderMenuController.show(roomType: .oneToOne,
+                                      userUuid: UUID,
+                                      showRoleType: role)
+            renderMenuController.view.mas_remakeConstraints { make in
+                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
+                make?.centerX.equalTo()(view.mas_centerX)
+                make?.height.equalTo()(30)
+                make?.width.equalTo()(renderMenuController.menuWidth)
+            }
+        }
     }
     
     func onRequestSpread(firstOpen: Bool,
@@ -255,7 +281,8 @@ extension AkOneToOneUIManager: AgoraToolBarDelegate {
         default:
             break
         }
-        ctrlViewAnimationFromView(selectView)
+        ctrlViewAnimationFromView(selectView,
+                                  toLeft: videoRight)
     }
     
     func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {

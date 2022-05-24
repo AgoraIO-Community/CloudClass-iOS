@@ -71,6 +71,8 @@ class AkOneToOneRenderUIController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         self.delegate = delegate
         contextPool = context
+        contextPool.widget.add(self,
+                               widgetId: kBoardWidgetId)
     }
     
     required init?(coder: NSCoder) {
@@ -261,6 +263,29 @@ extension AkOneToOneRenderUIController: AgoraEduRoomHandler {
         firstLoginState()
     }
 }
+
+// MARK: - AgoraWidgetMessageObserver
+extension AkOneToOneRenderUIController: AgoraWidgetMessageObserver {
+    func onMessageReceived(_ message: String,
+                           widgetId: String) {
+        guard widgetId == kBoardWidgetId,
+              let signal = message.toBoardSignal() else {
+            return
+        }
+        switch signal {
+        case .BoardGrantDataChanged(let list):
+            guard let userIds = list,
+                  let studentId = studentModel?.uuid,
+                  userIds.contains(studentId) else {
+                studentModel?.boardAuth = false
+                return
+            }
+            studentModel?.boardAuth = true
+        default:
+            break
+        }
+    }
+}
 // MARK: - Creations
 private extension AkOneToOneRenderUIController {
     @objc func onClickTeacher(_ sender: UITapGestureRecognizer) {
@@ -280,8 +305,7 @@ private extension AkOneToOneRenderUIController {
     
     func createViews() {
         let ui_frame = AgoraFrameGroup()
-        teacherView = AgoraRenderMemberView(frame: .zero,
-                                            role: .teacher)
+        teacherView = AgoraRenderMemberView(frame: .zero)
         teacherView.layer.cornerRadius = ui_frame.one_one_to_render_cell_corner_radius
         view.addSubview(teacherView)
         
