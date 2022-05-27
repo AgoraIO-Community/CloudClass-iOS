@@ -281,7 +281,7 @@ private extension LoginViewController {
             }
             
             let appId = response.appId
-            let rtmToken = response.rtmToken
+            let token = response.token
             let userUuid = response.userId
             
             let launchConfig = AgoraEduLaunchConfig(userName: userName,
@@ -291,7 +291,7 @@ private extension LoginViewController {
                                                     roomUuid: roomUuid,
                                                     roomType: roomStyle,
                                                     appId: appId,
-                                                    token: rtmToken,
+                                                    token: token,
                                                     startTime: nil,
                                                     duration: NSNumber(value: duration),
                                                     region: region.eduType,
@@ -300,7 +300,7 @@ private extension LoginViewController {
             
             // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
             var widgets = Dictionary<String,AgoraWidgetConfig>()
-            launchConfig.widgets.forEach {[unowned self] (k,v) in
+            launchConfig.widgets.forEach { [unowned self] (k,v) in
                 if k == "AgoraCloudWidget" {
                     v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
                 }
@@ -324,8 +324,10 @@ private extension LoginViewController {
                                      failure: failureBlock)
         }
         
-        requestToken(region: region.rawValue,
-                     userUuid: userUuid,
+        requestToken(region: region,
+                     roomId: roomUuid,
+                     userId: userUuid,
+                     userRole: userRole.rawValue,
                      success: tokenSuccessBlock,
                      failure: failureBlock)
         
@@ -362,22 +364,25 @@ private extension LoginViewController {
         
         let response = TokenBuilder.ServerResp(appId: appId,
                                                userId: userUuid,
-                                               rtmToken: token)
+                                               token: token)
         success(response)
     }
     
-    func requestToken(region: String,
-                      userUuid: String,
+    func requestToken(region: RoomRegionType,
+                      roomId: String,
+                      userId: String,
+                      userRole: Int,
                       success: @escaping (TokenBuilder.ServerResp) -> (),
                       failure: @escaping (Error) -> ()) {
-        tokenBuilder.buildByServer(region: region,
-                                   userUuid: userUuid,
-                                   environment: inputParams.env,
-                                   success: { (resp) in
-                                    success(resp)
-                                   }, failure: { (error) in
-                                    failure(error)
-                                   })
+        tokenBuilder.buildByServer(environment: inputParams.env,
+                                   region: region.toServer,
+                                   roomId: roomId,
+                                   userId: userId,
+                                   userRole: userRole) { (resp) in
+            success(resp)
+        } failure: { (error) in
+            failure(error)
+        }
     }
 }
 
@@ -725,6 +730,17 @@ private extension LoginViewController {
             } else {
                 bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
             }
+        }
+    }
+}
+
+extension RoomRegionType {
+    var toServer: TokenBuilder.Region {
+        switch self {
+        case .CN: return .cn
+        case .EU: return .eu
+        case .NA: return .na
+        case .AP: return .ap
         }
     }
 }
