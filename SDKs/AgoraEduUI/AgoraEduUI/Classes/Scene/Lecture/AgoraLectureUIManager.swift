@@ -87,10 +87,8 @@ import AgoraWidget
             }
             self.isJoinedRoom = true
             self.createChatController()
-            if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
-                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
-                self.contextPool.media.openLocalDevice(systemDevice: .mic)
-            }
+            self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            self.contextPool.media.openLocalDevice(systemDevice: .mic)
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitClassRoom(reason: .normal)
