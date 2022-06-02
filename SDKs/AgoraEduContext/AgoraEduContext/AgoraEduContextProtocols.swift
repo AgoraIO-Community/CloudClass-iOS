@@ -11,6 +11,7 @@ import UIKit
 public typealias AgoraEduContextSuccess = () -> (Void)
 public typealias AgoraEduContextSuccessWithUsers = ([AgoraEduContextUserInfo]) -> (Void)
 public typealias AgoraEduContextSuccessWithString = (String) -> (Void)
+public typealias AgoraEduContextSuccessWithFcrSnapshotInfo = (FcrSnapshotInfo) -> (Void)
 public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
 
 // MARK: - Classroom
@@ -778,6 +779,19 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// 设置音频混合文件的播放起始位置 (v2.0.0)
     /// - Returns: AgoraEduContextError, 返回错误，为空代表成功
     func setAudioMixingPosition(position: Int) -> AgoraEduContextError?
+
+    /// 视频流截图，生成 jpg 文件 (v2.6.0)
+    /// - parameter roomUuid: 房间 id
+    /// - parameter streamUuid: 流 id
+    /// - parameter filePath: 截图文件保存的本地路径（需要完整写出文件名，例如: xxx/xxx/example.jpg）
+    /// - parameter success: 截图成功后的回调，返回 snapshot 的信息
+    /// - parameter failure: 截图失败后的回调，返回错误
+    /// - returns: void
+    func getSnapshot(roomUuid: String ,
+                     streamUuid: String,
+                     filePath: String,
+                     success: AgoraEduContextSuccessWithFcrSnapshotInfo?,
+                     failure: AgoraEduContextFailure?)
     
     /// 开始事件监听 (v2.0.0)
     /// - parameter handler: 监听者

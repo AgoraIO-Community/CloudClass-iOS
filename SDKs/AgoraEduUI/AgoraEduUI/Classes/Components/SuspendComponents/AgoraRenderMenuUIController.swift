@@ -63,7 +63,7 @@ class AgoraRenderMenuUIController: UIViewController {
     private lazy var authButton = UIButton(type: .custom)
     
     private lazy var rewardButton = UIButton(type: .custom)
-    
+        
     // Data sources
     private var items: [AgoraRenderMenuItemType] = [] {
         didSet {

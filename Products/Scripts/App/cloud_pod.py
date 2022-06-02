@@ -53,7 +53,7 @@ end
 """
 
 PreRtcContent = """
-    pod 'AgoraRtcEngine_iOS', '3.4.6'
+    pod 'AgoraRtcEngine_iOS', '3.5.2'
 """
 
 RePodContent = """

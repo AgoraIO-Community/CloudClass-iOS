@@ -195,6 +195,32 @@ import Foundation
     }
 }
 
+@objcMembers public class FcrSnapshotInfo: NSObject {
+    /// 房间id
+    public var roomUuid: String
+    /// 流id
+    public var streamUuid: String
+    /// 截图文件保存地址
+    public var filePath: String
+    /// 图片宽度
+    public var width: UInt16
+    /// 图片高度
+    public var height: UInt16
+    
+    public init(roomUuid: String,
+                streamUuid: String,
+                filePath: String,
+                width: UInt16,
+                height: UInt16) {
+        self.roomUuid = roomUuid
+        self.streamUuid = streamUuid
+        self.filePath = filePath
+        self.width = width
+        self.height = height
+        super.init()
+    }
+}
+
 /// 视频渲染配置
 @objcMembers public class AgoraEduContextRenderConfig: NSObject {
     public var mode: AgoraEduContextVideoRenderMode = .hidden
