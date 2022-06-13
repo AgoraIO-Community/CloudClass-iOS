@@ -76,13 +76,18 @@ extension DebugViewController {
         
         createViews()
         createConstraint()
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         // 检查协议
-        if !TermsAndPolicyViewController.getPolicyPopped() {
-            if let termsVC = TermsAndPolicyViewController.loadFromStoryboard("privacy", "terms") {
-                present(termsVC,
-                        animated: true,
-                        completion: nil)
-            }
+        if !ServicePrivacyViewController.getPolicyPopped() {
+            let vc = ServicePrivacyViewController()
+            vc.modalPresentationStyle = .fullScreen
+            present(vc,
+                    animated: true,
+                    completion: nil)
         }
     }
     
