@@ -18,6 +18,12 @@ class AgoraHandsUpDelayView: UIView {
     
     weak var delegate: AgoraHandsUpDelayViewDelegate?
     
+    public var duration = 3 {
+        didSet {
+            self.count = duration
+        }
+    }
+    
     private var imageView: UIImageView!
     
     private var delayLabel: UILabel!
@@ -126,7 +132,7 @@ class AgoraHandsUpDelayView: UIView {
         }
         timer?.invalidate()
         timer = nil
-        count = 3
+        count = self.duration
         imageView.isHidden = false
         delayLabel.isHidden = true
         state = .free

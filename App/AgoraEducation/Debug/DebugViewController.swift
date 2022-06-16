@@ -437,6 +437,8 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                                                            comment: "")
             cell.textField.text = optionDescription(option: inputParams.env,
                                                     in: kEnvironmentOptions)
+        default:
+            break
         }
         return cell
     }

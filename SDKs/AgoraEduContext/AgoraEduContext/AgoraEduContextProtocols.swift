@@ -747,6 +747,20 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     func stopRenderVideo(roomUuid: String,
                          streamUuid: String) -> AgoraEduContextError?
     
+    /// 开始渲染 CDN 视频流 (v2.6.0)
+    /// - parameter view: 渲染视频的容器
+    /// - parameter mode: 渲染模式
+    /// - parameter streamUrl: 流地址
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
+    func startRenderVideoFromCdn(view: UIView,
+                                 mode: AgoraEduContextVideoRenderMode,
+                                 streamUrl: String) -> AgoraEduContextError?
+    
+    /// 停止渲染视频流 (v2.6.0)
+    /// - parameter streamUrl: 流地址
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
+    func stopRenderVideoFromCdn(streamUrl: String) -> AgoraEduContextError?
+    
     /// 开始播放音频流 (v2.4.0)
     /// - parameter roomUuid: 房间 id
     /// - parameter streamUuid: 流 Id
@@ -760,6 +774,16 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - returns: AgoraEduContextError, 返回错误，为空代表成功
     func stopPlayAudio(roomUuid: String,
                        streamUuid: String) -> AgoraEduContextError?
+    
+    /// 开始播放 CDN 音频流 (v2.6.0)
+    /// - parameter streamUrl: 流地址
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
+    func startPlayAudioFromCdn(streamUrl: String) -> AgoraEduContextError?
+    
+    /// 停止播放 CDN 音频流 (v2.6.0)
+    /// - parameter streamUrl: 流地址
+    /// - returns: AgoraEduContextError, 返回错误，为空代表成功
+    func stopPlayAudioFromCdn(streamUrl: String) -> AgoraEduContextError?
     
     /// 开启混音 (v2.0.0)
     /// - parameter filePath: 需要混音的文件路径
@@ -860,12 +884,17 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - returns: [AgoraEduContextStream]， 流信息的数组，可以为空
     func getAllStreamList() -> [AgoraEduContextStreamInfo]?
     
-    /// 设置本地流的视频配置(v1.2.0)
+    /// 设置本地流的视频配置 (v1.2.0)
     /// - parameter streamUuid: 流id
     /// - parameter config: 视频配置
     /// - returns: AgoraEduContextError
     func setLocalVideoConfig(streamUuid: String,
                              config: AgoraEduContextVideoStreamConfig) -> AgoraEduContextError?
+    
+    /// 获取本地流的视频配置 (v2.6.0)
+    /// - parameter streamUuid: 流id
+    /// - returns: AgoraEduContextVideoStreamConfig
+    func getLocalVideoConfig(streamUuid: String) -> AgoraEduContextVideoStreamConfig
     
     /// 选择订阅高/低分辨率的视频流 (v2.0.0)
     /// - parameter streamUuid: 流Id
@@ -874,7 +903,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     func setRemoteVideoStreamSubscribeLevel(streamUuid: String,
                                             level: AgoraEduContextVideoStreamSubscribeLevel) -> AgoraEduContextError?
     
-    /// 更新用户的发流权限(v2.2.0)
+    /// 更新用户的发流权限 (v2.2.0)
     /// - parameter streamUuids: 流 Id 数组
     /// - parameter videoPrivilege: 视频发流权限
     /// - parameter success: 请求成功
@@ -884,7 +913,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
                                       success: AgoraEduContextSuccess?,
                                       failure: AgoraEduContextFailure?)
     
-    /// 更新用户的发流权限(v2.2.0)
+    /// 更新用户的发流权限 (v2.2.0)
     /// - parameter streamUuids: 流 Id 数组
     /// - parameter audioPrivilege: 音频发流权限
     /// - parameter success: 请求成功
@@ -894,7 +923,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
                                       success: AgoraEduContextSuccess?,
                                       failure: AgoraEduContextFailure?)
     
-    /// 更新用户的发流权限(v2.2.0)
+    /// 更新用户的发流权限 (v2.2.0)
     /// - parameter streamUuids: 流 Id 数组
     /// - parameter videoPrivilege: 视频发流权限
     /// - parameter audioPrivilege: 音频发流权限
@@ -905,6 +934,22 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
                                       audioPrivilege: Bool,
                                       success: AgoraEduContextSuccess?,
                                       failure: AgoraEduContextFailure?)
+    
+    /// 开始将 rtc 流推到 cdn (v2.6.0)
+    /// - parameter config: 流配置
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func startPublishStreamToCdn(config: FcrRtmpStreamConfig,
+                                 success: AgoraEduContextSuccess?,
+                                 failure: AgoraEduContextFailure?)
+    
+    /// 停止将 rtc 流推到 cdn (v2.6.0)
+    /// - parameter config: 流配置
+    /// - parameter success: 请求成功
+    /// - parameter failure: 请求失败
+    func stopPublishStreamToCdn(streamUuid: String,
+                                success: AgoraEduContextSuccess?,
+                                failure: AgoraEduContextFailure?)
     
     /// 开始事件监听 (v2.0.0)
     /// - parameter handler: 监听者

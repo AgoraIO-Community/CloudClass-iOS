@@ -287,6 +287,12 @@ import Foundation
     public let streamName: String
     /// 流类型
     public let streamType: AgoraEduContextMediaStreamType
+    /// CDN 流地址，RTMP 协议
+    public var streamRtmpUrl: String?
+    /// CDN 流地址，FLV 协议
+    public var streamFlvUrl: String?
+    /// CDN 流协议，HLS 协议
+    public var streamHlsUrl: String?
     /// 流的视频源类型
     public let videoSourceType: AgoraEduContextVideoSourceType
     /// 流的音频源类型
@@ -314,6 +320,31 @@ import Foundation
         self.videoSourceState = videoSourceState
         self.audioSourceState = audioSourceState
         self.owner = owner
+    }
+}
+
+@objcMembers public class FcrRtmpStreamConfig: NSObject {
+    /// 流 Id
+    public let streamUuid: String
+    /// cdn 流的分辨率宽
+    public let dimensionWidth: UInt16
+    /// cdn 流的分辨率高
+    public let dimensionHeight: UInt16
+    /// cdn 流的码率
+    public let bitRate: UInt16
+    /// 自定义用户信息
+    public var seiOptions: [String: Any]?
+    
+    public init(streamUuid: String,
+                dimensionWidth: UInt16,
+                dimensionHeight: UInt16,
+                bitRate: UInt16,
+                seiOptions: [String: Any]?) {
+        self.streamUuid = streamUuid
+        self.dimensionWidth = dimensionWidth
+        self.dimensionHeight = dimensionHeight
+        self.bitRate = bitRate
+        self.seiOptions = seiOptions
     }
 }
 

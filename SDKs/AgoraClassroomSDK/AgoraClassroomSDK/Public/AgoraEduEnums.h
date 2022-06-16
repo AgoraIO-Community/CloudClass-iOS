@@ -77,7 +77,16 @@ typedef NS_ENUM(NSInteger, AgoraEduUserRole) {
 typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
     AgoraEduRoomTypeOneToOne      = 0,
     AgoraEduRoomTypeLecture       = 2,
-    AgoraEduRoomTypeSmall         = 4
+    AgoraEduRoomTypeSmall         = 4,
+    // 职教课堂type
+    AgoraEduRoomTypeVocational = 100
+};
+
+typedef NS_ENUM(NSInteger, AgoraEduServiceType) {
+    AgoraEduServiceTypeRTC,
+    AgoraEduServiceTypeFastRTC,
+    AgoraEduServiceTypeOnlyCDN,
+    AgoraEduServiceTypeMixedCDN
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduStreamState) {

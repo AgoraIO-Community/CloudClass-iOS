@@ -160,7 +160,14 @@ class AgoraToolBarBrushCell: AgoraToolBarItemCell {
 
 // MARK: - AgoraToolBarHandsUpCell
 class AgoraToolBarHandsUpCell: UICollectionViewCell {
+    
     var handsupDelayView: AgoraHandsUpDelayView!
+    
+    public var duration = 3 {
+        didSet {
+            self.handsupDelayView.duration = duration
+        }
+    }
             
     override init(frame: CGRect) {
         super.init(frame: frame)

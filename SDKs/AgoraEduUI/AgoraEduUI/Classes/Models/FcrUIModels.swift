@@ -15,6 +15,7 @@ struct AgoraRenderMemberViewModel {
     var userName: String
     var userRole: AgoraRenderUserRole
     var streamId: String?
+    var cdnURL: String?
     var userState: AgoraRenderUserState
     var videoState: AgoraRenderMediaState
     var audioState: AgoraRenderMediaState
@@ -73,6 +74,15 @@ struct AgoraRenderMemberViewModel {
         }
         
         self.streamId = stream.streamUuid
+        // 优先使用RTMP
+        if let cdnURL = stream.streamRtmpUrl {
+            self.cdnURL = cdnURL
+        } else if let cdnURL = stream.streamHlsUrl {
+            self.cdnURL = cdnURL
+        } else if let cdnURL = stream.streamFlvUrl {
+            self.cdnURL = cdnURL
+        }
+        
         // audio
         if stream.streamType.hasAudio,
            stream.audioSourceState == .open {

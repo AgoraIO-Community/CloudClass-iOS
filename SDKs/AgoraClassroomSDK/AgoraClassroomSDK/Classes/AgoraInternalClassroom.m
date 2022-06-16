@@ -29,7 +29,8 @@
     
     if (!(self.roomType == AgoraEduRoomTypeOneToOne
           || self.roomType == AgoraEduRoomTypeSmall
-          || self.roomType == AgoraEduRoomTypeLecture)) {
+          || self.roomType == AgoraEduRoomTypeLecture
+          || self.roomType == AgoraEduRoomTypeVocational)) {
         return NO;
     }
     

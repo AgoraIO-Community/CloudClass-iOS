@@ -126,6 +126,19 @@ private extension LoginViewController {
             enterButton.isUserInteractionEnabled = false
         }
     }
+    
+    func updateOptions() {
+        if self.inputParams.roomStyle == .vocational {
+            self.dataSource = [
+                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .region
+            ]
+        } else {
+            self.dataSource = [
+                .roomName, .nickName, .roomStyle, .roleType, .region
+            ]
+        }
+        self.tableView.reloadData()
+    }
 
     /** 获取选项列表*/
     func optionStrings(form options: [(Any, String)]) -> [String] {
@@ -229,7 +242,9 @@ private extension LoginViewController {
             return
         }
         
-        guard !(roomStyle == .lecture && inputParams.roleType == .teacher) else {
+        guard !(roomStyle == .lecture && inputParams.roleType == .teacher),
+              !(roomStyle == .vocational && inputParams.roleType == .teacher)
+        else {
             AgoraToast.toast(msg: NSLocalizedString("login_lecture_teacher_warning",
                                                     comment: ""),
                              type: .warning)
@@ -240,7 +255,17 @@ private extension LoginViewController {
         let encryptionMode = inputParams.encryptMode
         
         // roomUuid = roomName + classType
-        let roomUuid = "\(roomName)\(roomStyle.rawValue)"
+        var roomUuid = "\(roomName)\(roomStyle.rawValue)"
+        // 职教处理
+        if roomStyle == .vocational {
+            roomUuid = "\(roomName)\(AgoraEduRoomType.lecture.rawValue)"
+        }
+        var latencyLevel = AgoraEduLatencyLevel.ultraLow
+        if self.inputParams.serviceType == .RTC {
+            latencyLevel = .ultraLow
+        } else if self.inputParams.serviceType == .fastRTC {
+            latencyLevel = .low
+        }
         
         // userUuid = userName.md5()
         let userRole = self.inputParams.roleType
@@ -264,7 +289,7 @@ private extension LoginViewController {
 
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
                                                 videoEncoderConfig: nil,
-                                                latencyLevel: .ultraLow,
+                                                latencyLevel: latencyLevel,
                                                 videoState: videoState,
                                                 audioState: audioState)
         
@@ -323,10 +348,16 @@ private extension LoginViewController {
                 launchConfig.widgets.removeValue(forKey: "easemobIM")
             }
             
-
-            AgoraClassroomSDK.launch(launchConfig,
-                                     success: launchSuccessBlock,
-                                     failure: failureBlock)
+            if launchConfig.roomType == .vocational { // 职教入口
+                AgoraClassroomSDK.vocationalLaunch(launchConfig,
+                                                   service: self.inputParams.serviceType ?? .RTC,
+                                                   success: launchSuccessBlock,
+                                                   failure: failureBlock)
+            } else { // 灵动课堂入口
+                AgoraClassroomSDK.launch(launchConfig,
+                                         success: launchSuccessBlock,
+                                         failure: failureBlock)
+            }
         }
         
         requestToken(region: region.rawValue,
@@ -441,6 +472,14 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                                                            comment: "")
             cell.textField.text = optionDescription(option: inputParams.roomStyle,
                                                     in: kRoomOptions)
+        case .serviceType:
+            cell.mode = .option
+            cell.titleLabel.text = NSLocalizedString("Login_class_service_type_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_service_type_holder",
+                                                           comment: "")
+            cell.textField.text = optionDescription(option: inputParams.serviceType,
+                                                    in: kVocationalServiceOptions)
         case .roleType:
             cell.mode = .option
             cell.titleLabel.text = NSLocalizedString("login_title_role",
@@ -505,6 +544,22 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                 self.hideOptions()
                 let (v, str) = kRoomOptions[i]
                 self.inputParams.roomStyle = v
+                cell.textField.text = str
+                // 更新入口状态
+                self.updateEntranceStatus()
+                // 更新可选项
+                self.updateOptions()
+            }
+        } else if rowType == .serviceType {
+            let options = optionStrings(form: kVocationalServiceOptions)
+            let index = optionIndex(option: inputParams.serviceType,
+                                    in: kVocationalServiceOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                self.hideOptions()
+                let (v, str) = kVocationalServiceOptions[i]
+                self.inputParams.serviceType = v
                 cell.textField.text = str
                 // 更新入口状态
                 self.updateEntranceStatus()

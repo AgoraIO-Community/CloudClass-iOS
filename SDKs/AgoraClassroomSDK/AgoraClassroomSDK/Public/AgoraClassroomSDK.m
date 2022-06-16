@@ -99,9 +99,7 @@ static AgoraClassroomSDK *manager = nil;
     
     // Core config
     AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
-    
-    __weak AgoraClassroomSDK *weakManager = manager;
-
+    // 职教课处理
     [core launch:coreConfig
          widgets:config.widgets.allValues
          success:^(id<AgoraEduContextPool> pool) {
@@ -122,6 +120,78 @@ static AgoraClassroomSDK *manager = nil;
             default:
                 NSCAssert(true,
                           @"room type error");
+                break;
+        }
+        eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
+        UIViewController *topVC = [UIViewController ag_topViewController];
+        manager.ui = eduVC;
+        [topVC presentViewController:eduVC
+                            animated:true
+                          completion:^{
+            if (success) {
+                success();
+            }
+        }];
+    } failure:failure];
+}
+
++ (void)vocationalLaunch:(AgoraEduLaunchConfig *)config
+                 service:(AgoraEduServiceType)serviceType
+                 success:(void (^)(void))success
+                 failure:(void (^)(NSError *))failure {
+    if (config == nil || !config.isLegal) {
+        if (failure) {
+            NSError *error = [[NSError alloc] initWithDomain:@"config illegal"
+                                                        code:-1
+                                                    userInfo:nil];
+            failure(error);
+        }
+        return;
+    }
+    AgoraClassroomSDK *manager = [AgoraClassroomSDK share];
+    AgoraEduCorePuppet *core = manager.core;
+    // Log console
+    NSNumber *console = manager.consoleState;
+    if (console) {
+        NSDictionary *parameters = @{@"console": console};
+        [core setParameters:parameters];
+    }
+    // Environment
+    NSNumber *environment = manager.environment;
+    if (environment) {
+        NSDictionary *parameters = @{@"environment": environment};
+        [core setParameters:parameters];
+    }
+    // Core config
+    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
+    coreConfig.roomType = AgoraEduRoomTypeLecture;
+    
+    __block VocationalCDNType cdnType = VocationalCDNTypeNoCDN;
+    switch (serviceType) {
+        case AgoraEduServiceTypeOnlyCDN:
+            cdnType = VocationalCDNTypeOnlyCDN;
+            break;
+        case AgoraEduServiceTypeMixedCDN:
+            cdnType = VocationalCDNTypeMixedCDN;
+            break;
+        default:
+            cdnType = VocationalCDNTypeNoCDN;
+            break;
+    }
+    [core launch:coreConfig
+         widgets:config.widgets.allValues
+         success:^(id<AgoraEduContextPool> pool) {
+        AgoraEduUIManager *eduVC = nil;
+        switch ([pool.room getRoomInfo].roomType) {
+            case AgoraEduContextRoomTypeLecture: {
+                AgoraVocationalUIManager *vocationalVC = [[AgoraVocationalUIManager alloc] initWithContextPool:pool delegate:manager];
+                vocationalVC.cdnType = cdnType;
+                eduVC = vocationalVC;
+                break;
+            }
+            default:
+                NSCAssert(true,
+                          @"vocational room type error");
                 break;
         }
         eduVC.modalPresentationStyle = UIModalPresentationFullScreen;

@@ -13,6 +13,7 @@
 		1A44BE7A22BF863000766274 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE5E22BF863000766274 /* main.m */; };
 		1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE6022BF863000766274 /* AppDelegate.m */; };
 		2616FAB2271EC4530086397B /* TokenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2616FAB1271EC4530086397B /* TokenBuilder.swift */; };
+		489330F749FFF2263BE9EF78 /* Pods_AgoraEducation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E41C30C2710CB486B9E7805 /* Pods_AgoraEducation.framework */; };
 		683622D6262AC4620028F7F5 /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 683622D5262AC4620028F7F5 /* DisclaimerView.swift */; };
 		68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68362356262D30C20028F7F5 /* BaseLoginObject.swift */; };
 		68403F83276C859800E88214 /* AppExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861D3CFA276AE05E00645D6A /* AppExtension.swift */; };
@@ -22,7 +23,7 @@
 		688809E82629358800B5FB2A /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688809E72629358800B5FB2A /* MainViewController.swift */; };
 		68A5E2AB2635143400E3C37E /* AboutTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A5E2AA2635143400E3C37E /* AboutTableCell.swift */; };
 		68A5E2F12635557B00E3C37E /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A5E2F02635557B00E3C37E /* AboutView.swift */; };
-		75D36FB810CB94F4AEF8D9A2 /* Pods_AgoraEducation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */; };
+		75D36FB810CB94F4AEF8D9A2 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		7801A89C25DB7D9D00C63ABF /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */; };
 		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
 		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
@@ -82,7 +83,6 @@
 		688809E72629358800B5FB2A /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		68A5E2AA2635143400E3C37E /* AboutTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutTableCell.swift; sourceTree = "<group>"; };
 		68A5E2F02635557B00E3C37E /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEducation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7801A89A25DB7D9D00C63ABF /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
 		78136271242C81ED00B7D1FE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		78136273242C81FF00B7D1FE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
@@ -114,6 +114,7 @@
 		78DFB69525AEE20B00B01906 /* RtcTokenBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtcTokenBuilder.h; sourceTree = "<group>"; };
 		78DFB69625AEE20B00B01906 /* DynamicKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey.h; sourceTree = "<group>"; };
 		78DFB69725AEE20B00B01906 /* DynamicKey4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DynamicKey4.h; sourceTree = "<group>"; };
+		7E41C30C2710CB486B9E7805 /* Pods_AgoraEducation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgoraEducation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		861D3CFA276AE05E00645D6A /* AppExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtension.swift; sourceTree = "<group>"; };
 		86B99C442732B67C0090D013 /* DebugCourware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCourware.swift; sourceTree = "<group>"; };
 		86D4896C277AE2750062F068 /* LoginModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginModels.swift; sourceTree = "<group>"; };
@@ -130,9 +131,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75D36FB810CB94F4AEF8D9A2 /* Pods_AgoraEducation.framework in Frameworks */,
+				75D36FB810CB94F4AEF8D9A2 /* (null) in Frameworks */,
 				8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */,
 				787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */,
+				489330F749FFF2263BE9EF78 /* Pods_AgoraEducation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +355,7 @@
 				1AE0D0A422897EC40092AC5E /* libresolv.tbd */,
 				1AE0D0A222897EA60092AC5E /* CoreTelephony.framework */,
 				1AE0D0A022897E9A0092AC5E /* SystemConfiguration.framework */,
-				76A4F1D25B13050F999DB322 /* Pods_AgoraEducation.framework */,
+				7E41C30C2710CB486B9E7805 /* Pods_AgoraEducation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
