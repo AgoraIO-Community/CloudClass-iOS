@@ -43,8 +43,7 @@ import UIKit
     private lazy var toolBarController = AgoraToolBarUIController(context: contextPool)
     
     /** 渲染 控制器*/
-    private lazy var renderController = AgoraOneToOneMembersUIController(context: contextPool,
-                                                                         delegate: self)
+    private lazy var renderController = FcrOneToOneWindowRenderUIController(context: contextPool)
     
     /** 右边用来切圆角和显示背景色的容器视图*/
     private lazy var rightContentView = UIView()
@@ -61,7 +60,8 @@ import UIKit
     /** 教具 控制器*/
     private lazy var classToolsController = AgoraClassToolsUIController(context: contextPool)
     /** 大窗 控制器*/
-    private lazy var windowController = AgoraWindowUIController(context: contextPool)
+    private lazy var windowController = FcrStreamWindowUIController(context: contextPool,
+                                                                    delegate: self)
     private lazy var tabSelectView = AgoraOneToOneTabView(frame: .zero,
                                                      delegate: self)
     
@@ -161,7 +161,6 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
         
-        windowController.delegate = self
         addChild(windowController)
         contentView.addSubview(windowController.view)
         
@@ -306,23 +305,42 @@ extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
 }
 
 // MARK: - AgoraWindowUIControllerDelegate
-extension AgoraOneToOneUIManager: AgoraWindowUIControllerDelegate {
-    func getTargetView(with userId: String) -> UIView? {
-        return renderController.getRenderViewForUser(with: userId)
+extension AgoraOneToOneUIManager: FcrStreamWindowUIControllerDelegate {
+    func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
+        guard let renderView = renderController.getRenderView(userId: userId) else {
+            return nil
+        }
+        
+        let frame = renderView.convert(renderView.frame,
+                                       to: UIWindow.ag_topWindow())
+        
+        return frame
     }
     
-    func getTargetSuperView() -> UIView? {
-        return renderController.view
+    func onWillStartRenderVideoStream(streamId: String) {
+        guard let item = renderController.getItem(streamId: streamId),
+              let data = item.data else {
+            return
+        }
+        
+        let new = FcrWindowRenderViewState.create(isHide: true,
+                                                  data: data)
+        
+        renderController.updateItem(new,
+                                    animation: false)
     }
     
-    func startSpreadForUser(with userId: String) {
-        renderController.setRenderEnable(with: userId,
-                                         rendEnable: false)
-    }
-    
-    func stopSpreadForUser(with userId: String) {
-        renderController.setRenderEnable(with: userId,
-                                         rendEnable: true)
+    func onDidStopRenderVideoStream(streamId: String) {
+        guard let item = renderController.getItem(streamId: streamId),
+              let data = item.data else {
+            return
+        }
+        
+        let new = FcrWindowRenderViewState.create(isHide: false,
+                                                  data: data)
+        
+        renderController.updateItem(new,
+                                    animation: false)
     }
 }
 

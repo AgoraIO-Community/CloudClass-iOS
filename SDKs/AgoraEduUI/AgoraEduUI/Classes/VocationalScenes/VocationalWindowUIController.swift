@@ -315,7 +315,7 @@ private extension VocationalWindowUIController {
     
     func releaseAllWidgets() {
         for item in widgetArray {
-            releaseWidget(item.widgetId)
+            releaseWidget(item.widgetObjectId)
         }
     }
     
@@ -354,7 +354,10 @@ private extension VocationalWindowUIController {
                                                            streamId: streamId,
                                                            zIndex: zIndex)
         
-        let item = FcrWindowWidgetItem(widgetId: widgetId,
+        let item = FcrWindowWidgetItem(widgetObjectId: widgetId,
+                                       owner: "",
+                                       streamId: "",
+                                       videoSourceType: .camera,
                                        object: widget,
                                        zIndex: zIndex)
         
@@ -385,7 +388,7 @@ private extension VocationalWindowUIController {
         
         let widget = widgetArray[index]
         
-        guard let streamId = widget.widgetId.splitStreamId() else {
+        guard let streamId = widget.widgetObjectId.splitStreamId() else {
             return
         }
         
@@ -693,11 +696,11 @@ private extension VocationalWindowUIController {
 
 fileprivate extension Array where Element == FcrWindowWidgetItem {
     func firstItemIndex(widgetId: String) -> Int? {
-        return firstIndex(where: {return $0.widgetId == widgetId})
+        return firstIndex(where: {return $0.widgetObjectId == widgetId})
     }
     
     func firstItem(widgetId: String) -> FcrWindowWidgetItem? {
-        return first(where: {return $0.widgetId == widgetId})
+        return first(where: {return $0.widgetObjectId == widgetId})
     }
     
     mutating func insertItem(_ item: FcrWindowWidgetItem) -> Int {

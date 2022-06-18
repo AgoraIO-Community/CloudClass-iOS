@@ -176,7 +176,10 @@ struct AgoraStreamWindowSharingInfo {
 }
 
 struct FcrWindowWidgetItem {
-    var widgetId: String
+    var widgetObjectId: String
+    var owner: String
+    var streamId: String
+    var videoSourceType: AgoraEduContextVideoSourceType
     var object: AgoraBaseWidget
     var zIndex: Int
 }
@@ -322,4 +325,40 @@ struct AgoraUserListFuncState {
     var isOn: Bool
 }
 
-
+struct FcrWindowRenderViewData {
+    var userId: String
+    var userName: String
+    var streamId: String
+    var videoState: FcrWindowRenderMediaViewState
+    var audioState: FcrWindowRenderMediaViewState
+    
+    static func ==(left: FcrWindowRenderViewData,
+                   right: FcrWindowRenderViewData) -> Bool {
+        if left.userId != right.userId {
+            return false
+        }
+        
+        if left.userName != right.userName {
+            return false
+        }
+        
+        if left.streamId != right.streamId {
+            return false
+        }
+        
+        if left.videoState != right.videoState {
+            return false
+        }
+        
+        if left.audioState != right.audioState {
+            return false
+        }
+        
+        return true
+    }
+    
+    static func !=(left: FcrWindowRenderViewData,
+                  right: FcrWindowRenderViewData) -> Bool {
+        return !(left == right)
+    }
+}

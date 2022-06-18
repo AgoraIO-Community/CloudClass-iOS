@@ -7,6 +7,29 @@
 
 import AgoraUIBaseViews
 
+func ValueTransform<Result>(value: Any?,
+                            result: Result.Type) -> Result? {
+    if let `value` = value {
+        return (value as? Result)
+    } else {
+        return nil
+    }
+}
+
+func ValueTransform<Result: RawRepresentable>(enumValue: Any?,
+                                              result: Result.Type) -> Result? where Result.RawValue == Int {
+    guard let intValue = ValueTransform(value: enumValue,
+                                        result: Int.self) else {
+        return nil
+    }
+    
+    if let value = Result.init(rawValue: intValue) {
+        return value
+    } else {
+        return nil
+    }
+}
+
 extension UIImage {
     class func agedu_named(_ named: String) -> UIImage? {
         let b = Bundle.agoraEduUI()
@@ -110,7 +133,7 @@ struct AgoraFit {
 extension UIViewController {
     /// 获取最顶层的ViewController
     @objc public static func ag_topViewController() -> UIViewController {
-        let window = ag_topWindow()
+        let window = UIWindow.ag_topWindow()
         
         guard let rootViewController = window.rootViewController else {
             fatalError()
@@ -145,8 +168,10 @@ extension UIViewController {
         
         return vc
     }
-    
-    private static func ag_topWindow() -> UIWindow {
+}
+
+extension UIWindow {
+    static func ag_topWindow() -> UIWindow {
         var keyWindow: UIWindow?
         var windows: [UIWindow]?
         
@@ -250,6 +275,80 @@ extension Dictionary {
     }
 }
 
+extension Dictionary where Key == String, Value == Any {
+    func keyPath<Result>(_ path: String,
+                         result: Result.Type) -> Result? {
+        let array = path.components(separatedBy: ".")
+        
+        var latestDic: [String: Any]?
+        
+        // 数组越界保护
+        let end = array.count - 2
+        let endIndex = (end <= 0 ? 0 : end)
+        
+        if array.count == 1 {
+            let key = array[0]
+            
+            return ValueTransform(value: self[key],
+                                  result: Result.self)
+        }
+        
+        for i in 0...endIndex {
+            let key = array[i]
+        
+            if let dic = latestDic {
+                let newLatestDic = ValueTransform(value: dic[key],
+                                                  result: [String: Any].self)
+                
+                latestDic = newLatestDic
+            } else {
+                latestDic = ValueTransform(value: self[key],
+                                           result: [String: Any].self)
+            }
+            
+            if latestDic == nil {
+                return nil
+            }
+        }
+        
+        guard let dic = latestDic,
+              let lastKey = array.last else {
+            return nil
+        }
+        
+        return ValueTransform(value: dic[lastKey],
+                              result: Result.self)
+    }
+    
+    func keyPath<Result: RawRepresentable>(_ path: String,
+                                           enumResult: Result.Type) -> Result? where Result.RawValue == Int {
+        let array = path.components(separatedBy: ".")
+        
+        var latestDic: [String: Any]?
+        
+        let endIndex = array.count - 2
+        
+        for i in 0...endIndex {
+            let key = array[i]
+            
+            latestDic = ValueTransform(value: key,
+                                       result: [String: Any].self)
+            
+            if let _ = latestDic {
+                return nil
+            }
+        }
+        
+        guard let dic = latestDic,
+              let lastKey = array.last else {
+            return nil
+        }
+        
+        return ValueTransform(enumValue: dic[lastKey],
+                              result: Result.self)
+    }
+}
+
 extension String {
     func json() -> [String: Any]? {
         guard let data = self.data(using: .utf8) else {
@@ -293,5 +392,30 @@ extension Data {
         }
         
         return arr
+    }
+}
+
+extension UICollectionViewFlowLayout {
+    func copyLayout() -> UICollectionViewFlowLayout {
+        let new = UICollectionViewFlowLayout()
+        
+        new.minimumLineSpacing = minimumLineSpacing
+        new.minimumInteritemSpacing = minimumInteritemSpacing
+        new.itemSize = itemSize
+        new.estimatedItemSize = estimatedItemSize
+        new.scrollDirection = scrollDirection
+        
+        new.headerReferenceSize = headerReferenceSize
+        new.footerReferenceSize = footerReferenceSize
+        new.sectionInset = sectionInset
+        
+        if #available(iOS 11.0, *) {
+            new.sectionInsetReference = sectionInsetReference
+        }
+        
+        new.sectionHeadersPinToVisibleBounds = sectionHeadersPinToVisibleBounds
+        new.sectionFootersPinToVisibleBounds = sectionFootersPinToVisibleBounds
+        
+        return new
     }
 }

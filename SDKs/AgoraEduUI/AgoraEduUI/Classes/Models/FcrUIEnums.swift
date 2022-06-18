@@ -27,6 +27,108 @@ enum AgoraRenderMediaState {
     case normal, deviceOff, streamForbidden
 }
 
+enum FcrWindowRenderMediaViewState {
+    case none(UIImage)
+    case hasStreamPublishPrivilege(UIImage)
+    case mediaSourceOpen(UIImage)
+    case both(UIImage?)
+    
+    var isBoth: Bool {
+        switch self {
+        case .both: return true
+        default:    return false
+        }
+    }
+    
+    var intValue: Int {
+        switch self {
+        case .none:                      return 0
+        case .hasStreamPublishPrivilege: return 1
+        case .mediaSourceOpen:           return 2
+        case .both:                      return 3
+        }
+    }
+    
+    static func ==(left: FcrWindowRenderMediaViewState,
+                   right: FcrWindowRenderMediaViewState) -> Bool {
+        return (left.intValue == right.intValue)
+    }
+    
+    static func !=(left: FcrWindowRenderMediaViewState,
+                   right: FcrWindowRenderMediaViewState) -> Bool {
+        return (left.intValue != right.intValue)
+    }
+}
+
+enum FcrWindowRenderViewState {
+    case none, show(FcrWindowRenderViewData), hide(FcrWindowRenderViewData)
+    
+    var isNone: Bool {
+        switch self {
+        case .none: return true
+        default:    return false
+        }
+    }
+    
+    var data: FcrWindowRenderViewData? {
+        switch self {
+        case .show(let data): return data
+        case .hide(let data): return data
+        default:              return nil
+        }
+    }
+    
+    var isShow: Bool {
+        switch self {
+        case .show: return true
+        default:    return false
+        }
+    }
+    
+    var isHide: Bool {
+        switch self {
+        case .hide: return true
+        default:    return false
+        }
+    }
+    
+    var intValue: Int {
+        switch self {
+        case .none: return 0
+        case .show: return 1
+        case .hide: return 2
+        }
+    }
+    
+    static func create(isHide: Bool,
+                       data: FcrWindowRenderViewData) -> FcrWindowRenderViewState {
+        if isHide {
+            return FcrWindowRenderViewState.hide(data)
+        } else {
+            return FcrWindowRenderViewState.show(data)
+        }
+    }
+    
+    static func ==(left: FcrWindowRenderViewState,
+                   right: FcrWindowRenderViewState) -> Bool {
+        guard left.intValue == right.intValue else {
+            return false
+        }
+        
+        guard let leftData = left.data,
+              let rightData = right.data else {
+            return false
+        }
+        
+        return (leftData == rightData)
+    }
+    
+    static func !=(left: FcrWindowRenderViewState,
+                   right: FcrWindowRenderViewState) -> Bool {
+        return !(left == right)
+    }
+}
+
 // MARK: - StreamWindow
 enum AgoraStreamWindowType: Equatable {
     case video(cameraInfo: AgoraStreamWindowCameraInfo)

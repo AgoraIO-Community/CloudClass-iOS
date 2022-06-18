@@ -22,10 +22,8 @@ import AgoraWidget
                                                                   subRoom: subRoom)
     
     /** 视窗渲染 控制器*/
-    private lazy var renderController = AgoraSmallMembersUIController(context: contextPool,
-                                                                      delegate: self,
-                                                                      subRoom: subRoom,
-                                                                      expandFlag: true)
+    private lazy var renderController = FcrSmallWindowRenderUIController(context: contextPool,
+                                                                         subRoom: subRoom)
     
     /** 白板的渲染 控制器*/
     private lazy var boardController = AgoraBoardUIController(context: contextPool, subRoom: subRoom)
@@ -35,9 +33,9 @@ import AgoraWidget
     
     
     /** 大窗 控制器*/
-    private lazy var windowController = AgoraWindowUIController(context: contextPool,
-                                                                subRoom: subRoom,
-                                                                delegate: self)
+    private lazy var windowController = FcrStreamWindowUIController(context: contextPool,
+                                                                    subRoom: subRoom,
+                                                                    delegate: self)
     
     /** 工具栏*/
     private lazy var toolBarController = AgoraToolBarUIController(context: contextPool,
@@ -401,27 +399,43 @@ extension AgoraSubRoomUIManager: AgoraToolBarDelegate {
     }
 }
 
-// MARK: - AgoraWindowUIControllerDelegate
-extension AgoraSubRoomUIManager: AgoraWindowUIControllerDelegate {
-    func getTargetView(with userId: String) -> UIView? {
-        return renderController.getRenderViewForUser(with: userId)
-    }
-    
-    func getTargetSuperView() -> UIView? {
-        guard !renderController.view.isHidden else {
+// MARK: - FcrStreamWindowUIControllerDelegate
+extension AgoraSubRoomUIManager: FcrStreamWindowUIControllerDelegate {
+    func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
+        guard let renderView = renderController.getRenderView(userId: userId) else {
             return nil
         }
-        return renderController.view
+        
+        let frame = renderView.convert(renderView.frame,
+                                       to: UIWindow.ag_topWindow())
+        
+        return frame
     }
     
-    func startSpreadForUser(with userId: String) {
-        renderController.setRenderEnable(with: userId,
-                                         rendEnable: false)
+    func onWillStartRenderVideoStream(streamId: String) {
+        guard let item = renderController.getItem(streamId: streamId),
+              let data = item.data else {
+            return
+        }
+        
+        let new = FcrWindowRenderViewState.create(isHide: true,
+                                                  data: data)
+        
+        renderController.updateItem(new,
+                                    animation: false)
     }
     
-    func stopSpreadForUser(with userId: String) {
-        renderController.setRenderEnable(with: userId,
-                                         rendEnable: true)
+    func onDidStopRenderVideoStream(streamId: String) {
+        guard let item = renderController.getItem(streamId: streamId),
+              let data = item.data else {
+            return
+        }
+        
+        let new = FcrWindowRenderViewState.create(isHide: false,
+                                                  data: data)
+        
+        renderController.updateItem(new,
+                                    animation: false)
     }
 }
 

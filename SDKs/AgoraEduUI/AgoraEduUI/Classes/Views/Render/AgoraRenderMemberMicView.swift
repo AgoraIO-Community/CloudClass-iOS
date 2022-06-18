@@ -39,6 +39,7 @@ class AgoraRenderMemberMicView: UIView {
     public func setVolume(_ value: Int) {
         let floatValue = CGFloat(value)
         self.progressLayer.strokeEnd = CGFloat(floatValue - 55.0) / (255.0 - 55.0)
+        animaView.isHidden = false
     }
 }
 

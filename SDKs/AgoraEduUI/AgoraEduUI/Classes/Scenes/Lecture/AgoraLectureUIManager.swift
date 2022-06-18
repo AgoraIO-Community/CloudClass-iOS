@@ -48,8 +48,9 @@ import AgoraWidget
     private lazy var classStateController = AgoraClassStateUIController(context: contextPool,
                                                                         delegate: self)
     /** 老师渲染 控制器*/
-    private lazy var teacherRenderController = AgoraLectureMembersUIController(context: contextPool,
-                                                                               delegate: self)
+    private lazy var teacherRenderController = FcrLectureWindowRenderUIController(context: contextPool,
+                                                                                  dataSource: [FcrWindowRenderViewState.none],
+                                                                                  reverseItem: false)
     /** 白板 控制器*/
     private lazy var boardController = AgoraBoardUIController(context: contextPool)
     
@@ -59,7 +60,8 @@ import AgoraWidget
     /** 白板翻页 控制器（观众端没有）*/
     private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool)
     /** 大窗 控制器*/
-    private lazy var windowController = AgoraWindowUIController(context: contextPool)
+    private lazy var windowController = FcrLectureStreamWindowUIController(context: contextPool,
+                                                                           delegate: self)
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController = AgoraCloudUIController(context: contextPool)
     /** 教具 控制器*/
@@ -135,7 +137,6 @@ import AgoraWidget
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
-        windowController.delegate = self
         addChild(windowController)
         contentView.addSubview(windowController.view)
         
@@ -257,24 +258,43 @@ import AgoraWidget
     }
 }
 
-// MARK: - AgoraWindowUIControllerDelegate
-extension AgoraLectureUIManager: AgoraWindowUIControllerDelegate {
-    func getTargetView(with userId: String) -> UIView? {
-        return teacherRenderController.getRenderViewForUser(with: userId)
+// MARK: - FcrStreamWindowUIControllerDelegate
+extension AgoraLectureUIManager: FcrStreamWindowUIControllerDelegate {
+    func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
+        guard let renderView = teacherRenderController.getRenderView(userId: userId) else {
+            return nil
+        }
+        
+        let frame = renderView.convert(renderView.frame,
+                                       to: UIWindow.ag_topWindow())
+        
+        return frame
     }
     
-    func getTargetSuperView() -> UIView? {
-        return teacherRenderController.view
+    func onWillStartRenderVideoStream(streamId: String) {
+        guard let item = teacherRenderController.getItem(streamId: streamId),
+              let data = item.data else {
+            return
+        }
+        
+        let new = FcrWindowRenderViewState.create(isHide: true,
+                                                  data: data)
+        
+        teacherRenderController.updateItem(new,
+                                           animation: false)
     }
     
-    func startSpreadForUser(with userId: String) {
-        teacherRenderController.setRenderEnable(with: userId,
-                                                rendEnable: false)
-    }
-    
-    func stopSpreadForUser(with userId: String) {
-        teacherRenderController.setRenderEnable(with: userId,
-                                                rendEnable: true)
+    func onDidStopRenderVideoStream(streamId: String) {
+        guard let item = teacherRenderController.getItem(streamId: streamId),
+              let data = item.data else {
+            return
+        }
+        
+        let new = FcrWindowRenderViewState.create(isHide: false,
+                                                  data: data)
+        
+        teacherRenderController.updateItem(new,
+                                           animation: false)
     }
 }
 
@@ -457,7 +477,6 @@ extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
         }
     }
 }
-
 
 private extension AgoraLectureUIManager {
     func updateRenderLayout() {

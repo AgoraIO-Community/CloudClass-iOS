@@ -61,9 +61,6 @@ Carthage/Build
 # For more information about the recommended setup visit:
 # https://github.com/fastlane/fastlane/blob/master/docs/Gitignore.md
 
-AgoraMiniClass.xcworkspace/xcuserdata/yangmoumou.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
-AgoraMiniClass.xcworkspace/xcuserdata/yangmoumou.xcuserdatad/UserInterfaceState.xcuserstate
-
 fastlane/report.xml
 fastlane/screenshots
 # cocoapods

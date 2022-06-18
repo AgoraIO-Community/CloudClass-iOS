@@ -169,35 +169,12 @@ extension AgoraWindowUIController: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
         guard let item = widgetArray.firstItem(widgetId: widgetId),
-              let signal = message.toWindowSignal() else {
+              let json = message.json(),
+              let zIndex = json["zIndex"] as? Int else {
             return
         }
-        
-        switch signal {
-        case .RenderInfo(let renderInfo):
-            guard !modelDic.keys.contains(widgetId),
-                  let streamList = streamController.getStreamList(userUuid: renderInfo.userUuid),
-                  let stream = streamList.first(where: {$0.streamUuid == renderInfo.streamId}) else {
-                return
-            }
-            
-            switch stream.videoSourceType {
-            case .camera:
-                addCameraRenderInfo(stream: stream,
-                                    renderInfo: renderInfo,
-                                    widget: item.object,
-                                    zIndex: renderInfo.zIndex ?? 1)
-            case .screen:
-                addScreenSharingInfo(stream: stream,
-                                     renderInfo: renderInfo,
-                                     widget: item.object)
-            default:
-                break
-            }
-        case .ViewZIndex(let zIndex):
-            handleVideoZIndex(zIndex: zIndex,
-                              widget: item.object)
-        }
+        handleVideoZIndex(zIndex: zIndex,
+                          widget: item.object)
     }
 }
 
@@ -299,7 +276,7 @@ private extension AgoraWindowUIController {
     
     func releaseAllWidgets() {
         for item in widgetArray {
-            releaseWidget(item.widgetId)
+            releaseWidget(item.widgetObjectId)
         }
     }
     
@@ -338,7 +315,10 @@ private extension AgoraWindowUIController {
                                                            streamId: streamId,
                                                            zIndex: zIndex)
         
-        let item = FcrWindowWidgetItem(widgetId: widgetId,
+        let item = FcrWindowWidgetItem(widgetObjectId: widgetId,
+                                       owner: "",
+                                       streamId: "",
+                                       videoSourceType: stream.videoSourceType,
                                        object: widget,
                                        zIndex: zIndex)
         
@@ -369,7 +349,7 @@ private extension AgoraWindowUIController {
         
         let widget = widgetArray[index]
         
-        guard let streamId = widget.widgetId.splitStreamId() else {
+        guard let streamId = widget.widgetObjectId.splitStreamId() else {
             return
         }
         
@@ -661,11 +641,11 @@ private extension AgoraWindowUIController {
 
 fileprivate extension Array where Element == FcrWindowWidgetItem {
     func firstItemIndex(widgetId: String) -> Int? {
-        return firstIndex(where: {return $0.widgetId == widgetId})
+        return firstIndex(where: {return $0.widgetObjectId == widgetId})
     }
     
     func firstItem(widgetId: String) -> FcrWindowWidgetItem? {
-        return first(where: {return $0.widgetId == widgetId})
+        return first(where: {return $0.widgetObjectId == widgetId})
     }
     
     mutating func insertItem(_ item: FcrWindowWidgetItem) -> Int {
