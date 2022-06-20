@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraClassroomSDK_iOS"
-  spec.version      = "2.5.0"
+  spec.version      = "2.6.0"
   spec.summary      = "Education scene SDK"
   spec.description  = "Agora Classroom SDK"
   spec.homepage     = "https://docs.agora.io/en/agora-class/landing-page?platform=iOS"
@@ -12,15 +12,15 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = "10.0"
   
   # open source libs
-  spec.dependency "AgoraEduUI", ">=2.5.0"
-  spec.dependency "AgoraEduContext", ">=2.5.0"
+  spec.dependency "AgoraEduUI", ">=2.6.0"
+  spec.dependency "AgoraEduContext", ">=2.6.0"
 
   # open sources widgets
-  spec.dependency "AgoraWidgets", ">=2.5.0"
+  spec.dependency "AgoraWidgets", ">=2.6.0"
   
   # close source libs
-  spec.dependency "AgoraEduCore", ">=2.5.0"
-  spec.dependency "AgoraWidget", ">=2.5.0"
+  spec.dependency "AgoraEduCore", ">=2.6.0"
+  spec.dependency "AgoraWidget", ">=2.6.0"
 
   spec.frameworks = "AudioToolbox", "Foundation", "UIKit"
 

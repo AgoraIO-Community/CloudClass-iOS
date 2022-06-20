@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name             = 'AgoraWidget'
-  spec.version          = '2.0.0'
+  spec.version          = '2.6.0'
   spec.summary          = 'Agora Widget'
   spec.description      = 'Agora Widget SDK'
 
