@@ -5,8 +5,6 @@
 //  Created by LYY on 2022/1/18.
 //
 
-import UIKit
-
 struct AgoraStreamWindowWidgetRenderInfo: Convertable {
     var userUuid: String
     var streamId: String
@@ -29,7 +27,7 @@ enum AgoraStreamWindowWidgetSignal: Convertable {
                                              forKey: .RenderInfo) {
             self = .RenderInfo(value)
         } else if let value = try? container.decode(Int.self,
-                                                    forKey: .ViewZIndex) {
+                                                   forKey: .ViewZIndex) {
             self = .ViewZIndex(value)
         } else {
             throw DecodingError.dataCorrupted(

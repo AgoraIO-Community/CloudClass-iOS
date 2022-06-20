@@ -37,6 +37,9 @@ import AgoraWidget
                                                                     subRoom: subRoom,
                                                                     delegate: self)
     
+    /** 外部链接 控制器*/
+    private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
+    
     /** 工具栏*/
     private lazy var toolBarController = AgoraToolBarUIController(context: contextPool,
                                                                   subRoom: subRoom,
@@ -82,6 +85,7 @@ import AgoraWidget
     
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController = AgoraCloudUIController(context: contextPool,
+                                                              delegate: self,
                                                               subRoom: subRoom)
     
     private weak var mainDelegate: AgoraEduUISubManagerCallback?
@@ -207,6 +211,9 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
         boardController.view.clipsToBounds = true
         addChild(boardController)
         contentView.addSubview(boardController.view)
+        
+        addChild(webViewController)
+        contentView.addSubview(webViewController.view)
         
         if userRole != .observer {
             addChild(boardPageController)
@@ -337,6 +344,10 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
             }
         }
         
+        webViewController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
+        }
+        
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
@@ -436,6 +447,15 @@ extension AgoraSubRoomUIManager: FcrStreamWindowUIControllerDelegate {
         
         renderController.updateItem(new,
                                     animation: false)
+    }
+}
+
+// MARK: - AgoraCloudUIControllerDelegate
+extension AgoraSubRoomUIManager: AgoraCloudUIControllerDelegate {
+    func onOpenAlfCourseware(urlString: String,
+                             resourceId: String) {
+        webViewController.openWebView(urlString: urlString,
+                                      resourceId: resourceId)
     }
 }
 

@@ -184,6 +184,12 @@ struct FcrWindowWidgetItem {
     var zIndex: Int
 }
 
+struct FcrWebViewWidgetItem {
+    var widgetId: String
+    var object: AgoraBaseWidget
+    var zIndex: Int
+}
+
 // MARK: - HandsList
 struct AgoraHandsUpListUserInfo {
     var userUuid: String

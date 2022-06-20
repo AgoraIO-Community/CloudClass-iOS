@@ -27,6 +27,8 @@ import AgoraWidget
     /** 白板翻页 控制器（观众端没有）*/
     private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool)
     
+    /** 外部链接 控制器*/
+    private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     
     /** 大窗 控制器*/
     private lazy var windowController = FcrStreamWindowUIController(context: contextPool,
@@ -72,7 +74,8 @@ import AgoraWidget
                                                                       delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudController = AgoraCloudUIController(context: contextPool)
+    private lazy var cloudController = AgoraCloudUIController(context: contextPool,
+                                                              delegate: self)
     
     private var isJoinedRoom = false
     private var curStageOn = true
@@ -132,6 +135,9 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
+        addChild(webViewController)
+        contentView.addSubview(webViewController.view)
+        
         if userRole != .observer {
             addChild(boardPageController)
             contentView.addSubview(boardPageController.view)
@@ -190,13 +196,13 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
             renderMenuController.view.isHidden = true
             contentView.addSubview(renderMenuController.view)
             
-            addChild(cloudController)
-            cloudController.view.isHidden = true
-            contentView.addSubview(cloudController.view)
-            
             addChild(toolCollectionController)
             toolCollectionController.view.isHidden = false
             contentView.addSubview(toolCollectionController.view)
+            
+            addChild(cloudController)
+            cloudController.view.isHidden = true
+            contentView.addSubview(cloudController.view)
         case .student:
             addChild(nameRollController)
             
@@ -261,6 +267,10 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
                 make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
                 make?.width.equalTo()(168)
             }
+        }
+        
+        webViewController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         
         windowController.view.mas_makeConstraints { make in
@@ -352,6 +362,15 @@ extension AgoraSmallUIManager: FcrStreamWindowUIControllerDelegate {
         
         renderController.updateItem(new,
                                     animation: false)
+    }
+}
+
+// MARK: - AgoraCloudUIControllerDelegate
+extension AgoraSmallUIManager: AgoraCloudUIControllerDelegate {
+    func onOpenAlfCourseware(urlString: String,
+                             resourceId: String) {
+        webViewController.openWebView(urlString: urlString,
+                                      resourceId: resourceId)
     }
 }
 

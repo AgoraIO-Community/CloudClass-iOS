@@ -77,7 +77,8 @@ import AgoraWidget
     /** 大窗 控制器*/
     private lazy var windowController = VocationalWindowUIController(context: contextPool)
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudController = AgoraCloudUIController(context: contextPool)
+    private lazy var cloudController = AgoraCloudUIController(context: contextPool,
+                                                              delegate: nil)
     /** 教具 控制器*/
     private lazy var classToolsController = AgoraClassToolsUIController(context: contextPool)
     /** 聊天窗口 控制器*/

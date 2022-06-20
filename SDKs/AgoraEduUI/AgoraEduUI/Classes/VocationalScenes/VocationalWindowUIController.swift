@@ -169,8 +169,10 @@ extension VocationalWindowUIController: AgoraWidgetActivityObserver {
 // MARK: - AgoraWidgetSyncFrameObserver
 extension VocationalWindowUIController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
-                                  widgetId: String) {
-        guard let item = widgetArray.firstItem(widgetId: widgetId) else {
+                                  widgetId: String,
+                                  operatorUser: AgoraWidgetUserInfo?) {
+        guard operatorUser?.userUuid != userController.getLocalUserInfo().userUuid,
+              let item = widgetArray.firstItem(widgetId: widgetId) else {
             return
         }
         

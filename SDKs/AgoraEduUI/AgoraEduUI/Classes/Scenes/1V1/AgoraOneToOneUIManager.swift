@@ -24,7 +24,8 @@ import UIKit
     }()
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudController = AgoraCloudUIController(context: contextPool)
+    private lazy var cloudController = AgoraCloudUIController(context: contextPool,
+                                                              delegate: self)
     
     /** 设置界面 控制器*/
     private lazy var settingViewController: AgoraSettingUIController = {
@@ -44,7 +45,8 @@ import UIKit
     
     /** 渲染 控制器*/
     private lazy var renderController = FcrOneToOneWindowRenderUIController(context: contextPool)
-    
+    /** 外部链接 控制器*/
+    private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     /** 右边用来切圆角和显示背景色的容器视图*/
     private lazy var rightContentView = UIView()
     /** 白板 控制器*/
@@ -161,6 +163,9 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         addChild(renderController)
         rightContentView.addSubview(renderController.view)
         
+        addChild(webViewController)
+        contentView.addSubview(webViewController.view)
+        
         addChild(windowController)
         contentView.addSubview(windowController.view)
         
@@ -210,6 +215,9 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
             make?.left.bottom().equalTo()(0)
             make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+        }
+        webViewController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
@@ -341,6 +349,15 @@ extension AgoraOneToOneUIManager: FcrStreamWindowUIControllerDelegate {
         
         renderController.updateItem(new,
                                     animation: false)
+    }
+}
+
+// MARK: - AgoraCloudUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraCloudUIControllerDelegate {
+    func onOpenAlfCourseware(urlString: String,
+                             resourceId: String) {
+        webViewController.openWebView(urlString: urlString,
+                                      resourceId: resourceId)
     }
 }
 

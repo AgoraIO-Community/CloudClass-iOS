@@ -8,10 +8,16 @@
 import AgoraEduContext
 import AgoraWidget
 
+protocol AgoraCloudUIControllerDelegate: NSObjectProtocol {
+    func onOpenAlfCourseware(urlString: String,
+                             resourceId: String)
+}
+
 class AgoraCloudUIController: UIViewController {
     private var contextPool: AgoraEduContextPool!
     private var subRoom: AgoraEduSubRoomContext?
     private var cloudWidget: AgoraBaseWidget?
+    private weak var delegate: AgoraCloudUIControllerDelegate?
     
     private var widgetController: AgoraEduWidgetContext {
         if let `subRoom` = subRoom {
@@ -32,11 +38,14 @@ class AgoraCloudUIController: UIViewController {
     private var widgetSize: CGSize!
     
     init(context: AgoraEduContextPool,
+         delegate: AgoraCloudUIControllerDelegate?,
          subRoom: AgoraEduSubRoomContext? = nil) {
         super.init(nibName: nil,
                    bundle: nil)
+        
         self.contextPool = context
         self.subRoom = subRoom
+        self.delegate = delegate
         
         initData()
         view.backgroundColor = .clear
@@ -74,19 +83,25 @@ extension AgoraCloudUIController: AgoraEduSubRoomHandler {
 extension AgoraCloudUIController: AgoraWidgetMessageObserver{
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        if widgetId == kCloudWidgetId,
-        let signal = message.toCloudSignal() {
-            switch signal {
-            case .OpenCourseware(let courseware):
-                if let message = AgoraBoardWidgetSignal.OpenCourseware(courseware.toBoard()).toMessageString() {
-                    widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                                 message: message)
-                }
-            case .CloseCloud:
-                view.isHidden = true
-            default:
+        guard widgetId == kCloudWidgetId,
+              let signal = message.toCloudSignal() else {
+            return
+        }
+        switch signal {
+        case .OpenCourseware(let courseware):
+            if courseware.ext == "alf" {
+                delegate?.onOpenAlfCourseware(urlString: courseware.resourceUrl,
+                                              resourceId: courseware.resourceUuid)
                 break
             }
+            if let message = AgoraBoardWidgetSignal.OpenCourseware(courseware.toBoard()).toMessageString() {
+                widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                             message: message)
+            }
+        case .CloseCloud:
+            view.isHidden = true
+        default:
+            break
         }
     }
 }
@@ -95,35 +110,32 @@ extension AgoraCloudUIController: AgoraWidgetMessageObserver{
 extension AgoraCloudUIController {
     @objc func didDragTab(_ sender: UIPanGestureRecognizer) {
         guard sender.state == .changed,
-              let targetView = cloudWidget?.view,
-              sender.location(in: targetView).y <= 60 else {
+              let targetView = cloudWidget?.view else {
             return
         }
-        let currentOrigin = targetView.frame.origin
         
-        let translation = sender.translation(in: targetView)
-
-        var finalX = currentOrigin.x + translation.x
-        var finalY = currentOrigin.y + translation.y
-        if finalX < 0 {
-            finalX = 0
-        }
-        if finalX > (view.bounds.width - widgetSize.width) {
-            finalX = view.bounds.width - widgetSize.width
-        }
-        if finalY < 0 {
-            finalY = 0
-        }
-        if finalY > (view.bounds.height - widgetSize.height) {
-            finalY = view.bounds.height - widgetSize.height
-        }
+        let point = sender.translation(in: view)
         
-        targetView.frame.origin = CGPoint(x: finalX,
-                                          y: finalY)
-
-        UIView.animate(withDuration: TimeInterval.agora_animation) {
-            self.view.layoutIfNeeded()
+        let viewWidth = targetView.width
+        let viewHeight = targetView.height
+        
+        let transLeft = targetView.frame.minX + point.x
+        let transTop = targetView.frame.minY + point.y
+        
+        var finalLeft = (transLeft >= 0) ? transLeft : 0
+        finalLeft = (finalLeft + viewWidth <= view.width) ? finalLeft : (view.width - viewWidth)
+        
+        var finalTop = (transTop >= 0) ? transTop : 0
+        finalTop = (finalTop + viewHeight <= view.height) ? finalTop : (view.height - viewHeight)
+        targetView.mas_remakeConstraints { make in
+            make?.left.equalTo()(finalLeft)
+            make?.top.equalTo()(finalTop)
+            
+            make?.width.equalTo()(widgetSize.width)
+            make?.height.equalTo()(widgetSize.height)
         }
+        sender.setTranslation(.zero,
+                               in: view)
     }
     
     func initData() {
@@ -156,7 +168,7 @@ extension AgoraCloudUIController {
         let gesture = UIPanGestureRecognizer(target: self,
                                              action: #selector(didDragTab(_:)))
         cloudWidget.view.addGestureRecognizer(gesture)
-        cloudWidget.view.mas_remakeConstraints { make in
+        cloudWidget.view.mas_makeConstraints { make in
             make?.center.equalTo()(view)
             make?.width.equalTo()(widgetSize.width)
             make?.height.equalTo()(widgetSize.height)

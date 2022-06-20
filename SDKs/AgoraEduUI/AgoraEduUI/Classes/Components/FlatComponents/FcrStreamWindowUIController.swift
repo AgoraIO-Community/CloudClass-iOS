@@ -501,8 +501,10 @@ extension FcrStreamWindowUIController: AgoraWidgetMessageObserver {
 // MARK: - AgoraWidgetSyncFrameObserver
 extension FcrStreamWindowUIController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
-                                  widgetId: String) {
-        guard let item = widgetArray.firstItem(widgetObjectId: widgetId) else {
+                                  widgetId: String,
+                                  operatorUser: AgoraWidgetUserInfo?) {
+        guard operatorUser?.userUuid != userController.getLocalUserInfo().userUuid,
+              let item = widgetArray.firstItem(widgetObjectId: widgetId) else {
             return
         }
         

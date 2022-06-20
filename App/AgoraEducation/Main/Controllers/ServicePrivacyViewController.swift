@@ -54,6 +54,7 @@ private extension ServicePrivacyViewController {
         view.addSubview(termTitle)
         
         loadUrl()
+        contentView.uiDelegate = self
         view.addSubview(contentView)
         
         let image = haveAgreed ? UIImage(named: "checkBox_checked") : UIImage(named: "checkBox_unchecked")
@@ -120,3 +121,15 @@ private extension ServicePrivacyViewController {
     }
 }
 
+extension ServicePrivacyViewController: WKUIDelegate {
+    public func webView(_ webView: WKWebView,
+                        createWebViewWith configuration: WKWebViewConfiguration,
+                        for navigationAction: WKNavigationAction,
+                        windowFeatures: WKWindowFeatures) -> WKWebView? {
+        if let targetFrame = navigationAction.targetFrame,
+           !targetFrame.isMainFrame {
+            webView.load(navigationAction.request)
+        }
+        return nil
+    }
+}

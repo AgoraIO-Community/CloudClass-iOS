@@ -174,8 +174,8 @@ private extension DebugViewController {
         // roomUuid = roomName + classType
         let roomUuid = "\(roomName)\(roomStyle.rawValue)"
         
-        // userUuid = userName.md5()
-        let userUuid = userName.md5()
+        let userRole = self.inputParams.roleType
+        let userUuid = "\(userName.md5())\(userRole.rawValue)"
         
         // startTime
         let startTime = inputParams.startTime
@@ -224,7 +224,6 @@ private extension DebugViewController {
                         let appId = response.appId
                         let rtmToken = response.rtmToken
                         let userUuid = response.userId
-                        let userRole = self.inputParams.roleType
                         
                         let launchConfig = AgoraEduLaunchConfig(userName: userName,
                                                                 userUuid: userUuid,

@@ -269,13 +269,11 @@ class AgoraRenderMembersUIController: UIViewController {
     }
     
     func registerHandlers() {
-        widgetController.add(self)
         contextPool.media.registerMediaEventHandler(self)
         streamController.registerStreamEventHandler(self)
     }
     
     func unregisterHandlers() {
-        widgetController.remove(self)
         streamController.unregisterStreamEventHandler(self)
         contextPool.media.unregisterMediaEventHandler(self)
     }
@@ -415,17 +413,6 @@ extension AgoraRenderMembersUIController: UICollectionViewDataSource, UICollecti
             delegate?.onClickMemberAt(view: cell,
                                       userId: u.userId)
         }
-    }
-}
-
-// MARK: - AgoraWidgetActivityObserver
-extension AgoraRenderMembersUIController: AgoraWidgetActivityObserver {
-    public func onWidgetActive(_ widgetId: String) {
-        
-    }
-    
-    public func onWidgetInactive(_ widgetId: String) {
-
     }
 }
 

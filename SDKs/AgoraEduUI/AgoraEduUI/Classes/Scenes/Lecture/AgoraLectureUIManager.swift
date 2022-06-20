@@ -62,8 +62,11 @@ import AgoraWidget
     /** 大窗 控制器*/
     private lazy var windowController = FcrLectureStreamWindowUIController(context: contextPool,
                                                                            delegate: self)
+    /** 外部链接 控制器*/
+    private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudController = AgoraCloudUIController(context: contextPool)
+    private lazy var cloudController = AgoraCloudUIController(context: contextPool,
+                                                              delegate: self)
     /** 教具 控制器*/
     private lazy var classToolsController = AgoraClassToolsUIController(context: contextPool)
     /** 聊天窗口 控制器*/
@@ -137,6 +140,9 @@ import AgoraWidget
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
+        addChild(webViewController)
+        contentView.addSubview(webViewController.view)
+        
         addChild(windowController)
         contentView.addSubview(windowController.view)
         
@@ -196,6 +202,9 @@ import AgoraWidget
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))
+        }
+        webViewController.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
@@ -295,6 +304,15 @@ extension AgoraLectureUIManager: FcrStreamWindowUIControllerDelegate {
         
         teacherRenderController.updateItem(new,
                                            animation: false)
+    }
+}
+
+// MARK: - AgoraCloudUIControllerDelegate
+extension AgoraLectureUIManager: AgoraCloudUIControllerDelegate {
+    func onOpenAlfCourseware(urlString: String,
+                             resourceId: String) {
+        webViewController.openWebView(urlString: urlString,
+                                      resourceId: resourceId)
     }
 }
 

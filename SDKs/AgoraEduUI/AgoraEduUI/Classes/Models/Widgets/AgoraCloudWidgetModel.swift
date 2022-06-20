@@ -59,6 +59,7 @@ struct AgoraCloudWidgetCoursewareModel: Convertable {
     var resourceUuid: String
     var resourceName: String
     var resourceUrl: String
+    var ext: String
     var scenes: [AgoraCloudWidgetConvertedFile]?
     var convert: Bool?
     

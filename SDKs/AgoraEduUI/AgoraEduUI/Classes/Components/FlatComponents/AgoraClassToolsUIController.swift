@@ -123,7 +123,11 @@ extension AgoraClassToolsUIController: AgoraWidgetMessageObserver {
 
 extension AgoraClassToolsUIController: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
-                                  widgetId: String) {
+                                  widgetId: String,
+                                  operatorUser: AgoraWidgetUserInfo?) {
+        guard operatorUser?.userUuid != userController.getLocalUserInfo().userUuid else {
+            return
+        }
         let size = getWidgetSize(widgetId)
         updateWidgetFrame(widgetId,
                           size: size)

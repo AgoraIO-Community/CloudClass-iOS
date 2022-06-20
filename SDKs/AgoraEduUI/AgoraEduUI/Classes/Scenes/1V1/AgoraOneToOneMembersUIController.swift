@@ -72,16 +72,13 @@ class AgoraOneToOneMembersUIController: AgoraRenderMembersUIController {
     // viewWillInactive
     override func unregisterHandlers() {
         super.unregisterHandlers()
-        widgetController.remove(self)
+
         userController.unregisterUserEventHandler(self)
         streamController.unregisterStreamEventHandler(self)
         contextPool.media.unregisterMediaEventHandler(self)
     }
 }
 
-extension AgoraOneToOneMembersUIController {
-    
-}
 // MARK: - AgoraEduUserHandler
 extension AgoraOneToOneMembersUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {

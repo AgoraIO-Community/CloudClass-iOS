@@ -182,6 +182,11 @@
                                                                 widgetId:@"streamWindow"];
     widgets[window.widgetId] = window;
     
+    // WebView Widget
+    AgoraWidgetConfig *webView = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWebViewWidget class]
+                                                                widgetId:@"webView"];
+    widgets[webView.widgetId] = webView;
+    
     // Cloud Widget
     AgoraWidgetConfig *cloud = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
                                                                widgetId:@"AgoraCloudWidget"];
