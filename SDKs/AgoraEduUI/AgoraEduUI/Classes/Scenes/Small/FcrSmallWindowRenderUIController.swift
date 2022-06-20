@@ -12,8 +12,11 @@ class FcrSmallWindowRenderUIController: UIViewController {
     private let coHostUIController: FcrCoHostWindowRenderUIController
     private let teacherUIController: FcrTeacherWindowRenderUIController
     
+    weak var delegate: FcrWindowRenderUIControllerDelegate?
+    
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: FcrWindowRenderUIControllerDelegate? = nil) {
         self.coHostUIController = FcrCoHostWindowRenderUIController(context: context,
                                                                     subRoom: subRoom)
         
@@ -25,6 +28,7 @@ class FcrSmallWindowRenderUIController: UIViewController {
         
         self.coHostUIController.delegate = self
         self.teacherUIController.delegate = self
+        self.delegate = delegate
     }
     
     override func viewDidLoad() {
@@ -149,5 +153,13 @@ extension FcrSmallWindowRenderUIController: FcrWindowRenderUIControllerDelegate 
     func renderUIController(_ controller: FcrWindowRenderUIController,
                             didDataSouceCountUpdated count: Int) {
         updateViewFrame()
+    }
+    
+    func renderUIController(_ controller: FcrWindowRenderUIController,
+                            didPressItem item: FcrWindowRenderViewState,
+                            view: UIView) {
+        delegate?.renderUIController(controller,
+                                     didPressItem: item,
+                                     view: view)
     }
 }

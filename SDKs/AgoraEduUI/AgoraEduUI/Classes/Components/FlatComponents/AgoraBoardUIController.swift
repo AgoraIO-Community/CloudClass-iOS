@@ -13,7 +13,7 @@ protocol AgoraBoardUIControllerDelegate: NSObjectProtocol {
 }
 
 class AgoraBoardUIController: UIViewController {
-    private var grantUsers = [String]() {
+    private(set) var grantUsers = [String]() {
         didSet {
             if grantUsers.contains(contextPool.user.getLocalUserInfo().userUuid) {
                 localGranted = true

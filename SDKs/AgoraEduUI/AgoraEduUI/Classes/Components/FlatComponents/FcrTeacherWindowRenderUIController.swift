@@ -198,7 +198,11 @@ private extension FcrTeacherWindowRenderUIController {
     
     // For lecture call
     internal func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
-        let data = stream.toWindowRenderData
+        let rewardCount = contextPool.user.getUserRewardCount(userUuid: stream.owner.userUuid)
+        
+        let data = FcrWindowRenderViewData.create(stream: stream,
+                                                  rewardCount: rewardCount,
+                                                  boardPrivilege: false)
         
         let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
         

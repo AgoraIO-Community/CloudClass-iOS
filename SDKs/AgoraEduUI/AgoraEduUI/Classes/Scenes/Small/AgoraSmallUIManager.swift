@@ -472,13 +472,17 @@ extension AgoraSmallUIManager: AgoraChatUIControllerDelegate {
     }
 }
 
-// MARK: - AgoraRenderUIControllerDelegate
-extension AgoraSmallUIManager: AgoraRenderUIControllerDelegate {
-    func onClickMemberAt(view: UIView,
-                         userId: String) {
-        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+// MARK: - FcrWindowRenderUIControllerDelegate
+extension AgoraSmallUIManager: FcrWindowRenderUIControllerDelegate {
+    func renderUIController(_ controller: FcrWindowRenderUIController,
+                            didPressItem item: FcrWindowRenderViewState,
+                            view: UIView) {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher,
+              let data = item.data else {
             return
         }
+        
+        let userId = data.userId
         
         var role = AgoraEduContextUserRole.student
         if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
@@ -493,27 +497,16 @@ extension AgoraSmallUIManager: AgoraRenderUIControllerDelegate {
         } else {
             // 1. 当前menu的userId不为点击的userId，切换用户
             // 2. 当前不存在menu，显示
-            renderMenuController.show(roomType: .small,
+            renderMenuController.show(roomType: .oneToOne,
                                       userUuid: userId,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
-                make?.top.equalTo()(view.mas_bottom)?.offset()(1)
+                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
                 make?.centerX.equalTo()(view.mas_centerX)
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }
         }
-    }
-    
-    func onRequestSpread(firstOpen: Bool,
-                         userId: String,
-                         streamId: String,
-                         fromView: UIView,
-                         xaxis: CGFloat,
-                         yaxis: CGFloat,
-                         width: CGFloat,
-                         height: CGFloat) {
-        return
     }
 }
 

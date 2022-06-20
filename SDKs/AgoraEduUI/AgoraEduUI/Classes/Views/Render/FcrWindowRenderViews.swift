@@ -8,6 +8,86 @@
 import AgoraUIBaseViews
 import FLAnimatedImage
 
+class FcrWindowRenderRewardView: UIView, AgoraUIContentContainer {
+    let imageView = UIImageView(frame: .zero)
+    let label = UILabel(frame: .zero)
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func initViews() {
+        addSubview(imageView)
+        addSubview(label)
+        
+        label.textAlignment = .right
+    }
+    
+    func initViewFrame() {
+        imageView.mas_makeConstraints { make in
+            make?.left.top().bottom().equalTo()(0)
+            make?.width.equalTo()(self.mas_width)?.multipliedBy()(0.5)
+        }
+        
+        label.mas_makeConstraints { make in
+            make?.top.bottom().equalTo()(0)
+            make?.right.equalTo()(-2)
+            make?.width.equalTo()(self.mas_width)?.multipliedBy()(0.5)
+        }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        
+        label.textColor = UIColor.white
+        label.font = UIFont.systemFont(ofSize: 12)
+        
+        label.layer.shadowColor = ui.color.render_label_shadow_color
+        label.layer.shadowOffset = CGSize(width: 0,
+                                          height: 1)
+        
+        label.layer.shadowOpacity = ui.color.render_label_shadow_opacity
+        label.layer.shadowRadius = ui.frame.render_label_shadow_radius
+    }
+}
+
+class FcrWindowRenderNoneView: UIView, AgoraUIContentContainer {
+    let imageView = UIImageView()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func initViews() {
+        addSubview(imageView)
+    }
+    
+    func initViewFrame() {
+        imageView.mas_makeConstraints { make in
+            make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.53)
+            make?.center.equalTo()(0)
+        }
+    }
+    
+    func updateViewProperties() {
+        imageView.image = UIImage.agedu_named("ic_member_no_user")
+    }
+}
+
 class FcrWindowRenderMicView: UIView, AgoraUIContentContainer {
     private let progressLayer = CAShapeLayer()
     
@@ -87,6 +167,8 @@ class FcrWindowRenderView: UIView {
     let videoMaskView = UIImageView(frame: .zero)
     let nameLabel = UILabel()
     let micView = FcrWindowRenderMicView()
+    let rewardView = FcrWindowRenderRewardView()
+    let boardPrivilegeView = UIImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -128,6 +210,8 @@ extension FcrWindowRenderView: AgoraUIContentContainer {
         addSubview(nameLabel)
         addSubview(micView)
         addSubview(waveView)
+        addSubview(rewardView)
+        addSubview(boardPrivilegeView)
         
         waveView.isHidden = true
         
@@ -170,6 +254,19 @@ extension FcrWindowRenderView: AgoraUIContentContainer {
             make?.width.height().equalTo()(self.mas_height)
             make?.centerX.bottom().equalTo()(0)
         }
+        
+        rewardView.mas_makeConstraints { make in
+            make?.right.equalTo()(-2)
+            make?.top.equalTo()(5)
+            make?.width.equalTo()(32)
+            make?.height.equalTo()(16)
+        }
+        
+        boardPrivilegeView.mas_makeConstraints { make in
+            make?.right.bottom().equalTo()(-2)
+            make?.width.equalTo()(16)
+            make?.height.equalTo()(18)
+        }
     }
     
     func updateViewProperties() {
@@ -190,7 +287,7 @@ class FcrWindowRenderCell: UICollectionViewCell, AgoraUIContentContainer {
     
     let renderView = FcrWindowRenderView()
     
-    let maskImageView = UIImageView(frame: .zero)
+    let noneView = FcrWindowRenderNoneView(frame: .zero)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -204,14 +301,13 @@ class FcrWindowRenderCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func initViews() {
-        contentView.addSubview(maskImageView)
+        contentView.addSubview(noneView)
         contentView.addSubview(renderView)
     }
     
     func initViewFrame() {
-        maskImageView.mas_makeConstraints { make in
-            make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.53)
-            make?.center.equalTo()(0)
+        noneView.mas_makeConstraints { make in
+            make?.right.left().top().bottom().equalTo()(0)
         }
         
         renderView.mas_makeConstraints { make in
@@ -227,12 +323,10 @@ class FcrWindowRenderCell: UICollectionViewCell, AgoraUIContentContainer {
         renderView.layer.borderWidth = ui.frame.render_cell_border_width
         renderView.layer.borderColor = ui.color.render_mask_border_color
         
-        maskImageView.backgroundColor = ui.color.render_cell_bg_color
-        maskImageView.layer.cornerRadius = ui.frame.render_cell_corner_radius
-        maskImageView.layer.borderWidth = ui.frame.render_cell_border_width
-        maskImageView.layer.borderColor = ui.color.render_mask_border_color
-        
-        maskImageView.image = UIImage.agedu_named("ic_member_no_user")
+        noneView.backgroundColor = ui.color.render_cell_bg_color
+        noneView.layer.cornerRadius = ui.frame.render_cell_corner_radius
+        noneView.layer.borderWidth = ui.frame.render_cell_border_width
+        noneView.layer.borderColor = ui.color.render_mask_border_color
     }
     
     func addRenderView() {

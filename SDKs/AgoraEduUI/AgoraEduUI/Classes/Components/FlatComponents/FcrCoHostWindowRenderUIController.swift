@@ -45,11 +45,13 @@ class FcrCoHostWindowRenderUIController: FcrWindowRenderUIController {
     private var subRoom: AgoraEduSubRoomContext?
     
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: FcrWindowRenderUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
         
-        super.init(maxShowItemCount: 6)
+        super.init(maxShowItemCount: 6,
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
@@ -203,7 +205,11 @@ private extension FcrCoHostWindowRenderUIController {
     }
     
     func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
-        let data = stream.toWindowRenderData
+        let rewardCount = contextPool.user.getUserRewardCount(userUuid: stream.owner.userUuid)
+        
+        let data = FcrWindowRenderViewData.create(stream: stream,
+                                                  rewardCount: rewardCount,
+                                                  boardPrivilege: false)
         
         let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
         
@@ -303,6 +309,12 @@ extension FcrCoHostWindowRenderUIController: AgoraEduUserHandler {
         }
         
         renderView.stopWaving()
+    }
+    
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        updateItemOfCoHost(by: user)
     }
 }
 

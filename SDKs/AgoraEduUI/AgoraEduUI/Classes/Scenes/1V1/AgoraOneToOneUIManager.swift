@@ -44,7 +44,8 @@ import UIKit
     private lazy var toolBarController = AgoraToolBarUIController(context: contextPool)
     
     /** 渲染 控制器*/
-    private lazy var renderController = FcrOneToOneWindowRenderUIController(context: contextPool)
+    private lazy var renderController = FcrOneToOneWindowRenderUIController(context: contextPool,
+                                                                            delegate: self)
     /** 外部链接 控制器*/
     private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     /** 右边用来切圆角和显示背景色的容器视图*/
@@ -65,7 +66,7 @@ import UIKit
     private lazy var windowController = FcrStreamWindowUIController(context: contextPool,
                                                                     delegate: self)
     private lazy var tabSelectView = AgoraOneToOneTabView(frame: .zero,
-                                                     delegate: self)
+                                                          delegate: self)
     
     private var isJoinedRoom = false
     
@@ -470,13 +471,17 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
     }
 }
 
-// MARK: - AgoraRenderUIControllerDelegate
-extension AgoraOneToOneUIManager: AgoraRenderUIControllerDelegate {
-    func onClickMemberAt(view: UIView,
-                         userId: String) {
-        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+// MARK: - FcrWindowRenderUIControllerDelegate
+extension AgoraOneToOneUIManager: FcrWindowRenderUIControllerDelegate {
+    func renderUIController(_ controller: FcrWindowRenderUIController,
+                            didPressItem item: FcrWindowRenderViewState,
+                            view: UIView) {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher,
+              let data = item.data else {
             return
         }
+        
+        let userId = data.userId
         
         var role = AgoraEduContextUserRole.student
         if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,

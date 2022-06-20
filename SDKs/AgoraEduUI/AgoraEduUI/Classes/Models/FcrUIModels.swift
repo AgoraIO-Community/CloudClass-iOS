@@ -331,12 +331,46 @@ struct AgoraUserListFuncState {
     var isOn: Bool
 }
 
+struct FcrRewardViewData {
+    var count: String
+    var image: UIImage
+    var isHidden: Bool
+    
+    static func create(count: Int,
+                       isHidden: Bool) -> FcrRewardViewData {
+        let rewardImage = UIImage.agedu_named("ic_member_reward")!
+        let countString = "x\(count)"
+        
+        let data = FcrRewardViewData(count: countString,
+                                     image: rewardImage,
+                                     isHidden: isHidden)
+        
+        return data
+    }
+    
+    static func ==(left: FcrRewardViewData,
+                   right: FcrRewardViewData) -> Bool {
+        if left.count != right.count {
+            return false
+        }
+        
+        return true
+    }
+    
+    static func !=(left: FcrRewardViewData,
+                  right: FcrRewardViewData) -> Bool {
+        return !(left == right)
+    }
+}
+
 struct FcrWindowRenderViewData {
     var userId: String
     var userName: String
     var streamId: String
     var videoState: FcrWindowRenderMediaViewState
     var audioState: FcrWindowRenderMediaViewState
+    var reward: FcrRewardViewData
+    var boardPrivilege: FcrBoardPrivilegeViewState
     
     static func ==(left: FcrWindowRenderViewData,
                    right: FcrWindowRenderViewData) -> Bool {
@@ -360,11 +394,110 @@ struct FcrWindowRenderViewData {
             return false
         }
         
+        if left.reward != right.reward {
+            return false
+        }
+        
+        if left.boardPrivilege != right.boardPrivilege {
+            return false
+        }
+        
         return true
     }
     
     static func !=(left: FcrWindowRenderViewData,
                   right: FcrWindowRenderViewData) -> Bool {
         return !(left == right)
+    }
+    
+    static func create(stream: AgoraEduContextStreamInfo,
+                       rewardCount: Int,
+                       boardPrivilege: Bool) -> FcrWindowRenderViewData {
+        let videoState = createVideoViewState(stream: stream)
+        let audioState = createAudioViewState(stream: stream)
+        
+        let rewardIsHidden = (stream.owner.userRole == .teacher)
+        
+        let reward = FcrRewardViewData.create(count: rewardCount,
+                                              isHidden: rewardIsHidden)
+
+        let privilege = FcrBoardPrivilegeViewState.create(boardPrivilege)
+        
+        let data = FcrWindowRenderViewData(userId: stream.owner.userUuid,
+                                           userName: stream.owner.userName,
+                                           streamId: stream.streamUuid,
+                                           videoState: videoState,
+                                           audioState: audioState,
+                                           reward: reward,
+                                           boardPrivilege: privilege)
+        
+        return data
+    }
+        
+    private static func createVideoViewState(stream: AgoraEduContextStreamInfo) -> FcrWindowRenderMediaViewState {
+        let sourceOffImage = UIImage.agedu_named("ic_member_device_off")!
+        
+        var videoState = FcrWindowRenderMediaViewState.none(sourceOffImage)
+        
+        var videoMaskCode = 0
+        
+        if stream.streamType.hasVideo {
+            videoMaskCode += 1
+        }
+        
+        if stream.videoSourceState == .open {
+            videoMaskCode += 2
+        }
+        
+        switch videoMaskCode {
+        // hasStreamPublishPrivilege
+        case 1:
+            videoState = FcrWindowRenderMediaViewState.hasStreamPublishPrivilege(sourceOffImage)
+        // mediaSourceOpen
+        case 2:
+            let noPrivilegeImage = UIImage.agedu_named("ic_member_device_forbidden")!
+            videoState = FcrWindowRenderMediaViewState.mediaSourceOpen(noPrivilegeImage)
+        // both
+        case 3:
+            videoState = FcrWindowRenderMediaViewState.both(nil)
+        default:
+            break
+        }
+        
+        return videoState
+    }
+    
+    private static func createAudioViewState(stream: AgoraEduContextStreamInfo) -> FcrWindowRenderMediaViewState {
+        let sourceOffImage = UIImage.agedu_named("ic_mic_status_off")!
+        
+        var audioState = FcrWindowRenderMediaViewState.none(sourceOffImage)
+        
+        var audioMaskCode = 0
+        
+        if stream.streamType.hasAudio {
+            audioMaskCode += 1
+        }
+        
+        if stream.audioSourceState == .open {
+            audioMaskCode += 2
+        }
+        
+        switch audioMaskCode {
+        // hasStreamPublishPrivilege
+        case 1:
+            audioState = FcrWindowRenderMediaViewState.hasStreamPublishPrivilege(sourceOffImage)
+        // mediaSourceOpen
+        case 2:
+            let noPrivilegeImage = UIImage.agedu_named("ic_mic_status_forbidden")!
+            audioState = FcrWindowRenderMediaViewState.mediaSourceOpen(noPrivilegeImage)
+        // both
+        case 3:
+            let image = UIImage.agedu_named("ic_mic_status_on")!
+            audioState = FcrWindowRenderMediaViewState.both(image)
+        default:
+            break
+        }
+        
+        return audioState
     }
 }

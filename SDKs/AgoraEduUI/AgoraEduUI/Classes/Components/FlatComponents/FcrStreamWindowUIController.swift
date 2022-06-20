@@ -202,7 +202,7 @@ private extension FcrStreamWindowUIController {
         
         renderViewList[streamId] = renderView
         
-        let data = stream.toWindowRenderData
+        let data = createViewData(with: stream)
         
         updateRenderView(renderView,
                          stream: stream)
@@ -289,6 +289,16 @@ private extension FcrStreamWindowUIController {
         
         widgetController.removeObserver(forWidgetSyncFrame: self,
                                         widgetId: widgetObjectId)
+    }
+    
+    func createViewData(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewData {
+        let rewardCount = contextPool.user.getUserRewardCount(userUuid: stream.owner.userUuid)
+        
+        let data = FcrWindowRenderViewData.create(stream: stream,
+                                                  rewardCount: rewardCount,
+                                                  boardPrivilege: false)
+        
+        return data
     }
 }
 
@@ -410,7 +420,7 @@ extension FcrStreamWindowUIController {
             return
         }
         
-        let data = stream.toWindowRenderData
+        let data = createViewData(with: stream)
         
         renderView.nameLabel.text = data.userName
         
@@ -441,6 +451,17 @@ extension FcrStreamWindowUIController {
         case .both(let image):
             renderView.micView.imageView.image = image
         }
+        
+        switch data.boardPrivilege {
+        case .none:
+            renderView.boardPrivilegeView.isHidden = true
+        case .has(let image):
+            renderView.boardPrivilegeView.isHidden = false
+            renderView.boardPrivilegeView.image = image
+        }
+        
+        renderView.rewardView.imageView.image = data.reward.image
+        renderView.rewardView.label.text = data.reward.count
     }
     
     func createRenderView() -> FcrWindowRenderView {
