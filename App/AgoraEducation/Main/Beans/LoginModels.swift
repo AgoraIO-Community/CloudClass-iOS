@@ -127,7 +127,7 @@ struct RoomInfoModel {
     var encryptMode: AgoraEduMediaEncryptionMode = .none
     
     var startTime: NSNumber?
-    var env: TokenBuilder.Environment = .dev
+    var env: TokenBuilder.Environment = .pro
     var mediaAuth: AgoraEduMediaAuthOption = .both
 
     /** 入参默认值 */
