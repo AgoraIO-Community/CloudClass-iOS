@@ -63,6 +63,8 @@ fcr_stream_start_audio = "Your mic has been turned on";
 // board
 fcr_netless_board_granted = "You have been authorized by the teacher. Please use the whiteboard tool to interact";
 fcr_netless_board_ungranted = "Your authorization has been cancelled by the teacher. You can't interact with whiteboard tools";
+fcr_savecanvas_tips_save_failed_tips = "Allow flexible classroom to access your Photos in \"Setting->Privacy->Photos\"";
+fcr_savecanvas_tips_save_failed_sure = "OK";
 
 // tool box
 fcr_tool_box_cloud_storage = "Cloud storage";

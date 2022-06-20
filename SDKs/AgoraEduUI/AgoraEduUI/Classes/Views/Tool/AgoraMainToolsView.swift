@@ -23,7 +23,7 @@ class AgoraMainToolsView: UIView {
     /** Data */
     weak var delegate: AgoraMainToolsViewDelegate?
     // TODO: 教师端暂时删除.vote, .answerSheet, .countDown
-    var teachingAidsList: [AgoraTeachingAidType] = [.cloudStorage] {
+    var teachingAidsList: [AgoraTeachingAidType] = [.cloudStorage, .saveBoard] {
         didSet {
             if teachingAidsList.count != oldValue.count {
                 updateTeachingAidsLayout()

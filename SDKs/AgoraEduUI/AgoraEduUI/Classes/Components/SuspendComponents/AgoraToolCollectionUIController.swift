@@ -227,8 +227,6 @@ extension AgoraToolCollectionUIController: AgoraWidgetActivityObserver,
             return
         }
         switch signal {
-        case .MemberStateChanged(let state):
-            handleBoardWidgetMemberState(state)
         case .GetBoardGrantedUsers(let list):
             handleBoardWidgetGrantUsers(list)
         case .BoardStepChanged(let changeType):
@@ -277,19 +275,20 @@ extension AgoraToolCollectionUIController: AgoraMainToolsViewDelegate,
     func didSelectColorHex(_ hex: Int) {
         mainToolsView.curColor = UIColor(hex: subToolsView.currentColor)
         updateImage()
-        let colorArr = UIColor(hex: hex)?.getRGBAArr()
-        if let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(strokeColor: colorArr)).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
+        
+        switch currentMainTool {
+        case .text:
+            updateWidgetText()
+        case .paint:
+            updateWidgetShape()
+        default:
+            break
         }
     }
     
     func didSelectTextFont(fontSize: Int) {
         updateImage()
-        if let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(textSize: fontSize)).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
+        updateWidgetText()
     }
     
     func didSelectPaintType(_ type: AgoraBoardToolPaintType) {
@@ -297,10 +296,7 @@ extension AgoraToolCollectionUIController: AgoraMainToolsViewDelegate,
     }
     
     func didSelectLineWidth(lineWidth: Int) {
-        if let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(strokeWidth: lineWidth)).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
+        updateWidgetShape()
     }
 }
 
@@ -315,7 +311,7 @@ private extension AgoraToolCollectionUIController {
     }
 }
 
-// MARK: - UI
+// MARK: - private
 private extension AgoraToolCollectionUIController {
     func initCtrlViews() {
         let containAids = (userController.getLocalUserInfo().userRole == .teacher)
@@ -337,9 +333,7 @@ private extension AgoraToolCollectionUIController {
                 initViewFrame()
                 delegate?.toolCollectionCellNeedSpread(false)
             }
-            if let type = currentMainTool.boardWidgetToolType {
-                signal = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: type))
-            }
+            updateWidgetTool()
         case .paint:
             subToolsView.switchType(currentMainTool)
             updateImage()
@@ -348,12 +342,7 @@ private extension AgoraToolCollectionUIController {
                 initViewFrame()
                 delegate?.toolCollectionCellNeedSpread(true)
             }
-            if let shape = currentSubTool.boardWidgetShapeType {
-                signal = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: .Shape,
-                                                                                               shapeType: shape))
-            }else if let tool = currentSubTool.boardWidgetToolType {
-                signal = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: tool))
-            }
+            updateWidgetShape()
         case .text:
             subToolsView.switchType(currentMainTool)
             updateImage()
@@ -362,9 +351,7 @@ private extension AgoraToolCollectionUIController {
                 initViewFrame()
                 delegate?.toolCollectionCellNeedSpread(true)
             }
-            if let type = currentMainTool.boardWidgetToolType {
-                signal = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: type))
-            }
+            updateWidgetText()
         default:
             break
         }
@@ -378,45 +365,7 @@ private extension AgoraToolCollectionUIController {
     
     func handleCurrentSubToolChange() {
         updateImage()
-        if let shape = currentSubTool.boardWidgetShapeType,
-           let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: .Shape,
-                                                                                               shapeType: shape)).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
-        
-        if let tool = currentSubTool.boardWidgetToolType,
-           let message = AgoraBoardWidgetSignal.MemberStateChanged(AgoraBoardWidgetMemberState(activeApplianceType: tool)).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
-    }
-    
-    func handleBoardWidgetMemberState(_ state: AgoraBoardWidgetMemberState) {
-        if let main = state.activeApplianceType?.toMainType() {
-            currentMainTool = main
-            mainToolsView.curBoardTool = main
-            if main == .paint {
-                if let sub = state.shapeType?.toPaintType() {
-                    subToolsView.currentPaintTool = sub
-                }
-                if let sub = state.activeApplianceType?.toPaintType() {
-                    subToolsView.currentPaintTool = sub
-                }
-            }
-        }
-        if let width = state.strokeWidth {
-            subToolsView.curLineWidth = AgoraBoardToolsLineWidth.fromValue(width)
-        }
-        if let strokeColor = state.strokeColor {
-            subToolsView.currentColor = strokeColor.toColorHex()
-        }
-        if let font = state.textSize {
-            subToolsView.curTextFont = AgoraBoardToolsFont.fromValue(font)
-        }
-        
-        updateImage()
-        initViewFrame()
+        updateWidgetShape()
     }
     
     func handleBoardWidgetGrantUsers(_ list: [String]) {
@@ -426,14 +375,29 @@ private extension AgoraToolCollectionUIController {
         let auth = list.contains(userController.getLocalUserInfo().userUuid)
         view.isHidden = !auth
         delegate?.toolCollectionDidChangeAppearance(auth)
+        
+        guard auth else {
+            return
+        }
+        handleAssistantTypeMessage()
+    }
+    
+    func handleAssistantTypeMessage() {
+        if let boardTool = currentMainTool.widgetType {
+            updateWidgetTool()
+        } else if currentMainTool == .text {
+            updateWidgetText()
+        } else if currentMainTool == .paint {
+            updateWidgetShape()
+        }
     }
     
     func handleBoardWidgetStep(_ changeType: AgoraBoardWidgetStepChangeType) {
         switch changeType {
-        case .undoCount(let count):
-            mainToolsView.undoEnable = (count > 0)
-        case .redoCount(let count):
-            mainToolsView.redoEnable = (count > 0)
+        case .undoAble(let able):
+            mainToolsView.undoEnable = able
+        case .redoAble(let able):
+            mainToolsView.redoEnable = able
         default:
             break
         }
@@ -476,6 +440,34 @@ private extension AgoraToolCollectionUIController {
             subCell.setFont(subToolsView.curTextFont.value / 2)
             subCell.isHidden = false
             sepLine.isHidden = false
+        }
+    }
+    
+    func updateWidgetTool() {
+        if let type = currentMainTool.widgetType,
+           let message = AgoraBoardWidgetSignal.ChangeAssistantType(.tool(type)).toMessageString() {
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
+        }
+    }
+    
+    func updateWidgetText() {
+        let textInfo = FcrBoardWidgetTextInfo(size: subToolsView.curTextFont.value,
+                                              color: subToolsView.currentColor.toColorArr())
+        
+        if let message = AgoraBoardWidgetSignal.ChangeAssistantType(.text(textInfo)).toMessageString() {
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
+        }
+    }
+    
+    func updateWidgetShape() {
+        let shapeInfo = FcrBoardWidgetShapeInfo(type: subToolsView.currentPaintTool.widgetShape,
+                                          width: subToolsView.curLineWidth.value,
+                                          color: subToolsView.currentColor.toColorArr())
+        if let message = AgoraBoardWidgetSignal.ChangeAssistantType(.shape(shapeInfo)).toMessageString() {
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
         }
     }
 }

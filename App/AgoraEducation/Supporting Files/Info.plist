@@ -31,8 +31,8 @@
 	<string>App needs your permission to access microphone for audio interaction</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>App needs your permission to access photos</string>
-	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
-	<true/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>App needs your permission to access addition to photos</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

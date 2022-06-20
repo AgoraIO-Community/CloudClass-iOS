@@ -149,15 +149,13 @@
     widgets[chat.widgetId] = chat;
     
     // AgoraWhiteboardWidget
-    AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWhiteboardWidget class]
+    AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[FcrBoardWidget class]
                                                                           widgetId:@"netlessBoard"];
     
     NSString *courseFolder = [NSString stringWithFormat:@"%@/%@", NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
                                                                                                       NSUserDomainMask,
                                                                                                       YES)[0], @"AgoraDownload"];
-    whiteboardConfig.extraInfo = @{@"coursewareDirectory": courseFolder,
-                                   @"useMultiViews": @YES,
-                                   @"autoFit": @NO};
+    whiteboardConfig.extraInfo = @{@"coursewareDirectory": courseFolder};
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     

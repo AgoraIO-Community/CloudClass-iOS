@@ -68,6 +68,8 @@ fcr_stream_start_audio = "你可以发言了";
 // board
 fcr_netless_board_granted = "你已被老师授权，请使用白板工具互动";
 fcr_netless_board_ungranted = "你已被老师收回授权，无法使用白板工具互动";
+fcr_savecanvas_tips_save_failed_tips = "请在系统的\"设置-隐私-照片\"选项中，允许灵动课堂访问你的手机照片";
+fcr_savecanvas_tips_save_failed_sure = "确定";
 
 // tool box
 fcr_tool_box_cloud_storage = "云盘";

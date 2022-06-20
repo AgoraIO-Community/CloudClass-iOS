@@ -13,23 +13,16 @@ enum AgoraBoardToolPaintType: Int, CaseIterable {
     
     static var allCases: [AgoraBoardToolPaintType] = [.pencil, .line, .rect, .circle, .pentagram, .rhombus, .arrow, .triangle]
     
-    var boardWidgetToolType: AgoraBoardWidgetToolType? {
+    var widgetShape: FcrBoardWidgetShapeType {
         switch self {
-        case .pencil:       return .Pencil
-        case .line:         return .Straight
-        case .rect:         return .Rectangle
-        case .circle:       return .Ellipse
-        case .arrow:        return .Arrow
-        default:            return nil
-        }
-    }
-    
-    var boardWidgetShapeType: AgoraBoardWidgetShapeType? {
-        switch self {
-        case .pentagram:    return .Pentagram
-        case .rhombus:      return .Rhombus
-        case .triangle:     return .Triangle
-        default:            return nil
+        case .pencil:       return .curve
+        case .line:         return .straight
+        case .rect:         return .rectangle
+        case .circle:       return .ellipse
+        case .pentagram:    return .pentagram
+        case .rhombus:      return .rhombus
+        case .arrow:        return .arrow
+        case .triangle:     return .triangle
         }
     }
     
@@ -89,21 +82,11 @@ enum AgoraBoardToolMainType: Int, CaseIterable {
         }
     }
     
-    var associatedType: Any.Type? {
+    var widgetType: FcrBoardWidgetToolType? {
         switch self {
-        case .paint:
-            return AgoraBoardToolPaintType.self
-        default:
-            return nil
-        }
-    }
-    
-    var boardWidgetToolType: AgoraBoardWidgetToolType? {
-        switch self {
-        case .clicker:  return .Clicker
-        case .area:     return .Selector
-        case .text:     return .Text
-        case .rubber:   return .Eraser
+        case .clicker:  return .clicker
+        case .area:     return .area
+        case .rubber:   return .eraser
         default:
             return nil
         }

@@ -414,6 +414,8 @@ extension AgoraSmallUIManager: AgoraToolCollectionUIControllerDelegate {
                 }
             }
             cloudController.view.isHidden = !cloudController.view.isHidden
+        case .saveBoard:
+            boardController.saveBoard()
         case .vote:
             break
         case .countDown:

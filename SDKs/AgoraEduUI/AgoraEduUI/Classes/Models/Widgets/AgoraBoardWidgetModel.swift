@@ -11,7 +11,7 @@ import Foundation
 enum AgoraBoardWidgetSignal: Convertable {
     case JoinBoard
     case BoardPhaseChanged(AgoraBoardWidgetRoomPhase)
-    case MemberStateChanged(AgoraBoardWidgetMemberState)
+    case ChangeAssistantType(FcrBoardWidgetAssistantType)
     case GetBoardGrantedUsers([String])
     case UpdateGrantedUsers(AgoraBoardWidgetGrantUsersChangeType)
     case AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData)
@@ -21,12 +21,14 @@ enum AgoraBoardWidgetSignal: Convertable {
     case ClearBoard
     case OpenCourseware(AgoraBoardWidgetCoursewareInfo)
     case WindowStateChanged(AgoraBoardWidgetWindowState)
+    case SaveBoard
+    case PhotoAuth
     case CloseBoard
     
     private enum CodingKeys: CodingKey {
         case JoinBoard
         case BoardPhaseChanged
-        case MemberStateChanged
+        case ChangeAssistantType
         case GetBoardGrantedUsers
         case UpdateGrantedUsers
         case AudioMixingStateChanged
@@ -36,6 +38,8 @@ enum AgoraBoardWidgetSignal: Convertable {
         case ClearBoard
         case OpenCourseware
         case WindowStateChanged
+        case SaveBoard
+        case PhotoAuth
         case CloseBoard
     }
     
@@ -47,9 +51,9 @@ enum AgoraBoardWidgetSignal: Convertable {
         } else if let value = try? container.decode(AgoraBoardWidgetRoomPhase.self,
                                                     forKey: .BoardPhaseChanged) {
             self = .BoardPhaseChanged(value)
-        } else if let value = try? container.decode(AgoraBoardWidgetMemberState.self,
-                                                    forKey: .MemberStateChanged) {
-            self = .MemberStateChanged(value)
+        } else if let value = try? container.decode(FcrBoardWidgetAssistantType.self,
+                                                    forKey: .ChangeAssistantType) {
+            self = .ChangeAssistantType(value)
         } else if let value = try? container.decode(AgoraBoardWidgetAudioMixingChangeData.self,
                                                     forKey: .AudioMixingStateChanged) {
             self = .AudioMixingStateChanged(value)
@@ -73,6 +77,10 @@ enum AgoraBoardWidgetSignal: Convertable {
         } else if let value = try? container.decode(AgoraBoardWidgetWindowState.self,
                                                     forKey: .WindowStateChanged) {
             self = .WindowStateChanged(value)
+        } else if let _ = try? container.decodeNil(forKey: .SaveBoard) {
+            self = .SaveBoard
+        } else if let _ = try? container.decodeNil(forKey: .PhotoAuth) {
+            self = .PhotoAuth
         } else if let _ = try? container.decodeNil(forKey: .CloseBoard) {
             self = .CloseBoard
         } else {
@@ -94,9 +102,9 @@ enum AgoraBoardWidgetSignal: Convertable {
         case .BoardPhaseChanged(let x):
             try container.encode(x,
                                  forKey: .BoardPhaseChanged)
-        case .MemberStateChanged(let x):
+        case .ChangeAssistantType(let x):
             try container.encode(x,
-                                 forKey: .MemberStateChanged)
+                                 forKey: .ChangeAssistantType)
         case .GetBoardGrantedUsers(let x):
             try container.encode(x,
                                  forKey: .GetBoardGrantedUsers)
@@ -123,6 +131,10 @@ enum AgoraBoardWidgetSignal: Convertable {
         case .WindowStateChanged(let x):
             try container.encode(x,
                                  forKey: .WindowStateChanged)
+        case .SaveBoard:
+            try container.encodeNil(forKey: .SaveBoard)
+        case .PhotoAuth:
+            try container.encodeNil(forKey: .PhotoAuth)
         case .CloseBoard:
             try container.encodeNil(forKey: .CloseBoard)
         }
@@ -192,7 +204,7 @@ enum AgoraBoardWidgetWindowState: Int, Convertable {
 // MARK: - Message
 // 当外部手动更新某一项数据的时候MemberState就只包含对应的某一项，然后通过sendMessageToWidget发送即可
 // 若初始化时期，白板需要向外传
-struct AgoraBoardWidgetMemberState: Convertable {
+struct AgoraBoardWidgetAssistantType: Convertable {
     // 被激活教具
     var activeApplianceType: AgoraBoardWidgetToolType?
     // 颜色
@@ -214,6 +226,75 @@ struct AgoraBoardWidgetMemberState: Convertable {
         self.strokeWidth = strokeWidth
         self.textSize = textSize
         self.shapeType = shapeType
+    }
+}
+
+enum FcrBoardWidgetToolType: Int, Convertable {
+    case clicker, area, laserPointer, eraser
+}
+
+struct FcrBoardWidgetTextInfo: Convertable {
+    var size: Int
+    var color: Array<Int>
+}
+
+enum FcrBoardWidgetShapeType: Int, Convertable {
+    case curve, straight, arrow, rectangle, triangle, rhombus, pentagram, ellipse
+}
+
+struct FcrBoardWidgetShapeInfo: Convertable {
+    var type: FcrBoardWidgetShapeType
+    var width: Int
+    var color: Array<Int>
+}
+    
+enum FcrBoardWidgetAssistantType: Convertable {
+    case tool(FcrBoardWidgetToolType)
+    case text(FcrBoardWidgetTextInfo)
+    case shape(FcrBoardWidgetShapeInfo)
+
+    private enum CodingKeys: CodingKey {
+        case tool
+        case text
+        case shape
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let value = try? container.decode(FcrBoardWidgetToolType.self,
+                                                    forKey: .tool) {
+            self = .tool(value)
+        } else if let value = try? container.decode(FcrBoardWidgetTextInfo.self,
+                                                    forKey: .text) {
+            self = .text(value)
+        } else if let value = try? container.decode(FcrBoardWidgetShapeInfo.self,
+                                                    forKey: .shape) {
+            self = .shape(value)
+        } else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: container.codingPath,
+                    debugDescription: "invalid data"
+                )
+            )
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        switch self {
+        case .tool(let x):
+            try container.encode(x,
+                                 forKey: .tool)
+        case .text(let x):
+            try container.encode(x,
+                                 forKey: .text)
+        case .shape(let x):
+            try container.encode(x,
+                                 forKey: .shape)
+        }
     }
 }
 
@@ -261,6 +342,13 @@ extension String {
         return signal
     }
 }
+
+extension Int {
+    func toColorArr() -> [Int] {
+        return UIColor(hex: self)!.getRGBAArr()
+    }
+}
+
 enum AgoraBoardWidgetGrantUsersChangeType: Convertable {
     case add([String])
     case delete([String])
@@ -341,14 +429,14 @@ enum AgoraBoardWidgetPageChangeType: Convertable {
 enum AgoraBoardWidgetStepChangeType: Convertable {
     case pre(Int)
     case next(Int)
-    case undoCount(Int)
-    case redoCount(Int)
+    case undoAble(Bool)
+    case redoAble(Bool)
     
     private enum CodingKeys: CodingKey {
         case pre
         case next
-        case undoCount
-        case redoCount
+        case undoAble
+        case redoAble
     }
     
     init(from decoder: Decoder) throws {
@@ -357,14 +445,14 @@ enum AgoraBoardWidgetStepChangeType: Convertable {
                                          forKey: .pre) {
             self = .pre(x)
         } else if let x = try? container.decode(Int.self,
-                                         forKey: .next) {
+                                                forKey: .next) {
             self = .next(x)
-        } else if let x = try? container.decode(Int.self,
-                                         forKey: .undoCount) {
-            self = .undoCount(x)
-        } else if let x = try? container.decode(Int.self,
-                                                forKey: .redoCount) {
-            self = .redoCount(x)
+        } else if let x = try? container.decode(Bool.self,
+                                                forKey: .undoAble) {
+            self = .undoAble(x)
+        } else if let x = try? container.decode(Bool.self,
+                                                forKey: .redoAble) {
+            self = .redoAble(x)
         } else {
             throw DecodingError.typeMismatch(AgoraBoardWidgetStepChangeType.self,
                                              DecodingError.Context(codingPath: decoder.codingPath,
@@ -381,12 +469,12 @@ enum AgoraBoardWidgetStepChangeType: Convertable {
         case .next(let x):
             try container.encode(x,
                                  forKey: .next)
-        case .undoCount(let x):
+        case .undoAble(let x):
             try container.encode(x,
-                                 forKey: .undoCount)
-        case .redoCount(let x):
+                                 forKey: .undoAble)
+        case .redoAble(let x):
             try container.encode(x,
-                                 forKey: .redoCount)
+                                 forKey: .redoAble)
         }
     }
 }
