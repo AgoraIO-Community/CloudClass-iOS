@@ -14,12 +14,16 @@ class FcrOneToOneWindowRenderUIController: FcrWindowRenderUIController {
     private let teacherItemIndex = 0
     private let studentItemIndex = 1
     
+    private weak var controllerDataSource: FcrUIControllerDataSource?
+    
     init(context: AgoraEduContextPool,
-         delegate: FcrWindowRenderUIControllerDelegate? = nil) {
+         delegate: FcrWindowRenderUIControllerDelegate? = nil,
+         controllerDataSource: FcrUIControllerDataSource? = nil) {
         let dataSource = [FcrWindowRenderViewState.none,
                           FcrWindowRenderViewState.none]
         
         self.contextPool = context
+        self.controllerDataSource = controllerDataSource
         
         super.init(dataSource: dataSource,
                    maxShowItemCount: dataSource.count,
@@ -153,11 +157,20 @@ private extension FcrOneToOneWindowRenderUIController {
     }
     
     func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
-        let rewardCount = contextPool.user.getUserRewardCount(userUuid: stream.owner.userUuid)
+        var boardPrivilege: Bool = false
+        
+        let userId = stream.owner.userUuid
+        
+        if let userList = controllerDataSource?.controllerNeedGrantedUserList(),
+           userList.contains(userId) {
+            boardPrivilege = true
+        }
+        
+        let rewardCount = contextPool.user.getUserRewardCount(userUuid: userId)
         
         let data = FcrWindowRenderViewData.create(stream: stream,
                                                   rewardCount: rewardCount,
-                                                  boardPrivilege: false)
+                                                  boardPrivilege: boardPrivilege)
         
         let isActive = contextPool.widget.streamWindowWidgetIsActive(of: stream)
         

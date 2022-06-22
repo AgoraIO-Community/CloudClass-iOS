@@ -23,21 +23,23 @@ import AgoraWidget
     
     /** 视窗渲染 控制器*/
     private lazy var renderController = FcrSmallWindowRenderUIController(context: contextPool,
-                                                                         subRoom: subRoom)
+                                                                         subRoom: subRoom,
+                                                                         controllerDataSource: self)
     
     /** 白板的渲染 控制器*/
     private lazy var boardController = AgoraBoardUIController(context: contextPool,
-                                                              delegate: self,
-                                                              subRoom: subRoom)
+                                                              subRoom: subRoom,
+                                                              delegate: self)
     
     /** 白板翻页 控制器（观众端没有）*/
-    private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool, subRoom: subRoom)
-    
+    private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool,
+                                                                      subRoom: subRoom)
     
     /** 大窗 控制器*/
     private lazy var windowController = FcrStreamWindowUIController(context: contextPool,
                                                                     subRoom: subRoom,
-                                                                    delegate: self)
+                                                                    delegate: self,
+                                                                    controllerDataSource: self)
     
     /** 外部链接 控制器*/
     private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
@@ -391,6 +393,66 @@ extension AgoraSubRoomUIManager: AgoraBoardUIControllerDelegate {
         toolCollectionController.updateBoardActiveState(isActive: isActive)
         boardPageController.updateBoardActiveState(isActive: isActive)
     }
+    
+    func onBoardGrantedUserListAdded(userList: [String]) {
+        updateWindowRenderItemBoardPrivilege(true,
+                                             userList: userList)
+        updateStreamWindowItemBoardPrivilege(true,
+                                             userList: userList)
+    }
+    
+    func onBoardGrantedUserListRemoved(userList: [String]) {
+        updateWindowRenderItemBoardPrivilege(false,
+                                             userList: userList)
+        updateStreamWindowItemBoardPrivilege(false,
+                                             userList: userList)
+    }
+    
+    func updateWindowRenderItemBoardPrivilege(_ privilege: Bool,
+                                              userList: [String]) {
+        for (index, item) in renderController.coHost.dataSource.enumerated() {
+            guard var data = item.data,
+                  userList.contains(data.userId) else {
+                continue
+            }
+            
+            guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
+                  user.userRole != .teacher else {
+                continue
+            }
+            
+            let privilege = FcrBoardPrivilegeViewState.create(privilege)
+            data.boardPrivilege = privilege
+            
+            let new = FcrWindowRenderViewState.create(isHide: item.isHide,
+                                                      data: data)
+            
+            renderController.coHost.updateItem(new,
+                                               index: index)
+        }
+    }
+    
+    func updateStreamWindowItemBoardPrivilege(_ privilege: Bool,
+                                              userList: [String]) {
+        for (index, item) in windowController.dataSource.enumerated() {
+            var data = item.data
+            
+            guard userList.contains(data.userId) else {
+                continue
+            }
+            
+            guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
+                  user.userRole != .teacher else {
+                continue
+            }
+            
+            let privilege = FcrBoardPrivilegeViewState.create(privilege)
+            data.boardPrivilege = privilege
+            
+            windowController.updateItemData(data,
+                                            index: index)
+        }
+    }
 }
 
 // MARK: - AgoraToolBarDelegate
@@ -577,55 +639,18 @@ extension AgoraSubRoomUIManager: AgoraChatUIControllerDelegate {
     }
 }
 
-// MARK: - AgoraRenderUIControllerDelegate
-extension AgoraSubRoomUIManager: AgoraRenderUIControllerDelegate {
-    func onClickMemberAt(view: UIView,
-                         userId: String) {
-        guard subRoom.user.getLocalUserInfo().userRole == .teacher else {
-            return
-        }
-        
-        var role = AgoraEduContextUserRole.student
-        if let teacehr = subRoom.user.getUserList(role: .teacher)?.first,
-           teacehr.userUuid == userId {
-            role = .teacher
-        }
-        
-        if let menuId = renderMenuController.userId,
-           menuId == userId {
-            // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
-            renderMenuController.dismissView()
-        } else {
-            // 1. 当前menu的userId不为点击的userId，切换用户
-            // 2. 当前不存在menu，显示
-            renderMenuController.show(roomType: .small,
-                                      userUuid: userId,
-                                      showRoleType: role)
-            renderMenuController.view.mas_remakeConstraints { make in
-                make?.top.equalTo()(view.mas_bottom)?.offset()(1)
-                make?.centerX.equalTo()(view.mas_centerX)
-                make?.height.equalTo()(30)
-                make?.width.equalTo()(renderMenuController.menuWidth)
-            }
-        }
-    }
-    
-    func onRequestSpread(firstOpen: Bool,
-                         userId: String,
-                         streamId: String,
-                         fromView: UIView,
-                         xaxis: CGFloat,
-                         yaxis: CGFloat,
-                         width: CGFloat,
-                         height: CGFloat) {
-    }
-}
-
 // MARK: - AgoraRenderMenuUIControllerDelegate
 extension AgoraSubRoomUIManager: AgoraRenderMenuUIControllerDelegate {
     func onMenuUserLeft() {
         renderMenuController.dismissView()
         renderMenuController.view.isHidden = true
+    }
+}
+
+// MARK: - FcrUIControllerDataSource
+extension AgoraSubRoomUIManager: FcrUIControllerDataSource {
+    func controllerNeedGrantedUserList() -> [String] {
+        return boardController.grantUsers
     }
 }
 
@@ -645,6 +670,7 @@ private extension AgoraSubRoomUIManager {
         layout.minimumLineSpacing = kItemGap
         renderController.updateLayout(layout)
     }
+    
     func teacherInRoom() -> FcrTeacherInRoomType {
         let group = contextPool.group
         let mainUser = contextPool.user

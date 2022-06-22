@@ -62,7 +62,8 @@ import AgoraWidget
     private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool)
     /** 大窗 控制器*/
     private lazy var windowController = FcrLectureStreamWindowUIController(context: contextPool,
-                                                                           delegate: self)
+                                                                           delegate: self,
+                                                                           controllerDataSource: self)
     /** 外部链接 控制器*/
     private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     /** 云盘 控制器（仅教师端）*/
@@ -274,6 +275,38 @@ extension AgoraLectureUIManager: AgoraBoardUIControllerDelegate {
     func onBoardActiveStateChanged(isActive: Bool) {
         toolCollectionController.updateBoardActiveState(isActive: isActive)
         boardPageController.updateBoardActiveState(isActive: isActive)
+    }
+    
+    func onBoardGrantedUserListAdded(userList: [String]) {
+        updateStreamWindowItemBoardPrivilege(true,
+                                             userList: userList)
+    }
+    
+    func onBoardGrantedUserListRemoved(userList: [String]) {
+        updateStreamWindowItemBoardPrivilege(false,
+                                             userList: userList)
+    }
+    
+    func updateStreamWindowItemBoardPrivilege(_ privilege: Bool,
+                                              userList: [String]) {
+        for (index, item) in windowController.dataSource.enumerated() {
+            var data = item.data
+            
+            guard userList.contains(data.userId) else {
+                continue
+            }
+            
+            guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
+                  user.userRole != .teacher else {
+                continue
+            }
+            
+            let privilege = FcrBoardPrivilegeViewState.create(privilege)
+            data.boardPrivilege = privilege
+            
+            windowController.updateItemData(data,
+                                            index: index)
+        }
     }
 }
 
@@ -506,6 +539,13 @@ extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
             make?.bottom.equalTo()(boardPageController.view.mas_bottom)
             make?.size.equalTo()(classStateController.suggestSize)
         }
+    }
+}
+
+// MARK: - FcrUIControllerDataSource
+extension AgoraLectureUIManager: FcrUIControllerDataSource {
+    func controllerNeedGrantedUserList() -> [String] {
+        return boardController.grantUsers
     }
 }
 

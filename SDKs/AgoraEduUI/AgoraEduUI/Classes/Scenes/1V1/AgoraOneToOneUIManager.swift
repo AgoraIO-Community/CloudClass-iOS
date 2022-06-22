@@ -45,7 +45,8 @@ import UIKit
     
     /** 渲染 控制器*/
     private lazy var renderController = FcrOneToOneWindowRenderUIController(context: contextPool,
-                                                                            delegate: self)
+                                                                            delegate: self,
+                                                                            controllerDataSource: self)
     /** 外部链接 控制器*/
     private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     /** 右边用来切圆角和显示背景色的容器视图*/
@@ -65,7 +66,9 @@ import UIKit
     private lazy var classToolsController = AgoraClassToolsUIController(context: contextPool)
     /** 大窗 控制器*/
     private lazy var windowController = FcrStreamWindowUIController(context: contextPool,
-                                                                    delegate: self)
+                                                                    delegate: self,
+                                                                    controllerDataSource: self)
+    
     private lazy var tabSelectView = AgoraOneToOneTabView(frame: .zero,
                                                           delegate: self)
     
@@ -302,6 +305,66 @@ extension AgoraOneToOneUIManager: AgoraBoardUIControllerDelegate {
     func onBoardActiveStateChanged(isActive: Bool) {
         toolCollectionController.updateBoardActiveState(isActive: isActive)
         boardPageController.updateBoardActiveState(isActive: isActive)
+    }
+    
+    func onBoardGrantedUserListAdded(userList: [String]) {
+        updateWindowRenderItemBoardPrivilege(true,
+                                             userList: userList)
+        updateStreamWindowItemBoardPrivilege(true,
+                                             userList: userList)
+    }
+    
+    func onBoardGrantedUserListRemoved(userList: [String]) {
+        updateWindowRenderItemBoardPrivilege(false,
+                                             userList: userList)
+        updateStreamWindowItemBoardPrivilege(false,
+                                             userList: userList)
+    }
+    
+    func updateWindowRenderItemBoardPrivilege(_ privilege: Bool,
+                                              userList: [String]) {
+        for (index, item) in renderController.dataSource.enumerated() {
+            guard var data = item.data,
+                  userList.contains(data.userId) else {
+                continue
+            }
+            
+            guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
+                  user.userRole != .teacher else {
+                continue
+            }
+            
+            let privilege = FcrBoardPrivilegeViewState.create(privilege)
+            data.boardPrivilege = privilege
+            
+            let new = FcrWindowRenderViewState.create(isHide: item.isHide,
+                                                      data: data)
+            
+            renderController.updateItem(new,
+                                        index: index)
+        }
+    }
+    
+    func updateStreamWindowItemBoardPrivilege(_ privilege: Bool,
+                                              userList: [String]) {
+        for (index, item) in windowController.dataSource.enumerated() {
+            var data = item.data
+            
+            guard userList.contains(data.userId) else {
+                continue
+            }
+            
+            guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
+                  user.userRole != .teacher else {
+                continue
+            }
+            
+            let privilege = FcrBoardPrivilegeViewState.create(privilege)
+            data.boardPrivilege = privilege
+            
+            windowController.updateItemData(data,
+                                            index: index)
+        }
     }
 }
 
@@ -542,6 +605,12 @@ extension AgoraOneToOneUIManager: AgoraClassStateUIControllerDelegate {
             make?.bottom.equalTo()(boardPageController.view.mas_bottom)
             make?.size.equalTo()(classStateController.suggestSize)
         }
+    }
+}
+
+extension AgoraOneToOneUIManager: FcrUIControllerDataSource {
+    func controllerNeedGrantedUserList() -> [String] {
+        return boardController.grantUsers
     }
 }
 

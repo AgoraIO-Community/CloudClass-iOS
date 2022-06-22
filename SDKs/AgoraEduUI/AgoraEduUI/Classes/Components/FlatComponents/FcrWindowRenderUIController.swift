@@ -419,6 +419,8 @@ private extension FcrWindowRenderUIController {
                           data: FcrWindowRenderViewData) {
         renderView.nameLabel.text = data.userName
         
+        renderView.videoView.isHidden = !(data.videoState.isBoth)
+        
         switch data.videoState {
         case .none(let image):
             renderView.videoMaskView.isHidden = false

@@ -44,11 +44,15 @@ class FcrCoHostWindowRenderUIController: FcrWindowRenderUIController {
     private let contextPool: AgoraEduContextPool
     private var subRoom: AgoraEduSubRoomContext?
     
+    private weak var controllerDataSource: FcrUIControllerDataSource?
+    
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrWindowRenderUIControllerDelegate? = nil) {
+         delegate: FcrWindowRenderUIControllerDelegate? = nil,
+         controllerDataSource: FcrUIControllerDataSource? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.controllerDataSource = controllerDataSource
         
         super.init(maxShowItemCount: 6,
                    delegate: delegate)
@@ -205,11 +209,20 @@ private extension FcrCoHostWindowRenderUIController {
     }
     
     func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
-        let rewardCount = contextPool.user.getUserRewardCount(userUuid: stream.owner.userUuid)
+        var boardPrivilege: Bool = false
+        
+        let userId = stream.owner.userUuid
+        
+        if let userList = controllerDataSource?.controllerNeedGrantedUserList(),
+           userList.contains(userId) {
+            boardPrivilege = true
+        }
+        
+        let rewardCount = userController.getUserRewardCount(userUuid: userId)
         
         let data = FcrWindowRenderViewData.create(stream: stream,
                                                   rewardCount: rewardCount,
-                                                  boardPrivilege: false)
+                                                  boardPrivilege: boardPrivilege)
         
         let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
         

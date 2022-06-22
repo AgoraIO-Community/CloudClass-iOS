@@ -9,25 +9,27 @@ import AgoraEduContext
 import Foundation
 
 class FcrSmallWindowRenderUIController: UIViewController {
-    private let coHostUIController: FcrCoHostWindowRenderUIController
-    private let teacherUIController: FcrTeacherWindowRenderUIController
+    let coHost: FcrCoHostWindowRenderUIController
+    let teacher: FcrTeacherWindowRenderUIController
     
     weak var delegate: FcrWindowRenderUIControllerDelegate?
     
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrWindowRenderUIControllerDelegate? = nil) {
-        self.coHostUIController = FcrCoHostWindowRenderUIController(context: context,
-                                                                    subRoom: subRoom)
+         delegate: FcrWindowRenderUIControllerDelegate? = nil,
+         controllerDataSource: FcrUIControllerDataSource? = nil) {
+        self.coHost = FcrCoHostWindowRenderUIController(context: context,
+                                                        subRoom: subRoom,
+                                                        controllerDataSource: controllerDataSource)
         
-        self.teacherUIController = FcrTeacherWindowRenderUIController(context: context,
-                                                                      subRoom: subRoom)
+        self.teacher = FcrTeacherWindowRenderUIController(context: context,
+                                                          subRoom: subRoom)
         
         super.init(nibName: nil,
                    bundle: nil)
         
-        self.coHostUIController.delegate = self
-        self.teacherUIController.delegate = self
+        self.coHost.delegate = self
+        self.teacher.delegate = self
         self.delegate = delegate
     }
     
@@ -43,18 +45,18 @@ class FcrSmallWindowRenderUIController: UIViewController {
     
     func updateLayout(_ layout: UICollectionViewFlowLayout) {
         let coHostLayout = layout.copyLayout()
-        coHostUIController.updateLayout(coHostLayout)
+        coHost.updateLayout(coHostLayout)
         
         let teacherLayout = layout.copyLayout()
-        teacherUIController.updateLayout(teacherLayout)
+        teacher.updateLayout(teacherLayout)
         
         updateViewFrame()
     }
     
     func getRenderView(userId: String) -> FcrWindowRenderView? {
-        if let renderView = teacherUIController.getRenderView(userId: userId) {
+        if let renderView = teacher.getRenderView(userId: userId) {
             return renderView
-        } else if let renderView = coHostUIController.getRenderView(userId: userId) {
+        } else if let renderView = coHost.getRenderView(userId: userId) {
             return renderView
         }
         
@@ -62,9 +64,9 @@ class FcrSmallWindowRenderUIController: UIViewController {
     }
     
     func getItem(streamId: String) -> FcrWindowRenderViewState? {
-        if let item = teacherUIController.getItem(streamId: streamId) {
+        if let item = teacher.getItem(streamId: streamId) {
             return item
-        } else if let item = coHostUIController.getItem(streamId: streamId) {
+        } else if let item = coHost.getItem(streamId: streamId) {
             return item
         }
         
@@ -73,30 +75,30 @@ class FcrSmallWindowRenderUIController: UIViewController {
     
     func updateItem(_ item: FcrWindowRenderViewState,
                     animation: Bool = true) {
-        teacherUIController.updateItem(item,
+        teacher.updateItem(item,
                                        animation: animation)
-        coHostUIController.updateItem(item,
+        coHost.updateItem(item,
                                       animation: animation)
     }
 }
 
 extension FcrSmallWindowRenderUIController: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
-        addChild(coHostUIController)
-        addChild(teacherUIController)
+        addChild(coHost)
+        addChild(teacher)
         
-        view.addSubview(coHostUIController.view)
-        view.addSubview(teacherUIController.view)
+        view.addSubview(coHost.view)
+        view.addSubview(teacher.view)
     }
     
     func initViewFrame() {
-        coHostUIController.view.mas_makeConstraints { make in
+        coHost.view.mas_makeConstraints { make in
             make?.left.top().right().bottom().equalTo()(0)
         }
         
-        teacherUIController.view.mas_makeConstraints { make in
+        teacher.view.mas_makeConstraints { make in
             make?.left.top().bottom().equalTo()(0)
-            make?.right.equalTo()(coHostUIController.view.mas_left)?.equalTo()(0)
+            make?.right.equalTo()(coHost.view.mas_left)?.equalTo()(0)
         }
     }
     
@@ -105,24 +107,24 @@ extension FcrSmallWindowRenderUIController: AgoraUIContentContainer, AgoraUIActi
     }
     
     func viewWillActive() {
-        coHostUIController.viewWillActive()
-        teacherUIController.viewWillActive()
+        coHost.viewWillActive()
+        teacher.viewWillActive()
     }
     
     func viewWillInactive() {
-        coHostUIController.viewWillInactive()
-        teacherUIController.viewWillInactive()
+        coHost.viewWillInactive()
+        teacher.viewWillInactive()
     }
 }
 
 private extension FcrSmallWindowRenderUIController {
     func updateViewFrame() {
-        let coHostCount = CGFloat(coHostUIController.dataSource.count)
-        let teacherCount = CGFloat(teacherUIController.dataSource.count)
+        let coHostCount = CGFloat(coHost.dataSource.count)
+        let teacherCount = CGFloat(teacher.dataSource.count)
         let count = (teacherCount + coHostCount)
         
-        let itemWidth = coHostUIController.layout.itemSize.width
-        let itemLineSpacing = coHostUIController.layout.minimumLineSpacing
+        let itemWidth = coHost.layout.itemSize.width
+        let itemLineSpacing = coHost.layout.minimumLineSpacing
         
         let itemsWidth = (itemWidth + itemLineSpacing) * count - itemLineSpacing
         var firstItemX = (view.bounds.width - itemsWidth) * 0.5
@@ -133,14 +135,14 @@ private extension FcrSmallWindowRenderUIController {
         
         let coHostLeft = (itemWidth + itemLineSpacing) * teacherCount + firstItemX
         
-        coHostUIController.view.mas_remakeConstraints { make in
+        coHost.view.mas_remakeConstraints { make in
             make?.top.right().bottom().equalTo()(0)
             make?.left.equalTo()(coHostLeft)
         }
         
-        teacherUIController.view.mas_remakeConstraints { make in
+        teacher.view.mas_remakeConstraints { make in
             make?.left.top().bottom().equalTo()(0)
-            make?.right.equalTo()(coHostUIController.view.mas_left)?.equalTo()(-itemLineSpacing)
+            make?.right.equalTo()(coHost.view.mas_left)?.equalTo()(-itemLineSpacing)
         }
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {

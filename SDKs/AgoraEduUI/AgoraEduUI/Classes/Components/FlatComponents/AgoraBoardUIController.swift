@@ -11,6 +11,22 @@ import AgoraWidget
 protocol AgoraBoardUIControllerDelegate: NSObjectProtocol {
     func onBoardActiveStateChanged(isActive: Bool)
     func onStageStateChanged(stageOn: Bool)
+    func onBoardGrantedUserListRemoved(userList: [String])
+    func onBoardGrantedUserListAdded(userList: [String])
+}
+
+extension AgoraBoardUIControllerDelegate {
+    func onStageStateChanged(stageOn: Bool) {
+        
+    }
+    
+    func onBoardGrantedUserListRemoved(userList: [String]) {
+        
+    }
+    
+    func onBoardGrantedUserListAdded(userList: [String]) {
+        
+    }
 }
 
 class AgoraBoardUIController: UIViewController {
@@ -54,8 +70,8 @@ class AgoraBoardUIController: UIViewController {
     private weak var delegate: AgoraBoardUIControllerDelegate?
     
     init(context: AgoraEduContextPool,
-         delegate: AgoraBoardUIControllerDelegate? = nil,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraBoardUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
         self.delegate = delegate
@@ -211,7 +227,18 @@ private extension AgoraBoardUIController {
     }
     
     func handleGrantUsers(_ list: Array<String>) {
+        let oldList = grantUsers
+        let newList = list
+        
         grantUsers = list
+        
+        if let insertList = oldList.insert(from: newList) {
+            delegate?.onBoardGrantedUserListAdded(userList: insertList)
+        }
+        
+        if let deletedList = oldList.delete(from: newList) {
+            delegate?.onBoardGrantedUserListRemoved(userList: deletedList)
+        }
     }
     
     func handlePhotoNoAuth(_ result: FcrBoardWidgetSnapshotResult) {
@@ -337,6 +364,44 @@ extension AgoraBoardUIController: AgoraEduMediaHandler {
         if let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(data).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
+        }
+    }
+}
+
+fileprivate extension Array where Element == String {
+    func insert(from: [String]) -> [String]? {
+        var insertArray = [String]()
+    
+        for item in from {
+            guard !self.contains(item) else {
+                continue
+            }
+            
+            insertArray.append(item)
+        }
+        
+        if insertArray.count == 0 {
+            return nil
+        } else {
+            return insertArray
+        }
+    }
+    
+    func delete(from: [String]) -> [String]? {
+        var deleteArray = [String]()
+        
+        for item in self {
+            guard !from.contains(item) else {
+                continue
+            }
+            
+            deleteArray.append(item)
+        }
+        
+        if deleteArray.count == 0 {
+            return nil
+        } else {
+            return deleteArray
         }
     }
 }
