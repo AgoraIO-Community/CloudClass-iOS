@@ -22,7 +22,7 @@ enum AgoraBoardWidgetSignal: Convertable {
     case OpenCourseware(AgoraBoardWidgetCoursewareInfo)
     case WindowStateChanged(AgoraBoardWidgetWindowState)
     case SaveBoard
-    case PhotoAuth
+    case OnBoardSaveResult(FcrBoardWidgetSnapshotResult)
     case CloseBoard
     
     private enum CodingKeys: CodingKey {
@@ -39,7 +39,7 @@ enum AgoraBoardWidgetSignal: Convertable {
         case OpenCourseware
         case WindowStateChanged
         case SaveBoard
-        case PhotoAuth
+        case OnBoardSaveResult
         case CloseBoard
     }
     
@@ -79,8 +79,9 @@ enum AgoraBoardWidgetSignal: Convertable {
             self = .WindowStateChanged(value)
         } else if let _ = try? container.decodeNil(forKey: .SaveBoard) {
             self = .SaveBoard
-        } else if let _ = try? container.decodeNil(forKey: .PhotoAuth) {
-            self = .PhotoAuth
+        } else if let value = try? container.decode(FcrBoardWidgetSnapshotResult.self,
+                                                    forKey: .OnBoardSaveResult) {
+            self = .OnBoardSaveResult(value)
         } else if let _ = try? container.decodeNil(forKey: .CloseBoard) {
             self = .CloseBoard
         } else {
@@ -133,8 +134,9 @@ enum AgoraBoardWidgetSignal: Convertable {
                                  forKey: .WindowStateChanged)
         case .SaveBoard:
             try container.encodeNil(forKey: .SaveBoard)
-        case .PhotoAuth:
-            try container.encodeNil(forKey: .PhotoAuth)
+        case .OnBoardSaveResult(let x):
+            try container.encode(x,
+                                 forKey: .OnBoardSaveResult)
         case .CloseBoard:
             try container.encodeNil(forKey: .CloseBoard)
         }
@@ -196,6 +198,10 @@ enum AgoraBoardWidgetShapeType: Int,Convertable {
         default:            return nil
         }
     }
+}
+// save snapshot
+enum FcrBoardWidgetSnapshotResult: Int, Convertable {
+    case savedToAlbum, noAlbumAuth, failureToSave
 }
 
 enum AgoraBoardWidgetWindowState: Int, Convertable {

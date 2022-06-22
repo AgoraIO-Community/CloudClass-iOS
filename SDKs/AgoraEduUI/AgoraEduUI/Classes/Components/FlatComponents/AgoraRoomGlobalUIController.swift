@@ -45,6 +45,8 @@ class AgoraRoomGlobalUIController: UIViewController {
     private var localStream: AgoraEduContextStreamInfo?
     private var hasJoinedSubRoomId: String?
     
+    var isRequestingHelp: Bool = false
+    
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: AgoraRoomGlobalUIControllerDelegate? = nil) {
@@ -304,6 +306,26 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
         
         delegate?.onLocalUserRemovedFromSubRoom(subRoomId: hasJoined,
                                                 isKickOut: false)
+    }
+    
+    func onUserListRejectedToSubRoom(userList: [String],
+                                     subRoomUuid: String,
+                                     operatorUser: AgoraEduContextUserInfo?) {
+        guard isRequestingHelp,
+              let teacherUserId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+              userList.contains(teacherUserId) else {
+            return
+        }
+        
+        isRequestingHelp = false
+        
+        let confirmAction = AgoraAlertAction(title: "fcr_group_sure".agedu_localized(),
+                                             action: nil)
+        AgoraAlertModel()
+            .setTitle("fcr_group_help_title".agedu_localized())
+            .setMessage("fcr_group_help_teacher_busy_msg".agedu_localized())
+            .addAction(action: confirmAction)
+            .show(in: self)
     }
 }
 

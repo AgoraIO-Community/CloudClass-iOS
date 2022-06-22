@@ -42,6 +42,15 @@ class AgoraToolCollectionUIController: UIViewController {
     /// Data
     private weak var delegate: AgoraToolCollectionUIControllerDelegate?
     
+    private var localAuth: Bool = false {
+        didSet {
+            guard localAuth != oldValue else {
+                return
+            }
+            view.isHidden = !localAuth
+        }
+    }
+    
     var suggestLength: CGFloat = UIDevice.current.isPad ? 34 : 32
     var suggestSpreadHeight: CGFloat = 80
     
@@ -115,18 +124,28 @@ class AgoraToolCollectionUIController: UIViewController {
         
         baseTintColor = group.tool_bar_item_highlight_color
         
+        
         super.init(nibName: nil,
                    bundle: nil)
         
         self.contextPool = context
         self.subRoom = subRoom
-        
+
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
         
         self.delegate = delegate
         
         initCtrlViews()
+    }
+    
+    func updateBoardActiveState(isActive: Bool) {
+        guard localAuth,
+              isActive else {
+            view.isHidden = true
+            return
+        }
+        view.isHidden = false
     }
     
     required init?(coder: NSCoder) {
@@ -139,6 +158,9 @@ class AgoraToolCollectionUIController: UIViewController {
         initViews()
         initViewFrame()
         updateViewProperties()
+        
+        let localRole = userController.getLocalUserInfo().userRole
+        localAuth = (localRole == .teacher)
     }
 }
 // MARK: - AgoraUIActivity & AgoraUIContentContainer
@@ -373,7 +395,7 @@ private extension AgoraToolCollectionUIController {
             return
         }
         let auth = list.contains(userController.getLocalUserInfo().userUuid)
-        view.isHidden = !auth
+        localAuth = auth
         delegate?.toolCollectionDidChangeAppearance(auth)
         
         guard auth else {

@@ -159,8 +159,6 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
                                        .nameRoll,
                                        .handsList]
             
-            boardPageController.view.isHidden = false
-            
             addChild(classStateController)
             classStateController.view.isHidden = true
             contentView.addSubview(classStateController.view)
@@ -169,8 +167,6 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
                                        .message,
                                        .nameRoll,
                                        .handsup]
-            
-            boardPageController.view.isHidden = true
         default:
             toolBarController.tools = [.setting,
                                        .message]
@@ -197,7 +193,6 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
             contentView.addSubview(renderMenuController.view)
             
             addChild(toolCollectionController)
-            toolCollectionController.view.isHidden = false
             contentView.addSubview(toolCollectionController.view)
             
             addChild(cloudController)
@@ -207,7 +202,6 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
             addChild(nameRollController)
             
             addChild(toolCollectionController)
-            toolCollectionController.view.isHidden = true
             contentView.addSubview(toolCollectionController.view)
         default:
             break
@@ -580,6 +574,7 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
     }
 }
 
+// MARK: - AgoraBoardUIControllerDelegate
 extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
     func onStageStateChanged(stageOn: Bool) {
         guard curStageOn != stageOn else {
@@ -606,6 +601,11 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
                 make?.centerY.equalTo()(contentView.mas_centerY)?.offset()(UIDevice.current.isPad ? 10 : 7)
             }
         }
+    }
+    
+    func onBoardActiveStateChanged(isActive: Bool) {
+        toolCollectionController.updateBoardActiveState(isActive: isActive)
+        boardPageController.updateBoardActiveState(isActive: isActive)
     }
 }
 

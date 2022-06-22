@@ -9,6 +9,7 @@ import AgoraEduContext
 import AgoraWidget
 
 protocol AgoraBoardUIControllerDelegate: NSObjectProtocol {
+    func onBoardActiveStateChanged(isActive: Bool)
     func onStageStateChanged(stageOn: Bool)
 }
 
@@ -93,12 +94,13 @@ class AgoraBoardUIController: UIViewController {
     // for sub
     func onViewWillActive() {
         contextPool.media.registerMediaEventHandler(self)
+        widgetController.add(self)
         
         guard widgetController.getWidgetActivity(kBoardWidgetId) else {
+            delegate?.onBoardActiveStateChanged(isActive: false)
             return
         }
-        
-        widgetController.add(self)
+        delegate?.onBoardActiveStateChanged(isActive: true)
         
         setUp()
         joinBoardWidget()
@@ -212,12 +214,21 @@ private extension AgoraBoardUIController {
         grantUsers = list
     }
     
-    func handlePhotoNoAuth() {
-        let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized(), action: nil)
-        AgoraAlertModel()
-            .setMessage("fcr_savecanvas_tips_save_failed_tips".agedu_localized())
-            .addAction(action: action)
-            .show(in: self)
+    func handlePhotoNoAuth(_ result: FcrBoardWidgetSnapshotResult) {
+        switch result {
+        case .savedToAlbum:
+            AgoraToast.toast(msg: "fcr_savecanvas_tips_save_successfully".agedu_localized(),
+                             type: .success)
+        case .noAlbumAuth:
+            let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized(), action: nil)
+            AgoraAlertModel()
+                .setMessage("fcr_savecanvas_tips_save_failed_tips".agedu_localized())
+                .addAction(action: action)
+                .show(in: self)
+        case .failureToSave:
+            AgoraToast.toast(msg: "fcr_savecanvas_tips_save_failed".agedu_localized(),
+                             type: .error)
+        }
     }
 }
 
@@ -237,8 +248,8 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
             handleAudioMixing(requestData)
         case .GetBoardGrantedUsers(let list):
             handleGrantUsers(list)
-        case .PhotoAuth:
-            handlePhotoNoAuth()
+        case .OnBoardSaveResult(let result):
+            handlePhotoNoAuth(result)
         default:
             break
         }
@@ -250,6 +261,7 @@ extension AgoraBoardUIController: AgoraWidgetActivityObserver {
         guard widgetId == kBoardWidgetId else {
             return
         }
+        delegate?.onBoardActiveStateChanged(isActive: true)
         
         joinBoardWidget()
     }
@@ -258,6 +270,7 @@ extension AgoraBoardUIController: AgoraWidgetActivityObserver {
         guard widgetId == kBoardWidgetId else {
             return
         }
+        delegate?.onBoardActiveStateChanged(isActive: false)
         
         deinitBoardWidget()
     }

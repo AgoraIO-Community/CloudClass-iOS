@@ -36,6 +36,13 @@ class AgoraToolBarUIController: UIViewController {
             default:                return nil
             }
         }
+        
+        var isOnceKind: Bool {
+            switch self {
+            case .help:     return true
+            default:        return false
+            }
+        }
     }
     
     private var userController: AgoraEduUserContext {
@@ -352,7 +359,8 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
         collectionView.deselectItem(at: indexPath,
                                     animated: false)
         let tool = dataSource[indexPath.row]
-        if selectedTool == tool {
+        if !tool.isOnceKind,
+           selectedTool == tool {
             selectedTool = nil
         } else {
             selectedTool = tool

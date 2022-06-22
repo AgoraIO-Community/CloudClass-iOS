@@ -501,3 +501,8 @@ struct FcrWindowRenderViewData {
         return audioState
     }
 }
+
+
+enum FcrTeacherInRoomType {
+    case none, main, localSub, otherSub
+}

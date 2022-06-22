@@ -51,7 +51,8 @@ import UIKit
     /** 右边用来切圆角和显示背景色的容器视图*/
     private lazy var rightContentView = UIView()
     /** 白板 控制器*/
-    private lazy var boardController = AgoraBoardUIController(context: contextPool)
+    private lazy var boardController = AgoraBoardUIController(context: contextPool,
+                                                              delegate: self)
    
     /** 工具集合 控制器（观众端没有）*/
     private lazy var toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
@@ -178,16 +179,16 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         contentView.addSubview(classToolsController.view)
         
         if userRole != .observer {
-            toolCollectionController.view.isHidden = true
             view.addSubview(toolCollectionController.view)
             
             contentView.addSubview(boardPageController.view)
-            boardPageController.view.isHidden = true
             addChild(boardPageController)
         }
         
         if userRole == .teacher {
             addChild(classStateController)
+            classStateController.view.isHidden = true
+            contentView.addSubview(classStateController.view)
             addChild(cloudController)
             contentView.addSubview(cloudController.view)
             addChild(renderMenuController)
@@ -195,8 +196,6 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
             
             renderMenuController.view.isHidden = true
             cloudController.view.isHidden = true
-            toolCollectionController.view.isHidden = false
-            boardPageController.view.isHidden = false
         }
         
         createChatController()
@@ -291,6 +290,18 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         
         rightContentView.backgroundColor = ui.color.one_right_content_bg_color
         rightContentView.layer.cornerRadius = ui.frame.one_room_right_corner_radius
+    }
+}
+
+// MARK: - AgoraBoardUIControllerDelegate
+extension AgoraOneToOneUIManager: AgoraBoardUIControllerDelegate {
+    func onStageStateChanged(stageOn: Bool) {
+        
+    }
+    
+    func onBoardActiveStateChanged(isActive: Bool) {
+        toolCollectionController.updateBoardActiveState(isActive: isActive)
+        boardPageController.updateBoardActiveState(isActive: isActive)
     }
 }
 
@@ -523,7 +534,8 @@ extension AgoraOneToOneUIManager: AgoraClassStateUIControllerDelegate {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
-        contentView.addSubview(classStateController.view)
+        
+        classStateController.view.isHidden = false
         
         classStateController.view.mas_makeConstraints { make in
             make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.isPad ? 15 : 12)

@@ -26,7 +26,9 @@ import AgoraWidget
                                                                          subRoom: subRoom)
     
     /** 白板的渲染 控制器*/
-    private lazy var boardController = AgoraBoardUIController(context: contextPool, subRoom: subRoom)
+    private lazy var boardController = AgoraBoardUIController(context: contextPool,
+                                                              delegate: self,
+                                                              subRoom: subRoom)
     
     /** 白板翻页 控制器（观众端没有）*/
     private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool, subRoom: subRoom)
@@ -93,6 +95,7 @@ import AgoraWidget
     private var subRoom: AgoraEduSubRoomContext
     
     private var isJoinedRoom = false
+    private var curStageOn = true
     
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
@@ -235,16 +238,12 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
                                        .message,
                                        .nameRoll,
                                        .handsList]
-            
-            boardPageController.view.isHidden = false
         case .student:
             toolBarController.tools = [.help,
                                        .setting,
                                        .message,
                                        .nameRoll,
                                        .handsup]
-            
-            boardPageController.view.isHidden = true
         default:
             toolBarController.tools = [.setting,
                                        .message]
@@ -258,7 +257,6 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
         }
         
         chatController.hideMiniButton = true
-        chatController.viewDidLoad()
         addChild(chatController)
         
         switch userRole {
@@ -276,13 +274,11 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
             contentView.addSubview(cloudController.view)
             
             addChild(toolCollectionController)
-            toolCollectionController.view.isHidden = false
             contentView.addSubview(toolCollectionController.view)
         case .student:
             addChild(nameRollController)
             
             addChild(toolCollectionController)
-            toolCollectionController.view.isHidden = true
             contentView.addSubview(toolCollectionController.view)
         default:
             break
@@ -362,6 +358,41 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
     }
 }
 
+// MARK: - AgoraBoardUIControllerDelegate
+extension AgoraSubRoomUIManager: AgoraBoardUIControllerDelegate {
+    func onStageStateChanged(stageOn: Bool) {
+        guard curStageOn != stageOn else {
+            return
+        }
+        curStageOn = stageOn
+        if curStageOn {
+            renderController.view.isHidden = false
+            boardController.view.mas_remakeConstraints { make in
+                make?.height.equalTo()(AgoraFit.scale(307))
+                make?.left.right().bottom().equalTo()(0)
+            }
+            
+            renderController.view.mas_remakeConstraints { make in
+                make?.left.right().equalTo()(0)
+                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-1))
+            }
+        } else {
+            renderController.view.isHidden = true
+            boardController.view.mas_remakeConstraints { make in
+                make?.height.equalTo()(AgoraFit.scale(307))
+                make?.left.right().equalTo()(0)
+                make?.centerY.equalTo()(contentView.mas_centerY)?.offset()(UIDevice.current.isPad ? 10 : 7)
+            }
+        }
+    }
+    
+    func onBoardActiveStateChanged(isActive: Bool) {
+        toolCollectionController.updateBoardActiveState(isActive: isActive)
+        boardPageController.updateBoardActiveState(isActive: isActive)
+    }
+}
+
 // MARK: - AgoraToolBarDelegate
 extension AgoraSubRoomUIManager: AgoraToolBarDelegate {
     func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
@@ -386,19 +417,7 @@ extension AgoraSubRoomUIManager: AgoraToolBarDelegate {
                 ctrlView = handsListController.view
             }
         case .help:
-            if teacherInLocalSubRoom() {
-                AgoraToast.toast(msg: "fcr_group_teacher_exist_hint".agedu_localized(),
-                                 type: .warning)
-            } else if let userList = contextPool.user.getUserList(role: .teacher),
-                      let teacherUserId = userList.first?.userUuid {
-                let roomId = subRoom.getSubRoomInfo().subRoomUuid
-                
-                contextPool.group.inviteUserListToSubRoom(userList: [teacherUserId],
-                                                          subRoomUuid: roomId,
-                                                          success: nil,
-                                                          failure: nil)
-            }
-            break
+            toolsViewDidSelectHelp()
         default:
             break
         }
@@ -626,28 +645,74 @@ private extension AgoraSubRoomUIManager {
         layout.minimumLineSpacing = kItemGap
         renderController.updateLayout(layout)
     }
-    
-    func teacherInLocalSubRoom() -> Bool {
+    func teacherInRoom() -> FcrTeacherInRoomType {
         let group = contextPool.group
-        let user = subRoom.user
+        let mainUser = contextPool.user
+        let subUser = subRoom.user
         
-        guard let subRoomList = group.getSubRoomList(),
-              let teacher = user.getUserList(role: .teacher)?.first else {
-            return false
+        guard let mainTeacher = mainUser.getUserList(role: .teacher)?.first else {
+            return .none
         }
         
-        let localUserId = user.getLocalUserInfo().userUuid
-        let teacherId = teacher.userUuid
+        let localSubTeacher = subUser.getUserList(role: .teacher)?.first
+        guard localSubTeacher == nil else {
+            return .localSub
+        }
+        
+        guard let subRoomList = group.getSubRoomList() else {
+            return .none
+        }
+        
+        let localUserId = subUser.getLocalUserInfo().userUuid
+        let teacherId = mainTeacher.userUuid
         
         for item in subRoomList {
-            guard let userList = group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
-                  userList.contains([localUserId,teacherId]) else {
-                continue
+            if let userList = group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
+               userList.contains(teacherId),
+               !userList.contains(localUserId) {
+                return .otherSub
             }
-            
-            return true
         }
         
-        return false
+        return .none
+    }
+    
+    func toolsViewDidSelectHelp() {
+        switch teacherInRoom() {
+        case .localSub:
+            AgoraToast.toast(msg: "fcr_group_teacher_exist_hint".agedu_localized(),
+                             type: .warning)
+        case .otherSub:
+            AgoraToast.toast(msg: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
+                             type: .warning)
+        default:
+            guard let userList = contextPool.user.getUserList(role: .teacher),
+                  let teacherUserId = userList.first?.userUuid else {
+                      break
+                  }
+                
+                globalController.isRequestingHelp = true
+                
+                let actionInvite = AgoraAlertAction(title: "fcr_group_invite".agedu_localized(), action: { [weak self] in
+                    guard let `self` = self else {
+                        return
+                    }
+                    let roomId = self.subRoom.getSubRoomInfo().subRoomUuid
+                    self.contextPool.group.inviteUserListToSubRoom(userList: [teacherUserId],
+                                                                   subRoomUuid: roomId,
+                                                                   success: nil,
+                                                                   failure: nil)
+                })
+                
+                let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".agedu_localized(),
+                                                    action: nil)
+                
+                AgoraAlertModel()
+                    .setTitle("fcr_group_help_title".agedu_localized())
+                    .setMessage("fcr_group_help_content".agedu_localized())
+                    .addAction(action: actionCancel)
+                    .addAction(action: actionInvite)
+                    .show(in: self)
+            }
     }
 }

@@ -64,6 +64,8 @@ fcr_stream_start_audio = "Your mic has been turned on";
 fcr_netless_board_granted = "You have been authorized by the teacher. Please use the whiteboard tool to interact";
 fcr_netless_board_ungranted = "Your authorization has been cancelled by the teacher. You can't interact with whiteboard tools";
 fcr_savecanvas_tips_save_failed_tips = "Allow flexible classroom to access your Photos in \"Setting->Privacy->Photos\"";
+fcr_savecanvas_tips_save_successfully = "Save successfully";
+fcr_savecanvas_tips_save_failed = "Save failed";
 fcr_savecanvas_tips_save_failed_sure = "OK";
 
 // tool box
@@ -95,6 +97,8 @@ fcr_group_teacher_is_helping_others_msg = "The teacher is helping other group, P
 fcr_group_teacher_exist_hint = "The teacher is already in the group";
 
 fcr_group_invite = "Invite";
+fcr_group_cancel = "Cancel";
+fcr_group_sure = "Comfirm";
 fcr_group_invitation = "The teacher invites you to join {xxx}";
 fcr_group_button_join = "Join";
 fcr_group_button_later = "Later";
@@ -109,7 +113,7 @@ fcr_group_close_group = "The teacher closed breakout rooms";
 fcr_group_invite_back_main_room = "The teacher is inviting you to return to main session";
 fcr_group_back_main_room = "Returning to main session...";
 
-fcr_group_back_sure = "Sure";
+fcr_group_back_sure = "Confirm";
 fcr_group_back_cancel = "Cancel";
 fcr_group_back_exit = "Exit";
 fcr_group_back_to_main_room = "Return to main session";

@@ -52,7 +52,8 @@ import AgoraWidget
                                                                                   dataSource: [FcrWindowRenderViewState.none],
                                                                                   reverseItem: false)
     /** 白板 控制器*/
-    private lazy var boardController = AgoraBoardUIController(context: contextPool)
+    private lazy var boardController = AgoraBoardUIController(context: contextPool,
+                                                              delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
     private lazy var toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
@@ -147,11 +148,12 @@ import AgoraWidget
         contentView.addSubview(windowController.view)
         
         toolBarController.delegate = self
-        
-        addChild(classToolsController)
-        contentView.addSubview(classToolsController.view)
 
         if userRole == .teacher {
+            addChild(classToolsController)
+            classToolsController.view.isHidden = true
+            contentView.addSubview(classToolsController.view)
+            
             addChild(toolCollectionController)
             contentView.addSubview(toolCollectionController.view)
             
@@ -169,8 +171,6 @@ import AgoraWidget
             
             renderMenuController.view.isHidden = true
             cloudController.view.isHidden = true
-            toolCollectionController.view.isHidden = false
-            boardPageController.view.isHidden = false
         } else if userRole == .student {
             addChild(toolCollectionController)
             contentView.addSubview(toolCollectionController.view)
@@ -179,8 +179,6 @@ import AgoraWidget
             addChild(boardPageController)
             
             toolBarController.tools = [.setting, .handsup]
-            toolCollectionController.view.isHidden = true
-            boardPageController.view.isHidden = true
         } else {
             toolBarController.tools = [.setting]
         }
@@ -264,6 +262,18 @@ import AgoraWidget
     
     func updateViewProperties() {
         
+    }
+}
+
+// MARK: - AgoraBoardUIControllerDelegate
+extension AgoraLectureUIManager: AgoraBoardUIControllerDelegate {
+    func onStageStateChanged(stageOn: Bool) {
+        
+    }
+    
+    func onBoardActiveStateChanged(isActive: Bool) {
+        toolCollectionController.updateBoardActiveState(isActive: isActive)
+        boardPageController.updateBoardActiveState(isActive: isActive)
     }
 }
 
@@ -488,7 +498,8 @@ extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
-        contentView.addSubview(classStateController.view)
+        
+        classStateController.view.isHidden = false
         
         classStateController.view.mas_makeConstraints { make in
             make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.isPad ? 15 : 12)
