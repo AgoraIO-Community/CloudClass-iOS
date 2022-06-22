@@ -106,8 +106,6 @@ class AgoraBoardPageUIController: UIViewController {
         
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
-        let localRole = userController.getLocalUserInfo().userRole
-        localAuth = (localRole == .teacher)
     }
     
     func updateBoardActiveState(isActive: Bool) {
@@ -223,11 +221,12 @@ extension AgoraBoardPageUIController: AgoraWidgetMessageObserver {
                 pageCount = count
             }
         case .GetBoardGrantedUsers(let list):
-            let localUser = contextPool.user.getLocalUserInfo()
-            guard localUser.userRole != .teacher else {
-                break
+            let localUser = userController.getLocalUserInfo()
+            if localUser.userRole == .teacher {
+                localAuth = true
+            } else {
+                localAuth = list.contains(localUser.userUuid)
             }
-            localAuth = list.contains(localUser.userUuid)
         case .WindowStateChanged(let state):
             positionMoveFlag = (state == .min)
         default:

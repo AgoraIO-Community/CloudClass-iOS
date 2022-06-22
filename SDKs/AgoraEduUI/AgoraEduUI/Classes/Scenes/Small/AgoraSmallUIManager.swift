@@ -18,7 +18,9 @@ import AgoraWidget
     private lazy var stateController = AgoraRoomStateUIController(context: contextPool)
     
     /** 视窗渲染 控制器*/
-    private lazy var renderController = FcrSmallWindowRenderUIController(context: contextPool, controllerDataSource: self)
+    private lazy var renderController = FcrSmallWindowRenderUIController(context: contextPool,
+                                                                         delegate: self,
+                                                                         controllerDataSource: self)
     
     /** 白板的渲染 控制器*/
     private lazy var boardController = AgoraBoardUIController(context: contextPool,
@@ -139,13 +141,13 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         addChild(webViewController)
         contentView.addSubview(webViewController.view)
         
+        addChild(windowController)
+        contentView.addSubview(windowController.view)
+        
         if userRole != .observer {
             addChild(boardPageController)
             contentView.addSubview(boardPageController.view)
         }
-        
-        addChild(windowController)
-        contentView.addSubview(windowController.view)
         
         addChild(toolBarController)
         contentView.addSubview(toolBarController.view)
@@ -233,20 +235,11 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
             make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-1))
         }
         
-        if userRole == .teacher {
-            toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
-        } else {
-            toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.boardController.view)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
+        self.toolBarController.view.mas_remakeConstraints { make in
+            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.width.equalTo()(self.toolBarController.suggestSize.width)
+            make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
         
         if userRole != .observer {
@@ -477,6 +470,10 @@ extension AgoraSmallUIManager: FcrWindowRenderUIControllerDelegate {
             return
         }
         
+        let rect = view.convert(view.bounds,
+                                to: contentView)
+        let centerX = rect.center.x - contentView.width / 2
+        
         let userId = data.userId
         
         var role = AgoraEduContextUserRole.student
@@ -492,12 +489,12 @@ extension AgoraSmallUIManager: FcrWindowRenderUIControllerDelegate {
         } else {
             // 1. 当前menu的userId不为点击的userId，切换用户
             // 2. 当前不存在menu，显示
-            renderMenuController.show(roomType: .oneToOne,
+            renderMenuController.show(roomType: .small,
                                       userUuid: userId,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
-                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
-                make?.centerX.equalTo()(view.mas_centerX)
+                make?.top.equalTo()(view.mas_bottom)?.offset()(2)
+                make?.centerX.equalTo()(centerX)
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }

@@ -50,10 +50,11 @@ import AgoraWidget
     /** 老师渲染 控制器*/
     private lazy var teacherRenderController = FcrLectureWindowRenderUIController(context: contextPool,
                                                                                   dataSource: [FcrWindowRenderViewState.none],
-                                                                                  reverseItem: false)
+                                                                                  reverseItem: false,
+                                                                                  delegate: self)
     /** 白板 控制器*/
-    private lazy var boardController = AgoraBoardUIController(context: contextPool,
-                                                              delegate: self)
+    private lazy var boardController = AgoraLectureBoardUIController(context: contextPool,
+                                                                     delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
     private lazy var toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
@@ -152,7 +153,6 @@ import AgoraWidget
 
         if userRole == .teacher {
             addChild(classToolsController)
-            classToolsController.view.isHidden = true
             contentView.addSubview(classToolsController.view)
             
             addChild(toolCollectionController)
@@ -173,6 +173,9 @@ import AgoraWidget
             renderMenuController.view.isHidden = true
             cloudController.view.isHidden = true
         } else if userRole == .student {
+            addChild(classToolsController)
+            contentView.addSubview(classToolsController.view)
+            
             addChild(toolCollectionController)
             contentView.addSubview(toolCollectionController.view)
             
@@ -219,20 +222,11 @@ import AgoraWidget
             make?.right.equalTo()(teacherRenderController.view.mas_left)?.offset()(AgoraFit.scale(-2))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
-        if userRole == .teacher {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
-        } else {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
+        toolBarController.view.mas_remakeConstraints { make in
+            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.width.equalTo()(self.toolBarController.suggestSize.width)
+            make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
         if userRole != .observer {
             toolCollectionController.view.mas_makeConstraints { make in
@@ -246,6 +240,9 @@ import AgoraWidget
                 make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
                 make?.width.equalTo()(168)
             }
+            classToolsController.view.mas_makeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(boardController.view)
+            }
         }
 
         chatController.view.mas_makeConstraints { make in
@@ -253,11 +250,7 @@ import AgoraWidget
             make?.left.right().equalTo()(teacherRenderController.view)
             make?.bottom.equalTo()(0)
         }
-        
-        classToolsController.view.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(boardController.view)
-        }
-        
+
         updateRenderLayout()
     }
     
@@ -397,13 +390,21 @@ extension AgoraLectureUIManager: AgoraRenderMenuUIControllerDelegate {
     }
 }
 
-// MARK: - AgoraRenderUIControllerDelegate
-extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
-    func onClickMemberAt(view: UIView,
-                         userId: String) {
-        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+// MARK: - FcrWindowRenderUIControllerDelegate
+extension AgoraLectureUIManager: FcrWindowRenderUIControllerDelegate {
+    func renderUIController(_ controller: FcrWindowRenderUIController,
+                            didPressItem item: FcrWindowRenderViewState,
+                            view: UIView) {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher,
+              let data = item.data else {
             return
         }
+        
+        let rect = view.convert(view.bounds,
+                                to: contentView)
+        let centerX = rect.center.x - contentView.width / 2
+        
+        let userId = data.userId
         
         var role = AgoraEduContextUserRole.student
         if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
@@ -422,7 +423,7 @@ extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
                                       userUuid: userId,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
-                make?.top.equalTo()(view.mas_bottom)?.offset()(1)
+                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
                 make?.centerX.equalTo()(view.mas_centerX)
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(renderMenuController.menuWidth)

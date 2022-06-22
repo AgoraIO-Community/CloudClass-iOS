@@ -48,6 +48,12 @@ class AgoraToolCollectionUIController: UIViewController {
                 return
             }
             view.isHidden = !localAuth
+            delegate?.toolCollectionDidChangeAppearance(localAuth)
+            
+            guard localAuth else {
+                return
+            }
+            setBoardAssistantType()
         }
     }
     
@@ -143,9 +149,11 @@ class AgoraToolCollectionUIController: UIViewController {
         guard localAuth,
               isActive else {
             view.isHidden = true
+            delegate?.toolCollectionDidChangeAppearance(false)
             return
         }
         view.isHidden = false
+        delegate?.toolCollectionDidChangeAppearance(true)
     }
     
     required init?(coder: NSCoder) {
@@ -158,9 +166,6 @@ class AgoraToolCollectionUIController: UIViewController {
         initViews()
         initViewFrame()
         updateViewProperties()
-        
-        let localRole = userController.getLocalUserInfo().userRole
-        localAuth = (localRole == .teacher)
     }
 }
 // MARK: - AgoraUIActivity & AgoraUIContentContainer
@@ -391,20 +396,15 @@ private extension AgoraToolCollectionUIController {
     }
     
     func handleBoardWidgetGrantUsers(_ list: [String]) {
-        guard userController.getLocalUserInfo().userRole == .student else {
-            return
+        let localUser = userController.getLocalUserInfo()
+        if localUser.userRole == .teacher {
+            localAuth = true
+        } else {
+            localAuth = list.contains(localUser.userUuid)
         }
-        let auth = list.contains(userController.getLocalUserInfo().userUuid)
-        localAuth = auth
-        delegate?.toolCollectionDidChangeAppearance(auth)
-        
-        guard auth else {
-            return
-        }
-        handleAssistantTypeMessage()
     }
     
-    func handleAssistantTypeMessage() {
+    func setBoardAssistantType() {
         if let boardTool = currentMainTool.widgetType {
             updateWidgetTool()
         } else if currentMainTool == .text {
@@ -485,8 +485,8 @@ private extension AgoraToolCollectionUIController {
     
     func updateWidgetShape() {
         let shapeInfo = FcrBoardWidgetShapeInfo(type: subToolsView.currentPaintTool.widgetShape,
-                                          width: subToolsView.curLineWidth.value,
-                                          color: subToolsView.currentColor.toColorArr())
+                                                width: subToolsView.curLineWidth.value,
+                                                color: subToolsView.currentColor.toColorArr())
         if let message = AgoraBoardWidgetSignal.ChangeAssistantType(.shape(shapeInfo)).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)

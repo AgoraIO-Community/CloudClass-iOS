@@ -48,7 +48,8 @@ class FcrTeacherWindowRenderUIController: FcrWindowRenderUIController {
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
          dataSource: [FcrWindowRenderViewState]? = nil,
-         reverseItem: Bool = true) {
+         reverseItem: Bool = true,
+         delegate: FcrWindowRenderUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
         

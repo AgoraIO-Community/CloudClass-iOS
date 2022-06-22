@@ -229,20 +229,11 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         
-        if userRole == .teacher {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
-        } else {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
+        self.toolBarController.view.mas_remakeConstraints { make in
+            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
+            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.width.equalTo()(self.toolBarController.suggestSize.width)
+            make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
         
         if userRole != .observer {
@@ -555,6 +546,10 @@ extension AgoraOneToOneUIManager: FcrWindowRenderUIControllerDelegate {
             return
         }
         
+        let rect = view.convert(view.bounds,
+                                to: contentView)
+        let centerX = rect.center.x - contentView.width / 2
+        
         let userId = data.userId
         
         var role = AgoraEduContextUserRole.student
@@ -574,8 +569,8 @@ extension AgoraOneToOneUIManager: FcrWindowRenderUIControllerDelegate {
                                       userUuid: userId,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
-                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
-                make?.centerX.equalTo()(view.mas_centerX)
+                make?.bottom.equalTo()(view.mas_bottom)?.offset()(-5)
+                make?.centerX.equalTo()(centerX)
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }
