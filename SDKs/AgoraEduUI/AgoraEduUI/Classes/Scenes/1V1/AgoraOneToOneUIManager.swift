@@ -632,6 +632,9 @@ private extension AgoraOneToOneUIManager {
         if contextPool.user.getLocalUserInfo().userRole == .observer {
             chatController.hideInput = true
         }
+        
+        chatController.hideMuteButton = true
+        
         addChild(chatController)
         if UIDevice.current.isPad {
             rightContentView.addSubview(chatController.view)

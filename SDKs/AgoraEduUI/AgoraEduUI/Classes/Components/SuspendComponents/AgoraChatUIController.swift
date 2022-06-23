@@ -61,6 +61,8 @@ class AgoraChatUIController: UIViewController {
     
     public var hideInput = false
     
+    public var hideMuteButton = false
+    
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: AgoraChatUIControllerDelegate? = nil) {
@@ -189,6 +191,11 @@ private extension AgoraChatUIController {
         if hideInput {
             widgetController.sendMessage(toWidget: widgetId,
                                          message: "hideInput")
+        }
+        
+        if hideMuteButton {
+            widgetController.sendMessage(toWidget: widgetId,
+                                         message: "hideMuteButton")
         }
         
         widgetController.add(self,
