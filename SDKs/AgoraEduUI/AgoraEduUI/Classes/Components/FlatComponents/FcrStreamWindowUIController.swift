@@ -67,7 +67,6 @@ class FcrStreamWindowUIController: UIViewController {
     private var widgets = [String: AgoraBaseWidget]()         // Key: widget object Id
     
     private let zIndexKey = "zIndex"
-//    private let userIdKey = "userUuid"
     
     private weak var controllerDataSource: FcrUIControllerDataSource?
     
@@ -156,25 +155,6 @@ extension FcrStreamWindowUIController {
         dataSource[index] = item
     }
     
-    func updateItemHierarchy(_ zIndex: Int,
-                             index: Int) {
-        var item = dataSource[index]
-                
-        guard let widget = widgets[item.widgetObjectId] else {
-            return
-        }
-        
-        item.zIndex = zIndex
-        
-        dataSource.remove(at: index)
-        
-        // Update view hierarchy
-        let viewIndex = dataSource.insertItem(item)
-        
-        view.insertSubview(widget.view,
-                           at: viewIndex)
-    }
-    
     func onWillDisplayItem(_ item: FcrStreamWindowWidgetItem,
                            renderView: FcrWindowRenderVideoView) {
         let renderConfig = AgoraEduContextRenderConfig()
@@ -244,7 +224,7 @@ private extension FcrStreamWindowUIController {
         // Frame & Animation
         let itemIndex = (dataSource.count - 1)
         
-        createWidgetViewFrame(widgetView: widget.view,
+        addItemViewFrame(widgetView: widget.view,
                               widgetObjectId: item.widgetObjectId,
                               userId: item.data.userId,
                               zIndex: item.zIndex,
@@ -274,7 +254,7 @@ private extension FcrStreamWindowUIController {
         widgets.removeValue(forKey: item.widgetObjectId)
         
         // Frame & Animation
-        releaseWidgetViewFrame(widgetView: widget.view,
+        deleteViewFrame(widgetView: widget.view,
                                userId: item.data.userId,
                                animation: animation) { [weak self] in
             guard let `self` = self else {
@@ -340,10 +320,26 @@ private extension FcrStreamWindowUIController {
         
         return item
     }
-}
-
-// MARK: - Widget create & relase
-private extension FcrStreamWindowUIController {
+    
+    func updateItemHierarchy(_ zIndex: Int,
+                             index: Int) {
+        var item = dataSource[index]
+                
+        guard let widget = widgets[item.widgetObjectId] else {
+            return
+        }
+        
+        item.zIndex = zIndex
+        
+        dataSource.remove(at: index)
+        
+        // Update view hierarchy
+        let viewIndex = dataSource.insertItem(item)
+        
+        view.insertSubview(widget.view,
+                           at: viewIndex)
+    }
+    
     func createAllItems() {
         guard let list = widgetController.getActiveWidgetList(widgetId: WindowWidgetId) else {
             return
@@ -367,28 +363,10 @@ private extension FcrStreamWindowUIController {
                        animation: false)
         }
     }
-    
-    func createViewData(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewData {
-        var boardPrivilege: Bool = false
-        
-        let userId = stream.owner.userUuid
-        
-        if let userList = controllerDataSource?.controllerNeedGrantedUserList(),
-           userList.contains(userId) {
-            boardPrivilege = true
-        }
-        
-        let rewardCount = userController.getUserRewardCount(userUuid: userId)
-        
-        let data = FcrWindowRenderViewData.create(stream: stream,
-                                                  rewardCount: rewardCount,
-                                                  boardPrivilege: boardPrivilege)
-        
-        return data
-    }
 }
 
-extension FcrStreamWindowUIController {
+// MARK: - UI
+private extension FcrStreamWindowUIController {
     func updateFrame(widgetObjectId: String,
                      syncFrame: CGRect,
                      animation: Bool = false) {
@@ -407,12 +385,12 @@ extension FcrStreamWindowUIController {
         }
     }
         
-    func createWidgetViewFrame(widgetView: UIView,
-                               widgetObjectId: String,
-                               userId: String,
-                               zIndex: Int,
-                               itemIndex: Int,
-                               animation: Bool = false) {
+    func addItemViewFrame(widgetView: UIView,
+                          widgetObjectId: String,
+                          userId: String,
+                          zIndex: Int,
+                          itemIndex: Int,
+                          animation: Bool = false) {
         var syncFrame = widgetController.getWidgetSyncFrame(widgetObjectId)
         
         if syncFrame == .zero {
@@ -454,10 +432,10 @@ extension FcrStreamWindowUIController {
         }
     }
     
-    func releaseWidgetViewFrame(widgetView: UIView,
-                                userId: String,
-                                animation: Bool = false,
-                                completion: @escaping () -> Void) {
+    func deleteViewFrame(widgetView: UIView,
+                         userId: String,
+                         animation: Bool = false,
+                         completion: @escaping () -> Void) {
         if let destinationFrame = delegate?.onNeedWindowRenderViewFrameOnTopWindow(userId: userId),
            animation {
             
@@ -553,6 +531,25 @@ extension FcrStreamWindowUIController {
         renderView.videoMaskView.isHidden = true
         
         return renderView
+    }
+    
+    func createViewData(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewData {
+        var boardPrivilege: Bool = false
+        
+        let userId = stream.owner.userUuid
+        
+        if let userList = controllerDataSource?.controllerNeedGrantedUserList(),
+           userList.contains(userId) {
+            boardPrivilege = true
+        }
+        
+        let rewardCount = userController.getUserRewardCount(userUuid: userId)
+        
+        let data = FcrWindowRenderViewData.create(stream: stream,
+                                                  rewardCount: rewardCount,
+                                                  boardPrivilege: boardPrivilege)
+        
+        return data
     }
 }
 
