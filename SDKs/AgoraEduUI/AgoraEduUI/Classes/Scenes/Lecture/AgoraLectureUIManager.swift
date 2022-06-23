@@ -205,39 +205,45 @@ import AgoraWidget
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))
         }
+        
         webViewController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
+        
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
+        
         teacherRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.right.equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
             make?.height.equalTo()(AgoraFit.scale(112))
         }
+        
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.right.equalTo()(teacherRenderController.view.mas_left)?.offset()(AgoraFit.scale(-2))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
+
         toolBarController.view.mas_remakeConstraints { make in
-            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.width.equalTo()(self.toolBarController.suggestSize.width)
             make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
+        
         if userRole != .observer {
             toolCollectionController.view.mas_makeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
             boardPageController.view.mas_makeConstraints { make in
-                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+                make?.height.equalTo()(UIDevice.current.agora_is_pad ? 34 : 32)
                 make?.width.equalTo()(168)
             }
             classToolsController.view.mas_makeConstraints { make in
@@ -456,14 +462,14 @@ extension AgoraLectureUIManager: AgoraToolCollectionUIControllerDelegate {
         if spread {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.equalTo()(toolCollectionController.suggestLength)
                 make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
@@ -508,15 +514,15 @@ extension AgoraLectureUIManager: AgoraToolCollectionUIControllerDelegate {
                         
                         if appear {
                             self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
                                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
                             }
                         } else {
                             self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
                             }
@@ -536,7 +542,7 @@ extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
         classStateController.view.isHidden = false
         
         classStateController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.isPad ? 15 : 12)
+            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
             make?.bottom.equalTo()(boardPageController.view.mas_bottom)
             make?.size.equalTo()(classStateController.suggestSize)
         }

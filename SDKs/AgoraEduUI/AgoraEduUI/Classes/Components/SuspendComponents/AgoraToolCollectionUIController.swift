@@ -57,7 +57,7 @@ class AgoraToolCollectionUIController: UIViewController {
         }
     }
     
-    var suggestLength: CGFloat = UIDevice.current.isPad ? 34 : 32
+    var suggestLength: CGFloat = UIDevice.current.agora_is_pad ? 34 : 32
     var suggestSpreadHeight: CGFloat = 80
     
     private var baseTintColor: UIColor

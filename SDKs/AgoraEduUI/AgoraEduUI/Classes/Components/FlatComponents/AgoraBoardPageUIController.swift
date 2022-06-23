@@ -75,7 +75,7 @@ class AgoraBoardPageUIController: UIViewController {
                             guard let `self` = self else {
                                 return
                             }
-                            let move: CGFloat = UIDevice.current.isPad ? 49 : 44
+                            let move: CGFloat = UIDevice.current.agora_is_pad ? 49 : 44
                             self.view.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
                                                                     y: 0)
                            }, completion: nil)

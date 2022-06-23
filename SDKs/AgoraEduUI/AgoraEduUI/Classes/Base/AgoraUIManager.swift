@@ -128,7 +128,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         let estimateFrame = CGRect(origin: point,
                                  size: animaView.frame.size)
         if estimateFrame.maxY > self.contentView.frame.maxY - 10 {
-            let gap: CGFloat = UIDevice.current.isPad ? 20 : 15
+            let gap: CGFloat = UIDevice.current.agora_is_pad ? 20 : 15
             point.y = self.contentView.frame.maxY - gap - animaView.bounds.height
         }
         animaView.frame = CGRect(origin: point, size: animaView.frame.size)

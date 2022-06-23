@@ -298,7 +298,7 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
         
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
-            make?.height.equalTo()(UIDevice.current.isPad ? 20 : 14)
+            make?.height.equalTo()(UIDevice.current.agora_is_pad ? 20 : 14)
         }
         
         boardController.view.mas_makeConstraints { make in
@@ -313,8 +313,8 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
         }
 
         self.toolBarController.view.mas_remakeConstraints { make in
-            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.width.equalTo()(self.toolBarController.suggestSize.width)
             make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
@@ -322,14 +322,14 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
         if userRole != .observer {
             toolCollectionController.view.mas_makeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(boardController.view)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(boardController.view)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
             
             boardPageController.view.mas_makeConstraints { make in
-                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
-                make?.bottom.equalTo()(boardController.view)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
+                make?.bottom.equalTo()(boardController.view)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+                make?.height.equalTo()(UIDevice.current.agora_is_pad ? 34 : 32)
                 make?.width.equalTo()(168)
             }
         }
@@ -418,7 +418,7 @@ extension AgoraSubRoomUIManager: AgoraBoardUIControllerDelegate {
             boardController.view.mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().equalTo()(0)
-                make?.centerY.equalTo()(contentView.mas_centerY)?.offset()(UIDevice.current.isPad ? 10 : 7)
+                make?.centerY.equalTo()(contentView.mas_centerY)?.offset()(UIDevice.current.agora_is_pad ? 10 : 7)
             }
         }
     }
@@ -587,15 +587,15 @@ extension AgoraSubRoomUIManager: AgoraToolCollectionUIControllerDelegate {
             
             if appear {
                 self.toolBarController.view.mas_remakeConstraints { make in
-                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                    make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                    make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
                     make?.width.equalTo()(self.toolBarController.suggestSize.width)
                     make?.height.equalTo()(self.toolBarController.suggestSize.height)
                 }
             } else {
                 self.toolBarController.view.mas_remakeConstraints { make in
-                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                    make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                    make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                     make?.width.equalTo()(self.toolBarController.suggestSize.width)
                     make?.height.equalTo()(self.toolBarController.suggestSize.height)
                 }
@@ -614,14 +614,14 @@ extension AgoraSubRoomUIManager: AgoraToolCollectionUIControllerDelegate {
         if spread {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.equalTo()(toolCollectionController.suggestLength)
                 make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }

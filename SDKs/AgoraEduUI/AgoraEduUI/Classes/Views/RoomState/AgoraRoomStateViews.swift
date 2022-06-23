@@ -52,7 +52,7 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
             make?.top.bottom().equalTo()(0)
             make?.width.greaterThanOrEqualTo()(60)
             
-            let right: CGFloat = (UIDevice.current.isPad ? -12 : -6)
+            let right: CGFloat = (UIDevice.current.agora_is_pad ? -12 : -6)
             
             if #available(iOS 11.0, *) {
                 make?.right.equalTo()(self.mas_safeAreaLayoutGuideRight)?.offset()(right)

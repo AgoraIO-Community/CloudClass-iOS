@@ -203,7 +203,7 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         
         createChatController()
         
-        if !UIDevice.current.isPad {
+        if !UIDevice.current.agora_is_pad {
             rightContentView.addSubview(tabSelectView)
         }
     }
@@ -230,8 +230,8 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         }
         
         self.toolBarController.view.mas_remakeConstraints { make in
-            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.width.equalTo()(self.toolBarController.suggestSize.width)
             make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
@@ -239,18 +239,18 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         if userRole != .observer {
             toolCollectionController.view.mas_makeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
             boardPageController.view.mas_makeConstraints { make in
-                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+                make?.height.equalTo()(UIDevice.current.agora_is_pad ? 34 : 32)
                 make?.width.equalTo()(168)
             }
         }
         
-        if UIDevice.current.isPad {
+        if UIDevice.current.agora_is_pad {
             rightContentView.mas_makeConstraints { make in
                 make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
                 make?.bottom.right().equalTo()(0)
@@ -467,14 +467,14 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
         if spread {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.equalTo()(toolCollectionController.suggestLength)
                 make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
@@ -518,15 +518,15 @@ extension AgoraOneToOneUIManager: AgoraToolCollectionUIControllerDelegate {
                         
                         if appear {
                             self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
                                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
                             }
                         } else {
                             self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
                             }
@@ -596,7 +596,7 @@ extension AgoraOneToOneUIManager: AgoraClassStateUIControllerDelegate {
         classStateController.view.isHidden = false
         
         classStateController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.isPad ? 15 : 12)
+            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
             make?.bottom.equalTo()(boardPageController.view.mas_bottom)
             make?.size.equalTo()(classStateController.suggestSize)
         }
@@ -623,7 +623,7 @@ private extension AgoraOneToOneUIManager {
     }
     
     func createChatController() {
-        if UIDevice.current.isPad {
+        if UIDevice.current.agora_is_pad {
             chatController.hideMiniButton = true
             chatController.hideAnnouncement = true
         } else {
@@ -636,7 +636,7 @@ private extension AgoraOneToOneUIManager {
         chatController.hideMuteButton = true
         
         addChild(chatController)
-        if UIDevice.current.isPad {
+        if UIDevice.current.agora_is_pad {
             rightContentView.addSubview(chatController.view)
             chatController.view.mas_makeConstraints { make in
                 make?.left.right().bottom().equalTo()(0)

@@ -108,7 +108,7 @@ extension LoginViewController {
 // MARK: - Private
 private extension LoginViewController {
     func updateDefaultRegion() {
-        guard !UIDevice.current.isChineseLanguage else {
+        guard !UIDevice.current.agora_is_chinese_language else {
             return
         }
         

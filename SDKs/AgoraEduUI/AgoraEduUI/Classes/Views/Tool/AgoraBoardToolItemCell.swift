@@ -194,7 +194,7 @@ class AgoraToolCollectionToolCell: UICollectionViewCell {
         
         imageView.mas_makeConstraints { make in
             make?.center.equalTo()(self)
-            make?.width.height().equalTo()(UIDevice.current.isPad ? 34 : 30)
+            make?.width.height().equalTo()(UIDevice.current.agora_is_pad ? 34 : 30)
         }
     }
     
