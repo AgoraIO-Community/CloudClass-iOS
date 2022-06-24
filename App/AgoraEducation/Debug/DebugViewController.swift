@@ -235,15 +235,17 @@ private extension DebugViewController {
             AgoraLoading.hide()
         }
         
-        requestToken(region: region.rawValue,
-                     userUuid: userUuid,
+        requestToken(region: region,
+                     roomId: roomUuid,
+                     userId: userUuid,
+                     userRole: inputParams.roleType.rawValue,
                      success: { [weak self] (response) in
                         guard let `self` = self else {
                             return
                         }
                         
                         let appId = response.appId
-                        let rtmToken = response.rtmToken
+                        let token = response.token
                         let userUuid = response.userId
                         
                         let launchConfig = AgoraEduLaunchConfig(userName: userName,
@@ -253,7 +255,7 @@ private extension DebugViewController {
                                                                 roomUuid: roomUuid,
                                                                 roomType: roomStyle,
                                                                 appId: appId,
-                                                                token: rtmToken,
+                                                                token: token,
                                                                 startTime: startTime,
                                                                 duration: NSNumber(value: duration),
                                                                 region: region.eduType,
@@ -261,7 +263,7 @@ private extension DebugViewController {
                                                                 userProperties: nil)
                         // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
                         var widgets = Dictionary<String,AgoraWidgetConfig>()
-                        launchConfig.widgets.forEach {[unowned self] (k,v) in
+                        launchConfig.widgets.forEach { [unowned self] (k,v) in
                             if k == "AgoraCloudWidget" {
                                 v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
                             }
@@ -322,22 +324,25 @@ private extension DebugViewController {
         
         let response = TokenBuilder.ServerResp(appId: appId,
                                                userId: userUuid,
-                                               rtmToken: token)
+                                               token: token)
         success(response)
     }
     
-    func requestToken(region: String,
-                      userUuid: String,
+    func requestToken(region: RoomRegionType,
+                      roomId: String,
+                      userId: String,
+                      userRole: Int,
                       success: @escaping (TokenBuilder.ServerResp) -> (),
                       failure: @escaping (Error) -> ()) {
-        tokenBuilder.buildByServer(region: region,
-                                   userUuid: userUuid,
-                                   environment: inputParams.env,
-                                   success: { (resp) in
+        tokenBuilder.buildByServer(environment: inputParams.env,
+                                   region: region.toServer,
+                                   roomId: roomId,
+                                   userId: userId,
+                                   userRole: userRole) { (resp) in
             success(resp)
-        }, failure: { (error) in
+        } failure: { (error) in
             failure(error)
-        })
+        }
     }
 }
 
