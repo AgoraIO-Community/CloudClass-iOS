@@ -156,6 +156,17 @@ class AgoraToolCollectionUIController: UIViewController {
         delegate?.toolCollectionDidChangeAppearance(true)
     }
     
+    func onBoardPrivilegeListChaned(_ privilege: Bool,
+                                    userList: [String]) {
+        let localUser = userController.getLocalUserInfo()
+
+        guard userList.contains(localUser.userUuid) else {
+            return
+        }
+        
+        localAuth = privilege
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -254,8 +265,6 @@ extension AgoraToolCollectionUIController: AgoraWidgetActivityObserver,
             return
         }
         switch signal {
-        case .GetBoardGrantedUsers(let list):
-            handleBoardWidgetGrantUsers(list)
         case .BoardStepChanged(let changeType):
             handleBoardWidgetStep(changeType)
         case .CloseBoard:
@@ -393,15 +402,6 @@ private extension AgoraToolCollectionUIController {
     func handleCurrentSubToolChange() {
         updateImage()
         updateWidgetShape()
-    }
-    
-    func handleBoardWidgetGrantUsers(_ list: [String]) {
-        let localUser = userController.getLocalUserInfo()
-        if localUser.userRole == .teacher {
-            localAuth = true
-        } else {
-            localAuth = list.contains(localUser.userUuid)
-        }
     }
     
     func setBoardAssistantType() {

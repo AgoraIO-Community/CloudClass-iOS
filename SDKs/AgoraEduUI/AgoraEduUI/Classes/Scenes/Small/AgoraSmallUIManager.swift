@@ -611,6 +611,10 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
                                              userList: userList)
         updateStreamWindowItemBoardPrivilege(true,
                                              userList: userList)
+        toolCollectionController.onBoardPrivilegeListChaned(true,
+                                                            userList: userList)
+        boardPageController.onBoardPrivilegeListChaned(true,
+                                                       userList: userList)
     }
     
     func onBoardGrantedUserListRemoved(userList: [String]) {
@@ -618,6 +622,10 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
                                              userList: userList)
         updateStreamWindowItemBoardPrivilege(false,
                                              userList: userList)
+        toolCollectionController.onBoardPrivilegeListChaned(false,
+                                                            userList: userList)
+        boardPageController.onBoardPrivilegeListChaned(false,
+                                                       userList: userList)
     }
     
     func updateWindowRenderItemBoardPrivilege(_ privilege: Bool,
@@ -670,7 +678,7 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
 // MARK: - FcrUIControllerDataSource
 extension AgoraSmallUIManager: FcrUIControllerDataSource {
     func controllerNeedGrantedUserList() -> [String] {
-        return boardController.grantUsers
+        return boardController.grantedUsers
     }
 }
 

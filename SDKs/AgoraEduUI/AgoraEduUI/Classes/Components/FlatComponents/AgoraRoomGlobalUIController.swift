@@ -69,6 +69,7 @@ class AgoraRoomGlobalUIController: UIViewController {
             subRoom.registerSubRoomEventHandler(self)
         }
         
+        contextPool.monitor.registerMonitorEventHandler(self)
         contextPool.room.registerRoomEventHandler(self)
         contextPool.group.registerGroupEventHandler(self)
     }

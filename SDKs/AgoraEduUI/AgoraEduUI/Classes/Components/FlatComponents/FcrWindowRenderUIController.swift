@@ -519,15 +519,9 @@ extension FcrWindowRenderUIController: UICollectionViewDataSource, UICollectionV
             return
         }
         
-        print(">>>>>> indexPath item: \(indexPath.item)")
-        
         // cell object changed also call this ‘didEndDisplaying’
         // but need to ignore this case
         let indexs = collectionView.indexPathsForVisibleItems
-        
-        for i in indexs {
-            print(">>>>>> indexPath i: \(i.item)")
-        }
         
         guard !indexs.contains(indexPath) else {
             return

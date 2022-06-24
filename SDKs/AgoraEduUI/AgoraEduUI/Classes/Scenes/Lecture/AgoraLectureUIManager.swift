@@ -279,11 +279,19 @@ extension AgoraLectureUIManager: AgoraBoardUIControllerDelegate {
     func onBoardGrantedUserListAdded(userList: [String]) {
         updateStreamWindowItemBoardPrivilege(true,
                                              userList: userList)
+        toolCollectionController.onBoardPrivilegeListChaned(true,
+                                                            userList: userList)
+        boardPageController.onBoardPrivilegeListChaned(true,
+                                                       userList: userList)
     }
     
     func onBoardGrantedUserListRemoved(userList: [String]) {
         updateStreamWindowItemBoardPrivilege(false,
                                              userList: userList)
+        toolCollectionController.onBoardPrivilegeListChaned(false,
+                                                            userList: userList)
+        boardPageController.onBoardPrivilegeListChaned(false,
+                                                       userList: userList)
     }
     
     func updateStreamWindowItemBoardPrivilege(_ privilege: Bool,
@@ -552,7 +560,7 @@ extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
 // MARK: - FcrUIControllerDataSource
 extension AgoraLectureUIManager: FcrUIControllerDataSource {
     func controllerNeedGrantedUserList() -> [String] {
-        return boardController.grantUsers
+        return boardController.grantedUsers
     }
 }
 

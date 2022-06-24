@@ -30,13 +30,10 @@ extension AgoraBoardUIControllerDelegate {
 }
 
 class AgoraBoardUIController: UIViewController {
-    private(set) var grantUsers = [String]() {
+    private(set) var grantedUsers = [String]() {
         didSet {
-            if grantUsers.contains(contextPool.user.getLocalUserInfo().userUuid) {
-                localGranted = true
-            } else {
-                localGranted = false
-            }
+            onGrantedUsersChanged(oldList: oldValue,
+                                  newList: grantedUsers)
         }
     }
     
@@ -67,7 +64,7 @@ class AgoraBoardUIController: UIViewController {
     var contextPool: AgoraEduContextPool
     var subRoom: AgoraEduSubRoomContext?
     private var boardWidget: AgoraBaseWidget?
-    private weak var delegate: AgoraBoardUIControllerDelegate?
+    private(set) weak var delegate: AgoraBoardUIControllerDelegate?
     
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
@@ -107,7 +104,7 @@ class AgoraBoardUIController: UIViewController {
         UIApplication.shared.windows[0].endEditing(true)
     }
     
-    // for sub
+    // for subVC
     func onViewWillActive() {
         contextPool.media.registerMediaEventHandler(self)
         widgetController.add(self)
@@ -120,6 +117,24 @@ class AgoraBoardUIController: UIViewController {
         
         setUp()
         joinBoardWidget()
+    }
+    
+    func onGrantedUsersChanged(oldList: Array<String>,
+                               newList: Array<String>) {
+        let localUser = contextPool.user.getLocalUserInfo()
+        if localUser.userRole == .teacher {
+            localGranted = true
+        } else {
+            localGranted = newList.contains(localUser.userUuid)
+        }
+        
+        if let insertList = oldList.insert(from: newList) {
+            delegate?.onBoardGrantedUserListAdded(userList: insertList)
+        }
+        
+        if let deletedList = oldList.delete(from: newList) {
+            delegate?.onBoardGrantedUserListRemoved(userList: deletedList)
+        }
     }
     
     func onViewWillInactive() {
@@ -193,15 +208,6 @@ private extension AgoraBoardUIController {
         }
     }
     
-    func handleBoardPhase(_ phase: AgoraBoardWidgetRoomPhase) {
-        switch phase {
-        case .Disconnected :
-            break
-        default:
-            break
-        }
-    }
-    
     func handleAudioMixing(_ data: AgoraBoardWidgetAudioMixingRequestData) {
         var contextError: AgoraEduContextError?
         switch data.requestType {
@@ -223,21 +229,6 @@ private extension AgoraBoardUIController {
                                                                                                               errorCode: error.code)).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
-        }
-    }
-    
-    func handleGrantUsers(_ list: Array<String>) {
-        let oldList = grantUsers
-        let newList = list
-        
-        grantUsers = list
-        
-        if let insertList = oldList.insert(from: newList) {
-            delegate?.onBoardGrantedUserListAdded(userList: insertList)
-        }
-        
-        if let deletedList = oldList.delete(from: newList) {
-            delegate?.onBoardGrantedUserListRemoved(userList: deletedList)
         }
     }
     
@@ -269,12 +260,10 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
         }
         
         switch signal {
-        case .BoardPhaseChanged(let phase):
-            handleBoardPhase(phase)
         case .BoardAudioMixingRequest(let requestData):
             handleAudioMixing(requestData)
         case .GetBoardGrantedUsers(let list):
-            handleGrantUsers(list)
+            grantedUsers = list
         case .OnBoardSaveResult(let result):
             handlePhotoNoAuth(result)
         default:
@@ -368,7 +357,7 @@ extension AgoraBoardUIController: AgoraEduMediaHandler {
     }
 }
 
-fileprivate extension Array where Element == String {
+extension Array where Element == String {
     func insert(from: [String]) -> [String]? {
         var insertArray = [String]()
     

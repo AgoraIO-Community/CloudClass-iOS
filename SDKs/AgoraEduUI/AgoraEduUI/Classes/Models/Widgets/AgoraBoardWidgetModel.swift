@@ -10,7 +10,6 @@ import Foundation
 // MARK: - Config
 enum AgoraBoardWidgetSignal: Convertable {
     case JoinBoard
-    case BoardPhaseChanged(AgoraBoardWidgetRoomPhase)
     case ChangeAssistantType(FcrBoardWidgetAssistantType)
     case GetBoardGrantedUsers([String])
     case UpdateGrantedUsers(AgoraBoardWidgetGrantUsersChangeType)
@@ -27,7 +26,6 @@ enum AgoraBoardWidgetSignal: Convertable {
     
     private enum CodingKeys: CodingKey {
         case JoinBoard
-        case BoardPhaseChanged
         case ChangeAssistantType
         case GetBoardGrantedUsers
         case UpdateGrantedUsers
@@ -48,9 +46,6 @@ enum AgoraBoardWidgetSignal: Convertable {
         
         if let _ = try? container.decodeNil(forKey: .JoinBoard) {
             self = .JoinBoard
-        } else if let value = try? container.decode(AgoraBoardWidgetRoomPhase.self,
-                                                    forKey: .BoardPhaseChanged) {
-            self = .BoardPhaseChanged(value)
         } else if let value = try? container.decode(FcrBoardWidgetAssistantType.self,
                                                     forKey: .ChangeAssistantType) {
             self = .ChangeAssistantType(value)
@@ -100,9 +95,6 @@ enum AgoraBoardWidgetSignal: Convertable {
         switch self {
         case .JoinBoard:
             try container.encodeNil(forKey: .JoinBoard)
-        case .BoardPhaseChanged(let x):
-            try container.encode(x,
-                                 forKey: .BoardPhaseChanged)
         case .ChangeAssistantType(let x):
             try container.encode(x,
                                  forKey: .ChangeAssistantType)
@@ -150,14 +142,6 @@ enum AgoraBoardWidgetSignal: Convertable {
         return str
     }
 }
-
-enum AgoraBoardWidgetRoomPhase: Int,Convertable {
-    case Connecting
-    case Connected
-    case Reconnecting
-    case Disconnecting
-    case Disconnected
-};
 
 enum AgoraBoardWidgetToolType: Int,Convertable {
     case Selector, Text, Rectangle, Ellipse, Eraser, Pencil, Arrow, Straight, Pointer, Clicker, Shape
