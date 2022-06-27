@@ -57,7 +57,7 @@ buildFunc() {
     -sdk ${OS_TYPE}\
     -configuration ${Mode}\
     ${ARC}\
-    -derivedDataPath $Derived_Data_Path BITCODE_GENERATION_MODE=bitcode || exit 1
+    -derivedDataPath $Derived_Data_Path || exit 1
 }
 
 # compile
