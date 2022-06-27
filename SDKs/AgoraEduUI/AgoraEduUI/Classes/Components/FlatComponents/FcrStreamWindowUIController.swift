@@ -539,7 +539,8 @@ private extension FcrStreamWindowUIController {
         let userId = stream.owner.userUuid
         
         if let userList = controllerDataSource?.controllerNeedGrantedUserList(),
-           userList.contains(userId) {
+           userList.contains(userId),
+           stream.owner.userRole != .teacher  {
             boardPrivilege = true
         }
         
