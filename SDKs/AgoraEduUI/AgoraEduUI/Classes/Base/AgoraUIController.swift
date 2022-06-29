@@ -18,6 +18,6 @@ protocol AgoraUIContentContainer: NSObjectProtocol {
     func updateViewProperties()
 }
 
-protocol FcrUIControllerDataSource: NSObjectProtocol where Self: UIViewController {
+protocol FcrUIControllerDataSource where Self: UIViewController {
     func controllerNeedGrantedUserList() -> [String]
 }
