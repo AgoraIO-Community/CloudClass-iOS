@@ -274,7 +274,7 @@ class AgoraToolCollectionCell: UIView {
         
         imageView.mas_remakeConstraints { make in
             make?.center.equalTo()(0)
-            make?.width.height().equalTo()(UIDevice.current.isPad ? 32 : 30)
+            make?.width.height().equalTo()(UIDevice.current.agora_is_pad ? 32 : 30)
         }
         
         if !isMain {

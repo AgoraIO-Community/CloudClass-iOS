@@ -98,26 +98,26 @@ protocol AgoraBoardToolConfigViewDelegate: class {
 
 fileprivate let kTextSizeCount: Int = 4
 
-fileprivate let kToolLength: CGFloat = UIDevice.current.isPad ? 34 : 30
-fileprivate let kFontLength: CGFloat = UIDevice.current.isPad ? 34 : 30
+fileprivate let kToolLength: CGFloat = UIDevice.current.agora_is_pad ? 34 : 30
+fileprivate let kFontLength: CGFloat = UIDevice.current.agora_is_pad ? 34 : 30
 fileprivate let kWidthLength: CGFloat = 28
 fileprivate let kColorLength: CGFloat = 22
 
 fileprivate let kGapLength: CGFloat = 12
 fileprivate let kToolHGap: CGFloat = 12
 fileprivate let kFontHGap: CGFloat = 12
-fileprivate let kWidthHGap: CGFloat = UIDevice.current.isPad ? 8 : 4
-fileprivate let kColorHGap: CGFloat = UIDevice.current.isPad ? 28 : 20
+fileprivate let kWidthHGap: CGFloat = UIDevice.current.agora_is_pad ? 8 : 4
+fileprivate let kColorHGap: CGFloat = UIDevice.current.agora_is_pad ? 28 : 20
 /// only shows when curMainTool is Text or Paint
 class AgoraBoardToolConfigView: UIView {
     /** UI*/
     public var suggestSize: CGSize {
         get {
             if isCurrentPaint {
-                return CGSize(width: UIDevice.current.isPad ? 196 : 172,
+                return CGSize(width: UIDevice.current.agora_is_pad ? 196 : 172,
                               height: toolCollectionHeight + lineCollectionHeight + colorCollectionHeight + AgoraFit.scale(1) * 2)
             } else {
-                return CGSize(width: UIDevice.current.isPad ? 196 : 172,
+                return CGSize(width: UIDevice.current.agora_is_pad ? 196 : 172,
                               height: textCollectionHeight + colorCollectionHeight + AgoraFit.scale(1))
             }
         }
@@ -328,7 +328,7 @@ private extension AgoraBoardToolConfigView {
         addSubview(contentView)
         
         
-        let toolLeft: CGFloat = UIDevice.current.isPad ? 12 : 8
+        let toolLeft: CGFloat = UIDevice.current.agora_is_pad ? 12 : 8
         subPaintCollectionView = makeCollectionView(space: kToolHGap,
                                                     sectionInset: UIEdgeInsets(top: kGapLength,
                                                                                left: toolLeft,

@@ -20,6 +20,14 @@ class AgoraBoardPageUIController: UIViewController {
         }
     }
     
+    private var userController: AgoraEduUserContext {
+        if let `subRoom` = subRoom {
+            return subRoom.user
+        } else {
+            return contextPool.user
+        }
+    }
+    
     private var contextPool: AgoraEduContextPool
     private var subRoom: AgoraEduSubRoomContext?
     
@@ -31,6 +39,15 @@ class AgoraBoardPageUIController: UIViewController {
     private var nextBtn: UIButton = UIButton(type: .custom)
     
     /** Data */
+    private var localAuth: Bool = false {
+        didSet {
+            guard localAuth != oldValue else {
+                return
+            }
+            view.isHidden = !localAuth
+        }
+    }
+    
     private var pageIndex = 1 {
         didSet {
             let text = "\(pageIndex) / \(pageCount)"
@@ -58,7 +75,7 @@ class AgoraBoardPageUIController: UIViewController {
                             guard let `self` = self else {
                                 return
                             }
-                            let move: CGFloat = UIDevice.current.isPad ? 49 : 44
+                            let move: CGFloat = UIDevice.current.agora_is_pad ? 49 : 44
                             self.view.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
                                                                     y: 0)
                            }, completion: nil)
@@ -89,6 +106,26 @@ class AgoraBoardPageUIController: UIViewController {
         
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
+    }
+    
+    func updateBoardActiveState(isActive: Bool) {
+        guard localAuth,
+              isActive else {
+            view.isHidden = true
+            return
+        }
+        view.isHidden = false
+    }
+    
+    func onBoardPrivilegeListChaned(_ privilege: Bool,
+                                    userList: [String]) {
+        let localUser = userController.getLocalUserInfo()
+
+        guard userList.contains(localUser.userUuid) else {
+            return
+        }
+        
+        localAuth = privilege
     }
 }
 
@@ -193,16 +230,6 @@ extension AgoraBoardPageUIController: AgoraWidgetMessageObserver {
                 pageIndex = index + 1
             case .count(let count):
                 pageCount = count
-            }
-        case .GetBoardGrantedUsers(let list):
-            let localUser = contextPool.user.getLocalUserInfo()
-            guard localUser.userRole != .teacher else {
-                break
-            }
-            if list.contains(localUser.userUuid) {
-                view.isHidden = false
-            } else {
-                view.isHidden = true
             }
         case .WindowStateChanged(let state):
             positionMoveFlag = (state == .min)

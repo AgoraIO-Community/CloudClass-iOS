@@ -9,17 +9,31 @@ import AgoraEduContext
 import AgoraWidget
 
 protocol AgoraBoardUIControllerDelegate: NSObjectProtocol {
+    func onBoardActiveStateChanged(isActive: Bool)
     func onStageStateChanged(stageOn: Bool)
+    func onBoardGrantedUserListRemoved(userList: [String])
+    func onBoardGrantedUserListAdded(userList: [String])
+}
+
+extension AgoraBoardUIControllerDelegate {
+    func onStageStateChanged(stageOn: Bool) {
+        
+    }
+    
+    func onBoardGrantedUserListRemoved(userList: [String]) {
+        
+    }
+    
+    func onBoardGrantedUserListAdded(userList: [String]) {
+        
+    }
 }
 
 class AgoraBoardUIController: UIViewController {
-    private var grantUsers = [String]() {
+    private(set) var grantedUsers = [String]() {
         didSet {
-            if grantUsers.contains(contextPool.user.getLocalUserInfo().userUuid) {
-                localGranted = true
-            } else {
-                localGranted = false
-            }
+            onGrantedUsersChanged(oldList: oldValue,
+                                  newList: grantedUsers)
         }
     }
     
@@ -50,11 +64,11 @@ class AgoraBoardUIController: UIViewController {
     var contextPool: AgoraEduContextPool
     var subRoom: AgoraEduSubRoomContext?
     private var boardWidget: AgoraBaseWidget?
-    private weak var delegate: AgoraBoardUIControllerDelegate?
+    private(set) weak var delegate: AgoraBoardUIControllerDelegate?
     
     init(context: AgoraEduContextPool,
-         delegate: AgoraBoardUIControllerDelegate? = nil,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: AgoraBoardUIControllerDelegate? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
         self.delegate = delegate
@@ -90,18 +104,37 @@ class AgoraBoardUIController: UIViewController {
         UIApplication.shared.windows[0].endEditing(true)
     }
     
-    // for sub
+    // for subVC
     func onViewWillActive() {
         contextPool.media.registerMediaEventHandler(self)
+        widgetController.add(self)
         
         guard widgetController.getWidgetActivity(kBoardWidgetId) else {
+            delegate?.onBoardActiveStateChanged(isActive: false)
             return
         }
-        
-        widgetController.add(self)
+        delegate?.onBoardActiveStateChanged(isActive: true)
         
         setUp()
         joinBoardWidget()
+    }
+    
+    func onGrantedUsersChanged(oldList: Array<String>,
+                               newList: Array<String>) {
+        let localUser = contextPool.user.getLocalUserInfo()
+        if localUser.userRole == .teacher {
+            localGranted = true
+        } else {
+            localGranted = newList.contains(localUser.userUuid)
+        }
+        
+        if let insertList = oldList.insert(from: newList) {
+            delegate?.onBoardGrantedUserListAdded(userList: insertList)
+        }
+        
+        if let deletedList = oldList.delete(from: newList) {
+            delegate?.onBoardGrantedUserListRemoved(userList: deletedList)
+        }
     }
     
     func onViewWillInactive() {
@@ -175,15 +208,6 @@ private extension AgoraBoardUIController {
         }
     }
     
-    func handleBoardPhase(_ phase: AgoraBoardWidgetRoomPhase) {
-        switch phase {
-        case .Disconnected :
-            break
-        default:
-            break
-        }
-    }
-    
     func handleAudioMixing(_ data: AgoraBoardWidgetAudioMixingRequestData) {
         var contextError: AgoraEduContextError?
         switch data.requestType {
@@ -208,16 +232,21 @@ private extension AgoraBoardUIController {
         }
     }
     
-    func handleGrantUsers(_ list: Array<String>) {
-        grantUsers = list
-    }
-    
-    func handlePhotoNoAuth() {
-        let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized(), action: nil)
-        AgoraAlertModel()
-            .setMessage("fcr_savecanvas_tips_save_failed_tips".agedu_localized())
-            .addAction(action: action)
-            .show(in: self)
+    func handlePhotoNoAuth(_ result: FcrBoardWidgetSnapshotResult) {
+        switch result {
+        case .savedToAlbum:
+            AgoraToast.toast(msg: "fcr_savecanvas_tips_save_successfully".agedu_localized(),
+                             type: .success)
+        case .noAlbumAuth:
+            let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized(), action: nil)
+            AgoraAlertModel()
+                .setMessage("fcr_savecanvas_tips_save_failed_tips".agedu_localized())
+                .addAction(action: action)
+                .show(in: self)
+        case .failureToSave:
+            AgoraToast.toast(msg: "fcr_savecanvas_tips_save_failed".agedu_localized(),
+                             type: .error)
+        }
     }
 }
 
@@ -231,14 +260,12 @@ extension AgoraBoardUIController: AgoraWidgetMessageObserver {
         }
         
         switch signal {
-        case .BoardPhaseChanged(let phase):
-            handleBoardPhase(phase)
         case .BoardAudioMixingRequest(let requestData):
             handleAudioMixing(requestData)
         case .GetBoardGrantedUsers(let list):
-            handleGrantUsers(list)
-        case .PhotoAuth:
-            handlePhotoNoAuth()
+            grantedUsers = list
+        case .OnBoardSaveResult(let result):
+            handlePhotoNoAuth(result)
         default:
             break
         }
@@ -250,6 +277,7 @@ extension AgoraBoardUIController: AgoraWidgetActivityObserver {
         guard widgetId == kBoardWidgetId else {
             return
         }
+        delegate?.onBoardActiveStateChanged(isActive: true)
         
         joinBoardWidget()
     }
@@ -258,6 +286,7 @@ extension AgoraBoardUIController: AgoraWidgetActivityObserver {
         guard widgetId == kBoardWidgetId else {
             return
         }
+        delegate?.onBoardActiveStateChanged(isActive: false)
         
         deinitBoardWidget()
     }
@@ -324,6 +353,44 @@ extension AgoraBoardUIController: AgoraEduMediaHandler {
         if let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(data).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
+        }
+    }
+}
+
+extension Array where Element == String {
+    func insert(from: [String]) -> [String]? {
+        var insertArray = [String]()
+    
+        for item in from {
+            guard !self.contains(item) else {
+                continue
+            }
+            
+            insertArray.append(item)
+        }
+        
+        if insertArray.count == 0 {
+            return nil
+        } else {
+            return insertArray
+        }
+    }
+    
+    func delete(from: [String]) -> [String]? {
+        var deleteArray = [String]()
+        
+        for item in self {
+            guard !from.contains(item) else {
+                continue
+            }
+            
+            deleteArray.append(item)
+        }
+        
+        if deleteArray.count == 0 {
+            return nil
+        } else {
+            return deleteArray
         }
     }
 }

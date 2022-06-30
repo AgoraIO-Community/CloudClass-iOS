@@ -10,6 +10,23 @@ import UIKit
 protocol FcrWindowRenderUIControllerDelegate: NSObjectProtocol {
     func renderUIController(_ controller: FcrWindowRenderUIController,
                             didDataSouceCountUpdated count: Int)
+    
+    func renderUIController(_ controller: FcrWindowRenderUIController,
+                            didPressItem item: FcrWindowRenderViewState,
+                            view: UIView)
+}
+
+extension FcrWindowRenderUIControllerDelegate {
+    func renderUIController(_ controller: FcrWindowRenderUIController,
+                            didDataSouceCountUpdated count: Int) {
+        
+    }
+    
+    func renderUIController(_ controller: FcrWindowRenderUIController,
+                            didPressItem item: FcrWindowRenderViewState,
+                            view: UIView) {
+        
+    }
 }
 
 class FcrWindowRenderUIController: UIViewController {
@@ -41,7 +58,8 @@ class FcrWindowRenderUIController: UIViewController {
     init(dataSource: [FcrWindowRenderViewState]? = nil,
          layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout(),
          maxShowItemCount: Int = Int.max,
-         reverseItem: Bool = false) {
+         reverseItem: Bool = false,
+         delegate: FcrWindowRenderUIControllerDelegate? = nil) {
         if let source = dataSource {
             self.dataSource = source
         } else {
@@ -53,6 +71,7 @@ class FcrWindowRenderUIController: UIViewController {
         self.reverseItem = reverseItem
         self.collectionView = UICollectionView(frame: .zero,
                                                collectionViewLayout: layout)
+        self.delegate = delegate
         
         super.init(nibName: nil,
                    bundle: nil)
@@ -369,16 +388,16 @@ private extension FcrWindowRenderUIController {
                     with item: FcrWindowRenderViewState) {
         switch item {
         case .none:
-            cell.maskImageView.isHidden = false
+            cell.noneView.isHidden = false
             cell.renderView.isHidden = true
         case .show(let data):
-            cell.maskImageView.isHidden = true
+            cell.noneView.isHidden = true
             cell.renderView.isHidden = false
             
             updateRenderView(cell.renderView,
                              data: data)
         case .hide(let data):
-            cell.maskImageView.isHidden = true
+            cell.noneView.isHidden = true
             cell.renderView.isHidden = true
         }
         
@@ -399,6 +418,8 @@ private extension FcrWindowRenderUIController {
     func updateRenderView(_ renderView: FcrWindowRenderView,
                           data: FcrWindowRenderViewData) {
         renderView.nameLabel.text = data.userName
+        
+        renderView.videoView.isHidden = !(data.videoState.isBoth)
         
         switch data.videoState {
         case .none(let image):
@@ -427,6 +448,18 @@ private extension FcrWindowRenderUIController {
         case .both(let image):
             renderView.micView.imageView.image = image
         }
+        
+        switch data.boardPrivilege {
+        case .none:
+            renderView.boardPrivilegeView.isHidden = true
+        case .has(let image):
+            renderView.boardPrivilegeView.isHidden = false
+            renderView.boardPrivilegeView.image = image
+        }
+        
+        renderView.rewardView.imageView.image = data.reward.image
+        renderView.rewardView.label.text = data.reward.count
+        renderView.rewardView.isHidden = data.reward.isHidden
     }
 }
 
@@ -454,6 +487,16 @@ extension FcrWindowRenderUIController: UICollectionViewDataSource, UICollectionV
                                didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath,
                                     animated: false)
+        
+        guard let cell = collectionView.cellForItem(at: indexPath) else {
+            return
+        }
+        
+        let item = dataSource[indexPath.item]
+        
+        delegate?.renderUIController(self,
+                                     didPressItem: item,
+                                     view: cell)
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -476,15 +519,9 @@ extension FcrWindowRenderUIController: UICollectionViewDataSource, UICollectionV
             return
         }
         
-        print(">>>>>> indexPath item: \(indexPath.item)")
-        
         // cell object changed also call this ‘didEndDisplaying’
         // but need to ignore this case
         let indexs = collectionView.indexPathsForVisibleItems
-        
-        for i in indexs {
-            print(">>>>>> indexPath i: \(i.item)")
-        }
         
         guard !indexs.contains(indexPath) else {
             return

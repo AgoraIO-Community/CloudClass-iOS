@@ -25,6 +25,35 @@ class AgoraLectureBoardUIController: AgoraBoardUIController {
         super.onViewWillInactive()
         userController.unregisterUserEventHandler(self)
     }
+    
+    override func onGrantedUsersChanged(oldList: Array<String>,
+                                        newList: Array<String>) {
+        var newLocalGranted = true
+        
+        var finalNewList: [String] = newList.map({return $0})
+        
+        let localUser = contextPool.user.getLocalUserInfo()
+        
+        if localUser.userRole != .teacher {
+            if !newList.contains(localUser.userUuid) {
+                newLocalGranted = false
+            } else if !userController.isLocalCoHost() {
+                newLocalGranted = false
+                resignBoardGranted(userId: localUser.userUuid)
+                finalNewList.removeAll(localUser.userUuid)
+            }
+        }
+        
+        localGranted = newLocalGranted
+        
+        if let insertList = oldList.insert(from: finalNewList) {
+            delegate?.onBoardGrantedUserListAdded(userList: insertList)
+        }
+        
+        if let deletedList = oldList.delete(from: newList) {
+            delegate?.onBoardGrantedUserListRemoved(userList: deletedList)
+        }
+    }
 }
 
 extension AgoraLectureBoardUIController: AgoraEduUserHandler {
@@ -35,8 +64,13 @@ extension AgoraLectureBoardUIController: AgoraEduUserHandler {
               localGranted else {
             return
         }
-        
-        let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(.delete([localUserId]))
+        resignBoardGranted(userId: localUserId)
+    }
+}
+
+private extension AgoraLectureBoardUIController {
+    func resignBoardGranted(userId: String) {
+        let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(.delete([userId]))
         if let message = signal.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
@@ -44,3 +78,13 @@ extension AgoraLectureBoardUIController: AgoraEduUserHandler {
     }
 }
 
+fileprivate extension AgoraEduUserContext {
+    func isLocalCoHost() -> Bool {
+        let localUserId = getLocalUserInfo().userUuid
+        guard let list = getCoHostList(),
+              list.contains(where: {$0.userUuid == localUserId}) else {
+            return false
+        }
+        return true
+    }
+}

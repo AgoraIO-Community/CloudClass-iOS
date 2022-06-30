@@ -14,6 +14,10 @@ class TokenBuilder {
         case dev, pre, pro
     }
     
+    enum Region {
+        case cn, na, eu, ap
+    }
+    
     typealias FailureCompletion = (Error) -> ()
     typealias SuccessCompletion = (ServerResp) -> ()
     
@@ -27,58 +31,58 @@ class TokenBuilder {
                                   uid: userUuid)
     }
     
-    func buildByServer(region: String,
-                       userUuid: String,
-                       environment: Environment,
+    func buildByServer(environment: Environment,
+                       region: Region,
+                       roomId: String,
+                       userId: String,
+                       userRole: Int,
                        success: @escaping SuccessCompletion,
                        failure: @escaping FailureCompletion) {
-        var urlSubFirst: String
+        var host: String
         
         switch environment {
         case .dev:
-            urlSubFirst = "https://api-solutions-dev.bj2.agoralab.co/edu/v2/users"
+            host = "https://api-solutions-dev.bj2.agoralab.co"
         case .pre:
-            urlSubFirst = "https://api-solutions-pre.bj2.agoralab.co/edu/v2/users"
+            host = "https://api-solutions-pre.bj2.agoralab.co"
         case .pro:
             switch region {
-            case "CN":
-                urlSubFirst = "https://api-solutions.bj2.agoralab.co/edu/v2/users"
-            case "NA":
-                urlSubFirst = "https://api-solutions.sv3sbm.agoralab.co/edu/v2/users"
-            case "EU":
-                urlSubFirst = "https://api-solutions.fr3sbm.agoralab.co/edu/v2/users"
-            case "AP":
-                urlSubFirst = "https://api-solutions.sg3sbm.agoralab.co/edu/v2/users"
-            default:
-                fatalError("buildByServer, not support region: \(region)")
+            case .cn:
+                host = "https://api-solutions.bj2.agoralab.co"
+            case .na:
+                host = "https://api-solutions.sv3sbm.agoralab.co"
+            case .eu:
+                host = "https://api-solutions.fr3sbm.agoralab.co"
+            case .ap:
+                host = "https://api-solutions.sg3sbm.agoralab.co"
             }
         }
                 
-        let urlString = urlSubFirst + "/\(userUuid)/token"
+        let url = host + "/edu/v3/rooms/\(roomId)/roles/\(userRole)/users/\(userId)/token"
         let event = ArRequestEvent(name: "TokenBuilder buildByServer")
         let type = ArRequestType.http(.get,
-                                      url: urlString)
+                                      url: url)
         let task = ArRequestTask(event: event,
                                  type: type)
         armin.request(task: task,
                       responseOnMainQueue: true,
                       success: .json({ dict in
-            guard let data = dict["data"] as? [String : Any] else {
-                fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
-            }
-            guard let rtmToken = data["rtmToken"] as? String,
-                  let appId = data["appId"] as? String,
-                  let userId = data["userUuid"] as? String else {
-                      fatalError("TokenBuilder buildByServer can not find value, dict: \(dict)")
-                  }
-            let resp = ServerResp(appId: appId,
-                                  userId: userId,
-                                  rtmToken: rtmToken)
-            success(resp)
-        }), failRetry: { error in
-            failure(error)
-            return .resign
-        })
+                        guard let data = dict["data"] as? [String : Any] else {
+                            fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
+                        }
+                        guard let token = data["token"] as? String,
+                              let appId = data["appId"] as? String,
+                              let userId = data["userUuid"] as? String else {
+                            fatalError("TokenBuilder buildByServer can not find value, dict: \(dict)")
+                        }
+                        let resp = ServerResp(appId: appId,
+                                              userId: userId,
+                                              token: token)
+                        success(resp)
+                      }), failRetry: { error in
+                        failure(error)
+                        return .resign
+                      })
     }
 }
 
@@ -86,6 +90,6 @@ extension TokenBuilder {
     struct ServerResp {
         let appId: String
         let userId: String
-        let rtmToken: String
+        let token: String
     }
 }

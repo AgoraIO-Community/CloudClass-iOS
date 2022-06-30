@@ -50,9 +50,11 @@ import AgoraWidget
     /** 老师渲染 控制器*/
     private lazy var teacherRenderController = FcrLectureWindowRenderUIController(context: contextPool,
                                                                                   dataSource: [FcrWindowRenderViewState.none],
-                                                                                  reverseItem: false)
+                                                                                  reverseItem: false,
+                                                                                  delegate: self)
     /** 白板 控制器*/
-    private lazy var boardController = AgoraBoardUIController(context: contextPool)
+    private lazy var boardController = AgoraLectureBoardUIController(context: contextPool,
+                                                                     delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
     private lazy var toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
@@ -61,7 +63,8 @@ import AgoraWidget
     private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool)
     /** 大窗 控制器*/
     private lazy var windowController = FcrLectureStreamWindowUIController(context: contextPool,
-                                                                           delegate: self)
+                                                                           delegate: self,
+                                                                           controllerDataSource: self)
     /** 外部链接 控制器*/
     private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     /** 云盘 控制器（仅教师端）*/
@@ -147,11 +150,11 @@ import AgoraWidget
         contentView.addSubview(windowController.view)
         
         toolBarController.delegate = self
-        
-        addChild(classToolsController)
-        contentView.addSubview(classToolsController.view)
 
         if userRole == .teacher {
+            addChild(classToolsController)
+            contentView.addSubview(classToolsController.view)
+            
             addChild(toolCollectionController)
             contentView.addSubview(toolCollectionController.view)
             
@@ -169,9 +172,10 @@ import AgoraWidget
             
             renderMenuController.view.isHidden = true
             cloudController.view.isHidden = true
-            toolCollectionController.view.isHidden = false
-            boardPageController.view.isHidden = false
         } else if userRole == .student {
+            addChild(classToolsController)
+            contentView.addSubview(classToolsController.view)
+            
             addChild(toolCollectionController)
             contentView.addSubview(toolCollectionController.view)
             
@@ -179,8 +183,6 @@ import AgoraWidget
             addChild(boardPageController)
             
             toolBarController.tools = [.setting, .handsup]
-            toolCollectionController.view.isHidden = true
-            boardPageController.view.isHidden = true
         } else {
             toolBarController.tools = [.setting]
         }
@@ -203,49 +205,49 @@ import AgoraWidget
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))
         }
+        
         webViewController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
+        
         windowController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
+        
         teacherRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.right.equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
             make?.height.equalTo()(AgoraFit.scale(112))
         }
+        
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
             make?.right.equalTo()(teacherRenderController.view.mas_left)?.offset()(AgoraFit.scale(-2))
             make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
         }
-        if userRole == .teacher {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
-        } else {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.width.equalTo()(self.toolBarController.suggestSize.width)
-                make?.height.equalTo()(self.toolBarController.suggestSize.height)
-            }
+
+        toolBarController.view.mas_remakeConstraints { make in
+            make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+            make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+            make?.width.equalTo()(self.toolBarController.suggestSize.width)
+            make?.height.equalTo()(self.toolBarController.suggestSize.height)
         }
+        
         if userRole != .observer {
             toolCollectionController.view.mas_makeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
             boardPageController.view.mas_makeConstraints { make in
-                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? 15 : 12)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
-                make?.height.equalTo()(UIDevice.current.isPad ? 34 : 32)
+                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+                make?.height.equalTo()(UIDevice.current.agora_is_pad ? 34 : 32)
                 make?.width.equalTo()(168)
+            }
+            classToolsController.view.mas_makeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(boardController.view)
             }
         }
 
@@ -254,16 +256,64 @@ import AgoraWidget
             make?.left.right().equalTo()(teacherRenderController.view)
             make?.bottom.equalTo()(0)
         }
-        
-        classToolsController.view.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(boardController.view)
-        }
-        
+
         updateRenderLayout()
     }
     
     func updateViewProperties() {
         
+    }
+}
+
+// MARK: - AgoraBoardUIControllerDelegate
+extension AgoraLectureUIManager: AgoraBoardUIControllerDelegate {
+    func onStageStateChanged(stageOn: Bool) {
+        
+    }
+    
+    func onBoardActiveStateChanged(isActive: Bool) {
+        toolCollectionController.updateBoardActiveState(isActive: isActive)
+        boardPageController.updateBoardActiveState(isActive: isActive)
+    }
+    
+    func onBoardGrantedUserListAdded(userList: [String]) {
+        updateStreamWindowItemBoardPrivilege(true,
+                                             userList: userList)
+        toolCollectionController.onBoardPrivilegeListChaned(true,
+                                                            userList: userList)
+        boardPageController.onBoardPrivilegeListChaned(true,
+                                                       userList: userList)
+    }
+    
+    func onBoardGrantedUserListRemoved(userList: [String]) {
+        updateStreamWindowItemBoardPrivilege(false,
+                                             userList: userList)
+        toolCollectionController.onBoardPrivilegeListChaned(false,
+                                                            userList: userList)
+        boardPageController.onBoardPrivilegeListChaned(false,
+                                                       userList: userList)
+    }
+    
+    func updateStreamWindowItemBoardPrivilege(_ privilege: Bool,
+                                              userList: [String]) {
+        for (index, item) in windowController.dataSource.enumerated() {
+            var data = item.data
+            
+            guard userList.contains(data.userId) else {
+                continue
+            }
+            
+            guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
+                  user.userRole != .teacher else {
+                continue
+            }
+            
+            let privilege = FcrBoardPrivilegeViewState.create(privilege)
+            data.boardPrivilege = privilege
+            
+            windowController.updateItemData(data,
+                                            index: index)
+        }
     }
 }
 
@@ -354,13 +404,21 @@ extension AgoraLectureUIManager: AgoraRenderMenuUIControllerDelegate {
     }
 }
 
-// MARK: - AgoraRenderUIControllerDelegate
-extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
-    func onClickMemberAt(view: UIView,
-                         userId: String) {
-        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+// MARK: - FcrWindowRenderUIControllerDelegate
+extension AgoraLectureUIManager: FcrWindowRenderUIControllerDelegate {
+    func renderUIController(_ controller: FcrWindowRenderUIController,
+                            didPressItem item: FcrWindowRenderViewState,
+                            view: UIView) {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher,
+              let data = item.data else {
             return
         }
+        
+        let rect = view.convert(view.bounds,
+                                to: contentView)
+        let centerX = rect.center.x - contentView.width / 2
+        
+        let userId = data.userId
         
         var role = AgoraEduContextUserRole.student
         if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
@@ -379,7 +437,7 @@ extension AgoraLectureUIManager: AgoraRenderUIControllerDelegate {
                                       userUuid: userId,
                                       showRoleType: role)
             renderMenuController.view.mas_remakeConstraints { make in
-                make?.top.equalTo()(view.mas_bottom)?.offset()(1)
+                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
                 make?.centerX.equalTo()(view.mas_centerX)
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(renderMenuController.menuWidth)
@@ -412,14 +470,14 @@ extension AgoraLectureUIManager: AgoraToolCollectionUIControllerDelegate {
         if spread {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.equalTo()(toolCollectionController.suggestLength)
                 make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
             toolCollectionController.view.mas_remakeConstraints { make in
                 make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
@@ -464,15 +522,15 @@ extension AgoraLectureUIManager: AgoraToolCollectionUIControllerDelegate {
                         
                         if appear {
                             self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.isPad ? -15 : -12)
+                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
                                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
                             }
                         } else {
                             self.toolBarController.view.mas_remakeConstraints { make in
-                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.isPad ? -15 : -12)
-                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.isPad ? -20 : -15)
+                                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
                             }
@@ -488,13 +546,21 @@ extension AgoraLectureUIManager: AgoraClassStateUIControllerDelegate {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
             return
         }
-        contentView.addSubview(classStateController.view)
+        
+        classStateController.view.isHidden = false
         
         classStateController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.isPad ? 15 : 12)
+            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
             make?.bottom.equalTo()(boardPageController.view.mas_bottom)
             make?.size.equalTo()(classStateController.suggestSize)
         }
+    }
+}
+
+// MARK: - FcrUIControllerDataSource
+extension AgoraLectureUIManager: FcrUIControllerDataSource {
+    func controllerNeedGrantedUserList() -> [String] {
+        return boardController.grantedUsers
     }
 }
 

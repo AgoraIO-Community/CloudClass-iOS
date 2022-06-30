@@ -113,7 +113,18 @@ private extension DebugViewController {
             enterButton.isUserInteractionEnabled = false
         }
     }
-    
+    func updateOptions() {
+        if self.inputParams.roomStyle == .vocational {
+            self.dataSource = [
+                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .region, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
+            ]
+        } else {
+            self.dataSource = [
+                .roomName, .nickName, .roomStyle, .roleType, .region, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
+            ]
+        }
+        self.tableView.reloadData()
+    }
     /** 获取选项列表*/
     func optionStrings(form options: [(Any, String)]) -> [String] {
         return options.map {$1}
@@ -172,7 +183,17 @@ private extension DebugViewController {
         let im = inputParams.im
         
         // roomUuid = roomName + classType
-        let roomUuid = "\(roomName)\(roomStyle.rawValue)"
+        var roomUuid = "\(roomName)\(roomStyle.rawValue)"
+        // 职教处理
+        if roomStyle == .vocational {
+            roomUuid = "\(roomName)\(AgoraEduRoomType.lecture.rawValue)"
+        }
+        var latencyLevel = AgoraEduLatencyLevel.ultraLow
+        if self.inputParams.serviceType == .RTC {
+            latencyLevel = .ultraLow
+        } else if self.inputParams.serviceType == .fastRTC {
+            latencyLevel = .low
+        }
         
         let userRole = self.inputParams.roleType
         let userUuid = "\(userName.md5())\(userRole.rawValue)"
@@ -198,7 +219,7 @@ private extension DebugViewController {
 
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
                                                 videoEncoderConfig: nil,
-                                                latencyLevel: .ultraLow,
+                                                latencyLevel: latencyLevel,
                                                 videoState: videoState,
                                                 audioState: audioState)
         
@@ -214,15 +235,17 @@ private extension DebugViewController {
             AgoraLoading.hide()
         }
         
-        requestToken(region: region.rawValue,
-                     userUuid: userUuid,
+        requestToken(region: region,
+                     roomId: roomUuid,
+                     userId: userUuid,
+                     userRole: inputParams.roleType.rawValue,
                      success: { [weak self] (response) in
                         guard let `self` = self else {
                             return
                         }
                         
                         let appId = response.appId
-                        let rtmToken = response.rtmToken
+                        let token = response.token
                         let userUuid = response.userId
                         
                         let launchConfig = AgoraEduLaunchConfig(userName: userName,
@@ -232,7 +255,7 @@ private extension DebugViewController {
                                                                 roomUuid: roomUuid,
                                                                 roomType: roomStyle,
                                                                 appId: appId,
-                                                                token: rtmToken,
+                                                                token: token,
                                                                 startTime: startTime,
                                                                 duration: NSNumber(value: duration),
                                                                 region: region.eduType,
@@ -240,7 +263,7 @@ private extension DebugViewController {
                                                                 userProperties: nil)
                         // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
                         var widgets = Dictionary<String,AgoraWidgetConfig>()
-                        launchConfig.widgets.forEach {[unowned self] (k,v) in
+                        launchConfig.widgets.forEach { [unowned self] (k,v) in
                             if k == "AgoraCloudWidget" {
                                 v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
                             }
@@ -275,11 +298,17 @@ private extension DebugViewController {
                             AgoraClassroomSDK.perform(sel,
                                                       with: 0)
                         }
-                        
-                        AgoraClassroomSDK.launch(launchConfig,
-                                                 success: success,
-                                                 failure: failure)
-                     }, failure: failure)
+            if launchConfig.roomType == .vocational { // 职教入口
+                AgoraClassroomSDK.vocationalLaunch(launchConfig,
+                                                   service: self.inputParams.serviceType ?? .RTC,
+                                                   success: success,
+                                                   failure: failure)
+            } else { // 灵动课堂入口
+                AgoraClassroomSDK.launch(launchConfig,
+                                         success: success,
+                                         failure: failure)
+            }
+        }, failure: failure)
     }
 }
 
@@ -295,22 +324,25 @@ private extension DebugViewController {
         
         let response = TokenBuilder.ServerResp(appId: appId,
                                                userId: userUuid,
-                                               rtmToken: token)
+                                               token: token)
         success(response)
     }
     
-    func requestToken(region: String,
-                      userUuid: String,
+    func requestToken(region: RoomRegionType,
+                      roomId: String,
+                      userId: String,
+                      userRole: Int,
                       success: @escaping (TokenBuilder.ServerResp) -> (),
                       failure: @escaping (Error) -> ()) {
-        tokenBuilder.buildByServer(region: region,
-                                   userUuid: userUuid,
-                                   environment: inputParams.env,
-                                   success: { (resp) in
+        tokenBuilder.buildByServer(environment: inputParams.env,
+                                   region: region.toServer,
+                                   roomId: roomId,
+                                   userId: userId,
+                                   userRole: userRole) { (resp) in
             success(resp)
-        }, failure: { (error) in
+        } failure: { (error) in
             failure(error)
-        })
+        }
     }
 }
 
@@ -368,6 +400,14 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                                                            comment: "")
             cell.textField.text = optionDescription(option: inputParams.roomStyle,
                                                     in: kRoomOptions)
+        case .serviceType:
+            cell.mode = .option
+            cell.titleLabel.text = NSLocalizedString("Login_class_service_type_title",
+                                                     comment: "")
+            cell.textField.placeholder = NSLocalizedString("Login_service_type_holder",
+                                                           comment: "")
+            cell.textField.text = optionDescription(option: inputParams.serviceType,
+                                                    in: kVocationalServiceOptions)
         case .roleType:
             cell.mode = .option
             cell.titleLabel.text = NSLocalizedString("login_title_role",
@@ -436,8 +476,6 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                                                            comment: "")
             cell.textField.text = optionDescription(option: inputParams.env,
                                                     in: kEnvironmentOptions)
-        default:
-            break
         }
         return cell
     }
@@ -466,6 +504,22 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                 self.hideOptions()
                 let (v, str) = kRoomOptions[i]
                 self.inputParams.roomStyle = v
+                cell.textField.text = str
+                // 更新入口状态
+                self.updateEntranceStatus()
+                // 更新可选项
+                self.updateOptions()
+            }
+        case .serviceType:
+            let options = optionStrings(form: kVocationalServiceOptions)
+            let index = optionIndex(option: inputParams.serviceType,
+                                    in: kVocationalServiceOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                self.hideOptions()
+                let (v, str) = kVocationalServiceOptions[i]
+                self.inputParams.serviceType = v
                 cell.textField.text = str
                 // 更新入口状态
                 self.updateEntranceStatus()

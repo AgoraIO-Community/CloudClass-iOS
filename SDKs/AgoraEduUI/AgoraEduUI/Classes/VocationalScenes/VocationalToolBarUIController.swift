@@ -28,7 +28,7 @@ class VocationalToolBarUIController: UIViewController {
     private var subRoom: AgoraEduSubRoomContext?
     
     /** Size*/
-    private let kButtonLength: CGFloat = UIDevice.current.isPad ? 34 : 32
+    private let kButtonLength: CGFloat = UIDevice.current.agora_is_pad ? 34 : 32
     private let kGap: CGFloat = 12.0
     private let kDefaultTag: Int = 3389
     
@@ -36,7 +36,7 @@ class VocationalToolBarUIController: UIViewController {
     
     var suggestSize: CGSize {
         get {
-            return CGSize(width: UIDevice.current.isPad ? 34 : 30,
+            return CGSize(width: UIDevice.current.agora_is_pad ? 34 : 30,
                           height: CGFloat(tools.count) * (kButtonLength + kGap) - kGap)
         }
     }

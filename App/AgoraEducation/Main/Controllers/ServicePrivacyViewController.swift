@@ -94,7 +94,7 @@ private extension ServicePrivacyViewController {
     
     func loadUrl() {
         var urlString = ""
-        if UIDevice.current.isChineseLanguage {
+        if UIDevice.current.agora_is_chinese_language {
             urlString = "https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/demo/education/privacy.html"
         } else {
             urlString = "https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/demo/education/privacy_en.html"

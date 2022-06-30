@@ -60,6 +60,36 @@ enum FcrWindowRenderMediaViewState {
     }
 }
 
+enum FcrBoardPrivilegeViewState {
+    case none, has(UIImage)
+    
+    var intValue: Int {
+        switch self {
+        case .none: return 0
+        case .has:  return 1
+        }
+    }
+    
+    static func create(_ privilege: Bool) -> FcrBoardPrivilegeViewState {
+        if privilege {
+            let image = UIImage.agedu_named("ic_board_privilege")!
+            return .has(image)
+        } else {
+            return .none
+        }
+    }
+    
+    static func ==(left: FcrBoardPrivilegeViewState,
+                   right: FcrBoardPrivilegeViewState) -> Bool {
+        return (left.intValue == right.intValue)
+    }
+    
+    static func !=(left: FcrBoardPrivilegeViewState,
+                   right: FcrBoardPrivilegeViewState) -> Bool {
+        return !(left == right)
+    }
+}
+
 enum FcrWindowRenderViewState {
     case none, show(FcrWindowRenderViewData), hide(FcrWindowRenderViewData)
     
@@ -103,9 +133,9 @@ enum FcrWindowRenderViewState {
     static func create(isHide: Bool,
                        data: FcrWindowRenderViewData) -> FcrWindowRenderViewState {
         if isHide {
-            return FcrWindowRenderViewState.hide(data)
+            return .hide(data)
         } else {
-            return FcrWindowRenderViewState.show(data)
+            return .show(data)
         }
     }
     

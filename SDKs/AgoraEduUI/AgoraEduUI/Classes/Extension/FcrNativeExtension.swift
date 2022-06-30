@@ -41,7 +41,7 @@ extension UIImage {
 
 extension Bundle {
     class func agoraEduUI() -> Bundle {
-        return Bundle.ag_compentsBundleNamed("AgoraEduUI") ?? Bundle.main
+        return Bundle.agora_bundle("AgoraEduUI") ?? Bundle.main
     }
 }
 
@@ -51,7 +51,7 @@ extension String {
     }
     
     func agedu_localized() -> String {
-        let bundle = Bundle.ag_compentsBundleNamed("AgoraEduUI") ?? Bundle.main
+        let bundle = Bundle.agora_bundle("AgoraEduUI") ?? Bundle.main
         return NSLocalizedString(self,
                                  bundle: bundle,
                                  comment: "")

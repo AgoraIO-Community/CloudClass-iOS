@@ -42,7 +42,22 @@ class AgoraToolCollectionUIController: UIViewController {
     /// Data
     private weak var delegate: AgoraToolCollectionUIControllerDelegate?
     
-    var suggestLength: CGFloat = UIDevice.current.isPad ? 34 : 32
+    private var localAuth: Bool = false {
+        didSet {
+            guard localAuth != oldValue else {
+                return
+            }
+            view.isHidden = !localAuth
+            delegate?.toolCollectionDidChangeAppearance(localAuth)
+            
+            guard localAuth else {
+                return
+            }
+            setBoardAssistantType()
+        }
+    }
+    
+    var suggestLength: CGFloat = UIDevice.current.agora_is_pad ? 34 : 32
     var suggestSpreadHeight: CGFloat = 80
     
     private var baseTintColor: UIColor
@@ -115,18 +130,41 @@ class AgoraToolCollectionUIController: UIViewController {
         
         baseTintColor = group.tool_bar_item_highlight_color
         
+        
         super.init(nibName: nil,
                    bundle: nil)
         
         self.contextPool = context
         self.subRoom = subRoom
-        
+
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
         
         self.delegate = delegate
         
         initCtrlViews()
+    }
+    
+    func updateBoardActiveState(isActive: Bool) {
+        guard localAuth,
+              isActive else {
+            view.isHidden = true
+            delegate?.toolCollectionDidChangeAppearance(false)
+            return
+        }
+        view.isHidden = false
+        delegate?.toolCollectionDidChangeAppearance(true)
+    }
+    
+    func onBoardPrivilegeListChaned(_ privilege: Bool,
+                                    userList: [String]) {
+        let localUser = userController.getLocalUserInfo()
+
+        guard userList.contains(localUser.userUuid) else {
+            return
+        }
+        
+        localAuth = privilege
     }
     
     required init?(coder: NSCoder) {
@@ -227,8 +265,6 @@ extension AgoraToolCollectionUIController: AgoraWidgetActivityObserver,
             return
         }
         switch signal {
-        case .GetBoardGrantedUsers(let list):
-            handleBoardWidgetGrantUsers(list)
         case .BoardStepChanged(let changeType):
             handleBoardWidgetStep(changeType)
         case .CloseBoard:
@@ -368,21 +404,7 @@ private extension AgoraToolCollectionUIController {
         updateWidgetShape()
     }
     
-    func handleBoardWidgetGrantUsers(_ list: [String]) {
-        guard userController.getLocalUserInfo().userRole == .student else {
-            return
-        }
-        let auth = list.contains(userController.getLocalUserInfo().userUuid)
-        view.isHidden = !auth
-        delegate?.toolCollectionDidChangeAppearance(auth)
-        
-        guard auth else {
-            return
-        }
-        handleAssistantTypeMessage()
-    }
-    
-    func handleAssistantTypeMessage() {
+    func setBoardAssistantType() {
         if let boardTool = currentMainTool.widgetType {
             updateWidgetTool()
         } else if currentMainTool == .text {
@@ -463,8 +485,8 @@ private extension AgoraToolCollectionUIController {
     
     func updateWidgetShape() {
         let shapeInfo = FcrBoardWidgetShapeInfo(type: subToolsView.currentPaintTool.widgetShape,
-                                          width: subToolsView.curLineWidth.value,
-                                          color: subToolsView.currentColor.toColorArr())
+                                                width: subToolsView.curLineWidth.value,
+                                                color: subToolsView.currentColor.toColorArr())
         if let message = AgoraBoardWidgetSignal.ChangeAssistantType(.shape(shapeInfo)).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)

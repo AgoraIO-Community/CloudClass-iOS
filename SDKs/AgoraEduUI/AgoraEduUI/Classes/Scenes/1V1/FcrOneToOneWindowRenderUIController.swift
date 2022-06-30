@@ -14,14 +14,20 @@ class FcrOneToOneWindowRenderUIController: FcrWindowRenderUIController {
     private let teacherItemIndex = 0
     private let studentItemIndex = 1
     
-    init(context: AgoraEduContextPool) {
+    private weak var controllerDataSource: FcrUIControllerDataSource?
+    
+    init(context: AgoraEduContextPool,
+         delegate: FcrWindowRenderUIControllerDelegate? = nil,
+         controllerDataSource: FcrUIControllerDataSource? = nil) {
         let dataSource = [FcrWindowRenderViewState.none,
                           FcrWindowRenderViewState.none]
         
         self.contextPool = context
+        self.controllerDataSource = controllerDataSource
         
         super.init(dataSource: dataSource,
-                   maxShowItemCount: dataSource.count)
+                   maxShowItemCount: dataSource.count,
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
@@ -151,7 +157,21 @@ private extension FcrOneToOneWindowRenderUIController {
     }
     
     func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
-        let data = stream.toWindowRenderData
+        var boardPrivilege: Bool = false
+        
+        let userId = stream.owner.userUuid
+        
+        if let userList = controllerDataSource?.controllerNeedGrantedUserList(),
+           userList.contains(userId),
+           stream.owner.userRole != .teacher {
+            boardPrivilege = true
+        }
+        
+        let rewardCount = contextPool.user.getUserRewardCount(userUuid: userId)
+        
+        let data = FcrWindowRenderViewData.create(stream: stream,
+                                                  rewardCount: rewardCount,
+                                                  boardPrivilege: boardPrivilege)
         
         let isActive = contextPool.widget.streamWindowWidgetIsActive(of: stream)
         
@@ -228,6 +248,16 @@ extension FcrOneToOneWindowRenderUIController: AgoraEduUserHandler {
         default:
             break
         }
+    }
+    
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        guard user.userRole == .student else {
+            return
+        }
+        
+        updateItemOfStudent()
     }
 }
 

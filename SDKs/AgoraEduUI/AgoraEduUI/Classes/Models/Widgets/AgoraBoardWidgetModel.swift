@@ -10,7 +10,6 @@ import Foundation
 // MARK: - Config
 enum AgoraBoardWidgetSignal: Convertable {
     case JoinBoard
-    case BoardPhaseChanged(AgoraBoardWidgetRoomPhase)
     case ChangeAssistantType(FcrBoardWidgetAssistantType)
     case GetBoardGrantedUsers([String])
     case UpdateGrantedUsers(AgoraBoardWidgetGrantUsersChangeType)
@@ -22,12 +21,11 @@ enum AgoraBoardWidgetSignal: Convertable {
     case OpenCourseware(AgoraBoardWidgetCoursewareInfo)
     case WindowStateChanged(AgoraBoardWidgetWindowState)
     case SaveBoard
-    case PhotoAuth
+    case OnBoardSaveResult(FcrBoardWidgetSnapshotResult)
     case CloseBoard
     
     private enum CodingKeys: CodingKey {
         case JoinBoard
-        case BoardPhaseChanged
         case ChangeAssistantType
         case GetBoardGrantedUsers
         case UpdateGrantedUsers
@@ -39,7 +37,7 @@ enum AgoraBoardWidgetSignal: Convertable {
         case OpenCourseware
         case WindowStateChanged
         case SaveBoard
-        case PhotoAuth
+        case OnBoardSaveResult
         case CloseBoard
     }
     
@@ -48,9 +46,6 @@ enum AgoraBoardWidgetSignal: Convertable {
         
         if let _ = try? container.decodeNil(forKey: .JoinBoard) {
             self = .JoinBoard
-        } else if let value = try? container.decode(AgoraBoardWidgetRoomPhase.self,
-                                                    forKey: .BoardPhaseChanged) {
-            self = .BoardPhaseChanged(value)
         } else if let value = try? container.decode(FcrBoardWidgetAssistantType.self,
                                                     forKey: .ChangeAssistantType) {
             self = .ChangeAssistantType(value)
@@ -79,8 +74,9 @@ enum AgoraBoardWidgetSignal: Convertable {
             self = .WindowStateChanged(value)
         } else if let _ = try? container.decodeNil(forKey: .SaveBoard) {
             self = .SaveBoard
-        } else if let _ = try? container.decodeNil(forKey: .PhotoAuth) {
-            self = .PhotoAuth
+        } else if let value = try? container.decode(FcrBoardWidgetSnapshotResult.self,
+                                                    forKey: .OnBoardSaveResult) {
+            self = .OnBoardSaveResult(value)
         } else if let _ = try? container.decodeNil(forKey: .CloseBoard) {
             self = .CloseBoard
         } else {
@@ -99,9 +95,6 @@ enum AgoraBoardWidgetSignal: Convertable {
         switch self {
         case .JoinBoard:
             try container.encodeNil(forKey: .JoinBoard)
-        case .BoardPhaseChanged(let x):
-            try container.encode(x,
-                                 forKey: .BoardPhaseChanged)
         case .ChangeAssistantType(let x):
             try container.encode(x,
                                  forKey: .ChangeAssistantType)
@@ -133,8 +126,9 @@ enum AgoraBoardWidgetSignal: Convertable {
                                  forKey: .WindowStateChanged)
         case .SaveBoard:
             try container.encodeNil(forKey: .SaveBoard)
-        case .PhotoAuth:
-            try container.encodeNil(forKey: .PhotoAuth)
+        case .OnBoardSaveResult(let x):
+            try container.encode(x,
+                                 forKey: .OnBoardSaveResult)
         case .CloseBoard:
             try container.encodeNil(forKey: .CloseBoard)
         }
@@ -148,14 +142,6 @@ enum AgoraBoardWidgetSignal: Convertable {
         return str
     }
 }
-
-enum AgoraBoardWidgetRoomPhase: Int,Convertable {
-    case Connecting
-    case Connected
-    case Reconnecting
-    case Disconnecting
-    case Disconnected
-};
 
 enum AgoraBoardWidgetToolType: Int,Convertable {
     case Selector, Text, Rectangle, Ellipse, Eraser, Pencil, Arrow, Straight, Pointer, Clicker, Shape
@@ -196,6 +182,10 @@ enum AgoraBoardWidgetShapeType: Int,Convertable {
         default:            return nil
         }
     }
+}
+// save snapshot
+enum FcrBoardWidgetSnapshotResult: Int, Convertable {
+    case savedToAlbum, noAlbumAuth, failureToSave
 }
 
 enum AgoraBoardWidgetWindowState: Int, Convertable {

@@ -44,12 +44,18 @@ class FcrCoHostWindowRenderUIController: FcrWindowRenderUIController {
     private let contextPool: AgoraEduContextPool
     private var subRoom: AgoraEduSubRoomContext?
     
+    private weak var controllerDataSource: FcrUIControllerDataSource?
+    
     init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: FcrWindowRenderUIControllerDelegate? = nil,
+         controllerDataSource: FcrUIControllerDataSource? = nil) {
         self.contextPool = context
         self.subRoom = subRoom
+        self.controllerDataSource = controllerDataSource
         
-        super.init(maxShowItemCount: 6)
+        super.init(maxShowItemCount: 6,
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
@@ -203,7 +209,20 @@ private extension FcrCoHostWindowRenderUIController {
     }
     
     func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
-        let data = stream.toWindowRenderData
+        var boardPrivilege: Bool = false
+        
+        let userId = stream.owner.userUuid
+        
+        if let userList = controllerDataSource?.controllerNeedGrantedUserList(),
+           userList.contains(userId) {
+            boardPrivilege = true
+        }
+        
+        let rewardCount = userController.getUserRewardCount(userUuid: userId)
+        
+        let data = FcrWindowRenderViewData.create(stream: stream,
+                                                  rewardCount: rewardCount,
+                                                  boardPrivilege: boardPrivilege)
         
         let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
         
@@ -303,6 +322,12 @@ extension FcrCoHostWindowRenderUIController: AgoraEduUserHandler {
         }
         
         renderView.stopWaving()
+    }
+    
+    func onUserRewarded(user: AgoraEduContextUserInfo,
+                        rewardCount: Int,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        updateItemOfCoHost(by: user)
     }
 }
 

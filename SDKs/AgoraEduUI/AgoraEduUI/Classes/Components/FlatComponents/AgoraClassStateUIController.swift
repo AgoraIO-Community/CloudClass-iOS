@@ -26,7 +26,7 @@ class AgoraClassStateUIController: UIViewController {
                                 guard let `self` = self else {
                                     return
                                 }
-                                let move: CGFloat = (UIDevice.current.isPad ? 49 : 44)
+                                let move: CGFloat = (UIDevice.current.agora_is_pad ? 49 : 44)
                                 self.startButton.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
                                                                          y: 0)
                                }, completion: nil)
@@ -38,7 +38,7 @@ class AgoraClassStateUIController: UIViewController {
     private var startButton = UIButton()
     
     /**Data*/
-    private(set) var suggestSize: CGSize = UIDevice.current.isPad ? CGSize(width: 100,
+    private(set) var suggestSize: CGSize = UIDevice.current.agora_is_pad ? CGSize(width: 100,
                                                                            height: 34) : CGSize(width: 100,
                                                                                                 height: 32)
     private weak var delegate: AgoraClassStateUIControllerDelegate?

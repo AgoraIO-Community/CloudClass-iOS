@@ -36,6 +36,13 @@ class AgoraToolBarUIController: UIViewController {
             default:                return nil
             }
         }
+        
+        var isOnceKind: Bool {
+            switch self {
+            case .help:     return true
+            default:        return false
+            }
+        }
     }
     
     private var userController: AgoraEduUserContext {
@@ -51,7 +58,7 @@ class AgoraToolBarUIController: UIViewController {
     private var subRoom: AgoraEduSubRoomContext?
     
     /** Size*/
-    private let kButtonLength: CGFloat = UIDevice.current.isPad ? 34 : 32
+    private let kButtonLength: CGFloat = UIDevice.current.agora_is_pad ? 34 : 32
     private let kGap: CGFloat = 12.0
     private let kDefaultTag: Int = 3389
     
@@ -59,7 +66,7 @@ class AgoraToolBarUIController: UIViewController {
     
     var suggestSize: CGSize {
         get {
-            return CGSize(width: UIDevice.current.isPad ? 34 : 30,
+            return CGSize(width: UIDevice.current.agora_is_pad ? 34 : 30,
                           height: CGFloat(tools.count) * (kButtonLength + kGap) - kGap)
         }
     }
@@ -88,9 +95,11 @@ class AgoraToolBarUIController: UIViewController {
     /** 举手列表人数*/
     private var handsListCount = 0 {
         didSet {
-            if handsListCount != oldValue {
-                collectionView.reloadData()
+            guard handsListCount != oldValue,
+                  let indexPath = tools.indexOfType(.handsList) else {
+                      return
             }
+            collectionView.reloadItems(at: [indexPath])
         }
     }
     /** 举手提示浮层*/
@@ -153,23 +162,14 @@ class AgoraToolBarUIController: UIViewController {
             return
         }
         messageRemind = isShow
-        self.collectionView.reloadData()
+        guard let indexPath = tools.indexOfType(.message) else {
+            return
+        }
+        collectionView.reloadItems(at: [indexPath])
     }
     
     public func updateHandsListCount(_ count: Int) {
         handsListCount = count
-    }
-    
-    // left for painting UI manager
-    public func updateBrushButton(image: UIImage?,
-                                  colorHex: Int) {
-        self.brushImage = image
-        if colorHex == 0xFFFFFF {
-            self.brushColor = UIColor(hex: 0xE1E1EA)
-        } else {
-            self.brushColor = UIColor(hex: colorHex)
-        }
-        self.collectionView.reloadData()
     }
 }
 
@@ -219,17 +219,19 @@ extension AgoraToolBarUIController: AgoraEduGroupHandler {
                                   subRoomUuid: String,
                                   operatorUser: AgoraEduContextUserInfo?) {
         if let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
-            userList.contains(teacherId),
-            teacherInLocalSubRoom() {
-            collectionView.reloadData()
+           userList.contains(teacherId),
+           teacherInLocalSubRoom(),
+           let indexPath = tools.indexOfType(.help) {
+            collectionView.reloadItems(at: [indexPath])
         }
     }
     
     func onUserListRemovedFromSubRoom(userList: [AgoraEduContextSubRoomRemovedUserEvent],
                                       subRoomUuid: String) {
         if let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
-           userList.contains(where: {$0.userUuid == teacherId}) {
-            collectionView.reloadData()
+           userList.contains(where: {$0.userUuid == teacherId}),
+           let indexPath = tools.indexOfType(.help) {
+            collectionView.reloadItems(at: [indexPath])
         }
     }
 }
@@ -352,7 +354,8 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
         collectionView.deselectItem(at: indexPath,
                                     animated: false)
         let tool = dataSource[indexPath.row]
-        if selectedTool == tool {
+        if !tool.isOnceKind,
+           selectedTool == tool {
             selectedTool = nil
         } else {
             selectedTool = tool
@@ -361,7 +364,9 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
                                                       selectView: cell)
             }
         }
-        collectionView.reloadItems(at: [indexPath])
+        UIView.performWithoutAnimation {
+            collectionView.reloadItems(at: [indexPath])
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -443,5 +448,15 @@ private extension AgoraToolBarUIController {
         }
         
         return false
+    }
+}
+
+extension Array where Element == AgoraToolBarUIController.ItemType {
+    func indexOfType(_ type: AgoraToolBarUIController.ItemType) -> IndexPath? {
+        guard let index = self.firstIndex(of: type) else {
+            return nil
+        }
+        return IndexPath(item: index,
+                         section: 0)
     }
 }
