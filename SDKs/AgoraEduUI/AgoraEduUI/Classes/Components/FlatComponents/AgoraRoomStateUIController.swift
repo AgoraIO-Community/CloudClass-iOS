@@ -64,6 +64,7 @@ class AgoraRoomStateUIController: UIViewController {
 
 extension AgoraRoomStateUIController: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
+        stateView.netStateView.image = UIImage.agedu_named("ic_network_good")
         view.addSubview(stateView)
     }
     
