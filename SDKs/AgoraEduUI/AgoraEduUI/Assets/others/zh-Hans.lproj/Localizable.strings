@@ -111,8 +111,8 @@ fcr_group_button_later = "稍后";
 fcr_group_joining = "正在加入{xxx}";
 fcr_group_join = "加入讨论组";
 fcr_group_enter_welcome = "欢迎加入{xxx}与大家互动讨论";
-fcr_group_enter_group = "老师进入小组";
-fcr_group_exit_group = "老师离开小组";
+fcr_group_enter_group = "{xxx}{yyy}进入小组";
+fcr_group_exit_group = "{xxx}{yyy}离开小组";
 
 fcr_group_close_group = "老师结束了小组讨论";
 fcr_group_invite_back_main_room = "老师邀请你回到大房间";

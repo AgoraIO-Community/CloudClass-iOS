@@ -42,8 +42,8 @@ class AgoraUserListUIController: UIViewController {
     
     public var suggestSize: CGSize {
         get {
-            // 学生姓名为100，其余为60
-            let contentWidth = 60 * supportFuncs.count + 100
+            // 学生姓名为100，其余为80
+            let contentWidth = 80 * supportFuncs.count + 100
             return CGSize(width: contentWidth,
                           height: 253)
         }

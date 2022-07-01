@@ -150,7 +150,11 @@ import AgoraWidget
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isJoinedRoom == false {
-            AgoraLoading.loading()
+            let subRoomName = subRoom.getSubRoomInfo().subRoomName
+            let message = "fcr_group_joining".agedu_localized().replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                                                                                     with: subRoomName)
+            
+            AgoraLoading.loading(msg: message)
         }
     }
     

@@ -30,6 +30,14 @@ extension AgoraEduContextUserRole {
         default:        return .student
         }
     }
+    
+    var stringValue: String? {
+        switch self {
+        case .teacher:  return "fcr_user_list_teacher_name".agedu_localized()
+        case .student:  return "fcr_user_list_student_name".agedu_localized()
+        default:        return nil
+        }
+    }
 }
 
 extension AgoraEduContextVideoStreamConfig {

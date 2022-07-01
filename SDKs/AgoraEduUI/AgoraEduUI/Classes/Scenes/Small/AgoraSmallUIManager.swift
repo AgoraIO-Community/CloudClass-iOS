@@ -113,6 +113,9 @@ import AgoraWidget
         super.viewWillAppear(animated)
         if isJoinedRoom == false {
             AgoraLoading.loading()
+        } else {
+            let message = "fcr_group_back_main_room".agedu_localized()
+            AgoraLoading.loading(msg: message)
         }
     }
     

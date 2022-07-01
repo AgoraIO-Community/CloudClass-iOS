@@ -164,12 +164,12 @@ private extension AgoraRoomStateUIController {
                 let strMid = "\(minNum)"
                 
                 let str = "fcr_room_close_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
+                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                      with: strMid)
                 AgoraToast.toast(msg: final)
             } else if countDown == 60 {
                 let str = "fcr_room_close_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
+                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                      with: "1")
                 AgoraToast.toast(msg: final)
             }
@@ -182,7 +182,7 @@ private extension AgoraRoomStateUIController {
             let countDown = info.closeDelay + info.duration - time
             if countDown == 5 * 60 + info.closeDelay {
                 let str = "fcr_room_class_end_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing(),
+                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                      with: "5")
                 AgoraToast.toast(msg: final)
             }
