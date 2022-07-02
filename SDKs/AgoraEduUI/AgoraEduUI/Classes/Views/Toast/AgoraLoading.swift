@@ -110,25 +110,26 @@ fileprivate class AgoraLoadingView: UIView {
     
     func updateLayoutIfNeeded() {
         guard let text = label.text else {
+            contentView.mas_remakeConstraints { make in
+                make?.centerX.centerY().equalTo()(self)
+                make?.width.height().equalTo()(90)
+            }
             return
         }
         let labelSize = text.agora_size(font: label.font)
         
-        var height = min(self.bounds.width, self.bounds.height) * 0.25
-        height = height > 90 ? 90 : height
+        var contentHeight: CGFloat = 90
+        contentHeight = 16 + 60 + 4 + labelSize.height + 16
         
-        contentView.mas_updateConstraints { make in
-            make?.height.equalTo()(height)
-        }
+        var contentWidth: CGFloat = 90
+        let labelLength = labelSize.width + 30 * 2
         
-        var width = contentView.width
-        let labelLength = label.text?.agora_size(font: label.font).width ?? 0 + 30 * 2
+        contentWidth = (contentWidth > labelLength) ? contentWidth : labelLength
         
-        if labelLength > width {
-            width = labelLength
-            contentView.mas_updateConstraints { make in
-                make?.width.equalTo()(labelLength)
-            }
+        contentView.mas_remakeConstraints { make in
+            make?.centerX.centerY().equalTo()(self)
+            make?.height.equalTo()(contentHeight)
+            make?.width.equalTo()(contentWidth)
         }
     }
     
@@ -142,7 +143,7 @@ fileprivate class AgoraLoadingView: UIView {
     
     private func createViews() {
         contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 15
+        contentView.layer.cornerRadius = 12
         AgoraUIGroup().color.borderSet(layer: contentView.layer)
         addSubview(contentView)
         
@@ -155,7 +156,7 @@ fileprivate class AgoraLoadingView: UIView {
         contentView.addSubview(animatedView)
         
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = .systemFont(ofSize: 13)
         contentView.addSubview(label)
     }
     
@@ -173,7 +174,7 @@ fileprivate class AgoraLoadingView: UIView {
             make?.centerX.equalTo()(0)
             make?.left.greaterThanOrEqualTo()(30)
             make?.right.greaterThanOrEqualTo()(-30)
-            make?.bottom.equalTo()(-15)
+            make?.top.equalTo()(animatedView.mas_bottom)?.offset()(4)
         }
     }
 }
