@@ -94,6 +94,12 @@ fcr_monitor_network_disconnected = "当前网络已断开,请检查设备网络�
 fcr_monitor_network_reconnecting = "重连中...";
 fcr_monitor_login_remote_device = "账号在远端设备登录";
 
+// role
+fcr_role_teacher = "老师";
+fcr_role_assistant = "助教";
+fcr_role_student = "学生";
+fcr_role_audience = "观众";
+
 // Group
 fcr_group_help_title = "请求帮助";
 fcr_group_help_content = "你可以邀请老师进入小组帮助你";

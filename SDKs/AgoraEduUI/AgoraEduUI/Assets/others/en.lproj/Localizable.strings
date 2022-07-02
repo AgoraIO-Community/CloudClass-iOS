@@ -89,6 +89,12 @@ fcr_monitor_network_disconnected = "The local network is disconnected,please che
 fcr_monitor_network_reconnecting = "reconnecting...";
 fcr_monitor_login_remote_device = "Account was logged in from remote device";
 
+// role
+fcr_role_teacher = "teacher";
+fcr_role_assistant = "assistant";
+fcr_role_student = "student";
+fcr_role_audience = "audience";
+
 // Group
 fcr_group_help_title = "Request help";
 fcr_group_help_content = "You can invite the teacher to this group for assistance.";

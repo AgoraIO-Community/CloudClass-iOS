@@ -32,11 +32,17 @@ extension AgoraEduContextUserRole {
     }
     
     var stringValue: String? {
+        var stringValue = ""
         switch self {
-        case .teacher:  return "fcr_user_list_teacher_name".agedu_localized()
-        case .student:  return "fcr_user_list_student_name".agedu_localized()
+        case .teacher:  stringValue = "fcr_role_teacher".agedu_localized()
+        case .student:  stringValue = "fcr_role_student".agedu_localized()
         default:        return nil
         }
+        guard !UIDevice.current.agora_is_chinese_language else {
+            return stringValue
+        }
+        
+        return "\(stringValue) "
     }
 }
 
