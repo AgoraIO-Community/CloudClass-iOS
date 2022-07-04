@@ -215,7 +215,8 @@ extension AgoraRoomGlobalUIController: AgoraEduMonitorHandler {
 // MARK: - AgoraEduGroupHandler
 extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
     func onGroupInfoUpdated(groupInfo: AgoraEduContextGroupInfo) {
-        guard !groupInfo.state else {
+        guard !groupInfo.state,
+              subRoom == nil else {
             return
         }
         AgoraToast.toast(msg: "fcr_group_close_group".agedu_localized(),

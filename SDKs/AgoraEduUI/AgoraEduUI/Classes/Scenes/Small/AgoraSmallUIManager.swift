@@ -119,6 +119,13 @@ import AgoraWidget
         }
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if isJoinedRoom {
+            AgoraLoading.hide()
+        }
+    }
+    
     public override func didClickCtrlMaskView() {
         super.didClickCtrlMaskView()
         toolBarController.deselectAll()
