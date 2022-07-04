@@ -272,8 +272,8 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
             return
         }
         
-        guard let localJoinedSubRoomId = hasJoinedSubRoomId,
-              localJoinedSubRoomId == subRoomUuid else {
+        guard hasJoinedSubRoomId == subRoomUuid,
+              let _ = subRoom else {
             return
         }
         
@@ -304,8 +304,8 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
                                                     isKickOut: isKickOut)
         }
         
-        guard let localJoinedSubRoomId = hasJoinedSubRoomId,
-              localJoinedSubRoomId == subRoomUuid else {
+        guard hasJoinedSubRoomId == subRoomUuid,
+              let _ = subRoom else {
             return
         }
         
