@@ -121,6 +121,7 @@ extension AgoraKickOutAlertController {
         firstLabel.textColor = UIColor(hex: 0x191919)
         firstLabel.text = "fcr_user_kick_out_once".agedu_localized()
         firstLabel.font = UIFont.systemFont(ofSize: 13)
+        firstLabel.numberOfLines = 0
         contentView.addSubview(firstLabel)
         
         seconedButton = UIButton(type: .custom)
@@ -138,6 +139,7 @@ extension AgoraKickOutAlertController {
         seconedLabel.textColor = UIColor(hex: 0x586376)
         seconedLabel.text = "fcr_user_kick_out_forever".agedu_localized()
         seconedLabel.font = UIFont.systemFont(ofSize: 13)
+        seconedLabel.numberOfLines = 0
         contentView.addSubview(seconedLabel)
         
         vLine = UIView()
@@ -182,6 +184,7 @@ extension AgoraKickOutAlertController {
         }
         firstLabel.mas_makeConstraints { make in
             make?.left.equalTo()(firstButton.mas_right)?.offset()(4)
+            make?.right.equalTo()(-30)
             make?.centerY.equalTo()(firstButton)
         }
         seconedButton.mas_makeConstraints { make in
@@ -191,6 +194,7 @@ extension AgoraKickOutAlertController {
         }
         seconedLabel.mas_makeConstraints { make in
             make?.left.equalTo()(seconedButton.mas_right)?.offset()(4)
+            make?.right.equalTo()(-30)
             make?.centerY.equalTo()(seconedButton)
         }
         vLine.mas_makeConstraints { make in
