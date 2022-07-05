@@ -58,7 +58,7 @@ fcr_user_list_ban = "Remove";
 fcr_stream_stop_video = "The teacher has turned off your camera.";
 fcr_stream_stop_audio = "You are muted.";
 fcr_stream_start_video = "The teacher has turned on your camera.";
-fcr_stream_start_audio = "Your mic has been turned on";
+fcr_stream_start_audio = "You are unmuted.";
 
 // board
 fcr_netless_board_granted = "You can now annotate on the whiteboard.";

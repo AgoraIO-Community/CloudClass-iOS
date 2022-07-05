@@ -273,8 +273,7 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
             return
         }
         
-        guard hasJoinedSubRoomId == subRoomUuid,
-              let _ = subRoom else {
+        guard hasJoinedSubRoomId == subRoomUuid else {
             return
         }
         
