@@ -237,12 +237,13 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         boardController.view.mas_makeConstraints { make in
             make?.height.equalTo()(AgoraFit.scale(307))
             make?.left.right().bottom().equalTo()(0)
+            make?.bottom.equalTo()(0)
         }
         
         renderController.view.mas_makeConstraints { make in
             make?.left.right().equalTo()(0)
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-            make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-1))
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+            make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(-2)
         }
         
         self.toolBarController.view.mas_remakeConstraints { make in
@@ -604,11 +605,13 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
         } else {
             renderController.view.isHidden = true
             boardController.view.mas_remakeConstraints { make in
-                make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().equalTo()(0)
-                make?.centerY.equalTo()(contentView.mas_centerY)?.offset()(UIDevice.current.agora_is_pad ? 10 : 7)
+                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+                make?.bottom.equalTo()(0)
             }
         }
+        
+        boardController.onNeedChangeRatio()
     }
     
     func onBoardActiveStateChanged(isActive: Bool) {

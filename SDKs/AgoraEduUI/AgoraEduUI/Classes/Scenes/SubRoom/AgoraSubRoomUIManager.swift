@@ -420,11 +420,13 @@ extension AgoraSubRoomUIManager: AgoraBoardUIControllerDelegate {
         } else {
             renderController.view.isHidden = true
             boardController.view.mas_remakeConstraints { make in
-                make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().equalTo()(0)
-                make?.centerY.equalTo()(contentView.mas_centerY)?.offset()(UIDevice.current.agora_is_pad ? 10 : 7)
+                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+                make?.bottom.equalTo()(0)
             }
         }
+        
+        boardController.onNeedChangeRatio()
     }
     
     func onBoardActiveStateChanged(isActive: Bool) {

@@ -104,6 +104,13 @@ class AgoraBoardUIController: UIViewController {
         UIApplication.shared.windows[0].endEditing(true)
     }
     
+    func onNeedChangeRatio() {
+        if let message = AgoraBoardWidgetSignal.ChangeRatio.toMessageString() {
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
+        }
+    }
+    
     // for subVC
     func onViewWillActive() {
         contextPool.media.registerMediaEventHandler(self)

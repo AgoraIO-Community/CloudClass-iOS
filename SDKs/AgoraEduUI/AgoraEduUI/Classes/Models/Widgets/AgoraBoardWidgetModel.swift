@@ -21,6 +21,7 @@ enum AgoraBoardWidgetSignal: Convertable {
     case OpenCourseware(AgoraBoardWidgetCoursewareInfo)
     case WindowStateChanged(AgoraBoardWidgetWindowState)
     case SaveBoard
+    case ChangeRatio
     case OnBoardSaveResult(FcrBoardWidgetSnapshotResult)
     case CloseBoard
     
@@ -37,6 +38,7 @@ enum AgoraBoardWidgetSignal: Convertable {
         case OpenCourseware
         case WindowStateChanged
         case SaveBoard
+        case ChangeRatio
         case OnBoardSaveResult
         case CloseBoard
     }
@@ -74,6 +76,8 @@ enum AgoraBoardWidgetSignal: Convertable {
             self = .WindowStateChanged(value)
         } else if let _ = try? container.decodeNil(forKey: .SaveBoard) {
             self = .SaveBoard
+        } else if let _ = try? container.decodeNil(forKey: .ChangeRatio) {
+            self = .ChangeRatio
         } else if let value = try? container.decode(FcrBoardWidgetSnapshotResult.self,
                                                     forKey: .OnBoardSaveResult) {
             self = .OnBoardSaveResult(value)
@@ -126,6 +130,8 @@ enum AgoraBoardWidgetSignal: Convertable {
                                  forKey: .WindowStateChanged)
         case .SaveBoard:
             try container.encodeNil(forKey: .SaveBoard)
+        case .ChangeRatio:
+            try container.encodeNil(forKey: .ChangeRatio)
         case .OnBoardSaveResult(let x):
             try container.encode(x,
                                  forKey: .OnBoardSaveResult)
