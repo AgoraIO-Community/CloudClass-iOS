@@ -348,11 +348,13 @@ private extension AgoraUserListUIController {
         guard let students = userController.getUserList(role: .student) else {
             return
         }
-        for student in students {
-            let model = AgoraUserListModel(contextUser: student)
-            dataSource.append(model)
-            updateModel(with: student.userUuid,
-                        resort: false)
+        for user in students {
+            if !self.dataSource.contains{ $0.uuid == user.userUuid } {
+                let model = AgoraUserListModel(contextUser: user)
+                self.dataSource.append(model)
+            }
+            self.updateModel(with: user.userUuid,
+                             resort: false)
         }
         sort()
     }
@@ -421,11 +423,10 @@ private extension AgoraUserListUIController {
         // audio
         model.micState.streamOn = stream.streamType.hasAudio
         model.micState.deviceOn = (stream.audioSourceState == .open)
-//        model.micState.isEnable = (stream.audioSourceState == .open)
+
         // video
         model.cameraState.streamOn = stream.streamType.hasVideo
         model.cameraState.deviceOn = (stream.videoSourceState == .open)
-//        model.cameraState.isEnable = (stream.audioSourceState == .open)
         
         let isTeacher = (userController.getLocalUserInfo().userRole == .teacher)
         model.micState.isEnable = isTeacher && (stream.audioSourceState == .open)
