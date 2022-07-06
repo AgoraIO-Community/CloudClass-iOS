@@ -63,6 +63,16 @@ class AgoraBoardUIController: UIViewController {
     
     var contextPool: AgoraEduContextPool
     var subRoom: AgoraEduSubRoomContext?
+    
+    private var roomProperties: [String: Any]? {
+        get {
+            guard let subRoom = subRoom else {
+                return contextPool.room.getRoomProperties()
+            }
+            
+            return contextPool.room.getRoomProperties()
+        }
+    }
     private var boardWidget: AgoraBaseWidget?
     private(set) weak var delegate: AgoraBoardUIControllerDelegate?
     
@@ -204,10 +214,10 @@ private extension AgoraBoardUIController {
     }
     
     func setUp() {
-        guard let props = contextPool.room.getRoomProperties(),
-              let stageState = props["stage"] as? Int else {
+        guard let stageState = roomProperties?["stage"] as? Int else {
             return
         }
+        
         if stageState == 1 {
             delegate?.onStageStateChanged(stageOn: true)
         } else {
@@ -308,8 +318,7 @@ extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onRoomPropertiesUpdated(changedProperties: [String : Any],
                                  cause: [String : Any]?,
                                  operatorUser: AgoraEduContextUserInfo?) {
-        // 讲台开关
-        guard let stageState = changedProperties["stage"] as? Int else {
+        guard let stageState = roomProperties?["stage"] as? Int else {
             return
         }
         if stageState == 1 {
