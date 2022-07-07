@@ -171,6 +171,12 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         addChild(webViewController)
         contentView.addSubview(webViewController.view)
         
+        if userRole != .observer {
+            contentView.addSubview(boardPageController.view)
+            addChild(boardPageController)
+            boardPageController.view.isHidden = true
+        }
+        
         addChild(windowController)
         contentView.addSubview(windowController.view)
         
@@ -183,10 +189,6 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         
         if userRole != .observer {
             view.addSubview(toolCollectionController.view)
-            
-            contentView.addSubview(boardPageController.view)
-            addChild(boardPageController)
-            boardPageController.view.isHidden = true
         }
         
         if userRole == .teacher {

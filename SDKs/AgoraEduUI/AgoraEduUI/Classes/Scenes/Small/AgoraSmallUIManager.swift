@@ -151,14 +151,14 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         addChild(webViewController)
         contentView.addSubview(webViewController.view)
         
-        addChild(windowController)
-        contentView.addSubview(windowController.view)
-        
         if userRole != .observer {
             addChild(boardPageController)
             boardPageController.view.isHidden = true
             contentView.addSubview(boardPageController.view)
         }
+        
+        addChild(windowController)
+        contentView.addSubview(windowController.view)
         
         addChild(toolBarController)
         contentView.addSubview(toolBarController.view)
