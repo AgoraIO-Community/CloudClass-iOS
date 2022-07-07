@@ -70,7 +70,7 @@ class AgoraBoardUIController: UIViewController {
                 return contextPool.room.getRoomProperties()
             }
             
-            return contextPool.room.getRoomProperties()
+            return subRoom.getSubRoomProperties()
         }
     }
     private var boardWidget: AgoraBaseWidget?

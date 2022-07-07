@@ -186,6 +186,7 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
             
             contentView.addSubview(boardPageController.view)
             addChild(boardPageController)
+            boardPageController.view.isHidden = true
         }
         
         if userRole == .teacher {

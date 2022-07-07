@@ -156,9 +156,11 @@ import AgoraWidget
             contentView.addSubview(classToolsController.view)
             
             addChild(toolCollectionController)
+            toolCollectionController.view.isHidden = true
             contentView.addSubview(toolCollectionController.view)
             
             contentView.addSubview(boardPageController.view)
+            boardPageController.view.isHidden = true
             addChild(boardPageController)
             
             toolBarController.tools = [.setting, .nameRoll, .handsList]
@@ -177,9 +179,11 @@ import AgoraWidget
             contentView.addSubview(classToolsController.view)
             
             addChild(toolCollectionController)
+            toolCollectionController.view.isHidden = true
             contentView.addSubview(toolCollectionController.view)
             
             contentView.addSubview(boardPageController.view)
+            boardPageController.view.isHidden = true
             addChild(boardPageController)
             
             toolBarController.tools = [.setting, .handsup]

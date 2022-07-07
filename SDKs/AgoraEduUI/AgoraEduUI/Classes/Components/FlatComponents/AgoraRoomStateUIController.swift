@@ -249,6 +249,16 @@ extension AgoraRoomStateUIController: AgoraEduGroupHandler {
 
 // MARK: - AgoraEduMonitorHandler
 extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
+    func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
+        var image: UIImage?
+        switch state {
+        case .disconnected, .reconnecting:
+            image = UIImage.agedu_named("ic_network_down")
+        default:
+            return
+        }
+        stateView.netStateView.image = image
+    }
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
         var image: UIImage?
         
@@ -261,10 +271,6 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
             image = UIImage.agedu_named("ic_network_bad")
         case .down:
             image = UIImage.agedu_named("ic_network_down")
-            
-            let message = "fcr_monitor_network_disconnected".agedu_localized()
-            AgoraToast.toast(msg: message,
-                             type: .error)
         default:
             return
         }

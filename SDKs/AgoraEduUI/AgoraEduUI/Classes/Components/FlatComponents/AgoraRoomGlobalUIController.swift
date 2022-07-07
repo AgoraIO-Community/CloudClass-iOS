@@ -210,6 +210,17 @@ extension AgoraRoomGlobalUIController: AgoraEduMonitorHandler {
             AgoraLoading.hide()
         }
     }
+    
+    func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
+        switch quality {
+        case .bad:
+            let toastMessage = "fcr_monitor_network_poor".agedu_localized()
+            AgoraToast.toast(msg: toastMessage,
+                             type: .error)
+        default:
+            break
+        }
+    }
 }
 
 // MARK: - AgoraEduGroupHandler
