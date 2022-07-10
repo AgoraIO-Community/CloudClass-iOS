@@ -42,8 +42,8 @@ class AgoraUserListUIController: UIViewController {
     
     public var suggestSize: CGSize {
         get {
-            // 学生姓名为100，其余为60
-            let contentWidth = 60 * supportFuncs.count + 100
+            // 学生姓名为100，其余为80
+            let contentWidth = 80 * supportFuncs.count + 100
             return CGSize(width: contentWidth,
                           height: 253)
         }
@@ -343,37 +343,19 @@ private extension AgoraUserListUIController {
     func setUpSmallData() {
         setUpTeacherData()
         
-        let isTeacher = userController.getLocalUserInfo().userRole == .teacher
         let localUserID = userController.getLocalUserInfo().userUuid
         
         guard let students = userController.getUserList(role: .student) else {
             return
         }
-        var tmp = [AgoraUserListModel]()
-        let coHosts = userController.getCoHostList()
-        for student in students {
-            let model = AgoraUserListModel(contextUser: student)
-            model.rewards = userController.getUserRewardCount(userUuid: student.userUuid)
-            var isCoHost = false
-            if let _ = coHosts?.first(where: {$0.userUuid == student.userUuid}) {
-                isCoHost = true
+        for user in students {
+            if !self.dataSource.contains{ $0.uuid == user.userUuid } {
+                let model = AgoraUserListModel(contextUser: user)
+                self.dataSource.append(model)
             }
-            model.stageState.isOn = isCoHost
-            // 白板权限
-            model.authState.isOn = self.boardUsers.contains(model.uuid)
-            // enable
-            model.stageState.isEnable = isTeacher
-            model.authState.isEnable = isTeacher
-            
-            // TODO: 除了isTeacher 之外 判断设备状态
-            model.micState.isEnable = isTeacher
-            model.cameraState.isEnable = isTeacher
-            // stream
-            let s = streamController.getStreamList(userUuid: student.userUuid)?.first
-            model.updateWithStream(s)
-            tmp.append(model)
+            self.updateModel(with: user.userUuid,
+                             resort: false)
         }
-        dataSource = tmp
         sort()
     }
     
@@ -413,23 +395,43 @@ private extension AgoraUserListUIController {
             isCoHost = true
         }
         model.stageState.isOn = isCoHost
+        model.rewards = userController.getUserRewardCount(userUuid: uuid)
         
         model.authState.isOn = boardUsers.contains(model.uuid)
         // enable
-        model.micState.isEnable = isTeacher
-        model.cameraState.isEnable = isTeacher
         model.stageState.isEnable = isTeacher
         model.authState.isEnable = isTeacher
         model.rewardEnable = isTeacher
         model.kickEnable = isTeacher
         // stream
-        let s = streamController.getStreamList(userUuid: model.uuid)?.first
-        model.updateWithStream(s)
+        updateModelWithStream(model)
         if resort {
             sort()
         } else {
             tableView.reloadData()
         }
+    }
+    
+    func updateModelWithStream(_ model: AgoraUserListModel) {
+        guard let stream = streamController.getStreamList(userUuid: model.uuid)?.first else {
+            model.micState = (false, false, false)
+            model.cameraState = (false, false, false)
+            return
+        }
+        
+        model.streamId = stream.streamUuid
+        // audio
+        model.micState.streamOn = stream.streamType.hasAudio
+        model.micState.deviceOn = (stream.audioSourceState == .open)
+
+        // video
+        model.cameraState.streamOn = stream.streamType.hasVideo
+        model.cameraState.deviceOn = (stream.videoSourceState == .open)
+        
+        let isTeacher = (userController.getLocalUserInfo().userRole == .teacher)
+        model.micState.isEnable = isTeacher && (stream.audioSourceState == .open)
+        model.cameraState.isEnable = isTeacher && (stream.videoSourceState == .open)
+
     }
     
     func sort() {
@@ -482,8 +484,10 @@ extension AgoraUserListUIController: AgoraWidgetMessageObserver {
 extension AgoraUserListUIController: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         if user.userRole == .student {
-            dataSource.append(AgoraUserListModel(contextUser: user))
-            sort()
+            let model = AgoraUserListModel(contextUser: user)
+            dataSource.append(model)
+            updateModel(with: user.userUuid,
+                        resort: true)
         } else if user.userRole == .teacher {
             self.teacherNameLabel.text = user.userName
         }
@@ -603,7 +607,7 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
             }
             break
         case .mic:
-            guard user.cameraState.isEnable,
+            guard user.micState.isEnable,
                   let streamId = user.streamId else {
                 return
             }

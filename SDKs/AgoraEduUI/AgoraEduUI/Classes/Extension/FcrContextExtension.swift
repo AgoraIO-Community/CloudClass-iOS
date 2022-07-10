@@ -30,6 +30,20 @@ extension AgoraEduContextUserRole {
         default:        return .student
         }
     }
+    
+    var stringValue: String? {
+        var stringValue = ""
+        switch self {
+        case .teacher:  stringValue = "fcr_role_teacher".agedu_localized()
+        case .student:  stringValue = "fcr_role_student".agedu_localized()
+        default:        return nil
+        }
+        guard !UIDevice.current.agora_is_chinese_language else {
+            return stringValue
+        }
+        
+        return "\(stringValue) "
+    }
 }
 
 extension AgoraEduContextVideoStreamConfig {

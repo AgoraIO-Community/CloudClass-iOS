@@ -16,6 +16,7 @@ import SwifterSwift
 import AgoraWidget
 import AgoraEduUI
 import AgoraLog
+import Masonry
 import UIKit
 
 // MARK: - Login View Controller
@@ -34,7 +35,12 @@ import UIKit
         about.alpha = 0
         return about
     }()
-    private var topImageView: AgoraBaseUIImageView!
+    
+    private lazy var titleLabel = UILabel()
+    /**only ipad **/
+    private lazy var subTitleLabel = UILabel()
+    /** only iphone */
+    private lazy var topImageView = AgoraBaseUIImageView(frame: .zero)
     /** logo*/
     private var logoImageView: AgoraBaseUIImageView!
     /** 关于*/
@@ -673,21 +679,32 @@ extension LoginViewController: RoomInfoCellDelegate {
 // MARK: - Creations
 private extension LoginViewController {
     func createViews() {
-        if LoginConfig.device != .iPad{
+        let isPad = (LoginConfig.device == .iPad)
+        if !isPad {
             let image = UIImage(named: LoginConfig.device == .iPhone_Small ? "title_bg_small" : "title_bg")
-            topImageView = AgoraBaseUIImageView(image: image)
-            let label = AgoraBaseUILabel()
-            label.text = NSLocalizedString("Login_title",
-                                           comment: "")
-            label.textColor = .white
-            label.font = UIFont.systemFont(ofSize: 20)
-            topImageView.addSubview(label)
-            label.agora_center_x = 0
-            label.agora_center_y = -2
+            topImageView.image = image
             view.addSubview(topImageView)
+            
+            titleLabel.textColor = .white
+        } else {
+            subTitleLabel.text = NSLocalizedString("About_url",
+                                           comment: "")
+            subTitleLabel.textColor = UIColor(hex: 0x677386)
+            subTitleLabel.font = UIFont.systemFont(ofSize: 14)
+            view.addSubview(subTitleLabel)
+            
+            titleLabel.textColor = UIColor(hex: 0x191919)
         }
         
-        logoImageView = AgoraBaseUIImageView(image: UIImage(named: "icon_\(LoginConfig.device.rawValue)"))
+        titleLabel.font = .systemFont(ofSize: isPad ? 24 : 20)
+        titleLabel.text = NSLocalizedString("Login_title",
+                                       comment: "")
+        
+        
+        view.addSubview(titleLabel)
+        
+        let iconName = (LoginConfig.device == .iPhone_Small) ? "small" : "big"
+        logoImageView = AgoraBaseUIImageView(image: UIImage(named: "icon_\(iconName)"))
         view.addSubview(logoImageView)
         
         aboutButton = AgoraBaseUIButton()
@@ -749,47 +766,64 @@ private extension LoginViewController {
     }
     
     func createConstraint() {
-        if LoginConfig.device != .iPad {
-            topImageView.agora_x = 0
-            topImageView.agora_right = 0
-            topImageView.agora_y = 0
+        let isPad = (LoginConfig.device == .iPad)
+        if  !isPad {
+            topImageView.mas_makeConstraints { make in
+                make?.left.top().right().equalTo()(0)
+                make?.height.equalTo()(150)
+            }
+            
+            titleLabel.mas_makeConstraints { make in
+                make?.centerX.equalTo()(0)
+                make?.centerY.equalTo()(topImageView.mas_centerY)?.offset()(-2)
+            }
+        } else {
+            titleLabel.mas_makeConstraints { make in
+                make?.centerX.equalTo()(0)
+                make?.top.equalTo()(logoImageView.mas_bottom)?.offset()(17)
+            }
+            
+            subTitleLabel.mas_makeConstraints { make in
+                make?.centerX.equalTo()(0)
+                make?.top.equalTo()(titleLabel.mas_bottom)?.offset()(2)
+            }
         }
         
-        logoImageView.agora_center_x = 0
-        logoImageView.agora_y = LoginConfig.login_icon_y
+        logoImageView.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.top.equalTo()(LoginConfig.login_icon_y)
+        }
         
-        aboutButton.agora_width = 20
-        aboutButton.agora_height = 20
-        aboutButton.agora_y = 46
-        aboutButton.agora_right = 15
+        aboutButton.mas_makeConstraints { make in
+            make?.height.width().equalTo()(20)
+            make?.top.equalTo()(46)
+            make?.right.equalTo()(-15)
+        }
         
-        debugButton.agora_width = 20
-        debugButton.agora_height = 20
-        debugButton.agora_x = 15
-        debugButton.agora_y = 46
+        debugButton.mas_makeConstraints { make in
+            make?.height.width().equalTo()(20)
+            make?.top.equalTo()(46)
+            make?.left.equalTo()(15)
+        }
         
-        tableView.agora_center_x = 0
-        tableView.agora_width = LoginConfig.login_group_width
-        tableView.agora_height = 68 * 5
-        tableView.agora_y = LoginConfig.login_first_group_y
+        tableView.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.width.equalTo()(LoginConfig.login_group_width)
+            make?.height.equalTo()(68 * 5)
+            make?.top.equalTo()(LoginConfig.login_first_group_y)
+        }
         
         let enter_gap: CGFloat = LoginConfig.device == .iPhone_Small ? 30 : 40
-        enterButton.agora_center_x = 0
-        enterButton.agora_height = 44
-        enterButton.agora_width = 280
-        enterButton.agora_y = tableView.agora_y + tableView.agora_height + enter_gap
+        enterButton.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.height.equalTo()(44)
+            make?.width.equalTo()(280)
+            make?.top.equalTo()(tableView.mas_bottom)?.offset()(enter_gap)
+        }
 
-        bottomLabel.agora_center_x = 0
-        if LoginConfig.device == .iPad {
-            bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
-        } else {
-            let height: CGFloat = max(UIScreen.main.bounds.width,
-                                      UIScreen.main.bounds.height)
-            if enterButton.agora_y > height - LoginConfig.login_bottom_bottom - 30 - enterButton.agora_height {
-                bottomLabel.agora_y = enterButton.agora_y + enterButton.agora_height + 30
-            } else {
-                bottomLabel.agora_bottom = LoginConfig.login_bottom_bottom
-            }
+        bottomLabel.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.bottom.equalTo()(-LoginConfig.login_bottom_bottom)
         }
     }
 }

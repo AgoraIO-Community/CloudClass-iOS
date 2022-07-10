@@ -63,6 +63,16 @@ class AgoraBoardUIController: UIViewController {
     
     var contextPool: AgoraEduContextPool
     var subRoom: AgoraEduSubRoomContext?
+    
+    private var roomProperties: [String: Any]? {
+        get {
+            guard let subRoom = subRoom else {
+                return contextPool.room.getRoomProperties()
+            }
+            
+            return subRoom.getSubRoomProperties()
+        }
+    }
     private var boardWidget: AgoraBaseWidget?
     private(set) weak var delegate: AgoraBoardUIControllerDelegate?
     
@@ -102,6 +112,13 @@ class AgoraBoardUIController: UIViewController {
     override func touchesBegan(_ touches: Set<UITouch>,
                                with event: UIEvent?) {
         UIApplication.shared.windows[0].endEditing(true)
+    }
+    
+    func onNeedChangeRatio() {
+        if let message = AgoraBoardWidgetSignal.ChangeRatio.toMessageString() {
+            widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                         message: message)
+        }
     }
     
     // for subVC
@@ -197,10 +214,10 @@ private extension AgoraBoardUIController {
     }
     
     func setUp() {
-        guard let props = contextPool.room.getRoomProperties(),
-              let stageState = props["stage"] as? Int else {
+        guard let stageState = roomProperties?["stage"] as? Int else {
             return
         }
+        
         if stageState == 1 {
             delegate?.onStageStateChanged(stageOn: true)
         } else {
@@ -301,8 +318,7 @@ extension AgoraBoardUIController: AgoraEduRoomHandler {
     func onRoomPropertiesUpdated(changedProperties: [String : Any],
                                  cause: [String : Any]?,
                                  operatorUser: AgoraEduContextUserInfo?) {
-        // 讲台开关
-        guard let stageState = changedProperties["stage"] as? Int else {
+        guard let stageState = roomProperties?["stage"] as? Int else {
             return
         }
         if stageState == 1 {

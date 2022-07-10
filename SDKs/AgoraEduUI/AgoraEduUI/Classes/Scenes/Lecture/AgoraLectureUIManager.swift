@@ -146,6 +146,12 @@ import AgoraWidget
         addChild(webViewController)
         contentView.addSubview(webViewController.view)
         
+        if userRole != .observer {
+            addChild(boardPageController)
+            boardPageController.view.isHidden = true
+            contentView.addSubview(boardPageController.view)
+        }
+        
         addChild(windowController)
         contentView.addSubview(windowController.view)
         
@@ -156,10 +162,8 @@ import AgoraWidget
             contentView.addSubview(classToolsController.view)
             
             addChild(toolCollectionController)
+            toolCollectionController.view.isHidden = true
             contentView.addSubview(toolCollectionController.view)
-            
-            contentView.addSubview(boardPageController.view)
-            addChild(boardPageController)
             
             toolBarController.tools = [.setting, .nameRoll, .handsList]
             addChild(classStateController)
@@ -177,11 +181,9 @@ import AgoraWidget
             contentView.addSubview(classToolsController.view)
             
             addChild(toolCollectionController)
+            toolCollectionController.view.isHidden = true
             contentView.addSubview(toolCollectionController.view)
-            
-            contentView.addSubview(boardPageController.view)
-            addChild(boardPageController)
-            
+
             toolBarController.tools = [.setting, .handsup]
         } else {
             toolBarController.tools = [.setting]

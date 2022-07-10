@@ -11,11 +11,11 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
     
     private var sepLine = UIView()
     
-    let netStateView = UIImageView()
-    let recordingStateView = UIView()
-    let recordingLabel = UILabel()
-    let timeLabel = UILabel()
-    let titleLabel = UILabel()
+    lazy var netStateView = UIImageView()
+    lazy var recordingStateView = UIView()
+    lazy var recordingLabel = UILabel()
+    lazy var timeLabel = UILabel()
+    lazy var titleLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)

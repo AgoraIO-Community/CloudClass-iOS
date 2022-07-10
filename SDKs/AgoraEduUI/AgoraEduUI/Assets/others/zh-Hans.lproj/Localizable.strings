@@ -94,6 +94,12 @@ fcr_monitor_network_disconnected = "当前网络已断开,请检查设备网络�
 fcr_monitor_network_reconnecting = "重连中...";
 fcr_monitor_login_remote_device = "账号在远端设备登录";
 
+// role
+fcr_role_teacher = "老师";
+fcr_role_assistant = "助教";
+fcr_role_student = "学生";
+fcr_role_audience = "观众";
+
 // Group
 fcr_group_help_title = "请求帮助";
 fcr_group_help_content = "你可以邀请老师进入小组帮助你";
@@ -111,8 +117,8 @@ fcr_group_button_later = "稍后";
 fcr_group_joining = "正在加入{xxx}";
 fcr_group_join = "加入讨论组";
 fcr_group_enter_welcome = "欢迎加入{xxx}与大家互动讨论";
-fcr_group_enter_group = "老师进入小组";
-fcr_group_exit_group = "老师离开小组";
+fcr_group_enter_group = "{xxx}{yyy}进入小组";
+fcr_group_exit_group = "{xxx}{yyy}离开小组";
 
 fcr_group_close_group = "老师结束了小组讨论";
 fcr_group_invite_back_main_room = "老师邀请你回到大房间";

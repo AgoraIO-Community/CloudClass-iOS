@@ -172,7 +172,7 @@ extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
                         operatorUser: AgoraEduContextUserInfo?) {
         // 祝贺**获得奖励
         let message = "fcr_user_congratulation".agedu_localized()
-        let final = message.replacingOccurrences(of: String.agedu_localized_replacing(),
+        let final = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                  with: user.userName)
         AgoraToast.toast(msg: final,
                          type: .notice)
@@ -210,10 +210,30 @@ extension AgoraRoomGlobalUIController: AgoraEduMonitorHandler {
             AgoraLoading.hide()
         }
     }
+    
+    func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
+        switch quality {
+        case .bad:
+            let toastMessage = "fcr_monitor_network_poor".agedu_localized()
+            AgoraToast.toast(msg: toastMessage,
+                             type: .error)
+        default:
+            break
+        }
+    }
 }
 
 // MARK: - AgoraEduGroupHandler
 extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
+    func onGroupInfoUpdated(groupInfo: AgoraEduContextGroupInfo) {
+        guard !groupInfo.state,
+              subRoom == nil else {
+            return
+        }
+        AgoraToast.toast(msg: "fcr_group_close_group".agedu_localized(),
+                         type: .warning)
+    }
+    
     func onUserListInvitedToSubRoom(userList: Array<String>,
                                     subRoomUuid: String,
                                     operatorUser: AgoraEduContextUserInfo?) {
@@ -226,7 +246,7 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
         }
         
         var message = "fcr_group_invitation".agedu_localized()
-        let final = message.replacingOccurrences(of: String.agedu_localized_replacing(),
+        let final = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                  with: subRoomInfo.subRoomName)
         let title = "fcr_group_join".agedu_localized()
         
@@ -257,13 +277,30 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
                                   operatorUser: AgoraEduContextUserInfo?) {
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
         
-        guard userList.contains(localUserId) else {
+        if userList.contains(localUserId) {
+            hasJoinedSubRoomId = subRoomUuid
+            
+            delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoomUuid)
             return
         }
         
-        hasJoinedSubRoomId = subRoomUuid
+        guard hasJoinedSubRoomId == subRoomUuid else {
+            return
+        }
         
-        delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoomUuid)
+        for userId in userList {
+            guard let userInfo = userController.getUserInfo(userUuid: userId),
+                  let roleString = userInfo.userRole.stringValue else {
+                      return
+                  }
+            let message = "fcr_group_enter_group".agedu_localized()
+            var temp = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                                                     with: roleString)
+            var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
+                                                  with: userInfo.userName)
+            AgoraToast.toast(msg: final,
+                             type: .success)
+        }
     }
     
     func onUserListRemovedFromSubRoom(userList: [AgoraEduContextSubRoomRemovedUserEvent],
@@ -276,6 +313,26 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
             let isKickOut = (event.reason == .kickOut)
             delegate?.onLocalUserRemovedFromSubRoom(subRoomId: subRoomUuid,
                                                     isKickOut: isKickOut)
+        }
+        
+        guard hasJoinedSubRoomId == subRoomUuid,
+              let _ = subRoom else {
+            return
+        }
+        
+        let userIdList = userList.map({return $0.userUuid})
+        for userId in userIdList {
+            guard let userInfo = userController.getUserInfo(userUuid: userId),
+                  let roleString = userInfo.userRole.stringValue else {
+                      return
+                  }
+            let message = "fcr_group_exit_group".agedu_localized()
+            var temp = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                                                     with: roleString)
+            var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
+                                                  with: userInfo.userName)
+            AgoraToast.toast(msg: final,
+                             type: .warning)
         }
     }
     
@@ -387,7 +444,7 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
                 let message = "fcr_stream_start_video".agedu_localized()
                 
                 AgoraToast.toast(msg: message,
-                                 type: .error)
+                                 type: .success)
             } else {
                 let message = "fcr_stream_stop_video".agedu_localized()
                 

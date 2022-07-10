@@ -113,6 +113,16 @@ import AgoraWidget
         super.viewWillAppear(animated)
         if isJoinedRoom == false {
             AgoraLoading.loading()
+        } else {
+            let message = "fcr_group_back_main_room".agedu_localized()
+            AgoraLoading.loading(msg: message)
+        }
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if isJoinedRoom {
+            AgoraLoading.hide()
         }
     }
     
@@ -146,6 +156,7 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         
         if userRole != .observer {
             addChild(boardPageController)
+            boardPageController.view.isHidden = true
             contentView.addSubview(boardPageController.view)
         }
         
@@ -196,6 +207,8 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
             contentView.addSubview(renderMenuController.view)
             
             addChild(toolCollectionController)
+            toolCollectionController.view.isHidden = true
+
             contentView.addSubview(toolCollectionController.view)
             
             addChild(cloudController)
@@ -227,12 +240,13 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         boardController.view.mas_makeConstraints { make in
             make?.height.equalTo()(AgoraFit.scale(307))
             make?.left.right().bottom().equalTo()(0)
+            make?.bottom.equalTo()(0)
         }
         
         renderController.view.mas_makeConstraints { make in
             make?.left.right().equalTo()(0)
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-            make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-1))
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+            make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(-2)
         }
         
         self.toolBarController.view.mas_remakeConstraints { make in

@@ -46,8 +46,12 @@ extension Bundle {
 }
 
 extension String {
-    static func agedu_localized_replacing() -> String {
+    static func agedu_localized_replacing_x() -> String {
         return "{xxx}"
+    }
+    
+    static func agedu_localized_replacing_y() -> String {
+        return "{yyy}"
     }
     
     func agedu_localized() -> String {

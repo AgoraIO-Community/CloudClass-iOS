@@ -150,7 +150,11 @@ import AgoraWidget
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isJoinedRoom == false {
-            AgoraLoading.loading()
+            let subRoomName = subRoom.getSubRoomInfo().subRoomName
+            let message = "fcr_group_joining".agedu_localized().replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                                                                                     with: subRoomName)
+            
+            AgoraLoading.loading(msg: message)
         }
     }
     
@@ -223,6 +227,7 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
         
         if userRole != .observer {
             addChild(boardPageController)
+            boardPageController.view.isHidden = true
             contentView.addSubview(boardPageController.view)
         }
         
@@ -277,6 +282,8 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
             contentView.addSubview(cloudController.view)
             
             addChild(toolCollectionController)
+            toolCollectionController.view.isHidden = true
+            
             contentView.addSubview(toolCollectionController.view)
         case .student:
             addChild(nameRollController)
@@ -723,6 +730,7 @@ private extension AgoraSubRoomUIManager {
         }
         
         let localSubTeacher = subUser.getUserList(role: .teacher)?.first
+        
         guard localSubTeacher == nil else {
             return .localSub
         }

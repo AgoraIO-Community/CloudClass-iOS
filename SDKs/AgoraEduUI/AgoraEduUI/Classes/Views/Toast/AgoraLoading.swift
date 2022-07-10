@@ -71,6 +71,9 @@ public class AgoraLoading: NSObject {
         self.loadingView.superview?.bringSubviewToFront(self.loadingView)
         self.loadingView.label.text = msg
         self.loadingView.isHidden = false
+        
+        self.loadingView.updateLayoutIfNeeded()
+        
         self.loadingView.startAnimating()
     }
     
@@ -88,11 +91,11 @@ public class AgoraLoading: NSObject {
 
 fileprivate class AgoraLoadingView: UIView {
     
-    private var contentView: UIView!
+    private lazy var contentView = UIView()
     
-    public var label: UILabel!
+    public lazy var label = UILabel()
     
-    private var loadingView: FLAnimatedImageView!
+    private lazy var animatedView = FLAnimatedImageView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -105,27 +108,42 @@ fileprivate class AgoraLoadingView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        var size = min(self.bounds.width, self.bounds.height) * 0.25
-        size = size > 90 ? 90 : size
-        self.contentView.frame = CGRect(x: 0, y: 0, width: size, height: size)
-        self.contentView.layer.cornerRadius = size * 0.12
-        self.contentView.center = self.center
+    func updateLayoutIfNeeded() {
+        guard let text = label.text else {
+            contentView.mas_remakeConstraints { make in
+                make?.centerX.centerY().equalTo()(self)
+                make?.width.height().equalTo()(90)
+            }
+            return
+        }
+        let labelSize = text.agora_size(font: label.font)
+        
+        var contentHeight: CGFloat = 90
+        contentHeight = 16 + 60 + 4 + labelSize.height + 16
+        
+        var contentWidth: CGFloat = 90
+        let labelLength = labelSize.width + 30 * 2
+        
+        contentWidth = (contentWidth > labelLength) ? contentWidth : labelLength
+        
+        contentView.mas_remakeConstraints { make in
+            make?.centerX.centerY().equalTo()(self)
+            make?.height.equalTo()(contentHeight)
+            make?.width.equalTo()(contentWidth)
+        }
     }
     
     public func startAnimating() {
-        loadingView.startAnimating()
+        animatedView.startAnimating()
     }
     
     public func stopAnimating() {
-        loadingView.stopAnimating()
+        animatedView.stopAnimating()
     }
     
     private func createViews() {
-        contentView = UIView()
         contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 15
+        contentView.layer.cornerRadius = 12
         AgoraUIGroup().color.borderSet(layer: contentView.layer)
         addSubview(contentView)
         
@@ -134,25 +152,29 @@ fileprivate class AgoraLoadingView: UIView {
             let imgData = try? Data(contentsOf: url)
             image = FLAnimatedImage.init(animatedGIFData: imgData)
         }
-        loadingView = FLAnimatedImageView()
-        loadingView.animatedImage = image
-        contentView.addSubview(loadingView)
+        animatedView.animatedImage = image
+        contentView.addSubview(animatedView)
         
-        label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = .systemFont(ofSize: 13)
         contentView.addSubview(label)
     }
     
     private func createConstraint() {
-        loadingView.mas_makeConstraints { make in
+        contentView.mas_makeConstraints { make in
+            make?.centerX.centerY().equalTo()(self)
+            make?.width.height().equalTo()(90)
+        }
+        animatedView.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
-            make?.centerY.equalTo()(0)
-            make?.width.height().equalTo()(contentView)?.multipliedBy()(0.62)
+            make?.top.equalTo()(15)
+            make?.width.height().equalTo()(60)
         }
         label.mas_makeConstraints { make in
-            make?.left.right().equalTo()(0)
-            make?.bottom.equalTo()(-5)
+            make?.centerX.equalTo()(0)
+            make?.left.greaterThanOrEqualTo()(30)
+            make?.right.greaterThanOrEqualTo()(-30)
+            make?.top.equalTo()(animatedView.mas_bottom)?.offset()(4)
         }
     }
 }

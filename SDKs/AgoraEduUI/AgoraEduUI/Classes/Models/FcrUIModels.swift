@@ -357,24 +357,6 @@ class AgoraUserListModel {
         if nameString.hasPrefix("重") {return "chong"}
         return pinyinString;
     }
-    
-    func updateWithStream(_ stream: AgoraEduContextStreamInfo?) {
-        if let `stream` = stream {
-            self.streamId = stream.streamUuid
-            // audio
-            self.micState.streamOn = stream.streamType.hasAudio
-            self.micState.deviceOn = (stream.audioSourceState == .open)
-            // video
-            self.cameraState.streamOn = stream.streamType.hasVideo
-            self.cameraState.deviceOn = (stream.videoSourceState == .open)
-            
-        } else {
-            self.micState.streamOn = false
-            self.micState.deviceOn = false
-            self.cameraState.streamOn = false
-            self.cameraState.deviceOn = false
-        }
-    }
 }
 
 struct AgoraUserListFuncState {
