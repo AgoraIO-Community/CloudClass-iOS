@@ -132,13 +132,13 @@ class AgoraBoardToolConfigView: UIView {
     let lineCollectionHeight = kWidthLength + kGapLength * 2
     let textCollectionHeight = kFontLength + kGapLength * 2
     /** 容器*/
-    private var contentView: UIView!
+    private lazy var contentView = UIView()
     
     private var subPaintCollectionView: UICollectionView!
-    private var topLine: UIView!
+    private lazy var topLine = UIView(frame: .zero)
     private var lineWidthCollectionView: UICollectionView!
     private var textSizecollectionView: UICollectionView!
-    private var bottomLine: UIView!
+    private lazy var bottomLine = UIView(frame: .zero)
     private var colorCollectionView: UICollectionView!
     
     /** Data*/
@@ -190,9 +190,11 @@ class AgoraBoardToolConfigView: UIView {
         self.delegate = delegate
         super.init(frame: .zero)
         backgroundColor = .clear
-        createViews()
-        baseConstrains()
+        
+        initViews()
+        initViewFrame()
         updateConstrains()
+        updateViewProperties()
     }
     
     func switchType(_ type: AgoraBoardToolMainType) {
@@ -235,7 +237,7 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolCollectionToolCell.self,
                                                           for: indexPath)
             if let tool = AgoraBoardToolPaintType(rawValue: indexPath.row) {
-                cell.setImage(image: (tool == currentPaintTool) ? tool.selectedImage : tool.image,
+                cell.setImage(image: (tool == currentPaintTool) ? tool.selectedImage : tool.unselectedImage,
                               color: UIColor.fakeWhite(UIColor(hex: currentColor)))
                 cell.aSelected = (tool == currentPaintTool)
             }
@@ -314,19 +316,11 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
         return CGSize(width: 0, height: 0)
     }
 }
-// MARK: - Creations
-private extension AgoraBoardToolConfigView {
-    func createViews() {
-        AgoraUIGroup().color.borderSet(layer: layer)
-        
-        contentView = UIView()
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 10.0
-        contentView.clipsToBounds = true
-        contentView.borderWidth = 1
-        contentView.borderColor = .white
+
+// MARK: - AgoraUIContentContainer
+extension AgoraBoardToolConfigView: AgoraUIContentContainer {
+    func initViews() {
         addSubview(contentView)
-        
         
         let toolLeft: CGFloat = UIDevice.current.agora_is_pad ? 12 : 8
         subPaintCollectionView = makeCollectionView(space: kToolHGap,
@@ -361,16 +355,11 @@ private extension AgoraBoardToolConfigView {
         textSizecollectionView.register(cellWithClass: AgoraBoardTextSizeItemCell.self)
         contentView.addSubview(textSizecollectionView)
         
-        topLine = UIView(frame: .zero)
-        topLine.backgroundColor = UIColor(hex: 0xECECF1)
         contentView.addSubview(topLine)
-        
-        bottomLine = UIView(frame: .zero)
-        bottomLine.backgroundColor = UIColor(hex: 0xECECF1)
         contentView.addSubview(bottomLine)
     }
     
-    func baseConstrains() {
+    func initViewFrame() {
         contentView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(contentView.superview)
         }
@@ -386,6 +375,24 @@ private extension AgoraBoardToolConfigView {
         }
     }
     
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        
+        FcrColorGroup.borderSet(layer: layer)
+        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = ui.frame.fcr_square_container_corner_radius
+        contentView.clipsToBounds = true
+        contentView.borderWidth = ui.frame.fcr_border_width
+        contentView.layer.borderColor = FcrColorGroup.fcr_border_color
+        
+        topLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        bottomLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+    }
+    
+    
+}
+// MARK: - Creations
+private extension AgoraBoardToolConfigView {
     func updateConstrains() {
         if isCurrentPaint {
             subPaintCollectionView.mas_remakeConstraints { make in

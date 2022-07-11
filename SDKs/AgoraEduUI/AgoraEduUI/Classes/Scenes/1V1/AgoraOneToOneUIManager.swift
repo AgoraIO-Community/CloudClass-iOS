@@ -50,7 +50,7 @@ import UIKit
     /** 外部链接 控制器*/
     private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     /** 右边用来切圆角和显示背景色的容器视图*/
-    private lazy var rightContentView = UIView()
+//    private lazy var rightContentView = UIView()
     /** 白板 控制器*/
     private lazy var boardController = AgoraBoardUIController(context: contextPool,
                                                               delegate: self)
@@ -69,9 +69,6 @@ import UIKit
                                                                     delegate: self,
                                                                     controllerDataSource: self)
     
-    private lazy var tabSelectView = AgoraOneToOneTabView(frame: .zero,
-                                                          delegate: self)
-    
     private var isJoinedRoom = false
     
     private var fileWriter = FcrUIFileWriter()
@@ -82,7 +79,6 @@ import UIKit
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(hex: 0xF9F9FC)
         
         initViews()
         initViewFrame()
@@ -162,11 +158,8 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
-        rightContentView.clipsToBounds = true
-        contentView.addSubview(rightContentView)
-        
         addChild(renderController)
-        rightContentView.addSubview(renderController.view)
+        contentView.addSubview(renderController.view)
         
         addChild(webViewController)
         contentView.addSubview(webViewController.view)
@@ -181,7 +174,7 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         contentView.addSubview(windowController.view)
         
         toolBarController.delegate = self
-        toolBarController.tools = [.setting]
+        toolBarController.tools = [.setting, .message]
         contentView.addSubview(toolBarController.view)
         
         addChild(classToolsController)
@@ -207,22 +200,40 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         }
         
         createChatController()
-        
-        if !UIDevice.current.agora_is_pad {
-            rightContentView.addSubview(tabSelectView)
-        }
     }
     
     func initViewFrame() {
         let userRole = contextPool.user.getLocalUserInfo().userRole
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(23))
+            make?.height.equalTo()(UIDevice.current.agora_is_pad ? 24 : 14)
         }
+        
+        if UIDevice.current.agora_is_pad {
+            renderController.view.mas_makeConstraints { make in
+                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+                make?.right.equalTo()(0)
+                make?.width.equalTo()(244)
+                make?.height.equalTo()(276)
+            }
+            
+            chatController.view.mas_makeConstraints { make in
+                make?.top.equalTo()(renderController.view.mas_bottom)?.offset()(2)
+                make?.left.right().equalTo()(renderController.view)
+                make?.bottom.equalTo()(0)
+            }
+        } else {
+            renderController.view.mas_makeConstraints { make in
+                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
+                make?.width.equalTo()(157)
+                make?.bottom.right().equalTo()(0)
+            }
+        }
+        
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(rightContentView.mas_left)?.offset()(AgoraFit.scale(-2))
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.right.equalTo()(renderController.view.mas_left)?.offset()(-2)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
         }
         webViewController.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
@@ -255,40 +266,13 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
             }
         }
         
-        if UIDevice.current.agora_is_pad {
-            rightContentView.mas_makeConstraints { make in
-                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-                make?.bottom.right().equalTo()(0)
-                make?.width.equalTo()(AgoraFit.scale(170))
-            }
-            renderController.view.mas_makeConstraints { make in
-                make?.top.left().right().equalTo()(0)
-                make?.bottom.equalTo()(rightContentView.mas_centerY)
-            }
-        } else {
-            rightContentView.mas_makeConstraints { make in
-                make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-                make?.bottom.right().equalTo()(0)
-                make?.width.equalTo()(AgoraFit.scale(170))
-            }
-            tabSelectView.mas_makeConstraints { make in
-                make?.top.left().right().equalTo()(0)
-                make?.height.equalTo()(AgoraFit.scale(33))
-            }
-            renderController.view.mas_makeConstraints { make in
-                make?.top.equalTo()(tabSelectView.mas_bottom)?.offset()(AgoraFit.scale(1))
-                make?.left.right().bottom().equalTo()(0)
-            }
-        }
-        
         updateRenderLayout()
     }
     
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         
-        rightContentView.backgroundColor = ui.color.one_right_content_bg_color
-        rightContentView.layer.cornerRadius = ui.frame.one_room_right_corner_radius
+        view.backgroundColor = FcrColorGroup.fcr_system_background_color
     }
 }
 
@@ -372,25 +356,6 @@ extension AgoraOneToOneUIManager: AgoraBoardUIControllerDelegate {
     }
 }
 
-// MARK: - AgoraOneToOneTabViewDelegate
-extension AgoraOneToOneUIManager: AgoraOneToOneTabViewDelegate {
-    func onChatTabSelectChanged(isSelected: Bool) {
-        renderMenuController.dismissView()
-        guard let v = chatController.view else {
-            return
-        }
-        if isSelected {
-            rightContentView.addSubview(v)
-            v.mas_makeConstraints { make in
-                make?.top.equalTo()(tabSelectView.mas_bottom)
-                make?.left.right().bottom().equalTo()(0)
-            }
-        } else {
-            v.removeFromSuperview()
-        }
-    }
-}
-
 // MARK: - AgoraWindowUIControllerDelegate
 extension AgoraOneToOneUIManager: FcrStreamWindowUIControllerDelegate {
     func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
@@ -442,20 +407,24 @@ extension AgoraOneToOneUIManager: AgoraCloudUIControllerDelegate {
 
 // MARK: - AgoraToolBarDelegate
 extension AgoraOneToOneUIManager: AgoraToolBarDelegate {
-    func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
+    func toolsViewDidSelectTool(tool: FcrToolBarItemType,
                                 selectView: UIView) {
         switch tool {
         case .setting:
             settingViewController.view.frame = CGRect(origin: .zero,
                                                       size: settingViewController.suggestSize)
             ctrlView = settingViewController.view
+        case .message:
+            chatController.view.frame = CGRect(origin: .zero,
+                                               size: chatController.suggestSize)
+            ctrlView = chatController.view
         default:
             break
         }
         ctrlViewAnimationFromView(selectView)
     }
     
-    func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
+    func toolsViewDidDeselectTool(tool: FcrToolBarItemType) {
         ctrlView = nil
     }
 }
@@ -463,7 +432,7 @@ extension AgoraOneToOneUIManager: AgoraToolBarDelegate {
 // MARK: - AgoraChatUIControllerDelegate
 extension AgoraOneToOneUIManager: AgoraChatUIControllerDelegate {
     func updateChatRedDot(isShow: Bool) {
-        tabSelectView.updateChatRedDot(isShow: isShow)
+        toolBarController.updateChatRedDot(isShow: isShow)
     }
 }
 
@@ -629,34 +598,25 @@ private extension AgoraOneToOneUIManager {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         
-        layout.itemSize = CGSize(width: AgoraFit.scale(170),
+        layout.itemSize = CGSize(width: renderController.view.width,
                                  height: (renderController.view.height - 2) / 2)
         layout.minimumLineSpacing = 2
         renderController.updateLayout(layout)
     }
     
     func createChatController() {
-        if UIDevice.current.agora_is_pad {
-            chatController.hideMiniButton = true
-            chatController.hideAnnouncement = true
-        } else {
-            chatController.hideTopBar = true
-        }
         if contextPool.user.getLocalUserInfo().userRole == .observer {
             chatController.hideInput = true
         }
-        
+        chatController.hideAnnouncement = true
+        chatController.hideMiniButton = true
         chatController.hideMuteButton = true
         
         addChild(chatController)
         if UIDevice.current.agora_is_pad {
-            rightContentView.addSubview(chatController.view)
-            chatController.view.mas_makeConstraints { make in
-                make?.left.right().bottom().equalTo()(0)
-                make?.top.equalTo()(rightContentView.mas_centerY)
-            }
+            contentView.addSubview(chatController.view)
         } else {
-            let _ = chatController.view
+            FcrColorGroup.borderSet(layer: chatController.view.layer)
         }
 
         chatController.delegate = self

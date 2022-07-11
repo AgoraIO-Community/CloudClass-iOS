@@ -107,15 +107,18 @@ static AgoraClassroomSDK *manager = nil;
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
                 eduVC = [[AgoraOneToOneUIManager alloc] initWithContextPool:pool
-                                                                   delegate:manager];
+                                                                   delegate:manager
+                                                                     uiMode:config.uiMode];
                 break;
             case AgoraEduContextRoomTypeSmall:
                 eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool
-                                                                delegate:manager];
+                                                                delegate:manager
+                                                                  uiMode:config.uiMode];
                 break;
             case AgoraEduContextRoomTypeLecture:
                 eduVC = [[AgoraLectureUIManager alloc] initWithContextPool:pool
-                                                                  delegate:manager];
+                                                                  delegate:manager
+                                                                    uiMode:config.uiMode];
                 break;
             default:
                 NSCAssert(true,
@@ -184,7 +187,7 @@ static AgoraClassroomSDK *manager = nil;
         AgoraEduUIManager *eduVC = nil;
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeLecture: {
-                AgoraVocationalUIManager *vocationalVC = [[AgoraVocationalUIManager alloc] initWithContextPool:pool delegate:manager];
+                AgoraVocationalUIManager *vocationalVC = [[AgoraVocationalUIManager alloc] initWithContextPool:pool delegate:manager uiMode:config.uiMode];
                 vocationalVC.cdnType = cdnType;
                 eduVC = vocationalVC;
                 break;

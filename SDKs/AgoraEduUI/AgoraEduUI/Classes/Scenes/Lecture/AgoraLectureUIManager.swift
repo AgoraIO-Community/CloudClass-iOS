@@ -130,16 +130,10 @@ import AgoraWidget
         addChild(globalController)
         globalController.viewDidLoad()
         
-        teacherRenderController.view.layer.cornerRadius = AgoraFit.scale(2)
-        teacherRenderController.view.clipsToBounds = true
         addChild(teacherRenderController)
         contentView.addSubview(teacherRenderController.view)
         
         // 视图层级：白板，大窗，工具
-        boardController.view.layer.cornerRadius = AgoraFit.scale(2)
-        boardController.view.borderWidth = 1
-        boardController.view.borderColor = UIColor(hex: 0xECECF1)
-        boardController.view.clipsToBounds = true
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
@@ -195,7 +189,7 @@ import AgoraWidget
             chatController.hideInput = true
         }
         addChild(chatController)
-        AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
+        FcrColorGroup.borderSet(layer: chatController.view.layer)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
     }
@@ -205,7 +199,7 @@ import AgoraWidget
 
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
-            make?.height.equalTo()(AgoraFit.scale(14))
+            make?.height.equalTo()(UIDevice.current.agora_is_pad ? 24 : 14)
         }
         
         webViewController.view.mas_makeConstraints { make in
@@ -217,7 +211,7 @@ import AgoraWidget
         }
         
         teacherRenderController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(2)
             make?.right.equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
             make?.height.equalTo()(AgoraFit.scale(112))
@@ -225,8 +219,8 @@ import AgoraWidget
         
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(teacherRenderController.view.mas_left)?.offset()(AgoraFit.scale(-2))
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.right.equalTo()(teacherRenderController.view.mas_left)?.offset()(-2)
+            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(2)
         }
 
         toolBarController.view.mas_remakeConstraints { make in
@@ -254,7 +248,7 @@ import AgoraWidget
         }
 
         chatController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(2)
             make?.left.right().equalTo()(teacherRenderController.view)
             make?.bottom.equalTo()(0)
         }
@@ -263,7 +257,10 @@ import AgoraWidget
     }
     
     func updateViewProperties() {
+        let ui = AgoraUIGroup()
         
+        teacherRenderController.view.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        teacherRenderController.view.clipsToBounds = true
     }
 }
 
@@ -370,7 +367,7 @@ extension AgoraLectureUIManager: AgoraCloudUIControllerDelegate {
 
 // MARK: - AgoraToolBarDelegate
 extension AgoraLectureUIManager: AgoraToolBarDelegate {
-    func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
+    func toolsViewDidSelectTool(tool: FcrToolBarItemType,
                                 selectView: UIView) {
         switch tool {
         case .setting:
@@ -393,7 +390,7 @@ extension AgoraLectureUIManager: AgoraToolBarDelegate {
         ctrlViewAnimationFromView(selectView)
     }
     
-    func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
+    func toolsViewDidDeselectTool(tool: FcrToolBarItemType) {
         ctrlView = nil
     }
 }
@@ -572,7 +569,7 @@ private extension AgoraLectureUIManager {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         
-        layout.itemSize = CGSize(width: AgoraFit.scale(170),
+        layout.itemSize = CGSize(width: 244,
                                  height: teacherRenderController.view.height - 2)
         layout.minimumLineSpacing = 2
         teacherRenderController.updateLayout(layout)

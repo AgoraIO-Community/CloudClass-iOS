@@ -10,25 +10,25 @@ import UIKit
 
 class AgoraKickOutAlertController: UIViewController {
     
-    private var contentView: UIView!
+    private lazy var contentView = UIView()
     
-    private var titleLable: UILabel!
+    private lazy var titleLable = UILabel()
     
-    private var cancelButton: UIButton!
+    private lazy var cancelButton = UIButton(type: .system)
     
-    private var submitButton: UIButton!
+    private lazy var submitButton = UIButton(type: .system)
     
-    private var hLine: UIView!
+    private lazy var hLine = UIView()
     
-    private var vLine: UIView!
+    private lazy var vLine = UIView()
     
-    private var firstButton: UIButton!
+    private lazy var firstButton = UIButton(type: .custom)
     
-    private var firstLabel: UILabel!
+    private lazy var firstLabel = UILabel()
     
-    private var seconedButton: UIButton!
+    private lazy var seconedButton = UIButton(type: .custom)
     
-    private var seconedLabel: UILabel!
+    private lazy var seconedLabel = UILabel()
     
     private var onComplete: ((_ forever: Bool) -> Void)?
     
@@ -36,16 +36,18 @@ class AgoraKickOutAlertController: UIViewController {
     
     private var kickForever: Bool = false {
         didSet {
+            let color_one = FcrColorGroup.fcr_text_level1_color
+            let color_two = FcrColorGroup.fcr_text_level2_color
             if kickForever {
                 firstButton.isSelected = false
-                firstLabel.textColor = UIColor(hex: 0x586376)
+                firstLabel.textColor = color_two
                 seconedButton.isSelected = true
-                seconedLabel.textColor = UIColor(hex: 0x191919)
+                seconedLabel.textColor = color_one
             } else {
                 firstButton.isSelected = true
-                firstLabel.textColor = UIColor(hex: 0x191919)
+                firstLabel.textColor = color_one
                 seconedButton.isSelected = false
-                seconedLabel.textColor = UIColor(hex: 0x586376)
+                seconedLabel.textColor = color_two
             }
         }
     }
@@ -64,49 +66,43 @@ class AgoraKickOutAlertController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
 }
 // MARK: - Actions
 private extension AgoraKickOutAlertController {
     @objc func onClickSubmit(_ sender: UIButton) {
-        onComplete?(self.kickForever)
-        self.dismiss(animated: true, completion: nil)
+        onComplete?(kickForever)
+        dismiss(animated: true,
+                completion: nil)
     }
     
     @objc func onClickCancel(_ sender: UIButton) {
         onCancel?()
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true,
+                completion: nil)
     }
     
     @objc func onClickFirstButton(_ sender: UIButton) {
-        self.kickForever = false
+        kickForever = false
     }
     
     @objc func onClickSecondButton(_ sender: UIButton) {
-        self.kickForever = true
+        kickForever = true
     }
 }
-// MARK: - Creation
-extension AgoraKickOutAlertController {
-    func createViews() {
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-        
-        contentView = UIView()
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 12
-        AgoraUIGroup().color.borderSet(layer: contentView.layer)
-        self.view.addSubview(contentView)
-        
-        titleLable = UILabel()
-        titleLable.textColor = UIColor(hex: 0x030303)
+// MARK: - AgoraUIContentContainer
+extension AgoraKickOutAlertController: AgoraUIContentContainer {
+    func initViews() {
+        view.addSubview(contentView)
+
         titleLable.textAlignment = .center
         titleLable.text = "fcr_user_kick_out".agedu_localized()
-        titleLable.font = UIFont.systemFont(ofSize: 17)
+        
         contentView.addSubview(titleLable)
         
-        firstButton = UIButton(type: .custom)
         firstButton.isSelected = true
         firstButton.addTarget(self,
                               action: #selector(onClickFirstButton(_:)),
@@ -117,14 +113,9 @@ extension AgoraKickOutAlertController {
                              for: .selected)
         contentView.addSubview(firstButton)
         
-        firstLabel = UILabel()
-        firstLabel.textColor = UIColor(hex: 0x191919)
         firstLabel.text = "fcr_user_kick_out_once".agedu_localized()
-        firstLabel.font = UIFont.systemFont(ofSize: 13)
-        firstLabel.numberOfLines = 0
         contentView.addSubview(firstLabel)
         
-        seconedButton = UIButton(type: .custom)
         seconedButton.isSelected = false
         seconedButton.addTarget(self,
                                 action: #selector(onClickSecondButton(_:)),
@@ -135,22 +126,13 @@ extension AgoraKickOutAlertController {
                                for: .selected)
         contentView.addSubview(seconedButton)
         
-        seconedLabel = UILabel()
-        seconedLabel.textColor = UIColor(hex: 0x586376)
         seconedLabel.text = "fcr_user_kick_out_forever".agedu_localized()
-        seconedLabel.font = UIFont.systemFont(ofSize: 13)
-        seconedLabel.numberOfLines = 0
         contentView.addSubview(seconedLabel)
         
-        vLine = UIView()
-        vLine.backgroundColor = UIColor(hex: 0xEEEEF7)
         contentView.addSubview(vLine)
         
-        hLine = UIView()
-        hLine.backgroundColor = UIColor(hex: 0xEEEEF7)
         contentView.addSubview(hLine)
         
-        submitButton = UIButton(type: .system)
         submitButton.addTarget(self,
                                action: #selector(onClickSubmit(_:)),
                                for: .touchUpInside)
@@ -158,7 +140,6 @@ extension AgoraKickOutAlertController {
                               for: .normal)
         contentView.addSubview(submitButton)
         
-        cancelButton = UIButton(type: .system)
         cancelButton.addTarget(self,
                                action: #selector(onClickCancel(_:)),
                                for: .touchUpInside)
@@ -167,7 +148,7 @@ extension AgoraKickOutAlertController {
         contentView.addSubview(cancelButton)
     }
     
-    func createConstraint() {
+    func initViewFrame() {
         contentView.mas_makeConstraints { make in
             make?.center.equalTo()(0)
             make?.width.equalTo()(270)
@@ -217,5 +198,21 @@ extension AgoraKickOutAlertController {
             make?.top.equalTo()(hLine.mas_bottom)
             make?.right.equalTo()(vLine.mas_left)
         }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        FcrColorGroup.borderSet(layer: contentView.layer)
+        titleLable.font = ui.font.fcr_font17
+        firstLabel.textColor = FcrColorGroup.fcr_text_level1_color
+        firstLabel.font = ui.font.fcr_font13
+        vLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        hLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = ui.frame.fcr_alert_corner_radius
+        titleLable.textColor = UIColor(hex: 0x030303)
+        seconedLabel.textColor = UIColor(hex: 0x586376)
+        seconedLabel.font = ui.font.fcr_font13
     }
 }

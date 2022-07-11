@@ -92,16 +92,13 @@ extension AgoraClassStateUIController: AgoraUIContentContainer {
         
         startButton.setTitle("fcr_room_start_class".agedu_localized(),
                              for: .normal)
-        startButton.titleLabel?.font = .systemFont(ofSize: 13)
-        startButton.backgroundColor = ui.color.common_base_tint_color
-        startButton.setTitleColor(.white,
+        startButton.titleLabel?.font = ui.font.fcr_font13
+        startButton.backgroundColor = FcrColorGroup.fcr_system_highlight_color
+        startButton.setTitleColor(FcrColorGroup.fcr_text_contrast_color,
                                   for: .normal)
-        startButton.layer.cornerRadius = ui.frame.class_state_button_corner_radius
-        startButton.layer.shadowColor = ui.color.class_state_shadow_color
-        startButton.layer.shadowOffset = CGSize(width: 0,
-                                                height: 1.5)
-        startButton.layer.shadowOpacity = 0.15
-        startButton.layer.shadowRadius = 5
+        startButton.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
+        
+        FcrColorGroup.borderSet(layer: startButton.layer)
     }
     
 }

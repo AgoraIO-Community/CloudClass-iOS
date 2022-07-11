@@ -196,9 +196,9 @@ extension FcrSettingsView: AgoraUIContentContainer {
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         
-        let switchTintColor = ui.color.setting_switch_tint_color
-        let labelFont = ui.frame.setting_camera_font
-        let labelColor = ui.color.setting_label_color
+        let switchTintColor = FcrColorGroup.fcr_icon_fill_color
+        let labelFont = ui.font.fcr_font13
+        let labelColor = FcrColorGroup.fcr_text_level1_color
         
         // Camera
         cameraLabel.text = "fcr_media_camera".agedu_localized()
@@ -206,7 +206,7 @@ extension FcrSettingsView: AgoraUIContentContainer {
         cameraLabel.font = labelFont
         
         cameraDirectionLabel.text = "fcr_media_camera_direction".agedu_localized()
-        cameraDirectionLabel.textColor = ui.color.setting_direction_label_color
+        cameraDirectionLabel.textColor = FcrColorGroup.fcr_text_level3_color
         cameraDirectionLabel.font = labelFont
         
         cameraSwitch.onTintColor = switchTintColor
@@ -220,25 +220,28 @@ extension FcrSettingsView: AgoraUIContentContainer {
                                for: .normal)
         
         for button in [frontCameraButton, backCameraButton] {
-            button.setTitleColor(ui.color.setting_button_selected_title_color,
+            button.setTitleColor(FcrColorGroup.fcr_text_contrast_color,
                                  for: .selected)
-            button.setTitleColor(ui.color.setting_button_normal_title_color,
+            button.setTitleColor(FcrColorGroup.fcr_text_level2_color,
                                  for: .normal)
-            button.setBackgroundImage(UIImage(color: ui.color.setting_camera_button_normal_bg_color,
-                                              size: CGSize(width: 1,
-                                                           height: 1)),
+            let normalColorImage = UIImage(color: FcrColorGroup.fcr_icon_normal_color.withAlphaComponent(0.1),
+                                           size: CGSize(width: 1,
+                                                        height: 1))
+            let selectedColorImage = UIImage(color: FcrColorGroup.fcr_icon_fill_color,
+                                           size: CGSize(width: 1,
+                                                        height: 1))
+                                           
+            button.setBackgroundImage(normalColorImage,
                                       for: .normal)
-            button.setBackgroundImage(UIImage(color: ui.color.setting_camera_button_selected_bg_color,
-                                              size: CGSize(width: 1,
-                                                           height: 1)),
+            button.setBackgroundImage(selectedColorImage,
                                       for: .selected)
             
-            button.layer.cornerRadius = ui.frame.setting_camera_button_corner_radius
+            button.layer.cornerRadius = ui.frame.fcr_toast_corner_radius
             button.clipsToBounds = true
         }
         
         // Sep
-        sepLine.backgroundColor = ui.color.setting_sep_color
+        sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
         
         // Mic
         micLabel.textColor = labelColor
@@ -258,20 +261,11 @@ extension FcrSettingsView: AgoraUIContentContainer {
         exitButton.titleLabel?.font = labelFont
         exitButton.setTitle("fcr_room_leave_room".agedu_localized(),
                             for: .normal)
-        
-        exitButton.layer.cornerRadius = ui.frame.setting_exit_corner_radius
+        exitButton.backgroundColor = FcrColorGroup.fcr_icon_fill_color
+        exitButton.layer.cornerRadius = ui.frame.fcr_button_corner_radius
         exitButton.clipsToBounds = true
-        exitButton.setTitleColor(ui.color.setting_button_normal_title_color,
+        exitButton.setTitleColor(FcrColorGroup.fcr_text_contrast_color,
                                  for: .normal)
-        
-        let exitImageSize = CGSize(width: 1,
-                                   height: 1)
-        
-        let exitImage = UIImage(color: ui.color.setting_exit_button_color,
-                                size: exitImageSize)
-        
-        exitButton.setBackgroundImage(exitImage,
-                                      for: .normal)
     }
 }
 

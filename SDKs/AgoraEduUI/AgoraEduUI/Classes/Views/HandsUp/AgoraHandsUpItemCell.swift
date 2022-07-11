@@ -34,16 +34,17 @@ class AgoraHandsUpItemCell: UITableViewCell {
         }
     }
     
-    var nameLabel: UILabel!
+    lazy var nameLabel = UILabel()
     
-    private var stateButton: UIButton!
+    private var stateButton = UIButton.init(type: .custom)
             
     override init(style: UITableViewCell.CellStyle,
                   reuseIdentifier: String?) {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     required init?(coder: NSCoder) {
@@ -58,14 +59,10 @@ class AgoraHandsUpItemCell: UITableViewCell {
     }
 }
 // MARK: - Creations
-extension AgoraHandsUpItemCell {
-    func createViews() {
-        nameLabel = UILabel()
-        nameLabel.textColor = UIColor(hex: 0x191919)
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
+extension AgoraHandsUpItemCell: AgoraUIContentContainer {
+    func initViews() {
         contentView.addSubview(nameLabel)
         
-        stateButton = UIButton.init(type: .custom)
         stateButton.setImage(UIImage.agedu_named("ic_handsup_off_stage"),
                              for: .normal)
         stateButton.addTarget(self,
@@ -74,7 +71,7 @@ extension AgoraHandsUpItemCell {
         contentView.addSubview(stateButton)
     }
     
-    func createConstraint() {
+    func initViewFrame() {
         nameLabel.mas_makeConstraints { make in
             make?.left.equalTo()(15)
             make?.centerY.equalTo()(nameLabel.superview)
@@ -84,5 +81,11 @@ extension AgoraHandsUpItemCell {
             make?.centerY.equalTo()(self)
             make?.width.height().equalTo()(self.mas_height)
         }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        nameLabel.textColor = FcrColorGroup.fcr_text_level1_color
+        nameLabel.font = ui.font.fcr_font12
     }
 }

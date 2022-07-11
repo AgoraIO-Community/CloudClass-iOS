@@ -46,15 +46,14 @@ class FcrWindowRenderRewardView: UIView, AgoraUIContentContainer {
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         
-        label.textColor = UIColor.white
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = FcrColorGroup.fcr_text_contrast_color
+        label.font = ui.font.fcr_font12
         
-        label.layer.shadowColor = ui.color.render_label_shadow_color
-        label.layer.shadowOffset = CGSize(width: 0,
-                                          height: 1)
+        label.layer.shadowColor = FcrColorGroup.fcr_text_shadow_color
+        label.layer.shadowOffset = FcrColorGroup.fcr_label_shadow_offset
         
-        label.layer.shadowOpacity = ui.color.render_label_shadow_opacity
-        label.layer.shadowRadius = ui.frame.render_label_shadow_radius
+        label.layer.shadowOpacity = FcrColorGroup.fcr_shadow_opacity
+        label.layer.shadowRadius = FcrColorGroup.fcr_label_shadow_radius
     }
 }
 
@@ -272,13 +271,12 @@ extension FcrWindowRenderView: AgoraUIContentContainer {
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         
-        nameLabel.textColor = ui.color.render_label_color
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
-        nameLabel.layer.shadowColor = ui.color.render_label_shadow_color
-        nameLabel.layer.shadowOffset = CGSize(width: 0,
-                                              height: 1)
-        nameLabel.layer.shadowOpacity = ui.color.render_label_shadow_opacity
-        nameLabel.layer.shadowRadius = ui.frame.render_label_shadow_radius
+        nameLabel.textColor = FcrColorGroup.fcr_text_contrast_color
+        nameLabel.font = ui.font.fcr_font12
+        nameLabel.layer.shadowColor = FcrColorGroup.fcr_text_shadow_color
+        nameLabel.layer.shadowOffset = FcrColorGroup.fcr_label_shadow_offset
+        nameLabel.layer.shadowOpacity = FcrColorGroup.fcr_shadow_opacity
+        nameLabel.layer.shadowRadius = FcrColorGroup.fcr_label_shadow_radius
     }
 }
 
@@ -318,15 +316,15 @@ class FcrWindowRenderCell: UICollectionViewCell, AgoraUIContentContainer {
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         
-        renderView.backgroundColor = ui.color.render_cell_bg_color
-        renderView.layer.cornerRadius = ui.frame.render_cell_corner_radius
-        renderView.layer.borderWidth = ui.frame.render_cell_border_width
-        renderView.layer.borderColor = ui.color.render_mask_border_color
+        renderView.backgroundColor = FcrColorGroup.fcr_system_foreground_color
+        renderView.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        renderView.layer.borderWidth = ui.frame.fcr_border_width
+        renderView.layer.borderColor = FcrColorGroup.fcr_border_color
         
-        noneView.backgroundColor = ui.color.render_cell_bg_color
-        noneView.layer.cornerRadius = ui.frame.render_cell_corner_radius
-        noneView.layer.borderWidth = ui.frame.render_cell_border_width
-        noneView.layer.borderColor = ui.color.render_mask_border_color
+        noneView.backgroundColor = FcrColorGroup.fcr_system_foreground_color
+        noneView.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        noneView.layer.borderWidth = ui.frame.fcr_border_width
+        noneView.layer.borderColor = FcrColorGroup.fcr_border_color
     }
     
     func addRenderView() {

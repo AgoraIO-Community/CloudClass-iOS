@@ -103,11 +103,13 @@ import AgoraWidget
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
          subDelegate: AgoraEduUIManagerCallback?,
-         mainDelegate: AgoraEduUISubManagerCallback?) {
+         mainDelegate: AgoraEduUISubManagerCallback?,
+         uiMode: AgoraUIMode) {
         self.subRoom = subRoom
         self.mainDelegate = mainDelegate
         super.init(contextPool: contextPool,
-                   delegate: subDelegate)
+                   delegate: subDelegate,
+                   uiMode: uiMode)
     }
     
     required init?(coder: NSCoder) {
@@ -355,7 +357,7 @@ extension AgoraSubRoomUIManager: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
+        FcrColorGroup.borderSet(layer: chatController.view.layer)
     }
 }
 
@@ -506,7 +508,7 @@ extension AgoraSubRoomUIManager: AgoraBoardUIControllerDelegate {
 
 // MARK: - AgoraToolBarDelegate
 extension AgoraSubRoomUIManager: AgoraToolBarDelegate {
-    func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
+    func toolsViewDidSelectTool(tool: FcrToolBarItemType,
                                 selectView: UIView) {
         switch tool {
         case .setting:
@@ -535,7 +537,7 @@ extension AgoraSubRoomUIManager: AgoraToolBarDelegate {
         ctrlViewAnimationFromView(selectView)
     }
     
-    func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
+    func toolsViewDidDeselectTool(tool: FcrToolBarItemType) {
         ctrlView = nil
     }
 }

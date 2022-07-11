@@ -158,89 +158,6 @@ struct AgoraFit {
     }
 }
 
-extension UIViewController {
-    /// 获取最顶层的ViewController
-    @objc public static func ag_topViewController() -> UIViewController {
-        let window = UIWindow.ag_topWindow()
-        
-        guard let rootViewController = window.rootViewController else {
-            fatalError()
-        }
-        
-        var topVC: UIViewController?
-        var viewController = rootViewController
-        
-        while true {
-            if let presented = viewController.presentedViewController {
-                viewController = presented
-                continue
-            }
-            if let navigation = viewController as? UINavigationController,
-               let navigationTop = navigation.topViewController {
-                viewController = navigationTop
-                continue
-            }
-            if let tabBar = viewController as? UITabBarController,
-               let selected = tabBar.selectedViewController {
-                viewController = selected
-                continue
-            }
-            break
-        }
-        
-        topVC = viewController
-        
-        guard let vc = topVC else {
-            fatalError()
-        }
-        
-        return vc
-    }
-}
-
-extension UIWindow {
-    static func ag_topWindow() -> UIWindow {
-        var keyWindow: UIWindow?
-        var windows: [UIWindow]?
-        
-        if let delegate = UIApplication.shared.delegate,
-           let window = delegate.window {
-            keyWindow = window
-        }
-        
-        if #available(iOS 13.0, *),
-           let connectedScenes = UIApplication.shared.connectedScenes as? [UIWindowScene] {
-            for windowScene in connectedScenes where windowScene.activationState == .foregroundActive {
-                windows = windowScene.windows
-                break
-            }
-        } else {
-            windows = UIApplication.shared.windows
-        }
-        
-        if let activeWindows = windows {
-            for window in activeWindows {
-                if window.isHidden == true {
-                    continue
-                }
-                if window.isOpaque == false {
-                    continue
-                }
-                if window.bounds.equalTo(UIScreen.main.bounds) == false {
-                    continue
-                }
-                keyWindow = window
-            }
-        }
-        
-        guard let window = keyWindow else {
-            fatalError()
-        }
-        
-        return window
-    }
-}
-
 extension UIColor {
     static func fakeWhite(_ ori: UIColor?) -> UIColor? {
         guard let color = ori else {
@@ -248,7 +165,7 @@ extension UIColor {
         }
         
         if color == UIColor(hex: 0xFFFFFF) {
-            return AgoraColorGroup().tool_fake_white_color
+            return UIColor(hex: 0xE1E1EA)!
         }
         return color
     }

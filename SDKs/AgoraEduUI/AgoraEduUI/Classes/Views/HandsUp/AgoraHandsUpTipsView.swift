@@ -16,8 +16,9 @@ class AgoraHandsUpTipsView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     required init?(coder: NSCoder) {
@@ -25,24 +26,25 @@ class AgoraHandsUpTipsView: UIView {
     }
 }
 
-private extension AgoraHandsUpTipsView {
-    func createViews() {
-        AgoraUIGroup().color.borderSet(layer: layer)
-
-        let tipImage = UIImage.agedu_named("ic_handsup_remind_tip")
-        let newImage = tipImage?.resizableImage(withCapInsets: UIEdgeInsets(top: 10, left: 10, bottom: 25, right: 10), resizingMode: .stretch)
+extension AgoraHandsUpTipsView:AgoraUIContentContainer {
+    func initViews() {
+        let name = "toolbar_handsup_remind_popover"
+        let tipImage = UIImage.agedu_named(name)
+        let newImage = tipImage?.resizableImage(withCapInsets: UIEdgeInsets(top: 10,
+                                                                            left: 10,
+                                                                            bottom: 25,
+                                                                            right: 10),
+                                                resizingMode: .stretch)
         imageView = UIImageView(image: newImage)
         addSubview(imageView)
         
         label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor(hex: 0x191919)
         label.text = "fcr_user_hands".agedu_localized()
         label.textAlignment = .center
         addSubview(label)
     }
     
-    func createConstraint() {
+    func initViewFrame() {
         label.mas_makeConstraints { make in
             make?.left.equalTo()(12)
             make?.right.equalTo()(-10)
@@ -56,5 +58,13 @@ private extension AgoraHandsUpTipsView {
             make?.top.equalTo()(label)?.offset()(-2)
             make?.bottom.equalTo()(label)?.offset()(2)
         }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        FcrColorGroup.borderSet(layer: layer)
+        
+        label.font = ui.font.fcr_font12
+        label.textColor = FcrColorGroup.fcr_text_level1_color
     }
 }

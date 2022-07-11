@@ -126,11 +126,6 @@ class AgoraRenderMenuUIController: UIViewController {
                              widgetId: kBoardWidgetId)
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        view.layer.cornerRadius = self.view.bounds.height * 0.5
-    }
-    
     func show(roomType: AgoraEduContextRoomType,
               userUuid: String,
               showRoleType: AgoraEduContextUserRole) {
@@ -257,12 +252,12 @@ class AgoraRenderMenuUIController: UIViewController {
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         
-        view.backgroundColor = ui.color.render_menu_bg_color
-        view.layer.cornerRadius = ui.frame.render_menu_corner_radius
+        view.backgroundColor = FcrColorGroup.fcr_system_component_color
+        view.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
         
-        contentView.backgroundColor = ui.color.render_menu_bg_color
+        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
         
-        AgoraUIGroup().color.borderSet(layer: view.layer)
+        FcrColorGroup.borderSet(layer: view.layer)
     }
 }
 
@@ -284,6 +279,7 @@ private extension AgoraRenderMenuUIController {
                     cameraButton.setImageForAllStates(img)
                 }
             case .auth:
+                // TODO: 切换图片
                 guard let img = UIImage.agedu_named("ic_nameroll_auth")?.withRenderingMode(.alwaysTemplate) else {
                     return
                 }

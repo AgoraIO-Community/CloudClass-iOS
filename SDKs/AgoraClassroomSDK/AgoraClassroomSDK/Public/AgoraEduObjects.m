@@ -99,6 +99,7 @@
                         startTime:nil
                          duration:nil
                            region:AgoraEduRegionCN
+                           uiMode:AgoraEduUIModeLight
                      mediaOptions:mediaOptions
                    userProperties:nil];
 }
@@ -114,6 +115,7 @@
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
+                          uiMode:(AgoraEduUIMode)uiMode
                     mediaOptions:(AgoraEduMediaOptions *)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties {
     self = [self init];
@@ -131,6 +133,7 @@
     self.startTime = startTime;
     self.duration = duration;
     self.region = region;
+    self.uiMode = uiMode;
     self.mediaOptions = mediaOptions;
     
     self.userProperties = userProperties;

@@ -131,6 +131,9 @@ class AgoraBoardPageUIController: UIViewController {
 
 extension AgoraBoardPageUIController: AgoraUIContentContainer {
     func initViews() {
+        if let image = UIImage.agedu_named("ic_board_page_add") {
+            addBtn.setImageForAllStates(image)
+        }
         addBtn.addTarget(self,
                           action: #selector(onClickAddPage(_:)),
                           for: .touchUpInside)
@@ -138,14 +141,21 @@ extension AgoraBoardPageUIController: AgoraUIContentContainer {
         
         view.addSubview(sepLine)
         
+        if let image = UIImage.agedu_named("ic_board_page_pre") {
+            preBtn.setImageForAllStates(image)
+        }
         preBtn.addTarget(self,
                           action: #selector(onClickPrePage(_:)),
                           for: .touchUpInside)
         view.addSubview(preBtn)
         
+        pageLabel.text = "1 / 1"
+        pageLabel.textAlignment = .center
         view.addSubview(pageLabel)
         
-       
+        if let image = UIImage.agedu_named("ic_board_page_next") {
+            nextBtn.setImageForAllStates(image)
+        }
         nextBtn.addTarget(self,
                            action: #selector(onClickNextPage(_:)),
                            for: .touchUpInside)
@@ -187,30 +197,18 @@ extension AgoraBoardPageUIController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 17
+        let ui = AgoraUIGroup()
+        view.backgroundColor = FcrColorGroup.fcr_system_component_color
+        view.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
         
-        AgoraUIGroup().color.borderSet(layer: view.layer)
+        FcrColorGroup.borderSet(layer: view.layer)
+
+        sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+
+        pageLabel.font = ui.font.fcr_font14
+        pageLabel.textColor = FcrColorGroup.fcr_text_level2_color
         
-        if let image = UIImage.agedu_named("ic_board_page_add") {
-            addBtn.setImageForAllStates(image)
-        }
-        
-        sepLine.backgroundColor = UIColor(hex: 0xE5E5F0)
-        
-        if let image = UIImage.agedu_named("ic_board_page_pre") {
-            preBtn.setImageForAllStates(image)
-        }
-        
-        pageLabel.text = "1 / 1"
-        pageLabel.textAlignment = .center
-        pageLabel.font = UIFont.systemFont(ofSize: 14)
-        pageLabel.textColor = UIColor(hex:0x586376)
-        
-        
-         if let image = UIImage.agedu_named("ic_board_page_next") {
-             nextBtn.setImageForAllStates(image)
-         }
+
     }
 }
 

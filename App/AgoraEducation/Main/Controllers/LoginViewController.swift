@@ -331,6 +331,7 @@ private extension LoginViewController {
                                                     startTime: nil,
                                                     duration: NSNumber(value: duration),
                                                     region: region.eduType,
+                                                    uiMode: .dark,
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
             

@@ -100,8 +100,9 @@ fileprivate class AgoraLoadingView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.createViews()
-        self.createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     required init?(coder: NSCoder) {
@@ -140,15 +141,16 @@ fileprivate class AgoraLoadingView: UIView {
     public func stopAnimating() {
         animatedView.stopAnimating()
     }
-    
-    private func createViews() {
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 12
-        AgoraUIGroup().color.borderSet(layer: contentView.layer)
+}
+
+// MARK: - AgoraUIContentContainer
+extension AgoraLoadingView: AgoraUIContentContainer {
+    func initViews() {
         addSubview(contentView)
         
         var image: FLAnimatedImage?
-        if let url = Bundle.agoraEduUI().url(forResource: "img_loading", withExtension: "gif") {
+        if let url = Bundle.agoraEduUI().url(forResource: "img_loading",
+                                             withExtension: "gif") {
             let imgData = try? Data(contentsOf: url)
             image = FLAnimatedImage.init(animatedGIFData: imgData)
         }
@@ -156,15 +158,10 @@ fileprivate class AgoraLoadingView: UIView {
         contentView.addSubview(animatedView)
         
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 13)
         contentView.addSubview(label)
     }
     
-    private func createConstraint() {
-        contentView.mas_makeConstraints { make in
-            make?.centerX.centerY().equalTo()(self)
-            make?.width.height().equalTo()(90)
-        }
+    func initViewFrame() {
         animatedView.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.top.equalTo()(15)
@@ -176,5 +173,14 @@ fileprivate class AgoraLoadingView: UIView {
             make?.right.greaterThanOrEqualTo()(-30)
             make?.top.equalTo()(animatedView.mas_bottom)?.offset()(4)
         }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        
+        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
+        FcrColorGroup.borderSet(layer: contentView.layer)
+        label.font = ui.font.fcr_font14
     }
 }

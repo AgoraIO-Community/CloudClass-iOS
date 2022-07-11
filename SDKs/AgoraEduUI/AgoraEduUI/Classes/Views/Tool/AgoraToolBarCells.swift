@@ -17,7 +17,7 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
         
         redDot.isHidden = true
         redDot.isUserInteractionEnabled = false
-        redDot.backgroundColor = UIColor(hex: 0xF04C36)
+        
         redDot.layer.cornerRadius = 2
         redDot.clipsToBounds = true
         self.addSubview(redDot)
@@ -29,130 +29,83 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
         }
     }
     
+    override func updateViewProperties() {
+        super.updateViewProperties()
+        
+        redDot.backgroundColor = FcrColorGroup.fcr_system_error_color
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    override func highLight() {
-        self.imageView.tintColor = itemHighlightColor
-        self.contentView.backgroundColor = itemBackgroundHighlightColor
-        self.transform = CGAffineTransform(scaleX: 1.2,
-                                           y: 1.2)
-        self.imageView.transform = CGAffineTransform(scaleX: 0.8,
-                                                     y: 0.8)
-    }
-    
-    override func normalState() {
-        self.imageView.tintColor = self.aSelected ? itemSelectedColor : itemUnselectedColor
-        self.contentView.backgroundColor = self.aSelected ? itemBackgroundSelectedColor : itemBackgroundUnselectedColor
-        UIView.animate(withDuration: 0.1,
-                       delay: 0,
-                       options: .curveLinear) {
-            self.transform = .identity
-            self.imageView.transform = .identity
-        } completion: { finish in
-        }
-    }
 }
 // MARK: - AgoraToolBarItemCell
-class AgoraToolBarItemCell: UICollectionViewCell {
-    var imageView: UIImageView!
-    
-    var itemSelectedColor: UIColor
-    var itemUnselectedColor: UIColor
-    var itemBackgroundSelectedColor: UIColor
-    var itemBackgroundUnselectedColor: UIColor
-    var itemHighlightColor: UIColor
-    var itemBackgroundHighlightColor: UIColor
-    
+class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
+    private lazy var bgView = UIImageView(frame: .zero)
+    lazy var iconView = UIImageView(frame: .zero)
+
     var aSelected = false {
-        willSet {
-            if aSelected != newValue {
-                contentView.backgroundColor = newValue ? itemBackgroundSelectedColor : itemBackgroundUnselectedColor
-                imageView.tintColor = newValue ? itemSelectedColor : itemUnselectedColor
-            }
+        didSet {
+            let selectedName = aSelected ? "selected" : "unselected"
+            let imageName = "toolbar_\(selectedName)_bg"
+            bgView.image = UIImage.agedu_named(imageName)
         }
     }
             
     override init(frame: CGRect) {
-        let group = AgoraColorGroup()
-        itemSelectedColor = group.tool_bar_item_selected_color
-        itemUnselectedColor = group.tool_bar_item_unselected_color
-        itemBackgroundSelectedColor = group.tool_bar_item_background_selected_color
-        itemBackgroundUnselectedColor = group.tool_bar_item_background_unselected_color
-        itemHighlightColor = group.tool_bar_item_highlight_color
-        itemBackgroundHighlightColor = group.tool_bar_item_background_highlight_color
-        
         super.init(frame: frame)
         
-        contentView.backgroundColor = itemBackgroundUnselectedColor
-        contentView.layer.cornerRadius = 8
-        AgoraUIGroup().color.borderSet(layer: contentView.layer)
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func initViews() {
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = UIDevice.current.agora_is_dark ? .dark : .light
+        }
+        let selectedName = aSelected ? "selected" : "unselected"
+        let imageName = "toolbar_\(selectedName)_bg"
+        bgView.image = UIImage.agedu_named(imageName)
+        contentView.addSubview(bgView)
         
-        imageView = UIImageView(frame: .zero)
-        imageView.tintColor = itemUnselectedColor
-        contentView.addSubview(imageView)
-        
-        imageView.mas_remakeConstraints { make in
+        contentView.addSubview(iconView)
+    }
+    
+    func initViewFrame() {
+        bgView.mas_makeConstraints { make in
+            make?.center.width().height().equalTo()(contentView)
+        }
+        iconView.mas_makeConstraints { make in
             make?.center.equalTo()(0)
             make?.width.height().equalTo()(22)
         }
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentView.layer.cornerRadius = bounds.height * 0.5
-    }
-    
-    func setImage(_ image: UIImage?) {
-        guard let i = image else {
-            return
-        }
-        imageView.image = i.withRenderingMode(.alwaysTemplate)
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+
+        contentView.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
+        FcrColorGroup.borderSet(layer: contentView.layer)
     }
     
     func highLight() {
-        self.imageView.tintColor = itemHighlightColor
-        self.contentView.backgroundColor = itemBackgroundHighlightColor
         self.transform = CGAffineTransform(scaleX: 1.2,
                                            y: 1.2)
-        self.imageView.transform = CGAffineTransform(scaleX: 0.8,
+        self.iconView.transform = CGAffineTransform(scaleX: 0.8,
                                                      y: 0.8)
     }
     
     func normalState() {
-        contentView.backgroundColor = self.aSelected ? itemBackgroundSelectedColor : itemBackgroundUnselectedColor
-        imageView.tintColor = self.aSelected ? itemSelectedColor: itemUnselectedColor
         UIView.animate(withDuration: 0.1,
                        delay: 0,
                        options: .curveLinear) {
             self.transform = .identity
-            self.imageView.transform = .identity
-        } completion: { finish in
-        }
-    }
-}
-
-// MARK: - AgoraToolBarBrushCell
-class AgoraToolBarBrushCell: AgoraToolBarItemCell {
-    
-    override func highLight() {
-        self.transform = CGAffineTransform(scaleX: 1.2,
-                                           y: 1.2)
-        self.imageView.transform = CGAffineTransform(scaleX: 0.8,
-                                                     y: 0.8)
-    }
-    
-    override func normalState() {
-        UIView.animate(withDuration: 0.1,
-                       delay: 0,
-                       options: .curveLinear) {
-            self.transform = .identity
-            self.imageView.transform = .identity
+            self.iconView.transform = .identity
         } completion: { finish in
         }
     }
@@ -185,54 +138,24 @@ class AgoraToolBarHandsUpCell: UICollectionViewCell {
     }
 }
 
-// MARK: - AgoraToolBarHelpCell
-class AgoraToolBarHelpCell: AgoraToolBarItemCell {
-    var touchable: Bool = true {
+// MARK: - FcrToolBarWaveHandsCell
+class FcrToolBarWaveHandsCell: AgoraToolBarItemCell {
+    
+    lazy var waveHandsDelayView = FcrWaveHandsDelayView(frame: .zero)
+    
+    public var duration = 3 {
         didSet {
-            if touchable {
-                normalState()
-            } else {
-                unTouchableState()
-            }
+            self.waveHandsDelayView.duration = duration
         }
     }
-    
-    private func unTouchableState() {
-        contentView.backgroundColor = .white
-        imageView.tintColor = UIColor(hex: 0xECECF1)
-        UIView.animate(withDuration: 0.1,
-                       delay: 0,
-                       options: .curveLinear) {
-            self.transform = .identity
-            self.imageView.transform = .identity
-        } completion: { finish in
-        }
-    }
-}
-
-// MARK: - AgoraToolBarHandsListCell
-class AgoraToolBarHandsListCell: AgoraToolBarItemCell {
-    
-    let redLabel = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        redLabel.textColor = .white
-        redLabel.font = UIFont.systemFont(ofSize: 10)
-        redLabel.textAlignment = .center
-
-        redLabel.isHidden = true
-        redLabel.isUserInteractionEnabled = false
-        redLabel.backgroundColor = UIColor(hex: 0xF04C36)
-        redLabel.layer.cornerRadius = 2
-        redLabel.clipsToBounds = true
-        self.addSubview(redLabel)
-        redLabel.mas_makeConstraints { make in
-            make?.width.height().equalTo()(4)
-            make?.top.equalTo()(5)
-            make?.right.equalTo()(-5)
-        }
         
+        contentView.addSubview(waveHandsDelayView)
+        waveHandsDelayView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -240,7 +163,54 @@ class AgoraToolBarHandsListCell: AgoraToolBarItemCell {
     }
 }
 
+// MARK: - AgoraToolBarHandsListCell
+class AgoraToolBarHandsListCell: AgoraToolBarItemCell {
+    
+    lazy var redLabel = UILabel()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    override func initViews() {
+        super.initViews()
+        redLabel.textAlignment = .center
+        redLabel.isHidden = true
+        redLabel.isUserInteractionEnabled = false
+        
+        redLabel.clipsToBounds = true
+        
+        self.addSubview(redLabel)
+    }
+    
+    override func initViewFrame() {
+        super.initViewFrame()
+        redLabel.mas_makeConstraints { make in
+            make?.width.height().equalTo()(4)
+            make?.top.equalTo()(5)
+            make?.right.equalTo()(-5)
+        }
+    }
+    
+    override func updateViewProperties() {
+        super.updateViewProperties()
+        
+        let ui = AgoraUIGroup()
+        redLabel.textColor = FcrColorGroup.fcr_text_contrast_color
+        redLabel.font = ui.font.fcr_font10
+        redLabel.backgroundColor = FcrColorGroup.fcr_system_error_color
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
+// MARK: - AgoraToolCollectionCell
 class AgoraToolCollectionCell: UIView {
     private var isMain: Bool
     private var imageView: UIImageView!

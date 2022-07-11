@@ -73,47 +73,37 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
             make?.top.bottom().equalTo()(0)
         }
         
-        let recordingViewRightOffset: CGFloat = -10
-        
         recordingLabel.mas_makeConstraints { make in
-            make?.right.equalTo()(titleLabel.mas_left)?.offset()(recordingViewRightOffset)
+            make?.right.equalTo()(titleLabel.mas_left)?.offset()(-10)
             make?.top.equalTo()(0)
             make?.bottom.equalTo()(0)
         }
         
-        let redViewHeight: CGFloat = 6
-        let redViewWidth: CGFloat = 6
-        let redViewCornerRadius: CGFloat = (redViewWidth * 0.5)
-        let redViewRightOffset: CGFloat = -10
-        
         recordingStateView.mas_makeConstraints { make in
             make?.centerY.equalTo()(0)
-            make?.width.equalTo()(redViewWidth)
-            make?.height.equalTo()(redViewHeight)
-            make?.right.equalTo()(recordingLabel.mas_left)?.offset()(redViewRightOffset)
+            make?.width.height().equalTo()(6)
+            make?.right.equalTo()(recordingLabel.mas_left)?.offset()(-10)
         }
-        
-        recordingStateView.layer.cornerRadius = redViewCornerRadius
     }
     
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         let frame = ui.frame
-        let color = ui.color
         
-        let font = frame.room_state_bar_font
+        let font = ui.font.fcr_font9
         
         timeLabel.font = font
-        timeLabel.textColor = color.room_state_label_before_color
+        timeLabel.textColor = FcrColorGroup.fcr_text_level3_color
         
-        sepLine.backgroundColor = color.room_state_sep_line_color
+        sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
         
         titleLabel.font = font
-        titleLabel.textColor = color.room_state_title_color
+        titleLabel.textColor = FcrColorGroup.fcr_text_level1_color
         
-        recordingStateView.backgroundColor = color.room_state_bar_recording_state_background_color
+        recordingStateView.backgroundColor = FcrColorGroup.fcr_system_error_color
+        recordingStateView.layer.cornerRadius = ui.frame.fcr_toast_corner_radius
         
-        recordingLabel.textColor = color.room_state_bar_recording_text_color
+        recordingLabel.textColor = FcrColorGroup.fcr_text_level3_color
         recordingLabel.font = font
     }
 }

@@ -34,6 +34,8 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     weak var delegate: AgoraEduUIManagerCallback?
     
     var contextPool: AgoraEduContextPool!
+    
+    var uiMode: AgoraUIMode
     /// 弹窗控制器
     /** 控制器遮罩层，用来盛装控制器和处理手势触发消失事件*/
     private var ctrlMaskView: UIView!
@@ -54,12 +56,15 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     
     public override init(nibName nibNameOrNil: String?,
                          bundle nibBundleOrNil: Bundle?) {
+        self.uiMode = .agoraLight
         super.init(nibName: nibNameOrNil,
                    bundle: nibBundleOrNil)
     }
     
     @objc public init(contextPool: AgoraEduContextPool,
-                      delegate: AgoraEduUIManagerCallback?) {
+                      delegate: AgoraEduUIManagerCallback?,
+                      uiMode: AgoraUIMode) {
+        self.uiMode = uiMode
         super.init(nibName: nil,
                    bundle: nil)
         self.contextPool = contextPool
@@ -72,14 +77,22 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor(hex: 0xF9F9FC)
-        // create content view
+        
         let ui = AgoraUIGroup()
         
+        // mode set
+        ui.setMode(uiMode)
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = (uiMode == .agoraDark) ? .dark : .light
+        }
+        
+        self.view.backgroundColor = FcrColorGroup.fcr_system_background_color
+        
+        // create content view
         self.contentView = UIView()
-        contentView.borderWidth = ui.frame.room_border_width
-        contentView.borderColor = ui.color.room_border_color
-        contentView.backgroundColor = ui.color.room_bg_color
+        contentView.borderWidth = ui.frame.fcr_border_width
+        contentView.layer.borderColor = FcrColorGroup.fcr_border_color
+        contentView.backgroundColor = FcrColorGroup.fcr_system_foreground_color
         self.view.addSubview(self.contentView)
         let width = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
         let height = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
@@ -182,3 +195,20 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         }
     }
 }
+//
+//// MARK: - AgoraUIContentContainer
+//extension AgoraEduUIManager: AgoraUIContentContainer {
+//    func initViews() {
+//        <#code#>
+//    }
+//    
+//    func initViewFrame() {
+//        <#code#>
+//    }
+//    
+//    func updateViewProperties() {
+//        <#code#>
+//    }
+//    
+//    
+//}

@@ -26,7 +26,8 @@ class AgoraAlertTableCell: UITableViewCell {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
         initViews()
-        initConstraints()
+        initViewFrame()
+        updateViewProperties()
     }
     
     required init?(coder: NSCoder) {
@@ -36,20 +37,21 @@ class AgoraAlertTableCell: UITableViewCell {
     private func setOptionImage() {
         optionImageView.image = UIImage.agedu_named(optionIsSelected ? "ic_alert_checked" : "ic_alert_unchecked")
     }
-    
-    private func initViews() {
+}
+
+// MARK: - AgoraUIContentContainer
+extension AgoraAlertTableCell: AgoraUIContentContainer {
+    func initViews() {
         selectionStyle = .none
         
-        optionLabel.font = .systemFont(ofSize: 13)
         optionLabel.numberOfLines = 0
         
         addSubviews([optionImageView,
                      optionLabel])
     }
     
-    private func initConstraints() {
+    func initViewFrame() {
         let horizontalSpace: CGFloat = 15
-        let group = AgoraFrameGroup()
         
         optionImageView.mas_makeConstraints { make in
             make?.left.equalTo()(horizontalSpace)
@@ -57,15 +59,17 @@ class AgoraAlertTableCell: UITableViewCell {
             make?.width.height().equalTo()(12)
         }
         
-        let labelLeft: CGFloat = group.subRoom_option_label_left_space
-        let labelRight: CGFloat = group.subRoom_option_label_right_space
-        
+        let spacing = AgoraFrameGroup().fcr_alert_side_spacing
         optionLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(0)
-            make?.left.equalTo()(labelLeft)
-            make?.right.equalTo()(-labelRight)
+            make?.left.equalTo()(spacing)
+            make?.right.equalTo()(-spacing)
             make?.bottom.equalTo()(-0)
         }
+    }
+    
+    func updateViewProperties() {
+        optionLabel.font = AgoraUIGroup().font.fcr_font13
     }
 }
 
@@ -174,8 +178,9 @@ private class AgoraAlertController: UIViewController {
         let messageLabel = UILabel()
         messageLabel.text = model.message
         messageLabel.numberOfLines = 0
-        messageLabel.font = UIFont.systemFont(ofSize: 13)
-        messageLabel.textColor = UIColor(hex: 0x586376)
+        let ui = AgoraUIGroup()
+        messageLabel.font = ui.font.fcr_font13
+        messageLabel.textColor = FcrColorGroup.fcr_text_level2_color
         messageLabel.textAlignment = .center
         return messageLabel
     }()
@@ -196,8 +201,9 @@ private class AgoraAlertController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
         
         switch model.alertStyle {
         case .Choice:
@@ -263,15 +269,9 @@ extension AgoraAlertController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-// MARK: - private
-private extension AgoraAlertController {
-    private func createViews() {
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-        
+extension AgoraAlertController: AgoraUIContentContainer {
+    func initViews() {
         contentView = UIView()
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 12
-        AgoraUIGroup().color.borderSet(layer: contentView.layer)
         view.addSubview(contentView)
         
         imageView = UIImageView()
@@ -280,13 +280,11 @@ private extension AgoraAlertController {
         titleLabel = UILabel()
         titleLabel.text = model.title
         titleLabel.numberOfLines = 1
-        titleLabel.font = UIFont.systemFont(ofSize: 17)
-        titleLabel.textColor = UIColor(hex: 0x030303)
         titleLabel.textAlignment = .center
         contentView.addSubview(titleLabel)
         
         hLine = UIView()
-        hLine.backgroundColor = UIColor(hex: 0xEEEEF7)
+        
         contentView.addSubview(hLine)
         
         switch model.alertStyle {
@@ -297,7 +295,7 @@ private extension AgoraAlertController {
         }
     }
     
-    private func createConstraint() {
+    func initViewFrame() {
         contentView.mas_makeConstraints { make in
             make?.width.equalTo()(240)
             make?.height.mas_greaterThanOrEqualTo()(100)
@@ -310,10 +308,10 @@ private extension AgoraAlertController {
         }
         titleLabel.mas_makeConstraints { make in
             make?.top.equalTo()(imageView.mas_bottom)
-            make?.left.equalTo()(20)
-            make?.right.equalTo()(-20)
+            make?.left.equalTo()(30)
+            make?.right.equalTo()(-30)
         }
-
+        
         switch model.alertStyle {
         case .Choice:
             tableView.mas_makeConstraints { make in
@@ -325,11 +323,29 @@ private extension AgoraAlertController {
         default:
             messageLabel.mas_makeConstraints { make in
                 make?.top.equalTo()(titleLabel.mas_bottom)?.offset()(14)
-                make?.left.equalTo()(20)
-                make?.right.equalTo()(-20)
+                make?.left.equalTo()(30)
+                make?.right.equalTo()(-30)
             }
         }
     }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        
+        FcrColorGroup.borderSet(layer: contentView.layer)
+        
+        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = ui.frame.fcr_alert_corner_radius
+        
+        titleLabel.font = ui.font.fcr_font17
+        titleLabel.textColor = FcrColorGroup.fcr_text_level1_color
+        
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
+        hLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+    }
+}
+// MARK: - private
+private extension AgoraAlertController {
     
     private func createChoiceButtons() {
         guard model.actions.count > 0 else {
@@ -354,6 +370,7 @@ private extension AgoraAlertController {
     }
     
     private func createActionButtons() {
+        let ui = AgoraUIGroup()
         guard model.actions.count > 0 else {
             hLine.mas_makeConstraints { make in
                 make?.left.right().equalTo()(0)
@@ -372,10 +389,10 @@ private extension AgoraAlertController {
             let action = model.actions.first
             let button = UIButton(type: .custom)
             button.tag = buttonStartTag
-            button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+            button.titleLabel?.font = ui.font.fcr_font17
             button.setTitle(action?.title,
                             for: .normal)
-            button.setTitleColor(UIColor(hex: 0x357BF6),
+            button.setTitleColor(FcrColorGroup.fcr_text_enabled_color,
                                  for: .normal)
             button.addTarget(self,
                              action: #selector(onClickActionButton(_:)),
@@ -410,7 +427,7 @@ private extension AgoraAlertController {
                 }
                 if lastOne == false {
                     let line = UIView()
-                    line.backgroundColor = UIColor(hex: 0xEEEEF7)
+                    line.backgroundColor = FcrColorGroup.fcr_system_divider_color
                     contentView.addSubview(line)
                     previous = line
                     line.mas_makeConstraints { make in
@@ -442,7 +459,7 @@ private extension AgoraAlertController {
             make?.height.equalTo()(44)
         }
         let line = UIView()
-        line.backgroundColor = UIColor(hex: 0xEEEEF7)
+        line.backgroundColor = FcrColorGroup.fcr_system_divider_color
         contentView.addSubview(line)
         line.mas_makeConstraints { make in
             make?.top.equalTo()(hLine.mas_bottom)
@@ -454,12 +471,13 @@ private extension AgoraAlertController {
     }
     
     func generateButton(title: String?, index: Int) -> UIButton {
+        let ui = AgoraUIGroup()
         let button = UIButton(type: .custom)
         button.tag = buttonStartTag + index
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17)
+        button.titleLabel?.font = ui.font.fcr_font17
         button.setTitle(title,
                         for: .normal)
-        button.setTitleColor(UIColor(hex: 0x357BF6),
+        button.setTitleColor(FcrColorGroup.fcr_text_enabled_color,
                              for: .normal)
         button.addTarget(self,
                          action: #selector(onClickActionButton(_:)),

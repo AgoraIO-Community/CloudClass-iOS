@@ -32,7 +32,6 @@ class AgoraMainToolsView: UIView {
     }
     private var containAids: Bool = false
     /** UI */
-    let color = AgoraColorGroup()
     private let boardToolsHeight = (kItemHeight + kGapSize) * ceil(CGFloat(AgoraBoardToolMainType.allCases.count) / 4) + kGapSize
     private var aidsHeight: CGFloat {
         get {
@@ -79,7 +78,7 @@ class AgoraMainToolsView: UIView {
         }
     }
     /** 容器*/
-    private var contentView: UIView!
+    private lazy var contentView = UIView()
     /// 仅教师端，包含投票器、答题器等
     private lazy var teachingAidsView: UICollectionView = {
         let collectionView = makeCollectionView(space: kGapSize,
@@ -92,12 +91,7 @@ class AgoraMainToolsView: UIView {
     }()
     
     /// 仅教师端
-    private lazy var sepLine: UIView = {
-        let sepLine = UIView()
-        sepLine.backgroundColor = UIColor(hex: 0xECECF1)
-        return sepLine
-    }()
-    
+    private lazy var sepLine = UIView()
     /// 白板工具
     private var boardToolsView: UICollectionView!
     
@@ -108,8 +102,9 @@ class AgoraMainToolsView: UIView {
         
         super.init(frame: .zero)
         
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     required init?(coder: NSCoder) {
@@ -140,20 +135,26 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
            let tool = AgoraBoardToolMainType(rawValue: indexPath.item) {
             switch tool {
             case .paint,.text:
-                cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
+                cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.unselectedImage,
                               color: UIColor.fakeWhite(curColor))
             default:
-                cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.image,
-                              color: color.common_base_tint_color)
+                cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.unselectedImage,
+                              color: nil)
             }
             cell.aSelected = (tool == curBoardTool)
             if tool == .pre {
-                cell.setEnable(undoEnable)
+                cell.setImage(image: undoEnable ? tool.unselectedImage : tool.disabledImage,
+                              color: nil)
             }
             if tool == .next {
-                cell.setEnable(redoEnable)
+                cell.setImage(image: redoEnable ? tool.unselectedImage : tool.disabledImage,
+                              color: nil)
             }
-        } else if collectionView == teachingAidsView {
+            
+            return cell
+        }
+        
+        if collectionView == teachingAidsView {
             let tool = teachingAidsList[indexPath.row]
             cell.setImage(image: tool.cellImage(),
                           color: nil)
@@ -191,17 +192,9 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
     }
 }
 
-// MARK: - UI
-private extension AgoraMainToolsView {
-    func createViews() {
-        AgoraUIGroup().color.borderSet(layer: layer)
-        
-        contentView = UIView()
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 10.0
-        contentView.clipsToBounds = true
-        contentView.borderWidth = 1
-        contentView.borderColor = .white
+// MARK: - AgoraUIContentContainer
+extension AgoraMainToolsView: AgoraUIContentContainer {
+    func initViews() {
         addSubview(contentView)
         
         boardToolsView = makeCollectionView(space: kGapSize,
@@ -210,7 +203,6 @@ private extension AgoraMainToolsView {
                                                                        bottom: kGapSize,
                                                                        right: kHGapSize))
         boardToolsView.register(cellWithClass: AgoraToolCollectionToolCell.self)
-        
         contentView.addSubview(boardToolsView)
         
         if containAids {
@@ -219,7 +211,7 @@ private extension AgoraMainToolsView {
         }
     }
     
-    func createConstraint() {
+    func initViewFrame() {
         contentView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(contentView.superview)
         }
@@ -248,6 +240,24 @@ private extension AgoraMainToolsView {
         }
     }
     
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        FcrColorGroup.borderSet(layer: layer)
+        
+        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = ui.frame.fcr_square_container_corner_radius
+        contentView.clipsToBounds = true
+        contentView.borderWidth = ui.frame.fcr_border_width
+        contentView.layer.borderColor = FcrColorGroup.fcr_border_color
+        
+        if containAids {
+            sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        }
+    }
+}
+
+// MARK: - UI
+private extension AgoraMainToolsView {
     func updateTeachingAidsLayout() {
         if teachingAidsView == nil {
             // 避免在视图加载完成前对data赋值，触发layout变化
@@ -269,7 +279,7 @@ private extension AgoraMainToolsView {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = FcrColorGroup.fcr_system_component_color
         collectionView.bounces = false
         collectionView.delegate = self
         collectionView.dataSource = self

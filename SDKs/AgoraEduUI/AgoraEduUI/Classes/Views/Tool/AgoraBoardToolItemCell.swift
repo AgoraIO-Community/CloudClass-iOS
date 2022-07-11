@@ -26,60 +26,78 @@ enum AgoraBoardToolPaintType: Int, CaseIterable {
         }
     }
     
-    var image: UIImage? {
+    var unselectedImage: UIImage? {
+        var imageName = ""
         switch self {
-        case .pencil:       return UIImage.agedu_named("ic_brush_pencil")
-        case .line:         return UIImage.agedu_named("ic_brush_line")
-        case .rect:         return UIImage.agedu_named("ic_brush_rect")
-        case .circle:       return UIImage.agedu_named("ic_brush_circle")
-        case .pentagram:    return UIImage.agedu_named("ic_brush_pentagram")
-        case .rhombus:      return UIImage.agedu_named("ic_brush_rhombus")
-        case .arrow:        return UIImage.agedu_named("ic_brush_arrow")
-        case .triangle:     return UIImage.agedu_named("ic_brush_triangle")
+        case .pencil:       imageName = "toolcollection_unselecetd_pencil"
+        case .line:         imageName = "toolcollection_unselecetd_line"
+        case .rect:         imageName = "toolcollection_unselecetd_rect"
+        case .circle:       imageName = "toolcollection_unselecetd_circle"
+        case .pentagram:    imageName = "toolcollection_unselecetd_pentagram"
+        case .rhombus:      imageName = "toolcollection_unselecetd_rhombus"
+        case .arrow:        imageName = "toolcollection_unselecetd_arrow"
+        case .triangle:     imageName = "toolcollection_unselecetd_triangle"
         }
+        return UIImage.agedu_named(imageName)
     }
     
     var selectedImage: UIImage? {
+        var imageName = ""
         switch self {
-        case .pencil:       return UIImage.agedu_named("ic_brush_pencil")
-        case .line:         return UIImage.agedu_named("ic_brush_line")
-        case .rect:         return UIImage.agedu_named("ic_brush_rect_selected")
-        case .circle:       return UIImage.agedu_named("ic_brush_circle_selected")
-        case .pentagram:    return UIImage.agedu_named("ic_brush_pentagram_selected")
-        case .rhombus:      return UIImage.agedu_named("ic_brush_rhombus_selected")
-        case .arrow:        return UIImage.agedu_named("ic_brush_arrow")
-        case .triangle:     return UIImage.agedu_named("ic_brush_triangle_selected")
+        case .pencil:       imageName = "toolcollection_selected_pencil"
+        case .line:         imageName = "toolcollection_selected_line"
+        case .rect:         imageName = "toolcollection_selected_rect"
+        case .circle:       imageName = "toolcollection_selected_circle"
+        case .pentagram:    imageName = "toolcollection_selected_pentagram"
+        case .rhombus:      imageName = "toolcollection_selected_rhombus"
+        case .arrow:        imageName = "toolcollection_selected_arrow"
+        case .triangle:     imageName = "toolcollection_selected_triangle"
         }
+        return UIImage.agedu_named(imageName)
     }
 }
 
 enum AgoraBoardToolMainType: Int, CaseIterable {
     case clicker, area, paint, text, rubber, clear, pre, next
     
-    var image: UIImage? {
+    var unselectedImage: UIImage? {
+        var imageName = ""
         switch self {
-        case .clicker:  return UIImage.agedu_named("ic_brush_clicker")
-        case .area:     return UIImage.agedu_named("ic_brush_area")
-        case .paint:    return UIImage.agedu_named("ic_brush_paint")
-        case .text:     return UIImage.agedu_named("ic_brush_text")
-        case .rubber:   return UIImage.agedu_named("ic_brush_rubber")
-        case .clear:    return UIImage.agedu_named("ic_brush_clear")
-        case .pre:      return UIImage.agedu_named("ic_brush_pre")
-        case .next:     return UIImage.agedu_named("ic_brush_next")
+        case .clicker:  imageName = "toolcollection_unselecetd_clicker"
+        case .area:     imageName = "toolcollection_unselecetd_area"
+        case .paint:    imageName = "toolcollection_unselecetd_paint"
+        case .text:     imageName = "toolcollection_unselecetd_text"
+        case .rubber:   imageName = "toolcollection_unselecetd_rubber"
+        case .clear:    imageName = "toolcollection_unselecetd_clear"
+        case .pre:      imageName = "toolcollection_enabled_pre"
+        case .next:     imageName = "toolcollection_enabled_next"
         }
+        return UIImage.agedu_named(imageName)
     }
     
     var selectedImage: UIImage? {
+        var imageName = ""
         switch self {
-        case .clicker:  return UIImage.agedu_named("ic_brush_clicker_selected")
-        case .area:     return UIImage.agedu_named("ic_brush_area_selected")
-        case .paint:    return UIImage.agedu_named("ic_brush_paint_selected")
-        case .text:     return UIImage.agedu_named("ic_brush_text")
-        case .rubber:   return UIImage.agedu_named("ic_brush_rubber_selected")
-        case .clear:    return UIImage.agedu_named("ic_brush_clear")
-        case .pre:      return UIImage.agedu_named("ic_brush_pre")
-        case .next:     return UIImage.agedu_named("ic_brush_next")
+        case .clicker:  imageName = "toolcollection_selected_clicker"
+        case .area:     imageName = "toolcollection_selected_area"
+        case .paint:    imageName = "toolcollection_selected_paint"
+        case .text:     imageName = "toolcollection_selecetd_text"
+        case .rubber:   imageName = "toolcollection_selected_rubber"
+        case .clear:    imageName = "toolcollection_enabled_clear"
+        case .pre:      imageName = "toolcollection_enabled_pre"
+        case .next:     imageName = "toolcollection_enabled_next"
         }
+        return UIImage.agedu_named(imageName)
+    }
+    
+    var disabledImage: UIImage? {
+        var imageName = ""
+        switch self {
+        case .pre:      imageName = "toolcollection_disabled_pre"
+        case .next:     imageName = "toolcollection_disabled_next"
+        default:        break
+        }
+        return UIImage.agedu_named(imageName)
     }
     
     var widgetType: FcrBoardWidgetToolType? {
@@ -104,74 +122,10 @@ enum AgoraBoardToolItemType: Int, CaseIterable {
     case clicker, area, rubber, laser, text, pencil, line, rect, cycle
 }
 
-// MARK: - AgoraBoardToolItemCell
-class AgoraBoardToolItemCell: UICollectionViewCell {
-    private var imageView: UIImageView!
-    
-    private var colorView: UIView!
-    
-    var aSelected: Bool = false {
-        willSet {
-            if newValue {
-                imageView.tintColor = .white
-                colorView.backgroundColor = UIColor(hex: 0x0073FF)
-            } else {
-                imageView.tintColor = UIColor(hex: 0x7B88A0)
-                colorView.backgroundColor = .white
-            }
-        }
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        colorView = UIView(frame: .zero)
-        colorView.layer.cornerRadius = 5
-        colorView.clipsToBounds = true
-        addSubview(colorView)
-        colorView.mas_makeConstraints { make in
-            make?.width.height().equalTo()(38)
-            make?.center.equalTo()(self)
-        }
-        
-        imageView = UIImageView(frame: .zero)
-        addSubview(imageView)
-        imageView.mas_makeConstraints { make in
-            make?.center.equalTo()(self)
-        }
-    }
-    
-    public func setImage(_ image: UIImage?) {
-        guard let v = image else {
-            return
-        }
-        imageView.image = v.withRenderingMode(.alwaysTemplate)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
 // MARK: - AgoraToolCollectionToolCell
-class AgoraToolCollectionToolCell: UICollectionViewCell {
-    private var imageView: UIImageView!
+class AgoraToolCollectionToolCell: UICollectionViewCell, AgoraUIContentContainer {
+    private lazy var imageView = UIImageView(frame: .zero)
     private var selectedColor: UIColor?
-    
-    // for pre/next
-    private var enable: Bool = true {
-        didSet {
-            guard let i = imageView.image else {
-                return
-            }
-            if enable {
-                imageView.tintColor = nil
-            } else {
-                imageView.tintColor = UIColor(hex: 0xE2E2EE)
-                imageView.image = i.withRenderingMode(.alwaysTemplate)
-            }
-        }
-    }
     
     var aSelected: Bool = false {
         willSet {
@@ -188,18 +142,21 @@ class AgoraToolCollectionToolCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        imageView = UIImageView(frame: .zero)
-        imageView.contentMode = .scaleAspectFit
-        addSubview(imageView)
-        
-        imageView.mas_makeConstraints { make in
-            make?.center.equalTo()(self)
-            make?.width.height().equalTo()(UIDevice.current.agora_is_pad ? 34 : 30)
-        }
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     public func setEnable(_ enable: Bool) {
-        self.enable = enable
+        guard let i = imageView.image else {
+            return
+        }
+        if enable {
+            imageView.tintColor = nil
+        } else {
+            imageView.tintColor = FcrColorGroup.fcr_icon_normal_color
+            imageView.image = i.withRenderingMode(.alwaysTemplate)
+        }
     }
     
     public func setImage(image: UIImage?,
@@ -212,6 +169,24 @@ class AgoraToolCollectionToolCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: AgoraUIContentContainer
+    func initViews() {
+        imageView.contentMode = .scaleAspectFit
+        addSubview(imageView)
+    }
+    
+    func initViewFrame() {
+        imageView.mas_makeConstraints { make in
+            make?.center.equalTo()(self)
+            make?.width.height().equalTo()(UIDevice.current.agora_is_pad ? 34 : 30)
+        }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        imageView.tintColor = FcrColorGroup.fcr_icon_normal_color
     }
 }
 
@@ -249,7 +224,7 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let image = UIImage.agedu_named("ic_brush_text")
+        let image = UIImage.agedu_named("toolcollection_text")
         sizeView = UIImageView(image: image)
         sizeView.contentMode = .scaleAspectFill
         addSubview(sizeView)
@@ -266,67 +241,96 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
 }
 
 // MARK: - BrushSizeItemCell
-class AgoraBoardLineWidthCell: UICollectionViewCell {
-    private var unselectedColor = AgoraColorGroup().tool_unselected_color
+class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
+    private var unselectedColor: UIColor!
+    
     private var scales: [CGFloat] = [1, 4/3, 2, 7/3, 3]
+    
     public var level: Int = -1 {
         willSet {
             if level != newValue {
                 sizeView.transform = CGAffineTransform(scaleX: scales[newValue],
                                                        y: scales[newValue])
-                sizeView.borderWidth = 1 / scales[newValue]
+                let baseBorderWidth = AgoraUIGroup().frame.fcr_border_width
+                sizeView.borderWidth = baseBorderWidth / scales[newValue]
             }
         }
     }
     
-    public var color: UIColor?
+    public var color: UIColor!
     /** 需要先设置颜色才能正常刷出来*/
     public var aSelected: Bool = false {
-        willSet {
-            if newValue == true {
-                if let c = color {
-                    sizeView.backgroundColor = c
-                    if c == UIColor(hex: 0xFFFFFF)! {
-                        sizeView.borderColor = unselectedColor
-                    } else {
-                        sizeView.borderColor = .clear
-                    }
-                } else {
-                    sizeView.backgroundColor = unselectedColor
-                }
-            } else {
-                sizeView.backgroundColor = unselectedColor
-            }
+        didSet {
+            updateColor()
         }
     }
     
-    private var sizeView: UIView!
+    private lazy var sizeView = UIView(frame: .zero)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        sizeView = UIView(frame: .zero)
-        sizeView.backgroundColor = unselectedColor
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func initViews() {
+        // set to make a circle
         sizeView.cornerRadius = 3
-        sizeView.borderWidth = 1
-        sizeView.borderColor = .clear
         addSubview(sizeView)
+    }
+    
+    func initViewFrame() {
         sizeView.mas_makeConstraints { make in
             make?.center.equalTo()(sizeView.superview)
             make?.width.height().equalTo()(6)
         }
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        unselectedColor = FcrColorGroup.fcr_icon_normal_color
+        
+        color = unselectedColor
+
+        sizeView.borderWidth = ui.frame.fcr_border_width
+        sizeView.borderColor = unselectedColor
+        
+        if aSelected {
+            sizeView.backgroundColor = color
+        } else {
+            sizeView.backgroundColor = unselectedColor
+        }
+    }
+    
+    func updateColor() {
+        // TODO: update color
+        guard aSelected else {
+            sizeView.borderColor = .clear
+            sizeView.backgroundColor = unselectedColor
+            return
+        }
+        
+        sizeView.backgroundColor = color
+        
+        if color == UIColor(hex: 0xFFFFFF)! {
+            sizeView.borderColor = unselectedColor
+        } else {
+            sizeView.borderColor = .clear
+        }
     }
 }
 
 // MARK: - BrushColorItemCell
-class AgoraBoardColorItemCell: UICollectionViewCell {
-    var frontView: UIView!
+class AgoraBoardColorItemCell: UICollectionViewCell, AgoraUIContentContainer {
+    lazy var frontView = UIView(frame: .zero)
     
-    var backView: UIView!
+    lazy var backView = UIView(frame: .zero)
     
     var color: UIColor? {
         didSet {
@@ -351,28 +355,41 @@ class AgoraBoardColorItemCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backView = UIView(frame: .zero)
-        backView.layer.borderWidth = 1
-        backView.layer.cornerRadius = 4
-        backView.backgroundColor = .white
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: AgoraUIContentContainer
+    func initViews() {
         addSubview(backView)
+        addSubview(frontView)
+    }
+    
+    func initViewFrame() {
         backView.mas_makeConstraints { make in
             make?.center.equalTo()(backView.superview)
             make?.width.height().equalTo()(24)
         }
         
-        frontView = UIView(frame: .zero)
-        frontView.layer.borderWidth = 1
-        frontView.layer.cornerRadius = 4
-        frontView.clipsToBounds = true
-        addSubview(frontView)
         frontView.mas_makeConstraints { make in
             make?.center.equalTo()(frontView.superview)
             make?.width.height().equalTo()(20)
         }
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        backView.layer.borderWidth = ui.frame.fcr_border_width
+        backView.layer.cornerRadius = ui.frame.fcr_toast_corner_radius
+        backView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        
+        frontView.layer.borderWidth = ui.frame.fcr_border_width
+        frontView.layer.cornerRadius = ui.frame.fcr_toast_corner_radius
+        frontView.clipsToBounds = true
     }
 }

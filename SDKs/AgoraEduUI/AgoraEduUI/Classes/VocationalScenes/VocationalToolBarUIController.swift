@@ -42,22 +42,22 @@ class VocationalToolBarUIController: UIViewController {
     }
     
     /** 展示的工具*/
-    public var tools = [AgoraToolBarUIController.ItemType]() {
+    public var tools = [FcrToolBarItemType]() {
         didSet {
             updateDataSource()
         }
     }
     
-    private var hiddenTools = [AgoraToolBarUIController.ItemType]()
+    private var hiddenTools = [FcrToolBarItemType]()
     
-    private var dataSource = [AgoraToolBarUIController.ItemType]()
+    private var dataSource = [FcrToolBarItemType]()
         
     private var collectionView: UICollectionView!
     
     private var handsupCell: AgoraToolBarHandsUpCell?
     
     /** 画笔图片*/
-    private var brushImage = UIImage.agedu_named("ic_brush_clicker")
+    private var brushImage = UIImage.agedu_named("toolcollection_clicker")
     /** 画笔颜色*/
     private var brushColor = UIColor(hex: 0xE1E1EA)
     /** 消息提醒*/
@@ -86,7 +86,7 @@ class VocationalToolBarUIController: UIViewController {
         return v
     }()
     /** 已被选中的工具*/
-    private var selectedTool: AgoraToolBarUIController.ItemType? {
+    private var selectedTool: FcrToolBarItemType? {
         didSet {
             if let oldTool = oldValue {
                 self.delegate?.toolsViewDidDeselectTool(tool: oldTool)
@@ -167,9 +167,7 @@ extension VocationalToolBarUIController: AgoraUIContentContainer {
         collectionView.register(cellWithClass: AgoraToolBarItemCell.self)
         collectionView.register(cellWithClass: AgoraToolBarHandsUpCell.self)
         collectionView.register(cellWithClass: AgoraToolBarRedDotCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarBrushCell.self)
         collectionView.register(cellWithClass: AgoraToolBarHandsListCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarHelpCell.self)
         view.addSubview(collectionView)
     }
     
@@ -282,11 +280,16 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let tool = dataSource[indexPath.row]
+        
+        let aSelected = selectedTool == tool
+        
+        let image = aSelected ? tool.selectedImage : tool.unselectedImage
+        
         if tool == .message {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarRedDotCell.self,
                                                           for: indexPath)
-            cell.setImage(tool.cellImage())
-            cell.aSelected = (selectedTool == tool)
+            cell.iconView.image = image
+            cell.aSelected = aSelected
             cell.redDot.isHidden = !messageRemind
             return cell
         } else if tool == .handsup {
@@ -301,7 +304,9 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
         } else if tool == .handsList {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarHandsListCell.self,
                                                           for: indexPath)
-            cell.setImage(tool.cellImage())
+            cell.iconView.image = image
+            cell.aSelected = aSelected
+            
             cell.redLabel.text = "\(handsListCount)"
             cell.redLabel.isHidden = (handsListCount == 0)
             if handsListCount > 0  {
@@ -311,16 +316,16 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
             }
             return cell
         } else if tool == .help {
-            let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarHelpCell.self,
+            let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarItemCell.self,
                                                           for: indexPath)
-            cell.setImage(tool.cellImage())
-            cell.touchable = !teacherInLocalSubRoom()
+            let touchable = !teacherInLocalSubRoom()
+            cell.iconView.image = touchable ? image : tool.disabledImage
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarItemCell.self,
                                                           for: indexPath)
-            cell.setImage(tool.cellImage())
-            cell.aSelected = (selectedTool == tool)
+            cell.iconView.image = image
+            cell.aSelected = aSelected
             return cell
         }
     }

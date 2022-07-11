@@ -91,7 +91,7 @@ class AgoraUserListItemCell: UITableViewCell {
             v.setImageForAllStates(image)
         }
         v.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        v.setTitleColor(UIColor(hex: 0xBDBDCA),
+        v.setTitleColor(FcrColorGroup.fcr_text_disabled_color,
                         for: .normal)
         v.addTarget(self,
                     action: #selector(onClickReward(_:)),
@@ -112,8 +112,9 @@ class AgoraUserListItemCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     required init?(coder: NSCoder) {
@@ -154,8 +155,10 @@ private extension AgoraUserListItemCell {
             return
         }
         nameLabel.text = model.name
+        
+        let ui = AgoraUIGroup()
         let onColor = UIColor(hex: 0x0073FF)
-        let offColor = UIColor(hex: 0xF04C36)
+        let offColor = FcrColorGroup.fcr_system_error_color
         let authOffColor = UIColor(hex: 0xB3D6FF)
         let disabledColor = UIColor(hex: 0xE2E2EE)
         for fn in fns {
@@ -303,13 +306,9 @@ private extension AgoraUserListItemCell {
     }
 }
 // MARK: - Creations
-private extension AgoraUserListItemCell {
-    func createViews() {
-        self.backgroundColor = .white
-        
+extension AgoraUserListItemCell: AgoraUIContentContainer {
+    func initViews() {
         nameLabel = UILabel()
-        nameLabel.textColor = UIColor(hex: 0x191919)
-        nameLabel.font = UIFont.systemFont(ofSize: 12)
         nameLabel.textAlignment = .center
         contentView.addSubview(nameLabel)
         
@@ -321,7 +320,7 @@ private extension AgoraUserListItemCell {
         contentView.addSubview(funcsView)
     }
     
-    func createConstraint() {
+    func initViewFrame() {
         nameLabel.mas_makeConstraints { make in
             make?.left.equalTo()(0)
             make?.top.bottom().equalTo()(nameLabel.superview)
@@ -332,5 +331,13 @@ private extension AgoraUserListItemCell {
             make?.left.equalTo()(nameLabel.mas_right)
             make?.right.equalTo()(0)
         }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        
+        backgroundColor = FcrColorGroup.fcr_system_component_color
+        nameLabel.textColor = FcrColorGroup.fcr_text_level1_color
+        nameLabel.font = ui.font.fcr_font12
     }
 }

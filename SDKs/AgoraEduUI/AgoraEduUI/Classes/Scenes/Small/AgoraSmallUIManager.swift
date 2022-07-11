@@ -287,13 +287,13 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
+        FcrColorGroup.borderSet(layer: chatController.view.layer)
     }
 }
 
 // MARK: - AgoraToolBarDelegate
 extension AgoraSmallUIManager: AgoraToolBarDelegate {
-    func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
+    func toolsViewDidSelectTool(tool: FcrToolBarItemType,
                                 selectView: UIView) {
         switch tool {
         case .setting:
@@ -322,7 +322,7 @@ extension AgoraSmallUIManager: AgoraToolBarDelegate {
         ctrlViewAnimationFromView(selectView)
     }
     
-    func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
+    func toolsViewDidDeselectTool(tool: FcrToolBarItemType) {
         ctrlView = nil
     }
 }
@@ -565,7 +565,8 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
         let vc = AgoraSubRoomUIManager(contextPool: contextPool,
                                        subRoom: subRoom,
                                        subDelegate: self,
-                                       mainDelegate: self)
+                                       mainDelegate: self,
+                                       uiMode: uiMode)
         
         vc.modalPresentationStyle = .fullScreen
         present(vc,

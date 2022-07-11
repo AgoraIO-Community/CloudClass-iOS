@@ -96,7 +96,7 @@ class AgoraBoardUIController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        updateViewProperties()
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
@@ -163,6 +163,21 @@ class AgoraBoardUIController: UIViewController {
     }
 }
 
+// MARK: - AgoraUIContentContainer
+extension AgoraBoardUIController: AgoraUIContentContainer {
+    func initViews() {
+        
+    }
+    
+    func initViewFrame() {
+        
+    }
+    
+    func updateViewProperties() {
+        view.backgroundColor = FcrColorGroup.fcr_system_foreground_color
+    }
+}
+
 // MARK: - AgoraUIActivity
 extension AgoraBoardUIController: AgoraUIActivity {
     func viewWillActive() {
@@ -186,12 +201,9 @@ private extension AgoraBoardUIController {
         widgetController.add(self,
                              widgetId: boardConfig.widgetId)
         
-        let group = AgoraUIGroup()
-        widget.view.backgroundColor = group.color.board_bg_color
-        widget.view.layer.borderColor = group.color.board_border_color
-        widget.view.layer.borderWidth = group.frame.board_border_width
-        widget.view.layer.cornerRadius = group.frame.board_corner_radius
-        widget.view.layer.masksToBounds = true
+        let ui = AgoraUIGroup()
+        widget.view.layer.borderColor = FcrColorGroup.fcr_border_color
+        widget.view.layer.borderWidth = ui.frame.fcr_border_width
         
         view.addSubview(widget.view)
         boardWidget = widget

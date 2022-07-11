@@ -78,6 +78,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSNumber *duration;
 // 区域
 @property (nonatomic, assign) AgoraEduRegion region;
+// UI模式（明亮/暗黑）
+@property (nonatomic, assign) AgoraEduUIMode uiMode;
 // 媒体选项
 @property (nonatomic, strong, nullable) AgoraEduMediaOptions *mediaOptions;
 // 用户自定属性
@@ -105,6 +107,7 @@ NS_ASSUME_NONNULL_BEGIN
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
+                          uiMode:(AgoraEduUIMode)uiMode
                     mediaOptions:(AgoraEduMediaOptions * _Nullable)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties;
 @end

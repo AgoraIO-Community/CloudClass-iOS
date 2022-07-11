@@ -325,7 +325,6 @@ extension FcrWindowRenderUIController: AgoraUIContentContainer {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = .clear
         collectionView.isPagingEnabled = false
         collectionView.isScrollEnabled = false
         collectionView.register(FcrWindowRenderCell.self,
@@ -358,21 +357,23 @@ extension FcrWindowRenderUIController: AgoraUIContentContainer {
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         
+        collectionView.backgroundColor = FcrColorGroup.fcr_system_foreground_color
+        
         prevButton.clipsToBounds = true
         
         prevButton.setImage(UIImage.agedu_named("ic_member_arrow_left"),
                             for: .normal)
         
-        prevButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
-        prevButton.backgroundColor = ui.color.render_left_right_button_color
+        prevButton.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        prevButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         
         nextButton.clipsToBounds = true
         
         nextButton.setImage(UIImage.agedu_named("ic_member_arrow_right"),
                             for: .normal)
         
-        nextButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
-        nextButton.backgroundColor = ui.color.render_left_right_button_color
+        nextButton.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        nextButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
     }
 }
 

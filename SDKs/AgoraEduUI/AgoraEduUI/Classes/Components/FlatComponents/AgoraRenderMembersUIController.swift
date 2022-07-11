@@ -364,10 +364,10 @@ class AgoraRenderMembersUIController: UIViewController {
             return
         }
         
-        leftButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
-        leftButton.backgroundColor = ui.color.render_left_right_button_color
-        rightButton.layer.cornerRadius = ui.frame.render_left_right_button_radius
-        rightButton.backgroundColor = ui.color.render_left_right_button_color
+        leftButton.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        leftButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        rightButton.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        rightButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
     }
 }
 

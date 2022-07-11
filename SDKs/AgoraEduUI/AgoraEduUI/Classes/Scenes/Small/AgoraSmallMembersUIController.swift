@@ -147,7 +147,7 @@ class AgoraSmallMembersUIController: AgoraRenderMembersUIController {
         super.initViews()
         
         let ui = AgoraUIGroup()
-        teacherView.layer.cornerRadius = ui.frame.render_cell_corner_radius
+        teacherView.layer.cornerRadius = ui.frame.fcr_window_corner_radius
         teacherView.clipsToBounds = true
         teacherView.isHidden = true
         contentView.addSubview(teacherView)

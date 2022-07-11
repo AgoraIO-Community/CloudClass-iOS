@@ -184,6 +184,46 @@ enum AgoraToolCollectionSelectType: Int {
     case none, main, sub
 }
 
+enum AgoraTeachingAidType {
+    /** 云盘*/
+    case cloudStorage
+    /** 保存板书*/
+    case saveBoard
+    /** 录制*/
+    case record
+    /** 投票*/
+    case vote
+    /** 倒计时*/
+    case countDown
+    /** 答题器*/
+    case answerSheet
+    
+    func cellImage() -> UIImage? {
+        switch self {
+        case .cloudStorage:     return UIImage.agedu_named("toolcollection_enabled_cloud")
+        case .saveBoard:        return UIImage.agedu_named("toolcollection_enabled_save")
+        case .record:           return UIImage.agedu_named("ic_toolbox_record")
+        case .vote:             return UIImage.agedu_named("ic_toolbox_vote")
+        case .countDown:        return UIImage.agedu_named("ic_toolbox_clock")
+        case .answerSheet:      return UIImage.agedu_named("ic_toolbox_answer")
+        default: return nil
+        }
+    }
+    
+    func cellText() -> String? {
+        switch self {
+        case .cloudStorage:     return "fcr_tool_box_cloud_storage".agedu_localized()
+        case .saveBoard:        return "toolbox_save_borad".agedu_localized()
+        case .record:           return "fcr_tool_box_record_class".agedu_localized()
+        case .vote:             return "fcr_tool_box_poll".agedu_localized()
+        case .countDown:        return "fcr_tool_box_count_down".agedu_localized()
+        case .answerSheet:      return "fcr_tool_box_popup_quiz".agedu_localized()
+        default:                return nil
+        }
+    }
+}
+
+
 // MARK: - UserList
 enum AgoraUserListFunction: Int {
     case stage = 0, auth, camera, mic, reward, kick
@@ -197,6 +237,53 @@ enum AgoraUserListFunction: Int {
         case .reward:   return "fcr_user_list_reward".agedu_localized()
         case .kick:     return "fcr_user_list_ban".agedu_localized()
         default:        return ""
+        }
+    }
+}
+
+// MARK: - ToolBar
+enum FcrToolBarItemType {
+    case setting, nameRoll, message, handsup, handsList, help
+    
+    var selectedImage: UIImage? {
+        var imageName = ""
+        switch self {
+        case .setting:          imageName = "toolbar_selected_setting"
+        case .nameRoll:         imageName = "toolbar_selected_name_roll"
+        case .message:          imageName = "toolbar_selected_message"
+        case .handsList:        imageName = "toolbar_selected_hands_list"
+        default:                break
+        }
+        return UIImage.agedu_named(imageName)
+    }
+    
+    var unselectedImage: UIImage? {
+        var imageName = ""
+        switch self {
+        case .setting:          imageName = "toolbar_unselected_setting"
+        case .nameRoll:         imageName = "toolbar_unselected_name_roll"
+        case .message:          imageName = "toolbar_unselected_message"
+        case .handsup:          imageName = "toolbar_unselected_wave_hands"
+        case .handsList:        imageName = "toolbar_unselected_hands_list"
+        case .help:             imageName = "toolbar_enabled_help"
+        default:                break
+        }
+        return UIImage.agedu_named(imageName)
+    }
+    
+    var disabledImage: UIImage? {
+        var imageName = ""
+        switch self {
+        case .help:             imageName = "toolbar_disabled_help"
+        default:                break
+        }
+        return UIImage.agedu_named(imageName)
+    }
+    
+    var isOnceKind: Bool {
+        switch self {
+        case .help:     return true
+        default:        return false
         }
     }
 }

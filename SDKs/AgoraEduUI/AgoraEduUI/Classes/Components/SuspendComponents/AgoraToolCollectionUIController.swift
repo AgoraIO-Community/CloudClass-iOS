@@ -59,9 +59,7 @@ class AgoraToolCollectionUIController: UIViewController {
     
     var suggestLength: CGFloat = UIDevice.current.agora_is_pad ? 34 : 32
     var suggestSpreadHeight: CGFloat = 80
-    
-    private var baseTintColor: UIColor
-    
+        
     private var curSelectedCell: AgoraToolCollectionSelectType = .none {
         didSet {
             guard curSelectedCell != oldValue else {
@@ -104,33 +102,26 @@ class AgoraToolCollectionUIController: UIViewController {
     // AgoraToolCollectionUIController自身视图为教室中的cell，同时控制工具栏和配置栏
     private lazy var contentView = UIView(frame: .zero)
     private lazy var subCell = AgoraToolCollectionCell(isMain: false,
-                                                       color: UIColor(hex: subToolsView.currentColor) ?? UIColor(hex: 0x357BF6),
-                                                       image: currentSubTool.image,
+                                                       color: UIColor(hex: subToolsView.currentColor) ?? FcrColorGroup.fcr_system_highlight_color,
+                                                       image: currentSubTool.unselectedImage,
                                                        font: subToolsView.curTextFont.value / 2)
     private lazy var sepLine = UIView()
     private lazy var mainCell = AgoraToolCollectionCell(isMain: true,
-                                                        color: UIColor(hex: subToolsView.currentColor) ?? color.common_base_tint_color,
-                                                        image: currentMainTool.image)
+                                                        color: UIColor(hex: subToolsView.currentColor) ?? FcrColorGroup.fcr_system_highlight_color,
+                                                        image: currentMainTool.unselectedImage)
     
     // 主要工具栏CollectionView（包含教具、白板工具）
     private var mainToolsView: AgoraMainToolsView!
     // 白板工具配置CollectionView
     private var subToolsView: AgoraBoardToolConfigView!
-    
-    let color = AgoraColorGroup()
-    
+        
     deinit {
         print("\(#function): \(self.classForCoder)")
     }
 
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: AgoraToolCollectionUIControllerDelegate? = nil) {
-        let group = AgoraColorGroup()
-        
-        baseTintColor = group.tool_bar_item_highlight_color
-        
-        
+         delegate: AgoraToolCollectionUIControllerDelegate? = nil) {        
         super.init(nibName: nil,
                    bundle: nil)
         
@@ -241,10 +232,10 @@ class AgoraToolCollectionUIController: UIViewController {
     
     func updateViewProperties() {
         view.backgroundColor = .clear
-        color.borderSet(layer: contentView.layer)
-        contentView.backgroundColor = color.tool_collection_bg_color
-        contentView.layer.cornerRadius = AgoraFrameGroup().tool_collection_corner_radius
-        sepLine.backgroundColor = color.tool_collection_sep_color
+        FcrColorGroup.borderSet(layer: contentView.layer)
+        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = AgoraFrameGroup().fcr_round_container_corner_radius
+        sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
     }
 }
 // MARK: - Widget
@@ -445,7 +436,7 @@ private extension AgoraToolCollectionUIController {
                               color: UIColor(hex: subToolsView.currentColor))
         } else {
             mainCell.setImage(mainSelectedImage,
-                              color: color.common_base_tint_color)
+                              color: FcrColorGroup.fcr_system_highlight_color)
             
             subCell.isHidden = true
             sepLine.isHidden = true
@@ -453,7 +444,7 @@ private extension AgoraToolCollectionUIController {
         
         // 若选中的mainTool为text/paint
         if currentMainTool == .paint {
-            subCell.setImage(subToolsView.currentPaintTool.image,
+            subCell.setImage(subToolsView.currentPaintTool.unselectedImage,
                              color: UIColor(hex: subToolsView.currentColor))
             
             subCell.isHidden = false

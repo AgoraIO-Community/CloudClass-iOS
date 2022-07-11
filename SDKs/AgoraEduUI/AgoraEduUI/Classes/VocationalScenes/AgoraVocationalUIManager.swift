@@ -273,7 +273,7 @@ extension AgoraVocationalUIManager: AgoraEduStreamHandler {
             chatController.hideInput = true
         }
         addChild(chatController)
-        AgoraUIGroup().color.borderSet(layer: chatController.view.layer)
+        FcrColorGroup.borderSet(layer: chatController.view.layer)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
     }
@@ -369,7 +369,7 @@ extension AgoraVocationalUIManager: VocationalWindowUIControllerDelegate {
 
 // MARK: - AgoraToolBarDelegate
 extension AgoraVocationalUIManager: AgoraToolBarDelegate {
-    func toolsViewDidSelectTool(tool: AgoraToolBarUIController.ItemType,
+    func toolsViewDidSelectTool(tool: FcrToolBarItemType,
                                 selectView: UIView) {
         switch tool {
         case .setting:
@@ -392,7 +392,7 @@ extension AgoraVocationalUIManager: AgoraToolBarDelegate {
         ctrlViewAnimationFromView(selectView)
     }
     
-    func toolsViewDidDeselectTool(tool: AgoraToolBarUIController.ItemType) {
+    func toolsViewDidDeselectTool(tool: FcrToolBarItemType) {
         ctrlView = nil
     }
 }

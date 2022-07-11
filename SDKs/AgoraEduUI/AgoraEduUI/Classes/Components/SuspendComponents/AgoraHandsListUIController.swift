@@ -31,14 +31,15 @@ class AgoraHandsListUIController: UIViewController {
     /** 代理*/
     weak var delegate: AgoraHandsListUIControllerDelegate?
 
-    private var listContentView: UIView?
+//    private lazy var listContentView: UIView?
     /** 举手列表*/
-    private var tableView: UITableView?
+    private lazy var tableView = UITableView.init(frame: .zero,
+                                                  style: .plain)
 
     private(set) var dataSource = [AgoraHandsUpListUserInfo]() {
         didSet {
             delegate?.updateHandsListRedLabel(dataSource.count)
-            tableView?.reloadData()
+            tableView.reloadData()
         }
     }
     
@@ -66,8 +67,9 @@ class AgoraHandsListUIController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createViews()
-        createConstraint()
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
 }
 
@@ -159,58 +161,40 @@ extension AgoraHandsListUIController: UITableViewDataSource, UITableViewDelegate
     }
 }
 
-// MARK: - private
-extension AgoraHandsListUIController {
-    func createViews() {
-        AgoraUIGroup().color.borderSet(layer: view.layer)
-        
-        let contentView = UIView()
-        contentView.backgroundColor = UIColor(hex: 0xF9F9FC)
-        contentView.layer.cornerRadius = 10.0
-        contentView.clipsToBounds = true
-        contentView.borderWidth = 1
-        contentView.borderColor = UIColor(hex: 0xE3E3EC)
-        contentView.isUserInteractionEnabled = true
-        
-        view.addSubview(contentView)
-
-        let tab = UITableView.init(frame: .zero,
-                                   style: .plain)
-        tab.backgroundColor = UIColor(hex: 0xF9F9FC)
-        tab.delegate = self
-        tab.dataSource = self
-        tab.tableFooterView = UIView.init(frame: CGRect(x: 0,
+// MARK: - AgoraUIContentContainer
+extension AgoraHandsListUIController: AgoraUIContentContainer {
+    func initViews() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.tableFooterView = UIView.init(frame: CGRect(x: 0,
                                                         y: 0,
                                                         width: 1,
                                                         height: 0.01))
-        tab.rowHeight = 40
-        tab.separatorInset = UIEdgeInsets(top: 0,
+        tableView.rowHeight = 40
+        tableView.separatorInset = UIEdgeInsets(top: 0,
                                           left: 0,
                                           bottom: 0,
                                           right: 15)
-        tab.separatorColor = UIColor(hexString: "#EEEEF7")
-        tab.allowsSelection = false
-        tab.register(cellWithClass: AgoraHandsUpItemCell.self)
-        tab.layer.cornerRadius = 12
-        tab.clipsToBounds = true
-        tab.isUserInteractionEnabled = true
         
-        contentView.addSubview(tab)
-        
-        listContentView = contentView
-        tableView = tab
+        tableView.allowsSelection = false
+        tableView.register(cellWithClass: AgoraHandsUpItemCell.self)
+        tableView.isUserInteractionEnabled = true
+        view.addSubview(tableView)
     }
     
-    func createConstraint() {
-        guard let content = listContentView,
-              let tab = tableView else {
-                  return
-              }
-        content.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(content.superview)
+    func initViewFrame() {
+        tableView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(view)
         }
-        tab.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(tab.superview)
-        }
+    }
+    
+    func updateViewProperties() {
+        let ui = AgoraUIGroup()
+        FcrColorGroup.borderSet(layer: view.layer)
+        
+        tableView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        tableView.separatorColor = FcrColorGroup.fcr_system_divider_color
+        tableView.layer.cornerRadius = ui.frame.fcr_alert_corner_radius
+        tableView.clipsToBounds = true
     }
 }

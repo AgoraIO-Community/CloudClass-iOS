@@ -94,4 +94,9 @@ typedef NS_ENUM(NSInteger, AgoraEduStreamState) {
     AgoraEduStreamStateOn      = 1
 };
 
+typedef NS_ENUM(NSInteger, AgoraEduUIMode) {
+    AgoraEduUIModeLight     = 0,
+    AgoraEduUIModeDark      = 1
+};
+
 NS_ASSUME_NONNULL_END

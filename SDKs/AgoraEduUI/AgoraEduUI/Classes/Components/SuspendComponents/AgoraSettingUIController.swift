@@ -90,9 +90,9 @@ class AgoraSettingUIController: UIViewController {
     func updateViewProperties() {
         let ui = AgoraUIGroup()
         
-        ui.color.borderSet(layer: view.layer)
-        contentView.backgroundColor = ui.color.setting_bg_color
-        contentView.layer.cornerRadius = ui.frame.setting_corner_radius
+        FcrColorGroup.borderSet(layer: view.layer)
+        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = ui.frame.fcr_square_container_corner_radius
         contentView.clipsToBounds = true
     }
 }

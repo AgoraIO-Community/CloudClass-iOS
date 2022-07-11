@@ -519,10 +519,16 @@ private extension FcrStreamWindowUIController {
         let renderView = FcrWindowRenderView(frame: .zero)
         let ui = AgoraUIGroup()
         
-        renderView.backgroundColor = ui.color.render_cell_bg_color
-        renderView.layer.cornerRadius = ui.frame.render_cell_corner_radius
-        renderView.layer.borderWidth = ui.frame.render_cell_border_width
-        renderView.layer.borderColor = ui.color.render_mask_border_color
+        renderView.backgroundColor = FcrColorGroup.fcr_system_background_color
+        renderView.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        renderView.layer.borderWidth = ui.frame.fcr_border_width
+        renderView.layer.borderColor = FcrColorGroup.fcr_border_color
+        
+        renderView.boardPrivilegeView.isHidden = true
+        renderView.micView.isHidden = true
+        renderView.nameLabel.isHidden = true
+        renderView.rewardView.isHidden = true
+        renderView.videoMaskView.isHidden = true
         
         renderView.boardPrivilegeView.isHidden = true
         renderView.micView.isHidden = true
