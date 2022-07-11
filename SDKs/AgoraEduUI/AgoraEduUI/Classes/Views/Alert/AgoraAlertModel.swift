@@ -59,7 +59,7 @@ extension AgoraAlertTableCell: AgoraUIContentContainer {
             make?.width.height().equalTo()(12)
         }
         
-        let spacing = AgoraFrameGroup().fcr_alert_side_spacing
+        let spacing = FcrUIFrameGroup.fcr_alert_side_spacing
         optionLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(0)
             make?.left.equalTo()(spacing)
@@ -69,7 +69,7 @@ extension AgoraAlertTableCell: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        optionLabel.font = AgoraUIGroup().font.fcr_font13
+        optionLabel.font = FcrUIFontGroup.fcr_font13
     }
 }
 
@@ -178,9 +178,9 @@ private class AgoraAlertController: UIViewController {
         let messageLabel = UILabel()
         messageLabel.text = model.message
         messageLabel.numberOfLines = 0
-        let ui = AgoraUIGroup()
-        messageLabel.font = ui.font.fcr_font13
-        messageLabel.textColor = FcrColorGroup.fcr_text_level2_color
+        
+        messageLabel.font = FcrUIFontGroup.fcr_font13
+        messageLabel.textColor = FcrUIColorGroup.fcr_text_level2_color
         messageLabel.textAlignment = .center
         return messageLabel
     }()
@@ -330,18 +330,18 @@ extension AgoraAlertController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        FcrColorGroup.borderSet(layer: contentView.layer)
         
-        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = ui.frame.fcr_alert_corner_radius
+        FcrUIColorGroup.borderSet(layer: contentView.layer)
         
-        titleLabel.font = ui.font.fcr_font17
-        titleLabel.textColor = FcrColorGroup.fcr_text_level1_color
+        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_alert_corner_radius
+        
+        titleLabel.font = FcrUIFontGroup.fcr_font17
+        titleLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-        hLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        hLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
     }
 }
 // MARK: - private
@@ -370,7 +370,7 @@ private extension AgoraAlertController {
     }
     
     private func createActionButtons() {
-        let ui = AgoraUIGroup()
+        
         guard model.actions.count > 0 else {
             hLine.mas_makeConstraints { make in
                 make?.left.right().equalTo()(0)
@@ -389,10 +389,10 @@ private extension AgoraAlertController {
             let action = model.actions.first
             let button = UIButton(type: .custom)
             button.tag = buttonStartTag
-            button.titleLabel?.font = ui.font.fcr_font17
+            button.titleLabel?.font = FcrUIFontGroup.fcr_font17
             button.setTitle(action?.title,
                             for: .normal)
-            button.setTitleColor(FcrColorGroup.fcr_text_enabled_color,
+            button.setTitleColor(FcrUIColorGroup.fcr_text_enabled_color,
                                  for: .normal)
             button.addTarget(self,
                              action: #selector(onClickActionButton(_:)),
@@ -427,7 +427,7 @@ private extension AgoraAlertController {
                 }
                 if lastOne == false {
                     let line = UIView()
-                    line.backgroundColor = FcrColorGroup.fcr_system_divider_color
+                    line.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
                     contentView.addSubview(line)
                     previous = line
                     line.mas_makeConstraints { make in
@@ -459,7 +459,7 @@ private extension AgoraAlertController {
             make?.height.equalTo()(44)
         }
         let line = UIView()
-        line.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        line.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
         contentView.addSubview(line)
         line.mas_makeConstraints { make in
             make?.top.equalTo()(hLine.mas_bottom)
@@ -471,13 +471,13 @@ private extension AgoraAlertController {
     }
     
     func generateButton(title: String?, index: Int) -> UIButton {
-        let ui = AgoraUIGroup()
+        
         let button = UIButton(type: .custom)
         button.tag = buttonStartTag + index
-        button.titleLabel?.font = ui.font.fcr_font17
+        button.titleLabel?.font = FcrUIFontGroup.fcr_font17
         button.setTitle(title,
                         for: .normal)
-        button.setTitleColor(FcrColorGroup.fcr_text_enabled_color,
+        button.setTitleColor(FcrUIColorGroup.fcr_text_enabled_color,
                              for: .normal)
         button.addTarget(self,
                          action: #selector(onClickActionButton(_:)),

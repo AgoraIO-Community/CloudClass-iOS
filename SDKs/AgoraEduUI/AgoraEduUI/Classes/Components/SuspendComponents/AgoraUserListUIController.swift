@@ -276,25 +276,25 @@ class AgoraUserListUIController: UIViewController {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        let contentLabelColor = FcrColorGroup.fcr_icon_normal_color
-        let titleLabelColor = FcrColorGroup.fcr_text_level1_color
-        let labelFont = ui.font.fcr_font12
         
-        FcrColorGroup.borderSet(layer: view.layer)
+        let contentLabelColor = FcrUIColorGroup.fcr_icon_normal_color
+        let titleLabelColor = FcrUIColorGroup.fcr_text_level1_color
+        let labelFont = FcrUIFontGroup.fcr_font12
         
-        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = ui.frame.fcr_square_container_corner_radius
+        FcrUIColorGroup.borderSet(layer: view.layer)
+        
+        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_square_container_corner_radius
         contentView.clipsToBounds = true
-        contentView.layer.borderWidth = ui.frame.fcr_border_width
-        contentView.layer.borderColor = FcrColorGroup.fcr_border_color
+        contentView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
+        contentView.layer.borderColor = FcrUIColorGroup.fcr_border_color
                 
         titleLabel.font = labelFont
         titleLabel.textColor = titleLabelColor
         
-        infoView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        infoView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
         
-        let sepColor = FcrColorGroup.fcr_system_divider_color
+        let sepColor = FcrUIColorGroup.fcr_system_divider_color
         topSepLine.backgroundColor = sepColor
         bottomSepLine.backgroundColor = sepColor
         
@@ -306,10 +306,10 @@ class AgoraUserListUIController: UIViewController {
         
         studentTitleLabel.font = labelFont
         studentTitleLabel.textColor = contentLabelColor
-        itemTitlesView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        itemTitlesView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
         
-        tableView.backgroundColor = FcrColorGroup.fcr_system_component_color
-        tableView.separatorColor = FcrColorGroup.fcr_system_divider_color
+        tableView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        tableView.separatorColor = FcrUIColorGroup.fcr_system_divider_color
         
         for view in itemTitlesView.arrangedSubviews {
             guard let label = view as? UILabel else {
@@ -324,7 +324,7 @@ class AgoraUserListUIController: UIViewController {
             carouselTitle.font = labelFont
             carouselTitle.textColor = contentLabelColor
             
-            carouselSwitch.onTintColor = FcrColorGroup.fcr_icon_fill_color
+            carouselSwitch.onTintColor = FcrUIColorGroup.fcr_icon_fill_color
         }
     }
     

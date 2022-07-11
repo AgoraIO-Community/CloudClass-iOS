@@ -88,17 +88,17 @@ extension AgoraClassStateUIController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
+        
         
         startButton.setTitle("fcr_room_start_class".agedu_localized(),
                              for: .normal)
-        startButton.titleLabel?.font = ui.font.fcr_font13
-        startButton.backgroundColor = FcrColorGroup.fcr_system_highlight_color
-        startButton.setTitleColor(FcrColorGroup.fcr_text_contrast_color,
+        startButton.titleLabel?.font = FcrUIFontGroup.fcr_font13
+        startButton.backgroundColor = FcrUIColorGroup.fcr_system_highlight_color
+        startButton.setTitleColor(FcrUIColorGroup.fcr_text_contrast_color,
                                   for: .normal)
-        startButton.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
+        startButton.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
         
-        FcrColorGroup.borderSet(layer: startButton.layer)
+        FcrUIColorGroup.borderSet(layer: startButton.layer)
     }
     
 }

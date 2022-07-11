@@ -376,17 +376,17 @@ extension AgoraBoardToolConfigView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        FcrColorGroup.borderSet(layer: layer)
-        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = ui.frame.fcr_square_container_corner_radius
+        
+        FcrUIColorGroup.borderSet(layer: layer)
+        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_square_container_corner_radius
         contentView.clipsToBounds = true
-        contentView.borderWidth = ui.frame.fcr_border_width
-        contentView.layer.borderColor = FcrColorGroup.fcr_border_color
+        contentView.borderWidth = FcrUIFrameGroup.fcr_border_width
+        contentView.layer.borderColor = FcrUIColorGroup.fcr_border_color
         
-        topLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
-        bottomLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        topLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        bottomLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
     }
     
     

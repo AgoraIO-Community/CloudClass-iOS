@@ -174,7 +174,7 @@ extension AgoraBoardUIController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        view.backgroundColor = FcrColorGroup.fcr_system_foreground_color
+        view.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
     }
 }
 
@@ -201,9 +201,9 @@ private extension AgoraBoardUIController {
         widgetController.add(self,
                              widgetId: boardConfig.widgetId)
         
-        let ui = AgoraUIGroup()
-        widget.view.layer.borderColor = FcrColorGroup.fcr_border_color
-        widget.view.layer.borderWidth = ui.frame.fcr_border_width
+        
+        widget.view.layer.borderColor = FcrUIColorGroup.fcr_border_color
+        widget.view.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
         
         view.addSubview(widget.view)
         boardWidget = widget

@@ -14,13 +14,13 @@ class AgoraRenderMaskView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        let ui = AgoraUIGroup()
         
-        backgroundColor = FcrColorGroup.fcr_system_background_color
+        
+        backgroundColor = FcrUIColorGroup.fcr_system_background_color
         imageView.image = UIImage.agedu_named("ic_member_no_user")
-        layer.cornerRadius = ui.frame.fcr_window_corner_radius
-        layer.borderWidth = ui.frame.fcr_border_width
-        layer.borderColor = FcrColorGroup.fcr_border_color
+        layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
+        layer.borderWidth = FcrUIFrameGroup.fcr_border_width
+        layer.borderColor = FcrUIColorGroup.fcr_border_color
         
         addSubview(imageView)
         imageView.mas_makeConstraints { make in
@@ -98,20 +98,20 @@ class AgoraRenderMemberView: UIView {
 private extension AgoraRenderMemberView {
     func createViews() {
         backgroundColor = .clear
-        let ui = AgoraUIGroup()
+        
         addSubview(videoMaskView)
         
-        videoView.backgroundColor = FcrColorGroup.fcr_system_background_color
-        videoView.layer.borderWidth = ui.frame.fcr_border_width
-        videoView.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        videoView.backgroundColor = FcrUIColorGroup.fcr_system_background_color
+        videoView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
+        videoView.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
         addSubview(videoView)
         
-        nameLabel.textColor = FcrColorGroup.fcr_text_contrast_color
-        nameLabel.font = ui.font.fcr_font12
-        nameLabel.layer.shadowColor = FcrColorGroup.fcr_text_shadow_color
-        nameLabel.layer.shadowOffset = FcrColorGroup.fcr_label_shadow_offset
-        nameLabel.layer.shadowOpacity = FcrColorGroup.fcr_shadow_opacity
-        nameLabel.layer.shadowRadius = FcrColorGroup.fcr_label_shadow_radius
+        nameLabel.textColor = FcrUIColorGroup.fcr_text_contrast_color
+        nameLabel.font = FcrUIFontGroup.fcr_font12
+        nameLabel.layer.shadowColor = FcrUIColorGroup.fcr_text_shadow_color
+        nameLabel.layer.shadowOffset = FcrUIColorGroup.fcr_label_shadow_offset
+        nameLabel.layer.shadowOpacity = FcrUIColorGroup.fcr_shadow_opacity
+        nameLabel.layer.shadowRadius = FcrUIColorGroup.fcr_label_shadow_radius
         addSubview(nameLabel)
         
         addSubview(micView)
@@ -145,7 +145,7 @@ class AgoraRenderMemberCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .clear
-        videoMaskView.layer.cornerRadius = AgoraFrameGroup().fcr_window_corner_radius
+        videoMaskView.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
         videoMaskView.clipsToBounds = true
         videoMaskView.imageView.image = UIImage.agedu_named("ic_member_no_user")
         contentView.addSubview(videoMaskView)

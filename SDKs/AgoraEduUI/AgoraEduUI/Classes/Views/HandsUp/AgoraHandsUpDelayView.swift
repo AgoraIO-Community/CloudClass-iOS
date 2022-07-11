@@ -147,21 +147,21 @@ extension AgoraHandsUpDelayView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        itemSelectedColor = FcrColorGroup.fcr_system_component_color
-        itemUnselectedColor = FcrColorGroup.fcr_icon_normal_color
-        itemBackgroundSelectedColor = FcrColorGroup.fcr_icon_fill_color
-        itemBackgroundUnselectedColor = FcrColorGroup.fcr_system_component_color
+        
+        itemSelectedColor = FcrUIColorGroup.fcr_system_component_color
+        itemUnselectedColor = FcrUIColorGroup.fcr_icon_normal_color
+        itemBackgroundSelectedColor = FcrUIColorGroup.fcr_icon_fill_color
+        itemBackgroundUnselectedColor = FcrUIColorGroup.fcr_system_component_color
         
         backgroundColor = itemBackgroundUnselectedColor
-        layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
+        layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
         
-        FcrColorGroup.borderSet(layer: layer)
+        FcrUIColorGroup.borderSet(layer: layer)
         
         imageView.tintColor = itemUnselectedColor
         
         delayLabel.textColor = .white
-        delayLabel.font = ui.font.fcr_font13
+        delayLabel.font = FcrUIFontGroup.fcr_font13
     }
 }

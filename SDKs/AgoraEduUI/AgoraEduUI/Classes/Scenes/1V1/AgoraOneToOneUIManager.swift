@@ -270,9 +270,9 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        view.backgroundColor = FcrColorGroup.fcr_system_background_color
+        
+        view.backgroundColor = FcrUIColorGroup.fcr_system_background_color
     }
 }
 
@@ -616,7 +616,7 @@ private extension AgoraOneToOneUIManager {
         if UIDevice.current.agora_is_pad {
             contentView.addSubview(chatController.view)
         } else {
-            FcrColorGroup.borderSet(layer: chatController.view.layer)
+            FcrUIColorGroup.borderSet(layer: chatController.view.layer)
         }
 
         chatController.delegate = self

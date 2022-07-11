@@ -287,7 +287,7 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        FcrColorGroup.borderSet(layer: chatController.view.layer)
+        FcrUIColorGroup.borderSet(layer: chatController.view.layer)
     }
 }
 

@@ -197,16 +197,16 @@ extension AgoraBoardPageUIController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        view.backgroundColor = FcrColorGroup.fcr_system_component_color
-        view.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
         
-        FcrColorGroup.borderSet(layer: view.layer)
+        view.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        view.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
+        
+        FcrUIColorGroup.borderSet(layer: view.layer)
 
-        sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
 
-        pageLabel.font = ui.font.fcr_font14
-        pageLabel.textColor = FcrColorGroup.fcr_text_level2_color
+        pageLabel.font = FcrUIFontGroup.fcr_font14
+        pageLabel.textColor = FcrUIColorGroup.fcr_text_level2_color
         
 
     }

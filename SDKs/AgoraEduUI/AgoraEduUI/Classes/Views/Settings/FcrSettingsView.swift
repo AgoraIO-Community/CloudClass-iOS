@@ -194,11 +194,11 @@ extension FcrSettingsView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        let switchTintColor = FcrColorGroup.fcr_icon_fill_color
-        let labelFont = ui.font.fcr_font13
-        let labelColor = FcrColorGroup.fcr_text_level1_color
+        
+        let switchTintColor = FcrUIColorGroup.fcr_icon_fill_color
+        let labelFont = FcrUIFontGroup.fcr_font13
+        let labelColor = FcrUIColorGroup.fcr_text_level1_color
         
         // Camera
         cameraLabel.text = "fcr_media_camera".agedu_localized()
@@ -206,7 +206,7 @@ extension FcrSettingsView: AgoraUIContentContainer {
         cameraLabel.font = labelFont
         
         cameraDirectionLabel.text = "fcr_media_camera_direction".agedu_localized()
-        cameraDirectionLabel.textColor = FcrColorGroup.fcr_text_level3_color
+        cameraDirectionLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
         cameraDirectionLabel.font = labelFont
         
         cameraSwitch.onTintColor = switchTintColor
@@ -220,14 +220,14 @@ extension FcrSettingsView: AgoraUIContentContainer {
                                for: .normal)
         
         for button in [frontCameraButton, backCameraButton] {
-            button.setTitleColor(FcrColorGroup.fcr_text_contrast_color,
+            button.setTitleColor(FcrUIColorGroup.fcr_text_contrast_color,
                                  for: .selected)
-            button.setTitleColor(FcrColorGroup.fcr_text_level2_color,
+            button.setTitleColor(FcrUIColorGroup.fcr_text_level2_color,
                                  for: .normal)
-            let normalColorImage = UIImage(color: FcrColorGroup.fcr_icon_normal_color.withAlphaComponent(0.1),
+            let normalColorImage = UIImage(color: FcrUIColorGroup.fcr_icon_normal_color.withAlphaComponent(0.1),
                                            size: CGSize(width: 1,
                                                         height: 1))
-            let selectedColorImage = UIImage(color: FcrColorGroup.fcr_icon_fill_color,
+            let selectedColorImage = UIImage(color: FcrUIColorGroup.fcr_icon_fill_color,
                                            size: CGSize(width: 1,
                                                         height: 1))
                                            
@@ -236,12 +236,12 @@ extension FcrSettingsView: AgoraUIContentContainer {
             button.setBackgroundImage(selectedColorImage,
                                       for: .selected)
             
-            button.layer.cornerRadius = ui.frame.fcr_toast_corner_radius
+            button.layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
             button.clipsToBounds = true
         }
         
         // Sep
-        sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
         
         // Mic
         micLabel.textColor = labelColor
@@ -261,10 +261,10 @@ extension FcrSettingsView: AgoraUIContentContainer {
         exitButton.titleLabel?.font = labelFont
         exitButton.setTitle("fcr_room_leave_room".agedu_localized(),
                             for: .normal)
-        exitButton.backgroundColor = FcrColorGroup.fcr_icon_fill_color
-        exitButton.layer.cornerRadius = ui.frame.fcr_button_corner_radius
+        exitButton.backgroundColor = FcrUIColorGroup.fcr_icon_fill_color
+        exitButton.layer.cornerRadius = FcrUIFrameGroup.fcr_button_corner_radius
         exitButton.clipsToBounds = true
-        exitButton.setTitleColor(FcrColorGroup.fcr_text_contrast_color,
+        exitButton.setTitleColor(FcrUIColorGroup.fcr_text_contrast_color,
                                  for: .normal)
     }
 }

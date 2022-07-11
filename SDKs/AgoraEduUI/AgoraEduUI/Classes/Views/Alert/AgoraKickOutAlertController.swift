@@ -36,8 +36,8 @@ class AgoraKickOutAlertController: UIViewController {
     
     private var kickForever: Bool = false {
         didSet {
-            let color_one = FcrColorGroup.fcr_text_level1_color
-            let color_two = FcrColorGroup.fcr_text_level2_color
+            let color_one = FcrUIColorGroup.fcr_text_level1_color
+            let color_two = FcrUIColorGroup.fcr_text_level2_color
             if kickForever {
                 firstButton.isSelected = false
                 firstLabel.textColor = color_two
@@ -201,18 +201,18 @@ extension AgoraKickOutAlertController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
+        
         view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-        FcrColorGroup.borderSet(layer: contentView.layer)
-        titleLable.font = ui.font.fcr_font17
-        firstLabel.textColor = FcrColorGroup.fcr_text_level1_color
-        firstLabel.font = ui.font.fcr_font13
-        vLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
-        hLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
-        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = ui.frame.fcr_alert_corner_radius
+        FcrUIColorGroup.borderSet(layer: contentView.layer)
+        titleLable.font = FcrUIFontGroup.fcr_font17
+        firstLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
+        firstLabel.font = FcrUIFontGroup.fcr_font13
+        vLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        hLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_alert_corner_radius
         titleLable.textColor = UIColor(hex: 0x030303)
         seconedLabel.textColor = UIColor(hex: 0x586376)
-        seconedLabel.font = ui.font.fcr_font13
+        seconedLabel.font = FcrUIFontGroup.fcr_font13
     }
 }

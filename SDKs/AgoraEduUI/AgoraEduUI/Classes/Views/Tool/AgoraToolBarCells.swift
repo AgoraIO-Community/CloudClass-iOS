@@ -32,7 +32,7 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
     override func updateViewProperties() {
         super.updateViewProperties()
         
-        redDot.backgroundColor = FcrColorGroup.fcr_system_error_color
+        redDot.backgroundColor = FcrUIColorGroup.fcr_system_error_color
     }
     
     required init?(coder: NSCoder) {
@@ -87,10 +87,10 @@ class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
+        
 
-        contentView.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
-        FcrColorGroup.borderSet(layer: contentView.layer)
+        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
+        FcrUIColorGroup.borderSet(layer: contentView.layer)
     }
     
     func highLight() {
@@ -199,10 +199,10 @@ class AgoraToolBarHandsListCell: AgoraToolBarItemCell {
     override func updateViewProperties() {
         super.updateViewProperties()
         
-        let ui = AgoraUIGroup()
-        redLabel.textColor = FcrColorGroup.fcr_text_contrast_color
-        redLabel.font = ui.font.fcr_font10
-        redLabel.backgroundColor = FcrColorGroup.fcr_system_error_color
+        
+        redLabel.textColor = FcrUIColorGroup.fcr_text_contrast_color
+        redLabel.font = FcrUIFontGroup.fcr_font10
+        redLabel.backgroundColor = FcrUIColorGroup.fcr_system_error_color
     }
     
     required init?(coder: NSCoder) {

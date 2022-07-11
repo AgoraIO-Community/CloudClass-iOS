@@ -176,11 +176,11 @@ extension AgoraLoadingView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
-        FcrColorGroup.borderSet(layer: contentView.layer)
-        label.font = ui.font.fcr_font14
+        
+        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
+        FcrUIColorGroup.borderSet(layer: contentView.layer)
+        label.font = FcrUIFontGroup.fcr_font14
     }
 }

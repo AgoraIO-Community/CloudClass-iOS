@@ -16,7 +16,7 @@ protocol FcrUIComponentProtocol {
 struct FcrUIComponentStateBar: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
-    var background: UIColor = FcrColorGroup.fcr_system_background_color
+    var background: UIColor = FcrUIColorGroup.fcr_system_background_color
     
     var network = FcrUIItemNetwork()
     var roomName = FcrUIItemNetwork()
@@ -25,7 +25,7 @@ struct FcrUIComponentStateBar: FcrUIComponentProtocol {
 struct FcrUIComponentBoard: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
-    var background: UIColor = FcrColorGroup.fcr_system_background_color
+    var background: UIColor = FcrUIColorGroup.fcr_system_background_color
     
 //    var pageControl 
 }

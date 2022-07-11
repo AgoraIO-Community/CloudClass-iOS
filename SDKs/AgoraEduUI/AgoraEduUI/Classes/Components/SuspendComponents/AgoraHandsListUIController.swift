@@ -189,12 +189,12 @@ extension AgoraHandsListUIController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        FcrColorGroup.borderSet(layer: view.layer)
         
-        tableView.backgroundColor = FcrColorGroup.fcr_system_component_color
-        tableView.separatorColor = FcrColorGroup.fcr_system_divider_color
-        tableView.layer.cornerRadius = ui.frame.fcr_alert_corner_radius
+        FcrUIColorGroup.borderSet(layer: view.layer)
+        
+        tableView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        tableView.separatorColor = FcrUIColorGroup.fcr_system_divider_color
+        tableView.layer.cornerRadius = FcrUIFrameGroup.fcr_alert_corner_radius
         tableView.clipsToBounds = true
     }
 }

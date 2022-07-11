@@ -104,20 +104,20 @@ extension AgoraToastTipsView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        layer.borderColor = UIColor.white.cgColor
-        layer.borderWidth = ui.frame.fcr_border_width
-        layer.cornerRadius = ui.frame.fcr_toast_corner_radius
-        FcrColorGroup.borderSet(layer: layer)
         
-        titleLabel.textColor = FcrColorGroup.fcr_text_level1_color
-        titleLabel.font = ui.font.fcr_font14
+        layer.borderColor = UIColor.white.cgColor
+        layer.borderWidth = FcrUIFrameGroup.fcr_border_width
+        layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
+        FcrUIColorGroup.borderSet(layer: layer)
+        
+        titleLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
+        titleLabel.font = FcrUIFontGroup.fcr_font14
         
         // TODO: toast color special
         switch type {
         case .notice:
             self.backgroundColor = UIColor(hex: 0xFAFFFF)
-            self.layer.borderColor = FcrColorGroup.fcr_icon_fill_color.cgColor
+            self.layer.borderColor = FcrUIColorGroup.fcr_icon_fill_color.cgColor
             self.imageView.image = UIImage.agedu_named("ic_toast_message_notice")
         case .warning:
             self.backgroundColor = UIColor(hex: 0xFFFBF4)
@@ -129,7 +129,7 @@ extension AgoraToastTipsView: AgoraUIContentContainer {
             self.imageView.image = UIImage.agedu_named("ic_toast_message_error")
         case .success:
             self.backgroundColor = UIColor(hex: 0xFAFFFF)
-            self.layer.borderColor = FcrColorGroup.fcr_icon_fill_color.cgColor
+            self.layer.borderColor = FcrUIColorGroup.fcr_icon_fill_color.cgColor
             self.imageView.image = UIImage.agedu_named("ic_toast_message_notice")
         }
     }

@@ -189,7 +189,7 @@ import AgoraWidget
             chatController.hideInput = true
         }
         addChild(chatController)
-        FcrColorGroup.borderSet(layer: chatController.view.layer)
+        FcrUIColorGroup.borderSet(layer: chatController.view.layer)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
     }
@@ -257,9 +257,9 @@ import AgoraWidget
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        teacherRenderController.view.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        
+        teacherRenderController.view.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
         teacherRenderController.view.clipsToBounds = true
     }
 }

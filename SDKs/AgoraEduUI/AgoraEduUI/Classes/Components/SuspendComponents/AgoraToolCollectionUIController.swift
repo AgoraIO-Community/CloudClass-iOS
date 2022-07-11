@@ -102,12 +102,12 @@ class AgoraToolCollectionUIController: UIViewController {
     // AgoraToolCollectionUIController自身视图为教室中的cell，同时控制工具栏和配置栏
     private lazy var contentView = UIView(frame: .zero)
     private lazy var subCell = AgoraToolCollectionCell(isMain: false,
-                                                       color: UIColor(hex: subToolsView.currentColor) ?? FcrColorGroup.fcr_system_highlight_color,
+                                                       color: UIColor(hex: subToolsView.currentColor) ?? FcrUIColorGroup.fcr_system_highlight_color,
                                                        image: currentSubTool.unselectedImage,
                                                        font: subToolsView.curTextFont.value / 2)
     private lazy var sepLine = UIView()
     private lazy var mainCell = AgoraToolCollectionCell(isMain: true,
-                                                        color: UIColor(hex: subToolsView.currentColor) ?? FcrColorGroup.fcr_system_highlight_color,
+                                                        color: UIColor(hex: subToolsView.currentColor) ?? FcrUIColorGroup.fcr_system_highlight_color,
                                                         image: currentMainTool.unselectedImage)
     
     // 主要工具栏CollectionView（包含教具、白板工具）
@@ -232,10 +232,10 @@ class AgoraToolCollectionUIController: UIViewController {
     
     func updateViewProperties() {
         view.backgroundColor = .clear
-        FcrColorGroup.borderSet(layer: contentView.layer)
-        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = AgoraFrameGroup().fcr_round_container_corner_radius
-        sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        FcrUIColorGroup.borderSet(layer: contentView.layer)
+        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
+        sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
     }
 }
 // MARK: - Widget
@@ -436,7 +436,7 @@ private extension AgoraToolCollectionUIController {
                               color: UIColor(hex: subToolsView.currentColor))
         } else {
             mainCell.setImage(mainSelectedImage,
-                              color: FcrColorGroup.fcr_system_highlight_color)
+                              color: FcrUIColorGroup.fcr_system_highlight_color)
             
             subCell.isHidden = true
             sepLine.isHidden = true

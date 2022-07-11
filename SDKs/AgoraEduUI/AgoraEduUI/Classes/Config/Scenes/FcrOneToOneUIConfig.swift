@@ -7,12 +7,6 @@
 
 import UIKit
 
-var uiConfig: FcrUIConfig = FcrOneToOneUIConfig()
-
-protocol FcrUIConfig {
-    
-}
-
 struct FcrOneToOneUIConfig: FcrUIConfig {
     // State Bar
     var stateBar = FcrUIComponentStateBar()

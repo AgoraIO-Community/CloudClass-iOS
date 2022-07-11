@@ -517,12 +517,12 @@ private extension FcrStreamWindowUIController {
     
     func createRenderView() -> FcrWindowRenderView {
         let renderView = FcrWindowRenderView(frame: .zero)
-        let ui = AgoraUIGroup()
         
-        renderView.backgroundColor = FcrColorGroup.fcr_system_background_color
-        renderView.layer.cornerRadius = ui.frame.fcr_window_corner_radius
-        renderView.layer.borderWidth = ui.frame.fcr_border_width
-        renderView.layer.borderColor = FcrColorGroup.fcr_border_color
+        
+        renderView.backgroundColor = FcrUIColorGroup.fcr_system_background_color
+        renderView.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
+        renderView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
+        renderView.layer.borderColor = FcrUIColorGroup.fcr_border_color
         
         renderView.boardPrivilegeView.isHidden = true
         renderView.micView.isHidden = true

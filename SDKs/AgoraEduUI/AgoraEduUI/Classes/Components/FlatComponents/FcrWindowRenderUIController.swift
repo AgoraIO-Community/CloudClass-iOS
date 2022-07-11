@@ -355,16 +355,16 @@ extension FcrWindowRenderUIController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        collectionView.backgroundColor = FcrColorGroup.fcr_system_foreground_color
+        
+        collectionView.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
         
         prevButton.clipsToBounds = true
         
         prevButton.setImage(UIImage.agedu_named("ic_member_arrow_left"),
                             for: .normal)
         
-        prevButton.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        prevButton.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
         prevButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         
         nextButton.clipsToBounds = true
@@ -372,7 +372,7 @@ extension FcrWindowRenderUIController: AgoraUIContentContainer {
         nextButton.setImage(UIImage.agedu_named("ic_member_arrow_right"),
                             for: .normal)
         
-        nextButton.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        nextButton.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
         nextButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
     }
 }

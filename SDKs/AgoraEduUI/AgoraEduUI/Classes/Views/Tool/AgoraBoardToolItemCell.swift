@@ -154,7 +154,7 @@ class AgoraToolCollectionToolCell: UICollectionViewCell, AgoraUIContentContainer
         if enable {
             imageView.tintColor = nil
         } else {
-            imageView.tintColor = FcrColorGroup.fcr_icon_normal_color
+            imageView.tintColor = FcrUIColorGroup.fcr_icon_normal_color
             imageView.image = i.withRenderingMode(.alwaysTemplate)
         }
     }
@@ -185,8 +185,8 @@ class AgoraToolCollectionToolCell: UICollectionViewCell, AgoraUIContentContainer
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        imageView.tintColor = FcrColorGroup.fcr_icon_normal_color
+        
+        imageView.tintColor = FcrUIColorGroup.fcr_icon_normal_color
     }
 }
 
@@ -251,7 +251,7 @@ class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
             if level != newValue {
                 sizeView.transform = CGAffineTransform(scaleX: scales[newValue],
                                                        y: scales[newValue])
-                let baseBorderWidth = AgoraUIGroup().frame.fcr_border_width
+                let baseBorderWidth = FcrUIFrameGroup.fcr_border_width
                 sizeView.borderWidth = baseBorderWidth / scales[newValue]
             }
         }
@@ -293,12 +293,12 @@ class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        unselectedColor = FcrColorGroup.fcr_icon_normal_color
+        
+        unselectedColor = FcrUIColorGroup.fcr_icon_normal_color
         
         color = unselectedColor
 
-        sizeView.borderWidth = ui.frame.fcr_border_width
+        sizeView.borderWidth = FcrUIFrameGroup.fcr_border_width
         sizeView.borderColor = unselectedColor
         
         if aSelected {
@@ -383,13 +383,13 @@ class AgoraBoardColorItemCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        backView.layer.borderWidth = ui.frame.fcr_border_width
-        backView.layer.cornerRadius = ui.frame.fcr_toast_corner_radius
-        backView.backgroundColor = FcrColorGroup.fcr_system_component_color
         
-        frontView.layer.borderWidth = ui.frame.fcr_border_width
-        frontView.layer.cornerRadius = ui.frame.fcr_toast_corner_radius
+        backView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
+        backView.layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
+        backView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        
+        frontView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
+        frontView.layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
         frontView.clipsToBounds = true
     }
 }

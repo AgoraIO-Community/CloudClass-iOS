@@ -87,23 +87,20 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        let frame = ui.frame
-        
-        let font = ui.font.fcr_font9
+        let font = FcrUIFontGroup.fcr_font9
         
         timeLabel.font = font
-        timeLabel.textColor = FcrColorGroup.fcr_text_level3_color
+        timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
         
-        sepLine.backgroundColor = FcrColorGroup.fcr_system_divider_color
+        sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
         
         titleLabel.font = font
-        titleLabel.textColor = FcrColorGroup.fcr_text_level1_color
+        titleLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
         
-        recordingStateView.backgroundColor = FcrColorGroup.fcr_system_error_color
-        recordingStateView.layer.cornerRadius = ui.frame.fcr_toast_corner_radius
+        recordingStateView.backgroundColor = FcrUIColorGroup.fcr_system_error_color
+        recordingStateView.layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
         
-        recordingLabel.textColor = FcrColorGroup.fcr_text_level3_color
+        recordingLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
         recordingLabel.font = font
     }
 }

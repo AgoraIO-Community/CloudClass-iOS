@@ -29,7 +29,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
 
 @objc public class AgoraEduUIManager: UIViewController, AgoraClassRoomManagement {
     /** 容器视图，用来框出一块16：9的适配区域*/
-    public var contentView: UIView!
+    public var contentView: UIView = UIView()
     
     weak var delegate: AgoraEduUIManagerCallback?
     
@@ -78,44 +78,50 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        let ui = AgoraUIGroup()
-        
         // mode set
-        ui.setMode(uiMode)
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = (uiMode == .agoraDark) ? .dark : .light
-        }
+        UIMode = uiMode
         
-        self.view.backgroundColor = FcrColorGroup.fcr_system_background_color
+        
+        
+        view.backgroundColor = FcrUIColorGroup.fcr_system_background_color
         
         // create content view
-        self.contentView = UIView()
-        contentView.borderWidth = ui.frame.fcr_border_width
-        contentView.layer.borderColor = FcrColorGroup.fcr_border_color
-        contentView.backgroundColor = FcrColorGroup.fcr_system_foreground_color
-        self.view.addSubview(self.contentView)
-        let width = max(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-        let height = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
-        if width/height > 667.0/375.0 {
+        contentView.borderWidth = FcrUIFrameGroup.fcr_border_width
+        contentView.layer.borderColor = FcrUIColorGroup.fcr_border_color
+        contentView.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
+        view.addSubview(contentView)
+        
+        let width = max(UIScreen.main.bounds.width,
+                        UIScreen.main.bounds.height)
+        
+        let height = min(UIScreen.main.bounds.width,
+                         UIScreen.main.bounds.height)
+        
+        if (width / height) > (667.0 / 375.0) {
             contentView.mas_makeConstraints { make in
                 make?.center.equalTo()(contentView.superview)
                 make?.height.equalTo()(height)
-                make?.width.equalTo()(height * 16.0/9.0)
+                make?.width.equalTo()(height * 16.0 / 9.0)
             }
         } else {
             contentView.mas_makeConstraints { make in
                 make?.center.equalTo()(contentView.superview)
                 make?.width.equalTo()(width)
-                make?.height.equalTo()(width * 9.0/16.0)
+                make?.height.equalTo()(width * 9.0 / 16.0)
             }
         }
+        
         // create ctrl mask view
         ctrlMaskView = UIView(frame: .zero)
         ctrlMaskView.isHidden = true
-        let tap = UITapGestureRecognizer(
-            target: self, action: #selector(onClickCtrlMaskView(_:)))
+        
+        let tap = UITapGestureRecognizer(target: self,
+                                         action: #selector(onClickCtrlMaskView(_:)))
+        
         ctrlMaskView.addGestureRecognizer(tap)
+        
         view.addSubview(ctrlMaskView)
+        
         ctrlMaskView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(self.view)
         }
@@ -137,30 +143,43 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         // 算出落点的frame
         let rect = formView.convert(formView.bounds,
                                     to: self.view)
-        var point = CGPoint(x: rect.minX - 8 - animaView.frame.size.width, y: rect.minY)
+        
+        var point = CGPoint(x: rect.minX - 8 - animaView.frame.size.width,
+                            y: rect.minY)
+        
         let estimateFrame = CGRect(origin: point,
-                                 size: animaView.frame.size)
+                                   size: animaView.frame.size)
+        
         if estimateFrame.maxY > self.contentView.frame.maxY - 10 {
             let gap: CGFloat = UIDevice.current.agora_is_pad ? 20 : 15
             point.y = self.contentView.frame.maxY - gap - animaView.bounds.height
         }
-        animaView.frame = CGRect(origin: point, size: animaView.frame.size)
+        
+        animaView.frame = CGRect(origin: point,
+                                 size: animaView.frame.size)
         // 运算动画锚点
-        let anchorConvert = formView.convert(formView.bounds, to: animaView)
-        let anchor = CGPoint(x: 1, y: anchorConvert.origin.y/animaView.frame.height)
+        let anchorConvert = formView.convert(formView.bounds,
+                                             to: animaView)
+        
+        let anchor = CGPoint(x: 1,
+                             y: anchorConvert.origin.y / animaView.frame.height)
         // 开始动画运算
         let oldFrame = animaView.frame
+        
         let position = CGPoint(x: animaView.layer.position.x + (anchor.x - 0.5) * animaView.bounds.width,
                                y: animaView.layer.position.y + (anchor.y - 0.5) * animaView.bounds.height)
+        
         animaView.layer.anchorPoint = anchor
         animaView.frame = oldFrame
         animaView.alpha = 0.2
-        animaView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        animaView.transform = CGAffineTransform(scaleX: 0.8,
+                                                y: 0.8)
+        
         self.view.layoutIfNeeded()
-        UIView.animate(withDuration: 0.1) {
+        
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
             animaView.transform = .identity
             animaView.alpha = 1
-        } completion: { finish in
         }
     }
     
@@ -195,20 +214,3 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         }
     }
 }
-//
-//// MARK: - AgoraUIContentContainer
-//extension AgoraEduUIManager: AgoraUIContentContainer {
-//    func initViews() {
-//        <#code#>
-//    }
-//    
-//    func initViewFrame() {
-//        <#code#>
-//    }
-//    
-//    func updateViewProperties() {
-//        <#code#>
-//    }
-//    
-//    
-//}

@@ -91,7 +91,7 @@ class AgoraUserListItemCell: UITableViewCell {
             v.setImageForAllStates(image)
         }
         v.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        v.setTitleColor(FcrColorGroup.fcr_text_disabled_color,
+        v.setTitleColor(FcrUIColorGroup.fcr_text_disabled_color,
                         for: .normal)
         v.addTarget(self,
                     action: #selector(onClickReward(_:)),
@@ -156,9 +156,9 @@ private extension AgoraUserListItemCell {
         }
         nameLabel.text = model.name
         
-        let ui = AgoraUIGroup()
+        
         let onColor = UIColor(hex: 0x0073FF)
-        let offColor = FcrColorGroup.fcr_system_error_color
+        let offColor = FcrUIColorGroup.fcr_system_error_color
         let authOffColor = UIColor(hex: 0xB3D6FF)
         let disabledColor = UIColor(hex: 0xE2E2EE)
         for fn in fns {
@@ -334,10 +334,10 @@ extension AgoraUserListItemCell: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        backgroundColor = FcrColorGroup.fcr_system_component_color
-        nameLabel.textColor = FcrColorGroup.fcr_text_level1_color
-        nameLabel.font = ui.font.fcr_font12
+        
+        backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        nameLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
+        nameLabel.font = FcrUIFontGroup.fcr_font12
     }
 }

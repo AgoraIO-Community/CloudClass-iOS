@@ -61,10 +61,10 @@ extension AgoraHandsUpTipsView:AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        FcrColorGroup.borderSet(layer: layer)
         
-        label.font = ui.font.fcr_font12
-        label.textColor = FcrColorGroup.fcr_text_level1_color
+        FcrUIColorGroup.borderSet(layer: layer)
+        
+        label.font = FcrUIFontGroup.fcr_font12
+        label.textColor = FcrUIColorGroup.fcr_text_level1_color
     }
 }

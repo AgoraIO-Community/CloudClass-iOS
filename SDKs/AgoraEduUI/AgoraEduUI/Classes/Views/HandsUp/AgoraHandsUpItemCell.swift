@@ -84,8 +84,8 @@ extension AgoraHandsUpItemCell: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
-        nameLabel.textColor = FcrColorGroup.fcr_text_level1_color
-        nameLabel.font = ui.font.fcr_font12
+        
+        nameLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
+        nameLabel.font = FcrUIFontGroup.fcr_font12
     }
 }

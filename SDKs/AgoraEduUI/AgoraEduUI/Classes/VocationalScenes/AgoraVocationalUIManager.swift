@@ -273,7 +273,7 @@ extension AgoraVocationalUIManager: AgoraEduStreamHandler {
             chatController.hideInput = true
         }
         addChild(chatController)
-        FcrColorGroup.borderSet(layer: chatController.view.layer)
+        FcrUIColorGroup.borderSet(layer: chatController.view.layer)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
     }

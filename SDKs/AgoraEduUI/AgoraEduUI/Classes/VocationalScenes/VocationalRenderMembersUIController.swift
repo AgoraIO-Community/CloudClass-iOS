@@ -377,15 +377,15 @@ class VocationalRenderMembersUIController: UIViewController {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
+        
         
         guard expandFlag else {
             return
         }
         
-        leftButton.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        leftButton.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
         leftButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        rightButton.layer.cornerRadius = ui.frame.fcr_window_corner_radius
+        rightButton.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
         rightButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
     }
 }

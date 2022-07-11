@@ -250,14 +250,14 @@ class AgoraRenderMenuUIController: UIViewController {
     }
     
     func updateViewProperties() {
-        let ui = AgoraUIGroup()
         
-        view.backgroundColor = FcrColorGroup.fcr_system_component_color
-        view.layer.cornerRadius = ui.frame.fcr_round_container_corner_radius
         
-        contentView.backgroundColor = FcrColorGroup.fcr_system_component_color
+        view.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        view.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
         
-        FcrColorGroup.borderSet(layer: view.layer)
+        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        
+        FcrUIColorGroup.borderSet(layer: view.layer)
     }
 }
 
