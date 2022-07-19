@@ -17,7 +17,7 @@ enum AgoraRenderUserState {
     
     var image: UIImage? {
         switch self {
-        case .none:   return UIImage.agedu_named("ic_member_no_user")
+        case .none:   return UIConfig.studentVideo.mask.noUserImage
         default:      return nil
         }
     }
@@ -72,7 +72,7 @@ enum FcrBoardPrivilegeViewState {
     
     static func create(_ privilege: Bool) -> FcrBoardPrivilegeViewState {
         if privilege {
-            let image = UIImage.agedu_named("ic_board_privilege")!
+            let image = UIConfig.studentVideo.mask.boardAuthWindowImage!
             return .has(image)
         } else {
             return .none
@@ -199,14 +199,15 @@ enum AgoraTeachingAidType {
     case answerSheet
     
     func cellImage() -> UIImage? {
+        let config = UIConfig.toolBox
         switch self {
-        case .cloudStorage:     return UIImage.agedu_named("toolcollection_enabled_cloud")
-        case .saveBoard:        return UIImage.agedu_named("toolcollection_enabled_save")
-        case .record:           return UIImage.agedu_named("ic_toolbox_record")
-        case .vote:             return UIImage.agedu_named("ic_toolbox_vote")
-        case .countDown:        return UIImage.agedu_named("ic_toolbox_clock")
-        case .answerSheet:      return UIImage.agedu_named("ic_toolbox_answer")
-        default: return nil
+        case .cloudStorage:     return config.cloudStorageImage
+        case .saveBoard:        return UIConfig.netlessBoard.save.image
+        case .record:           return config.recordImage
+        case .vote:             return config.voteImage
+        case .countDown:        return config.countDownImage
+        case .answerSheet:      return config.answerSheetImage
+        default:                return nil
         }
     }
     
@@ -243,47 +244,135 @@ enum AgoraUserListFunction: Int {
 
 // MARK: - ToolBar
 enum FcrToolBarItemType {
-    case setting, nameRoll, message, handsup, handsList, help
+    case setting, roster, message, waveHands, handsList, help
     
     var selectedImage: UIImage? {
-        var imageName = ""
+        let config = UIConfig.toolBar
         switch self {
-        case .setting:          imageName = "toolbar_selected_setting"
-        case .nameRoll:         imageName = "toolbar_selected_name_roll"
-        case .message:          imageName = "toolbar_selected_message"
-        case .handsList:        imageName = "toolbar_selected_hands_list"
-        default:                break
+        case .setting:          return config.setting.selectedImage
+        case .roster:           return UIConfig.roster.selectedImage
+        case .message:          return config.message.selectedImage
+        case .handsList:        return config.handsList.selectedImage
+        default:                return nil
         }
-        return UIImage.agedu_named(imageName)
     }
     
     var unselectedImage: UIImage? {
-        var imageName = ""
+        let config = UIConfig.toolBar
         switch self {
-        case .setting:          imageName = "toolbar_unselected_setting"
-        case .nameRoll:         imageName = "toolbar_unselected_name_roll"
-        case .message:          imageName = "toolbar_unselected_message"
-        case .handsup:          imageName = "toolbar_unselected_wave_hands"
-        case .handsList:        imageName = "toolbar_unselected_hands_list"
-        case .help:             imageName = "toolbar_enabled_help"
-        default:                break
+        case .setting:          return config.setting.normalImage
+        case .roster:           return UIConfig.roster.normalImage
+        case .message:          return config.message.normalImage
+        case .waveHands:        return UIConfig.raiseHand.normalImage
+        case .handsList:        return config.handsList.normalImage
+        case .help:             return UIConfig.breakoutRoom.help.enabledImage
+        default:                return nil
         }
-        return UIImage.agedu_named(imageName)
     }
     
     var disabledImage: UIImage? {
-        var imageName = ""
+        let config = UIConfig.toolBar
         switch self {
-        case .help:             imageName = "toolbar_disabled_help"
-        default:                break
+        case .help:             return UIConfig.breakoutRoom.help.disabledImage
+        default:                return nil
         }
-        return UIImage.agedu_named(imageName)
     }
     
     var isOnceKind: Bool {
         switch self {
         case .help:     return true
         default:        return false
+        }
+    }
+}
+
+// MARK: - ToolCollection
+enum AgoraBoardToolPaintType: Int, CaseIterable {
+    case pencil, line, rect, circle, pentagram, rhombus, arrow, triangle
+    
+    static var allCases: [AgoraBoardToolPaintType] = [.pencil, .line, .rect, .circle, .pentagram, .rhombus, .arrow, .triangle]
+    
+    var widgetShape: FcrBoardWidgetShapeType {
+        switch self {
+        case .pencil:       return .curve
+        case .line:         return .straight
+        case .rect:         return .rectangle
+        case .circle:       return .ellipse
+        case .pentagram:    return .pentagram
+        case .rhombus:      return .rhombus
+        case .arrow:        return .arrow
+        case .triangle:     return .triangle
+        }
+    }
+    
+    var image: UIImage? {
+        let config = UIConfig.netlessBoard
+        switch self {
+        case .pencil:       return config.pencil.image
+        case .line:         return config.line.image
+        case .rect:         return config.rect.image
+        case .circle:       return config.circle.image
+        case .pentagram:    return config.pentagram.image
+        case .rhombus:      return config.rhombus.image
+        case .arrow:        return config.arrow.image
+        case .triangle:     return config.triangle.image
+        }
+    }
+}
+
+enum AgoraBoardToolMainType: Int, CaseIterable {
+    case clicker, area, paint, text, rubber, clear, pre, next
+    
+    var unselectedImage: UIImage? {
+        let config = UIConfig.netlessBoard
+        switch self {
+        case .clicker:  return config.mouse.unselectedImage
+        case .area:     return config.selector.unselectedImage
+        case .paint:    return config.paint.unselectedImage
+        case .text:     return config.text.image
+        case .rubber:   return config.eraser.unselectedImage
+        case .clear:    return config.clear.enabledImage
+        case .pre:      return config.prev.enabledImage
+        case .next:     return config.next.enabledImage
+        default:        return nil
+        }
+    }
+    
+    var selectedImage: UIImage? {
+        let config = UIConfig.netlessBoard
+        switch self {
+        case .clicker:  return config.mouse.selectedImage
+        case .area:     return config.selector.selectedImage
+        case .paint:    return config.paint.selectedImage
+        case .text:     return config.text.image
+        case .rubber:   return config.eraser.selectedImage
+        default:        return nil
+        }
+    }
+    
+    var disabledImage: UIImage? {
+        let config = UIConfig.netlessBoard
+        switch self {
+        case .pre:      return config.prev.disabledImage
+        case .next:     return config.next.disabledImage
+        default:        return nil
+        }
+    }
+    
+    var widgetType: FcrBoardWidgetToolType? {
+        switch self {
+        case .clicker:  return .clicker
+        case .area:     return .area
+        case .rubber:   return .eraser
+        default:
+            return nil
+        }
+    }
+    
+    var needUpdateCell: Bool {
+        switch self {
+        case .clicker, .area, .paint, .text, .rubber:  return true
+        case .clear, .pre ,.next:                      return false
         }
     }
 }

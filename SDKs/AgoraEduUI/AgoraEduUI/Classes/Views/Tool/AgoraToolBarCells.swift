@@ -32,7 +32,7 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
     override func updateViewProperties() {
         super.updateViewProperties()
         
-        redDot.backgroundColor = FcrUIColorGroup.fcr_system_error_color
+        redDot.backgroundColor = UIConfig.toolBar.message.dotColor
     }
     
     required init?(coder: NSCoder) {
@@ -46,9 +46,9 @@ class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
 
     var aSelected = false {
         didSet {
-            let selectedName = aSelected ? "selected" : "unselected"
-            let imageName = "toolbar_\(selectedName)_bg"
-            bgView.image = UIImage.agedu_named(imageName)
+            let config = UIConfig.toolBar.cell
+            let image = aSelected ? config.selectedImage : config.normalImage
+            bgView.image = image
         }
     }
             
@@ -65,14 +65,7 @@ class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func initViews() {
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = UIDevice.current.agora_is_dark ? .dark : .light
-        }
-        let selectedName = aSelected ? "selected" : "unselected"
-        let imageName = "toolbar_\(selectedName)_bg"
-        bgView.image = UIImage.agedu_named(imageName)
         contentView.addSubview(bgView)
-        
         contentView.addSubview(iconView)
     }
     
@@ -87,10 +80,15 @@ class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.toolBar.cell
+        contentView.layer.cornerRadius = config.cornerRadius
         
-
-        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
-        FcrUIColorGroup.borderSet(layer: contentView.layer)
+        contentView.layer.shadowColor = config.shadow.color
+        contentView.layer.shadowOffset = config.shadow.offset
+        contentView.layer.shadowOpacity = config.shadow.opacity
+        contentView.layer.shadowRadius = config.shadow.radius
+        
+        bgView.image = config.normalImage
     }
     
     func highLight() {
@@ -199,10 +197,11 @@ class AgoraToolBarHandsListCell: AgoraToolBarItemCell {
     override func updateViewProperties() {
         super.updateViewProperties()
         
+        let config = UIConfig.toolBar.handsList.label
         
-        redLabel.textColor = FcrUIColorGroup.fcr_text_contrast_color
-        redLabel.font = FcrUIFontGroup.fcr_font10
-        redLabel.backgroundColor = FcrUIColorGroup.fcr_system_error_color
+        redLabel.textColor = config.color
+        redLabel.font = config.font
+        redLabel.backgroundColor = config.backgroundColor
     }
     
     required init?(coder: NSCoder) {
@@ -273,20 +272,19 @@ class AgoraToolCollectionCell: UIView {
     // 对于子配置cell，若设置图片，则隐藏font视图，显示image和color视图
     func setImage(_ image: UIImage?,
                   color: UIColor?) {
-        let finalColor = UIColor.fakeWhite(color)
         if isMain {
             guard let i = image else {
                 return
             }
             imageView.image = i.withRenderingMode(.alwaysTemplate)
-            imageView.tintColor = finalColor
+            imageView.tintColor = color
         } else {
             imageView.image = image
             
             fontLabel.isHidden = true
             imageView.isHidden = false
             colorView.isHidden = false
-            colorView.backgroundColor = finalColor
+            colorView.backgroundColor = color
         }
     }
     

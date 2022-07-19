@@ -28,6 +28,5 @@ target 'AgoraEduUI' do
 
   pod 'Masonry', '1.1.0'
   pod 'SnapKit', "5.0.1"
-  pod 'FLAnimatedImage', '1.0.16'
   pod 'SwifterSwift', "5.2.0" 
 end

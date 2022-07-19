@@ -73,12 +73,24 @@ class FcrSettingsView: UIView {
 
 extension FcrSettingsView: AgoraUIContentContainer {
     func initViews() {
+        let config = UIConfig.setting
         // Camera
         addSubview(cameraLabel)
         addSubview(cameraSwitch)
+        cameraLabel.agora_enable = config.camera.enable
+        cameraLabel.agora_visible = config.camera.visible
+        cameraSwitch.agora_enable = config.camera.enable
+        cameraSwitch.agora_visible = config.camera.visible
+        
         addSubview(cameraDirectionLabel)
         addSubview(frontCameraButton)
         addSubview(backCameraButton)
+        cameraDirectionLabel.agora_enable = config.camera.direction.enable
+        cameraDirectionLabel.agora_visible = config.camera.direction.visible
+        frontCameraButton.agora_enable = config.camera.direction.enable
+        frontCameraButton.agora_visible = config.camera.direction.visible
+        backCameraButton.agora_enable = config.camera.direction.enable
+        backCameraButton.agora_visible = config.camera.direction.visible
         
         frontCameraButton.isEnabled = cameraSwitch.isOn
         backCameraButton.isEnabled = cameraSwitch.isOn
@@ -101,13 +113,23 @@ extension FcrSettingsView: AgoraUIContentContainer {
         // Mic
         addSubview(micLabel)
         addSubview(micSwitch)
+        micLabel.agora_enable = config.microphone.enable
+        micLabel.agora_visible = config.microphone.visible
+        micSwitch.agora_enable = config.microphone.enable
+        micSwitch.agora_visible = config.microphone.visible
         
         // Speaker
         addSubview(speakerLabel)
         addSubview(speakerSwitch)
+        speakerLabel.agora_enable = config.speaker.enable
+        speakerLabel.agora_visible = config.speaker.visible
+        speakerSwitch.agora_enable = config.speaker.enable
+        speakerSwitch.agora_visible = config.speaker.visible
 
         // Exit
         addSubview(exitButton)
+        exitButton.agora_enable = config.exit.enable
+        exitButton.agora_visible = config.exit.visible
     }
     
     func initViewFrame() {
@@ -194,40 +216,36 @@ extension FcrSettingsView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        
-        
-        let switchTintColor = FcrUIColorGroup.fcr_icon_fill_color
-        let labelFont = FcrUIFontGroup.fcr_font13
-        let labelColor = FcrUIColorGroup.fcr_text_level1_color
+        let config = UIConfig.setting
         
         // Camera
         cameraLabel.text = "fcr_media_camera".agedu_localized()
-        cameraLabel.textColor = labelColor
-        cameraLabel.font = labelFont
+        cameraLabel.textColor = config.camera.title.color
+        cameraLabel.font = config.camera.title.font
         
         cameraDirectionLabel.text = "fcr_media_camera_direction".agedu_localized()
-        cameraDirectionLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
-        cameraDirectionLabel.font = labelFont
+        cameraDirectionLabel.textColor = config.camera.direction.titleColor
+        cameraDirectionLabel.font = config.camera.direction.font
         
-        cameraSwitch.onTintColor = switchTintColor
+        cameraSwitch.onTintColor = config.camera.tintColor
         
-        frontCameraButton.titleLabel?.font = labelFont
+        frontCameraButton.titleLabel?.font = config.camera.direction.font
         frontCameraButton.setTitle("fcr_media_camera_direction_front".agedu_localized(),
                                    for: .normal)
         
-        backCameraButton.titleLabel?.font = labelFont
+        backCameraButton.titleLabel?.font = config.camera.direction.font
         backCameraButton.setTitle("fcr_media_camera_direction_back".agedu_localized(),
                                for: .normal)
         
         for button in [frontCameraButton, backCameraButton] {
-            button.setTitleColor(FcrUIColorGroup.fcr_text_contrast_color,
+            button.setTitleColor(config.camera.direction.selectedLabelColor,
                                  for: .selected)
-            button.setTitleColor(FcrUIColorGroup.fcr_text_level2_color,
+            button.setTitleColor(config.camera.direction.normalLabelColor,
                                  for: .normal)
-            let normalColorImage = UIImage(color: FcrUIColorGroup.fcr_icon_normal_color.withAlphaComponent(0.1),
+            let normalColorImage = UIImage(color: config.camera.direction.normalBackgroundColor,
                                            size: CGSize(width: 1,
                                                         height: 1))
-            let selectedColorImage = UIImage(color: FcrUIColorGroup.fcr_icon_fill_color,
+            let selectedColorImage = UIImage(color: config.camera.direction.selectedBackgroundColor,
                                            size: CGSize(width: 1,
                                                         height: 1))
                                            
@@ -236,35 +254,35 @@ extension FcrSettingsView: AgoraUIContentContainer {
             button.setBackgroundImage(selectedColorImage,
                                       for: .selected)
             
-            button.layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
+            button.layer.cornerRadius = config.camera.direction.cornerRadius
             button.clipsToBounds = true
         }
         
         // Sep
-        sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        sepLine.backgroundColor = FcrUIColorGroup.systemDividerColor
         
         // Mic
-        micLabel.textColor = labelColor
+        micLabel.textColor = config.microphone.title.color
         micLabel.text = "fcr_media_mic".agedu_localized()
-        micLabel.font = labelFont
+        micLabel.font = config.microphone.title.font
         
-        micSwitch.onTintColor = switchTintColor
+        micSwitch.onTintColor = config.microphone.tintColor
         
         // Speaker
-        speakerLabel.textColor = labelColor
+        speakerLabel.textColor = config.speaker.title.color
         speakerLabel.text = "fcr_media_speaker".agedu_localized()
-        speakerLabel.font = labelFont
+        speakerLabel.font = config.speaker.title.font
         
-        speakerSwitch.onTintColor = switchTintColor
+        speakerSwitch.onTintColor = config.microphone.tintColor
         
         // Exit
-        exitButton.titleLabel?.font = labelFont
+        exitButton.titleLabel?.font = config.exit.titleFont
         exitButton.setTitle("fcr_room_leave_room".agedu_localized(),
                             for: .normal)
-        exitButton.backgroundColor = FcrUIColorGroup.fcr_icon_fill_color
-        exitButton.layer.cornerRadius = FcrUIFrameGroup.fcr_button_corner_radius
+        exitButton.backgroundColor = config.exit.backgroundColor
+        exitButton.layer.cornerRadius = config.exit.cornerRadius
         exitButton.clipsToBounds = true
-        exitButton.setTitleColor(FcrUIColorGroup.fcr_text_contrast_color,
+        exitButton.setTitleColor(config.exit.titleColor,
                                  for: .normal)
     }
 }

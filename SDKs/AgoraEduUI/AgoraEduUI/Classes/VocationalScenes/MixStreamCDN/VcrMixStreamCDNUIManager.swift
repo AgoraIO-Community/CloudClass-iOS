@@ -31,10 +31,6 @@ import AgoraWidget
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        initViews()
-        initViewFrame()
-        updateViewProperties()
-        
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
@@ -58,10 +54,8 @@ import AgoraWidget
             AgoraLoading.loading()
         }
     }
-}
-// MARK: - AgoraUIContentContainer
-@objc extension VcrMixStreamCDNUIManager: AgoraUIContentContainer {
-    func initViews() {
+    
+    override func initViews() {
         stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
@@ -75,7 +69,6 @@ import AgoraWidget
             chatController.hideInput = true
         }
         addChild(chatController)
-        FcrUIColorGroup.borderSet(layer: chatController.view.layer)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
         
@@ -85,7 +78,7 @@ import AgoraWidget
         contentView.addSubview(renderController.view)
     }
     
-    func initViewFrame() {
+    override func initViewFrame() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(34))
@@ -100,9 +93,5 @@ import AgoraWidget
             make?.left.bottom().equalTo()(0)
             make?.right.equalTo()(chatController.view.mas_left)
         }
-    }
-    
-    func updateViewProperties() {
-        
     }
 }

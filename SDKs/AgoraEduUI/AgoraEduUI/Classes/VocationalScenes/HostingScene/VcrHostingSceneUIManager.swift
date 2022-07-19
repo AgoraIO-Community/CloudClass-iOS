@@ -32,10 +32,6 @@ import AgoraWidget
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        initViews()
-        initViewFrame()
-        updateViewProperties()
-        
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
@@ -53,17 +49,7 @@ import AgoraWidget
         }
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if isJoinedRoom == false {
-            AgoraLoading.loading()
-        }
-    }
-    
-}
-// MARK: - AgoraUIContentContainer
-@objc extension VcrHostingSceneUIManager: AgoraUIContentContainer {
-    func initViews() {
+    override func initViews() {
         stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
@@ -77,7 +63,6 @@ import AgoraWidget
             chatController.hideInput = true
         }
         addChild(chatController)
-        FcrUIColorGroup.borderSet(layer: chatController.view.layer)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
         
@@ -88,7 +73,7 @@ import AgoraWidget
         contentView.addSubview(renderController.view)
     }
     
-    func initViewFrame() {
+    override func initViewFrame() {
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(34))
@@ -105,7 +90,10 @@ import AgoraWidget
         }
     }
     
-    func updateViewProperties() {
-        
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isJoinedRoom == false {
+            AgoraLoading.loading()
+        }
     }
 }

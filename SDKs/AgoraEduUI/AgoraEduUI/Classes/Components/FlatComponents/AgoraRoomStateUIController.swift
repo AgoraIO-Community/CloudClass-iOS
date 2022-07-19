@@ -64,22 +64,18 @@ class AgoraRoomStateUIController: UIViewController {
 
 extension AgoraRoomStateUIController: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
-        stateView.netStateView.image = UIImage.agedu_named("ic_network_good")
         view.addSubview(stateView)
-    }
-    
-    func initViewFrame() {
-        stateView.mas_remakeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
-    }
-    
-    func updateViewProperties() {
-        view.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
-        view.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
-        view.layer.borderColor = FcrUIColorGroup.fcr_border_color
         
-        stateView.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
+        let recordingTitle = "fcr_record_recording".agedu_localized()
+        stateView.recordingLabel.text = recordingTitle
+        
+        let recodingIsVisible: Bool = (contextPool.room.getRecordingState() == .started)
+        
+        if let sub = subRoom {
+            stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
+        } else {
+            stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
+        }
         
         var roomTitle: String
         switch contextPool.room.getRoomInfo().roomType {
@@ -90,21 +86,33 @@ extension AgoraRoomStateUIController: AgoraUIContentContainer, AgoraUIActivity {
         }
         stateView.titleLabel.text = roomTitle
         
-        stateView.titleLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
-        stateView.timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+        let config = UIConfig.stateBar
         
-        let recordingTitle = "fcr_record_recording".agedu_localized()
-        stateView.recordingLabel.text = recordingTitle
+        stateView.netStateView.agora_enable = config.networkState.enable
+        stateView.netStateView.agora_visible = config.networkState.visible
+        stateView.netStateView.image = config.networkState.disconnectedImage
         
-        let isHidden: Bool = !((contextPool.room.getRecordingState() == .started))
-        stateView.recordingStateView.isHidden = isHidden
-        stateView.recordingLabel.isHidden = isHidden
+        stateView.timeLabel.agora_enable = config.scheduleTime.enable
+        stateView.timeLabel.agora_visible = config.scheduleTime.visible
         
-        if let sub = subRoom {
-            stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
-        } else {
-            stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
+        stateView.titleLabel.agora_enable = config.roomName.enable
+        stateView.titleLabel.agora_visible = config.roomName.visible
+        
+        stateView.recordingStateView.agora_enable = config.recordingState.enable
+        stateView.recordingStateView.agora_visible = recodingIsVisible
+        
+        stateView.recordingLabel.agora_enable = config.recordingState.enable
+        stateView.recordingLabel.agora_visible = recodingIsVisible
+    }
+    
+    func initViewFrame() {
+        stateView.mas_remakeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
         }
+    }
+    
+    func updateViewProperties() {
+        
     }
     
     func viewWillActive() {
@@ -137,7 +145,7 @@ private extension AgoraRoomStateUIController {
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch info.state {
         case .before:
-            stateView.timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+            stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
             if info.startTime == 0 {
                 stateView.timeLabel.text = "fcr_room_class_not_start".agedu_localized()
             } else {
@@ -146,7 +154,7 @@ private extension AgoraRoomStateUIController {
                 stateView.timeLabel.text = text + timeString(from: time)
             }
         case .after:
-            stateView.timeLabel.textColor = FcrUIColorGroup.fcr_system_error_color
+            stateView.timeLabel.textColor = FcrUIColorGroup.systemErrorColor
             let time = realTime - info.startTime
             let text = "fcr_room_class_over".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)
@@ -167,7 +175,7 @@ private extension AgoraRoomStateUIController {
                 AgoraToast.toast(msg: final)
             }
         case .during:
-            stateView.timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+            stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
             let time = realTime - info.startTime
             let text = "fcr_room_class_started".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)
@@ -209,10 +217,10 @@ extension AgoraRoomStateUIController: AgoraEduRoomHandler {
     }
     
     func onRecordingStateUpdated(state: FcrRecordingState) {
-        let isHidden: Bool = !(state == .started)
+        let isVisible: Bool = (state == .started)
         
-        stateView.recordingLabel.isHidden = isHidden
-        stateView.recordingStateView.isHidden = isHidden
+        stateView.recordingLabel.agora_visible = isVisible
+        stateView.recordingStateView.agora_visible = isVisible
     }
 }
 
@@ -245,24 +253,27 @@ extension AgoraRoomStateUIController: AgoraEduMonitorHandler {
         var image: UIImage?
         switch state {
         case .disconnected, .reconnecting:
-            image = UIImage.agedu_named("ic_network_down")
+            image = UIConfig.stateBar.networkState.disconnectedImage
         default:
             return
         }
         stateView.netStateView.image = image
     }
+    
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
+        let networkConfig = UIConfig.stateBar.networkState
+        
         var image: UIImage?
         
         switch quality {
         case .unknown:
-            image = UIImage.agedu_named("ic_network_unknow")
+            image = networkConfig.unknownImage
         case .good:
-            image = UIImage.agedu_named("ic_network_good")
+            image = networkConfig.goodImage
         case .bad:
-            image = UIImage.agedu_named("ic_network_bad")
+            image = networkConfig.badImage
         case .down:
-            image = UIImage.agedu_named("ic_network_down")
+            image = networkConfig.disconnectedImage
         default:
             return
         }

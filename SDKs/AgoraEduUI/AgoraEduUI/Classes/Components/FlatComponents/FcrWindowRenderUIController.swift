@@ -29,7 +29,7 @@ extension FcrWindowRenderUIControllerDelegate {
     }
 }
 
-class FcrWindowRenderUIController: UIViewController {
+class FcrWindowRenderUIController: UIViewController, AgoraUIContentContainer {
     // Data
     private(set) var dataSource: [FcrWindowRenderViewState] {
         didSet {
@@ -216,12 +216,12 @@ class FcrWindowRenderUIController: UIViewController {
             
             dataSource.insert(item,
                               at: index)
-
+            
             let indexPath = IndexPath(item: index,
                                       section: 0)
-
+            
             collectionView.insertItems(at: [indexPath])
-
+            
             onDidAddItem(item)
         }
     }
@@ -316,10 +316,8 @@ class FcrWindowRenderUIController: UIViewController {
                                 renderView: FcrWindowRenderVideoView) {
         
     }
-}
-
-// MARK: - AgoraUIContentContainer
-extension FcrWindowRenderUIController: AgoraUIContentContainer {
+    
+    // MARK: - AgoraUIContentContainer
     func initViews() {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.showsVerticalScrollIndicator = false
@@ -332,14 +330,14 @@ extension FcrWindowRenderUIController: AgoraUIContentContainer {
         
         view.addSubview(collectionView)
         
-        prevButton.isHidden = true
+        prevButton.agora_visible = false
         prevButton.addTarget(self,
                              action: #selector(onClickPrev(_:)),
                              for: .touchUpInside)
         
         view.addSubview(prevButton)
         
-        nextButton.isHidden = true
+        nextButton.agora_visible = false
         
         nextButton.addTarget(self,
                              action: #selector(onClickNext(_:)),
@@ -355,26 +353,28 @@ extension FcrWindowRenderUIController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.studentVideo
         
-        
-        collectionView.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
+        view.backgroundColor = config.backgroundColor
+        collectionView.backgroundColor = config.backgroundColor
         
         prevButton.clipsToBounds = true
         
-        prevButton.setImage(UIImage.agedu_named("ic_member_arrow_left"),
+        prevButton.setImage(config.moveButton.prevImage,
                             for: .normal)
         
-        prevButton.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
-        prevButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        prevButton.layer.cornerRadius = config.moveButton.cornerRadius
+        prevButton.backgroundColor = config.moveButton.backgroundColor
         
         nextButton.clipsToBounds = true
         
-        nextButton.setImage(UIImage.agedu_named("ic_member_arrow_right"),
+        nextButton.setImage(config.moveButton.nextImage,
                             for: .normal)
         
-        nextButton.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
-        nextButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        nextButton.layer.cornerRadius = config.moveButton.cornerRadius
+        nextButton.backgroundColor = config.moveButton.backgroundColor
     }
+    
 }
 
 private extension FcrWindowRenderUIController {
@@ -389,17 +389,17 @@ private extension FcrWindowRenderUIController {
                     with item: FcrWindowRenderViewState) {
         switch item {
         case .none:
-            cell.noneView.isHidden = false
-            cell.renderView.isHidden = true
+            cell.noneView.agora_visible = true
+            cell.renderView.agora_visible = false
         case .show(let data):
-            cell.noneView.isHidden = true
-            cell.renderView.isHidden = false
+            cell.noneView.agora_visible = false
+            cell.renderView.agora_visible = true
             
             updateRenderView(cell.renderView,
                              data: data)
         case .hide(let data):
-            cell.noneView.isHidden = true
-            cell.renderView.isHidden = true
+            cell.noneView.agora_visible = false
+            cell.renderView.agora_visible = false
         }
         
         guard reverseItem else {
@@ -424,16 +424,16 @@ private extension FcrWindowRenderUIController {
         
         switch data.videoState {
         case .none(let image):
-            renderView.videoMaskView.isHidden = false
+            renderView.videoMaskView.agora_visible = true
             renderView.videoMaskView.image = image
         case .hasStreamPublishPrivilege(let image):
-            renderView.videoMaskView.isHidden = false
+            renderView.videoMaskView.agora_visible = true
             renderView.videoMaskView.image = image
         case .mediaSourceOpen(let image):
-            renderView.videoMaskView.isHidden = false
+            renderView.videoMaskView.agora_visible = true
             renderView.videoMaskView.image = image
         case .both:
-            renderView.videoMaskView.isHidden = true
+            renderView.videoMaskView.agora_visible = false
         }
         
         switch data.audioState {
@@ -452,9 +452,9 @@ private extension FcrWindowRenderUIController {
         
         switch data.boardPrivilege {
         case .none:
-            renderView.boardPrivilegeView.isHidden = true
+            renderView.boardPrivilegeView.agora_visible = false
         case .has(let image):
-            renderView.boardPrivilegeView.isHidden = false
+            renderView.boardPrivilegeView.agora_visible = true
             renderView.boardPrivilegeView.image = image
         }
         

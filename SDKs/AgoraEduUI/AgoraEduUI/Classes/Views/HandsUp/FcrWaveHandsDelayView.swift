@@ -114,12 +114,15 @@ extension FcrWaveHandsDelayView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.raiseHand
         
+        layer.shadowColor = config.shadow.color
+        layer.shadowOffset = config.shadow.offset
+        layer.shadowOpacity = config.shadow.opacity
+        layer.shadowRadius = config.shadow.radius
         
-        FcrUIColorGroup.borderSet(layer: layer)
-        
-        delayLabel.textColor = FcrUIColorGroup.fcr_text_contrast_color
-        delayLabel.font = FcrUIFontGroup.fcr_font13
+        delayLabel.textColor = config.delayView.textColor
+        delayLabel.font = config.delayView.font
     }
 }
 

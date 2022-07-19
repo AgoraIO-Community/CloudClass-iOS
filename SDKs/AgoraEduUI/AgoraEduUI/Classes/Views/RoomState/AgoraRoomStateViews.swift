@@ -87,20 +87,26 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let font = FcrUIFontGroup.fcr_font9
+        let config = UIConfig.stateBar
         
-        timeLabel.font = font
-        timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+        backgroundColor = config.backgroundColor
+        layer.borderWidth = config.borderWidth
+        layer.borderColor = config.borderColor.cgColor
         
-        sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        let font = FcrUIFontGroup.font9
         
-        titleLabel.font = font
-        titleLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
+        timeLabel.font = config.roomName.textFont
+        timeLabel.textColor = config.roomName.textColor
         
-        recordingStateView.backgroundColor = FcrUIColorGroup.fcr_system_error_color
-        recordingStateView.layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
+        sepLine.backgroundColor = config.sepLine.backgroundColor
         
-        recordingLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
-        recordingLabel.font = font
+        titleLabel.font = config.scheduleTime.textFont
+        titleLabel.textColor = config.scheduleTime.textColor
+        
+        recordingStateView.backgroundColor = config.recordingState.backgroundColor
+        recordingStateView.layer.cornerRadius = config.recordingState.cornerRadius
+        
+        recordingLabel.textColor = config.recordingState.textColor
+        recordingLabel.font = config.recordingState.textFont
     }
 }

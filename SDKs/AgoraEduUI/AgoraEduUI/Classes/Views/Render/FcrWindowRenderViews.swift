@@ -6,7 +6,6 @@
 //
 
 import AgoraUIBaseViews
-import FLAnimatedImage
 
 class FcrWindowRenderRewardView: UIView, AgoraUIContentContainer {
     let imageView = UIImageView(frame: .zero)
@@ -44,16 +43,15 @@ class FcrWindowRenderRewardView: UIView, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.studentVideo.label
         
+        label.textColor = config.color
+        label.font = config.font
         
-        label.textColor = FcrUIColorGroup.fcr_text_contrast_color
-        label.font = FcrUIFontGroup.fcr_font12
-        
-        label.layer.shadowColor = FcrUIColorGroup.fcr_text_shadow_color
-        label.layer.shadowOffset = FcrUIColorGroup.fcr_label_shadow_offset
-        
-        label.layer.shadowOpacity = FcrUIColorGroup.fcr_shadow_opacity
-        label.layer.shadowRadius = FcrUIColorGroup.fcr_label_shadow_radius
+        label.layer.shadowColor = config.shadowColor
+        label.layer.shadowOffset = config.shadowOffset
+        label.layer.shadowOpacity = config.shadowOpacity
+        label.layer.shadowRadius = config.shadowRadius
     }
 }
 
@@ -83,7 +81,7 @@ class FcrWindowRenderNoneView: UIView, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        imageView.image = UIImage.agedu_named("ic_member_no_user")
+        imageView.image = UIConfig.studentVideo.mask.cameraOffImage
     }
 }
 
@@ -150,7 +148,7 @@ class FcrWindowRenderMicView: UIView, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        animaView.image = UIImage.agedu_named("ic_mic_status_volume")
+        animaView.image = UIConfig.studentVideo.mask.micVolumeImage
         progressLayer.strokeColor = UIColor.white.cgColor
     }
 }
@@ -160,7 +158,7 @@ class FcrWindowRenderVideoView: UIView {
 }
 
 class FcrWindowRenderView: UIView {
-    private let waveView = FLAnimatedImageView()
+    private let waveView = AGAnimatedImageView()
     
     let videoView = FcrWindowRenderVideoView()
     let videoMaskView = UIImageView(frame: .zero)
@@ -208,23 +206,15 @@ extension FcrWindowRenderView: AgoraUIContentContainer {
         addSubview(videoMaskView)
         addSubview(nameLabel)
         addSubview(micView)
+        
+        let config = UIConfig.studentVideo.waveHands
+        waveView.agora_enable = config.enable
+        waveView.agora_visible = config.visible
         addSubview(waveView)
         addSubview(rewardView)
         addSubview(boardPrivilegeView)
         
         waveView.isHidden = true
-        
-        guard let bundle = Bundle.agora_bundle(object: self,
-                                               resource: "AgoraEduUI"),
-              let url = bundle.url(forResource: "img_hands_wave",
-                                   withExtension: "gif"),
-              let data = try? Data(contentsOf: url) else {
-            fatalError()
-        }
-        
-        let animatedImage = FLAnimatedImage(animatedGIFData: data)
-        
-        waveView.animatedImage = animatedImage
     }
     
     func initViewFrame() {
@@ -269,14 +259,25 @@ extension FcrWindowRenderView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        // 目前studentVideo.nameLabel同teacherVideo.nameLabel
+        let config = UIConfig.studentVideo
         
+        nameLabel.textColor = config.label.color
+        nameLabel.font = config.label.font
         
-        nameLabel.textColor = FcrUIColorGroup.fcr_text_contrast_color
-        nameLabel.font = FcrUIFontGroup.fcr_font12
-        nameLabel.layer.shadowColor = FcrUIColorGroup.fcr_text_shadow_color
-        nameLabel.layer.shadowOffset = FcrUIColorGroup.fcr_label_shadow_offset
-        nameLabel.layer.shadowOpacity = FcrUIColorGroup.fcr_shadow_opacity
-        nameLabel.layer.shadowRadius = FcrUIColorGroup.fcr_label_shadow_radius
+        nameLabel.layer.shadowColor = config.label.shadowColor
+        nameLabel.layer.shadowOffset = config.label.shadowOffset
+        nameLabel.layer.shadowOpacity = config.label.shadowOpacity
+        nameLabel.layer.shadowRadius = config.label.shadowRadius
+        
+        guard let url = config.waveHands.gifUrl,
+              let data = try? Data(contentsOf: url) else {
+            return
+        }
+        
+        let animatedImage = AGAnimatedImage(animatedGIFData: data)
+        
+        waveView.animatedImage = animatedImage
     }
 }
 
@@ -314,17 +315,18 @@ class FcrWindowRenderCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        // 目前studentVideo.cell同teacherVideo.cell
+        let config = UIConfig.studentVideo
         
+        renderView.backgroundColor = config.cell.backgroundColor
+        renderView.layer.cornerRadius = config.cell.cornerRadius
+        renderView.layer.borderWidth = config.cell.borderWidth
+        renderView.layer.borderColor = config.cell.borderColor
         
-        renderView.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
-        renderView.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
-        renderView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
-        renderView.layer.borderColor = FcrUIColorGroup.fcr_border_color
-        
-        noneView.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
-        noneView.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
-        noneView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
-        noneView.layer.borderColor = FcrUIColorGroup.fcr_border_color
+        noneView.backgroundColor = config.mask.backgroundColor
+        noneView.layer.cornerRadius = config.cell.cornerRadius
+        noneView.layer.borderWidth = config.cell.borderWidth
+        noneView.layer.borderColor = config.cell.borderColor
     }
     
     func addRenderView() {

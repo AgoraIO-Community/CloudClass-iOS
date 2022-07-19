@@ -58,8 +58,6 @@ import UIKit
     /** 工具集合 控制器（观众端没有）*/
     private lazy var toolCollectionController = AgoraToolCollectionUIController(context: contextPool,
                                                                                 delegate: self)
-    /** 白板翻页 控制器（观众端没有）*/
-    private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool)
     /** 聊天 控制器*/
     private lazy var chatController = AgoraChatUIController(context: contextPool)
     /** 教具 控制器*/
@@ -79,10 +77,6 @@ import UIKit
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        initViews()
-        initViewFrame()
-        updateViewProperties()
          
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -114,37 +108,11 @@ import UIKit
         toolBarController.deselectAll()
     }
     
-    private func startTestAudioData() {
-        let media = contextPool.media
-        let config = FcrAudioRawDataConfig()
+    // MARK: AgoraUIContentContainer
+    override func initViews() {
+        super.initViews()
+        UIConfig = FcrOneToOneUIConfig()
         
-        let sampleSize: Int32 = 2
-        let duration: Int32 = 10 // second
-        
-        fileWriter.byteLimit = Int64(config.sampleRate * Int32(config.channels) * sampleSize * duration)
-        
-        media.setAudioRawDataConfig(config: config,
-                                    position: .record)
-        media.addAudioRawDataObserver(observer: self,
-                                      position: .record)
-    }
-    
-    private func stopTestAudioData() {
-        let media = contextPool.media
-        media.removeAudioRawDataObserver(observer: self,
-                                         position: .record)
-    }
-}
-
-extension AgoraOneToOneUIManager: FcrAudioRawDataObserver {
-    public func onAudioRawDataRecorded(data: FcrAudioRawData) {
-        fileWriter.write(data: data.buffer,
-                         to: "audiorawdata.pcm")
-    }
-}
-// MARK: - AgoraUIContentContainer
-extension AgoraOneToOneUIManager: AgoraUIContentContainer {
-    func initViews() {
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
         addChild(stateController)
@@ -164,17 +132,11 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         addChild(webViewController)
         contentView.addSubview(webViewController.view)
         
-        if userRole != .observer {
-            contentView.addSubview(boardPageController.view)
-            addChild(boardPageController)
-            boardPageController.view.isHidden = true
-        }
-        
         addChild(windowController)
         contentView.addSubview(windowController.view)
         
         toolBarController.delegate = self
-        toolBarController.tools = [.setting, .message]
+        toolBarController.updateTools([.setting, .message])
         contentView.addSubview(toolBarController.view)
         
         addChild(classToolsController)
@@ -182,27 +144,50 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
         
         if userRole != .observer {
             view.addSubview(toolCollectionController.view)
-            contentView.addSubview(boardPageController.view)
-            addChild(boardPageController)
         }
         
         if userRole == .teacher {
             addChild(classStateController)
-            classStateController.view.isHidden = true
             contentView.addSubview(classStateController.view)
+            classStateController.view.agora_enable = UIConfig.classState.enable
+            classStateController.view.agora_visible = false
+            
             addChild(cloudController)
             contentView.addSubview(cloudController.view)
+            
             addChild(renderMenuController)
             contentView.addSubview(renderMenuController.view)
+            renderMenuController.view.agora_enable = UIConfig.renderMenu.enable
+            renderMenuController.view.agora_visible = false
             
-            renderMenuController.view.isHidden = true
             cloudController.view.isHidden = true
         }
         
         createChatController()
+        
+        stateController.view.agora_enable = UIConfig.stateBar.enable
+        stateController.view.agora_visible = UIConfig.stateBar.visible
+        
+        boardController.view.agora_enable = UIConfig.netlessBoard.enable
+        boardController.view.agora_visible = UIConfig.netlessBoard.visible
+        
+        
+        settingViewController.view.agora_enable = UIConfig.setting.enable
+        settingViewController.view.agora_visible = UIConfig.setting.visible
+        
+        toolBarController.view.agora_enable = UIConfig.toolBar.enable
+        toolBarController.view.agora_visible = UIConfig.toolBar.visible
+        
+        toolCollectionController.view.agora_enable = UIConfig.toolCollection.enable
+        toolCollectionController.view.agora_visible = UIConfig.toolCollection.visible
+        
+        classToolsController.view.agora_enable = UIConfig.toolBox.enable
+        classToolsController.view.agora_visible = UIConfig.toolBox.visible
     }
     
-    func initViewFrame() {
+    override func initViewFrame() {
+        super.initViewFrame()
+        
         let userRole = contextPool.user.getLocalUserInfo().userRole
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
@@ -258,21 +243,15 @@ extension AgoraOneToOneUIManager: AgoraUIContentContainer {
                 make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
-            boardPageController.view.mas_makeConstraints { make in
-                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
-                make?.height.equalTo()(UIDevice.current.agora_is_pad ? 34 : 32)
-                make?.width.equalTo()(168)
-            }
         }
         
         updateRenderLayout()
     }
     
-    func updateViewProperties() {
+    override func updateViewProperties() {
+        super.updateViewProperties()
         
-        
-        view.backgroundColor = FcrUIColorGroup.fcr_system_background_color
+        view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
     }
 }
 
@@ -284,7 +263,6 @@ extension AgoraOneToOneUIManager: AgoraBoardUIControllerDelegate {
     
     func onBoardActiveStateChanged(isActive: Bool) {
         toolCollectionController.updateBoardActiveState(isActive: isActive)
-        boardPageController.updateBoardActiveState(isActive: isActive)
     }
     
     func onBoardGrantedUserListAdded(userList: [String]) {
@@ -294,8 +272,6 @@ extension AgoraOneToOneUIManager: AgoraBoardUIControllerDelegate {
                                              userList: userList)
         toolCollectionController.onBoardPrivilegeListChaned(true,
                                                             userList: userList)
-        boardPageController.onBoardPrivilegeListChaned(true,
-                                                       userList: userList)
     }
     
     func onBoardGrantedUserListRemoved(userList: [String]) {
@@ -305,8 +281,6 @@ extension AgoraOneToOneUIManager: AgoraBoardUIControllerDelegate {
                                              userList: userList)
         toolCollectionController.onBoardPrivilegeListChaned(false,
                                                             userList: userList)
-        boardPageController.onBoardPrivilegeListChaned(false,
-                                                       userList: userList)
     }
     
     func updateWindowRenderItemBoardPrivilege(_ privilege: Bool,
@@ -564,7 +538,7 @@ extension AgoraOneToOneUIManager: FcrWindowRenderUIControllerDelegate {
 extension AgoraOneToOneUIManager: AgoraRenderMenuUIControllerDelegate {
     func onMenuUserLeft() {
         renderMenuController.dismissView()
-        renderMenuController.view.isHidden = true
+        renderMenuController.view.agora_visible = false
     }
 }
 
@@ -577,9 +551,10 @@ extension AgoraOneToOneUIManager: AgoraClassStateUIControllerDelegate {
         
         classStateController.view.isHidden = false
         
+        let left: CGFloat = UIDevice.current.agora_is_pad ? 198 : 192
         classStateController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
-            make?.bottom.equalTo()(boardPageController.view.mas_bottom)
+            make?.left.equalTo()(contentView)?.offset()(left)
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.size.equalTo()(classStateController.suggestSize)
         }
     }
@@ -615,8 +590,6 @@ private extension AgoraOneToOneUIManager {
         addChild(chatController)
         if UIDevice.current.agora_is_pad {
             contentView.addSubview(chatController.view)
-        } else {
-            FcrUIColorGroup.borderSet(layer: chatController.view.layer)
         }
 
         chatController.delegate = self

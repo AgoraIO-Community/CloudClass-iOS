@@ -43,6 +43,23 @@ class FcrOneToOneWindowRenderUIController: FcrWindowRenderUIController {
         contextPool.media.registerMediaEventHandler(self)
     }
     
+    override func initViews() {
+        super.initViews()
+        
+        let teacherIndexPath = IndexPath(item: teacherItemIndex,
+                                         section: 0)
+        let studentIndexPath = IndexPath(item: studentItemIndex,
+                                         section: 0)
+        let teacherView = collectionView.cellForItem(at: teacherIndexPath)
+        let studentView = collectionView.cellForItem(at: studentIndexPath)
+        
+        teacherView?.agora_enable = UIConfig.teacherVideo.enable
+        teacherView?.agora_visible = UIConfig.teacherVideo.visible
+        
+        studentView?.agora_enable = UIConfig.studentVideo.enable
+        studentView?.agora_visible = UIConfig.studentVideo.visible
+    }
+    
     override func onDidAddItem(_ item: FcrWindowRenderViewState) {
         super.onDidAddItem(item)
         
@@ -197,12 +214,12 @@ private extension FcrOneToOneWindowRenderUIController {
     
     func startRenderVideo(streamId: String,
                           view: FcrWindowRenderVideoView) {
-//        if let renderingStream = view.renderingStream,
-//           renderingStream == streamId {
-//            return
-//        }
-//        
-//        view.renderingStream = streamId
+        //        if let renderingStream = view.renderingStream,
+        //           renderingStream == streamId {
+        //            return
+        //        }
+        //
+        //        view.renderingStream = streamId
         
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden

@@ -250,6 +250,12 @@ private extension LoginViewController {
                                                 videoState: videoState,
                                                 audioState: audioState)
         
+        if let url = Bundle.main.url(forResource: "img_loading",
+                                                withExtension: "gif"),
+              let data = try? Data(contentsOf: url) {
+            AgoraLoading.setImageData(data)
+        }
+        
         AgoraLoading.loading()
 
         let failureBlock: (Error) -> () = { (error) in

@@ -9,7 +9,7 @@ import UIKit
 import Masonry
 
 @objc public enum AgoraToastType: NSInteger {
-    case notice, warning, error, success
+    case notice, warning, error
 }
 
 public class AgoraToast: NSObject {

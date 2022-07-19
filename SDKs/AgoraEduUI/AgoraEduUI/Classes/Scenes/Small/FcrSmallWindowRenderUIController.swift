@@ -89,6 +89,12 @@ extension FcrSmallWindowRenderUIController: AgoraUIContentContainer, AgoraUIActi
         
         view.addSubview(coHost.view)
         view.addSubview(teacher.view)
+        
+        teacher.view.agora_enable = UIConfig.teacherVideo.enable
+        teacher.view.agora_visible = UIConfig.teacherVideo.visible
+        
+        coHost.view.agora_enable = UIConfig.studentVideo.enable
+        coHost.view.agora_visible = UIConfig.studentVideo.visible
     }
     
     func initViewFrame() {

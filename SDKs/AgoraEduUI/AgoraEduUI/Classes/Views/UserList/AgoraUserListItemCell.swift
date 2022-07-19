@@ -41,10 +41,6 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 上下台*/
     private lazy var stageButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.agedu_named("ic_nameroll_stage")?
-            .withRenderingMode(.alwaysTemplate) {
-            v.setImageForAllStates(image)
-        }
         v.addTarget(self,
                     action: #selector(onClickStage(_:)),
                     for: .touchUpInside)
@@ -53,10 +49,6 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 授权*/
     private lazy var authButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.agedu_named("ic_nameroll_auth")?
-            .withRenderingMode(.alwaysTemplate) {
-            v.setImageForAllStates(image)
-        }
         v.addTarget(self,
                     action: #selector(onClickAuth(_:)),
                     for: .touchUpInside)
@@ -65,34 +57,22 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 摄像头*/
     private lazy var cameraButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.agedu_named("ic_nameroll_camera_off")?
-            .withRenderingMode(.alwaysTemplate) {
-            v.tintColor = UIColor(hex: 0xE2E2EE)
-            v.setImageForAllStates(image)
-        }
-        v.addTarget(self, action: #selector(onClickCamera(_:)), for: .touchUpInside)
+        v.addTarget(self, action: #selector(onClickCamera(_:)),
+                    for: .touchUpInside)
         return v
     }()
     /** 麦克风*/
     private lazy var micButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.agedu_named("ic_nameroll_mic_off")?
-            .withRenderingMode(.alwaysTemplate) {
-            v.tintColor = UIColor(hex: 0xE2E2EE)
-            v.setImageForAllStates(image)
-        }
-        v.addTarget(self, action: #selector(onClickMic(_:)), for: .touchUpInside)
+        v.addTarget(self, action: #selector(onClickMic(_:)),
+                    for: .touchUpInside)
         return v
     }()
     /** 奖励*/
     private lazy var rewardButton: UIButton = {
         let v = UIButton(type: .custom)
-        if let image = UIImage.agedu_named("ic_nameroll_reward") {
-            v.setImageForAllStates(image)
-        }
-        v.titleLabel?.font = UIFont.systemFont(ofSize: 13)
-        v.setTitleColor(FcrUIColorGroup.fcr_text_disabled_color,
-                        for: .normal)
+        v.setImage(UIConfig.roster.reward.image,
+                   for: .normal)
         v.addTarget(self,
                     action: #selector(onClickReward(_:)),
                     for: .touchUpInside)
@@ -101,8 +81,8 @@ class AgoraUserListItemCell: UITableViewCell {
     /** 踢人*/
     private lazy var kickButton: UIButton = {
         let v = UIButton(type: .custom)
-        let img = UIImage.agedu_named("ic_nameroll_kick")
-        v.setImage(img, for: .normal)
+        v.setImage(UIConfig.roster.kickOut.image,
+                   for: .normal)
         v.addTarget(self,
                     action: #selector(onClickkick(_:)),
                     for: .touchUpInside)
@@ -125,22 +105,42 @@ class AgoraUserListItemCell: UITableViewCell {
         guard let list = self.supportFuncs else {
             return
         }
+        
+        let config = UIConfig.roster
         var temp = [UIView]()
         for fn in list {
             switch fn {
             case .stage:
+                stageButton.agora_enable = config.stage.enable
+                stageButton.agora_visible = config.stage.visible
                 temp.append(stageButton)
             case .auth:
+                authButton.agora_enable = config.boardAuthorization.enable
+                authButton.agora_visible = config.boardAuthorization.visible
                 temp.append(authButton)
             case .camera:
+                cameraButton.agora_enable = config.camera.enable
+                cameraButton.agora_visible = config.camera.visible
                 temp.append(cameraButton)
             case .mic:
+                micButton.agora_enable = config.microphone.enable
+                micButton.agora_visible = config.microphone.visible
                 temp.append(micButton)
             case .reward:
+                rewardButton.agora_enable = config.reward.enable
+                rewardButton.agora_visible = config.reward.visible
+                
+                rewardButton.titleLabel?.font = config.reward.font
+                rewardButton.setTitleColor(config.reward.textColor,
+                                           for: .normal)
+                
                 temp.append(rewardButton)
             case .kick:
+                kickButton.agora_enable = config.kickOut.enable
+                kickButton.agora_visible = config.kickOut.visible
                 temp.append(kickButton)
-            default: break
+            default:
+                break
             }
         }
         funcsView.removeArrangedSubviews()
@@ -156,88 +156,54 @@ private extension AgoraUserListItemCell {
         }
         nameLabel.text = model.name
         
-        
-        let onColor = UIColor(hex: 0x0073FF)
-        let offColor = FcrUIColorGroup.fcr_system_error_color
-        let authOffColor = UIColor(hex: 0xB3D6FF)
-        let disabledColor = UIColor(hex: 0xE2E2EE)
+        let config = UIConfig.roster
         for fn in fns {
             switch fn {
             case .stage:
-                if model.stageState.isOn {
-                    stageButton.tintColor = onColor
-                } else {
-                    stageButton.tintColor = authOffColor
-                }
+                let image = model.stageState.isOn ? config.stage.onImage : config.stage.offImage
+                stageButton.setImage(image,
+                                     for: .normal)
                 stageButton.isUserInteractionEnabled = model.stageState.isEnable
             case .auth:
-                if model.authState.isOn {
-                    authButton.tintColor = onColor
-                } else {
-                    authButton.tintColor = authOffColor
-                }
+                let image = model.authState.isOn ? config.stage.onImage : config.stage.offImage
+                authButton.setImage(image,
+                                     for: .normal)
                 authButton.isUserInteractionEnabled = model.stageState.isEnable
             case .camera:
+                var image: UIImage?
                 if !model.stageState.isOn {
                     // 未上台
-                    let image = UIImage.agedu_named("ic_nameroll_camera_on")
-                    if let i = image?.withRenderingMode(.alwaysTemplate) {
-                        cameraButton.setImageForAllStates(i)
-                    }
-                    cameraButton.tintColor = disabledColor
+                    image = config.camera.offImage
                 } else if !model.cameraState.deviceOn {
                     // 上台+设备关闭
-                    let image = UIImage.agedu_named("ic_nameroll_camera_off")
-                    if let i = image?.withRenderingMode(.alwaysTemplate) {
-                        cameraButton.setImageForAllStates(i)
-                    }
-                    cameraButton.tintColor = disabledColor
+                    image = config.camera.offImage
                 } else if !model.cameraState.streamOn {
                     // 上台+设备开启+无流权限
-                    let image = UIImage.agedu_named("ic_nameroll_camera_off")
-                    if let i = image?.withRenderingMode(.alwaysTemplate) {
-                        cameraButton.setImageForAllStates(i)
-                    }
-                    cameraButton.tintColor = offColor
+                    image = config.camera.forbiddenImage
                 } else {
                     // 上台+设备开启+有流权限
-                    let image = UIImage.agedu_named("ic_nameroll_camera_on")
-                    if let i = image?.withRenderingMode(.alwaysTemplate) {
-                        cameraButton.setImageForAllStates(i)
-                    }
-                    cameraButton.tintColor = onColor
+                    image = config.camera.onImage
                 }
+                cameraButton.setImage(image,
+                                     for: .normal)
                 cameraButton.isUserInteractionEnabled = model.cameraState.isEnable
             case .mic:
+                var image: UIImage?
                 if !model.stageState.isOn {
                     // 未上台
-                    let image = UIImage.agedu_named("ic_nameroll_mic_on")
-                    if let i = image?.withRenderingMode(.alwaysTemplate) {
-                        micButton.setImageForAllStates(i)
-                    }
-                    micButton.tintColor = disabledColor
+                    image = config.microphone.offImage
                 } else if !model.micState.deviceOn {
                     // 上台+设备关闭
-                    let image = UIImage.agedu_named("ic_nameroll_mic_off")
-                    if let i = image?.withRenderingMode(.alwaysTemplate) {
-                        micButton.setImageForAllStates(i)
-                    }
-                    micButton.tintColor = disabledColor
+                    image = config.microphone.offImage
                 } else if !model.micState.streamOn {
                     // 上台+设备开启+无流权限
-                    let image = UIImage.agedu_named("ic_nameroll_mic_off")
-                    if let i = image?.withRenderingMode(.alwaysTemplate) {
-                        micButton.setImageForAllStates(i)
-                    }
-                    micButton.tintColor = offColor
+                    image = config.microphone.forbiddenImage
                 } else {
                     // 上台+设备开启+有流权限
-                    let image = UIImage.agedu_named("ic_nameroll_mic_on")
-                    if let i = image?.withRenderingMode(.alwaysTemplate) {
-                        micButton.setImageForAllStates(i)
-                    }
-                    micButton.tintColor = onColor
+                    image = config.microphone.onImage
                 }
+                micButton.setImage(image,
+                                     for: .normal)
                 micButton.isUserInteractionEnabled = model.micState.isEnable
             case .reward:
                 rewardButton.setTitle("x\(model.rewards)", for: .normal)
@@ -310,6 +276,9 @@ extension AgoraUserListItemCell: AgoraUIContentContainer {
     func initViews() {
         nameLabel = UILabel()
         nameLabel.textAlignment = .center
+        let config = UIConfig.roster.studentName
+        nameLabel.agora_enable = config.enable
+        nameLabel.agora_visible = config.visible
         contentView.addSubview(nameLabel)
         
         funcsView = UIStackView(frame: .zero)
@@ -334,10 +303,10 @@ extension AgoraUserListItemCell: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        
-        
-        backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        nameLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
-        nameLabel.font = FcrUIFontGroup.fcr_font12
+        let config = UIConfig.roster
+
+        backgroundColor = config.backgroundColor
+        nameLabel.textColor = FcrUIColorGroup.textLevel1Color
+        nameLabel.font = FcrUIFontGroup.font12
     }
 }

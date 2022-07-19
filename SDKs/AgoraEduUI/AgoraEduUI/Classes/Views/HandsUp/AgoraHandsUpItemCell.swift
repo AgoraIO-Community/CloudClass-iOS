@@ -22,12 +22,13 @@ class AgoraHandsUpItemCell: UITableViewCell {
     
     var state: HandsUpCellState = .waiting {
         didSet {
+            let config = UIConfig.handsList
             switch state {
             case .waiting:
-                stateButton.setImage(UIImage.agedu_named("ic_handsup_off_stage"),
+                stateButton.setImage(config.offImage,
                                      for: .normal)
             case .onStage:
-                stateButton.setImage(UIImage.agedu_named("ic_handsup_on_stage"),
+                stateButton.setImage(config.onImage,
                                      for: .normal)
             default: break
             }
@@ -63,7 +64,7 @@ extension AgoraHandsUpItemCell: AgoraUIContentContainer {
     func initViews() {
         contentView.addSubview(nameLabel)
         
-        stateButton.setImage(UIImage.agedu_named("ic_handsup_off_stage"),
+        stateButton.setImage(UIConfig.handsList.offImage,
                              for: .normal)
         stateButton.addTarget(self,
                               action: #selector(onClickAcceptButton(_:)),
@@ -84,8 +85,8 @@ extension AgoraHandsUpItemCell: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        
-        nameLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
-        nameLabel.font = FcrUIFontGroup.fcr_font12
+        let config = UIConfig.handsList
+        nameLabel.textColor = config.label.color
+        nameLabel.font = config.label.font
     }
 }

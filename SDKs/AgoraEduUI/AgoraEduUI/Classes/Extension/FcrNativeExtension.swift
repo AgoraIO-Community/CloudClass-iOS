@@ -158,19 +158,6 @@ struct AgoraFit {
     }
 }
 
-extension UIColor {
-    static func fakeWhite(_ ori: UIColor?) -> UIColor? {
-        guard let color = ori else {
-            return nil
-        }
-        
-        if color == UIColor(hex: 0xFFFFFF) {
-            return UIColor(hex: 0xE1E1EA)!
-        }
-        return color
-    }
-}
-
 // MARK: - Code
 protocol Convertable: Codable {
     

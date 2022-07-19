@@ -28,8 +28,7 @@ class AgoraHandsUpTipsView: UIView {
 
 extension AgoraHandsUpTipsView:AgoraUIContentContainer {
     func initViews() {
-        let name = "toolbar_handsup_remind_popover"
-        let tipImage = UIImage.agedu_named(name)
+        let tipImage = UIConfig.raiseHand.popOverImage
         let newImage = tipImage?.resizableImage(withCapInsets: UIEdgeInsets(top: 10,
                                                                             left: 10,
                                                                             bottom: 25,
@@ -61,10 +60,14 @@ extension AgoraHandsUpTipsView:AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.raiseHand
         
-        FcrUIColorGroup.borderSet(layer: layer)
+        layer.shadowColor = config.shadow.color
+        layer.shadowOffset = config.shadow.offset
+        layer.shadowOpacity = config.shadow.opacity
+        layer.shadowRadius = config.shadow.radius
         
-        label.font = FcrUIFontGroup.fcr_font12
-        label.textColor = FcrUIColorGroup.fcr_text_level1_color
+        label.font = config.tipView.font
+        label.textColor = config.tipView.textColor
     }
 }

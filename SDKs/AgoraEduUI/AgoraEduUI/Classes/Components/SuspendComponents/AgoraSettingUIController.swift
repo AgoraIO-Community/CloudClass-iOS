@@ -46,6 +46,11 @@ class AgoraSettingUIController: UIViewController {
         initViews()
         initViewFrame()
         updateViewProperties()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         setContentViewState()
     }
 }
@@ -88,11 +93,15 @@ class AgoraSettingUIController: UIViewController {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.setting
         
+        view.layer.shadowColor = config.shadow.color
+        view.layer.shadowOffset = config.shadow.offset
+        view.layer.shadowOpacity = config.shadow.opacity
+        view.layer.shadowRadius = config.shadow.radius
         
-        FcrUIColorGroup.borderSet(layer: view.layer)
-        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_square_container_corner_radius
+        contentView.backgroundColor = config.backgroundColor
+        contentView.layer.cornerRadius = config.cornerRadius
         contentView.clipsToBounds = true
     }
 }

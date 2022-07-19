@@ -131,28 +131,30 @@ class AgoraRenderMenuUIController: UIViewController {
               showRoleType: AgoraEduContextUserRole) {
         userId = userUuid
 
+        var temp = [AgoraRenderMenuItemType]()
         switch roomType {
         case .oneToOne:
             if showRoleType == .teacher {
-                items = []
+                temp = []
             } else if showRoleType == .student {
-                items = [.camera, .mic, .reward, .auth]
+                temp = [.camera, .mic, .reward, .auth]
             }
         case .small:
             if showRoleType == .teacher {
-                items = [.allOffStage]
+                temp = [.allOffStage]
             } else if showRoleType == .student {
-                items = [.camera, .mic, .reward, .auth, .stage]
+                temp = [.camera, .mic, .reward, .auth, .stage]
             }
         case .lecture:
             if showRoleType == .teacher {
-                items = [.allOffStage]
+                temp = [.allOffStage]
             } else if showRoleType == .student {
-                items = [.camera, .mic, .stage]
+                temp = [.camera, .mic, .stage]
             }
         default:
             break
         }
+        items = temp.enabledList()
         
         guard items.count > 0 else {
             view.isHidden = true
@@ -200,6 +202,9 @@ class AgoraRenderMenuUIController: UIViewController {
                                  width: 22,
                                  height: 22)
         
+        let teacherConfig = UIConfig.teacherVideo
+        let studentConfig = UIConfig.studentVideo
+        
         // micButton
         micButton.frame = buttonFrame
         micButton.addTarget(self,
@@ -232,8 +237,6 @@ class AgoraRenderMenuUIController: UIViewController {
         contentView.addArrangedSubview(authButton)
         // rewardButton
         rewardButton.frame = buttonFrame
-        rewardButton.setImage(UIImage.agedu_named("ic_member_menu_reward"),
-                              for: .normal)
         rewardButton.addTarget(self,
                                action: #selector(onClickReward(_:)),
                                for: .touchUpInside)
@@ -250,14 +253,17 @@ class AgoraRenderMenuUIController: UIViewController {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.renderMenu
         
+        view.backgroundColor = .clear
         
-        view.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        view.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
+        contentView.backgroundColor = config.backgroundColor
+        contentView.layer.cornerRadius = config.cornerRadius
         
-        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        
-        FcrUIColorGroup.borderSet(layer: view.layer)
+        view.layer.shadowColor = config.shadow.color
+        view.layer.shadowOffset = config.shadow.offset
+        view.layer.shadowOpacity = config.shadow.opacity
+        view.layer.shadowRadius = config.shadow.radius
     }
 }
 
@@ -267,29 +273,40 @@ private extension AgoraRenderMenuUIController {
         guard let `model` = model else {
             return
         }
+        let teacherConfig = UIConfig.teacherVideo
+        let studentConfig = UIConfig.studentVideo
+        
         // 设置按钮的状态
         for item in items {
             switch item {
             case .mic:
-                if let img = model.micState.micImage {
-                    micButton.setImageForAllStates(img)
+                var image: UIImage?
+                switch model.micState {
+                case .on:           image = studentConfig.microphone.onImage
+                case .off:          image = studentConfig.microphone.offImage
+                case .forbidden:    image = studentConfig.microphone.forbiddenImage
                 }
+                micButton.setImage(image,
+                                   for: .normal)
             case .camera:
-                if let img = model.cameraState.cameraImage {
-                    cameraButton.setImageForAllStates(img)
+                var image: UIImage?
+                switch model.cameraState {
+                case .on:           image = studentConfig.camera.onImage
+                case .off:          image = studentConfig.camera.offImage
+                case .forbidden:    image = studentConfig.camera.forbiddenImage
                 }
+                cameraButton.setImage(image,
+                                   for: .normal)
             case .auth:
-                // TODO: 切换图片
-                guard let img = UIImage.agedu_named("ic_nameroll_auth")?.withRenderingMode(.alwaysTemplate) else {
-                    return
-                }
-                authButton.tintColor = model.authState ? UIColor(hex: 0x0073FF) : UIColor(hex: 0xB3D6FF)
-                authButton.setImageForAllStates(img)
+                let image = model.authState ? studentConfig.boardAuthorization.onImage : studentConfig.boardAuthorization.offImage
+                
+                authButton.setImage(studentConfig.boardAuthorization.onImage,
+                                    for: .normal)
             case .stage:
-                stageButton.setImage(UIImage.agedu_named("ic_nameroll_stage"),
+                stageButton.setImage(studentConfig.offStage.image,
                                      for: .normal)
             case .allOffStage:
-                allStageOffButton.setImage(UIImage.agedu_named("ic_member_menu_stage_off"),
+                allStageOffButton.setImage(teacherConfig.offStage.image,
                                            for: .normal)
                 if let coHostList = userController.getCoHostList(),
                    coHostList.count > 0 {
@@ -297,6 +314,9 @@ private extension AgoraRenderMenuUIController {
                 } else {
                     allStageOffButton.isUserInteractionEnabled = false
                 }
+            case .reward:
+                rewardButton.setImage(studentConfig.reward.image,
+                                      for: .normal)
             default:
                 break
             }
@@ -537,5 +557,51 @@ extension AgoraRenderMenuUIController: AgoraWidgetMessageObserver {
         default:
             break
         }
+    }
+}
+
+fileprivate extension Array where Element == AgoraRenderMenuItemType {
+    func enabledList() -> [AgoraRenderMenuItemType] {
+        let teacherConfig = UIConfig.teacherVideo
+        let studentConfig = UIConfig.studentVideo
+        
+        var list = [AgoraRenderMenuItemType]()
+        
+        for item in self {
+            switch item {
+            case .camera:
+                if studentConfig.camera.enable,
+                   studentConfig.camera.visible {
+                    list.append(item)
+                }
+            case .mic:
+                if studentConfig.microphone.enable,
+                   studentConfig.microphone.visible {
+                    list.append(item)
+                }
+            case .stage:
+                if studentConfig.offStage.enable,
+                   studentConfig.offStage.visible {
+                    list.append(item)
+                }
+            case .allOffStage:
+                if teacherConfig.offStage.enable,
+                   teacherConfig.offStage.visible {
+                    list.append(item)
+                }
+            case .auth:
+                if studentConfig.boardAuthorization.enable,
+                   studentConfig.boardAuthorization.visible {
+                    list.append(item)
+                }
+            case .reward:
+                if studentConfig.reward.enable,
+                   studentConfig.reward.visible {
+                    list.append(item)
+                }
+            }
+        }
+        
+        return list
     }
 }

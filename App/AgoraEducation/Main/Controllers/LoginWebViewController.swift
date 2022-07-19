@@ -6,8 +6,9 @@
 //  Copyright © 2022 Agora. All rights reserved.
 //
 
-import UIKit
+import AgoraUIBaseViews
 import AgoraEduUI
+import UIKit
 import WebKit
 
 class LoginWebViewController: UIViewController {

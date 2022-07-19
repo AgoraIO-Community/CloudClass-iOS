@@ -18,7 +18,6 @@ target 'AgoraEducation' do
   pod 'Masonry', '1.1.0'
   pod 'SDWebImage', '5.12.0'
   pod 'WHToast', '0.0.7'
-  pod 'FLAnimatedImage', '1.0.16'
  
   # agora libs
   pod 'AgoraRtcEngine_iOS', '3.5.2'

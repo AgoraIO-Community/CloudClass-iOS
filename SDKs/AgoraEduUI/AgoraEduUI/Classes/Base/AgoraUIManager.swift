@@ -27,7 +27,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
                        roomType: AgoraClassRoomExitRoomType)
 }
 
-@objc public class AgoraEduUIManager: UIViewController, AgoraClassRoomManagement {
+@objc public class AgoraEduUIManager: UIViewController, AgoraClassRoomManagement, AgoraUIContentContainer {
     /** 容器视图，用来框出一块16：9的适配区域*/
     public var contentView: UIView = UIView()
     
@@ -35,10 +35,10 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     
     var contextPool: AgoraEduContextPool!
     
-    var uiMode: AgoraUIMode
+    var uiMode: FcrUIMode
     /// 弹窗控制器
     /** 控制器遮罩层，用来盛装控制器和处理手势触发消失事件*/
-    private var ctrlMaskView: UIView!
+    private lazy var ctrlMaskView = UIView(frame: .zero)
     /** 弹出显示的控制widget视图*/
     public weak var ctrlView: UIView? {
         willSet {
@@ -63,8 +63,9 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: AgoraEduUIManagerCallback?,
-                      uiMode: AgoraUIMode) {
+                      uiMode: FcrUIMode) {
         self.uiMode = uiMode
+
         super.init(nibName: nil,
                    bundle: nil)
         self.contextPool = contextPool
@@ -78,19 +79,32 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    // MARK: AgoraUIContentContainer
+    @objc func initViews() {
         // mode set
         UIMode = uiMode
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = (uiMode == .agoraDark) ? .dark : .light
+        }
         
-        
-        
-        view.backgroundColor = FcrUIColorGroup.fcr_system_background_color
-        
-        // create content view
-        contentView.borderWidth = FcrUIFrameGroup.fcr_border_width
-        contentView.layer.borderColor = FcrUIColorGroup.fcr_border_color
-        contentView.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
         view.addSubview(contentView)
         
+        ctrlMaskView.isHidden = true
+        
+        let tap = UITapGestureRecognizer(target: self,
+                                         action: #selector(onClickCtrlMaskView(_:)))
+        
+        ctrlMaskView.addGestureRecognizer(tap)
+        
+        view.addSubview(ctrlMaskView)
+    }
+    
+    @objc func initViewFrame() {
         let width = max(UIScreen.main.bounds.width,
                         UIScreen.main.bounds.height)
         
@@ -111,20 +125,26 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
             }
         }
         
-        // create ctrl mask view
-        ctrlMaskView = UIView(frame: .zero)
-        ctrlMaskView.isHidden = true
-        
-        let tap = UITapGestureRecognizer(target: self,
-                                         action: #selector(onClickCtrlMaskView(_:)))
-        
-        ctrlMaskView.addGestureRecognizer(tap)
-        
-        view.addSubview(ctrlMaskView)
-        
         ctrlMaskView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(self.view)
         }
+    }
+    
+    @objc func updateViewProperties() {
+        view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
+        
+        contentView.borderWidth = FcrUIFrameGroup.borderWidth
+        contentView.layer.borderColor = FcrUIColorGroup.borderColor.cgColor
+        contentView.backgroundColor = FcrUIColorGroup.systemForegroundColor
+        
+        let config = UIConfig.loading
+        if let url = config.gifUrl,
+           let data = try? Data(contentsOf: url) {
+            AgoraLoading.setImageData(data)
+        }
+        AgoraLoading.setMessage(color: config.message.color,
+                                font: config.message.font)
+        AgoraLoading.setBackgroundColor(config.backgroundColor)
     }
     
     @objc private func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {

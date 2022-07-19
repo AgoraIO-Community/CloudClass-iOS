@@ -26,9 +26,6 @@ import AgoraWidget
     private lazy var boardController = AgoraBoardUIController(context: contextPool,
                                                               delegate: self)
     
-    /** 白板翻页 控制器（观众端没有）*/
-    private lazy var boardPageController = AgoraBoardPageUIController(context: contextPool)
-    
     /** 外部链接 控制器*/
     private lazy var webViewController = AgoraWebViewUIController(context: contextPool)
     
@@ -89,9 +86,6 @@ import AgoraWidget
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        initViews()
-        initViewFrame()
-        updateViewProperties()
         
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
@@ -115,7 +109,7 @@ import AgoraWidget
             AgoraLoading.loading()
         } else {
             let message = "fcr_group_back_main_room".agedu_localized()
-            AgoraLoading.loading(msg: message)
+            AgoraLoading.loading(message: message)
         }
     }
     
@@ -130,11 +124,13 @@ import AgoraWidget
         super.didClickCtrlMaskView()
         toolBarController.deselectAll()
     }
-}
-
-// MARK: - AgoraUIContentContainer
-extension AgoraSmallUIManager: AgoraUIContentContainer {
-    func initViews() {
+    
+    // MARK: AgoraUIContentContainer
+    override func initViews() {
+        super.initViews()
+        
+        UIConfig = FcrSmallUIConfig()
+        
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
         // Flat components
@@ -154,12 +150,6 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         addChild(windowController)
         contentView.addSubview(windowController.view)
         
-        if userRole != .observer {
-            addChild(boardPageController)
-            boardPageController.view.isHidden = true
-            contentView.addSubview(boardPageController.view)
-        }
-        
         addChild(toolBarController)
         contentView.addSubview(toolBarController.view)
         
@@ -168,22 +158,23 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         
         switch userRole {
         case .teacher:
-            toolBarController.tools = [.setting,
+            toolBarController.updateTools([.setting,
                                        .message,
-                                       .nameRoll,
-                                       .handsList]
+                                       .roster,
+                                       .handsList])
             
             addChild(classStateController)
-            classStateController.view.isHidden = true
+            classStateController.view.agora_enable = UIConfig.classState.enable
+            classStateController.view.agora_visible = false
             contentView.addSubview(classStateController.view)
         case .student:
-            toolBarController.tools = [.setting,
+            toolBarController.updateTools([.setting,
                                        .message,
-                                       .nameRoll,
-                                       .handsup]
+                                       .roster,
+                                       .waveHands])
         default:
-            toolBarController.tools = [.setting,
-                                       .message]
+            toolBarController.updateTools([.setting,
+                                       .message])
         }
         
         // Suspend components
@@ -199,26 +190,35 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         switch userRole {
         case .teacher:
             addChild(nameRollController)
+            nameRollController.view.agora_enable = UIConfig.roster.enable
+            nameRollController.view.agora_visible = UIConfig.roster.enable
             
             addChild(handsListController)
+            handsListController.view.agora_enable = UIConfig.handsList.enable
+            handsListController.view.agora_visible = UIConfig.handsList.enable
             
             addChild(renderMenuController)
-            renderMenuController.view.isHidden = true
             contentView.addSubview(renderMenuController.view)
+            renderMenuController.view.agora_enable = UIConfig.renderMenu.enable
+            renderMenuController.view.agora_visible = false
             
             addChild(toolCollectionController)
-            toolCollectionController.view.isHidden = true
-
             contentView.addSubview(toolCollectionController.view)
+            toolCollectionController.view.agora_enable = UIConfig.toolCollection.enable
+            toolCollectionController.view.agora_visible = UIConfig.toolCollection.enable
             
             addChild(cloudController)
             cloudController.view.isHidden = true
             contentView.addSubview(cloudController.view)
         case .student:
             addChild(nameRollController)
+            nameRollController.view.agora_enable = UIConfig.roster.enable
+            nameRollController.view.agora_visible = UIConfig.roster.enable
             
             addChild(toolCollectionController)
             contentView.addSubview(toolCollectionController.view)
+            toolCollectionController.view.agora_enable = UIConfig.toolCollection.enable
+            toolCollectionController.view.agora_visible = UIConfig.toolCollection.enable
         default:
             break
         }
@@ -227,9 +227,28 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         globalController.roomDelegate = self
         addChild(globalController)
         globalController.viewDidLoad()
+        
+        stateController.view.agora_enable = UIConfig.stateBar.enable
+        stateController.view.agora_visible = UIConfig.stateBar.visible
+        
+        boardController.view.agora_enable = UIConfig.netlessBoard.enable
+        boardController.view.agora_visible = UIConfig.netlessBoard.visible
+        
+        settingController.view.agora_enable = UIConfig.setting.enable
+        settingController.view.agora_visible = UIConfig.setting.visible
+        
+        toolBarController.view.agora_enable = UIConfig.toolBar.enable
+        toolBarController.view.agora_visible = UIConfig.toolBar.visible
+        
+        classToolsController.view.agora_enable = UIConfig.toolBox.enable
+        classToolsController.view.agora_visible = UIConfig.toolBox.visible
+        
+        chatController.view.agora_enable = UIConfig.agoraChat.enable
+        chatController.view.agora_visible = UIConfig.agoraChat.visible
     }
     
-    func initViewFrame() {
+    override func initViewFrame() {
+        super.initViewFrame()
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
         stateController.view.mas_makeConstraints { make in
@@ -262,13 +281,6 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
                 make?.bottom.equalTo()(boardController.view)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
-            
-            boardPageController.view.mas_makeConstraints { make in
-                make?.left.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
-                make?.bottom.equalTo()(boardController.view)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
-                make?.height.equalTo()(UIDevice.current.agora_is_pad ? 34 : 32)
-                make?.width.equalTo()(168)
-            }
         }
         
         webViewController.view.mas_makeConstraints { make in
@@ -286,8 +298,8 @@ extension AgoraSmallUIManager: AgoraUIContentContainer {
         updateRenderCollectionLayout()
     }
     
-    func updateViewProperties() {
-        FcrUIColorGroup.borderSet(layer: chatController.view.layer)
+    override func updateViewProperties() {
+        super.updateViewProperties()
     }
 }
 
@@ -300,7 +312,7 @@ extension AgoraSmallUIManager: AgoraToolBarDelegate {
             settingController.view.frame = CGRect(origin: .zero,
                                                   size: settingController.suggestSize)
             ctrlView = settingController.view
-        case .nameRoll:
+        case .roster:
             nameRollController.view.frame = CGRect(origin: .zero,
                                                    size: nameRollController.suggestSize)
             ctrlView = nameRollController.view
@@ -532,9 +544,10 @@ extension AgoraSmallUIManager: AgoraClassStateUIControllerDelegate {
         
         classStateController.view.isHidden = false
         
+        let left: CGFloat = UIDevice.current.agora_is_pad ? 198 : 192
         classStateController.view.mas_makeConstraints { make in
-            make?.left.equalTo()(boardPageController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
-            make?.bottom.equalTo()(boardPageController.view.mas_bottom)
+            make?.left.equalTo()(contentView)?.offset()(left)
+            make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.size.equalTo()(classStateController.suggestSize)
         }
     }
@@ -548,7 +561,8 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
             return
         }
         
-        guard let subRoom = contextPool.group.createSubRoomObject(subRoomUuid: subRoomId) else {
+        guard UIConfig.breakoutRoom.enable,
+              let subRoom = contextPool.group.createSubRoomObject(subRoomUuid: subRoomId) else {
             return
         }
         
@@ -618,7 +632,6 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
     
     func onBoardActiveStateChanged(isActive: Bool) {
         toolCollectionController.updateBoardActiveState(isActive: isActive)
-        boardPageController.updateBoardActiveState(isActive: isActive)
     }
     
     func onBoardGrantedUserListAdded(userList: [String]) {
@@ -628,8 +641,6 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
                                              userList: userList)
         toolCollectionController.onBoardPrivilegeListChaned(true,
                                                             userList: userList)
-        boardPageController.onBoardPrivilegeListChaned(true,
-                                                       userList: userList)
     }
     
     func onBoardGrantedUserListRemoved(userList: [String]) {
@@ -639,8 +650,6 @@ extension AgoraSmallUIManager: AgoraBoardUIControllerDelegate {
                                              userList: userList)
         toolCollectionController.onBoardPrivilegeListChaned(false,
                                                             userList: userList)
-        boardPageController.onBoardPrivilegeListChaned(false,
-                                                       userList: userList)
     }
     
     func updateWindowRenderItemBoardPrivilege(_ privilege: Bool,

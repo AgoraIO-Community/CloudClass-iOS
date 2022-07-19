@@ -7,7 +7,6 @@
 
 import AgoraUIBaseViews
 import AgoraEduContext
-import FLAnimatedImage
 import AudioToolbox
 import AVFoundation
 

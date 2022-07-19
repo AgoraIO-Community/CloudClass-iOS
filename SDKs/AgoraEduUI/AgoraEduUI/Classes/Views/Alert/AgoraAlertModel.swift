@@ -35,7 +35,10 @@ class AgoraAlertTableCell: UITableViewCell {
     }
     
     private func setOptionImage() {
-        optionImageView.image = UIImage.agedu_named(optionIsSelected ? "ic_alert_checked" : "ic_alert_unchecked")
+        let config = UIConfig.alert.message
+        
+        optionImageView.image = optionIsSelected ? config.checkedImage : config.uncheckedImage
+        optionLabel.textColor = optionIsSelected ? config.selectedColor : config.normalColor
     }
 }
 
@@ -46,30 +49,32 @@ extension AgoraAlertTableCell: AgoraUIContentContainer {
         
         optionLabel.numberOfLines = 0
         
-        addSubviews([optionImageView,
-                     optionLabel])
+        contentView.addSubviews([optionImageView,
+                                 optionLabel])
     }
     
     func initViewFrame() {
-        let horizontalSpace: CGFloat = 15
-        
         optionImageView.mas_makeConstraints { make in
-            make?.left.equalTo()(horizontalSpace)
+            make?.left.equalTo()(10)
             make?.centerY.equalTo()(0)
-            make?.width.height().equalTo()(12)
+            make?.width.height().equalTo()(18)
         }
         
-        let spacing = FcrUIFrameGroup.fcr_alert_side_spacing
+        let spacing = UIConfig.alert.sideSpacing
         optionLabel.mas_makeConstraints { make in
             make?.centerY.equalTo()(0)
-            make?.left.equalTo()(spacing)
+            make?.left.equalTo()(optionImageView.mas_right)?.offset()(7)
             make?.right.equalTo()(-spacing)
             make?.bottom.equalTo()(-0)
         }
     }
     
     func updateViewProperties() {
-        optionLabel.font = FcrUIFontGroup.fcr_font13
+        let config = UIConfig.alert
+        
+        backgroundColor = config.backgroundColor
+        optionLabel.font = config.message.font
+        optionLabel.textColor = config.message.normalColor
     }
 }
 
@@ -154,9 +159,7 @@ private class AgoraAlertController: UIViewController {
     private var model: AgoraAlertModel
     
     private var contentView: UIView!
-    
-    private var imageView: UIImageView!
-    
+        
     private var titleLabel: UILabel!
     
     // choice only
@@ -179,8 +182,6 @@ private class AgoraAlertController: UIViewController {
         messageLabel.text = model.message
         messageLabel.numberOfLines = 0
         
-        messageLabel.font = FcrUIFontGroup.fcr_font13
-        messageLabel.textColor = FcrUIColorGroup.fcr_text_level2_color
         messageLabel.textAlignment = .center
         return messageLabel
     }()
@@ -274,9 +275,6 @@ extension AgoraAlertController: AgoraUIContentContainer {
         contentView = UIView()
         view.addSubview(contentView)
         
-        imageView = UIImageView()
-        contentView.addSubview(imageView)
-        
         titleLabel = UILabel()
         titleLabel.text = model.title
         titleLabel.numberOfLines = 1
@@ -297,17 +295,13 @@ extension AgoraAlertController: AgoraUIContentContainer {
     
     func initViewFrame() {
         contentView.mas_makeConstraints { make in
-            make?.width.equalTo()(240)
+            make?.width.equalTo()(270)
             make?.height.mas_greaterThanOrEqualTo()(100)
+            make?.height.mas_lessThanOrEqualTo()(300)
             make?.center.equalTo()(0)
         }
-        imageView.mas_makeConstraints { make in
-            make?.top.equalTo()(20)
-            make?.size.equalTo()(model.imageSize)
-            make?.centerX.equalTo()(0)
-        }
         titleLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(imageView.mas_bottom)
+            make?.top.equalTo()(20)
             make?.left.equalTo()(30)
             make?.right.equalTo()(-30)
         }
@@ -330,23 +324,32 @@ extension AgoraAlertController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.alert
         
+        contentView.layer.shadowColor = config.shadow.color
+        contentView.layer.shadowOffset = config.shadow.offset
+        contentView.layer.shadowOpacity = config.shadow.opacity
+        contentView.layer.shadowRadius = config.shadow.radius
         
-        FcrUIColorGroup.borderSet(layer: contentView.layer)
+        contentView.backgroundColor = config.backgroundColor
+        contentView.layer.cornerRadius = config.cornerRadius
         
-        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_alert_corner_radius
+        titleLabel.font = config.title.font
+        titleLabel.textColor = config.title.color
         
-        titleLabel.font = FcrUIFontGroup.fcr_font17
-        titleLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
+        hLine.backgroundColor = config.sepLine.backgroundColor
         
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.2)
-        hLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        switch model.alertStyle {
+        case .Normal:
+            messageLabel.font = config.message.font
+            messageLabel.textColor = config.message.normalColor
+        case .Choice:
+            break
+        }
     }
 }
 // MARK: - private
 private extension AgoraAlertController {
-    
     private func createChoiceButtons() {
         guard model.actions.count > 0 else {
             hLine.mas_makeConstraints { make in
@@ -370,7 +373,6 @@ private extension AgoraAlertController {
     }
     
     private func createActionButtons() {
-        
         guard model.actions.count > 0 else {
             hLine.mas_makeConstraints { make in
                 make?.left.right().equalTo()(0)
@@ -385,14 +387,16 @@ private extension AgoraAlertController {
             make?.height.equalTo()(1)
             make?.top.equalTo()(messageLabel.mas_bottom)?.offset()(20)
         }
+        
+        let config = UIConfig.alert.button
         if model.actions.count == 1 {
             let action = model.actions.first
             let button = UIButton(type: .custom)
             button.tag = buttonStartTag
-            button.titleLabel?.font = FcrUIFontGroup.fcr_font17
+            button.titleLabel?.font = config.font
             button.setTitle(action?.title,
                             for: .normal)
-            button.setTitleColor(FcrUIColorGroup.fcr_text_enabled_color,
+            button.setTitleColor(config.normalTitleColor,
                                  for: .normal)
             button.addTarget(self,
                              action: #selector(onClickActionButton(_:)),
@@ -427,7 +431,7 @@ private extension AgoraAlertController {
                 }
                 if lastOne == false {
                     let line = UIView()
-                    line.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+                    line.backgroundColor = UIConfig.alert.sepLine.backgroundColor
                     contentView.addSubview(line)
                     previous = line
                     line.mas_makeConstraints { make in
@@ -459,7 +463,7 @@ private extension AgoraAlertController {
             make?.height.equalTo()(44)
         }
         let line = UIView()
-        line.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        line.backgroundColor = UIConfig.alert.sepLine.backgroundColor
         contentView.addSubview(line)
         line.mas_makeConstraints { make in
             make?.top.equalTo()(hLine.mas_bottom)
@@ -471,13 +475,14 @@ private extension AgoraAlertController {
     }
     
     func generateButton(title: String?, index: Int) -> UIButton {
+        let config = UIConfig.alert.button
         
         let button = UIButton(type: .custom)
         button.tag = buttonStartTag + index
-        button.titleLabel?.font = FcrUIFontGroup.fcr_font17
+        button.titleLabel?.font = config.font
         button.setTitle(title,
                         for: .normal)
-        button.setTitleColor(FcrUIColorGroup.fcr_text_enabled_color,
+        button.setTitleColor(config.normalTitleColor,
                              for: .normal)
         button.addTarget(self,
                          action: #selector(onClickActionButton(_:)),

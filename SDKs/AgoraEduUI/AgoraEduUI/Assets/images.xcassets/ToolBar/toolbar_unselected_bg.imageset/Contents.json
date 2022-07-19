@@ -25,7 +25,7 @@
       "scale" : "1x"
     },
     {
-      "filename" : "fcr_toolbar_unselected_bg_light@2x.png",
+      "filename" : "light-icon-bg(none)-default-iPhone@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -47,12 +47,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "dark-icon-bg(noshadow)-default-iPhone@2x.png",
+      "filename" : "椭圆形@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "fcr_toolbar_unselected_bg_light@3x.png",
+      "filename" : "light-icon-bg(none)-default-iPhone@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -74,7 +74,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "dark-icon-bg(noshadow)-default-iPhone@3x.png",
+      "filename" : "椭圆形@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

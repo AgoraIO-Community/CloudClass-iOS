@@ -8,167 +8,175 @@
 import UIKit
 
 struct FcrUIColorGroup {
-    // standard
-    static var fcr_system_background_color: UIColor {
+    // MARK: - UI Config
+    // 背景色
+    static var systemBackgroundColor: UIColor {
         switch UIMode {
         case .agoraLight: return UIColor(hex: 0xF9F9FC)!
-        case .agoraDark:  return UIColor(hex: 0x121212)!
+        case .agoraDark:  return UIColor(hex: 0x262626)!
         }
     }
     
-    static var fcr_system_foreground_color: UIColor {
+    // 前景色
+    static var systemForegroundColor: UIColor {
         switch UIMode {
         case .agoraLight:  return UIColor(hex: 0xFFFFFF)!
         case .agoraDark:   return UIColor(hex: 0x1D1D1D)!
         }
     }
     
-    static var fcr_system_component_color: UIColor {
+    // 组件背景色
+    static var systemComponentColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0xFFFFFF)!
-        case .agoraDark:    return UIColor(hex: 0x2A2A2A)!
+        case .agoraDark:    return UIColor(hex: 0x2F2F2F)!
         }
     }
     
-    static var fcr_system_divider_color: UIColor {
+    // 边框/分割线色
+    static var systemDividerColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0xEEEEF7)!
         case .agoraDark:    return UIColor(hex: 0x373737)!
         }
     }
-    
-    static var fcr_system_highlight_color: UIColor {
-        switch UIMode {
-        case .agoraLight:   return UIColor(hex: 0x357BF6)!
-        case .agoraDark:    return UIColor(hex: 0x317AF7)!
-        }
-    }
 
-    static var fcr_system_error_color: UIColor {
+    // 警告色
+    static var systemErrorColor: UIColor {
         switch UIMode {
-        case .agoraLight:   return UIColor(hex: 0xF04C36)!
-        case .agoraDark:    return UIColor(hex: 0xD94838)!
+        case .agoraLight:   return UIColor(hex: 0xF5655C)!
+        case .agoraDark:    return UIColor(hex: 0xF5655C)!
         }
     }
     
-    static var fcr_system_warning_color: UIColor {
+    // 警示色
+    static var systemWarningColor: UIColor {
         switch UIMode {
-        case .agoraLight:   return UIColor(hex: 0xFFA229)!
-        case .agoraDark:    return UIColor(hex: 0xF8A01D)!
+        case .agoraLight:   return UIColor(hex: 0xFFB554)!
+        case .agoraDark:    return UIColor(hex: 0xFFB554)!
         }
     }
     
-    static var fcr_system_safe_color: UIColor {
+    // 安全色
+    static var systemSafeColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x64BB5C)!
         case .agoraDark:    return UIColor(hex: 0x69C42E)!
         }
     }
     
-    // icon
-    static var fcr_icon_normal_color: UIColor {
+    // 图标被选背景色
+    static var iconSelectedBackgroundColor: UIColor {
+        switch UIMode {
+        case .agoraLight:   return UIColor(hex: 0xF8F9FC)!
+        case .agoraDark:    return UIColor(hex: 0x323232)!
+        }
+    }
+    
+    // 图标色
+    static var iconNormalBackgroundColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x7B88A0)!
         case .agoraDark:    return UIColor(hex: 0x8E8E8E)!
         }
     }
     
-    static var fcr_icon_fill_color: UIColor {
+    // 填充按钮色
+    static var iconFillColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x357BF6)!
         case .agoraDark:    return UIColor(hex: 0x317AF7)!
         }
     }
     
-    static var fcr_icon_line_color: UIColor {
+    // 线框按钮色
+    static var iconLineColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0xEEEEF7)!
         case .agoraDark:    return UIColor(hex: 0x373737)!
         }
     }
     
-    // Text
-    static var fcr_text_level1_color: UIColor {
+    // 一级文本色
+    static var textLevel1Color: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x191919)!
-        case .agoraDark:    return UIColor(hex: 0xFFFFFF)!.withAlphaComponent(0.87)
+        case .agoraDark:    return UIColor(hex: 0xFFFFFF)!.withAlphaComponent(0.80)
         }
     }
     
-    static var fcr_text_level2_color: UIColor {
+    // 二级文本色
+    static var textLevel2Color: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x586376)!
         case .agoraDark:    return UIColor(hex: 0xFFFFFF)!.withAlphaComponent(0.60)
         }
     }
     
-    static var fcr_text_level3_color: UIColor {
+    // 三级文本色
+    static var textLevel3Color: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x7B88A0)!
         case .agoraDark:    return UIColor(hex: 0xFFFFFF)!.withAlphaComponent(0.60)
         }
     }
     
-    static var fcr_text_disabled_color: UIColor {
+    // 不可用文本色
+    static var textDisabledColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0xBDBDCA)!
         case .agoraDark:    return UIColor(hex: 0xFFFFFF)!.withAlphaComponent(0.38)
         }
     }
     
-    static var fcr_text_enabled_color: UIColor {
+    // 可点击/链接色
+    static var textEnabledColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x357BF6)!
         case .agoraDark:    return UIColor(hex: 0x317AF7)!
         }
     }
     
-    static var fcr_text_contrast_color: UIColor {
+    // 主按钮文本色
+    static var textContrastColor: UIColor {
         switch UIMode {
-        case .agoraLight:   return .white
-        case .agoraDark:    return .white
+        case .agoraLight:   return UIColor(hex: 0xFFFFFF)!
+        case .agoraDark:    return UIColor(hex: 0xFFFFFF)!
         }
     }
-    
-    // border
-    static var fcr_border_color: CGColor {
+     
+    // MARK: - UI Standard
+    static var borderColor: UIColor {
         switch UIMode {
-        case .agoraLight:  return UIColor(hex: 0xEEEEF7)!.cgColor
-        case .agoraDark:   return UIColor(hex: 0x373737)!.cgColor
+        case .agoraLight:  return UIColor(hex: 0xEEEEF7)!
+        case .agoraDark:   return UIColor(hex: 0x373737)!
         }
     }
     
     // shadow
-    static var fcr_text_shadow_color: CGColor {
+    static var textShadowColor: UIColor {
         switch UIMode {
         case .agoraLight:  return UIColor(hex: 0x0D1D3D,
-                                          transparency: 0.8)!.cgColor
+                                          transparency: 0.8)!
         case .agoraDark:   return UIColor(hex: 0x0D1D3D,
-                                          transparency: 0.8)!.cgColor
+                                          transparency: 0.8)!
         }
     }
     
-    static var fcr_container_shadow_color: CGColor {
+    static var containerShadowColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x2F4192,
-                                           transparency: 0.15)!.cgColor
+                                           transparency: 0.15)!
         case .agoraDark:    return UIColor(hex: 0x000000,
-                                           transparency: 0.12)!.cgColor
+                                           transparency: 0.12)!
         }
     }
     
-    static var fcr_label_shadow_radius: CGFloat = 2
-    static var fcr_label_shadow_offset: CGSize = CGSize(width: 0,
+    static var labelShadowRadius: CGFloat = 2
+    static var labelShadowOffset: CGSize = CGSize(width: 0,
                                                         height: 1)
-    static var fcr_shadow_opacity: Float = 1
-    static var fcr_shadow_radius: CGFloat = 8
-    static var fcr_view_shadow_offset: CGSize = CGSize(width: 0,
+    static var shadowOpacity: Float = 1
+    static var containerShadowRadius: CGFloat = 8
+    static var containerShadowOffset: CGSize = CGSize(width: 0,
                                                        height: 2)
-    
-    static func borderSet(layer: CALayer) {
-        layer.shadowColor = fcr_container_shadow_color
-        layer.shadowOffset = fcr_view_shadow_offset
-        layer.shadowOpacity = fcr_shadow_opacity
-        layer.shadowRadius = fcr_shadow_radius
-    }
 }

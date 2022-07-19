@@ -43,19 +43,11 @@ class AgoraToolBarUIController: UIViewController {
     var suggestSize: CGSize {
         get {
             return CGSize(width: UIDevice.current.agora_is_pad ? 34 : 30,
-                          height: CGFloat(tools.count) * (kButtonLength + kGap) - kGap)
+                          height: CGFloat(dataSource.count) * (kButtonLength + kGap) - kGap)
         }
     }
     
     /** 展示的工具*/
-    public var tools = [FcrToolBarItemType]() {
-        didSet {
-            updateDataSource()
-        }
-    }
-    
-    private var hiddenTools = [FcrToolBarItemType]()
-    
     private var dataSource = [FcrToolBarItemType]()
         
     private var collectionView: UICollectionView!
@@ -68,7 +60,7 @@ class AgoraToolBarUIController: UIViewController {
     private var handsListCount = 0 {
         didSet {
             guard handsListCount != oldValue,
-                  let indexPath = tools.indexOfType(.handsList) else {
+                  let indexPath = dataSource.indexOfType(.handsList) else {
                       return
             }
             collectionView.reloadItems(at: [indexPath])
@@ -79,7 +71,7 @@ class AgoraToolBarUIController: UIViewController {
         let v = AgoraHandsUpTipsView()
         v.isHidden = true
         view.addSubview(v)
-        if let index = self.dataSource.firstIndex(of: .handsup) {
+        if let index = self.dataSource.firstIndex(of: .waveHands) {
             let cell = self.collectionView.cellForItem(at: IndexPath(row: index,
                                                                      section: 0))
             v.mas_makeConstraints { make in
@@ -121,6 +113,11 @@ class AgoraToolBarUIController: UIViewController {
         contextPool.group.registerGroupEventHandler(self)
     }
     
+    public func updateTools(_ list: [FcrToolBarItemType]) {
+        dataSource = list.enabledList()
+        updateDataSource()
+    }
+    
     public func deselectAll() {
         guard selectedTool != nil else {
             return
@@ -134,7 +131,7 @@ class AgoraToolBarUIController: UIViewController {
             return
         }
         messageRemind = isShow
-        guard let indexPath = tools.indexOfType(.message) else {
+        guard let indexPath = dataSource.indexOfType(.message) else {
             return
         }
         collectionView.reloadItems(at: [indexPath])
@@ -195,7 +192,7 @@ extension AgoraToolBarUIController: AgoraEduGroupHandler {
         if let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
            userList.contains(teacherId),
            teacherInLocalSubRoom(),
-           let indexPath = tools.indexOfType(.help) {
+           let indexPath = dataSource.indexOfType(.help) {
             collectionView.reloadItems(at: [indexPath])
         }
     }
@@ -204,7 +201,7 @@ extension AgoraToolBarUIController: AgoraEduGroupHandler {
                                       subRoomUuid: String) {
         if let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
            userList.contains(where: {$0.userUuid == teacherId}),
-           let indexPath = tools.indexOfType(.help) {
+           let indexPath = dataSource.indexOfType(.help) {
             collectionView.reloadItems(at: [indexPath])
         }
     }
@@ -216,8 +213,7 @@ private extension AgoraToolBarUIController {
         guard collectionView != nil else {
             return
         }
-        var temp = self.tools
-        self.dataSource = temp.removeAll(self.hiddenTools)
+        
         let count = CGFloat(self.dataSource.count)
         collectionView.mas_remakeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
@@ -292,7 +288,7 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
             cell.aSelected = aSelected
             cell.redDot.isHidden = !messageRemind
             return cell
-        } else if tool == .handsup {
+        } else if tool == .waveHands {
             let cell = waveHandsCell ?? collectionView.dequeueReusableCell(withClass: FcrToolBarWaveHandsCell.self,
                                                                          for: indexPath)
             let image = tool.unselectedImage
@@ -355,7 +351,7 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let tool = dataSource[indexPath.row]
-        if tool == .handsup {
+        if tool == .waveHands {
             return false
         } else {
             return true
@@ -377,7 +373,7 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         let tool = dataSource[indexPath.row]
-        if tool == .handsup {
+        if tool == .waveHands {
             waveHandsCell?.waveHandsDelayView.isHidden = false
             waveHandsCell?.waveHandsDelayView.startTimer()
             return false
@@ -418,6 +414,47 @@ private extension AgoraToolBarUIController {
 }
 
 extension Array where Element == FcrToolBarItemType {
+    func enabledList() -> [FcrToolBarItemType] {
+        let config = UIConfig.toolBar
+        
+        var list = [FcrToolBarItemType]()
+        for item in self {
+            switch item {
+            case .setting:
+                if config.setting.enable,
+                   config.setting.visible {
+                    list.append(item)
+                }
+            case .roster:
+                if UIConfig.roster.enable,
+                   UIConfig.roster.visible {
+                    list.append(item)
+                }
+            case .message:
+                if config.message.enable,
+                   config.message.visible {
+                    list.append(item)
+                }
+            case .waveHands:
+                if UIConfig.raiseHand.enable,
+                   UIConfig.raiseHand.visible {
+                    list.append(item)
+                }
+            case .handsList:
+                if config.handsList.enable,
+                   config.handsList.visible {
+                    list.append(item)
+                }
+            case .help:
+                if UIConfig.breakoutRoom.help.enable,
+                   UIConfig.breakoutRoom.help.visible {
+                    list.append(item)
+                }
+            }
+        }
+        return list
+    }
+    
     func indexOfType(_ type: FcrToolBarItemType) -> IndexPath? {
         guard let index = self.firstIndex(of: type) else {
             return nil

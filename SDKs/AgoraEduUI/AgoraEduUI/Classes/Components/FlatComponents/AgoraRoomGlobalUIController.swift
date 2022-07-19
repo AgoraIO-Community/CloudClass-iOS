@@ -7,7 +7,6 @@
 
 import AgoraUIBaseViews
 import AgoraEduContext
-import FLAnimatedImage
 import AudioToolbox
 
 protocol AgoraRoomGlobalUIControllerDelegate: NSObjectProtocol {
@@ -198,14 +197,14 @@ extension AgoraRoomGlobalUIController: AgoraEduMonitorHandler {
                                              roomType: .main)
         case .connecting:
             let message = "fcr_room_loading".agedu_localized()
-            AgoraLoading.loading(msg: message)
+            AgoraLoading.loading(message: message)
         case .disconnected, .reconnecting:
             let toastMessage = "fcr_monitor_network_disconnected".agedu_localized()
             AgoraToast.toast(msg: toastMessage,
                              type: .error)
             
             let loadingMessage = "fcr_monitor_network_reconnecting".agedu_localized()
-            AgoraLoading.loading(msg: loadingMessage)
+            AgoraLoading.loading(message: loadingMessage)
         case .connected:
             AgoraLoading.hide()
         }
@@ -299,7 +298,7 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
             var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
                                                   with: userInfo.userName)
             AgoraToast.toast(msg: final,
-                             type: .success)
+                             type: .notice)
         }
     }
     
@@ -444,7 +443,7 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
                 let message = "fcr_stream_start_video".agedu_localized()
                 
                 AgoraToast.toast(msg: message,
-                                 type: .success)
+                                 type: .notice)
             } else {
                 let message = "fcr_stream_stop_video".agedu_localized()
                 
@@ -478,8 +477,8 @@ private extension AgoraRoomGlobalUIController {
             return
         }
         
-        let animatedImage = FLAnimatedImage(animatedGIFData: data)
-        let imageView = FLAnimatedImageView()
+        let animatedImage = AGAnimatedImage(animatedGIFData: data)
+        let imageView = AGAnimatedImageView()
         imageView.animatedImage = animatedImage
         imageView.loopCompletionBlock = { [weak imageView] (loopCountRemaining) -> Void in
             imageView?.removeFromSuperview()
@@ -539,8 +538,8 @@ private extension AgoraRoomGlobalUIController {
               let data = try? Data(contentsOf: url) else {
             return
         }
-        let animatedImage = FLAnimatedImage(animatedGIFData: data)
-        let imageView = FLAnimatedImageView()
+        let animatedImage = AGAnimatedImage(animatedGIFData: data)
+        let imageView = AGAnimatedImageView()
         imageView.animatedImage = animatedImage
         imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
             imageView?.removeFromSuperview()

@@ -123,7 +123,7 @@ class AgoraBoardToolConfigView: UIView {
         }
     }
     
-    let toolCollectionHeight = (kToolLength + kGapLength) * ceil(CGFloat(AgoraBoardToolPaintType.allCases.count) / 4) + kGapLength
+    private lazy var toolCollectionHeight = (kToolLength + kGapLength) * ceil(CGFloat(paintTools.count) / 4) + kGapLength
     var colorCollectionHeight: CGFloat {
         get {
             return (kColorLength + kGapLength) * ceil(CGFloat(hexColors.count) / 4) + kGapLength
@@ -142,12 +142,13 @@ class AgoraBoardToolConfigView: UIView {
     private var colorCollectionView: UICollectionView!
     
     /** Data*/
+    private lazy var paintTools = AgoraBoardToolPaintType.allCases.enabledTypes()
     public weak var delegate: AgoraBoardToolConfigViewDelegate?
     private var contextPool: AgoraEduContextPool!
     
     private let hexColors: [Int] = [
-        0xFFFFFF, 0x9B9B9B, 0x4A4A4A, 0x000000, 0xD0021B, 0xF5A623,
-        0xF8E71C, 0x7ED321, 0x9013FE, 0x50E3C2, 0x0073FF, 0xFFC8E2
+        0x9B9B9B, 0x4A4A4A, 0x000000, 0xD0021B, 0xF5A623, 0xF8E71C,
+        0x7ED321, 0xEB47A2, 0x9013FE, 0x50E3C2, 0x0073FF, 0xFFC8E2
     ]
     
     var curLineWidth: AgoraBoardToolsLineWidth = .width2 {
@@ -219,7 +220,7 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         if collectionView == subPaintCollectionView {
-            return AgoraBoardToolPaintType.allCases.count
+            return paintTools.count
         } else if collectionView == lineWidthCollectionView {
             return AgoraBoardToolsLineWidth.allCases.count
         } else if collectionView == textSizecollectionView {
@@ -236,11 +237,10 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
         if collectionView == subPaintCollectionView {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolCollectionToolCell.self,
                                                           for: indexPath)
-            if let tool = AgoraBoardToolPaintType(rawValue: indexPath.row) {
-                cell.setImage(image: (tool == currentPaintTool) ? tool.selectedImage : tool.unselectedImage,
-                              color: UIColor.fakeWhite(UIColor(hex: currentColor)))
-                cell.aSelected = (tool == currentPaintTool)
-            }
+            let tool = paintTools[indexPath.row]
+            cell.setImage(image: tool.image,
+                          color: UIColor(hex: currentColor))
+            cell.aSelected = (tool == currentPaintTool)
             return cell
         } else if collectionView == lineWidthCollectionView {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardLineWidthCell.self,
@@ -253,14 +253,14 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
             let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardTextSizeItemCell.self,
                                                           for: indexPath)
             cell.level = indexPath.row
-            cell.color = UIColor.fakeWhite(UIColor(hex: currentColor))
+            cell.color = UIColor(hex: currentColor)
             cell.aSelected = (AgoraBoardToolsFont(rawValue: indexPath.row) == curTextFont)
             return cell
         } else if collectionView == colorCollectionView {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraBoardColorItemCell.self,
                                                           for: indexPath)
             let color = hexColors[indexPath.row]
-            cell.color = (color == 0xFFFFFF ? nil : UIColor(hex: color))
+            cell.color = UIColor(hex: color)!
             cell.aSelected = (currentColor == color)
             return cell
         } else {
@@ -276,9 +276,8 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
                                     animated: false)
         
         if collectionView == subPaintCollectionView,
-           let newValue = AgoraBoardToolPaintType(rawValue: indexPath.row),
-           newValue != currentPaintTool {
-            let tool = AgoraBoardToolPaintType.allCases[indexPath.row]
+           indexPath.row < paintTools.count {
+            let tool = paintTools[indexPath.row]
             if currentPaintTool != tool {
                 currentPaintTool = tool
                 self.delegate?.didSelectPaintType(currentPaintTool)
@@ -305,13 +304,17 @@ extension AgoraBoardToolConfigView: UICollectionViewDelegate, UICollectionViewDa
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == subPaintCollectionView {
-            return CGSize(width: kToolLength, height: kToolLength)
+            return CGSize(width: kToolLength,
+                          height: kToolLength)
         } else if collectionView == lineWidthCollectionView {
-            return CGSize(width: kWidthLength, height: kWidthLength)
+            return CGSize(width: kWidthLength,
+                          height: kWidthLength)
         } else if collectionView == colorCollectionView {
-            return CGSize(width: kColorLength, height: kColorLength)
+            return CGSize(width: kColorLength,
+                          height: kColorLength)
         } else if collectionView == textSizecollectionView {
-            return CGSize(width: kFontLength, height: kFontLength)
+            return CGSize(width: kFontLength,
+                          height: kFontLength)
         }
         return CGSize(width: 0, height: 0)
     }
@@ -357,6 +360,19 @@ extension AgoraBoardToolConfigView: AgoraUIContentContainer {
         
         contentView.addSubview(topLine)
         contentView.addSubview(bottomLine)
+        
+        let config = UIConfig.netlessBoard
+        subPaintCollectionView.agora_enable = config.paint.enable
+        subPaintCollectionView.agora_visible = config.paint.visible
+        
+        lineWidthCollectionView.agora_enable = config.lineWidth.enable
+        lineWidthCollectionView.agora_visible = config.lineWidth.visible
+        
+        colorCollectionView.agora_enable = config.colors.enable
+        colorCollectionView.agora_visible = config.colors.visible
+        
+        textSizecollectionView.agora_enable = config.textSize.enable
+        textSizecollectionView.agora_visible = config.textSize.visible
     }
     
     func initViewFrame() {
@@ -376,17 +392,21 @@ extension AgoraBoardToolConfigView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.toolCollection
         
+        layer.shadowColor = config.shadow.color
+        layer.shadowOffset = config.shadow.offset
+        layer.shadowOpacity = config.shadow.opacity
+        layer.shadowRadius = config.shadow.radius
         
-        FcrUIColorGroup.borderSet(layer: layer)
-        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_square_container_corner_radius
+        contentView.backgroundColor = config.backgroundColor
+        contentView.layer.cornerRadius = config.windowCornerRadius
         contentView.clipsToBounds = true
-        contentView.borderWidth = FcrUIFrameGroup.fcr_border_width
-        contentView.layer.borderColor = FcrUIColorGroup.fcr_border_color
+        contentView.borderWidth = config.borderWidth
+        contentView.layer.borderColor = config.borderColor
         
-        topLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
-        bottomLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        topLine.backgroundColor = config.sepLine.backgroundColor
+        bottomLine.backgroundColor = config.sepLine.backgroundColor
     }
     
     
@@ -453,5 +473,57 @@ private extension AgoraBoardToolConfigView {
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
+    }
+}
+
+fileprivate extension Array where Element == AgoraBoardToolPaintType {
+    func enabledTypes() -> [AgoraBoardToolPaintType] {
+        let config = UIConfig.netlessBoard
+        var list = [AgoraBoardToolPaintType]()
+        for item in self {
+            switch item {
+            case .line:
+                if config.line.enable,
+                   config.line.visible {
+                    list.append(item)
+                }
+            case .pencil:
+                if config.pencil.enable,
+                   config.pencil.visible {
+                    list.append(item)
+                }
+            case .rect:
+                if config.rect.enable,
+                   config.rect.visible {
+                    list.append(item)
+                }
+            case .circle:
+                if config.circle.enable,
+                   config.circle.visible {
+                    list.append(item)
+                }
+            case .pentagram:
+                if config.pentagram.enable,
+                   config.pentagram.visible {
+                    list.append(item)
+                }
+            case .rhombus:
+                if config.rhombus.enable,
+                   config.rhombus.visible {
+                    list.append(item)
+                }
+            case .arrow:
+                if config.arrow.enable,
+                   config.arrow.visible {
+                    list.append(item)
+                }
+            case .triangle:
+                if config.triangle.enable,
+                   config.triangle.visible {
+                    list.append(item)
+                }
+            }
+        }
+        return list
     }
 }

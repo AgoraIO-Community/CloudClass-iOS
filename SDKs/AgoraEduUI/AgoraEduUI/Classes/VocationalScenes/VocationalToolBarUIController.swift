@@ -57,7 +57,7 @@ class VocationalToolBarUIController: UIViewController {
     private var handsupCell: AgoraToolBarHandsUpCell?
     
     /** 画笔图片*/
-    private var brushImage = UIImage.agedu_named("toolcollection_clicker")
+    private var brushImage = UIConfig.netlessBoard.mouse.unselectedImage
     /** 画笔颜色*/
     private var brushColor = UIColor(hex: 0xE1E1EA)
     /** 消息提醒*/
@@ -75,7 +75,7 @@ class VocationalToolBarUIController: UIViewController {
         let v = AgoraHandsUpTipsView()
         v.isHidden = true
         view.addSubview(v)
-        if let index = self.dataSource.firstIndex(of: .handsup) {
+        if let index = self.dataSource.firstIndex(of: .waveHands) {
             let cell = self.collectionView.cellForItem(at: IndexPath(row: index,
                                                                      section: 0))
             v.mas_makeConstraints { make in
@@ -292,7 +292,7 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
             cell.aSelected = aSelected
             cell.redDot.isHidden = !messageRemind
             return cell
-        } else if tool == .handsup {
+        } else if tool == .waveHands {
             let cell = handsupCell ?? collectionView.dequeueReusableCell(withClass: AgoraToolBarHandsUpCell.self,
                                                                          for: indexPath)
             if handsupCell == nil {
@@ -350,7 +350,7 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let tool = dataSource[indexPath.row]
-        if tool == .handsup {
+        if tool == .waveHands {
             return false
         } else {
             return true
@@ -391,7 +391,7 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         let tool = dataSource[indexPath.row]
-        if tool == .handsup {
+        if tool == .waveHands {
             return false
         } else {
             return true

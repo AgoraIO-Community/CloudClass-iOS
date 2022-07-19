@@ -8,17 +8,9 @@
 import AgoraUIBaseViews
 import UIKit
 
-@objc public enum AgoraUIMode: Int {
+@objc public enum FcrUIMode: Int {
     case agoraLight
     case agoraDark
 }
 
-var UIMode: AgoraUIMode = .agoraLight {
-    didSet {
-        if #available(iOS 13.0, *) {
-            let style: UIUserInterfaceStyle = (UIMode == .agoraDark) ? .dark : .light
-            UIViewController.ag_topViewController().overrideUserInterfaceStyle = style
-        }
-    }
-}
-
+var UIMode: FcrUIMode = .agoraLight

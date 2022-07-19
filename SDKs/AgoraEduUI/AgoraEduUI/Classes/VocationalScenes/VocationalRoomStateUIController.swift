@@ -81,11 +81,11 @@ extension VocationalRoomStateUIController: AgoraUIContentContainer, AgoraUIActiv
     }
     
     func updateViewProperties() {
-        view.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
-        view.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
-        view.layer.borderColor = FcrUIColorGroup.fcr_border_color
+        view.backgroundColor = FcrUIColorGroup.systemForegroundColor
+        view.layer.borderWidth = FcrUIFrameGroup.borderWidth
+        view.layer.borderColor = FcrUIColorGroup.borderColor.cgColor
         
-        stateView.backgroundColor = FcrUIColorGroup.fcr_system_foreground_color
+        stateView.backgroundColor = FcrUIColorGroup.systemForegroundColor
         
         var roomTitle: String
         switch contextPool.room.getRoomInfo().roomType {
@@ -96,8 +96,8 @@ extension VocationalRoomStateUIController: AgoraUIContentContainer, AgoraUIActiv
         }
         stateView.titleLabel.text = roomTitle
         
-        stateView.titleLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
-        stateView.timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+        stateView.titleLabel.textColor = FcrUIColorGroup.textLevel3Color
+        stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
         
         let recordingTitle = "fcr_record_recording".agedu_localized()
         stateView.recordingLabel.text = recordingTitle
@@ -156,7 +156,7 @@ private extension VocationalRoomStateUIController {
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch info.state {
         case .before:
-            stateView.timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+            stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
             if info.startTime == 0 {
                 stateView.timeLabel.text = "fcr_room_class_not_start".agedu_localized()
             } else {
@@ -165,7 +165,7 @@ private extension VocationalRoomStateUIController {
                 stateView.timeLabel.text = text + timeString(from: time)
             }
         case .after:
-            stateView.timeLabel.textColor = FcrUIColorGroup.fcr_system_error_color
+            stateView.timeLabel.textColor = FcrUIColorGroup.systemErrorColor
             let time = realTime - info.startTime
             let text = "fcr_room_class_over".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)
@@ -186,7 +186,7 @@ private extension VocationalRoomStateUIController {
                 AgoraToast.toast(msg: final)
             }
         case .during:
-            stateView.timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+            stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
             let time = realTime - info.startTime
             let text = "fcr_room_class_started".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)
@@ -362,20 +362,20 @@ class VocationalRoomStateBar: UIView, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let font = FcrUIFontGroup.fcr_font9
+        let font = FcrUIFontGroup.font9
         
         timeLabel.font = font
-        timeLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+        timeLabel.textColor = FcrUIColorGroup.textLevel3Color
         
-        sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        sepLine.backgroundColor = FcrUIColorGroup.systemDividerColor
         
         titleLabel.font = font
-        titleLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
+        titleLabel.textColor = FcrUIColorGroup.textLevel1Color
         
-        recordingStateView.backgroundColor = FcrUIColorGroup.fcr_system_error_color
-        recordingStateView.layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
+        recordingStateView.backgroundColor = FcrUIColorGroup.systemErrorColor
+        recordingStateView.layer.cornerRadius = FcrUIFrameGroup.containerCornerRadius
         
-        recordingLabel.textColor = FcrUIColorGroup.fcr_text_level3_color
+        recordingLabel.textColor = FcrUIColorGroup.textLevel3Color
         recordingLabel.font = font
     }
 }

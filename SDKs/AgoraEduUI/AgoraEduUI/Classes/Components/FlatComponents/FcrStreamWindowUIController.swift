@@ -118,7 +118,7 @@ extension FcrStreamWindowUIController: AgoraUIActivity {
             return
         }
         
-        view.isHidden = false
+        view.agora_visible = true
     }
     
     func viewWillInactive() {
@@ -127,7 +127,7 @@ extension FcrStreamWindowUIController: AgoraUIActivity {
         streamController.unregisterStreamEventHandler(self)
         deleteAllItems()
         
-        view.isHidden = true
+        view.agora_visible = false
     }
 }
 
@@ -466,26 +466,26 @@ private extension FcrStreamWindowUIController {
     
     func updateRenderView(_ renderView: FcrWindowRenderView,
                           data: FcrWindowRenderViewData) {
-        renderView.nameLabel.isHidden = false
-        renderView.micView.isHidden = false
-        renderView.nameLabel.isHidden = false
-        renderView.rewardView.isHidden = false
+        renderView.nameLabel.agora_visible = true
+        renderView.micView.agora_visible = true
+        renderView.nameLabel.agora_visible = true
+        renderView.rewardView.agora_visible = true
         renderView.videoView.isHidden = !(data.videoState.isBoth)
         
         renderView.nameLabel.text = data.userName
         
         switch data.videoState {
         case .none(let image):
-            renderView.videoMaskView.isHidden = false
+            renderView.videoMaskView.agora_visible = true
             renderView.videoMaskView.image = image
         case .hasStreamPublishPrivilege(let image):
-            renderView.videoMaskView.isHidden = false
+            renderView.videoMaskView.agora_visible = true
             renderView.videoMaskView.image = image
         case .mediaSourceOpen(let image):
-            renderView.videoMaskView.isHidden = false
+            renderView.videoMaskView.agora_visible = true
             renderView.videoMaskView.image = image
         case .both:
-            renderView.videoMaskView.isHidden = true
+            renderView.videoMaskView.agora_visible = false
         }
         
         switch data.audioState {
@@ -504,9 +504,9 @@ private extension FcrStreamWindowUIController {
         
         switch data.boardPrivilege {
         case .none:
-            renderView.boardPrivilegeView.isHidden = true
+            renderView.boardPrivilegeView.agora_visible = false
         case .has(let image):
-            renderView.boardPrivilegeView.isHidden = false
+            renderView.boardPrivilegeView.agora_visible = true
             renderView.boardPrivilegeView.image = image
         }
         
@@ -518,23 +518,23 @@ private extension FcrStreamWindowUIController {
     func createRenderView() -> FcrWindowRenderView {
         let renderView = FcrWindowRenderView(frame: .zero)
         
+        let config = UIConfig.streamWindow
+        renderView.backgroundColor = config.backgroundColor
+        renderView.layer.cornerRadius = config.cornerRadius
+        renderView.layer.borderWidth = config.borderWidth
+        renderView.layer.borderColor = config.borderColor
         
-        renderView.backgroundColor = FcrUIColorGroup.fcr_system_background_color
-        renderView.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
-        renderView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
-        renderView.layer.borderColor = FcrUIColorGroup.fcr_border_color
+        renderView.boardPrivilegeView.agora_visible = false
+        renderView.micView.agora_visible = false
+        renderView.nameLabel.agora_visible = false
+        renderView.rewardView.agora_visible = false
+        renderView.videoMaskView.agora_visible = false
         
-        renderView.boardPrivilegeView.isHidden = true
-        renderView.micView.isHidden = true
-        renderView.nameLabel.isHidden = true
-        renderView.rewardView.isHidden = true
-        renderView.videoMaskView.isHidden = true
-        
-        renderView.boardPrivilegeView.isHidden = true
-        renderView.micView.isHidden = true
-        renderView.nameLabel.isHidden = true
-        renderView.rewardView.isHidden = true
-        renderView.videoMaskView.isHidden = true
+        renderView.boardPrivilegeView.agora_visible = false
+        renderView.micView.agora_visible = false
+        renderView.nameLabel.agora_visible = false
+        renderView.rewardView.agora_visible = false
+        renderView.videoMaskView.agora_visible = false
         
         return renderView
     }

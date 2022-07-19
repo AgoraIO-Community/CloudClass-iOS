@@ -104,33 +104,28 @@ extension AgoraToastTipsView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.toast
         
-        layer.borderColor = UIColor.white.cgColor
-        layer.borderWidth = FcrUIFrameGroup.fcr_border_width
-        layer.cornerRadius = FcrUIFrameGroup.fcr_toast_corner_radius
-        FcrUIColorGroup.borderSet(layer: layer)
+        layer.cornerRadius = config.cornerRadius
         
-        titleLabel.textColor = FcrUIColorGroup.fcr_text_level1_color
-        titleLabel.font = FcrUIFontGroup.fcr_font14
+        layer.shadowColor = config.shadow.color
+        layer.shadowOffset = config.shadow.offset
+        layer.shadowOpacity = config.shadow.opacity
+        layer.shadowRadius = config.shadow.radius
         
-        // TODO: toast color special
+        titleLabel.textColor = config.label.color
+        titleLabel.font = config.label.font
+        
         switch type {
         case .notice:
-            self.backgroundColor = UIColor(hex: 0xFAFFFF)
-            self.layer.borderColor = FcrUIColorGroup.fcr_icon_fill_color.cgColor
-            self.imageView.image = UIImage.agedu_named("ic_toast_message_notice")
+            backgroundColor = config.safeBackgroundColor
+            imageView.image = config.noticeImage
         case .warning:
-            self.backgroundColor = UIColor(hex: 0xFFFBF4)
-            self.layer.borderColor = UIColor(hex: 0xF0C996)?.cgColor
-            self.imageView.image = UIImage.agedu_named("ic_toast_message_warning")
+            backgroundColor = config.warningBackgroundColor
+            imageView.image = config.warningImage
         case .error:
-            self.backgroundColor = UIColor(hex: 0xFFF2F2)
-            self.layer.borderColor = UIColor(hex: 0xF07766)?.cgColor
-            self.imageView.image = UIImage.agedu_named("ic_toast_message_error")
-        case .success:
-            self.backgroundColor = UIColor(hex: 0xFAFFFF)
-            self.layer.borderColor = FcrUIColorGroup.fcr_icon_fill_color.cgColor
-            self.imageView.image = UIImage.agedu_named("ic_toast_message_notice")
+            backgroundColor = config.errorBackgroundColor
+            imageView.image = config.warningImage
         }
     }
 }

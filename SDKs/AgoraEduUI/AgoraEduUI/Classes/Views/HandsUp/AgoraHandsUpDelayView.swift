@@ -24,10 +24,7 @@ class AgoraHandsUpDelayView: UIView {
         }
     }
     
-    private lazy var imageView: UIImageView = {
-        let image = UIImage.agedu_named("toolbar_hands_up")
-        return UIImageView(image: image?.withRenderingMode(.alwaysTemplate))
-    }()
+    private lazy var imageView = UIImageView()
     
     private lazy var delayLabel = UILabel()
     
@@ -38,27 +35,12 @@ class AgoraHandsUpDelayView: UIView {
             }
             
             delegate?.onHandsUpViewDidChangeState(state)
-            
-            switch state {
-            case .free:
-                backgroundColor = itemBackgroundUnselectedColor
-            case .hold:
-                backgroundColor = itemBackgroundSelectedColor
-            case .counting:
-                backgroundColor = itemBackgroundSelectedColor
-            default: break
-            }
         }
     }
     
     private var timer: Timer?
     
     private var count = 3
-        
-    private var itemSelectedColor: UIColor!
-    private var itemUnselectedColor: UIColor!
-    private var itemBackgroundSelectedColor: UIColor!
-    private var itemBackgroundUnselectedColor: UIColor!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -147,21 +129,16 @@ extension AgoraHandsUpDelayView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.raiseHand
+        backgroundColor = config.backgroundColor
+        layer.cornerRadius = config.cornerRadius
         
+        layer.shadowColor = config.shadow.color
+        layer.shadowOffset = config.shadow.offset
+        layer.shadowOpacity = config.shadow.opacity
+        layer.shadowRadius = config.shadow.radius
         
-        itemSelectedColor = FcrUIColorGroup.fcr_system_component_color
-        itemUnselectedColor = FcrUIColorGroup.fcr_icon_normal_color
-        itemBackgroundSelectedColor = FcrUIColorGroup.fcr_icon_fill_color
-        itemBackgroundUnselectedColor = FcrUIColorGroup.fcr_system_component_color
-        
-        backgroundColor = itemBackgroundUnselectedColor
-        layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
-        
-        FcrUIColorGroup.borderSet(layer: layer)
-        
-        imageView.tintColor = itemUnselectedColor
-        
-        delayLabel.textColor = .white
-        delayLabel.font = FcrUIFontGroup.fcr_font13
+        delayLabel.textColor = config.textColor
+        delayLabel.font = config.font
     }
 }

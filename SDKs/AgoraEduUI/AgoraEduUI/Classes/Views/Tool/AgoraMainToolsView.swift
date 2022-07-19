@@ -22,7 +22,7 @@ fileprivate let kItemWidth: CGFloat = AgoraFit.scale(30)
 class AgoraMainToolsView: UIView {
     /** Data */
     weak var delegate: AgoraMainToolsViewDelegate?
-    // TODO: 教师端暂时删除.vote, .answerSheet, .countDown
+    // Tool Box
     var teachingAidsList: [AgoraTeachingAidType] = [.cloudStorage, .saveBoard] {
         didSet {
             if teachingAidsList.count != oldValue.count {
@@ -31,8 +31,10 @@ class AgoraMainToolsView: UIView {
         }
     }
     private var containAids: Bool = false
+    
+    // Board Tools
+    private lazy var mainBoardTools = AgoraBoardToolMainType.allCases.enabledTypes()
     /** UI */
-    private let boardToolsHeight = (kItemHeight + kGapSize) * ceil(CGFloat(AgoraBoardToolMainType.allCases.count) / 4) + kGapSize
     private var aidsHeight: CGFloat {
         get {
             return (kItemHeight + kGapSize) * ceil(CGFloat(teachingAidsList.count) / 4) + kGapSize
@@ -41,6 +43,7 @@ class AgoraMainToolsView: UIView {
     
     public var suggestSize: CGSize {
         get {
+            let boardToolsHeight = (kItemHeight + kGapSize) * ceil(CGFloat(mainBoardTools.count) / 4) + kGapSize
             if containAids {
                 return CGSize(width: (kItemWidth + kGapSize) * 4 - kGapSize + kHGapSize * 2,
                               height: boardToolsHeight + aidsHeight)
@@ -119,7 +122,7 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         if collectionView == boardToolsView {
-            return AgoraBoardToolMainType.allCases.count
+            return mainBoardTools.count
         } else if collectionView == teachingAidsView {
             return teachingAidsList.count
         }
@@ -132,11 +135,12 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
                                                       for: indexPath)
         
         if collectionView == boardToolsView,
-           let tool = AgoraBoardToolMainType(rawValue: indexPath.item) {
+           indexPath.item < mainBoardTools.count {
+           let tool = mainBoardTools[indexPath.item]
             switch tool {
             case .paint,.text:
                 cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.unselectedImage,
-                              color: UIColor.fakeWhite(curColor))
+                              color: curColor)
             default:
                 cell.setImage(image: (tool == curBoardTool) ? tool.selectedImage : tool.unselectedImage,
                               color: nil)
@@ -169,7 +173,8 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
                                                       for: indexPath)
         
         if collectionView == boardToolsView,
-           let tool = AgoraBoardToolMainType(rawValue: indexPath.item) {
+           indexPath.item < mainBoardTools.count {
+           let tool = mainBoardTools[indexPath.item]
             if tool.needUpdateCell {
                 curBoardTool = tool
             }
@@ -241,17 +246,20 @@ extension AgoraMainToolsView: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.toolCollection
+        layer.shadowColor = config.shadow.color
+        layer.shadowOffset = config.shadow.offset
+        layer.shadowOpacity = config.shadow.opacity
+        layer.shadowRadius = config.shadow.radius
         
-        FcrUIColorGroup.borderSet(layer: layer)
-        
-        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_square_container_corner_radius
+        contentView.backgroundColor = config.backgroundColor
+        contentView.layer.cornerRadius = config.windowCornerRadius
         contentView.clipsToBounds = true
-        contentView.borderWidth = FcrUIFrameGroup.fcr_border_width
-        contentView.layer.borderColor = FcrUIColorGroup.fcr_border_color
+        contentView.borderWidth = config.borderWidth
+        contentView.layer.borderColor = config.borderColor
         
         if containAids {
-            sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+            sepLine.backgroundColor = config.sepLine.backgroundColor
         }
     }
 }
@@ -279,10 +287,62 @@ private extension AgoraMainToolsView {
         let collectionView = UICollectionView(frame: .zero,
                                               collectionViewLayout: layout)
         collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        collectionView.backgroundColor = .clear
         collectionView.bounces = false
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
+    }
+}
+
+fileprivate extension Array where Element == AgoraBoardToolMainType {
+    func enabledTypes() -> [AgoraBoardToolMainType] {
+        let config = UIConfig.netlessBoard
+        var list = [AgoraBoardToolMainType]()
+        for item in self {
+            switch item {
+            case .clicker:
+                if config.mouse.enable,
+                   config.mouse.visible {
+                    list.append(item)
+                }
+            case .area:
+                if config.selector.enable,
+                   config.selector.visible {
+                    list.append(item)
+                }
+            case .paint:
+                if config.paint.enable,
+                   config.paint.visible {
+                    list.append(item)
+                }
+            case .text:
+                if config.text.enable,
+                   config.text.visible {
+                    list.append(item)
+                }
+            case .rubber:
+                if config.eraser.enable,
+                   config.eraser.visible {
+                    list.append(item)
+                }
+            case .clear:
+                if config.clear.enable,
+                   config.clear.visible {
+                    list.append(item)
+                }
+            case .pre:
+                if config.prev.enable,
+                   config.prev.visible {
+                    list.append(item)
+                }
+            case .next:
+                if config.next.enable,
+                   config.next.visible {
+                    list.append(item)
+                }
+            }
+        }
+        return list
     }
 }

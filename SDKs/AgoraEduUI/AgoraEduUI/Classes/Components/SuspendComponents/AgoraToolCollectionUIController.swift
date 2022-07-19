@@ -100,14 +100,14 @@ class AgoraToolCollectionUIController: UIViewController {
     
     /// UI
     // AgoraToolCollectionUIController自身视图为教室中的cell，同时控制工具栏和配置栏
-    private lazy var contentView = UIView(frame: .zero)
+    private lazy var contentView = UIView()
     private lazy var subCell = AgoraToolCollectionCell(isMain: false,
-                                                       color: UIColor(hex: subToolsView.currentColor) ?? FcrUIColorGroup.fcr_system_highlight_color,
-                                                       image: currentSubTool.unselectedImage,
+                                                       color: nil,
+                                                       image: currentSubTool.image,
                                                        font: subToolsView.curTextFont.value / 2)
     private lazy var sepLine = UIView()
     private lazy var mainCell = AgoraToolCollectionCell(isMain: true,
-                                                        color: UIColor(hex: subToolsView.currentColor) ?? FcrUIColorGroup.fcr_system_highlight_color,
+                                                        color: nil,
                                                         image: currentMainTool.unselectedImage)
     
     // 主要工具栏CollectionView（包含教具、白板工具）
@@ -231,11 +231,16 @@ class AgoraToolCollectionUIController: UIViewController {
     }
     
     func updateViewProperties() {
-        view.backgroundColor = .clear
-        FcrUIColorGroup.borderSet(layer: contentView.layer)
-        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
-        sepLine.backgroundColor = FcrUIColorGroup.fcr_system_divider_color
+        let config = UIConfig.toolCollection
+        
+        contentView.layer.shadowColor = config.shadow.color
+        contentView.layer.shadowOffset = config.shadow.offset
+        contentView.layer.shadowOpacity = config.shadow.opacity
+        contentView.layer.shadowRadius = config.shadow.radius
+        
+        contentView.backgroundColor = config.backgroundColor
+        contentView.layer.cornerRadius = config.cellCornerRadius
+        sepLine.backgroundColor = config.sepLine.backgroundColor
     }
 }
 // MARK: - Widget
@@ -436,7 +441,7 @@ private extension AgoraToolCollectionUIController {
                               color: UIColor(hex: subToolsView.currentColor))
         } else {
             mainCell.setImage(mainSelectedImage,
-                              color: FcrUIColorGroup.fcr_system_highlight_color)
+                              color: nil)
             
             subCell.isHidden = true
             sepLine.isHidden = true
@@ -444,7 +449,7 @@ private extension AgoraToolCollectionUIController {
         
         // 若选中的mainTool为text/paint
         if currentMainTool == .paint {
-            subCell.setImage(subToolsView.currentPaintTool.unselectedImage,
+            subCell.setImage(subToolsView.currentPaintTool.image,
                              color: UIColor(hex: subToolsView.currentColor))
             
             subCell.isHidden = false

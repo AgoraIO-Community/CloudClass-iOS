@@ -75,10 +75,16 @@ class AgoraClassStateUIController: UIViewController {
 // MARK: - AgoraUIContentContainer
 extension AgoraClassStateUIController: AgoraUIContentContainer {
     func initViews() {
+        startButton.setTitle("fcr_room_start_class".agedu_localized(),
+                             for: .normal)
         startButton.addTarget(self,
                               action: #selector(onClickStart(_:)),
                               for: .touchUpInside)
         view.addSubview(startButton)
+        
+        let config = UIConfig.classState.startClass
+        startButton.agora_enable = config.enable
+        startButton.agora_visible = config.visible
     }
     
     func initViewFrame() {
@@ -88,19 +94,19 @@ extension AgoraClassStateUIController: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.classState.startClass
         
-        
-        startButton.setTitle("fcr_room_start_class".agedu_localized(),
-                             for: .normal)
-        startButton.titleLabel?.font = FcrUIFontGroup.fcr_font13
-        startButton.backgroundColor = FcrUIColorGroup.fcr_system_highlight_color
-        startButton.setTitleColor(FcrUIColorGroup.fcr_text_contrast_color,
+        startButton.titleLabel?.font = config.font
+        startButton.backgroundColor = config.normalBackgroundColor
+        startButton.setTitleColor(config.normalTitleColor,
                                   for: .normal)
-        startButton.layer.cornerRadius = FcrUIFrameGroup.fcr_round_container_corner_radius
+        startButton.layer.cornerRadius = config.cornerRadius
         
-        FcrUIColorGroup.borderSet(layer: startButton.layer)
+        startButton.layer.shadowColor = config.shadow.color
+        startButton.layer.shadowOffset = config.shadow.offset
+        startButton.layer.shadowOpacity = config.shadow.opacity
+        startButton.layer.shadowRadius = config.shadow.radius
     }
-    
 }
 
 // MARK: - AgoraEduRoomHandler

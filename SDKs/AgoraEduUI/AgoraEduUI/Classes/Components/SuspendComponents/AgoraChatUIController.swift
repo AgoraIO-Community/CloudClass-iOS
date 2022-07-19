@@ -86,6 +86,10 @@ class AgoraChatUIController: UIViewController {
         } else {
             contextPool.room.registerRoomEventHandler(self)
         }
+        
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -95,13 +99,29 @@ class AgoraChatUIController: UIViewController {
 }
 
 // MARK: - AgoraUIActivity
-extension AgoraChatUIController: AgoraUIActivity {
+extension AgoraChatUIController: AgoraUIActivity, AgoraUIContentContainer {
     func viewWillActive() {
         createWidget()
     }
     
     func viewWillInactive() {
         releaseWidget()
+    }
+    
+    func initViews() {
+        
+    }
+    
+    func initViewFrame() {
+        
+    }
+    
+    func updateViewProperties() {
+        let config = UIConfig.agoraChat
+        view.layer.shadowColor = config.shadow.color
+        view.layer.shadowOffset = config.shadow.offset
+        view.layer.shadowOpacity = config.shadow.opacity
+        view.layer.shadowRadius = config.shadow.radius
     }
 }
 

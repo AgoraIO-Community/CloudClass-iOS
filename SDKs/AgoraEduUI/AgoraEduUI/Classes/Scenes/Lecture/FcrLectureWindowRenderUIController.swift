@@ -9,6 +9,18 @@ import AgoraEduContext
 import UIKit
 
 class FcrLectureWindowRenderUIController: FcrTeacherWindowRenderUIController {
+    override func initViews() {
+        super.initViews()
+        
+        let teacherIndexPath = IndexPath(item: 0,
+                                         section: 0)
+        
+        let teacherView = collectionView.cellForItem(at: teacherIndexPath)
+        
+        teacherView?.agora_enable = UIConfig.teacherVideo.enable
+        teacherView?.agora_visible = UIConfig.teacherVideo.visible
+    }
+    
     override func addItemOfTeacher(_ user: AgoraEduContextUserInfo) {
         guard let stream = streamController.firstCameraStream(of: user) else {
             return

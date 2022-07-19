@@ -124,23 +124,22 @@ struct AgoraRenderMemberViewModel {
                 return userState.image
             }
         }
-        var imageName = ""
+        
+        let config = UIConfig.studentVideo.mask
         switch videoState {
-            case .deviceOff:        imageName = "ic_member_device_off"
-            case .streamForbidden:  imageName = "ic_member_device_forbidden"
-            default:                break
+            case .deviceOff:       return config.cameraOffImage
+            case .streamForbidden: return config.cameraForbiddenImage
+            default:               return nil
         }
-        return UIImage.agedu_named(imageName)
     }
     
     func audioImage() -> UIImage? {
-        var imageName = ""
+        let config = UIConfig.studentVideo.mask
         switch audioState {
-        case .normal:           imageName = "ic_mic_status_on"
-        case .deviceOff:        imageName = "ic_mic_status_off"
-        case .streamForbidden:  imageName = "ic_mic_status_forbidden"
+        case .normal:           return config.micOnImage
+        case .deviceOff:        return config.micOffImage
+        case .streamForbidden:  return config.micForbiddenImage
         }
-        return UIImage.agedu_named(imageName)
     }
     
     func setRenderMemberView(view: AgoraRenderMemberView) {
@@ -252,32 +251,6 @@ struct AgoraHandsUpListUserInfo {
 struct AgoraRenderMenuModel {
     enum AgoraRenderMenuDeviceState {
         case on, off, forbidden
-        
-        var micImage: UIImage? {
-            switch self {
-            case .on:
-                return UIImage.agedu_named("ic_nameroll_mic_on")
-            case .off:
-                return UIImage.agedu_named("ic_nameroll_mic_off")
-            case .forbidden:
-                return UIImage.agedu_named("ic_member_menu_mic_forbidden")
-            default:
-                return nil
-            }
-        }
-        
-        var cameraImage: UIImage? {
-            switch self {
-            case .on:
-                return UIImage.agedu_named("ic_nameroll_camera_on")
-            case .off:
-                return UIImage.agedu_named("ic_nameroll_camera_off")
-            case .forbidden:
-                return UIImage.agedu_named("ic_member_menu_camera_forbidden")
-            default:
-                return nil
-            }
-        }
     }
 
     // Data
@@ -371,7 +344,7 @@ struct FcrRewardViewData {
     
     static func create(count: Int,
                        isHidden: Bool) -> FcrRewardViewData {
-        let rewardImage = UIImage.agedu_named("ic_member_reward")!
+        let rewardImage = UIConfig.studentVideo.mask.rewardImage!
         let countString = "x\(count)"
         
         let data = FcrRewardViewData(count: countString,
@@ -468,7 +441,8 @@ struct FcrWindowRenderViewData {
     }
         
     private static func createVideoViewState(stream: AgoraEduContextStreamInfo) -> FcrWindowRenderMediaViewState {
-        let sourceOffImage = UIImage.agedu_named("ic_member_device_off")!
+        let maskConfig = UIConfig.studentVideo.mask
+        let sourceOffImage = maskConfig.cameraOffImage!
         
         var videoState = FcrWindowRenderMediaViewState.none(sourceOffImage)
         
@@ -488,7 +462,7 @@ struct FcrWindowRenderViewData {
             videoState = FcrWindowRenderMediaViewState.hasStreamPublishPrivilege(sourceOffImage)
         // mediaSourceOpen
         case 2:
-            let noPrivilegeImage = UIImage.agedu_named("ic_member_device_forbidden")!
+            let noPrivilegeImage = maskConfig.cameraForbiddenImage!
             videoState = FcrWindowRenderMediaViewState.mediaSourceOpen(noPrivilegeImage)
         // both
         case 3:
@@ -501,7 +475,8 @@ struct FcrWindowRenderViewData {
     }
     
     private static func createAudioViewState(stream: AgoraEduContextStreamInfo) -> FcrWindowRenderMediaViewState {
-        let sourceOffImage = UIImage.agedu_named("ic_mic_status_off")!
+        let config = UIConfig.studentVideo.mask
+        let sourceOffImage = config.micOffImage!
         
         var audioState = FcrWindowRenderMediaViewState.none(sourceOffImage)
         
@@ -521,11 +496,11 @@ struct FcrWindowRenderViewData {
             audioState = FcrWindowRenderMediaViewState.hasStreamPublishPrivilege(sourceOffImage)
         // mediaSourceOpen
         case 2:
-            let noPrivilegeImage = UIImage.agedu_named("ic_mic_status_forbidden")!
+            let noPrivilegeImage = config.micForbiddenImage!
             audioState = FcrWindowRenderMediaViewState.mediaSourceOpen(noPrivilegeImage)
         // both
         case 3:
-            let image = UIImage.agedu_named("ic_mic_status_on")!
+            let image = config.micOnImage!
             audioState = FcrWindowRenderMediaViewState.both(image)
         default:
             break

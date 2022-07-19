@@ -53,7 +53,7 @@ class AgoraUserListUIController: UIViewController {
     /** 页面title*/
     private lazy var titleLabel = UILabel(frame: .zero)
     /** 教师信息*/
-    private lazy var infoView = UIView(frame: .zero)
+    private lazy var teacherInfoView = UIView(frame: .zero)
     /** 分割线*/
     private lazy var topSepLine = UIView(frame: .zero)
     private lazy var bottomSepLine = UIView(frame: .zero)
@@ -78,16 +78,20 @@ class AgoraUserListUIController: UIViewController {
     lazy var supportFuncs: [AgoraUserListFunction] = {
         let isLecture = contextPool.room.getRoomInfo().roomType == .lecture
         let isTeacher = userController.getLocalUserInfo().userRole == .teacher
+        
+        var temp = [AgoraUserListFunction]()
         if isLecture {
             // 大班课老师（大班课学生端没有花名册）
-            return [.camera, .mic, .kick]
+            temp = [.camera, .mic, .kick]
         } else if isTeacher {
             // 小班课老师
-            return [.stage, .auth, .camera, .mic, .reward, .kick]
+            temp = [.stage, .auth, .camera, .mic, .reward, .kick]
         } else {
             // 小班课学生
-            return [.stage, .auth, .camera, .mic, .reward]
+            temp = [.stage, .auth, .camera, .mic, .reward]
         }
+        
+        return temp.enabledList()
     }()
     
     private var boardUsers = [String]()
@@ -162,7 +166,7 @@ class AgoraUserListUIController: UIViewController {
         
         titleLabel.text = "fcr_user_list".agedu_localized()
         contentView.addSubview(titleLabel)
-        contentView.addSubview(infoView)
+        contentView.addSubview(teacherInfoView)
         contentView.addSubview(topSepLine)
         contentView.addSubview(bottomSepLine)
         
@@ -194,12 +198,40 @@ class AgoraUserListUIController: UIViewController {
             contentView.addSubview(carouselSwitch)
         }
         
+        let config = UIConfig.roster
         for fn in supportFuncs {
             let label = UILabel(frame: .zero)
             label.text = fn.title()
             label.textAlignment = .center
+            
+            switch fn {
+            case .stage:
+                label.agora_enable = config.stage.enable
+                label.agora_visible = config.stage.visible
+            case .auth:
+                label.agora_enable = config.boardAuthorization.enable
+                label.agora_visible = config.boardAuthorization.visible
+            case .camera:
+                label.agora_enable = config.camera.enable
+                label.agora_visible = config.camera.visible
+            case .mic:
+                label.agora_enable = config.microphone.enable
+                label.agora_visible = config.microphone.visible
+            case .reward:
+                label.agora_enable = config.reward.enable
+                label.agora_visible = config.reward.visible
+            case .kick:
+                label.agora_enable = config.kickOut.enable
+                label.agora_visible = config.kickOut.visible
+            default:
+                break
+            }
+            
             itemTitlesView.addArrangedSubview(label)
         }
+        
+        carouselSwitch.agora_enable = config.carousel.enable
+        carouselSwitch.agora_visible = config.carousel.visible
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -223,29 +255,29 @@ class AgoraUserListUIController: UIViewController {
             make?.left.equalTo()(16)
             make?.height.equalTo()(30)
         }
-        infoView.mas_makeConstraints { make in
+        teacherInfoView.mas_makeConstraints { make in
             make?.top.equalTo()(titleLabel.mas_bottom)
-            make?.left.right().equalTo()(infoView.superview)
+            make?.left.right().equalTo()(teacherInfoView.superview)
             make?.height.equalTo()(30)
         }
         topSepLine.mas_makeConstraints { make in
-            make?.top.left().right().equalTo()(infoView)
+            make?.top.left().right().equalTo()(teacherInfoView)
             make?.height.equalTo()(1)
         }
         bottomSepLine.mas_makeConstraints { make in
-            make?.bottom.left().right().equalTo()(infoView)
+            make?.bottom.left().right().equalTo()(teacherInfoView)
             make?.height.equalTo()(1)
         }
         teacherTitleLabel.mas_makeConstraints { make in
             make?.left.equalTo()(titleLabel)
-            make?.top.bottom().equalTo()(infoView)
+            make?.top.bottom().equalTo()(teacherInfoView)
         }
         teacherNameLabel.mas_makeConstraints { make in
             make?.left.equalTo()(teacherTitleLabel.mas_right)?.offset()(6)
-            make?.top.bottom().equalTo()(infoView)
+            make?.top.bottom().equalTo()(teacherInfoView)
         }
         studentTitleLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(infoView.mas_bottom)
+            make?.top.equalTo()(teacherInfoView.mas_bottom)
             make?.left.equalTo()(0)
             make?.height.equalTo()(30)
             make?.width.equalTo()(100)
@@ -276,55 +308,52 @@ class AgoraUserListUIController: UIViewController {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.roster
         
-        let contentLabelColor = FcrUIColorGroup.fcr_icon_normal_color
-        let titleLabelColor = FcrUIColorGroup.fcr_text_level1_color
-        let labelFont = FcrUIFontGroup.fcr_font12
+        view.layer.shadowColor = config.shadow.color
+        view.layer.shadowOffset = config.shadow.offset
+        view.layer.shadowOpacity = config.shadow.opacity
+        view.layer.shadowRadius = config.shadow.radius
         
-        FcrUIColorGroup.borderSet(layer: view.layer)
-        
-        contentView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        contentView.layer.cornerRadius = FcrUIFrameGroup.fcr_square_container_corner_radius
+        contentView.backgroundColor = config.backgroundColor
+        contentView.layer.cornerRadius = config.cornerRadius
         contentView.clipsToBounds = true
-        contentView.layer.borderWidth = FcrUIFrameGroup.fcr_border_width
-        contentView.layer.borderColor = FcrUIColorGroup.fcr_border_color
+        contentView.layer.borderWidth = config.borderWidth
+        contentView.layer.borderColor = config.borderColor
+        
+        titleLabel.font = config.label.font
+        titleLabel.textColor = config.label.mainTitleColor
                 
-        titleLabel.font = labelFont
-        titleLabel.textColor = titleLabelColor
+        topSepLine.backgroundColor = config.sepLine.backgroundColor
+        bottomSepLine.backgroundColor = config.sepLine.backgroundColor
         
-        infoView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
+        teacherInfoView.backgroundColor = config.titleBackgroundColor
+        teacherTitleLabel.font = config.label.font
+        teacherTitleLabel.textColor = config.label.subTitleColor
         
-        let sepColor = FcrUIColorGroup.fcr_system_divider_color
-        topSepLine.backgroundColor = sepColor
-        bottomSepLine.backgroundColor = sepColor
+        teacherNameLabel.font = config.label.font
+        teacherNameLabel.textColor = config.label.mainTitleColor
         
-        teacherTitleLabel.font = labelFont
-        teacherTitleLabel.textColor = contentLabelColor
+        studentTitleLabel.font = config.label.font
+        studentTitleLabel.textColor = config.label.subTitleColor
         
-        teacherNameLabel.font = labelFont
-        teacherNameLabel.textColor = titleLabelColor
-        
-        studentTitleLabel.font = labelFont
-        studentTitleLabel.textColor = contentLabelColor
-        itemTitlesView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        
-        tableView.backgroundColor = FcrUIColorGroup.fcr_system_component_color
-        tableView.separatorColor = FcrUIColorGroup.fcr_system_divider_color
+        tableView.backgroundColor = config.titleBackgroundColor
+        tableView.separatorColor = config.sepLine.backgroundColor
         
         for view in itemTitlesView.arrangedSubviews {
             guard let label = view as? UILabel else {
                 return
             }
-            label.font = labelFont
-            label.textColor = contentLabelColor
+            label.font = config.label.font
+            label.textColor = config.label.subTitleColor
         }
         
         if userController.getLocalUserInfo().userRole == .teacher,
            contextPool.room.getRoomInfo().roomType == .small {
-            carouselTitle.font = labelFont
-            carouselTitle.textColor = contentLabelColor
+            carouselTitle.font = config.label.font
+            carouselTitle.textColor = config.label.subTitleColor
             
-            carouselSwitch.onTintColor = FcrUIColorGroup.fcr_icon_fill_color
+            carouselSwitch.onTintColor = config.carousel.tintColor
         }
     }
     
@@ -584,7 +613,6 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
             var ifAdd = false
             if isOn,
                !list.contains(user.uuid) {
-                // 授予白板权限
                 ifAdd = true
             }
             let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(ifAdd ? .add([user.uuid]) : .delete([user.uuid]))
@@ -622,17 +650,36 @@ extension AgoraUserListUIController: AgoraPaintingUserListItemCellDelegate {
             guard user.kickEnable else {
                 return
             }
-            AgoraKickOutAlertController.present(by: self,
-                                                onComplete: {[weak self] forever in
-                                                    guard let `self` = self else {
-                                                        return
-                                                    }
-                                                    self.userController.kickOutUser(userUuid: user.uuid,
-                                                                                      forever: forever,
-                                                                                      success: nil,
-                                                                                      failure: nil)
-                                                },
-                                                onCancel: nil)
+            let kickTitle = "fcr_user_kick_out".agedu_localized()
+            
+            let kickOnceTitle = "fcr_user_kick_out_once".agedu_localized()
+            let kickOnceAction = AgoraAlertAction(title: kickOnceTitle) { [weak self] in
+                guard let `self` = self else {
+                    return
+                }
+                self.userController.kickOutUser(userUuid: user.uuid,
+                                                  forever: false,
+                                                  success: nil,
+                                                  failure: nil)
+            }
+            
+            let kickForeverTitle = "fcr_user_kick_out_forever".agedu_localized()
+            let kickForeverAction = AgoraAlertAction(title: kickForeverTitle) { [weak self] in
+                guard let `self` = self else {
+                    return
+                }
+                self.userController.kickOutUser(userUuid: user.uuid,
+                                                  forever: true,
+                                                  success: nil,
+                                                  failure: nil)
+            }
+            
+            AgoraAlertModel()
+                .setTitle(kickTitle)
+                .setStyle(.Choice)
+                .addAction(action: kickOnceAction)
+                .addAction(action: kickForeverAction)
+                .show(in: self)
             break
         case .reward:
             guard user.rewardEnable else {
@@ -686,5 +733,52 @@ extension AgoraUserListUIController {
                 sender.isOn = !sender.isOn
             }
         }
+    }
+}
+
+fileprivate extension Array where Element == AgoraUserListFunction {
+    func enabledList() -> [AgoraUserListFunction] {
+        let config = UIConfig.roster
+        
+        var list = [AgoraUserListFunction]()
+        
+        for item in self {
+            switch item {
+            case .stage:
+                if config.stage.enable,
+                   config.stage.visible {
+                    list.append(item)
+                }
+            case .auth:
+                if config.boardAuthorization.enable,
+                   config.boardAuthorization.visible {
+                    list.append(item)
+                }
+            case .camera:
+                if config.camera.enable,
+                   config.camera.visible {
+                    list.append(item)
+                }
+            case .mic:
+                if config.microphone.enable,
+                   config.microphone.visible {
+                    list.append(item)
+                }
+            case .reward:
+                if config.reward.enable,
+                   config.reward.visible {
+                    list.append(item)
+                }
+            case .kick:
+                if config.kickOut.enable,
+                   config.kickOut.visible {
+                    list.append(item)
+                }
+            default:
+                break
+            }
+        }
+        
+        return list
     }
 }

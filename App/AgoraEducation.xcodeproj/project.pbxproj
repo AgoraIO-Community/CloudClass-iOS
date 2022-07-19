@@ -198,6 +198,7 @@
 		1A87571323581AEC009C55A8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				68A12057287E765E005218DB /* img_loading.gif */,
 				6861691926AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf */,
 				6861691826AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf */,
 				78A3EA5E25640261003067AB /* AgoraEducation-Bridging-Header.h */,
@@ -536,6 +537,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68A12058287E765E005218DB /* img_loading.gif in Resources */,
 				7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */,
 				7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */,
 				1A44BE7522BF863000766274 /* Assets.xcassets in Resources */,

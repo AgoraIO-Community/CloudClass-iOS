@@ -9,6 +9,11 @@ import AgoraUIBaseViews
 import AgoraEduContext
 import AgoraWidget
 
+protocol AgoraRenderUIControllerDelegate: NSObjectProtocol {
+    func onClickMemberAt(view: UIView,
+                         userId: String)
+}
+
 class VocationalRenderMembersUIController: UIViewController {
     
     public var isRenderByRTC = true {
@@ -333,7 +338,8 @@ class VocationalRenderMembersUIController: UIViewController {
         leftButton.addTarget(self,
                              action: #selector(onClickLeft(_:)),
                              for: .touchUpInside)
-        leftButton.setImage(UIImage.agedu_named("ic_member_arrow_left"),
+        let config = UIConfig.studentVideo.moveButton
+        leftButton.setImage(config.prevImage,
                             for: .normal)
         collectionView.addSubview(leftButton)
         
@@ -342,7 +348,7 @@ class VocationalRenderMembersUIController: UIViewController {
         rightButton.addTarget(self,
                               action: #selector(onClickRight(_:)),
                               for: .touchUpInside)
-        rightButton.setImage(UIImage.agedu_named("ic_member_arrow_right"),
+        rightButton.setImage(config.nextImage,
                              for: .normal)
         collectionView.addSubview(rightButton)
     }
@@ -383,9 +389,9 @@ class VocationalRenderMembersUIController: UIViewController {
             return
         }
         
-        leftButton.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
+        leftButton.layer.cornerRadius = FcrUIFrameGroup.windowCornerRadius
         leftButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        rightButton.layer.cornerRadius = FcrUIFrameGroup.fcr_window_corner_radius
+        rightButton.layer.cornerRadius = FcrUIFrameGroup.windowCornerRadius
         rightButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
     }
 }
