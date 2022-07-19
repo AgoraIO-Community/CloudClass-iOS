@@ -69,8 +69,6 @@ class FcrTeacherWindowRenderUIController: FcrWindowRenderUIController {
         } else {
             contextPool.room.registerRoomEventHandler(self)
         }
-
-      
     }
     
     override func onDidAddItem(_ item: FcrWindowRenderViewState) {

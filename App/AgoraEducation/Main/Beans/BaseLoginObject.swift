@@ -47,17 +47,11 @@ enum FIELD_TYPE: String {
 }
 
 class LoginConfig {
-    static let AboutInfoList: Array<(String,Any?)> = [
-        (NSLocalizedString("About_privacy", comment: ""), URL(string: NSLocalizedString("Privacy_url", comment: ""))),
-        (NSLocalizedString("About_terms", comment: ""), URL(string: NSLocalizedString("Terms_url", comment: ""))),
-        (NSLocalizedString("About_disclaimer", comment: ""),  DisclaimerView(frame: .zero)),
-        (NSLocalizedString("About_register", comment: ""), URL(string: NSLocalizedString("Signup_url", comment: ""))),
-        (NSLocalizedString("About_version_time", comment: ""),  version_time)
-    ]
     
     static let version_time: String = {
-        return "2022.06.27"
+        return "2022.07.19"
     }()
+    
     static let sdk_version: String = AgoraClassroomSDK.version()
     static let class_version: String = Bundle.main.version
     
@@ -166,8 +160,5 @@ class LoginConfig {
     static let region_cell_id: String = "RegionCell"
     static let About_cell_id: String = "AboutCell"
     static let encryption_cell_id: String = "EncryptionCell"
-    
-    // Data
-    static let USER_DEFAULT_EYE_CARE = "USER_DEFAULT_EYE_CARE"
 }
 

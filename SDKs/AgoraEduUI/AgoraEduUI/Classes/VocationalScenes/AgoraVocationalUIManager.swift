@@ -149,7 +149,7 @@ import AgoraWidget
         }
     }
 }
-// MARK: - AgoraEduUserHandler
+// MARK: - AgoraEduStreamHandler
 extension AgoraVocationalUIManager: AgoraEduStreamHandler {
     public func onStreamJoined(stream: AgoraEduContextStreamInfo,
                                operatorUser: AgoraEduContextUserInfo?) {

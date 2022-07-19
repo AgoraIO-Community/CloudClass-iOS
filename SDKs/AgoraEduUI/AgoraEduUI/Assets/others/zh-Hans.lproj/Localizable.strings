@@ -136,3 +136,6 @@ fcr_alert_cancel = "取消";
 
 // Record
 fcr_record_recording = "录制中...";
+
+// vocational
+fcr_vocational_teacher_absent = "老师当前不在教室中";

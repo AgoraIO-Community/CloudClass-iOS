@@ -29,13 +29,6 @@ import UIKit
         view.addSubview(optionsView)
         return optionsView
     }()
-    // ..
-    private lazy var aboutView: AboutView = {
-        let about = AboutView(frame: .zero)
-        about.alpha = 0
-        return about
-    }()
-    
     private lazy var titleLabel = UILabel()
     /**only ipad **/
     private lazy var subTitleLabel = UILabel()
@@ -50,9 +43,10 @@ import UIKit
     
     private var bottomLabel: AgoraBaseUILabel!
     
-    private var dataSource: [RoomInfoItemType] = [
-        .roomName, .nickName, .roomStyle, .roleType, .region
-    ]
+    private var dataSource: [RoomInfoItemType] = [.roomName,
+                                                  .nickName,
+                                                  .roomStyle,
+                                                  .roleType]
     
     private var inputParams = RoomInfoModel()
     
@@ -84,21 +78,24 @@ extension LoginViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
 
-        updateDefaultRegion()
         createViews()
         createConstraint()
+        
+        self.refreshToken()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.setNavigationBarHidden(true,
+                                                     animated: true)
     }
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        // 检查协议
-        if !ServicePrivacyViewController.getPolicyPopped() {
-            let vc = ServicePrivacyViewController()
-            vc.modalPresentationStyle = .fullScreen
-            present(vc,
-                    animated: true,
-                    completion: nil)
+        // 检查协议，检查登录
+        FcrPrivacyTermsViewController.checkPrivacyTerms {
+            LoginWebViewController.showLoginIfNot(complete: nil)
         }
     }
     
@@ -113,13 +110,6 @@ extension LoginViewController {
 
 // MARK: - Private
 private extension LoginViewController {
-    func updateDefaultRegion() {
-        guard !UIDevice.current.agora_is_chinese_language else {
-            return
-        }
-        
-        inputParams.region = .NA
-    }
     
     func updateEntranceStatus() {
         if let roomName = inputParams.roomName,
@@ -135,13 +125,16 @@ private extension LoginViewController {
     
     func updateOptions() {
         if self.inputParams.roomStyle == .vocational {
-            self.dataSource = [
-                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .region
-            ]
+            self.dataSource = [.roomName,
+                               .nickName,
+                               .roomStyle,
+                               .serviceType,
+                               .roleType]
         } else {
-            self.dataSource = [
-                .roomName, .nickName, .roomStyle, .roleType, .region
-            ]
+            self.dataSource = [.roomName,
+                               .nickName,
+                               .roomStyle,
+                               .roleType]
         }
         self.tableView.reloadData()
     }
@@ -183,62 +176,21 @@ private extension LoginViewController {
             tableView.reloadData()
         }
     }
+    // 打开应用刷新token
+    func refreshToken() {
+        guard FcrUserInfoPresenter.shared.isLogin else {
+            return
+        }
+        FcrOutsideClassAPI.refreshToken(onSuccess: nil, onFailure: nil)
+    }
+    
 }
 
 // MARK: - Actions
 private extension LoginViewController {
     @objc func onTouchAbout() {
-        view.addSubview(aboutView)
-        aboutView.agora_x = 0
-        aboutView.agora_y = 0
-        aboutView.agora_right = 0
-        aboutView.agora_bottom = 0
-        
-        switch LoginConfig.device {
-        case .iPhone_Big: fallthrough
-        case .iPhone_Small:
-            aboutView.alpha = 1
-            aboutView.layoutIfNeeded()
-            aboutView.transform = CGAffineTransform(translationX: view.frame.width, y: 0)
-            UIView.animate(withDuration: TimeInterval.agora_animation,
-                           delay: 0,
-                           options: .transitionFlipFromLeft,
-                           animations: { [weak self] in
-                            guard let strongSelf = self else {
-                                return
-                            }
-                            strongSelf.aboutView.agora_x = 0
-                            strongSelf.aboutView.agora_y = 0
-                            strongSelf.aboutView.agora_right = 0
-                            strongSelf.aboutView.agora_bottom = 0
-                            strongSelf.aboutView.transform = CGAffineTransform(translationX: 0,
-                                                                               y: 0)
-                            strongSelf.aboutView.layoutIfNeeded()
-                           }, completion: nil)
-        case .iPad:
-            aboutView.alpha = 0
-            aboutView.transform = CGAffineTransform(scaleX: 0.3,
-                                                    y: 0.3)
-            UIView.animate(withDuration: TimeInterval.agora_animation,
-                           delay: 0,
-                           usingSpringWithDamping: 0.5,
-                           initialSpringVelocity: 0,
-                           options: .curveEaseInOut,
-                           animations: { [weak self] in
-                            guard let strongSelf = self else {
-                                return
-                            }
-                            
-                            strongSelf.aboutView.agora_x = 0
-                            strongSelf.aboutView.agora_y = 0
-                            strongSelf.aboutView.agora_right = 0
-                            strongSelf.aboutView.agora_bottom = 0
-                            strongSelf.aboutView.alpha = 1
-                            strongSelf.aboutView.transform = CGAffineTransform(scaleX: 1.0,
-                                                                               y: 1.0)
-                            strongSelf.aboutView.layoutIfNeeded()
-                           }, completion: nil)
-        }
+        let vc = FcrSettingsViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc func onTouchJoinRoom() {
@@ -257,9 +209,8 @@ private extension LoginViewController {
             return
         }
         
-        let region = inputParams.region
         let encryptionMode = inputParams.encryptMode
-        
+        let region = self.getLaunchRegion()
         // roomUuid = roomName + classType
         var roomUuid = "\(roomName)\(roomStyle.rawValue)"
         // 职教处理
@@ -292,7 +243,7 @@ private extension LoginViewController {
         
         let videoState: AgoraEduStreamState = (inputParams.mediaAuth == .video || inputParams.mediaAuth == .both) ? .on : .off
         let audioState: AgoraEduStreamState = (inputParams.mediaAuth == .audio || inputParams.mediaAuth == .both) ? .on : .off
-
+        let uiMode =  AgoraEduUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
                                                 videoEncoderConfig: nil,
                                                 latencyLevel: latencyLevel,
@@ -330,8 +281,8 @@ private extension LoginViewController {
                                                     token: token,
                                                     startTime: nil,
                                                     duration: NSNumber(value: duration),
-                                                    region: region.eduType,
-                                                    uiMode: .dark,
+                                                    region: region,
+                                                    uiMode: uiMode,
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
             
@@ -367,8 +318,7 @@ private extension LoginViewController {
             }
         }
         
-        requestToken(region: region,
-                     roomId: roomUuid,
+        requestToken(roomId: roomUuid,
                      userId: userUuid,
                      userRole: userRole.rawValue,
                      success: tokenSuccessBlock,
@@ -393,6 +343,15 @@ private extension LoginViewController {
                 animated: true,
                 completion: nil)
     }
+    
+    func getLaunchRegion() -> AgoraEduRegion {
+        switch FcrEnvironment.shared.region {
+        case .CN: return .CN
+        case .NA: return .NA
+        case .EU: return .EU
+        case .AP: return .AP
+        }
+    }
 }
 
 private extension LoginViewController {
@@ -400,7 +359,7 @@ private extension LoginViewController {
                     appCertificate: String,
                     userUuid: String,
                     success: @escaping (TokenBuilder.ServerResp) -> (),
-                    failure: @escaping (Error) -> ()) {
+                    failure: @escaping (NSError) -> ()) {
         let token = tokenBuilder.buildByAppId(appId,
                                               appCertificate: appCertificate,
                                               userUuid: userUuid)
@@ -411,19 +370,26 @@ private extension LoginViewController {
         success(response)
     }
     
-    func requestToken(region: RoomRegionType,
-                      roomId: String,
+    func requestToken(roomId: String,
                       userId: String,
                       userRole: Int,
                       success: @escaping (TokenBuilder.ServerResp) -> (),
-                      failure: @escaping (Error) -> ()) {
-        tokenBuilder.buildByServer(environment: inputParams.env,
-                                   region: region.toServer,
-                                   roomId: roomId,
-                                   userId: userId,
-                                   userRole: userRole) { (resp) in
+                      failure: @escaping (NSError) -> ()) {
+        FcrOutsideClassAPI.buildToken(roomId: roomId, userRole: userRole, userId: userId) { dict in
+            guard let data = dict["data"] as? [String : Any] else {
+                fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
+            }
+            guard let token = data["token"] as? String,
+                  let appId = data["appId"] as? String,
+                  let userId = data["userUuid"] as? String else {
+                fatalError("TokenBuilder buildByServer can not find value, dict: \(dict)")
+            }
+            let resp = TokenBuilder.ServerResp(appId: appId,
+                                               userId: userId,
+                                               token: token)
             success(resp)
-        } failure: { (error) in
+        } onFailure: { msg in
+            let error = NSError.init(domain: msg, code: -1)
             failure(error)
         }
     }
@@ -500,13 +466,6 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                                                            in: kRoleOptions)
             cell.textField.text = optionDescription(option: inputParams.roleType,
                                                     in: kRoleOptions)
-        case .region:
-            cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("Login_region_title",
-                                                     comment: "")
-            cell.textField.placeholder = inputParams.region.rawValue
-            cell.textField.text = optionDescription(option: inputParams.region,
-                                                    in: kRegionOptions)
         case .duration:
             cell.mode = .unable
             cell.titleLabel.text = NSLocalizedString("Login_duration_title",
@@ -588,19 +547,7 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
                 self.inputParams.roleType = v
                 cell.textField.text = str
             }
-        } else if rowType == .region {
-            let options = optionStrings(form: kRegionOptions)
-            let index = optionIndex(option: inputParams.region,
-                                    in: kRegionOptions)
-            optionsView.show(beside: cell,
-                             options: options,
-                             index: index) { [unowned self] i in
-                self.hideOptions()
-                let (v, str) = kRegionOptions[i]
-                self.inputParams.region = v
-                cell.textField.text = str
-            }
-        }  else if rowType == .encryptMode {
+        } else if rowType == .encryptMode {
             let options = optionStrings(form: kEncryptionOptions)
             let index = optionIndex(option: inputParams.encryptMode,
                                     in: kEncryptionOptions)
@@ -699,7 +646,7 @@ private extension LoginViewController {
         
         titleLabel.font = .systemFont(ofSize: isPad ? 24 : 20)
         titleLabel.text = NSLocalizedString("Login_title",
-                                       comment: "")
+                                            comment: "")
         
         
         view.addSubview(titleLabel)
@@ -741,9 +688,7 @@ private extension LoginViewController {
         bottomLabel.textColor = UIColor(hexString: "7D8798")
         bottomLabel.font = UIFont.systemFont(ofSize: 12)
         view.addSubview(bottomLabel)
-        
-        view.addSubview(aboutView)
-        
+                
         tableView = AgoraBaseUITableView.init(frame: .zero,
                                               style: .plain)
         tableView.delegate = self
@@ -825,17 +770,6 @@ private extension LoginViewController {
         bottomLabel.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.bottom.equalTo()(-LoginConfig.login_bottom_bottom)
-        }
-    }
-}
-
-extension RoomRegionType {
-    var toServer: TokenBuilder.Region {
-        switch self {
-        case .CN: return .cn
-        case .EU: return .eu
-        case .NA: return .na
-        case .AP: return .ap
         }
     }
 }

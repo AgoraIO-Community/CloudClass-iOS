@@ -131,3 +131,5 @@ fcr_alert_cancel = "Cancel";
 
 // Record
 fcr_record_recording = "Recording...";
+// vocational
+fcr_vocational_teacher_absent = "The teacher is not in the classroom";

@@ -9,11 +9,11 @@
 import Foundation
 import UIKit
 
-@objc public class MainViewController: UINavigationController {
+@objc public class FcrNavigationController: UINavigationController {
     
     public override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
-        self.view.backgroundColor = UIColor.white
+        
     }
     
     public override init(nibName nibNameOrNil: String?,
@@ -21,23 +21,32 @@ import UIKit
         super.init(nibName: nibNameOrNil,
                    bundle: nibBundleOrNil)
     }
-
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.setNavigationBarHidden(true,
-                                    animated: false)
-    }
     
     public override func viewDidLoad() {
-        let eyeCare = UserDefaults.standard.bool(forKey: LoginConfig.USER_DEFAULT_EYE_CARE)
-//        let defaultConfig = AgoraEduSDKConfig.init(appId: KeyCenter.appId(),
-//                                                   eyeCare: eyeCare)
-//        AgoraClassroomSDK.setConfig(defaultConfig)
-
+        self.view.backgroundColor = UIColor.white
+        self.navigationBar.isTranslucent = false
+        self.navigationBar.backIndicatorImage = UIImage(named: "ic_navigation_back")
+        self.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "ic_navigation_back")
+        self.navigationBar.tintColor = UIColor(hex: 0x7B88A0)
+        self.navigationBar.titleTextAttributes = [
+            .foregroundColor : UIColor(hex: 0x191919) ?? .black,
+            .font : UIFont.systemFont(ofSize: 16)
+        ]
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func pushViewController(_ viewController: UIViewController,
+                                            animated: Bool) {
+        super.pushViewController(viewController, animated: animated)
+        
+        let barItem = UIBarButtonItem(title: "",
+                                      style: .plain,
+                                      target: nil,
+                                      action: nil)
+        viewController.navigationItem.backBarButtonItem = barItem
     }
     
     public override var shouldAutorotate: Bool {

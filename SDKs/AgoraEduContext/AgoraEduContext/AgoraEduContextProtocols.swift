@@ -51,6 +51,10 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     
     /// Recording state (v2.5.0)
     @objc optional func onRecordingStateUpdated(state: FcrRecordingState)
+    
+    /// 录制转CDN (v2.7.0)
+    /// - parameter urlList: cdn 地址列表
+    @objc optional func onRecordingStreamUrlListUpdated(urlList: [String: String])
 }
 
 @objc public protocol AgoraEduRoomContext: NSObjectProtocol {
@@ -105,6 +109,10 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// 获取录制状态 (v2.5.0)
     /// - returns: 录制状态
     func getRecordingState() -> FcrRecordingState
+    
+    /// 返回录制的 CDN 流地址字典 (v2.7.0)
+    /// - returns: URL String 字典 {"rtmp": "xx", "flv": "xx", "hls": "xx"}
+    func getRecordingStreamUrlList() -> [String: String]
     
     /// 开始事件监听 (v2.0.0)
     /// - parameter handler: 监听者

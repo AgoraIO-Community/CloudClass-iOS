@@ -10,19 +10,52 @@ OneToOneText = "One to One Classroom";
 SmallClassText = "Small Classroom";
 BigClassText = "Lecture Hall";
 BreakOutClassText = "Break Out Classroom";
-MediumClassText = "Medium Classroom";
-
-EyeProtectionText = "Eye protection";
-SettingText = "Setting";
-
 UserNameVerifyText = "class name and user name must be within 20 characters";
 UserNameFormatVerifyText = "class name and user name can only be letters and numbers";
 RoomTypeVerifyText = "please select a room type";
-
-
 KickOffClassroomText = "you were kicked out of the classroom by the teacher!";
+// about
+fcr_alert_title = "Tips";
+fcr_alert_submit = "Confirm";
+fcr_alert_cancel = "Cancel";
+fcr_settings_option_general_language_simplified = "简体中文";
+fcr_settings_option_general_language_traditional = "繁体中文";
+fcr_settings_option_general_language_english = "English";
+fcr_settings_label_about_us_about_us = "About";
+fcr_settings_link_about_us_privacy_policy = "Privacy Policy";
+fcr_settings_link_about_us_user_agreement = "User Agreement";
+fcr_settings_option_general = "General";
+fcr_settings_option_about_us = "About Us";
+// settings
+settings_setting = "Settings";
+settings_logout = "Logout";
+settings_logout_alert = "Are you sure to logout?";
+settings_nickname = "Nick Name";
+fcr_settings_label_region = "Area";
+settings_theme = "Theme";
+settings_theme_light = "Light";
+settings_theme_dark = "Dark";
+fcr_settings_label_language = "Language";
+settings_close_account = "Close Account";
 
-
+settings_disclaimer = "Product Disclaimer";
+settings_register = "Sign up Agora.io";
+settings_publish_time = "Version Time";
+settings_srivacy_url = "https://www.agora.io/en/privacy-policy/";
+settings_terms_url = "https://www.agora.io/en/terms-of-service/";
+settings_signup_url = "https://sso.agora.io/en/signup";
+settings_disclaimer_title = "Product disclaimer";
+settings_disclaimer_detail = "Agora Education (\"this product\") is a product provided by Agora . Agora enjoys the copyright and ownership of this product. It is hereby granted free of charge to anyone who obtains a copy of this product and related documentation (hereinafter referred to as \"software\") to try the software without limitation, including but not limited to trial, copy, modify, merge, publish, distribute, but this product shall not be used For any commercial use, you may not sublicense and / or sell copies of the software.
+This product is provided \"as is\" without any express warranty, including but not limited to guarantees of suitability, suitability for specific purposes, and non-infringement. Whether it is due to any contract, infringement or other forms of conduct related to this product or the trial of this product or other methods, Agora will not be responsible for any claims, damages or other liabilities.
+You are free to choose whether to try the services provided by this product. If you download, install, or try the services provided in this product, it means that you trust the owner of the product, and Agora shall not be responsible for any form of loss or injury caused by yourself or others when you try the services provided in this product for any reason.";
+settings_powerd_by = "www.agora.io";
+settings_logoff_detail = "Unfortunately，Flexible Classroom is not able to continue serving you.Thank you.
+Delete your account will result in ….
+1.Delete the room data associated with the account
+2.delete account and mobile
+";
+settings_logoff_agreenment = "I have read and confirmed to delete my account";
+settings_logoff_submit = "Confirm";
 // Login
 Login_title = "Agora Flexible Classroom";
 Login_room_title = "Room";
@@ -73,25 +106,6 @@ login_auth_audio = "Only Audio";
 login_auth_video = "Only Video";
 login_auth_both = "Both Audio & Video";
 login_lecture_teacher_warning = "The teacher's lecture Hall has not been opened. Coming soon";
-
-About_title = "About";
-About_close = "Close";
-About_privacy = "Privacy Policy";
-About_terms = "Terms Of Service";
-About_disclaimer = "Product Disclaimer";
-About_register = "Sign up Agora.io";
-About_version_time = "Version Time";
-About_url = "www.agora.io";
-
-Privacy_url = "https://www.agora.io/en/privacy-policy/";
-Terms_url = "https://www.agora.io/en/terms-of-service/";
-Signup_url = "https://sso.agora.io/en/signup";
-
-Disclaimer_title = "Product disclaimer";
-Disclaimer_detail = "Agora Education (\"this product\") is a product provided by Agora . Agora enjoys the copyright and ownership of this product. It is hereby granted free of charge to anyone who obtains a copy of this product and related documentation (hereinafter referred to as \"software\") to try the software without limitation, including but not limited to trial, copy, modify, merge, publish, distribute, but this product shall not be used For any commercial use, you may not sublicense and / or sell copies of the software.
-This product is provided \"as is\" without any express warranty, including but not limited to guarantees of suitability, suitability for specific purposes, and non-infringement. Whether it is due to any contract, infringement or other forms of conduct related to this product or the trial of this product or other methods, Agora will not be responsible for any claims, damages or other liabilities.
-You are free to choose whether to try the services provided by this product. If you download, install, or try the services provided in this product, it means that you trust the owner of the product, and Agora shall not be responsible for any form of loss or injury caused by yourself or others when you try the services provided in this product for any reason.";
-
 // service
 Service_title = "Agora Privacy And Terms of Service";
 Service_check_content = "I have read the terms";

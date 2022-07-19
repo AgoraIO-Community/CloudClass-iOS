@@ -86,7 +86,9 @@ typedef NS_ENUM(NSInteger, AgoraEduServiceType) {
     AgoraEduServiceTypeRTC,
     AgoraEduServiceTypeFastRTC,
     AgoraEduServiceTypeOnlyCDN,
-    AgoraEduServiceTypeMixedCDN
+    AgoraEduServiceTypeMixedCDN,
+    AgoraEduServiceTypeMixStreamCDN,
+    AgoraEduServiceTypeHostingScene
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduStreamState) {

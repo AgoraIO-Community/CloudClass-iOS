@@ -27,13 +27,6 @@ import AgoraEduUI
         view.addSubview(optionsView)
         return optionsView
     }()
-    // ..
-    private lazy var aboutView: AboutView = {
-        let about = AboutView(frame: .zero)
-        about.alpha = 0
-        return about
-    }()
-    
     private lazy var titleLabel = UILabel()
     /**only ipad **/
     private lazy var subTitleLabel = UILabel()
@@ -49,7 +42,18 @@ import AgoraEduUI
     private var bottomLabel: AgoraBaseUILabel!
     
     private var dataSource: [RoomInfoItemType] = [
-        .roomName, .nickName, .roomStyle, .roleType, .region, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
+        .roomName,
+        .nickName,
+        .roomStyle,
+        .roleType,
+        .im,
+        .duration,
+        .encryptKey,
+        .encryptMode,
+        .startTime,
+        .delay,
+        .mediaAuth,
+        .env
     ]
     
     private var inputParams = RoomInfoModel()
@@ -86,14 +90,7 @@ extension DebugViewController {
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // 检查协议
-        if !ServicePrivacyViewController.getPolicyPopped() {
-            let vc = ServicePrivacyViewController()
-            vc.modalPresentationStyle = .fullScreen
-            present(vc,
-                    animated: true,
-                    completion: nil)
-        }
+        
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>,
@@ -121,11 +118,11 @@ private extension DebugViewController {
     func updateOptions() {
         if self.inputParams.roomStyle == .vocational {
             self.dataSource = [
-                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .region, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
+                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
             ]
         } else {
             self.dataSource = [
-                .roomName, .nickName, .roomStyle, .roleType, .region, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
+                .roomName, .nickName, .roomStyle, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
             ]
         }
         self.tableView.reloadData()
@@ -183,7 +180,7 @@ private extension DebugViewController {
             return
         }
         
-        let region = inputParams.region
+        let region = self.getLaunchRegion()
         let encryptionMode = inputParams.encryptMode
         let im = inputParams.im
         
@@ -221,7 +218,7 @@ private extension DebugViewController {
         
         let videoState: AgoraEduStreamState = (inputParams.mediaAuth == .video || inputParams.mediaAuth == .both) ? .on : .off
         let audioState: AgoraEduStreamState = (inputParams.mediaAuth == .audio || inputParams.mediaAuth == .both) ? .on : .off
-
+        let uiMode =  AgoraEduUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
                                                 videoEncoderConfig: nil,
                                                 latencyLevel: latencyLevel,
@@ -240,8 +237,7 @@ private extension DebugViewController {
             AgoraLoading.hide()
         }
         
-        requestToken(region: region,
-                     roomId: roomUuid,
+        requestToken(roomId: roomUuid,
                      userId: userUuid,
                      userRole: inputParams.roleType.rawValue,
                      success: { [weak self] (response) in
@@ -263,8 +259,8 @@ private extension DebugViewController {
                                                                 token: token,
                                                                 startTime: startTime,
                                                                 duration: NSNumber(value: duration),
-                                                                region: region.eduType,
-                                                                uiMode: .light,
+                                                                region: region,
+                                                                uiMode: uiMode,
                                                                 mediaOptions: mediaOptions,
                                                                 userProperties: nil)
                         // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
@@ -291,19 +287,19 @@ private extension DebugViewController {
                         
                         AgoraClassroomSDK.setDelegate(self)
                         
-                        // set environment
-                        let sel = NSSelectorFromString("setEnvironment:")
-                        switch self.inputParams.env {
-                        case .pro:
-                            AgoraClassroomSDK.perform(sel,
-                                                      with: 2)
-                        case .pre:
-                            AgoraClassroomSDK.perform(sel,
-                                                      with: 1)
-                        case .dev:
-                            AgoraClassroomSDK.perform(sel,
-                                                      with: 0)
-                        }
+            // set environment
+            let sel = NSSelectorFromString("setEnvironment:")
+            switch FcrEnvironment.shared.environment {
+            case .pro:
+                AgoraClassroomSDK.perform(sel,
+                                          with: 2)
+            case .pre:
+                AgoraClassroomSDK.perform(sel,
+                                          with: 1)
+            case .dev:
+                AgoraClassroomSDK.perform(sel,
+                                          with: 0)
+            }
             if launchConfig.roomType == .vocational { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
                                                    service: self.inputParams.serviceType ?? .RTC,
@@ -334,20 +330,36 @@ private extension DebugViewController {
         success(response)
     }
     
-    func requestToken(region: RoomRegionType,
-                      roomId: String,
+    func requestToken(roomId: String,
                       userId: String,
                       userRole: Int,
                       success: @escaping (TokenBuilder.ServerResp) -> (),
                       failure: @escaping (Error) -> ()) {
-        tokenBuilder.buildByServer(environment: inputParams.env,
-                                   region: region.toServer,
-                                   roomId: roomId,
-                                   userId: userId,
-                                   userRole: userRole) { (resp) in
+        FcrOutsideClassAPI.freeBuildToken(roomId: roomId, userRole: userRole, userId: userId) { dict in
+            guard let data = dict["data"] as? [String : Any] else {
+                fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
+            }
+            guard let token = data["token"] as? String,
+                  let appId = data["appId"] as? String,
+                  let userId = data["userUuid"] as? String else {
+                fatalError("TokenBuilder buildByServer can not find value, dict: \(dict)")
+            }
+            let resp = TokenBuilder.ServerResp(appId: appId,
+                                               userId: userId,
+                                               token: token)
             success(resp)
-        } failure: { (error) in
+        } onFailure: { msg in
+            let error = NSError.init(domain: msg, code: -1)
             failure(error)
+        }
+    }
+    
+    func getLaunchRegion() -> AgoraEduRegion {
+        switch FcrEnvironment.shared.region {
+        case .CN: return .CN
+        case .NA: return .NA
+        case .EU: return .EU
+        case .AP: return .AP
         }
     }
 }
@@ -422,14 +434,6 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                                                            in: kRoleOptions)
             cell.textField.text = optionDescription(option: inputParams.roleType,
                                                     in: kRoleOptions)
-        case .region:
-            cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("Login_region_title",
-                                                     comment: "")
-            cell.textField.placeholder = inputParams.region.rawValue
-            cell.textField.text = optionDescription(option: inputParams.region,
-                                                    in: kRegionOptions)
-            
         case .im:
             cell.mode = .option
             cell.titleLabel.text = "IM"
@@ -480,7 +484,7 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                                                      comment: "")
             cell.textField.placeholder = NSLocalizedString("Login_env_holder",
                                                            comment: "")
-            cell.textField.text = optionDescription(option: inputParams.env,
+            cell.textField.text = optionDescription(option: FcrEnvironment.shared.environment,
                                                     in: kEnvironmentOptions)
         }
         return cell
@@ -542,18 +546,6 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                 self.inputParams.roleType = v
                 cell.textField.text = str
             }
-        case .region:
-            let options = optionStrings(form: kRegionOptions)
-            let index = optionIndex(option: inputParams.region,
-                                    in: kRegionOptions)
-            optionsView.show(beside: cell,
-                             options: options,
-                             index: index) { [unowned self] i in
-                self.hideOptions()
-                let (v, str) = kRegionOptions[i]
-                self.inputParams.region = v
-                cell.textField.text = str
-            }
         case .encryptMode:
             let options = optionStrings(form: kEncryptionOptions)
             let index = optionIndex(option: inputParams.encryptMode,
@@ -592,13 +584,13 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
             }
         case .env:
             let options = optionStrings(form: kEnvironmentOptions)
-            let index = optionIndex(option: inputParams.env,
+            let index = optionIndex(option: FcrEnvironment.shared.environment,
                                     in: kEnvironmentOptions)
             optionsView.show(beside: cell,
                              options: options,
                              index: index) { [unowned self] i in
                 let (v, str) = kEnvironmentOptions[i]
-                self.inputParams.env = v
+                FcrEnvironment.shared.environment = v
                 cell.textField.text = str
                 self.hideOptions()
             }
@@ -730,9 +722,7 @@ private extension DebugViewController {
         bottomLabel.textColor = UIColor(hexString: "7D8798")
         bottomLabel.font = UIFont.systemFont(ofSize: 12)
         view.addSubview(bottomLabel)
-        
-        view.addSubview(aboutView)
-        
+                
         tableView = AgoraBaseUITableView.init(frame: .zero,
                                               style: .plain)
         tableView.delegate = self

@@ -1,22 +1,39 @@
 //
-//  ServicePrivacyViewController.swift
+//  FcrPrivacyTermsViewController.swift
 //  AgoraEducation
 //
-//  Created by DoubleCircle on 2022/6/11.
+//  Created by Jonathan on 2022/7/14.
 //  Copyright © 2022 Agora. All rights reserved.
 //
 
 import UIKit
 import WebKit
-import Masonry
 
-class ServicePrivacyViewController: UIViewController {
+fileprivate let kAgree = "com.agora.privacyTermsAgree"
+class FcrPrivacyTermsViewController: UIViewController {
+    
+    public static func checkPrivacyTerms(complete: (() -> Void)?) {
+        guard let root = UIApplication.shared.keyWindow?.rootViewController else {
+            return
+        }
+        if let agree = UserDefaults.standard.object(forKey: kAgree) as? Bool,
+           agree == true {
+            complete?()
+        } else {
+            let vc = FcrPrivacyTermsViewController()
+            vc.modalPresentationStyle = .fullScreen
+            vc.onComplete = complete
+            root.present(vc, animated: true)
+        }
+    }
+    
     /**views**/
     private lazy var termTitle = UILabel()
     private lazy var contentView = WKWebView(frame: .zero)
     private lazy var agreementView = AgreementView(frame: .zero)
     
-    static let storeKey = "TermsRead"
+    private var onComplete: (() -> Void)?
+    
     private var haveAgreed = false {
         didSet {
             let image = haveAgreed ? UIImage(named: "checkBox_checked") : UIImage(named: "checkBox_unchecked")
@@ -27,10 +44,6 @@ class ServicePrivacyViewController: UIViewController {
         }
     }
     
-    static func getPolicyPopped() -> Bool {
-        return UserDefaults.standard.bool(forKey: storeKey)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         initViews()
@@ -38,12 +51,8 @@ class ServicePrivacyViewController: UIViewController {
     }
 }
 
-private extension ServicePrivacyViewController {
-    func setPolicyPopped(_ state: Bool) {
-        UserDefaults.standard.setValue(state,
-                                       forKey: ServicePrivacyViewController.storeKey)
-    }
-    
+private extension FcrPrivacyTermsViewController {
+   
     func initViews() {
         view.backgroundColor = .white
         
@@ -99,7 +108,6 @@ private extension ServicePrivacyViewController {
         } else {
             urlString = "https://agora-adc-artifacts.s3.cn-north-1.amazonaws.com.cn/demo/education/privacy_en.html"
         }
-
         if let urlRequest = URLRequest(urlString: urlString) {
             contentView.load(urlRequest)
         }
@@ -110,18 +118,16 @@ private extension ServicePrivacyViewController {
     }
     
     @objc func onClickAgree(_ sender: Any) {
-        setPolicyPopped(true)
-        dismiss(animated: true,
-                completion: nil)
+        UserDefaults.standard.set(true, forKey: kAgree)
+        self.dismiss(animated: true, completion: self.onComplete)
     }
     
     @objc func onClickDisagree(_ sender: UIButton) {
-        setPolicyPopped(false)
         exit(0)
     }
 }
 
-extension ServicePrivacyViewController: WKUIDelegate {
+extension FcrPrivacyTermsViewController: WKUIDelegate {
     public func webView(_ webView: WKWebView,
                         createWebViewWith configuration: WKWebViewConfiguration,
                         for navigationAction: WKNavigationAction,
@@ -133,3 +139,4 @@ extension ServicePrivacyViewController: WKUIDelegate {
         return nil
     }
 }
+

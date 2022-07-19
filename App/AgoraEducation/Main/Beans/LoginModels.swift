@@ -25,8 +25,6 @@ enum RoomInfoItemType: Int, CaseIterable {
     case serviceType
     // 角色
     case roleType
-    // 区域
-    case region
     // IM
     case im
     // 开始时间
@@ -45,11 +43,6 @@ enum RoomInfoItemType: Int, CaseIterable {
     case env
 }
 
-/** 区域选择类型*/
-enum RoomRegionType: String, CaseIterable  {
-    case CN, NA, EU, AP
-}
-
 enum IMType: String {
     case rtm, easemob
 }
@@ -61,15 +54,6 @@ let kRoomOptions: [(AgoraEduRoomType, String)] = [
     (.lecture, NSLocalizedString("Login_lecture", comment: "")),
     (.vocational, NSLocalizedString("Login_vocational_lecture", comment: "")),
 ]
-
-/** 区域可选项*/
-let kRegionOptions: [(RoomRegionType, String)] = [
-    (.CN, "CN"),
-    (.NA, "NA"),
-    (.EU, "EU"),
-    (.AP, "AP")
-]
-
 /** 角色可选项*/
 let kRoleOptions: [(AgoraEduUserRole, String)] = [
     (.student, NSLocalizedString("login_role_student", comment: "")),
@@ -91,7 +75,7 @@ let kEncryptionOptions: [(AgoraEduMediaEncryptionMode, String)] = [
 ]
 
 /** 环境可选项*/
-let kEnvironmentOptions: [(TokenBuilder.Environment, String)] = [
+let kEnvironmentOptions: [(FcrEnvironment.Environment, String)] = [
     (.dev, NSLocalizedString("login_env_test", comment: "")),
     (.pre, NSLocalizedString("login_pre_test", comment: "")),
     (.pro, NSLocalizedString("login_pro_test", comment: ""))
@@ -111,6 +95,8 @@ let kVocationalServiceOptions: [(AgoraEduServiceType, String)] = [
     (.fastRTC, NSLocalizedString("Login_service_fast_rtc", comment: "")),
     (.onlyCDN, NSLocalizedString("Login_service_only_cdn", comment: "")),
     (.mixedCDN, NSLocalizedString("Login_service_mixed_cdn", comment: "")),
+    (.mixStreamCDN, "合流转推"),
+    (.hostingScene, "伪直播"),
 ]
 
 /** 入参模型*/
@@ -120,14 +106,13 @@ struct RoomInfoModel {
     var roomStyle: AgoraEduRoomType?
     var serviceType: AgoraEduServiceType?
     var roleType: AgoraEduUserRole = .student
-    var region: RoomRegionType = .CN
     var im: IMType = .easemob
     var duration: Int = 1800
     var encryptKey: String?
     var encryptMode: AgoraEduMediaEncryptionMode = .none
     
     var startTime: NSNumber?
-    var env: TokenBuilder.Environment = .pro
+    
     var mediaAuth: AgoraEduMediaAuthOption = .both
 
     /** 入参默认值 */
@@ -512,16 +497,5 @@ struct RoomInfoModel {
             }
             """
         return [publicJson1, publicJson2]
-    }
-}
-
-extension RoomRegionType {
-    var eduType: AgoraEduRegion {
-        switch self {
-        case .CN: return .CN
-        case .NA: return .NA
-        case .EU: return .EU
-        case .AP: return .AP
-        }
     }
 }

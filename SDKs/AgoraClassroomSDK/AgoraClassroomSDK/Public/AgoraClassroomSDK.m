@@ -169,33 +169,36 @@ static AgoraClassroomSDK *manager = nil;
     AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
     coreConfig.roomType = AgoraEduRoomTypeLecture;
     
-    __block VocationalCDNType cdnType = VocationalCDNTypeNoCDN;
-    switch (serviceType) {
-        case AgoraEduServiceTypeOnlyCDN:
-            cdnType = VocationalCDNTypeOnlyCDN;
-            break;
-        case AgoraEduServiceTypeMixedCDN:
-            cdnType = VocationalCDNTypeMixedCDN;
-            break;
-        default:
-            cdnType = VocationalCDNTypeNoCDN;
-            break;
-    }
     [core launch:coreConfig
          widgets:config.widgets.allValues
          success:^(id<AgoraEduContextPool> pool) {
+        if ([pool.room getRoomInfo].roomType != AgoraEduContextRoomTypeLecture) {
+            NSCAssert(true, @"vocational room type error");
+            return;
+        }
         AgoraEduUIManager *eduVC = nil;
-        switch ([pool.room getRoomInfo].roomType) {
-            case AgoraEduContextRoomTypeLecture: {
-                AgoraVocationalUIManager *vocationalVC = [[AgoraVocationalUIManager alloc] initWithContextPool:pool delegate:manager uiMode:config.uiMode];
-                vocationalVC.cdnType = cdnType;
-                eduVC = vocationalVC;
-                break;
+        if (serviceType == AgoraEduServiceTypeMixStreamCDN) {
+            VcrMixStreamCDNUIManager *vc = [[VcrMixStreamCDNUIManager alloc] initWithContextPool:pool delegate:manager uiMode:config.uiMode];
+            eduVC = vc;
+        } else if (serviceType == AgoraEduServiceTypeHostingScene) {
+            VcrHostingSceneUIManager *vc = [[VcrHostingSceneUIManager alloc] initWithContextPool:pool delegate:manager uiMode:config.uiMode];
+            eduVC = vc;
+        } else {
+            VocationalCDNType cdnType = VocationalCDNTypeNoCDN;
+            switch (serviceType) {
+                case AgoraEduServiceTypeOnlyCDN:
+                    cdnType = VocationalCDNTypeOnlyCDN;
+                    break;
+                case AgoraEduServiceTypeMixedCDN:
+                    cdnType = VocationalCDNTypeMixedCDN;
+                    break;
+                default:
+                    cdnType = VocationalCDNTypeNoCDN;
+                    break;
             }
-            default:
-                NSCAssert(true,
-                          @"vocational room type error");
-                break;
+            AgoraVocationalUIManager *vc = [[AgoraVocationalUIManager alloc] initWithContextPool:pool delegate:manager uiMode:config.uiMode];
+            vc.cdnType = cdnType;
+            eduVC = vc;
         }
         eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
         UIViewController *topVC = [UIViewController ag_topViewController];
