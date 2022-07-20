@@ -24,7 +24,7 @@ end
 def preRtc
   pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
   pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
-  pod "AgoraRtcEngine_iOS", "3.4.6"
+  pod "AgoraRtcEngine_iOS", "3.5.2"
 end
 
 def reRtc
