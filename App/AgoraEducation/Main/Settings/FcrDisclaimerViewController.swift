@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FcrDisclaimerViewController: UIViewController {
+class FcrDisclaimerViewController: FcrOutsideClassBaseController {
     
     private let textLabel = UILabel()
     
@@ -18,8 +18,7 @@ class FcrDisclaimerViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor(hex: 0xF9F9FC)
-        title = NSLocalizedString("settings_disclaimer_title",
-                                  comment: "")
+        title = "settings_disclaimer_title".ag_localized()
         createViews()
         createConstrains()
     }
@@ -28,8 +27,7 @@ class FcrDisclaimerViewController: UIViewController {
 private extension FcrDisclaimerViewController {
     func createViews() {
         textLabel.numberOfLines = 0
-        let attrString = NSMutableAttributedString(string: NSLocalizedString("settings_disclaimer_detail",
-                                                                             comment: ""))
+        let attrString = NSMutableAttributedString(string: "settings_disclaimer_detail".ag_localized())
         let paraStyle = NSMutableParagraphStyle()
         paraStyle.paragraphSpacing = 21
         let attr: [NSAttributedString.Key : Any] = [.font: UIFont.systemFont(ofSize: 14),
@@ -41,8 +39,7 @@ private extension FcrDisclaimerViewController {
         textLabel.attributedText = attrString
         view.addSubview(textLabel)
         
-        infoLabel.text = NSLocalizedString("settings_powerd_by",
-                                           comment: "")
+        infoLabel.text = "settings_powerd_by".ag_localized()
         infoLabel.font = UIFont.systemFont(ofSize: 12)
         infoLabel.textColor = UIColor(hex: 0x7D8798)
         infoLabel.textAlignment = .center

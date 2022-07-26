@@ -38,6 +38,17 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
     
+    func resetViewControllers(viewControllers: [UIViewController]) {
+        for viewController in viewControllers {
+            let barItem = UIBarButtonItem(title: "",
+                                          style: .plain,
+                                          target: nil,
+                                          action: nil)
+            viewController.navigationItem.backBarButtonItem = barItem
+        }
+        self.viewControllers = viewControllers
+    }
+    
     public override func pushViewController(_ viewController: UIViewController,
                                             animated: Bool) {
         super.pushViewController(viewController, animated: animated)

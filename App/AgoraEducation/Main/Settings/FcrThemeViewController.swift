@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FcrThemeViewController: UIViewController {
+class FcrThemeViewController: FcrOutsideClassBaseController {
     
     private enum FcrThemeOption: Int {
         case light = 0
@@ -17,11 +17,9 @@ class FcrThemeViewController: UIViewController {
         func description() -> String {
             switch self {
             case .light:
-                return NSLocalizedString("settings_theme_light",
-                                         comment: "")
+                return "settings_theme_light".ag_localized()
             case .dark:
-                return NSLocalizedString("settings_theme_dark",
-                                         comment: "")
+                return "settings_theme_dark".ag_localized()
             }
         }
     }
@@ -40,8 +38,7 @@ class FcrThemeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = NSLocalizedString("settings_theme",
-                                       comment: "")
+        title = "settings_theme".ag_localized()
         createViews()
         createConstrains()
     }

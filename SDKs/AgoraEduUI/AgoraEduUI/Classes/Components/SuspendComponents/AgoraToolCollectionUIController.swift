@@ -186,12 +186,12 @@ class AgoraToolCollectionUIController: UIViewController {
         view.addSubview(contentView)
         
         mainCell.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                                  action: #selector(didSelectMain)))
+                                                             action: #selector(didSelectMain)))
         contentView.addSubview(mainCell)
         contentView.addSubview(sepLine)
         
         subCell.addGestureRecognizer(UITapGestureRecognizer(target: self,
-                                                                  action: #selector(didSelectSub)))
+                                                            action: #selector(didSelectSub)))
         contentView.addSubview(subCell)
         
         updateImage()

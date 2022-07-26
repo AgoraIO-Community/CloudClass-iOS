@@ -8,45 +8,31 @@
 
 import UIKit
 
-class FcrLanguageViewController: UIViewController {
-    
-    private enum FcrLanguageOption: String {
-        case zh_cn = "zh-Hans"
-        case en = "en"
-        case zh_tw = "zh-tw"
-        
-        func description() -> String {
-            switch self {
-            case .zh_cn:
-                return NSLocalizedString("fcr_settings_option_general_language_simplified",
-                                         comment: "")
-            case .en:
-                return NSLocalizedString("fcr_settings_option_general_language_english",
-                                         comment: "")
-            case .zh_tw:
-                return NSLocalizedString("fcr_settings_option_general_language_traditional",
-                                         comment: "")
-            }
-        }
-    }
+class FcrLanguageViewController: FcrOutsideClassBaseController {
     
     private let tableView = UITableView(frame: .zero, style: .plain)
     
-    private let dataSource: [FcrLanguageOption] = [.zh_cn,
-                                                   .en]
+    private let dataSource: [FcrSurpportLanguage] = [.zh_cn,
+                                                     .en]
     
-    private lazy var selectedLanguage: FcrLanguageOption = {
-        let language = FcrLanguageOption(rawValue: FcrUserInfoPresenter.shared.language) ?? .zh_cn
-        return language
-    }()
+    private lazy var selectedLanguage: FcrSurpportLanguage? = FcrLocalization.shared.language
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = NSLocalizedString("fcr_settings_label_language",
-                                  comment: "")
+        title = "fcr_settings_label_language".ag_localized()
         createViews()
         createConstrains()
+    }
+    
+    func reloadRootViews() {
+        let navi = FcrNavigationController(rootViewController: LoginViewController())
+        var viewControllers = navi.viewControllers
+        viewControllers.append(FcrSettingsViewController())
+        viewControllers.append(FcrGeneralSettingsViewController())
+        viewControllers.append(FcrLanguageViewController())
+        navi.resetViewControllers(viewControllers: viewControllers)
+        UIApplication.shared.keyWindow?.rootViewController = navi
     }
 }
 // MARK: - Creations
@@ -71,8 +57,8 @@ extension FcrLanguageViewController: UITableViewDelegate, UITableViewDataSource 
                               animated: false)
         let type = dataSource[indexPath.row]
         selectedLanguage = type
-        FcrUserInfoPresenter.shared.language = type.rawValue
-        tableView.reloadData()
+        FcrLocalization.shared.setupNewLanguage(type)
+        reloadRootViews()
     }
 }
 // MARK: - Creations
@@ -94,6 +80,20 @@ private extension FcrLanguageViewController {
     func createConstrains() {
         tableView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
+        }
+    }
+}
+
+private extension FcrSurpportLanguage {
+    
+    func description() -> String {
+        switch self {
+        case .zh_cn:
+            return "fcr_settings_option_general_language_simplified".ag_localized()
+        case .en:
+            return "fcr_settings_option_general_language_english".ag_localized()
+        case .zh_tw:
+            return "fcr_settings_option_general_language_traditional".ag_localized()
         }
     }
 }

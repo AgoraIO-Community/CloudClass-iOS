@@ -123,7 +123,7 @@ struct FcrUIComponentBreakoutRoom: FcrUIComponentProtocol {
 struct FcrUIComponentRaiseHand: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
-    var backgroundColor: UIColor = FcrUIColorGroup.iconFillColor
+    var backgroundColor: UIColor = FcrUIColorGroup.systemBrandColor
     
     var normalImage: UIImage?            = .agedu_named("toolbar_unselected_wave_hands")
     var popOverImage: UIImage?           = .agedu_named("toolbar_handsup_remind_popover")

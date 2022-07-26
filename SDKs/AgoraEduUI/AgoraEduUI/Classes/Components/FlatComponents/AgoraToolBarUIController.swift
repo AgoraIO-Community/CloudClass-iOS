@@ -227,21 +227,21 @@ private extension AgoraToolBarUIController {
 }
 
 // MARK: - Student Hands Up
-extension AgoraToolBarUIController: FcrWaveHandsDelayViewDelegate {
-    func onHandsUpViewDidChangeState(_ state: FcrWaveHandsDelayView.ViewState) {
+extension AgoraToolBarUIController: FcrToolBarWaveHandsCellDelegate {
+    func onHandsUpViewDidChangeState(_ state: FcrToolBarWaveHandsCell.ViewState) {
         switch state {
         case .hold:
             mayShowTips()
             let userName = userController.getLocalUserInfo().userName
             userController.handsWave(duration: 3,
-                                       payload: ["userName": userName]) {
+                                     payload: ["userName": userName]) {
                 
             } failure: { (_) in
                 
             }
             break
         case .free:
-            waveHandsCell?.waveHandsDelayView.isHidden = true
+            break
         case .counting:
             break
         default:
@@ -267,8 +267,7 @@ extension AgoraToolBarUIController: FcrWaveHandsDelayViewDelegate {
 
 // MARK: - UICollectionViewDataSource
 extension AgoraToolBarUIController: UICollectionViewDelegate,
-                                    UICollectionViewDataSource,
-                                    UICollectionViewDelegateFlowLayout {
+                                    UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         return self.dataSource.count
@@ -293,11 +292,9 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
                                                                          for: indexPath)
             let image = tool.unselectedImage
             cell.iconView.image = image
-            
             if waveHandsCell == nil {
                 waveHandsCell = cell
-                waveHandsCell?.waveHandsDelayView.delegate = self
-                waveHandsCell?.waveHandsDelayView.isHidden = true
+                waveHandsCell?.delegate = self
             }
             return cell
         } else if tool == .handsList {
@@ -374,8 +371,6 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
                         shouldHighlightItemAt indexPath: IndexPath) -> Bool {
         let tool = dataSource[indexPath.row]
         if tool == .waveHands {
-            waveHandsCell?.waveHandsDelayView.isHidden = false
-            waveHandsCell?.waveHandsDelayView.startTimer()
             return false
         } else {
             return true

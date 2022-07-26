@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FcrRegionViewController: UIViewController {
+class FcrRegionViewController: FcrOutsideClassBaseController {
     
     private let tableView = UITableView(frame: .zero,
                                         style: .plain)
@@ -23,8 +23,8 @@ class FcrRegionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = NSLocalizedString("fcr_settings_label_region",
-                                       comment: "")
+        title = "fcr_settings_label_region".ag_localized()
+        
         createViews()
         createConstrains()
     }

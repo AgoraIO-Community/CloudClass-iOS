@@ -5,12 +5,12 @@
       "scale" : "1x"
     },
     {
-      "filename" : "dark-icon-roster-actived-iPhone@2x.png",
+      "filename" : "toolbar_selected_roster@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "dark-icon-roster-actived-iPhone@3x.png",
+      "filename" : "toolbar_selected_roster@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

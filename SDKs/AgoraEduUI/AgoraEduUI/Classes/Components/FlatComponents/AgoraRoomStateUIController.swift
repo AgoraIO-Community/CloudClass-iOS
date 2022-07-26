@@ -71,12 +71,6 @@ extension AgoraRoomStateUIController: AgoraUIContentContainer, AgoraUIActivity {
         
         let recodingIsVisible: Bool = (contextPool.room.getRecordingState() == .started)
         
-        if let sub = subRoom {
-            stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
-        } else {
-            stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
-        }
-        
         var roomTitle: String
         switch contextPool.room.getRoomInfo().roomType {
         case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".agedu_localized()
@@ -85,6 +79,12 @@ extension AgoraRoomStateUIController: AgoraUIContentContainer, AgoraUIActivity {
         @unknown default:   roomTitle = "fcr_room_small_title".agedu_localized()
         }
         stateView.titleLabel.text = roomTitle
+        
+        if let sub = subRoom {
+            stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
+        } else {
+            stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
+        }
         
         let config = UIConfig.stateBar
         

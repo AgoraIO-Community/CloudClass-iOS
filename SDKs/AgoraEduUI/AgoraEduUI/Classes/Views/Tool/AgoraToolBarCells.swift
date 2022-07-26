@@ -47,7 +47,7 @@ class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
     var aSelected = false {
         didSet {
             let config = UIConfig.toolBar.cell
-            let image = aSelected ? config.selectedImage : config.normalImage
+            let image = aSelected ? config.normalImage?.withRenderingMode(.alwaysTemplate) : config.normalImage
             bgView.image = image
         }
     }
@@ -89,6 +89,7 @@ class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
         contentView.layer.shadowRadius = config.shadow.radius
         
         bgView.image = config.normalImage
+        bgView.tintColor = config.selectedColor
     }
     
     func highLight() {
@@ -109,55 +110,128 @@ class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
     }
 }
 
-// MARK: - AgoraToolBarHandsUpCell
-class AgoraToolBarHandsUpCell: UICollectionViewCell {
-    
-    var handsupDelayView: AgoraHandsUpDelayView!
-    
-    public var duration = 3 {
-        didSet {
-            self.handsupDelayView.duration = duration
-        }
-    }
-            
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        contentView.backgroundColor = UIColor.clear
-        
-        handsupDelayView = AgoraHandsUpDelayView(frame: .zero)
-        contentView.addSubview(handsupDelayView)
-        handsupDelayView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
 // MARK: - FcrToolBarWaveHandsCell
+protocol FcrToolBarWaveHandsCellDelegate: NSObjectProtocol {
+    func onHandsUpViewDidChangeState(_ state: FcrToolBarWaveHandsCell.ViewState)
+}
 class FcrToolBarWaveHandsCell: AgoraToolBarItemCell {
     
-    lazy var waveHandsDelayView = FcrWaveHandsDelayView(frame: .zero)
+    enum ViewState {
+        case free, hold, counting
+    }
+    
+    weak var delegate: FcrToolBarWaveHandsCellDelegate?
+    
+    private let backgroudView = UIView()
+        
+    private let delayLabel = UILabel()
     
     public var duration = 3 {
         didSet {
-            self.waveHandsDelayView.duration = duration
-        }
-    }
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        contentView.addSubview(waveHandsDelayView)
-        waveHandsDelayView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
+            self.count = duration
         }
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    private var state: ViewState = .free {
+        didSet {
+            guard state != oldValue else {
+                return
+            }
+            delegate?.onHandsUpViewDidChangeState(state)
+        }
+    }
+    
+    private var timer: Timer?
+    
+    private var count = 3
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        guard state == .free else {
+            return
+        }
+        backgroudView.isHidden = false
+        delayLabel.isHidden = false
+        delayLabel.text = "\(count)"
+        aSelected = true
+        highLight()
+        
+        stopTimer()
+        state = .hold
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        didTouchFinish()
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        didTouchFinish()
+    }
+    
+    func didTouchFinish() {
+        guard state == .hold else {
+            return
+        }
+        normalState()
+        
+        state = .counting
+        timer = Timer.scheduledTimer(withTimeInterval: 1,
+                                     repeats: true,
+                                     block: { [weak self] _ in
+            self?.countDown()
+        })
+    }
+    
+    private func countDown() {
+        if count > 1 {
+            count -= 1
+            delayLabel.text = "\(count)"
+        } else {
+            stopTimer()
+        }
+    }
+    
+    private func stopTimer() {
+        guard timer != nil else {
+            return
+        }
+        timer?.invalidate()
+        timer = nil
+        count = self.duration
+        delayLabel.isHidden = true
+        backgroudView.isHidden = true
+        aSelected = false
+        state = .free
+    }
+    
+    
+    override func initViews() {
+        super.initViews()
+        backgroudView.isHidden = true
+        contentView.addSubview(backgroudView)
+        
+        delayLabel.textAlignment = .center
+        contentView.addSubview(delayLabel)
+    }
+    
+    override func initViewFrame() {
+        super.initViewFrame()
+        backgroudView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(iconView)
+        }
+        delayLabel.mas_makeConstraints { make in
+            make?.center.equalTo()(0)
+        }
+    }
+    
+    override func updateViewProperties() {
+        super.updateViewProperties()
+        backgroudView.backgroundColor = UIConfig.toolBar.cell.selectedColor
+        
+        delayLabel.textColor = UIConfig.raiseHand.textColor
+        delayLabel.font = UIConfig.raiseHand.font
     }
 }
 
@@ -243,7 +317,7 @@ class AgoraToolCollectionCell: UIView {
         
         imageView.mas_remakeConstraints { make in
             make?.center.equalTo()(0)
-            make?.width.height().equalTo()(UIDevice.current.agora_is_pad ? 32 : 30)
+            make?.width.height().equalTo()(22)
         }
         
         if !isMain {

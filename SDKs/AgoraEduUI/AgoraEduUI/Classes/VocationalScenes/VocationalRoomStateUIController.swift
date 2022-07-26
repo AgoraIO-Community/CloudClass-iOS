@@ -99,13 +99,6 @@ extension VocationalRoomStateUIController: AgoraUIContentContainer, AgoraUIActiv
         stateView.titleLabel.textColor = FcrUIColorGroup.textLevel3Color
         stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
         
-        let recordingTitle = "fcr_record_recording".agedu_localized()
-        stateView.recordingLabel.text = recordingTitle
-        
-        let isHidden: Bool = !((contextPool.room.getRecordingState() == .started))
-        stateView.recordingStateView.isHidden = isHidden
-        stateView.recordingLabel.isHidden = isHidden
-        
         if let sub = subRoom {
             stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
         } else {
@@ -226,13 +219,6 @@ extension VocationalRoomStateUIController: AgoraEduRoomHandler {
                                       duration: info.duration * 1000,
                                       closeDelay: info.closeDelay * 1000)
     }
-    
-    func onRecordingStateUpdated(state: FcrRecordingState) {
-        let isHidden: Bool = !(state == .started)
-        
-        stateView.recordingLabel.isHidden = isHidden
-        stateView.recordingStateView.isHidden = isHidden
-    }
 }
 
 // MARK: - AgoraEduSubRoomHandler
@@ -289,8 +275,7 @@ class VocationalRoomStateBar: UIView, AgoraUIContentContainer {
     private var sepLine = UIView()
     
     let netStateView = UIImageView()
-    let recordingStateView = UIView()
-    let recordingLabel = UILabel()
+    
     let timeLabel = UILabel()
     let titleLabel = UILabel()
     
@@ -310,8 +295,6 @@ class VocationalRoomStateBar: UIView, AgoraUIContentContainer {
         addSubview(timeLabel)
         addSubview(sepLine)
         addSubview(titleLabel)
-        addSubview(recordingStateView)
-        addSubview(recordingLabel)
     }
     
     func initViewFrame() {
@@ -338,27 +321,6 @@ class VocationalRoomStateBar: UIView, AgoraUIContentContainer {
             make?.right.equalTo()(sepLine.mas_left)?.offset()(-8)
             make?.top.bottom().equalTo()(0)
         }
-        
-        let recordingViewRightOffset: CGFloat = -10
-        recordingLabel.mas_makeConstraints { make in
-            make?.right.equalTo()(titleLabel.mas_left)?.offset()(recordingViewRightOffset)
-            make?.top.equalTo()(0)
-            make?.bottom.equalTo()(0)
-        }
-        
-        let redViewHeight: CGFloat = 6
-        let redViewWidth: CGFloat = 6
-        let redViewCornerRadius: CGFloat = (redViewWidth * 0.5)
-        let redViewRightOffset: CGFloat = -10
-        
-        recordingStateView.mas_makeConstraints { make in
-            make?.centerY.equalTo()(0)
-            make?.width.equalTo()(redViewWidth)
-            make?.height.equalTo()(redViewHeight)
-            make?.right.equalTo()(recordingLabel.mas_left)?.offset()(redViewRightOffset)
-        }
-        
-        recordingStateView.layer.cornerRadius = redViewCornerRadius
     }
     
     func updateViewProperties() {
@@ -371,12 +333,6 @@ class VocationalRoomStateBar: UIView, AgoraUIContentContainer {
         
         titleLabel.font = font
         titleLabel.textColor = FcrUIColorGroup.textLevel1Color
-        
-        recordingStateView.backgroundColor = FcrUIColorGroup.systemErrorColor
-        recordingStateView.layer.cornerRadius = FcrUIFrameGroup.containerCornerRadius
-        
-        recordingLabel.textColor = FcrUIColorGroup.textLevel3Color
-        recordingLabel.font = font
     }
 }
 

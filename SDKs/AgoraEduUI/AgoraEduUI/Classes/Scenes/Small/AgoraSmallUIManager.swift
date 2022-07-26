@@ -180,11 +180,6 @@ import AgoraWidget
         // Suspend components
         addChild(settingController)
         
-        if userRole == .observer {
-            chatController.hideInput = true
-        }
-        
-        chatController.hideMiniButton = true
         addChild(chatController)
         
         switch userRole {
@@ -580,7 +575,8 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
                                        subRoom: subRoom,
                                        subDelegate: self,
                                        mainDelegate: self,
-                                       uiMode: uiMode)
+                                       uiMode: uiMode,
+                                       language: language)
         
         vc.modalPresentationStyle = .fullScreen
         present(vc,

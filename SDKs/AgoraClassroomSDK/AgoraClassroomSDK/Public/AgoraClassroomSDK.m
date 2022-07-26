@@ -108,17 +108,20 @@ static AgoraClassroomSDK *manager = nil;
             case AgoraEduContextRoomTypeOneToOne:
                 eduVC = [[AgoraOneToOneUIManager alloc] initWithContextPool:pool
                                                                    delegate:manager
-                                                                     uiMode:config.uiMode];
+                                                                     uiMode:config.uiMode
+                                                                   language:config.language];
                 break;
             case AgoraEduContextRoomTypeSmall:
                 eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool
                                                                 delegate:manager
-                                                                  uiMode:config.uiMode];
+                                                                  uiMode:config.uiMode
+                                                                 language:config.language];
                 break;
             case AgoraEduContextRoomTypeLecture:
                 eduVC = [[AgoraLectureUIManager alloc] initWithContextPool:pool
                                                                   delegate:manager
-                                                                    uiMode:config.uiMode];
+                                                                    uiMode:config.uiMode
+                                                                  language:config.language];
                 break;
             default:
                 NSCAssert(true,
@@ -178,10 +181,16 @@ static AgoraClassroomSDK *manager = nil;
         }
         AgoraEduUIManager *eduVC = nil;
         if (serviceType == AgoraEduServiceTypeMixStreamCDN) {
-            VcrMixStreamCDNUIManager *vc = [[VcrMixStreamCDNUIManager alloc] initWithContextPool:pool delegate:manager uiMode:config.uiMode];
+            VcrMixStreamCDNUIManager *vc = [[VcrMixStreamCDNUIManager alloc] initWithContextPool:pool
+                                                                                        delegate:manager
+                                                                                          uiMode:config.uiMode
+                                                                                        language:config.language];
             eduVC = vc;
         } else if (serviceType == AgoraEduServiceTypeHostingScene) {
-            VcrHostingSceneUIManager *vc = [[VcrHostingSceneUIManager alloc] initWithContextPool:pool delegate:manager uiMode:config.uiMode];
+            VcrHostingSceneUIManager *vc = [[VcrHostingSceneUIManager alloc] initWithContextPool:pool
+                                                                                        delegate:manager
+                                                                                          uiMode:config.uiMode
+                                                                                        language:config.language];
             eduVC = vc;
         } else {
             VocationalCDNType cdnType = VocationalCDNTypeNoCDN;
@@ -196,7 +205,10 @@ static AgoraClassroomSDK *manager = nil;
                     cdnType = VocationalCDNTypeNoCDN;
                     break;
             }
-            AgoraVocationalUIManager *vc = [[AgoraVocationalUIManager alloc] initWithContextPool:pool delegate:manager uiMode:config.uiMode];
+            AgoraVocationalUIManager *vc = [[AgoraVocationalUIManager alloc] initWithContextPool:pool
+                                                                                        delegate:manager
+                                                                                          uiMode:config.uiMode
+                                                                                        language:config.language];
             vc.cdnType = cdnType;
             eduVC = vc;
         }

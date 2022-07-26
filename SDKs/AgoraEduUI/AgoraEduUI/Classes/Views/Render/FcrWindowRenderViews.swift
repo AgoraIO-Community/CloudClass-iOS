@@ -218,8 +218,10 @@ extension FcrWindowRenderView: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
+        let borderWidth = UIConfig.studentVideo.cell.borderWidth
         videoView.mas_makeConstraints { make in
-            make?.left.right().top().bottom()?.equalTo()(0)
+            make?.center.equalTo()(0)
+            make?.width.height().equalTo()(self)?.offset()(-borderWidth)
         }
         
         videoMaskView.mas_makeConstraints { make in

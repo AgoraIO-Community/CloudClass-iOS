@@ -165,7 +165,7 @@ private extension AgoraUserListItemCell {
                                      for: .normal)
                 stageButton.isUserInteractionEnabled = model.stageState.isEnable
             case .auth:
-                let image = model.authState.isOn ? config.stage.onImage : config.stage.offImage
+                let image = model.authState.isOn ? config.boardAuthorization.onImage : config.boardAuthorization.offImage
                 authButton.setImage(image,
                                      for: .normal)
                 authButton.isUserInteractionEnabled = model.stageState.isEnable

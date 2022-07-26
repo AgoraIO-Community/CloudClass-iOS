@@ -83,15 +83,13 @@ class AgoraBoardUIController: UIViewController {
     /** Data */
     private var pageIndex = 1 {
         didSet {
-            let text = "\(pageIndex) / \(pageCount)"
-            pageControl.pageLabel.text = text
+            pageControl.updatePage(pageIndex, pages: pageCount)
         }
     }
     
     private var pageCount = 0 {
         didSet {
-            let text = "\(pageIndex) / \(pageCount)"
-            pageControl.pageLabel.text = text
+            pageControl.updatePage(pageIndex, pages: pageCount)
         }
     }
     
@@ -210,6 +208,10 @@ extension AgoraBoardUIController: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
+        let userRole = contextPool.user.getLocalUserInfo().userRole
+        guard userRole != .observer else {
+            return
+        }
         pageControl.mas_makeConstraints { make in
             make?.left.equalTo()(view)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
             make?.bottom.equalTo()(view)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)

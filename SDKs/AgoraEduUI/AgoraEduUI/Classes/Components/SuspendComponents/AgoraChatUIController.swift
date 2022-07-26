@@ -52,17 +52,7 @@ class AgoraChatUIController: UIViewController {
                                     height: 287)
     
     public weak var delegate: AgoraChatUIControllerDelegate?
-    
-    public var hideTopBar = false
-    
-    public var hideMiniButton = false
-    
-    public var hideAnnouncement = false
-    
-    public var hideInput = false
-    
-    public var hideMuteButton = false
-    
+            
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: AgoraChatUIControllerDelegate? = nil) {
@@ -146,13 +136,19 @@ extension AgoraChatUIController: AgoraWidgetMessageObserver {
         guard widgetId == EasemobWidgetId || widgetId == AgoraChatWidgetId else {
             return
         }
-        
-        guard message == "chatWidgetDidReceiveMessage",
-              isVisible == false else {
-            return
+
+        if let signal = message.toChatSignal() {
+            switch signal {
+            case .messageReceived:
+                guard !isVisible else {
+                    return
+                }
+                redDotShow = true
+            case .error(let string):
+                AgoraToast.toast(msg: string,
+                                 type: .error)
+            }
         }
-        
-        redDotShow = true
     }
 }
 
@@ -183,40 +179,21 @@ private extension AgoraChatUIController {
             return nil
         }
         
-        let widget = widgetController.create(config)
         let userInfo = userController.getLocalUserInfo()
         
+        // avatarUrl set
         if let flexProps = userController.getUserProperties(userUuid: userInfo.userUuid),
-           let url = flexProps["avatarurl"] as? String,
-           let message = ["avatarurl": url].jsonString() {
-            widgetController.sendMessage(toWidget: widgetId,
-                                         message: message)
+           let url = flexProps["avatarUrl"] as? String {
+            if let extraInfo = config.extraInfo {
+                var newExtra = config.extraInfo as! Dictionary<String, Any>
+                newExtra["avatarUrl"] = url
+                config.extraInfo = newExtra
+            } else {
+                config.extraInfo = ["avatarUrl": url]
+            }
         }
         
-        if hideTopBar {
-            widgetController.sendMessage(toWidget: widgetId,
-                                         message: "hideTopBar")
-        }
-        
-        if hideMiniButton {
-            widgetController.sendMessage(toWidget: widgetId,
-                                         message: "hideMiniButton")
-        }
-        
-        if hideAnnouncement {
-            widgetController.sendMessage(toWidget: widgetId,
-                                         message: "hideAnnouncement")
-        }
-        
-        if hideInput {
-            widgetController.sendMessage(toWidget: widgetId,
-                                         message: "hideInput")
-        }
-        
-        if hideMuteButton {
-            widgetController.sendMessage(toWidget: widgetId,
-                                         message: "hideMuteButton")
-        }
+        let widget = widgetController.create(config)
         
         widgetController.add(self,
                              widgetId: widgetId)
@@ -232,12 +209,6 @@ private extension AgoraChatUIController {
         }
         
         let widget = widgetController.create(config)
-        
-        if let param = ["view": ["hideTopBar": hideTopBar,
-                                 "hideInput": hideInput]].jsonString() {
-            widgetController.sendMessage(toWidget: widgetId,
-                                         message: param)
-        }
         
         widgetController.add(self,
                              widgetId: widgetId)

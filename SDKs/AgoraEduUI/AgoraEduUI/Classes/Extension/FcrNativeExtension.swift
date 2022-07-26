@@ -55,10 +55,10 @@ extension String {
     }
     
     func agedu_localized() -> String {
-        let bundle = Bundle.agora_bundle("AgoraEduUI") ?? Bundle.main
-        return NSLocalizedString(self,
-                                 bundle: bundle,
-                                 comment: "")
+        let bundle = FcrUIGlobal.languageBundle ?? Bundle.agora_bundle("AgoraEduUI") ?? Bundle.main
+        return bundle.localizedString(forKey: self,
+                                      value: nil,
+                                      table: nil)
     }
 }
 

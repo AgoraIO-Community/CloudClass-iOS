@@ -34,9 +34,7 @@ class AgoraToolCollectionToolCell: UICollectionViewCell, AgoraUIContentContainer
     
     public func setImage(image: UIImage?,
                          color: UIColor?) {
-        if let c = color {
-            selectedColor = color
-        }
+        selectedColor = color
         imageView.image = image
     }
     
@@ -59,6 +57,10 @@ class AgoraToolCollectionToolCell: UICollectionViewCell, AgoraUIContentContainer
     
     func updateViewProperties() {
         backgroundColor = UIConfig.toolCollection.backgroundColor
+    }
+    
+    func updateImageViewState() {
+        
     }
 }
 
@@ -114,7 +116,7 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
 
 // MARK: - BrushSizeItemCell
 class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
-    private var scales: [CGFloat] = [1, 4/3, 2, 7/3, 3]
+    private var scales: [CGFloat] = [3/7, 4/7, 5/7, 6/7, 1]
     
     public var level: Int = -1 {
         willSet {
@@ -157,7 +159,7 @@ class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
     func initViewFrame() {
         sizeView.mas_makeConstraints { make in
             make?.center.equalTo()(sizeView.superview)
-            make?.width.height().equalTo()(6)
+            make?.width.height().equalTo()(14)
         }
     }
     
@@ -166,12 +168,13 @@ class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func updateColor() {
-        guard aSelected else {
-            sizeView.tintColor = nil
-            return
+        if let c = color,
+           aSelected {
+            sizeView.image = sizeView.image?.withRenderingMode(.alwaysTemplate)
+            sizeView.tintColor = c
+        } else {
+            sizeView.image = sizeView.image?.withRenderingMode(.alwaysOriginal)
         }
-        
-        sizeView.tintColor = color
     }
 }
 
@@ -216,12 +219,12 @@ class AgoraBoardColorItemCell: UICollectionViewCell, AgoraUIContentContainer {
     func initViewFrame() {
         backView.mas_makeConstraints { make in
             make?.center.equalTo()(backView.superview)
-            make?.width.height().equalTo()(24)
+            make?.width.height().equalTo()(20)
         }
         
         frontView.mas_makeConstraints { make in
             make?.center.equalTo()(frontView.superview)
-            make?.width.height().equalTo()(20)
+            make?.width.height().equalTo()(14)
         }
     }
     
@@ -233,7 +236,7 @@ class AgoraBoardColorItemCell: UICollectionViewCell, AgoraUIContentContainer {
         backView.backgroundColor = config.backgroundColor
         
         frontView.layer.borderWidth = config.borderWidth
-        frontView.layer.cornerRadius = config.cornerRadius
+        frontView.layer.cornerRadius = config.cornerRadius - 2
         frontView.clipsToBounds = true
     }
 }

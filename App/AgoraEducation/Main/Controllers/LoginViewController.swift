@@ -58,6 +58,55 @@ import UIKit
     
     private var debugButton: AgoraBaseUIButton!
     private var debugCount: Int = 0
+    /** 房间可选项*/
+    let kRoomOptions: [(AgoraEduRoomType, String)] = [
+        (.oneToOne, "Login_onetoone".ag_localized()),
+        (.small, "Login_small".ag_localized()),
+        (.lecture, "Login_lecture".ag_localized()),
+        (.vocational, "Login_vocational_lecture".ag_localized()),
+    ]
+    /** 角色可选项*/
+    let kRoleOptions: [(AgoraEduUserRole, String)] = [
+        (.student, "login_role_student".ag_localized()),
+        (.teacher, "login_role_teacher".ag_localized()),
+        (.observer, "login_role_observer".ag_localized()),
+    ]
+
+    let kIMOptions: [(IMType, String)] = [
+        (.rtm, "rtm"),
+        (.easemob, "easemon")
+    ]
+
+    /** 加密方式可选项*/
+    let kEncryptionOptions: [(AgoraEduMediaEncryptionMode, String)] = [
+        (.none, "None"),
+        (.SM4128ECB, "sm4-128-ecb"),
+        (.AES128GCM2, "aes-128-gcm2"),
+        (.AES256GCM2, "aes-256-gcm2"),
+    ]
+
+    /** 环境可选项*/
+    let kEnvironmentOptions: [(FcrEnvironment.Environment, String)] = [
+        (.dev, "login_env_test".ag_localized()),
+        (.pre, "login_pre_test".ag_localized()),
+        (.pro, "login_pro_test".ag_localized())
+    ]
+
+    /** 上台后音视频是否自动发流权限*/
+    let kMediaAuthOptions: [(AgoraEduMediaAuthOption, String)] = [
+        (.none, "login_auth_none".ag_localized()),
+        (.audio, "login_auth_audio".ag_localized()),
+        (.video, "login_auth_video".ag_localized()),
+        (.both, "login_auth_both".ag_localized())
+    ]
+
+    /** 服务类型可选项*/
+    let kVocationalServiceOptions: [(AgoraEduServiceType, String)] = [
+        (.RTC, "Login_service_rtc".ag_localized()),
+        (.fastRTC, "Login_service_fast_rtc".ag_localized()),
+        (.onlyCDN, "Login_service_only_cdn".ag_localized()),
+        (.mixedCDN, "Login_service_mixed_cdn".ag_localized()),
+    ]
 }
 
 // MARK: - override
@@ -77,11 +126,18 @@ extension LoginViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        // setup agora loading
+        if let bundle = Bundle.agora_bundle("AgoraEduUI"),
+           let url = bundle.url(forResource: "img_loading",
+                                withExtension: "gif"),
+           let data = try? Data(contentsOf: url) {
+            AgoraLoading.setImageData(data)
+        }
 
         createViews()
         createConstraint()
         
-        self.refreshToken()
+        updateUserInfo()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -93,6 +149,14 @@ extension LoginViewController {
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        guard FcrUserInfoPresenter.shared.qaMode == false else {
+            let debugVC = DebugViewController()
+            debugVC.modalPresentationStyle = .fullScreen
+            self.present(debugVC,
+                         animated: true,
+                         completion: nil)
+            return
+        }
         // 检查协议，检查登录
         FcrPrivacyTermsViewController.checkPrivacyTerms {
             LoginWebViewController.showLoginIfNot(complete: nil)
@@ -176,16 +240,18 @@ private extension LoginViewController {
             tableView.reloadData()
         }
     }
-    // 打开应用刷新token
-    func refreshToken() {
+    // 打开应用获取用户信息
+    func updateUserInfo() {
         guard FcrUserInfoPresenter.shared.isLogin else {
             return
         }
-        FcrOutsideClassAPI.refreshToken(onSuccess: nil, onFailure: nil)
+        FcrOutsideClassAPI.fetchUserInfo { dict in
+            
+        } onFailure: { msg in
+            
+        }
     }
-    
 }
-
 // MARK: - Actions
 private extension LoginViewController {
     @objc func onTouchAbout() {
@@ -203,8 +269,7 @@ private extension LoginViewController {
         guard !(roomStyle == .lecture && inputParams.roleType == .teacher),
               !(roomStyle == .vocational && inputParams.roleType == .teacher)
         else {
-            AgoraToast.toast(msg: NSLocalizedString("login_lecture_teacher_warning",
-                                                    comment: ""),
+            AgoraToast.toast(msg: "login_lecture_teacher_warning".ag_localized(),
                              type: .warning)
             return
         }
@@ -243,18 +308,11 @@ private extension LoginViewController {
         
         let videoState: AgoraEduStreamState = (inputParams.mediaAuth == .video || inputParams.mediaAuth == .both) ? .on : .off
         let audioState: AgoraEduStreamState = (inputParams.mediaAuth == .audio || inputParams.mediaAuth == .both) ? .on : .off
-        let uiMode =  AgoraEduUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
                                                 videoEncoderConfig: nil,
                                                 latencyLevel: latencyLevel,
                                                 videoState: videoState,
                                                 audioState: audioState)
-        
-        if let url = Bundle.main.url(forResource: "img_loading",
-                                                withExtension: "gif"),
-              let data = try? Data(contentsOf: url) {
-            AgoraLoading.setImageData(data)
-        }
         
         AgoraLoading.loading()
 
@@ -288,7 +346,8 @@ private extension LoginViewController {
                                                     startTime: nil,
                                                     duration: NSNumber(value: duration),
                                                     region: region,
-                                                    uiMode: uiMode,
+                                                    uiMode: self.getLaunchUIMode(),
+                                                    language: self.getLaunchLanguage(),
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
             
@@ -358,6 +417,19 @@ private extension LoginViewController {
         case .AP: return .AP
         }
     }
+    
+    func getLaunchLanguage() -> AgoraLanguage {
+        switch FcrLocalization.shared.language {
+        case .zh_cn: return .simplified
+        case .en:    return .english
+        case .zh_tw: return .followSystem
+        case .none:  return .followSystem
+        }
+    }
+    
+    func getLaunchUIMode() -> AgoraEduUIMode {
+        return AgoraEduUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
+    }
 }
 
 private extension LoginViewController {
@@ -381,7 +453,7 @@ private extension LoginViewController {
                       userRole: Int,
                       success: @escaping (TokenBuilder.ServerResp) -> (),
                       failure: @escaping (NSError) -> ()) {
-        FcrOutsideClassAPI.buildToken(roomId: roomId, userRole: userRole, userId: userId) { dict in
+        FcrOutsideClassAPI.freeBuildToken(roomId: roomId, userRole: userRole, userId: userId) { dict in
             guard let data = dict["data"] as? [String : Any] else {
                 fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
             }
@@ -438,58 +510,43 @@ extension LoginViewController: UITableViewDelegate, UITableViewDataSource {
         switch rowType {
         case .roomName:
             cell.mode = .input
-            cell.titleLabel.text = NSLocalizedString("Login_room_title",
-                                                     comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_room_holder",
-                                                           comment: "")
+            cell.titleLabel.text = "Login_room_title".ag_localized()
+            cell.textField.placeholder = "Login_room_holder".ag_localized()
         case .nickName:
             cell.mode = .input
-            cell.titleLabel.text = NSLocalizedString("Login_user_title",
-                                                     comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_user_holder",
-                                                           comment: "")
+            cell.titleLabel.text = "Login_user_title".ag_localized()
+            cell.textField.placeholder = "Login_user_holder".ag_localized()
         case .roomStyle:
             cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("Login_class_type_title",
-                                                     comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_type_holder",
-                                                           comment: "")
+            cell.titleLabel.text = "Login_class_type_title".ag_localized()
+            cell.textField.placeholder = "Login_type_holder".ag_localized()
             cell.textField.text = optionDescription(option: inputParams.roomStyle,
                                                     in: kRoomOptions)
         case .serviceType:
             cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("Login_class_service_type_title",
-                                                     comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_service_type_holder",
-                                                           comment: "")
+            cell.titleLabel.text = "Login_class_service_type_title".ag_localized()
+            cell.textField.placeholder = "Login_service_type_holder".ag_localized()
             cell.textField.text = optionDescription(option: inputParams.serviceType,
                                                     in: kVocationalServiceOptions)
         case .roleType:
             cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("login_title_role",
-                                                     comment: "")
+            cell.titleLabel.text = "login_title_role".ag_localized()
             cell.textField.placeholder = optionDescription(option: inputParams.roleType,
                                                            in: kRoleOptions)
             cell.textField.text = optionDescription(option: inputParams.roleType,
                                                     in: kRoleOptions)
         case .duration:
             cell.mode = .unable
-            cell.titleLabel.text = NSLocalizedString("Login_duration_title",
-                                                     comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_duration_holder",
-                                                           comment: "")
+            cell.titleLabel.text = "Login_duration_title".ag_localized()
+            cell.textField.placeholder = "Login_duration_holder".ag_localized()
         case .encryptKey:
             cell.mode = .input
-            cell.titleLabel.text = NSLocalizedString("Login_encryptKey_title",
-                                                     comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_encryptKey_holder",
-                                                           comment: "")
+            cell.titleLabel.text = "Login_encryptKey_title".ag_localized()
+            cell.textField.placeholder = "Login_encryptKey_holder".ag_localized()
         case .encryptMode:
             cell.mode = .option
-            cell.titleLabel.text = NSLocalizedString("Login_encryption_mode_title",
-                                                     comment: "")
-            cell.textField.placeholder = NSLocalizedString("Login_encryption_mode_holder",
-                                                           comment: "")
+            cell.titleLabel.text = "Login_encryption_mode_title".ag_localized()
+            cell.textField.placeholder = "Login_encryption_mode_holder".ag_localized()
             cell.textField.text = optionDescription(option: inputParams.encryptMode,
                                                          in: kEncryptionOptions)
         default:
@@ -641,8 +698,7 @@ private extension LoginViewController {
             
             titleLabel.textColor = .white
         } else {
-            subTitleLabel.text = NSLocalizedString("About_url",
-                                           comment: "")
+            subTitleLabel.text = "About_url".ag_localized()
             subTitleLabel.textColor = UIColor(hex: 0x677386)
             subTitleLabel.font = UIFont.systemFont(ofSize: 14)
             view.addSubview(subTitleLabel)
@@ -651,8 +707,7 @@ private extension LoginViewController {
         }
         
         titleLabel.font = .systemFont(ofSize: isPad ? 24 : 20)
-        titleLabel.text = NSLocalizedString("Login_title",
-                                            comment: "")
+        titleLabel.text = "Login_title".ag_localized()
         
         
         view.addSubview(titleLabel)
@@ -672,8 +727,7 @@ private extension LoginViewController {
         view.addSubview(aboutButton)
         
         enterButton = AgoraBaseUIButton()
-        enterButton.setTitle(NSLocalizedString("Login_enter",
-                                               comment: ""),
+        enterButton.setTitle("Login_enter".ag_localized(),
                              for: .normal)
         enterButton.setTitleColor(.white,
                                   for: .normal)
@@ -686,8 +740,7 @@ private extension LoginViewController {
         view.addSubview(enterButton)
         
         let appVersion = "_" + AgoraClassroomSDK.version()
-        let loginVersion = NSLocalizedString("Login_version",
-                                             comment: "") + appVersion
+        let loginVersion = "Login_version".ag_localized() + appVersion
         
         bottomLabel = AgoraBaseUILabel(frame: .zero)
         bottomLabel.text = loginVersion

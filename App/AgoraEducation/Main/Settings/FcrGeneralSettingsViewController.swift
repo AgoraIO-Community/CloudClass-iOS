@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FcrGeneralSettingsViewController: UIViewController {
+class FcrGeneralSettingsViewController: FcrOutsideClassBaseController {
     
     private enum FcrSettingsOption: Int {
         case nickName = 0
@@ -30,8 +30,7 @@ class FcrGeneralSettingsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = NSLocalizedString("fcr_settings_option_general",
-                                  comment: "")
+        title = "fcr_settings_option_general".ag_localized()
         createViews()
         createConstrains()
     }
@@ -81,20 +80,15 @@ extension FcrGeneralSettingsViewController: UITableViewDelegate, UITableViewData
         let type = dataSource[indexPath.row]
         switch type {
         case .nickName:
-            cell.infoLabel.text = NSLocalizedString("settings_nickname",
-                                                    comment: "")
+            cell.infoLabel.text = "settings_nickname".ag_localized()
         case .language:
-            cell.infoLabel.text = NSLocalizedString("fcr_settings_label_language",
-                                                    comment: "")
+            cell.infoLabel.text = "fcr_settings_label_language".ag_localized()
         case .area:
-            cell.infoLabel.text = NSLocalizedString("fcr_settings_label_region",
-                                                    comment: "")
+            cell.infoLabel.text = "fcr_settings_label_region".ag_localized()
         case .theme:
-            cell.infoLabel.text = NSLocalizedString("settings_theme",
-                                                    comment: "")
+            cell.infoLabel.text = "settings_theme".ag_localized()
         case .logoff:
-            cell.infoLabel.text = NSLocalizedString("settings_close_account",
-                                                    comment: "")
+            cell.infoLabel.text = "settings_close_account".ag_localized()
         }
         return cell
     }
@@ -137,5 +131,19 @@ private extension FcrGeneralSettingsViewController {
         tableView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
+    }
+}
+// MARK: - InterfaceOrientations
+extension FcrGeneralSettingsViewController {
+    public override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
+    }
+
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
     }
 }

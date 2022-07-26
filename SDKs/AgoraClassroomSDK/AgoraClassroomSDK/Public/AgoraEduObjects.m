@@ -100,6 +100,7 @@
                          duration:nil
                            region:AgoraEduRegionCN
                            uiMode:AgoraEduUIModeLight
+                         language:AgoraLanguageFollowSystem
                      mediaOptions:mediaOptions
                    userProperties:nil];
 }
@@ -116,6 +117,7 @@
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
                           uiMode:(AgoraEduUIMode)uiMode
+                        language:(AgoraLanguage)language
                     mediaOptions:(AgoraEduMediaOptions *)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties {
     self = [self init];
@@ -134,10 +136,14 @@
     self.duration = duration;
     self.region = region;
     self.uiMode = uiMode;
+    self.language = language;
     self.mediaOptions = mediaOptions;
     
     self.userProperties = userProperties;
     
+    FcrWidgetsUIMode widgetUIMode = uiMode;
+    FcrWidgetsLanguage widgetLanguage = language;
+    [FcrWidgetsUIGlobal setUIModeWithUiMode:widgetUIMode language:widgetLanguage];
     self.widgets = [self baseWidgets];
     
     return self;
@@ -147,7 +153,7 @@
     // Register widgets
     NSMutableDictionary<NSString *, AgoraWidgetConfig *> *widgets = [NSMutableDictionary dictionary];
     // TODO: replace rtm to im (chat)
-    AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[ChatWidget class]
+    AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[AgoraChatEasemobWidget class]
                                                               widgetId:@"easemobIM"];
     widgets[chat.widgetId] = chat;
     
@@ -163,7 +169,7 @@
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     
     // RTM IM Widget
-    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc] initWithClass:[AgoraRtmIMWidget class]
+    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc] initWithClass:[AgoraChatRtmWidget class]
                                                              widgetId:@"AgoraChatWidget"];
     widgets[rtm.widgetId] = rtm;
 

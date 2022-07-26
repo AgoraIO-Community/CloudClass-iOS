@@ -54,7 +54,7 @@ class VocationalToolBarUIController: UIViewController {
         
     private var collectionView: UICollectionView!
     
-    private var handsupCell: AgoraToolBarHandsUpCell?
+    private var waveHandsCell: FcrToolBarWaveHandsCell?
     
     /** 画笔图片*/
     private var brushImage = UIConfig.netlessBoard.mouse.unselectedImage
@@ -154,6 +154,10 @@ extension VocationalToolBarUIController: AgoraUIContentContainer {
     func initViews() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width: kButtonLength,
+                                 height: kButtonLength)
+        layout.minimumLineSpacing = kGap
+        layout.minimumInteritemSpacing = kGap
         collectionView = UICollectionView(frame: .zero,
                                           collectionViewLayout: layout)
         collectionView.delegate = self
@@ -165,7 +169,7 @@ extension VocationalToolBarUIController: AgoraUIContentContainer {
         collectionView.bounces = false
         collectionView.clipsToBounds = false
         collectionView.register(cellWithClass: AgoraToolBarItemCell.self)
-        collectionView.register(cellWithClass: AgoraToolBarHandsUpCell.self)
+        collectionView.register(cellWithClass: FcrToolBarWaveHandsCell.self)
         collectionView.register(cellWithClass: AgoraToolBarRedDotCell.self)
         collectionView.register(cellWithClass: AgoraToolBarHandsListCell.self)
         view.addSubview(collectionView)
@@ -230,14 +234,14 @@ private extension VocationalToolBarUIController {
 }
 
 // MARK: - Student Hands Up
-extension VocationalToolBarUIController: AgoraHandsUpDelayViewDelegate {
-    func onHandsUpViewDidChangeState(_ state: AgoraHandsUpDelayView.ViewState) {
+extension VocationalToolBarUIController: FcrToolBarWaveHandsCellDelegate {
+    func onHandsUpViewDidChangeState(_ state: FcrToolBarWaveHandsCell.ViewState) {
         switch state {
         case .hold:
             mayShowTips()
             let userName = userController.getLocalUserInfo().userName
             userController.handsWave(duration: self.handsupDuration,
-                                       payload: ["userName": userName]) {
+                                     payload: ["userName": userName]) {
                 
             } failure: { (_) in
                 
@@ -270,8 +274,7 @@ extension VocationalToolBarUIController: AgoraHandsUpDelayViewDelegate {
 
 // MARK: - UICollectionViewDataSource
 extension VocationalToolBarUIController: UICollectionViewDelegate,
-                                    UICollectionViewDataSource,
-                                    UICollectionViewDelegateFlowLayout {
+                                         UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         return self.dataSource.count
@@ -281,49 +284,49 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let tool = dataSource[indexPath.row]
         
-        let aSelected = selectedTool == tool
-        
-        let image = aSelected ? tool.selectedImage : tool.unselectedImage
+        let aSelected = (selectedTool == tool)
         
         if tool == .message {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarRedDotCell.self,
                                                           for: indexPath)
+            let image = aSelected ? tool.selectedImage : tool.unselectedImage
             cell.iconView.image = image
             cell.aSelected = aSelected
             cell.redDot.isHidden = !messageRemind
             return cell
         } else if tool == .waveHands {
-            let cell = handsupCell ?? collectionView.dequeueReusableCell(withClass: AgoraToolBarHandsUpCell.self,
+            let cell = waveHandsCell ?? collectionView.dequeueReusableCell(withClass: FcrToolBarWaveHandsCell.self,
                                                                          for: indexPath)
-            if handsupCell == nil {
-                handsupCell = cell
-                handsupCell?.handsupDelayView.delegate = self
+            let image = tool.unselectedImage
+            cell.iconView.image = image
+            if waveHandsCell == nil {
+                waveHandsCell = cell
+                waveHandsCell?.delegate = self
+                waveHandsCell?.duration = handsupDuration
             }
-            handsupCell?.duration = self.handsupDuration
             return cell
         } else if tool == .handsList {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarHandsListCell.self,
                                                           for: indexPath)
+            var handsListSelected = (handsListCount > 0) ? aSelected : false
+            let image = handsListSelected ? tool.selectedImage : tool.unselectedImage
             cell.iconView.image = image
-            cell.aSelected = aSelected
             
             cell.redLabel.text = "\(handsListCount)"
             cell.redLabel.isHidden = (handsListCount == 0)
-            if handsListCount > 0  {
-                cell.aSelected = (selectedTool == tool)
-            } else {
-                cell.aSelected = false
-            }
+            cell.aSelected = handsListSelected
             return cell
         } else if tool == .help {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarItemCell.self,
                                                           for: indexPath)
             let touchable = !teacherInLocalSubRoom()
-            cell.iconView.image = touchable ? image : tool.disabledImage
+            let image = touchable ? tool.unselectedImage : tool.disabledImage
+            cell.iconView.image = image
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarItemCell.self,
                                                           for: indexPath)
+            let image = aSelected ? tool.selectedImage : tool.unselectedImage
             cell.iconView.image = image
             cell.aSelected = aSelected
             return cell
@@ -335,7 +338,8 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
         collectionView.deselectItem(at: indexPath,
                                     animated: false)
         let tool = dataSource[indexPath.row]
-        if selectedTool == tool {
+        if !tool.isOnceKind,
+           selectedTool == tool {
             selectedTool = nil
         } else {
             selectedTool = tool
@@ -344,7 +348,9 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
                                                       selectView: cell)
             }
         }
-        collectionView.reloadItems(at: [indexPath])
+        UIView.performWithoutAnimation {
+            collectionView.reloadItems(at: [indexPath])
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -355,25 +361,6 @@ extension VocationalToolBarUIController: UICollectionViewDelegate,
         } else {
             return true
         }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: kButtonLength,
-                      height: kButtonLength)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return kGap
-    }
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return kGap
     }
     
     func collectionView(_ collectionView: UICollectionView,

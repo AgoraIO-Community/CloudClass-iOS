@@ -5,13 +5,12 @@
 //  Created by Jonathan on 2022/7/11.
 //  Copyright © 2022 Agora. All rights reserved.
 //
-
 import AgoraUIBaseViews
 import AgoraEduUI
-import UIKit
 import WebKit
+import UIKit
 
-class LoginWebViewController: UIViewController {
+class LoginWebViewController: FcrOutsideClassBaseController {
     
     public static func showLoginIfNot(complete: (() -> Void)?) {
         guard FcrUserInfoPresenter.shared.isLogin == false else {
@@ -43,6 +42,10 @@ class LoginWebViewController: UIViewController {
     private var urlStr: String?
     
     private var onComplete: (() -> Void)?
+    
+    private var debugButton = UIButton(type: .custom)
+    
+    private var debugCount: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +60,26 @@ class LoginWebViewController: UIViewController {
             let myRequest = URLRequest(url: myURL!)
             webView.load(myRequest)
         }
+        
+        debugButton.backgroundColor = .clear
+        debugButton.addTarget(self,
+                              action: #selector(onTouchDebug),
+                              for: .touchUpInside)
+        view.addSubview(debugButton)
+        debugButton.mas_makeConstraints { make in
+            make?.height.equalTo()(40)
+            make?.width.equalTo()(30)
+            make?.left.bottom().equalTo()(0)
+        }
+    }
+    
+    @objc func onTouchDebug() {
+        guard debugCount >= 10 else {
+            debugCount += 1
+            return
+        }
+        FcrUserInfoPresenter.shared.qaMode = true
+        dismiss(animated: true)
     }
 }
 // MARK: - WKNavigationDelegate
@@ -80,14 +103,14 @@ extension LoginWebViewController: WKNavigationDelegate {
             decisionHandler(.allow)
             return
         }
-        if queryItems.contains(where: {$0.name == "refresh_token"}),
-           queryItems.contains(where: {$0.name == "access_token"}) {
+        if queryItems.contains(where: {$0.name == "accessToken"}),
+           queryItems.contains(where: {$0.name == "refreshToken"}) {
             // 获取登录结果
             queryItems.forEach { item in
-                if item.name == "access_token",
+                if item.name == "accessToken",
                    let accessToken = item.value {
                     FcrUserInfoPresenter.shared.accessToken = accessToken
-                } else if item.name == "refresh_token",
+                } else if item.name == "refreshToken",
                           let refreshToken = item.value {
                     FcrUserInfoPresenter.shared.refreshToken = refreshToken
                 }

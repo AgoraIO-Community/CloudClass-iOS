@@ -145,6 +145,10 @@ import AgoraWidget
     
     // MARK: AgoraUIContentContainer
     override func initViews() {
+        super.initViews()
+        
+        UIConfig = FcrLectrueConfig()
+        
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
         addChild(stateController)
@@ -160,10 +164,6 @@ import AgoraWidget
         contentView.addSubview(teacherRenderController.view)
         
         // 视图层级：白板，大窗，工具
-        boardController.view.layer.cornerRadius = AgoraFit.scale(2)
-        boardController.view.borderWidth = 1
-        boardController.view.borderColor = UIColor(hex: 0xECECF1)
-        boardController.view.clipsToBounds = true
         addChild(boardController)
         contentView.addSubview(boardController.view)
         
@@ -214,17 +214,15 @@ import AgoraWidget
             toolBarController.tools = [.setting]
         }
         contentView.addSubview(toolBarController.view)
-        
-        chatController.hideMiniButton = true
-        if contextPool.user.getLocalUserInfo().userRole == .observer {
-            chatController.hideInput = true
-        }
+
         addChild(chatController)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
     }
     
     override func initViewFrame() {
+        super.initViewFrame()
+        
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
         stateController.view.mas_makeConstraints { make in
@@ -282,7 +280,7 @@ import AgoraWidget
     }
     
     override func updateViewProperties() {
-        
+        super.updateViewProperties()
     }
 }
 // MARK: - AgoraEduStreamHandler
@@ -534,7 +532,7 @@ private extension AgoraVocationalUIManager {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         
-        layout.itemSize = CGSize(width: AgoraFit.scale(170),
+        layout.itemSize = CGSize(width: teacherRenderController.view.width,
                                  height: teacherRenderController.view.height - 2)
         layout.minimumLineSpacing = 2
         teacherRenderController.updateLayout(layout)

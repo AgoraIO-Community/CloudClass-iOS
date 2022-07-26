@@ -26,14 +26,12 @@ class AgreementView: UIView {
                                   transparency: 0.5)
         
         addSubview(checkButton)
-        checkLabel.text = NSLocalizedString("Service_check_content",
-                                            comment: "")
+        checkLabel.text = "Service_check_content".ag_localized()
         checkLabel.textColor = UIColor(hex: 0x7D8798)
         checkLabel.font = .systemFont(ofSize: 10)
         addSubview(checkLabel)
         
-        agreeButton.setTitle(NSLocalizedString("Service_agree",
-                                               comment: ""),
+        agreeButton.setTitle("Service_agree".ag_localized(),
                              for: .normal)
         agreeButton.setTitleColor(.white,
                                   for: .normal)
@@ -43,8 +41,7 @@ class AgreementView: UIView {
         agreeButton.layer.cornerRadius = 22
         addSubview(agreeButton)
         
-        disagreeButton.setTitle(NSLocalizedString("Service_disagree",
-                                                  comment: ""),
+        disagreeButton.setTitle("Service_disagree".ag_localized(),
                                 for: .normal)
         disagreeButton.setTitleColor(UIColor(hex: 0x8A8A9A),
                                   for: .normal)

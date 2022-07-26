@@ -48,8 +48,9 @@ import AgoraWidget
             self?.exitClassRoom(reason: .normal)
         }
     }
-    
+        
     override func initViews() {
+        super.initViews()
         stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
@@ -57,11 +58,7 @@ import AgoraWidget
         globalController.roomDelegate = self
         addChild(globalController)
         globalController.viewDidLoad()
-        
-        chatController.hideMiniButton = true
-        if contextPool.user.getLocalUserInfo().userRole == .observer {
-            chatController.hideInput = true
-        }
+
         addChild(chatController)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
@@ -74,6 +71,10 @@ import AgoraWidget
     }
     
     override func initViewFrame() {
+        super.initViewFrame()
+        
+        UIConfig = FcrLectrueConfig()
+        
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(34))

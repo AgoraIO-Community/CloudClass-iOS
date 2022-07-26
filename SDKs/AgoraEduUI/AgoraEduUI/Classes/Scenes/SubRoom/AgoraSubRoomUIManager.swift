@@ -100,12 +100,14 @@ import AgoraWidget
          subRoom: AgoraEduSubRoomContext,
          subDelegate: AgoraEduUIManagerCallback?,
          mainDelegate: AgoraEduUISubManagerCallback?,
-         uiMode: FcrUIMode) {
+         uiMode: FcrUIMode,
+         language: FcrLanguage) {
         self.subRoom = subRoom
         self.mainDelegate = mainDelegate
         super.init(contextPool: contextPool,
                    delegate: subDelegate,
-                   uiMode: uiMode)
+                   uiMode: uiMode,
+                   language: language)
     }
     
     required init?(coder: NSCoder) {
@@ -251,11 +253,6 @@ import AgoraWidget
         // Suspend components
         addChild(settingController)
         
-        if userRole == .observer {
-            chatController.hideInput = true
-        }
-        
-        chatController.hideMiniButton = true
         addChild(chatController)
         
         switch userRole {

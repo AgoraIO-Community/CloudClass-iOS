@@ -126,6 +126,8 @@ struct FcrUIItemNetlessBoardPageControl: FcrUIItemProtocol {
     let addPageImage: UIImage?  = .agedu_named("ic_board_page_add")
     let prevPageImage: UIImage? = .agedu_named("ic_board_page_pre")
     let nextPageImage: UIImage? = .agedu_named("ic_board_page_next")
+    let disabledPrevPageImage: UIImage? = .agedu_named("ic_board_page_disabled_pre")
+    let disabledNextPageImage: UIImage? = .agedu_named("ic_board_page_disabled_next")
     
     let sepLine        = FcrUIItemSepLine()
     let pageLabel      = FcrUIItemNetlessBoardPageLabel()
@@ -294,7 +296,7 @@ struct FcrUIItemClassStateStartClass: FcrUIItemProtocol {
     
     let normalTitleColor: UIColor      = FcrUIColorGroup.textContrastColor
     let font: UIFont                   = FcrUIFontGroup.font13
-    let normalBackgroundColor: UIColor = FcrUIColorGroup.iconFillColor
+    let normalBackgroundColor: UIColor = FcrUIColorGroup.systemBrandColor
     let cornerRadius: CGFloat          = FcrUIFrameGroup.roundContainerCornerRadius
     
     let shadow: FcrUIItemShadow        = FcrUIItemShadow()
@@ -305,7 +307,7 @@ struct FcrUIItemSettingCamera: FcrUIItemProtocol {
     var visible: Bool   = true
     var enable: Bool    = true
     
-    let tintColor: UIColor      = FcrUIColorGroup.iconFillColor
+    let tintColor: UIColor      = FcrUIColorGroup.systemBrandColor
     let title                   = FcrUIItemSettingTitle()
     let direction               = FcrUIItemSettingCameraDirection()
 }
@@ -314,7 +316,7 @@ struct FcrUIItemSettingMicrophone: FcrUIItemProtocol {
     var visible: Bool   = true
     var enable: Bool    = true
     
-    let tintColor: UIColor      = FcrUIColorGroup.iconFillColor
+    let tintColor: UIColor      = FcrUIColorGroup.systemBrandColor
     let title                   = FcrUIItemSettingTitle()
 }
 
@@ -322,7 +324,7 @@ struct FcrUIItemSettingSpeaker: FcrUIItemProtocol {
     var visible: Bool   = true
     var enable: Bool    = true
     
-    let tintColor: UIColor      = FcrUIColorGroup.iconFillColor
+    let tintColor: UIColor      = FcrUIColorGroup.systemBrandColor
     let title                   = FcrUIItemSettingTitle()
 }
 
@@ -330,7 +332,7 @@ struct FcrUIItemSettingExit: FcrUIItemProtocol {
     var visible: Bool   = true
     var enable: Bool    = true
     
-    let backgroundColor: UIColor  = FcrUIColorGroup.iconFillColor
+    let backgroundColor: UIColor  = FcrUIColorGroup.systemBrandColor
     let cornerRadius: CGFloat     = FcrUIFrameGroup.containerCornerRadius
     let titleColor: UIColor       = FcrUIColorGroup.textContrastColor
     let titleFont: UIFont         = FcrUIFontGroup.font12
@@ -350,7 +352,7 @@ struct FcrUIItemSettingCameraDirection: FcrUIItemProtocol {
     
     let titleColor: UIColor                = FcrUIColorGroup.textLevel3Color
     let normalBackgroundColor: UIColor     = FcrUIColorGroup.iconNormalBackgroundColor.withAlphaComponent(0.1)
-    let selectedBackgroundColor: UIColor   = FcrUIColorGroup.iconFillColor
+    let selectedBackgroundColor: UIColor   = FcrUIColorGroup.systemBrandColor
     let normalLabelColor: UIColor          = FcrUIColorGroup.textLevel2Color
     let selectedLabelColor: UIColor        = FcrUIColorGroup.textContrastColor
     let font: UIFont                       = FcrUIFontGroup.font12
@@ -364,9 +366,9 @@ struct FcrUIItemToolBarCell: FcrUIItemProtocol {
     
     let cornerRadius: CGFloat   = FcrUIFrameGroup.roundContainerCornerRadius
     let normalImage: UIImage?   = .agedu_named("toolbar_unselected_bg")
-    let selectedImage: UIImage? = .agedu_named("toolbar_selected_bg")
+    let selectedColor: UIColor  = FcrUIColorGroup.systemBrandColor
     
-    let shadow: FcrUIItemShadow                        = FcrUIItemShadow()
+    let shadow: FcrUIItemShadow = FcrUIItemShadow()
 }
 // types
 struct FcrUIItemToolBarSetting: FcrUIItemProtocol {
@@ -492,7 +494,7 @@ struct FcrUIItemVideoCell: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
+    let backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
     let cornerRadius: CGFloat    = FcrUIFrameGroup.windowCornerRadius
     let borderWidth: CGFloat     = FcrUIFrameGroup.borderWidth
     let borderColor: CGColor     = FcrUIColorGroup.borderColor.cgColor
@@ -502,7 +504,7 @@ struct FcrUIItemVideoMask: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let backgroundColor: UIColor        = FcrUIColorGroup.systemForegroundColor
+    let backgroundColor: UIColor        = FcrUIColorGroup.systemBackgroundColor
     let noUserImage: UIImage?           = .agedu_named("window_no_user")
     let cameraOffImage: UIImage?        = .agedu_named("window_device_off")
     let cameraForbiddenImage: UIImage?  = .agedu_named("window_device_forbidden")
@@ -542,7 +544,7 @@ struct FcrUIItemRosterCarousel: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let tintColor: UIColor    = FcrUIColorGroup.iconFillColor
+    let tintColor: UIColor    = FcrUIColorGroup.systemBrandColor
 }
 
 struct FcrUIItemRosterStudentName: FcrUIItemProtocol {

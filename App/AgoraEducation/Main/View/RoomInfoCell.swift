@@ -235,11 +235,9 @@ extension RoomInfoCell {
 
         switch type {
         case .roomName:
-            label.text = NSLocalizedString("Login_room_warn",
-                                           comment: "")
+            label.text = "Login_room_warn".ag_localized()
         case .nickName:
-            label.text = NSLocalizedString("Login_user_warn",
-                                           comment: "")
+            label.text = "Login_user_warn".ag_localized()
         default:
             break
         }

@@ -104,7 +104,7 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
         titleLabel.textColor = config.scheduleTime.textColor
         
         recordingStateView.backgroundColor = config.recordingState.backgroundColor
-        recordingStateView.layer.cornerRadius = config.recordingState.cornerRadius
+        recordingStateView.layer.cornerRadius = 3
         
         recordingLabel.textColor = config.recordingState.textColor
         recordingLabel.font = config.recordingState.textFont

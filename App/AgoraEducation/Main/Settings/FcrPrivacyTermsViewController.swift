@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 
 fileprivate let kAgree = "com.agora.privacyTermsAgree"
-class FcrPrivacyTermsViewController: UIViewController {
+class FcrPrivacyTermsViewController: FcrOutsideClassBaseController {
     
     public static func checkPrivacyTerms(complete: (() -> Void)?) {
         guard let root = UIApplication.shared.keyWindow?.rootViewController else {
@@ -56,8 +56,7 @@ private extension FcrPrivacyTermsViewController {
     func initViews() {
         view.backgroundColor = .white
         
-        termTitle.text = NSLocalizedString("Service_title",
-                                           comment: "")
+        termTitle.text = "Service_title".ag_localized()
         termTitle.textColor = .black
         termTitle.font = .boldSystemFont(ofSize: 14)
         view.addSubview(termTitle)

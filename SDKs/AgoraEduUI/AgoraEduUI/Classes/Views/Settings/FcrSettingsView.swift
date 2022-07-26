@@ -273,7 +273,7 @@ extension FcrSettingsView: AgoraUIContentContainer {
         speakerLabel.text = "fcr_media_speaker".agedu_localized()
         speakerLabel.font = config.speaker.title.font
         
-        speakerSwitch.onTintColor = config.microphone.tintColor
+        speakerSwitch.onTintColor = config.speaker.tintColor
         
         // Exit
         exitButton.titleLabel?.font = config.exit.titleFont

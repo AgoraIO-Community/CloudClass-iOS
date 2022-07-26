@@ -179,11 +179,7 @@ import AgoraWidget
             toolBarController.updateTools([.setting])
         }
         contentView.addSubview(toolBarController.view)
-        
-        chatController.hideMiniButton = true
-        if contextPool.user.getLocalUserInfo().userRole == .observer {
-            chatController.hideInput = true
-        }
+
         addChild(chatController)
         contentView.addSubview(chatController.view)
         contentView.sendSubviewToBack(chatController.view)
@@ -567,7 +563,7 @@ private extension AgoraLectureUIManager {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         
-        layout.itemSize = CGSize(width: 244,
+        layout.itemSize = CGSize(width: teacherRenderController.view.width - 2,
                                  height: teacherRenderController.view.height - 2)
         layout.minimumLineSpacing = 2
         teacherRenderController.updateLayout(layout)

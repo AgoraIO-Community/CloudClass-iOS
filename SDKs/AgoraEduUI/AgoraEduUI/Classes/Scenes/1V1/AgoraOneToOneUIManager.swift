@@ -183,6 +183,9 @@ import UIKit
         
         classToolsController.view.agora_enable = UIConfig.toolBox.enable
         classToolsController.view.agora_visible = UIConfig.toolBox.visible
+        
+        chatController.view.agora_enable = UIConfig.agoraChat.enable
+        chatController.view.agora_visible = UIConfig.agoraChat.visible
     }
     
     override func initViewFrame() {
@@ -580,13 +583,6 @@ private extension AgoraOneToOneUIManager {
     }
     
     func createChatController() {
-        if contextPool.user.getLocalUserInfo().userRole == .observer {
-            chatController.hideInput = true
-        }
-        chatController.hideAnnouncement = true
-        chatController.hideMiniButton = true
-        chatController.hideMuteButton = true
-        
         addChild(chatController)
         if UIDevice.current.agora_is_pad {
             contentView.addSubview(chatController.view)

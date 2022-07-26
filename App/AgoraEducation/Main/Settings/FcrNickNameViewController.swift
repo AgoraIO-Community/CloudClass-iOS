@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FcrNickNameViewController: UIViewController {
+class FcrNickNameViewController: FcrOutsideClassBaseController {
     
     private let textField = UITextField(frame: .zero)
     
@@ -17,8 +17,7 @@ class FcrNickNameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = NSLocalizedString("settings_nickname",
-                                  comment: "")
+        title = "settings_nickname".ag_localized()
         view.backgroundColor = .white
         createViews()
         createConstrains()

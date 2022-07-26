@@ -39,6 +39,8 @@ enum RoomInfoItemType: Int, CaseIterable {
     case encryptMode
     // 上台是否直接授权音视频发流权限
     case mediaAuth
+    // 主题模式
+    case uiMode
     // 环境
     case env
 }
@@ -46,58 +48,6 @@ enum RoomInfoItemType: Int, CaseIterable {
 enum IMType: String {
     case rtm, easemob
 }
-
-/** 房间可选项*/
-let kRoomOptions: [(AgoraEduRoomType, String)] = [
-    (.oneToOne, NSLocalizedString("Login_onetoone", comment: "")),
-    (.small, NSLocalizedString("Login_small", comment: "")),
-    (.lecture, NSLocalizedString("Login_lecture", comment: "")),
-    (.vocational, NSLocalizedString("Login_vocational_lecture", comment: "")),
-]
-/** 角色可选项*/
-let kRoleOptions: [(AgoraEduUserRole, String)] = [
-    (.student, NSLocalizedString("login_role_student", comment: "")),
-    (.teacher, NSLocalizedString("login_role_teacher", comment: "")),
-    (.observer, NSLocalizedString("login_role_observer", comment: "")),
-]
-
-let kIMOptions: [(IMType, String)] = [
-    (.rtm, "rtm"),
-    (.easemob, "easemon")
-]
-
-/** 加密方式可选项*/
-let kEncryptionOptions: [(AgoraEduMediaEncryptionMode, String)] = [
-    (.none, "None"),
-    (.SM4128ECB, "sm4-128-ecb"),
-    (.AES128GCM2, "aes-128-gcm2"),
-    (.AES256GCM2, "aes-256-gcm2"),
-]
-
-/** 环境可选项*/
-let kEnvironmentOptions: [(FcrEnvironment.Environment, String)] = [
-    (.dev, NSLocalizedString("login_env_test", comment: "")),
-    (.pre, NSLocalizedString("login_pre_test", comment: "")),
-    (.pro, NSLocalizedString("login_pro_test", comment: ""))
-]
-
-/** 上台后音视频是否自动发流权限*/
-let kMediaAuthOptions: [(AgoraEduMediaAuthOption, String)] = [
-    (.none, NSLocalizedString("login_auth_none", comment: "")),
-    (.audio, NSLocalizedString("login_auth_audio", comment: "")),
-    (.video, NSLocalizedString("login_auth_video", comment: "")),
-    (.both, NSLocalizedString("login_auth_both", comment: ""))
-]
-
-/** 服务类型可选项*/
-let kVocationalServiceOptions: [(AgoraEduServiceType, String)] = [
-    (.RTC, NSLocalizedString("Login_service_rtc", comment: "")),
-    (.fastRTC, NSLocalizedString("Login_service_fast_rtc", comment: "")),
-    (.onlyCDN, NSLocalizedString("Login_service_only_cdn", comment: "")),
-    (.mixedCDN, NSLocalizedString("Login_service_mixed_cdn", comment: "")),
-    (.mixStreamCDN, "合流转推"),
-    (.hostingScene, "伪直播"),
-]
 
 /** 入参模型*/
 struct RoomInfoModel {
@@ -114,7 +64,7 @@ struct RoomInfoModel {
     var startTime: NSNumber?
     
     var mediaAuth: AgoraEduMediaAuthOption = .both
-
+    
     /** 入参默认值 */
     static func defaultValue() -> RoomInfoModel {
         var room = RoomInfoModel()
