@@ -159,6 +159,18 @@ import Foundation
     }
 }
 
+@objcMembers public class FcrUserPorpertiesEvent: NSObject {
+    public let user: AgoraEduContextUserInfo
+    
+    public let changedProperties: [String]
+    
+    public init(user: AgoraEduContextUserInfo,
+                changedProperties: [String]) {
+        self.user = user
+        self.changedProperties = changedProperties
+    }
+}
+
 // MARK: - Media
 /// 视频流配置
 @objcMembers public class AgoraEduContextVideoStreamConfig: NSObject {
@@ -360,5 +372,22 @@ import Foundation
                 message: String? = nil) {
         self.code = code
         self.message = message
+    }
+}
+
+// MARK: - FcrEventBatch
+@objcMembers public class FcrEventBatch: NSObject {
+    public let identifier: String
+    
+    public let total: UInt16
+    
+    public let index: UInt16
+    
+    public init(identifier: String,
+                total: UInt16,
+                index: UInt16) {
+        self.identifier = identifier
+        self.total = total
+        self.index = index
     }
 }

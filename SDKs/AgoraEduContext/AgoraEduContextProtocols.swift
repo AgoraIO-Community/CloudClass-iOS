@@ -475,6 +475,26 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - note: 无论是用户自己取消举手，还是举手申请被接受，都会走这个回调
     @objc optional func onUserHandsDown(userUuid: String,
                                         payload: [String: Any]?)
+    
+    /// 批量用户属性更新 (v2.5.3)
+    /// - parameter list: 用户属性更新事件列表
+    /// - parameter batch: 批量信息
+    /// - parameter operatorUser: 操作者，可为空
+    /// - parameter cause: 原因，可以为空
+    @objc optional func onUserPropertiesListUpdated(list: [FcrUserPorpertiesEvent],
+                                                    batch: FcrEventBatch,
+                                                    operatorUser: AgoraEduContextUserInfo?,
+                                                    cause: [String: Any]?)
+    
+    /// 批量用户属性删除 (v2.5.3)
+    /// - parameter list: 用户属性删除事件列表
+    /// - parameter batch: 批量信息
+    /// - parameter operatorUser: 操作者，可为空
+    /// - parameter cause: 原因，可以为空
+    @objc optional func onUserPropertiesListDeleted(list: [FcrUserPorpertiesEvent],
+                                                    batch: FcrEventBatch,
+                                                    operatorUser: AgoraEduContextUserInfo?,
+                                                    cause: [String: Any]?)
 }
 
 @objc public protocol AgoraEduUserContext: NSObjectProtocol {
