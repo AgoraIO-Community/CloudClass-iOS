@@ -11,7 +11,6 @@ def libVersion
   pod 'SwifterSwift', '5.2.0'
   pod 'Masonry', '1.1.0'
   pod 'SDWebImage', '5.12.0'
-  pod 'WHToast', '0.0.7'
 
   # agora libs
   pod 'AgoraRtm_iOS', '1.4.8'
