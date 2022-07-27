@@ -13,7 +13,6 @@ Pod::Spec.new do |spec|
   
   # open source libs
   spec.dependency "AgoraEduUI", ">=2.6.1"
-  spec.dependency "AgoraEduContext", ">=2.6.0"
 
   # open sources widgets
   spec.dependency "AgoraWidgets", ">=2.6.2"

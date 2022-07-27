@@ -33,10 +33,10 @@ buildFunc() {
     ARC=""
 
     if [ ! -f "Podfile" ];then
-        TARGET_FILE=${SDK_Name}.xcodeproj
+        TARGET_FILE=AgoraBuilder.xcodeproj
         PROJECT_TYPE="-project"
     else
-        TARGET_FILE=${SDK_Name}.xcworkspace
+        TARGET_FILE=AgoraBuilder.xcworkspace
         PROJECT_TYPE="-workspace"
         pod install --repo-update
     fi

@@ -72,9 +72,9 @@ class VcrMixStreamCDNRenderUIController: UIViewController {
 // MARK: - AgoraEduRoomHandler
 extension VcrMixStreamCDNRenderUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        if let hls = contextPool.room.getRecordingStreamUrlList()["hls"] {
-            cdnURL = hls
-        }
+//        if let hls = contextPool.room.getRecordingStreamUrlList()["hls"] {
+//            cdnURL = hls
+//        }
     }
     
     func onRecordingStreamUrlListUpdated(urlList: [String : String]) {

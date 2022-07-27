@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
   spec.swift_versions        = ["5.0", "5.1", "5.2", "5.3", "5.4"]
 
   spec.source              = { :git => "git@github.com:AgoraIO-Community/CloudClass-iOS.git", :tag => 'AgoraEduContext_v' + "#{spec.version.to_s}" }
-  spec.source_files        = "SDKs/AgoraEduContext/AgoraEduContext/*.{swift,h,m}"
+  spec.source_files        = "SDKs/AgoraEduContext/*.{swift,h,m}"
   spec.public_header_files = [
     "SDKs/AgoraEduContext/AgoraEduContext/*.h"
   ]

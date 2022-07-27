@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name             = 'AgoraUIBaseViews'
-  spec.version          = '2.0.0'
+  spec.version          = '5.0.0'
   spec.summary          = 'Agora UIBase Views'
   spec.description      = 'Agora UIBase Views SDK'
 
@@ -13,6 +13,6 @@ Pod::Spec.new do |spec|
   spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
   
   spec.vendored_frameworks = [
-    "AgoraUIBaseViews.framework"
+    "Libs/AgoraUIBaseViews.framework"
   ]
 end
