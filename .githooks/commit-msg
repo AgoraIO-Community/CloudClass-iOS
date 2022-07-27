@@ -20,15 +20,15 @@
 
 git diff --cached --name-only --diff-filter=M -z $against -- | while read -d $'\0' f; do
 
-if [[ ${f} == *"swift"* ]]
+if [[ ${f} == *""* ]]
 then
 
 	project="${f%.*}"
 	project="${project##*/}"
 
-	if [ "$project" = "DebugViewController" ]; then
+	if [ "$project" = "Podfile" ]; then
 		while read line; do
-			if [[ "$line" != *"DebugViewController"* ]]
+			if [[ "$line" != *"Podfile"* ]]
 			then
 					cat <<EOF
 Error: 注意啦，这是一个特别的文件，你真的要提交吗？

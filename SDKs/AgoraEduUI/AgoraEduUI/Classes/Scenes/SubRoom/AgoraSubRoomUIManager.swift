@@ -206,7 +206,8 @@ import AgoraWidget
     
     // MARK: AgoraUIContentContainer
     override func initViews() {
-        //        UIConfig = FcrSmallUIConfig()
+        UIConfig = FcrSmallUIConfig()
+        super.initViews()
         
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
@@ -289,6 +290,7 @@ import AgoraWidget
     }
     
     override func initViewFrame() {
+        super.initViewFrame()
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
         stateController.view.mas_makeConstraints { make in
@@ -336,6 +338,7 @@ import AgoraWidget
     }
     
     override func updateViewProperties() {
+        super.updateViewProperties()
     }
 }
 

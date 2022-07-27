@@ -118,6 +118,8 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
 class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
     private var scales: [CGFloat] = [3/7, 4/7, 5/7, 6/7, 1]
     
+    private lazy var lineWidthImage = UIConfig.netlessBoard.lineWidth.image
+    
     public var level: Int = -1 {
         willSet {
             guard level != newValue else {
@@ -151,8 +153,7 @@ class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func initViews() {
-        let config = UIConfig.netlessBoard.lineWidth
-        sizeView.image = config.image
+        sizeView.image = lineWidthImage
         addSubview(sizeView)
     }
     

@@ -341,7 +341,7 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
         for subRoom in subRoomList {
             guard let list = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
                list.contains(localUserId) else {
-               return
+               continue
             }
         
             hasJoinedSubRoomId = subRoom.subRoomUuid

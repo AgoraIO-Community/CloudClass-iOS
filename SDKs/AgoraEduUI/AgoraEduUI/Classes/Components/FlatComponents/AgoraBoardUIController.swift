@@ -39,11 +39,11 @@ class AgoraBoardUIController: UIViewController {
     
     var localGranted = false {
         didSet {
+            pageControl.isHidden = !localGranted
+            
             guard localGranted != oldValue else {
                 return
             }
-            pageControl.isHidden = !localGranted
-            
             guard contextPool.user.getLocalUserInfo().userRole != .teacher else {
                 return
             }
