@@ -93,7 +93,7 @@ struct FcrUIItemStateBarRoomName: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool = true
     
-    let textColor: UIColor = FcrUIColorGroup.textLevel3Color
+    let textColor: UIColor = FcrUIColorGroup.textLevel1Color
     let textFont: UIFont = FcrUIFontGroup.font9
 }
 
@@ -111,7 +111,7 @@ struct FcrUIItemStateBarRecordingState: FcrUIItemProtocol {
     
     let backgroundColor: UIColor = FcrUIColorGroup.systemErrorColor
     let cornerRadius: CGFloat = FcrUIFrameGroup.containerCornerRadius
-    let textColor: UIColor = FcrUIColorGroup.textLevel3Color
+    let textColor: UIColor = FcrUIColorGroup.textLevel1Color
     let textFont: UIFont = FcrUIFontGroup.font9
 }
 

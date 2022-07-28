@@ -175,7 +175,7 @@ class AgoraUserListUIController: UIViewController {
         
         contentView.addSubview(teacherNameLabel)
         
-        studentTitleLabel.textAlignment = .center
+        studentTitleLabel.textAlignment = .left
         studentTitleLabel.text = "fcr_user_list_student_name".agedu_localized()
         contentView.addSubview(studentTitleLabel)
         
@@ -269,7 +269,7 @@ class AgoraUserListUIController: UIViewController {
             make?.height.equalTo()(1)
         }
         teacherTitleLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(titleLabel)
+            make?.left.equalTo()(16)
             make?.top.bottom().equalTo()(teacherInfoView)
         }
         teacherNameLabel.mas_makeConstraints { make in
@@ -278,9 +278,9 @@ class AgoraUserListUIController: UIViewController {
         }
         studentTitleLabel.mas_makeConstraints { make in
             make?.top.equalTo()(teacherInfoView.mas_bottom)
-            make?.left.equalTo()(0)
+            make?.left.equalTo()(16)
             make?.height.equalTo()(30)
-            make?.width.equalTo()(100)
+            make?.width.equalTo()(80)
         }
         itemTitlesView.mas_makeConstraints { make in
             make?.top.equalTo()(studentTitleLabel)

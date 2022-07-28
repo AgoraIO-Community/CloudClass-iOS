@@ -28,17 +28,16 @@ class VcrMixStreamCDNRenderUIController: UIViewController {
             guard cdnURL != oldValue else {
                 return
             }
-            if let url = URL.init(string: cdnURL) {
-                placeHolderView.isHidden = true
-                videoPlayer.pause()
-                let asset = AVURLAsset(url: url)
-                playerItem = AVPlayerItem(asset: asset)
-                videoPlayer.replaceCurrentItem(with: playerItem)
-                videoPlayer.play()
-            } else {
-                placeHolderView.isHidden = false
-                videoPlayer.pause()
+            self.updateVideoState()
+        }
+    }
+    
+    var recordingState: FcrRecordingState = .stopped {
+        didSet {
+            guard recordingState != oldValue else {
+                return
             }
+            self.updateVideoState()
         }
     }
     
@@ -57,6 +56,7 @@ class VcrMixStreamCDNRenderUIController: UIViewController {
         
         view.layer.addSublayer(playerLayer)
         view.addSubview(placeHolderView)
+        updateViewProperties()
         placeHolderView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
@@ -68,23 +68,49 @@ class VcrMixStreamCDNRenderUIController: UIViewController {
         super.viewDidLayoutSubviews()
         playerLayer.frame = view.bounds
     }
+    
+    func updateViewProperties() {
+        let config = UIConfig.streamWindow
+        
+        view.backgroundColor = config.backgroundColor
+        placeHolderView.backgroundColor = config.backgroundColor
+        placeHolderView.layer.cornerRadius = config.cornerRadius
+        placeHolderView.layer.borderWidth = config.borderWidth
+        placeHolderView.layer.borderColor = config.borderColor
+    }
+    
+    private func updateVideoState() {
+        videoPlayer.pause()
+        if recordingState == .started,
+           let url = URL.init(string: cdnURL) {
+            placeHolderView.isHidden = true
+            let asset = AVURLAsset(url: url)
+            playerItem = AVPlayerItem(asset: asset)
+            videoPlayer.replaceCurrentItem(with: playerItem)
+            videoPlayer.play()
+        } else {
+            placeHolderView.isHidden = false
+        }
+    }
 }
 // MARK: - AgoraEduRoomHandler
 extension VcrMixStreamCDNRenderUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-//        if let hls = contextPool.room.getRecordingStreamUrlList()["hls"] {
-//            cdnURL = hls
-//        }
+        
     }
     
     func onRecordingStreamUrlListUpdated(urlList: [String : String]) {
         cdnURL = urlList["hls"]
     }
+    
+    func onRecordingStateUpdated(state: FcrRecordingState) {
+        recordingState = state
+    }
 }
 // VcrMixStreamCDNEmptyView
 class VcrMixStreamCDNEmptyView: UIView {
     
-    let imageView = UIImageView(image: UIImage.agedu_named("ic_member_no_user"))
+    let imageView = UIImageView(image: UIImage.agedu_named("window_no_user"))
     
     let label = UILabel()
     
@@ -104,15 +130,16 @@ class VcrMixStreamCDNEmptyView: UIView {
         addSubview(imageView)
         
         label.text = "fcr_vocational_teacher_absent".agedu_localized()
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textColor = UIColor(hex: 0x7B88A0)
+        label.font = FcrUIFontGroup.font12
+        label.textColor = FcrUIColorGroup.textLevel2Color
         addSubview(label)
     }
     
     func createConstrains() {
         imageView.mas_makeConstraints { make in
             make?.width.height().equalTo()(100)
-            make?.center.equalTo()(0)
+            make?.centerX.equalTo()(0)
+            make?.centerY.equalTo()(-35)
         }
         label.mas_makeConstraints { make in
             make?.top.equalTo()(imageView.mas_bottom)?.offset()(4)

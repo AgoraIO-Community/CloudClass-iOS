@@ -145,7 +145,7 @@ private extension AgoraRoomStateUIController {
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         switch info.state {
         case .before:
-            stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
+            stateView.timeLabel.textColor = FcrUIColorGroup.textLevel2Color
             if info.startTime == 0 {
                 stateView.timeLabel.text = "fcr_room_class_not_start".agedu_localized()
             } else {
@@ -175,7 +175,7 @@ private extension AgoraRoomStateUIController {
                 AgoraToast.toast(msg: final)
             }
         case .during:
-            stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
+            stateView.timeLabel.textColor = FcrUIColorGroup.textLevel2Color
             let time = realTime - info.startTime
             let text = "fcr_room_class_started".agedu_localized()
             stateView.timeLabel.text = text + timeString(from: time)

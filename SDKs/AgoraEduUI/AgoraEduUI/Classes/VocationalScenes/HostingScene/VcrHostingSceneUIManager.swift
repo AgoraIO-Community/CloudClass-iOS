@@ -87,7 +87,7 @@ import AgoraWidget
         renderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(chatController.view.mas_left)
+            make?.right.equalTo()(chatController.view.mas_left)?.offset()(-2)
         }
     }
     

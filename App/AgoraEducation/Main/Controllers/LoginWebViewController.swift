@@ -67,8 +67,8 @@ class LoginWebViewController: FcrOutsideClassBaseController {
                               for: .touchUpInside)
         view.addSubview(debugButton)
         debugButton.mas_makeConstraints { make in
-            make?.height.equalTo()(40)
-            make?.width.equalTo()(30)
+            make?.height.equalTo()(60)
+            make?.width.equalTo()(40)
             make?.left.bottom().equalTo()(0)
         }
     }

@@ -80,6 +80,7 @@ class VcrHostingPlayerUIController: UIViewController {
         
         view.layer.addSublayer(playerLayer)
         view.addSubview(placeHolderView)
+        updateViewProperties()
         placeHolderView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
@@ -90,6 +91,16 @@ class VcrHostingPlayerUIController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         playerLayer.frame = view.bounds
+    }
+    
+    func updateViewProperties() {
+        let config = UIConfig.streamWindow
+        
+        view.backgroundColor = config.backgroundColor
+        placeHolderView.backgroundColor = config.backgroundColor
+        placeHolderView.layer.cornerRadius = config.cornerRadius
+        placeHolderView.layer.borderWidth = config.borderWidth
+        placeHolderView.layer.borderColor = config.borderColor
     }
 }
 // MARK: - Private

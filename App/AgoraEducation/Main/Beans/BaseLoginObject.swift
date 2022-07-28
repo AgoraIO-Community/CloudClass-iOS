@@ -49,7 +49,7 @@ enum FIELD_TYPE: String {
 class LoginConfig {
     
     static let version_time: String = {
-        return "2022.07.26"
+        return "2022.07.27"
     }()
     
     static let sdk_version: String = AgoraClassroomSDK.version()

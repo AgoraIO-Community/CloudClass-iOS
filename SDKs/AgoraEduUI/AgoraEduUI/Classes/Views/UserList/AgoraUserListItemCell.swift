@@ -275,7 +275,7 @@ private extension AgoraUserListItemCell {
 extension AgoraUserListItemCell: AgoraUIContentContainer {
     func initViews() {
         nameLabel = UILabel()
-        nameLabel.textAlignment = .center
+        nameLabel.textAlignment = .left
         let config = UIConfig.roster.studentName
         nameLabel.agora_enable = config.enable
         nameLabel.agora_visible = config.visible
@@ -293,7 +293,7 @@ extension AgoraUserListItemCell: AgoraUIContentContainer {
         nameLabel.mas_makeConstraints { make in
             make?.left.equalTo()(0)
             make?.top.bottom().equalTo()(nameLabel.superview)
-            make?.width.equalTo()(100)
+            make?.width.equalTo()(80)
         }
         funcsView.mas_makeConstraints { make in
             make?.top.bottom().equalTo()(funcsView.superview)

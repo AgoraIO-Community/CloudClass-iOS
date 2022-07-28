@@ -144,7 +144,7 @@ class AgoraRenderMemberCell: UICollectionViewCell {
         contentView.backgroundColor = .clear
         videoMaskView.layer.cornerRadius = FcrUIFrameGroup.windowCornerRadius
         videoMaskView.clipsToBounds = true
-        videoMaskView.imageView.image = UIImage.agedu_named("ic_member_no_user")
+        videoMaskView.imageView.image = UIImage.agedu_named("window_no_user")
         contentView.addSubview(videoMaskView)
         videoMaskView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
