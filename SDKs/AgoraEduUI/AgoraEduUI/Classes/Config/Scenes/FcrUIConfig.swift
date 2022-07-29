@@ -43,7 +43,7 @@ protocol FcrUIConfig {
     var loading: FcrUIComponentLoading { get }
 }
 
-var UIConfig: FcrUIConfig!
+var UIConfig: FcrUIConfig! = FcrOneToOneUIConfig()
 
 @objc public class FcrUIConfigOC: NSObject {
     @objc public static func setUIConfig(value: Int) {
