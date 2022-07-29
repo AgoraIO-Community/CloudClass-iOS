@@ -33,7 +33,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     
     weak var delegate: AgoraEduUIManagerCallback?
     
-    var contextPool: AgoraEduContextPool!
+    var contextPool: AgoraEduContextPool
     
     var uiMode: FcrUIMode
     
@@ -56,25 +56,17 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         }
     }
     
-    public override init(nibName nibNameOrNil: String?,
-                         bundle nibBundleOrNil: Bundle?) {
-        self.uiMode = .agoraLight
-        self.language = .followSystem
-        super.init(nibName: nibNameOrNil,
-                   bundle: nibBundleOrNil)
-    }
-    
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: AgoraEduUIManagerCallback?,
                       uiMode: FcrUIMode,
                       language: FcrLanguage) {
         self.uiMode = uiMode
         self.language = language
+        self.contextPool = contextPool
+        self.delegate = delegate
         
         super.init(nibName: nil,
                    bundle: nil)
-        self.contextPool = contextPool
-        self.delegate = delegate
     }
     
     required init?(coder: NSCoder) {
@@ -225,9 +217,13 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
                                     roomType: AgoraClassRoomExitRoomType = .main) {
         switch roomType {
         case .main:
-            self.contextPool.room.leaveRoom()
+            guard !isBeingDismissed else {
+                return
+            }
             
-            self.dismiss(animated: true) { [weak self] in
+            contextPool.room.leaveRoom()
+            
+            dismiss(animated: true) { [weak self] in
                 guard let `self` = self else {
                     return
                 }
