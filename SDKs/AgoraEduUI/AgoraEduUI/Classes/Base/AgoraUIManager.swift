@@ -35,9 +35,6 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     
     var contextPool: AgoraEduContextPool
     
-    var uiMode: FcrUIMode
-    
-    var language: FcrLanguage
     /// 弹窗控制器
     /** 控制器遮罩层，用来盛装控制器和处理手势触发消失事件*/
     private lazy var ctrlMaskView = UIView(frame: .zero)
@@ -57,11 +54,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     }
     
     @objc public init(contextPool: AgoraEduContextPool,
-                      delegate: AgoraEduUIManagerCallback?,
-                      uiMode: FcrUIMode,
-                      language: FcrLanguage) {
-        self.uiMode = uiMode
-        self.language = language
+                      delegate: AgoraEduUIManagerCallback?) {
         self.contextPool = contextPool
         self.delegate = delegate
         
@@ -83,11 +76,8 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
     
     // MARK: AgoraUIContentContainer
     @objc func initViews() {
-        // mode set
-        FcrUIGlobal.uiMode = uiMode
-        FcrUIGlobal.launguage = language
         if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = (uiMode == .agoraDark) ? .dark : .light
+            overrideUserInterfaceStyle = (agora_ui_mode == .agoraDark) ? .dark : .light
         }
         
         view.addSubview(contentView)

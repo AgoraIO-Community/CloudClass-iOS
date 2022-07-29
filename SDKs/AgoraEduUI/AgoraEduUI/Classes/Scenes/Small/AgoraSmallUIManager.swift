@@ -129,9 +129,6 @@ import AgoraWidget
     // MARK: AgoraUIContentContainer
     override func initViews() {
         super.initViews()
-        
-        UIConfig = FcrSmallUIConfig()
-        
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
         // Flat components
@@ -575,9 +572,7 @@ extension AgoraSmallUIManager: AgoraRoomGlobalUIControllerDelegate {
         let vc = AgoraSubRoomUIManager(contextPool: contextPool,
                                        subRoom: subRoom,
                                        subDelegate: self,
-                                       mainDelegate: self,
-                                       uiMode: uiMode,
-                                       language: language)
+                                       mainDelegate: self)
         
         vc.modalPresentationStyle = .fullScreen
         present(vc,

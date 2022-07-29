@@ -14,6 +14,7 @@
 #endif
 
 #import <AgoraEduContext/AgoraEduContext-Swift.h>
+#import <AgoraWidgets/AgoraWidgets-Swift.h>
 #import <AgoraEduUI/AgoraEduUI-Swift.h>
 #import "AgoraInternalClassroom.h"
 #import "AgoraClassroomSDK.h"
@@ -108,21 +109,24 @@ static AgoraClassroomSDK *manager = nil;
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
                 eduVC = [[AgoraOneToOneUIManager alloc] initWithContextPool:pool
-                                                                   delegate:manager
-                                                                     uiMode:config.uiMode
-                                                                   language:config.language];
+                                                                   delegate:manager];
+                
+                [FcrUIConfigOC setUIConfigWithValue:0];
+                [FcrWidgetsUIConfigOC setUIConfigWithValue:0];
                 break;
             case AgoraEduContextRoomTypeSmall:
                 eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool
-                                                                delegate:manager
-                                                                  uiMode:config.uiMode
-                                                                language:config.language];
+                                                                delegate:manager];
+                
+                [FcrUIConfigOC setUIConfigWithValue:1];
+                [FcrWidgetsUIConfigOC setUIConfigWithValue:1];
                 break;
             case AgoraEduContextRoomTypeLecture:
                 eduVC = [[AgoraLectureUIManager alloc] initWithContextPool:pool
-                                                                  delegate:manager
-                                                                    uiMode:config.uiMode
-                                                                  language:config.language];
+                                                                  delegate:manager];
+                
+                [FcrUIConfigOC setUIConfigWithValue:2];
+                [FcrWidgetsUIConfigOC setUIConfigWithValue:2];
                 break;
             default:
                 NSCAssert(true,
@@ -184,15 +188,13 @@ static AgoraClassroomSDK *manager = nil;
         AgoraEduUIManager *eduVC = nil;
         if (serviceType == AgoraEduServiceTypeMixStreamCDN) {
             VcrMixStreamCDNUIManager *vc = [[VcrMixStreamCDNUIManager alloc] initWithContextPool:pool
-                                                                                        delegate:manager
-                                                                                          uiMode:config.uiMode
-                                                                                        language:config.language];
+                                                                                        delegate:manager];
             eduVC = vc;
+            
+            
         } else if (serviceType == AgoraEduServiceTypeHostingScene) {
             VcrHostingSceneUIManager *vc = [[VcrHostingSceneUIManager alloc] initWithContextPool:pool
-                                                                                        delegate:manager
-                                                                                          uiMode:config.uiMode
-                                                                                        language:config.language];
+                                                                                        delegate:manager];
             eduVC = vc;
         } else {
             VocationalCDNType cdnType = VocationalCDNTypeNoCDN;
@@ -208,12 +210,14 @@ static AgoraClassroomSDK *manager = nil;
                     break;
             }
             AgoraVocationalUIManager *vc = [[AgoraVocationalUIManager alloc] initWithContextPool:pool
-                                                                                        delegate:manager
-                                                                                          uiMode:config.uiMode
-                                                                                        language:config.language];
+                                                                                        delegate:manager];
             vc.cdnType = cdnType;
             eduVC = vc;
         }
+        
+        [FcrUIConfigOC setUIConfigWithValue:2];
+        [FcrWidgetsUIConfigOC setUIConfigWithValue:2];
+        
         eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
         UIViewController *topVC = [UIViewController agora_top_view_controller];
         manager.ui = eduVC;
@@ -247,6 +251,9 @@ static AgoraClassroomSDK *manager = nil;
     self.core = nil;
     self.delegate = nil;
     self.ui = nil;
+    
+    [FcrUIConfigOC relaseUIConfig];
+    [FcrWidgetsUIConfigOC relaseUIConfig];
 }
 
 #pragma mark - AgoraEduUIManagerDelegate

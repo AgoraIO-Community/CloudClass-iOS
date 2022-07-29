@@ -108,9 +108,9 @@ import AgoraEduUI
     ]
     
     /** 主题模式*/
-    let kUIModeOptions: [(AgoraEduUIMode, String)] = [
-        (.light, "settings_theme_light".ag_localized()),
-        (.dark, "settings_theme_dark".ag_localized()),
+    let kUIModeOptions: [(AgoraUIMode, String)] = [
+        (.agoraLight, "settings_theme_light".ag_localized()),
+        (.agoraDark, "settings_theme_dark".ag_localized()),
     ]
 
     /** 服务类型可选项*/
@@ -300,52 +300,54 @@ private extension DebugViewController {
                      userId: userUuid,
                      userRole: inputParams.roleType.rawValue,
                      success: { [weak self] (response) in
-                        guard let `self` = self else {
-                            return
-                        }
-                        
-                        let appId = response.appId
-                        let token = response.token
-                        let userUuid = response.userId
-                        
-                        let launchConfig = AgoraEduLaunchConfig(userName: userName,
-                                                                userUuid: userUuid,
-                                                                userRole: userRole,
-                                                                roomName: roomName,
-                                                                roomUuid: roomUuid,
-                                                                roomType: roomStyle,
-                                                                appId: appId,
-                                                                token: token,
-                                                                startTime: startTime,
-                                                                duration: NSNumber(value: duration),
-                                                                region: region,
-                                                                uiMode: self.getLaunchUIMode(),
-                                                                language: self.getLaunchLanguage(),
-                                                                mediaOptions: mediaOptions,
-                                                                userProperties: nil)
-                        // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
-                        var widgets = Dictionary<String,AgoraWidgetConfig>()
-                        launchConfig.widgets.forEach { [unowned self] (k,v) in
-                            if k == "AgoraCloudWidget" {
-                                v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
-                            }
-
-                            if k == "netlessBoard",
-                               v.extraInfo != nil {
-                                var newExtra = v.extraInfo as! Dictionary<String, Any>
-                                newExtra["coursewareList"] = self.inputParams.publicCoursewares()
-                                v.extraInfo = newExtra
-                            }
-
-                            widgets[k] = v
-                        }
-                        launchConfig.widgets = widgets
-                        
-                        if im == .rtm {
-                            launchConfig.widgets.removeValue(forKey: "easemobIM")
-                        }
-                        
-                        AgoraClassroomSDK.setDelegate(self)
+            guard let `self` = self else {
+                return
+            }
+            
+            // UI Mode & Language
+            agora_ui_mode = self.getLaunchUIMode()
+            agora_ui_language = self.getLaunchLanguage()
+            
+            let appId = response.appId
+            let token = response.token
+            let userUuid = response.userId
+            
+            let launchConfig = AgoraEduLaunchConfig(userName: userName,
+                                                    userUuid: userUuid,
+                                                    userRole: userRole,
+                                                    roomName: roomName,
+                                                    roomUuid: roomUuid,
+                                                    roomType: roomStyle,
+                                                    appId: appId,
+                                                    token: token,
+                                                    startTime: startTime,
+                                                    duration: NSNumber(value: duration),
+                                                    region: region,
+                                                    mediaOptions: mediaOptions,
+                                                    userProperties: nil)
+            // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
+            var widgets = Dictionary<String,AgoraWidgetConfig>()
+            launchConfig.widgets.forEach { [unowned self] (k,v) in
+                if k == "AgoraCloudWidget" {
+                    v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
+                }
+                
+                if k == "netlessBoard",
+                   v.extraInfo != nil {
+                    var newExtra = v.extraInfo as! Dictionary<String, Any>
+                    newExtra["coursewareList"] = self.inputParams.publicCoursewares()
+                    v.extraInfo = newExtra
+                }
+                
+                widgets[k] = v
+            }
+            launchConfig.widgets = widgets
+            
+            if im == .rtm {
+                launchConfig.widgets.removeValue(forKey: "easemobIM")
+            }
+            
+            AgoraClassroomSDK.setDelegate(self)
             if launchConfig.roomType == .vocational { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
                                                    service: self.inputParams.serviceType ?? .RTC,
@@ -409,17 +411,21 @@ private extension DebugViewController {
         }
     }
     
-    func getLaunchLanguage() -> AgoraLanguage {
+    func getLaunchLanguage() -> String? {
         switch FcrLocalization.shared.language {
-        case .zh_cn: return .simplified
-        case .en:    return .english
-        case .zh_tw: return .followSystem
-        case .none:  return .followSystem
+        case .zh_cn: return "zh-Hans"
+        case .en:    return "en"
+        case .zh_tw: return nil
+        case .none:  return nil
         }
     }
     
-    func getLaunchUIMode() -> AgoraEduUIMode {
-        return AgoraEduUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
+    func getLaunchUIMode() -> AgoraUIMode {
+        if let mode = AgoraUIMode(rawValue: FcrUserInfoPresenter.shared.theme) {
+            return mode
+        } else {
+            return .agoraLight
+        }
     }
 }
 

@@ -73,8 +73,6 @@ import AgoraWidget
     override func initViewFrame() {
         super.initViewFrame()
         
-        UIConfig = FcrLectrueConfig()
-        
         stateController.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(34))

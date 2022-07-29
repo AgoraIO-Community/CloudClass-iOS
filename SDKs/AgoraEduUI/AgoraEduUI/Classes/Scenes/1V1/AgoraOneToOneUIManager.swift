@@ -111,7 +111,6 @@ import UIKit
     // MARK: AgoraUIContentContainer
     override func initViews() {
         super.initViews()
-        UIConfig = FcrOneToOneUIConfig()
         
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
@@ -120,7 +119,7 @@ import UIKit
         
         globalController.roomDelegate = self
         addChild(globalController)
-        globalController.viewDidLoad()
+        globalController.viewDidLoad() 
         
         // 视图层级：白板，大窗，工具
         addChild(boardController)

@@ -5,7 +5,7 @@
 //  Created by Cavan on 2022/7/7.
 //
 
-struct FcrLectrueConfig: FcrUIConfig {
+struct FcrLectureUIConfig: FcrUIConfig {
     let stateBar        = FcrUIComponentStateBar()
     let teacherVideo    = FcrUIComponentTeacherVideo()
     let studentVideo    = FcrUIComponentStudentVideo()

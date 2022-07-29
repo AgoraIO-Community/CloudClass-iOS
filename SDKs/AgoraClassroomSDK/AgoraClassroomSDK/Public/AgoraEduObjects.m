@@ -99,8 +99,6 @@
                         startTime:nil
                          duration:nil
                            region:AgoraEduRegionCN
-                           uiMode:AgoraEduUIModeLight
-                         language:AgoraLanguageFollowSystem
                      mediaOptions:mediaOptions
                    userProperties:nil];
 }
@@ -116,8 +114,6 @@
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
-                          uiMode:(AgoraEduUIMode)uiMode
-                        language:(AgoraLanguage)language
                     mediaOptions:(AgoraEduMediaOptions *)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties {
     self = [self init];
@@ -135,15 +131,8 @@
     self.startTime = startTime;
     self.duration = duration;
     self.region = region;
-    self.uiMode = uiMode;
-    self.language = language;
     self.mediaOptions = mediaOptions;
-    
     self.userProperties = userProperties;
-    
-    FcrWidgetsUIMode widgetUIMode = uiMode;
-    FcrWidgetsLanguage widgetLanguage = language;
-    [FcrWidgetsUIGlobal setUIModeWithUiMode:widgetUIMode language:widgetLanguage];
     self.widgets = [self baseWidgets];
     
     return self;

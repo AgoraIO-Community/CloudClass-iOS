@@ -147,8 +147,6 @@ import AgoraWidget
     override func initViews() {
         super.initViews()
         
-        UIConfig = FcrLectrueConfig()
-        
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
         addChild(stateController)

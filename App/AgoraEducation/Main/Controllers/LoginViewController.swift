@@ -331,6 +331,10 @@ private extension LoginViewController {
                 return
             }
             
+            // UI mode
+            agora_ui_mode = self.getLaunchUIMode()
+            agora_ui_language = self.getLaunchLanguage()
+            
             let appId = response.appId
             let token = response.token
             let userUuid = response.userId
@@ -346,8 +350,6 @@ private extension LoginViewController {
                                                     startTime: nil,
                                                     duration: NSNumber(value: duration),
                                                     region: region,
-                                                    uiMode: self.getLaunchUIMode(),
-                                                    language: self.getLaunchLanguage(),
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
             
@@ -418,17 +420,21 @@ private extension LoginViewController {
         }
     }
     
-    func getLaunchLanguage() -> AgoraLanguage {
+    func getLaunchLanguage() -> String? {
         switch FcrLocalization.shared.language {
-        case .zh_cn: return .simplified
-        case .en:    return .english
-        case .zh_tw: return .followSystem
-        case .none:  return .followSystem
+        case .zh_cn: return "zh-Hans"
+        case .en:    return "en"
+        case .zh_tw: return nil
+        case .none:  return nil
         }
     }
     
-    func getLaunchUIMode() -> AgoraEduUIMode {
-        return AgoraEduUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
+    func getLaunchUIMode() -> AgoraUIMode {
+        if let mode = AgoraUIMode(rawValue: FcrUserInfoPresenter.shared.theme) {
+            return mode
+        } else {
+            return .agoraLight
+        }
     }
 }
 

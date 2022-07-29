@@ -96,18 +96,4 @@ typedef NS_ENUM(NSInteger, AgoraEduStreamState) {
     AgoraEduStreamStateOn      = 1
 };
 
-typedef NS_ENUM(NSInteger, AgoraEduUIMode) {
-    AgoraEduUIModeLight     = 0,
-    AgoraEduUIModeDark      = 1
-};
-// 课堂本地化语言
-typedef NS_ENUM(NSInteger, AgoraLanguage) {
-    // 跟随系统
-    AgoraLanguageFollowSystem   = 0,
-    // 简体中文
-    AgoraLanguageSimplified     = 1,
-    // 英文
-    AgoraLanguageEnglish        = 2
-};
-
 NS_ASSUME_NONNULL_END

@@ -99,15 +99,11 @@ import AgoraWidget
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
          subDelegate: AgoraEduUIManagerCallback?,
-         mainDelegate: AgoraEduUISubManagerCallback?,
-         uiMode: FcrUIMode,
-         language: FcrLanguage) {
+         mainDelegate: AgoraEduUISubManagerCallback?) {
         self.subRoom = subRoom
         self.mainDelegate = mainDelegate
         super.init(contextPool: contextPool,
-                   delegate: subDelegate,
-                   uiMode: uiMode,
-                   language: language)
+                   delegate: subDelegate)
     }
     
     required init?(coder: NSCoder) {
@@ -206,7 +202,6 @@ import AgoraWidget
     
     // MARK: AgoraUIContentContainer
     override func initViews() {
-        UIConfig = FcrSmallUIConfig()
         super.initViews()
         
         let userRole = contextPool.user.getLocalUserInfo().userRole

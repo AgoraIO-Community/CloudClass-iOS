@@ -55,10 +55,25 @@ extension String {
     }
     
     func agedu_localized() -> String {
-        let bundle = FcrUIGlobal.languageBundle ?? Bundle.agora_bundle("AgoraEduUI") ?? Bundle.main
-        return bundle.localizedString(forKey: self,
-                                      value: nil,
-                                      table: nil)
+        guard let eduBundle = Bundle.agora_bundle("AgoraEduUI") else {
+            return ""
+        }
+        
+        if let language = agora_ui_language,
+           let languagePath = eduBundle.path(forResource: language,
+                                             ofType: "lproj"),
+           let bundle = Bundle(path: languagePath) {
+            
+            return bundle.localizedString(forKey: self,
+                                          value: nil,
+                                          table: nil)
+        } else {
+            let text = eduBundle.localizedString(forKey: self,
+                                                 value: nil,
+                                                 table: nil)
+            
+            return text
+        }
     }
 }
 
