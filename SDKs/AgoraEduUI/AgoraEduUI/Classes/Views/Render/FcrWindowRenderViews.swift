@@ -81,7 +81,7 @@ class FcrWindowRenderNoneView: UIView, AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        imageView.image = UIConfig.studentVideo.mask.cameraOffImage
+        imageView.image = UIConfig.studentVideo.mask.noUserImage
     }
 }
 

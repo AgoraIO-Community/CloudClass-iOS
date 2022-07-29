@@ -300,7 +300,7 @@ private extension AgoraRenderMenuUIController {
             case .auth:
                 let image = model.authState ? studentConfig.boardAuthorization.onImage : studentConfig.boardAuthorization.offImage
                 
-                authButton.setImage(studentConfig.boardAuthorization.onImage,
+                authButton.setImage(image,
                                     for: .normal)
             case .stage:
                 stageButton.setImage(studentConfig.offStage.image,

@@ -53,7 +53,7 @@ struct FcrUIItemLoadingMessage: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let color: UIColor = FcrUIColorGroup.systemDividerColor
+    let color: UIColor = FcrUIColorGroup.textLevel1Color
     let font: UIFont   = FcrUIFontGroup.font14
 }
 

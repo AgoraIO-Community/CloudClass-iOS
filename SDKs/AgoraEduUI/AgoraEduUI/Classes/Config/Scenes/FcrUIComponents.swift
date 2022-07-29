@@ -49,7 +49,7 @@ struct FcrUIComponentAlert: FcrUIComponentProtocol {
 struct FcrUIComponentLoading: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
-    var backgroundColor: UIColor = .clear
+    var backgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
     
     let gifUrl: URL? = Bundle.agoraEduUI().url(forResource: "img_loading",
                                                  withExtension: "gif")

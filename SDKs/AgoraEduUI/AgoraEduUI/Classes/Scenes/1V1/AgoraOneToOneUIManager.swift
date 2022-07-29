@@ -135,7 +135,11 @@ import UIKit
         contentView.addSubview(windowController.view)
         
         toolBarController.delegate = self
-        toolBarController.updateTools([.setting, .message])
+        if UIDevice.current.agora_is_pad {
+            toolBarController.updateTools([.setting])
+        } else {
+            toolBarController.updateTools([.setting, .message])
+        }
         contentView.addSubview(toolBarController.view)
         
         addChild(classToolsController)
