@@ -405,7 +405,7 @@ private extension FcrStreamWindowUIController {
         if animation,
            let originationFrame = delegate?.onNeedWindowRenderViewFrameOnTopWindow(userId: userId) {
             
-            let topWindow = UIWindow.ag_topWindow()
+            let topWindow = UIWindow.agora_top_window()
             topWindow.addSubview(widgetView)
             
             widgetView.frame = originationFrame
@@ -439,7 +439,7 @@ private extension FcrStreamWindowUIController {
         if let destinationFrame = delegate?.onNeedWindowRenderViewFrameOnTopWindow(userId: userId),
            animation {
             
-            let topWindow = UIWindow.ag_topWindow()
+            let topWindow = UIWindow.agora_top_window()
             let originationFrame = view.convert(widgetView.frame,
                                                 to: topWindow)
             

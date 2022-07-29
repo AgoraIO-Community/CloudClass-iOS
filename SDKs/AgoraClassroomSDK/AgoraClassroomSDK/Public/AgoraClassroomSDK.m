@@ -104,6 +104,7 @@ static AgoraClassroomSDK *manager = nil;
          widgets:config.widgets.allValues
          success:^(id<AgoraEduContextPool> pool) {
         AgoraEduUIManager *eduVC = nil;
+        
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
                 eduVC = [[AgoraOneToOneUIManager alloc] initWithContextPool:pool
@@ -115,7 +116,7 @@ static AgoraClassroomSDK *manager = nil;
                 eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool
                                                                 delegate:manager
                                                                   uiMode:config.uiMode
-                                                                 language:config.language];
+                                                                language:config.language];
                 break;
             case AgoraEduContextRoomTypeLecture:
                 eduVC = [[AgoraLectureUIManager alloc] initWithContextPool:pool
@@ -128,8 +129,9 @@ static AgoraClassroomSDK *manager = nil;
                           @"room type error");
                 break;
         }
+        
         eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
-        UIViewController *topVC = [UIViewController ag_topViewController];
+        UIViewController *topVC = [UIViewController agora_top_view_controller];
         manager.ui = eduVC;
         [topVC presentViewController:eduVC
                             animated:true
@@ -213,7 +215,7 @@ static AgoraClassroomSDK *manager = nil;
             eduVC = vc;
         }
         eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
-        UIViewController *topVC = [UIViewController ag_topViewController];
+        UIViewController *topVC = [UIViewController agora_top_view_controller];
         manager.ui = eduVC;
         [topVC presentViewController:eduVC
                             animated:true
@@ -249,8 +251,9 @@ static AgoraClassroomSDK *manager = nil;
 
 #pragma mark - AgoraEduUIManagerDelegate
 - (void)manager:(AgoraEduUIManager *)manager
-        didExit:(enum AgoraClassRoomExitReason)reason {
-    AgoraEduExitReason sdkReason = nil;
+        didExit:(AgoraClassRoomExitReason)reason {
+    AgoraEduExitReason sdkReason = AgoraEduExitReasonNormal;
+    
     switch (reason) {
         case AgoraClassRoomExitReasonNormal:
             sdkReason = AgoraEduExitReasonNormal;
@@ -260,9 +263,10 @@ static AgoraClassroomSDK *manager = nil;
         default:
             break;
     }
+    
     if ([_delegate respondsToSelector:@selector(classroomSDK:didExit:)]) {
         [self.delegate classroomSDK:self
-                          didExit:sdkReason];
+                            didExit:sdkReason];
     }
     
     [self agoraRelease];

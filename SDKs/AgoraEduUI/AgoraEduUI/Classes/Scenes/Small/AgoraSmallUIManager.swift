@@ -93,6 +93,7 @@ import AgoraWidget
                 return
             }
             self.isJoinedRoom = true
+            
             if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
                 self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
                 self.contextPool.media.openLocalDevice(systemDevice: .mic)
@@ -342,7 +343,7 @@ extension AgoraSmallUIManager: FcrStreamWindowUIControllerDelegate {
         }
         
         let frame = renderView.convert(renderView.frame,
-                                       to: UIWindow.ag_topWindow())
+                                       to: UIWindow.agora_top_window())
         
         return frame
     }

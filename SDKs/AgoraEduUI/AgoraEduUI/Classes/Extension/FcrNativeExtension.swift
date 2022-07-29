@@ -32,10 +32,10 @@ func ValueTransform<Result: RawRepresentable>(enumValue: Any?,
 
 extension UIImage {
     class func agedu_named(_ named: String) -> UIImage? {
-        let b = Bundle.agoraEduUI()
-        return UIImage.init(named: named,
-                            in: b,
-                            compatibleWith: nil)
+        let bundle = Bundle.agoraEduUI()
+        return UIImage(named: named,
+                       in: bundle,
+                       compatibleWith: nil)
     }
 }
 

@@ -317,7 +317,7 @@ extension AgoraLectureUIManager: FcrStreamWindowUIControllerDelegate {
         }
         
         let frame = renderView.convert(renderView.frame,
-                                       to: UIWindow.ag_topWindow())
+                                       to: UIWindow.agora_top_window())
         
         return frame
     }
