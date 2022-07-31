@@ -497,7 +497,7 @@ struct FcrUIItemVideoCell: FcrUIItemProtocol {
     let backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
     let cornerRadius: CGFloat    = FcrUIFrameGroup.windowCornerRadius
     let borderWidth: CGFloat     = FcrUIFrameGroup.borderWidth
-    let borderColor: CGColor     = FcrUIColorGroup.borderColor.cgColor
+    let borderColor: CGColor     = FcrUIColorGroup.systemDividerColor.cgColor
 }
 
 struct FcrUIItemVideoMask: FcrUIItemProtocol {

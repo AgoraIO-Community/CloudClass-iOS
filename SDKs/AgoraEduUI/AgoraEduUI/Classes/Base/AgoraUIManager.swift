@@ -122,7 +122,7 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
         
         contentView.borderWidth = FcrUIFrameGroup.borderWidth
-        contentView.layer.borderColor = FcrUIColorGroup.borderColor.cgColor
+        contentView.layer.borderColor = FcrUIColorGroup.systemDividerColor.cgColor
         contentView.backgroundColor = FcrUIColorGroup.systemForegroundColor
         
         let config = UIConfig.loading

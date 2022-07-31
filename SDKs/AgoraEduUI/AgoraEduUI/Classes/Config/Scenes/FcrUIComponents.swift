@@ -72,7 +72,7 @@ struct FcrUIComponentStateBar: FcrUIComponentProtocol {
     let sepLine = FcrUIItemSepLine()
     
     let borderWidth = FcrUIFrameGroup.borderWidth
-    let borderColor = FcrUIColorGroup.borderColor
+    let borderColor = FcrUIColorGroup.systemDividerColor
 }
 
 // MARK: - TeacherVideo
@@ -197,7 +197,7 @@ struct FcrUIComponentToolCollection: FcrUIComponentProtocol {
     let cellCornerRadius: CGFloat   = FcrUIFrameGroup.roundContainerCornerRadius
     let windowCornerRadius: CGFloat = FcrUIFrameGroup.containerCornerRadius
     let borderWidth: CGFloat        = FcrUIFrameGroup.borderWidth
-    let borderColor: CGColor        = FcrUIColorGroup.borderColor.cgColor
+    let borderColor: CGColor        = FcrUIColorGroup.systemDividerColor.cgColor
         
     let sepLine = FcrUIItemSepLine()
     let shadow = FcrUIItemShadow()
@@ -226,7 +226,7 @@ struct FcrUIComponentRoster: FcrUIComponentProtocol {
     let titleBackgroundColor: UIColor = FcrUIColorGroup.iconSelectedBackgroundColor
     let cornerRadius: CGFloat = FcrUIFrameGroup.containerCornerRadius
     let borderWidth: CGFloat  = FcrUIFrameGroup.borderWidth
-    let borderColor: CGColor  = FcrUIColorGroup.borderColor.cgColor
+    let borderColor: CGColor  = FcrUIColorGroup.systemDividerColor.cgColor
     
     let label: FcrUIItemRosterLabel = FcrUIItemRosterLabel()
     let shadow: FcrUIItemShadow     = FcrUIItemShadow()
@@ -269,13 +269,16 @@ struct FcrUIComponentStreamWindow: FcrUIComponentProtocol {
     
     let cornerRadius: CGFloat    = FcrUIFrameGroup.windowCornerRadius
     let borderWidth: CGFloat     = FcrUIFrameGroup.borderWidth
-    let borderColor: CGColor     = FcrUIColorGroup.borderColor.cgColor
+    let borderColor: CGColor     = FcrUIColorGroup.systemDividerColor.cgColor
 }
 
 struct FcrUIComponentNetlessBoard: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
+    
+    var borderColor: UIColor     = FcrUIColorGroup.systemDividerColor
+    var borderWidth: CGFloat     = FcrUIFrameGroup.borderWidth
     
     /**Scene Builder Set**/
     var mouse       = FcrUIItemNetlessBoardMouse()

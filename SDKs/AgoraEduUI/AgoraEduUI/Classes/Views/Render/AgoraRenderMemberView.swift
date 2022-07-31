@@ -17,7 +17,7 @@ class AgoraRenderMaskView: UIView {
         imageView.image = UIImage.agedu_named("window_no_user")
         layer.cornerRadius = FcrUIFrameGroup.windowCornerRadius
         layer.borderWidth = FcrUIFrameGroup.borderWidth
-        layer.borderColor = FcrUIColorGroup.borderColor.cgColor
+        layer.borderColor = FcrUIColorGroup.systemDividerColor.cgColor
         
         addSubview(imageView)
         imageView.mas_makeConstraints { make in

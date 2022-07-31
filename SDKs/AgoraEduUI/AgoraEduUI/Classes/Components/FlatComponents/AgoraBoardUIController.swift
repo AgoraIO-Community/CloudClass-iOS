@@ -248,9 +248,9 @@ private extension AgoraBoardUIController {
         widgetController.add(self,
                              widgetId: boardConfig.widgetId)
         
-        
-        widget.view.layer.borderColor = FcrUIColorGroup.borderColor.cgColor
-        widget.view.layer.borderWidth = FcrUIFrameGroup.borderWidth
+        let config = UIConfig.netlessBoard
+        widget.view.layer.borderColor = config.borderColor.cgColor
+        widget.view.layer.borderWidth = config.borderWidth
         
         view.addSubview(widget.view)
         view.bringSubviewToFront(pageControl)

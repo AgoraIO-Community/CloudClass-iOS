@@ -83,7 +83,7 @@ extension VocationalRoomStateUIController: AgoraUIContentContainer, AgoraUIActiv
     func updateViewProperties() {
         view.backgroundColor = FcrUIColorGroup.systemForegroundColor
         view.layer.borderWidth = FcrUIFrameGroup.borderWidth
-        view.layer.borderColor = FcrUIColorGroup.borderColor.cgColor
+        view.layer.borderColor = FcrUIColorGroup.systemDividerColor.cgColor
         
         stateView.backgroundColor = FcrUIColorGroup.systemForegroundColor
         
