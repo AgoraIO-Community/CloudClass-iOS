@@ -12,8 +12,8 @@ Pod::Spec.new do |spec|
   spec.swift_versions        = ["5.0", "5.1", "5.2", "5.3", "5.4"]
 
   spec.source              = { :git => "git@github.com:AgoraIO-Community/CloudClass-iOS.git", :tag => "AgoraEduUI_v" + "#{spec.version.to_s}" }
-  spec.public_header_files = "SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.h"
-  spec.source_files        = "SDKs/AgoraEduUI/AgoraEduUI/Classes/**/*.{h,m,swift}"
+  spec.public_header_files = "SDKs/AgoraEduUI/Classes/**/*.h"
+  spec.source_files        = "SDKs/AgoraEduUI/Classes/**/*.{h,m,swift}"
   
   spec.dependency "AgoraUIBaseViews", ">=2.7.0"
   spec.dependency "AgoraEduContext", ">=2.6.0"
@@ -30,7 +30,7 @@ Pod::Spec.new do |spec|
 
   spec.subspec "Resources" do |ss|
     ss.resource_bundles = {
-      "AgoraEduUI" => ["SDKs/AgoraEduUI/AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}"]
+      "AgoraEduUI" => ["SDKs/AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}"]
     }
   end
 end

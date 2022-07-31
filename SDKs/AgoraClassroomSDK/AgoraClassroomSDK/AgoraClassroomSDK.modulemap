@@ -1,5 +1,0 @@
-framework module AgoraClassroomSDK {
-    header "AgoraEduEnums.h"
-    header "AgoraEduObjects.h"
-    header "AgoraClassroomSDK.h"
-}

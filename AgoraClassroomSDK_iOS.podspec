@@ -30,8 +30,8 @@ Pod::Spec.new do |spec|
   spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
   spec.xcconfig             = { "BUILD_LIBRARY_FOR_DISTRIBUTION" => "YES" }
 
-  spec.source_files  = "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/**/*.{swift,h,m}"
+  spec.source_files  = "SDKs/AgoraClassroomSDK/**/*.{swift,h,m}"
   spec.public_header_files = [
-      "SDKs/AgoraClassroomSDK/AgoraClassroomSDK/Public/*.h"
+      "SDKs/AgoraClassroomSDK/Public/*.h"
   ]
 end
