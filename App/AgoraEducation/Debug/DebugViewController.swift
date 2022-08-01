@@ -54,6 +54,7 @@ import AgoraEduUI
         .delay,
         .mediaAuth,
         .uiMode,
+        .uiLanguage,
         .env
     ]
     
@@ -111,6 +112,12 @@ import AgoraEduUI
     let kUIModeOptions: [(AgoraUIMode, String)] = [
         (.agoraLight, "settings_theme_light".ag_localized()),
         (.agoraDark, "settings_theme_dark".ag_localized()),
+    ]
+    
+    /** 语言*/
+    let kUILanguageOptions: [(FcrSurpportLanguage, String)] = [
+        (.zh_cn, "Login_uiLanguage_zh_cn".ag_localized()),
+        (.en, "Login_uiLanguage_en".ag_localized()),
     ]
 
     /** 服务类型可选项*/
@@ -197,7 +204,7 @@ private extension DebugViewController {
             ]
         } else {
             self.dataSource = [
-                .roomName, .nickName, .roomStyle, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .uiMode, .env
+                .roomName, .nickName, .roomStyle, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .uiMode, .uiLanguage, .env
             ]
         }
         self.tableView.reloadData()
@@ -443,6 +450,13 @@ private extension DebugViewController {
             return .agoraLight
         }
     }
+    
+    func getUILanguage() -> FcrSurpportLanguage {
+        if let language = FcrLocalization.shared.language {
+            return language
+        }
+        return .zh_cn
+    }
 }
 
 // MARK: - AgoraEduClassroomDelegate
@@ -545,6 +559,12 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
             cell.textField.placeholder = "Login_uiMode_holder".ag_localized()
             cell.textField.text = optionDescription(option: getLaunchUIMode(),
                                                     in: kUIModeOptions)
+        case .uiLanguage:
+            cell.mode = .option
+            cell.titleLabel.text = "Login_uiLanguage_title".ag_localized()
+            cell.textField.placeholder = "Login_uiLanguage_holder".ag_localized()
+            cell.textField.text = optionDescription(option: getUILanguage(),
+                                                    in: kUILanguageOptions)
         case .env:
             cell.mode = .option
             cell.titleLabel.text = "Login_env_title".ag_localized()
@@ -656,6 +676,18 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                              index: index) { [unowned self] i in
                 let (v, str) = kUIModeOptions[i]
                 FcrUserInfoPresenter.shared.theme = v.rawValue
+                cell.textField.text = str
+                self.hideOptions()
+            }
+        case .uiLanguage:
+            let options = optionStrings(form: kUILanguageOptions)
+            let index = optionIndex(option: getUILanguage(),
+                                    in: kUILanguageOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                let (v, str) = kUILanguageOptions[i]
+                FcrLocalization.shared.setupNewLanguage(v)
                 cell.textField.text = str
                 self.hideOptions()
             }
