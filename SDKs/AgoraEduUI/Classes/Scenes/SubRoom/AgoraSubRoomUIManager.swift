@@ -729,10 +729,10 @@ private extension AgoraSubRoomUIManager {
     func toolsViewDidSelectHelp() {
         switch teacherInRoom() {
         case .localSub:
-            AgoraToast.toast(msg: "fcr_group_teacher_exist_hint".agedu_localized(),
+            AgoraToast.toast(message: "fcr_group_teacher_exist_hint".agedu_localized(),
                              type: .warning)
         case .otherSub:
-            AgoraToast.toast(msg: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
+            AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
                              type: .warning)
         default:
             guard let userList = contextPool.user.getUserList(role: .teacher),

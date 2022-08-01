@@ -146,7 +146,7 @@ extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
         // 老师邀请你上台了，与大家积极互动吧
         let message = "fcr_user_local_start_co_hosting".agedu_localized()
         
-        AgoraToast.toast(msg: message,
+        AgoraToast.toast(message: message,
                          type: .notice)
     }
     
@@ -162,7 +162,7 @@ extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
         // 你离开讲台了，暂时无法与大家互动
         let message = "fcr_user_local_stop_co_hosting".agedu_localized()
         
-        AgoraToast.toast(msg: message,
+        AgoraToast.toast(message: message,
                          type: .error)
     }
     
@@ -173,7 +173,7 @@ extension AgoraRoomGlobalUIController: AgoraEduUserHandler {
         let message = "fcr_user_congratulation".agedu_localized()
         let final = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                  with: user.userName)
-        AgoraToast.toast(msg: final,
+        AgoraToast.toast(message: final,
                          type: .notice)
         
         showReward()
@@ -190,7 +190,7 @@ extension AgoraRoomGlobalUIController: AgoraEduMonitorHandler {
             
             let message = "fcr_monitor_login_remote_device".agedu_localized()
             
-            AgoraToast.toast(msg: message,
+            AgoraToast.toast(message: message,
                              type: .error)
             
             self.roomDelegate?.exitClassRoom(reason: .kickOut,
@@ -200,7 +200,7 @@ extension AgoraRoomGlobalUIController: AgoraEduMonitorHandler {
             AgoraLoading.loading(message: message)
         case .disconnected, .reconnecting:
             let toastMessage = "fcr_monitor_network_disconnected".agedu_localized()
-            AgoraToast.toast(msg: toastMessage,
+            AgoraToast.toast(message: toastMessage,
                              type: .error)
             
             let loadingMessage = "fcr_monitor_network_reconnecting".agedu_localized()
@@ -214,7 +214,7 @@ extension AgoraRoomGlobalUIController: AgoraEduMonitorHandler {
         switch quality {
         case .bad:
             let toastMessage = "fcr_monitor_network_poor".agedu_localized()
-            AgoraToast.toast(msg: toastMessage,
+            AgoraToast.toast(message: toastMessage,
                              type: .error)
         default:
             break
@@ -229,7 +229,7 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
               subRoom == nil else {
             return
         }
-        AgoraToast.toast(msg: "fcr_group_close_group".agedu_localized(),
+        AgoraToast.toast(message: "fcr_group_close_group".agedu_localized(),
                          type: .warning)
     }
     
@@ -297,7 +297,7 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
                                                      with: roleString)
             var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
                                                   with: userInfo.userName)
-            AgoraToast.toast(msg: final,
+            AgoraToast.toast(message: final,
                              type: .notice)
         }
     }
@@ -330,7 +330,7 @@ extension AgoraRoomGlobalUIController: AgoraEduGroupHandler {
                                                      with: roleString)
             var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
                                                   with: userInfo.userName)
-            AgoraToast.toast(msg: final,
+            AgoraToast.toast(message: final,
                              type: .warning)
         }
     }
@@ -428,12 +428,12 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
             if stream.streamType.hasAudio {
                 let message = "fcr_stream_start_audio".agedu_localized()
                 
-                AgoraToast.toast(msg: message,
+                AgoraToast.toast(message: message,
                                  type: .notice)
             } else {
                 let message = "fcr_stream_stop_audio".agedu_localized()
                 
-                AgoraToast.toast(msg: message,
+                AgoraToast.toast(message: message,
                                  type: .error)
             }
         }
@@ -442,12 +442,12 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
             if stream.streamType.hasVideo {
                 let message = "fcr_stream_start_video".agedu_localized()
                 
-                AgoraToast.toast(msg: message,
+                AgoraToast.toast(message: message,
                                  type: .notice)
             } else {
                 let message = "fcr_stream_stop_video".agedu_localized()
                 
-                AgoraToast.toast(msg: message,
+                AgoraToast.toast(message: message,
                                  type: .error)
             }
         }

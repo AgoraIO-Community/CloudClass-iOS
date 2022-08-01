@@ -133,7 +133,15 @@ extension LoginViewController {
            let data = try? Data(contentsOf: url) {
             AgoraLoading.setImageData(data)
         }
-
+        
+        let noticeImage = UIImage(named: "toast_notice")!
+        let warningImage = UIImage(named: "toast_warning")!
+        let errorImage = UIImage(named: "toast_warning")!
+        
+        AgoraToast.setImages(noticeImage: noticeImage,
+                             warningImage: warningImage,
+                             errorImage: errorImage)
+        
         createViews()
         createConstraint()
         
@@ -269,7 +277,7 @@ private extension LoginViewController {
         guard !(roomStyle == .lecture && inputParams.roleType == .teacher),
               !(roomStyle == .vocational && inputParams.roleType == .teacher)
         else {
-            AgoraToast.toast(msg: "login_lecture_teacher_warning".ag_localized(),
+            AgoraToast.toast(message: "login_lecture_teacher_warning".ag_localized(),
                              type: .warning)
             return
         }
@@ -277,10 +285,10 @@ private extension LoginViewController {
         let encryptionMode = inputParams.encryptMode
         let region = self.getLaunchRegion()
         // roomUuid = roomName + classType
-        var roomUuid = "\(roomName)\(roomStyle.rawValue)"
+        var roomUuid = "\(roomName.md5())\(roomStyle.rawValue)"
         // 职教处理
         if roomStyle == .vocational {
-            roomUuid = "\(roomName)\(AgoraEduRoomType.lecture.rawValue)"
+            roomUuid = "\(roomName.md5())\(AgoraEduRoomType.lecture.rawValue)"
         }
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
         if self.inputParams.serviceType == .RTC {
@@ -318,7 +326,7 @@ private extension LoginViewController {
 
         let failureBlock: (Error) -> () = { (error) in
             AgoraLoading.hide()
-            AgoraToast.toast(msg: error.localizedDescription,
+            AgoraToast.toast(message: error.localizedDescription,
                              type: .error)
         }
         
@@ -486,7 +494,7 @@ extension LoginViewController: AgoraEduClassroomSDKDelegate {
                              didExit reason: AgoraEduExitReason) {
         switch reason {
         case .kickOut:
-            AgoraToast.toast(msg: "kick out")
+            AgoraToast.toast(message: "kick out")
         default:
             break
         }

@@ -299,7 +299,7 @@ extension AgoraVocationalUIManager: AgoraEduStreamHandler {
             // Do Noting
         }, failure: { erro in // 子线程
             DispatchQueue.main.async {
-                AgoraToast.toast(msg: "推CDN流失败", type: .error)
+                AgoraToast.toast(message: "推CDN流失败", type: .error)
             }
         })
     }
@@ -315,7 +315,7 @@ extension AgoraVocationalUIManager: AgoraEduStreamHandler {
             // Do Noting
         } failure: { erro in // 子线程
             DispatchQueue.main.async {
-                AgoraToast.toast(msg: "关CDN流失败", type: .error)
+                AgoraToast.toast(message: "关CDN流失败", type: .error)
             }
         }
     }

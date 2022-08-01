@@ -49,7 +49,8 @@ class AgoraBoardUIController: UIViewController {
             }
             let msgKey = localGranted ? "fcr_netless_board_granted" : "fcr_netless_board_ungranted"
             let type: AgoraToastType = localGranted ? .notice : .error
-            AgoraToast.toast(msg: msgKey.agedu_localized(),
+            
+            AgoraToast.toast(message: msgKey.agedu_localized(),
                              type: type)
         }
     }
@@ -312,7 +313,7 @@ private extension AgoraBoardUIController {
     func handlePhotoNoAuth(_ result: FcrBoardWidgetSnapshotResult) {
         switch result {
         case .savedToAlbum:
-            AgoraToast.toast(msg: "fcr_savecanvas_tips_save_successfully".agedu_localized(),
+            AgoraToast.toast(message: "fcr_savecanvas_tips_save_successfully".agedu_localized(),
                              type: .notice)
         case .noAlbumAuth:
             let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized(), action: nil)
@@ -321,7 +322,7 @@ private extension AgoraBoardUIController {
                 .addAction(action: action)
                 .show(in: self)
         case .failureToSave:
-            AgoraToast.toast(msg: "fcr_savecanvas_tips_save_failed".agedu_localized(),
+            AgoraToast.toast(message: "fcr_savecanvas_tips_save_failed".agedu_localized(),
                              type: .error)
         }
     }

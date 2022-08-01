@@ -171,12 +171,12 @@ private extension VocationalRoomStateUIController {
                 let str = "fcr_room_close_warning".agedu_localized()
                 let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                      with: strMid)
-                AgoraToast.toast(msg: final)
+                AgoraToast.toast(message: final)
             } else if countDown == 60 {
                 let str = "fcr_room_close_warning".agedu_localized()
                 let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                      with: "1")
-                AgoraToast.toast(msg: final)
+                AgoraToast.toast(message: final)
             }
         case .during:
             stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
@@ -189,7 +189,7 @@ private extension VocationalRoomStateUIController {
                 let str = "fcr_room_class_end_warning".agedu_localized()
                 let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                      with: "5")
-                AgoraToast.toast(msg: final)
+                AgoraToast.toast(message: final)
             }
         }
     }
@@ -260,7 +260,7 @@ extension VocationalRoomStateUIController: AgoraEduMonitorHandler {
             image = UIImage.agedu_named("ic_network_down")
             
             let message = "fcr_monitor_network_disconnected".agedu_localized()
-            AgoraToast.toast(msg: message,
+            AgoraToast.toast(message: message,
                              type: .error)
         default:
             return

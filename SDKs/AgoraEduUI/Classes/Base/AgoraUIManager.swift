@@ -125,14 +125,21 @@ protocol AgoraClassRoomManagement: NSObjectProtocol {
         contentView.layer.borderColor = FcrUIColorGroup.systemDividerColor.cgColor
         contentView.backgroundColor = FcrUIColorGroup.systemForegroundColor
         
-        let config = UIConfig.loading
-        if let url = config.gifUrl,
+        let loadingComponent = UIConfig.loading
+        
+        if let url = loadingComponent.gifUrl,
            let data = try? Data(contentsOf: url) {
             AgoraLoading.setImageData(data)
         }
-        AgoraLoading.setMessage(color: config.message.color,
-                                font: config.message.font)
-        AgoraLoading.setBackgroundColor(config.backgroundColor)
+        AgoraLoading.setMessage(color: loadingComponent.message.color,
+                                font: loadingComponent.message.font)
+        AgoraLoading.setBackgroundColor(loadingComponent.backgroundColor)
+        
+        let toastComponent = UIConfig.toast
+        
+        AgoraToast.setImages(noticeImage: toastComponent.noticeImage,
+                             warningImage: toastComponent.warningImage,
+                             errorImage: toastComponent.errorImage)
     }
     
     @objc private func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {

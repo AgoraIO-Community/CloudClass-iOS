@@ -252,8 +252,8 @@ static AgoraClassroomSDK *manager = nil;
     self.delegate = nil;
     self.ui = nil;
     
-//    [FcrUIConfigOC relaseUIConfig];
-//    [FcrWidgetsUIConfigOC relaseUIConfig];
+    [FcrUIConfigOC relaseUIConfig];
+    [FcrWidgetsUIConfigOC relaseUIConfig];
 }
 
 #pragma mark - AgoraEduUIManagerDelegate

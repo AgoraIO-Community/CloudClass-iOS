@@ -145,7 +145,7 @@ extension AgoraChatUIController: AgoraWidgetMessageObserver {
                 }
                 redDotShow = true
             case .error(let string):
-                AgoraToast.toast(msg: string,
+                AgoraToast.toast(message: string,
                                  type: .error)
             }
         }

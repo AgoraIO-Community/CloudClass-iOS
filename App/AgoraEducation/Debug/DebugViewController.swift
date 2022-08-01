@@ -142,6 +142,22 @@ extension DebugViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        // setup agora loading
+        if let bundle = Bundle.agora_bundle("AgoraEduUI"),
+           let url = bundle.url(forResource: "img_loading",
+                                withExtension: "gif"),
+           let data = try? Data(contentsOf: url) {
+            AgoraLoading.setImageData(data)
+        }
+        
+        let noticeImage = UIImage(named: "toast_notice")!
+        let warningImage = UIImage(named: "toast_warning")!
+        let errorImage = UIImage(named: "toast_warning")!
+        
+        AgoraToast.setImages(noticeImage: noticeImage,
+                             warningImage: warningImage,
+                             errorImage: errorImage)
+        
         createViews()
         createConstraint()
     }
@@ -245,10 +261,10 @@ private extension DebugViewController {
         let im = inputParams.im
         
         // roomUuid = roomName + classType
-        var roomUuid = "\(roomName)\(roomStyle.rawValue)"
+        var roomUuid = "\(roomName.md5())\(roomStyle.rawValue)"
         // 职教处理
         if roomStyle == .vocational {
-            roomUuid = "\(roomName)\(AgoraEduRoomType.lecture.rawValue)"
+            roomUuid = "\(roomName.md5())\(AgoraEduRoomType.lecture.rawValue)"
         }
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
         if self.inputParams.serviceType == .RTC {
@@ -288,7 +304,7 @@ private extension DebugViewController {
         
         let failure: (Error) -> () = { (error) in
             AgoraLoading.hide()
-            AgoraToast.toast(msg: error.localizedDescription,
+            AgoraToast.toast(message: error.localizedDescription,
                              type: .error)
         }
         
@@ -435,7 +451,7 @@ extension DebugViewController: AgoraEduClassroomSDKDelegate {
                              didExit reason: AgoraEduExitReason) {
         switch reason {
         case .kickOut:
-            AgoraToast.toast(msg: "kick out")
+            AgoraToast.toast(message: "kick out")
         default:
             break
         }

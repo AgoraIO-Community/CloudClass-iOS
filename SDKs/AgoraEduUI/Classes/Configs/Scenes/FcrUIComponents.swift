@@ -26,6 +26,7 @@ struct FcrUIComponentToast: FcrUIComponentProtocol {
     
     let noticeImage  = UIImage.agedu_named("toast_notice")
     let warningImage = UIImage.agedu_named("toast_warning")
+    let errorImage = UIImage.agedu_named("toast_warning")
     
     let label = FcrUIItemToastLabel()
     let shadow = FcrUIItemShadow()
