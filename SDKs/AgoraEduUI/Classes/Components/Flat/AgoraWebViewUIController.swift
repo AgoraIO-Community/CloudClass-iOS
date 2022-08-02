@@ -206,7 +206,7 @@ private extension AgoraWebViewUIController {
         for (widgetId, activityNumber) in allWidgetActivity {
             let active = activityNumber.boolValue
             
-            guard widgetId.hasPrefix(WebViewWidgetId),
+            guard (widgetId.hasPrefix(WebViewWidgetId) || widgetId.hasPrefix(MediaPlayerWidgetId)),
                   active == true else {
                 continue
             }
@@ -222,9 +222,18 @@ private extension AgoraWebViewUIController {
     }
     
     func createWidget(_ widgetId: String) {
-        guard widgetId.hasPrefix(WebViewWidgetId),
-              widgetArray.firstItem(widgetId: widgetId) == nil,
-              let config = widgetController.getWidgetConfig(WebViewWidgetId) else {
+        guard widgetArray.firstItem(widgetId: widgetId) == nil else {
+            return
+        }
+        
+        var config: AgoraWidgetConfig!
+        if widgetId.hasPrefix(WebViewWidgetId),
+           let webViewConfig = widgetController.getWidgetConfig(WebViewWidgetId) {
+            config = webViewConfig
+        } else if widgetId.hasPrefix(MediaPlayerWidgetId),
+          let mediaConfig = widgetController.getWidgetConfig(MediaPlayerWidgetId) {
+            config = mediaConfig
+        } else {
             return
         }
         

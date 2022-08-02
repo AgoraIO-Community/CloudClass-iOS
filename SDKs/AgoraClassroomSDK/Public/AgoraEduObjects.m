@@ -183,6 +183,11 @@
                                                                 widgetId:@"webView"];
     widgets[webView.widgetId] = webView;
     
+    // Media Player Widget
+    AgoraWidgetConfig *mediaPlayer = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWebViewWidget class]
+                                                                     widgetId:@"mediaPlayer"];
+    widgets[mediaPlayer.widgetId] = mediaPlayer;
+    
     // Cloud Widget
     AgoraWidgetConfig *cloud = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
                                                                widgetId:@"AgoraCloudWidget"];
