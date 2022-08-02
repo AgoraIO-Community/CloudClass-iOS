@@ -414,8 +414,7 @@ extension AgoraRoomGlobalUIController: AgoraEduStreamHandler {
                          operatorUser: AgoraEduContextUserInfo?) {
         let userId = contextPool.user.getLocalUserInfo().userUuid
         
-        guard stream.owner.userUuid == userId,
-              stream.owner.userRole == .student else {
+        guard stream.owner.userUuid == userId else {
             return
         }
         
