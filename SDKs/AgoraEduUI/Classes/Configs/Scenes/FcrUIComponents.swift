@@ -208,7 +208,7 @@ struct FcrUIComponentToolCollection: FcrUIComponentProtocol {
 struct FcrUIComponentRoster: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
-    var backgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
+    var backgroundColor: UIColor = FcrUIColorGroup.iconSelectedBackgroundColor
     
     // config
     var carousel                    = FcrUIItemRosterCarousel()
@@ -224,7 +224,8 @@ struct FcrUIComponentRoster: FcrUIComponentProtocol {
     var normalImage: UIImage?   = .agedu_named("toolbar_unselected_roster")
     var selectedImage: UIImage? = .agedu_named("toolbar_selected_roster")
     
-    let titleBackgroundColor: UIColor = FcrUIColorGroup.iconSelectedBackgroundColor
+    let cellBackgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
+    let titleBackgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
     let cornerRadius: CGFloat = FcrUIFrameGroup.containerCornerRadius
     let borderWidth: CGFloat  = FcrUIFrameGroup.borderWidth
     let borderColor: CGColor  = FcrUIColorGroup.systemDividerColor.cgColor

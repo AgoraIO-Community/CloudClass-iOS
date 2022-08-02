@@ -337,7 +337,7 @@ class AgoraUserListUIController: UIViewController {
         studentTitleLabel.font = config.label.font
         studentTitleLabel.textColor = config.label.subTitleColor
         
-        tableView.backgroundColor = config.titleBackgroundColor
+        tableView.backgroundColor = config.cellBackgroundColor
         tableView.separatorColor = config.sepLine.backgroundColor
         
         for view in itemTitlesView.arrangedSubviews {

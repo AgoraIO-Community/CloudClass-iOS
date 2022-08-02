@@ -305,7 +305,7 @@ extension AgoraUserListItemCell: AgoraUIContentContainer {
     func updateViewProperties() {
         let config = UIConfig.roster
 
-        backgroundColor = config.backgroundColor
+        backgroundColor = config.cellBackgroundColor
         nameLabel.textColor = FcrUIColorGroup.textLevel1Color
         nameLabel.font = FcrUIFontGroup.font12
     }
