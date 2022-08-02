@@ -92,10 +92,24 @@ class VcrMixStreamCDNRenderUIController: UIViewController {
             placeHolderView.isHidden = false
         }
     }
+    
+    func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback,
+                                                            options: [.defaultToSpeaker])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("mix stream: audio session set \(error)")
+        }
+    }
 }
 // MARK: - AgoraEduRoomHandler
 extension VcrMixStreamCDNRenderUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            // 因为有服务抢音频通道，所以延时1秒进行扬声器通道播放
+            self.setupAudioSession()
+        }
         if let url = contextPool.room.getRecordingStreamUrlList()["hls"] {
             cdnURL = url
         }

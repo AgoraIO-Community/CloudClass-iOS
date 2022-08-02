@@ -191,10 +191,11 @@ private extension VcrHostingPlayerUIController {
     
     func setupAudioSession() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playAndRecord)
+            try AVAudioSession.sharedInstance().setCategory(.playback,
+                                                            options: [.defaultToSpeaker])
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
-            print("audio session set erro")
+            print("mix stream: audio session set \(error)")
         }
     }
 }
@@ -231,7 +232,10 @@ extension VcrHostingPlayerUIController {
 // MARK: - AgoraEduRoomHandler
 extension VcrHostingPlayerUIController: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        setupAudioSession()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            // 因为有服务抢音频通道，所以延时1秒进行扬声器通道播放
+            self.setupAudioSession()
+        }
         fetchHostingLesson()
     }
     
