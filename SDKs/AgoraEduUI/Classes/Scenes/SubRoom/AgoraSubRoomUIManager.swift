@@ -119,7 +119,7 @@ import AgoraWidget
         
         updateRenderCollectionLayout()
         
-        AgoraLoading.hide()
+        
         
         subRoom.joinSubRoom { [weak self] in
             AgoraLoading.hide()
