@@ -54,7 +54,7 @@ struct FcrUIItemLoadingMessage: FcrUIItemProtocol {
     var enable: Bool  = true
     
     let color: UIColor = FcrUIColorGroup.textLevel1Color
-    let font: UIFont   = FcrUIFontGroup.font14
+    let font: UIFont   = FcrUIFontGroup.font13
 }
 
 struct FcrUIItemAlertMessage: FcrUIItemProtocol {

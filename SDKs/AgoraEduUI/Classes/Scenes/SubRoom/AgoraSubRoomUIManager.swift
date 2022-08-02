@@ -282,6 +282,24 @@ import AgoraWidget
         globalController.roomDelegate = self
         addChild(globalController)
         globalController.viewDidLoad()
+        
+        stateController.view.agora_enable = UIConfig.stateBar.enable
+        stateController.view.agora_visible = UIConfig.stateBar.visible
+        
+        boardController.view.agora_enable = UIConfig.netlessBoard.enable
+        boardController.view.agora_visible = UIConfig.netlessBoard.visible
+        
+        settingController.view.agora_enable = UIConfig.setting.enable
+        settingController.view.agora_visible = UIConfig.setting.visible
+        
+        toolBarController.view.agora_enable = UIConfig.toolBar.enable
+        toolBarController.view.agora_visible = UIConfig.toolBar.visible
+        
+        classToolsController.view.agora_enable = UIConfig.toolBox.enable
+        classToolsController.view.agora_visible = UIConfig.toolBox.visible
+        
+        chatController.view.agora_enable = UIConfig.agoraChat.enable
+        chatController.view.agora_visible = UIConfig.agoraChat.visible
     }
     
     override func initViewFrame() {
