@@ -102,10 +102,10 @@ import UIKit
 
     /** 服务类型可选项*/
     let kVocationalServiceOptions: [(AgoraEduServiceType, String)] = [
-        (.RTC, "Login_service_rtc".ag_localized()),
-        (.fastRTC, "Login_service_fast_rtc".ag_localized()),
-        (.onlyCDN, "Login_service_only_cdn".ag_localized()),
-        (.mixedCDN, "Login_service_mixed_cdn".ag_localized()),
+        (.livePremium, "Login_service_rtc".ag_localized()),
+        (.liveStandard, "Login_service_fast_rtc".ag_localized()),
+        (.CDN, "Login_service_only_cdn".ag_localized()),
+        (.fusion, "Login_service_mixed_cdn".ag_localized()),
     ]
 }
 
@@ -291,9 +291,9 @@ private extension LoginViewController {
             roomUuid = "\(roomName.md5())\(AgoraEduRoomType.lecture.rawValue)"
         }
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
-        if self.inputParams.serviceType == .RTC {
+        if self.inputParams.serviceType == .livePremium {
             latencyLevel = .ultraLow
-        } else if self.inputParams.serviceType == .fastRTC {
+        } else if self.inputParams.serviceType == .liveStandard {
             latencyLevel = .low
         }
         
@@ -383,7 +383,7 @@ private extension LoginViewController {
             
             if launchConfig.roomType == .vocational { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
-                                                   service: self.inputParams.serviceType ?? .RTC,
+                                                   service: self.inputParams.serviceType ?? .livePremium,
                                                    success: launchSuccessBlock,
                                                    failure: failureBlock)
             } else { // 灵动课堂入口

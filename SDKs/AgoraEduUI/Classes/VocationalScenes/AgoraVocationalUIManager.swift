@@ -11,19 +11,19 @@ import AudioToolbox
 import AgoraWidget
 
 @objc public enum VocationalCDNType: Int {
-    case noCDN
-    case onlyCDN
-    case mixedCDN
+    case liveStandard
+    case CDN
+    case fusion
 }
 
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class AgoraVocationalUIManager: AgoraEduUIManager {
     
-    @objc public var cdnType: VocationalCDNType = .noCDN {
+    @objc public var cdnType: VocationalCDNType = .liveStandard {
         didSet {
             switch cdnType {
-            case .onlyCDN:
+            case .CDN:
                 self.teacherRenderController.isRenderByRTC = false
             default: break
             }
@@ -124,13 +124,13 @@ import AgoraWidget
     
     func updateCDNState() {
         let localUserId = contextPool.user.getLocalUserInfo().userUuid
-        if self.cdnType == .noCDN {
+        if self.cdnType == .liveStandard {
             self.teacherRenderController.isRenderByRTC = true
             self.windowController.isRenderByRTC = true
-        } else if self.cdnType == .onlyCDN {
+        } else if self.cdnType == .CDN {
             self.teacherRenderController.isRenderByRTC = false
             self.windowController.isRenderByRTC = false
-        } else if self.cdnType == .mixedCDN {
+        } else if self.cdnType == .fusion {
             // 混合CDN上台
             if let coHosts = self.contextPool.user.getCoHostList(),
                coHosts.contains(where: {$0.userUuid == localUserId}) {
@@ -178,7 +178,7 @@ import AgoraWidget
             addChild(toolCollectionController)
             contentView.addSubview(toolCollectionController.view)
             
-            if self.cdnType == .onlyCDN {
+            if self.cdnType == .CDN {
                 toolBarController.tools = [.setting, .roster, .handsList]
             } else {
                 toolBarController.tools = [.setting, .roster]
@@ -198,9 +198,9 @@ import AgoraWidget
             addChild(toolCollectionController)
             contentView.addSubview(toolCollectionController.view)
             
-            if self.cdnType == .onlyCDN {
+            if self.cdnType == .CDN {
                 toolBarController.tools = [.setting]
-            } else if self.cdnType == .mixedCDN {
+            } else if self.cdnType == .fusion {
                 toolBarController.tools = [.setting, .waveHands]
                 toolBarController.handsupDuration = 5
             } else {
@@ -285,7 +285,7 @@ import AgoraWidget
 extension AgoraVocationalUIManager: AgoraEduStreamHandler {
     public func onStreamJoined(stream: AgoraEduContextStreamInfo,
                                operatorUser: AgoraEduContextUserInfo?) {
-        guard self.cdnType == .mixedCDN,
+        guard self.cdnType == .fusion,
               stream.owner.userUuid == contextPool.user.getLocalUserInfo().userUuid else {
             return
         }
@@ -305,7 +305,7 @@ extension AgoraVocationalUIManager: AgoraEduStreamHandler {
     }
     public func onStreamLeft(stream: AgoraEduContextStreamInfo,
                              operatorUser: AgoraEduContextUserInfo?) {
-        guard self.cdnType == .mixedCDN,
+        guard self.cdnType == .fusion,
               stream.owner.userUuid == contextPool.user.getLocalUserInfo().userUuid else {
             return
         }

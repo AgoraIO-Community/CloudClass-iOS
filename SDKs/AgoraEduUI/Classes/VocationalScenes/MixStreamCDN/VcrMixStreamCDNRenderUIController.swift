@@ -78,8 +78,10 @@ class VcrMixStreamCDNRenderUIController: UIViewController {
         placeHolderView.layer.borderWidth = config.borderWidth
         placeHolderView.layer.borderColor = config.borderColor
     }
-    
-    private func updateVideoState() {
+}
+// MARK: - Private
+private extension VcrMixStreamCDNRenderUIController {
+    func updateVideoState() {
         videoPlayer.pause()
         if recordingState == .started,
            let url = URL.init(string: cdnURL) {
@@ -88,6 +90,13 @@ class VcrMixStreamCDNRenderUIController: UIViewController {
             playerItem = AVPlayerItem(asset: asset)
             videoPlayer.replaceCurrentItem(with: playerItem)
             videoPlayer.play()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                // 错误资源重试
+                guard self.playerItem?.status != .readyToPlay else {
+                    return
+                }
+                self.updateVideoState()
+            }
         } else {
             placeHolderView.isHidden = false
         }

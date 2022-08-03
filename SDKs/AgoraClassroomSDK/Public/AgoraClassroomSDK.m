@@ -197,16 +197,16 @@ static AgoraClassroomSDK *manager = nil;
                                                                                         delegate:manager];
             eduVC = vc;
         } else {
-            VocationalCDNType cdnType = VocationalCDNTypeNoCDN;
+            VocationalCDNType cdnType = VocationalCDNTypeLiveStandard;
             switch (serviceType) {
-                case AgoraEduServiceTypeOnlyCDN:
-                    cdnType = VocationalCDNTypeOnlyCDN;
+                case AgoraEduServiceTypeCDN:
+                    cdnType = VocationalCDNTypeCDN;
                     break;
-                case AgoraEduServiceTypeMixedCDN:
-                    cdnType = VocationalCDNTypeMixedCDN;
+                case AgoraEduServiceTypeFusion:
+                    cdnType = VocationalCDNTypeFusion;
                     break;
                 default:
-                    cdnType = VocationalCDNTypeNoCDN;
+                    cdnType = VocationalCDNTypeLiveStandard;
                     break;
             }
             AgoraVocationalUIManager *vc = [[AgoraVocationalUIManager alloc] initWithContextPool:pool

@@ -50,6 +50,8 @@ class VcrHostingPlayerUIController: UIViewController {
             guard playerItem != oldValue else {
                 return
             }
+            oldValue?.removeObserver(self,
+                                     forKeyPath: "status")
             playerItem?.addObserver(self,
                                     forKeyPath: "status",
                                     options: .new,

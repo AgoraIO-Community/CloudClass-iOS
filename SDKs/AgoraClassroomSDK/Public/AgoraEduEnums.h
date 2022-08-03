@@ -83,10 +83,10 @@ typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduServiceType) {
-    AgoraEduServiceTypeRTC,
-    AgoraEduServiceTypeFastRTC,
-    AgoraEduServiceTypeOnlyCDN,
-    AgoraEduServiceTypeMixedCDN,
+    AgoraEduServiceTypeLivePremium,
+    AgoraEduServiceTypeLiveStandard,
+    AgoraEduServiceTypeCDN,
+    AgoraEduServiceTypeFusion,
     AgoraEduServiceTypeMixStreamCDN,
     AgoraEduServiceTypeHostingScene
 };
