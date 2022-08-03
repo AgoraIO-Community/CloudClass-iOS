@@ -226,7 +226,8 @@ private extension AgoraWebViewUIController {
             return
         }
         
-        var config: AgoraWidgetConfig!
+        var config: AgoraWidgetConfig
+        
         if widgetId.hasPrefix(WebViewWidgetId),
            let webViewConfig = widgetController.getWidgetConfig(WebViewWidgetId) {
             config = webViewConfig
