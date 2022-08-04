@@ -5,6 +5,7 @@
 //  Created by HeZhengQing on 2021/9/22.
 //
 
+import AgoraUIBaseViews
 import Masonry
 
 class AgoraRoomStateBar: UIView, AgoraUIContentContainer {

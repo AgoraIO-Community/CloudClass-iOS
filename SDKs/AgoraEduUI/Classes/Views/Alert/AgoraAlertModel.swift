@@ -5,8 +5,9 @@
 //  Created by Jonathan on 2021/12/1.
 //
 
-import UIKit
+import AgoraUIBaseViews
 import SwifterSwift
+import UIKit
 
 class AgoraAlertTableCell: UITableViewCell {
     static let cellId = NSStringFromClass(AgoraAlertTableCell.self)

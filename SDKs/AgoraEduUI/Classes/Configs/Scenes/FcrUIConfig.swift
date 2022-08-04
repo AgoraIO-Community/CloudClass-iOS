@@ -44,33 +44,3 @@ protocol FcrUIConfig {
 }
 
 var UIConfig: FcrUIConfig!
-
-@objc public class FcrUIConfigOC: NSObject {
-    @objc public static func setUIConfig(value: Int) {
-        set_ui_config(value: value)
-    }
-
-    @objc public static func relaseUIConfig() {
-        relase_ui_config()
-    }
-}
-
-public func set_ui_config(value: Int) {
-    switch value {
-    // One to one
-    case 0:
-        UIConfig = FcrOneToOneUIConfig()
-    // Small
-    case 1:
-        UIConfig = FcrSmallUIConfig()
-    // Lecture
-    case 2:
-        UIConfig = FcrLectureUIConfig()
-    default:
-        fatalError("invalid value: \(value)")
-    }
-}
-
-public func relase_ui_config() {
-    UIConfig = nil
-}

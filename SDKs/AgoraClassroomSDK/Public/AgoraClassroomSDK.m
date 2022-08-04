@@ -19,9 +19,9 @@
 #import "AgoraInternalClassroom.h"
 #import "AgoraClassroomSDK.h"
 
-@interface AgoraClassroomSDK () <AgoraEduUIManagerCallback>
+@interface AgoraClassroomSDK () <FcrUISceneDelegate>
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
-@property (nonatomic, strong) AgoraEduUIManager *ui;
+@property (nonatomic, strong) FcrUIScene *scene;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSNumber *environment;
 @property (nonatomic, weak) id<AgoraEduClassroomSDKDelegate> delegate;
@@ -100,33 +100,31 @@ static AgoraClassroomSDK *manager = nil;
     
     // Core config
     AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
-    // 职教课处理
+    
     [core launch:coreConfig
          widgets:config.widgets.allValues
          success:^(id<AgoraEduContextPool> pool) {
-        AgoraEduUIManager *eduVC = nil;
+        
+        FcrUIScene *scene = nil;
         
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
-                eduVC = [[AgoraOneToOneUIManager alloc] initWithContextPool:pool
-                                                                   delegate:manager];
+                [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeOneToOne];
                 
-                [FcrUIConfigOC setUIConfigWithValue:0];
-                [FcrWidgetsUIConfigOC setUIConfigWithValue:0];
+                scene = [[FcrOneToOneUIScene alloc] initWithContextPool:pool
+                                                               delegate:manager];
                 break;
             case AgoraEduContextRoomTypeSmall:
-                eduVC = [[AgoraSmallUIManager alloc] initWithContextPool:pool
-                                                                delegate:manager];
+                [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeSmall];
                 
-                [FcrUIConfigOC setUIConfigWithValue:1];
-                [FcrWidgetsUIConfigOC setUIConfigWithValue:1];
+                scene = [[FcrSmallUIScene alloc] initWithContextPool:pool
+                                                            delegate:manager];
                 break;
             case AgoraEduContextRoomTypeLecture:
-                eduVC = [[AgoraLectureUIManager alloc] initWithContextPool:pool
-                                                                  delegate:manager];
+                [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeLecture];
                 
-                [FcrUIConfigOC setUIConfigWithValue:2];
-                [FcrWidgetsUIConfigOC setUIConfigWithValue:2];
+                scene = [[FcrLectureUIScene alloc] initWithContextPool:pool
+                                                              delegate:manager];
                 break;
             default:
                 NSCAssert(true,
@@ -134,10 +132,12 @@ static AgoraClassroomSDK *manager = nil;
                 break;
         }
         
-        eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
+        scene.modalPresentationStyle = UIModalPresentationFullScreen;
+        manager.scene = scene;
+        
         UIViewController *topVC = [UIViewController agora_top_view_controller];
-        manager.ui = eduVC;
-        [topVC presentViewController:eduVC
+        
+        [topVC presentViewController:scene
                             animated:true
                           completion:^{
             if (success) {
@@ -181,21 +181,22 @@ static AgoraClassroomSDK *manager = nil;
     [core launch:coreConfig
          widgets:config.widgets.allValues
          success:^(id<AgoraEduContextPool> pool) {
+        
         if ([pool.room getRoomInfo].roomType != AgoraEduContextRoomTypeLecture) {
             NSCAssert(true, @"vocational room type error");
             return;
         }
-        AgoraEduUIManager *eduVC = nil;
+        
+        FcrUIScene *scene = nil;
+        
         if (serviceType == AgoraEduServiceTypeMixStreamCDN) {
-            VcrMixStreamCDNUIManager *vc = [[VcrMixStreamCDNUIManager alloc] initWithContextPool:pool
-                                                                                        delegate:manager];
-            eduVC = vc;
-            
-            
+            VcrMixStreamCDNUIScene *vc = [[VcrMixStreamCDNUIScene alloc] initWithContextPool:pool
+                                                                                    delegate:manager];
+            scene = vc;
         } else if (serviceType == AgoraEduServiceTypeHostingScene) {
-            VcrHostingSceneUIManager *vc = [[VcrHostingSceneUIManager alloc] initWithContextPool:pool
-                                                                                        delegate:manager];
-            eduVC = vc;
+            VcrHostingUIScene *vc = [[VcrHostingUIScene alloc] initWithContextPool:pool
+                                                                          delegate:manager];
+            scene = vc;
         } else {
             VocationalCDNType cdnType = VocationalCDNTypeLiveStandard;
             switch (serviceType) {
@@ -209,19 +210,21 @@ static AgoraClassroomSDK *manager = nil;
                     cdnType = VocationalCDNTypeLiveStandard;
                     break;
             }
-            AgoraVocationalUIManager *vc = [[AgoraVocationalUIManager alloc] initWithContextPool:pool
-                                                                                        delegate:manager];
+            
+            AgoraVocationalUIScene *vc = [[AgoraVocationalUIScene alloc] initWithContextPool:pool
+                                                                                    delegate:manager];
             vc.cdnType = cdnType;
-            eduVC = vc;
+            scene = vc;
         }
         
-        [FcrUIConfigOC setUIConfigWithValue:2];
-        [FcrWidgetsUIConfigOC setUIConfigWithValue:2];
+        [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeVocation];
         
-        eduVC.modalPresentationStyle = UIModalPresentationFullScreen;
+        scene.modalPresentationStyle = UIModalPresentationFullScreen;
+        manager.scene = scene;
+        
         UIViewController *topVC = [UIViewController agora_top_view_controller];
-        manager.ui = eduVC;
-        [topVC presentViewController:eduVC
+        
+        [topVC presentViewController:scene
                             animated:true
                           completion:^{
             if (success) {
@@ -240,7 +243,7 @@ static AgoraClassroomSDK *manager = nil;
     
     __weak AgoraClassroomSDK *weakManager = manager;
     
-    [manager.ui dismissViewControllerAnimated:YES
+    [manager.scene dismissViewControllerAnimated:YES
                                    completion:^{
         [weakManager agoraRelease];
     }];
@@ -248,34 +251,33 @@ static AgoraClassroomSDK *manager = nil;
 
 #pragma mark - Private
 - (void)agoraRelease {
-    self.core = nil;
     self.delegate = nil;
-    self.ui = nil;
+    self.scene = nil;
+    self.core = nil;
     
-    [FcrUIConfigOC relaseUIConfig];
-    [FcrWidgetsUIConfigOC relaseUIConfig];
+    [FcrWidgetUIContext desctory];
 }
 
-#pragma mark - AgoraEduUIManagerDelegate
-- (void)manager:(AgoraEduUIManager *)manager
-        didExit:(AgoraClassRoomExitReason)reason {
+#pragma mark - FcrUISceneDelegate
+- (void)scene:(FcrUIScene *)scene
+      didExit:(FcrUISceneExitReason)reason {
     AgoraEduExitReason sdkReason = AgoraEduExitReasonNormal;
-    
+
     switch (reason) {
-        case AgoraClassRoomExitReasonNormal:
+        case FcrUISceneExitReasonNormal:
             sdkReason = AgoraEduExitReasonNormal;
             break;
-        case AgoraClassRoomExitReasonKickOut:
+        case FcrUISceneExitReasonKickOut:
             sdkReason = AgoraEduExitReasonKickOut;
         default:
             break;
     }
-    
+
     if ([_delegate respondsToSelector:@selector(classroomSDK:didExit:)]) {
         [self.delegate classroomSDK:self
                             didExit:sdkReason];
     }
-    
+
     [self agoraRelease];
 }
 @end

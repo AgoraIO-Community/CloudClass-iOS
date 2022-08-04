@@ -5,6 +5,8 @@
 //  Created by LYY on 2022/7/11.
 //
 
+import AgoraUIBaseViews
+
 class FcrBoardPageControlView: UIView {
     /** Views*/
     private lazy var sepLine: UIView = UIView(frame: .zero)

@@ -5,6 +5,7 @@
 //  Created by Cavan on 2022/6/23.
 //
 
+import AgoraUIBaseViews
 import UIKit
 
 protocol FcrSettingsViewDelegate: NSObjectProtocol {

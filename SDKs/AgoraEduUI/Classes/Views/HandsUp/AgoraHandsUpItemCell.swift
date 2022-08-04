@@ -5,6 +5,7 @@
 //  Created by Jonathan on 2021/10/21.
 //
 
+import AgoraUIBaseViews
 import UIKit
 
 protocol AgoraHandsUpItemCellDelegate: NSObjectProtocol {

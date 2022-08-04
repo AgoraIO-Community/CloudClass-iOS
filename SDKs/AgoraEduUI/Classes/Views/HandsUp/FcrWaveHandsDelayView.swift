@@ -5,7 +5,7 @@
 //  Created by LYY on 2022/6/29.
 //
 
-
+import AgoraUIBaseViews
 import UIKit
 
 protocol FcrWaveHandsDelayViewDelegate: NSObjectProtocol {
