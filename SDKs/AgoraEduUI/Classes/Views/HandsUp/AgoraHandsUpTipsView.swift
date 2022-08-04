@@ -29,12 +29,7 @@ class AgoraHandsUpTipsView: UIView {
 extension AgoraHandsUpTipsView:AgoraUIContentContainer {
     func initViews() {
         let tipImage = UIConfig.raiseHand.popOverImage
-        let newImage = tipImage?.resizableImage(withCapInsets: UIEdgeInsets(top: 10,
-                                                                            left: 10,
-                                                                            bottom: 25,
-                                                                            right: 10),
-                                                resizingMode: .stretch)
-        imageView = UIImageView(image: newImage)
+        imageView = UIImageView(image: tipImage)
         addSubview(imageView)
         
         label = UILabel()

@@ -80,7 +80,7 @@ class VcrMixStreamCDNRenderUIComponent: UIViewController {
     }
 }
 // MARK: - Private
-private extension VcrMixStreamCDNRenderUIController {
+private extension VcrMixStreamCDNRenderUIComponent {
     func updateVideoState() {
         videoPlayer.pause()
         if recordingState == .started,

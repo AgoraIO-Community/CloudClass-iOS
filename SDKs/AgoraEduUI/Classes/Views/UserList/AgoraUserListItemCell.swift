@@ -292,7 +292,7 @@ extension AgoraUserListItemCell: AgoraUIContentContainer {
     
     func initViewFrame() {
         nameLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(0)
+            make?.left.equalTo()(16)
             make?.top.bottom().equalTo()(nameLabel.superview)
             make?.width.equalTo()(80)
         }
