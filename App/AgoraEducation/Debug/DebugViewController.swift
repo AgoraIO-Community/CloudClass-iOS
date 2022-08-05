@@ -67,12 +67,24 @@ import AgoraEduUI
     private let minInputLength = 6
     
     /** 房间可选项*/
-    let kRoomOptions: [(AgoraEduRoomType, String)] = [
-        (.oneToOne, "Login_onetoone".ag_localized()),
-        (.small, "Login_small".ag_localized()),
-        (.lecture, "Login_lecture".ag_localized()),
-        (.vocational, "Login_vocational_lecture".ag_localized()),
-    ]
+    var kRoomOptions: [(AgoraEduRoomType, String)] {
+        var array = [(AgoraEduRoomType, String)]()
+        
+        let list = AgoraEduRoomType.getList()
+        
+        for item in list {
+            switch item {
+            case .oneToOne: array.append((.oneToOne, "Login_onetoone".ag_localized()))
+            case .small:    array.append((.small, "Login_small".ag_localized()))
+            case .lecture:  array.append((.lecture, "Login_lecture".ag_localized()))
+            case .vocation: array.append((.vocation, "Login_vocational_lecture".ag_localized()))
+            @unknown default: break
+            }
+        }
+        
+        return array
+    }
+    
     /** 角色可选项*/
     let kRoleOptions: [(AgoraEduUserRole, String)] = [
         (.student, "login_role_student".ag_localized()),
@@ -198,7 +210,7 @@ private extension DebugViewController {
         }
     }
     func updateOptions() {
-        if self.inputParams.roomStyle == .vocational {
+        if self.inputParams.roomStyle == .vocation {
             self.dataSource = [
                 .roomName, .nickName, .roomStyle, .serviceType, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
             ]
@@ -267,13 +279,20 @@ private extension DebugViewController {
         let encryptionMode = inputParams.encryptMode
         let im = inputParams.im
         
-        // roomUuid = roomName + classType
-        var roomUuid = "\(roomName.md5())\(roomStyle.rawValue)"
-        // 职教处理
-        if roomStyle == .vocational {
-            roomUuid = "\(roomName.md5())\(AgoraEduRoomType.lecture.rawValue)"
+        var roomTag: Int
+        
+        switch roomStyle {
+        case .oneToOne:   roomTag = 0
+        case .small:      roomTag = 4
+        case .lecture:    roomTag = 2
+        case .vocation:   roomTag = 2
+        @unknown default: fatalError()
         }
+        
+        let roomUuid = "\(roomName.md5())\(roomTag)"
+        
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
+        
         if self.inputParams.serviceType == .livePremium {
             latencyLevel = .ultraLow
         } else if self.inputParams.serviceType == .liveStandard {
@@ -371,7 +390,7 @@ private extension DebugViewController {
             }
             
             AgoraClassroomSDK.setDelegate(self)
-            if launchConfig.roomType == .vocational { // 职教入口
+            if launchConfig.roomType == .vocation { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
                                                    service: self.inputParams.serviceType ?? .livePremium,
                                                    success: success,

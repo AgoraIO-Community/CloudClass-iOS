@@ -897,7 +897,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.7.0;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = App;
@@ -959,7 +959,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.7.0;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraFlexEduDis;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = FlexiableClassroom_AppStore;
@@ -1150,7 +1150,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.7.0;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = App;
@@ -1304,7 +1304,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.7.0;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.WayangQA;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = AgoraQA2022C;
@@ -1458,7 +1458,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.7.0;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQA;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = AgoraLab2020;
@@ -1612,7 +1612,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.7.0;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATest;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = AgoraTest2020;

@@ -6,6 +6,7 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
+#import <AgoraEduUI/AgoraEduUI-Swift.h>
 #import "AgoraInternalClassroom.h"
 #import "AgoraEduEnums.h"
 
@@ -27,10 +28,10 @@
         return NO;
     }
     
-    if (!(self.roomType == AgoraEduRoomTypeOneToOne
-          || self.roomType == AgoraEduRoomTypeSmall
-          || self.roomType == AgoraEduRoomTypeLecture
-          || self.roomType == AgoraEduRoomTypeVocational)) {
+    if (!(self.roomType == FcrUISceneTypeOneToOne
+          || self.roomType == FcrUISceneTypeSmall
+          || self.roomType == FcrUISceneTypeLecture
+          || self.roomType == FcrUISceneTypeVocation)) {
         return NO;
     }
     
@@ -52,6 +53,25 @@
     
     AgoraEduCorePuppetUserRole role = config.userRole;
     
+    AgoraEduCorePuppetRoomType roomType;
+    
+    switch (config.roomType) {
+        case FcrUISceneTypeOneToOne:
+            roomType = AgoraEduCorePuppetRoomTypeOneToOne;
+            break;
+        case FcrUISceneTypeSmall:
+            roomType = AgoraEduCorePuppetRoomTypeSmall;
+            break;
+        case FcrUISceneTypeLecture:
+            roomType = AgoraEduCorePuppetRoomTypeLecture;
+            break;
+        case FcrUISceneTypeVocation:
+            roomType = AgoraEduCorePuppetRoomTypeLecture;
+            break;
+        default:
+            break;
+    }
+    
     AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
                                                                                                 rtmToken:config.token
                                                                                                   region:config.region
@@ -62,7 +82,7 @@
                                                                                             mediaOptions:mediaOptions
                                                                                                 roomName:config.roomName
                                                                                                 roomUuid:config.roomUuid
-                                                                                                roomType:config.roomType
+                                                                                                roomType:roomType
                                                                                                startTime:config.startTime
                                                                                                 duration:config.duration];
     return launchConfig;
