@@ -782,7 +782,7 @@ private extension DebugViewController {
             
             titleLabel.textColor = .white
         } else {
-            subTitleLabel.text = "About_url".ag_localized()
+            subTitleLabel.text = "settings_powerd_by".ag_localized()
             subTitleLabel.textColor = UIColor(hex: 0x677386)
             subTitleLabel.font = UIFont.systemFont(ofSize: 14)
             view.addSubview(subTitleLabel)
