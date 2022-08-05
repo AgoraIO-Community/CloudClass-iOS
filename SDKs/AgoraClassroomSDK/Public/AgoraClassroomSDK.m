@@ -176,7 +176,6 @@ static AgoraClassroomSDK *manager = nil;
     }
     // Core config
     AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
-    coreConfig.roomType = AgoraEduRoomTypeLecture;
     
     [core launch:coreConfig
          widgets:config.widgets.allValues
