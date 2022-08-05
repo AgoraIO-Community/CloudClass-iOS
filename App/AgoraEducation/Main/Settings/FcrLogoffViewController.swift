@@ -29,22 +29,22 @@ class FcrLogoffViewController: FcrOutsideClassBaseController {
 // MARK: - Actions
 private extension FcrLogoffViewController {
     // 注销账号
-        @objc func onClickLogoff() {
-            let alertController = UIAlertController(title: "fcr_alert_title".ag_localized(),
-                                                    message: "settings_logoff_alert".ag_localized(),
-                                                    preferredStyle: .alert)
-            let submit = UIAlertAction(title: "fcr_alert_submit".ag_localized(),
-                                       style: .default) { action in
-                FcrUserInfoPresenter.shared.logout {
-                    self.navigationController?.popToRootViewController(animated: true)
-                }
+    @objc func onClickLogoff() {
+        let alertController = UIAlertController(title: "fcr_alert_title".ag_localized(),
+                                                message: "settings_logoff_alert".ag_localized(),
+                                                preferredStyle: .alert)
+        let submit = UIAlertAction(title: "fcr_alert_submit".ag_localized(),
+                                   style: .default) { action in
+            FcrUserInfoPresenter.shared.logout {
+                self.navigationController?.popToRootViewController(animated: true)
             }
-            let cancel = UIAlertAction(title: "fcr_alert_cancel".ag_localized(),
-                                       style: .default)
-            alertController.addAction(submit)
-            alertController.addAction(cancel)
-            present(alertController, animated: true)
         }
+        let cancel = UIAlertAction(title: "fcr_alert_cancel".ag_localized(),
+                                   style: .default)
+        alertController.addAction(submit)
+        alertController.addAction(cancel)
+        present(alertController, animated: true)
+    }
     // 协议勾选
     @objc func onClickCheckBox(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected

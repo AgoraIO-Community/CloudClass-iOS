@@ -55,6 +55,7 @@ import AgoraEduUI
         .mediaAuth,
         .uiMode,
         .uiLanguage,
+        .region,
         .env
     ]
     
@@ -131,7 +132,13 @@ import AgoraEduUI
         (.zh_cn, "Login_uiLanguage_zh_cn".ag_localized()),
         (.en, "Login_uiLanguage_en".ag_localized()),
     ]
-
+    /** 区域可选项*/
+    let kRegionOptions: [(FcrEnvironment.Region, String)] = [
+        (.CN, FcrEnvironment.Region.CN.rawValue),
+        (.NA, FcrEnvironment.Region.NA.rawValue),
+        (.EU, FcrEnvironment.Region.EU.rawValue),
+        (.AP, FcrEnvironment.Region.AP.rawValue),
+    ]
     /** 服务类型可选项*/
     let kVocationalServiceOptions: [(AgoraEduServiceType, String)] = [
         (.livePremium, "Login_service_rtc".ag_localized()),
@@ -212,11 +219,11 @@ private extension DebugViewController {
     func updateOptions() {
         if self.inputParams.roomStyle == .vocation {
             self.dataSource = [
-                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
+                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .uiMode, .uiLanguage, .region, .env
             ]
         } else {
             self.dataSource = [
-                .roomName, .nickName, .roomStyle, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .uiMode, .uiLanguage, .env
+                .roomName, .nickName, .roomStyle, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .uiMode, .uiLanguage, .region, .env
             ]
         }
         self.tableView.reloadData()
@@ -584,6 +591,12 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
             cell.textField.placeholder = "Login_uiLanguage_holder".ag_localized()
             cell.textField.text = optionDescription(option: getUILanguage(),
                                                     in: kUILanguageOptions)
+        case .region:
+            cell.mode = .option
+            cell.titleLabel.text = "Login_region_title".ag_localized()
+            cell.textField.placeholder = ""
+            cell.textField.text = optionDescription(option: FcrEnvironment.shared.region,
+                                                    in: kRegionOptions)
         case .env:
             cell.mode = .option
             cell.titleLabel.text = "Login_env_title".ag_localized()
@@ -707,6 +720,18 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                              index: index) { [unowned self] i in
                 let (v, str) = kUILanguageOptions[i]
                 FcrLocalization.shared.setupNewLanguage(v)
+                cell.textField.text = str
+                self.hideOptions()
+            }
+        case .region:
+            let options = optionStrings(form: kRegionOptions)
+            let index = optionIndex(option: FcrEnvironment.shared.region,
+                                    in: kRegionOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                let (v, str) = kRegionOptions[i]
+                FcrEnvironment.shared.region = v
                 cell.textField.text = str
                 self.hideOptions()
             }
