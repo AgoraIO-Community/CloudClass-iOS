@@ -175,6 +175,11 @@ class FcrRenderMenuUIComponent: UIViewController {
         self.userId = nil
         self.model = AgoraRenderMenuModel()
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        view.layer.cornerRadius = (view.bounds.size.height * 0.5)
+    }
 }
 
 // MARK: - AgoraUIActivity & AgoraUIContentContainer
@@ -257,8 +262,8 @@ class FcrRenderMenuUIComponent: UIViewController {
         
         view.backgroundColor = .clear
         
-        contentView.backgroundColor = config.backgroundColor
-        contentView.layer.cornerRadius = config.cornerRadius
+        view.backgroundColor = config.backgroundColor
+        view.layer.cornerRadius = config.cornerRadius
         
         view.layer.shadowColor = config.shadow.color
         view.layer.shadowOffset = config.shadow.offset
@@ -343,6 +348,8 @@ private extension FcrRenderMenuUIComponent {
         }
         contentView.removeSubviews()
         contentView.addArrangedSubviews(views)
+        
+        //(10 1; 22 28)
         
         menuWidth =  CGFloat(items.count) * 22 + CGFloat(items.count + 1) * 10
         let stackWidth = CGFloat(items.count) * 22 + CGFloat(items.count - 1) * 10
