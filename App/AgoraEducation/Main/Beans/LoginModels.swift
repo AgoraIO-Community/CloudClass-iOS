@@ -43,6 +43,8 @@ enum RoomInfoItemType: Int, CaseIterable {
     case uiMode
     // 语言
     case uiLanguage
+    // 区域
+    case region
     // 环境
     case env
 }
