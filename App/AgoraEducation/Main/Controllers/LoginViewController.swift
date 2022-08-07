@@ -116,11 +116,11 @@ extension LoginViewController {
     }
     
     public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
+        return UIDevice.current.agora_is_pad ? .landscapeRight : .portrait
     }
     
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
+        return UIDevice.current.agora_is_pad ? .landscapeRight : .portrait
     }
     
     public override func viewDidLoad() {
@@ -704,7 +704,7 @@ extension LoginViewController: RoomInfoCellDelegate {
 // MARK: - Creations
 private extension LoginViewController {
     func createViews() {
-        let isPad = (LoginConfig.device == .iPad)
+        let isPad = (UIDevice.current.agora_is_pad)
         if !isPad {
             let image = UIImage(named: LoginConfig.device == .iPhone_Small ? "title_bg_small" : "title_bg")
             topImageView.image = image
@@ -785,7 +785,7 @@ private extension LoginViewController {
     }
     
     func createConstraint() {
-        let isPad = (LoginConfig.device == .iPad)
+        let isPad = (UIDevice.current.agora_is_pad)
         if  !isPad {
             topImageView.mas_makeConstraints { make in
                 make?.left.top().right().equalTo()(0)

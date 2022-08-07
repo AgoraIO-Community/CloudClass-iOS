@@ -15,8 +15,7 @@ import AgoraUIBaseViews
 
 class DebugViewController: UIViewController {
     /**data**/
-    private var dataSourceList: [DataSourceType] = []
-    private var dataHandler = DebugDataHandler()
+    private var data: DebugDataHandler
     /**view**/
     private lazy var debugView = DebugView(frame: .zero)
     
@@ -25,28 +24,29 @@ class DebugViewController: UIViewController {
         super.init(nibName: nibNameOrNil,
                    bundle: nibBundleOrNil)
         
-        let language = dataHandler.getLaunchLanguage()
-        let region = dataHandler.getRegion()
-        let uiMode = dataHandler.getUIMode()
+        let language = data.getLaunchLanguage()
+        let region = data.getRegion()
+        let uiMode = data.getUIMode()
         
-        dataSourceList = [.roomName(.none),
-                          .userName(.none),
-                          .roomType(selected: .oneToOne,
-                                    list: DataSourceRoomType.allCases),
-                          .roleType(selected: .student,
-                                    list: DataSourceRoleType.allCases),
-                          .im(.easemob),
-                          .duration(.none),
-                          .encryptKey(.none),
-                          .encryptMode(.none),
-                          .startTime(.none),
-                          .delay(.none),
-                          .mediaAuth(.both),
-                          .uiMode(uiMode),
-                          .uiLanguage(language),
-                          .region(region),
-                          .environment(.pro)
-        ]
+        let defaultList: [DataSourceType] = [.roomName(.none),
+                                             .userName(.none),
+                                             .roomType(selected: .oneToOne,
+                                                       list: [.oneToOne, .small, .lecture, .vocational]),
+                                             .roleType(selected: .student,
+                                                       list: [.student, .teacher, .observer]),
+                                             .im(.easemob),
+                                             .duration(.none),
+                                             .encryptKey(.none),
+                                             .encryptMode(.none),
+                                             .startTime(.none),
+                                             .delay(.none),
+                                             .mediaAuth(.both),
+                                             .uiMode(uiMode),
+                                             .uiLanguage(language),
+                                             .region(region),
+                                             .environment(.pro)]
+        
+        data = DebugDataHandler(dataSourceList: defaultList)
     }
     
     required init?(coder: NSCoder) {
@@ -63,12 +63,50 @@ extension DebugViewController: DebugViewDelagate {
     }
     
     func didClickEnter() {
+        guard let info = data.getLaunchInfo() else {
+            return
+        }
+        let failureBlock: (Error) -> () = { (error) in
+            AgoraLoading.hide()
+            AgoraToast.toast(message: error.localizedDescription,
+                             type: .error)
+        }
         
+        let launchSuccessBlock: () -> () = {
+            AgoraLoading.hide()
+        }
+        
+        let tokenSuccessBlock: (TokenBuilder.ServerResp) -> () = { [weak self] (response) in
+            guard let `self` = self else {
+                return
+            }
+            
+            // UI mode
+            agora_ui_mode = info.uiMode
+            agora_ui_language = info.uiLanguage.string
+            
+            let launchConfig = self.data.getLaunchConfig(debugInfo: info,
+                                                         appId: response.appId,
+                                                         token: response.token,
+                                                         userId: response.userId)
+            
+            if launchConfig.roomType == .vocational { // 职教入口
+                AgoraClassroomSDK.vocationalLaunch(launchConfig,
+                                                   service: info.serviceType,
+                                                   success: launchSuccessBlock,
+                                                   failure: failureBlock)
+            } else { // 灵动课堂入口
+                AgoraClassroomSDK.launch(launchConfig,
+                                         success: launchSuccessBlock,
+                                         failure: failureBlock)
+            }
+        }
+        data.requestToken(roomId: info.roomId,
+                          userId: info.userId,
+                          userRole: info.roleType.rawValue,
+                          success: tokenSuccessBlock,
+                          failure: failureBlock)
     }
-}
-
-private extension DebugViewController {
-    
 }
 
 // MARK: - AgoraUIContentContainer
@@ -91,10 +129,14 @@ extension DebugViewController: AgoraUIContentContainer {
                              errorImage: errorImage)
         
         debugView.delegate = self
-        debugView.tableView.dataSource = self
-        debugView.tableView.delegate = self
-        debugView.optionsView.delegate = self
+        
+        let appVersion = "_" + AgoraClassroomSDK.version()
+        let loginVersion = "Login_version".ag_localized() + appVersion
+        debugView.bottomLabel.text = loginVersion
         view.addSubview(debugView)
+        
+        debugView.dataSource = data.makeViewModels()
+        debugView.reloadList()
     }
     
     func initViewFrame() {
@@ -107,7 +149,6 @@ extension DebugViewController: AgoraUIContentContainer {
         view.backgroundColor = .white
     }
 }
-
 
 // MARK: - override
 extension DebugViewController {
@@ -125,6 +166,10 @@ extension DebugViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>,

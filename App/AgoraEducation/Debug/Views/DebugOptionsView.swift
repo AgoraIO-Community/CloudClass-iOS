@@ -8,17 +8,14 @@
 
 import AgoraUIBaseViews
 
-protocol DebugOptionsViewDelegate: NSObjectProtocol {
-    func didSelect(at index: Int, value: String)
-}
-
-typealias OptionSelectedAction = (() -> Void)
+typealias OptionSelectedAction = ((Int) -> Void)
 
 class DebugOptionsView: UIView {
-    weak var delegate: DebugOptionsViewDelegate?
     private lazy var listView = UITableView(frame: .zero,
                                             style: .plain)
-    private var data = [(String, OptionSelectedAction)]()
+    private var data = [(text: String,
+                         action: OptionSelectedAction)]()
+    
     private var selectedIndex = -1
     
     func updateData(data: [(String, OptionSelectedAction)],
@@ -45,15 +42,23 @@ class DebugOptionsView: UIView {
 extension DebugOptionsView: UITableViewDataSource,
                             UITableViewDelegate {
     // MARK: UITableViewDataSource
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+    func tableView(_ tableView: UITableView,
+                   numberOfRowsInSection section: Int) -> Int {
+        return data.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: DebugOptionCell.id) as! DebugOptionCell
+        return cell
     }
     
-    
+    func tableView(_ tableView: UITableView,
+                   didSelectRowAt indexPath: IndexPath) {
+        let model = data[indexPath.row]
+        let action = model.action
+        action(indexPath.row)
+    }
 }
     
 // MARK: - AgoraUIContentContainer

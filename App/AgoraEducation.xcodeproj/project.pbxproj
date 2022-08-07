@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1550F0C1289E167D00F6B80F /* DebugInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1550F0C0289E167D00F6B80F /* DebugInfoCell.swift */; };
 		15AFBEA12854996B003EBC0C /* AgreementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15AFBEA02854996B003EBC0C /* AgreementView.swift */; };
 		1A44BE7522BF863000766274 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A44BE5722BF863000766274 /* Assets.xcassets */; };
 		1A44BE7A22BF863000766274 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A44BE5E22BF863000766274 /* main.m */; };
@@ -75,6 +76,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1550F0C0289E167D00F6B80F /* DebugInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugInfoCell.swift; sourceTree = "<group>"; };
 		15AFBEA02854996B003EBC0C /* AgreementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgreementView.swift; sourceTree = "<group>"; };
 		1A44BE3522BF863000766274 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1A44BE5722BF863000766274 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 			children = (
 				681528A7289CF4C500EFD6F4 /* DebugView.swift */,
 				681528AC289D0ED200EFD6F4 /* DebugOptionsView.swift */,
+				1550F0C0289E167D00F6B80F /* DebugInfoCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -665,6 +668,7 @@
 				681528A8289CF4C500EFD6F4 /* DebugView.swift in Sources */,
 				AB4F69DF286DC5F30012E6B3 /* FcrCheckBoxCell.swift in Sources */,
 				AB4F69D7286DBE490012E6B3 /* FcrRegionViewController.swift in Sources */,
+				1550F0C1289E167D00F6B80F /* DebugInfoCell.swift in Sources */,
 				681528A4289CF0FB00EFD6F4 /* DebugViewController.swift in Sources */,
 				ABB1D15D287C00A600395A13 /* LoginWebViewController.swift in Sources */,
 				AB2AAFC5288A4BEE009D015C /* FcrOutsideClassBaseController.swift in Sources */,
@@ -805,7 +809,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -860,7 +864,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1114,7 +1118,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1268,7 +1272,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1422,7 +1426,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1576,7 +1580,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

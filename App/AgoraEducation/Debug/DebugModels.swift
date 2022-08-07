@@ -13,46 +13,107 @@ import AgoraClassroomSDK
 #endif
 import Foundation
 
-protocol DataSourceOptionProtocol {
-    var viewText: String {get}
-}
-
 enum DataSourceRoomName {
     case none
     case value(String)
+    
+    var viewText: String? {
+        switch self {
+        case .none:             return nil
+        case .value(let value): return value
+        }
+    }
 }
 
 enum DataSourceUserName {
     case none
     case value(String)
+    
+    var viewText: String? {
+        switch self {
+        case .none:             return nil
+        case .value(let value): return value
+        }
+    }
 }
 
-enum DataSourceRoomType: DataSourceOptionProtocol, CaseIterable {
+enum DataSourceStartTime {
+    case none
+    case value(Int64)
+    
+    var viewText: String? {
+        switch self {
+        case .none:             return nil
+        case .value(let value): return "\(value)"
+        }
+    }
+}
+
+enum DataSourceDuration {
+    case none
+    case value(Int64)
+    
+    var viewText: String? {
+        switch self {
+        case .none:             return nil
+        case .value(let value): return "\(value)"
+        }
+    }
+}
+
+enum DataSourceDelay {
+    case none
+    case value(Int64)
+    
+    var viewText: String? {
+        switch self {
+        case .none:             return nil
+        case .value(let value): return "\(value)"
+        }
+    }
+}
+
+enum DataSourceEncryptKey {
+    case none
+    case value(String)
+    
+    var viewText: String? {
+        switch self {
+        case .none:             return nil
+        case .value(let value): return "\(value)"
+        }
+    }
+}
+
+enum DataSourceRoomType: CaseIterable {
+    case unselected
     case oneToOne
     case small
     case lecture
     case vocational
     
-    var viewText: String {
+    var viewText: String? {
         switch self {
         case .oneToOne:     return "debug_onetoone".ag_localized()
         case .small:        return "debug_small".ag_localized()
         case .lecture:      return "debug_lecture".ag_localized()
         case .vocational:   return "debug_vocational_lecture".ag_localized()
+        case .unselected:   return nil
         }
     }
     
-    var edu: AgoraEduRoomType {
+    var edu: AgoraEduRoomType? {
         switch self {
         case .oneToOne:     return .oneToOne
         case .small:        return .small
         case .lecture:      return .lecture
         case .vocational:   return .vocational
+        case .unselected:   return nil
         }
     }
 }
 
-enum DataSourceServiceType: DataSourceOptionProtocol, CaseIterable {
+enum DataSourceServiceType: CaseIterable {
     case livePremium
     case liveStandard
     case cdn
@@ -83,29 +144,32 @@ enum DataSourceServiceType: DataSourceOptionProtocol, CaseIterable {
     }
 }
 
-enum DataSourceRoleType: DataSourceOptionProtocol, CaseIterable {
+enum DataSourceRoleType: CaseIterable {
+    case unselected
     case teacher
     case student
     case observer
     
-    var viewText: String {
+    var viewText: String? {
         switch self {
         case .teacher:      return "debug_role_teacher".ag_localized()
         case .student:      return "debug_role_student".ag_localized()
         case .observer:     return "debug_role_observer".ag_localized()
+        case .unselected:   return nil
         }
     }
     
-    var edu: AgoraEduUserRole {
+    var edu: AgoraEduUserRole? {
         switch self {
         case .teacher:      return .teacher
         case .student:      return .student
         case .observer:     return .observer
+        case .unselected:   return nil
         }
     }
 }
 
-enum DataSourceIMType: DataSourceOptionProtocol {
+enum DataSourceIMType: CaseIterable {
     case rtm
     case easemob
     
@@ -124,27 +188,7 @@ enum DataSourceIMType: DataSourceOptionProtocol {
     }
 }
 
-enum DataSourceStartTime {
-    case none
-    case value(Int64)
-}
-
-enum DataSourceDuration {
-    case none
-    case value(Int64)
-}
-
-enum DataSourceDelay {
-    case none
-    case value(Int64)
-}
-
-enum DataSourceEncryptKey {
-    case none
-    case value(String)
-}
-
-enum DataSourceEncryptMode: DataSourceOptionProtocol {
+enum DataSourceEncryptMode: CaseIterable {
     case none
     case SM4128ECB
     case AES128GCM2
@@ -169,7 +213,7 @@ enum DataSourceEncryptMode: DataSourceOptionProtocol {
     }
 }
 
-enum DataSourceMediaAuth: DataSourceOptionProtocol {
+enum DataSourceMediaAuth: CaseIterable {
     case none
     case audio
     case video
@@ -194,7 +238,7 @@ enum DataSourceMediaAuth: DataSourceOptionProtocol {
     }
 }
 
-enum DataSourceUIMode: Int, DataSourceOptionProtocol {
+enum DataSourceUIMode: Int, CaseIterable {
     case light = 0
     case dark = 1
     
@@ -213,7 +257,7 @@ enum DataSourceUIMode: Int, DataSourceOptionProtocol {
     }
 }
 
-enum DataSourceUILanguage: DataSourceOptionProtocol {
+enum DataSourceUILanguage: CaseIterable {
     case zh_cn
     case en
     case zh_tw
@@ -235,7 +279,7 @@ enum DataSourceUILanguage: DataSourceOptionProtocol {
     }
 }
 
-enum DataSourceRegion:String, DataSourceOptionProtocol {
+enum DataSourceRegion:String, CaseIterable {
     case CN
     case NA
     case EU
@@ -255,7 +299,7 @@ enum DataSourceRegion:String, DataSourceOptionProtocol {
     }
 }
 
-enum DataSourceEnvironment: DataSourceOptionProtocol {
+enum DataSourceEnvironment: CaseIterable {
     case dev
     case pre
     case pro
@@ -278,7 +322,7 @@ enum DataSourceEnvironment: DataSourceOptionProtocol {
 }
 
 // MARK: - main
-enum DataSourceType {
+enum DataSourceType: Equatable {
     case roomName(DataSourceRoomName)
     case userName(DataSourceUserName)
     case roomType(selected: DataSourceRoomType, list:[DataSourceRoomType])
@@ -296,7 +340,29 @@ enum DataSourceType {
     case region(DataSourceRegion)
     case environment(DataSourceEnvironment)
     
-    // TODO: language text
+    static func == (lhs: DataSourceType,
+                    rhs: DataSourceType) -> Bool {
+        switch (lhs,rhs) {
+        case (.roomName, .roomName):        return true
+        case (.userName, .userName):        return true
+        case (.roomType, .roomType):        return true
+        case (.serviceType, .serviceType):  return true
+        case (.roleType, .roleType):        return true
+        case (.im, .im):                    return true
+        case (.startTime, .startTime):      return true
+        case (.duration, .duration):        return true
+        case (.delay, .delay):              return true
+        case (.encryptKey, .encryptKey):    return true
+        case (.encryptMode, .encryptMode):  return true
+        case (.mediaAuth, .mediaAuth):      return true
+        case (.uiMode, .uiMode):            return true
+        case (.uiLanguage, .uiLanguage):    return true
+        case (.region, .region):            return true
+        case (.environment, .environment):  return true
+        default:                            return false
+        }
+    }
+    
     var title: String {
         switch self {
         case .roomName:      return "debug_room_title".ag_localized()
@@ -343,12 +409,13 @@ enum DataSourceType {
 // MARK: - view models
 enum DebugInfoCellType {
     case text(placeholder: String,
-              text: String?)
-    case option(options: [String],
+              text: String?,
+              action: CellTextEndEditingAction)
+    case option(options: [(String, OptionSelectedAction)],
                 placeholder: String,
-                text: String?)
-    case time
-    case show(placeholder: String?)
+                text: String?,
+                selectedIndex: Int)
+    case time(action: CellTimePickedAction)
 }
 
 struct DebugInfoCellModel {
@@ -358,15 +425,17 @@ struct DebugInfoCellModel {
 
 // MARK: - launch
 /** 入参模型*/
-struct LaunchInfoModel {
+struct DebugLaunchInfo {
     var roomName: String
+    var roomId: String
     var userName: String
-    var roomStyle: AgoraEduRoomType
+    var userId: String
+    var roomType: AgoraEduRoomType
     var serviceType: AgoraEduServiceType
     var roleType: AgoraEduUserRole
     var im: IMType
-    var duration: Int?
-    var delay: Int?
+    var duration: NSNumber?
+    var delay: NSNumber?
     var encryptKey: String?
     var encryptMode: AgoraEduMediaEncryptionMode
     
@@ -752,5 +821,21 @@ struct LaunchInfoModel {
             }
             """
         return [publicJson1, publicJson2]
+    }
+}
+
+extension FcrSurpportLanguage {
+    var string: String? {
+        switch self {
+        case .zh_cn: return "zh-Hans"
+        case .en:    return "en"
+        default:     return nil
+        }
+    }
+}
+
+extension Array where Element == DataSourceType {
+    func indexOfType(_ type: DataSourceType) -> Int? {
+        return self.firstIndex(where: {$0 == type})
     }
 }

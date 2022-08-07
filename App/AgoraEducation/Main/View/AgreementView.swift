@@ -56,7 +56,7 @@ class AgreementView: UIView {
         if let width = checkLabel.text?.agora_size(font: checkLabel.font).width {
             checkLabelWidth = width
         }
-        let isPad = (LoginConfig.device == .iPad)
+        let isPad = (UIDevice.current.agora_is_pad)
         let offset: CGFloat = 5
         let checkButtonWidth: CGFloat = isPad ? 14 : 12
         
