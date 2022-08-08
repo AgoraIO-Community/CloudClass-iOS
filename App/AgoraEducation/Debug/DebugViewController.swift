@@ -48,6 +48,9 @@ extension DebugViewController: DebugViewDelagate {
         guard let info = data.getLaunchInfo() else {
             return
         }
+        
+        AgoraLoading.loading()
+        
         let failureBlock: (Error) -> () = { (error) in
             AgoraLoading.hide()
             AgoraToast.toast(message: error.localizedDescription,

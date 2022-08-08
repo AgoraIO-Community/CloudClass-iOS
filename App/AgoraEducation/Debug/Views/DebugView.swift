@@ -42,6 +42,7 @@ class DebugView: UIView {
     private var currentFocusInfoIndex = -1
     private var currentOptions = [(text: String,
                                    action: OptionSelectedAction)]()
+    private var currentSelectedOptionIndex = -1
     
     func updateCellModel(model: DebugInfoCellModel,
                          at index: Int) {
@@ -108,11 +109,8 @@ private extension DebugView {
     }
     
     func showOptions(cell: DebugInfoCell,
-                     options: [(String, OptionSelectedAction)],
-                     selectedIndex: Int) {
+                     options: [(String, OptionSelectedAction)]) {
         optionsView.reloadData()
-//        optionsView.updateData(data: options,
-//                               selectedIndex: selectedIndex)
         optionsView.agora_visible = true
         bringSubviewToFront(optionsView)
         
@@ -155,7 +153,16 @@ private extension DebugView {
     }
 }
 
-extension DebugView: UITableViewDelegate,UITableViewDataSource {
+// MARK: - View delegate
+extension DebugView: DebugInfoCellDelegate,
+                     UITableViewDelegate,
+                     UITableViewDataSource {
+    // MARK: DebugInfoCellDelegate
+    func infoCellDidBeginEditing() {
+        hideOptions()
+    }
+    
+    // MARK: UITableViewDataSource
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
         if tableView == infoListView {
@@ -170,10 +177,12 @@ extension DebugView: UITableViewDelegate,UITableViewDataSource {
         if let cell = tableView.dequeueReusableCell(withIdentifier: DebugInfoCell.id) as? DebugInfoCell {
             let model = dataSource[indexPath.row]
             cell.model = model
+            cell.delegate = self
             return cell
         } else if let cell = tableView.dequeueReusableCell(withIdentifier: DebugOptionCell.id) as? DebugOptionCell {
             let tuple = currentOptions[indexPath.row]
             cell.infoLabel.text = tuple.text
+            cell.isHighlight = (currentSelectedOptionIndex == indexPath.row)
             return cell
         }
         return UITableViewCell()
@@ -182,18 +191,21 @@ extension DebugView: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
         if tableView == infoListView,
-           case DebugInfoCellType.option(let options, _, _, let selectedIndex) = dataSource[indexPath.row].type,
-           !optionsView.agora_visible {
+           case DebugInfoCellType.option(let options, _, _, let selectedIndex) = dataSource[indexPath.row].type {
             
-            currentOptions = options
-            currentFocusInfoIndex = indexPath.row
-            
-            hideKeyboard()
-            
-            let cell = tableView.cellForRow(at: indexPath) as! DebugInfoCell
-            showOptions(cell: cell,
-                        options: options,
-                        selectedIndex: selectedIndex)
+            if !optionsView.agora_visible ||
+                currentFocusInfoIndex != indexPath.row {
+                currentSelectedOptionIndex = selectedIndex
+                currentOptions = options
+                currentFocusInfoIndex = indexPath.row
+                
+                hideKeyboard()
+                
+                let cell = tableView.cellForRow(at: indexPath) as! DebugInfoCell
+                showOptions(cell: cell,
+                            options: options)
+            }
+
             return
         }
         
@@ -251,7 +263,12 @@ extension DebugView: AgoraUIContentContainer {
                            forCellReuseIdentifier:DebugInfoCell.id)
         addSubview(infoListView)
         
-        
+        let tableHeaderFooter = UIView(frame:CGRect(x: 0,
+                                                    y: 0,
+                                                    width: optionsView.width,
+                                                    height: 11))
+        optionsView.tableHeaderView = tableHeaderFooter
+        optionsView.tableFooterView = tableHeaderFooter
         optionsView.delegate = self
         optionsView.dataSource = self
         
@@ -352,10 +369,8 @@ extension DebugView: AgoraUIContentContainer {
         bottomLabel.font = UIFont.systemFont(ofSize: 12)
         
         optionsView.backgroundColor = UIColor.white
-        optionsView.layer.cornerRadius = 8
-        optionsView.layer.shadowColor = UIColor(hex: 0x2F4192, transparency: 0.15)?.cgColor
-        optionsView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        optionsView.layer.shadowOpacity = 1
-        optionsView.layer.shadowRadius = 6
+        optionsView.clipsToBounds = true
+        optionsView.layer.borderWidth = 1
+        optionsView.layer.borderColor = UIColor(hex: 0xD2D2E2)?.cgColor
     }
 }

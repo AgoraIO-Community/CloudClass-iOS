@@ -94,7 +94,7 @@ extension DebugInfoCell: UITextFieldDelegate {
 private extension DebugInfoCell {
     @objc func onTimeChanged(_ datePicker : UIDatePicker) {
         guard let type = model?.type,
-              case DebugInfoCellType.time(let action) = type else {
+              case DebugInfoCellType.time(_ ,let action) = type else {
             return
         }
         let timeInterval = Int64(datePicker.date.timeIntervalSince1970 * 1000)
@@ -111,7 +111,7 @@ private extension DebugInfoCell {
         case .text(let placeholder, let text, let warning,_):
             textField.text = text
             textField.placeholder = placeholder
-            
+            textField.isUserInteractionEnabled = true
             textWarningLabel.agora_visible = warning
             lineLayer.backgroundColor = warning ? UIColor(hex: 0xF04C36)!.cgColor: UIColor(hex: 0xE3E3EC)!.cgColor
             
@@ -123,11 +123,16 @@ private extension DebugInfoCell {
             textField.placeholder = placeholder
             textField.isUserInteractionEnabled = false
             
+            lineLayer.backgroundColor = UIColor(hex: 0xE3E3EC)!.cgColor
             textWarningLabel.agora_visible = false
             textField.agora_visible = true
             indicatorView.agora_visible = true
             timePickerView.agora_visible = false
-        case .time:
+        case .time(let timeInterval, _):
+            lineLayer.backgroundColor = UIColor(hex: 0xE3E3EC)!.cgColor
+            let date = Date.init(timeIntervalSince1970: timeInterval / 1000)
+            timePickerView.setDate(date,
+                                   animated: true)
             textWarningLabel.agora_visible = false
             textField.agora_visible = false
             indicatorView.agora_visible = false
@@ -206,6 +211,15 @@ extension DebugInfoCell: AgoraUIContentContainer {
 class DebugOptionCell: UITableViewCell {
     static let id = "DebugOptionCell"
     var infoLabel = UILabel()
+    var isHighlight: Bool = false {
+        willSet {
+            if newValue {
+                infoLabel.textColor = UIColor(hex: 0x357BF6)
+            } else {
+                infoLabel.textColor = UIColor(hex: 0x191919)
+            }
+        }
+    }
 
     override init(style: UITableViewCell.CellStyle,
                   reuseIdentifier: String?) {
@@ -214,7 +228,8 @@ class DebugOptionCell: UITableViewCell {
 
         selectionStyle = .none
         infoLabel.font = UIFont.systemFont(ofSize: 14)
-        infoLabel.textColor = UIColor(hexString: "#191919")
+        
+        infoLabel.textColor = UIColor(hex: 0x191919)
         infoLabel.textAlignment = .center
         contentView.addSubview(infoLabel)
         

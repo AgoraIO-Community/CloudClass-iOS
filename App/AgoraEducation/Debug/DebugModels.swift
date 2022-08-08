@@ -42,10 +42,10 @@ enum DataSourceStartTime {
     case none
     case value(Int64)
     
-    var viewText: String {
+    var timeInterval: TimeInterval {
         switch self {
-        case .none:             return ""
-        case .value(let value): return "\(value)"
+        case .none:             return Date().timeIntervalSince1970
+        case .value(let value): return TimeInterval(value)
         }
     }
 }
@@ -265,13 +265,11 @@ enum DataSourceUIMode: Int, CaseIterable {
 enum DataSourceUILanguage: CaseIterable {
     case zh_cn
     case en
-    case zh_tw
     
     var viewText: String {
         switch self {
         case .zh_cn:    return "debug_uiLanguage_zh_cn".ag_localized()
         case .en:       return "debug_uiLanguage_en".ag_localized()
-        case .zh_tw:    return "debug_uiLanguage_zh_tw".ag_localized()
         }
     }
     
@@ -279,7 +277,6 @@ enum DataSourceUILanguage: CaseIterable {
         switch self {
         case .zh_cn:    return .zh_cn
         case .en:       return .en
-        case .zh_tw:    return .zh_tw
         }
     }
 }
@@ -424,7 +421,8 @@ enum DebugInfoCellType {
                 placeholder: String,
                 text: String?,
                 selectedIndex: Int)
-    case time(action: CellTimePickedAction)
+    case time(timeInterval: TimeInterval,
+              action: CellTimePickedAction)
 }
 
 struct DebugInfoCellModel {

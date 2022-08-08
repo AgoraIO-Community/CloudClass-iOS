@@ -77,7 +77,7 @@ extension DebugDataHandler {
         var uiMode: AgoraUIMode?
         var uiLanguage: FcrSurpportLanguage?
         var environment: FcrEnvironment.Environment?
-
+        
         for item in dataSourceList {
             switch item {
             case .roomName(let dataSourceRoomName):
@@ -145,7 +145,7 @@ extension DebugDataHandler {
            encryptKey == nil {
             return nil
         }
-
+        
         let userId = "\(userName.md5())\(roleType.rawValue)"
         let roomId = "\(roomName.md5())\(roomType.rawValue)"
         return DebugLaunchInfo(roomName: roomName,
@@ -306,9 +306,8 @@ private extension DebugDataHandler {
                          action: { [weak self] value in
                 let roomName: DataSourceRoomName = (value == nil) ? .none : .value(value!)
                 let newValue = DataSourceType.roomName(roomName)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             })
         case .userName(let dataSourceUserName):
             var textWarning = false
@@ -322,18 +321,17 @@ private extension DebugDataHandler {
                          action: { [weak self] value in
                 let userName: DataSourceUserName = (value == nil) ? .none : .value(value!)
                 let newValue = DataSourceType.userName(userName)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             })
-        case .startTime(_):
-            type = .time(action: { [weak self] value in
+        case .startTime(let dataSourceStartTime):
+            type = .time(timeInterval: dataSourceStartTime.timeInterval,
+                         action: { [weak self] value in
                 let startTime: DataSourceStartTime = .value(value)
                 let newValue = DataSourceType.startTime(startTime)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             })
         case .duration(let dataSourceDuration):
             type = .text(placeholder: placeholder,
@@ -341,10 +339,9 @@ private extension DebugDataHandler {
                          action: { [weak self] value in
                 let userName: DataSourceUserName = (value == nil) ? .none : .value(value!)
                 let newValue = DataSourceType.userName(userName)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             })
         case .encryptKey(let dataSourceEncryptKey):
             type = .text(placeholder: placeholder,
@@ -352,9 +349,8 @@ private extension DebugDataHandler {
                          action: { [weak self] value in
                 let encryptKey: DataSourceEncryptKey = (value == nil) ? .none : .value(value!)
                 let newValue = DataSourceType.encryptKey(encryptKey)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             })
             
         case .roomType(let selected):
@@ -362,9 +358,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let roomType: DataSourceRoomType = list[index]
                 let newValue = DataSourceType.roomType(roomType)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
@@ -378,9 +373,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let serviceType: DataSourceServiceType = list[index]
                 let newValue = DataSourceType.serviceType(serviceType)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -393,9 +387,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let roleType: DataSourceRoleType = list[index]
                 let newValue = DataSourceType.roleType(roleType)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -408,9 +401,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let im: DataSourceIMType = list[index]
                 let newValue = DataSourceType.im(im)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -423,9 +415,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let encryptMode: DataSourceEncryptMode = list[index]
                 let newValue = DataSourceType.encryptMode(encryptMode)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -438,9 +429,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let mediaAuth: DataSourceMediaAuth = list[index]
                 let newValue = DataSourceType.mediaAuth(mediaAuth)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -453,9 +443,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let uiMode: DataSourceUIMode = list[index]
                 let newValue = DataSourceType.uiMode(uiMode)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -468,9 +457,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let uiLanguage: DataSourceUILanguage = list[index]
                 let newValue = DataSourceType.uiLanguage(uiLanguage)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -483,9 +471,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let region: DataSourceRegion = list[index]
                 let newValue = DataSourceType.region(region)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -498,9 +485,8 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let environment: DataSourceEnvironment = list[index]
                 let newValue = DataSourceType.environment(environment)
-                self?.dataSourceList[dataTypeIndex] = newValue
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -515,8 +501,9 @@ private extension DebugDataHandler {
         return model
     }
     
-    func didDataSourceChanged(at index: Int,
-                              with dataSource: DataSourceType) {
+    func updateDataSource(at index: Int,
+                          with dataSource: DataSourceType) {
+        dataSourceList[index] = dataSource
         let newModel = makeCellModel(dataSource,
                                      dataTypeIndex: index)
         delegate?.onDataSourceChanged(index: index,
