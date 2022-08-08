@@ -158,21 +158,6 @@ extension DebugViewController {
         updateViewProperties()
     }
     
-    public override func touchesBegan(_ touches: Set<UITouch>,
-                                      with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        
-        UIApplication.shared.keyWindow?.endEditing(true)
-    }
-    
-    // TODO: temp
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        navigationController?.setNavigationBarHidden(true,
-                                                     animated: true)
-    }
-    
     private func initData() {
         let language = data.getLaunchLanguage()
         let region = data.getRegion()
