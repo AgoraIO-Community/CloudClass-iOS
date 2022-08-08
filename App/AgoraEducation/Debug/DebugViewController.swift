@@ -184,7 +184,6 @@ extension DebugViewController {
                                              .encryptKey(.none),
                                              .encryptMode(.none),
                                              .startTime(.none),
-                                             .delay(.none),
                                              .mediaAuth(.both),
                                              .uiMode(uiMode),
                                              .uiLanguage(language),

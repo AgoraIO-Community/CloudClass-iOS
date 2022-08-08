@@ -67,7 +67,6 @@ extension DebugDataHandler {
         var roleType: AgoraEduUserRole?
         var im: IMType?
         var duration: NSNumber?
-        var delay: NSNumber?
         var encryptKey: String?
         var encryptMode: AgoraEduMediaEncryptionMode?
         
@@ -108,10 +107,6 @@ extension DebugDataHandler {
             case .duration(let dataSourceDuration):
                 if case .value(let value) = dataSourceDuration {
                     duration = NSNumber(value: value)
-                }
-            case .delay(let dataSourceDelay):
-                if case .value(let value) = dataSourceDelay {
-                    delay = NSNumber(value: value)
                 }
             case .encryptKey(let dataSourceEncryptKey):
                 if case .value(let value) = dataSourceEncryptKey {
@@ -162,7 +157,6 @@ extension DebugDataHandler {
                                roleType: roleType,
                                im: im,
                                duration: duration,
-                               delay: delay,
                                encryptKey: encryptKey,
                                encryptMode: encryptMode,
                                startTime: startTime,
@@ -349,20 +343,6 @@ private extension DebugDataHandler {
                 let newValue = DataSourceType.userName(userName)
                 self?.dataSourceList[dataTypeIndex] = newValue
                 
-                self?.didDataSourceChanged(at: dataTypeIndex,
-                                           with: newValue)
-            })
-        case .delay(let dataSourceDelay):
-            type = .text(placeholder: placeholder,
-                         text: dataSourceDelay.viewText,
-                         action: { [weak self] value in
-                var delay = DataSourceDelay.none
-                if let string = value,
-                   let delayInt = Int64(string) {
-                    delay = .value(delayInt)
-                }
-                let newValue = DataSourceType.delay(delay)
-                self?.dataSourceList[dataTypeIndex] = newValue
                 self?.didDataSourceChanged(at: dataTypeIndex,
                                            with: newValue)
             })

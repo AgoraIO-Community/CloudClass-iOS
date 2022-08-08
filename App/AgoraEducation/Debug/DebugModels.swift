@@ -62,18 +62,6 @@ enum DataSourceDuration {
     }
 }
 
-enum DataSourceDelay {
-    case none
-    case value(Int64)
-    
-    var viewText: String {
-        switch self {
-        case .none:             return ""
-        case .value(let value): return "\(value)"
-        }
-    }
-}
-
 enum DataSourceEncryptKey {
     case none
     case value(String)
@@ -348,7 +336,6 @@ enum DataSourceType: Equatable {
     case im(DataSourceIMType)
     case startTime(DataSourceStartTime)
     case duration(DataSourceDuration)
-    case delay(DataSourceDelay)
     case encryptKey(DataSourceEncryptKey)
     case encryptMode(DataSourceEncryptMode)
     case mediaAuth(DataSourceMediaAuth)
@@ -358,7 +345,7 @@ enum DataSourceType: Equatable {
     case environment(DataSourceEnvironment)
     
     enum Key {
-        case roomName, userName, roomType, serviceType, roleType, im, startTime, duration, delay, encryptKey, encryptMode, mediaAuth, uiMode, uiLanguage, region, environment
+        case roomName, userName, roomType, serviceType, roleType, im, startTime, duration, encryptKey, encryptMode, mediaAuth, uiMode, uiLanguage, region, environment
     }
     
     var inKey: Key {
@@ -371,7 +358,6 @@ enum DataSourceType: Equatable {
         case .im:           return .im
         case .startTime:    return .startTime
         case .duration:     return .duration
-        case .delay:        return .delay
         case .encryptKey:   return .encryptKey
         case .encryptMode:  return .encryptMode
         case .mediaAuth:    return .mediaAuth
@@ -397,7 +383,6 @@ enum DataSourceType: Equatable {
         case .im:            return "IM"
         case .startTime:     return "debug_startTime_title".ag_localized()
         case .duration:      return "debug_duration_title".ag_localized()
-        case .delay:         return "debug_delay_title".ag_localized()
         case .encryptKey:    return "debug_encryptKey_title".ag_localized()
         case .encryptMode:   return "debug_encryption_mode_title".ag_localized()
         case .mediaAuth:     return "debug_authMedia_title".ag_localized()
@@ -418,7 +403,6 @@ enum DataSourceType: Equatable {
         case .im:            return "debug_service_type_holder".ag_localized()
         case .startTime:     return ""
         case .duration:      return "debug_duration_holder".ag_localized()
-        case .delay:         return "debug_delay_holder".ag_localized()
         case .encryptKey:    return "debug_encryptKey_holder".ag_localized()
         case .encryptMode:   return "debug_encryption_mode_holder".ag_localized()
         case .mediaAuth:     return "debug_authMedia_holder".ag_localized()
@@ -460,7 +444,6 @@ struct DebugLaunchInfo {
     var roleType: AgoraEduUserRole
     var im: IMType
     var duration: NSNumber?
-    var delay: NSNumber?
     var encryptKey: String?
     var encryptMode: AgoraEduMediaEncryptionMode
     

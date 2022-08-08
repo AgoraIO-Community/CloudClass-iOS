@@ -31,8 +31,6 @@ enum RoomInfoItemType: Int, CaseIterable {
     case startTime
     // 时长
     case duration
-    // 拖堂时长
-    case delay
     // 密钥
     case encryptKey
     // 模式
