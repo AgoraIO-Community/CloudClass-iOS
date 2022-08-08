@@ -15,44 +15,26 @@ import AgoraUIBaseViews
 
 class DebugViewController: UIViewController {
     /**data**/
-    private var data: DebugDataHandler
+    private lazy var data = DebugDataHandler(delegate: self)
     /**view**/
     private lazy var debugView = DebugView(frame: .zero)
-    
-    override init(nibName nibNameOrNil: String?,
-                  bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil,
-                   bundle: nibBundleOrNil)
-        
-        let language = data.getLaunchLanguage()
-        let region = data.getRegion()
-        let uiMode = data.getUIMode()
-        
-        let defaultList: [DataSourceType] = [.roomName(.none),
-                                             .userName(.none),
-                                             .roomType(selected: .oneToOne,
-                                                       list: [.oneToOne, .small, .lecture, .vocational]),
-                                             .roleType(selected: .student,
-                                                       list: [.student, .teacher, .observer]),
-                                             .im(.easemob),
-                                             .duration(.none),
-                                             .encryptKey(.none),
-                                             .encryptMode(.none),
-                                             .startTime(.none),
-                                             .delay(.none),
-                                             .mediaAuth(.both),
-                                             .uiMode(uiMode),
-                                             .uiLanguage(language),
-                                             .region(region),
-                                             .environment(.pro)]
-        
-        data = DebugDataHandler(dataSourceList: defaultList)
+}
+
+// MARK: - Data Delagate
+extension DebugViewController: DebugDataHandlerDelegate {
+    func onDataSourceChanged(index: Int,
+                             typeKey: DataSourceType.Key,
+                             newCellModel: DebugInfoCellModel) {
+        debugView.updateCellModel(model: newCellModel,
+                                  at: index)
+        debugView.reloadList([index])
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    func onDataSourceValid(_ valid: Bool) {
+        debugView.updateEnterEnabled(valid)
     }
 }
+
 // MARK: - View Delagate
 extension DebugViewController: DebugViewDelagate {
     // MARK: DebugViewDelagate
@@ -135,7 +117,7 @@ extension DebugViewController: AgoraUIContentContainer {
         debugView.bottomLabel.text = loginVersion
         view.addSubview(debugView)
         
-        debugView.dataSource = data.makeViewModels()
+        debugView.dataSource = data.cellModelList()
         debugView.reloadList()
     }
     
@@ -167,6 +149,7 @@ extension DebugViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        initData()
         initViews()
         initViewFrame()
         updateViewProperties()
@@ -185,5 +168,29 @@ extension DebugViewController {
         
         navigationController?.setNavigationBarHidden(true,
                                                      animated: true)
+    }
+    
+    private func initData() {
+        let language = data.getLaunchLanguage()
+        let region = data.getRegion()
+        let uiMode = data.getUIMode()
+        
+        let defaultList: [DataSourceType] = [.roomName(.none),
+                                             .userName(.none),
+                                             .roomType(.unselected),
+                                             .roleType(.unselected),
+                                             .im(.easemob),
+                                             .duration(.none),
+                                             .encryptKey(.none),
+                                             .encryptMode(.none),
+                                             .startTime(.none),
+                                             .delay(.none),
+                                             .mediaAuth(.both),
+                                             .uiMode(uiMode),
+                                             .uiLanguage(language),
+                                             .region(region),
+                                             .environment(.pro)]
+        
+        data.updateDataSourceList(defaultList)
     }
 }

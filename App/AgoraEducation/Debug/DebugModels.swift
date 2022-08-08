@@ -13,25 +13,26 @@ import AgoraClassroomSDK
 #endif
 import Foundation
 
-enum DataSourceRoomName {
+// text
+enum DataSourceRoomName: Equatable {
     case none
     case value(String)
     
-    var viewText: String? {
+    var viewText: String {
         switch self {
-        case .none:             return nil
+        case .none:             return ""
         case .value(let value): return value
         }
     }
 }
 
-enum DataSourceUserName {
+enum DataSourceUserName: Equatable {
     case none
     case value(String)
     
-    var viewText: String? {
+    var viewText: String {
         switch self {
-        case .none:             return nil
+        case .none:             return ""
         case .value(let value): return value
         }
     }
@@ -41,9 +42,9 @@ enum DataSourceStartTime {
     case none
     case value(Int64)
     
-    var viewText: String? {
+    var viewText: String {
         switch self {
-        case .none:             return nil
+        case .none:             return ""
         case .value(let value): return "\(value)"
         }
     }
@@ -53,9 +54,9 @@ enum DataSourceDuration {
     case none
     case value(Int64)
     
-    var viewText: String? {
+    var viewText: String {
         switch self {
-        case .none:             return nil
+        case .none:             return ""
         case .value(let value): return "\(value)"
         }
     }
@@ -65,9 +66,9 @@ enum DataSourceDelay {
     case none
     case value(Int64)
     
-    var viewText: String? {
+    var viewText: String {
         switch self {
-        case .none:             return nil
+        case .none:             return ""
         case .value(let value): return "\(value)"
         }
     }
@@ -77,14 +78,15 @@ enum DataSourceEncryptKey {
     case none
     case value(String)
     
-    var viewText: String? {
+    var viewText: String {
         switch self {
-        case .none:             return nil
+        case .none:             return ""
         case .value(let value): return "\(value)"
         }
     }
 }
 
+// option
 enum DataSourceRoomType: CaseIterable {
     case unselected
     case oneToOne
@@ -92,13 +94,17 @@ enum DataSourceRoomType: CaseIterable {
     case lecture
     case vocational
     
-    var viewText: String? {
+    static var allCases: [DataSourceRoomType] {
+        return [.oneToOne, .small, .lecture, .vocational]
+    }
+    
+    var viewText: String {
         switch self {
         case .oneToOne:     return "debug_onetoone".ag_localized()
         case .small:        return "debug_small".ag_localized()
         case .lecture:      return "debug_lecture".ag_localized()
         case .vocational:   return "debug_vocational_lecture".ag_localized()
-        case .unselected:   return nil
+        case .unselected:   return ""
         }
     }
     
@@ -114,12 +120,17 @@ enum DataSourceRoomType: CaseIterable {
 }
 
 enum DataSourceServiceType: CaseIterable {
+    case unselected
     case livePremium
     case liveStandard
     case cdn
     case fusion
     case mixStreamCDN
     case hostingScene
+    
+    static var allCases: [DataSourceServiceType] {
+        return [.livePremium, .liveStandard, .cdn, .fusion, .mixStreamCDN, .hostingScene]
+    }
     
     var viewText: String {
         switch self {
@@ -129,10 +140,11 @@ enum DataSourceServiceType: CaseIterable {
         case .fusion:       return "debug_service_mixed_cdn".ag_localized()
         case .mixStreamCDN: return "合流转推"
         case .hostingScene: return "伪直播"
+        case .unselected:   return ""
         }
     }
     
-    var edu: AgoraEduServiceType {
+    var edu: AgoraEduServiceType? {
         switch self {
         case .livePremium:  return .livePremium
         case .liveStandard: return .liveStandard
@@ -140,6 +152,7 @@ enum DataSourceServiceType: CaseIterable {
         case .fusion:       return .fusion
         case .mixStreamCDN: return .mixStreamCDN
         case .hostingScene: return .hostingScene
+        case .unselected:   return nil
         }
     }
 }
@@ -150,12 +163,16 @@ enum DataSourceRoleType: CaseIterable {
     case student
     case observer
     
-    var viewText: String? {
+    static var allCases: [DataSourceRoleType] {
+        return [.teacher, .student, .observer]
+    }
+    
+    var viewText: String {
         switch self {
         case .teacher:      return "debug_role_teacher".ag_localized()
         case .student:      return "debug_role_student".ag_localized()
         case .observer:     return "debug_role_observer".ag_localized()
-        case .unselected:   return nil
+        case .unselected:   return ""
         }
     }
     
@@ -325,9 +342,9 @@ enum DataSourceEnvironment: CaseIterable {
 enum DataSourceType: Equatable {
     case roomName(DataSourceRoomName)
     case userName(DataSourceUserName)
-    case roomType(selected: DataSourceRoomType, list:[DataSourceRoomType])
+    case roomType(DataSourceRoomType)
     case serviceType(DataSourceServiceType)
-    case roleType(selected: DataSourceRoleType, list:[DataSourceRoleType])
+    case roleType(DataSourceRoleType)
     case im(DataSourceIMType)
     case startTime(DataSourceStartTime)
     case duration(DataSourceDuration)
@@ -340,27 +357,34 @@ enum DataSourceType: Equatable {
     case region(DataSourceRegion)
     case environment(DataSourceEnvironment)
     
+    enum Key {
+        case roomName, userName, roomType, serviceType, roleType, im, startTime, duration, delay, encryptKey, encryptMode, mediaAuth, uiMode, uiLanguage, region, environment
+    }
+    
+    var inKey: Key {
+        switch self {
+        case .roomName:     return .roomName
+        case .userName:     return .userName
+        case .roomType:     return .roomType
+        case .serviceType:  return .serviceType
+        case .roleType:     return .roleType
+        case .im:           return .im
+        case .startTime:    return .startTime
+        case .duration:     return .duration
+        case .delay:        return .delay
+        case .encryptKey:   return .encryptKey
+        case .encryptMode:  return .encryptMode
+        case .mediaAuth:    return .mediaAuth
+        case .uiMode:       return .uiMode
+        case .uiLanguage:   return .uiLanguage
+        case .region:       return .region
+        case .environment:  return .environment
+        }
+    }
+    
     static func == (lhs: DataSourceType,
                     rhs: DataSourceType) -> Bool {
-        switch (lhs,rhs) {
-        case (.roomName, .roomName):        return true
-        case (.userName, .userName):        return true
-        case (.roomType, .roomType):        return true
-        case (.serviceType, .serviceType):  return true
-        case (.roleType, .roleType):        return true
-        case (.im, .im):                    return true
-        case (.startTime, .startTime):      return true
-        case (.duration, .duration):        return true
-        case (.delay, .delay):              return true
-        case (.encryptKey, .encryptKey):    return true
-        case (.encryptMode, .encryptMode):  return true
-        case (.mediaAuth, .mediaAuth):      return true
-        case (.uiMode, .uiMode):            return true
-        case (.uiLanguage, .uiLanguage):    return true
-        case (.region, .region):            return true
-        case (.environment, .environment):  return true
-        default:                            return false
-        }
+        return (lhs.inKey == rhs.inKey)
     }
     
     var title: String {
@@ -410,6 +434,7 @@ enum DataSourceType: Equatable {
 enum DebugInfoCellType {
     case text(placeholder: String,
               text: String?,
+              textWarning: Bool = false,
               action: CellTextEndEditingAction)
     case option(options: [(String, OptionSelectedAction)],
                 placeholder: String,
@@ -835,7 +860,15 @@ extension FcrSurpportLanguage {
 }
 
 extension Array where Element == DataSourceType {
-    func indexOfType(_ type: DataSourceType) -> Int? {
-        return self.firstIndex(where: {$0 == type})
+    func indexOfType(_ typeKey: DataSourceType.Key) -> Int? {
+        return self.firstIndex(where: {typeKey == $0.inKey})
+    }
+    
+    func valueOfType(_ typeKey: DataSourceType.Key) -> Any? {
+        guard let index = indexOfType(typeKey) else {
+            return nil
+        }
+        let value = self[index]
+        return value
     }
 }

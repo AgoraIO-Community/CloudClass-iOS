@@ -39,11 +39,7 @@ class DebugInfoCell: UITableViewCell {
     
     private lazy var timePickerView = UIDatePicker()
     
-    private lazy var optionsView: DebugOptionsView = {
-        let optionsView = DebugOptionsView(frame: .zero)
-        contentView.addSubview(optionsView)
-        return optionsView
-    }()
+    private lazy var textWarningLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle,
                   reuseIdentifier: String?) {
@@ -54,13 +50,7 @@ class DebugInfoCell: UITableViewCell {
         initViewFrame()
         updateViewProperties()
     }
-    
-    func showOptions(options: [(String, OptionSelectedAction)],
-                      selectedIndex: Int) {
-        _showOptions(options: options,
-                     selectedIndex: selectedIndex)
-    }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         
@@ -82,12 +72,11 @@ extension DebugInfoCell: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        switch model?.type {
-        case .text(_ , _, let action):
-            action(textField.text)
-        default:
+        guard let type = model?.type,
+              case .text(_,_,_,let action) = type else {
             return
         }
+        action(textField.text)
     }
     
     func textField(_ textField: UITextField,
@@ -112,42 +101,6 @@ private extension DebugInfoCell {
         action(timeInterval)
     }
     
-    func _showOptions(options: [(String, OptionSelectedAction)],
-                     selectedIndex: Int) {
-        optionsView.updateData(data: options,
-                               selectedIndex: selectedIndex)
-        optionsView.agora_visible = true
-        
-        let itemHeight: CGFloat = 44.0
-        let insert: CGFloat = 11.0
-        
-        var contentHeight: CGFloat = 0
-        if (options.count > 4) {
-            contentHeight = itemHeight * 4 + insert * 2
-        } else {
-            contentHeight = itemHeight * CGFloat(options.count) + insert * 2
-        }
-        
-        optionsView.mas_remakeConstraints { make in
-            make?.top.equalTo()(contentView.mas_bottom)?.offset()(-26)
-            make?.left.right().equalTo()(contentView)
-            make?.height.equalTo()(0)
-        }
-        
-        layoutIfNeeded()
-        optionsView.mas_updateConstraints { make in
-            make?.height.equalTo()(contentHeight)
-        }
-        optionsView.alpha = 0.2
-        
-        UIView.animate(withDuration: 0.1) {
-            self.layoutIfNeeded()
-            self.optionsView.alpha = 1
-        } completion: { finish in
-            
-        }
-    }
-    
     func updateWithModel() {
         guard let `model` = model else {
             return
@@ -155,18 +108,27 @@ private extension DebugInfoCell {
         titleLabel.text = model.title
         
         switch model.type {
-        case .text(let placeholder, let text, _):
+        case .text(let placeholder, let text, let warning,_):
             textField.text = text
             textField.placeholder = placeholder
+            
+            textWarningLabel.agora_visible = warning
+            lineLayer.backgroundColor = warning ? UIColor(hex: 0xF04C36)!.cgColor: UIColor(hex: 0xE3E3EC)!.cgColor
+            
+            textField.agora_visible = true
             indicatorView.agora_visible = false
             timePickerView.agora_visible = false
         case .option(_ , let placeholder,let text, _):
             textField.text = text
             textField.placeholder = placeholder
             textField.isUserInteractionEnabled = false
+            
+            textWarningLabel.agora_visible = false
+            textField.agora_visible = true
             indicatorView.agora_visible = true
             timePickerView.agora_visible = false
         case .time:
+            textWarningLabel.agora_visible = false
             textField.agora_visible = false
             indicatorView.agora_visible = false
             timePickerView.agora_visible = true
@@ -188,10 +150,14 @@ extension DebugInfoCell: AgoraUIContentContainer {
                                  action: #selector(onTimeChanged(_:)),
                              for: .valueChanged)
         
+        textWarningLabel.text = "debug_text_warn".ag_localized()
+        
         contentView.addSubviews([titleLabel,
                                  textField,
                                  indicatorView,
-                                 timePickerView])
+                                 timePickerView,
+                                 textWarningLabel])
+        textWarningLabel.agora_visible = false
         contentView.layer.addSublayer(lineLayer)
     }
     
@@ -216,6 +182,10 @@ extension DebugInfoCell: AgoraUIContentContainer {
             make?.left.equalTo()(titleLabel.mas_right)
             make?.right.equalTo()(0)
         }
+        textWarningLabel.mas_remakeConstraints { make in
+            make?.left.right().equalTo()(0)
+            make?.top.equalTo()(titleLabel.mas_bottom)
+        }
     }
     
     func updateViewProperties() {
@@ -226,6 +196,36 @@ extension DebugInfoCell: AgoraUIContentContainer {
         
         indicatorView.image = .init(named: "show_types")
         lineLayer.backgroundColor = UIColor(hex: 0xE3E3EC)!.cgColor
+        
+        textWarningLabel.font = UIFont.systemFont(ofSize: 10)
+        textWarningLabel.textColor = UIColor(hexString: "#F04C36")
+        textWarningLabel.textAlignment = .center
     }
 }
 
+class DebugOptionCell: UITableViewCell {
+    static let id = "DebugOptionCell"
+    var infoLabel = UILabel()
+
+    override init(style: UITableViewCell.CellStyle,
+                  reuseIdentifier: String?) {
+        super.init(style: style,
+                   reuseIdentifier: reuseIdentifier)
+
+        selectionStyle = .none
+        infoLabel.font = UIFont.systemFont(ofSize: 14)
+        infoLabel.textColor = UIColor(hexString: "#191919")
+        infoLabel.textAlignment = .center
+        contentView.addSubview(infoLabel)
+        
+        infoLabel.mas_makeConstraints { make in
+            make?.center.equalTo()(contentView)
+            make?.left.equalTo()(15)
+            make?.right.equalTo()(-15)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}

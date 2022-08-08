@@ -50,6 +50,8 @@ extension DebugOptionsView: UITableViewDataSource,
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DebugOptionCell.id) as! DebugOptionCell
+        let tuple = data[indexPath.row]
+        cell.infoLabel.text = tuple.text
         return cell
     }
     
@@ -100,29 +102,3 @@ extension DebugOptionsView: AgoraUIContentContainer {
     }
 }
 
-class DebugOptionCell: UITableViewCell {
-    static let id = "DebugOptionCell"
-    var infoLabel = UILabel()
-
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
-
-        selectionStyle = .none
-        infoLabel.font = UIFont.systemFont(ofSize: 14)
-        infoLabel.textColor = UIColor(hexString: "#191919")
-        infoLabel.textAlignment = .center
-        contentView.addSubview(infoLabel)
-        
-        infoLabel.mas_makeConstraints { make in
-            make?.center.equalTo()(contentView)
-            make?.left.equalTo()(15)
-            make?.right.equalTo()(-15)
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}

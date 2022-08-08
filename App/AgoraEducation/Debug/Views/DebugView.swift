@@ -34,18 +34,66 @@ class DebugView: UIView {
     // bottom info
     private(set) lazy var bottomLabel = UILabel(frame: .zero)
     // info list
-    private(set) lazy var tableView = UITableView(frame: .zero,
+    private(set) lazy var infoListView = UITableView(frame: .zero,
                                                   style: .plain)
-    private(set) lazy var optionsView = DebugOptionsView(frame: .zero)
+    private(set) lazy var optionsView = UITableView(frame: .zero,
+                                                    style: .plain)
+    
+    private var currentFocusInfoIndex = -1
+    private var currentOptions = [(text: String,
+                                   action: OptionSelectedAction)]()
+    
+    func updateCellModel(model: DebugInfoCellModel,
+                         at index: Int) {
+        guard dataSource.count > index else {
+            return
+        }
+        
+        hideOptions()
+        hideKeyboard()
+        dataSource[index] = model
+    }
+    
+    func updateEnterEnabled(_ enabled: Bool) {
+        if enabled {
+            enterButton.backgroundColor = UIColor(hexString: "357BF6")
+            enterButton.isUserInteractionEnabled = true
+        } else {
+            enterButton.backgroundColor = UIColor(hexString: "C0D6FF")
+            enterButton.isUserInteractionEnabled = true
+        }
+    }
     
     func reloadList(_ indexList: [Int]? = nil) {
         guard let list = indexList else {
-            tableView.reloadData()
+            infoListView.reloadData()
+            return
         }
         let indexPathList = list.map({return IndexPath(row: $0,
                                                        section: 0)})
-        tableView.reloadRows(at: indexPathList,
+        infoListView.reloadRows(at: indexPathList,
                              with: .none)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
+        super.touchesBegan(touches,
+                           with: event)
+        
+        hideOptions()
+        hideKeyboard()
     }
 }
 
@@ -58,35 +106,108 @@ private extension DebugView {
     @objc func didClickEnter() {
         delegate?.didClickEnter()
     }
+    
+    func showOptions(cell: DebugInfoCell,
+                     options: [(String, OptionSelectedAction)],
+                     selectedIndex: Int) {
+        optionsView.reloadData()
+//        optionsView.updateData(data: options,
+//                               selectedIndex: selectedIndex)
+        optionsView.agora_visible = true
+        bringSubviewToFront(optionsView)
+        
+        let itemHeight: CGFloat = 44.0
+        let insert: CGFloat = 11.0
+        
+        var contentHeight: CGFloat = 0
+        if (options.count > 4) {
+            contentHeight = itemHeight * 4 + insert * 2
+        } else {
+            contentHeight = itemHeight * CGFloat(options.count) + insert * 2
+        }
+        
+        optionsView.mas_remakeConstraints { make in
+            make?.top.equalTo()(cell.mas_bottom)?.offset()(-26)
+            make?.left.right().equalTo()(cell)
+            make?.height.equalTo()(0)
+        }
+        
+        layoutIfNeeded()
+        optionsView.mas_updateConstraints { make in
+            make?.height.equalTo()(contentHeight)
+        }
+        optionsView.alpha = 0.2
+        
+        UIView.animate(withDuration: 0.1) {
+            self.layoutIfNeeded()
+            self.optionsView.alpha = 1
+        } completion: { finish in
+            
+        }
+    }
+    
+    func hideOptions() {
+        optionsView.agora_visible = false
+    }
+    
+    func hideKeyboard() {
+        UIApplication.shared.keyWindow?.endEditing(true)
+    }
 }
 
 extension DebugView: UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        return dataSource.count
+        if tableView == infoListView {
+            return dataSource.count
+        } else {
+            return currentOptions.count
+        }
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DebugInfoCell.id) as! DebugInfoCell
-        
-        let model = dataSource[indexPath.row]
-        cell.model = model
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: DebugInfoCell.id) as? DebugInfoCell {
+            let model = dataSource[indexPath.row]
+            cell.model = model
+            return cell
+        } else if let cell = tableView.dequeueReusableCell(withIdentifier: DebugOptionCell.id) as? DebugOptionCell {
+            let tuple = currentOptions[indexPath.row]
+            cell.infoLabel.text = tuple.text
+            return cell
+        }
+        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? DebugInfoCell else {
+        if tableView == infoListView,
+           case DebugInfoCellType.option(let options, _, _, let selectedIndex) = dataSource[indexPath.row].type,
+           !optionsView.agora_visible {
+            
+            currentOptions = options
+            currentFocusInfoIndex = indexPath.row
+            
+            hideKeyboard()
+            
+            let cell = tableView.cellForRow(at: indexPath) as! DebugInfoCell
+            showOptions(cell: cell,
+                        options: options,
+                        selectedIndex: selectedIndex)
             return
         }
         
-        let model = dataSource[indexPath.row]
-        guard case DebugInfoCellType.option(let options, _, _, let selectedIndex) = model.type else {
-            return
+        if tableView == optionsView {
+            let model = dataSource[currentFocusInfoIndex]
+            if case DebugInfoCellType.option(let options, _, _, _) = model.type {
+                let action = options[indexPath.row].1
+                action(indexPath.row)
+                infoListView.reloadRows(at: [IndexPath(row: currentFocusInfoIndex,
+                                                       section: 0)], with: .none)
+                optionsView.reloadRows(at: [indexPath],
+                                       with: .none)
+            }
         }
-        cell.showOptions(options: options,
-                         selectedIndex: selectedIndex)
     }
 }
 
@@ -116,20 +237,28 @@ extension DebugView: AgoraUIContentContainer {
 
         addSubview(bottomLabel)
                 
-        tableView.tableFooterView = UIView()
-        tableView.rowHeight = 68
-        tableView.estimatedRowHeight = 68
-        tableView.estimatedSectionHeaderHeight = 0
-        tableView.estimatedSectionFooterHeight = 0
-        tableView.separatorInset = .zero
-        tableView.separatorStyle = .none
-        tableView.allowsMultipleSelection = false
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(DebugInfoCell.self,
+        infoListView.tableFooterView = UIView()
+        infoListView.rowHeight = 68
+        infoListView.estimatedRowHeight = 68
+        infoListView.estimatedSectionHeaderHeight = 0
+        infoListView.estimatedSectionFooterHeight = 0
+        infoListView.separatorInset = .zero
+        infoListView.separatorStyle = .none
+        infoListView.allowsMultipleSelection = false
+        infoListView.delegate = self
+        infoListView.dataSource = self
+        infoListView.register(DebugInfoCell.self,
                            forCellReuseIdentifier:DebugInfoCell.id)
-        addSubview(tableView)
+        addSubview(infoListView)
         
+        
+        optionsView.delegate = self
+        optionsView.dataSource = self
+        
+        optionsView.register(DebugOptionCell.self,
+                           forCellReuseIdentifier:DebugOptionCell.id)
+        
+        optionsView.separatorColor = UIColor(hex: 0xEEEEF7)
         addSubview(optionsView)
         optionsView.agora_visible = false
     }
@@ -166,7 +295,7 @@ extension DebugView: AgoraUIContentContainer {
             make?.right.equalTo()(-15)
         }
         
-        tableView.mas_makeConstraints { make in
+        infoListView.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.width.equalTo()(LoginConfig.login_group_width)
             make?.height.equalTo()(68 * 5)
@@ -178,7 +307,7 @@ extension DebugView: AgoraUIContentContainer {
             make?.centerX.equalTo()(0)
             make?.height.equalTo()(44)
             make?.width.equalTo()(280)
-            make?.top.equalTo()(tableView.mas_bottom)?.offset()(enter_gap)
+            make?.top.equalTo()(infoListView.mas_bottom)?.offset()(enter_gap)
         }
 
         bottomLabel.mas_makeConstraints { make in
@@ -221,5 +350,12 @@ extension DebugView: AgoraUIContentContainer {
         
         bottomLabel.textColor = UIColor(hexString: "7D8798")
         bottomLabel.font = UIFont.systemFont(ofSize: 12)
+        
+        optionsView.backgroundColor = UIColor.white
+        optionsView.layer.cornerRadius = 8
+        optionsView.layer.shadowColor = UIColor(hex: 0x2F4192, transparency: 0.15)?.cgColor
+        optionsView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        optionsView.layer.shadowOpacity = 1
+        optionsView.layer.shadowRadius = 6
     }
 }
