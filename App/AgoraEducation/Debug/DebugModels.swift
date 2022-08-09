@@ -476,7 +476,7 @@ struct DebugLaunchInfo {
                 "convertedPageSize": 24,
                 "convertedPercentage": 100,
                 "currentStep": "Packaging",
-                "convertedFileList": [({
+                "convertedFileList": [{
                     "ppt": {
                         "width": 1280,
                         "height": 720,
