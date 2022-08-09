@@ -28,7 +28,11 @@ class DebugDataHandler {
     
     private let tokenBuilder = TokenBuilder()
     
-    private var dataSourceList: [DataSourceType] = []
+    private var dataSourceList: [DataSourceType] = [] {
+        didSet {
+            checkDataSource()
+        }
+    }
     
     init(delegate: DebugDataHandlerDelegate?) {
         self.delegate = delegate
@@ -517,8 +521,6 @@ private extension DebugDataHandler {
         delegate?.onDataSourceChanged(index: index,
                                       typeKey: dataSource.inKey,
                                       newCellModel: newModel)
-        
-        checkDataSource()
     }
     
     func updateAllDataSource() {
