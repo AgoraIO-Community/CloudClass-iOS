@@ -189,7 +189,7 @@ extension RoomInfoCell {
         timePickerView.minimumDate = Date()
         timePickerView.addTarget(self,
                                  action: #selector(timeChanged(_:)),
-                             for: .valueChanged)
+                                 for: .valueChanged)
         contentView.addSubview(timePickerView)
     }
     

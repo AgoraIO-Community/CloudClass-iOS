@@ -108,7 +108,7 @@ private extension DebugInfoCell {
         titleLabel.text = model.title
         
         switch model.type {
-        case .text(let placeholder, let text, let warning,_):
+        case .text(let placeholder, let text, let warning, _):
             textField.text = text
             textField.placeholder = placeholder
             textField.isUserInteractionEnabled = true
@@ -118,7 +118,7 @@ private extension DebugInfoCell {
             textField.agora_visible = true
             indicatorView.agora_visible = false
             timePickerView.agora_visible = false
-        case .option(_ , let placeholder,let text, _):
+        case .option(_ , let placeholder, let text, _):
             textField.text = text
             textField.placeholder = placeholder
             textField.isUserInteractionEnabled = false
@@ -210,7 +210,9 @@ extension DebugInfoCell: AgoraUIContentContainer {
 
 class DebugOptionCell: UITableViewCell {
     static let id = "DebugOptionCell"
+    
     var infoLabel = UILabel()
+    
     var isHighlight: Bool = false {
         willSet {
             if newValue {

@@ -19,6 +19,7 @@
 		681528A8289CF4C500EFD6F4 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681528A7289CF4C500EFD6F4 /* DebugView.swift */; };
 		681528AA289D00CD00EFD6F4 /* DebugModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681528A9289D00CD00EFD6F4 /* DebugModels.swift */; };
 		681528AD289D0ED200EFD6F4 /* DebugOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681528AC289D0ED200EFD6F4 /* DebugOptionsView.swift */; };
+		6818977D28A259C200681DD9 /* DebugCoursewares.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6818977C28A259C200681DD9 /* DebugCoursewares.swift */; };
 		68362357262D30C20028F7F5 /* BaseLoginObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68362356262D30C20028F7F5 /* BaseLoginObject.swift */; };
 		68403F83276C859800E88214 /* AppExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 861D3CFA276AE05E00645D6A /* AppExtension.swift */; };
 		6861691A26AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6861691826AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf */; };
@@ -99,6 +100,7 @@
 		681528A7289CF4C500EFD6F4 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		681528A9289D00CD00EFD6F4 /* DebugModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugModels.swift; sourceTree = "<group>"; };
 		681528AC289D0ED200EFD6F4 /* DebugOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugOptionsView.swift; sourceTree = "<group>"; };
+		6818977C28A259C200681DD9 /* DebugCoursewares.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugCoursewares.swift; sourceTree = "<group>"; };
 		68362356262D30C20028F7F5 /* BaseLoginObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLoginObject.swift; sourceTree = "<group>"; };
 		6861691826AEB1B800E26F69 /* Agora_Privacy_Policy_en.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Agora_Privacy_Policy_en.rtf; sourceTree = "<group>"; };
 		6861691926AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Agora_Privacy_Policy_cn.rtf; sourceTree = "<group>"; };
@@ -254,6 +256,15 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		6818977B28A259A600681DD9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				681528A9289D00CD00EFD6F4 /* DebugModels.swift */,
+				6818977C28A259C200681DD9 /* DebugCoursewares.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		6836221126296F660028F7F5 /* Beans */ = {
 			isa = PBXGroup;
 			children = (
@@ -266,10 +277,10 @@
 		7801A89925DB7D7100C63ABF /* Debug */ = {
 			isa = PBXGroup;
 			children = (
+				6818977B28A259A600681DD9 /* Models */,
 				681528AB289D0E6700EFD6F4 /* Views */,
 				681528A3289CF0FB00EFD6F4 /* DebugViewController.swift */,
 				681528A5289CF10400EFD6F4 /* DebugDataHandler.swift */,
-				681528A9289D00CD00EFD6F4 /* DebugModels.swift */,
 			);
 			path = Debug;
 			sourceTree = "<group>";
@@ -656,6 +667,7 @@
 				AB4F69E72874621F0012E6B3 /* FcrThemeViewController.swift in Sources */,
 				AB4F69E32872C2340012E6B3 /* FcrDisclaimerViewController.swift in Sources */,
 				688809E82629358800B5FB2A /* FcrNavigationController.swift in Sources */,
+				6818977D28A259C200681DD9 /* DebugCoursewares.swift in Sources */,
 				AB7FFD6926EAFEF2003A50B8 /* RoomInfoOptionCell.swift in Sources */,
 				AB4F69DD286DC5D40012E6B3 /* FcrNavigatorCell.swift in Sources */,
 				AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */,

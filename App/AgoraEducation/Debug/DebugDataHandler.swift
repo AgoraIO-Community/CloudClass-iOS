@@ -177,30 +177,7 @@ extension DebugDataHandler {
                          appId: String,
                          token: String,
                          userId: String) -> AgoraEduLaunchConfig {
-        var encryptionConfig: AgoraEduMediaEncryptionConfig?
-        if let key = debugInfo.encryptKey,
-           debugInfo.encryptMode != .none {
-            let tfModeValue = debugInfo.encryptMode.rawValue
-            if tfModeValue > 0 && tfModeValue <= 6 {
-                encryptionConfig = AgoraEduMediaEncryptionConfig(mode: debugInfo.encryptMode,
-                                                                 key: key)
-            }
-        }
-        
-        var latencyLevel = AgoraEduLatencyLevel.ultraLow
-        if debugInfo.serviceType == .livePremium {
-            latencyLevel = .ultraLow
-        } else if debugInfo.serviceType == .liveStandard {
-            latencyLevel = .low
-        }
-        
-        let videoState: AgoraEduStreamState = (debugInfo.mediaAuth == .video || debugInfo.mediaAuth == .both) ? .on : .off
-        let audioState: AgoraEduStreamState = (debugInfo.mediaAuth == .audio || debugInfo.mediaAuth == .both) ? .on : .off
-        let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
-                                                videoEncoderConfig: nil,
-                                                latencyLevel: latencyLevel,
-                                                videoState: videoState,
-                                                audioState: audioState)
+        let mediaOptions = debugInfo.mediaOptions
         
         let launchConfig = AgoraEduLaunchConfig(userName: debugInfo.userName,
                                                 userUuid: userId,
@@ -217,24 +194,23 @@ extension DebugDataHandler {
                                                 userProperties: nil)
         
         // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
-        var widgets = Dictionary<String,AgoraWidgetConfig>()
-        launchConfig.widgets.forEach { (k,v) in
-            if k == "AgoraCloudWidget" {
-                v.extraInfo = ["publicCoursewares": debugInfo.publicCoursewares()]
-            }
-            if k == "netlessBoard",
-               v.extraInfo != nil {
-                var newExtra = v.extraInfo as! Dictionary<String, Any>
-                newExtra["coursewareList"] = debugInfo.publicCoursewares()
-                v.extraInfo = newExtra
-            }
-            widgets[k] = v
+        let cloudWidgetKey = "AgoraCloudWidget"
+        let netlessWidgetKey = "netlessBoard"
+        let easemobWidgetKey = "easemobIM"
+        
+        let widgets = launchConfig.widgets
+        if let config = widgets[cloudWidgetKey] {
+            config.extraInfo = ["publicCoursewares": debugInfo.publicCoursewares()]
         }
-        launchConfig.widgets = widgets
+        
+        if let config = widgets[netlessWidgetKey],
+           var extra = config.extraInfo as? [String: Any] {
+            extra["coursewareList"] = debugInfo.publicCoursewares()
+        }
         
         if debugInfo.region != .CN ||
             debugInfo.im == .rtm {
-            launchConfig.widgets.removeValue(forKey: "easemobIM")
+            launchConfig.widgets.removeValue(forKey: easemobWidgetKey)
         }
         
         return launchConfig
@@ -260,7 +236,9 @@ extension DebugDataHandler {
                       userRole: Int,
                       success: @escaping (TokenBuilder.ServerResp) -> (),
                       failure: @escaping (NSError) -> ()) {
-        FcrOutsideClassAPI.freeBuildToken(roomId: roomId, userRole: userRole, userId: userId) { dict in
+        FcrOutsideClassAPI.freeBuildToken(roomId: roomId,
+                                          userRole: userRole,
+                                          userId: userId) { dict in
             guard let data = dict["data"] as? [String : Any] else {
                 fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
             }
@@ -358,7 +336,6 @@ private extension DebugDataHandler {
                 self?.updateDataSource(at: dataTypeIndex,
                                        with: newValue)
             })
-            
         case .roomType(let selected):
             let list = DataSourceRoomType.allCases
             let action: OptionSelectedAction = { [weak self] index in
