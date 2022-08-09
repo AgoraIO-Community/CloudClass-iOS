@@ -36,13 +36,10 @@ class DebugView: UIView {
     // info list
     private(set) lazy var infoListView = UITableView(frame: .zero,
                                                   style: .plain)
-    private(set) lazy var optionsView = UITableView(frame: .zero,
-                                                    style: .plain)
+    // options list
+    private lazy var optionsView = DebugOptionsView(frame: .zero)
     
-    private var currentFocusInfoIndex = -1
-    private var currentOptions = [(text: String,
-                                   action: OptionSelectedAction)]()
-    private var currentSelectedOptionIndex = -1
+    private var currentFocusIndex = -1
     
     func updateCellModel(model: DebugInfoCellModel,
                          at index: Int) {
@@ -109,8 +106,10 @@ private extension DebugView {
     }
     
     func showOptions(cell: DebugInfoCell,
+                     selectedIndex: Int,
                      options: [(String, OptionSelectedAction)]) {
-        optionsView.reloadData()
+        optionsView.updateData(data: options,
+                               selectedIndex: selectedIndex)
         optionsView.agora_visible = true
         bringSubviewToFront(optionsView)
         
@@ -145,6 +144,7 @@ private extension DebugView {
     }
     
     func hideOptions() {
+        currentFocusIndex = -1
         optionsView.agora_visible = false
     }
     
@@ -165,61 +165,36 @@ extension DebugView: DebugInfoCellDelegate,
     // MARK: UITableViewDataSource
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        if tableView == infoListView {
-            return dataSource.count
-        } else {
-            return currentOptions.count
-        }
+        return dataSource.count
     }
     
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: DebugInfoCell.id) as? DebugInfoCell {
-            let model = dataSource[indexPath.row]
-            cell.model = model
-            cell.delegate = self
-            return cell
-        } else if let cell = tableView.dequeueReusableCell(withIdentifier: DebugOptionCell.id) as? DebugOptionCell {
-            let tuple = currentOptions[indexPath.row]
-            cell.infoLabel.text = tuple.text
-            cell.isHighlight = (currentSelectedOptionIndex == indexPath.row)
-            return cell
-        }
-        return UITableViewCell()
+        let cell = tableView.dequeueReusableCell(withIdentifier: DebugInfoCell.id) as! DebugInfoCell
+        let model = dataSource[indexPath.row]
+        cell.model = model
+        cell.delegate = self
+        return cell
     }
     
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
-        if tableView == infoListView,
-           case DebugInfoCellType.option(let options, _, _, let selectedIndex) = dataSource[indexPath.row].type {
-            
-            if !optionsView.agora_visible ||
-                currentFocusInfoIndex != indexPath.row {
-                currentSelectedOptionIndex = selectedIndex
-                currentOptions = options
-                currentFocusInfoIndex = indexPath.row
-                
-                hideKeyboard()
-                
-                let cell = tableView.cellForRow(at: indexPath) as! DebugInfoCell
-                showOptions(cell: cell,
-                            options: options)
-            }
-
+        guard case DebugInfoCellType.option(let options, _, _, let selectedIndex) = dataSource[indexPath.row].type else {
             return
         }
         
-        if tableView == optionsView {
-            let model = dataSource[currentFocusInfoIndex]
-            if case DebugInfoCellType.option(let options, _, _, _) = model.type {
-                let action = options[indexPath.row].1
-                action(indexPath.row)
-                infoListView.reloadRows(at: [IndexPath(row: currentFocusInfoIndex,
-                                                       section: 0)], with: .none)
-                optionsView.reloadRows(at: [indexPath],
-                                       with: .none)
-            }
+        guard currentFocusIndex != indexPath.row else {
+            hideOptions()
+            return
         }
+        currentFocusIndex = indexPath.row
+        
+        hideKeyboard()
+        
+        let cell = tableView.cellForRow(at: indexPath) as! DebugInfoCell
+        showOptions(cell: cell,
+                    selectedIndex: selectedIndex,
+                    options: options)
     }
 }
 
@@ -263,19 +238,6 @@ extension DebugView: AgoraUIContentContainer {
                            forCellReuseIdentifier:DebugInfoCell.id)
         addSubview(infoListView)
         
-        let tableHeaderFooter = UIView(frame:CGRect(x: 0,
-                                                    y: 0,
-                                                    width: optionsView.width,
-                                                    height: 11))
-        optionsView.tableHeaderView = tableHeaderFooter
-        optionsView.tableFooterView = tableHeaderFooter
-        optionsView.delegate = self
-        optionsView.dataSource = self
-        
-        optionsView.register(DebugOptionCell.self,
-                           forCellReuseIdentifier:DebugOptionCell.id)
-        
-        optionsView.separatorColor = UIColor(hex: 0xEEEEF7)
         addSubview(optionsView)
         optionsView.agora_visible = false
     }
@@ -367,10 +329,5 @@ extension DebugView: AgoraUIContentContainer {
         
         bottomLabel.textColor = UIColor(hexString: "7D8798")
         bottomLabel.font = UIFont.systemFont(ofSize: 12)
-        
-        optionsView.backgroundColor = UIColor.white
-        optionsView.clipsToBounds = true
-        optionsView.layer.borderWidth = 1
-        optionsView.layer.borderColor = UIColor(hex: 0xD2D2E2)?.cgColor
     }
 }

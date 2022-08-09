@@ -52,6 +52,7 @@ extension DebugOptionsView: UITableViewDataSource,
         let cell = tableView.dequeueReusableCell(withIdentifier: DebugOptionCell.id) as! DebugOptionCell
         let tuple = data[indexPath.row]
         cell.infoLabel.text = tuple.text
+        cell.isHighlight = (selectedIndex == indexPath.row)
         return cell
     }
     
@@ -60,6 +61,9 @@ extension DebugOptionsView: UITableViewDataSource,
         let model = data[indexPath.row]
         let action = model.action
         action(indexPath.row)
+        
+        tableView.reloadRows(at: [indexPath],
+                             with: .none)
     }
 }
     
@@ -67,8 +71,8 @@ extension DebugOptionsView: UITableViewDataSource,
 extension DebugOptionsView: AgoraUIContentContainer {
     func initViews() {
         listView.tableFooterView = UIView.init(frame: CGRect(x: 0,
-                                                    y: 0,
-                                                    width: 1,
+                                                             y: 0,
+                                                             width: 1,
                                                              height: 0.01))
         listView.rowHeight = 44
         listView.separatorInset = UIEdgeInsets(top: 0,
