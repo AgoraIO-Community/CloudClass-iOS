@@ -39,8 +39,6 @@ class FcrBoardUIComponent: UIViewController {
     
     var localGranted = false {
         didSet {
-            pageControl.isHidden = !localGranted
-            
             guard localGranted != oldValue else {
                 return
             }
@@ -78,22 +76,7 @@ class FcrBoardUIComponent: UIViewController {
     private var boardWidget: AgoraBaseWidget?
     private(set) weak var delegate: FcrBoardUIComponentDelegate?
     
-    /**views**/
-    private lazy var pageControl = FcrBoardPageControlView(frame: .zero)
-    
     /** Data */
-    private var pageIndex = 1 {
-        didSet {
-            pageControl.updatePage(pageIndex, pages: pageCount)
-        }
-    }
-    
-    private var pageCount = 0 {
-        didSet {
-            pageControl.updatePage(pageIndex, pages: pageCount)
-        }
-    }
-    
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrBoardUIComponentDelegate? = nil) {
@@ -115,9 +98,7 @@ class FcrBoardUIComponent: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initViews()
-        initViewFrame()
-        updateViewProperties()
+        view.backgroundColor = UIConfig.netlessBoard.backgroundColor
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
@@ -184,48 +165,6 @@ class FcrBoardUIComponent: UIViewController {
     }
 }
 
-// MARK: - AgoraUIContentContainer
-extension FcrBoardUIComponent: AgoraUIContentContainer {
-    func initViews() {
-        let userRole = contextPool.user.getLocalUserInfo().userRole
-        guard userRole != .observer else {
-            return
-        }
-        
-        pageControl.addBtn.addTarget(self,
-                                     action: #selector(onClickAddPage(_:)),
-                                     for: .touchUpInside)
-        pageControl.prevBtn.addTarget(self,
-                                      action: #selector(onClickPrePage(_:)),
-                                      for: .touchUpInside)
-        pageControl.nextBtn.addTarget(self,
-                                      action: #selector(onClickNextPage(_:)),
-                                      for: .touchUpInside)
-        
-        view.addSubview(pageControl)
-        pageControl.isHidden = true
-        
-        pageControl.agora_enable = UIConfig.netlessBoard.pageControl.enable
-    }
-    
-    func initViewFrame() {
-        let userRole = contextPool.user.getLocalUserInfo().userRole
-        guard userRole != .observer else {
-            return
-        }
-        pageControl.mas_makeConstraints { make in
-            make?.left.equalTo()(view)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
-            make?.bottom.equalTo()(view)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
-            make?.height.equalTo()(UIDevice.current.agora_is_pad ? 34 : 32)
-            make?.width.equalTo()(168)
-        }
-    }
-    
-    func updateViewProperties() {
-        view.backgroundColor = UIConfig.netlessBoard.backgroundColor
-    }
-}
-
 // MARK: - AgoraUIActivity
 extension FcrBoardUIComponent: AgoraUIActivity {
     func viewWillActive() {
@@ -254,7 +193,6 @@ private extension FcrBoardUIComponent {
         widget.view.layer.borderWidth = config.borderWidth
         
         view.addSubview(widget.view)
-        view.bringSubviewToFront(pageControl)
         boardWidget = widget
 
         widget.view.mas_makeConstraints { make in
@@ -326,44 +264,6 @@ private extension FcrBoardUIComponent {
                              type: .error)
         }
     }
-    
-    func movePageControl(isRight: Bool) {
-        UIView.animate(withDuration: TimeInterval.agora_animation,
-                       delay: 0,
-                       options: .curveEaseInOut,
-                       animations: { [weak self] in
-            guard let `self` = self else {
-                return
-            }
-            let move: CGFloat = UIDevice.current.agora_is_pad ? 49 : 44
-            self.pageControl.transform = CGAffineTransform(translationX: isRight ? move : 0,
-                                                           y: 0)
-        }, completion: nil)
-    }
-    
-    @objc func onClickAddPage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.count(pageCount + 1)
-        if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
-    }
-    
-    @objc func onClickPrePage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 - 1)
-        if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
-    }
-    
-    @objc func onClickNextPage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 + 1)
-        if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
-    }
 }
 
 // MARK: - AgoraWidgetMessageObserver
@@ -382,16 +282,6 @@ extension FcrBoardUIComponent: AgoraWidgetMessageObserver {
             grantedUsers = list
         case .OnBoardSaveResult(let result):
             handlePhotoNoAuth(result)
-        case .BoardPageChanged(let type):
-            switch type {
-            case .index(let index):
-                pageIndex = index + 1
-            case .count(let count):
-                pageCount = count
-            }
-        case .WindowStateChanged(let state):
-            let moveRight = (state == .min)
-            movePageControl(isRight: moveRight)
         default:
             break
         }
@@ -412,7 +302,6 @@ extension FcrBoardUIComponent: AgoraWidgetActivityObserver {
         guard widgetId == kBoardWidgetId else {
             return
         }
-        pageControl.isHidden = true
         delegate?.onBoardActiveStateChanged(isActive: false)
         
         deinitBoardWidget()
