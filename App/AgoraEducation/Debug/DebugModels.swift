@@ -12,6 +12,7 @@ import AgoraClassroomSDK_iOS
 import AgoraClassroomSDK
 #endif
 import Foundation
+import AgoraEduUI
 
 // text
 enum DataSourceRoomName: Equatable {
@@ -83,7 +84,7 @@ enum DataSourceRoomType: CaseIterable {
     case vocational
     
     static var allCases: [DataSourceRoomType] {
-        return [.oneToOne, .small, .lecture, .vocational]
+        return FcrUISceneType.getList().toDebugList()
     }
     
     var viewText: String {
@@ -840,6 +841,18 @@ extension FcrSurpportLanguage {
     }
 }
 
+extension FcrUISceneType {
+    var debug: DataSourceRoomType {
+        switch self {
+        case .oneToOne:     return .oneToOne
+        case .lecture:      return .lecture
+        case .small:        return .small
+        case .vocation:     return .vocational
+        @unknown default:   return .oneToOne
+        }
+    }
+}
+
 extension Array where Element == DataSourceType {
     func indexOfType(_ typeKey: DataSourceType.Key) -> Int? {
         return self.firstIndex(where: {typeKey == $0.inKey})
@@ -851,5 +864,11 @@ extension Array where Element == DataSourceType {
         }
         let value = self[index]
         return value
+    }
+}
+
+extension Array where Element == FcrUISceneType {
+    func toDebugList() -> [DataSourceRoomType] {
+        return self.map({return $0.debug})
     }
 }

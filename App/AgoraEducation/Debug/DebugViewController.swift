@@ -30,6 +30,12 @@ extension DebugViewController: DebugDataHandlerDelegate {
         debugView.reloadList([index])
     }
     
+    func onDataSourceNeedReload() {
+        let cellModelList = data.cellModelList()
+        debugView.dataSource = cellModelList
+        debugView.reloadList()
+    }
+    
     func onDataSourceValid(_ valid: Bool) {
         debugView.updateEnterEnabled(valid)
     }

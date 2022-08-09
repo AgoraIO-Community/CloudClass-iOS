@@ -18,6 +18,8 @@ protocol DebugDataHandlerDelegate: NSObjectProtocol {
                              typeKey: DataSourceType.Key,
                              newCellModel: DebugInfoCellModel)
     
+    func onDataSourceNeedReload()
+    
     func onDataSourceValid(_ valid: Bool)
 }
 
@@ -442,6 +444,7 @@ private extension DebugDataHandler {
             let list = DataSourceUIMode.allCases
             let action: OptionSelectedAction = { [weak self] index in
                 let uiMode: DataSourceUIMode = list[index]
+                FcrUserInfoPresenter.shared.theme = uiMode.edu.rawValue
                 let newValue = DataSourceType.uiMode(uiMode)
                 self?.updateDataSource(at: dataTypeIndex,
                                        with: newValue)
@@ -456,9 +459,14 @@ private extension DebugDataHandler {
             let list = DataSourceUILanguage.allCases
             let action: OptionSelectedAction = { [weak self] index in
                 let uiLanguage: DataSourceUILanguage = list[index]
+                // special
+                FcrLocalization.shared.setupNewLanguage(uiLanguage.edu)
+
                 let newValue = DataSourceType.uiLanguage(uiLanguage)
                 self?.updateDataSource(at: dataTypeIndex,
                                        with: newValue)
+                // special
+                self?.updateAllDataSource()
             }
             let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
             let selectedIndex = list.firstIndex(where: {$0 == selected})
@@ -511,6 +519,10 @@ private extension DebugDataHandler {
                                       newCellModel: newModel)
         
         checkDataSource()
+    }
+    
+    func updateAllDataSource() {
+        delegate?.onDataSourceNeedReload()
     }
     
     func checkDataSource() {
