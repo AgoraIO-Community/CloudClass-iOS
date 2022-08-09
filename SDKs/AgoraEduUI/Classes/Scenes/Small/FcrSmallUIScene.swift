@@ -640,7 +640,6 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
                                              userList: userList)
         toolCollectionComponent.onBoardPrivilegeListChaned(true,
                                                            userList: userList)
-        
         webViewComponent.onBoardPrivilegeListChaned(true,
                                                     userList: userList)
     }
