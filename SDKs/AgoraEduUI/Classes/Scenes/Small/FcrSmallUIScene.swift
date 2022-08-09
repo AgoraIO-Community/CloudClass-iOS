@@ -640,6 +640,9 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
                                              userList: userList)
         toolCollectionComponent.onBoardPrivilegeListChaned(true,
                                                            userList: userList)
+        
+        webViewComponent.onBoardPrivilegeListChaned(true,
+                                                    userList: userList)
     }
     
     func onBoardGrantedUserListRemoved(userList: [String]) {
@@ -649,6 +652,8 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
                                              userList: userList)
         toolCollectionComponent.onBoardPrivilegeListChaned(false,
                                                            userList: userList)
+        webViewComponent.onBoardPrivilegeListChaned(false,
+                                                    userList: userList)
     }
     
     func updateWindowRenderItemBoardPrivilege(_ privilege: Bool,

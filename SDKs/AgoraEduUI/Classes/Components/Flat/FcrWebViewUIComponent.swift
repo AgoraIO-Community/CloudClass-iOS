@@ -77,6 +77,17 @@ class FcrWebViewUIComponent: UIViewController {
                                          success: nil)
     }
     
+    func onBoardPrivilegeListChaned(_ privilege: Bool,
+                                    userList: [String]) {
+        let localUserId = userController.getLocalUserInfo().userUuid
+        var auth = false
+        if privilege,
+            userList.contains(localUserId) {
+            auth = true
+        }
+        localBoardAuth = auth
+    }
+    
     deinit {
         print("\(#function): \(self.classForCoder)")
     }
@@ -106,8 +117,6 @@ extension FcrWebViewUIComponent: AgoraUIActivity {
         widgetController.add(self)
         widgetController.add(self,
                              widgetId: WebViewWidgetId)
-        widgetController.add(self,
-                             widgetId: kBoardWidgetId)
         
         createAllActiveWidgets()
         
@@ -120,8 +129,6 @@ extension FcrWebViewUIComponent: AgoraUIActivity {
     
     func viewWillInactive() {
         widgetController.remove(self)
-        widgetController.remove(self,
-                                widgetId: kBoardWidgetId)
         releaseAllWidgets()
         
         view.isHidden = true
@@ -184,12 +191,6 @@ extension FcrWebViewUIComponent: AgoraWidgetMessageObserver {
             default:
                 break
             }
-        }
-        
-        if widgetId == kBoardWidgetId,
-           let signal = message.toBoardSignal(),
-           case .GetBoardGrantedUsers(let list) = signal {
-            handleBoardGrantedUsers(userList: list)
         }
     }
 }
@@ -269,7 +270,7 @@ private extension FcrWebViewUIComponent {
                             widget: widget)
         
         // 白板授权
-        if userController.getLocalUserInfo().userRole == .teacher || localBoardAuth {
+        if localBoardAuth {
             addViewGestures(widget: widget)
             sendMessage(widgetId: widget.info.widgetId,
                         signal: .boardAuth(true))
@@ -415,15 +416,6 @@ private extension FcrWebViewUIComponent {
         widgetController.setWidgetInactive(widgetId,
                                            isRemove: false,
                                            success: nil)
-    }
-    
-    func handleBoardGrantedUsers(userList: [String]) {
-        let localUser = userController.getLocalUserInfo()
-        guard localUser.userRole != .teacher else {
-            return
-        }
-
-        localBoardAuth = userList.contains(localUser.userUuid)
     }
     
     func handleLocalBoardAuth() {
