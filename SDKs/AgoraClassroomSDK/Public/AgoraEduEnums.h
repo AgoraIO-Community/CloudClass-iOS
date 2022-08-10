@@ -5,6 +5,7 @@
 //  Created by SRS on 2021/1/7.
 //
 
+#import <AgoraEduUI/AgoraEduUI-Swift.h>
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
@@ -74,13 +75,7 @@ typedef NS_ENUM(NSInteger, AgoraEduUserRole) {
     AgoraEduUserRoleObserver = 4
 };
 
-typedef NS_ENUM(NSInteger, AgoraEduRoomType) {
-    AgoraEduRoomTypeOneToOne      = 0,
-    AgoraEduRoomTypeLecture       = 2,
-    AgoraEduRoomTypeSmall         = 4,
-    // 职教课堂type
-    AgoraEduRoomTypeVocational = 100
-};
+typedef FcrUISceneType AgoraEduRoomType;
 
 typedef NS_ENUM(NSInteger, AgoraEduServiceType) {
     AgoraEduServiceTypeLivePremium,

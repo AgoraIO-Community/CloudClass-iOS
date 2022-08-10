@@ -13,13 +13,13 @@ Pod::Spec.new do |spec|
   
   # open source libs
   spec.dependency "AgoraEduUI", ">=2.7.0"
-  spec.dependency "AgoraEduContext", ">=2.6.0"
+  spec.dependency "AgoraEduContext", ">=2.7.0"
 
   # open sources widgets
   spec.dependency "AgoraWidgets", ">=2.7.0"
   
   # close source libs
-  spec.dependency "AgoraEduCore", ">=2.7.0"
+  spec.dependency "AgoraEduCore", ">=2.7.1"
   spec.dependency "AgoraWidget", ">=2.6.0"
 
   spec.frameworks = "AudioToolbox", "Foundation", "UIKit"

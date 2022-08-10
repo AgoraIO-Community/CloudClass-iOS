@@ -198,7 +198,7 @@ private extension FcrClassToolsUIComponent {
     }
     
     func createWidget(_ widgetId: String) {
-        guard widgetIdList.contains(widgetId),
+        guard isEnabledWidgetId(widgetId),
               let config = widgetController.getWidgetConfig(widgetId) else {
             return
         }
@@ -311,6 +311,18 @@ private extension FcrClassToolsUIComponent {
         if let string = tsDic.jsonString() {
             widgetController.sendMessage(toWidget: widgetId,
                                          message: string)
+        }
+    }
+    
+    func isEnabledWidgetId(_ widgetId: String) -> Bool {
+        guard widgetIdList.contains(widgetId) else {
+            return false
+        }
+        switch widgetId {
+        case PollWidgetId:           return UIConfig.poll.enable
+        case CountdownTimerWidgetId: return UIConfig.counter.enable
+        case PopupQuizWidgetId:      return UIConfig.popupQuiz.enable
+        default:                     return false
         }
     }
 }

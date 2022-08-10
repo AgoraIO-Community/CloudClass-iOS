@@ -179,7 +179,8 @@ extension FcrBoardUIComponent: AgoraUIActivity {
 // MARK: - private
 private extension FcrBoardUIComponent {
     func joinBoardWidget() {
-        guard let boardConfig = widgetController.getWidgetConfig(kBoardWidgetId),
+        guard UIConfig.netlessBoard.enable,
+              let boardConfig = widgetController.getWidgetConfig(kBoardWidgetId),
               self.boardWidget == nil else {
             return
         }

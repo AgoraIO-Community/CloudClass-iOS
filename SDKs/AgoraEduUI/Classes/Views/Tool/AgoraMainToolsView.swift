@@ -14,7 +14,6 @@ protocol AgoraMainToolsViewDelegate: NSObjectProtocol {
     func didSelectBoardTool(type: AgoraBoardToolMainType)
 }
 
-
 fileprivate let kGapSize: CGFloat = AgoraFit.scale(12)
 fileprivate let kHGapSize: CGFloat = AgoraFit.scale(8)
 fileprivate let kItemHeight: CGFloat = AgoraFit.scale(30)
@@ -24,7 +23,7 @@ class AgoraMainToolsView: UIView {
     /** Data */
     weak var delegate: AgoraMainToolsViewDelegate?
     // Tool Box
-    var teachingAidsList: [AgoraTeachingAidType] = [.cloudStorage, .saveBoard] {
+    var teachingAidsList: [AgoraTeachingAidType] = [.cloudStorage, .saveBoard].enabledTypes() {
         didSet {
             if teachingAidsList.count != oldValue.count {
                 updateTeachingAidsLayout()
@@ -38,6 +37,9 @@ class AgoraMainToolsView: UIView {
     /** UI */
     private var aidsHeight: CGFloat {
         get {
+            guard teachingAidsList.count > 0 else {
+                return 0
+            }
             return (kItemHeight + kGapSize) * ceil(CGFloat(teachingAidsList.count) / 4) + kGapSize
         }
     }
@@ -74,6 +76,7 @@ class AgoraMainToolsView: UIView {
             }
         }
     }
+    
     var undoEnable: Bool = false {
         didSet {
             if undoEnable != oldValue {
@@ -109,6 +112,10 @@ class AgoraMainToolsView: UIView {
         initViews()
         initViewFrame()
         updateViewProperties()
+    }
+    
+    func updateTeachingAidsList(_ list: [AgoraTeachingAidType]) {
+        teachingAidsList = list.enabledTypes()
     }
     
     required init?(coder: NSCoder) {
@@ -261,6 +268,7 @@ extension AgoraMainToolsView: AgoraUIContentContainer {
         
         if containAids {
             sepLine.backgroundColor = config.sepLine.backgroundColor
+            sepLine.agora_visible = (teachingAidsList.count > 0)
         }
     }
 }
@@ -272,7 +280,7 @@ private extension AgoraMainToolsView {
             // 避免在视图加载完成前对data赋值，触发layout变化
             return
         }
-        
+        sepLine.agora_visible = (teachingAidsList.count > 0)
         teachingAidsView.mas_remakeConstraints { make in
             make?.left.equalTo()(self)?.offset()(AgoraFit.scale(8))
             make?.right.equalTo()(self)?.offset()(AgoraFit.scale(-8))
@@ -313,8 +321,8 @@ fileprivate extension Array where Element == AgoraBoardToolMainType {
                     list.append(item)
                 }
             case .paint:
-                if config.paint.enable,
-                   config.paint.visible {
+                if config.pencil.enable,
+                   config.pencil.visible {
                     list.append(item)
                 }
             case .text:
@@ -340,6 +348,44 @@ fileprivate extension Array where Element == AgoraBoardToolMainType {
             case .next:
                 if config.next.enable,
                    config.next.visible {
+                    list.append(item)
+                }
+            }
+        }
+        return list
+    }
+}
+
+fileprivate extension Array where Element == AgoraTeachingAidType {
+    func enabledTypes() -> [AgoraTeachingAidType] {
+        var list = [AgoraTeachingAidType]()
+        for item in self {
+            switch item {
+            case .vote:
+                if UIConfig.poll.enable,
+                   UIConfig.poll.visible {
+                    list.append(item)
+                }
+            case .cloudStorage:
+                if UIConfig.cloudStorage.enable,
+                   UIConfig.cloudStorage.visible {
+                    list.append(item)
+                }
+            case .saveBoard:
+                if UIConfig.netlessBoard.save.enable,
+                   UIConfig.netlessBoard.save.visible {
+                    list.append(item)
+                }
+            case .record:
+                list.append(item)
+            case .countDown:
+                if UIConfig.counter.enable,
+                   UIConfig.counter.visible {
+                    list.append(item)
+                }
+            case .answerSheet:
+                if UIConfig.popupQuiz.enable,
+                   UIConfig.popupQuiz.visible {
                     list.append(item)
                 }
             }

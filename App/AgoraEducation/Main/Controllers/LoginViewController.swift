@@ -59,12 +59,23 @@ import UIKit
     private var debugButton: AgoraBaseUIButton!
     private var debugCount: Int = 0
     /** 房间可选项*/
-    let kRoomOptions: [(AgoraEduRoomType, String)] = [
-        (.oneToOne, "Login_onetoone".ag_localized()),
-        (.small, "Login_small".ag_localized()),
-        (.lecture, "Login_lecture".ag_localized()),
-        (.vocational, "Login_vocational_lecture".ag_localized()),
-    ]
+    var kRoomOptions: [(AgoraEduRoomType, String)] {
+        var array = [(AgoraEduRoomType, String)]()
+        
+        let list = AgoraEduRoomType.getList()
+        
+        for item in list {
+            switch item {
+            case .oneToOne: array.append((.oneToOne, "Login_onetoone".ag_localized()))
+            case .small:    array.append((.small, "Login_small".ag_localized()))
+            case .lecture:  array.append((.lecture, "Login_lecture".ag_localized()))
+            case .vocation: array.append((.vocation, "Login_vocational_lecture".ag_localized()))
+            @unknown default: break
+            }
+        }
+        
+        return array
+    }
     /** 角色可选项*/
     let kRoleOptions: [(AgoraEduUserRole, String)] = [
         (.student, "login_role_student".ag_localized()),
@@ -165,10 +176,13 @@ extension LoginViewController {
                          completion: nil)
             return
         }
+        
+        #if !DEBUG
         // 检查协议，检查登录
         FcrPrivacyTermsViewController.checkPrivacyTerms {
             LoginWebViewController.showLoginIfNot(complete: nil)
         }
+        #endif
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>,
@@ -196,7 +210,7 @@ private extension LoginViewController {
     }
     
     func updateOptions() {
-        if self.inputParams.roomStyle == .vocational {
+        if self.inputParams.roomStyle == .vocation {
             self.dataSource = [.roomName,
                                .nickName,
                                .roomStyle,
@@ -275,7 +289,7 @@ private extension LoginViewController {
         }
         
         guard !(roomStyle == .lecture && inputParams.roleType == .teacher),
-              !(roomStyle == .vocational && inputParams.roleType == .teacher)
+              !(roomStyle == .vocation && inputParams.roleType == .teacher)
         else {
             AgoraToast.toast(message: "login_lecture_teacher_warning".ag_localized(),
                              type: .warning)
@@ -284,12 +298,19 @@ private extension LoginViewController {
         
         let encryptionMode = inputParams.encryptMode
         let region = self.getLaunchRegion()
-        // roomUuid = roomName + classType
-        var roomUuid = "\(roomName.md5())\(roomStyle.rawValue)"
-        // 职教处理
-        if roomStyle == .vocational {
-            roomUuid = "\(roomName.md5())\(AgoraEduRoomType.lecture.rawValue)"
+        
+        var roomTag: Int
+        
+        switch roomStyle {
+        case .oneToOne:   roomTag = 0
+        case .small:      roomTag = 4
+        case .lecture:    roomTag = 2
+        case .vocation:   roomTag = 2
+        @unknown default: fatalError()
         }
+        
+        let roomUuid = "\(roomName.md5())\(roomTag)"
+        
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
         if self.inputParams.serviceType == .livePremium {
             latencyLevel = .ultraLow
@@ -381,7 +402,7 @@ private extension LoginViewController {
                 launchConfig.widgets.removeValue(forKey: "easemobIM")
             }
             
-            if launchConfig.roomType == .vocational { // 职教入口
+            if launchConfig.roomType == .vocation { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
                                                    service: self.inputParams.serviceType ?? .livePremium,
                                                    success: launchSuccessBlock,
@@ -712,7 +733,7 @@ private extension LoginViewController {
             
             titleLabel.textColor = .white
         } else {
-            subTitleLabel.text = "About_url".ag_localized()
+            subTitleLabel.text = "settings_powerd_by".ag_localized()
             subTitleLabel.textColor = UIColor(hex: 0x677386)
             subTitleLabel.font = UIFont.systemFont(ofSize: 14)
             view.addSubview(subTitleLabel)

@@ -101,7 +101,7 @@ import AgoraWidget
             }
             self.isJoinedRoom = true
             
-            if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
+            if self.contextPool.user.getLocalUserInfo().userRole != .observer {
                 self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
                 self.contextPool.media.openLocalDevice(systemDevice: .mic)
             }
