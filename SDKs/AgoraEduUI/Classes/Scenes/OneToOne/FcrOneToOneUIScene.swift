@@ -28,7 +28,7 @@ import UIKit
                                                           delegate: self)
     
     /** 设置界面 控制器*/
-    private lazy var settingViewComponent: FcrSettingUIComponent = {
+    private lazy var settingComponent: FcrSettingUIComponent = {
         let vc = FcrSettingUIComponent(context: contextPool,
                                        exitDelegate: self)
         self.addChild(vc)
@@ -39,9 +39,11 @@ import UIKit
     private lazy var stateComponent = FcrRoomStateUIComponent(context: contextPool)
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalComponent = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                delegate: nil)
+                                                                delegate: nil,
+                                                                exitDelegate: self)
     /** 工具栏*/
-    private lazy var toolBarComponent = FcrToolBarUIComponent(context: contextPool)
+    private lazy var toolBarComponent = FcrToolBarUIComponent(context: contextPool,
+                                                              delegate: self)
     
     /** 渲染 控制器*/
     private lazy var renderComponent = FcrOneToOneWindowRenderUIComponent(context: contextPool,
@@ -59,7 +61,8 @@ import UIKit
     private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(context: contextPool,
                                                                             delegate: self)
     /** 聊天 控制器*/
-    private lazy var chatComponent = FcrChatUIComponent(context: contextPool)
+    private lazy var chatComponent = FcrChatUIComponent(context: contextPool,
+                                                        delegate: self)
     /** 教具 控制器*/
     private lazy var classToolsComponent = FcrClassToolsUIComponent(context: contextPool)
     /** 大窗 控制器*/
@@ -120,82 +123,64 @@ import UIKit
         super.initViews()
         
         let userRole = contextPool.user.getLocalUserInfo().userRole
+        var componentList: [UIViewController] = [stateComponent,
+                                                 settingComponent,
+                                                 globalComponent,
+                                                 boardComponent,
+                                                 renderComponent,
+                                                 webViewComponent,
+                                                 windowComponent,
+                                                 classToolsComponent,
+                                                 toolBarComponent,
+                                                 toolCollectionComponent,
+                                                 chatComponent]
         
-        addChild(stateComponent)
-        contentView.addSubview(stateComponent.view)
+        switch userRole {
+        case .teacher:
+            let teacherList = [classStateComponent,
+                               cloudComponent,
+                               renderMenuComponent]
+            componentList.append(contentsOf: teacherList)
+            for item in teacherList {
+                item.view.agora_visible = false
+            }
+        case .student:
+            break
+        case .assistant:
+            break
+        case .observer:
+            componentList.removeAll([toolCollectionComponent,
+                                     classToolsComponent])
+        }
         
-        globalComponent.roomDelegate = self
-        addChild(globalComponent)
-        globalComponent.viewDidLoad()
+        for component in componentList {
+            addChild(component)
+            
+            if component == settingComponent {
+                continue
+            }
+            
+            if component == globalComponent {
+                globalComponent.viewDidLoad()
+                continue
+            }
+            
+            if component == chatComponent,
+               !UIDevice.current.agora_is_pad {
+                chatComponent.viewDidLoad()
+                continue
+            }
+            
+            contentView.addSubview(component.view)
+        }
         
-        // 视图层级：白板，大窗，工具
-        addChild(boardComponent)
-        contentView.addSubview(boardComponent.view)
-        
-        addChild(renderComponent)
-        contentView.addSubview(renderComponent.view)
-        
-        addChild(webViewComponent)
-        contentView.addSubview(webViewComponent.view)
-        
-        addChild(windowComponent)
-        contentView.addSubview(windowComponent.view)
-        
-        toolBarComponent.delegate = self
+        // special
         if UIDevice.current.agora_is_pad {
             toolBarComponent.updateTools([.setting])
         } else {
-            toolBarComponent.updateTools([.setting, .message])
+            toolBarComponent.updateTools([.setting,
+                                          .message])
         }
-        contentView.addSubview(toolBarComponent.view)
-        
-        addChild(classToolsComponent)
-        contentView.addSubview(classToolsComponent.view)
-        
-        if userRole != .observer {
-            view.addSubview(toolCollectionComponent.view)
-        }
-        
-        if userRole == .teacher {
-            addChild(classStateComponent)
-            contentView.addSubview(classStateComponent.view)
-            classStateComponent.view.agora_enable = UIConfig.classState.enable
-            classStateComponent.view.agora_visible = false
-            
-            addChild(cloudComponent)
-            contentView.addSubview(cloudComponent.view)
-            
-            addChild(renderMenuComponent)
-            contentView.addSubview(renderMenuComponent.view)
-            renderMenuComponent.view.agora_enable = UIConfig.renderMenu.enable
-            renderMenuComponent.view.agora_visible = false
-            
-            cloudComponent.view.isHidden = true
-        }
-        
-        createChatComponent()
-        
-        stateComponent.view.agora_enable = UIConfig.stateBar.enable
-        stateComponent.view.agora_visible = UIConfig.stateBar.visible
-        
-        boardComponent.view.agora_enable = UIConfig.netlessBoard.enable
-        boardComponent.view.agora_visible = UIConfig.netlessBoard.visible
-        
-        
-        settingViewComponent.view.agora_enable = UIConfig.setting.enable
-        settingViewComponent.view.agora_visible = UIConfig.setting.visible
-        
-        toolBarComponent.view.agora_enable = UIConfig.toolBar.enable
-        toolBarComponent.view.agora_visible = UIConfig.toolBar.visible
-        
-        toolCollectionComponent.view.agora_enable = UIConfig.toolCollection.enable
-        toolCollectionComponent.view.agora_visible = UIConfig.toolCollection.visible
-        
-        classToolsComponent.view.agora_enable = UIConfig.toolBox.enable
-        classToolsComponent.view.agora_visible = UIConfig.toolBox.visible
-        
-        chatComponent.view.agora_enable = UIConfig.agoraChat.enable
-        chatComponent.view.agora_visible = UIConfig.agoraChat.visible
     }
     
     public override func initViewFrame() {
@@ -243,7 +228,7 @@ import UIKit
             make?.left.right().top().bottom().equalTo()(boardComponent.view)
         }
         
-        self.toolBarComponent.view.mas_remakeConstraints { make in
+        toolBarComponent.view.mas_remakeConstraints { make in
             make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
             make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
@@ -402,9 +387,9 @@ extension FcrOneToOneUIScene: FcrToolBarComponentDelegate {
                                 selectView: UIView) {
         switch tool {
         case .setting:
-            settingViewComponent.view.frame = CGRect(origin: .zero,
-                                                     size: settingViewComponent.suggestSize)
-            ctrlView = settingViewComponent.view
+            settingComponent.view.frame = CGRect(origin: .zero,
+                                                     size: settingComponent.suggestSize)
+            ctrlView = settingComponent.view
         case .message:
             chatComponent.view.frame = CGRect(origin: .zero,
                                               size: chatComponent.suggestSize)
@@ -462,12 +447,12 @@ extension FcrOneToOneUIScene: FcrToolCollectionUIComponentDelegate {
         ctrlView = nil
         switch type {
         case .cloudStorage:
-            if cloudComponent.view.isHidden {
+            if !cloudComponent.view.agora_visible {
                 cloudComponent.view.mas_remakeConstraints { make in
                     make?.left.right().top().bottom().equalTo()(boardComponent.view)
                 }
             }
-            cloudComponent.view.isHidden = !cloudComponent.view.isHidden
+            cloudComponent.view.agora_visible = !cloudComponent.view.agora_visible
         case .saveBoard:
             boardComponent.saveBoard()
         case .vote:
@@ -566,7 +551,7 @@ extension FcrOneToOneUIScene: FcrClassStateUIComponentDelegate {
             return
         }
         
-        classStateComponent.view.isHidden = false
+        classStateComponent.view.agora_visible = true
         
         let left: CGFloat = UIDevice.current.agora_is_pad ? 198 : 192
         classStateComponent.view.mas_makeConstraints { make in
@@ -594,14 +579,5 @@ private extension FcrOneToOneUIScene {
                                  height: (renderComponent.view.height - 2) / 2)
         layout.minimumLineSpacing = 2
         renderComponent.updateLayout(layout)
-    }
-    
-    func createChatComponent() {
-        addChild(chatComponent)
-        if UIDevice.current.agora_is_pad {
-            contentView.addSubview(chatComponent.view)
-        }
-        
-        chatComponent.delegate = self
     }
 }

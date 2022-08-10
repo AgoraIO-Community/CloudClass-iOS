@@ -139,11 +139,11 @@ class FcrToolCollectionUIComponent: UIViewController {
     func updateBoardActiveState(isActive: Bool) {
         guard localAuth,
               isActive else {
-            view.isHidden = true
+            view.agora_visible = false
             delegate?.toolCollectionDidChangeAppearance(false)
             return
         }
-        view.isHidden = false
+        view.agora_visible = true
         delegate?.toolCollectionDidChangeAppearance(true)
     }
     
@@ -233,6 +233,9 @@ class FcrToolCollectionUIComponent: UIViewController {
     func updateViewProperties() {
         let config = UIConfig.toolCollection
         
+        view.agora_enable = config.enable
+        view.agora_visible = false
+        
         contentView.layer.shadowColor = config.shadow.color
         contentView.layer.shadowOffset = config.shadow.offset
         contentView.layer.shadowOpacity = config.shadow.opacity
@@ -264,7 +267,7 @@ extension FcrToolCollectionUIComponent: AgoraWidgetActivityObserver,
         case .BoardStepChanged(let changeType):
             handleBoardWidgetStep(changeType)
         case .CloseBoard:
-            view.isHidden = true
+            view.agora_visible = false
             delegate?.toolCollectionDidChangeAppearance(false)
         default:
             break
@@ -443,8 +446,8 @@ private extension FcrToolCollectionUIComponent {
             mainCell.setImage(mainSelectedImage,
                               color: nil)
             
-            subCell.isHidden = true
-            sepLine.isHidden = true
+            subCell.agora_visible = false
+            sepLine.agora_visible = false
         }
         
         // 若选中的mainTool为text/paint
@@ -452,12 +455,12 @@ private extension FcrToolCollectionUIComponent {
             subCell.setImage(subToolsView.currentPaintTool.image,
                              color: UIColor(hex: subToolsView.currentColor))
             
-            subCell.isHidden = false
-            sepLine.isHidden = false
+            subCell.agora_visible = true
+            sepLine.agora_visible = true
         } else if currentMainTool == .text {
             subCell.setFont(subToolsView.curTextFont.value / 2)
-            subCell.isHidden = false
-            sepLine.isHidden = false
+            subCell.agora_visible = true
+            sepLine.agora_visible = true
         }
     }
     

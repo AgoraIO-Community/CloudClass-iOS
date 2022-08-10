@@ -260,6 +260,7 @@ class FcrRenderMenuUIComponent: UIViewController {
     func updateViewProperties() {
         let config = UIConfig.renderMenu
         
+        view.agora_enable = config.enable
         view.backgroundColor = .clear
         
         view.backgroundColor = config.backgroundColor

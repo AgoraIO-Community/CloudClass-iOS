@@ -47,7 +47,8 @@ import AgoraWidget
     
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalComponent = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                delegate: self)
+                                                                delegate: self,
+                                                                exitDelegate: self)
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
@@ -136,30 +137,62 @@ import AgoraWidget
     // MARK: AgoraUIContentContainer
     public override func initViews() {
         super.initViews()
+        
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
-        // Flat components
-        addChild(stateComponent)
-        contentView.addSubview(stateComponent.view)
+        var componentList: [UIViewController] = [stateComponent,
+                                                 settingComponent,
+                                                 globalComponent,
+                                                 boardComponent,
+                                                 renderComponent,
+                                                 webViewComponent,
+                                                 windowComponent,
+                                                 nameRollComponent,
+                                                 classToolsComponent,
+                                                 toolBarComponent,
+                                                 toolCollectionComponent,
+                                                 chatComponent]
         
-        addChild(renderComponent)
-        contentView.addSubview(renderComponent.view)
+        switch userRole {
+        case .teacher:
+            let teacherList = [classStateComponent,
+                               cloudComponent,
+                               renderMenuComponent,
+                               handsListComponent]
+            componentList.append(contentsOf: teacherList)
+            for item in teacherList {
+                item.view.agora_visible = false
+            }
+        case .student:
+            break
+        case .assistant:
+            break
+        case .observer:
+            componentList.removeAll([toolCollectionComponent,
+                                     nameRollComponent,
+                                     classToolsComponent])
+        }
         
+        for component in componentList {
+            addChild(component)
+            
+            if [settingComponent,
+                handsListComponent,
+                nameRollComponent].contains(component) {
+                continue
+            }
+            
+            if [globalComponent,
+                chatComponent].contains(component) {
+                component.viewDidLoad()
+                continue
+            }
+            
+            contentView.addSubview(component.view)
+        }
+        
+        // special
         boardComponent.view.clipsToBounds = true
-        addChild(boardComponent)
-        contentView.addSubview(boardComponent.view)
-        
-        addChild(webViewComponent)
-        contentView.addSubview(webViewComponent.view)
-        
-        addChild(windowComponent)
-        contentView.addSubview(windowComponent.view)
-        
-        addChild(toolBarComponent)
-        contentView.addSubview(toolBarComponent.view)
-        
-        addChild(classToolsComponent)
-        contentView.addSubview(classToolsComponent.view)
         
         switch userRole {
         case .teacher:
@@ -167,11 +200,6 @@ import AgoraWidget
                                           .message,
                                           .roster,
                                           .handsList])
-            
-            addChild(classStateComponent)
-            classStateComponent.view.agora_enable = UIConfig.classState.enable
-            classStateComponent.view.agora_visible = false
-            contentView.addSubview(classStateComponent.view)
         case .student:
             toolBarComponent.updateTools([.setting,
                                           .message,
@@ -181,70 +209,6 @@ import AgoraWidget
             toolBarComponent.updateTools([.setting,
                                           .message])
         }
-        
-        // Suspend components
-        addChild(settingComponent)
-        
-        addChild(chatComponent)
-        
-        switch userRole {
-        case .teacher:
-            addChild(nameRollComponent)
-            nameRollComponent.view.agora_enable = UIConfig.roster.enable
-            nameRollComponent.view.agora_visible = UIConfig.roster.enable
-            
-            addChild(handsListComponent)
-            handsListComponent.view.agora_enable = UIConfig.handsList.enable
-            handsListComponent.view.agora_visible = UIConfig.handsList.enable
-            
-            addChild(renderMenuComponent)
-            contentView.addSubview(renderMenuComponent.view)
-            renderMenuComponent.view.agora_enable = UIConfig.renderMenu.enable
-            renderMenuComponent.view.agora_visible = false
-            
-            addChild(toolCollectionComponent)
-            contentView.addSubview(toolCollectionComponent.view)
-            toolCollectionComponent.view.agora_enable = UIConfig.toolCollection.enable
-            toolCollectionComponent.view.agora_visible = UIConfig.toolCollection.enable
-            
-            addChild(cloudComponent)
-            cloudComponent.view.isHidden = true
-            contentView.addSubview(cloudComponent.view)
-        case .student:
-            addChild(nameRollComponent)
-            nameRollComponent.view.agora_enable = UIConfig.roster.enable
-            nameRollComponent.view.agora_visible = UIConfig.roster.enable
-            
-            addChild(toolCollectionComponent)
-            contentView.addSubview(toolCollectionComponent.view)
-            toolCollectionComponent.view.agora_enable = UIConfig.toolCollection.enable
-            toolCollectionComponent.view.agora_visible = UIConfig.toolCollection.enable
-        default:
-            break
-        }
-        
-        // Flat components
-        globalComponent.roomDelegate = self
-        addChild(globalComponent)
-        globalComponent.viewDidLoad()
-        
-        stateComponent.view.agora_enable = UIConfig.stateBar.enable
-        stateComponent.view.agora_visible = UIConfig.stateBar.visible
-        
-        boardComponent.view.agora_enable = UIConfig.netlessBoard.enable
-        boardComponent.view.agora_visible = UIConfig.netlessBoard.visible
-        
-        settingComponent.view.agora_enable = UIConfig.setting.enable
-        settingComponent.view.agora_visible = UIConfig.setting.visible
-        
-        toolBarComponent.view.agora_enable = UIConfig.toolBar.enable
-        toolBarComponent.view.agora_visible = UIConfig.toolBar.visible
-        
-        classToolsComponent.view.agora_enable = UIConfig.toolBox.enable
-        classToolsComponent.view.agora_visible = UIConfig.toolBox.visible
-        
-        chatComponent.view.agora_enable = UIConfig.agoraChat.enable
-        chatComponent.view.agora_visible = UIConfig.agoraChat.visible
     }
     
     public override func initViewFrame() {
@@ -268,7 +232,7 @@ import AgoraWidget
             make?.bottom.equalTo()(boardComponent.view.mas_top)?.offset()(-2)
         }
         
-        self.toolBarComponent.view.mas_remakeConstraints { make in
+        toolBarComponent.view.mas_remakeConstraints { make in
             make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
             make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
@@ -542,7 +506,7 @@ extension FcrSmallUIScene: FcrClassStateUIComponentDelegate {
             return
         }
         
-        classStateComponent.view.isHidden = false
+        classStateComponent.view.agora_visible = true
         
         let left: CGFloat = UIDevice.current.agora_is_pad ? 198 : 192
         classStateComponent.view.mas_makeConstraints { make in

@@ -34,7 +34,8 @@ protocol FcrUIConfig {
     var toolBar: FcrUIComponentToolBar { get }
     var toolCollection: FcrUIComponentToolCollection { get }
     var renderMenu: FcrUIComponentRenderMenu { get }
-    var toolBox: FcrUIComponentToolBox { get }
+//    var toolBox: FcrUIComponentToolBox { get }
+    var record: FcrUIComponentRecord { get }
     var handsList: FcrUIComponentHandsList { get }
     
     // base

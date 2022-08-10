@@ -66,10 +66,6 @@ class FcrClassStateUIComponent: UIViewController {
         contextPool.widget.add(self,
                                widgetId: kBoardWidgetId)
     }
-    
-    func dismissView() {
-        view.isHidden = true
-    }
 }
 
 // MARK: - AgoraUIContentContainer
@@ -81,10 +77,6 @@ extension FcrClassStateUIComponent: AgoraUIContentContainer {
                               action: #selector(onClickStart(_:)),
                               for: .touchUpInside)
         view.addSubview(startButton)
-        
-        let config = UIConfig.classState.startClass
-        startButton.agora_enable = config.enable
-        startButton.agora_visible = config.visible
     }
     
     func initViewFrame() {
@@ -94,18 +86,23 @@ extension FcrClassStateUIComponent: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let config = UIConfig.classState.startClass
+        let config = UIConfig.classState
         
-        startButton.titleLabel?.font = config.font
-        startButton.backgroundColor = config.normalBackgroundColor
-        startButton.setTitleColor(config.normalTitleColor,
+        view.agora_enable = config.enable
+        
+        startButton.agora_enable = config.startClass.enable
+        startButton.agora_visible = config.startClass.visible
+        
+        startButton.titleLabel?.font = config.startClass.font
+        startButton.backgroundColor = config.startClass.normalBackgroundColor
+        startButton.setTitleColor(config.startClass.normalTitleColor,
                                   for: .normal)
-        startButton.layer.cornerRadius = config.cornerRadius
+        startButton.layer.cornerRadius = config.startClass.cornerRadius
         
-        startButton.layer.shadowColor = config.shadow.color
-        startButton.layer.shadowOffset = config.shadow.offset
-        startButton.layer.shadowOpacity = config.shadow.opacity
-        startButton.layer.shadowRadius = config.shadow.radius
+        startButton.layer.shadowColor = config.startClass.shadow.color
+        startButton.layer.shadowOffset = config.startClass.shadow.offset
+        startButton.layer.shadowOpacity = config.startClass.shadow.opacity
+        startButton.layer.shadowRadius = config.startClass.shadow.radius
     }
 }
 

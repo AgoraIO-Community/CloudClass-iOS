@@ -16,7 +16,8 @@ import AgoraWidget
     private lazy var stateController = VocationalRoomStateUIComponent(context: contextPool)
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalController = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                    delegate: nil)
+                                                                 delegate: nil,
+                                                                 exitDelegate: self)
     /** CDN渲染 控制器*/
     private lazy var renderController = VcrMixStreamCDNRenderUIComponent(context: contextPool)
     /** 聊天窗口 控制器*/
@@ -68,7 +69,6 @@ import AgoraWidget
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        globalController.roomDelegate = self
         addChild(globalController)
         globalController.viewDidLoad()
 

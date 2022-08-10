@@ -51,7 +51,7 @@ class FcrChatUIComponent: UIViewController {
     public let suggestSize = CGSize(width: 200,
                                     height: 287)
     
-    public weak var delegate: FcrChatUIComponentDelegate?
+    private weak var delegate: FcrChatUIComponentDelegate?
             
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
@@ -155,6 +155,10 @@ extension FcrChatUIComponent: AgoraWidgetMessageObserver {
 // MARK: - Creations
 private extension FcrChatUIComponent {
     func createWidget() {
+        guard UIConfig.agoraChat.enable else {
+            return
+        }
+        
         if let object = createHyWidget() {
             widget = object
         } else if let object = createAgWidget() {
