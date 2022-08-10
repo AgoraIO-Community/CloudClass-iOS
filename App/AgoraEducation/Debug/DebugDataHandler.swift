@@ -152,8 +152,18 @@ extension DebugDataHandler {
             return nil
         }
         
+        var roomTag: Int
+        
+        switch roomType {
+        case .oneToOne:   roomTag = 0
+        case .small:      roomTag = 4
+        case .lecture:    roomTag = 2
+        case .vocation:   roomTag = 2
+        @unknown default: fatalError()
+        }
+        
         let userId = "\(userName.md5())\(roleType.rawValue)"
-        let roomId = "\(roomName.md5())\(roomType.rawValue)"
+        let roomId = "\(roomName.md5())\(roomTag)"
         return DebugLaunchInfo(roomName: roomName,
                                roomId: roomId,
                                userName: userName,

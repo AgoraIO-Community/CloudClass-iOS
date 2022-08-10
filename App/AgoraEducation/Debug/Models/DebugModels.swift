@@ -102,7 +102,7 @@ enum DataSourceRoomType: CaseIterable {
         case .oneToOne:     return .oneToOne
         case .small:        return .small
         case .lecture:      return .lecture
-        case .vocational:   return .vocational
+        case .vocational:   return .vocation
         case .unselected:   return nil
         }
     }
@@ -467,7 +467,7 @@ struct DebugLaunchInfo {
     
     var latencyLevel: AgoraEduLatencyLevel {
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
-        if roomType == .vocational,
+        if roomType == .vocation,
            serviceType == .liveStandard {
             latencyLevel = .low
         }
