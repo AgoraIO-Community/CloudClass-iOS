@@ -192,7 +192,7 @@ extension FcrStreamWindowUIComponent {
 private extension FcrStreamWindowUIComponent {
     func addItem(_ item: FcrStreamWindowWidgetItem,
                  animation: Bool = true) {
-        if let prevItem = dataSource.firstItem(widgetObjectId: item.widgetObjectId) {
+        guard dataSource.firstItem(widgetObjectId: item.widgetObjectId) == nil  else {
             return
         }
         
@@ -277,12 +277,18 @@ private extension FcrStreamWindowUIComponent {
     }
     
     func createItem(widgetObjectId: String) -> FcrStreamWindowWidgetItem? {
-        guard widgetObjectId.hasPrefix(WindowWidgetId),
+        guard UIConfig.streamWindow.enable,
+              widgetObjectId.hasPrefix(WindowWidgetId),
               dataSource.firstItem(widgetObjectId: widgetObjectId) == nil,
               let config = widgetController.getWidgetConfig(WindowWidgetId),
               let streamId = widgetObjectId.splitStreamId(),
               let streamList = streamController.getAllStreamList(),
               let stream = streamList.first(where: {$0.streamUuid == streamId}) else {
+            return nil
+        }
+        
+        if stream.videoSourceType == .screen,
+           !UIConfig.screenShare.enable {
             return nil
         }
         
