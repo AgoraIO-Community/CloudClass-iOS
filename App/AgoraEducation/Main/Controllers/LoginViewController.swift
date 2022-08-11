@@ -59,12 +59,23 @@ import UIKit
     private var debugButton: AgoraBaseUIButton!
     private var debugCount: Int = 0
     /** 房间可选项*/
-    let kRoomOptions: [(AgoraEduRoomType, String)] = [
-        (.oneToOne, "Login_onetoone".ag_localized()),
-        (.small, "Login_small".ag_localized()),
-        (.lecture, "Login_lecture".ag_localized()),
-        (.vocational, "Login_vocational_lecture".ag_localized()),
-    ]
+    var kRoomOptions: [(AgoraEduRoomType, String)] {
+        var array = [(AgoraEduRoomType, String)]()
+        
+        let list = AgoraEduRoomType.getList()
+        
+        for item in list {
+            switch item {
+            case .oneToOne: array.append((.oneToOne, "Login_onetoone".ag_localized()))
+            case .small:    array.append((.small, "Login_small".ag_localized()))
+            case .lecture:  array.append((.lecture, "Login_lecture".ag_localized()))
+            case .vocation: array.append((.vocation, "Login_vocational_lecture".ag_localized()))
+            @unknown default: break
+            }
+        }
+        
+        return array
+    }
     /** 角色可选项*/
     let kRoleOptions: [(AgoraEduUserRole, String)] = [
         (.student, "login_role_student".ag_localized()),
@@ -102,10 +113,10 @@ import UIKit
 
     /** 服务类型可选项*/
     let kVocationalServiceOptions: [(AgoraEduServiceType, String)] = [
-        (.RTC, "Login_service_rtc".ag_localized()),
-        (.fastRTC, "Login_service_fast_rtc".ag_localized()),
-        (.onlyCDN, "Login_service_only_cdn".ag_localized()),
-        (.mixedCDN, "Login_service_mixed_cdn".ag_localized()),
+        (.livePremium, "Login_service_rtc".ag_localized()),
+        (.liveStandard, "Login_service_fast_rtc".ag_localized()),
+        (.CDN, "Login_service_only_cdn".ag_localized()),
+        (.fusion, "Login_service_mixed_cdn".ag_localized()),
     ]
 }
 
@@ -133,7 +144,15 @@ extension LoginViewController {
            let data = try? Data(contentsOf: url) {
             AgoraLoading.setImageData(data)
         }
-
+        
+        let noticeImage = UIImage(named: "toast_notice")!
+        let warningImage = UIImage(named: "toast_warning")!
+        let errorImage = UIImage(named: "toast_warning")!
+        
+        AgoraToast.setImages(noticeImage: noticeImage,
+                             warningImage: warningImage,
+                             errorImage: errorImage)
+        
         createViews()
         createConstraint()
         
@@ -157,10 +176,13 @@ extension LoginViewController {
                          completion: nil)
             return
         }
+        
+        #if !DEBUG
         // 检查协议，检查登录
         FcrPrivacyTermsViewController.checkPrivacyTerms {
             LoginWebViewController.showLoginIfNot(complete: nil)
         }
+        #endif
     }
     
     public override func touchesBegan(_ touches: Set<UITouch>,
@@ -188,7 +210,7 @@ private extension LoginViewController {
     }
     
     func updateOptions() {
-        if self.inputParams.roomStyle == .vocational {
+        if self.inputParams.roomStyle == .vocation {
             self.dataSource = [.roomName,
                                .nickName,
                                .roomStyle,
@@ -267,25 +289,32 @@ private extension LoginViewController {
         }
         
         guard !(roomStyle == .lecture && inputParams.roleType == .teacher),
-              !(roomStyle == .vocational && inputParams.roleType == .teacher)
+              !(roomStyle == .vocation && inputParams.roleType == .teacher)
         else {
-            AgoraToast.toast(msg: "login_lecture_teacher_warning".ag_localized(),
+            AgoraToast.toast(message: "login_lecture_teacher_warning".ag_localized(),
                              type: .warning)
             return
         }
         
         let encryptionMode = inputParams.encryptMode
         let region = self.getLaunchRegion()
-        // roomUuid = roomName + classType
-        var roomUuid = "\(roomName)\(roomStyle.rawValue)"
-        // 职教处理
-        if roomStyle == .vocational {
-            roomUuid = "\(roomName)\(AgoraEduRoomType.lecture.rawValue)"
+        
+        var roomTag: Int
+        
+        switch roomStyle {
+        case .oneToOne:   roomTag = 0
+        case .small:      roomTag = 4
+        case .lecture:    roomTag = 2
+        case .vocation:   roomTag = 2
+        @unknown default: fatalError()
         }
+        
+        let roomUuid = "\(roomName.md5())\(roomTag)"
+        
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
-        if self.inputParams.serviceType == .RTC {
+        if self.inputParams.serviceType == .livePremium {
             latencyLevel = .ultraLow
-        } else if self.inputParams.serviceType == .fastRTC {
+        } else if self.inputParams.serviceType == .liveStandard {
             latencyLevel = .low
         }
         
@@ -318,7 +347,7 @@ private extension LoginViewController {
 
         let failureBlock: (Error) -> () = { (error) in
             AgoraLoading.hide()
-            AgoraToast.toast(msg: error.localizedDescription,
+            AgoraToast.toast(message: error.localizedDescription,
                              type: .error)
         }
         
@@ -330,6 +359,10 @@ private extension LoginViewController {
             guard let `self` = self else {
                 return
             }
+            
+            // UI mode
+            agora_ui_mode = self.getLaunchUIMode()
+            agora_ui_language = self.getLaunchLanguage()
             
             let appId = response.appId
             let token = response.token
@@ -346,8 +379,6 @@ private extension LoginViewController {
                                                     startTime: nil,
                                                     duration: NSNumber(value: duration),
                                                     region: region,
-                                                    uiMode: self.getLaunchUIMode(),
-                                                    language: self.getLaunchLanguage(),
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
             
@@ -371,9 +402,9 @@ private extension LoginViewController {
                 launchConfig.widgets.removeValue(forKey: "easemobIM")
             }
             
-            if launchConfig.roomType == .vocational { // 职教入口
+            if launchConfig.roomType == .vocation { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
-                                                   service: self.inputParams.serviceType ?? .RTC,
+                                                   service: self.inputParams.serviceType ?? .livePremium,
                                                    success: launchSuccessBlock,
                                                    failure: failureBlock)
             } else { // 灵动课堂入口
@@ -418,17 +449,21 @@ private extension LoginViewController {
         }
     }
     
-    func getLaunchLanguage() -> AgoraLanguage {
+    func getLaunchLanguage() -> String? {
         switch FcrLocalization.shared.language {
-        case .zh_cn: return .simplified
-        case .en:    return .english
-        case .zh_tw: return .followSystem
-        case .none:  return .followSystem
+        case .zh_cn: return "zh-Hans"
+        case .en:    return "en"
+        case .zh_tw: return nil
+        case .none:  return nil
         }
     }
     
-    func getLaunchUIMode() -> AgoraEduUIMode {
-        return AgoraEduUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
+    func getLaunchUIMode() -> AgoraUIMode {
+        if let mode = AgoraUIMode(rawValue: FcrUserInfoPresenter.shared.theme) {
+            return mode
+        } else {
+            return .agoraLight
+        }
     }
 }
 
@@ -480,7 +515,7 @@ extension LoginViewController: AgoraEduClassroomSDKDelegate {
                              didExit reason: AgoraEduExitReason) {
         switch reason {
         case .kickOut:
-            AgoraToast.toast(msg: "kick out")
+            AgoraToast.toast(message: "kick out")
         default:
             break
         }
@@ -698,7 +733,7 @@ private extension LoginViewController {
             
             titleLabel.textColor = .white
         } else {
-            subTitleLabel.text = "About_url".ag_localized()
+            subTitleLabel.text = "settings_powerd_by".ag_localized()
             subTitleLabel.textColor = UIColor(hex: 0x677386)
             subTitleLabel.font = UIFont.systemFont(ofSize: 14)
             view.addSubview(subTitleLabel)

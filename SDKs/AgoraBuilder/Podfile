@@ -1,0 +1,72 @@
+# Uncomment the next line to define a global platform for your project
+
+  platform :ios, '10.0'
+
+def libVersion
+  # third libs
+  pod 'Protobuf', '3.17.0'
+  pod "CocoaLumberjack", '3.6.1'
+  pod 'AliyunOSSiOS',  '2.10.8'
+  pod 'Armin',  '1.1.0'
+  pod 'SSZipArchive', '2.4.2'
+  pod 'SwifterSwift', '5.2.0'
+  pod 'Masonry', '1.1.0'
+  pod 'SDWebImage', '5.12.0'
+
+  # agora libs
+  pod 'AgoraRtm_iOS', '1.4.8'
+  pod 'AgoraMediaPlayer_iOS', '1.3.0'
+  pod 'Whiteboard', '2.16.29'
+  pod 'Agora_Chat_iOS', '1.0.6'
+end
+
+def preRtc
+  pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
+  pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
+  pod "AgoraRtcEngine_iOS", "3.5.2"
+end
+
+def reRtc
+  pod 'AgoraEduCore/ReRtc', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
+  pod 'AgoraRte/ReRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
+  pod 'AgoraRtcKit', :path => '../../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'  
+end
+
+def openSourceLibs
+  # open source libs
+  pod 'AgoraClassroomSDK_iOS', :path => '../../AgoraClassroomSDK_iOS.podspec'
+  pod 'AgoraEduContext', :path => '../../AgoraEduContext.podspec'
+  pod 'AgoraEduUI', :path => '../../AgoraEduUI.podspec'
+  pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/AgoraWidgets.podspec'
+end
+
+def closeSourceLibs
+  # close source libs
+  pod 'AgoraReport', :path => '../../../apaas-common-libs-ios/SDKs/AgoraReport/AgoraReport.podspec'
+  pod 'AgoraRx', :path => '../../../apaas-common-libs-ios/SDKs/AgoraRx/AgoraRx.podspec'
+	
+  # common libs
+  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
+  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'  
+
+  # rtc
+  preRtc
+end
+
+target 'AgoraBuilder' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  libVersion
+  openSourceLibs
+  closeSourceLibs
+
+  post_install do |installer|
+     installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+          config.build_settings['BITCODE_GENERATION_MODE'] = 'bitcode'
+          config.build_settings['ENABLE_BITCODE'] = 'YES'
+        end
+     end
+  end
+end

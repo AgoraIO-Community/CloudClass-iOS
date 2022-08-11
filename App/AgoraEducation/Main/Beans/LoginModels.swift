@@ -41,6 +41,10 @@ enum RoomInfoItemType: Int, CaseIterable {
     case mediaAuth
     // 主题模式
     case uiMode
+    // 语言
+    case uiLanguage
+    // 区域
+    case region
     // 环境
     case env
 }

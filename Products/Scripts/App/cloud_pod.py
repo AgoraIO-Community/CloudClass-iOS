@@ -48,7 +48,14 @@ end
    """
 
 BinaryPodContent = """
-    pod 'AgoraClassroomSDK', :path => '../Products/AgoraClassroomSDK_Binary.podspec'
+  pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
+  pod 'AgoraEduContext', :path => '../AgoraEduContext.podspec'
+  pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
+  pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets.podspec'
+    
+  pod 'AgoraUIBaseViews', :path => '../Products/AgoraUIBaseViews_Binary.podspec'
+  pod 'AgoraEduCore', :path => '../Products/AgoraEduCore_Binary.podspec'
+  pod 'AgoraWidget', :path => '../Products/AgoraWidget_Binary.podspec'
 end
 """
 

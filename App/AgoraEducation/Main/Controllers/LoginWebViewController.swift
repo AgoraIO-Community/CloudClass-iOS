@@ -23,7 +23,6 @@ class LoginWebViewController: FcrOutsideClassBaseController {
             guard let redirectURL = dict["data"] as? String,
                   let root = UIApplication.shared.keyWindow?.rootViewController
             else {
-                AgoraToast.toast(msg: "")
                 return
             }
             let vc = LoginWebViewController()
@@ -33,7 +32,8 @@ class LoginWebViewController: FcrOutsideClassBaseController {
             root.present(vc, animated: true)
         } onFailure: { msg in
             AgoraLoading.hide()
-            AgoraToast.toast(msg: msg)
+            AgoraToast.toast(message: msg,
+                             type: .error)
         }
     }
     
@@ -67,8 +67,8 @@ class LoginWebViewController: FcrOutsideClassBaseController {
                               for: .touchUpInside)
         view.addSubview(debugButton)
         debugButton.mas_makeConstraints { make in
-            make?.height.equalTo()(40)
-            make?.width.equalTo()(30)
+            make?.height.equalTo()(60)
+            make?.width.equalTo()(40)
             make?.left.bottom().equalTo()(0)
         }
     }

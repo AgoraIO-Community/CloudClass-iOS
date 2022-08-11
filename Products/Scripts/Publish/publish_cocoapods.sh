@@ -22,7 +22,7 @@ git commit -m "[ENH]:${Tag}"
 git tag -d ${Tag}
 git push originGithub :refs/tags/${Tag}
 git tag ${Tag}
-git push originGithub --tags
+git push originGithub ${Tag}
 
 pod spec lint ${SDK_Name}.podspec --allow-warnings --verbose
 pod trunk push ${SDK_Name}.podspec --allow-warnings --verbose

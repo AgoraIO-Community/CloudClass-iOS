@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
-  spec.name         = 'AgoraClassroomSDK'
-  spec.version      = '2.6.1'
+  spec.name         = 'AgoraClassroomSDK_iOS'
+  spec.version      = '5.0.0'
   spec.summary      = 'Education scene SDK'
 
   spec.description  = "Education scene binary SDK "
@@ -19,4 +19,10 @@ Pod::Spec.new do |spec|
   spec.vendored_frameworks = [
     "Libs/*.framework"
   ]
+
+  spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
+  spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
+  spec.xcconfig             = { "BUILD_LIBRARY_FOR_DISTRIBUTION" => "YES" }
+  spec.pod_target_xcconfig  = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
+  spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
 end

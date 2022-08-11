@@ -36,12 +36,12 @@ buildItem() {
     SDK_Name=$1
     
     echo "${Color} ======${SDK_Name} Start======== ${Res}"
-    ./buildFramework.sh ${SDKs_Path}/${SDK_Name} ${SDK_Name} Release
+    ./buildFramework.sh ${SDKs_Path}/AgoraBuilder ${SDK_Name} Release
 
     errorExit ${SDK_Name} $?
 }
 
-SDK_Name="AgoraClassroomSDK"
+SDK_Name="AgoraClassroomSDK_iOS"
 
 buildItem ${SDK_Name}
 
@@ -53,6 +53,21 @@ do
     then
         continue
     elif [[ ! ${FileName} =~ "Agora" ]]
+    then
+        rm -fr ${Products_Path}/${FileName}
+    elif [[ ${FileName} =~ "AgoraClassroomSDK" ]]
+    then
+        rm -fr ${Products_Path}/${FileName}
+    elif [[ ${FileName} =~ "AgoraEduUI" ]]
+    then
+        rm -fr ${Products_Path}/${FileName}
+    elif [[ ${FileName} =~ "AgoraEduContext" ]]
+    then
+        rm -fr ${Products_Path}/${FileName}
+    elif [[ ${FileName} =~ "AgoraWidgets" ]]
+    then
+        rm -fr ${Products_Path}/${FileName}
+    elif [[ ${FileName} =~ "AgoraLog" ]]
     then
         rm -fr ${Products_Path}/${FileName}
     elif [[ ${FileName} =~ "Pods" ]]

@@ -54,6 +54,8 @@ import AgoraEduUI
         .delay,
         .mediaAuth,
         .uiMode,
+        .uiLanguage,
+        .region,
         .env
     ]
     
@@ -66,12 +68,24 @@ import AgoraEduUI
     private let minInputLength = 6
     
     /** 房间可选项*/
-    let kRoomOptions: [(AgoraEduRoomType, String)] = [
-        (.oneToOne, "Login_onetoone".ag_localized()),
-        (.small, "Login_small".ag_localized()),
-        (.lecture, "Login_lecture".ag_localized()),
-        (.vocational, "Login_vocational_lecture".ag_localized()),
-    ]
+    var kRoomOptions: [(AgoraEduRoomType, String)] {
+        var array = [(AgoraEduRoomType, String)]()
+        
+        let list = AgoraEduRoomType.getList()
+        
+        for item in list {
+            switch item {
+            case .oneToOne: array.append((.oneToOne, "Login_onetoone".ag_localized()))
+            case .small:    array.append((.small, "Login_small".ag_localized()))
+            case .lecture:  array.append((.lecture, "Login_lecture".ag_localized()))
+            case .vocation: array.append((.vocation, "Login_vocational_lecture".ag_localized()))
+            @unknown default: break
+            }
+        }
+        
+        return array
+    }
+    
     /** 角色可选项*/
     let kRoleOptions: [(AgoraEduUserRole, String)] = [
         (.student, "login_role_student".ag_localized()),
@@ -108,17 +122,29 @@ import AgoraEduUI
     ]
     
     /** 主题模式*/
-    let kUIModeOptions: [(AgoraEduUIMode, String)] = [
-        (.light, "settings_theme_light".ag_localized()),
-        (.dark, "settings_theme_dark".ag_localized()),
+    let kUIModeOptions: [(AgoraUIMode, String)] = [
+        (.agoraLight, "settings_theme_light".ag_localized()),
+        (.agoraDark, "settings_theme_dark".ag_localized()),
     ]
-
+    
+    /** 语言*/
+    let kUILanguageOptions: [(FcrSurpportLanguage, String)] = [
+        (.zh_cn, "Login_uiLanguage_zh_cn".ag_localized()),
+        (.en, "Login_uiLanguage_en".ag_localized()),
+    ]
+    /** 区域可选项*/
+    let kRegionOptions: [(FcrEnvironment.Region, String)] = [
+        (.CN, FcrEnvironment.Region.CN.rawValue),
+        (.NA, FcrEnvironment.Region.NA.rawValue),
+        (.EU, FcrEnvironment.Region.EU.rawValue),
+        (.AP, FcrEnvironment.Region.AP.rawValue),
+    ]
     /** 服务类型可选项*/
     let kVocationalServiceOptions: [(AgoraEduServiceType, String)] = [
-        (.RTC, "Login_service_rtc".ag_localized()),
-        (.fastRTC, "Login_service_fast_rtc".ag_localized()),
-        (.onlyCDN, "Login_service_only_cdn".ag_localized()),
-        (.mixedCDN, "Login_service_mixed_cdn".ag_localized()),
+        (.livePremium, "Login_service_rtc".ag_localized()),
+        (.liveStandard, "Login_service_fast_rtc".ag_localized()),
+        (.CDN, "Login_service_only_cdn".ag_localized()),
+        (.fusion, "Login_service_mixed_cdn".ag_localized()),
         (.mixStreamCDN, "合流转推"),
         (.hostingScene, "伪直播"),
     ]
@@ -141,6 +167,22 @@ extension DebugViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
+        // setup agora loading
+        if let bundle = Bundle.agora_bundle("AgoraEduUI"),
+           let url = bundle.url(forResource: "img_loading",
+                                withExtension: "gif"),
+           let data = try? Data(contentsOf: url) {
+            AgoraLoading.setImageData(data)
+        }
+        
+        let noticeImage = UIImage(named: "toast_notice")!
+        let warningImage = UIImage(named: "toast_warning")!
+        let errorImage = UIImage(named: "toast_warning")!
+        
+        AgoraToast.setImages(noticeImage: noticeImage,
+                             warningImage: warningImage,
+                             errorImage: errorImage)
         
         createViews()
         createConstraint()
@@ -175,13 +217,13 @@ private extension DebugViewController {
         }
     }
     func updateOptions() {
-        if self.inputParams.roomStyle == .vocational {
+        if self.inputParams.roomStyle == .vocation {
             self.dataSource = [
-                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .env
+                .roomName, .nickName, .roomStyle, .serviceType, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .uiMode, .uiLanguage, .region, .env
             ]
         } else {
             self.dataSource = [
-                .roomName, .nickName, .roomStyle, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .uiMode, .env
+                .roomName, .nickName, .roomStyle, .roleType, .im, .duration, .encryptKey, .encryptMode, .startTime, .delay, .mediaAuth, .uiMode, .uiLanguage, .region, .env
             ]
         }
         self.tableView.reloadData()
@@ -244,16 +286,23 @@ private extension DebugViewController {
         let encryptionMode = inputParams.encryptMode
         let im = inputParams.im
         
-        // roomUuid = roomName + classType
-        var roomUuid = "\(roomName)\(roomStyle.rawValue)"
-        // 职教处理
-        if roomStyle == .vocational {
-            roomUuid = "\(roomName)\(AgoraEduRoomType.lecture.rawValue)"
+        var roomTag: Int
+        
+        switch roomStyle {
+        case .oneToOne:   roomTag = 0
+        case .small:      roomTag = 4
+        case .lecture:    roomTag = 2
+        case .vocation:   roomTag = 2
+        @unknown default: fatalError()
         }
+        
+        let roomUuid = "\(roomName.md5())\(roomTag)"
+        
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
-        if self.inputParams.serviceType == .RTC {
+        
+        if self.inputParams.serviceType == .livePremium {
             latencyLevel = .ultraLow
-        } else if self.inputParams.serviceType == .fastRTC {
+        } else if self.inputParams.serviceType == .liveStandard {
             latencyLevel = .low
         }
         
@@ -288,7 +337,7 @@ private extension DebugViewController {
         
         let failure: (Error) -> () = { (error) in
             AgoraLoading.hide()
-            AgoraToast.toast(msg: error.localizedDescription,
+            AgoraToast.toast(message: error.localizedDescription,
                              type: .error)
         }
         
@@ -300,55 +349,57 @@ private extension DebugViewController {
                      userId: userUuid,
                      userRole: inputParams.roleType.rawValue,
                      success: { [weak self] (response) in
-                        guard let `self` = self else {
-                            return
-                        }
-                        
-                        let appId = response.appId
-                        let token = response.token
-                        let userUuid = response.userId
-                        
-                        let launchConfig = AgoraEduLaunchConfig(userName: userName,
-                                                                userUuid: userUuid,
-                                                                userRole: userRole,
-                                                                roomName: roomName,
-                                                                roomUuid: roomUuid,
-                                                                roomType: roomStyle,
-                                                                appId: appId,
-                                                                token: token,
-                                                                startTime: startTime,
-                                                                duration: NSNumber(value: duration),
-                                                                region: region,
-                                                                uiMode: self.getLaunchUIMode(),
-                                                                language: self.getLaunchLanguage(),
-                                                                mediaOptions: mediaOptions,
-                                                                userProperties: nil)
-                        // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
-                        var widgets = Dictionary<String,AgoraWidgetConfig>()
-                        launchConfig.widgets.forEach { [unowned self] (k,v) in
-                            if k == "AgoraCloudWidget" {
-                                v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
-                            }
-
-                            if k == "netlessBoard",
-                               v.extraInfo != nil {
-                                var newExtra = v.extraInfo as! Dictionary<String, Any>
-                                newExtra["coursewareList"] = self.inputParams.publicCoursewares()
-                                v.extraInfo = newExtra
-                            }
-
-                            widgets[k] = v
-                        }
-                        launchConfig.widgets = widgets
-                        
-                        if im == .rtm {
-                            launchConfig.widgets.removeValue(forKey: "easemobIM")
-                        }
-                        
-                        AgoraClassroomSDK.setDelegate(self)
-            if launchConfig.roomType == .vocational { // 职教入口
+            guard let `self` = self else {
+                return
+            }
+            
+            // UI Mode & Language
+            agora_ui_mode = self.getLaunchUIMode()
+            agora_ui_language = self.getLaunchLanguage()
+            
+            let appId = response.appId
+            let token = response.token
+            let userUuid = response.userId
+            
+            let launchConfig = AgoraEduLaunchConfig(userName: userName,
+                                                    userUuid: userUuid,
+                                                    userRole: userRole,
+                                                    roomName: roomName,
+                                                    roomUuid: roomUuid,
+                                                    roomType: roomStyle,
+                                                    appId: appId,
+                                                    token: token,
+                                                    startTime: startTime,
+                                                    duration: NSNumber(value: duration),
+                                                    region: region,
+                                                    mediaOptions: mediaOptions,
+                                                    userProperties: nil)
+            // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
+            var widgets = Dictionary<String,AgoraWidgetConfig>()
+            launchConfig.widgets.forEach { [unowned self] (k,v) in
+                if k == "AgoraCloudWidget" {
+                    v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
+                }
+                
+                if k == "netlessBoard",
+                   v.extraInfo != nil {
+                    var newExtra = v.extraInfo as! Dictionary<String, Any>
+                    newExtra["coursewareList"] = self.inputParams.publicCoursewares()
+                    v.extraInfo = newExtra
+                }
+                
+                widgets[k] = v
+            }
+            launchConfig.widgets = widgets
+            
+            if im == .rtm {
+                launchConfig.widgets.removeValue(forKey: "easemobIM")
+            }
+            
+            AgoraClassroomSDK.setDelegate(self)
+            if launchConfig.roomType == .vocation { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
-                                                   service: self.inputParams.serviceType ?? .RTC,
+                                                   service: self.inputParams.serviceType ?? .livePremium,
                                                    success: success,
                                                    failure: failure)
             } else { // 灵动课堂入口
@@ -409,17 +460,28 @@ private extension DebugViewController {
         }
     }
     
-    func getLaunchLanguage() -> AgoraLanguage {
+    func getLaunchLanguage() -> String? {
         switch FcrLocalization.shared.language {
-        case .zh_cn: return .simplified
-        case .en:    return .english
-        case .zh_tw: return .followSystem
-        case .none:  return .followSystem
+        case .zh_cn: return "zh-Hans"
+        case .en:    return "en"
+        case .zh_tw: return nil
+        case .none:  return nil
         }
     }
     
-    func getLaunchUIMode() -> AgoraEduUIMode {
-        return AgoraEduUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
+    func getLaunchUIMode() -> AgoraUIMode {
+        if let mode = AgoraUIMode(rawValue: FcrUserInfoPresenter.shared.theme) {
+            return mode
+        } else {
+            return .agoraLight
+        }
+    }
+    
+    func getUILanguage() -> FcrSurpportLanguage {
+        if let language = FcrLocalization.shared.language {
+            return language
+        }
+        return .zh_cn
     }
 }
 
@@ -429,7 +491,7 @@ extension DebugViewController: AgoraEduClassroomSDKDelegate {
                              didExit reason: AgoraEduExitReason) {
         switch reason {
         case .kickOut:
-            AgoraToast.toast(msg: "kick out")
+            AgoraToast.toast(message: "kick out")
         default:
             break
         }
@@ -523,6 +585,18 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
             cell.textField.placeholder = "Login_uiMode_holder".ag_localized()
             cell.textField.text = optionDescription(option: getLaunchUIMode(),
                                                     in: kUIModeOptions)
+        case .uiLanguage:
+            cell.mode = .option
+            cell.titleLabel.text = "Login_uiLanguage_title".ag_localized()
+            cell.textField.placeholder = "Login_uiLanguage_holder".ag_localized()
+            cell.textField.text = optionDescription(option: getUILanguage(),
+                                                    in: kUILanguageOptions)
+        case .region:
+            cell.mode = .option
+            cell.titleLabel.text = "Login_region_title".ag_localized()
+            cell.textField.placeholder = ""
+            cell.textField.text = optionDescription(option: FcrEnvironment.shared.region,
+                                                    in: kRegionOptions)
         case .env:
             cell.mode = .option
             cell.titleLabel.text = "Login_env_title".ag_localized()
@@ -637,6 +711,30 @@ extension DebugViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.textField.text = str
                 self.hideOptions()
             }
+        case .uiLanguage:
+            let options = optionStrings(form: kUILanguageOptions)
+            let index = optionIndex(option: getUILanguage(),
+                                    in: kUILanguageOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                let (v, str) = kUILanguageOptions[i]
+                FcrLocalization.shared.setupNewLanguage(v)
+                cell.textField.text = str
+                self.hideOptions()
+            }
+        case .region:
+            let options = optionStrings(form: kRegionOptions)
+            let index = optionIndex(option: FcrEnvironment.shared.region,
+                                    in: kRegionOptions)
+            optionsView.show(beside: cell,
+                             options: options,
+                             index: index) { [unowned self] i in
+                let (v, str) = kRegionOptions[i]
+                FcrEnvironment.shared.region = v
+                cell.textField.text = str
+                self.hideOptions()
+            }
         case .env:
             let options = optionStrings(form: kEnvironmentOptions)
             let index = optionIndex(option: FcrEnvironment.shared.environment,
@@ -728,7 +826,7 @@ private extension DebugViewController {
             
             titleLabel.textColor = .white
         } else {
-            subTitleLabel.text = "About_url".ag_localized()
+            subTitleLabel.text = "settings_powerd_by".ag_localized()
             subTitleLabel.textColor = UIColor(hex: 0x677386)
             subTitleLabel.font = UIFont.systemFont(ofSize: 14)
             view.addSubview(subTitleLabel)
