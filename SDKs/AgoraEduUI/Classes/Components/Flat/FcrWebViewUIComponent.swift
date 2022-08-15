@@ -222,7 +222,8 @@ private extension FcrWebViewUIComponent {
     }
     
     func createWidget(_ widgetId: String) {
-        guard widgetArray.firstItem(widgetId: widgetId) == nil else {
+        guard UIConfig.webView.enable,
+              widgetArray.firstItem(widgetId: widgetId) == nil else {
             return
         }
         
