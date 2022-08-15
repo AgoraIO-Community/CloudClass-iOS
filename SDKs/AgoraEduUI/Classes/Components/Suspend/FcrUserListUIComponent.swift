@@ -12,33 +12,10 @@ import UIKit
 
 class FcrUserListUIComponent: UIViewController {
     /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
-    
-    private var subRoom: AgoraEduSubRoomContext?
-    
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var streamController: AgoraEduStreamContext {
-        if let `subRoom` = subRoom {
-            return subRoom.stream
-        } else {
-            return contextPool.stream
-        }
-    }
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let streamController: AgoraEduStreamContext
+    private let widgetController: AgoraEduWidgetContext
     
     public var suggestSize: CGSize {
         get {
@@ -76,7 +53,7 @@ class FcrUserListUIComponent: UIViewController {
     private var dataSource = [AgoraUserListModel]()
     /** 支持的选项列表*/
     lazy var supportFuncs: [AgoraUserListFunction] = {
-        let isLecture = contextPool.room.getRoomInfo().roomType == .lecture
+        let isLecture = roomController.getRoomInfo().roomType == .lecture
         let isTeacher = userController.getLocalUserInfo().userRole == .teacher
         
         var temp = [AgoraUserListFunction]()
@@ -102,12 +79,17 @@ class FcrUserListUIComponent: UIViewController {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         widgetController: AgoraEduWidgetContext) {
+        self.roomController = roomController
+        self.userController = userController
+        self.streamController = streamController
+        self.widgetController = widgetController
+        
         super.init(nibName: nil,
                    bundle: nil)
-        self.contextPool = context
-        self.subRoom = subRoom
         
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
@@ -129,7 +111,7 @@ class FcrUserListUIComponent: UIViewController {
         super.viewWillAppear(animated)
         
         isViewShow = true
-        let roomType = contextPool.room.getRoomInfo().roomType
+        let roomType = roomController.getRoomInfo().roomType
         if roomType == .small {
             setUpSmallData()
         } else if roomType == .lecture {
@@ -185,7 +167,7 @@ class FcrUserListUIComponent: UIViewController {
         contentView.addSubview(itemTitlesView)
         
         if userController.getLocalUserInfo().userRole == .teacher,
-           contextPool.room.getRoomInfo().roomType == .small {
+           roomController.getRoomInfo().roomType == .small {
             carouselTitle.text = "fcr_user_list_carousel_setting".agedu_localized()
             contentView.addSubview(carouselTitle)
             
@@ -293,7 +275,7 @@ class FcrUserListUIComponent: UIViewController {
             make?.top.equalTo()(studentTitleLabel.mas_bottom)
         }
         if userController.getLocalUserInfo().userRole == .teacher,
-           contextPool.room.getRoomInfo().roomType == .small {
+           roomController.getRoomInfo().roomType == .small {
             carouselSwitch.mas_makeConstraints { make in
                 make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
                 make?.right.equalTo()(-10)
@@ -351,7 +333,7 @@ class FcrUserListUIComponent: UIViewController {
         }
         
         if userController.getLocalUserInfo().userRole == .teacher,
-           contextPool.room.getRoomInfo().roomType == .small {
+           roomController.getRoomInfo().roomType == .small {
             carouselTitle.font = config.label.font
             carouselTitle.textColor = config.label.subTitleColor
             

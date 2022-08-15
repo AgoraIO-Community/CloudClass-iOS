@@ -16,36 +16,13 @@ protocol FcrRenderMenuUIComponentDelegate: NSObjectProtocol {
 }
 
 class FcrRenderMenuUIComponent: UIViewController {
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var streamController: AgoraEduStreamContext {
-        if let `subRoom` = subRoom {
-            return subRoom.stream
-        } else {
-            return contextPool.stream
-        }
-    }
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-    
-    private var contextPool: AgoraEduContextPool
-    private var subRoom: AgoraEduSubRoomContext?
+    private let userController: AgoraEduUserContext
+    private let streamController: AgoraEduStreamContext
+    private let widgetController: AgoraEduWidgetContext
     
     var menuWidth: CGFloat = 0
     
-    public weak var delegate: FcrRenderMenuUIComponentDelegate?
+    private weak var delegate: FcrRenderMenuUIComponentDelegate?
     
     private var boardUsers = [String]()
     
@@ -99,11 +76,13 @@ class FcrRenderMenuUIComponent: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil,
+    init(userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         widgetController: AgoraEduWidgetContext,
          delegate: FcrRenderMenuUIComponentDelegate? = nil) {
-        self.contextPool = context
-        self.subRoom = subRoom
+        self.userController = userController
+        self.streamController = streamController
+        self.widgetController = widgetController
         self.delegate = delegate
         
         super.init(nibName: nil,

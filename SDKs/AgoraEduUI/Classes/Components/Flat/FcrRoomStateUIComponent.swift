@@ -18,8 +18,11 @@ struct AgoraClassTimeInfo {
 
 class FcrRoomStateUIComponent: UIViewController {
     /** SDK环境*/
-    private var contextPool: AgoraEduContextPool
-    private var subRoom: AgoraEduSubRoomContext?
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let monitorController: AgoraEduMonitorContext
+    private let groupController: AgoraEduGroupContext
+    private let subRoom: AgoraEduSubRoomContext?
     
     /** 状态栏*/
     private var stateView = AgoraRoomStateBar(frame: .zero)
@@ -29,10 +32,17 @@ class FcrRoomStateUIComponent: UIViewController {
     /** 房间时间信息*/
     private var timeInfo: AgoraClassTimeInfo?
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         monitorController: AgoraEduMonitorContext,
+         groupController: AgoraEduGroupContext,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.monitorController = monitorController
+        self.groupController = groupController
         self.subRoom = subRoom
+        
         super.init(nibName: nil,
                    bundle: nil)
     }
@@ -54,11 +64,11 @@ class FcrRoomStateUIComponent: UIViewController {
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
-            contextPool.group.registerGroupEventHandler(self)
+            groupController.registerGroupEventHandler(self)
         }
         
-        contextPool.room.registerRoomEventHandler(self)
-        contextPool.monitor.registerMonitorEventHandler(self)
+        roomController.registerRoomEventHandler(self)
+        monitorController.registerMonitorEventHandler(self)
     }
 }
 
@@ -72,7 +82,7 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         
         
         var roomTitle: String
-        switch contextPool.room.getRoomInfo().roomType {
+        switch roomController.getRoomInfo().roomType {
         case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".agedu_localized()
         case .small:        roomTitle = "fcr_room_small_title".agedu_localized()
         case .lecture:      roomTitle = "fcr_room_lecture_title".agedu_localized()
@@ -83,7 +93,7 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         if let sub = subRoom {
             stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
         } else {
-            stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
+            stateView.titleLabel.text = roomController.getRoomInfo().roomName
         }
     }
     
@@ -106,7 +116,7 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         
         stateView.titleLabel.agora_enable = config.roomName.enable
         
-        let recodingIsVisible: Bool = (contextPool.room.getRecordingState() == .started)
+        let recodingIsVisible: Bool = (roomController.getRecordingState() == .started)
         
         let recordConfig = UIConfig.record
         stateView.recordingStateView.agora_enable = recordConfig.recordingState.enable
@@ -118,7 +128,7 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     }
     
     func viewWillActive() {
-        let info = self.contextPool.room.getClassInfo()
+        let info = roomController.getClassInfo()
         self.timeInfo = AgoraClassTimeInfo(state: info.state,
                                            startTime: info.startTime,
                                            duration: info.duration * 1000,
@@ -211,7 +221,7 @@ extension FcrRoomStateUIComponent: AgoraEduRoomHandler {
     }
     
     func onClassStateUpdated(state: AgoraEduContextClassState) {
-        let info = contextPool.room.getClassInfo()
+        let info = roomController.getClassInfo()
         timeInfo = AgoraClassTimeInfo(state: info.state,
                                       startTime: info.startTime,
                                       duration: info.duration * 1000,
@@ -235,10 +245,10 @@ extension FcrRoomStateUIComponent: AgoraEduSubRoomHandler {
 
 extension FcrRoomStateUIComponent: AgoraEduGroupHandler {
     func onSubRoomListUpdated(subRoomList: [AgoraEduContextSubRoomInfo]) {
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        let localUserId = userController.getLocalUserInfo().userUuid
         
         for subRoom in subRoomList {
-            guard let list = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
+            guard let list = groupController.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
                list.contains(localUserId) else {
                return
             }

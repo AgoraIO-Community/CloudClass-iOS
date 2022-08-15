@@ -16,44 +16,22 @@ protocol FcrStreamWindowUIComponentDelegate: NSObjectProtocol {
 }
 
 class FcrStreamWindowUIComponent: UIViewController {
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-
-    private var streamController: AgoraEduStreamContext {
-        if let `subRoom` = subRoom {
-            return subRoom.stream
-        } else {
-            return contextPool.stream
-        }
-    }
-
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let streamController: AgoraEduStreamContext
+    private(set) var mediaController: AgoraEduMediaContext
+    private let widgetController: AgoraEduWidgetContext
+    private var subRoom: AgoraEduSubRoomContext?
+    
     // For lecture
     internal var roomId: String {
         if let `subRoom` = subRoom {
             return subRoom.getSubRoomInfo().subRoomUuid
         } else {
-            return contextPool.room.getRoomInfo().roomUuid
+            return roomController.getRoomInfo().roomUuid
         }
     }
-
-    private var subRoom: AgoraEduSubRoomContext?
-    
     // For lecture
-    let contextPool: AgoraEduContextPool
-    
     private weak var delegate: FcrStreamWindowUIComponentDelegate?
 
     // dataSource index is equal to view.subViews index
@@ -70,11 +48,19 @@ class FcrStreamWindowUIComponent: UIViewController {
     
     private weak var componentDataSource: FcrUIComponentDataSource?
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         mediaController: AgoraEduMediaContext,
+         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.streamController = streamController
+        self.mediaController = mediaController
+        self.widgetController = widgetController
         self.subRoom = subRoom
         self.delegate = delegate
         self.componentDataSource = componentDataSource
@@ -100,10 +86,10 @@ class FcrStreamWindowUIComponent: UIViewController {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
         
-        contextPool.media.registerMediaEventHandler(self)
+        mediaController.registerMediaEventHandler(self)
     }
 }
 
@@ -172,17 +158,17 @@ extension FcrStreamWindowUIComponent {
         
         delegate?.onWillStartRenderVideoStream(streamId: streamId)
         
-        contextPool.media.startRenderVideo(roomUuid: roomId,
-                                           view: renderView,
-                                           renderConfig: renderConfig,
-                                           streamUuid: streamId)
+        mediaController.startRenderVideo(roomUuid: roomId,
+                                         view: renderView,
+                                         renderConfig: renderConfig,
+                                         streamUuid: streamId)
     }
     
     func onDidEndDisplayingItem(_ item: FcrStreamWindowWidgetItem) {
         let streamId = item.data.streamId
         
-        contextPool.media.stopRenderVideo(roomUuid: roomId,
-                                          streamUuid: streamId)
+        mediaController.stopRenderVideo(roomUuid: roomId,
+                                        streamUuid: streamId)
         
         delegate?.onDidStopRenderVideoStream(streamId: streamId)
     }

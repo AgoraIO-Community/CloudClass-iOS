@@ -22,7 +22,9 @@ import AgoraWidget
     /** 视频渲染 控制器*/
     private lazy var renderController = VcrHostingPlayerUIComponent(context: contextPool)
     /** 聊天窗口 控制器*/
-    private lazy var chatController = FcrChatUIComponent(context: contextPool)
+    private lazy var chatController = FcrChatUIComponent(roomController: contextPool.room,
+                                                         userController: contextPool.user,
+                                                         widgetController: contextPool.widget)
     
     private var isJoinedRoom = false
         

@@ -18,36 +18,56 @@ import AgoraWidget
 @objc public class FcrSubRoomUIScene: FcrUIScene {
     // MARK: - Flat components
     /** 房间状态 控制器*/
-    private lazy var stateComponent = FcrRoomStateUIComponent(context: contextPool,
+    private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
+                                                              userController: subRoom.user,
+                                                              monitorController: contextPool.monitor,
+                                                              groupController: contextPool.group,
                                                               subRoom: subRoom)
     
     /** 视窗渲染 控制器*/
-    private lazy var renderComponent = FcrSmallWindowRenderUIComponent(context: contextPool,
+    private lazy var renderComponent = FcrSmallWindowRenderUIComponent(roomController: contextPool.room,
+                                                                       userController: subRoom.user,
+                                                                       streamController: subRoom.stream,
+                                                                       mediaController: contextPool.media,
+                                                                       widgetController: subRoom.widget,
                                                                        subRoom: subRoom,
                                                                        delegate: self,
                                                                        componentDataSource: self)
     
     /** 白板的渲染 控制器*/
-    private lazy var boardComponent = FcrBoardUIComponent(context: contextPool,
+    private lazy var boardComponent = FcrBoardUIComponent(roomController: contextPool.room,
+                                                          userController: subRoom.user,
+                                                          widgetController: subRoom.widget,
+                                                          mediaController: contextPool.media,
                                                           subRoom: subRoom,
                                                           delegate: self)
     
     /** 大窗 控制器*/
-    private lazy var windowComponent = FcrStreamWindowUIComponent(context: contextPool,
+    private lazy var windowComponent = FcrStreamWindowUIComponent(roomController: contextPool.room,
+                                                                  userController: subRoom.user,
+                                                                  streamController: subRoom.stream,
+                                                                  mediaController: contextPool.media,
+                                                                  widgetController: subRoom.widget,
                                                                   subRoom: subRoom,
                                                                   delegate: self,
                                                                   componentDataSource: self)
     
     /** 外部链接 控制器*/
-    private lazy var webViewComponent = FcrWebViewUIComponent(context: contextPool)
+    private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
+                                                              userController: subRoom.user,
+                                                              widgetController: subRoom.widget,
+                                                              subRoom: subRoom)
     
     /** 工具栏*/
-    private lazy var toolBarComponent = FcrToolBarUIComponent(context: contextPool,
+    private lazy var toolBarComponent = FcrToolBarUIComponent(userController: subRoom.user,
                                                               subRoom: subRoom,
                                                               delegate: self)
     
     /** 教具 控制器*/
-    private lazy var classToolsComponent = FcrClassToolsUIComponent(context: contextPool,
+    private lazy var classToolsComponent = FcrClassToolsUIComponent(roomController: contextPool.room,
+                                                                    userController: subRoom.user,
+                                                                    monitorController: contextPool.monitor,
+                                                                    widgetController: subRoom.widget,
                                                                     subRoom: subRoom)
     
     /** 全局状态 控制器（自身不包含UI）*/
@@ -57,38 +77,43 @@ import AgoraWidget
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
-    private lazy var settingComponent = FcrSettingUIComponent(context: contextPool,
+    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
                                                               subRoom: subRoom,
                                                               exitDelegate: self)
     
     /** 聊天窗口 控制器*/
-    private lazy var chatComponent = FcrChatUIComponent(context: contextPool,
-                                                        subRoom: subRoom,
+    private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,
+                                                        userController: subRoom.user,
+                                                        widgetController: subRoom.widget,
                                                         delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
-    private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(context: contextPool,
-                                                                            subRoom: subRoom,
+    private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(userController: subRoom.user,
+                                                                            widgetController: subRoom.widget,
                                                                             delegate: self)
     
     /** 花名册 控制器*/
-    private lazy var nameRollComponent = FcrUserListUIComponent(context: contextPool,
-                                                                subRoom: subRoom)
+    private lazy var nameRollComponent = FcrUserListUIComponent(roomController: contextPool.room,
+                                                                userController: subRoom.user,
+                                                                streamController: subRoom.stream,
+                                                                widgetController: subRoom.widget)
     
     /** 视窗菜单 控制器（仅教师端）*/
-    private lazy var renderMenuComponent = FcrRenderMenuUIComponent(context: contextPool,
-                                                                    subRoom: subRoom,
+    private lazy var renderMenuComponent = FcrRenderMenuUIComponent(userController: subRoom.user,
+                                                                    streamController: subRoom.stream,
+                                                                    widgetController: subRoom.widget,
                                                                     delegate: self)
     
     /** 举手列表 控制器（仅老师端）*/
-    private lazy var handsListComponent = FcrHandsListUIComponent(context: contextPool,
-                                                                  subRoom: subRoom,
+    private lazy var handsListComponent = FcrHandsListUIComponent(userController: subRoom.user,
                                                                   delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(context: contextPool,
-                                                          delegate: self,
-                                                          subRoom: subRoom)
+    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
+                                                          widgetController: contextPool.widget,
+                                                          userController: contextPool.user,
+                                                          subRoom: subRoom,
+                                                          delegate: self)
     
     private weak var mainDelegate: AgoraEduUISubManagerCallback?
     

@@ -15,34 +15,54 @@ import AgoraWidget
 @objc public class FcrSmallUIScene: FcrUIScene {
     // MARK: - Flat components
     /** 房间状态 控制器*/
-    private lazy var stateComponent = FcrRoomStateUIComponent(context: contextPool)
+    private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
+                                                              userController: contextPool.user,
+                                                              monitorController: contextPool.monitor,
+                                                              groupController: contextPool.group)
     
     /** 视窗渲染 控制器*/
-    private lazy var renderComponent = FcrSmallWindowRenderUIComponent(context: contextPool,
+    private lazy var renderComponent = FcrSmallWindowRenderUIComponent(roomController: contextPool.room,
+                                                                       userController: contextPool.user,
+                                                                       streamController: contextPool.stream,
+                                                                       mediaController: contextPool.media,
+                                                                       widgetController: contextPool.widget,
                                                                        delegate: self,
                                                                        componentDataSource: self)
     
     /** 白板的渲染 控制器*/
-    private lazy var boardComponent = FcrBoardUIComponent(context: contextPool,
+    private lazy var boardComponent = FcrBoardUIComponent(roomController: contextPool.room,
+                                                          userController: contextPool.user,
+                                                          widgetController: contextPool.widget,
+                                                          mediaController: contextPool.media,
                                                           delegate: self)
     
     /** 外部链接 控制器*/
-    private lazy var webViewComponent = FcrWebViewUIComponent(context: contextPool)
+    private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
+                                                              userController: contextPool.user,
+                                                              widgetController: contextPool.widget)
     
     /** 大窗 控制器*/
-    private lazy var windowComponent = FcrStreamWindowUIComponent(context: contextPool,
+    private lazy var windowComponent = FcrStreamWindowUIComponent(roomController: contextPool.room,
+                                                                  userController: contextPool.user,
+                                                                  streamController: contextPool.stream,
+                                                                  mediaController: contextPool.media,
+                                                                  widgetController: contextPool.widget,
                                                                   delegate: self,
                                                                   componentDataSource: self)
     
     /** 工具栏*/
-    private lazy var toolBarComponent = FcrToolBarUIComponent(context: contextPool,
+    private lazy var toolBarComponent = FcrToolBarUIComponent(userController: contextPool.user,
                                                               delegate: self)
     
     /** 教具 控制器*/
-    private lazy var classToolsComponent = FcrClassToolsUIComponent(context: contextPool)
+    private lazy var classToolsComponent = FcrClassToolsUIComponent(roomController: contextPool.room,
+                                                                    userController: contextPool.user,
+                                                                    monitorController: contextPool.monitor,
+                                                                    widgetController: contextPool.widget)
     
     /** 课堂状态 控制器（仅教师端）*/
-    private lazy var classStateComponent = FcrClassStateUIComponent(context: contextPool,
+    private lazy var classStateComponent = FcrClassStateUIComponent(roomController: contextPool.room,
+                                                                    widgetController: contextPool.widget,
                                                                     delegate: self)
     
     /** 全局状态 控制器（自身不包含UI）*/
@@ -52,30 +72,41 @@ import AgoraWidget
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
-    private lazy var settingComponent = FcrSettingUIComponent(context: contextPool,
+    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
                                                               exitDelegate: self)
     
     /** 聊天窗口 控制器*/
-    private lazy var chatComponent = FcrChatUIComponent(context: contextPool,
+    private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,
+                                                        userController: contextPool.user,
+                                                        widgetController: contextPool.widget,
                                                         delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
-    private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(context: contextPool,
+    private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(userController: contextPool.user,
+                                                                            widgetController: contextPool.widget,
                                                                             delegate: self)
     
     /** 花名册 控制器*/
-    private lazy var nameRollComponent = FcrUserListUIComponent(context: contextPool)
+    private lazy var nameRollComponent = FcrUserListUIComponent(roomController: contextPool.room,
+                                                                userController: contextPool.user,
+                                                                streamController: contextPool.stream,
+                                                                widgetController: contextPool.widget)
     
     /** 视窗菜单 控制器（仅教师端）*/
-    private lazy var renderMenuComponent = FcrRenderMenuUIComponent(context: contextPool,
+    private lazy var renderMenuComponent = FcrRenderMenuUIComponent(userController: contextPool.user,
+                                                                    streamController: contextPool.stream,
+                                                                    widgetController: contextPool.widget,
                                                                     delegate: self)
     
+    
     /** 举手列表 控制器（仅老师端）*/
-    private lazy var handsListComponent = FcrHandsListUIComponent(context: contextPool,
+    private lazy var handsListComponent = FcrHandsListUIComponent(userController: contextPool.user,
                                                                   delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(context: contextPool,
+    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
+                                                          widgetController: contextPool.widget,
+                                                          userController: contextPool.user,
                                                           delegate: self)
     
     private var isJoinedRoom = false

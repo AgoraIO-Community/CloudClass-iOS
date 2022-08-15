@@ -11,23 +11,9 @@ import UIKit
 
 class FcrWebViewUIComponent: UIViewController {
     /**context**/
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-    
-    private var contextPool: AgoraEduContextPool
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let widgetController: AgoraEduWidgetContext
     private var subRoom: AgoraEduSubRoomContext?
     
     // widgetArray index is equal to view.subViews index
@@ -48,9 +34,13 @@ class FcrWebViewUIComponent: UIViewController {
     /** 记录当前已有zIndex中的最大值*/
     private var currentMaxZIndex = 0
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.widgetController = widgetController
         self.subRoom = subRoom
         
         super.init(nibName: nil,
@@ -106,7 +96,7 @@ class FcrWebViewUIComponent: UIViewController {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
     }
 }

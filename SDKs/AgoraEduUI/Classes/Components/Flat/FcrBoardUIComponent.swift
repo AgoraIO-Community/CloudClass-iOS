@@ -42,7 +42,7 @@ class FcrBoardUIComponent: UIViewController {
             guard localGranted != oldValue else {
                 return
             }
-            guard contextPool.user.getLocalUserInfo().userRole != .teacher else {
+            guard userController.getLocalUserInfo().userRole != .teacher else {
                 return
             }
             let msgKey = localGranted ? "fcr_netless_board_granted" : "fcr_netless_board_ungranted"
@@ -53,21 +53,17 @@ class FcrBoardUIComponent: UIViewController {
         }
     }
     
-    var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
+    private(set) var roomController: AgoraEduRoomContext
+    private(set) var userController: AgoraEduUserContext
+    private(set) var widgetController: AgoraEduWidgetContext
+    private(set) var mediaController: AgoraEduMediaContext
     
-    var contextPool: AgoraEduContextPool
     var subRoom: AgoraEduSubRoomContext?
     
     private var roomProperties: [String: Any]? {
         get {
             guard let subRoom = subRoom else {
-                return contextPool.room.getRoomProperties()
+                return roomController.getRoomProperties()
             }
             
             return subRoom.getSubRoomProperties()
@@ -77,11 +73,18 @@ class FcrBoardUIComponent: UIViewController {
     private(set) weak var delegate: FcrBoardUIComponentDelegate?
     
     /** Data */
-    init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         widgetController: AgoraEduWidgetContext,
+         mediaController: AgoraEduMediaContext,
+        subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrBoardUIComponentDelegate? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.widgetController = widgetController
+        self.mediaController = mediaController
         self.subRoom = subRoom
+        
         self.delegate = delegate
         
         super.init(nibName: nil,
@@ -103,7 +106,7 @@ class FcrBoardUIComponent: UIViewController {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
     }
     
@@ -125,7 +128,7 @@ class FcrBoardUIComponent: UIViewController {
     
     // for subVC
     func onViewWillActive() {
-        contextPool.media.registerMediaEventHandler(self)
+        mediaController.registerMediaEventHandler(self)
         widgetController.add(self)
         
         guard widgetController.getWidgetActivity(kBoardWidgetId) else {
@@ -140,7 +143,7 @@ class FcrBoardUIComponent: UIViewController {
     
     func onGrantedUsersChanged(oldList: Array<String>,
                                newList: Array<String>) {
-        let localUser = contextPool.user.getLocalUserInfo()
+        let localUser = userController.getLocalUserInfo()
         if localUser.userRole == .teacher {
             localGranted = true
         } else {
@@ -157,7 +160,7 @@ class FcrBoardUIComponent: UIViewController {
     }
     
     func onViewWillInactive() {
-        contextPool.media.unregisterMediaEventHandler(self)
+        mediaController.unregisterMediaEventHandler(self)
         
         widgetController.remove(self)
         
@@ -229,14 +232,14 @@ private extension FcrBoardUIComponent {
         var contextError: AgoraEduContextError?
         switch data.requestType {
         case .start:
-            contextError = contextPool.media.startAudioMixing(filePath: data.filePath,
+            contextError = mediaController.startAudioMixing(filePath: data.filePath,
                                                               loopback: data.loopback,
                                                               replace: data.replace,
                                                               cycle: data.cycle)
         case .stop:
-            contextError = contextPool.media.stopAudioMixing()
+            contextError = mediaController.stopAudioMixing()
         case .setPosition:
-            contextError = contextPool.media.setAudioMixingPosition(position: data.position)
+            contextError = mediaController.setAudioMixingPosition(position: data.position)
         default:
             break
         }
@@ -340,7 +343,7 @@ extension FcrBoardUIComponent: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         onViewWillActive()
         
-        let localUserInfo = contextPool.user.getLocalUserInfo()
+        let localUserInfo = userController.getLocalUserInfo()
         
         guard !localGranted,
               localUserInfo.userRole != .teacher else {
