@@ -70,7 +70,7 @@ extension FcrLectureBoardUIComponent: AgoraEduUserHandler {
 
 private extension FcrLectureBoardUIComponent {
     func resignBoardGranted(userId: String) {
-        let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(.delete([userId]))
+        let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(.delete([userId]))
         if let message = signal.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)

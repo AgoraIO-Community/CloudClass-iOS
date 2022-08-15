@@ -88,13 +88,13 @@ extension FcrCloudUIComponent: AgoraWidgetMessageObserver {
             return
         }
         switch signal {
-        case .OpenCourseware(let courseware):
+        case .openCourseware(let courseware):
             if courseware.ext == "alf" {
                 delegate?.onOpenAlfCourseware(urlString: courseware.resourceUrl,
                                               resourceId: courseware.resourceUuid)
                 break
             }
-            if let message = AgoraBoardWidgetSignal.OpenCourseware(courseware.toBoard()).toMessageString() {
+            if let message = AgoraBoardWidgetSignal.openCourseware(courseware.toBoard()).toMessageString() {
                 widgetController.sendMessage(toWidget: kBoardWidgetId,
                                              message: message)
             }

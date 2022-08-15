@@ -483,7 +483,7 @@ extension FcrRenderMenuUIComponent {
             // 授予白板权限
             ifAdd = true
         }
-        let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(ifAdd ? .add([UUID]) : .delete([UUID]))
+        let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([UUID]) : .delete([UUID]))
         if let message = signal.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
@@ -557,7 +557,7 @@ extension FcrRenderMenuUIComponent: AgoraWidgetMessageObserver {
                   return
               }
         switch signal {
-        case .GetBoardGrantedUsers(let list):
+        case .getBoardGrantedUsers(let list):
             self.boardUsers = list
             if let uid = self.userId {
                 model?.authState = self.boardUsers.contains(uid)

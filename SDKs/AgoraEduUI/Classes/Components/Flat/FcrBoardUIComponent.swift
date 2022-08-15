@@ -89,7 +89,7 @@ class FcrBoardUIComponent: UIViewController {
     }
     
     func saveBoard() {
-        if let message = AgoraBoardWidgetSignal.SaveBoard.toMessageString() {
+        if let message = AgoraBoardWidgetSignal.saveBoard.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -117,7 +117,7 @@ class FcrBoardUIComponent: UIViewController {
     }
     
     func onNeedChangeRatio() {
-        if let message = AgoraBoardWidgetSignal.ChangeRatio.toMessageString() {
+        if let message = AgoraBoardWidgetSignal.changeRatio.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -200,7 +200,7 @@ private extension FcrBoardUIComponent {
             make?.left.right().top().bottom().equalTo()(0)
         }
         
-        if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
+        if let message = AgoraBoardWidgetSignal.joinBoard.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -242,7 +242,7 @@ private extension FcrBoardUIComponent {
         }
         
         if let error = contextError,
-           let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(stateCode: 714,
+           let message = AgoraBoardWidgetSignal.audioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(stateCode: 714,
                                                                                                               errorCode: error.code)).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
@@ -277,11 +277,11 @@ extension FcrBoardUIComponent: AgoraWidgetMessageObserver {
         }
         
         switch signal {
-        case .BoardAudioMixingRequest(let requestData):
+        case .boardAudioMixingRequest(let requestData):
             handleAudioMixing(requestData)
-        case .GetBoardGrantedUsers(let list):
+        case .getBoardGrantedUsers(let list):
             grantedUsers = list
-        case .OnBoardSaveResult(let result):
+        case .onBoardSaveResult(let result):
             handlePhotoNoAuth(result)
         default:
             break
@@ -347,7 +347,7 @@ extension FcrBoardUIComponent: AgoraEduSubRoomHandler {
             return
         }
         
-        let type = AgoraBoardWidgetSignal.UpdateGrantedUsers(.add([localUserInfo.userUuid]))
+        let type = AgoraBoardWidgetSignal.updateGrantedUsers(.add([localUserInfo.userUuid]))
 
         if let message = type.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
@@ -366,7 +366,7 @@ extension FcrBoardUIComponent: AgoraEduMediaHandler {
                                           errorCode: Int) {
         let data = AgoraBoardWidgetAudioMixingChangeData(stateCode: stateCode,
                                                          errorCode: errorCode)
-        if let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(data).toMessageString() {
+        if let message = AgoraBoardWidgetSignal.audioMixingStateChanged(data).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }

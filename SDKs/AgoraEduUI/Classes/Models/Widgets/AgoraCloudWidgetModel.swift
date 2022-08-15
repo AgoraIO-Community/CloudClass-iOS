@@ -7,11 +7,11 @@
 
 // MARK: - Config
 enum AgoraCloudWidgetSignal: Convertable {
-    case OpenCourseware(AgoraCloudWidgetCoursewareModel)
+    case openCourseware(AgoraCloudWidgetCoursewareModel)
     case CloseCloud
     
     private enum CodingKeys: CodingKey {
-        case OpenCourseware
+        case openCourseware
         case CloseCloud
     }
     
@@ -21,8 +21,8 @@ enum AgoraCloudWidgetSignal: Convertable {
         if let _ = try? container.decodeNil(forKey: .CloseCloud) {
             self = .CloseCloud
         } else if let value = try? container.decode(AgoraCloudWidgetCoursewareModel.self,
-                                                    forKey: .OpenCourseware) {
-            self = .OpenCourseware(value)
+                                                    forKey: .openCourseware) {
+            self = .openCourseware(value)
         } else {
             throw DecodingError.dataCorrupted(
                 .init(
@@ -39,9 +39,9 @@ enum AgoraCloudWidgetSignal: Convertable {
         switch self {
         case .CloseCloud:
             try container.encodeNil(forKey: .CloseCloud)
-        case .OpenCourseware(let x):
+        case .openCourseware(let x):
             try container.encode(x,
-                                 forKey: .OpenCourseware)
+                                 forKey: .openCourseware)
         }
     }
     

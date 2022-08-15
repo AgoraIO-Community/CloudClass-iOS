@@ -125,7 +125,7 @@ extension FcrClassStateUIComponent: AgoraWidgetMessageObserver {
         }
         
         switch signal {
-        case .WindowStateChanged(let state):
+        case .windowStateChanged(let state):
             positionMoveFlag = (state == .min)
         default:
             break

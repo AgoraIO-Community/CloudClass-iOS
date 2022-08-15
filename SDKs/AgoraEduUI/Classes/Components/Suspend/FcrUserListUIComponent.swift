@@ -495,7 +495,7 @@ extension FcrUserListUIComponent: AgoraWidgetMessageObserver {
             return
         }
         switch signal {
-        case .GetBoardGrantedUsers(let list):
+        case .getBoardGrantedUsers(let list):
             self.boardUsers = list
             guard isViewShow else {
                 return
@@ -617,7 +617,7 @@ extension FcrUserListUIComponent: AgoraPaintingUserListItemCellDelegate {
                !list.contains(user.uuid) {
                 ifAdd = true
             }
-            let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(ifAdd ? .add([user.uuid]) : .delete([user.uuid]))
+            let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([user.uuid]) : .delete([user.uuid]))
             if let message = signal.toMessageString() {
                 widgetController.sendMessage(toWidget: kBoardWidgetId,
                                              message: message)
