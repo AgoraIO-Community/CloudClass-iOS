@@ -21,9 +21,8 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
                                          streamUuid: stream.streamUuid)
     }
     
-    override func onStreamJoined(stream: AgoraEduContextStreamInfo,
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
                                  operatorUser: AgoraEduContextUserInfo?) {
-        super.onStreamJoined(stream: stream, operatorUser: operatorUser)
         if stream.hasAudio {
             contextPool.media.startPlayAudio(roomUuid: roomId,
                                              streamUuid: stream.streamUuid)
