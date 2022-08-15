@@ -22,21 +22,21 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
         
         setupSupportFuncs([.camera, .mic, .kick])
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         refreshData()
         // add event handler
-        userController.registerUserEventHandler(self)
-        streamController.registerStreamEventHandler(self)
+        contextPool.user.registerUserEventHandler(self)
+        contextPool.stream.registerStreamEventHandler(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         removeAll()
         // remove event handler
-        userController.unregisterUserEventHandler(self)
-        streamController.unregisterStreamEventHandler(self)
+        contextPool.user.unregisterUserEventHandler(self)
+        contextPool.stream.unregisterStreamEventHandler(self)
     }
     
     override func onExcuteFunc(_ fn: AgoraRosterFunction,
@@ -48,8 +48,8 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             let nextState = !model.cameraState.streamOn
-            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                          videoPrivilege: nextState) { [weak self] in
+            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                            videoPrivilege: nextState) { [weak self] in
                 model.cameraState.streamOn = nextState
                 self?.reloadTableView()
             } failure: { error in
@@ -62,8 +62,8 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             let nextState = !model.micState.streamOn
-            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                          audioPrivilege: nextState) { [weak self] in
+            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                            audioPrivilege: nextState) { [weak self] in
                 model.micState.streamOn = nextState
                 self?.reloadTableView()
             } failure: { error in
@@ -81,7 +81,7 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 guard let `self` = self else {
                     return
                 }
-                self.userController.kickOutUser(userUuid: model.uuid,
+                self.contextPool.user.kickOutUser(userUuid: model.uuid,
                                                   forever: false,
                                                   success: nil,
                                                   failure: nil)
@@ -92,7 +92,7 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 guard let `self` = self else {
                     return
                 }
-                self.userController.kickOutUser(userUuid: model.uuid,
+                self.contextPool.user.kickOutUser(userUuid: model.uuid,
                                                   forever: true,
                                                   success: nil,
                                                   failure: nil)
@@ -109,7 +109,7 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
             break
         }
     }
-
+    
 }
 // MARK: - Private
 private extension FcrLectureRosterUIComponent {
@@ -117,9 +117,9 @@ private extension FcrLectureRosterUIComponent {
     func refreshData() {
         setUpTeacherData()
         
-        userController.getUserList(roleList: [AgoraEduContextUserRole.student.rawValue],
-                                   pageIndex: 1,
-                                   pageSize: 20) { [weak self] students in
+        contextPool.user.getUserList(roleList: [AgoraEduContextUserRole.student.rawValue],
+                                     pageIndex: 1,
+                                     pageSize: 20) { [weak self] students in
             guard let `self` = self else {
                 return
             }

@@ -17,33 +17,7 @@ import UIKit
  */
 class FcrRosterUIComponent: UIViewController {
     /** SDK环境*/
-    public var contextPool: AgoraEduContextPool!
-    
-    public var subRoom: AgoraEduSubRoomContext?
-    
-    public var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    public var streamController: AgoraEduStreamContext {
-        if let `subRoom` = subRoom {
-            return subRoom.stream
-        } else {
-            return contextPool.stream
-        }
-    }
-    
-    public var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
+    public var contextPool: AgoraEduContextPool
     
     public var suggestSize: CGSize {
         get {
@@ -77,14 +51,14 @@ class FcrRosterUIComponent: UIViewController {
         return label
     }()
     private lazy var carouselSwitch: UISwitch = {
-        let swi = UISwitch()
-        swi.transform = CGAffineTransform(scaleX: 0.59,
-                                          y: 0.59)
-        swi.isOn = userController.getCoHostCarouselInfo().state
-        swi.addTarget(self,
-                      action: #selector(onClickCarouselSwitch(_:)),
-                      for: .touchUpInside)
-        return swi
+        let carouselSwitch = UISwitch()
+        carouselSwitch.transform = CGAffineTransform(scaleX: 0.59,
+                                                     y: 0.59)
+        carouselSwitch.isOn = contextPool.user.getCoHostCarouselInfo().state
+        carouselSwitch.addTarget(self,
+                                 action: #selector(onClickCarouselSwitch(_:)),
+                                 for: .touchUpInside)
+        return carouselSwitch
     }()
     
     /** 表视图*/
@@ -110,12 +84,10 @@ class FcrRosterUIComponent: UIViewController {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+    init(context: AgoraEduContextPool) {
+        self.contextPool = context
         super.init(nibName: nil,
                    bundle: nil)
-        self.contextPool = context
-        self.subRoom = subRoom
     }
     
     required init?(coder: NSCoder) {
@@ -266,7 +238,7 @@ class FcrRosterUIComponent: UIViewController {
         
         titleLabel.font = config.label.font
         titleLabel.textColor = config.label.mainTitleColor
-                
+        
         topSepLine.backgroundColor = config.sepLine.backgroundColor
         bottomSepLine.backgroundColor = config.sepLine.backgroundColor
         
@@ -307,7 +279,7 @@ extension FcrRosterUIComponent {
     }
     
     public func setUpTeacherData() {
-        if let teacher = userController.getUserList(role: .teacher)?.first {
+        if let teacher = contextPool.user.getUserList(role: .teacher)?.first {
             teacherNameLabel.text = teacher.userName
         } else {
             teacherNameLabel.text = nil
@@ -417,17 +389,17 @@ private extension FcrRosterUIComponent {
         guard let model = dataSource.first(where: {$0.uuid == uuid}) else {
             return stageChanged
         }
-        let isTeacher = (userController.getLocalUserInfo().userRole == .teacher)
-        let localUserID = userController.getLocalUserInfo().userUuid
+        let isTeacher = (contextPool.user.getLocalUserInfo().userRole == .teacher)
+        let localUserID = contextPool.user.getLocalUserInfo().userUuid
         
-        model.rewards = userController.getUserRewardCount(userUuid: uuid)
+        model.rewards = contextPool.user.getUserRewardCount(userUuid: uuid)
         // enable
         model.stageState.isEnable = isTeacher
         model.authState.isEnable = isTeacher
         model.rewardEnable = isTeacher
         model.kickEnable = isTeacher
         // 上下台操作
-        let coHosts = userController.getCoHostList()
+        let coHosts = contextPool.user.getCoHostList()
         var isCoHost = false
         if let _ = coHosts?.first(where: {$0.userUuid == model.uuid}) {
             isCoHost = true
@@ -436,7 +408,7 @@ private extension FcrRosterUIComponent {
             model.stageState.isOn = isCoHost
             stageChanged = true
         }
-        guard let stream = streamController.getStreamList(userUuid: model.uuid)?.first else {
+        guard let stream = contextPool.stream.getStreamList(userUuid: model.uuid)?.first else {
             model.micState = (false, false, false)
             model.cameraState = (false, false, false)
             return stageChanged
@@ -509,7 +481,7 @@ extension FcrRosterUIComponent: UITableViewDelegate,
 extension FcrRosterUIComponent {
     @objc func onClickCarouselSwitch(_ sender: UISwitch) {
         if sender.isOn {
-            userController.startCoHostCarousel(interval: 20,
+            contextPool.user.startCoHostCarousel(interval: 20,
                                                  count: 6,
                                                  type: .sequence,
                                                  condition: .none) {
@@ -518,7 +490,7 @@ extension FcrRosterUIComponent {
                 sender.isOn = !sender.isOn
             }
         } else {
-            userController.stopCoHostCarousel {
+            contextPool.user.stopCoHostCarousel {
                 
             } failure: { error in
                 sender.isOn = !sender.isOn
