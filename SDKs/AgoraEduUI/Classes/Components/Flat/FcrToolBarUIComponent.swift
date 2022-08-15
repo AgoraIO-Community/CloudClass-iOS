@@ -38,7 +38,7 @@ class FcrToolBarUIComponent: UIViewController {
     private let kGap: CGFloat = 12.0
     private let kDefaultTag: Int = 3389
     
-    weak var delegate: FcrToolBarComponentDelegate?
+    private weak var delegate: FcrToolBarComponentDelegate?
     
     var suggestSize: CGSize {
         get {
@@ -178,6 +178,11 @@ extension FcrToolBarUIComponent: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.toolBar
+        
+        view.agora_enable = config.enable
+        view.agora_visible = config.visible
+        
         collectionView.backgroundColor = .clear
         
         updateDataSource()

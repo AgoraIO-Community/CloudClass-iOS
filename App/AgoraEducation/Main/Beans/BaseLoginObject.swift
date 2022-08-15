@@ -33,13 +33,13 @@ enum FIELD_TYPE: String {
         case .room:
             return 0
         case .user:
-            return LoginConfig.device == .iPad ? 50 : 0
+            return UIDevice.current.agora_is_pad ? 50 : 0
         case .duration:
-            return LoginConfig.device == .iPad ? 230 : 50
+            return UIDevice.current.agora_is_pad ? 230 : 50
         case .encryptKey:
-            return LoginConfig.device == .iPad ? 300 : 90
+            return UIDevice.current.agora_is_pad ? 300 : 90
         case .encryptMode:
-            return LoginConfig.device == .iPad ? 350 : 130
+            return UIDevice.current.agora_is_pad ? 350 : 130
         default:
             return 0
         }
@@ -49,7 +49,7 @@ enum FIELD_TYPE: String {
 class LoginConfig {
     
     static let version_time: String = {
-        return "2022.08.05"
+        return "2022.08.08"
     }()
     
     static let sdk_version: String = AgoraClassroomSDK.version()

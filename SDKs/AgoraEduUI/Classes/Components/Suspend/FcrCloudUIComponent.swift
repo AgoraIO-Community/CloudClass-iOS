@@ -155,8 +155,9 @@ extension FcrCloudUIComponent {
     }
     
     func initWidget() {
-        guard userController.getLocalUserInfo().userRole == .teacher,
-           let cloudConfig = widgetController.getWidgetConfig(kCloudWidgetId) else {
+        guard UIConfig.cloudStorage.enable,
+              userController.getLocalUserInfo().userRole == .teacher,
+              let cloudConfig = widgetController.getWidgetConfig(kCloudWidgetId) else {
             return
         }
         

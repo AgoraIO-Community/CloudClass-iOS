@@ -15,10 +15,10 @@ class FcrOutsideClassBaseController: UIViewController {
     }
     
     public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
+        return UIDevice.current.agora_is_pad ? .landscapeRight : .portrait
     }
 
     public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return LoginConfig.device == .iPad ? .landscapeRight : .portrait
+        return UIDevice.current.agora_is_pad ? .landscapeRight : .portrait
     }
 }

@@ -59,7 +59,8 @@ import AgoraWidget
     private lazy var stateController = FcrRoomStateUIComponent(context: contextPool)
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalController = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                    delegate: nil)
+                                                                 delegate: nil,
+                                                                 exitDelegate: self)
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateController = FcrClassStateUIComponent(context: contextPool,
                                                                         delegate: self)
@@ -159,7 +160,6 @@ import AgoraWidget
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        globalController.roomDelegate = self
         addChild(globalController)
         globalController.viewDidLoad()
         

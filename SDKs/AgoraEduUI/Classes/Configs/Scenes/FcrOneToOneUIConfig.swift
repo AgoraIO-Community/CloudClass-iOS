@@ -30,7 +30,7 @@ struct FcrOneToOneUIConfig: FcrUIConfig {
     let toolBar         = FcrUIComponentToolBar()
     let toolCollection  = FcrUIComponentToolCollection()
     let renderMenu      = FcrUIComponentRenderMenu()
-    let toolBox         = FcrUIComponentToolBox()
+    let record          = FcrUIComponentRecord()
     let handsList       = FcrUIComponentHandsList()
     
     // base

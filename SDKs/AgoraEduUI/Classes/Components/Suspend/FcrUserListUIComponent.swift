@@ -310,6 +310,8 @@ class FcrUserListUIComponent: UIViewController {
     func updateViewProperties() {
         let config = UIConfig.roster
         
+        view.agora_enable = UIConfig.roster.enable
+        
         view.layer.shadowColor = config.shadow.color
         view.layer.shadowOffset = config.shadow.offset
         view.layer.shadowOpacity = config.shadow.opacity

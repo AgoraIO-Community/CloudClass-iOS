@@ -191,6 +191,8 @@ extension FcrHandsListUIComponent: AgoraUIContentContainer {
     func updateViewProperties() {
         let config = UIConfig.handsList
         
+        view.agora_enable = config.enable
+        
         view.layer.shadowColor = config.shadow.color
         view.layer.shadowOffset = config.shadow.offset
         view.layer.shadowOpacity = config.shadow.opacity

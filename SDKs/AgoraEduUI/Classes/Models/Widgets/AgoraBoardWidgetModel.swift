@@ -15,7 +15,6 @@ enum AgoraBoardWidgetSignal: Convertable {
     case UpdateGrantedUsers(AgoraBoardWidgetGrantUsersChangeType)
     case AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData)
     case BoardAudioMixingRequest(AgoraBoardWidgetAudioMixingRequestData)
-    case BoardPageChanged(AgoraBoardWidgetPageChangeType)
     case BoardStepChanged(AgoraBoardWidgetStepChangeType)
     case ClearBoard
     case OpenCourseware(AgoraBoardWidgetCoursewareInfo)
@@ -60,9 +59,6 @@ enum AgoraBoardWidgetSignal: Convertable {
         } else if let value = try? container.decode(AgoraBoardWidgetGrantUsersChangeType.self,
                                                     forKey: .UpdateGrantedUsers) {
             self = .UpdateGrantedUsers(value)
-        } else if let value = try? container.decode(AgoraBoardWidgetPageChangeType.self,
-                                                    forKey: .BoardPageChanged) {
-            self = .BoardPageChanged(value)
         } else if let value = try? container.decode(AgoraBoardWidgetStepChangeType.self,
                                                     forKey: .BoardStepChanged) {
             self = .BoardStepChanged(value)
@@ -114,9 +110,6 @@ enum AgoraBoardWidgetSignal: Convertable {
         case .BoardAudioMixingRequest(let x):
             try container.encode(x,
                                  forKey: .BoardAudioMixingRequest)
-        case .BoardPageChanged(let x):
-            try container.encode(x,
-                                 forKey: .BoardPageChanged)
         case .BoardStepChanged(let x):
             try container.encode(x,
                                  forKey: .BoardStepChanged)

@@ -69,7 +69,7 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         let recordingTitle = "fcr_record_recording".agedu_localized()
         stateView.recordingLabel.text = recordingTitle
         
-        let recodingIsVisible: Bool = (contextPool.room.getRecordingState() == .started)
+        
         
         var roomTitle: String
         switch contextPool.room.getRoomInfo().roomType {
@@ -85,24 +85,6 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         } else {
             stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
         }
-        
-        let config = UIConfig.stateBar
-        
-        stateView.netStateView.agora_enable = config.networkState.enable
-        stateView.netStateView.agora_visible = config.networkState.visible
-        stateView.netStateView.image = config.networkState.disconnectedImage
-        
-        stateView.timeLabel.agora_enable = config.scheduleTime.enable
-        stateView.timeLabel.agora_visible = config.scheduleTime.visible
-        
-        stateView.titleLabel.agora_enable = config.roomName.enable
-        stateView.titleLabel.agora_visible = config.roomName.visible
-        
-        stateView.recordingStateView.agora_enable = config.recordingState.enable
-        stateView.recordingStateView.agora_visible = recodingIsVisible
-        
-        stateView.recordingLabel.agora_enable = config.recordingState.enable
-        stateView.recordingLabel.agora_visible = recodingIsVisible
     }
     
     func initViewFrame() {
@@ -112,6 +94,26 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.stateBar
+        
+        view.agora_enable = config.enable
+        view.agora_visible = config.visible
+        
+        stateView.netStateView.agora_enable = config.networkState.enable
+        stateView.netStateView.image = config.networkState.disconnectedImage
+        
+        stateView.timeLabel.agora_enable = config.scheduleTime.enable
+        
+        stateView.titleLabel.agora_enable = config.roomName.enable
+        
+        let recodingIsVisible: Bool = (contextPool.room.getRecordingState() == .started)
+        
+        let recordConfig = UIConfig.record
+        stateView.recordingStateView.agora_enable = recordConfig.recordingState.enable
+        stateView.recordingStateView.agora_visible = recodingIsVisible
+        
+        stateView.recordingLabel.agora_enable = recordConfig.recordingState.enable
+        stateView.recordingLabel.agora_visible = recodingIsVisible
         
     }
     

@@ -95,6 +95,9 @@ class FcrSettingUIComponent: UIViewController {
     func updateViewProperties() {
         let config = UIConfig.setting
         
+        view.agora_enable = config.enable
+        view.agora_visible = config.visible
+        
         view.layer.shadowColor = config.shadow.color
         view.layer.shadowOffset = config.shadow.offset
         view.layer.shadowOpacity = config.shadow.opacity

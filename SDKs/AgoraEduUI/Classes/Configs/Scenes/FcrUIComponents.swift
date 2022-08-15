@@ -69,7 +69,6 @@ struct FcrUIComponentStateBar: FcrUIComponentProtocol {
     var roomName = FcrUIItemStateBarRoomName()
     var scheduleTime = FcrUIItemStateBarScheduleTime()
     /**iOS**/
-    var recordingState = FcrUIItemStateBarRecordingState()
     let sepLine = FcrUIItemSepLine()
     
     let borderWidth = FcrUIFrameGroup.borderWidth
@@ -235,16 +234,13 @@ struct FcrUIComponentRoster: FcrUIComponentProtocol {
     let sepLine: FcrUIItemSepLine   = FcrUIItemSepLine()
 }
 
-struct FcrUIComponentToolBox: FcrUIComponentProtocol {
+struct FcrUIComponentRecord: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
     var backgroundColor: UIColor = .clear
     
-    let cloudStorageImage: UIImage? =  .agedu_named("toolcollection_enabled_cloud")
-    let recordImage: UIImage?       =  .agedu_named("ic_toolbox_record")
-    let voteImage: UIImage?         =  .agedu_named("ic_toolbox_vote")
-    let countDownImage: UIImage?    =  .agedu_named("ic_toolbox_clock")
-    let answerSheetImage: UIImage?  =  .agedu_named("ic_toolbox_answer")
+    var image: UIImage?    =  .agedu_named("ic_toolbox_record")
+    var recordingState     = FcrUIItemStateBarRecordingState()
 }
 
 // MARK: - hands list
@@ -320,24 +316,32 @@ struct FcrUIComponentPopupQuiz: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
+    
+    var image: UIImage?  =  .agedu_named("ic_toolbox_answer")
 }
 
 struct FcrUIComponentCounter: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
+    
+    var image: UIImage?    =  .agedu_named("ic_toolbox_clock")
 }
 
 struct FcrUIComponentPoll: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
+    
+    var image: UIImage?          =  .agedu_named("ic_toolbox_vote")
 }
 
 struct FcrUIComponentCloudStorage: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
+    
+    var image: UIImage? =  .agedu_named("toolcollection_enabled_cloud")
 }
 
 struct FcrUIComponentScreenShare: FcrUIComponentProtocol {

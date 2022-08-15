@@ -38,7 +38,7 @@ class FcrRoomGlobalUIComponent: UIViewController {
     private var subRoom: AgoraEduSubRoomContext?
     
     // data
-    public weak var roomDelegate: FcrUISceneExit?
+    public weak var exitDelegate: FcrUISceneExit?
     private weak var delegate: FcrRoomGlobalUIComponentDelegate?
     
     private var localStream: AgoraEduContextStreamInfo?
@@ -48,10 +48,12 @@ class FcrRoomGlobalUIComponent: UIViewController {
     
     init(context: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrRoomGlobalUIComponentDelegate? = nil) {
+         delegate: FcrRoomGlobalUIComponentDelegate? = nil,
+         exitDelegate: FcrUISceneExit?) {
         self.contextPool = context
         self.subRoom = subRoom
         self.delegate = delegate
+        self.exitDelegate = exitDelegate
         
         super.init(nibName: nil,
                    bundle: nil)
@@ -101,7 +103,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduRoomHandler {
             .setTitle("fcr_room_class_over_notice".agedu_localized())
             .setMessage("fcr_room_class_over".agedu_localized())
             .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitScene(reason: .normal,
+                self.exitDelegate?.exitScene(reason: .normal,
                                                  type: .main)
             }))
             .show(in: self)
@@ -118,7 +120,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduSubRoomHandler {
 extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
         let action = AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-            self.roomDelegate?.exitScene(reason: .kickOut,
+            self.exitDelegate?.exitScene(reason: .kickOut,
                                              type: .main)
         })
         
@@ -193,7 +195,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduMonitorHandler {
             AgoraToast.toast(message: message,
                              type: .error)
             
-            self.roomDelegate?.exitScene(reason: .kickOut,
+            self.exitDelegate?.exitScene(reason: .kickOut,
                                          type: .main)
         case .connecting:
             let message = "fcr_room_loading".agedu_localized()
