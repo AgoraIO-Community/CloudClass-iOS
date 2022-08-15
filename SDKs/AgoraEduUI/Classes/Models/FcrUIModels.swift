@@ -260,11 +260,7 @@ struct AgoraRenderMenuModel {
 }
 
 // MARK: - UserList
-class AgoraUserListModel {
-    
-    enum AgoraUserListDeviceState {
-        case on, off, forbidden
-    }
+class AgoraRosterModel {
     
     var uuid: String = ""
     

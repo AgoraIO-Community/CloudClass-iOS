@@ -30,7 +30,7 @@ import AgoraWidget
         }
     }
     /** 花名册 控制器 （教师端）*/
-    private lazy var nameRollController = FcrUserListUIComponent(context: contextPool)
+    private lazy var nameRollController = FcrLectureRosterUIComponent(context: contextPool)
     
     /** 设置界面 控制器*/
     private lazy var settingViewController: FcrSettingUIComponent = {

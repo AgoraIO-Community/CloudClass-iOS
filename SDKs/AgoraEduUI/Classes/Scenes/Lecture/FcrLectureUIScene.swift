@@ -14,7 +14,7 @@ import AgoraWidget
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class FcrLectureUIScene: FcrUIScene {
     /** 花名册 控制器 （教师端）*/
-    private lazy var nameRollComponent = FcrUserListUIComponent(context: contextPool)
+    private lazy var nameRollComponent = FcrLectureRosterUIComponent(context: contextPool)
     
     /** 设置界面 控制器*/
     private lazy var settingViewComponent: FcrSettingUIComponent = {

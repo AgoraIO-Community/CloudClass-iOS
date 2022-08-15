@@ -63,7 +63,7 @@ import AgoraWidget
                                                                             delegate: self)
     
     /** 花名册 控制器*/
-    private lazy var nameRollComponent = FcrUserListUIComponent(context: contextPool)
+    private lazy var nameRollComponent = FcrSmallRosterUIComponent(context: contextPool)
     
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuComponent = FcrRenderMenuUIComponent(context: contextPool,

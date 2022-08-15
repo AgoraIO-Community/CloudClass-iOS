@@ -226,7 +226,7 @@ enum AgoraTeachingAidType {
 
 
 // MARK: - UserList
-enum AgoraUserListFunction: Int {
+enum AgoraRosterFunction: Int {
     case stage = 0, auth, camera, mic, reward, kick
     
     func title() -> String {
