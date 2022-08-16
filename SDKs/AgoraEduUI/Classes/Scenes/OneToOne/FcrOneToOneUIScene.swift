@@ -149,6 +149,7 @@ import UIKit
         super.initViews()
         
         let userRole = contextPool.user.getLocalUserInfo().userRole
+        
         var componentList: [UIViewController] = [stateComponent,
                                                  settingComponent,
                                                  globalComponent,
