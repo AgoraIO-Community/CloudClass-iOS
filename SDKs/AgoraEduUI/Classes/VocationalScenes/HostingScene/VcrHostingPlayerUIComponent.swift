@@ -13,7 +13,8 @@ import AVFoundation
 /** 托管课堂播放业务的控制器*/
 class VcrHostingPlayerUIComponent: UIViewController {
     
-    private var contextPool: AgoraEduContextPool
+    private let roomController: AgoraEduRoomContext
+    private let monitorController: AgoraEduMonitorContext
     
     public weak var roomDelegate: FcrUISceneExit?
     
@@ -66,8 +67,10 @@ class VcrHostingPlayerUIComponent: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    init(context: AgoraEduContextPool) {
-        contextPool = context
+    init(roomController: AgoraEduRoomContext,
+         monitorController: AgoraEduMonitorContext) {
+        self.roomController = roomController
+        self.monitorController = monitorController
         
         super.init(nibName: nil,
                    bundle: nil)
@@ -87,7 +90,7 @@ class VcrHostingPlayerUIComponent: UIViewController {
             make?.left.right().top().bottom().equalTo()(0)
         }
         setupNotifications()
-        contextPool.room.registerRoomEventHandler(self)
+        roomController.registerRoomEventHandler(self)
     }
     
     override func viewDidLayoutSubviews() {
@@ -137,7 +140,7 @@ private extension VcrHostingPlayerUIComponent {
     }
     
     func fetchHostingLesson() {
-        guard let roomProperties = contextPool.room.getRoomProperties(),
+        guard let roomProperties = roomController.getRoomProperties(),
               let hostingLesson = roomProperties["hostingScene"] as? [String: Any],
               let videoURL = hostingLesson["videoURL"] as? String
         else {
@@ -150,7 +153,7 @@ private extension VcrHostingPlayerUIComponent {
     }
     
     func updateVideoProgress() {
-        let classInfo = contextPool.room.getClassInfo()
+        let classInfo = roomController.getClassInfo()
         switch classInfo.state {
         case .before:
             placeHolderView.isHidden = false
@@ -168,8 +171,8 @@ private extension VcrHostingPlayerUIComponent {
     // 1. 视频在时长之内，可以正常播放
     // 2. 超出视频时长，课程结束
     func seekVideoByLessonProgress() {
-        let classInfo = contextPool.room.getClassInfo()
-        let serverNow = contextPool.monitor.getSyncTimestamp()
+        let classInfo = roomController.getClassInfo()
+        let serverNow = monitorController.getSyncTimestamp()
         // 获取已经开课的时间
         let time = serverNow - classInfo.startTime
         let mediaTime = CMTime(value: time, timescale: 1000)

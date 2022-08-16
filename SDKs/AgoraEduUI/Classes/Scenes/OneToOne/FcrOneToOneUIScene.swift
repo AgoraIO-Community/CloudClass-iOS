@@ -43,8 +43,11 @@ import UIKit
                                                               monitorController: contextPool.monitor,
                                                               groupController: contextPool.group)
     /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalComponent = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                delegate: nil,
+    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                userController: contextPool.user,
+                                                                monitorController: contextPool.monitor,
+                                                                streamController: contextPool.stream,
+                                                                groupController: contextPool.group,
                                                                 exitDelegate: self)
     /** 工具栏*/
     private lazy var toolBarComponent = FcrToolBarUIComponent(userController: contextPool.user,

@@ -18,23 +18,11 @@ protocol FcrRoomGlobalUIComponentDelegate: NSObjectProtocol {
 // 作为全局状态监听，展示toast，动图等，自身不包含UI
 class FcrRoomGlobalUIComponent: UIViewController {
     /** SDK环境*/
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var streamController: AgoraEduStreamContext {
-        if let `subRoom` = subRoom {
-            return subRoom.stream
-        } else {
-            return contextPool.stream
-        }
-    }
-    
-    private var contextPool: AgoraEduContextPool
+    private let roomController: AgoraEduRoomContext
+    private let monitorController: AgoraEduMonitorContext
+    private let userController: AgoraEduUserContext
+    private let groupController: AgoraEduGroupContext
+    private let streamController: AgoraEduStreamContext
     private var subRoom: AgoraEduSubRoomContext?
     
     // data
@@ -46,12 +34,21 @@ class FcrRoomGlobalUIComponent: UIViewController {
     
     var isRequestingHelp: Bool = false
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         monitorController: AgoraEduMonitorContext,
+         streamController: AgoraEduStreamContext,
+         groupController: AgoraEduGroupContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrRoomGlobalUIComponentDelegate? = nil,
          exitDelegate: FcrUISceneExit?) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.monitorController = monitorController
+        self.streamController = streamController
+        self.groupController = groupController
         self.subRoom = subRoom
+        
         self.delegate = delegate
         self.exitDelegate = exitDelegate
         
@@ -70,9 +67,9 @@ class FcrRoomGlobalUIComponent: UIViewController {
             subRoom.registerSubRoomEventHandler(self)
         }
         
-        contextPool.monitor.registerMonitorEventHandler(self)
-        contextPool.room.registerRoomEventHandler(self)
-        contextPool.group.registerGroupEventHandler(self)
+        monitorController.registerMonitorEventHandler(self)
+        roomController.registerRoomEventHandler(self)
+        groupController.registerGroupEventHandler(self)
     }
 }
 
@@ -136,7 +133,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
     
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
-        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let userId = userController.getLocalUserInfo().userUuid
         let list = userList.map( {$0.userUuid } )
         
         guard list.contains(userId),
@@ -154,7 +151,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
     
     func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                  operatorUser: AgoraEduContextUserInfo?) {
-        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let userId = userController.getLocalUserInfo().userUuid
         let list = userList.map( {$0.userUuid} )
         
         guard list.contains(userId) else {
@@ -238,10 +235,10 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
     func onUserListInvitedToSubRoom(userList: Array<String>,
                                     subRoomUuid: String,
                                     operatorUser: AgoraEduContextUserInfo?) {
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        let localUserId = userController.getLocalUserInfo().userUuid
         
         guard userList.contains(localUserId),
-              let subRoomList = contextPool.group.getSubRoomList(),
+              let subRoomList = groupController.getSubRoomList(),
               let subRoomInfo = subRoomList.first(where: {$0.subRoomUuid == subRoomUuid}) else {
             return
         }
@@ -257,13 +254,11 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         let joinActionTitle = "fcr_group_button_join".agedu_localized()
         let joinAction = AgoraAlertAction(title: joinActionTitle,
                                           action: { [weak self] in
-                                            let group = self?.contextPool.group
-                                            
-                                            group?.userListAcceptInvitationToSubRoom(userList: [localUserId],
-                                                                                     subRoomUuid: subRoomUuid,
-                                                                                     success: nil,
-                                                                                     failure: nil)
-                                          })
+            self?.groupController.userListAcceptInvitationToSubRoom(userList: [localUserId],
+                                                                     subRoomUuid: subRoomUuid,
+                                                                     success: nil,
+                                                                     failure: nil)
+        })
         
         AgoraAlertModel()
             .setTitle(title)
@@ -276,7 +271,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
     func onUserListAddedToSubRoom(userList: [String],
                                   subRoomUuid: String,
                                   operatorUser: AgoraEduContextUserInfo?) {
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        let localUserId = userController.getLocalUserInfo().userUuid
         
         if userList.contains(localUserId) {
             hasJoinedSubRoomId = subRoomUuid
@@ -306,7 +301,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
     
     func onUserListRemovedFromSubRoom(userList: [AgoraEduContextSubRoomRemovedUserEvent],
                                       subRoomUuid: String) {
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        let localUserId = userController.getLocalUserInfo().userUuid
         
         for event in userList where event.userUuid == localUserId {
             hasJoinedSubRoomId = nil
@@ -338,10 +333,10 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
     }
     
     func onSubRoomListAdded(subRoomList: [AgoraEduContextSubRoomInfo]) {
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        let localUserId = userController.getLocalUserInfo().userUuid
         
         for subRoom in subRoomList {
-            guard let list = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
+            guard let list = groupController.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
                list.contains(localUserId) else {
                continue
             }
@@ -371,7 +366,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
                                      subRoomUuid: String,
                                      operatorUser: AgoraEduContextUserInfo?) {
         guard isRequestingHelp,
-              let teacherUserId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+              let teacherUserId = userController.getUserList(role: .teacher)?.first?.userUuid,
               userList.contains(teacherUserId) else {
             return
         }
@@ -392,7 +387,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
 extension FcrRoomGlobalUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let userId = userController.getLocalUserInfo().userUuid
         
         guard stream.owner.userUuid == userId else {
             return
@@ -403,7 +398,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduStreamHandler {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let userId = userController.getLocalUserInfo().userUuid
         
         guard stream.owner.userUuid == userId else {
             return
@@ -414,7 +409,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduStreamHandler {
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let userId = userController.getLocalUserInfo().userUuid
         
         guard stream.owner.userUuid == userId else {
             return
@@ -513,16 +508,14 @@ private extension FcrRoomGlobalUIComponent {
     }
     
     func checkNeedJoinSubRoom() {
-        let group = contextPool.group
-        
-        guard let subRoomList = group.getSubRoomList() else {
+        guard let subRoomList = groupController.getSubRoomList() else {
             return
         }
         
         let localUserId = userController.getLocalUserInfo().userUuid
         
         for subRoom in subRoomList {
-            guard let list = group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
+            guard let list = groupController.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
                list.contains(localUserId) else {
                continue
             }

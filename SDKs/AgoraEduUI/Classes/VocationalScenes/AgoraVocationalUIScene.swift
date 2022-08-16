@@ -56,23 +56,32 @@ import AgoraWidget
                                                                      delegate: self)
     
     /** 工具栏*/
-    private lazy var toolBarController = VocationalToolBarUIComponent(context: contextPool)
+    private lazy var toolBarController = VocationalToolBarUIComponent(userController: contextPool.user,
+                                                                      groupController: contextPool.group,
+                                                                      delegate: self)
     /** 房间状态 控制器*/
     private lazy var stateController = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                                userController: contextPool.user,
                                                                monitorController: contextPool.monitor,
                                                                groupController: contextPool.group)
     /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalController = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                 delegate: nil,
+    private lazy var globalController = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                 userController: contextPool.user,
+                                                                 monitorController: contextPool.monitor,
+                                                                 streamController: contextPool.stream,
+                                                                 groupController: contextPool.group,
                                                                  exitDelegate: self)
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateController = FcrClassStateUIComponent(roomController: contextPool.room,
                                                                      widgetController: contextPool.widget,
                                                                      delegate: self)
     /** 老师渲染 控制器*/
-    private lazy var teacherRenderController = VocationalTeacherRenderComponent(context: contextPool,
-                                                                                 delegate: self)
+    private lazy var teacherRenderController = VocationalTeacherRenderComponent(roomController: contextPool.room,
+                                                                                userController: contextPool.user,
+                                                                                streamController: contextPool.stream,
+                                                                                mediaController: contextPool.media,
+                                                                                widgetController: contextPool.widget,
+                                                                                delegate: self)
     /** 白板 控制器*/
     private lazy var boardController = FcrBoardUIComponent(roomController: contextPool.room,
                                                            userController: contextPool.user,
@@ -84,7 +93,11 @@ import AgoraWidget
                                                                              widgetController: contextPool.widget,
                                                                              delegate: self)
     /** 大窗 控制器*/
-    private lazy var windowController = VocationalWindowUIComponent(context: contextPool)
+    private lazy var windowController = VocationalWindowUIComponent(roomController: contextPool.room,
+                                                                     userController: contextPool.user,
+                                                                     streamController: contextPool.stream,
+                                                                     mediaController: contextPool.media,
+                                                                     widgetController: contextPool.widget)
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudController = FcrCloudUIComponent(roomController: contextPool.room,
                                                            widgetController: contextPool.widget,
@@ -192,8 +205,6 @@ import AgoraWidget
         windowController.delegate = self
         addChild(windowController)
         contentView.addSubview(windowController.view)
-        
-        toolBarController.delegate = self
         
         addChild(classToolsController)
         contentView.addSubview(classToolsController.view)

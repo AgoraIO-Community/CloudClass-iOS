@@ -11,8 +11,11 @@ import Masonry
 
 class VocationalRoomStateUIComponent: UIViewController {
     /** SDK环境*/
-    private var contextPool: AgoraEduContextPool
-    private var subRoom: AgoraEduSubRoomContext?
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let monitorController: AgoraEduMonitorContext
+    private let groupController: AgoraEduGroupContext
+    private let subRoom: AgoraEduSubRoomContext?
     
     public weak var roomDelegate: FcrUISceneExit?
     /** 状态栏*/
@@ -24,10 +27,17 @@ class VocationalRoomStateUIComponent: UIViewController {
     /** 房间时间信息*/
     private var timeInfo: AgoraClassTimeInfo?
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         monitorController: AgoraEduMonitorContext,
+         groupController: AgoraEduGroupContext,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.monitorController = monitorController
+        self.groupController = groupController
         self.subRoom = subRoom
+        
         super.init(nibName: nil,
                    bundle: nil)
     }
@@ -49,11 +59,11 @@ class VocationalRoomStateUIComponent: UIViewController {
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
-            contextPool.group.registerGroupEventHandler(self)
+            groupController.registerGroupEventHandler(self)
         }
         
-        contextPool.room.registerRoomEventHandler(self)
-        contextPool.monitor.registerMonitorEventHandler(self)
+        roomController.registerRoomEventHandler(self)
+        monitorController.registerMonitorEventHandler(self)
     }
 }
 
@@ -88,7 +98,7 @@ extension VocationalRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivi
         stateView.backgroundColor = FcrUIColorGroup.systemForegroundColor
         
         var roomTitle: String
-        switch contextPool.room.getRoomInfo().roomType {
+        switch roomController.getRoomInfo().roomType {
         case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".agedu_localized()
         case .small:        roomTitle = "fcr_room_small_title".agedu_localized()
         case .lecture:      roomTitle = "fcr_room_lecture_title".agedu_localized()
@@ -102,12 +112,12 @@ extension VocationalRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivi
         if let sub = subRoom {
             stateView.titleLabel.text = sub.getSubRoomInfo().subRoomName
         } else {
-            stateView.titleLabel.text = contextPool.room.getRoomInfo().roomName
+            stateView.titleLabel.text = roomController.getRoomInfo().roomName
         }
     }
     
     func viewWillActive() {
-        let info = self.contextPool.room.getClassInfo()
+        let info = roomController.getClassInfo()
         self.timeInfo = AgoraClassTimeInfo(state: info.state,
                                            startTime: info.startTime,
                                            duration: info.duration * 1000,
@@ -213,7 +223,7 @@ extension VocationalRoomStateUIComponent: AgoraEduRoomHandler {
     }
     
     func onClassStateUpdated(state: AgoraEduContextClassState) {
-        let info = contextPool.room.getClassInfo()
+        let info = roomController.getClassInfo()
         timeInfo = AgoraClassTimeInfo(state: info.state,
                                       startTime: info.startTime,
                                       duration: info.duration * 1000,
@@ -230,10 +240,10 @@ extension VocationalRoomStateUIComponent: AgoraEduSubRoomHandler {
 
 extension VocationalRoomStateUIComponent: AgoraEduGroupHandler {
     func onSubRoomListUpdated(subRoomList: [AgoraEduContextSubRoomInfo]) {
-        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        let localUserId = userController.getLocalUserInfo().userUuid
         
         for subRoom in subRoomList {
-            guard let list = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
+            guard let list = groupController.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
                list.contains(localUserId) else {
                return
             }

@@ -13,7 +13,7 @@ class FcrSmallWindowRenderUIComponent: UIViewController {
     let coHost: FcrCoHostWindowRenderUIComponent
     let teacher: FcrTeacherWindowRenderUIComponent
     
-    weak var delegate: FcrWindowRenderUIComponentDelegate?
+    private weak var delegate: FcrWindowRenderUIComponentDelegate?
     
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,

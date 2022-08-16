@@ -66,7 +66,11 @@ import AgoraWidget
                                                                     delegate: self)
     
     /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalComponent = FcrRoomGlobalUIComponent(context: contextPool,
+    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                userController: contextPool.user,
+                                                                monitorController: contextPool.monitor,
+                                                                streamController: contextPool.stream,
+                                                                groupController: contextPool.group,
                                                                 delegate: self,
                                                                 exitDelegate: self)
     
