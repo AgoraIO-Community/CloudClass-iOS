@@ -10,48 +10,36 @@ import AgoraEduContext
 import Foundation
 
 class FcrCoHostWindowRenderUIComponent: FcrWindowRenderUIComponent {
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var streamController: AgoraEduStreamContext {
-        if let `subRoom` = subRoom {
-            return subRoom.stream
-        } else {
-            return contextPool.stream
-        }
-    }
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-    
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let streamController: AgoraEduStreamContext
+    private let mediaController: AgoraEduMediaContext
+    private let widgetController: AgoraEduWidgetContext
+    private let subRoom: AgoraEduSubRoomContext?
+
     private var roomId: String {
         if let `subRoom` = subRoom {
             return subRoom.getSubRoomInfo().subRoomUuid
         } else {
-            return contextPool.room.getRoomInfo().roomUuid
+            return roomController.getRoomInfo().roomUuid
         }
     }
     
-    private let contextPool: AgoraEduContextPool
-    private var subRoom: AgoraEduSubRoomContext?
-    
     private weak var componentDataSource: FcrUIComponentDataSource?
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         mediaController: AgoraEduMediaContext,
+         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrWindowRenderUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.streamController = streamController
+        self.mediaController = mediaController
+        self.widgetController = widgetController
         self.subRoom = subRoom
         self.componentDataSource = componentDataSource
         
@@ -69,7 +57,7 @@ class FcrCoHostWindowRenderUIComponent: FcrWindowRenderUIComponent {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
     }
     
@@ -151,7 +139,7 @@ extension FcrCoHostWindowRenderUIComponent: AgoraUIActivity {
         
         userController.registerUserEventHandler(self)
         streamController.registerStreamEventHandler(self)
-        contextPool.media.registerMediaEventHandler(self)
+        mediaController.registerMediaEventHandler(self)
     }
     
     func viewWillInactive() {
@@ -159,7 +147,7 @@ extension FcrCoHostWindowRenderUIComponent: AgoraUIActivity {
         
         userController.unregisterUserEventHandler(self)
         streamController.unregisterStreamEventHandler(self)
-        contextPool.media.unregisterMediaEventHandler(self)
+        mediaController.unregisterMediaEventHandler(self)
     }
 }
 
@@ -244,12 +232,12 @@ private extension FcrCoHostWindowRenderUIComponent {
 
 private extension FcrCoHostWindowRenderUIComponent {
     func startPlayAudio(streamId: String) {
-        contextPool.media.startPlayAudio(roomUuid: roomId,
+        mediaController.startPlayAudio(roomUuid: roomId,
                                          streamUuid: streamId)
     }
     
     func stopPlayAudio(streamId: String) {
-        contextPool.media.stopPlayAudio(roomUuid: roomId,
+        mediaController.stopPlayAudio(roomUuid: roomId,
                                         streamUuid: streamId)
     }
     
@@ -265,7 +253,7 @@ private extension FcrCoHostWindowRenderUIComponent {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         
-        contextPool.media.startRenderVideo(roomUuid: roomId,
+        mediaController.startRenderVideo(roomUuid: roomId,
                                            view: view,
                                            renderConfig: renderConfig,
                                            streamUuid: streamId)
@@ -274,7 +262,7 @@ private extension FcrCoHostWindowRenderUIComponent {
     func stopRenderVideo(streamId: String,
                          view: FcrWindowRenderVideoView) {
 //        view.renderingStream = nil
-        contextPool.media.stopRenderVideo(roomUuid: roomId,
+        mediaController.stopRenderVideo(roomUuid: roomId,
                                           streamUuid: streamId)
     }
 }

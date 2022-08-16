@@ -20,25 +20,10 @@ protocol FcrToolCollectionUIComponentDelegate: NSObjectProtocol {
 
 class FcrToolCollectionUIComponent: UIViewController {
     /** SDK环境*/
-    private var contextPool: AgoraEduContextPool!
     private var subRoom: AgoraEduSubRoomContext?
     
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-    
+    private var userController: AgoraEduUserContext
+    private var widgetController: AgoraEduWidgetContext
     /// Data
     private weak var delegate: FcrToolCollectionUIComponentDelegate?
     
@@ -119,15 +104,15 @@ class FcrToolCollectionUIComponent: UIViewController {
         print("\(#function): \(self.classForCoder)")
     }
 
-    init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrToolCollectionUIComponentDelegate? = nil) {        
+    init(userController: AgoraEduUserContext,
+         widgetController: AgoraEduWidgetContext,
+         delegate: FcrToolCollectionUIComponentDelegate? = nil) {
+        self.userController = userController
+        self.widgetController = widgetController
+        
         super.init(nibName: nil,
                    bundle: nil)
         
-        self.contextPool = context
-        self.subRoom = subRoom
-
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
         
@@ -264,9 +249,9 @@ extension FcrToolCollectionUIComponent: AgoraWidgetActivityObserver,
             return
         }
         switch signal {
-        case .BoardStepChanged(let changeType):
+        case .boardStepChanged(let changeType):
             handleBoardWidgetStep(changeType)
-        case .CloseBoard:
+        case .closeBoard:
             view.agora_visible = false
             delegate?.toolCollectionDidChangeAppearance(false)
         default:
@@ -290,11 +275,11 @@ extension FcrToolCollectionUIComponent: AgoraMainToolsViewDelegate,
             var signal: AgoraBoardWidgetSignal?
             switch type {
             case .clear:
-                signal = AgoraBoardWidgetSignal.ClearBoard
+                signal = AgoraBoardWidgetSignal.clearBoard
             case .pre:
-                signal = AgoraBoardWidgetSignal.BoardStepChanged(.pre(1))
+                signal = AgoraBoardWidgetSignal.boardStepChanged(.pre(1))
             case .next:
-                signal = AgoraBoardWidgetSignal.BoardStepChanged(.next(1))
+                signal = AgoraBoardWidgetSignal.boardStepChanged(.next(1))
             default:
                 break
             }
@@ -466,7 +451,7 @@ private extension FcrToolCollectionUIComponent {
     
     func updateWidgetTool() {
         if let type = currentMainTool.widgetType,
-           let message = AgoraBoardWidgetSignal.ChangeAssistantType(.tool(type)).toMessageString() {
+           let message = AgoraBoardWidgetSignal.changeAssistantType(.tool(type)).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -476,7 +461,7 @@ private extension FcrToolCollectionUIComponent {
         let textInfo = FcrBoardWidgetTextInfo(size: subToolsView.curTextFont.value,
                                               color: subToolsView.currentColor.toColorArr())
         
-        if let message = AgoraBoardWidgetSignal.ChangeAssistantType(.text(textInfo)).toMessageString() {
+        if let message = AgoraBoardWidgetSignal.changeAssistantType(.text(textInfo)).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -486,7 +471,7 @@ private extension FcrToolCollectionUIComponent {
         let shapeInfo = FcrBoardWidgetShapeInfo(type: subToolsView.currentPaintTool.widgetShape,
                                                 width: subToolsView.curLineWidth.value,
                                                 color: subToolsView.currentColor.toColorArr())
-        if let message = AgoraBoardWidgetSignal.ChangeAssistantType(.shape(shapeInfo)).toMessageString() {
+        if let message = AgoraBoardWidgetSignal.changeAssistantType(.shape(shapeInfo)).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }

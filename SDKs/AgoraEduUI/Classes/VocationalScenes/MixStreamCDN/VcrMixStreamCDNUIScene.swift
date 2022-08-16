@@ -13,15 +13,23 @@ import AgoraWidget
 /** 合流转推的UIManager*/
 @objc public class VcrMixStreamCDNUIScene: FcrUIScene {
     /** 房间状态 控制器*/
-    private lazy var stateController = VocationalRoomStateUIComponent(context: contextPool)
+    private lazy var stateController = VocationalRoomStateUIComponent(roomController: contextPool.room,
+                                                                      userController: contextPool.user,
+                                                                      monitorController: contextPool.monitor,
+                                                                      groupController: contextPool.group)
     /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalController = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                 delegate: nil,
+    private lazy var globalController = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                 userController: contextPool.user,
+                                                                 monitorController: contextPool.monitor,
+                                                                 streamController: contextPool.stream,
+                                                                 groupController: contextPool.group,
                                                                  exitDelegate: self)
     /** CDN渲染 控制器*/
     private lazy var renderController = VcrMixStreamCDNRenderUIComponent(context: contextPool)
     /** 聊天窗口 控制器*/
-    private lazy var chatController = FcrChatUIComponent(context: contextPool)
+    private lazy var chatController = FcrChatUIComponent(roomController: contextPool.room,
+                                                         userController: contextPool.user,
+                                                         widgetController: contextPool.widget)
     
     private var isJoinedRoom = false
         

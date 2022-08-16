@@ -27,38 +27,18 @@ class VocationalRenderMembersUIComponent: UIViewController {
         }
     }
     // context
-    private(set) var contextPool: AgoraEduContextPool
+    private let roomController: AgoraEduRoomContext
+    private(set) var userController: AgoraEduUserContext
+    private(set) var streamController: AgoraEduStreamContext
+    private(set) var mediaController: AgoraEduMediaContext
+    private let widgetController: AgoraEduWidgetContext
     private(set) var subRoom: AgoraEduSubRoomContext?
-    
-    var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    var streamController: AgoraEduStreamContext {
-        if let `subRoom` = subRoom {
-            return subRoom.stream
-        } else {
-            return contextPool.stream
-        }
-    }
-    
-    var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-    
+
     var roomId: String {
         if let `subRoom` = subRoom {
             return subRoom.getSubRoomInfo().subRoomUuid
         } else {
-            return contextPool.room.getRoomInfo().roomUuid
+            return roomController.getRoomInfo().roomUuid
         }
     }
     
@@ -89,13 +69,22 @@ class VocationalRenderMembersUIComponent: UIViewController {
     }
     
     // MARK: - public
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         mediaController: AgoraEduMediaContext,
+         widgetController: AgoraEduWidgetContext,
          delegate: AgoraRenderUIComponentDelegate?,
          subRoom: AgoraEduSubRoomContext? = nil,
          expandFlag: Bool = false) {
-        self.contextPool = context
-        self.delegate = delegate
+        self.roomController = roomController
+        self.userController = userController
+        self.streamController = streamController
+        self.mediaController = mediaController
+        self.widgetController = widgetController
         self.subRoom = subRoom
+        
+        self.delegate = delegate
         self.expandFlag = expandFlag
         
         super.init(nibName: nil,
@@ -134,7 +123,7 @@ class VocationalRenderMembersUIComponent: UIViewController {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
     }
     
@@ -292,14 +281,14 @@ class VocationalRenderMembersUIComponent: UIViewController {
     
     func registerHandlers() {
         widgetController.add(self)
-        contextPool.media.registerMediaEventHandler(self)
+        mediaController.registerMediaEventHandler(self)
         streamController.registerStreamEventHandler(self)
     }
     
     func unregisterHandlers() {
         widgetController.remove(self)
         streamController.unregisterStreamEventHandler(self)
-        contextPool.media.unregisterMediaEventHandler(self)
+        mediaController.unregisterMediaEventHandler(self)
     }
 }
 
@@ -545,8 +534,8 @@ private extension VocationalRenderMembersUIComponent {
             // 如果cdn正在渲染，关闭cdn的渲染
             if self.cdnRendingList.contains(streamId),
                let url = cdnURL {
-                self.contextPool.media.stopRenderVideoFromCdn(streamUrl: url)
-                self.contextPool.media.stopPlayAudioFromCdn(streamUrl: url)
+                mediaController.stopRenderVideoFromCdn(streamUrl: url)
+                mediaController.stopPlayAudioFromCdn(streamUrl: url)
                 self.cdnRendingList.removeAll(streamId)
             }
             // 再处理RTC的渲染
@@ -563,7 +552,7 @@ private extension VocationalRenderMembersUIComponent {
                     renderConfig.mode = .hidden
                     renderConfig.isMirror = false
                     // 开启rtc 渲染
-                    self.contextPool.media.startRenderVideo(roomUuid: roomId,
+                    mediaController.startRenderVideo(roomUuid: roomId,
                                                             view: renderView,
                                                             renderConfig: renderConfig,
                                                             streamUuid: streamId)
@@ -571,7 +560,7 @@ private extension VocationalRenderMembersUIComponent {
                 }
             } else {
                 if self.rtcVideoRenderingList.contains(streamId) {
-                    self.contextPool.media.stopRenderVideo(roomUuid: roomId,
+                    mediaController.stopRenderVideo(roomUuid: roomId,
                                                       streamUuid: streamId)
                     self.rtcVideoRenderingList.removeAll(streamId)
                 }
@@ -579,13 +568,13 @@ private extension VocationalRenderMembersUIComponent {
             // audio on
             if audioOn {
                 if !rtcAudioPlayingList.contains(streamId) {
-                    self.contextPool.media.startPlayAudio(roomUuid: roomId,
+                    mediaController.startPlayAudio(roomUuid: roomId,
                                                           streamUuid: streamId)
                     self.rtcAudioPlayingList.append(streamId)
                 }
             } else {
                 if self.rtcAudioPlayingList.contains(streamId) {
-                    self.contextPool.media.stopPlayAudio(roomUuid: roomId,
+                    mediaController.stopPlayAudio(roomUuid: roomId,
                                                          streamUuid: streamId)
                     self.rtcAudioPlayingList.removeAll(streamId)
                 }
@@ -596,33 +585,33 @@ private extension VocationalRenderMembersUIComponent {
             }
             // 如果RTC正在渲染，先关闭RTC的渲染
             if self.rtcVideoRenderingList.contains(streamId) {
-                self.contextPool.media.stopRenderVideo(roomUuid: roomId,
+                mediaController.stopRenderVideo(roomUuid: roomId,
                                                        streamUuid: streamId)
                 self.rtcVideoRenderingList.removeAll(streamId)
             }
             // 如果RTC正在播放，先关闭RTC的播放
             if self.rtcAudioPlayingList.contains(streamId) {
-                self.contextPool.media.stopPlayAudio(roomUuid: roomId,
+                mediaController.stopPlayAudio(roomUuid: roomId,
                                                      streamUuid: streamId)
                 self.rtcAudioPlayingList.removeAll(streamId)
             }
             if rendEnable {
                 if !self.cdnRendingList.contains(streamId) {
                     // 先调用一遍stop用以处理拖拉拽时不显示的问题
-                    self.contextPool.media.stopRenderVideoFromCdn(streamUrl: url)
-                    self.contextPool.media.stopPlayAudioFromCdn(streamUrl: url)
+                    mediaController.stopRenderVideoFromCdn(streamUrl: url)
+                    mediaController.stopPlayAudioFromCdn(streamUrl: url)
                     // 再打开CDN的播放
-                    self.contextPool.media.startRenderVideoFromCdn(view: renderView,
+                    mediaController.startRenderVideoFromCdn(view: renderView,
                                                                    mode: .hidden,
                                                                    streamUrl: url)
-                    self.contextPool.media.startPlayAudioFromCdn(streamUrl: url)
+                    mediaController.startPlayAudioFromCdn(streamUrl: url)
                     // 添加进播放记录
                     self.cdnRendingList.append(streamId)
                 }
             } else {
                 if self.cdnRendingList.contains(streamId) {
-                    self.contextPool.media.stopRenderVideoFromCdn(streamUrl: url)
-                    self.contextPool.media.stopPlayAudioFromCdn(streamUrl: url)
+                    mediaController.stopRenderVideoFromCdn(streamUrl: url)
+                    mediaController.stopPlayAudioFromCdn(streamUrl: url)
                     self.cdnRendingList.removeAll(streamId)
                 }
             }

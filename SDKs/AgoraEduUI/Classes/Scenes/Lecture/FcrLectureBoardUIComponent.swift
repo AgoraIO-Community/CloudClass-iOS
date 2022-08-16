@@ -8,14 +8,6 @@
 import AgoraEduContext
 
 class FcrLectureBoardUIComponent: FcrBoardUIComponent {
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
     override func onViewWillActive() {
         super.onViewWillActive()
         userController.registerUserEventHandler(self)
@@ -32,7 +24,7 @@ class FcrLectureBoardUIComponent: FcrBoardUIComponent {
         
         var finalNewList: [String] = newList.map({return $0})
         
-        let localUser = contextPool.user.getLocalUserInfo()
+        let localUser = userController.getLocalUserInfo()
         
         if localUser.userRole != .teacher {
             if !newList.contains(localUser.userUuid) {
@@ -70,7 +62,7 @@ extension FcrLectureBoardUIComponent: AgoraEduUserHandler {
 
 private extension FcrLectureBoardUIComponent {
     func resignBoardGranted(userId: String) {
-        let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(.delete([userId]))
+        let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(.delete([userId]))
         if let message = signal.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)

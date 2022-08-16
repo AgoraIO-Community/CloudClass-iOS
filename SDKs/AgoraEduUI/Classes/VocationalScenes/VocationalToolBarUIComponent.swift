@@ -15,24 +15,16 @@ class VocationalToolBarUIComponent: UIViewController {
     
     public var handsupDuration = 3
     
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
     /** SDK环境*/
-    private var contextPool: AgoraEduContextPool
-    private var subRoom: AgoraEduSubRoomContext?
+    private let userController: AgoraEduUserContext
+    private let groupController: AgoraEduGroupContext
     
     /** Size*/
     private let kButtonLength: CGFloat = UIDevice.current.agora_is_pad ? 34 : 32
     private let kGap: CGFloat = 12.0
     private let kDefaultTag: Int = 3389
     
-    weak var delegate: FcrToolBarComponentDelegate?
+    private weak var delegate: FcrToolBarComponentDelegate?
     
     var suggestSize: CGSize {
         get {
@@ -94,11 +86,11 @@ class VocationalToolBarUIComponent: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil,
+    init(userController: AgoraEduUserContext,
+         groupController: AgoraEduGroupContext,
          delegate: FcrToolBarComponentDelegate? = nil) {
-        self.contextPool = context
-        self.subRoom = subRoom
+        self.userController = userController
+        self.groupController = groupController
         self.delegate = delegate
         super.init(nibName: nil,
                    bundle: nil)
@@ -114,7 +106,7 @@ class VocationalToolBarUIComponent: UIViewController {
         initViewFrame()
         updateViewProperties()
         
-        contextPool.group.registerGroupEventHandler(self)
+        groupController.registerGroupEventHandler(self)
     }
     
     public func deselectAll() {
@@ -206,7 +198,7 @@ extension VocationalToolBarUIComponent: AgoraEduGroupHandler {
     
     func onUserListRemovedFromSubRoom(userList: [AgoraEduContextSubRoomRemovedUserEvent],
                                       subRoomUuid: String) {
-        if let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+        if let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
            userList.contains(where: {$0.userUuid == teacherId}) {
             collectionView.reloadData()
         }
@@ -389,22 +381,19 @@ extension VocationalToolBarUIComponent: UICollectionViewDelegate,
 // MARK: - Creations
 private extension VocationalToolBarUIComponent {
     func teacherInLocalSubRoom() -> Bool {
-        let group = contextPool.group
-        let user = contextPool.user
-        
-        guard let subRoomList = group.getSubRoomList(),
-              let teacher = user.getUserList(role: .teacher)?.first else {
+        guard let subRoomList = groupController.getSubRoomList(),
+              let teacher = userController.getUserList(role: .teacher)?.first else {
             return false
         }
         
-        let localUserId = user.getLocalUserInfo().userUuid
+        let localUserId = userController.getLocalUserInfo().userUuid
         let teacherId = teacher.userUuid
         
         let contains = [localUserId,
                         teacherId]
         
         for item in subRoomList {
-            guard let userList = group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
+            guard let userList = groupController.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
                   userList.contains(contains) else {
                 continue
             }
