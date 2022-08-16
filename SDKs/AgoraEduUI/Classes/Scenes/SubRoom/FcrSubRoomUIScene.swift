@@ -72,9 +72,9 @@ import AgoraWidget
     
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
-                                                                userController: contextPool.user,
+                                                                userController: subRoom.user,
                                                                 monitorController: contextPool.monitor,
-                                                                streamController: contextPool.stream,
+                                                                streamController: subRoom.stream,
                                                                 groupController: contextPool.group,
                                                                 subRoom: subRoom,
                                                                 exitDelegate: self)
@@ -114,8 +114,8 @@ import AgoraWidget
     
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
-                                                          widgetController: contextPool.widget,
-                                                          userController: contextPool.user,
+                                                          widgetController: subRoom.widget,
+                                                          userController: subRoom.user,
                                                           subRoom: subRoom,
                                                           delegate: self)
     
