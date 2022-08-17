@@ -21,16 +21,8 @@ protocol FcrToolBarComponentDelegate: NSObject {
 
 // MARK: - AgoraToolBarUIController
 class FcrToolBarUIComponent: UIViewController {
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
     /** SDK环境*/
-    private var contextPool: AgoraEduContextPool
+    private var userController: AgoraEduUserContext
     private var subRoom: AgoraEduSubRoomContext?
     
     /** Size*/
@@ -38,7 +30,7 @@ class FcrToolBarUIComponent: UIViewController {
     private let kGap: CGFloat = 12.0
     private let kDefaultTag: Int = 3389
     
-    weak var delegate: FcrToolBarComponentDelegate?
+    private weak var delegate: FcrToolBarComponentDelegate?
     
     var suggestSize: CGSize {
         get {
@@ -90,10 +82,10 @@ class FcrToolBarUIComponent: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool,
+    init(userController: AgoraEduUserContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrToolBarComponentDelegate? = nil) {
-        self.contextPool = context
+        self.userController = userController
         self.subRoom = subRoom
         self.delegate = delegate
         super.init(nibName: nil,
@@ -110,7 +102,7 @@ class FcrToolBarUIComponent: UIViewController {
         initViewFrame()
         updateViewProperties()
         
-        contextPool.group.registerGroupEventHandler(self)
+        userController.registerUserEventHandler(self)
     }
     
     public func updateTools(_ list: [FcrToolBarItemType]) {
@@ -178,9 +170,36 @@ extension FcrToolBarUIComponent: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
+        let config = UIConfig.toolBar
+        
+        view.agora_enable = config.enable
+        view.agora_visible = config.visible
+        
         collectionView.backgroundColor = .clear
         
         updateDataSource()
+    }
+}
+
+// MARK: - AgoraEduUserHandler
+extension FcrToolBarUIComponent: AgoraEduUserHandler {
+    func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
+        guard let indexPath = dataSource.indexOfType(.help),
+              user.userRole == .teacher,
+              teacherInLocalSubRoom() else {
+            return
+        }
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operatorUser: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        guard let indexPath = dataSource.indexOfType(.help),
+              user.userRole == .teacher else {
+            return
+        }
+        collectionView.reloadItems(at: [indexPath])
     }
 }
 
@@ -189,20 +208,21 @@ extension FcrToolBarUIComponent: AgoraEduGroupHandler {
     func onUserListAddedToSubRoom(userList: [String],
                                   subRoomUuid: String,
                                   operatorUser: AgoraEduContextUserInfo?) {
-        if let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
-           userList.contains(teacherId),
-           teacherInLocalSubRoom(),
-           let indexPath = dataSource.indexOfType(.help) {
-            collectionView.reloadItems(at: [indexPath])
+        if let subRoom = subRoom,
+           subRoom.getSubRoomInfo().subRoomUuid == subRoomUuid,
+           let indexPath = dataSource.indexOfType(.help),
+           let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
+           userList.contains(teacherId) {
+            
         }
     }
     
     func onUserListRemovedFromSubRoom(userList: [AgoraEduContextSubRoomRemovedUserEvent],
                                       subRoomUuid: String) {
-        if let teacherId = contextPool.user.getUserList(role: .teacher)?.first?.userUuid,
+        if let teacherId = userController.getUserList(role: .teacher)?.first?.userUuid,
            userList.contains(where: {$0.userUuid == teacherId}),
            let indexPath = dataSource.indexOfType(.help) {
-            collectionView.reloadItems(at: [indexPath])
+            
         }
     }
 }
@@ -381,30 +401,11 @@ extension FcrToolBarUIComponent: UICollectionViewDelegate,
 // MARK: - Creations
 private extension FcrToolBarUIComponent {
     func teacherInLocalSubRoom() -> Bool {
-        let group = contextPool.group
-        let user = contextPool.user
-        
-        guard let subRoomList = group.getSubRoomList(),
-              let teacher = user.getUserList(role: .teacher)?.first else {
+        guard let _ = userController.getUserList(role: .teacher)?.first else {
             return false
         }
         
-        let localUserId = user.getLocalUserInfo().userUuid
-        let teacherId = teacher.userUuid
-        
-        let contains = [localUserId,
-                        teacherId]
-        
-        for item in subRoomList {
-            guard let userList = group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
-                  userList.contains(contains) else {
-                continue
-            }
-            
-            return true
-        }
-        
-        return false
+        return true
     }
 }
 

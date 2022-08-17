@@ -10,19 +10,35 @@ import AgoraWidget
 import UIKit
 
 class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
-    private let contextPool: AgoraEduContextPool
+//    private let contextPool: AgoraEduContextPool
+    
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let mediaController: AgoraEduMediaContext
+    private let streamController: AgoraEduStreamContext
+    private let widgetController: AgoraEduWidgetContext
+    
     private let teacherItemIndex = 0
     private let studentItemIndex = 1
     
     private weak var componentDataSource: FcrUIComponentDataSource?
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         mediaController: AgoraEduMediaContext,
+         streamController: AgoraEduStreamContext,
+         widgetController: AgoraEduWidgetContext,
          delegate: FcrWindowRenderUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
         let dataSource = [FcrWindowRenderViewState.none,
                           FcrWindowRenderViewState.none]
         
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.mediaController = mediaController
+        self.streamController = streamController
+        self.widgetController = widgetController
+        
         self.componentDataSource = componentDataSource
         
         super.init(dataSource: dataSource,
@@ -37,10 +53,10 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        contextPool.room.registerRoomEventHandler(self)
-        contextPool.user.registerUserEventHandler(self)
-        contextPool.stream.registerStreamEventHandler(self)
-        contextPool.media.registerMediaEventHandler(self)
+        roomController.registerRoomEventHandler(self)
+        userController.registerUserEventHandler(self)
+        streamController.registerStreamEventHandler(self)
+        mediaController.registerMediaEventHandler(self)
     }
     
     override func initViews() {
@@ -134,7 +150,7 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
 
 private extension FcrOneToOneWindowRenderUIComponent {
     func updateItemOfTeacher() {
-        guard let teacher = contextPool.user.getUserList(role: .teacher)?.first else {
+        guard let teacher = userController.getUserList(role: .teacher)?.first else {
             return
         }
         
@@ -143,7 +159,7 @@ private extension FcrOneToOneWindowRenderUIComponent {
     }
     
     func updateItemOfStudent() {
-        guard let student = contextPool.user.getUserList(role: .student)?.first else {
+        guard let student = userController.getUserList(role: .student)?.first else {
             return
         }
         
@@ -153,7 +169,7 @@ private extension FcrOneToOneWindowRenderUIComponent {
     
     func updateItem(by user: AgoraEduContextUserInfo,
                     index: Int) {
-        guard let stream = contextPool.stream.firstCameraStream(of: user) else {
+        guard let stream = streamController.firstCameraStream(of: user) else {
             return
         }
         
@@ -184,13 +200,13 @@ private extension FcrOneToOneWindowRenderUIComponent {
             boardPrivilege = true
         }
         
-        let rewardCount = contextPool.user.getUserRewardCount(userUuid: userId)
+        let rewardCount = userController.getUserRewardCount(userUuid: userId)
         
         let data = FcrWindowRenderViewData.create(stream: stream,
                                                   rewardCount: rewardCount,
                                                   boardPrivilege: boardPrivilege)
         
-        let isActive = contextPool.widget.streamWindowWidgetIsActive(of: stream)
+        let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
         
         let item = FcrWindowRenderViewState.create(isHide: isActive,
                                                    data: data)
@@ -201,14 +217,14 @@ private extension FcrOneToOneWindowRenderUIComponent {
 
 private extension FcrOneToOneWindowRenderUIComponent {
     func startPlayAudio(streamId: String) {
-        let roomId = contextPool.room.getRoomInfo().roomUuid
-        contextPool.media.startPlayAudio(roomUuid: roomId,
+        let roomId = roomController.getRoomInfo().roomUuid
+        mediaController.startPlayAudio(roomUuid: roomId,
                                          streamUuid: streamId)
     }
     
     func stopPlayAudio(streamId: String) {
-        let roomId = contextPool.room.getRoomInfo().roomUuid
-        contextPool.media.stopPlayAudio(roomUuid: roomId,
+        let roomId = roomController.getRoomInfo().roomUuid
+        mediaController.stopPlayAudio(roomUuid: roomId,
                                         streamUuid: streamId)
     }
     
@@ -217,14 +233,14 @@ private extension FcrOneToOneWindowRenderUIComponent {
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         
-        contextPool.media.startRenderVideo(view: view,
+        mediaController.startRenderVideo(view: view,
                                            renderConfig: renderConfig,
                                            streamUuid: streamId)
     }
     
     func stopRenderVideo(streamId: String,
                          view: FcrWindowRenderVideoView) {
-        contextPool.media.stopRenderVideo(streamUuid: streamId)
+        mediaController.stopRenderVideo(streamUuid: streamId)
     }
 }
 

@@ -10,23 +10,21 @@ import AgoraEduContext
 import UIKit
 
 class FcrSettingUIComponent: UIViewController {
-    /** SDK环境*/
-    private var contextPool: AgoraEduContextPool
-    
-    private var subRoom: AgoraEduSubRoomContext?
-    
-    public let suggestSize = CGSize(width: 201,
-                                    height: 220)
-    
+    /**context*/
+    private let mediaController: AgoraEduMediaContext
+    private let subRoom: AgoraEduSubRoomContext?
     private weak var exitDelegate: FcrUISceneExit?
     
     // Views
     private lazy var contentView = FcrSettingsView()
+    
+    public let suggestSize = CGSize(width: 201,
+                                    height: 220)
             
-    init(context: AgoraEduContextPool,
+    init(mediaController: AgoraEduMediaContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          exitDelegate: FcrUISceneExit? = nil) {
-        self.contextPool = context
+        self.mediaController = mediaController
         self.subRoom = subRoom
         self.exitDelegate = exitDelegate
         
@@ -95,6 +93,9 @@ class FcrSettingUIComponent: UIViewController {
     func updateViewProperties() {
         let config = UIConfig.setting
         
+        view.agora_enable = config.enable
+        view.agora_visible = config.visible
+        
         view.layer.shadowColor = config.shadow.color
         view.layer.shadowOffset = config.shadow.offset
         view.layer.shadowOpacity = config.shadow.opacity
@@ -109,29 +110,27 @@ class FcrSettingUIComponent: UIViewController {
 // MARK: - FcrSettingsViewDelegate
 extension FcrSettingUIComponent: FcrSettingsViewDelegate {
     func onCameraSwitchIsOn(isOn: Bool) {
-        let media = contextPool.media
-        
         switch isOn {
         case true:
             if contentView.getFrontCameraIsSelected() {
-                media.openLocalDevice(systemDevice: .frontCamera)
+                mediaController.openLocalDevice(systemDevice: .frontCamera)
             } else {
-                media.openLocalDevice(systemDevice: .backCamera)
+                mediaController.openLocalDevice(systemDevice: .backCamera)
             }
         case false:
             if contentView.getFrontCameraIsSelected() {
-                media.closeLocalDevice(systemDevice: .frontCamera)
+                mediaController.closeLocalDevice(systemDevice: .frontCamera)
             } else {
-                media.closeLocalDevice(systemDevice: .backCamera)
+                mediaController.closeLocalDevice(systemDevice: .backCamera)
             }
         }
     }
     
     func onCameraButtonIsSelected(isFront: Bool) {
         if isFront {
-            contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            mediaController.openLocalDevice(systemDevice: .frontCamera)
         } else {
-            contextPool.media.openLocalDevice(systemDevice: .backCamera)
+            mediaController.openLocalDevice(systemDevice: .backCamera)
         }
     }
 }
@@ -139,22 +138,18 @@ extension FcrSettingUIComponent: FcrSettingsViewDelegate {
 // MARK: - Actions
 private extension FcrSettingUIComponent {
     @objc func onClickMicSwitch(_ sender: UISwitch) {
-        let media = contextPool.media
-        
         if sender.isOn {
-            media.openLocalDevice(systemDevice: .mic)
+            mediaController.openLocalDevice(systemDevice: .mic)
         } else {
-            media.closeLocalDevice(systemDevice: .mic)
+            mediaController.closeLocalDevice(systemDevice: .mic)
         }
     }
     
     @objc func onClickSpeakerSwitch(_ sender: UISwitch) {
-        let media = contextPool.media
-        
         if sender.isOn {
-            media.openLocalDevice(systemDevice: .speaker)
+            mediaController.openLocalDevice(systemDevice: .speaker)
         } else {
-            media.closeLocalDevice(systemDevice: .speaker)
+            mediaController.closeLocalDevice(systemDevice: .speaker)
         }
     }
     
@@ -206,16 +201,14 @@ private extension FcrSettingUIComponent {
 // MARK: - Private
 private extension FcrSettingUIComponent {
     func setContentViewState() {
-        let media = contextPool.media
-        
         // Camera
         var frontCameraIsOpen = false
         var backCameraIsOpen = false
         
-        let cameraList = media.getLocalDevices(deviceType: .camera)
+        let cameraList = mediaController.getLocalDevices(deviceType: .camera)
         
         for item in cameraList {
-            media.getLocalDeviceState(device: item) { [weak self] (state) in
+            mediaController.getLocalDeviceState(device: item) { [weak self] (state) in
                 if item.deviceName.contains("front") {
                     frontCameraIsOpen = (state == .open)
                 } else {
@@ -239,10 +232,10 @@ private extension FcrSettingUIComponent {
         }
         
         // Mic
-        let micList = media.getLocalDevices(deviceType: .mic)
+        let micList = mediaController.getLocalDevices(deviceType: .mic)
         
         for item in micList {
-            media.getLocalDeviceState(device: item) { [weak self] (state) in
+            mediaController.getLocalDeviceState(device: item) { [weak self] (state) in
                 self?.contentView.micSwitch.isOn = (state == .open)
             } failure: { _ in
                 
@@ -250,10 +243,10 @@ private extension FcrSettingUIComponent {
         }
         
         // Speaker
-        let speakerList = media.getLocalDevices(deviceType: .speaker)
+        let speakerList = mediaController.getLocalDevices(deviceType: .speaker)
         
         for item in speakerList {
-            media.getLocalDeviceState(device: item) { [weak self] (state) in
+            mediaController.getLocalDeviceState(device: item) { [weak self] (state) in
                 self?.contentView.speakerSwitch.isOn = (state == .open)
             } failure: { _ in
                 

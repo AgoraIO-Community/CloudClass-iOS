@@ -16,22 +16,6 @@ protocol FcrChatUIComponentDelegate: NSObjectProtocol {
 }
 
 class FcrChatUIComponent: UIViewController {
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-    
     private var redDotShow: Bool = false {
         didSet {
             guard redDotShow != oldValue else {
@@ -43,7 +27,9 @@ class FcrChatUIComponent: UIViewController {
     }
     
     /** SDK环境*/
-    private var contextPool: AgoraEduContextPool
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let widgetController: AgoraEduWidgetContext
     private var subRoom: AgoraEduSubRoomContext?
     private var widget: AgoraBaseWidget?
     
@@ -51,12 +37,16 @@ class FcrChatUIComponent: UIViewController {
     public let suggestSize = CGSize(width: 200,
                                     height: 287)
     
-    public weak var delegate: FcrChatUIComponentDelegate?
+    private weak var delegate: FcrChatUIComponentDelegate?
             
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrChatUIComponentDelegate? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.widgetController = widgetController
         self.subRoom = subRoom
         self.delegate = delegate
         
@@ -74,7 +64,7 @@ class FcrChatUIComponent: UIViewController {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
         
         initViews()
@@ -155,6 +145,10 @@ extension FcrChatUIComponent: AgoraWidgetMessageObserver {
 // MARK: - Creations
 private extension FcrChatUIComponent {
     func createWidget() {
+        guard UIConfig.agoraChat.enable else {
+            return
+        }
+        
         if let object = createHyWidget() {
             widget = object
         } else if let object = createAgWidget() {

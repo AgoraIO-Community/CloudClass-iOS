@@ -23,13 +23,13 @@ class FcrClassStateUIComponent: UIViewController {
                                delay: 0,
                                options: .curveEaseInOut,
                                animations: { [weak self] in
-                                guard let `self` = self else {
-                                    return
-                                }
-                                let move: CGFloat = (UIDevice.current.agora_is_pad ? 49 : 44)
-                                self.startButton.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
-                                                                         y: 0)
-                               }, completion: nil)
+                    guard let `self` = self else {
+                        return
+                    }
+                    let move: CGFloat = (UIDevice.current.agora_is_pad ? 49 : 44)
+                    self.startButton.transform = CGAffineTransform(translationX: self.positionMoveFlag ? move : 0,
+                                                                   y: 0)
+                }, completion: nil)
             }
         }
     }
@@ -39,14 +39,18 @@ class FcrClassStateUIComponent: UIViewController {
     
     /**Data*/
     private(set) var suggestSize: CGSize = UIDevice.current.agora_is_pad ? CGSize(width: 100,
-                                                                           height: 34) : CGSize(width: 100,
-                                                                                                height: 32)
+                                                                                  height: 34) : CGSize(width: 100,
+                                                                                                       height: 32)
     private weak var delegate: FcrClassStateUIComponentDelegate?
-    private var contextPool: AgoraEduContextPool
-   
-    init(context: AgoraEduContextPool,
+    
+    private let roomController: AgoraEduRoomContext
+    private let widgetController: AgoraEduWidgetContext
+    
+    init(roomController: AgoraEduRoomContext,
+         widgetController: AgoraEduWidgetContext,
          delegate: FcrClassStateUIComponentDelegate?) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.widgetController = widgetController
         self.delegate = delegate
         super.init(nibName: nil,
                    bundle: nil)
@@ -62,13 +66,9 @@ class FcrClassStateUIComponent: UIViewController {
         initViewFrame()
         updateViewProperties()
         
-        contextPool.room.registerRoomEventHandler(self)
-        contextPool.widget.add(self,
-                               widgetId: kBoardWidgetId)
-    }
-    
-    func dismissView() {
-        view.isHidden = true
+        roomController.registerRoomEventHandler(self)
+        widgetController.add(self,
+                             widgetId: kBoardWidgetId)
     }
 }
 
@@ -81,10 +81,6 @@ extension FcrClassStateUIComponent: AgoraUIContentContainer {
                               action: #selector(onClickStart(_:)),
                               for: .touchUpInside)
         view.addSubview(startButton)
-        
-        let config = UIConfig.classState.startClass
-        startButton.agora_enable = config.enable
-        startButton.agora_visible = config.visible
     }
     
     func initViewFrame() {
@@ -94,25 +90,30 @@ extension FcrClassStateUIComponent: AgoraUIContentContainer {
     }
     
     func updateViewProperties() {
-        let config = UIConfig.classState.startClass
+        let config = UIConfig.classState
         
-        startButton.titleLabel?.font = config.font
-        startButton.backgroundColor = config.normalBackgroundColor
-        startButton.setTitleColor(config.normalTitleColor,
+        view.agora_enable = config.enable
+        
+        startButton.agora_enable = config.startClass.enable
+        startButton.agora_visible = config.startClass.visible
+        
+        startButton.titleLabel?.font = config.startClass.font
+        startButton.backgroundColor = config.startClass.normalBackgroundColor
+        startButton.setTitleColor(config.startClass.normalTitleColor,
                                   for: .normal)
-        startButton.layer.cornerRadius = config.cornerRadius
+        startButton.layer.cornerRadius = config.startClass.cornerRadius
         
-        startButton.layer.shadowColor = config.shadow.color
-        startButton.layer.shadowOffset = config.shadow.offset
-        startButton.layer.shadowOpacity = config.shadow.opacity
-        startButton.layer.shadowRadius = config.shadow.radius
+        startButton.layer.shadowColor = config.startClass.shadow.color
+        startButton.layer.shadowOffset = config.startClass.shadow.offset
+        startButton.layer.shadowOpacity = config.startClass.shadow.opacity
+        startButton.layer.shadowRadius = config.startClass.shadow.radius
     }
 }
 
 // MARK: - AgoraEduRoomHandler
 extension FcrClassStateUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        if contextPool.room.getClassInfo().state == .before {
+        if roomController.getClassInfo().state == .before {
             delegate?.onShowStartClass()
         }
     }
@@ -128,7 +129,7 @@ extension FcrClassStateUIComponent: AgoraWidgetMessageObserver {
         }
         
         switch signal {
-        case .WindowStateChanged(let state):
+        case .windowStateChanged(let state):
             positionMoveFlag = (state == .min)
         default:
             break
@@ -138,7 +139,7 @@ extension FcrClassStateUIComponent: AgoraWidgetMessageObserver {
 
 private extension FcrClassStateUIComponent {
     @objc func onClickStart(_ sender: UIButton) {
-        contextPool.room.startClass { [weak self] in
+        roomController.startClass { [weak self] in
             self?.view.removeFromSuperview()
         } failure: { error in
             

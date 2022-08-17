@@ -19,18 +19,18 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
             return
         }
         
-        contextPool.media.startPlayAudio(roomUuid: roomId,
-                                         streamUuid: stream.streamUuid)
+        mediaController.startPlayAudio(roomUuid: roomId,
+                                       streamUuid: stream.streamUuid)
     }
     
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
         if stream.hasAudio {
-            contextPool.media.startPlayAudio(roomUuid: roomId,
-                                             streamUuid: stream.streamUuid)
+            mediaController.startPlayAudio(roomUuid: roomId,
+                                           streamUuid: stream.streamUuid)
         } else {
-            contextPool.media.stopPlayAudio(roomUuid: roomId,
-                                            streamUuid: stream.streamUuid)
+            mediaController.stopPlayAudio(roomUuid: roomId,
+                                          streamUuid: stream.streamUuid)
         }
         guard contextPool.user.getLocalUserInfo().userRole == .teacher ||
                 contextPool.user.getLocalUserInfo().userRole == .assistant,
@@ -44,8 +44,8 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        contextPool.media.stopPlayAudio(roomUuid: roomId,
-                                        streamUuid: stream.streamUuid)
+        mediaController.stopPlayAudio(roomUuid: roomId,
+                                      streamUuid: stream.streamUuid)
     }
     
     override func onAddedRenderWidget(widgetView: UIView) {

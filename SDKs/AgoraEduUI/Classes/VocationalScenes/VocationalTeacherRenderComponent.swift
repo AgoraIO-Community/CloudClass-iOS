@@ -11,14 +11,20 @@ import AgoraEduContext
 class VocationalTeacherRenderComponent: VocationalRenderMembersUIComponent {
     private let teacherIndex = 0
     
-    override init(context: AgoraEduContextPool,
+    override init(roomController: AgoraEduRoomContext,
+                  userController: AgoraEduUserContext,
+                  streamController: AgoraEduStreamContext,
+                  mediaController: AgoraEduMediaContext,
+                  widgetController: AgoraEduWidgetContext,
                   delegate: AgoraRenderUIComponentDelegate?,
                   subRoom: AgoraEduSubRoomContext? = nil,
                   expandFlag: Bool = false) {
-        super.init(context: context,
-                   delegate: delegate,
-                   subRoom: subRoom,
-                   expandFlag: expandFlag)
+        super.init(roomController: roomController,
+                   userController: userController,
+                   streamController: streamController,
+                   mediaController: mediaController,
+                   widgetController: widgetController,
+                   delegate: delegate)
         setBaseDataSource()
     }
     
@@ -30,7 +36,7 @@ class VocationalTeacherRenderComponent: VocationalRenderMembersUIComponent {
         super.registerHandlers()
         
         userController.registerUserEventHandler(self)
-        contextPool.media.registerMediaEventHandler(self)
+        mediaController.registerMediaEventHandler(self)
     }
     
     override func createAllRender() {
@@ -92,8 +98,8 @@ private extension VocationalTeacherRenderComponent {
         maxCount = 1
         
         var models = [AgoraRenderMemberViewModel]()
-        let localInfo = contextPool.user.getLocalUserInfo()
-        let localStream = contextPool.stream.getStreamList(userUuid: localInfo.userUuid)?.first(where: {$0.videoSourceType == .camera})
+        let localInfo = userController.getLocalUserInfo()
+        let localStream = streamController.getStreamList(userUuid: localInfo.userUuid)?.first(where: {$0.videoSourceType == .camera})
 
         switch localInfo.userRole {
         case .teacher:

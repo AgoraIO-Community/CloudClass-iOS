@@ -37,41 +37,22 @@ class VocationalWindowUIComponent: UIViewController {
         }
     }
     
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var streamController: AgoraEduStreamContext {
-        if let `subRoom` = subRoom {
-            return subRoom.stream
-        } else {
-            return contextPool.stream
-        }
-    }
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
+    /**context*/
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let streamController: AgoraEduStreamContext
+    private let mediaController: AgoraEduMediaContext
+    private let widgetController: AgoraEduWidgetContext
+    private let subRoom: AgoraEduSubRoomContext?
     
     private var roomId: String {
         if let `subRoom` = subRoom {
             return subRoom.getSubRoomInfo().subRoomUuid
         } else {
-            return contextPool.room.getRoomInfo().roomUuid
+            return roomController.getRoomInfo().roomUuid
         }
     }
-    
-    private var contextPool: AgoraEduContextPool
-    private var subRoom: AgoraEduSubRoomContext?
-    
+
     weak var delegate: VocationalWindowUIComponentDelegate?
     
     /**widgetId: AgoraStreamWindowType **/
@@ -84,11 +65,20 @@ class VocationalWindowUIComponent: UIViewController {
         }
     }
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         mediaController: AgoraEduMediaContext,
+         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: VocationalWindowUIComponentDelegate? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.streamController = streamController
+        self.mediaController = mediaController
+        self.widgetController = widgetController
         self.subRoom = subRoom
+        
         self.delegate = delegate
         super.init(nibName: nil,
                    bundle: nil)
@@ -111,10 +101,10 @@ class VocationalWindowUIComponent: UIViewController {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
         
-        contextPool.media.registerMediaEventHandler(self)
+        mediaController.registerMediaEventHandler(self)
     }
 }
 
@@ -543,22 +533,22 @@ private extension VocationalWindowUIComponent {
         renderConfig.isMirror = false
         if self.isRenderByRTC {
             if let url = cdnURL {
-                self.contextPool.media.stopRenderVideoFromCdn(streamUrl: url)
+                mediaController.stopRenderVideoFromCdn(streamUrl: url)
             }
-            self.contextPool.media.startRenderVideo(roomUuid: roomId,
+            mediaController.startRenderVideo(roomUuid: roomId,
                                                     view: renderView.videoView,
                                                     renderConfig: renderConfig,
                                                     streamUuid: streamId)
         } else if let url = cdnURL {
-            self.contextPool.media.stopRenderVideo(streamUuid: streamId)
+            mediaController.stopRenderVideo(streamUuid: streamId)
             // 先调用一遍stop用以处理拖拉拽时不显示的问题
-            self.contextPool.media.stopRenderVideoFromCdn(streamUrl: url)
-            self.contextPool.media.stopPlayAudioFromCdn(streamUrl: url)
+            mediaController.stopRenderVideoFromCdn(streamUrl: url)
+            mediaController.stopPlayAudioFromCdn(streamUrl: url)
             // 开始渲染
-            self.contextPool.media.startRenderVideoFromCdn(view: renderView,
+            mediaController.startRenderVideoFromCdn(view: renderView,
                                                       mode: .hidden,
                                                       streamUrl: url)
-            self.contextPool.media.startPlayAudioFromCdn(streamUrl: url)
+            mediaController.startPlayAudioFromCdn(streamUrl: url)
         }
     }
     
@@ -612,7 +602,7 @@ private extension VocationalWindowUIComponent {
             streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
                                                                 level: .high)
             
-            contextPool.media.startRenderVideo(roomUuid: roomId,
+            mediaController.startRenderVideo(roomUuid: roomId,
                                                view: view,
                                                renderConfig: renderConfig,
                                                streamUuid: streamId)
@@ -627,7 +617,7 @@ private extension VocationalWindowUIComponent {
         guard isCamera,
               let targetView = delegate?.getTargetView(with: userId),
               let targetSuperView = delegate?.getTargetSuperView() else {
-            contextPool.media.stopRenderVideo(streamUuid: streamId)
+            mediaController.stopRenderVideo(streamUuid: streamId)
             widget.view.removeFromSuperview()
             completion()
             return

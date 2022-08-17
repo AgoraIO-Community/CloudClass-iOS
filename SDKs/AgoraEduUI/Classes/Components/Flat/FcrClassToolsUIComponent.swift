@@ -10,23 +10,10 @@ import AgoraWidget
 import UIKit
 
 class FcrClassToolsUIComponent: UIViewController {
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-    
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var contextPool: AgoraEduContextPool
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let monitorController: AgoraEduMonitorContext
+    private let widgetController: AgoraEduWidgetContext
     private var subRoom: AgoraEduSubRoomContext?
     
     private let widgetIdList = [PollWidgetId,
@@ -42,9 +29,15 @@ class FcrClassToolsUIComponent: UIViewController {
     private var pollWidget: AgoraBaseWidget?
     private var countdownTimerWidget: AgoraBaseWidget?
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         monitorController: AgoraEduMonitorContext,
+         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.monitorController = monitorController
+        self.widgetController = widgetController
         self.subRoom = subRoom
         
         super.init(nibName: nil,
@@ -65,7 +58,7 @@ class FcrClassToolsUIComponent: UIViewController {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
     }
 }
@@ -305,7 +298,7 @@ private extension FcrClassToolsUIComponent {
     }
     
     func sendWidgetCurrentTimestamp(_ widgetId: String) {
-        let syncTimestamp = contextPool.monitor.getSyncTimestamp()
+        let syncTimestamp = monitorController.getSyncTimestamp()
         let tsDic = ["syncTimestamp": syncTimestamp]
         
         if let string = tsDic.jsonString() {

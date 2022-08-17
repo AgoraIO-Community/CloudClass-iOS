@@ -1,80 +1,14 @@
 //
-//  File.swift
+//  DebugCoursewares.swift
 //  AgoraEducation
 //
-//  Created by Cavan on 2021/12/28.
-//  Copyright © 2021 Agora. All rights reserved.
+//  Created by LYY on 2022/8/9.
+//  Copyright © 2022 Agora. All rights reserved.
 //
 
-#if canImport(AgoraClassroomSDK_iOS)
-import AgoraClassroomSDK_iOS
-#else
-import AgoraClassroomSDK
-#endif
 import Foundation
 
-/** 房间信息项*/
-enum RoomInfoItemType: Int, CaseIterable {
-    // 房间名
-    case roomName = 0
-    // 昵称
-    case nickName
-    // 类型
-    case roomStyle
-    // 服务类型：CDN、RTC等服务类型
-    case serviceType
-    // 角色
-    case roleType
-    // IM
-    case im
-    // 开始时间
-    case startTime
-    // 时长
-    case duration
-    // 密钥
-    case encryptKey
-    // 模式
-    case encryptMode
-    // 上台是否直接授权音视频发流权限
-    case mediaAuth
-    // 主题模式
-    case uiMode
-    // 语言
-    case uiLanguage
-    // 区域
-    case region
-    // 环境
-    case env
-}
-
-enum IMType: String {
-    case rtm, easemob
-}
-
-/** 入参模型*/
-struct RoomInfoModel {
-    var roomName: String?
-    var nickName: String?
-    var roomStyle: AgoraEduRoomType?
-    var serviceType: AgoraEduServiceType?
-    var roleType: AgoraEduUserRole = .student
-    var im: IMType = .easemob
-    var duration: Int = 1800
-    var encryptKey: String?
-    var encryptMode: AgoraEduMediaEncryptionMode = .none
-    
-    var startTime: NSNumber?
-    
-    var mediaAuth: AgoraEduMediaAuthOption = .both
-    
-    /** 入参默认值 */
-    static func defaultValue() -> RoomInfoModel {
-        var room = RoomInfoModel()
-        room.roomName = nil
-        room.nickName = nil
-        return room
-    }
-    
+extension DebugLaunchInfo {
     func publicCoursewares() -> Array<String> {
         let publicJson1 = """
         {

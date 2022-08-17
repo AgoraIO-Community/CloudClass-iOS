@@ -120,18 +120,7 @@ struct FcrUIItemNetlessBoardPageControl: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let backgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
-    let cornerRadius: CGFloat    = FcrUIFrameGroup.roundContainerCornerRadius
-    
-    let addPageImage: UIImage?  = .agedu_named("ic_board_page_add")
-    let prevPageImage: UIImage? = .agedu_named("ic_board_page_pre")
-    let nextPageImage: UIImage? = .agedu_named("ic_board_page_next")
-    let disabledPrevPageImage: UIImage? = .agedu_named("ic_board_page_disabled_pre")
-    let disabledNextPageImage: UIImage? = .agedu_named("ic_board_page_disabled_next")
-    
-    let sepLine        = FcrUIItemSepLine()
-    let pageLabel      = FcrUIItemNetlessBoardPageLabel()
-    let shadow         = FcrUIItemShadow()
+    var pageLabel      = FcrUIItemNetlessBoardPageLabel()
 }
 
 struct FcrUIItemNetlessBoardPageLabel: FcrUIItemProtocol {

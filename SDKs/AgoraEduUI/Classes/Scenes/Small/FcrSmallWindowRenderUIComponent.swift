@@ -13,17 +13,29 @@ class FcrSmallWindowRenderUIComponent: UIViewController {
     let coHost: FcrCoHostWindowRenderUIComponent
     let teacher: FcrTeacherWindowRenderUIComponent
     
-    weak var delegate: FcrWindowRenderUIComponentDelegate?
+    private weak var delegate: FcrWindowRenderUIComponentDelegate?
     
-    init(context: AgoraEduContextPool,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         mediaController: AgoraEduMediaContext,
+         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrWindowRenderUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
-        self.coHost = FcrCoHostWindowRenderUIComponent(context: context,
+        self.coHost = FcrCoHostWindowRenderUIComponent(roomController: roomController,
+                                                       userController: userController,
+                                                       streamController: streamController,
+                                                       mediaController: mediaController,
+                                                       widgetController: widgetController,
                                                        subRoom: subRoom,
                                                        componentDataSource: componentDataSource)
         
-        self.teacher = FcrTeacherWindowRenderUIComponent(context: context,
+        self.teacher = FcrTeacherWindowRenderUIComponent(roomController: roomController,
+                                                         userController: userController,
+                                                         streamController: streamController,
+                                                         mediaController: mediaController,
+                                                         widgetController: widgetController,
                                                          subRoom: subRoom)
         
         super.init(nibName: nil,

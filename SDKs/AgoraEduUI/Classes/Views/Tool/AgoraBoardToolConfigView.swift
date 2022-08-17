@@ -5,7 +5,6 @@
 //  Created by DoubleCircle on 2022/2/10.
 //
 
-import AgoraEduContext
 import SwifterSwift
 import AgoraWidget
 import UIKit
@@ -144,7 +143,6 @@ class AgoraBoardToolConfigView: UIView {
     /** Data*/
     private lazy var paintTools = AgoraBoardToolPaintType.allCases.enabledTypes()
     public weak var delegate: AgoraBoardToolConfigViewDelegate?
-    private var contextPool: AgoraEduContextPool!
     
     private let hexColors: [Int] = [
         0x9B9B9B, 0x4A4A4A, 0x000000, 0xD0021B, 0xF5A623, 0xF8E71C,

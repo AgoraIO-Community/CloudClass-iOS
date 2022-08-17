@@ -39,12 +39,10 @@ class FcrBoardUIComponent: UIViewController {
     
     var localGranted = false {
         didSet {
-            pageControl.isHidden = !localGranted
-            
             guard localGranted != oldValue else {
                 return
             }
-            guard contextPool.user.getLocalUserInfo().userRole != .teacher else {
+            guard userController.getLocalUserInfo().userRole != .teacher else {
                 return
             }
             let msgKey = localGranted ? "fcr_netless_board_granted" : "fcr_netless_board_ungranted"
@@ -55,21 +53,17 @@ class FcrBoardUIComponent: UIViewController {
         }
     }
     
-    var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
+    private(set) var roomController: AgoraEduRoomContext
+    private(set) var userController: AgoraEduUserContext
+    private(set) var widgetController: AgoraEduWidgetContext
+    private(set) var mediaController: AgoraEduMediaContext
     
-    var contextPool: AgoraEduContextPool
     var subRoom: AgoraEduSubRoomContext?
     
     private var roomProperties: [String: Any]? {
         get {
             guard let subRoom = subRoom else {
-                return contextPool.room.getRoomProperties()
+                return roomController.getRoomProperties()
             }
             
             return subRoom.getSubRoomProperties()
@@ -78,27 +72,19 @@ class FcrBoardUIComponent: UIViewController {
     private var boardWidget: AgoraBaseWidget?
     private(set) weak var delegate: FcrBoardUIComponentDelegate?
     
-    /**views**/
-    private lazy var pageControl = FcrBoardPageControlView(frame: .zero)
-    
     /** Data */
-    private var pageIndex = 1 {
-        didSet {
-            pageControl.updatePage(pageIndex, pages: pageCount)
-        }
-    }
-    
-    private var pageCount = 0 {
-        didSet {
-            pageControl.updatePage(pageIndex, pages: pageCount)
-        }
-    }
-    
-    init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil,
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         widgetController: AgoraEduWidgetContext,
+         mediaController: AgoraEduMediaContext,
+        subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrBoardUIComponentDelegate? = nil) {
-        self.contextPool = context
+        self.roomController = roomController
+        self.userController = userController
+        self.widgetController = widgetController
+        self.mediaController = mediaController
         self.subRoom = subRoom
+        
         self.delegate = delegate
         
         super.init(nibName: nil,
@@ -106,7 +92,7 @@ class FcrBoardUIComponent: UIViewController {
     }
     
     func saveBoard() {
-        if let message = AgoraBoardWidgetSignal.SaveBoard.toMessageString() {
+        if let message = AgoraBoardWidgetSignal.saveBoard.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -115,14 +101,12 @@ class FcrBoardUIComponent: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initViews()
-        initViewFrame()
-        updateViewProperties()
+        view.backgroundColor = UIConfig.netlessBoard.backgroundColor
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
     }
     
@@ -136,7 +120,7 @@ class FcrBoardUIComponent: UIViewController {
     }
     
     func onNeedChangeRatio() {
-        if let message = AgoraBoardWidgetSignal.ChangeRatio.toMessageString() {
+        if let message = AgoraBoardWidgetSignal.changeRatio.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -144,7 +128,7 @@ class FcrBoardUIComponent: UIViewController {
     
     // for subVC
     func onViewWillActive() {
-        contextPool.media.registerMediaEventHandler(self)
+        mediaController.registerMediaEventHandler(self)
         widgetController.add(self)
         
         guard widgetController.getWidgetActivity(kBoardWidgetId) else {
@@ -159,7 +143,7 @@ class FcrBoardUIComponent: UIViewController {
     
     func onGrantedUsersChanged(oldList: Array<String>,
                                newList: Array<String>) {
-        let localUser = contextPool.user.getLocalUserInfo()
+        let localUser = userController.getLocalUserInfo()
         if localUser.userRole == .teacher {
             localGranted = true
         } else {
@@ -176,53 +160,11 @@ class FcrBoardUIComponent: UIViewController {
     }
     
     func onViewWillInactive() {
-        contextPool.media.unregisterMediaEventHandler(self)
+        mediaController.unregisterMediaEventHandler(self)
         
         widgetController.remove(self)
         
         deinitBoardWidget()
-    }
-}
-
-// MARK: - AgoraUIContentContainer
-extension FcrBoardUIComponent: AgoraUIContentContainer {
-    func initViews() {
-        let userRole = contextPool.user.getLocalUserInfo().userRole
-        guard userRole != .observer else {
-            return
-        }
-        
-        pageControl.addBtn.addTarget(self,
-                                     action: #selector(onClickAddPage(_:)),
-                                     for: .touchUpInside)
-        pageControl.prevBtn.addTarget(self,
-                                      action: #selector(onClickPrePage(_:)),
-                                      for: .touchUpInside)
-        pageControl.nextBtn.addTarget(self,
-                                      action: #selector(onClickNextPage(_:)),
-                                      for: .touchUpInside)
-        
-        view.addSubview(pageControl)
-        pageControl.isHidden = true
-        
-        pageControl.agora_enable = UIConfig.netlessBoard.pageControl.enable
-    }
-    
-    func initViewFrame() {
-        let userRole = contextPool.user.getLocalUserInfo().userRole
-        guard userRole != .observer else {
-            return
-        }
-        pageControl.mas_makeConstraints { make in
-            make?.left.equalTo()(view)?.offset()(UIDevice.current.agora_is_pad ? 15 : 12)
-            make?.bottom.equalTo()(view)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
-            make?.height.equalTo()(UIDevice.current.agora_is_pad ? 34 : 32)
-            make?.width.equalTo()(168)
-        }
-    }
-    
-    func updateViewProperties() {
-        view.backgroundColor = UIConfig.netlessBoard.backgroundColor
     }
 }
 
@@ -255,14 +197,13 @@ private extension FcrBoardUIComponent {
         widget.view.layer.borderWidth = config.borderWidth
         
         view.addSubview(widget.view)
-        view.bringSubviewToFront(pageControl)
         boardWidget = widget
 
         widget.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         
-        if let message = AgoraBoardWidgetSignal.JoinBoard.toMessageString() {
+        if let message = AgoraBoardWidgetSignal.joinBoard.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }
@@ -291,20 +232,20 @@ private extension FcrBoardUIComponent {
         var contextError: AgoraEduContextError?
         switch data.requestType {
         case .start:
-            contextError = contextPool.media.startAudioMixing(filePath: data.filePath,
+            contextError = mediaController.startAudioMixing(filePath: data.filePath,
                                                               loopback: data.loopback,
                                                               replace: data.replace,
                                                               cycle: data.cycle)
         case .stop:
-            contextError = contextPool.media.stopAudioMixing()
+            contextError = mediaController.stopAudioMixing()
         case .setPosition:
-            contextError = contextPool.media.setAudioMixingPosition(position: data.position)
+            contextError = mediaController.setAudioMixingPosition(position: data.position)
         default:
             break
         }
         
         if let error = contextError,
-           let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(stateCode: 714,
+           let message = AgoraBoardWidgetSignal.audioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData(stateCode: 714,
                                                                                                               errorCode: error.code)).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
@@ -327,44 +268,6 @@ private extension FcrBoardUIComponent {
                              type: .error)
         }
     }
-    
-    func movePageControl(isRight: Bool) {
-        UIView.animate(withDuration: TimeInterval.agora_animation,
-                       delay: 0,
-                       options: .curveEaseInOut,
-                       animations: { [weak self] in
-            guard let `self` = self else {
-                return
-            }
-            let move: CGFloat = UIDevice.current.agora_is_pad ? 49 : 44
-            self.pageControl.transform = CGAffineTransform(translationX: isRight ? move : 0,
-                                                           y: 0)
-        }, completion: nil)
-    }
-    
-    @objc func onClickAddPage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.count(pageCount + 1)
-        if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
-    }
-    
-    @objc func onClickPrePage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 - 1)
-        if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
-    }
-    
-    @objc func onClickNextPage(_ sender: UIButton) {
-        let changeType = AgoraBoardWidgetPageChangeType.index(pageIndex - 1 + 1)
-        if let message = AgoraBoardWidgetSignal.BoardPageChanged(changeType).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                         message: message)
-        }
-    }
 }
 
 // MARK: - AgoraWidgetMessageObserver
@@ -377,22 +280,12 @@ extension FcrBoardUIComponent: AgoraWidgetMessageObserver {
         }
         
         switch signal {
-        case .BoardAudioMixingRequest(let requestData):
+        case .boardAudioMixingRequest(let requestData):
             handleAudioMixing(requestData)
-        case .GetBoardGrantedUsers(let list):
+        case .getBoardGrantedUsers(let list):
             grantedUsers = list
-        case .OnBoardSaveResult(let result):
+        case .onBoardSaveResult(let result):
             handlePhotoNoAuth(result)
-        case .BoardPageChanged(let type):
-            switch type {
-            case .index(let index):
-                pageIndex = index + 1
-            case .count(let count):
-                pageCount = count
-            }
-        case .WindowStateChanged(let state):
-            let moveRight = (state == .min)
-            movePageControl(isRight: moveRight)
         default:
             break
         }
@@ -413,7 +306,6 @@ extension FcrBoardUIComponent: AgoraWidgetActivityObserver {
         guard widgetId == kBoardWidgetId else {
             return
         }
-        pageControl.isHidden = true
         delegate?.onBoardActiveStateChanged(isActive: false)
         
         deinitBoardWidget()
@@ -451,14 +343,14 @@ extension FcrBoardUIComponent: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         onViewWillActive()
         
-        let localUserInfo = contextPool.user.getLocalUserInfo()
+        let localUserInfo = userController.getLocalUserInfo()
         
         guard !localGranted,
               localUserInfo.userRole != .teacher else {
             return
         }
         
-        let type = AgoraBoardWidgetSignal.UpdateGrantedUsers(.add([localUserInfo.userUuid]))
+        let type = AgoraBoardWidgetSignal.updateGrantedUsers(.add([localUserInfo.userUuid]))
 
         if let message = type.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
@@ -477,7 +369,7 @@ extension FcrBoardUIComponent: AgoraEduMediaHandler {
                                           errorCode: Int) {
         let data = AgoraBoardWidgetAudioMixingChangeData(stateCode: stateCode,
                                                          errorCode: errorCode)
-        if let message = AgoraBoardWidgetSignal.AudioMixingStateChanged(data).toMessageString() {
+        if let message = AgoraBoardWidgetSignal.audioMixingStateChanged(data).toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)
         }

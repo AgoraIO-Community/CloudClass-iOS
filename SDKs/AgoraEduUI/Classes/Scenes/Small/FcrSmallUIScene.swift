@@ -15,66 +15,99 @@ import AgoraWidget
 @objc public class FcrSmallUIScene: FcrUIScene {
     // MARK: - Flat components
     /** 房间状态 控制器*/
-    private lazy var stateComponent = FcrRoomStateUIComponent(context: contextPool)
+    private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
+                                                              userController: contextPool.user,
+                                                              monitorController: contextPool.monitor,
+                                                              groupController: contextPool.group)
     
     /** 视窗渲染 控制器*/
-    private lazy var renderComponent = FcrSmallWindowRenderUIComponent(context: contextPool,
+    private lazy var renderComponent = FcrSmallWindowRenderUIComponent(roomController: contextPool.room,
+                                                                       userController: contextPool.user,
+                                                                       streamController: contextPool.stream,
+                                                                       mediaController: contextPool.media,
+                                                                       widgetController: contextPool.widget,
                                                                        delegate: self,
                                                                        componentDataSource: self)
     
     /** 白板的渲染 控制器*/
-    private lazy var boardComponent = FcrBoardUIComponent(context: contextPool,
+    private lazy var boardComponent = FcrBoardUIComponent(roomController: contextPool.room,
+                                                          userController: contextPool.user,
+                                                          widgetController: contextPool.widget,
+                                                          mediaController: contextPool.media,
                                                           delegate: self)
     
     /** 外部链接 控制器*/
-    private lazy var webViewComponent = FcrWebViewUIComponent(context: contextPool)
+    private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
+                                                              userController: contextPool.user,
+                                                              widgetController: contextPool.widget)
     
     /** 大窗 控制器*/
-    private lazy var windowComponent = FcrStreamWindowUIComponent(context: contextPool,
+    private lazy var windowComponent = FcrStreamWindowUIComponent(roomController: contextPool.room,
+                                                                  userController: contextPool.user,
+                                                                  streamController: contextPool.stream,
+                                                                  mediaController: contextPool.media,
+                                                                  widgetController: contextPool.widget,
                                                                   delegate: self,
                                                                   componentDataSource: self)
     
     /** 工具栏*/
-    private lazy var toolBarComponent = FcrToolBarUIComponent(context: contextPool,
+    private lazy var toolBarComponent = FcrToolBarUIComponent(userController: contextPool.user,
                                                               delegate: self)
     
     /** 教具 控制器*/
-    private lazy var classToolsComponent = FcrClassToolsUIComponent(context: contextPool)
+    private lazy var classToolsComponent = FcrClassToolsUIComponent(roomController: contextPool.room,
+                                                                    userController: contextPool.user,
+                                                                    monitorController: contextPool.monitor,
+                                                                    widgetController: contextPool.widget)
     
     /** 课堂状态 控制器（仅教师端）*/
-    private lazy var classStateComponent = FcrClassStateUIComponent(context: contextPool,
+    private lazy var classStateComponent = FcrClassStateUIComponent(roomController: contextPool.room,
+                                                                    widgetController: contextPool.widget,
                                                                     delegate: self)
     
     /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalComponent = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                delegate: self)
+    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                userController: contextPool.user,
+                                                                monitorController: contextPool.monitor,
+                                                                streamController: contextPool.stream,
+                                                                groupController: contextPool.group,
+                                                                delegate: self,
+                                                                exitDelegate: self)
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
-    private lazy var settingComponent = FcrSettingUIComponent(context: contextPool,
+    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
                                                               exitDelegate: self)
     
     /** 聊天窗口 控制器*/
-    private lazy var chatComponent = FcrChatUIComponent(context: contextPool,
+    private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,
+                                                        userController: contextPool.user,
+                                                        widgetController: contextPool.widget,
                                                         delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
-    private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(context: contextPool,
+    private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(userController: contextPool.user,
+                                                                            widgetController: contextPool.widget,
                                                                             delegate: self)
     
     /** 花名册 控制器*/
     private lazy var nameRollComponent = FcrSmallRosterUIComponent(context: contextPool)
     
     /** 视窗菜单 控制器（仅教师端）*/
-    private lazy var renderMenuComponent = FcrRenderMenuUIComponent(context: contextPool,
+    private lazy var renderMenuComponent = FcrRenderMenuUIComponent(userController: contextPool.user,
+                                                                    streamController: contextPool.stream,
+                                                                    widgetController: contextPool.widget,
                                                                     delegate: self)
     
+    
     /** 举手列表 控制器（仅老师端）*/
-    private lazy var handsListComponent = FcrHandsListUIComponent(context: contextPool,
+    private lazy var handsListComponent = FcrHandsListUIComponent(userController: contextPool.user,
                                                                   delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(context: contextPool,
+    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
+                                                          widgetController: contextPool.widget,
+                                                          userController: contextPool.user,
                                                           delegate: self)
     
     private var isJoinedRoom = false
@@ -136,30 +169,62 @@ import AgoraWidget
     // MARK: AgoraUIContentContainer
     public override func initViews() {
         super.initViews()
+        
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
-        // Flat components
-        addChild(stateComponent)
-        contentView.addSubview(stateComponent.view)
+        var componentList: [UIViewController] = [stateComponent,
+                                                 settingComponent,
+                                                 globalComponent,
+                                                 boardComponent,
+                                                 renderComponent,
+                                                 webViewComponent,
+                                                 windowComponent,
+                                                 nameRollComponent,
+                                                 classToolsComponent,
+                                                 toolBarComponent,
+                                                 toolCollectionComponent,
+                                                 chatComponent]
         
-        addChild(renderComponent)
-        contentView.addSubview(renderComponent.view)
+        switch userRole {
+        case .teacher:
+            let teacherList = [classStateComponent,
+                               cloudComponent,
+                               renderMenuComponent,
+                               handsListComponent]
+            componentList.append(contentsOf: teacherList)
+            for item in teacherList {
+                item.view.agora_visible = false
+            }
+        case .student:
+            break
+        case .assistant:
+            break
+        case .observer:
+            componentList.removeAll([toolCollectionComponent,
+                                     nameRollComponent,
+                                     classToolsComponent])
+        }
         
+        for component in componentList {
+            addChild(component)
+            
+            if [settingComponent,
+                handsListComponent,
+                nameRollComponent].contains(component) {
+                continue
+            }
+            
+            if [globalComponent,
+                chatComponent].contains(component) {
+                component.viewDidLoad()
+                continue
+            }
+            
+            contentView.addSubview(component.view)
+        }
+        
+        // special
         boardComponent.view.clipsToBounds = true
-        addChild(boardComponent)
-        contentView.addSubview(boardComponent.view)
-        
-        addChild(webViewComponent)
-        contentView.addSubview(webViewComponent.view)
-        
-        addChild(windowComponent)
-        contentView.addSubview(windowComponent.view)
-        
-        addChild(toolBarComponent)
-        contentView.addSubview(toolBarComponent.view)
-        
-        addChild(classToolsComponent)
-        contentView.addSubview(classToolsComponent.view)
         
         switch userRole {
         case .teacher:
@@ -167,11 +232,6 @@ import AgoraWidget
                                           .message,
                                           .roster,
                                           .handsList])
-            
-            addChild(classStateComponent)
-            classStateComponent.view.agora_enable = UIConfig.classState.enable
-            classStateComponent.view.agora_visible = false
-            contentView.addSubview(classStateComponent.view)
         case .student:
             toolBarComponent.updateTools([.setting,
                                           .message,
@@ -181,70 +241,6 @@ import AgoraWidget
             toolBarComponent.updateTools([.setting,
                                           .message])
         }
-        
-        // Suspend components
-        addChild(settingComponent)
-        
-        addChild(chatComponent)
-        
-        switch userRole {
-        case .teacher:
-            addChild(nameRollComponent)
-            nameRollComponent.view.agora_enable = UIConfig.roster.enable
-            nameRollComponent.view.agora_visible = UIConfig.roster.enable
-            
-            addChild(handsListComponent)
-            handsListComponent.view.agora_enable = UIConfig.handsList.enable
-            handsListComponent.view.agora_visible = UIConfig.handsList.enable
-            
-            addChild(renderMenuComponent)
-            contentView.addSubview(renderMenuComponent.view)
-            renderMenuComponent.view.agora_enable = UIConfig.renderMenu.enable
-            renderMenuComponent.view.agora_visible = false
-            
-            addChild(toolCollectionComponent)
-            contentView.addSubview(toolCollectionComponent.view)
-            toolCollectionComponent.view.agora_enable = UIConfig.toolCollection.enable
-            toolCollectionComponent.view.agora_visible = UIConfig.toolCollection.enable
-            
-            addChild(cloudComponent)
-            cloudComponent.view.isHidden = true
-            contentView.addSubview(cloudComponent.view)
-        case .student:
-            addChild(nameRollComponent)
-            nameRollComponent.view.agora_enable = UIConfig.roster.enable
-            nameRollComponent.view.agora_visible = UIConfig.roster.enable
-            
-            addChild(toolCollectionComponent)
-            contentView.addSubview(toolCollectionComponent.view)
-            toolCollectionComponent.view.agora_enable = UIConfig.toolCollection.enable
-            toolCollectionComponent.view.agora_visible = UIConfig.toolCollection.enable
-        default:
-            break
-        }
-        
-        // Flat components
-        globalComponent.roomDelegate = self
-        addChild(globalComponent)
-        globalComponent.viewDidLoad()
-        
-        stateComponent.view.agora_enable = UIConfig.stateBar.enable
-        stateComponent.view.agora_visible = UIConfig.stateBar.visible
-        
-        boardComponent.view.agora_enable = UIConfig.netlessBoard.enable
-        boardComponent.view.agora_visible = UIConfig.netlessBoard.visible
-        
-        settingComponent.view.agora_enable = UIConfig.setting.enable
-        settingComponent.view.agora_visible = UIConfig.setting.visible
-        
-        toolBarComponent.view.agora_enable = UIConfig.toolBar.enable
-        toolBarComponent.view.agora_visible = UIConfig.toolBar.visible
-        
-        classToolsComponent.view.agora_enable = UIConfig.toolBox.enable
-        classToolsComponent.view.agora_visible = UIConfig.toolBox.visible
-        
-        chatComponent.view.agora_enable = UIConfig.agoraChat.enable
-        chatComponent.view.agora_visible = UIConfig.agoraChat.visible
     }
     
     public override func initViewFrame() {
@@ -268,7 +264,7 @@ import AgoraWidget
             make?.bottom.equalTo()(boardComponent.view.mas_top)?.offset()(-2)
         }
         
-        self.toolBarComponent.view.mas_remakeConstraints { make in
+        toolBarComponent.view.mas_remakeConstraints { make in
             make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
             make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
@@ -542,7 +538,7 @@ extension FcrSmallUIScene: FcrClassStateUIComponentDelegate {
             return
         }
         
-        classStateComponent.view.isHidden = false
+        classStateComponent.view.agora_visible = true
         
         let left: CGFloat = UIDevice.current.agora_is_pad ? 198 : 192
         classStateComponent.view.mas_makeConstraints { make in
@@ -640,6 +636,8 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
                                              userList: userList)
         toolCollectionComponent.onBoardPrivilegeListChaned(true,
                                                            userList: userList)
+        webViewComponent.onBoardPrivilegeListChaned(true,
+                                                    userList: userList)
     }
     
     func onBoardGrantedUserListRemoved(userList: [String]) {
@@ -649,6 +647,8 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
                                              userList: userList)
         toolCollectionComponent.onBoardPrivilegeListChaned(false,
                                                            userList: userList)
+        webViewComponent.onBoardPrivilegeListChaned(false,
+                                                    userList: userList)
     }
     
     func updateWindowRenderItemBoardPrivilege(_ privilege: Bool,

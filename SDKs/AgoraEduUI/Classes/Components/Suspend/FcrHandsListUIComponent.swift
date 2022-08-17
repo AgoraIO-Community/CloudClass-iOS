@@ -15,23 +15,12 @@ protocol FcrHandsListUIComponentDelegate: NSObjectProtocol {
 }
 
 class FcrHandsListUIComponent: UIViewController {
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
-    
-    private var contextPool: AgoraEduContextPool
-    private var subRoom: AgoraEduSubRoomContext?
+    private let userController: AgoraEduUserContext
     
     public var suggestSize = CGSize(width: 220,
                                     height: 245)
     /** 代理*/
     weak var delegate: FcrHandsListUIComponentDelegate?
-
-//    private lazy var listContentView: UIView?
     /** 举手列表*/
     private lazy var tableView = UITableView.init(frame: .zero,
                                                   style: .plain)
@@ -48,11 +37,9 @@ class FcrHandsListUIComponent: UIViewController {
         print("\(#function): \(self.classForCoder)")
     }
     
-    init(context: AgoraEduContextPool,
-         subRoom: AgoraEduSubRoomContext? = nil,
+    init(userController: AgoraEduUserContext,
          delegate: FcrHandsListUIComponentDelegate? = nil) {
-        self.contextPool = context
-        self.subRoom = subRoom
+        self.userController = userController
         self.delegate = delegate
         
         super.init(nibName: nil,
@@ -190,6 +177,8 @@ extension FcrHandsListUIComponent: AgoraUIContentContainer {
     
     func updateViewProperties() {
         let config = UIConfig.handsList
+        
+        view.agora_enable = config.enable
         
         view.layer.shadowColor = config.shadow.color
         view.layer.shadowOffset = config.shadow.offset

@@ -14,14 +14,24 @@ import AgoraWidget
 @objc public class VcrHostingUIScene: FcrUIScene {
 
     /** 房间状态 控制器*/
-    private lazy var stateController = VocationalRoomStateUIComponent(context: contextPool)
+    private lazy var stateController = VocationalRoomStateUIComponent(roomController: contextPool.room,
+                                                                      userController: contextPool.user,
+                                                                      monitorController: contextPool.monitor,
+                                                                      groupController: contextPool.group)
     /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalController = FcrRoomGlobalUIComponent(context: contextPool,
-                                                                    delegate: nil)
+    private lazy var globalController = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                 userController: contextPool.user,
+                                                                 monitorController: contextPool.monitor,
+                                                                 streamController: contextPool.stream,
+                                                                 groupController: contextPool.group,
+                                                                 exitDelegate: self)
     /** 视频渲染 控制器*/
-    private lazy var renderController = VcrHostingPlayerUIComponent(context: contextPool)
+    private lazy var renderController = VcrHostingPlayerUIComponent(roomController: contextPool.room,
+                                                                    monitorController: contextPool.monitor)
     /** 聊天窗口 控制器*/
-    private lazy var chatController = FcrChatUIComponent(context: contextPool)
+    private lazy var chatController = FcrChatUIComponent(roomController: contextPool.room,
+                                                         userController: contextPool.user,
+                                                         widgetController: contextPool.widget)
     
     private var isJoinedRoom = false
         
@@ -62,7 +72,6 @@ import AgoraWidget
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
-        globalController.roomDelegate = self
         addChild(globalController)
         globalController.viewDidLoad()
 

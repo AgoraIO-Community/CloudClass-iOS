@@ -14,38 +14,31 @@ protocol FcrCloudUIComponentDelegate: NSObjectProtocol {
 }
 
 class FcrCloudUIComponent: UIViewController {
-    private var contextPool: AgoraEduContextPool!
-    private var subRoom: AgoraEduSubRoomContext?
     private var cloudWidget: AgoraBaseWidget?
+    
     private weak var delegate: FcrCloudUIComponentDelegate?
-    
-    private var widgetController: AgoraEduWidgetContext {
-        if let `subRoom` = subRoom {
-            return subRoom.widget
-        } else {
-            return contextPool.widget
-        }
-    }
-    
-    private var userController: AgoraEduUserContext {
-        if let `subRoom` = subRoom {
-            return subRoom.user
-        } else {
-            return contextPool.user
-        }
-    }
     
     private var widgetSize: CGSize!
     
-    init(context: AgoraEduContextPool,
-         delegate: FcrCloudUIComponentDelegate?,
-         subRoom: AgoraEduSubRoomContext? = nil) {
-        super.init(nibName: nil,
-                   bundle: nil)
-        
-        self.contextPool = context
+    /**context**/
+    private let subRoom: AgoraEduSubRoomContext?
+    private let roomController: AgoraEduRoomContext
+    private let widgetController: AgoraEduWidgetContext
+    private let userController: AgoraEduUserContext
+    
+    init(roomController: AgoraEduRoomContext,
+         widgetController: AgoraEduWidgetContext,
+         userController: AgoraEduUserContext,
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: FcrCloudUIComponentDelegate?) {
+        self.roomController = roomController
+        self.widgetController = widgetController
+        self.userController = userController
         self.subRoom = subRoom
         self.delegate = delegate
+        
+        super.init(nibName: nil,
+                   bundle: nil)
         
         initData()
         view.backgroundColor = .clear
@@ -53,7 +46,7 @@ class FcrCloudUIComponent: UIViewController {
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
         } else {
-            contextPool.room.registerRoomEventHandler(self)
+            roomController.registerRoomEventHandler(self)
         }
     }
     
@@ -73,6 +66,7 @@ extension FcrCloudUIComponent: AgoraEduRoomHandler {
     }
 }
 
+// MARK: - AgoraEduSubRoomHandler
 extension FcrCloudUIComponent: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         initWidget()
@@ -88,13 +82,13 @@ extension FcrCloudUIComponent: AgoraWidgetMessageObserver {
             return
         }
         switch signal {
-        case .OpenCourseware(let courseware):
+        case .openCourseware(let courseware):
             if courseware.ext == "alf" {
                 delegate?.onOpenAlfCourseware(urlString: courseware.resourceUrl,
                                               resourceId: courseware.resourceUuid)
                 break
             }
-            if let message = AgoraBoardWidgetSignal.OpenCourseware(courseware.toBoard()).toMessageString() {
+            if let message = AgoraBoardWidgetSignal.openCourseware(courseware.toBoard()).toMessageString() {
                 widgetController.sendMessage(toWidget: kBoardWidgetId,
                                              message: message)
             }
@@ -141,7 +135,7 @@ extension FcrCloudUIComponent {
     }
     
     func initData() {
-        switch contextPool.room.getRoomInfo().roomType {
+        switch roomController.getRoomInfo().roomType {
         case .oneToOne:
             widgetSize = CGSize(width: 435,
                                 height: 253)
@@ -155,8 +149,9 @@ extension FcrCloudUIComponent {
     }
     
     func initWidget() {
-        guard userController.getLocalUserInfo().userRole == .teacher,
-           let cloudConfig = widgetController.getWidgetConfig(kCloudWidgetId) else {
+        guard UIConfig.cloudStorage.enable,
+              userController.getLocalUserInfo().userRole == .teacher,
+              let cloudConfig = widgetController.getWidgetConfig(kCloudWidgetId) else {
             return
         }
         

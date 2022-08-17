@@ -199,14 +199,13 @@ enum AgoraTeachingAidType {
     case answerSheet
     
     func cellImage() -> UIImage? {
-        let config = UIConfig.toolBox
         switch self {
-        case .cloudStorage:     return config.cloudStorageImage
+        case .cloudStorage:     return UIConfig.cloudStorage.image
         case .saveBoard:        return UIConfig.netlessBoard.save.image
-        case .record:           return config.recordImage
-        case .vote:             return config.voteImage
-        case .countDown:        return config.countDownImage
-        case .answerSheet:      return config.answerSheetImage
+        case .record:           return UIConfig.record.image
+        case .vote:             return UIConfig.poll.image
+        case .countDown:        return UIConfig.counter.image
+        case .answerSheet:      return UIConfig.popupQuiz.image
         default:                return nil
         }
     }
