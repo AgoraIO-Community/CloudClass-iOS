@@ -32,8 +32,8 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
             mediaController.stopPlayAudio(roomUuid: roomId,
                                           streamUuid: stream.streamUuid)
         }
-        guard contextPool.user.getLocalUserInfo().userRole == .teacher ||
-                contextPool.user.getLocalUserInfo().userRole == .assistant,
+        guard userController.getLocalUserInfo().userRole == .teacher ||
+                userController.getLocalUserInfo().userRole == .assistant,
               stream.owner.userRole == .student
         else {
             // 本地用户是老师或者助教，需要同步widget
@@ -50,8 +50,8 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
     
     override func onAddedRenderWidget(widgetView: UIView) {
         super.onAddedRenderWidget(widgetView: widgetView)
-        guard contextPool.user.getLocalUserInfo().userRole == .teacher ||
-                contextPool.user.getLocalUserInfo().userRole == .assistant
+        guard userController.getLocalUserInfo().userRole == .teacher ||
+                userController.getLocalUserInfo().userRole == .assistant
         else {
             // 本地用户是老师或者助教，可以操作widget
             return
@@ -69,19 +69,19 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
 private extension FcrLectureStreamWindowUIComponent {
     
     func createWidgetWith(stream: AgoraEduContextStreamInfo) {
-        guard let config = contextPool.widget.getWidgetConfig(WindowWidgetId) else {
+        guard let config = widgetController.getWidgetConfig(WindowWidgetId) else {
             return
         }
         let streamId = stream.streamUuid
         let windowId = "\(WindowWidgetId)-\(streamId)"
         config.widgetId = windowId
-        let widget = contextPool.widget.create(config)
-        contextPool.widget.updateWidgetSyncFrame(widgetInitialPosition(),
-                                                 widgetId: windowId) { [weak self] in
-            self?.contextPool.widget.setWidgetActive(windowId,
-                                                     ownerUuid: stream.owner.userUuid,
-                                                     roomProperties: nil,
-                                                     success: nil)
+        let widget = widgetController.create(config)
+        widgetController.updateWidgetSyncFrame(widgetInitialPosition(),
+                                               widgetId: windowId) { [weak self] in
+            self?.widgetController.setWidgetActive(windowId,
+                                                   ownerUuid: stream.owner.userUuid,
+                                                   roomProperties: nil,
+                                                   success: nil)
         } failure: { erro in
         }
     }

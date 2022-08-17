@@ -27,16 +27,16 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
         super.viewWillAppear(animated)
         refreshData()
         // add event handler
-        contextPool.user.registerUserEventHandler(self)
-        contextPool.stream.registerStreamEventHandler(self)
+        userController.registerUserEventHandler(self)
+        streamController.registerStreamEventHandler(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         removeAll()
         // remove event handler
-        contextPool.user.unregisterUserEventHandler(self)
-        contextPool.stream.unregisterStreamEventHandler(self)
+        userController.unregisterUserEventHandler(self)
+        streamController.unregisterStreamEventHandler(self)
     }
     
     override func onExcuteFunc(_ fn: AgoraRosterFunction,
@@ -48,7 +48,7 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             let nextState = !model.cameraState.streamOn
-            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
+            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                             videoPrivilege: nextState) { [weak self] in
                 model.cameraState.streamOn = nextState
                 self?.reloadTableView()
@@ -62,7 +62,7 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             let nextState = !model.micState.streamOn
-            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
+            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                             audioPrivilege: nextState) { [weak self] in
                 model.micState.streamOn = nextState
                 self?.reloadTableView()
@@ -81,7 +81,7 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 guard let `self` = self else {
                     return
                 }
-                self.contextPool.user.kickOutUser(userUuid: model.uuid,
+                self.userController.kickOutUser(userUuid: model.uuid,
                                                   forever: false,
                                                   success: nil,
                                                   failure: nil)
@@ -92,7 +92,7 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 guard let `self` = self else {
                     return
                 }
-                self.contextPool.user.kickOutUser(userUuid: model.uuid,
+                self.userController.kickOutUser(userUuid: model.uuid,
                                                   forever: true,
                                                   success: nil,
                                                   failure: nil)
@@ -117,7 +117,7 @@ private extension FcrLectureRosterUIComponent {
     func refreshData() {
         setUpTeacherData()
         
-        contextPool.user.getUserList(roleList: [AgoraEduContextUserRole.student.rawValue],
+        userController.getUserList(roleList: [AgoraEduContextUserRole.student.rawValue],
                                      pageIndex: 1,
                                      pageSize: 20) { [weak self] students in
             guard let `self` = self else {

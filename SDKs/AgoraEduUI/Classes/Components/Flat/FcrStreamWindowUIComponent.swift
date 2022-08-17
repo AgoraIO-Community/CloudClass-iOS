@@ -16,12 +16,12 @@ protocol FcrStreamWindowUIComponentDelegate: NSObjectProtocol {
 }
 
 class FcrStreamWindowUIComponent: UIViewController {
-    private let roomController: AgoraEduRoomContext
-    private let userController: AgoraEduUserContext
-    private let streamController: AgoraEduStreamContext
+    public let roomController: AgoraEduRoomContext
+    public let userController: AgoraEduUserContext
+    public let streamController: AgoraEduStreamContext
     private(set) var mediaController: AgoraEduMediaContext
-    private let widgetController: AgoraEduWidgetContext
-    private var subRoom: AgoraEduSubRoomContext?
+    public let widgetController: AgoraEduWidgetContext
+    public var subRoom: AgoraEduSubRoomContext?
     
     // For lecture
     internal var roomId: String {

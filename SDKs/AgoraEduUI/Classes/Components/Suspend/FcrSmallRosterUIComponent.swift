@@ -14,7 +14,7 @@ import UIKit
 class FcrSmallRosterUIComponent: FcrRosterUIComponent {
     
     override var carouselEnable: Bool {
-        return contextPool.user.getLocalUserInfo().userRole == .teacher
+        return userController.getLocalUserInfo().userRole == .teacher
     }
     
     private var boardUsers = [String]()
@@ -24,18 +24,22 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if contextPool.user.getLocalUserInfo().userRole == .teacher { // 老师
+        if userController.getLocalUserInfo().userRole == .teacher { // 老师
             setupSupportFuncs([.stage, .auth, .camera, .mic, .reward, .kick])
         } else { // 学生
             setupSupportFuncs([.stage, .auth, .camera, .mic, .reward])
         }
     }
     
-    override init(context: AgoraEduContextPool) {
-        super.init(context: context)
+    override init(userController: AgoraEduUserContext,
+                  streamController: AgoraEduStreamContext,
+                  widgetController: AgoraEduWidgetContext) {
+        super.init(userController: userController,
+                   streamController: streamController,
+                   widgetController: widgetController)
         
-        contextPool.widget.add(self,
-                               widgetId: kBoardWidgetId)
+        widgetController.add(self,
+                             widgetId: kBoardWidgetId)
     }
     
     required init?(coder: NSCoder) {
@@ -48,8 +52,8 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
         isViewShow = true
         refreshData()
         // add event handler
-        contextPool.user.registerUserEventHandler(self)
-        contextPool.stream.registerStreamEventHandler(self)
+        userController.registerUserEventHandler(self)
+        streamController.registerStreamEventHandler(self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -58,8 +62,8 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
         isViewShow = false
         removeAll()
         // remove event handler
-        contextPool.user.unregisterUserEventHandler(self)
-        contextPool.stream.unregisterStreamEventHandler(self)
+        userController.unregisterUserEventHandler(self)
+        streamController.unregisterStreamEventHandler(self)
     }
     
     override func onExcuteFunc(_ fn: AgoraRosterFunction,
@@ -70,14 +74,14 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             if model.stageState.isOn {
-                contextPool.user.addCoHost(userUuid: model.uuid) { [weak self] in
+                userController.addCoHost(userUuid: model.uuid) { [weak self] in
                     model.stageState.isOn = true
                     self?.reloadTableView()
                 } failure: { contextError in
                     
                 }
             } else {
-                contextPool.user.removeCoHost(userUuid: model.uuid) { [weak self] in
+                userController.removeCoHost(userUuid: model.uuid) { [weak self] in
                     model.stageState.isOn = false
                     self?.reloadTableView()
                 } failure: { contextError in
@@ -91,10 +95,10 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
             var list: Array<String> = self.boardUsers
             var ifAdd = (model.authState.isOn &&
                          !list.contains(model.uuid))
-            let signal =  AgoraBoardWidgetSignal.UpdateGrantedUsers(ifAdd ? .add([model.uuid]) : .delete([model.uuid]))
+            let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([model.uuid]) : .delete([model.uuid]))
             if let message = signal.toMessageString() {
-                contextPool.widget.sendMessage(toWidget: kBoardWidgetId,
-                                               message: message)
+                widgetController.sendMessage(toWidget: kBoardWidgetId,
+                                             message: message)
             }
         case .camera:
             guard model.cameraState.isEnable,
@@ -102,8 +106,8 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             let nextState = !model.cameraState.streamOn
-            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                            videoPrivilege: nextState) { [weak self] in
+            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                          videoPrivilege: nextState) { [weak self] in
                 model.cameraState.streamOn = nextState
                 self?.reloadTableView()
             } failure: { error in
@@ -116,8 +120,8 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             let nextState = !model.micState.streamOn
-            contextPool.stream.updateStreamPublishPrivilege(streamUuids: [streamId],
-                                                            audioPrivilege: nextState) { [weak self] in
+            streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
+                                                          audioPrivilege: nextState) { [weak self] in
                 model.micState.streamOn = nextState
                 self?.reloadTableView()
             } failure: { error in
@@ -135,10 +139,10 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                 guard let `self` = self else {
                     return
                 }
-                self.contextPool.user.kickOutUser(userUuid: model.uuid,
-                                                  forever: false,
-                                                  success: nil,
-                                                  failure: nil)
+                self.userController.kickOutUser(userUuid: model.uuid,
+                                                forever: false,
+                                                success: nil,
+                                                failure: nil)
             }
             
             let kickForeverTitle = "fcr_user_kick_out_forever".agedu_localized()
@@ -146,10 +150,10 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                 guard let `self` = self else {
                     return
                 }
-                self.contextPool.user.kickOutUser(userUuid: model.uuid,
-                                                  forever: true,
-                                                  success: nil,
-                                                  failure: nil)
+                self.userController.kickOutUser(userUuid: model.uuid,
+                                                forever: true,
+                                                success: nil,
+                                                failure: nil)
             }
             
             AgoraAlertModel()
@@ -163,10 +167,10 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
             guard model.rewardEnable else {
                 return
             }
-            contextPool.user.rewardUsers(userUuidList: [model.uuid],
-                                         rewardCount: 1,
-                                         success: nil,
-                                         failure: nil)
+            userController.rewardUsers(userUuidList: [model.uuid],
+                                       rewardCount: 1,
+                                       success: nil,
+                                       failure: nil)
         default:
             break
         }
@@ -177,8 +181,8 @@ private extension FcrSmallRosterUIComponent {
     
     func refreshData() {
         setUpTeacherData()
-        let localUserID = contextPool.user.getLocalUserInfo().userUuid
-        guard let students = contextPool.user.getUserList(role: .student) else {
+        let localUserID = userController.getLocalUserInfo().userUuid
+        guard let students = userController.getUserList(role: .student) else {
             return
         }
         var temp = [AgoraRosterModel]()
@@ -201,7 +205,7 @@ extension FcrSmallRosterUIComponent: AgoraWidgetMessageObserver {
             return
         }
         switch signal {
-        case .GetBoardGrantedUsers(let list):
+        case .getBoardGrantedUsers(let list):
             self.boardUsers = list
             guard isViewShow else {
                 return
