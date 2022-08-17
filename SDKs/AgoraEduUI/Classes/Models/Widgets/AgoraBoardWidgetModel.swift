@@ -14,7 +14,7 @@ enum AgoraBoardWidgetSignal: Convertable {
     case getBoardGrantedUsers([String])
     case updateGrantedUsers(AgoraBoardWidgetGrantUsersChangeType)
     case audioMixingStateChanged(AgoraBoardWidgetAudioMixingChangeData)
-    case boardAudioMixingRequest(AgoraBoardWidgetAudioMixingRequestData)
+    case boardAudioMixingRequest(AgoraBoardWidgetAudioMixingRequestType)
     case boardStepChanged(AgoraBoardWidgetStepChangeType)
     case clearBoard
     case openCourseware(AgoraBoardWidgetCoursewareInfo)
@@ -53,6 +53,9 @@ enum AgoraBoardWidgetSignal: Convertable {
         } else if let value = try? container.decode(AgoraBoardWidgetAudioMixingChangeData.self,
                                                     forKey: .audioMixingStateChanged) {
             self = .audioMixingStateChanged(value)
+        } else if let value = try? container.decode(AgoraBoardWidgetAudioMixingRequestType.self,
+                                                    forKey: .boardAudioMixingRequest) {
+            self = .boardAudioMixingRequest(value)
         } else if let value = try? container.decode([String].self,
                                                     forKey: .getBoardGrantedUsers) {
             self = .getBoardGrantedUsers(value)
@@ -292,33 +295,72 @@ struct AgoraBoardWidgetAudioMixingChangeData: Convertable {
     var errorCode: Int
 }
 
-enum AgoraBoardWidgetAudioMixingRequestType: Int,Convertable {
-    case start,stop,setPosition
-}
-
-struct AgoraBoardWidgetAudioMixingRequestData: Convertable {
-    var requestType: AgoraBoardWidgetAudioMixingRequestType
+struct AgoraBoardWidgetAudioMixingStartData: Convertable {
     var filePath: String
     var loopback: Bool
     var replace: Bool
     var cycle: Int
-    var position: Int
-    
-    init(requestType: AgoraBoardWidgetAudioMixingRequestType,
-         filePath: String = "",
-         loopback: Bool = true,
-         replace: Bool = true,
-         cycle: Int = 0,
-         position: Int = 0) {
-        self.requestType = requestType
-        self.filePath = filePath
-        self.loopback = loopback
-        self.replace = replace
-        self.cycle = cycle
-        self.position = position
-    }
 }
 
+enum AgoraBoardWidgetAudioMixingRequestType: Convertable {
+    case start(AgoraBoardWidgetAudioMixingStartData)
+    case pause
+    case resume
+    case stop
+    case setPosition(Int)
+    
+    private enum CodingKeys: CodingKey {
+        case start
+        case pause
+        case resume
+        case stop
+        case setPosition
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        if let value = try? container.decode(AgoraBoardWidgetAudioMixingStartData.self,
+                                             forKey: .start) {
+            self = .start(value)
+        } else if let _ = try? container.decodeNil(forKey: .pause) {
+            self = .pause
+        } else if let _ = try? container.decodeNil(forKey: .resume) {
+            self = .resume
+        } else if let _ = try? container.decodeNil(forKey: .stop) {
+            self = .stop
+        } else if let value = try? container.decode(Int.self,
+                                                    forKey: .setPosition) {
+            self = .setPosition(value)
+        } else {
+            throw DecodingError.dataCorrupted(
+                .init(
+                    codingPath: container.codingPath,
+                    debugDescription: "invalid data"
+                )
+            )
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        switch self {
+        case .start(let x):
+            try container.encode(x,
+                                 forKey: .start)
+        case .pause:
+            try container.encodeNil(forKey: .pause)
+        case .resume:
+            try container.encodeNil(forKey: .resume)
+        case .stop:
+            try container.encodeNil(forKey: .stop)
+        case .setPosition(let x):
+            try container.encode(x,
+                                 forKey: .setPosition)
+        }
+    }
+}
 
 // MARK: - extension
 extension String {

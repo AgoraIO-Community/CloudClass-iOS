@@ -227,20 +227,22 @@ private extension FcrBoardUIComponent {
         }
     }
     
-    func handleAudioMixing(_ data: AgoraBoardWidgetAudioMixingRequestData) {
+    func handleAudioMixing(_ type: AgoraBoardWidgetAudioMixingRequestType) {
         var contextError: AgoraEduContextError?
-        switch data.requestType {
-        case .start:
+        switch type {
+        case .start(let data):
             contextError = mediaController.startAudioMixing(filePath: data.filePath,
-                                                              loopback: data.loopback,
-                                                              replace: data.replace,
-                                                              cycle: data.cycle)
+                                                            loopback: data.loopback,
+                                                            replace: data.replace,
+                                                            cycle: data.cycle)
+        case .pause:
+            break
+        case .resume:
+            break
         case .stop:
             contextError = mediaController.stopAudioMixing()
-        case .setPosition:
-            contextError = mediaController.setAudioMixingPosition(position: data.position)
-        default:
-            break
+        case .setPosition(let position):
+            contextError = mediaController.setAudioMixingPosition(position: position)
         }
         
         guard let error = contextError else {
