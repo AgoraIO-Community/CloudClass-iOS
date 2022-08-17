@@ -167,15 +167,36 @@ class FcrWindowRenderView: UIView {
     let rewardView = FcrWindowRenderRewardView()
     let boardPrivilegeView = UIImageView()
     
+    private var timer: Timer?
+    private let highlightDelay: TimeInterval = 3
+    private let volumeThreshold = 30
+    private var currentHightlight: Bool = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         initViews()
         initViewFrame()
         updateViewProperties()
     }
-    
-    func updateVolume(_ volume: Int) {
+
+    func updateVolume(_ volume: Int,
+                      delay: Bool = false) {
         micView.updateVolume(volume)
+        
+        guard volume < volumeThreshold else {
+            updateHighlight(true)
+            return
+        }
+        
+        guard currentHightlight else {
+            return
+        }
+        
+        if delay {
+            startHighlightTimer()
+        } else {
+            updateHighlight(false)
+        }
     }
     
     func startWaving() {
@@ -194,12 +215,53 @@ class FcrWindowRenderView: UIView {
         waveView.stopAnimating()
     }
     
+    deinit {
+        stopHighlightTimer()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 // MARK: - private
+private extension FcrWindowRenderView {
+    func startHighlightTimer() {
+        guard timer == nil else {
+            return
+        }
+        timer = Timer.scheduledTimer(withTimeInterval: highlightDelay,
+                                     repeats: false,
+                                     block: { [weak self] _ in
+            self?.updateHighlight(false)
+        })
+    }
+    
+    func stopHighlightTimer() {
+        guard timer != nil else {
+            return
+        }
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    func updateHighlight(_ highlight: Bool) {
+        stopHighlightTimer()
+        
+        currentHightlight = highlight
+        
+        let config = UIConfig.studentVideo
+        if highlight {
+            layer.borderWidth = config.cell.highlightBorderWidth
+            layer.borderColor = config.cell.highlightBorderColor
+        } else {
+            layer.borderWidth = config.cell.borderWidth
+            layer.borderColor = config.cell.borderColor
+        }
+    }
+}
+
+// MARK: - AgoraUIContentContainer
 extension FcrWindowRenderView: AgoraUIContentContainer {
     func initViews() {
         addSubview(videoView)
