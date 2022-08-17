@@ -33,7 +33,7 @@ class FcrWebViewUIComponent: UIViewController {
     // widgetArray index is equal to view.subViews index
     fileprivate var widgetArray = [FcrWebViewWidgetItem]()
     
-    private lazy var previousNonContainFrame: CGRect = self.defaultSyncFrame()
+    private lazy var previousNonContainFrame: AgoraWidgetFrame = self.defaultSyncFrame()
     private var localBoardAuth = false {
         didSet {
             guard localBoardAuth != oldValue else {
@@ -154,7 +154,7 @@ extension FcrWebViewUIComponent: AgoraWidgetActivityObserver {
 
 // MARK: - AgoraWidgetSyncFrameObserver
 extension FcrWebViewUIComponent: AgoraWidgetSyncFrameObserver {
-    func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
+    func onWidgetSyncFrameUpdated(_ syncFrame: AgoraWidgetFrame,
                                   widgetId: String,
                                   operatorUser: AgoraWidgetUserInfo?) {
         guard operatorUser?.userUuid != userController.getLocalUserInfo().userUuid,
@@ -339,11 +339,11 @@ private extension FcrWebViewUIComponent {
     }
     
     func handleSyncFrame(widget: AgoraBaseWidget,
-                         syncFrame: CGRect) {
-        if syncFrame != CGRect.fullScreenSyncFrameValue() {
+                         syncFrame: AgoraWidgetFrame) {
+        if syncFrame.isFullScreen() == false {
             previousNonContainFrame = syncFrame
         }
-        let frame = syncFrame.displayFrameFromSyncFrame(superView: view)
+        let frame = syncFrame.rectInView(view)
 
         widget.view.mas_remakeConstraints { make in
             make?.left.equalTo()(frame.minX)
@@ -449,7 +449,7 @@ private extension FcrWebViewUIComponent {
                                      message: message)
     }
     
-    func defaultSyncFrame() -> CGRect {
+    func defaultSyncFrame() -> AgoraWidgetFrame {
         let width = AgoraFit.scale(364)
         let height = AgoraFit.scale(218)
         let left = (view.width - width) / 2
@@ -458,40 +458,35 @@ private extension FcrWebViewUIComponent {
                                   y: top,
                                   width: width,
                                   height: height)
-        return defaultFrame.syncFrameFromDisplayFrame(superView: view)
+        return defaultFrame.syncFrameInView(view)
     }
     
-    func getFinalScaleSyncFrame(widgetId: String) -> CGRect? {
+    func getFinalScaleSyncFrame(widgetId: String) -> AgoraWidgetFrame? {
         guard let widget = widgetArray.firstItem(widgetId: widgetId)?.object else {
             return nil
         }
-        
-        var finalFrame: CGRect = .zero
-        
+        var finalFrame: AgoraWidgetFrame?
         if widget.view.frame.size != view.size {
             // 先保留当前syncFrame
             let currentSyncFrame = widgetController.getWidgetSyncFrame(widgetId)
             previousNonContainFrame = currentSyncFrame
             // 全屏模式
-            finalFrame = CGRect(x: 0,
-                                y: 0,
-                                width: 1,
-                                height: 1)
+            finalFrame = AgoraWidgetFrame(x: 0,
+                                          y: 0,
+                                          z: 0,
+                                          width: 1,
+                                          height: 1)
         } else {
             finalFrame = previousNonContainFrame
         }
-        
         return finalFrame
     }
     
-    func getFinalPositionSyncFrame(widgetId: String) -> CGRect? {
+    func getFinalPositionSyncFrame(widgetId: String) -> AgoraWidgetFrame? {
         guard let widget = widgetArray.firstItem(widgetId: widgetId)?.object else {
             return nil
         }
-        let displayFrame = widget.view.frame
-        
-        let syncFrame = displayFrame.syncFrameFromDisplayFrame(superView: view)
-        return syncFrame
+        return widget.view.frame.syncFrameInView(view)
     }
     
     // actions

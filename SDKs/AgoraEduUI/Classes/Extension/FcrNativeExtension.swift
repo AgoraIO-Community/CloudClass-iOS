@@ -6,6 +6,7 @@
 //
 
 import AgoraUIBaseViews
+import AgoraWidget
 
 func ValueTransform<Result>(value: Any?,
                             result: Result.Type) -> Result? {
@@ -78,18 +79,18 @@ extension String {
 }
 
 // 将 AgoraWidgetInfo.syncFrame 转化为 具体是显示在界面上的 frame
-extension CGRect {
-    func displayFrameFromSyncFrame(superView: UIView) -> CGRect {
+extension AgoraWidgetFrame {
+    func rectInView(_ view: UIView) -> CGRect {
         let ratioWidth = self.width
         let rationHeight = self.height
-        let xaxis = self.origin.x
-        let yaxis = self.origin.y
+        let xaxis = self.x
+        let yaxis = self.y
         
-        let displayWidth = ratioWidth * superView.frame.width
-        let displayHeight = rationHeight * superView.frame.height
+        let displayWidth = ratioWidth * view.frame.width
+        let displayHeight = rationHeight * view.frame.height
         
-        let MEDx = superView.frame.width - displayWidth
-        let MEDy = superView.frame.height - displayHeight
+        let MEDx = view.frame.width - displayWidth
+        let MEDy = view.frame.height - displayHeight
         
         let displayX = xaxis * MEDx
         let displayY = yaxis * MEDy
@@ -104,8 +105,8 @@ extension CGRect {
     func displayFrameFromSyncFrame(superView: UIView,
                                    displayWidth: CGFloat,
                                    displayHeight: CGFloat) -> CGRect {
-        let xaxis = self.origin.x
-        let yaxis = self.origin.y
+        let xaxis = self.x
+        let yaxis = self.y
         
         let MEDx = superView.frame.width - displayWidth
         let MEDy = superView.frame.height - displayHeight
@@ -120,28 +121,29 @@ extension CGRect {
         return displayFrame
     }
     
-    func syncFrameFromDisplayFrame(superView: UIView) -> CGRect {
-        let MEDx = superView.width - self.width
-        let MEDy = superView.height - self.height
-        
-        let xaxis = (MEDx == 0) ? 0: (self.origin.x / MEDx)
-        let yaxis = (MEDy == 0) ? 0: (self.origin.y / MEDy)
-        
-        let displayWidth = (superView.width == 0) ? 0 : (self.width / superView.width)
-        let displayHeight = (superView.height == 0) ? 0 : (self.height / superView.height)
-        
-        let syncFrame = CGRect(x: xaxis,
-                               y: yaxis,
-                               width: displayWidth,
-                               height: displayHeight)
-        return syncFrame
+    func isFullScreen() -> Bool {
+        return (self.width == 1 &&
+                self.height == 1)
     }
-    
-    static func fullScreenSyncFrameValue() -> CGRect {
-        return CGRect(x: 0,
-                      y: 0,
-                      width: 1,
-                      height: 1)
+}
+
+extension CGRect {
+    func syncFrameInView(_ view: UIView) -> AgoraWidgetFrame {
+        let MEDx = view.width - self.width
+        let MEDy = view.height - self.height
+        
+        let xaxis = (MEDx == 0) ? 0: (self.minX / MEDx)
+        let yaxis = (MEDy == 0) ? 0: (self.minY / MEDy)
+        
+        let displayWidth = (view.width == 0) ? 0 : (self.width / view.width)
+        let displayHeight = (view.height == 0) ? 0 : (self.height / view.height)
+        
+        let syncFrame = AgoraWidgetFrame(x: xaxis,
+                                         y: yaxis,
+                                         z: 0,
+                                         width: displayWidth,
+                                         height: displayHeight)
+        return syncFrame
     }
 }
 

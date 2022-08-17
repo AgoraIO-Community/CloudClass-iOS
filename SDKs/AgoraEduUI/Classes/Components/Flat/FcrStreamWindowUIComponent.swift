@@ -64,7 +64,7 @@ class FcrStreamWindowUIComponent: UIViewController {
     }
     
     private var renderViews = [String: FcrWindowRenderView]() // Key: streamId
-    private var widgets = [String: AgoraBaseWidget]()         // Key: widget object Id
+    public var widgets = [String: AgoraBaseWidget]()         // Key: widget object Id
     
     private let zIndexKey = "zIndex"
     
@@ -104,6 +104,10 @@ class FcrStreamWindowUIComponent: UIViewController {
         }
         
         contextPool.media.registerMediaEventHandler(self)
+    }
+    
+    public func onAddedRenderWidget(widgetView: UIView) {
+        // 给子类重写来对widget view 进行操作
     }
 }
 
@@ -237,6 +241,7 @@ private extension FcrStreamWindowUIComponent {
         
         widgetController.addObserver(forWidgetSyncFrame: self,
                                      widgetId: item.widgetObjectId)
+        onAddedRenderWidget(widgetView: widget.view)
     }
     
     func removeItem(_ widgetObjectId: String,
@@ -374,13 +379,13 @@ private extension FcrStreamWindowUIComponent {
 // MARK: - UI
 private extension FcrStreamWindowUIComponent {
     func updateFrame(widgetObjectId: String,
-                     syncFrame: CGRect,
+                     syncFrame: AgoraWidgetFrame,
                      animation: Bool = false) {
         guard let widget = widgets[widgetObjectId] else {
             return
         }
         
-        let frame = syncFrame.displayFrameFromSyncFrame(superView: view)
+        let frame = syncFrame.rectInView(view)
         
         if animation {
             UIView.animate(withDuration: TimeInterval.agora_animation) {
@@ -399,14 +404,16 @@ private extension FcrStreamWindowUIComponent {
                           animation: Bool = false) {
         var syncFrame = widgetController.getWidgetSyncFrame(widgetObjectId)
         
-        if syncFrame == .zero {
-            syncFrame = CGRect(x: 0,
-                               y: 0,
-                               width: 1,
-                               height: 1)
+        if syncFrame.width == 0,
+           syncFrame.height == 0 {
+            syncFrame = AgoraWidgetFrame(x: 0,
+                                         y: 0,
+                                         z: 0,
+                                         width: 1,
+                                         height: 1)
         }
         
-        let displayFrame = syncFrame.displayFrameFromSyncFrame(superView: view)
+        let rect = syncFrame.rectInView(view)
         
         if animation,
            let originationFrame = delegate?.onNeedWindowRenderViewFrameOnTopWindow(userId: userId) {
@@ -416,7 +423,7 @@ private extension FcrStreamWindowUIComponent {
             
             widgetView.frame = originationFrame
             
-            let destinationFrame = view.convert(displayFrame,
+            let destinationFrame = view.convert(rect,
                                                 to: topWindow)
             
             UIView.animate(withDuration: TimeInterval.agora_animation) {
@@ -429,12 +436,12 @@ private extension FcrStreamWindowUIComponent {
                 self.updateItemHierarchy(zIndex,
                                          index: itemIndex)
                 
-                widgetView.frame = displayFrame
+                widgetView.frame = rect
             }
         } else {
             updateItemHierarchy(zIndex,
                                 index: itemIndex)
-            widgetView.frame = displayFrame
+            widgetView.frame = rect
         }
     }
     
@@ -631,7 +638,7 @@ extension FcrStreamWindowUIComponent: AgoraWidgetMessageObserver {
 
 // MARK: - AgoraWidgetSyncFrameObserver
 extension FcrStreamWindowUIComponent: AgoraWidgetSyncFrameObserver {
-    func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
+    func onWidgetSyncFrameUpdated(_ syncFrame: AgoraWidgetFrame,
                                   widgetId: String,
                                   operatorUser: AgoraWidgetUserInfo?) {
         guard operatorUser?.userUuid != userController.getLocalUserInfo().userUuid,

@@ -298,6 +298,7 @@ extension FcrRosterUIComponent {
         if resort {
             sort()
         }
+        tableView.reloadData()
     }
     // 从列表中移除掉某个用户
     public func remove(by uuid: String) {
