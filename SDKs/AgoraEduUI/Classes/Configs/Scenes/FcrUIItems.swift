@@ -483,10 +483,12 @@ struct FcrUIItemVideoCell: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
-    let cornerRadius: CGFloat    = FcrUIFrameGroup.windowCornerRadius
-    let borderWidth: CGFloat     = FcrUIFrameGroup.borderWidth
-    let borderColor: CGColor     = FcrUIColorGroup.systemDividerColor.cgColor
+    let backgroundColor: UIColor      = FcrUIColorGroup.systemBackgroundColor
+    let cornerRadius: CGFloat         = FcrUIFrameGroup.windowCornerRadius
+    let borderWidth: CGFloat          = FcrUIFrameGroup.borderWidth
+    let borderColor: CGColor          = FcrUIColorGroup.systemDividerColor.cgColor
+    let highlightBorderWidth: CGFloat = FcrUIFrameGroup.highlightBorderWidth
+    let highlightBorderColor: CGColor = FcrUIColorGroup.systemSafeColor.cgColor
 }
 
 struct FcrUIItemVideoMask: FcrUIItemProtocol {

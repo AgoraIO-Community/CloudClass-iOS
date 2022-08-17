@@ -16,6 +16,7 @@ struct FcrUIFrameGroup {
     
     // border width
     static let borderWidth: CGFloat = 1
+    static let highlightBorderWidth: CGFloat = 3
     
     // alert side spacing
     static let alertSideSpacing: CGFloat = 30
