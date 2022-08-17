@@ -233,6 +233,10 @@ class FcrToolBarWaveHandsCell: AgoraToolBarItemCell {
         delayLabel.textColor = UIConfig.raiseHand.textColor
         delayLabel.font = UIConfig.raiseHand.font
     }
+    
+    deinit {
+        stopTimer()
+    }
 }
 
 // MARK: - AgoraToolBarHandsListCell

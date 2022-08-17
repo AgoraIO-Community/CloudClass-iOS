@@ -10,8 +10,6 @@ import AgoraWidget
 import UIKit
 
 class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
-//    private let contextPool: AgoraEduContextPool
-    
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext

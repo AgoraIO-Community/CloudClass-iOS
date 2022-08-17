@@ -683,8 +683,8 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     /// - parameter volume: 音量
     /// - parameter streamUuid: 流 Id
     /// - returns: void
-    @objc optional  func onVolumeUpdated(volume: Int,
-                                         streamUuid: String)
+    @objc optional func onVolumeUpdated(volume: Int,
+                                        streamUuid: String)
     
     /// 设备状态更新 (v2.0.0)
     /// - parameter device: 设备信息

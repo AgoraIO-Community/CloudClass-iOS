@@ -490,13 +490,13 @@ private extension FcrStreamWindowUIComponent {
         switch data.audioState {
         case .none(let image):
             renderView.micView.imageView.image = image
-            renderView.micView.updateVolume(0)
+            renderView.updateVolume(0)
         case .hasStreamPublishPrivilege(let image):
             renderView.micView.imageView.image = image
-            renderView.micView.updateVolume(0)
+            renderView.updateVolume(0)
         case .mediaSourceOpen(let image):
             renderView.micView.imageView.image = image
-            renderView.micView.updateVolume(0)
+            renderView.updateVolume(0)
         case .both(let image):
             renderView.micView.imageView.image = image
         }
@@ -661,7 +661,8 @@ extension FcrStreamWindowUIComponent: AgoraEduMediaHandler {
             return
         }
         
-        renderView.updateVolume(volume)
+        renderView.updateVolume(volume,
+                                delay: true)
     }
 }
 
