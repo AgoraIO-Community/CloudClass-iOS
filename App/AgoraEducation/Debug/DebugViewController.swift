@@ -172,6 +172,7 @@ extension DebugViewController {
         let language = data.getLaunchLanguage()
         let region = data.getRegion()
         let uiMode = data.getUIMode()
+        let environment = data.getEnvironment()
         
         let defaultList: [DataSourceType] = [.roomName(.none),
                                              .userName(.none),
@@ -186,7 +187,7 @@ extension DebugViewController {
                                              .uiMode(uiMode),
                                              .uiLanguage(language),
                                              .region(region),
-                                             .environment(.pro)]
+                                             .environment(environment)]
         
         data.updateDataSourceList(defaultList)
     }
