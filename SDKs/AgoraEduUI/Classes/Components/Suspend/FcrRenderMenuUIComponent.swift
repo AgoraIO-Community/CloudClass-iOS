@@ -255,7 +255,8 @@ class FcrRenderMenuUIComponent: UIViewController {
 // MARK: - Private
 private extension FcrRenderMenuUIComponent {
     func updateMenu() {
-        guard let `model` = model else {
+        guard let `model` = model,
+        let `UIConfig` = UIConfig else {
             return
         }
         let teacherConfig = UIConfig.teacherVideo
