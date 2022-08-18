@@ -198,8 +198,7 @@ import AgoraWidget
                 continue
             }
             
-            if [globalComponent,
-                chatComponent].contains(component) {
+            if [globalComponent].contains(component) {
                 component.viewDidLoad()
                 continue
             }
