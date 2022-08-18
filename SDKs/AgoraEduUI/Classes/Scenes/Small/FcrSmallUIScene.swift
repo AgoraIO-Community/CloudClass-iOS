@@ -195,9 +195,10 @@ import AgoraWidget
                                renderMenuComponent,
                                handsListComponent]
             componentList.append(contentsOf: teacherList)
-            for item in teacherList {
-                item.view.agora_visible = false
-            }
+            
+            classStateComponent.view.agora_visible = false
+            cloudComponent.view.agora_visible = false
+            renderMenuComponent.view.agora_visible = false
         case .student:
             break
         case .assistant:
@@ -421,12 +422,12 @@ extension FcrSmallUIScene: FcrToolCollectionUIComponentDelegate {
         ctrlView = nil
         switch type {
         case .cloudStorage:
-            if cloudComponent.view.isHidden {
-                cloudComponent.view.mas_makeConstraints { make in
+            if !cloudComponent.view.agora_visible {
+                cloudComponent.view.mas_remakeConstraints { make in
                     make?.left.right().top().bottom().equalTo()(boardComponent.view)
                 }
             }
-            cloudComponent.view.isHidden = !cloudComponent.view.isHidden
+            cloudComponent.view.agora_visible = !cloudComponent.view.agora_visible
         case .saveBoard:
             boardComponent.saveBoard()
         case .vote:

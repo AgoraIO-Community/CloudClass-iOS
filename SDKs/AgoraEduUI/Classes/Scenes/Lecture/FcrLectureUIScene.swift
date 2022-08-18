@@ -20,19 +20,11 @@ import AgoraWidget
                                                                 widgetController: contextPool.widget)
     
     /** 设置界面 控制器*/
-    private lazy var settingComponent: FcrSettingUIComponent = {
-        let vc = FcrSettingUIComponent(mediaController: contextPool.media,
-                                       exitDelegate: self)
-        self.addChild(vc)
-        return vc
-    }()
+    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
+                                                              exitDelegate: self)
     /** 举手列表 控制器（仅教师端）*/
-    private lazy var handsListComponent: FcrHandsListUIComponent = {
-        let vc = FcrHandsListUIComponent(userController: contextPool.user,
-                                         delegate: self)
-        self.addChild(vc)
-        return vc
-    }()
+    private lazy var handsListComponent = FcrHandsListUIComponent(userController: contextPool.user,
+                                                                  delegate: self)
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuComponent = FcrRenderMenuUIComponent(userController: contextPool.user,
                                                                     streamController: contextPool.stream,
@@ -176,9 +168,10 @@ import AgoraWidget
                                renderMenuComponent,
                                handsListComponent]
             componentList.append(contentsOf: teacherList)
-            for item in teacherList {
-                item.view.agora_visible = false
-            }
+            
+            classStateComponent.view.agora_visible = false
+            cloudComponent.view.agora_visible = false
+            renderMenuComponent.view.agora_visible = false
         case .student:
             componentList.removeAll(nameRollComponent)
         case .assistant:
@@ -510,12 +503,12 @@ extension FcrLectureUIScene: FcrToolCollectionUIComponentDelegate {
         ctrlView = nil
         switch type {
         case .cloudStorage:
-            if cloudComponent.view.isHidden {
+            if !cloudComponent.view.agora_visible {
                 cloudComponent.view.mas_makeConstraints { make in
                     make?.left.right().top().bottom().equalTo()(boardComponent.view)
                 }
             }
-            cloudComponent.view.isHidden = !cloudComponent.view.isHidden
+            cloudComponent.view.agora_visible = !cloudComponent.view.agora_visible
         case .saveBoard:
             boardComponent.saveBoard()
         case .vote:
