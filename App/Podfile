@@ -23,7 +23,7 @@ target 'AgoraEducation' do
   pod 'AgoraMediaPlayer_iOS', '1.3.0'
   pod 'AgoraRtm_iOS', '1.4.8'
   pod 'Agora_Chat_iOS', '1.0.6'
-  pod 'Whiteboard', '2.16.29'
+  pod 'Whiteboard', '2.16.36'
  
   # open source libs
   pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'

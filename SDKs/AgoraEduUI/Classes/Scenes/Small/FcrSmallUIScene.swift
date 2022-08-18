@@ -607,7 +607,7 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
         }
         curStageOn = stageOn
         if curStageOn {
-            renderComponent.view.isHidden = false
+            renderComponent.view.agora_visible = true
             boardComponent.view.mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
@@ -619,13 +619,15 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
                 make?.bottom.equalTo()(boardComponent.view.mas_top)?.offset()(AgoraFit.scale(-1))
             }
         } else {
-            renderComponent.view.isHidden = true
+            renderComponent.view.agora_visible = false
             boardComponent.view.mas_remakeConstraints { make in
-                make?.height.equalTo()(AgoraFit.scale(307))
+                make?.top.equalTo()(stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.bottom.equalTo()(contentView.mas_bottom)?.offset()(AgoraFit.scale(1))
                 make?.left.right().equalTo()(0)
-                make?.centerY.equalTo()(contentView.mas_centerY)?.offset()(UIDevice.current.agora_is_pad ? 10 : 7)
             }
         }
+        
+        boardComponent.updateBoardRatio()
     }
     
     func onBoardActiveStateChanged(isActive: Bool) {
