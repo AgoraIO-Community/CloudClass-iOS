@@ -277,7 +277,7 @@ import AgoraWidget
                 continue
             }
             
-            if [globalComponent].contains(component) {
+            if component == globalComponent {
                 component.viewDidLoad()
                 continue
             }

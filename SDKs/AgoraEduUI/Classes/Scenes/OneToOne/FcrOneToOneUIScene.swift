@@ -187,12 +187,13 @@ import UIKit
                 continue
             }
             
-            if component == globalComponent {
-                globalComponent.viewDidLoad()
+            if component == chatComponent,
+               !UIDevice.current.agora_is_pad {
                 continue
             }
             
-            if component == chatComponent {
+            if component == globalComponent {
+                globalComponent.viewDidLoad()
                 continue
             }
             
