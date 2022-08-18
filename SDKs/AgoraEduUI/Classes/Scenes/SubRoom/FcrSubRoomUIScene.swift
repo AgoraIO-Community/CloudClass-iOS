@@ -89,6 +89,7 @@ import AgoraWidget
     private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,
                                                         userController: subRoom.user,
                                                         widgetController: subRoom.widget,
+                                                        subRoom: subRoom,
                                                         delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
@@ -271,12 +272,12 @@ import AgoraWidget
             
             if [settingComponent,
                 handsListComponent,
-                nameRollComponent].contains(component) {
+                nameRollComponent,
+                chatComponent].contains(component) {
                 continue
             }
             
-            if [globalComponent,
-                chatComponent].contains(component) {
+            if [globalComponent].contains(component) {
                 component.viewDidLoad()
                 continue
             }

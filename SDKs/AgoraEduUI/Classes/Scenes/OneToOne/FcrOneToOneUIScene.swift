@@ -192,9 +192,7 @@ import UIKit
                 continue
             }
             
-            if component == chatComponent,
-               !UIDevice.current.agora_is_pad {
-                chatComponent.viewDidLoad()
+            if component == chatComponent {
                 continue
             }
             

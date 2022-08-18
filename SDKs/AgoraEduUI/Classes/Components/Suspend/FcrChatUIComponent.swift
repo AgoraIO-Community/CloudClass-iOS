@@ -52,6 +52,12 @@ class FcrChatUIComponent: UIViewController {
         
         super.init(nibName: nil,
                    bundle: nil)
+        
+        if let `subRoom` = subRoom {
+            subRoom.registerSubRoomEventHandler(self)
+        } else {
+            roomController.registerRoomEventHandler(self)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -60,13 +66,6 @@ class FcrChatUIComponent: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if let `subRoom` = subRoom {
-            subRoom.registerSubRoomEventHandler(self)
-        } else {
-            roomController.registerRoomEventHandler(self)
-        }
-        
         initViews()
         initViewFrame()
         updateViewProperties()
