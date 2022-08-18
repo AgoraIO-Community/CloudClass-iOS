@@ -214,12 +214,12 @@ import AgoraWidget
             
             if [settingComponent,
                 handsListComponent,
-                nameRollComponent].contains(component) {
+                nameRollComponent,
+                chatComponent].contains(component) {
                 continue
             }
             
-            if [globalComponent,
-                chatComponent].contains(component) {
+            if [globalComponent].contains(component) {
                 component.viewDidLoad()
                 continue
             }
