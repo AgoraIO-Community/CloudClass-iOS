@@ -30,15 +30,14 @@ echo "$SDK_Name version: $SDK_Version"
 
 # originGithub check
 Remote_Cmd=`git remote | grep 'originGithub'`
-if [[ -z $SDK_Version ]]; then
+if [[ -z $Remote_Cmd ]]; then
 git remote add originGithub 'git@github.com:AgoraIO-Community/CloudClass-iOS.git'
-# git@github.com:AgoraIO-Community/apaas-extapp-ios.git
 fi
 
 # tag check
 Tag=${SDK_Name}_v${SDK_Version}
 Tag_Check_Cmd=`git ls-remote --tags originGithub | grep "refs/tags/$Tag"`
-if [[ -n $Tag_Check_Cmd ]]; then
+if [[ -n ${Tag_Check_Cmd} ]]; then
  echo "Tag exists in originGithub"
  exit -1
 fi
@@ -51,10 +50,10 @@ git push origin ${Tag}
 git push originGithub ${Tag}
 
 # pod push
-pod spec lint ${SDK_Name}.podspec --allow-warnings --verbose
-pod trunk push ${SDK_Name}.podspec --allow-warnings --verbose
+pod spec lint ${Podspec_Path} --allow-warnings --verbose
+pod trunk push ${Podspec_Path} --allow-warnings --verbose
 pod trunk info ${SDK_Name}
 
 # push branch to originGithub
 Branch_Name=release/${SDK_Version}
-git push originGithub $Branch_Name
+git push originGithub ${Branch_Name}
