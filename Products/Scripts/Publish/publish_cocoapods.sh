@@ -1,6 +1,7 @@
 #!/bin/sh
 SDK_Name=$1
 
+cd $(dirname $0)
 cd ../../../
 pwd
 
@@ -13,8 +14,8 @@ if [ ${#SDK_Name} -le 0 ]; then
 fi
 
 if [[ ! -f $Podspec_Path ]]; then
-echo "podspec not found"
-exit 1
+    echo "podspec not found"
+    exit 1
 fi
 
 # get version
@@ -22,8 +23,8 @@ Version_Cmd=`grep "spec.version\s*=\s*\"\d.\d.\d\"" "${Podspec_Path}" | sed -r '
 
 SDK_Version=$Version_Cmd
 if [[ -z $SDK_Version ]]; then
-echo "get version unsuccessfully"
-exit -1
+    echo "get version unsuccessfully"
+    exit -1
 fi
 
 echo "$SDK_Name version: $SDK_Version"
@@ -31,18 +32,19 @@ echo "$SDK_Name version: $SDK_Version"
 # originGithub check
 Remote_Cmd=`git remote | grep 'originGithub'`
 if [[ -z $Remote_Cmd ]]; then
-git remote add originGithub 'git@github.com:AgoraIO-Community/CloudClass-iOS.git'
+    echo "add remote originGithub"
+    git remote add originGithub 'git@github.com:AgoraIO-Community/CloudClass-iOS.git'
 fi
 
 # tag check
 Tag=${SDK_Name}_v${SDK_Version}
 Tag_Check_Cmd=`git ls-remote --tags originGithub | grep "refs/tags/$Tag"`
 if [[ -n ${Tag_Check_Cmd} ]]; then
- echo "Tag exists in originGithub"
- exit -1
+    echo "Tag exists in originGithub"
+    exit -1
 fi
 
- # push tag
+# push tag
 git tag -d ${Tag}
 git push origin :refs/tags/${Tag}
 git tag ${Tag}
