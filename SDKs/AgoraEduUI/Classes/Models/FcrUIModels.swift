@@ -183,15 +183,30 @@ struct FcrWindowWidgetItem {
     var zIndex: Int
 }
 
-struct FcrStreamWindowWidgetItem {
+class FcrStreamWindowWidgetItem {
     enum ItemType: Int {
         case screen, camera
     }
     
-    var widgetObjectId: String
+    var widgetId: String
+    var widget: AgoraBaseWidget?
+    
+    var streamId: String?
+    var renderView: FcrWindowRenderView?
+    
     var type: ItemType
     var data: FcrWindowRenderViewData
     var zIndex: Int
+    
+    init(widgetId: String,
+         type: ItemType,
+         data: FcrWindowRenderViewData,
+         zIndex: Int) {
+        self.widgetId = widgetId
+        self.type = type
+        self.data = data
+        self.zIndex = zIndex
+    }
     
     static func ==(left: FcrStreamWindowWidgetItem,
                    right: FcrStreamWindowWidgetItem) -> Bool {
@@ -215,7 +230,7 @@ struct FcrStreamWindowWidgetItem {
         return !(left == right)
     }
     
-    static func create(widgetObjectId: String,
+    static func create(widgetId: String,
                        stream: AgoraEduContextStreamInfo,
                        rewardCount: Int,
                        boardPrivilege: Bool,
@@ -226,7 +241,7 @@ struct FcrStreamWindowWidgetItem {
         
         let type: ItemType = ((stream.videoSourceType == .camera) ? .camera : .screen)
         
-        let item = FcrStreamWindowWidgetItem(widgetObjectId: widgetObjectId,
+        let item = FcrStreamWindowWidgetItem(widgetId: widgetId,
                                              type: type,
                                              data: data,
                                              zIndex: zIndex)

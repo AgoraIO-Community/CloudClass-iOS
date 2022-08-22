@@ -10,7 +10,40 @@ import AgoraUIBaseViews
 import AgoraWidget
 import UIKit
 
+protocol FcrLectureStreamWindowUIComponentDelegate: NSObjectProtocol {
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        didPressUser uuid: String,
+                        view: UIView)
+}
+
 class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
+    
+    public var actionDelegate: FcrLectureStreamWindowUIComponentDelegate?
+    
+    init(roomController: AgoraEduRoomContext,
+         userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         mediaController: AgoraEduMediaContext,
+         widgetController: AgoraEduWidgetContext,
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: FcrStreamWindowUIComponentDelegate? = nil,
+         componentDataSource: FcrUIComponentDataSource? = nil,
+         actionDelegate: FcrLectureStreamWindowUIComponentDelegate? = nil) {
+        super.init(roomController: roomController,
+                   userController: userController,
+                   streamController: streamController,
+                   mediaController: mediaController,
+                   widgetController: widgetController,
+                   subRoom: subRoom,
+                   delegate: delegate,
+                   componentDataSource: componentDataSource)
+        self.actionDelegate = actionDelegate
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                                   operatorUser: AgoraEduContextUserInfo?) {
         super.onStreamUpdated(stream: stream,
@@ -61,7 +94,13 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
         let tap = UITapGestureRecognizer(target: self,
                                          action: #selector(onTap(_:)))
         tap.delegate = self
-        widgetView.addGestureRecognizers([drag, tap])
+        tap.numberOfTouchesRequired = 1
+        let doubleTap = UITapGestureRecognizer(target: self,
+                                               action: #selector(onDoubleTap(_:)))
+        doubleTap.delegate = self
+        doubleTap.numberOfTouchesRequired = 2
+        tap.require(toFail: doubleTap)
+        widgetView.addGestureRecognizers([drag, tap, doubleTap])
     }
     
 }
@@ -73,21 +112,19 @@ private extension FcrLectureStreamWindowUIComponent {
             return
         }
         let streamId = stream.streamUuid
-        let windowId = "\(WindowWidgetId)-\(streamId)"
-        config.widgetId = windowId
-        let widget = widgetController.create(config)
-        widgetController.updateWidgetSyncFrame(widgetInitialPosition(),
-                                               widgetId: windowId) { [weak self] in
-            self?.widgetController.setWidgetActive(windowId,
-                                                   ownerUuid: stream.owner.userUuid,
-                                                   roomProperties: nil,
-                                                   success: nil)
-        } failure: { erro in
-        }
+        let widgetId = "\(WindowWidgetId)-\(streamId)"
+        config.widgetId = widgetId
+        let _ = widgetController.create(config)
+        widgetController.setWidgetActive(widgetId,
+                                         ownerUuid: stream.owner.userUuid,
+                                         roomProperties: nil,
+                                         syncFrame: widgetInitialPosition(),
+                                         success: nil,
+                                         failure: nil)
     }
     
     func widgetInitialPosition() ->  AgoraWidgetFrame {
-        let count = CGFloat(widgets.count)
+        let count = CGFloat(dataSource.count)
         let x = (count + 1) * AgoraFit.scale(5)
         let y = (count + 1) * AgoraFit.scale(5)
         let width = AgoraFit.scale(115)
@@ -103,21 +140,35 @@ private extension FcrLectureStreamWindowUIComponent {
         guard let targetView = sender.view as? AgoraBaseUIContainer else {
             return
         }
-
-        let point = sender.translation(in: view)
+        let size = sender.translation(in: view)
         
         let viewWidth = targetView.width
         let viewHeight = targetView.height
         
-        let transLeft = targetView.frame.minX + point.x
-        let transTop = targetView.frame.minY + point.y
-        
         switch sender.state {
         case .changed:
-            break
+            var nextX = targetView.frame.minX + size.x
+            nextX = (nextX >= 0) ? nextX : 0
+            nextX = (nextX + viewWidth <= view.width) ? nextX : (view.width - viewWidth)
+            
+            var nextY = targetView.frame.minY + size.y
+            nextY = (nextY >= 0) ? nextY : 0
+            nextY = (nextY + viewHeight <= view.height) ? nextY : (view.height - viewHeight)
+            
+            var frame = targetView.frame
+            frame.origin.x = nextX
+            frame.origin.y = nextY
+            targetView.frame = frame
         case .recognized: fallthrough
         case .ended:
-            
+            guard let widgetView = sender.view,
+                  let item = dataSource.first(where: {$0.widget?.view == widgetView})
+            else {
+                return
+            }
+            widgetController.updateWidgetSyncFrame(targetView.frame.syncFrameInView(view),
+                                                   widgetId: item.widgetId,
+                                                   success: nil)
             break
         default:
             break
@@ -127,6 +178,17 @@ private extension FcrLectureStreamWindowUIComponent {
     }
     
     @objc func onTap(_ sender: UITapGestureRecognizer) {
+        guard let widgetView = sender.view,
+              let item = dataSource.first(where: {$0.widget?.view == widgetView})
+        else {
+            return
+        }
+        actionDelegate?.onStreamWindow(self,
+                                       didPressUser: item.data.userId,
+                                       view: widgetView)
+    }
+    
+    @objc func onDoubleTap(_ sender: UITapGestureRecognizer) {
         
     }
 }

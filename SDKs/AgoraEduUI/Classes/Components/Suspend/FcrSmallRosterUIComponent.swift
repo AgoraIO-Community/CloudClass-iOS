@@ -13,9 +13,25 @@ import UIKit
 /** 小班课花名册*/
 class FcrSmallRosterUIComponent: FcrRosterUIComponent {
     
-    override var carouselEnable: Bool {
-        return userController.getLocalUserInfo().userRole == .teacher
-    }
+    private let userController: AgoraEduUserContext
+    private let streamController: AgoraEduStreamContext
+    private let widgetController: AgoraEduWidgetContext
+    /** 轮播 仅教师端*/
+    private lazy var carouselTitleLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.text = "fcr_user_list_carousel_setting".agedu_localized()
+        return label
+    }()
+    private lazy var carouselSwitch: UISwitch = {
+        let carouselSwitch = UISwitch()
+        carouselSwitch.transform = CGAffineTransform(scaleX: 0.59,
+                                                     y: 0.59)
+        carouselSwitch.isOn = userController.getCoHostCarouselInfo().state
+        carouselSwitch.addTarget(self,
+                                 action: #selector(onClickCarouselSwitch(_:)),
+                                 for: .touchUpInside)
+        return carouselSwitch
+    }()
     
     private var boardUsers = [String]()
     
@@ -31,12 +47,15 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
         }
     }
     
-    override init(userController: AgoraEduUserContext,
-                  streamController: AgoraEduStreamContext,
-                  widgetController: AgoraEduWidgetContext) {
-        super.init(userController: userController,
-                   streamController: streamController,
-                   widgetController: widgetController)
+    init(userController: AgoraEduUserContext,
+         streamController: AgoraEduStreamContext,
+         widgetController: AgoraEduWidgetContext) {
+        self.userController = userController
+        self.streamController = streamController
+        self.widgetController = widgetController
+        
+        super.init(nibName: nil,
+                   bundle: nil)
         
         widgetController.add(self,
                              widgetId: kBoardWidgetId)
@@ -64,6 +83,81 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
         // remove event handler
         userController.unregisterUserEventHandler(self)
         streamController.unregisterStreamEventHandler(self)
+    }
+    
+    override func initViews() {
+        super.initViews()
+        
+        if userController.getLocalUserInfo().userRole == .teacher {
+            contentView.addSubview(carouselTitleLabel)
+            contentView.addSubview(carouselSwitch)
+            let config = UIConfig.roster
+            carouselSwitch.agora_enable = config.carousel.enable
+            carouselSwitch.agora_visible = config.carousel.visible
+        }
+    }
+    
+    override func initViewFrame() {
+        super.initViewFrame()
+        
+        if userController.getLocalUserInfo().userRole == .teacher {
+            carouselSwitch.mas_makeConstraints { make in
+                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
+                make?.right.equalTo()(-10)
+                make?.height.equalTo()(30)
+            }
+            carouselTitleLabel.mas_makeConstraints { make in
+                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
+                make?.right.equalTo()(carouselSwitch.mas_left)
+                make?.height.equalTo()(30)
+            }
+        }
+    }
+    
+    override func updateViewProperties() {
+        super.updateViewProperties()
+        let config = UIConfig.roster
+        if userController.getLocalUserInfo().userRole == .teacher {
+            carouselTitleLabel.font = config.label.font
+            carouselTitleLabel.textColor = config.label.subTitleColor
+            
+            carouselSwitch.onTintColor = config.carousel.tintColor
+        }
+    }
+    
+    override func update(model: AgoraRosterModel) {
+        let isTeacher = (userController.getLocalUserInfo().userRole == .teacher)
+        model.rewards = userController.getUserRewardCount(userUuid: model.uuid)
+        // enable
+        model.stageState.isEnable = isTeacher
+        model.authState.isEnable = isTeacher
+        model.rewardEnable = isTeacher
+        model.kickEnable = isTeacher
+        // 上下台操作
+        let coHosts = userController.getCoHostList()
+        var isCoHost = false
+        if let _ = coHosts?.first(where: {$0.userUuid == model.uuid}) {
+            isCoHost = true
+        }
+        if model.stageState.isOn != isCoHost {
+            model.stageState.isOn = isCoHost
+        }
+        guard let stream = streamController.getStreamList(userUuid: model.uuid)?.first else {
+            model.micState = (false, false, false)
+            model.cameraState = (false, false, false)
+            return
+        }
+        // stream
+        model.streamId = stream.streamUuid
+        // audio
+        model.micState.streamOn = stream.streamType.hasAudio
+        model.micState.deviceOn = (stream.audioSourceState == .open)
+        // video
+        model.cameraState.streamOn = stream.streamType.hasVideo
+        model.cameraState.deviceOn = (stream.videoSourceState == .open)
+        
+        model.micState.isEnable = isTeacher && (stream.audioSourceState == .open)
+        model.cameraState.isEnable = isTeacher && (stream.videoSourceState == .open)
     }
     
     override func onExcuteFunc(_ fn: AgoraRosterFunction,
@@ -178,9 +272,27 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
 }
 // MARK: - Private
 private extension FcrSmallRosterUIComponent {
+    @objc func onClickCarouselSwitch(_ sender: UISwitch) {
+        if sender.isOn {
+            userController.startCoHostCarousel(interval: 20,
+                                                 count: 6,
+                                                 type: .sequence,
+                                                 condition: .none) {
+                
+            } failure: { error in
+                sender.isOn = !sender.isOn
+            }
+        } else {
+            userController.stopCoHostCarousel {
+                
+            } failure: { error in
+                sender.isOn = !sender.isOn
+            }
+        }
+    }
     
     func refreshData() {
-        setUpTeacherData()
+        setupTeacherInfo(name: userController.getUserList(role: .teacher)?.first?.userName)
         let localUserID = userController.getLocalUserInfo().userUuid
         guard let students = userController.getUserList(role: .student) else {
             return
@@ -191,8 +303,7 @@ private extension FcrSmallRosterUIComponent {
             model.authState.isOn = boardUsers.contains(model.uuid)
             temp.append(model)
         }
-        add(temp,
-            resort: true)
+        dataSource = temp.coHostSort()
     }
     
 }
@@ -223,8 +334,9 @@ extension FcrSmallRosterUIComponent: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         if user.userRole == .student {
             let model = AgoraRosterModel(contextUser: user)
-            add([model],
-                resort: true)
+            update(model: model)
+            dataSource.append(model)
+            dataSource = dataSource.coHostSort()
         } else if user.userRole == .teacher {
             self.teacherNameLabel.text = user.userName
         }
@@ -243,15 +355,15 @@ extension FcrSmallRosterUIComponent: AgoraEduUserHandler {
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
         let uuids = userList.map({$0.userUuid})
-        update(by: uuids,
-               resort: true)
+        update(by: uuids)
+        self.dataSource = self.dataSource.coHostSort()
     }
     
     func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                  operatorUser: AgoraEduContextUserInfo?) {
         let uuids = userList.map({$0.userUuid})
-        update(by: uuids,
-               resort: true)
+        update(by: uuids)
+        self.dataSource = self.dataSource.coHostSort()
     }
     
     func onUserRewarded(user: AgoraEduContextUserInfo,
@@ -266,19 +378,38 @@ extension FcrSmallRosterUIComponent: AgoraEduUserHandler {
 extension FcrSmallRosterUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        update(by: [stream.owner.userUuid],
-               resort: false)
+        update(by: [stream.owner.userUuid])
+        tableView.reloadData()
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        update(by: [stream.owner.userUuid],
-               resort: false)
+        update(by: [stream.owner.userUuid])
+        tableView.reloadData()
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        update(by: [stream.owner.userUuid],
-               resort: false)
+        update(by: [stream.owner.userUuid])
+        tableView.reloadData()
+    }
+}
+// MARK: - [AgoraRosterModel] ext
+fileprivate extension Array where Element == AgoraRosterModel {
+    /** 上台用户优先排序*/
+    func coHostSort() -> [AgoraRosterModel] {
+        var array = self
+        array.sort {$0.sortRank < $1.sortRank}
+        var coHosts = [AgoraRosterModel]()
+        var rest = [AgoraRosterModel]()
+        for user in array {
+            if user.stageState.isOn {
+                coHosts.append(user)
+            } else {
+                rest.append(user)
+            }
+        }
+        coHosts.append(contentsOf: rest)
+        return coHostSort()
     }
 }

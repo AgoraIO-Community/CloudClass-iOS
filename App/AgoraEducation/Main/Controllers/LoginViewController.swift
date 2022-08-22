@@ -288,8 +288,7 @@ private extension LoginViewController {
             return
         }
         
-        guard !(roomStyle == .lecture && inputParams.roleType == .teacher),
-              !(roomStyle == .vocation && inputParams.roleType == .teacher)
+        guard !(roomStyle == .vocation && inputParams.roleType == .teacher)
         else {
             AgoraToast.toast(message: "login_lecture_teacher_warning".ag_localized(),
                              type: .warning)

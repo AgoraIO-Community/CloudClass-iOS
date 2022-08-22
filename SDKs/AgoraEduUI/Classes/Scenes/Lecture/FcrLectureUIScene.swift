@@ -15,8 +15,7 @@ import AgoraWidget
 @objc public class FcrLectureUIScene: FcrUIScene {
     /** 花名册 控制器 （教师端）*/
     private lazy var nameRollComponent = FcrLectureRosterUIComponent(userController: contextPool.user,
-                                                                     streamController: contextPool.stream,
-                                                                     widgetController: contextPool.widget)
+                                                                     streamController: contextPool.stream)
     
     /** 设置界面 控制器*/
     private lazy var settingComponent: FcrSettingUIComponent = {
@@ -84,7 +83,8 @@ import AgoraWidget
                                                                          mediaController: contextPool.media,
                                                                          widgetController: contextPool.widget,
                                                                          delegate: self,
-                                                                         componentDataSource: self)
+                                                                         componentDataSource: self,
+                                                                         actionDelegate: self)
     /** 外部链接 控制器*/
     private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
@@ -178,6 +178,7 @@ import AgoraWidget
             for item in teacherList {
                 item.view.agora_visible = false
             }
+            handsListComponent.view.agora_visible = true
         case .student:
             componentList.removeAll(nameRollComponent)
         case .assistant:
@@ -197,8 +198,7 @@ import AgoraWidget
                 continue
             }
             
-            if [globalComponent,
-                chatComponent].contains(component) {
+            if [globalComponent].contains(component) {
                 component.viewDidLoad()
                 continue
             }
@@ -350,26 +350,24 @@ extension FcrLectureUIScene: FcrStreamWindowUIComponentDelegate {
     
     func onWillStartRenderVideoStream(streamId: String) {
         guard let item = teacherRenderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
-        
+              let data = item.data
+        else {
+            return
+        }
         let new = FcrWindowRenderViewState.create(isHide: true,
                                                   data: data)
-        
         teacherRenderComponent.updateItem(new,
                                           animation: false)
     }
     
     func onDidStopRenderVideoStream(streamId: String) {
         guard let item = teacherRenderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
-        
+              let data = item.data
+        else {
+            return
+        }
         let new = FcrWindowRenderViewState.create(isHide: false,
                                                   data: data)
-        
         teacherRenderComponent.updateItem(new,
                                           animation: false)
     }
@@ -413,7 +411,38 @@ extension FcrLectureUIScene: FcrToolBarComponentDelegate {
         ctrlView = nil
     }
 }
-
+// MARK: - FcrLectureStreamWindowUIComponentDelegate
+extension FcrLectureUIScene: FcrLectureStreamWindowUIComponentDelegate {
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        didPressUser uuid: String,
+                        view: UIView) {
+        let rect = view.convert(view.bounds,
+                                to: contentView)
+        let centerX = rect.center.x - contentView.width / 2
+        var role = AgoraEduContextUserRole.student
+        if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
+           teacehr.userUuid == uuid {
+            role = .teacher
+        }
+        if let menuId = renderMenuComponent.userId,
+           menuId == uuid {
+            // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
+            renderMenuComponent.dismissView()
+        } else {
+            // 1. 当前menu的userId不为点击的userId，切换用户
+            // 2. 当前不存在menu，显示
+            renderMenuComponent.show(roomType: .lecture,
+                                     userUuid: uuid,
+                                     showRoleType: role)
+            renderMenuComponent.view.mas_remakeConstraints { make in
+                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
+                make?.centerX.equalTo()(view.mas_centerX)
+                make?.height.equalTo()(30)
+                make?.width.equalTo()(renderMenuComponent.menuWidth)
+            }
+        }
+    }
+}
 // MARK: - AgoraRenderMenuUIComponentDelegate
 extension FcrLectureUIScene: FcrRenderMenuUIComponentDelegate {
     func onMenuUserLeft() {

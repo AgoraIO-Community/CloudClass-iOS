@@ -16,9 +16,6 @@ import UIKit
  * 3. 提供数据源的增删改查方法
  */
 class FcrRosterUIComponent: UIViewController {
-    public let userController: AgoraEduUserContext
-    public let streamController: AgoraEduStreamContext
-    public let widgetController: AgoraEduWidgetContext
     
     public var suggestSize: CGSize {
         get {
@@ -29,44 +26,31 @@ class FcrRosterUIComponent: UIViewController {
         }
     }
     /** 容器*/
-    private lazy var contentView = UIView(frame: .zero)
+    public let contentView = UIView(frame: .zero)
     /** 页面title*/
-    private lazy var titleLabel = UILabel(frame: .zero)
+    private let titleLabel = UILabel(frame: .zero)
     /** 教师信息*/
-    private lazy var teacherInfoView = UIView(frame: .zero)
+    private let teacherInfoView = UIView(frame: .zero)
     /** 分割线*/
-    private lazy var topSepLine = UIView(frame: .zero)
-    private lazy var bottomSepLine = UIView(frame: .zero)
+    private let topSepLine = UIView(frame: .zero)
+    private let bottomSepLine = UIView(frame: .zero)
     /** 教师姓名 标签*/
-    public var teacherTitleLabel = UILabel(frame: .zero)
+    private let teacherTitleLabel = UILabel(frame: .zero)
     /** 教师姓名 姓名*/
-    public var teacherNameLabel = UILabel(frame: .zero)
+    public let teacherNameLabel = UILabel(frame: .zero)
     /** 学生姓名*/
-    private lazy var studentTitleLabel = UILabel(frame: .zero)
+    private let studentTitleLabel = UILabel(frame: .zero)
     /** 列表项*/
-    private lazy var itemTitlesView = UIStackView(frame: .zero)
-    /** 轮播 仅教师端*/
-    private lazy var carouselTitleLabel: UILabel = {
-        let label = UILabel(frame: .zero)
-        label.text = "fcr_user_list_carousel_setting".agedu_localized()
-        return label
-    }()
-    private lazy var carouselSwitch: UISwitch = {
-        let carouselSwitch = UISwitch()
-        carouselSwitch.transform = CGAffineTransform(scaleX: 0.59,
-                                                     y: 0.59)
-        carouselSwitch.isOn = userController.getCoHostCarouselInfo().state
-        carouselSwitch.addTarget(self,
-                                 action: #selector(onClickCarouselSwitch(_:)),
-                                 for: .touchUpInside)
-        return carouselSwitch
-    }()
-    
+    private let itemTitlesView = UIStackView(frame: .zero)
     /** 表视图*/
-    private var tableView = UITableView.init(frame: .zero,
-                                             style: .plain)
+    public var tableView = UITableView.init(frame: .zero,
+                                            style: .plain)
     /** 数据源*/
-    private var dataSource = [AgoraRosterModel]()
+    public var dataSource = [AgoraRosterModel]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     /** 支持的选项列表*/
     public var supportFuncs = [AgoraRosterFunction]() {
         didSet {
@@ -77,26 +61,8 @@ class FcrRosterUIComponent: UIViewController {
         }
     }
     
-    open var carouselEnable: Bool {
-        return false
-    }
-    
     deinit {
         print("\(#function): \(self.classForCoder)")
-    }
-    init(userController: AgoraEduUserContext,
-         streamController: AgoraEduStreamContext,
-         widgetController: AgoraEduWidgetContext) {
-        self.userController = userController
-        self.streamController = streamController
-        self.widgetController = widgetController
-        
-        super.init(nibName: nil,
-                   bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -111,6 +77,10 @@ class FcrRosterUIComponent: UIViewController {
     public func onExcuteFunc(_ fn: AgoraRosterFunction,
                              to model: AgoraRosterModel) {
         // 由子类重写，对具体事件进行实现
+    }
+    // 更新模型
+    public func update(model: AgoraRosterModel) {
+        // 由子类重写，具体赋值
     }
 }
 // MARK: - AgoraUIActivity & AgoraUIContentContainer
@@ -145,14 +115,6 @@ class FcrRosterUIComponent: UIViewController {
         itemTitlesView.distribution = .fillEqually
         itemTitlesView.alignment = .center
         contentView.addSubview(itemTitlesView)
-        
-        if carouselEnable {
-            contentView.addSubview(carouselTitleLabel)
-            contentView.addSubview(carouselSwitch)
-        }
-        let config = UIConfig.roster
-        carouselSwitch.agora_enable = config.carousel.enable
-        carouselSwitch.agora_visible = config.carousel.visible
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -213,18 +175,6 @@ class FcrRosterUIComponent: UIViewController {
             make?.left.right().bottom().equalTo()(tableView.superview)
             make?.top.equalTo()(studentTitleLabel.mas_bottom)
         }
-        if carouselEnable {
-            carouselSwitch.mas_makeConstraints { make in
-                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
-                make?.right.equalTo()(-10)
-                make?.height.equalTo()(30)
-            }
-            carouselTitleLabel.mas_makeConstraints { make in
-                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
-                make?.right.equalTo()(carouselSwitch.mas_left)
-                make?.height.equalTo()(30)
-            }
-        }
     }
     
     func updateViewProperties() {
@@ -267,43 +217,30 @@ class FcrRosterUIComponent: UIViewController {
             label.font = config.label.font
             label.textColor = config.label.subTitleColor
         }
-        
-        if carouselEnable {
-            carouselTitleLabel.font = config.label.font
-            carouselTitleLabel.textColor = config.label.subTitleColor
-            
-            carouselSwitch.onTintColor = config.carousel.tintColor
-        }
     }
 }
 // MARK: - Public
 extension FcrRosterUIComponent {
+    
+    func update(by uuids: [String]) {
+        if uuids.count == 1 {
+            if let model = dataSource.first(where: {$0.uuid == uuids.first}) {
+                update(model: model)
+            }
+        } else {
+            dataSource.forEach(where: {uuids.contains($0.uuid)}) { model in
+                update(model: model)
+            }
+        }
+    }
+    
     public func setupSupportFuncs(_ funcs: [AgoraRosterFunction]) {
         supportFuncs = funcs.enabledList()
         tableView.reloadData()
     }
     
-    public func setUpTeacherData() {
-        if let teacher = userController.getUserList(role: .teacher)?.first {
-            teacherNameLabel.text = teacher.userName
-        } else {
-            teacherNameLabel.text = nil
-        }
-    }
-    // 向列表中添加用户(uuid去重)
-    // @param resort 是否进行重新排序
-    public func add(_ models: [AgoraRosterModel],
-                    resort: Bool) {
-        for model in models {
-            if dataSource.contains(where: {$0.uuid == model.uuid}) == false {
-                dataSource.append(model)
-                update(by: model.uuid)
-            }
-        }
-        if resort {
-            sort()
-        }
-        tableView.reloadData()
+    public func setupTeacherInfo(name: String?) {
+        teacherNameLabel.text = name
     }
     // 从列表中移除掉某个用户
     public func remove(by uuid: String) {
@@ -313,21 +250,6 @@ extension FcrRosterUIComponent {
     // 清空列表
     public func removeAll() {
         dataSource.removeAll()
-        tableView.reloadData()
-    }
-    // 对用户数据进行全量更新
-    // @param resort 是否因上台状态变化进行重新排序
-    public func update(by uuids: [String],
-                       resort: Bool) {
-        var staged = false
-        for uuid in uuids {
-            if update(by: uuid) == true {
-                staged = true
-            }
-        }
-        if staged, resort {
-            sort()
-        }
         tableView.reloadData()
     }
     // 获取一个用户的数据并对其手动进行更新
@@ -388,67 +310,6 @@ private extension FcrRosterUIComponent {
         }
     }
     
-    // @return 上台状态是否改变
-    @discardableResult
-    func update(by uuid: String) -> Bool {
-        var stageChanged = false
-        guard let model = dataSource.first(where: {$0.uuid == uuid}) else {
-            return stageChanged
-        }
-        let isTeacher = (userController.getLocalUserInfo().userRole == .teacher)
-        let localUserID = userController.getLocalUserInfo().userUuid
-        
-        model.rewards = userController.getUserRewardCount(userUuid: uuid)
-        // enable
-        model.stageState.isEnable = isTeacher
-        model.authState.isEnable = isTeacher
-        model.rewardEnable = isTeacher
-        model.kickEnable = isTeacher
-        // 上下台操作
-        let coHosts = userController.getCoHostList()
-        var isCoHost = false
-        if let _ = coHosts?.first(where: {$0.userUuid == model.uuid}) {
-            isCoHost = true
-        }
-        if model.stageState.isOn != isCoHost {
-            model.stageState.isOn = isCoHost
-            stageChanged = true
-        }
-        guard let stream = streamController.getStreamList(userUuid: model.uuid)?.first else {
-            model.micState = (false, false, false)
-            model.cameraState = (false, false, false)
-            return stageChanged
-        }
-        // stream
-        model.streamId = stream.streamUuid
-        // audio
-        model.micState.streamOn = stream.streamType.hasAudio
-        model.micState.deviceOn = (stream.audioSourceState == .open)
-        // video
-        model.cameraState.streamOn = stream.streamType.hasVideo
-        model.cameraState.deviceOn = (stream.videoSourceState == .open)
-        
-        model.micState.isEnable = isTeacher && (stream.audioSourceState == .open)
-        model.cameraState.isEnable = isTeacher && (stream.videoSourceState == .open)
-        return stageChanged
-    }
-    
-    func sort() {
-        dataSource.sort {$0.sortRank < $1.sortRank}
-        var coHosts = [AgoraRosterModel]()
-        var rest = [AgoraRosterModel]()
-        for user in dataSource {
-            if user.stageState.isOn {
-                coHosts.append(user)
-            } else {
-                rest.append(user)
-            }
-        }
-        coHosts.append(contentsOf: rest)
-        dataSource = coHosts
-        tableView.reloadData()
-    }
-    
     public func reloadTableView() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -483,28 +344,6 @@ extension FcrRosterUIComponent: UITableViewDelegate,
         return cell
     }
 }
-// MARK: - Actions
-extension FcrRosterUIComponent {
-    @objc func onClickCarouselSwitch(_ sender: UISwitch) {
-        if sender.isOn {
-            userController.startCoHostCarousel(interval: 20,
-                                                 count: 6,
-                                                 type: .sequence,
-                                                 condition: .none) {
-                
-            } failure: { error in
-                sender.isOn = !sender.isOn
-            }
-        } else {
-            userController.stopCoHostCarousel {
-                
-            } failure: { error in
-                sender.isOn = !sender.isOn
-            }
-        }
-    }
-}
-
 fileprivate extension Array where Element == AgoraRosterFunction {
     func enabledList() -> [AgoraRosterFunction] {
         let config = UIConfig.roster
