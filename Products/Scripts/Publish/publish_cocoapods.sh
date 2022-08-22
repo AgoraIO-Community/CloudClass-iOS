@@ -1,7 +1,6 @@
 #!/bin/sh
 SDK_Name=$1
 Podspec_Path=${SDK_Name}.podspec
-Branch_Name=release/${SDK_Version}
 
 cd $(dirname $0)
 cd ../../../
@@ -18,23 +17,22 @@ if [[ ! -f $Podspec_Path ]]; then
     exit 1
 fi
 
-# current branch check
-Check_Branch_Cmd=`git rev-parse --abbrev-ref HEAD`
-if [[ ${Check_Branch_Cmd} != ${Branch_Name} ]]; then
-    echo "Branch error!"
-    exit -1
-fi
-
 # get version
-Version_Cmd=`grep "spec.version\s*=\s*\"\d.\d.\d\"" "${Podspec_Path}" | sed -r 's/.*"(.+)".*/\1/'`
-
-SDK_Version=$Version_Cmd
+SDK_Version=`grep "spec.version\s*=\s*\"\d.\d.\d\"" ${Podspec_Path} | sed -r 's/.*"(.+)".*/\1/'`
+echo $Podspec_Path
 if [[ -z $SDK_Version ]]; then
     echo "Get version unsuccessfully"
     exit -1
 fi
 
 echo "$SDK_Name version: $SDK_Version"
+Target_Branch=release/${SDK_Version}
+# current branch check
+Current_Branch=`git rev-parse --abbrev-ref HEAD`
+if [[ ${Current_Branch} != ${Target_Branch} ]]; then
+    echo "Branch error! \nCurrent: ${Current_Branch}"
+    exit -1
+fi
 
 # originGithub check
 Remote_Cmd=`git remote | grep 'originGithub'`
@@ -54,6 +52,7 @@ fi
 # push tag
 git tag -d ${Tag}
 git push origin :refs/tags/${Tag}
+
 git tag ${Tag}
 git push origin ${Tag}
 git push originGithub ${Tag}
@@ -64,4 +63,4 @@ pod trunk push ${Podspec_Path} --allow-warnings --verbose
 pod trunk info ${SDK_Name}
 
 # push branch to originGithub
-git push originGithub ${Branch_Name}
+git push originGithub ${Target_Branch}

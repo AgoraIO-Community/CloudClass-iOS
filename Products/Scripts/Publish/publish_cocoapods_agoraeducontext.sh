@@ -1,4 +1,5 @@
 #!/bin/sh
-SDK_Name="AgoraEduContext"
+cd $(dirname $0)
 
+SDK_Name="AgoraEduContext"
 ./publish_cocoapods.sh ${SDK_Name}
