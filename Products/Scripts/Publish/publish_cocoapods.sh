@@ -1,11 +1,11 @@
 #!/bin/sh
 SDK_Name=$1
+Podspec_Path=${SDK_Name}.podspec
+Branch_Name=release/${SDK_Version}
 
 cd $(dirname $0)
 cd ../../../
 pwd
-
-Podspec_Path=${SDK_Name}.podspec
 
 # params check
 if [ ${#SDK_Name} -le 0 ]; then
@@ -18,12 +18,19 @@ if [[ ! -f $Podspec_Path ]]; then
     exit 1
 fi
 
+# current branch check
+Check_Branch_Cmd=`git rev-parse --abbrev-ref HEAD`
+if [[ ${Check_Branch_Cmd} != ${Branch_Name} ]]; then
+    echo "Branch error!"
+    exit -1
+fi
+
 # get version
 Version_Cmd=`grep "spec.version\s*=\s*\"\d.\d.\d\"" "${Podspec_Path}" | sed -r 's/.*"(.+)".*/\1/'`
 
 SDK_Version=$Version_Cmd
 if [[ -z $SDK_Version ]]; then
-    echo "get version unsuccessfully"
+    echo "Get version unsuccessfully"
     exit -1
 fi
 
@@ -32,7 +39,7 @@ echo "$SDK_Name version: $SDK_Version"
 # originGithub check
 Remote_Cmd=`git remote | grep 'originGithub'`
 if [[ -z $Remote_Cmd ]]; then
-    echo "add remote originGithub"
+    echo "Add remote originGithub"
     git remote add originGithub 'git@github.com:AgoraIO-Community/CloudClass-iOS.git'
 fi
 
@@ -57,5 +64,4 @@ pod trunk push ${Podspec_Path} --allow-warnings --verbose
 pod trunk info ${SDK_Name}
 
 # push branch to originGithub
-Branch_Name=release/${SDK_Version}
 git push originGithub ${Branch_Name}
