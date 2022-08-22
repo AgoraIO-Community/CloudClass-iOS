@@ -60,11 +60,11 @@ import AgoraWidget
                                                                                 reverseItem: false,
                                                                                 delegate: self)
     /** 白板 控制器*/
-    private lazy var boardComponent = FcrBoardUIComponent(roomController: contextPool.room,
-                                                          userController: contextPool.user,
-                                                          widgetController: contextPool.widget,
-                                                          mediaController: contextPool.media,
-                                                          delegate: self)
+    private lazy var boardComponent = FcrLectureBoardUIComponent(roomController: contextPool.room,
+                                                                 userController: contextPool.user,
+                                                                 widgetController: contextPool.widget,
+                                                                 mediaController: contextPool.media,
+                                                                 delegate: self)
     
     /** 工具集合 控制器（观众端没有）*/
     private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(userController: contextPool.user,
