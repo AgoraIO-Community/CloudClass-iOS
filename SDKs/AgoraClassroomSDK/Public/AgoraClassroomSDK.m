@@ -254,7 +254,7 @@ static AgoraClassroomSDK *manager = nil;
     self.scene = nil;
     self.core = nil;
     
-    [FcrWidgetUIContext desctory];
+    [FcrWidgetUIContext destroy];
 }
 
 #pragma mark - FcrUISceneDelegate
