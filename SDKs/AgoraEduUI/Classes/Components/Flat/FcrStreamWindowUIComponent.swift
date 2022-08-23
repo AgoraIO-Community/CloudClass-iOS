@@ -407,13 +407,12 @@ private extension FcrStreamWindowUIComponent {
             
             UIView.animate(withDuration: TimeInterval.agora_animation) {
                 widgetView.frame = destinationFrame
+                self.updateItemHierarchy(zIndex,
+                                         index: itemIndex)
             } completion: { isFinish in
                 guard isFinish else {
                     return
                 }
-                
-                self.updateItemHierarchy(zIndex,
-                                         index: itemIndex)
                 
                 widgetView.frame = displayFrame
             }

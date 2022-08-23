@@ -394,7 +394,7 @@ struct FcrUIItemToolBarHandsListLabel: FcrUIItemProtocol {
     
     let backgroundColor: UIColor = FcrUIColorGroup.systemErrorColor
     let color: UIColor           = FcrUIColorGroup.textContrastColor
-    let font: UIFont             = FcrUIFontGroup.font10
+    let font: UIFont             = FcrUIFontGroup.font9
 }
 
 // MARK: - BreakoutRoom

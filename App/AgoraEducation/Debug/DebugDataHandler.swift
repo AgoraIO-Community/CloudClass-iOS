@@ -477,6 +477,10 @@ private extension DebugDataHandler {
             let list = DataSourceRegion.allCases
             let action: OptionSelectedAction = { [weak self] index in
                 let region: DataSourceRegion = list[index]
+                
+                // special
+                FcrEnvironment.shared.region = region.env
+                
                 let newValue = DataSourceType.region(region)
                 self?.updateDataSource(at: dataTypeIndex,
                                        with: newValue)
