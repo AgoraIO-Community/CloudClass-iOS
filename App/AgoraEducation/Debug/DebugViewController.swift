@@ -80,10 +80,11 @@ extension DebugViewController: DebugViewDelagate {
                                                          appId: response.appId,
                                                          token: response.token,
                                                          userId: response.userId)
-
+#if DEBUG
             let sel1 = NSSelectorFromString("setLogConsoleState:");
             AgoraClassroomSDK.perform(sel1,
                                       with: 1)
+#endif
          
             if launchConfig.roomType == .vocation { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
