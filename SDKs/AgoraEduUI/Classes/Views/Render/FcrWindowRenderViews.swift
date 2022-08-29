@@ -183,20 +183,20 @@ class FcrWindowRenderView: UIView {
                       delay: Bool = false) {
         micView.updateVolume(volume)
         
-        guard volume < volumeThreshold else {
-            updateHighlight(true)
-            return
-        }
-        
-        guard currentHightlight else {
-            return
-        }
-        
-        if delay {
-            startHighlightTimer()
-        } else {
-            updateHighlight(false)
-        }
+//        guard volume < volumeThreshold else {
+//            updateHighlight(true)
+//            return
+//        }
+//
+//        guard currentHightlight else {
+//            return
+//        }
+//
+//        if delay {
+//            startHighlightTimer()
+//        } else {
+//            updateHighlight(false)
+//        }
     }
     
     func startWaving() {
