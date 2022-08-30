@@ -420,6 +420,7 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
                 make?.top.equalTo()(stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
                 make?.bottom.equalTo()(boardComponent.view.mas_top)?.offset()(AgoraFit.scale(-1))
             }
+            updateRenderCollectionLayout()
         } else {
             renderComponent.view.agora_visible = false
             boardComponent.view.mas_remakeConstraints { make in

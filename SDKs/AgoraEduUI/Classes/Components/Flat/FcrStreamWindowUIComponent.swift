@@ -419,7 +419,9 @@ private extension FcrStreamWindowUIComponent {
         } else {
             updateItemHierarchy(zIndex,
                                 index: itemIndex)
-            widgetView.frame = displayFrame
+            widgetView.mas_makeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(view)
+            }
         }
     }
     
