@@ -1,0 +1,141 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+/*
+ * 需要替换的字符串统一为"{xxx}"
+ */
+
+// room
+fcr_room_class_time_away = "距离上课还有：";
+fcr_room_class_started = "已上课：";
+fcr_room_class_over = "课程已结束：";
+fcr_room_class_not_start = "课程未开始";
+fcr_room_class_end_warning = "课程还有{xxx}分钟结束";
+fcr_room_close_warning = "距离教室关闭还有{xxx}分钟";
+fcr_room_exit_warning = "是否确定要退出教室？";
+fcr_room_exit = "退出教室";
+fcr_room_class_over = "課程已結束";
+fcr_room_start_class = "开始上课";
+fcr_room_one_to_one_tab_video = "视频";
+fcr_room_one_to_one_tab_chat = "聊天";
+fcr_room_leave_room = "退出教室";
+fcr_room_loading = "加载中...";
+fcr_room_class_leave_class_title = "下课确认";
+fcr_room_class_over_notice = "结束通知";
+fcr_room_class_over = "课程已结束";
+fcr_room_class_leave_cancel = "取消";
+fcr_room_class_leave_sure = "确认";
+fcr_room_one_to_one_title = "一对一课堂";
+fcr_room_small_title = "小班课";
+fcr_room_lecture_title = "大班课";
+
+// user
+fcr_user_local_kick_out_notice = "移出通知";
+fcr_user_hands = "举手请长按";
+fcr_user_kick_out = "移出学生";
+fcr_user_kick_out_once = "仅移出教室一次";
+fcr_user_kick_out_forever = "禁止再次进入教室";
+fcr_user_kick_out_submit = "确定";
+fcr_user_kick_out_cancel = "取消";
+fcr_user_local_kick_out = "你被移出教室";
+fcr_user_local_start_co_hosting = "老师邀请你上台了，与大家积极互动吧";
+fcr_user_local_stop_co_hosting = "你离开讲台了，暂时无法与大家互动";
+fcr_user_congratulation = "祝贺{xxx}获得奖励";
+
+// user list
+fcr_user_list = "花名册";
+fcr_user_list_teacher_name = "教师姓名:";
+fcr_user_list_carousel_setting = "轮播";
+fcr_user_list_student_name = "学生姓名";
+fcr_user_list_stage = "上下台";
+fcr_user_list_auth = "授权";
+fcr_user_list_video = "摄像头";
+fcr_user_list_audio = "麦克风";
+fcr_user_list_reward = "奖励";
+fcr_user_list_ban = "踢人";
+
+// stream
+fcr_stream_stop_video = "你的视频被老师停止了";
+fcr_stream_stop_audio = "你暂时不能发言了";
+fcr_stream_start_video = "你的视频被老师启用了";
+fcr_stream_start_audio = "你可以发言了";
+
+// board
+fcr_netless_board_granted = "你已被老师授权，请使用白板工具互动";
+fcr_netless_board_ungranted = "你已被老师收回授权，无法使用白板工具互动";
+fcr_savecanvas_tips_save_failed_tips = "请在系统的\"设置-隐私-照片\"选项中，允许灵动课堂访问你的手机照片";
+fcr_savecanvas_tips_save_successfully = "保存成功";
+fcr_savecanvas_tips_save_failed = "保存失败";
+fcr_savecanvas_tips_save_failed_sure = "确定";
+
+// tool box
+fcr_tool_box_cloud_storage = "云盘";
+fcr_tool_box_record_class = "录制";
+fcr_tool_box_poll = "投票";
+fcr_tool_box_count_down = "倒计时";
+fcr_tool_box_popup_quiz = "答题器";
+
+// Media
+fcr_media_camera = "摄像头";
+fcr_media_mic = "麦克风";
+fcr_media_camera_direction = "方向";
+fcr_media_camera_direction_front = "前";
+fcr_media_camera_direction_back = "后";
+fcr_media_speaker = "扬声器";
+
+// Monitor
+fcr_monitor_network_poor = "当前网络质量不佳,请检查设备网络连接";
+fcr_monitor_network_disconnected = "当前网络已断开,请检查设备网络连接";
+fcr_monitor_network_reconnecting = "重连中...";
+fcr_monitor_login_remote_device = "账号在远端设备登录";
+
+// role
+fcr_role_teacher = "老师";
+fcr_role_assistant = "助教";
+fcr_role_student = "学生";
+fcr_role_audience = "观众";
+
+// Group
+fcr_group_help_title = "请求帮助";
+fcr_group_help_content = "你可以邀请老师进入小组帮助你";
+fcr_group_help_teacher_busy_msg = "老师正在忙，请稍后重试";
+fcr_group_teacher_is_helping_others_msg = "老师正在帮助其他讨论组，请稍后重试";
+fcr_group_teacher_exist_hint = "老师已在小组内";
+
+fcr_group_invite = "邀请";
+fcr_group_cancel = "取消";
+fcr_group_sure = "确定";
+fcr_group_invitation = "老师邀请您加入{xxx}";
+fcr_group_button_join = "加入";
+fcr_group_button_later = "稍后";
+
+fcr_group_joining = "正在加入{xxx}";
+fcr_group_join = "加入讨论组";
+fcr_group_enter_welcome = "欢迎加入{xxx}与大家互动讨论";
+fcr_group_enter_group = "{xxx}{yyy}进入小组";
+fcr_group_exit_group = "{xxx}{yyy}离开小组";
+
+fcr_group_close_group = "老师结束了小组讨论";
+fcr_group_invite_back_main_room = "老师邀请你回到大房间";
+fcr_group_back_main_room = "正在回到大房间...";
+
+fcr_group_back_sure = "确定";
+fcr_group_back_cancel = "取消";
+fcr_group_back_exit = "退出";
+fcr_group_back_to_main_room = "回到大房间";
+fcr_group_exit_room = "离开教室";
+
+// alert
+fcr_alert_sure = "确定";
+fcr_alert_cancel = "取消";
+
+// Record
+fcr_record_recording = "录制中...";
+
+// vocational
+fcr_vocational_teacher_absent = "老师当前不在教室中";

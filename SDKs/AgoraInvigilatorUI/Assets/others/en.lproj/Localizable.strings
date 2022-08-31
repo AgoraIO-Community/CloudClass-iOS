@@ -1,0 +1,135 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+// room
+fcr_room_class_time_away = "Class will begin after：";
+fcr_room_class_started = "Class begins：";
+fcr_room_class_over = "The class has ended.";
+fcr_room_class_not_start = "Class will begin";
+fcr_room_class_end_warning = "The course has {xxx} m to end";
+fcr_room_close_warning = "The class is over, there are {xxx} to close the classroom";
+fcr_room_exit_warning = "Are you sure you want to quit the classroom?";
+fcr_room_exit = "Quit";
+fcr_room_start_class = "Start the class";
+fcr_room_one_to_one_tab_video = "Video";
+fcr_room_one_to_one_tab_chat = "Chat";
+fcr_room_leave_room = "Leave Classroom";
+fcr_room_loading = "Loading...";
+fcr_room_class_leave_class_title = "Leave Class";
+fcr_room_class_over_notice = "Over Notification";
+fcr_room_class_over = "The class has ended.";
+fcr_room_class_leave_cancel = "Cancel";
+fcr_room_class_leave_sure = "Sure";
+fcr_room_one_to_one_title = "One-to-One Classroom";
+fcr_room_small_title = "Small Classroom";
+fcr_room_lecture_title = "Lecture Classroom";
+
+// user
+fcr_user_local_kick_out_notice = "Remove Notification";
+fcr_user_hands = "Long press to wave hands";
+fcr_user_kick_out = "Remove students";
+fcr_user_kick_out_once = "Remove the student from the classroom";
+fcr_user_kick_out_forever = "Ban the student from re-entering the classroom";
+fcr_user_kick_out_submit = "Submit";
+fcr_user_kick_out_cancel = "Cancel";
+fcr_user_local_kick_out = "You have been removed from the classroom";
+fcr_user_local_start_co_hosting = "You are on stage now,You are in presentation mode now. Please feel free to interact with others.";
+fcr_user_local_stop_co_hosting = "You are off the stage now.";
+fcr_user_congratulation = "{xxx} has been rewarded by the teacher.";
+
+// User List
+fcr_user_list = "Roster";
+fcr_user_list_teacher_name = "Teacher:";
+fcr_user_list_carousel_setting = "Video Carousel";
+fcr_user_list_student_name = "Student";
+fcr_user_list_stage = "Stage";
+fcr_user_list_auth = "Auth";
+fcr_user_list_video = "Camera";
+fcr_user_list_audio = "Microphone";
+fcr_user_list_reward = "Reward";
+fcr_user_list_ban = "Remove";
+
+// stream
+fcr_stream_stop_video = "The teacher has turned off your camera.";
+fcr_stream_stop_audio = "You are muted.";
+fcr_stream_start_video = "The teacher has turned on your camera.";
+fcr_stream_start_audio = "You are unmuted.";
+
+// board
+fcr_netless_board_granted = "You can now annotate on the whiteboard.";
+fcr_netless_board_ungranted = "Your access to the whiteboard has been revoked by the teacher.";
+fcr_savecanvas_tips_save_failed_tips = "Allow flexible classroom to access your Photos in \"Setting->Privacy->Photos\"";
+fcr_savecanvas_tips_save_successfully = "Save successfully";
+fcr_savecanvas_tips_save_failed = "Save failed";
+fcr_savecanvas_tips_save_failed_sure = "OK";
+
+// tool box
+fcr_tool_box_cloud_storage = "Cloud storage";
+fcr_tool_box_record_class = "Record";
+fcr_tool_box_poll = "Poll";
+fcr_tool_box_count_down = "Countdown";
+fcr_tool_box_popup_quiz = "Pop-up Quiz";
+
+// Media
+fcr_media_camera = "Camera";
+fcr_media_mic = "Microphone";
+fcr_media_camera_direction = "Direction";
+fcr_media_camera_direction_front = "Front";
+fcr_media_camera_direction_back = "Back";
+fcr_media_speaker = "Speaker";
+
+// Monitor
+fcr_monitor_network_poor = "Poor local network connection,please check the network connection.";
+fcr_monitor_network_disconnected = "The local network is disconnected,please check the network connection.";
+fcr_monitor_network_reconnecting = "reconnecting...";
+fcr_monitor_login_remote_device = "Account was logged in from remote device";
+
+// role
+fcr_role_teacher = "teacher";
+fcr_role_assistant = "assistant";
+fcr_role_student = "student";
+fcr_role_audience = "audience";
+
+// Group
+fcr_group_help_title = "Request help";
+fcr_group_help_content = "You can invite the teacher to this group for assistance.";
+fcr_group_help_teacher_busy_msg = "The teacher is currently helping others. Please try again later.";
+fcr_group_teacher_is_helping_others_msg = "The teacher is helping other groups. Please try again later.";
+fcr_group_teacher_exist_hint = "The teacher is already in this group.";
+
+fcr_group_invite = "Invite";
+fcr_group_cancel = "Cancel";
+fcr_group_sure = "Comfirm";
+fcr_group_invitation = "The teacher invites you to join {xxx}";
+fcr_group_button_join = "Join";
+fcr_group_button_later = "Later";
+
+fcr_group_joining = "Joining {xxx}";
+fcr_group_join = "Join discussion group";
+fcr_group_enter_welcome = "welcome to join {xxx} and discuss with everyone";
+fcr_group_enter_group = "{xxx}{yyy} has joined the group";
+fcr_group_exit_group = "{xxx}{yyy} has left the group";
+
+fcr_group_close_group = "The teacher has closed all rooms";
+fcr_group_invite_back_main_room = "The teacher is inviting you to return to main session";
+fcr_group_back_main_room = "Returning to main session...";
+
+fcr_group_back_sure = "Confirm";
+fcr_group_back_cancel = "Cancel";
+fcr_group_back_exit = "Exit";
+fcr_group_back_to_main_room = "Return to main session";
+fcr_group_exit_room = "Leave the room";
+
+// alert
+fcr_alert_sure = "Confirm";
+fcr_alert_cancel = "Cancel";
+
+// Record
+fcr_record_recording = "Recording...";
+// vocational
+fcr_vocational_teacher_absent = "The teacher is not in the classroom";
