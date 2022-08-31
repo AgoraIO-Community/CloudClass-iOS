@@ -613,13 +613,6 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
             }
-            
-            renderComponent.view.mas_remakeConstraints { make in
-                make?.left.right().equalTo()(0)
-                make?.top.equalTo()(stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-                make?.bottom.equalTo()(boardComponent.view.mas_top)?.offset()(AgoraFit.scale(-1))
-            }
-            updateRenderCollectionLayout()
         } else {
             renderComponent.view.agora_visible = false
             boardComponent.view.mas_remakeConstraints { make in
@@ -630,6 +623,9 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
         }
         
         boardComponent.updateBoardRatio()
+        
+        contentView.layoutIfNeeded()
+        windowComponent.reloadStreamWindowsFrame()
     }
     
     func onBoardActiveStateChanged(isActive: Bool) {
