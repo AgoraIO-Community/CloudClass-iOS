@@ -642,9 +642,9 @@ extension FcrUserListUIComponent: AgoraPaintingUserListItemCellDelegate {
                     return
                 }
                 self.userController.kickOutUser(userUuid: user.uuid,
-                                                  forever: false,
-                                                  success: nil,
-                                                  failure: nil)
+                                                forever: false,
+                                                success: nil,
+                                                failure: nil)
             }
             
             let kickForeverTitle = "fcr_user_kick_out_forever".agedu_localized()
@@ -653,9 +653,9 @@ extension FcrUserListUIComponent: AgoraPaintingUserListItemCellDelegate {
                     return
                 }
                 self.userController.kickOutUser(userUuid: user.uuid,
-                                                  forever: true,
-                                                  success: nil,
-                                                  failure: nil)
+                                                forever: true,
+                                                success: nil,
+                                                failure: nil)
             }
             
             AgoraAlertModel()
