@@ -358,20 +358,20 @@ private extension FcrRenderMenuUIComponent {
         if let stream = streamController.getStreamList(userUuid: uid)?.first {
             // audio
             if stream.audioSourceState == .close {
-                micState = .forbidden
+                micState = .off
             } else if stream.streamType.hasAudio {
                 micState = .on
             } else {
-                micState = .off
+                micState = .forbidden
             }
             
             // video
             if stream.videoSourceState == .close {
-                cameraState = .forbidden
+                cameraState = .off
             } else if stream.streamType.hasVideo {
                 cameraState = .on
             } else {
-                cameraState = .off
+                cameraState = .forbidden
             }
         }
 
@@ -388,7 +388,7 @@ extension FcrRenderMenuUIComponent {
               let `model` = model else {
             return
         }
-        if model.micState == .off {
+        if model.micState == .forbidden {
             streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                           audioPrivilege: true) { [weak self] in
                 self?.model?.micState = .on
@@ -398,7 +398,7 @@ extension FcrRenderMenuUIComponent {
         } else if model.micState == .on {
             streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                           audioPrivilege: false) { [weak self] in
-                self?.model?.micState = .off
+                self?.model?.micState = .forbidden
             } failure: { error in
                 
             }
@@ -411,7 +411,7 @@ extension FcrRenderMenuUIComponent {
               let `model` = model else {
             return
         }
-        if model.cameraState == .off {
+        if model.cameraState == .forbidden {
             streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                           videoPrivilege: true) { [weak self] in
                 self?.model?.cameraState = .on
@@ -421,7 +421,7 @@ extension FcrRenderMenuUIComponent {
         } else if model.cameraState == .on {
             streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                           videoPrivilege: false) { [weak self] in
-                self?.model?.cameraState = .off
+                self?.model?.cameraState = .forbidden
             } failure: { error in
                 
             }

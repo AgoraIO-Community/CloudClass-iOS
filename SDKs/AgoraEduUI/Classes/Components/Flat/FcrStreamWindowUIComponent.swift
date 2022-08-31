@@ -383,14 +383,7 @@ private extension FcrStreamWindowUIComponent {
                           zIndex: Int,
                           itemIndex: Int,
                           animation: Bool = false) {
-        var syncFrame = widgetController.getWidgetSyncFrame(widgetObjectId)
-        
-        if syncFrame == .zero {
-            syncFrame = CGRect(x: 0,
-                               y: 0,
-                               width: 1,
-                               height: 1)
-        }
+        let syncFrame = widgetController.getWidgetSyncFrame(widgetObjectId)
         
         let displayFrame = syncFrame.displayFrameFromSyncFrame(superView: view)
         
@@ -416,12 +409,17 @@ private extension FcrStreamWindowUIComponent {
                 
                 widgetView.frame = displayFrame
             }
-        } else {
+        } else if syncFrame == .zero {
+            // screen share
             updateItemHierarchy(zIndex,
                                 index: itemIndex)
             widgetView.mas_makeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(view)
             }
+        } else {
+            updateItemHierarchy(zIndex,
+                                index: itemIndex)
+            widgetView.frame = displayFrame
         }
     }
     

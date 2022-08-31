@@ -59,8 +59,16 @@ extension DebugViewController: DebugViewDelagate {
         
         let failureBlock: (Error) -> () = { (error) in
             AgoraLoading.hide()
-            AgoraToast.toast(message: error.localizedDescription,
-                             type: .error)
+
+            let `error` = error as NSError
+            
+            if error.code == 30403100 {
+                AgoraToast.toast(message: "login_kicked".ag_localized(),
+                                 type: .error)
+            } else {
+                AgoraToast.toast(message: error.localizedDescription,
+                                 type: .error)
+            }
         }
         
         let launchSuccessBlock: () -> () = {

@@ -110,6 +110,7 @@ login_auth_audio = "仅发音频流";
 login_auth_video = "仅发视频流";
 login_auth_both = "发音视频流";
 login_lecture_teacher_warning = "老师大班课功能暂未开放，敬请期待";
+login_kicked = "你已被踢出教室";
 // service
 Service_title = "灵动课堂用户服务协议";
 Service_check_content = "我已阅读并同意灵动课堂用户服务协议";
