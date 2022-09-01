@@ -65,29 +65,12 @@ protocol FcrUISceneExit: NSObjectProtocol {
         
         super.init(nibName: nil,
                    bundle: nil)
-        
-        guard !(self is FcrSubRoomUIScene) else {
-            return
-        }
-        
-        switch sceneType {
-        case .oneToOne: UIConfig = FcrOneToOneUIConfig()
-        case .small:    UIConfig = FcrSmallUIConfig()
-        case .lecture:  UIConfig = FcrLectureUIConfig()
-        case .vocation: UIConfig = FcrLectureUIConfig()
-        }
     }
     
     deinit {
         #if DEBUG
         print("\(#function): \(self.classForCoder)")
         #endif
-        
-        guard !(self is FcrSubRoomUIScene) else {
-            return
-        }
-        
-        UIConfig = nil
     }
     
     required init?(coder: NSCoder) {

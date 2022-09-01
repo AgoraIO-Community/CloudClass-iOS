@@ -140,7 +140,8 @@ class FcrToolBarUIComponent: FcrUIComponent {
     }
 }
 
-extension FcrToolBarUIComponent: AgoraUIContentContainer {
+// MARK: - AgoraUIContentContainer, AgoraUIActivity
+extension FcrToolBarUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -185,15 +186,23 @@ extension FcrToolBarUIComponent: AgoraUIContentContainer {
         
         updateDataSource()
     }
+    
+    func viewWillActive() {
+        guard let indexPath = dataSource.indexOfType(.help) else {
+            return
+        }
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
+    func viewWillInactive() {
+        deselectAll()
+    }
 }
 
 // MARK: - AgoraEduSubRoomHandler
 extension FcrToolBarUIComponent: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
-        guard let indexPath = dataSource.indexOfType(.help) else {
-            return
-        }
-        collectionView.reloadItems(at: [indexPath])
+        viewWillActive()
     }
 }
 
