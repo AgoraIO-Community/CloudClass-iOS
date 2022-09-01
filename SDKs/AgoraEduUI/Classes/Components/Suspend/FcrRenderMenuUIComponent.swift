@@ -15,7 +15,7 @@ protocol FcrRenderMenuUIComponentDelegate: NSObjectProtocol {
     func onMenuUserLeft()
 }
 
-class FcrRenderMenuUIComponent: UIViewController {
+class FcrRenderMenuUIComponent: FcrUIComponent {
     private let userController: AgoraEduUserContext
     private let streamController: AgoraEduStreamContext
     private let widgetController: AgoraEduWidgetContext

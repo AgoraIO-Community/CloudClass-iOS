@@ -20,7 +20,7 @@ protocol FcrToolBarComponentDelegate: NSObject {
 }
 
 // MARK: - AgoraToolBarUIController
-class FcrToolBarUIComponent: UIViewController {
+class FcrToolBarUIComponent: FcrUIComponent {
     /** SDK环境*/
     private var userController: AgoraEduUserContext
     private var subRoom: AgoraEduSubRoomContext?

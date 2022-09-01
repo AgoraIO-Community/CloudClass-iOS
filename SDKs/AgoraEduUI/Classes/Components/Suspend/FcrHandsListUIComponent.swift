@@ -14,7 +14,7 @@ protocol FcrHandsListUIComponentDelegate: NSObjectProtocol {
     func updateHandsListRedLabel(_ count: Int)
 }
 
-class FcrHandsListUIComponent: UIViewController {
+class FcrHandsListUIComponent: FcrUIComponent {
     private let userController: AgoraEduUserContext
     
     public var suggestSize = CGSize(width: 220,
@@ -33,10 +33,6 @@ class FcrHandsListUIComponent: UIViewController {
     }
     
     // MARK: - Life Cycle
-    deinit {
-        print("\(#function): \(self.classForCoder)")
-    }
-    
     init(userController: AgoraEduUserContext,
          delegate: FcrHandsListUIComponentDelegate? = nil) {
         self.userController = userController

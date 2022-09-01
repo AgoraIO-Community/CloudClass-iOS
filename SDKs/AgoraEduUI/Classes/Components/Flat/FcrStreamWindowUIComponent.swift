@@ -15,11 +15,11 @@ protocol FcrStreamWindowUIComponentDelegate: NSObjectProtocol {
     func onDidStopRenderVideoStream(streamId: String)
 }
 
-class FcrStreamWindowUIComponent: UIViewController {
+class FcrStreamWindowUIComponent: FcrUIComponent {
+    private(set) var mediaController: AgoraEduMediaContext
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let streamController: AgoraEduStreamContext
-    private(set) var mediaController: AgoraEduMediaContext
     private let widgetController: AgoraEduWidgetContext
     private var subRoom: AgoraEduSubRoomContext?
     
@@ -31,6 +31,7 @@ class FcrStreamWindowUIComponent: UIViewController {
             return roomController.getRoomInfo().roomUuid
         }
     }
+    
     // For lecture
     private weak var delegate: FcrStreamWindowUIComponentDelegate?
 
@@ -71,10 +72,6 @@ class FcrStreamWindowUIComponent: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        print("\(#function): \(self.classForCoder)")
     }
     
     override func loadView() {
@@ -260,8 +257,8 @@ private extension FcrStreamWindowUIComponent {
         
         // Frame & Animation
         deleteViewFrame(widgetView: widget.view,
-                               userId: item.data.userId,
-                               animation: animation) { [weak self] in
+                        userId: item.data.userId,
+                        animation: animation) { [weak self] in
             guard let `self` = self else {
                 return
             }
@@ -556,7 +553,7 @@ private extension FcrStreamWindowUIComponent {
         
         if let userList = componentDataSource?.componentNeedGrantedUserList(),
            userList.contains(userId),
-           stream.owner.userRole != .teacher  {
+           stream.owner.userRole != .teacher {
             boardPrivilege = true
         }
         

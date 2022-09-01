@@ -9,7 +9,7 @@ import AgoraUIBaseViews
 import AgoraEduContext
 import UIKit
 
-class FcrSettingUIComponent: UIViewController {
+class FcrSettingUIComponent: FcrUIComponent {
     /**context*/
     private let mediaController: AgoraEduMediaContext
     private let subRoom: AgoraEduSubRoomContext?
@@ -34,10 +34,6 @@ class FcrSettingUIComponent: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        print("\(#function): \(self.classForCoder)")
     }
     
     override func viewDidLoad() {

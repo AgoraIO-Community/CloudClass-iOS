@@ -10,3 +10,11 @@ import Foundation
 protocol FcrUIComponentDataSource where Self: UIViewController {
     func componentNeedGrantedUserList() -> [String]
 }
+
+class FcrUIComponent: UIViewController {
+    deinit {
+        #if DEBUG
+        print("\(#function): \(self.classForCoder)")
+        #endif
+    }
+}

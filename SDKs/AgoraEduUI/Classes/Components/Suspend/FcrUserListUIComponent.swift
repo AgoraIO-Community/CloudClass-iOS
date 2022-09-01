@@ -10,7 +10,7 @@ import SwifterSwift
 import AgoraWidget
 import UIKit
 
-class FcrUserListUIComponent: UIViewController {
+class FcrUserListUIComponent: FcrUIComponent {
     /** SDK环境*/
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
@@ -74,10 +74,6 @@ class FcrUserListUIComponent: UIViewController {
     private var boardUsers = [String]()
     
     private var isViewShow: Bool = false
-    
-    deinit {
-        print("\(#function): \(self.classForCoder)")
-    }
     
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
