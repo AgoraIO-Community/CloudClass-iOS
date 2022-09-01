@@ -91,6 +91,25 @@ class FcrStreamWindowUIComponent: UIViewController {
         
         mediaController.registerMediaEventHandler(self)
     }
+    
+    func reloadStreamWindowsFrame() {
+        for item in dataSource {
+            guard let widget = widgets[item.widgetObjectId] else {
+                return
+            }
+            var syncFrame = widgetController.getWidgetSyncFrame(item.widgetObjectId)
+            
+            if syncFrame == .zero {
+                syncFrame = CGRect(x: 0,
+                                   y: 0,
+                                   width: 1,
+                                   height: 1)
+            }
+            let displayFrame = syncFrame.displayFrameFromSyncFrame(superView: view)
+            
+            widget.view.frame = displayFrame
+        }
+    }
 }
 
 extension FcrStreamWindowUIComponent: AgoraUIActivity {
@@ -211,11 +230,11 @@ private extension FcrStreamWindowUIComponent {
         let itemIndex = (dataSource.count - 1)
         
         addItemViewFrame(widgetView: widget.view,
-                              widgetObjectId: item.widgetObjectId,
-                              userId: item.data.userId,
-                              zIndex: item.zIndex,
-                              itemIndex: itemIndex,
-                              animation: animation)
+                         widgetObjectId: item.widgetObjectId,
+                         userId: item.data.userId,
+                         zIndex: item.zIndex,
+                         itemIndex: itemIndex,
+                         animation: animation)
         
         // Observe widget event
         widgetController.add(self,
@@ -383,7 +402,14 @@ private extension FcrStreamWindowUIComponent {
                           zIndex: Int,
                           itemIndex: Int,
                           animation: Bool = false) {
-        let syncFrame = widgetController.getWidgetSyncFrame(widgetObjectId)
+        var syncFrame = widgetController.getWidgetSyncFrame(widgetObjectId)
+        
+        if syncFrame == .zero {
+            syncFrame = CGRect(x: 0,
+                               y: 0,
+                               width: 1,
+                               height: 1)
+        }
         
         let displayFrame = syncFrame.displayFrameFromSyncFrame(superView: view)
         
@@ -408,13 +434,6 @@ private extension FcrStreamWindowUIComponent {
                 }
                 
                 widgetView.frame = displayFrame
-            }
-        } else if syncFrame == .zero {
-            // screen share
-            updateItemHierarchy(zIndex,
-                                index: itemIndex)
-            widgetView.mas_makeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(view)
             }
         } else {
             updateItemHierarchy(zIndex,

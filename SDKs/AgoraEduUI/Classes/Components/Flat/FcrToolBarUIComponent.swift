@@ -90,6 +90,12 @@ class FcrToolBarUIComponent: UIViewController {
         self.delegate = delegate
         super.init(nibName: nil,
                    bundle: nil)
+        
+        guard let `subRoom` = subRoom else {
+            return
+        }
+
+        subRoom.registerSubRoomEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
@@ -178,6 +184,16 @@ extension FcrToolBarUIComponent: AgoraUIContentContainer {
         collectionView.backgroundColor = .clear
         
         updateDataSource()
+    }
+}
+
+// MARK: - AgoraEduSubRoomHandler
+extension FcrToolBarUIComponent: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
+        guard let indexPath = dataSource.indexOfType(.help) else {
+            return
+        }
+        collectionView.reloadItems(at: [indexPath])
     }
 }
 
