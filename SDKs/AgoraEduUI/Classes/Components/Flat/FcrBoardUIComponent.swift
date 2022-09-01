@@ -29,7 +29,7 @@ extension FcrBoardUIComponentDelegate {
     }
 }
 
-class FcrBoardUIComponent: UIViewController {
+class FcrBoardUIComponent: FcrUIComponent {
     private(set) var grantedUsers = [String]() {
         didSet {
             onGrantedUsersChanged(oldList: oldValue,

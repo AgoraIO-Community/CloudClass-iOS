@@ -13,7 +13,7 @@ protocol FcrCloudUIComponentDelegate: NSObjectProtocol {
                              resourceId: String)
 }
 
-class FcrCloudUIComponent: UIViewController {
+class FcrCloudUIComponent: FcrUIComponent {
     private var cloudWidget: AgoraBaseWidget?
     
     private weak var delegate: FcrCloudUIComponentDelegate?

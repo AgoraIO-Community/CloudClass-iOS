@@ -15,7 +15,7 @@ protocol FcrClassStateUIComponentDelegate: NSObjectProtocol {
     func onShowStartClass()
 }
 
-class FcrClassStateUIComponent: UIViewController {
+class FcrClassStateUIComponent: FcrUIComponent {
     private var positionMoveFlag: Bool = false {
         didSet {
             if positionMoveFlag != oldValue {

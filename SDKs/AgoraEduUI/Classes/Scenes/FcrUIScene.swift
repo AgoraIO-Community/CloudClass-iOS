@@ -63,7 +63,6 @@ protocol FcrUISceneExit: NSObjectProtocol {
         self.contextPool = contextPool
         self.delegate = delegate
         
-      
         super.init(nibName: nil,
                    bundle: nil)
         
@@ -80,7 +79,9 @@ protocol FcrUISceneExit: NSObjectProtocol {
     }
     
     deinit {
+        #if DEBUG
         print("\(#function): \(self.classForCoder)")
+        #endif
         
         guard !(self is FcrSubRoomUIScene) else {
             return

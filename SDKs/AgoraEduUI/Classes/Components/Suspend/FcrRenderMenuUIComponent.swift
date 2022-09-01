@@ -15,7 +15,7 @@ protocol FcrRenderMenuUIComponentDelegate: NSObjectProtocol {
     func onMenuUserLeft()
 }
 
-class FcrRenderMenuUIComponent: UIViewController {
+class FcrRenderMenuUIComponent: FcrUIComponent {
     private let userController: AgoraEduUserContext
     private let streamController: AgoraEduStreamContext
     private let widgetController: AgoraEduWidgetContext
@@ -148,6 +148,8 @@ class FcrRenderMenuUIComponent: UIViewController {
                 with: nil,
                 afterDelay: 5)
     }
+    
+    // TODO: perform cancel deinit
     
     @objc func dismissView() {
         view.isHidden = true

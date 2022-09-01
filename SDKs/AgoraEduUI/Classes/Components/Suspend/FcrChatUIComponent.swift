@@ -15,7 +15,7 @@ protocol FcrChatUIComponentDelegate: NSObjectProtocol {
     func updateChatRedDot(isShow: Bool)
 }
 
-class FcrChatUIComponent: UIViewController {
+class FcrChatUIComponent: FcrUIComponent {
     private var redDotShow: Bool = false {
         didSet {
             guard redDotShow != oldValue else {

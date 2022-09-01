@@ -16,7 +16,7 @@ protocol FcrRoomGlobalUIComponentDelegate: NSObjectProtocol {
 }
 
 // 作为全局状态监听，展示toast，动图等，自身不包含UI
-class FcrRoomGlobalUIComponent: UIViewController {
+class FcrRoomGlobalUIComponent: FcrUIComponent {
     /** SDK环境*/
     private let roomController: AgoraEduRoomContext
     private let monitorController: AgoraEduMonitorContext

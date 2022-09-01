@@ -30,7 +30,7 @@ extension FcrWindowRenderUIComponentDelegate {
     }
 }
 
-class FcrWindowRenderUIComponent: UIViewController, AgoraUIContentContainer {
+class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
     // Data
     private(set) var dataSource: [FcrWindowRenderViewState] {
         didSet {
@@ -80,10 +80,6 @@ class FcrWindowRenderUIComponent: UIViewController, AgoraUIContentContainer {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        print("\(#function): \(self.classForCoder)")
     }
     
     override func viewDidLoad() {
