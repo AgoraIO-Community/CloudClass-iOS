@@ -68,18 +68,21 @@ static AgoraClassroomSDK *manager = nil;
         
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
+                [FcrUIContext createWith:FcrUISceneTypeOneToOne];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeOneToOne];
                 
                 scene = [[FcrOneToOneUIScene alloc] initWithContextPool:pool
                                                                delegate:manager];
                 break;
             case AgoraEduContextRoomTypeSmall:
+                [FcrUIContext createWith:FcrUISceneTypeSmall];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeSmall];
                 
                 scene = [[FcrSmallUIScene alloc] initWithContextPool:pool
                                                             delegate:manager];
                 break;
             case AgoraEduContextRoomTypeLecture:
+                [FcrUIContext createWith:FcrUISceneTypeLecture];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeLecture];
                 
                 scene = [[FcrLectureUIScene alloc] initWithContextPool:pool
@@ -137,6 +140,7 @@ static AgoraClassroomSDK *manager = nil;
             scene = vc;
         }
         
+        [FcrUIContext createWith:FcrUISceneTypeVocation];
         [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeVocation];
         
         [self presentUIScene:scene
@@ -233,6 +237,7 @@ static AgoraClassroomSDK *manager = nil;
     self.scene = nil;
     self.core = nil;
     
+    [FcrUIContext destroy];
     [FcrWidgetUIContext destroy];
 }
 
