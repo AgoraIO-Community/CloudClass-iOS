@@ -18,7 +18,7 @@ import Foundation
     }
     
     @objc public static func destroy() {
-        UIConfig = nil
+//        UIConfig = nil
     }
 }
 
