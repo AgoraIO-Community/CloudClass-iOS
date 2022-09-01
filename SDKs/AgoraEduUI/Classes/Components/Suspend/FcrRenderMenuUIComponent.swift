@@ -42,6 +42,8 @@ class FcrRenderMenuUIComponent: FcrUIComponent {
     private lazy var rewardButton = UIButton(type: .custom)
         
     // Data sources
+    private var timer: Timer?
+    
     private var items: [AgoraRenderMenuItemType] = [] {
         didSet {
             if items != oldValue {
@@ -144,14 +146,16 @@ class FcrRenderMenuUIComponent: FcrUIComponent {
         updateModelState()
         
         // 5s后自动消失
-        perform(#selector(dismissView),
-                with: nil,
-                afterDelay: 5)
+        startTimer()
     }
     
-    // TODO: perform cancel deinit
+    deinit {
+        cancelTimer()
+    }
     
-    @objc func dismissView() {
+    func dismissView() {
+        cancelTimer()
+        
         view.isHidden = true
         self.userId = nil
         self.model = AgoraRenderMenuModel()
@@ -256,6 +260,21 @@ class FcrRenderMenuUIComponent: FcrUIComponent {
 
 // MARK: - Private
 private extension FcrRenderMenuUIComponent {
+    func startTimer() {
+        cancelTimer()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0,
+                                          repeats: false,
+                                          block: { [weak self] t in
+            self?.dismissView()
+        })
+    }
+    
+    func cancelTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
     func updateMenu() {
         guard let `model` = model,
         let `UIConfig` = UIConfig else {
