@@ -335,8 +335,11 @@ import AgoraWidget
                 return
             }
             
-            make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
-            make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+            let right = CGFloat(UIDevice.current.agora_is_pad ? -15 : -12)
+            let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
+            
+            make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(right)
+            make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(bottom)
             make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
             make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
         }
@@ -347,8 +350,10 @@ import AgoraWidget
                     return
                 }
                 
+                let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
+                
                 make?.centerX.equalTo()(self.toolBarComponent.view.mas_centerX)
-                make?.bottom.equalTo()(self.boardComponent.view)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+                make?.bottom.equalTo()(self.boardComponent.view)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
         }
@@ -377,10 +382,6 @@ import AgoraWidget
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
     }
-    
-    public override func updateViewProperties() {
-        super.updateViewProperties()
-    }
 }
 
 // MARK: - FcrWindowRenderUIComponentDelegate
@@ -400,6 +401,7 @@ extension FcrSubRoomUIScene: FcrWindowRenderUIComponentDelegate {
         let userId = data.userId
 
         var role = AgoraEduContextUserRole.student
+        
         if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
            teacehr.userUuid == userId {
             role = .teacher
@@ -415,11 +417,16 @@ extension FcrSubRoomUIScene: FcrWindowRenderUIComponentDelegate {
             renderMenuComponent.show(roomType: .small,
                                      userUuid: userId,
                                      showRoleType: role)
-            renderMenuComponent.view.mas_remakeConstraints { make in
+            
+            renderMenuComponent.view.mas_remakeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
                 make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
                 make?.centerX.equalTo()(view.mas_centerX)
                 make?.height.equalTo()(30)
-                make?.width.equalTo()(renderMenuComponent.menuWidth)
+                make?.width.equalTo()(self.renderMenuComponent.menuWidth)
             }
         }
     }
@@ -431,25 +438,38 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
         guard curStageOn != stageOn else {
             return
         }
+        
         curStageOn = stageOn
+        
         if curStageOn {
             renderComponent.view.agora_visible = true
+            
             boardComponent.view.mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
             }
 
-            renderComponent.view.mas_remakeConstraints { make in
+            renderComponent.view.mas_remakeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
                 make?.left.right().equalTo()(0)
-                make?.top.equalTo()(stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-                make?.bottom.equalTo()(boardComponent.view.mas_top)?.offset()(AgoraFit.scale(-1))
+                make?.top.equalTo()(self.stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.bottom.equalTo()(self.boardComponent.view.mas_top)?.offset()(AgoraFit.scale(-1))
             }
+            
             updateRenderCollectionLayout()
         } else {
             renderComponent.view.agora_visible = false
-            boardComponent.view.mas_remakeConstraints { make in
-                make?.top.equalTo()(stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-                make?.bottom.equalTo()(contentView.mas_bottom)?.offset()(AgoraFit.scale(1))
+            
+            boardComponent.view.mas_remakeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                make?.top.equalTo()(self.stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.bottom.equalTo()(self.contentView.mas_bottom)?.offset()(AgoraFit.scale(1))
                 make?.left.right().equalTo()(0)
             }
         }
@@ -627,16 +647,30 @@ extension FcrSubRoomUIScene: FcrToolCollectionUIComponentDelegate {
             }
 
             if appear {
-                self.toolBarComponent.view.mas_remakeConstraints { make in
-                    make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
-                    make?.bottom.equalTo()(self.toolCollectionComponent.view.mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                self.toolBarComponent.view.mas_remakeConstraints { [weak self] make in
+                    guard let `self` = self else {
+                        return
+                    }
+                    
+                    let right = CGFloat(UIDevice.current.agora_is_pad ? -15 : -12)
+                    let bottom = CGFloat(UIDevice.current.agora_is_pad ? -15 : -12)
+                    
+                    make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(right)
+                    make?.bottom.equalTo()(self.toolCollectionComponent.view.mas_top)?.offset()(bottom)
                     make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
                     make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
                 }
             } else {
-                self.toolBarComponent.view.mas_remakeConstraints { make in
-                    make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
-                    make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+                self.toolBarComponent.view.mas_remakeConstraints { [weak self] make in
+                    guard let `self` = self else {
+                        return
+                    }
+                    
+                    let right = CGFloat(UIDevice.current.agora_is_pad ? -15 : -12)
+                    let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
+                    
+                    make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(right)
+                    make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(bottom)
                     make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
                     make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
                 }
@@ -653,17 +687,29 @@ extension FcrSubRoomUIScene: FcrToolCollectionUIComponentDelegate {
 
     func toolCollectionCellNeedSpread(_ spread: Bool) {
         if spread {
-            toolCollectionComponent.view.mas_remakeConstraints { make in
+            toolCollectionComponent.view.mas_remakeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
+                
                 make?.centerX.equalTo()(self.toolBarComponent.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
-                make?.width.equalTo()(toolCollectionComponent.suggestLength)
-                make?.height.equalTo()(toolCollectionComponent.suggestSpreadHeight)
+                make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
+                make?.width.equalTo()(self.toolCollectionComponent.suggestLength)
+                make?.height.equalTo()(self.toolCollectionComponent.suggestSpreadHeight)
             }
         } else {
-            toolCollectionComponent.view.mas_remakeConstraints { make in
+            toolCollectionComponent.view.mas_remakeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
+                
                 make?.centerX.equalTo()(self.toolBarComponent.view.mas_centerX)
-                make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
-                make?.width.height().equalTo()(toolCollectionComponent.suggestLength)
+                make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
+                make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
         }
     }
@@ -675,13 +721,19 @@ extension FcrSubRoomUIScene: FcrToolCollectionUIComponentDelegate {
     func toolCollectionDidSelectTeachingAid(type: AgoraTeachingAidType) {
         // 选择插件（答题器、投票器...）
         ctrlView = nil
+        
         switch type {
         case .cloudStorage:
             if !cloudComponent.view.agora_visible {
-                cloudComponent.view.mas_remakeConstraints { make in
-                    make?.left.right().top().bottom().equalTo()(boardComponent.view)
+                cloudComponent.view.mas_remakeConstraints { [weak self] make in
+                    guard let `self` = self else {
+                        return
+                    }
+                    
+                    make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
                 }
             }
+            
             cloudComponent.view.agora_visible = !cloudComponent.view.agora_visible
         case .saveBoard:
             boardComponent.saveBoard()
@@ -795,11 +847,14 @@ private extension FcrSubRoomUIScene {
 
             globalComponent.isRequestingHelp = true
 
-            let actionInvite = AgoraAlertAction(title: "fcr_group_invite".agedu_localized(), action: { [weak self] in
+            let actionInvite = AgoraAlertAction(title: "fcr_group_invite".agedu_localized(),
+                                                action: { [weak self] in
                 guard let `self` = self else {
                     return
                 }
+                
                 let roomId = self.subRoom.getSubRoomInfo().subRoomUuid
+                
                 self.contextPool.group.inviteUserListToSubRoom(userList: [teacherUserId],
                                                                subRoomUuid: roomId,
                                                                success: nil,
