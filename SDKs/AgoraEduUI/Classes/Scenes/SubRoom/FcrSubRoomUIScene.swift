@@ -138,10 +138,6 @@ import AgoraWidget
                    delegate: subDelegate)
     }
     
-    deinit {
-        print("\(#function): \(self.classForCoder)")
-    }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -218,7 +214,7 @@ import AgoraWidget
                  completion: (() -> Void)? = nil) {
         subRoom.leaveSubRoom()
         
-        dismiss(animated: flag) { [weak self] in
+        agora_dimiss(animated: flag) { [weak self] in
             guard let `self` = self else {
                 return
             }
@@ -227,6 +223,7 @@ import AgoraWidget
                                  didExit: reason)
             
             completion?()
+            
         }
     }
     

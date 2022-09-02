@@ -145,7 +145,7 @@ protocol FcrUISceneExit: NSObjectProtocol {
         AgoraLoading.setMessage(color: loadingComponent.message.color,
                                 font: loadingComponent.message.font)
         AgoraLoading.setBackgroundColor(loadingComponent.backgroundColor)
-        
+
         let toastComponent = UIConfig.toast
         
         AgoraToast.setImages(noticeImage: toastComponent.noticeImage,
@@ -231,13 +231,14 @@ protocol FcrUISceneExit: NSObjectProtocol {
             
             contextPool.room.leaveRoom()
             
-            dismiss(animated: true) { [weak self] in
+            agora_dimiss(animated: true) { [weak self] in
                 guard let `self` = self else {
                     return
                 }
                 
                 self.delegate?.scene(self,
                                      didExit: reason)
+                
             }
         default:
             break

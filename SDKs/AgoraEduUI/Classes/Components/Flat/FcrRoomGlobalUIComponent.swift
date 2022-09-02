@@ -65,10 +65,11 @@ class FcrRoomGlobalUIComponent: FcrUIComponent {
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
+        } else {
+            roomController.registerRoomEventHandler(self)
         }
         
         monitorController.registerMonitorEventHandler(self)
-        roomController.registerRoomEventHandler(self)
         groupController.registerGroupEventHandler(self)
     }
 }
@@ -141,6 +142,9 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
               operatorUser.userRole == .teacher else {
             return
         }
+        
+        
+        print("<<<<<<<<<< onCoHostUserListAdded self: \(self)")
         
         // 老师邀请你上台了，与大家积极互动吧
         let message = "fcr_user_local_start_co_hosting".agedu_localized()

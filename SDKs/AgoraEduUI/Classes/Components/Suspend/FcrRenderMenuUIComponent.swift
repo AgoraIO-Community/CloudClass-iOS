@@ -264,8 +264,8 @@ private extension FcrRenderMenuUIComponent {
         cancelTimer()
         
         timer = Timer.scheduledTimer(withTimeInterval: 5.0,
-                                          repeats: false,
-                                          block: { [weak self] t in
+                                     repeats: false,
+                                     block: { [weak self] t in
             self?.dismissView()
         })
     }
