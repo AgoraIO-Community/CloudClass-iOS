@@ -113,6 +113,8 @@ import AgoraWidget
                                                           userController: contextPool.user,
                                                           delegate: self)
     
+    private var subRoom: FcrSubRoomUIScene?
+    
     private var isJoinedRoom = false
     private var curStageOn = true
     
@@ -625,23 +627,9 @@ extension FcrSmallUIScene: FcrClassStateUIComponentDelegate {
 // MARK: - AgoraRoomGlobalUIControllerDelegate
 extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
     func onLocalUserAddedToSubRoom(subRoomId: String) {
-        DispatchQueue.main.async {
-            self._onLocalUserAddedToSubRoom(subRoomId: subRoomId)
-        }
-    }
-    
-    func _onLocalUserAddedToSubRoom(subRoomId: String) {
         guard UIConfig.breakoutRoom.enable,
               let subRoom = contextPool.group.createSubRoomObject(subRoomUuid: subRoomId) else {
             return
-        }
-        
-        if let vc = presentedViewController,
-           let _ = vc as? FcrSubRoomUIScene {
-            vc.dismiss(animated: false,
-                       completion: nil)
-            
-            //            return
         }
         
         for child in children {
@@ -660,21 +648,19 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
                                    mainDelegate: self)
         
         vc.modalPresentationStyle = .fullScreen
+        
         present(vc,
                 animated: true)
+        
+        self.subRoom = vc
     }
     
     func onLocalUserRemovedFromSubRoom(subRoomId: String,
                                        isKickOut: Bool) {
-        guard let vc = presentedViewController,
-              let subRoom = vc as? FcrSubRoomUIScene else {
-                  return
-              }
-        
         let reason: FcrUISceneExitReason = (isKickOut ? .kickOut : .normal)
         
-        subRoom.dismiss(reason: reason,
-                        animated: true)
+        subRoom?.dismiss(reason: reason,
+                         animated: false)
     }
 }
 
@@ -807,22 +793,15 @@ extension FcrSmallUIScene: FcrUISceneDelegate {
 // MARK: - AgoraEduUISubManagerCallBack
 extension FcrSmallUIScene: AgoraEduUISubManagerCallback {
     public func subNeedExitAllRooms(reason: FcrUISceneExitReason) {
-        if let vc = presentedViewController,
-           let subRoom = vc as? FcrSubRoomUIScene {
-            
-            subRoom.dismiss(reason: reason,
-                            animated: false) { [weak self] in
-                self?.exitScene(reason: reason,
-                                type: .main)
-            }
-        } else {
-            exitScene(reason: reason,
-                      type: .main)
-        }
+        subRoom?.dismiss(reason: reason,
+                         animated: false,
+                         completion: { [weak self] in
+            self?.exitScene(reason: reason,
+                            type: .main)
+        })
     }
 }
 
-// MARK: - Creations
 private extension FcrSmallUIScene {
     func updateRenderCollectionLayout() {
         view.layoutIfNeeded()
