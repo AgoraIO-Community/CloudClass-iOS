@@ -661,6 +661,16 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
         
         subRoom?.dismiss(reason: reason,
                          animated: false)
+        
+        for child in children {
+            guard let vc = child as? AgoraUIActivity else {
+                continue
+            }
+            
+            vc.viewWillActive()
+        }
+        
+        self.subRoom = nil
     }
 }
 
@@ -780,13 +790,6 @@ extension FcrSmallUIScene: FcrUIComponentDataSource {
 extension FcrSmallUIScene: FcrUISceneDelegate {
     public func scene(_ manager: FcrUIScene,
                       didExit reason: FcrUISceneExitReason) {
-        for child in children {
-            guard let vc = child as? AgoraUIActivity else {
-                continue
-            }
-            
-            vc.viewWillActive()
-        }
     }
 }
 
@@ -799,6 +802,8 @@ extension FcrSmallUIScene: AgoraEduUISubManagerCallback {
             self?.exitScene(reason: reason,
                             type: .main)
         })
+        
+        self.subRoom = nil
     }
 }
 
