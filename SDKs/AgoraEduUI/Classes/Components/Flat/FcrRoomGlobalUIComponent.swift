@@ -80,7 +80,6 @@ extension FcrRoomGlobalUIComponent: AgoraUIActivity {
         streamController.registerStreamEventHandler(self)
         
         initData()
-        checkNeedJoinSubRoom()
     }
     
     func viewWillInactive() {
@@ -93,6 +92,7 @@ extension FcrRoomGlobalUIComponent: AgoraUIActivity {
 extension FcrRoomGlobalUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
+        checkNeedJoinSubRoom()
     }
     
     func onRoomClosed() {
