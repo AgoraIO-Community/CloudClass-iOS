@@ -625,15 +625,24 @@ extension FcrSmallUIScene: FcrClassStateUIComponentDelegate {
 // MARK: - AgoraRoomGlobalUIControllerDelegate
 extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
     func onLocalUserAddedToSubRoom(subRoomId: String) {
-        if let vc = presentedViewController,
-           let _ = vc as? FcrSubRoomUIScene {
+        DispatchQueue.main.async {
+            self._onLocalUserAddedToSubRoom(subRoomId: subRoomId)
+        }
+    }
+    
+    func _onLocalUserAddedToSubRoom(subRoomId: String) {
+        guard UIConfig.breakoutRoom.enable,
+              let subRoom = contextPool.group.createSubRoomObject(subRoomUuid: subRoomId) else {
             return
         }
         
-        guard UIConfig.breakoutRoom.enable,
-              let subRoom = contextPool.group.createSubRoomObject(subRoomUuid: subRoomId) else {
-                  return
-              }
+        if let vc = presentedViewController,
+           let _ = vc as? FcrSubRoomUIScene {
+            vc.dismiss(animated: false,
+                       completion: nil)
+            
+            //            return
+        }
         
         for child in children {
             guard let vc = child as? AgoraUIActivity else {
@@ -643,7 +652,7 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
             vc.viewWillInactive()
         }
         
-        ctrlView = nil
+        self.ctrlView = nil
         
         let vc = FcrSubRoomUIScene(contextPool: contextPool,
                                    subRoom: subRoom,
