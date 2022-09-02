@@ -6,12 +6,12 @@ Pod::Spec.new do |spec|
     spec.homepage     = "https://docs.agora.io/en/agora-class/landing-page?platform=iOS"
     spec.license      = { "type" => "Copyright", "text" => "Copyright 2020 agora.io. All rights reserved." }
     spec.author       = { "Agora Lab" => "developer@agora.io" }
-    spec.module_name  = "AgoraEduUI"
+    spec.module_name  = "AgoraInvigilatorUI"
   
     spec.ios.deployment_target = "10.0"
     spec.swift_versions        = ["5.0", "5.1", "5.2", "5.3", "5.4"]
   
-    spec.source              = { :git => "git@github.com:AgoraIO-Community/CloudClass-iOS.git", :tag => "AgoraEduUI_v" + "#{spec.version.to_s}" }
+    spec.source              = { :git => "git@github.com:AgoraIO-Community/CloudClass-iOS.git", :tag => "AgoraInvigilatorUI_v" + "#{spec.version.to_s}" }
     spec.public_header_files = "SDKs/AgoraInvigilatorUI/Classes/**/*.h"
     spec.source_files        = "SDKs/AgoraInvigilatorUI/Classes/**/*.{h,m,swift}"
     

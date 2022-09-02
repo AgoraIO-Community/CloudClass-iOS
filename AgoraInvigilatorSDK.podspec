@@ -27,7 +27,7 @@ Pod::Spec.new do |spec|
   
     spec.source_files  = "SDKs/AgoraInvigilatorSDK/**/*.{swift,h,m}"
     spec.public_header_files = [
-        "SDKs/AgoraInvigilatorSDK/*.h"
+        "SDKs/AgoraInvigilatorSDK/Public/*.h"
     ]
   end
   
