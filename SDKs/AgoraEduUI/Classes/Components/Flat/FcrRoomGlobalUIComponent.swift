@@ -143,9 +143,6 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
             return
         }
         
-        
-        print("<<<<<<<<<< onCoHostUserListAdded self: \(self)")
-        
         // 老师邀请你上台了，与大家积极互动吧
         let message = "fcr_user_local_start_co_hosting".agedu_localized()
         

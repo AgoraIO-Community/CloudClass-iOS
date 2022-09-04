@@ -231,7 +231,7 @@ protocol FcrUISceneExit: NSObjectProtocol {
             
             contextPool.room.leaveRoom()
             
-            agora_dimiss(animated: true) { [weak self] in
+            agora_dismiss(animated: true) { [weak self] in
                 guard let `self` = self else {
                     return
                 }
