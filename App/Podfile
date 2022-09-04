@@ -19,11 +19,11 @@ target 'AgoraEducation' do
   pod 'SDWebImage', '5.12.0'
  
   # agora libs
-  pod 'AgoraRtcEngine_iOS', '3.5.2'
+  pod 'AgoraRtcEngine_iOS/RtcBasic', '3.6.2'
   pod 'AgoraMediaPlayer_iOS', '1.3.0'
   pod 'AgoraRtm_iOS', '1.4.8'
   pod 'Agora_Chat_iOS', '1.0.6'
-  pod 'Whiteboard', '2.16.29'
+  pod 'Whiteboard', '2.16.38'
  
   # open source libs
   pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
@@ -34,6 +34,6 @@ target 'AgoraEducation' do
   pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/AgoraWidgets.podspec'
    
   # close source libs
-  pod 'AgoraEduCore', '2.7.0'
+  pod 'AgoraEduCore', '2.7.2'
 end
    

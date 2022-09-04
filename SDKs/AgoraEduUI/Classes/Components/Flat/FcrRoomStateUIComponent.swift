@@ -16,7 +16,7 @@ struct AgoraClassTimeInfo {
     var closeDelay: Int64
 }
 
-class FcrRoomStateUIComponent: UIViewController {
+class FcrRoomStateUIComponent: FcrUIComponent {
     /** SDK环境*/
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
@@ -53,7 +53,6 @@ class FcrRoomStateUIComponent: UIViewController {
     
     deinit {
         viewWillInactive()
-        print("\(#function): \(self.classForCoder)")
     }
     
     override func viewDidLoad() {

@@ -266,10 +266,15 @@ class AgoraToolBarHandsListCell: AgoraToolBarItemCell {
     override func initViewFrame() {
         super.initViewFrame()
         redLabel.mas_makeConstraints { make in
-            make?.width.height().equalTo()(4)
-            make?.top.equalTo()(5)
-            make?.right.equalTo()(-5)
+            make?.width.height().equalTo()(8)
+            make?.top.equalTo()(0)
+            make?.right.equalTo()(0)
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        redLabel.layer.cornerRadius = redLabel.bounds.width / 2
     }
     
     override func updateViewProperties() {

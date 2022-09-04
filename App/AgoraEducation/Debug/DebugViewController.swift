@@ -59,8 +59,16 @@ extension DebugViewController: DebugViewDelagate {
         
         let failureBlock: (Error) -> () = { (error) in
             AgoraLoading.hide()
-            AgoraToast.toast(message: error.localizedDescription,
-                             type: .error)
+
+            let `error` = error as NSError
+            
+            if error.code == 30403100 {
+                AgoraToast.toast(message: "login_kicked".ag_localized(),
+                                 type: .error)
+            } else {
+                AgoraToast.toast(message: error.localizedDescription,
+                                 type: .error)
+            }
         }
         
         let launchSuccessBlock: () -> () = {
@@ -80,10 +88,11 @@ extension DebugViewController: DebugViewDelagate {
                                                          appId: response.appId,
                                                          token: response.token,
                                                          userId: response.userId)
-
+#if DEBUG
             let sel1 = NSSelectorFromString("setLogConsoleState:");
             AgoraClassroomSDK.perform(sel1,
                                       with: 1)
+#endif
          
             if launchConfig.roomType == .vocation { // 职教入口
                 AgoraClassroomSDK.vocationalLaunch(launchConfig,
@@ -172,6 +181,7 @@ extension DebugViewController {
         let language = data.getLaunchLanguage()
         let region = data.getRegion()
         let uiMode = data.getUIMode()
+        let environment = data.getEnvironment()
         
         let defaultList: [DataSourceType] = [.roomName(.none),
                                              .userName(.none),
@@ -186,7 +196,7 @@ extension DebugViewController {
                                              .uiMode(uiMode),
                                              .uiLanguage(language),
                                              .region(region),
-                                             .environment(.pro)]
+                                             .environment(environment)]
         
         data.updateDataSourceList(defaultList)
     }

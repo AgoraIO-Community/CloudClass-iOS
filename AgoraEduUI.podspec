@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraEduUI"
-  spec.version      = "2.7.1"
+  spec.version      = "2.7.2"
   spec.summary      = "Agora Edu UI"
   spec.description  = "Agora Edu UI SDK"
   spec.homepage     = "https://docs.agora.io/en/agora-class/landing-page?platform=iOS"
@@ -15,8 +15,8 @@ Pod::Spec.new do |spec|
   spec.public_header_files = "SDKs/AgoraEduUI/Classes/**/*.h"
   spec.source_files        = "SDKs/AgoraEduUI/Classes/**/*.{h,m,swift}"
   
-  spec.dependency "AgoraUIBaseViews", ">=2.7.0"
-  spec.dependency "AgoraEduContext", ">=2.6.0"
+  spec.dependency "AgoraUIBaseViews", ">=2.7.2"
+  spec.dependency "AgoraEduContext", "2.7.0"
   spec.dependency "AgoraWidget", ">=2.6.0"
   spec.dependency "SwifterSwift"
   spec.dependency "Masonry"

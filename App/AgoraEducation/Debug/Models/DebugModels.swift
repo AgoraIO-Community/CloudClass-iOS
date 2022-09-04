@@ -300,6 +300,15 @@ enum DataSourceRegion:String, CaseIterable {
         case .AP:   return .AP
         }
     }
+    
+    var env: FcrEnvironment.Region {
+        switch self {
+        case .CN:   return .CN
+        case .NA:   return .NA
+        case .EU:   return .EU
+        case .AP:   return .AP
+        }
+    }
 }
 
 enum DataSourceEnvironment: CaseIterable {

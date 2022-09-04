@@ -112,6 +112,8 @@ login_auth_audio = "Only Audio";
 login_auth_video = "Only Video";
 login_auth_both = "Both Audio & Video";
 login_lecture_teacher_warning = "The teacher's lecture Hall has not been opened. Coming soon";
+login_kicked = "You have been removed from the classroom";
+
 // service
 Service_title = "Agora Privacy And Terms of Service";
 Service_check_content = "I have read the terms";

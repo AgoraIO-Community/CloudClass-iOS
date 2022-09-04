@@ -87,6 +87,9 @@ extension DebugOptionsView: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
+        translatesAutoresizingMaskIntoConstraints = false
+        listView.translatesAutoresizingMaskIntoConstraints = false
+        
         listView.mas_makeConstraints { make in
             make?.left.right().equalTo()(0)
             make?.top.equalTo()(11)

@@ -50,14 +50,6 @@ static AgoraClassroomSDK *manager = nil;
     }
 }
 
-- (AgoraEduCorePuppet *)core {
-    if (_core == nil) {
-        _core = [[AgoraEduCorePuppet alloc] init];
-    }
-    
-    return _core;
-}
-
 + (void)setEnvironment:(NSNumber *)environment {
     [AgoraClassroomSDK share].environment = environment;
 }
@@ -70,57 +62,27 @@ static AgoraClassroomSDK *manager = nil;
 + (void)launch:(AgoraEduLaunchConfig *)config
        success:(void (^)(void))success
        failure:(void (^)(NSError *))failure {
-    if (config == nil || !config.isLegal) {
-        if (failure) {
-            NSError *error = [[NSError alloc] initWithDomain:@"config illegal"
-                                                        code:-1
-                                                    userInfo:nil];
-            failure(error);
-        }
-        
-        return;
-    }
-    
-    AgoraClassroomSDK *manager = [AgoraClassroomSDK share];
-    AgoraEduCorePuppet *core = manager.core;
-    
-    // Log console
-    NSNumber *console = manager.consoleState;
-    if (console) {
-        NSDictionary *parameters = @{@"console": console};
-        [core setParameters:parameters];
-    }
-    
-    // Environment
-    NSNumber *environment = manager.environment;
-    if (environment) {
-        NSDictionary *parameters = @{@"environment": environment};
-        [core setParameters:parameters];
-    }
-    
-    // Core config
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
-    
-    [core launch:coreConfig
-         widgets:config.widgets.allValues
-         success:^(id<AgoraEduContextPool> pool) {
-        
+    [self coreLaunchWithConfig:config
+                       success:^(id<AgoraEduContextPool> pool) {
         FcrUIScene *scene = nil;
         
         switch ([pool.room getRoomInfo].roomType) {
             case AgoraEduContextRoomTypeOneToOne:
+                [FcrUIContext createWith:FcrUISceneTypeOneToOne];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeOneToOne];
                 
                 scene = [[FcrOneToOneUIScene alloc] initWithContextPool:pool
                                                                delegate:manager];
                 break;
             case AgoraEduContextRoomTypeSmall:
+                [FcrUIContext createWith:FcrUISceneTypeSmall];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeSmall];
                 
                 scene = [[FcrSmallUIScene alloc] initWithContextPool:pool
                                                             delegate:manager];
                 break;
             case AgoraEduContextRoomTypeLecture:
+                [FcrUIContext createWith:FcrUISceneTypeLecture];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeLecture];
                 
                 scene = [[FcrLectureUIScene alloc] initWithContextPool:pool
@@ -132,18 +94,8 @@ static AgoraClassroomSDK *manager = nil;
                 break;
         }
         
-        scene.modalPresentationStyle = UIModalPresentationFullScreen;
-        manager.scene = scene;
-        
-        UIViewController *topVC = [UIViewController agora_top_view_controller];
-        
-        [topVC presentViewController:scene
-                            animated:true
-                          completion:^{
-            if (success) {
-                success();
-            }
-        }];
+        [self presentUIScene:scene
+                     success:success];
     } failure:failure];
 }
 
@@ -151,36 +103,8 @@ static AgoraClassroomSDK *manager = nil;
                  service:(AgoraEduServiceType)serviceType
                  success:(void (^)(void))success
                  failure:(void (^)(NSError *))failure {
-    if (config == nil || !config.isLegal) {
-        if (failure) {
-            NSError *error = [[NSError alloc] initWithDomain:@"config illegal"
-                                                        code:-1
-                                                    userInfo:nil];
-            failure(error);
-        }
-        return;
-    }
-    AgoraClassroomSDK *manager = [AgoraClassroomSDK share];
-    AgoraEduCorePuppet *core = manager.core;
-    // Log console
-    NSNumber *console = manager.consoleState;
-    if (console) {
-        NSDictionary *parameters = @{@"console": console};
-        [core setParameters:parameters];
-    }
-    // Environment
-    NSNumber *environment = manager.environment;
-    if (environment) {
-        NSDictionary *parameters = @{@"environment": environment};
-        [core setParameters:parameters];
-    }
-    // Core config
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
-    
-    [core launch:coreConfig
-         widgets:config.widgets.allValues
-         success:^(id<AgoraEduContextPool> pool) {
-        
+    [self coreLaunchWithConfig:config
+                       success:^(id<AgoraEduContextPool> pool) {
         if ([pool.room getRoomInfo].roomType != AgoraEduContextRoomTypeLecture) {
             NSCAssert(true, @"vocational room type error");
             return;
@@ -216,21 +140,28 @@ static AgoraClassroomSDK *manager = nil;
             scene = vc;
         }
         
+        [FcrUIContext createWith:FcrUISceneTypeVocation];
         [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeVocation];
         
-        scene.modalPresentationStyle = UIModalPresentationFullScreen;
-        manager.scene = scene;
-        
-        UIViewController *topVC = [UIViewController agora_top_view_controller];
-        
-        [topVC presentViewController:scene
-                            animated:true
-                          completion:^{
-            if (success) {
-                success();
-            }
-        }];
+        [self presentUIScene:scene
+                     success:success];
     } failure:failure];
+}
+
++ (void)presentUIScene:(FcrUIScene *)scene
+               success:(void (^)(void))success {
+    scene.modalPresentationStyle = UIModalPresentationFullScreen;
+    manager.scene = scene;
+    
+    UIViewController *topVC = [UIViewController agora_top_view_controller];
+    
+    [topVC presentViewController:scene
+                        animated:true
+                      completion:^{
+        if (success) {
+            success();
+        }
+    }];
 }
 
 + (void)setDelegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate {
@@ -243,25 +174,78 @@ static AgoraClassroomSDK *manager = nil;
     __weak AgoraClassroomSDK *weakManager = manager;
     
     [manager.scene dismissViewControllerAnimated:YES
-                                   completion:^{
+                                      completion:^{
         [weakManager agoraRelease];
     }];
 }
 
 #pragma mark - Private
++ (void)coreLaunchWithConfig:(AgoraEduLaunchConfig *)config
+                     success:(void (^)(id<AgoraEduContextPool> pool))success
+                     failure:(void (^)(NSError *))failure {
+    if (config == nil || !config.isLegal) {
+        if (failure) {
+            NSError *error = [[NSError alloc] initWithDomain:@"config illegal"
+                                                        code:-1
+                                                    userInfo:nil];
+            failure(error);
+        }
+        
+        return;
+    }
+    
+    if (manager.core) {
+        if (failure) {
+            NSError *error = [[NSError alloc] initWithDomain:@"last launch not finished"
+                                                        code:-1
+                                                    userInfo:nil];
+            failure(error);
+        }
+        
+        return;
+    }
+    
+    AgoraClassroomSDK *manager = [AgoraClassroomSDK share];
+    AgoraEduCorePuppet *core = [[AgoraEduCorePuppet alloc] init];
+    manager.core = core;
+    
+    // Log console
+    NSNumber *console = manager.consoleState;
+    if (console) {
+        NSDictionary *parameters = @{@"console": console};
+        [core setParameters:parameters];
+    }
+    
+    // Environment
+    NSNumber *environment = manager.environment;
+    if (environment) {
+        NSDictionary *parameters = @{@"environment": environment};
+        [core setParameters:parameters];
+    }
+    
+    // Core config
+    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
+    
+    [core launch:coreConfig
+         widgets:config.widgets.allValues
+         success:success
+         failure:failure];
+}
+
 - (void)agoraRelease {
     self.delegate = nil;
     self.scene = nil;
     self.core = nil;
     
-    [FcrWidgetUIContext desctory];
+    [FcrUIContext destroy];
+    [FcrWidgetUIContext destroy];
 }
 
 #pragma mark - FcrUISceneDelegate
 - (void)scene:(FcrUIScene *)scene
       didExit:(FcrUISceneExitReason)reason {
     AgoraEduExitReason sdkReason = AgoraEduExitReasonNormal;
-
+    
     switch (reason) {
         case FcrUISceneExitReasonNormal:
             sdkReason = AgoraEduExitReasonNormal;
@@ -271,12 +255,12 @@ static AgoraClassroomSDK *manager = nil;
         default:
             break;
     }
-
+    
     if ([_delegate respondsToSelector:@selector(classroomSDK:didExit:)]) {
         [self.delegate classroomSDK:self
                             didExit:sdkReason];
     }
-
+    
     [self agoraRelease];
 }
 @end

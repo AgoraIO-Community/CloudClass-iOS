@@ -16,7 +16,7 @@ protocol FcrRoomGlobalUIComponentDelegate: NSObjectProtocol {
 }
 
 // 作为全局状态监听，展示toast，动图等，自身不包含UI
-class FcrRoomGlobalUIComponent: UIViewController {
+class FcrRoomGlobalUIComponent: FcrUIComponent {
     /** SDK环境*/
     private let roomController: AgoraEduRoomContext
     private let monitorController: AgoraEduMonitorContext
@@ -65,10 +65,11 @@ class FcrRoomGlobalUIComponent: UIViewController {
         
         if let `subRoom` = subRoom {
             subRoom.registerSubRoomEventHandler(self)
+        } else {
+            roomController.registerRoomEventHandler(self)
         }
         
         monitorController.registerMonitorEventHandler(self)
-        roomController.registerRoomEventHandler(self)
         groupController.registerGroupEventHandler(self)
     }
 }
@@ -80,7 +81,6 @@ extension FcrRoomGlobalUIComponent: AgoraUIActivity {
         streamController.registerStreamEventHandler(self)
         
         initData()
-        checkNeedJoinSubRoom()
     }
     
     func viewWillInactive() {
@@ -93,6 +93,7 @@ extension FcrRoomGlobalUIComponent: AgoraUIActivity {
 extension FcrRoomGlobalUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
+        checkNeedJoinSubRoom()
     }
     
     func onRoomClosed() {

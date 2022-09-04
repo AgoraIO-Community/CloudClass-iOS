@@ -20,7 +20,7 @@ protocol FcrToolBarComponentDelegate: NSObject {
 }
 
 // MARK: - AgoraToolBarUIController
-class FcrToolBarUIComponent: UIViewController {
+class FcrToolBarUIComponent: FcrUIComponent {
     /** SDK环境*/
     private var userController: AgoraEduUserContext
     private var subRoom: AgoraEduSubRoomContext?
@@ -90,6 +90,12 @@ class FcrToolBarUIComponent: UIViewController {
         self.delegate = delegate
         super.init(nibName: nil,
                    bundle: nil)
+        
+        guard let `subRoom` = subRoom else {
+            return
+        }
+
+        subRoom.registerSubRoomEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
@@ -134,7 +140,8 @@ class FcrToolBarUIComponent: UIViewController {
     }
 }
 
-extension FcrToolBarUIComponent: AgoraUIContentContainer {
+// MARK: - AgoraUIContentContainer, AgoraUIActivity
+extension FcrToolBarUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -178,6 +185,24 @@ extension FcrToolBarUIComponent: AgoraUIContentContainer {
         collectionView.backgroundColor = .clear
         
         updateDataSource()
+    }
+    
+    func viewWillActive() {
+        guard let indexPath = dataSource.indexOfType(.help) else {
+            return
+        }
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
+    func viewWillInactive() {
+        deselectAll()
+    }
+}
+
+// MARK: - AgoraEduSubRoomHandler
+extension FcrToolBarUIComponent: AgoraEduSubRoomHandler {
+    func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
+        viewWillActive()
     }
 }
 

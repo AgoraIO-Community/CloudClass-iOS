@@ -44,4 +44,4 @@ protocol FcrUIConfig {
     var loading: FcrUIComponentLoading { get }
 }
 
-var UIConfig: FcrUIConfig!
+var UIConfig: FcrUIConfig = FcrOneToOneUIConfig()

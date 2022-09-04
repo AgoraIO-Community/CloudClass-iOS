@@ -15,11 +15,11 @@ protocol FcrStreamWindowUIComponentDelegate: NSObjectProtocol {
     func onDidStopRenderVideoStream(streamId: String)
 }
 
-class FcrStreamWindowUIComponent: UIViewController {
+class FcrStreamWindowUIComponent: FcrUIComponent {
+    private(set) var mediaController: AgoraEduMediaContext
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let streamController: AgoraEduStreamContext
-    private(set) var mediaController: AgoraEduMediaContext
     private let widgetController: AgoraEduWidgetContext
     private var subRoom: AgoraEduSubRoomContext?
     
@@ -31,6 +31,7 @@ class FcrStreamWindowUIComponent: UIViewController {
             return roomController.getRoomInfo().roomUuid
         }
     }
+    
     // For lecture
     private weak var delegate: FcrStreamWindowUIComponentDelegate?
 
@@ -73,10 +74,6 @@ class FcrStreamWindowUIComponent: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        print("\(#function): \(self.classForCoder)")
-    }
-    
     override func loadView() {
         view = AgoraBaseUIContainer()
     }
@@ -90,6 +87,25 @@ class FcrStreamWindowUIComponent: UIViewController {
         }
         
         mediaController.registerMediaEventHandler(self)
+    }
+    
+    func reloadStreamWindowsFrame() {
+        for item in dataSource {
+            guard let widget = widgets[item.widgetObjectId] else {
+                return
+            }
+            var syncFrame = widgetController.getWidgetSyncFrame(item.widgetObjectId)
+            
+            if syncFrame == .zero {
+                syncFrame = CGRect(x: 0,
+                                   y: 0,
+                                   width: 1,
+                                   height: 1)
+            }
+            let displayFrame = syncFrame.displayFrameFromSyncFrame(superView: view)
+            
+            widget.view.frame = displayFrame
+        }
     }
 }
 
@@ -211,11 +227,11 @@ private extension FcrStreamWindowUIComponent {
         let itemIndex = (dataSource.count - 1)
         
         addItemViewFrame(widgetView: widget.view,
-                              widgetObjectId: item.widgetObjectId,
-                              userId: item.data.userId,
-                              zIndex: item.zIndex,
-                              itemIndex: itemIndex,
-                              animation: animation)
+                         widgetObjectId: item.widgetObjectId,
+                         userId: item.data.userId,
+                         zIndex: item.zIndex,
+                         itemIndex: itemIndex,
+                         animation: animation)
         
         // Observe widget event
         widgetController.add(self,
@@ -241,8 +257,8 @@ private extension FcrStreamWindowUIComponent {
         
         // Frame & Animation
         deleteViewFrame(widgetView: widget.view,
-                               userId: item.data.userId,
-                               animation: animation) { [weak self] in
+                        userId: item.data.userId,
+                        animation: animation) { [weak self] in
             guard let `self` = self else {
                 return
             }
@@ -407,13 +423,12 @@ private extension FcrStreamWindowUIComponent {
             
             UIView.animate(withDuration: TimeInterval.agora_animation) {
                 widgetView.frame = destinationFrame
+                self.updateItemHierarchy(zIndex,
+                                         index: itemIndex)
             } completion: { isFinish in
                 guard isFinish else {
                     return
                 }
-                
-                self.updateItemHierarchy(zIndex,
-                                         index: itemIndex)
                 
                 widgetView.frame = displayFrame
             }
@@ -538,7 +553,7 @@ private extension FcrStreamWindowUIComponent {
         
         if let userList = componentDataSource?.componentNeedGrantedUserList(),
            userList.contains(userId),
-           stream.owner.userRole != .teacher  {
+           stream.owner.userRole != .teacher {
             boardPrivilege = true
         }
         

@@ -53,6 +53,14 @@ extension DebugDataHandler {
         }
     }
     
+    func getEnvironment() -> DataSourceEnvironment {
+        switch FcrEnvironment.shared.environment {
+        case .dev:  return .dev
+        case .pre:  return .pre
+        case .pro:  return .pro
+        }
+    }
+    
     func getLaunchLanguage() -> DataSourceUILanguage {
         switch FcrLocalization.shared.language {
         case .zh_cn: return .zh_cn
@@ -469,6 +477,10 @@ private extension DebugDataHandler {
             let list = DataSourceRegion.allCases
             let action: OptionSelectedAction = { [weak self] index in
                 let region: DataSourceRegion = list[index]
+                
+                // special
+                FcrEnvironment.shared.region = region.env
+                
                 let newValue = DataSourceType.region(region)
                 self?.updateDataSource(at: dataTypeIndex,
                                        with: newValue)
@@ -483,6 +495,8 @@ private extension DebugDataHandler {
             let list = DataSourceEnvironment.allCases
             let action: OptionSelectedAction = { [weak self] index in
                 let environment: DataSourceEnvironment = list[index]
+                FcrEnvironment.shared.environment = environment.edu
+                
                 let newValue = DataSourceType.environment(environment)
                 self?.updateDataSource(at: dataTypeIndex,
                                        with: newValue)
