@@ -214,7 +214,7 @@ import AgoraWidget
                  completion: (() -> Void)? = nil) {
         subRoom.leaveSubRoom()
         
-        agora_dimiss(animated: flag) { [weak self] in
+        agora_dismiss(animated: flag) { [weak self] in
             guard let `self` = self else {
                 return
             }

@@ -640,6 +640,8 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
             vc.viewWillInactive()
         }
         
+        presentedViewController?.dismiss(animated: false)
+        
         self.ctrlView = nil
         
         let vc = FcrSubRoomUIScene(contextPool: contextPool,
