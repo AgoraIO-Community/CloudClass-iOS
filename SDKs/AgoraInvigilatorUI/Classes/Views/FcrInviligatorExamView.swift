@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 
-class FcrInviligatorTest: UIView {
+class FcrInviligatorExamView: UIView {
     private(set) lazy var exitButton = UIButton()
     private(set) lazy var nameLabel = UILabel()
     private(set) lazy var countDot = UIImage()
@@ -15,7 +15,7 @@ class FcrInviligatorTest: UIView {
 }
 
 // MARK: - AgoraUIContentContainer
-extension FcrInviligatorTest: AgoraUIContentContainer {
+extension FcrInviligatorExamView: AgoraUIContentContainer {
     func initViews() {
         
     }
