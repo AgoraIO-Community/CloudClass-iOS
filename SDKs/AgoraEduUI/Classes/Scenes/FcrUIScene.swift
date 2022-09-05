@@ -63,30 +63,14 @@ protocol FcrUISceneExit: NSObjectProtocol {
         self.contextPool = contextPool
         self.delegate = delegate
         
-      
         super.init(nibName: nil,
                    bundle: nil)
-        
-        guard !(self is FcrSubRoomUIScene) else {
-            return
-        }
-        
-        switch sceneType {
-        case .oneToOne: UIConfig = FcrOneToOneUIConfig()
-        case .small:    UIConfig = FcrSmallUIConfig()
-        case .lecture:  UIConfig = FcrLectureUIConfig()
-        case .vocation: UIConfig = FcrLectureUIConfig()
-        }
     }
     
     deinit {
+        #if DEBUG
         print("\(#function): \(self.classForCoder)")
-        
-        guard !(self is FcrSubRoomUIScene) else {
-            return
-        }
-        
-        UIConfig = nil
+        #endif
     }
     
     required init?(coder: NSCoder) {
@@ -161,7 +145,7 @@ protocol FcrUISceneExit: NSObjectProtocol {
         AgoraLoading.setMessage(color: loadingComponent.message.color,
                                 font: loadingComponent.message.font)
         AgoraLoading.setBackgroundColor(loadingComponent.backgroundColor)
-        
+
         let toastComponent = UIConfig.toast
         
         AgoraToast.setImages(noticeImage: toastComponent.noticeImage,
@@ -247,13 +231,14 @@ protocol FcrUISceneExit: NSObjectProtocol {
             
             contextPool.room.leaveRoom()
             
-            dismiss(animated: true) { [weak self] in
+            agora_dismiss(animated: true) { [weak self] in
                 guard let `self` = self else {
                     return
                 }
                 
                 self.delegate?.scene(self,
                                      didExit: reason)
+                
             }
         default:
             break

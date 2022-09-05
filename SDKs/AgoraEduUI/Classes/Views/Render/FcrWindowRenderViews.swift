@@ -246,9 +246,6 @@ private extension FcrWindowRenderView {
     }
     
     func updateHighlight(_ highlight: Bool) {
-        guard let `UIConfig` = UIConfig else {
-            return
-        }
         stopHighlightTimer()
         
         currentHightlight = highlight
