@@ -14,6 +14,38 @@ protocol FcrLectureStreamWindowUIComponentDelegate: NSObjectProtocol {
     func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
                         didPressUser uuid: String,
                         view: UIView)
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        starDrag item: FcrStreamWindowWidgetItem,
+                        location: CGPoint)
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        dragging item: FcrStreamWindowWidgetItem,
+                        to location: CGPoint)
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        didEndDrag item: FcrStreamWindowWidgetItem,
+                        location: CGPoint) -> CGRect?
+}
+
+extension FcrLectureStreamWindowUIComponentDelegate {
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        didPressUser uuid: String,
+                        view: UIView) {}
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        starDrag item: FcrStreamWindowWidgetItem,
+                        location: CGPoint) {}
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        dragging item: FcrStreamWindowWidgetItem,
+                        to location: CGPoint) {}
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        didEndDrag item: FcrStreamWindowWidgetItem,
+                        location: CGPoint)  -> CGRect? {
+        return nil
+    }
 }
 
 class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
@@ -81,6 +113,24 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
                                       streamUuid: stream.streamUuid)
     }
     
+    public func createWidgetWith(stream: AgoraEduContextStreamInfo,
+                                 at position: CGRect? = nil) {
+        guard let config = widgetController.getWidgetConfig(WindowWidgetId) else {
+            return
+        }
+        let syncFrame = position?.syncFrameInView(view) ?? widgetInitialPosition()
+        let streamId = stream.streamUuid
+        let widgetId = "\(WindowWidgetId)-\(streamId)"
+        config.widgetId = widgetId
+        let _ = widgetController.create(config)
+        widgetController.setWidgetActive(widgetId,
+                                         ownerUuid: stream.owner.userUuid,
+                                         roomProperties: nil,
+                                         syncFrame: syncFrame,
+                                         success: nil,
+                                         failure: nil)
+    }
+    
     override func onAddedRenderWidget(widgetView: UIView) {
         super.onAddedRenderWidget(widgetView: widgetView)
         guard userController.getLocalUserInfo().userRole == .teacher ||
@@ -90,7 +140,7 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
             return
         }
         let drag = UIPanGestureRecognizer(target: self,
-                                          action:#selector(onDrage(_:)))
+                                          action:#selector(onDrag(_:)))
         let tap = UITapGestureRecognizer(target: self,
                                          action: #selector(onTap(_:)))
         tap.delegate = self
@@ -107,22 +157,6 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
 // MARK: - Teacher Create Widget
 private extension FcrLectureStreamWindowUIComponent {
     
-    func createWidgetWith(stream: AgoraEduContextStreamInfo) {
-        guard let config = widgetController.getWidgetConfig(WindowWidgetId) else {
-            return
-        }
-        let streamId = stream.streamUuid
-        let widgetId = "\(WindowWidgetId)-\(streamId)"
-        config.widgetId = widgetId
-        let _ = widgetController.create(config)
-        widgetController.setWidgetActive(widgetId,
-                                         ownerUuid: stream.owner.userUuid,
-                                         roomProperties: nil,
-                                         syncFrame: widgetInitialPosition(),
-                                         success: nil,
-                                         failure: nil)
-    }
-    
     func widgetInitialPosition() ->  AgoraWidgetFrame {
         let count = CGFloat(dataSource.count)
         let x = (count + 1) * AgoraFit.scale(5)
@@ -136,45 +170,37 @@ private extension FcrLectureStreamWindowUIComponent {
         return rect.syncFrameInView(view)
     }
     
-    @objc func onDrage(_ sender: UIPanGestureRecognizer) {
-        guard let targetView = sender.view as? AgoraBaseUIContainer else {
+    @objc func onDrag(_ sender: UIPanGestureRecognizer) {
+        guard let widgetView = sender.view,
+              let item = dataSource.first(where: {$0.widget?.view == widgetView})
+        else {
             return
         }
-        let size = sender.translation(in: view)
-        
-        let viewWidth = targetView.width
-        let viewHeight = targetView.height
-        
+        let point = sender.location(in: view)
         switch sender.state {
+        case .began:
+            actionDelegate?.onStreamWindow(self,
+                                           starDrag: item,
+                                           location: point)
         case .changed:
-            var nextX = targetView.frame.minX + size.x
-            nextX = (nextX >= 0) ? nextX : 0
-            nextX = (nextX + viewWidth <= view.width) ? nextX : (view.width - viewWidth)
-            
-            var nextY = targetView.frame.minY + size.y
-            nextY = (nextY >= 0) ? nextY : 0
-            nextY = (nextY + viewHeight <= view.height) ? nextY : (view.height - viewHeight)
-            
-            var frame = targetView.frame
-            frame.origin.x = nextX
-            frame.origin.y = nextY
-            targetView.frame = frame
-        case .recognized: fallthrough
+            actionDelegate?.onStreamWindow(self,
+                                           dragging: item,
+                                           to: point)
         case .ended:
-            guard let widgetView = sender.view,
-                  let item = dataSource.first(where: {$0.widget?.view == widgetView})
-            else {
-                return
-            }
-            widgetController.updateWidgetSyncFrame(targetView.frame.syncFrameInView(view),
-                                                   widgetId: item.widgetId,
+            if let rect = actionDelegate?.onStreamWindow(self,
+                                                         didEndDrag: item,
+                                                         location: point) {
+                widgetController.updateWidgetSyncFrame(rect.syncFrameInView(view),
+                                                       widgetId: item.widgetId,
+                                                       success: nil)
+            } else {
+                widgetController.setWidgetInactive(item.widgetId,
+                                                   isRemove: true,
                                                    success: nil)
-            break
+            }
         default:
             break
         }
-        sender.setTranslation(.zero,
-                              in: view)
     }
     
     @objc func onTap(_ sender: UITapGestureRecognizer) {

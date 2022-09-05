@@ -326,7 +326,9 @@ private extension FcrStreamWindowUIComponent {
         }
         let frame = syncFrame.rectInView(view)
         if animation {
-            UIView.animate(withDuration: TimeInterval.agora_animation) {
+            UIView.animate(withDuration: TimeInterval.agora_animation,
+                           delay: 0,
+                           options: .curveEaseOut) {
                 widget.view.frame = frame
             }
         } else {
@@ -357,7 +359,9 @@ private extension FcrStreamWindowUIComponent {
             widgetView.frame = originationFrame
             let destinationFrame = view.convert(rect,
                                                 to: topWindow)
-            UIView.animate(withDuration: TimeInterval.agora_animation) {
+            UIView.animate(withDuration: TimeInterval.agora_animation,
+                           delay: 0,
+                           options: .curveEaseOut) {
                 widgetView.frame = destinationFrame
             } completion: { isFinish in
                 guard isFinish else {
@@ -388,7 +392,9 @@ private extension FcrStreamWindowUIComponent {
             topWindow.addSubview(widgetView)
             widgetView.frame = originationFrame
             
-            UIView.animate(withDuration: TimeInterval.agora_animation) {
+            UIView.animate(withDuration: TimeInterval.agora_animation,
+                           delay: 0,
+                           options: .curveEaseOut) {
                 widgetView.frame = destinationFrame
             } completion: { isFinish in
                 guard isFinish else {
@@ -557,8 +563,7 @@ extension FcrStreamWindowUIComponent: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: AgoraWidgetFrame,
                                   widgetId: String,
                                   operatorUser: AgoraWidgetUserInfo?) {
-        guard operatorUser?.userUuid != userController.getLocalUserInfo().userUuid,
-              let item = dataSource.firstItem(widgetId: widgetId) else {
+        guard let item = dataSource.firstItem(widgetId: widgetId) else {
             return
         }
         updateFrame(widgetObjectId: widgetId,

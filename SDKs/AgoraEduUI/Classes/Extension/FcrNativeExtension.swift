@@ -129,8 +129,8 @@ extension AgoraWidgetFrame {
 
 extension CGRect {
     func syncFrameInView(_ view: UIView) -> AgoraWidgetFrame {
-        let MEDx = view.width - self.width
-        let MEDy = view.height - self.height
+        let MEDx = view.width - self.size.width
+        let MEDy = view.height - self.size.height
         
         let xaxis = (MEDx == 0) ? 0: (self.minX / MEDx)
         let yaxis = (MEDy == 0) ? 0: (self.minY / MEDy)
@@ -140,7 +140,7 @@ extension CGRect {
         
         let syncFrame = AgoraWidgetFrame(x: xaxis,
                                          y: yaxis,
-                                         z: 0,
+                                         z: 2,
                                          width: displayWidth,
                                          height: displayHeight)
         return syncFrame

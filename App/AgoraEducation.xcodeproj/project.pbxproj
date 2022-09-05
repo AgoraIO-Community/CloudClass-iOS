@@ -51,6 +51,9 @@
 		AB4F69EA2876B3490012E6B3 /* FcrRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4F69E92876B3490012E6B3 /* FcrRequest.swift */; };
 		AB4F69EE2876D17A0012E6B3 /* FcrEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4F69ED2876D17A0012E6B3 /* FcrEnvironment.swift */; };
 		AB4F69F02876E5160012E6B3 /* FcrUserInfoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4F69EF2876E5160012E6B3 /* FcrUserInfoPresenter.swift */; };
+		AB7B7B6C28C1D8A7001D327A /* RoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7B7B6B28C1D8A7001D327A /* RoomListViewController.swift */; };
+		AB7B7B6F28C1E0B1001D327A /* RoomListTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7B7B6E28C1E0B1001D327A /* RoomListTitleView.swift */; };
+		AB7B7B7128C1E151001D327A /* RoomListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7B7B7028C1E151001D327A /* RoomListItemCell.swift */; };
 		AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */; };
 		AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */; };
 		AB7FFD6926EAFEF2003A50B8 /* RoomInfoOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */; };
@@ -157,6 +160,9 @@
 		AB4F69E92876B3490012E6B3 /* FcrRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrRequest.swift; sourceTree = "<group>"; };
 		AB4F69ED2876D17A0012E6B3 /* FcrEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrEnvironment.swift; sourceTree = "<group>"; };
 		AB4F69EF2876E5160012E6B3 /* FcrUserInfoPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FcrUserInfoPresenter.swift; sourceTree = "<group>"; };
+		AB7B7B6B28C1D8A7001D327A /* RoomListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomListViewController.swift; sourceTree = "<group>"; };
+		AB7B7B6E28C1E0B1001D327A /* RoomListTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomListTitleView.swift; sourceTree = "<group>"; };
+		AB7B7B7028C1E151001D327A /* RoomListItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomListItemCell.swift; sourceTree = "<group>"; };
 		AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoCell.swift; sourceTree = "<group>"; };
 		AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoOptionsView.swift; sourceTree = "<group>"; };
 		AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoOptionCell.swift; sourceTree = "<group>"; };
@@ -312,6 +318,7 @@
 		78D7312E23B38B0A00D2146C /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				AB7B7B6D28C1E05B001D327A /* RoomList */,
 				6836221126296F660028F7F5 /* Beans */,
 				78D7313923B38B5700D2146C /* Controllers */,
 				78D7313523B38B5700D2146C /* View */,
@@ -440,6 +447,16 @@
 				AB2AAFC4288A4BEE009D015C /* FcrOutsideClassBaseController.swift */,
 			);
 			path = General;
+			sourceTree = "<group>";
+		};
+		AB7B7B6D28C1E05B001D327A /* RoomList */ = {
+			isa = PBXGroup;
+			children = (
+				AB7B7B6B28C1D8A7001D327A /* RoomListViewController.swift */,
+				AB7B7B7028C1E151001D327A /* RoomListItemCell.swift */,
+				AB7B7B6E28C1E0B1001D327A /* RoomListTitleView.swift */,
+			);
+			path = RoomList;
 			sourceTree = "<group>";
 		};
 		E01323DE5BE7ACD24D968F1E /* Frameworks */ = {
@@ -676,6 +693,7 @@
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
 				AB4F69D3286D8DE70012E6B3 /* FcrAboutViewController.swift in Sources */,
+				AB7B7B6F28C1E0B1001D327A /* RoomListTitleView.swift in Sources */,
 				AB8AC745287FEB5000B57B58 /* FcrPrivacyTermsViewController.swift in Sources */,
 				681528A8289CF4C500EFD6F4 /* DebugView.swift in Sources */,
 				AB4F69DF286DC5F30012E6B3 /* FcrCheckBoxCell.swift in Sources */,
@@ -686,6 +704,7 @@
 				AB2AAFC5288A4BEE009D015C /* FcrOutsideClassBaseController.swift in Sources */,
 				AB4F69D5286DBE140012E6B3 /* FcrNickNameViewController.swift in Sources */,
 				681528A6289CF10400EFD6F4 /* DebugDataHandler.swift in Sources */,
+				AB7B7B7128C1E151001D327A /* RoomListItemCell.swift in Sources */,
 				15AFBEA12854996B003EBC0C /* AgreementView.swift in Sources */,
 				AB4F69D1286D8C380012E6B3 /* FcrGeneralSettingsViewController.swift in Sources */,
 				68403F83276C859800E88214 /* AppExtension.swift in Sources */,
@@ -694,6 +713,7 @@
 				AB4F69F02876E5160012E6B3 /* FcrUserInfoPresenter.swift in Sources */,
 				AB8AC7472886D13600B57B58 /* FcrLocalization.swift in Sources */,
 				AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */,
+				AB7B7B6C28C1D8A7001D327A /* RoomListViewController.swift in Sources */,
 				AB4F69D9286DBE830012E6B3 /* FcrLanguageViewController.swift in Sources */,
 				681528AA289D00CD00EFD6F4 /* DebugModels.swift in Sources */,
 				78DFB69825AEE20B00B01906 /* RtmTokenTool.mm in Sources */,

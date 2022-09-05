@@ -103,6 +103,12 @@ import AgoraWidget
     private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,
                                                         userController: contextPool.user,
                                                         widgetController: contextPool.widget)
+    /** 窗口拖拽预览视图*/
+    private lazy var rectEffectView: FcrDragRectEffectView = {
+        let view = FcrDragRectEffectView(frame: .zero)
+        contentView.addSubview(view)
+        return view
+    }()
     
     private var isJoinedRoom = false
     
@@ -442,6 +448,51 @@ extension FcrLectureUIScene: FcrLectureStreamWindowUIComponentDelegate {
             }
         }
     }
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        starDrag item: FcrStreamWindowWidgetItem,
+                        location: CGPoint) {
+        let windowArea = FcrRectEffectArea(areaRect: windowComponent.view.frame,
+                                           initSize: item.widget?.view.size ?? .zero,
+                                           zoomMinSize: CGSize(width: 100, height: 100))
+        let teacherArea = FcrRectEffectArea(areaRect: teacherRenderComponent.view.frame,
+                                            initSize: teacherRenderComponent.view.frame.size,
+                                            zoomMinSize: nil)
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        let rect = component.view.convert(item.widget?.view.frame ?? .zero,
+                                          to: rectEffectView)
+        if contextPool.user.getUserInfo(userUuid: item.data.userId)?.userRole == .teacher {
+            rectEffectView.startEffect(with: [windowArea, teacherArea],
+                                       from: rect,
+                                       at: point)
+        } else {
+            rectEffectView.startEffect(with: [windowArea],
+                                       from: rect,
+                                       at: point)
+        }
+    }
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        dragging item: FcrStreamWindowWidgetItem,
+                        to location: CGPoint) {
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        rectEffectView.setDropPoint(point)
+    }
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        didEndDrag item: FcrStreamWindowWidgetItem,
+                        location: CGPoint) -> CGRect? {
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        rectEffectView.setDropPoint(point)
+        if rectEffectView.stopEffect() {
+            return nil
+        } else {
+            return rectEffectView.getDropRectInView(windowComponent.view)
+        }
+    }
 }
 // MARK: - AgoraRenderMenuUIComponentDelegate
 extension FcrLectureUIScene: FcrRenderMenuUIComponentDelegate {
@@ -490,6 +541,49 @@ extension FcrLectureUIScene: FcrWindowRenderUIComponentDelegate {
                 make?.width.equalTo()(renderMenuComponent.menuWidth)
             }
         }
+    }
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           starDrag item: FcrWindowRenderViewState,
+                           location: CGPoint) {
+        let windowArea = FcrRectEffectArea(areaRect: windowComponent.view.frame,
+                                           initSize: CGSize(width: 200, height: 160),
+                                           zoomMinSize: CGSize(width: 100, height: 100))
+        let teacherArea = FcrRectEffectArea(areaRect: teacherRenderComponent.view.frame,
+                                            initSize: teacherRenderComponent.view.frame.size,
+                                            zoomMinSize: nil)
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        let rect = component.view.convert(teacherRenderComponent.view.frame,
+                                          to: rectEffectView)
+        rectEffectView.startEffect(with: [windowArea, teacherArea],
+                                   from: rect,
+                                   at: point)
+    }
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           dragging item: FcrWindowRenderViewState,
+                           to location: CGPoint) {
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        rectEffectView.setDropPoint(point)
+    }
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           didEndDrag item: FcrWindowRenderViewState,
+                           location: CGPoint) {
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        rectEffectView.setDropPoint(point)
+        rectEffectView.stopEffect()
+        guard let data = item.data,
+              let stream = self.contextPool.stream.getStreamList(userUuid: data.userId)?.first
+        else {
+            return
+        }
+        let rect = rectEffectView.getDropRectInView(windowComponent.view)
+        self.windowComponent.createWidgetWith(stream: stream,
+                                              at: rect)
     }
 }
 
