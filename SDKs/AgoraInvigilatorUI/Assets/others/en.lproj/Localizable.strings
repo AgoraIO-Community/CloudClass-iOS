@@ -8,6 +8,7 @@
 
 // Device
 fcr_device_device = "Device Test";
-fcr_device_greet = "Hello,{xxx}!";
+fcr_device_greet = "Hello，{xxx}!";
 fcr_device_state_will_start = "{xxx} will start.";
 fcr_device_state_already_start = "{xxx} has began.";
+fcr_device_enter = "Enter the examination room";

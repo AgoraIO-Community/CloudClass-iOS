@@ -89,10 +89,7 @@ typedef NS_ENUM(NSInteger, AgoraInvigilatorStreamState) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraInvigilatorRoomType) {
-  FcrUISceneTypeOneToOne = 0,
-  FcrUISceneTypeSmall = 1,
-  FcrUISceneTypeLecture = 2,
-  FcrUISceneTypeVocation = 3,
+    AgoraInvigilatorRoomTypeSmall = 1
 };
 
 NS_ASSUME_NONNULL_END

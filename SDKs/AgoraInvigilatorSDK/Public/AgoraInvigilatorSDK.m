@@ -18,11 +18,12 @@
 #import "AgoraInternalInvigilator.h"
 #import "AgoraInvigilatorSDK.h"
 
-@interface AgoraInvigilatorSDK ()
+@interface AgoraInvigilatorSDK () <FcrInviligatorSceneDelegate>
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
 @property (nonatomic, strong) FcrInviligatorScene *scene;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSNumber *environment;
+@property (nonatomic, strong) AgoraInvigilatorLaunchConfig *config;
 @property (nonatomic, weak) id<AgoraInvigilatorSDKDelegate> delegate;
 @end
 
@@ -49,20 +50,21 @@ static AgoraInvigilatorSDK *manager = nil;
     }
 }
 
-- (AgoraEduCorePuppet *)core {
-    if (_core == nil) {
-        _core = [[AgoraEduCorePuppet alloc] init];
-    }
-    
-    return _core;
-}
-
 + (void)setEnvironment:(NSNumber *)environment {
     [AgoraInvigilatorSDK share].environment = environment;
 }
 
 + (void)setLogConsoleState:(NSNumber *)state {
     [AgoraInvigilatorSDK share].consoleState = state;
+}
+
+#pragma mark - FcrInviligatorSceneDelegate
+- (void)onExitWithReason:(enum FcrUISceneExitReason)reason {
+    UIViewController *topVC = [UIViewController agora_top_view_controller];
+    [topVC dismissViewControllerAnimated:manager.scene
+                              completion:^{
+        
+    }];
 }
 
 #pragma mark - Public
@@ -103,7 +105,8 @@ static AgoraInvigilatorSDK *manager = nil;
     [core launch:coreConfig
          widgets:config.widgets.allValues
          success:^(id<AgoraEduContextPool> pool) {
-        FcrInviligatorScene *scene = [[FcrInviligatorScene alloc] init];
+        FcrInviligatorScene *scene = [[FcrInviligatorScene alloc] initWithContextPool:pool
+                                                                             delegate:manager];
         scene.modalPresentationStyle = UIModalPresentationFullScreen;
         manager.scene = scene;
         

@@ -66,8 +66,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *roomName;
 // 全局唯一的教室id
 @property (nonatomic, copy) NSString *roomUuid;
-// 教室类型
-@property (nonatomic, assign) AgoraInvigilatorRoomType roomType;
 // 声网App Id
 @property (nonatomic, copy) NSString *appId;
 // 声网Token

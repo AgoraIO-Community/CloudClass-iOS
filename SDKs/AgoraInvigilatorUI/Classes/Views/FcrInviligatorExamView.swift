@@ -12,6 +12,7 @@ class FcrInviligatorExamView: UIView {
     private(set) lazy var nameLabel = UILabel()
     private(set) lazy var countDot = UIImage()
     private(set) lazy var countLabel = UILabel()
+    private(set) lazy var leaveButton = UIButton()
 }
 
 // MARK: - AgoraUIContentContainer

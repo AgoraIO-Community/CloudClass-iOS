@@ -8,6 +8,7 @@
 
 // Device
 fcr_device_device = "设备检测";
-fcr_device_greet = "Hello,{xxx}!";
+fcr_device_greet = "Hello，{xxx}!";
 fcr_device_state_will_start = "{xxx}即将开始";
 fcr_device_state_already_start = "{xxx}已经开始";
+fcr_device_enter = "正式进入考场";

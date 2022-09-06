@@ -9,13 +9,28 @@ import UIKit
 
 struct FcrUIColorGroup {
     // MARK: - UI Config
+    static var systemBackgroundColor: UIColor {
+        switch UIMode {
+        case .agoraLight: return UIColor(hex: 0x000000)!
+        case .agoraDark: return UIColor(hex: 0x000000)!
+        }
+    }
+    
+    static var systemBrandColor: UIColor {
+        switch UIMode {
+        case .agoraLight: return UIColor(hex: 0x357BF6)!
+        case .agoraDark: return UIColor(hex: 0x357BF6)!
+        }
+    }
     // 图标色
-    static var fcr_dark_icon_background1: UIColor {
+    static var iconBackgroundColor: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x8A8A8A)!.withAlphaComponent(0.1)
         case .agoraDark:    return UIColor(hex: 0x343434)!.withAlphaComponent(0.9)
         }
     }
+    
+
     
     // 一级文本色
     static var textLevel1Color: UIColor {

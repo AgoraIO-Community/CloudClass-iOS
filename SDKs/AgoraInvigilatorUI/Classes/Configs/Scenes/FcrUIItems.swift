@@ -13,21 +13,47 @@ protocol FcrUIItemProtocol {
 }
 
 // Device
-struct FcrUIItemDeviceExit: FcrUIItemProtocol {
+struct FcrUIItemDeviceExitButton: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
-    let backgroundColor: UIColor = FcrUIColorGroup.fcr_dark_icon_background1
+    let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
     let image = UIImage.fcr_named("exit")
     let cornerRadius = FcrUIFrameGroup.systemCornerRadius
 }
 
-struct FcrUIItemDeviceTitle: FcrUIItemProtocol {
+struct FcrUIItemDeviceGreetLabel: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let font:  UIFont = FcrUIFontGroup.font24
+    let color: UIColor = FcrUIColorGroup.textLevel1Color
+}
+
+struct FcrUIItemDeviceStateLabel: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let font:  UIFont = FcrUIFontGroup.font12
+    let color: UIColor = FcrUIColorGroup.textLevel1Color
+}
+
+struct FcrUIItemDeviceTitleLabel: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
     let font:  UIFont = FcrUIFontGroup.font14
     let color: UIColor = FcrUIColorGroup.textLevel1Color
+}
+
+struct FcrUIItemDeviceEnterButton: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let backgroundColor: UIColor = FcrUIColorGroup.systemBrandColor
+    let cornerRadius = FcrUIFrameGroup.buttonCornerRadius
+    let titleFont:  UIFont = FcrUIFontGroup.font16
+    let titleColor: UIColor = FcrUIColorGroup.textContrastColor
 }
 
 // Test
