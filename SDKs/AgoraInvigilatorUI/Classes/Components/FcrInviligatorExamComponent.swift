@@ -8,23 +8,37 @@
 import AgoraUIBaseViews
 import AgoraEduContext
 
+@objc public protocol FcrInviligatorExamComponentDelegate: NSObjectProtocol {
+    func onExamExit()
+}
+
 @objc public class FcrInviligatorExamComponent: UIViewController,
                                         AgoraUIContentContainer {
     /**views**/
+    private lazy var exitButton = UIButton()
+    private lazy var nameLabel = UILabel()
+    private lazy var countDot = UIView()
+    private lazy var countLabel = UILabel()
+    private lazy var leaveButton = UIButton()
     private lazy var renderView = FcrInviligatorRenderView()
-    private lazy var examView = FcrInviligatorExamView()
     
     /**context**/
-    private var contextPool: AgoraEduContextPool
+    private weak var delegate: FcrInviligatorExamComponentDelegate?
+    private let roomController: AgoraEduRoomContext
+    private let userController: AgoraEduUserContext
+    private let mediaController: AgoraEduMediaContext
+    private let streamController: AgoraEduStreamContext
     
-    @objc public init(contextPool: AgoraEduContextPool) {
-        self.contextPool = contextPool
-        
-        super.init(nibName: nil,
-                   bundle: nil)
-    }
-    
-    @objc public init() {
+    @objc public init(roomController: AgoraEduRoomContext,
+                      userController: AgoraEduUserContext,
+                      mediaController: AgoraEduMediaContext,
+                      streamController: AgoraEduStreamContext,
+                      delegate: FcrInviligatorExamComponentDelegate?) {
+        self.roomController = roomController
+        self.userController = userController
+        self.mediaController = mediaController
+        self.streamController = streamController
+        self.delegate = delegate
         
         super.init(nibName: nil,
                    bundle: nil)
@@ -39,67 +53,22 @@ import AgoraEduContext
     }
     
     public func initViews() {
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = (agora_ui_mode == .agoraDark) ? .dark : .light
-        }
+
         
 //        let roomName = contextPool.room.getRoomInfo().roomName
 //        let roomState = contextPool.room.getClassInfo().state
 //        let userName = contextPool.user.getLocalUserInfo().userName
         
-        let roomName = "room"
-        let roomState = AgoraEduContextClassState.before
-        let userName = "user"
-        
-        deviceTestView.roomName = roomName
-        deviceTestView.roomState = roomState.toUI
-        deviceTestView.userName = userName
-        
-        deviceTestView.exitButton.addTarget(self,
-                                            action: #selector(onClickExitRoom),
-                                            for: .touchUpInside)
-        
-        deviceTestView.enterButton.addTarget(self,
-                                             action: #selector(onClickEnterRoom),
-                                             for: .touchUpInside)
-        
-        examView.exitButton.addTarget(self,
-                                      action: #selector(onClickExitRoom),
-                                      for: .touchUpInside)
-        
-        examView.leaveButton.addTarget(self,
-                                       action: #selector(onClickExitRoom),
-                                       for: .touchUpInside)
-        
-        view.addSubviews([deviceTestView,
-                          renderView,
-                          examView])
-        
-        let config = UIConfig
-        
-        deviceTestView.agora_enable = config.deviceTest.enable
-        deviceTestView.agora_visible = true
-        
-        renderView.agora_enable = config.render.enable
-        renderView.agora_visible = false
-        
-        examView.agora_enable = config.exam.enable
-        examView.agora_visible = false
+        view.addSubviews([exitButton,
+                          nameLabel,
+                          countDot,
+                          countLabel,
+                          leaveButton,
+                          renderView])
     }
     
     public func initViewFrame() {
-        deviceTestView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
         
-        renderView.mas_makeConstraints { make in
-            make?.top.equalTo()(213)
-            make?.left.right().bottom().equalTo()(0)
-        }
-        
-        examView.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
     }
     
     public func updateViewProperties() {

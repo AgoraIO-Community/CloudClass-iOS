@@ -23,7 +23,8 @@ import AgoraEduContext
     private lazy var bottomView = UIView()
     private lazy var enterButton = UIButton()
     private lazy var renderView = FcrInviligatorRenderView()
-    private lazy var accessView = FcrInvigilatorCameraNOAccessView()
+    private lazy var avatarView = FcrInviligatorAvatarView()
+    private lazy var noAccessView = FcrInvigilatorCameraNOAccessView()
     
     /**data**/
     private weak var delegate: FcrInviligatorDeviceTestComponentDelegate?
@@ -89,14 +90,17 @@ extension FcrInviligatorDeviceTestComponent: AgoraUIContentContainer {
         enterButton.sizeToFit()
         enterButton.setTitle("fcr_device_enter".fcr_invigilator_localized(),
                              for: .normal)
-
+        
         view.addSubviews([backgroundImageView,
-                     exitButton,
-                     titleLabel,
-                     greetLabel,
-                     stateLabel,
-                     bottomView,
-                     enterButton])
+                          exitButton,
+                          titleLabel,
+                          greetLabel,
+                          stateLabel,
+                          renderView,
+                          avatarView,
+                          bottomView,
+                          enterButton,
+                          noAccessView])
     }
     
     public func initViewFrame() {
@@ -183,19 +187,42 @@ private extension FcrInviligatorDeviceTestComponent {
     }
     
     func checkDeviceState() {
-        guard mediaController.openLocalDevice(systemDevice: .frontCamera) == nil else {
-            accessView.agora_visible = true
+        let userId = userController.getLocalUserInfo().userUuid
+        
+        guard mediaController.openLocalDevice(systemDevice: .frontCamera) == nil,
+              let streamId = streamController.getStreamList(userUuid: userId)?.first?.streamUuid else {
+            updateEnterable(false)
             return
         }
-        if let _ =  {
-            accessView.agora_visible = true
+        // TODO: AgoraEduContextRenderConfig
+        let config = AgoraEduContextRenderConfig()
+        
+        let error = mediaController.startRenderVideo(view: renderView,
+                                                     renderConfig: config,
+                                                     streamUuid: streamId)
+        
+        guard error == nil else {
+            updateEnterable(false)
+            return
+        }
+        updateEnterable(true)
+    }
+    
+    func updateEnterable(_ able: Bool) {
+        if able {
+            noAccessView.agora_visible = false
+            avatarView.agora_visible = false
+            enterButton.isUserInteractionEnabled = true
+            enterButton.mas_updateConstraints { make in
+                make?.bottom.equalTo()(-40)
+            }
         } else {
-            let config = AgoraEduContextRenderConfig()
-            let userId = userController.getLocalUserInfo().userUuid
-            let streamId = streamController.getStreamList(userUuid: userId)?.first
-            mediaController.startRenderVideo(view: renderView,
-                                             renderConfig: config,
-                                             streamUuid: <#T##String#>)
+            noAccessView.agora_visible = true
+            avatarView.agora_visible = true
+            enterButton.isUserInteractionEnabled = true
+            enterButton.mas_updateConstraints { make in
+                make?.bottom.equalTo()(-209)
+            }
         }
     }
 }

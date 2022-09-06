@@ -12,3 +12,5 @@ fcr_device_greet = "Hello，{xxx}!";
 fcr_device_state_will_start = "{xxx}即将开始";
 fcr_device_state_already_start = "{xxx}已经开始";
 fcr_device_enter = "正式进入考场";
+fcr_device_no_access_title = "无法使用相机";
+fcr_device_no_access_content = "Allow  online proctoring  to access your camera in setting - privacy - Camera";

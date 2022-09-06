@@ -6,6 +6,7 @@
 //
 
 import AgoraUIBaseViews
+import Masonry
 import AgoraEduContext
 
 @objc public enum FcrUISceneExitReason: Int {
@@ -20,9 +21,14 @@ import AgoraEduContext
     private lazy var deviceTest = FcrInviligatorDeviceTestComponent(roomController: contextPool.room,
                                                                     userController: contextPool.user,
                                                                     mediaController: contextPool.media,
+                                                                    streamController: contextPool.stream,
                                                                     delegate: self)
     
-    private lazy var exam = FcrInviligatorExamComponent(contextPool: contextPool)
+    private lazy var exam = FcrInviligatorExamComponent(roomController: contextPool.room,
+                                                        userController: contextPool.user,
+                                                        mediaController: contextPool.media,
+                                                        streamController: contextPool.stream,
+                                                        delegate: self)
     
     private let contextPool: AgoraEduContextPool
     private weak var delegate: FcrInviligatorSceneDelegate?
@@ -43,25 +49,40 @@ import AgoraEduContext
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = (agora_ui_mode == .agoraDark) ? .dark : .light
+        }
+        
         view.backgroundColor = .black
         addChildViewController(deviceTest,
                                toContainerView: view)
         view.addSubview(deviceTest.view)
-        
+
         deviceTest.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
     }
 }
 
-// MARK: - FcrInviligatorDeviceTestComponentDelegate
-extension FcrInviligatorScene: FcrInviligatorDeviceTestComponentDelegate {
+// MARK: - FcrInviligatorDeviceTestComponentDelegate, FcrInviligatorExamComponentDelegate
+extension FcrInviligatorScene: FcrInviligatorDeviceTestComponentDelegate,
+                                FcrInviligatorExamComponentDelegate {
     public func onDeviceTestJoinExamSuccess() {
-        present(exam,
-                animated: true)
+        // TODO: 动画
+        deviceTest.dismiss(animated: true) { [weak self] in
+            guard let `self` = self else {
+                return
+            }
+            self.present(self.exam,
+                         animated: true)
+        }
     }
     
     public func onDeviceTestExit() {
-        delegate?.
+        delegate?.onExit(reason: .normal)
+    }
+    
+    public func onExamExit() {
+        delegate?.onExit(reason: .normal)
     }
 }

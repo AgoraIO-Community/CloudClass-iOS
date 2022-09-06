@@ -16,6 +16,13 @@ struct FcrUIColorGroup {
         }
     }
     
+    static var systemForegroundColor: UIColor {
+        switch UIMode {
+        case .agoraLight: return UIColor(hex: 0x2D2F3C)!
+        case .agoraDark: return UIColor(hex: 0x2D2F3C)!
+        }
+    }
+    
     static var systemBrandColor: UIColor {
         switch UIMode {
         case .agoraLight: return UIColor(hex: 0x357BF6)!
@@ -32,11 +39,18 @@ struct FcrUIColorGroup {
     
 
     
-    // 一级文本色
+    // 文本色
     static var textLevel1Color: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x000000)!
         case .agoraDark:    return UIColor(hex: 0xFFFFFF)!.withAlphaComponent(0.80)
+        }
+    }
+    
+    static var textLevel2Color: UIColor {
+        switch UIMode {
+        case .agoraLight:   return UIColor(hex: 0x000000)!
+        case .agoraDark:    return UIColor(hex: 0x000000)!
         }
     }
 

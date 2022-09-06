@@ -24,6 +24,8 @@ struct FcrUIComponentDevice: FcrUIComponentProtocol {
     let stateLabel      = FcrUIItemDeviceStateLabel()
     let titleLabel      = FcrUIItemDeviceTitleLabel()
     let enterButton     = FcrUIItemDeviceEnterButton()
+    let avatar          = FcrUIItemDeviceAvatar()
+    let noAccess        = FcrUIItemDeviceNoAccess()
 }
 
 struct FcrUIComponentRender: FcrUIComponentProtocol {
