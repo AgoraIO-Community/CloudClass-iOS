@@ -493,12 +493,12 @@ extension AgoraVocationalUIScene: FcrToolCollectionUIComponentDelegate {
         ctrlView = nil
         switch type {
         case .cloudStorage:
-            if cloudController.view.isHidden {
-                cloudController.view.mas_makeConstraints { make in
+            if !cloudController.view.agora_visible {
+                cloudController.view.mas_remakeConstraints { make in
                     make?.left.right().top().bottom().equalTo()(boardController.view)
                 }
             }
-            cloudController.view.isHidden = !cloudController.view.isHidden
+            cloudController.view.agora_visible = !cloudController.view.agora_visible
         case .vote:
             break
         case .countDown:

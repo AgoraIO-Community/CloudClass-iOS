@@ -204,37 +204,29 @@ private extension FcrTeacherWindowRenderUIComponent {
 private extension FcrTeacherWindowRenderUIComponent {
     func startPlayAudio(streamId: String) {
         mediaController.startPlayAudio(roomUuid: roomId,
-                                         streamUuid: streamId)
+                                       streamUuid: streamId)
     }
     
     func stopPlayAudio(streamId: String) {
         mediaController.stopPlayAudio(roomUuid: roomId,
-                                        streamUuid: streamId)
+                                      streamUuid: streamId)
     }
     
     func startRenderVideo(streamId: String,
                           view: FcrWindowRenderVideoView) {
-//        if let renderingStream = view.renderingStream,
-//           renderingStream == streamId {
-//            return
-//        }
-//
-//        view.renderingStream = streamId
-        
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         
         mediaController.startRenderVideo(roomUuid: roomId,
-                                           view: view,
-                                           renderConfig: renderConfig,
-                                           streamUuid: streamId)
+                                         view: view,
+                                         renderConfig: renderConfig,
+                                         streamUuid: streamId)
     }
     
     func stopRenderVideo(streamId: String,
                          view: FcrWindowRenderVideoView) {
-//        view.renderingStream = nil
         mediaController.stopRenderVideo(roomUuid: roomId,
-                                          streamUuid: streamId)
+                                        streamUuid: streamId)
     }
 }
 

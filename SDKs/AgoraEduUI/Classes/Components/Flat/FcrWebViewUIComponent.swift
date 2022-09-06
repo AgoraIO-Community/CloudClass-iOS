@@ -9,7 +9,7 @@ import AgoraEduContext
 import AgoraWidget
 import UIKit
 
-class FcrWebViewUIComponent: UIViewController {
+class FcrWebViewUIComponent: FcrUIComponent {
     /**context**/
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
@@ -76,10 +76,6 @@ class FcrWebViewUIComponent: UIViewController {
             auth = true
         }
         localBoardAuth = auth
-    }
-    
-    deinit {
-        print("\(#function): \(self.classForCoder)")
     }
     
     override func loadView() {

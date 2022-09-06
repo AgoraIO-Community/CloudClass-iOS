@@ -9,7 +9,7 @@ import AgoraEduContext
 import AgoraWidget
 import UIKit
 
-class FcrClassToolsUIComponent: UIViewController {
+class FcrClassToolsUIComponent: FcrUIComponent {
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let monitorController: AgoraEduMonitorContext

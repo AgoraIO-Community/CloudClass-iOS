@@ -15,7 +15,7 @@ protocol FcrRenderMenuUIComponentDelegate: NSObjectProtocol {
     func onMenuUserLeft()
 }
 
-class FcrRenderMenuUIComponent: UIViewController {
+class FcrRenderMenuUIComponent: FcrUIComponent {
     private let userController: AgoraEduUserContext
     private let streamController: AgoraEduStreamContext
     private let widgetController: AgoraEduWidgetContext
@@ -42,6 +42,8 @@ class FcrRenderMenuUIComponent: UIViewController {
     private lazy var rewardButton = UIButton(type: .custom)
         
     // Data sources
+    private var timer: Timer?
+    
     private var items: [AgoraRenderMenuItemType] = [] {
         didSet {
             if items != oldValue {
@@ -144,12 +146,16 @@ class FcrRenderMenuUIComponent: UIViewController {
         updateModelState()
         
         // 5s后自动消失
-        perform(#selector(dismissView),
-                with: nil,
-                afterDelay: 5)
+        startTimer()
     }
     
-    @objc func dismissView() {
+    deinit {
+        cancelTimer()
+    }
+    
+    func dismissView() {
+        cancelTimer()
+        
         view.isHidden = true
         self.userId = nil
         self.model = AgoraRenderMenuModel()
@@ -254,6 +260,21 @@ class FcrRenderMenuUIComponent: UIViewController {
 
 // MARK: - Private
 private extension FcrRenderMenuUIComponent {
+    func startTimer() {
+        cancelTimer()
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 5.0,
+                                     repeats: false,
+                                     block: { [weak self] t in
+            self?.dismissView()
+        })
+    }
+    
+    func cancelTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
     func updateMenu() {
         guard let `model` = model else {
             return
@@ -357,20 +378,20 @@ private extension FcrRenderMenuUIComponent {
         if let stream = streamController.getStreamList(userUuid: uid)?.first {
             // audio
             if stream.audioSourceState == .close {
-                micState = .forbidden
+                micState = .off
             } else if stream.streamType.hasAudio {
                 micState = .on
             } else {
-                micState = .off
+                micState = .forbidden
             }
             
             // video
             if stream.videoSourceState == .close {
-                cameraState = .forbidden
+                cameraState = .off
             } else if stream.streamType.hasVideo {
                 cameraState = .on
             } else {
-                cameraState = .off
+                cameraState = .forbidden
             }
         }
 
@@ -387,7 +408,7 @@ extension FcrRenderMenuUIComponent {
               let `model` = model else {
             return
         }
-        if model.micState == .off {
+        if model.micState == .forbidden {
             streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                           audioPrivilege: true) { [weak self] in
                 self?.model?.micState = .on
@@ -397,7 +418,7 @@ extension FcrRenderMenuUIComponent {
         } else if model.micState == .on {
             streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                           audioPrivilege: false) { [weak self] in
-                self?.model?.micState = .off
+                self?.model?.micState = .forbidden
             } failure: { error in
                 
             }
@@ -410,7 +431,7 @@ extension FcrRenderMenuUIComponent {
               let `model` = model else {
             return
         }
-        if model.cameraState == .off {
+        if model.cameraState == .forbidden {
             streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                           videoPrivilege: true) { [weak self] in
                 self?.model?.cameraState = .on
@@ -420,7 +441,7 @@ extension FcrRenderMenuUIComponent {
         } else if model.cameraState == .on {
             streamController.updateStreamPublishPrivilege(streamUuids: [streamId],
                                                           videoPrivilege: false) { [weak self] in
-                self?.model?.cameraState = .off
+                self?.model?.cameraState = .forbidden
             } failure: { error in
                 
             }

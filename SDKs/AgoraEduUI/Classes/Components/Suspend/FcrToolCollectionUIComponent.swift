@@ -18,7 +18,7 @@ protocol FcrToolCollectionUIComponentDelegate: NSObjectProtocol {
     func toolCollectionDidChangeAppearance(_ appear: Bool)
 }
 
-class FcrToolCollectionUIComponent: UIViewController {
+class FcrToolCollectionUIComponent: FcrUIComponent {
     /** SDK环境*/
     private var subRoom: AgoraEduSubRoomContext?
     
@@ -99,10 +99,6 @@ class FcrToolCollectionUIComponent: UIViewController {
     private var mainToolsView: AgoraMainToolsView!
     // 白板工具配置CollectionView
     private var subToolsView: AgoraBoardToolConfigView!
-        
-    deinit {
-        print("\(#function): \(self.classForCoder)")
-    }
 
     init(userController: AgoraEduUserContext,
          widgetController: AgoraEduWidgetContext,
