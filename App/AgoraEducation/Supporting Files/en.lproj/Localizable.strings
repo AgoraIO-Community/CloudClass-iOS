@@ -156,6 +156,7 @@ debug_small = "Interactive Small Classroom";
 debug_painting_small = "Painting Classroom";
 debug_lecture = "Lecture Hall";
 debug_vocational_lecture = "Vocational Lecture Hall";
+debug_proctor = "Proctor";
 debug_service_rtc = "Interactive Live Streaming Premium";
 debug_service_fast_rtc = "Interactive Live Streaming Standard";
 debug_service_only_cdn = "Standard Latency Streaming (CDN)";

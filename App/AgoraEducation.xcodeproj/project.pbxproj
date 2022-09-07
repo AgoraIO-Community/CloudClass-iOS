@@ -26,7 +26,7 @@
 		6861691B26AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6861691926AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf */; };
 		6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68880999262825FC00B5FB2A /* LoginViewController.swift */; };
 		688809E82629358800B5FB2A /* FcrNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688809E72629358800B5FB2A /* FcrNavigationController.swift */; };
-		75D36FB810CB94F4AEF8D9A2 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		75D36FB810CB94F4AEF8D9A2 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
 		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
 		7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4CD23FA735700AF1B4F /* InfoPlist.strings */; };
@@ -171,7 +171,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75D36FB810CB94F4AEF8D9A2 /* (null) in Frameworks */,
+				75D36FB810CB94F4AEF8D9A2 /* BuildFile in Frameworks */,
 				8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */,
 				787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */,
 				489330F749FFF2263BE9EF78 /* Pods_AgoraEducation.framework in Frameworks */,

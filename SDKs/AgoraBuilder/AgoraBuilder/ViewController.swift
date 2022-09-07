@@ -23,7 +23,7 @@ class ViewController: UIViewController {
                                                   userRole: .student,
                                                   roomName: "aaaaaa",
                                                   roomUuid: "aaaaaa",
-                                                  roomType: .small,
+                                                  roomType: .proctor,
                                                   appId: "aaaaaa",
                                                   token: "aaaaaa")
         AgoraInvigilatorSDK.launch(config) {

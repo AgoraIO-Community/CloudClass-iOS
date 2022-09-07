@@ -11,6 +11,7 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
+import AgoraProctorSDK
 import AgoraUIBaseViews
 
 class DebugViewController: UIViewController {
@@ -51,7 +52,7 @@ extension DebugViewController: DebugViewDelagate {
     }
     
     func didClickEnter() {
-        guard let info = data.getLaunchInfo() else {
+        guard let info = data.checkLaunchInfoValid() else {
             return
         }
         
@@ -81,30 +82,46 @@ extension DebugViewController: DebugViewDelagate {
             }
             
             // UI mode
-            agora_ui_mode = info.uiMode
-            agora_ui_language = info.uiLanguage.string
-            
-            let launchConfig = self.data.getLaunchConfig(debugInfo: info,
-                                                         appId: response.appId,
-                                                         token: response.token,
-                                                         userId: response.userId)
+            agora_ui_mode = info.uiMode.edu
+            agora_ui_language = info.uiLanguage.edu.string
 #if DEBUG
             let sel1 = NSSelectorFromString("setLogConsoleState:");
             AgoraClassroomSDK.perform(sel1,
                                       with: 1)
+            
+            let sel2 = NSSelectorFromString("setLogConsoleState:");
+            AgoraProctorSDK.perform(sel2,
+                                    with: 1)
 #endif
-         
-            if launchConfig.roomType == .vocation { // 职教入口
-                AgoraClassroomSDK.vocationalLaunch(launchConfig,
-                                                   service: info.serviceType,
-                                                   success: launchSuccessBlock,
-                                                   failure: failureBlock)
-            } else { // 灵动课堂入口
-                AgoraClassroomSDK.launch(launchConfig,
-                                         success: launchSuccessBlock,
-                                         failure: failureBlock)
+            
+            let roomType = info.roomType
+            if let roomType = roomType.edu,
+               let launchConfig = self.data.getEduLaunchConfig(debugInfo: info,
+                                                            appId: response.appId,
+                                                            token: response.token,
+                                                            userId: response.userId) {
+             
+                if launchConfig.roomType == .vocation { // 职教入口
+                    AgoraClassroomSDK.vocationalLaunch(launchConfig,
+                                                       service: info.serviceType.edu!,
+                                                       success: launchSuccessBlock,
+                                                       failure: failureBlock)
+                } else { // 灵动课堂入口
+                    AgoraClassroomSDK.launch(launchConfig,
+                                             success: launchSuccessBlock,
+                                             failure: failureBlock)
+                }
+            } else if roomType == .proctor {
+                let launchConfig = self.data.getProctorLaunchConfig(debugInfo: info,
+                                                                     appId: response.appId,
+                                                                     token: response.token,
+                                                                     userId: response.userId)
+                AgoraProctorSDK.launch(launchConfig,
+                                       success: launchSuccessBlock,
+                                       failure: failureBlock)
             }
         }
+        
         data.requestToken(roomId: info.roomId,
                           userId: info.userId,
                           userRole: info.roleType.rawValue,
@@ -183,10 +200,10 @@ extension DebugViewController {
         let uiMode = data.getUIMode()
         let environment = data.getEnvironment()
         
-        let defaultList: [DataSourceType] = [.roomName(.none),
-                                             .userName(.none),
-                                             .roomType(.unselected),
-                                             .roleType(.unselected),
+        let defaultList: [DataSourceType] = [.roomName(.value("010101")),
+                                             .userName(.value("010101")),
+                                             .roomType(.proctor),
+                                             .roleType(.student),
                                              .im(.easemob),
                                              .duration(.none),
                                              .encryptKey(.none),

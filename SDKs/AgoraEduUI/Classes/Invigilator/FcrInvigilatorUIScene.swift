@@ -1,5 +1,5 @@
 //
-//  FcrInvigilatorScene.swift
+//  FcrProctorScene.swift
 //  AgoraEduUI
 //
 //  Created by LYY on 2022/8/31.
@@ -14,7 +14,7 @@ import AgoraEduContext
  roomUuid
 */
 
-class FcrInvigilatorUIScene: UIViewController {
+class FcrProctorUIScene: UIViewController {
     
     let contextPool: AgoraEduContextPool
     
