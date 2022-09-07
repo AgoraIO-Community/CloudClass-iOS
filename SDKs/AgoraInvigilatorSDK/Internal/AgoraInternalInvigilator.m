@@ -28,10 +28,7 @@
         return NO;
     }
     
-    if (!(self.roomType == FcrUISceneTypeOneToOne
-          || self.roomType == FcrUISceneTypeSmall
-          || self.roomType == FcrUISceneTypeLecture
-          || self.roomType == FcrUISceneTypeVocation)) {
+    if (!(self.roomType == AgoraInvigilatorRoomTypeProctor)) {
         return NO;
     }
     
@@ -53,24 +50,7 @@
     
     AgoraEduCorePuppetUserRole role = config.userRole;
     
-    AgoraEduCorePuppetRoomType roomType;
-    
-    switch (config.roomType) {
-        case FcrUISceneTypeOneToOne:
-            roomType = AgoraEduCorePuppetRoomTypeOneToOne;
-            break;
-        case FcrUISceneTypeSmall:
-            roomType = AgoraEduCorePuppetRoomTypeSmall;
-            break;
-        case FcrUISceneTypeLecture:
-            roomType = AgoraEduCorePuppetRoomTypeLecture;
-            break;
-        case FcrUISceneTypeVocation:
-            roomType = AgoraEduCorePuppetRoomTypeLecture;
-            break;
-        default:
-            break;
-    }
+    AgoraEduCorePuppetRoomType roomType = AgoraEduCorePuppetRoomTypeProctor;
     
     AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
                                                                                                 rtmToken:config.token

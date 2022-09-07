@@ -69,9 +69,7 @@ typedef NS_ENUM(NSInteger, AgoraInvigilatorLatencyLevel) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraInvigilatorUserRole) {
-    AgoraInvigilatorUserRoleTeacher  = 1,
-    AgoraInvigilatorUserRoleStudent  = 2,
-    AgoraInvigilatorUserRoleObserver = 4
+    AgoraInvigilatorUserRoleStudent  = 2
 };
 
 typedef NS_ENUM(NSInteger, AgoraInvigilatorServiceType) {
@@ -89,7 +87,7 @@ typedef NS_ENUM(NSInteger, AgoraInvigilatorStreamState) {
 };
 
 typedef NS_ENUM(NSInteger, AgoraInvigilatorRoomType) {
-    AgoraInvigilatorRoomTypeSmall = 1
+    AgoraInvigilatorRoomTypeProctor = 6
 };
 
 NS_ASSUME_NONNULL_END
