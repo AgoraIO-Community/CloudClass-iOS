@@ -78,13 +78,52 @@ import AgoraEduContext
     }
     
     public func initViewFrame() {
+        backgroundImageView.mas_makeConstraints { make in
+            make?.left.right().top().equalTo()(0)
+        }
         
+        exitButton.mas_makeConstraints { make in
+            make?.top.equalTo()(42)
+            make?.left.equalTo()(16)
+            make?.width.height().equalTo()(40)
+        }
+        
+        nameLabel.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.centerY.equalTo()(exitButton.mas_centerY)
+        }
+        
+        renderView.mas_makeConstraints { make in
+            make?.top.equalTo()(nameLabel.mas_bottom)?.offset()(33)
+            make?.left.right().bottom().equalTo()(0)
+        }
+        
+        leaveButton.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.width.mas_greaterThanOrEqualTo()(200)
+            make?.height.equalTo()(46)
+            make?.bottom.equalTo()(-40)
+        }
     }
     
     public func updateViewProperties() {
         let config = UIConfig.exam
         
         view.backgroundColor = config.backgroundColor
+        
+        backgroundImageView.image = config.backgroundImage
+        exitButton.setImage(config.exitButton.image,
+                            for: .normal)
+        exitButton.backgroundColor = config.exitButton.backgroundColor
+        exitButton.layer.cornerRadius = config.exitButton.cornerRadius
+        
+        nameLabel.font = config.nameLabel.font
+        nameLabel.textColor = config.nameLabel.color
+
+        leaveButton.backgroundColor = config.leaveButton.backgroundColor
+        leaveButton.layer.cornerRadius = config.leaveButton.cornerRadius
+        leaveButton.setTitleColorForAllStates(config.leaveButton.titleColor)
+        leaveButton.titleLabel?.font = config.leaveButton.titleFont
     }
     
     required init?(coder: NSCoder) {

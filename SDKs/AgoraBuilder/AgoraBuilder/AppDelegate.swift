@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow.init(frame: UIScreen.main.bounds)
-        let scene = FcrInviligatorExamComponent()
+        let scene = ViewController()
         window?.rootViewController = scene
         window?.makeKeyAndVisible()
         return true

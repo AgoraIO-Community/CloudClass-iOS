@@ -42,6 +42,9 @@ struct FcrUIComponentExam: FcrUIComponentProtocol {
     var backgroundColor: UIColor = .black
     
     let backgroundImage = UIImage.fcr_named("background")
+    let exitButton      = FcrUIItemDeviceExitButton()
+    let nameLabel       = FcrUIItemDeviceTitleLabel()
+    let leaveButton     = FcrUIItemDeviceEnterButton()
 }
 
 // MARK: - alert
