@@ -226,10 +226,19 @@ static AgoraClassroomSDK *manager = nil;
     // Core config
     AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
     
+    __weak AgoraClassroomSDK *weakManager = manager;
+    
     [core launch:coreConfig
          widgets:config.widgets.allValues
          success:success
-         failure:failure];
+         failure:^(NSError * _Nonnull error) {
+            
+        weakManager.core = nil;
+        
+        if (failure) {
+            failure(error);
+        }
+    }];
 }
 
 - (void)agoraRelease {
