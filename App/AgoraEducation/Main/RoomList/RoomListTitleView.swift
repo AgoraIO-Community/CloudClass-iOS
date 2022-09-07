@@ -17,17 +17,38 @@ class RoomListTitleView: UIView {
     
     weak var delegate: RoomListTitleViewDelegate?
     
-    let cardView = UIView()
+    private let cardView = UIView()
     
-    let titleLabel = UILabel()
+    private let titleLabel = UILabel()
     
-    let joinButton = UIButton(type: .custom)
+    private let joinActionView = RoomListActionView(frame: .zero)
     
-    let createButton = UIButton(type: .custom)
+    private let createActionView = RoomListActionView(frame: .zero)
     
-    let smallJoinButton = UIButton(type: .custom)
+    private let joinButton = UIButton(type: .custom)
     
-    let smallCreateButton = UIButton(type: .custom)
+    private let createButton = UIButton(type: .custom)
+    
+    private var soildPercent: CGFloat = 0.0 {
+        didSet {
+            guard soildPercent != oldValue else {
+                return
+            }
+            cardView.alpha = soildPercent
+            titleLabel.alpha = 1 - soildPercent
+            if soildPercent < 0.6 {
+                createButton.isHidden = true
+                joinButton.isHidden = true
+                joinActionView.isHidden = false
+                createActionView.isHidden = false
+            } else {
+                createButton.isHidden = false
+                joinButton.isHidden = false
+                joinActionView.isHidden = true
+                createActionView.isHidden = true
+            }
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,10 +62,17 @@ class RoomListTitleView: UIView {
     }
     
     public func setSoildPercent(_ percent: CGFloat) {
-        print(percent)
-        cardView.alpha = percent
-        titleLabel.alpha = 1 - percent
+        soildPercent = percent
     }
+    
+    @objc func onClickJoin(_ sender: UIButton) {
+        delegate?.onClickJoin()
+    }
+    
+    @objc func onClickCreate(_ sender: UIButton) {
+        delegate?.onClickCreate()
+    }
+    
 }
 // MARK: - Creations
 private extension RoomListTitleView {
@@ -56,6 +84,32 @@ private extension RoomListTitleView {
         titleLabel.textColor = UIColor.black
         titleLabel.text = "Flexibleclassroom"
         addSubview(titleLabel)
+        
+        joinActionView.iconView.image = UIImage(named: "")
+        joinActionView.button.addTarget(self,
+                                        action: #selector(onClickJoin(_:)),
+                                        for: .touchUpInside)
+        joinActionView.backgroundColor = .black
+        addSubview(joinActionView)
+        
+        createActionView.iconView.image = UIImage(named: "")
+        createActionView.button.addTarget(self,
+                                          action: #selector(onClickCreate(_:)),
+                                          for: .touchUpInside)
+        createActionView.backgroundColor = .black
+        addSubview(createActionView)
+        
+        joinButton.backgroundColor = .black
+        joinButton.addTarget(self,
+                             action: #selector(onClickJoin(_:)),
+                             for: .touchUpInside)
+        addSubview(joinButton)
+        
+        createButton.backgroundColor = .black
+        createButton.addTarget(self,
+                               action: #selector(onClickCreate(_:)),
+                               for: .touchUpInside)
+        addSubview(createButton)
     }
     
     func createConstrains() {
@@ -65,6 +119,28 @@ private extension RoomListTitleView {
         titleLabel.mas_makeConstraints { make in
             make?.top.equalTo()(68)
             make?.left.equalTo()(16)
+        }
+        joinActionView.mas_makeConstraints { make in
+            make?.left.equalTo()(24)
+            make?.width.equalTo()(self)?.multipliedBy()(0.4)
+            make?.height.equalTo()(56)
+            make?.bottom.equalTo()(-20)
+        }
+        createActionView.mas_makeConstraints { make in
+            make?.left.equalTo()(joinActionView.mas_right)?.offset()(15)
+            make?.width.equalTo()(self)?.multipliedBy()(0.4)
+            make?.height.equalTo()(56)
+            make?.bottom.equalTo()(-20)
+        }
+        joinButton.mas_makeConstraints { make in
+            make?.left.equalTo()(16)
+            make?.width.height().equalTo()(32)
+            make?.centerY.equalTo()(titleLabel)
+        }
+        createButton.mas_makeConstraints { make in
+            make?.left.equalTo()(joinButton.mas_right)?.offset()(12)
+            make?.width.height().equalTo()(32)
+            make?.centerY.equalTo()(titleLabel)
         }
     }
 }
@@ -76,6 +152,8 @@ private class RoomListActionView: UIView {
     let iconBGView = UIImageView(image: UIImage())
     
     let iconView = UIImageView(image: UIImage())
+    
+    let titleLabel = UILabel()
     
     let button = UIButton(type: .custom)
     
@@ -91,10 +169,35 @@ private class RoomListActionView: UIView {
     }
     
     func createViews() {
+        addSubview(contentView)
         
+        addSubview(iconBGView)
+        
+        addSubview(iconView)
+        
+        addSubview(button)
+        
+        addSubview(titleLabel)
     }
     
     func createConstrains() {
-        
+        contentView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
+        iconBGView.mas_makeConstraints { make in
+            make?.width.height().equalTo()(44)
+            make?.left.equalTo()(8)
+            make?.centerY.equalTo()(0)
+        }
+        iconView.mas_makeConstraints { make in
+            make?.center.equalTo()(iconView)
+        }
+        titleLabel.mas_makeConstraints { make in
+            make?.left.equalTo()(iconView.mas_right)
+            make?.right.top().bottom().equalTo()(0)
+        }
+        button.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
     }
 }

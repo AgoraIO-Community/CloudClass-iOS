@@ -54,6 +54,11 @@ class RoomListViewController: UIViewController {
         #endif
     }
     
+    @objc func onClickSetting(_ sender: UIButton) {
+        let vc = FcrSettingsViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
 }
 // MARK: -
 extension RoomListViewController: UITableViewDelegate, UITableViewDataSource {
@@ -82,6 +87,19 @@ extension RoomListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
 }
+// MARK: - RoomListTitleViewDelegate
+extension RoomListViewController: RoomListTitleViewDelegate {
+    
+    func onClickJoin() {
+        
+    }
+    
+    func onClickCreate() {
+        RoomCreateViewController.showCreateRoom {
+            
+        }
+    }
+}
 // MARK: - Creations
 private extension RoomListViewController {
     
@@ -100,11 +118,15 @@ private extension RoomListViewController {
         tableView.rowHeight = 152
         view.addSubview(tableView)
         
+        titleView.delegate = self
         titleView.clipsToBounds = true
         view.addSubview(titleView)
         
         settingButton.setImage(UIImage(named: "fcr_roomlist_setting"),
                                for: .normal)
+        settingButton.addTarget(self,
+                                action: #selector(onClickSetting(_:)),
+                                for: .touchUpInside)
         view.addSubview(settingButton)
     }
     
