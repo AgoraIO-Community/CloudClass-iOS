@@ -88,6 +88,7 @@ private extension VcrMixStreamCDNRenderUIComponent {
             placeHolderView.isHidden = true
             let asset = AVURLAsset(url: url)
             playerItem = AVPlayerItem(asset: asset)
+            
             videoPlayer.replaceCurrentItem(with: playerItem)
             videoPlayer.play()
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

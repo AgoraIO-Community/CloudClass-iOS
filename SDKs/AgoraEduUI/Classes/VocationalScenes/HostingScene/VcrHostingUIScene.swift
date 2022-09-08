@@ -14,10 +14,10 @@ import AgoraWidget
 @objc public class VcrHostingUIScene: FcrUIScene {
 
     /** 房间状态 控制器*/
-    private lazy var stateController = VocationalRoomStateUIComponent(roomController: contextPool.room,
-                                                                      userController: contextPool.user,
-                                                                      monitorController: contextPool.monitor,
-                                                                      groupController: contextPool.group)
+    private lazy var stateController = FcrRoomStateUIComponent(roomController: contextPool.room,
+                                                               userController: contextPool.user,
+                                                               monitorController: contextPool.monitor,
+                                                               groupController: contextPool.group) 
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalController = FcrRoomGlobalUIComponent(roomController: contextPool.room,
                                                                  userController: contextPool.user,
@@ -68,7 +68,6 @@ import AgoraWidget
         
     public override func initViews() {
         super.initViews()
-        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         
@@ -93,11 +92,13 @@ import AgoraWidget
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(34))
         }
+        
         chatController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.width.equalTo()(AgoraFit.scale(170))
             make?.right.bottom().equalTo()(0)
         }
+        
         renderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.bottom().equalTo()(0)
