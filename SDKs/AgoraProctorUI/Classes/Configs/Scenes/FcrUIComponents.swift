@@ -13,19 +13,20 @@ protocol FcrUIComponentProtocol {
     var backgroundColor: UIColor {get set}
 }
 
-struct FcrUIComponentDevice: FcrUIComponentProtocol {
+struct FcrUIComponentDeviceTest: FcrUIComponentProtocol {
     var visible: Bool            = true
     var enable: Bool             = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
     
     let backgroundImage = UIImage.fcr_named("background")
-    let exitButton      = FcrUIItemDeviceExitButton()
-    let greetLabel      = FcrUIItemDeviceGreetLabel()
-    let stateLabel      = FcrUIItemDeviceStateLabel()
-    let titleLabel      = FcrUIItemDeviceTitleLabel()
-    let enterButton     = FcrUIItemDeviceEnterButton()
-    let avatar          = FcrUIItemDeviceAvatar()
-    let noAccess        = FcrUIItemDeviceNoAccess()
+    let exitButton      = FcrUIItemDeviceTestExitButton()
+    let greetLabel      = FcrUIItemDeviceTestGreetLabel()
+    let stateLabel      = FcrUIItemDeviceTestStateLabel()
+    let titleLabel      = FcrUIItemDeviceTestTitleLabel()
+    let enterButton     = FcrUIItemDeviceTestEnterButton()
+    let avatar          = FcrUIItemDeviceTestAvatar()
+    let noAccess        = FcrUIItemDeviceTestNoAccess()
+    let switchCamera    = FcrUIItemDeviceTestSwitchCamera()
 }
 
 struct FcrUIComponentRender: FcrUIComponentProtocol {
@@ -39,7 +40,7 @@ struct FcrUIComponentRender: FcrUIComponentProtocol {
 struct FcrUIComponentExam: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool  = true
-    var backgroundColor: UIColor = .black
+    var backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
     
     let backgroundImage     = UIImage.fcr_named("background")
     let exitButton          = FcrUIItemExamExitButton()
@@ -48,6 +49,7 @@ struct FcrUIComponentExam: FcrUIComponentProtocol {
     let startCountDown      = FcrUIItemExamStartCountDown()
     let duringCountDown     = FcrUIItemExamDuringCountDown()
     let endLabel            = FcrUIItemExamEndLabel()
+    let switchCamera        = FcrUIItemExamSwitchCamera()
 }
 
 // MARK: - alert

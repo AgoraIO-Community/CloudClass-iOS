@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 @class AgoraProctorSDK;
 @protocol AgoraProctorSDKDelegate <NSObject>
 @optional
-- (void)invigilatorSDK:(AgoraProctorSDK *)classroom
-               didExit:(AgoraProctorExitReason)reason;
+- (void)proctorSDK:(AgoraProctorSDK *)classroom
+           didExit:(AgoraProctorExitReason)reason;
 @end
 
 @interface AgoraProctorSDK : NSObject

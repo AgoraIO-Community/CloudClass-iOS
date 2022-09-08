@@ -19,6 +19,7 @@ import AgoraEduContext
     private lazy var nameLabel = UILabel()
     private lazy var leaveButton = UIButton()
     private lazy var renderView = FcrProctorRenderView()
+    private lazy var switchCameraButton = UIButton()
     // before
     private lazy var startCountdown = FcrExamStartCountdownView()
     // during
@@ -32,6 +33,9 @@ import AgoraEduContext
     private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext
     private let streamController: AgoraEduStreamContext
+    
+    /**data**/
+    private var currentFront: Bool = true
     
     @objc public init(roomController: AgoraEduRoomContext,
                       userController: AgoraEduUserContext,
@@ -85,16 +89,23 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
         nameLabel.text = userName
         nameLabel.sizeToFit()
         
+        switchCameraButton.addTarget(self,
+                                     action: #selector(onClickSwitchCamera),
+                                     for: .touchUpInside)
+        
         view.addSubviews([exitButton,
                           nameLabel,
                           leaveButton,
                           renderView,
+                          switchCameraButton,
                           startCountdown,
                           duringCountdown,
                           endLabel])
         
+        switchCameraButton.agora_visible = false
         startCountdown.agora_visible = false
         duringCountdown.agora_visible = false
+        endLabel.agora_visible = false
     }
     
     public func initViewFrame() {
@@ -116,6 +127,12 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
         renderView.mas_makeConstraints { make in
             make?.top.equalTo()(nameLabel.mas_bottom)?.offset()(33)
             make?.left.right().bottom().equalTo()(0)
+        }
+        
+        switchCameraButton.mas_makeConstraints { make in
+            make?.top.equalTo()(self).offset(20)
+            make?.right.equalTo()(self).offset(-20)
+            make?.width.height().equalTo()(70)
         }
         
         leaveButton.mas_makeConstraints { make in
@@ -163,6 +180,15 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
         maskLayer.frame = endLabel.bounds
         maskLayer.path = maskPath.cgPath
         endLabel.layer.mask = maskLayer
+        
+        endLabel.backgroundColor = config.endLabel.backgroundColor
+        endLabel.textColor = config.endLabel.textColor
+        endLabel.font = config.endLabel.textFont
+        
+        switchCameraButton.setImage(config.switchCamera.normalImage,
+                                    for: .normal)
+        switchCameraButton.setImage(config.switchCamera.selectedImage,
+                                    for: .highlighted)
     }
 }
 
@@ -185,9 +211,20 @@ private extension FcrProctorExamComponent {
             duringCountdown.startTimer()
         case .after:
             startCountdown.agora_visible = false
-            duringCountdown.agora_visible = false
+            duringCountdown.agora_visible = true
             endLabel.agora_visible = true
+            duringCountdown.updateTimeInfo(startTime: info.startTime,
+                                           duration: info.duration)
+            duringCountdown.startTimer()
         }
+    }
+    
+    @objc func onClickSwitchCamera() {
+        let deviceType: AgoraEduContextSystemDevice = currentFront ? .backCamera : .frontCamera
+        guard mediaController.openLocalDevice(systemDevice: deviceType) == nil else {
+            return
+        }
+        currentFront = !currentFront
     }
     
     @objc func onClickExitRoom() {

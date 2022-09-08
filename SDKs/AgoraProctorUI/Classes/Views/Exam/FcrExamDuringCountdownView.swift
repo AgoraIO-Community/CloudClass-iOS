@@ -100,9 +100,9 @@ private extension FcrExamDuringCountdownView {
             return
         }
         
-        // 倒计时 = (start+duration-realtime)
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
         let countDown = info.startTime + info.duration - realTime
+        label.text = timeString(from: countDown)
     }
     
     func timeString(from interval: Int64) -> String {

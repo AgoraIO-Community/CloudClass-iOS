@@ -6,8 +6,8 @@
 //
 
 import AgoraUIBaseViews
-import Masonry
 import AgoraEduContext
+import Masonry
 
 @objc public enum FcrUISceneExitReason: Int {
     case normal, kickOut
@@ -19,16 +19,16 @@ import AgoraEduContext
 
 @objc public class FcrProctorScene: UIViewController {
     private lazy var deviceTest = FcrProctorDeviceTestComponent(roomController: contextPool.room,
-                                                                    userController: contextPool.user,
-                                                                    mediaController: contextPool.media,
-                                                                    streamController: contextPool.stream,
-                                                                    delegate: self)
+                                                                userController: contextPool.user,
+                                                                mediaController: contextPool.media,
+                                                                streamController: contextPool.stream,
+                                                                delegate: self)
     
     private lazy var exam = FcrProctorExamComponent(roomController: contextPool.room,
-                                                        userController: contextPool.user,
-                                                        mediaController: contextPool.media,
-                                                        streamController: contextPool.stream,
-                                                        delegate: self)
+                                                    userController: contextPool.user,
+                                                    mediaController: contextPool.media,
+                                                    streamController: contextPool.stream,
+                                                    delegate: self)
     
     private let contextPool: AgoraEduContextPool
     private weak var delegate: FcrProctorSceneDelegate?
@@ -77,26 +77,31 @@ extension FcrProctorScene: FcrProctorDeviceTestComponentDelegate,
         exam.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
-//        exam.modalPresentationStyle = .fullScreen
-//        deviceTest.dismiss(animated: true) { [weak self] in
-//            guard let `self` = self else {
-//                return
-//            }
-//            self.present(self.exam,
-//                         animated: true)
-//        }
     }
     
     public func onDeviceTestExit() {
-        deviceTest.dismiss(animated: true) { [weak self] in
-            guard let `self` = self else {
-                return
-            }
-            self.delegate?.onExit(reason: .normal)
-        }
+        exit()
     }
     
     public func onExamExit() {
-        delegate?.onExit(reason: .normal)
+        exit()
+    }
+}
+
+private extension FcrProctorScene {
+    func exit() {
+        guard !isBeingDismissed else {
+            return
+        }
+        
+        contextPool.room.leaveRoom()
+        agora_dismiss(animated: true,
+                      completion: { [weak self] in
+            guard let `self` = self else {
+                return
+            }
+            
+            self.delegate?.onExit(reason: .normal)
+        })
     }
 }

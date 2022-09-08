@@ -24,13 +24,18 @@ import AgoraEduContext
     private lazy var enterButton = UIButton()
     private lazy var renderView = FcrProctorRenderView()
     private lazy var noAccessView = FcrDeviceTestNOAccessView()
+    private lazy var switchCameraButton = UIButton()
+    private lazy var switchCameraLabel = UILabel()
     
-    /**data**/
+    /**context**/
     private weak var delegate: FcrProctorDeviceTestComponentDelegate?
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext
     private let streamController: AgoraEduStreamContext
+    
+    /**data**/
+    private var currentFront: Bool = true
     
     @objc public init(roomController: AgoraEduRoomContext,
                       userController: AgoraEduUserContext,
@@ -89,6 +94,10 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
 
         updateRoomInfo()
         
+        switchCameraButton.addTarget(self,
+                                     action: #selector(onClickSwitchCamera),
+                                     for: .touchUpInside)
+        
         enterButton.sizeToFit()
         enterButton.setTitle("fcr_device_enter".fcr_invigilator_localized(),
                              for: .normal)
@@ -102,6 +111,8 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
                           greetLabel,
                           stateLabel,
                           renderView,
+                          switchCameraButton,
+                          switchCameraLabel,
                           bottomView,
                           enterButton,
                           noAccessView])
@@ -138,6 +149,17 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
         renderView.mas_makeConstraints { make in
             make?.top.equalTo()(stateLabel.mas_bottom)?.offset()(33)
             make?.left.right().bottom().equalTo()(0)
+        }
+        
+        switchCameraButton.mas_makeConstraints { make in
+            make?.centerX.equalTo()(self)
+            make?.width.height().equalTo()(70)
+            make?.bottom.equalTo()(-156)
+        }
+        
+        switchCameraLabel.mas_makeConstraints { make in
+            make?.centerX.equalTo()(self)
+            make?.top.equalTo()(switchCameraButton.mas_bottom)?.offset()(12)
         }
         
         bottomView.mas_makeConstraints { make in
@@ -182,6 +204,13 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
         enterButton.layer.cornerRadius = config.enterButton.cornerRadius
         enterButton.setTitleColorForAllStates(config.enterButton.titleColor)
         enterButton.titleLabel?.font = config.enterButton.titleFont
+        
+        switchCameraButton.setImage(config.switchCamera.normalImage,
+                                    for: .normal)
+        switchCameraButton.setImage(config.switchCamera.selectedImage,
+                                    for: .highlighted)
+        switchCameraLabel.textColor = config.switchCamera.labelColor
+        switchCameraLabel.font = config.switchCamera.labelFont
     }
 }
 
@@ -194,13 +223,23 @@ private extension FcrProctorDeviceTestComponent {
         self.delegate?.onDeviceTestExit()
     }
     
+    @objc func onClickSwitchCamera() {
+        let deviceType: AgoraEduContextSystemDevice = currentFront ? .backCamera : .frontCamera
+        guard mediaController.openLocalDevice(systemDevice: deviceType) == nil else {
+            return
+        }
+        currentFront = !currentFront
+    }
+    
     @objc func onClickEnterRoom() {
+        AgoraLoading.loading()
         roomController.joinRoom { [weak self] in
             guard let `self` = self else {
                 return
             }
             self.delegate?.onDeviceTestJoinExamSuccess()
         } failure: { error in
+            AgoraLoading.hide()
             // TODO: join fail
         }
     }

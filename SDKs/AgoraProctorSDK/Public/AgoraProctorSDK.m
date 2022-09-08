@@ -60,11 +60,20 @@ static AgoraProctorSDK *manager = nil;
 
 #pragma mark - FcrProctorSceneDelegate
 - (void)onExitWithReason:(enum FcrUISceneExitReason)reason {
-    UIViewController *topVC = [UIViewController agora_top_view_controller];
-    [topVC dismissViewControllerAnimated:manager.scene
-                              completion:^{
-        
-    }];
+    AgoraProctorExitReason sdkReason = AgoraProctorExitReasonNormal;
+    
+    switch (reason) {
+        case FcrUISceneExitReasonNormal:
+            sdkReason = AgoraProctorExitReasonNormal;
+            break;
+        case FcrUISceneExitReasonKickOut:
+            sdkReason = AgoraProctorExitReasonKickOut;
+        default:
+            break;
+    }
+    
+    [self.delegate proctorSDK:self
+                      didExit:sdkReason];
 }
 
 #pragma mark - Public

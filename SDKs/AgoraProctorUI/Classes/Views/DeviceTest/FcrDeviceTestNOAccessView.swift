@@ -116,33 +116,3 @@ extension FcrDeviceTestNOAccessView: AgoraUIContentContainer {
     }
 }
 
-// TODO: need?
-// MARK: - private
-private extension FcrDeviceTestNOAccessView {
-    func drawCircular() {
-        let centerX = bounds.size.width / 2
-        let boundingRect = CGRect(x:centerX - 100,
-                                  y:50,
-                                  width:200,
-                                  height:200)
-        var orbitPath: CGPath!
-        //通过CGPath的ellipseIn方法，创建一个圆形的CGPath
-        orbitPath = CGPath(ellipseIn: boundingRect, transform: nil)
-        //绘制路线的图层
-        drawPath(path: orbitPath)
-     }
-        
-    ///绘制路线的图层
-    func drawPath(path: CGPath) {
-        let pathLayer = CAShapeLayer()
-        pathLayer.frame = bounds
-        
-        pathLayer.path = path
-        pathLayer.fillColor = nil
-        pathLayer.lineWidth = 3
-        pathLayer.strokeColor = UIColor.white.cgColor
-            
-        layer.addSublayer(pathLayer)
-    }
-}
-

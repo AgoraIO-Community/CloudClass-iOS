@@ -13,7 +13,7 @@ protocol FcrUIItemProtocol {
 }
 
 // Device
-struct FcrUIItemDeviceExitButton: FcrUIItemProtocol {
+struct FcrUIItemDeviceTestExitButton: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
@@ -22,7 +22,7 @@ struct FcrUIItemDeviceExitButton: FcrUIItemProtocol {
     let cornerRadius = FcrUIFrameGroup.systemCornerRadius
 }
 
-struct FcrUIItemDeviceGreetLabel: FcrUIItemProtocol {
+struct FcrUIItemDeviceTestGreetLabel: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
@@ -30,7 +30,7 @@ struct FcrUIItemDeviceGreetLabel: FcrUIItemProtocol {
     let color: UIColor = FcrUIColorGroup.textLevel1Color
 }
 
-struct FcrUIItemDeviceStateLabel: FcrUIItemProtocol {
+struct FcrUIItemDeviceTestStateLabel: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
@@ -38,7 +38,7 @@ struct FcrUIItemDeviceStateLabel: FcrUIItemProtocol {
     let color: UIColor = FcrUIColorGroup.textLevel1Color
 }
 
-struct FcrUIItemDeviceTitleLabel: FcrUIItemProtocol {
+struct FcrUIItemDeviceTestTitleLabel: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
@@ -46,7 +46,7 @@ struct FcrUIItemDeviceTitleLabel: FcrUIItemProtocol {
     let color: UIColor = FcrUIColorGroup.textLevel1Color
 }
 
-struct FcrUIItemDeviceAvatar: FcrUIItemProtocol {
+struct FcrUIItemDeviceTestAvatar: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
@@ -57,7 +57,18 @@ struct FcrUIItemDeviceAvatar: FcrUIItemProtocol {
     let titleColor: UIColor      = FcrUIColorGroup.textDarkContrastColor
 }
 
-struct FcrUIItemDeviceEnterButton: FcrUIItemProtocol {
+struct FcrUIItemDeviceTestSwitchCamera: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let normalImage: UIImage?    = UIImage.fcr_named("fcr_switch_normal")
+    let selectedImage: UIImage?  = UIImage.fcr_named("fcr_switch_selected")
+    let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
+    let labelColor: UIColor      = FcrUIColorGroup.textDarkContrastColor
+    let labelFont: UIFont        = FcrUIFontGroup.font12
+}
+
+struct FcrUIItemDeviceTestEnterButton: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
@@ -67,7 +78,7 @@ struct FcrUIItemDeviceEnterButton: FcrUIItemProtocol {
     let titleColor: UIColor      = FcrUIColorGroup.textDarkContrastColor
 }
 
-struct FcrUIItemDeviceNoAccess: FcrUIItemProtocol {
+struct FcrUIItemDeviceTestNoAccess: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
@@ -79,7 +90,7 @@ struct FcrUIItemDeviceNoAccess: FcrUIItemProtocol {
     let contentFont:  UIFont            = FcrUIFontGroup.font14
     let contentColor: UIColor           = FcrUIColorGroup.textLightContrastColor
     
-    let image: UIImage?          = UIImage.fcr_named("fcr_devicetest_camera")
+    let image: UIImage?          = UIImage.fcr_named("fcr_devicetest_noaccess")
 }
 
 // Exam
@@ -114,7 +125,7 @@ struct FcrUIItemExamStartCountDown: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
-    let image:  UIImage? = .fcr_named("fcr_exam_countdown")
+    let image:  UIImage? = .fcr_named("fcr_exam_countdown_bg")
     let textColor: UIColor   = FcrUIColorGroup.textLightContrastColor
     let textFont:  UIFont = FcrUIFontGroup.font60
 }
@@ -127,6 +138,15 @@ struct FcrUIItemExamDuringCountDown: FcrUIItemProtocol {
     let dotBorderWidth: CGFloat = FcrUIFrameGroup.dotBorderWidth
     let textFont:  UIFont = FcrUIFontGroup.font16
     let textColor: UIColor = FcrUIColorGroup.textLevel1Color
+}
+
+struct FcrUIItemExamSwitchCamera: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let normalImage: UIImage?    = UIImage.fcr_named("fcr_switch_normal")
+    let selectedImage: UIImage?  = UIImage.fcr_named("fcr_switch_selected")
+    let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
 }
 
 struct FcrUIItemExamEndLabel: FcrUIItemProtocol {
