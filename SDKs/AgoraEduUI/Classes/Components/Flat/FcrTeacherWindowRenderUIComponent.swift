@@ -42,7 +42,8 @@ class FcrTeacherWindowRenderUIComponent: FcrWindowRenderUIComponent {
         self.subRoom = subRoom
         
         super.init(dataSource: dataSource,
-                   reverseItem: reverseItem)
+                   reverseItem: reverseItem,
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
