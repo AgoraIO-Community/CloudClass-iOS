@@ -37,6 +37,21 @@ struct FcrUIColorGroup {
         }
     }
     
+    static var cardBackgroundColor: UIColor {
+        switch UIMode {
+        case .agoraLight: return UIColor(hex: 0xD9D9D9)!.withAlphaComponent(0.9)
+        case .agoraDark: return UIColor(hex: 0xD9D9D9)!.withAlphaComponent(0.9)
+        }
+    }
+    
+    // 警告色
+    static var systemErrorColor: UIColor {
+        switch UIMode {
+        case .agoraLight:   return UIColor(hex: 0xF5655C)!
+        case .agoraDark:    return UIColor(hex: 0xF5655C)!
+        }
+    }
+    
     // 组件背景色
     static var systemComponentColor: UIColor {
         switch UIMode {
@@ -66,7 +81,7 @@ struct FcrUIColorGroup {
     static var textLevel1Color: UIColor {
         switch UIMode {
         case .agoraLight:   return UIColor(hex: 0x000000)!
-        case .agoraDark:    return UIColor(hex: 0xFFFFFF)!.withAlphaComponent(0.80)
+        case .agoraDark:    return UIColor(hex: 0xFFFFFF)!
         }
     }
     

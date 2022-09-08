@@ -23,7 +23,7 @@ import AgoraEduContext
     private lazy var bottomView = UIView()
     private lazy var enterButton = UIButton()
     private lazy var renderView = FcrProctorRenderView()
-    private lazy var noAccessView = FcrProctorCameraNOAccessView()
+    private lazy var noAccessView = FcrDeviceTestNOAccessView()
     
     /**data**/
     private weak var delegate: FcrProctorDeviceTestComponentDelegate?

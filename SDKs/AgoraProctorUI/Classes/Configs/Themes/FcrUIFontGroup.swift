@@ -16,4 +16,5 @@ struct FcrUIFontGroup {
     static let font20: UIFont = .systemFont(ofSize: 20)
     static let font24: UIFont = .systemFont(ofSize: 24)
     static let font30: UIFont = .systemFont(ofSize: 30)
+    static let font60: UIFont = .systemFont(ofSize: 60)
 }

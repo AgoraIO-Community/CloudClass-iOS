@@ -12,16 +12,19 @@ import AgoraEduContext
     func onExamExit()
 }
 
-@objc public class FcrProctorExamComponent: UIViewController,
-                                        AgoraUIContentContainer {
+@objc public class FcrProctorExamComponent: UIViewController {
     /**views**/
     private lazy var backgroundImageView = UIImageView()
     private lazy var exitButton = UIButton()
     private lazy var nameLabel = UILabel()
-    private lazy var countDot = UIView()
-    private lazy var countLabel = UILabel()
     private lazy var leaveButton = UIButton()
     private lazy var renderView = FcrProctorRenderView()
+    // before
+    private lazy var startCountdown = FcrExamStartCountdownView()
+    // during
+    private lazy var duringCountdown = FcrExamDuringCountdownView()
+    // after
+    private lazy var endLabel = UILabel()
     
     /**context**/
     private weak var delegate: FcrProctorExamComponentDelegate?
@@ -51,8 +54,23 @@ import AgoraEduContext
         initViews()
         initViewFrame()
         updateViewProperties()
+        checkExamState()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - AgoraEduRoomHandler
+extension FcrProctorExamComponent: AgoraEduRoomHandler {
+    public func onClassStateUpdated(state: AgoraEduContextClassState) {
+        checkExamState()
+    }
+}
+
+// MARK: - AgoraUIContentContainer
+extension FcrProctorExamComponent: AgoraUIContentContainer {
     public func initViews() {
         backgroundImageView.contentMode = .scaleAspectFill
         
@@ -67,14 +85,16 @@ import AgoraEduContext
         nameLabel.text = userName
         nameLabel.sizeToFit()
         
-        updateRoomInfo()
-        
         view.addSubviews([exitButton,
                           nameLabel,
-                          countDot,
-                          countLabel,
                           leaveButton,
-                          renderView])
+                          renderView,
+                          startCountdown,
+                          duringCountdown,
+                          endLabel])
+        
+        startCountdown.agora_visible = false
+        duringCountdown.agora_visible = false
     }
     
     public func initViewFrame() {
@@ -104,6 +124,13 @@ import AgoraEduContext
             make?.height.equalTo()(46)
             make?.bottom.equalTo()(-40)
         }
+        
+        endLabel.mas_makeConstraints { make in
+            make?.centerX.equalTo()(self)
+            make?.bottom.equalTo()(renderView.mas_bottom)
+            make?.width.equalTo()(200)
+            make?.height.equalTo()(48)
+        }
     }
     
     public func updateViewProperties() {
@@ -124,16 +151,45 @@ import AgoraEduContext
         leaveButton.layer.cornerRadius = config.leaveButton.cornerRadius
         leaveButton.setTitleColorForAllStates(config.leaveButton.titleColor)
         leaveButton.titleLabel?.font = config.leaveButton.titleFont
+        
+        let maskPath = UIBezierPath.init(roundedRect: CGRect(x: 0,
+                                                             y: 0,
+                                                             width: 200,
+                                                             height: 48),
+                                         byRoundingCorners: UIRectCorner(rawValue: UIRectCorner.topLeft.rawValue + UIRectCorner.topRight.rawValue),
+                                         cornerRadii: CGSize(width: config.endLabel.cornerRadius,
+                                                             height: config.endLabel.cornerRadius))
+        let maskLayer = CAShapeLayer.init()
+        maskLayer.frame = endLabel.bounds
+        maskLayer.path = maskPath.cgPath
+        endLabel.layer.mask = maskLayer
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
 }
 
 // MARK: - private
 private extension FcrProctorExamComponent {
+    func checkExamState() {
+        let info = roomController.getClassInfo()
+        switch info.state {
+        case .before:
+            startCountdown.agora_visible = true
+            duringCountdown.agora_visible = false
+            endLabel.agora_visible = false
+        case .during:
+            startCountdown.agora_visible = false
+            duringCountdown.agora_visible = true
+            endLabel.agora_visible = false
+            
+            duringCountdown.updateTimeInfo(startTime: info.startTime,
+                                           duration: info.duration)
+            duringCountdown.startTimer()
+        case .after:
+            startCountdown.agora_visible = false
+            duringCountdown.agora_visible = false
+            endLabel.agora_visible = true
+        }
+    }
+    
     @objc func onClickExitRoom() {
         let roomState = roomController.getClassInfo().state
         
@@ -159,23 +215,5 @@ private extension FcrProctorExamComponent {
             .addAction(action: cancelAction)
             .addAction(action: leaveAction)
             .show(in: self)
-    }
-    
-    // TODO: updateRoomInfo
-    func updateRoomInfo() {
-        var state = ""
-        let roomInfo = roomController.getRoomInfo()
-        let classInfo = roomController.getClassInfo()
-//        switch classInfo.state {
-//        case .before:
-//            state = "fcr_device_state_will_start".fcr_invigilator_localized()
-//        case .during:
-//            state = "fcr_device_state_already_start".fcr_invigilator_localized()
-//        default:
-//            return
-//        }
-//        let finalState = state.replacingOccurrences(of: String.agedu_localized_replacing_x(),
-//                                                    with: roomInfo.roomName)
-//        stateLabel.text = finalState
     }
 }

@@ -81,7 +81,6 @@ private class FcrAlertModelController: UIViewController {
         
     private var titleLabel: UILabel!
     
-    // normal only
     private lazy var messageLabel: UILabel = {
         let messageLabel = UILabel()
         messageLabel.text = model.message

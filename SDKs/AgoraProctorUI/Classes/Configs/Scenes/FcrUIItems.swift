@@ -73,22 +73,70 @@ struct FcrUIItemDeviceNoAccess: FcrUIItemProtocol {
     
     let backgroundColor: UIColor        = .clear
     let cardBackgroundColor: UIColor    = FcrUIColorGroup.componentBackgroundColor
-    let cornerRadius                    = FcrUIFrameGroup.cardCornerRadius
+    let cornerRadius                    = FcrUIFrameGroup.card1CornerRadius
     let titleFont:  UIFont              = FcrUIFontGroup.font20
     let titleColor: UIColor             = FcrUIColorGroup.textLightContrastColor
     let contentFont:  UIFont            = FcrUIFontGroup.font14
     let contentColor: UIColor           = FcrUIColorGroup.textLightContrastColor
     
-    let image: UIImage?          = UIImage.fcr_named("fcr_invigilate_camera")
+    let image: UIImage?          = UIImage.fcr_named("fcr_devicetest_camera")
 }
 
-// Test
-struct FcrUIItemTestTitle: FcrUIItemProtocol {
+// Exam
+struct FcrUIItemExamExitButton: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
+    let image = UIImage.fcr_named("exit")
+    let cornerRadius = FcrUIFrameGroup.systemCornerRadius
+}
+
+struct FcrUIItemExamNameLabel: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
     let font:  UIFont = FcrUIFontGroup.font14
     let color: UIColor = FcrUIColorGroup.textLevel1Color
+}
+
+struct FcrUIItemExamLeaveButton: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let backgroundColor: UIColor = FcrUIColorGroup.systemErrorColor
+    let cornerRadius: CGFloat    = FcrUIFrameGroup.buttonCornerRadius
+    let titleFont:  UIFont       = FcrUIFontGroup.font16
+    let titleColor: UIColor      = FcrUIColorGroup.textDarkContrastColor
+}
+
+struct FcrUIItemExamStartCountDown: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let image:  UIImage? = .fcr_named("fcr_exam_countdown")
+    let textColor: UIColor   = FcrUIColorGroup.textLightContrastColor
+    let textFont:  UIFont = FcrUIFontGroup.font60
+}
+
+struct FcrUIItemExamDuringCountDown: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let dotColor: UIColor = FcrUIColorGroup.textLevel1Color
+    let dotBorderWidth: CGFloat = FcrUIFrameGroup.dotBorderWidth
+    let textFont:  UIFont = FcrUIFontGroup.font16
+    let textColor: UIColor = FcrUIColorGroup.textLevel1Color
+}
+
+struct FcrUIItemExamEndLabel: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let backgroundColor: UIColor = FcrUIColorGroup.cardBackgroundColor
+    let cornerRadius = FcrUIFrameGroup.card2CornerRadius
+    let textFont:  UIFont = FcrUIFontGroup.font14
+    let textColor: UIColor = FcrUIColorGroup.textLightContrastColor
 }
 
 // Alert
@@ -104,12 +152,9 @@ struct FcrUIItemAlertMessage: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let normalColor: UIColor  = FcrUIColorGroup.textLevel2Color
-    let selectedColor: UIColor  = FcrUIColorGroup.textLevel1Color
-    let font: UIFont    = FcrUIFontGroup.font13
-    
-    let checkedImage: UIImage?   = .fcr_named("ic_alert_checked")
-    let uncheckedImage: UIImage? = .fcr_named("ic_alert_unchecked")
+    let normalColor: UIColor     = FcrUIColorGroup.textLevel2Color
+    let selectedColor: UIColor   = FcrUIColorGroup.textLevel1Color
+    let font: UIFont             = FcrUIFontGroup.font13
 }
 
 struct FcrUIItemAlertButton: FcrUIItemProtocol {

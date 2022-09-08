@@ -1,5 +1,5 @@
 //
-//  FcrProctorCameraNOAccessView.swift
+//  FcrDeviceTestNOAccessView.swift
 //  AgoraProctorUI
 //
 //  Created by LYY on 2022/9/6.
@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 
-class FcrProctorCameraNOAccessView: UIView {
+class FcrDeviceTestNOAccessView: UIView {
     private lazy var titleLabel = UILabel()
     private lazy var contentLabel = UILabel()
     private lazy var card = UIView()
@@ -38,7 +38,7 @@ class FcrProctorCameraNOAccessView: UIView {
     }
 }
 
-extension FcrProctorCameraNOAccessView: AgoraUIContentContainer {
+extension FcrDeviceTestNOAccessView: AgoraUIContentContainer {
     func initViews() {
         titleLabel.text = "fcr_device_no_access_title".fcr_invigilator_localized()
         contentLabel.text = "fcr_device_no_access_content".fcr_invigilator_localized()
@@ -118,7 +118,7 @@ extension FcrProctorCameraNOAccessView: AgoraUIContentContainer {
 
 // TODO: need?
 // MARK: - private
-private extension FcrProctorCameraNOAccessView {
+private extension FcrDeviceTestNOAccessView {
     func drawCircular() {
         let centerX = bounds.size.width / 2
         let boundingRect = CGRect(x:centerX - 100,

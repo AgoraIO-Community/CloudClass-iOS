@@ -41,10 +41,13 @@ struct FcrUIComponentExam: FcrUIComponentProtocol {
     var enable: Bool  = true
     var backgroundColor: UIColor = .black
     
-    let backgroundImage = UIImage.fcr_named("background")
-    let exitButton      = FcrUIItemDeviceExitButton()
-    let nameLabel       = FcrUIItemDeviceTitleLabel()
-    let leaveButton     = FcrUIItemDeviceEnterButton()
+    let backgroundImage     = UIImage.fcr_named("background")
+    let exitButton          = FcrUIItemExamExitButton()
+    let nameLabel           = FcrUIItemExamNameLabel()
+    let leaveButton         = FcrUIItemExamLeaveButton()
+    let startCountDown      = FcrUIItemExamStartCountDown()
+    let duringCountDown     = FcrUIItemExamDuringCountDown()
+    let endLabel            = FcrUIItemExamEndLabel()
 }
 
 // MARK: - alert
