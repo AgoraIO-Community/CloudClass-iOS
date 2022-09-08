@@ -78,15 +78,15 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         let recordingTitle = "fcr_record_recording".agedu_localized()
         stateView.recordingLabel.text = recordingTitle
         
-        
-        
         var roomTitle: String
+        
         switch roomController.getRoomInfo().roomType {
         case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".agedu_localized()
         case .small:        roomTitle = "fcr_room_small_title".agedu_localized()
         case .lecture:      roomTitle = "fcr_room_lecture_title".agedu_localized()
         @unknown default:   roomTitle = "fcr_room_small_title".agedu_localized()
         }
+        
         stateView.titleLabel.text = roomTitle
         
         if let sub = subRoom {
@@ -123,7 +123,6 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         
         stateView.recordingLabel.agora_enable = recordConfig.recordingState.enable
         stateView.recordingLabel.agora_visible = recodingIsVisible
-        
     }
     
     func viewWillActive() {

@@ -409,16 +409,11 @@ private extension LoginViewController {
                 launchConfig.widgets.removeValue(forKey: "easemobIM")
             }
             
-            if launchConfig.roomType == .vocation { // 职教入口
-                AgoraClassroomSDK.vocationalLaunch(launchConfig,
-                                                   service: self.inputParams.serviceType ?? .livePremium,
-                                                   success: launchSuccessBlock,
-                                                   failure: failureBlock)
-            } else { // 灵动课堂入口
-                AgoraClassroomSDK.launch(launchConfig,
-                                         success: launchSuccessBlock,
-                                         failure: failureBlock)
-            }
+            
+            AgoraClassroomSDK.launch(launchConfig,
+                                     success: launchSuccessBlock,
+                                     failure: failureBlock)
+            
         }
         
         requestToken(roomId: roomUuid,
