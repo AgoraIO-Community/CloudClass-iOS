@@ -91,10 +91,9 @@ import AgoraWidget
                                                                             delegate: self)
     
     /** 花名册 控制器*/
-    private lazy var nameRollComponent = FcrUserListUIComponent(roomController: contextPool.room,
-                                                                userController: contextPool.user,
-                                                                streamController: contextPool.stream,
-                                                                widgetController: contextPool.widget)
+    private lazy var nameRollComponent = FcrSmallRosterUIComponent(userController: contextPool.user,
+                                                                   streamController: contextPool.stream,
+                                                                   widgetController: contextPool.widget)
     
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuComponent = FcrRenderMenuUIComponent(userController: contextPool.user,
@@ -705,7 +704,7 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
         boardComponent.updateBoardRatio()
         
         contentView.layoutIfNeeded()
-        windowComponent.reloadStreamWindowsFrame()
+//        windowComponent.reloadStreamWindowsFrame()
     }
     
     func onBoardActiveStateChanged(isActive: Bool) {

@@ -10,19 +10,18 @@ import AgoraEduContext
 import UIKit
 
 // 花名册上的 cell
-protocol AgoraPaintingUserListItemCellDelegate: NSObjectProtocol {
-    func onDidSelectFunction(_ fn: AgoraUserListFunction,
-                             at index: NSIndexPath,
-                             isOn: Bool)
+protocol AgoraRosterItemCellDelegate: NSObjectProtocol {
+    func onDidSelectFunction(_ fn: AgoraRosterFunction,
+                             at index: NSIndexPath)
 }
 
 class AgoraUserListItemCell: UITableViewCell {
     
-    weak var delegate: AgoraPaintingUserListItemCellDelegate?
+    weak var delegate: AgoraRosterItemCellDelegate?
     
     var indexPath: NSIndexPath?
     
-    var supportFuncs: [AgoraUserListFunction]? {
+    var supportFuncs: [AgoraRosterFunction]? {
         didSet {
             if supportFuncs != oldValue {
                 updateSupportFuncs()
@@ -30,7 +29,7 @@ class AgoraUserListItemCell: UITableViewCell {
         }
     }
     
-    var itemModel: AgoraUserListModel? {
+    var itemModel: AgoraRosterModel? {
         didSet {
             updateState()
         }
@@ -222,54 +221,46 @@ private extension AgoraUserListItemCell {
         guard let model = itemModel else {
             return
         }
-        delegateSelectFunc(.stage,
-                           state: !model.stageState.isOn)
+        delegateSelectFunc(.stage)
     }
     @objc func onClickAuth(_ sender: UIButton) {
         guard let model = itemModel else {
             return
         }
-        delegateSelectFunc(.auth,
-                           state: !model.authState.isOn)
+        delegateSelectFunc(.auth)
     }
     @objc func onClickCamera(_ sender: UIButton) {
         guard let model = itemModel else {
             return
         }
-        delegateSelectFunc(.camera,
-                           state: !model.cameraState.streamOn)
+        delegateSelectFunc(.camera)
     }
     @objc func onClickMic(_ sender: UIButton) {
         guard let model = itemModel else {
             return
         }
-        delegateSelectFunc(.mic,
-                           state: !model.micState.streamOn)
+        delegateSelectFunc(.mic)
     }
 
     @objc func onClickReward(_ sender: UIButton) {
         guard let model = itemModel else {
             return
         }
-        delegateSelectFunc(.reward,
-                           state: true)
+        delegateSelectFunc(.reward)
     }
     @objc func onClickkick(_ sender: UIButton) {
         guard let model = itemModel else {
             return
         }
-        delegateSelectFunc(.kick,
-                           state: true)
+        delegateSelectFunc(.kick)
     }
     
-    func delegateSelectFunc(_ fn: AgoraUserListFunction,
-                            state: Bool) {
+    func delegateSelectFunc(_ fn: AgoraRosterFunction) {
         guard let i = indexPath else {
             return
         }
         delegate?.onDidSelectFunction(fn,
-                                      at: i,
-                                      isOn: state)
+                                      at: i)
     }
 }
 // MARK: - Creations

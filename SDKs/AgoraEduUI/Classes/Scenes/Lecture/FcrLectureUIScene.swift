@@ -14,10 +14,8 @@ import AgoraWidget
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class FcrLectureUIScene: FcrUIScene {
     /** 花名册 控制器 （教师端）*/
-    private lazy var nameRollComponent = FcrUserListUIComponent(roomController: contextPool.room,
-                                                                userController: contextPool.user,
-                                                                streamController: contextPool.stream,
-                                                                widgetController: contextPool.widget)
+    private lazy var nameRollComponent = FcrLectureRosterUIComponent(userController: contextPool.user,
+                                                                     streamController: contextPool.stream)
     
     /** 设置界面 控制器*/
     private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
@@ -77,7 +75,8 @@ import AgoraWidget
                                                                          mediaController: contextPool.media,
                                                                          widgetController: contextPool.widget,
                                                                          delegate: self,
-                                                                         componentDataSource: self)
+                                                                         componentDataSource: self,
+                                                                         actionDelegate: self)
     /** 外部链接 控制器*/
     private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
@@ -96,6 +95,12 @@ import AgoraWidget
     private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,
                                                         userController: contextPool.user,
                                                         widgetController: contextPool.widget)
+    /** 窗口拖拽预览视图*/
+    private lazy var rectEffectView: FcrDragRectEffectView = {
+        let view = FcrDragRectEffectView(frame: .zero)
+        contentView.addSubview(view)
+        return view
+    }()
     
     private var isJoinedRoom = false
     
@@ -168,7 +173,6 @@ import AgoraWidget
                                renderMenuComponent,
                                handsListComponent]
             componentList.append(contentsOf: teacherList)
-            
             classStateComponent.view.agora_visible = false
             cloudComponent.view.agora_visible = false
             renderMenuComponent.view.agora_visible = false
@@ -380,26 +384,24 @@ extension FcrLectureUIScene: FcrStreamWindowUIComponentDelegate {
     
     func onWillStartRenderVideoStream(streamId: String) {
         guard let item = teacherRenderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
-        
+              let data = item.data
+        else {
+            return
+        }
         let new = FcrWindowRenderViewState.create(isHide: true,
                                                   data: data)
-        
         teacherRenderComponent.updateItem(new,
                                           animation: false)
     }
     
     func onDidStopRenderVideoStream(streamId: String) {
         guard let item = teacherRenderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
-        
+              let data = item.data
+        else {
+            return
+        }
         let new = FcrWindowRenderViewState.create(isHide: false,
                                                   data: data)
-        
         teacherRenderComponent.updateItem(new,
                                           animation: false)
     }
@@ -443,7 +445,83 @@ extension FcrLectureUIScene: FcrToolBarComponentDelegate {
         ctrlView = nil
     }
 }
-
+// MARK: - FcrLectureStreamWindowUIComponentDelegate
+extension FcrLectureUIScene: FcrLectureStreamWindowUIComponentDelegate {
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        didPressUser uuid: String,
+                        view: UIView) {
+        let rect = view.convert(view.bounds,
+                                to: contentView)
+        let centerX = rect.center.x - contentView.width / 2
+        var role = AgoraEduContextUserRole.student
+        if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
+           teacehr.userUuid == uuid {
+            role = .teacher
+        }
+        if let menuId = renderMenuComponent.userId,
+           menuId == uuid {
+            // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
+            renderMenuComponent.dismissView()
+        } else {
+            // 1. 当前menu的userId不为点击的userId，切换用户
+            // 2. 当前不存在menu，显示
+            renderMenuComponent.show(roomType: .lecture,
+                                     userUuid: uuid,
+                                     showRoleType: role)
+            renderMenuComponent.view.mas_remakeConstraints { make in
+                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
+                make?.centerX.equalTo()(view.mas_centerX)
+                make?.height.equalTo()(30)
+                make?.width.equalTo()(renderMenuComponent.menuWidth)
+            }
+        }
+    }
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        starDrag item: FcrStreamWindowWidgetItem,
+                        location: CGPoint) {
+        let windowArea = FcrRectEffectArea(areaRect: windowComponent.view.frame,
+                                           initSize: item.widget?.view.size ?? .zero,
+                                           zoomMinSize: CGSize(width: 100, height: 100))
+        let teacherArea = FcrRectEffectArea(areaRect: teacherRenderComponent.view.frame,
+                                            initSize: teacherRenderComponent.view.frame.size,
+                                            zoomMinSize: nil)
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        let rect = component.view.convert(item.widget?.view.frame ?? .zero,
+                                          to: rectEffectView)
+        if contextPool.user.getUserInfo(userUuid: item.data.userId)?.userRole == .teacher {
+            rectEffectView.startEffect(with: [windowArea, teacherArea],
+                                       from: rect,
+                                       at: point)
+        } else {
+            rectEffectView.startEffect(with: [windowArea],
+                                       from: rect,
+                                       at: point)
+        }
+    }
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        dragging item: FcrStreamWindowWidgetItem,
+                        to location: CGPoint) {
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        rectEffectView.setDropPoint(point)
+    }
+    
+    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+                        didEndDrag item: FcrStreamWindowWidgetItem,
+                        location: CGPoint) -> CGRect? {
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        rectEffectView.setDropPoint(point)
+        if rectEffectView.stopEffect() {
+            return nil
+        } else {
+            return rectEffectView.getDropRectInView(windowComponent.view)
+        }
+    }
+}
 // MARK: - AgoraRenderMenuUIComponentDelegate
 extension FcrLectureUIScene: FcrRenderMenuUIComponentDelegate {
     func onMenuUserLeft() {
@@ -496,6 +574,49 @@ extension FcrLectureUIScene: FcrWindowRenderUIComponentDelegate {
                 make?.width.equalTo()(self.renderMenuComponent.menuWidth)
             }
         }
+    }
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           starDrag item: FcrWindowRenderViewState,
+                           location: CGPoint) {
+        let windowArea = FcrRectEffectArea(areaRect: windowComponent.view.frame,
+                                           initSize: CGSize(width: 200, height: 160),
+                                           zoomMinSize: CGSize(width: 100, height: 100))
+        let teacherArea = FcrRectEffectArea(areaRect: teacherRenderComponent.view.frame,
+                                            initSize: teacherRenderComponent.view.frame.size,
+                                            zoomMinSize: nil)
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        let rect = component.view.convert(teacherRenderComponent.view.frame,
+                                          to: rectEffectView)
+        rectEffectView.startEffect(with: [windowArea, teacherArea],
+                                   from: rect,
+                                   at: point)
+    }
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           dragging item: FcrWindowRenderViewState,
+                           to location: CGPoint) {
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        rectEffectView.setDropPoint(point)
+    }
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           didEndDrag item: FcrWindowRenderViewState,
+                           location: CGPoint) {
+        let point = component.view.convert(location,
+                                           to: rectEffectView)
+        rectEffectView.setDropPoint(point)
+        rectEffectView.stopEffect()
+        guard let data = item.data,
+              let stream = self.contextPool.stream.getStreamList(userUuid: data.userId)?.first
+        else {
+            return
+        }
+        let rect = rectEffectView.getDropRectInView(windowComponent.view)
+        self.windowComponent.createWidgetWith(stream: stream,
+                                              at: rect)
     }
 }
 

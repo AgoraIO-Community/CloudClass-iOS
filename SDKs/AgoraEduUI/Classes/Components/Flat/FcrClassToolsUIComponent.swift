@@ -115,7 +115,7 @@ extension FcrClassToolsUIComponent: AgoraWidgetMessageObserver {
 }
 
 extension FcrClassToolsUIComponent: AgoraWidgetSyncFrameObserver {
-    func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
+    func onWidgetSyncFrameUpdated(_ syncFrame: AgoraWidgetFrame,
                                   widgetId: String,
                                   operatorUser: AgoraWidgetUserInfo?) {
         guard operatorUser?.userUuid != userController.getLocalUserInfo().userUuid else {
