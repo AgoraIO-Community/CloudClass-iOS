@@ -98,6 +98,8 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
                                      action: #selector(onClickSwitchCamera),
                                      for: .touchUpInside)
         
+        switchCameraLabel.text = "".fcr_invigilator_localized()
+        
         enterButton.sizeToFit()
         enterButton.setTitle("fcr_device_enter".fcr_invigilator_localized(),
                              for: .normal)
@@ -270,15 +272,18 @@ private extension FcrProctorDeviceTestComponent {
     func updateEnterable(_ able: Bool) {
         if able {
             noAccessView.agora_visible = false
+            switchCameraButton.agora_visible = true
+            switchCameraLabel.agora_visible = true
             
             enterButton.isUserInteractionEnabled = true
             enterButton.alpha = 1
             enterButton.mas_updateConstraints { make in
                 make?.bottom.equalTo()(-40)
             }
-
         } else {
             noAccessView.agora_visible = true
+            switchCameraButton.agora_visible = false
+            switchCameraLabel.agora_visible = false
             
             enterButton.isUserInteractionEnabled = false
             enterButton.alpha = 0.5
