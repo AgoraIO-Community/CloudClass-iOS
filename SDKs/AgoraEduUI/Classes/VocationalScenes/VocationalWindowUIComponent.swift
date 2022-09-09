@@ -158,7 +158,7 @@ extension VocationalWindowUIComponent: AgoraWidgetActivityObserver {
 
 // MARK: - AgoraWidgetSyncFrameObserver
 extension VocationalWindowUIComponent: AgoraWidgetSyncFrameObserver {
-    func onWidgetSyncFrameUpdated(_ syncFrame: CGRect,
+    func onWidgetSyncFrameUpdated(_ syncFrame: AgoraWidgetFrame,
                                   widgetId: String,
                                   operatorUser: AgoraWidgetUserInfo?) {
         guard operatorUser?.userUuid != userController.getLocalUserInfo().userUuid,
@@ -166,7 +166,7 @@ extension VocationalWindowUIComponent: AgoraWidgetSyncFrameObserver {
             return
         }
         
-        let frame = syncFrame.displayFrameFromSyncFrame(superView: view)
+        let frame = syncFrame.rectInView(view)
         handleSyncFrame(widget: item.object,
                         frame: frame)
     }
@@ -435,7 +435,7 @@ private extension VocationalWindowUIComponent {
         
         // 动画
         let syncFrame = widgetController.getWidgetSyncFrame(widget.info.widgetId)
-        let frame = syncFrame.displayFrameFromSyncFrame(superView: view)
+        let frame = syncFrame.rectInView(view)
         view.addSubview(widget.view)
         
         delegate?.startSpreadForUser(with: renderInfo.userUuid)

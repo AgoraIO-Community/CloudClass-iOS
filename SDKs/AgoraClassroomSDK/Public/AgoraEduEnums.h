@@ -12,13 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 // 上台后音视频是否自动发流权限
 typedef NS_ENUM(NSInteger, AgoraEduMediaAuthOption) {
     // 无权限
-    AgoraEduMediaAuthOptionNone = 0,
+    AgoraEduMediaAuthOptionNone  = 0,
     // 仅音频权限
     AgoraEduMediaAuthOptionAudio = 1,
     // 仅视频权限
     AgoraEduMediaAuthOptionVideo = 2,
     // 音频+视频权限
-    AgoraEduMediaAuthOptionBoth = 3,
+    AgoraEduMediaAuthOptionBoth  = 3
 };
 
 typedef NS_ENUM(NSInteger, AgoraEduRegion) {
@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, AgoraEduRegion) {
 
 typedef NS_ENUM(NSInteger, AgoraEduExitReason) {
     // 正常退出
-    AgoraEduExitReasonNormal = 0,
+    AgoraEduExitReasonNormal  = 0,
     // 被踢出
     AgoraEduExitReasonKickOut = 1
 };

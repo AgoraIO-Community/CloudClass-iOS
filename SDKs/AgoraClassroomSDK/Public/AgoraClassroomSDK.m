@@ -18,6 +18,7 @@
 #import <AgoraEduUI/AgoraEduUI-Swift.h>
 #import "AgoraInternalClassroom.h"
 #import "AgoraClassroomSDK.h"
+#import "AgoraEduEnums.h"
 
 @interface AgoraClassroomSDK () <FcrUISceneDelegate>
 @property (nonatomic, strong) AgoraEduCorePuppet *core;
@@ -65,29 +66,28 @@ static AgoraClassroomSDK *manager = nil;
     [self coreLaunchWithConfig:config
                        success:^(id<AgoraEduContextPool> pool) {
         FcrUIScene *scene = nil;
-        
-        switch ([pool.room getRoomInfo].roomType) {
-            case AgoraEduContextRoomTypeOneToOne:
+         
+        switch (config.roomType) {
+            case FcrUISceneTypeOneToOne:
                 [FcrUIContext createWith:FcrUISceneTypeOneToOne];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeOneToOne];
                 
                 scene = [[FcrOneToOneUIScene alloc] initWithContextPool:pool
                                                                delegate:manager];
                 break;
-            case AgoraEduContextRoomTypeSmall:
+            case FcrUISceneTypeSmall:
                 [FcrUIContext createWith:FcrUISceneTypeSmall];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeSmall];
                 
                 scene = [[FcrSmallUIScene alloc] initWithContextPool:pool
                                                             delegate:manager];
                 break;
-            case AgoraEduContextRoomTypeLecture:
+            case FcrUISceneTypeLecture:
                 [FcrUIContext createWith:FcrUISceneTypeLecture];
                 [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeLecture];
                 
                 scene = [[FcrLectureUIScene alloc] initWithContextPool:pool
                                                               delegate:manager];
-                break;
             default:
                 NSCAssert(true,
                           @"room type error");
@@ -97,71 +97,6 @@ static AgoraClassroomSDK *manager = nil;
         [self presentUIScene:scene
                      success:success];
     } failure:failure];
-}
-
-+ (void)vocationalLaunch:(AgoraEduLaunchConfig *)config
-                 service:(AgoraEduServiceType)serviceType
-                 success:(void (^)(void))success
-                 failure:(void (^)(NSError *))failure {
-    [self coreLaunchWithConfig:config
-                       success:^(id<AgoraEduContextPool> pool) {
-        if ([pool.room getRoomInfo].roomType != AgoraEduContextRoomTypeLecture) {
-            NSCAssert(true, @"vocational room type error");
-            return;
-        }
-        
-        FcrUIScene *scene = nil;
-        
-        if (serviceType == AgoraEduServiceTypeMixStreamCDN) {
-            VcrMixStreamCDNUIScene *vc = [[VcrMixStreamCDNUIScene alloc] initWithContextPool:pool
-                                                                                    delegate:manager];
-            scene = vc;
-        } else if (serviceType == AgoraEduServiceTypeHostingScene) {
-            VcrHostingUIScene *vc = [[VcrHostingUIScene alloc] initWithContextPool:pool
-                                                                          delegate:manager];
-            scene = vc;
-        } else {
-            VocationalCDNType cdnType = VocationalCDNTypeLiveStandard;
-            switch (serviceType) {
-                case AgoraEduServiceTypeCDN:
-                    cdnType = VocationalCDNTypeCDN;
-                    break;
-                case AgoraEduServiceTypeFusion:
-                    cdnType = VocationalCDNTypeFusion;
-                    break;
-                default:
-                    cdnType = VocationalCDNTypeLiveStandard;
-                    break;
-            }
-            
-            AgoraVocationalUIScene *vc = [[AgoraVocationalUIScene alloc] initWithContextPool:pool
-                                                                                    delegate:manager];
-            vc.cdnType = cdnType;
-            scene = vc;
-        }
-        
-        [FcrUIContext createWith:FcrUISceneTypeVocation];
-        [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeVocation];
-        
-        [self presentUIScene:scene
-                     success:success];
-    } failure:failure];
-}
-
-+ (void)presentUIScene:(FcrUIScene *)scene
-               success:(void (^)(void))success {
-    scene.modalPresentationStyle = UIModalPresentationFullScreen;
-    manager.scene = scene;
-    
-    UIViewController *topVC = [UIViewController agora_top_view_controller];
-    
-    [topVC presentViewController:scene
-                        animated:true
-                      completion:^{
-        if (success) {
-            success();
-        }
-    }];
 }
 
 + (void)setDelegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate {
@@ -237,6 +172,22 @@ static AgoraClassroomSDK *manager = nil;
         
         if (failure) {
             failure(error);
+        }
+    }];
+}
+
++ (void)presentUIScene:(FcrUIScene *)scene
+               success:(void (^)(void))success {
+    scene.modalPresentationStyle = UIModalPresentationFullScreen;
+    manager.scene = scene;
+    
+    UIViewController *topVC = [UIViewController agora_top_view_controller];
+    
+    [topVC presentViewController:scene
+                        animated:true
+                      completion:^{
+        if (success) {
+            success();
         }
     }];
 }

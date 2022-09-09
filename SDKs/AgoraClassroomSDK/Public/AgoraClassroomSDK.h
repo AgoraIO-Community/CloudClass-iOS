@@ -22,12 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
        success:(void (^)(void))success
        failure:(void (^)(NSError *))failure;
 
-/** 职教课堂的加载方法*/
-+ (void)vocationalLaunch:(AgoraEduLaunchConfig *)config
-                 service:(AgoraEduServiceType)serviceType
-                 success:(void (^)(void))success
-                 failure:(void (^)(NSError *))failure;
-
 + (void)setDelegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate;
 
 + (void)exit;

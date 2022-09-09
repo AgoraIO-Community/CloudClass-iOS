@@ -9,25 +9,42 @@ import AgoraUIBaseViews
 import UIKit
 
 protocol FcrWindowRenderUIComponentDelegate: NSObjectProtocol {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                            didDataSouceCountUpdated count: Int)
     
     func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                            didPressItem item: FcrWindowRenderViewState,
-                            view: UIView)
+                           didDataSouceCountUpdated count: Int)
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           didPressItem item: FcrWindowRenderViewState,
+                           view: UIView)
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           starDrag item: FcrWindowRenderViewState,
+                           location: CGPoint)
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           dragging item: FcrWindowRenderViewState,
+                           to location: CGPoint)
+    
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           didEndDrag item: FcrWindowRenderViewState,
+                           location: CGPoint)
 }
 
 extension FcrWindowRenderUIComponentDelegate {
     func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                            didDataSouceCountUpdated count: Int) {
-        
-    }
-    
+                            didDataSouceCountUpdated count: Int) {}
     func renderUIComponent(_ component: FcrWindowRenderUIComponent,
                             didPressItem item: FcrWindowRenderViewState,
-                            view: UIView) {
-        
-    }
+                            view: UIView) {}
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           starDrag item: FcrWindowRenderViewState,
+                           location: CGPoint) {}
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           dragging item: FcrWindowRenderViewState,
+                           to location: CGPoint) {}
+    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
+                           didEndDrag item: FcrWindowRenderViewState,
+                           location: CGPoint) {}
 }
 
 class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
@@ -342,6 +359,10 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
                              for: .touchUpInside)
         
         view.addSubview(nextButton)
+        
+        let panGesture = UIPanGestureRecognizer(target: self,
+                                                action: #selector(onDrag(_:)))
+        view.addGestureRecognizer(panGesture)
     }
     
     func initViewFrame() {
@@ -374,7 +395,7 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
     }
     
 }
-
+// MARK: - Private
 private extension FcrWindowRenderUIComponent {
     func showScrollButtons() {
         let isHidden = (dataSource.count <= maxShowItemCount)
@@ -459,6 +480,34 @@ private extension FcrWindowRenderUIComponent {
         renderView.rewardView.imageView.image = data.reward.image
         renderView.rewardView.label.text = data.reward.count
         renderView.rewardView.isHidden = data.reward.isHidden
+    }
+    
+    @objc func onDrag(_ sender: UIPanGestureRecognizer) {
+        let point = sender.location(in: collectionView)
+//        guard let indexPath = collectionView.indexPathForItem(at: point),
+//              let cell = collectionView.cellForItem(at: indexPath)
+//        else {
+//            return
+//        }
+        let item = dataSource[0]
+        switch sender.state {
+        case .began:
+            delegate?.renderUIComponent(self,
+                                        starDrag: item,
+                                        location: point)
+        case .changed:
+            delegate?.renderUIComponent(self,
+                                        dragging: item,
+                                        to: point)
+        case .recognized: fallthrough
+        case .ended:
+            delegate?.renderUIComponent(self,
+                                        didEndDrag: item,
+                                        location: point)
+            break
+        default:
+            break
+        }
     }
 }
 
