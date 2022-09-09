@@ -130,8 +130,8 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
         }
         
         switchCameraButton.mas_makeConstraints { make in
-            make?.top.equalTo()(self).offset(20)
-            make?.right.equalTo()(self).offset(-20)
+            make?.top.equalTo()(self.view)?.offset()(20)
+            make?.right.equalTo()(self.view)?.offset()(-20)
             make?.width.height().equalTo()(70)
         }
         

@@ -6,7 +6,7 @@
 //
 
 struct FcrProctorUIConfig: FcrUIConfig {
-    var deviceTest  = FcrUIComponentDevice()
+    var deviceTest  = FcrUIComponentDeviceTest()
     var render      = FcrUIComponentRender()
     var exam        = FcrUIComponentExam()
     var alert       = FcrUIComponentAlert()
