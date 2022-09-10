@@ -16,9 +16,13 @@ import AgoraUIBaseViews
 
 class DebugViewController: UIViewController {
     /**data**/
-    private lazy var data = DebugDataHandler(delegate: self)
+    private lazy var data = DebugDataHandler(delegate: self,
+                                             proctorSDK: proctorSDK)
     /**view**/
     private lazy var debugView = DebugView(frame: .zero)
+    
+    /**sdk**/
+    private var proctorSDK: AgoraProctorSDK?
 }
 
 // MARK: - Data Delagate
@@ -103,14 +107,18 @@ extension DebugViewController: DebugViewDelagate {
                 AgoraClassroomSDK.launch(launchConfig,
                                          success: launchSuccessBlock,
                                          failure: failureBlock)
-            } else if roomType == .proctor {
+            } else if roomType == .proctor,
+                      self.proctorSDK == nil {
                 let launchConfig = self.data.getProctorLaunchConfig(debugInfo: info,
                                                                      appId: response.appId,
                                                                      token: response.token,
-                                                                     userId: response.userId)
-                AgoraProctorSDK.launch(launchConfig,
-                                       success: launchSuccessBlock,
-                                       failure: failureBlock)
+                                                                    userId: response.userId)
+                let proSDK = AgoraProctorSDK(launchConfig,
+                                             delegate: self)
+                self.proctorSDK = proSDK
+                
+                proSDK.launch(launchSuccessBlock,
+                              failure: failureBlock)
             }
         }
         
@@ -209,5 +217,31 @@ extension DebugViewController {
                                              .environment(environment)]
         
         data.updateDataSourceList(defaultList)
+    }
+}
+
+// MARK: - SDK delegate
+extension DebugViewController: AgoraProctorSDKDelegate,
+                               AgoraEduClassroomSDKDelegate {
+    func proctorSDK(_ classroom: AgoraProctorSDK,
+                    didExit reason: AgoraProctorExitReason) {
+        switch reason {
+        case .kickOut:
+            AgoraToast.toast(message: "kick out")
+        default:
+            break
+        }
+        
+        self.proctorSDK = nil
+    }
+    
+    public func classroomSDK(_ classroom: AgoraClassroomSDK,
+                             didExit reason: AgoraEduExitReason) {
+        switch reason {
+        case .kickOut:
+            AgoraToast.toast(message: "kick out")
+        default:
+            break
+        }
     }
 }

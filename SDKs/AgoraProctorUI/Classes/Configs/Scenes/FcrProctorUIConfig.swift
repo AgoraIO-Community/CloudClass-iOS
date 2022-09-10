@@ -10,4 +10,7 @@ struct FcrProctorUIConfig: FcrUIConfig {
     var render      = FcrUIComponentRender()
     var exam        = FcrUIComponentExam()
     var alert       = FcrUIComponentAlert()
+    
+    var loading     = FcrUIComponentLoading()
+    
 }

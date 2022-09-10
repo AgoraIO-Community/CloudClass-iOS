@@ -202,3 +202,12 @@ struct FcrUIItemShadow: FcrUIItemProtocol {
     let opacity: Float  = FcrUIColorGroup.shadowOpacity
     let radius: CGFloat = FcrUIColorGroup.containerShadowRadius
 }
+
+// loading
+struct FcrUIItemLoadingMessage: FcrUIItemProtocol {
+    var visible: Bool = true
+    var enable: Bool  = true
+    
+    let color: UIColor = FcrUIColorGroup.textLevel1Color
+    let font: UIFont   = FcrUIFontGroup.font13
+}

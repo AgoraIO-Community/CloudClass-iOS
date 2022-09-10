@@ -59,8 +59,8 @@
                                                                                                 roomName:config.roomName
                                                                                                 roomUuid:config.roomUuid
                                                                                                 roomType:roomType
-                                                                                               startTime:config.startTime
-                                                                                                duration:config.duration];
+                                                                                               startTime:nil
+                                                                                                duration:nil];
     return launchConfig;
 }
 

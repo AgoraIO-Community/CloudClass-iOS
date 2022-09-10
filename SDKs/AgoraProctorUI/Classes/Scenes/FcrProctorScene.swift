@@ -49,18 +49,9 @@ import Masonry
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = (agora_ui_mode == .agoraDark) ? .dark : .light
-        }
-        
-        view.backgroundColor = .black
-
-        addChildViewController(deviceTest,
-                               toContainerView: view)
-
-        deviceTest.view.mas_makeConstraints { make in
-            make?.left.right().top().bottom().equalTo()(0)
-        }
+        initViews()
+        initViewFrame()
+        updateViewProperties()
     }
 }
 
@@ -88,6 +79,38 @@ extension FcrProctorScene: FcrProctorDeviceTestComponentDelegate,
     }
 }
 
+// MARK: - private
+extension FcrProctorScene: AgoraUIContentContainer {
+    public func initViews() {
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = (agora_ui_mode == .agoraDark) ? .dark : .light
+        }
+        
+        view.backgroundColor = .black
+        addChildViewController(deviceTest,
+                               toContainerView: view)
+    }
+    
+    public func initViewFrame() {
+        deviceTest.view.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
+    }
+    
+    public func updateViewProperties() {
+        let loadingComponent = UIConfig.loading
+        
+        if let url = loadingComponent.gifUrl,
+           let data = try? Data(contentsOf: url) {
+            AgoraLoading.setImageData(data)
+        }
+        AgoraLoading.setMessage(color: loadingComponent.message.color,
+                                font: loadingComponent.message.font)
+        AgoraLoading.setBackgroundColor(loadingComponent.backgroundColor)
+    }
+}
+
+// MARK: - private
 private extension FcrProctorScene {
     func exit() {
         guard !isBeingDismissed else {

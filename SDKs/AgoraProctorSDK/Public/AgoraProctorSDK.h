@@ -18,15 +18,15 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface AgoraProctorSDK : NSObject
-+ (void)launch:(AgoraProctorLaunchConfig *)config
-       success:(void (^)(void))success
+- (instancetype)init:(AgoraProctorLaunchConfig *)config
+            delegate:(id<AgoraProctorSDKDelegate> _Nullable)delegate;
+
+- (void)launch:(void (^)(void))success
        failure:(void (^)(NSError *))failure;
 
-+ (void)setDelegate:(id<AgoraProctorSDKDelegate> _Nullable)delegate;
+- (void)exit;
 
-+ (void)exit;
-
-+ (NSString *)version;
+- (NSString *)version;
 @end
 
 NS_ASSUME_NONNULL_END

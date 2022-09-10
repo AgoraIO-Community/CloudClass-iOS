@@ -23,22 +23,26 @@
 @property (nonatomic, strong) FcrProctorScene *scene;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSNumber *environment;
+
 @property (nonatomic, strong) AgoraProctorLaunchConfig *config;
 @property (nonatomic, weak) id<AgoraProctorSDKDelegate> delegate;
 @end
 
-static AgoraProctorSDK *manager = nil;
-
 @implementation AgoraProctorSDK
-+ (instancetype)share {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        manager = [[AgoraProctorSDK alloc] init];
-    });
-    return manager;
+- (instancetype)init:(AgoraProctorLaunchConfig *)config
+            delegate:(id<AgoraProctorSDKDelegate>)delegate {
+    self = [super init];
+    
+    if (self) {
+        self.config = config;
+        self.delegate = delegate;
+        self.core = [[AgoraEduCorePuppet alloc] init];
+    }
+    
+    return self;
 }
 
-+ (NSString *)version {
+- (NSString *)version {
     NSBundle *bundle = [NSBundle bundleForClass:[AgoraProctorSDK class]];
     NSDictionary *dictionary = bundle.infoDictionary;
     NSString *version = dictionary[@"CFBundleShortVersionString"];
@@ -50,12 +54,12 @@ static AgoraProctorSDK *manager = nil;
     }
 }
 
-+ (void)setEnvironment:(NSNumber *)environment {
-    [AgoraProctorSDK share].environment = environment;
+- (void)setEnvironment:(NSNumber *)environment {
+    self.environment = environment;
 }
 
-+ (void)setLogConsoleState:(NSNumber *)state {
-    [AgoraProctorSDK share].consoleState = state;
+- (void)setLogConsoleState:(NSNumber *)state {
+    self.consoleState = state;
 }
 
 #pragma mark - FcrProctorSceneDelegate
@@ -74,13 +78,14 @@ static AgoraProctorSDK *manager = nil;
     
     [self.delegate proctorSDK:self
                       didExit:sdkReason];
+    
+    [self agoraRelease];
 }
 
 #pragma mark - Public
-+ (void)launch:(AgoraProctorLaunchConfig *)config
-       success:(void (^)(void))success
-       failure:(void (^)(NSError *))failure {
-    if (config == nil || !config.isLegal) {
+- (void)launch:(void (^)(void))success
+       failure:(void (^)(NSError * _Nonnull))failure {
+    if (self.config == nil || !self.config.isLegal) {
         if (failure) {
             NSError *error = [[NSError alloc] initWithDomain:@"config illegal"
                                                         code:-1
@@ -91,33 +96,36 @@ static AgoraProctorSDK *manager = nil;
         return;
     }
     
-    AgoraProctorSDK *manager = [AgoraProctorSDK share];
-    AgoraEduCorePuppet *core = manager.core;
-    
     // Log console
-    NSNumber *console = manager.consoleState;
+    NSNumber *console = self.consoleState;
     if (console) {
         NSDictionary *parameters = @{@"console": console};
-        [core setParameters:parameters];
+        [self.core setParameters:parameters];
     }
     
     // Environment
-    NSNumber *environment = manager.environment;
+    NSNumber *environment = self.environment;
     if (environment) {
         NSDictionary *parameters = @{@"environment": environment};
-        [core setParameters:parameters];
+        [self.core setParameters:parameters];
     }
     
-    // Core config
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraProctorSDK getPuppetLaunchConfig:config];
+    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraProctorSDK getPuppetLaunchConfig:self.config];
     
-    [core launch:coreConfig
-         widgets:config.widgets.allValues
-         success:^(id<AgoraEduContextPool> pool) {
+    __weak AgoraProctorSDK *weakSelf = self;
+    
+    [self.core launch:coreConfig
+              widgets:self.config.widgets.allValues
+              success:^(id<AgoraEduContextPool> pool) {
+        AgoraProctorSDK *strongSelf = weakSelf;
+        
+        if (!strongSelf) {
+            return;
+        }
         FcrProctorScene *scene = [[FcrProctorScene alloc] initWithContextPool:pool
-                                                                     delegate:manager];
+                                                                     delegate:strongSelf];
         scene.modalPresentationStyle = UIModalPresentationFullScreen;
-        manager.scene = scene;
+        weakSelf.scene = scene;
         
         UIViewController *topVC = [UIViewController agora_top_view_controller];
         
@@ -131,18 +139,19 @@ static AgoraProctorSDK *manager = nil;
     } failure:failure];
 }
 
-+ (void)setDelegate:(id<AgoraProctorSDKDelegate> _Nullable)delegate {
-    manager.delegate = delegate;
-}
-
-+ (void)exit {
-    [manager.core exit];
+- (void)exit {
+    [self.core exit];
     
-    __weak AgoraProctorSDK *weakManager = manager;
+    __weak AgoraProctorSDK *weakSelf = self;
     
-    [manager.scene dismissViewControllerAnimated:YES
+    [self.scene dismissViewControllerAnimated:YES
                                    completion:^{
-        [weakManager agoraRelease];
+        AgoraProctorSDK *strongSelf = weakSelf;
+        
+        if (!strongSelf) {
+            return;
+        }
+        [strongSelf agoraRelease];
     }];
 }
 
@@ -152,13 +161,4 @@ static AgoraProctorSDK *manager = nil;
     self.scene = nil;
     self.core = nil;
 }
-
-- (AgoraEduCorePuppet *)core {
-    if (_core == nil) {
-        _core = [[AgoraEduCorePuppet alloc] init];
-    }
-    
-    return _core;
-}
-
 @end

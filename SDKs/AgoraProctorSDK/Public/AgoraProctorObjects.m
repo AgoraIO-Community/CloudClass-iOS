@@ -93,8 +93,6 @@
                          roomUuid:roomUuid
                             appId:appId
                             token:token
-                        startTime:nil
-                         duration:nil
                            region:AgoraProctorRegionCN
                      mediaOptions:mediaOptions
                    userProperties:nil];
@@ -107,8 +105,6 @@
                         roomUuid:(NSString *)roomUuid
                            appId:(NSString *)appId
                            token:(NSString *)token
-                       startTime:(NSNumber * _Nullable)startTime
-                        duration:(NSNumber * _Nullable)duration
                           region:(AgoraProctorRegion)region
                     mediaOptions:(AgoraProctorMediaOptions *)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties {
@@ -123,8 +119,6 @@
     self.appId = appId;
     self.token = token;
     
-    self.startTime = startTime;
-    self.duration = duration;
     self.region = region;
     self.mediaOptions = mediaOptions;
     self.userProperties = userProperties;

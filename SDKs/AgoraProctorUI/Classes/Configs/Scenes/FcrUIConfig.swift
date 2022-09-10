@@ -13,6 +13,8 @@ protocol FcrUIConfig {
     var exam: FcrUIComponentExam { get }
     
     var alert: FcrUIComponentAlert { get }
+    
+    var loading: FcrUIComponentLoading { get }
 }
 
 var UIConfig: FcrUIConfig = FcrProctorUIConfig()

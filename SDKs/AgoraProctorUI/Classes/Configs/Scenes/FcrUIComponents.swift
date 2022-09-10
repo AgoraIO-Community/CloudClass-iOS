@@ -67,3 +67,15 @@ struct FcrUIComponentAlert: FcrUIComponentProtocol {
     let shadow = FcrUIItemShadow()
     let sepLine = FcrUIItemSepLine()
 }
+
+// MARK: - base
+struct FcrUIComponentLoading: FcrUIComponentProtocol {
+    var visible: Bool = true
+    var enable: Bool = true
+    var backgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
+    
+    let gifUrl: URL? = Bundle.AgoraProctorUI().url(forResource: "img_loading",
+                                                   withExtension: "gif")
+    
+    let message = FcrUIItemLoadingMessage()
+}

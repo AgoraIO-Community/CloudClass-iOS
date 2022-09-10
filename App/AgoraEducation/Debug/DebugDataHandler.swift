@@ -26,6 +26,7 @@ protocol DebugDataHandlerDelegate: NSObjectProtocol {
 
 class DebugDataHandler {
     private weak var delegate: DebugDataHandlerDelegate?
+    private weak var proctorSDK: AgoraProctorSDK?
     
     private let tokenBuilder = TokenBuilder()
     
@@ -35,8 +36,10 @@ class DebugDataHandler {
         }
     }
     
-    init(delegate: DebugDataHandlerDelegate?) {
+    init(delegate: DebugDataHandlerDelegate?,
+         proctorSDK: AgoraProctorSDK?) {
         self.delegate = delegate
+        self.proctorSDK = proctorSDK
     }
     
     func updateDataSourceList(_ list: [DataSourceType]) {
@@ -44,6 +47,7 @@ class DebugDataHandler {
         
         if case .environment(let environment) = dataSourceList.valueOfType(.roomType) as? DataSourceType {
             FcrEnvironment.shared.environment = environment.edu
+            updateProctorSDKEnviroment(environment.edu)
         }
         
         if case .region(let region) = dataSourceList.valueOfType(.region) as? DataSourceType {
@@ -584,6 +588,25 @@ private extension DebugDataHandler {
     
     func updateAllDataSource() {
         delegate?.onDataSourceNeedReload()
+    }
+    
+    func updateProctorSDKEnviroment(_ environment: FcrEnvironment.Environment) {
+        guard let `proctorSDK` = proctorSDK else {
+            return
+        }
+        
+        let sel = NSSelectorFromString("setEnvironment:")
+        switch environment {
+        case .pro:
+            proctorSDK.perform(sel,
+                               with: 2)
+        case .pre:
+            proctorSDK.perform(sel,
+                               with: 1)
+        case .dev:
+            proctorSDK.perform(sel,
+                               with: 0)
+        }
     }
     
     func checkDataSource() {
