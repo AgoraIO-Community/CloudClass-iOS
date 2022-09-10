@@ -15,7 +15,7 @@
 
 #import <AgoraEduContext/AgoraEduContext-Swift.h>
 #import <AgoraProctorUI/AgoraProctorUI-Swift.h>
-#import "AgoraInternalInvigilator.h"
+#import "AgoraInternalProctorSDK.h"
 #import "AgoraProctorSDK.h"
 
 @interface AgoraProctorSDK () <FcrProctorSceneDelegate>
@@ -110,8 +110,6 @@ static AgoraProctorSDK *manager = nil;
     
     // Core config
     AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraProctorSDK getPuppetLaunchConfig:config];
-    // TODO: temp
-    coreConfig.roomType = AgoraEduCorePuppetRoomTypeSmall;
     
     [core launch:coreConfig
          widgets:config.widgets.allValues

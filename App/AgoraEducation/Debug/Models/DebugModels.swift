@@ -181,6 +181,25 @@ enum DataSourceRoleType: Int, CaseIterable {
     }
 }
 
+enum DataSourceDeviceType: CaseIterable {
+    case main
+    case sub
+    
+    var viewText: String {
+        switch self {
+        case .main:     return "debug_device_main".ag_localized()
+        case .sub:      return "debug_device_sub".ag_localized()
+        }
+    }
+    
+    var edu: AgoraProctorDeviceType {
+        switch self {
+        case .main:     return .main
+        case .sub:      return .sub
+        }
+    }
+}
+
 enum DataSourceIMType: CaseIterable {
     case rtm
     case easemob
@@ -365,6 +384,7 @@ enum DataSourceType: Equatable {
     case serviceType(DataSourceServiceType)
     case roleType(DataSourceRoleType)
     case im(DataSourceIMType)
+    case deviceType(DataSourceDeviceType)
     case startTime(DataSourceStartTime)
     case duration(DataSourceDuration)
     case encryptKey(DataSourceEncryptKey)
@@ -376,7 +396,7 @@ enum DataSourceType: Equatable {
     case environment(DataSourceEnvironment)
     
     enum Key {
-        case roomName, userName, roomType, serviceType, roleType, im, startTime, duration, encryptKey, encryptMode, mediaAuth, uiMode, uiLanguage, region, environment
+        case roomName, userName, roomType, serviceType, roleType, im, deviceType, startTime, duration, encryptKey, encryptMode, mediaAuth, uiMode, uiLanguage, region, environment
     }
     
     var inKey: Key {
@@ -387,6 +407,7 @@ enum DataSourceType: Equatable {
         case .serviceType:  return .serviceType
         case .roleType:     return .roleType
         case .im:           return .im
+        case .deviceType:   return .deviceType
         case .startTime:    return .startTime
         case .duration:     return .duration
         case .encryptKey:   return .encryptKey
@@ -412,6 +433,7 @@ enum DataSourceType: Equatable {
         case .serviceType:   return "debug_class_service_type_title".ag_localized()
         case .roleType:      return "debug_title_role".ag_localized()
         case .im:            return "IM"
+        case .deviceType:    return "debug_device_type".ag_localized()
         case .startTime:     return "debug_startTime_title".ag_localized()
         case .duration:      return "debug_duration_title".ag_localized()
         case .encryptKey:    return "debug_encryptKey_title".ag_localized()
@@ -432,6 +454,7 @@ enum DataSourceType: Equatable {
         case .serviceType:   return "debug_service_type_holder".ag_localized()
         case .roleType:      return "debug_role_holder".ag_localized()
         case .im:            return "debug_service_type_holder".ag_localized()
+        case .deviceType:    return "debug_device_holder".ag_localized()
         case .startTime:     return ""
         case .duration:      return "debug_duration_holder".ag_localized()
         case .encryptKey:    return "debug_encryptKey_holder".ag_localized()
@@ -475,6 +498,7 @@ struct DebugLaunchInfo {
     var serviceType: DataSourceServiceType
     var roleType: DataSourceRoleType
     var im: DataSourceIMType
+    var deviceType: DataSourceDeviceType
     var duration: NSNumber?
     var encryptKey: String?
     var encryptMode: DataSourceEncryptMode

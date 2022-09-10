@@ -86,8 +86,9 @@ typedef NS_ENUM(NSInteger, AgoraProctorStreamState) {
     AgoraProctorStreamStateOn      = 1
 };
 
-typedef NS_ENUM(NSInteger, AgoraProctorRoomType) {
-    AgoraProctorRoomTypeProctor = 6
+typedef NS_ENUM(NSInteger, AgoraProctorDeviceType) {
+    AgoraProctorDeviceTypeMain     = 0,
+    AgoraProctorDeviceTypeSub      = 1
 };
 
 NS_ASSUME_NONNULL_END

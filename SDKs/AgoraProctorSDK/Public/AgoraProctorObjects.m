@@ -79,7 +79,6 @@
                         userRole:(AgoraProctorUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
-                        roomType:(AgoraProctorRoomType)roomType
                            appId:(NSString *)appId
                            token:(NSString *)token {
     AgoraProctorMediaOptions *mediaOptions = [[AgoraProctorMediaOptions alloc] initWithEncryptionConfig:nil
@@ -92,7 +91,6 @@
                          userRole:userRole
                          roomName:roomName
                          roomUuid:roomUuid
-                         roomType:roomType
                             appId:appId
                             token:token
                         startTime:nil
@@ -107,7 +105,6 @@
                         userRole:(AgoraProctorUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
-                        roomType:(AgoraProctorRoomType)roomType
                            appId:(NSString *)appId
                            token:(NSString *)token
                        startTime:(NSNumber * _Nullable)startTime
@@ -122,7 +119,6 @@
     
     self.roomName = roomName;
     self.roomUuid = roomUuid;
-    self.roomType = roomType;
     
     self.appId = appId;
     self.token = token;

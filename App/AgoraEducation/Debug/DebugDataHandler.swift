@@ -41,17 +41,22 @@ class DebugDataHandler {
     
     func updateDataSourceList(_ list: [DataSourceType]) {
         self.dataSourceList = list
+        
+        if case .environment(let environment) = dataSourceList.valueOfType(.roomType) as? DataSourceType {
+            FcrEnvironment.shared.environment = environment.edu
+        }
+        
+        if case .region(let region) = dataSourceList.valueOfType(.region) as? DataSourceType {
+            FcrEnvironment.shared.region = region.env
+        }
+        
+        if case .uiLanguage(let uiLanguage) = dataSourceList.valueOfType(.uiLanguage) as? DataSourceType {
+            FcrLocalization.shared.setupNewLanguage(uiLanguage.edu)
+        }
     }
 }
 
 extension DebugDataHandler {
-    func getRoomType() -> DataSourceRoomType {
-        guard let value = dataSourceList.valueOfType(.roomType) as? DataSourceRoomType else {
-            return .unselected
-        }
-        return value
-    }
-    
     func getRegion() -> DataSourceRegion {
         switch FcrEnvironment.shared.region {
         case .CN: return .CN
@@ -88,6 +93,8 @@ extension DebugDataHandler {
         var serviceType: DataSourceServiceType = .livePremium
         var roleType: DataSourceRoleType?
         var im: DataSourceIMType?
+        // proctor
+        var deviceType: DataSourceDeviceType = .main
         var duration: NSNumber?
         var encryptKey: String?
         var encryptMode: DataSourceEncryptMode?
@@ -120,6 +127,8 @@ extension DebugDataHandler {
                 roleType = (dataSourceRoleType != .unselected) ? dataSourceRoleType : nil
             case .im(let dataSourceIMType):
                 im = dataSourceIMType
+            case .deviceType(let dataSourceDeviceType):
+                deviceType = dataSourceDeviceType
             case .startTime(let dataSourceStartTime):
                 if case .value(let value) = dataSourceStartTime {
                     startTime = NSNumber(value: value)
@@ -187,6 +196,7 @@ extension DebugDataHandler {
                                serviceType: serviceType,
                                roleType: roleType,
                                im: im,
+                               deviceType: deviceType,
                                duration: duration,
                                encryptKey: encryptKey,
                                encryptMode: encryptMode,
@@ -251,17 +261,15 @@ extension DebugDataHandler {
                                 userId: String) -> AgoraProctorLaunchConfig {
         
         let mediaOptions = debugInfo.proctorMediaOptions
-        
+
         let launchConfig = AgoraProctorLaunchConfig(userName: debugInfo.userName,
                                                     userUuid: userId,
                                                     userRole: .student,
                                                     roomName: debugInfo.roomName,
                                                     roomUuid: debugInfo.roomId,
-                                                    roomType: .proctor,
+                                                    deviceType: debugInfo.deviceType.edu,
                                                     appId: appId,
                                                     token: token,
-                                                    startTime: debugInfo.startTime,
-                                                    duration: debugInfo.duration,
                                                     region: debugInfo.region.proctor,
                                                     mediaOptions: mediaOptions,
                                                     userProperties: nil)
@@ -438,6 +446,20 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let im: DataSourceIMType = list[index]
                 let newValue = DataSourceType.im(im)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
+            }
+            let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
+            let selectedIndex = list.firstIndex(where: {$0 == selected})
+            type = .option(options: options,
+                           placeholder: placeholder,
+                           text: selected.viewText,
+                           selectedIndex: selectedIndex ?? -1)
+        case .deviceType(let selected):
+            let list = DataSourceDeviceType.allCases
+            let action: OptionSelectedAction = { [weak self] index in
+                let deviceType: DataSourceDeviceType = list[index]
+                let newValue = DataSourceType.deviceType(deviceType)
                 self?.updateDataSource(at: dataTypeIndex,
                                        with: newValue)
             }

@@ -95,22 +95,14 @@ extension DebugViewController: DebugViewDelagate {
 #endif
             
             let roomType = info.roomType
-            if let roomType = roomType.edu,
+            if let _ = roomType.edu,
                let launchConfig = self.data.getEduLaunchConfig(debugInfo: info,
                                                             appId: response.appId,
                                                             token: response.token,
                                                             userId: response.userId) {
-             
-                if launchConfig.roomType == .vocation { // 职教入口
-                    AgoraClassroomSDK.vocationalLaunch(launchConfig,
-                                                       service: info.serviceType.edu!,
-                                                       success: launchSuccessBlock,
-                                                       failure: failureBlock)
-                } else { // 灵动课堂入口
-                    AgoraClassroomSDK.launch(launchConfig,
-                                             success: launchSuccessBlock,
-                                             failure: failureBlock)
-                }
+                AgoraClassroomSDK.launch(launchConfig,
+                                         success: launchSuccessBlock,
+                                         failure: failureBlock)
             } else if roomType == .proctor {
                 let launchConfig = self.data.getProctorLaunchConfig(debugInfo: info,
                                                                      appId: response.appId,
@@ -200,11 +192,12 @@ extension DebugViewController {
         let uiMode = data.getUIMode()
         let environment = data.getEnvironment()
         
-        let defaultList: [DataSourceType] = [.roomName(.value("010101")),
-                                             .userName(.value("010101")),
-                                             .roomType(.proctor),
+        let defaultList: [DataSourceType] = [.roomName(.none),
+                                             .userName(.none),
+                                             .roomType(.small),
                                              .roleType(.student),
                                              .im(.easemob),
+                                             .deviceType(.sub),
                                              .duration(.none),
                                              .encryptKey(.none),
                                              .encryptMode(.none),

@@ -7,7 +7,7 @@
 //
 
 #import <AgoraProctorUI/AgoraProctorUI-Swift.h>
-#import "AgoraInternalInvigilator.h"
+#import "AgoraInternalProctorSDK.h"
 #import "AgoraProctorEnums.h"
 
 @implementation AgoraProctorLaunchConfig (Internal)
@@ -25,10 +25,6 @@
     }
     
     if (self.roomUuid.length <= 0) {
-        return NO;
-    }
-    
-    if (!(self.roomType == AgoraProctorRoomTypeProctor)) {
         return NO;
     }
     
@@ -50,7 +46,7 @@
     
     AgoraEduCorePuppetUserRole role = config.userRole;
     
-    AgoraEduCorePuppetRoomType roomType = AgoraEduCorePuppetRoomTypeProctor;
+    AgoraEduCorePuppetRoomType roomType = AgoraEduCorePuppetRoomTypeProctoring;
     
     AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
                                                                                                 rtmToken:config.token

@@ -66,16 +66,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *roomName;
 // 全局唯一的教室id
 @property (nonatomic, copy) NSString *roomUuid;
-// 教室类型
-@property (nonatomic, assign) AgoraProctorRoomType roomType;
+// 设备类型（主/副）
+@property (nonatomic, assign) AgoraProctorDeviceType deviceType;
 // 声网App Id
 @property (nonatomic, copy) NSString *appId;
 // 声网Token
 @property (nonatomic, copy) NSString *token;
-// 开始上课的时间（毫秒）
-@property (nonatomic, copy, nullable) NSNumber *startTime;
-// 课程时长（秒）
-@property (nonatomic, copy, nullable) NSNumber *duration;
 // 区域
 @property (nonatomic, assign) AgoraProctorRegion region;
 // 媒体选项
@@ -90,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
                         userRole:(AgoraProctorUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
-                        roomType:(AgoraProctorRoomType)roomType
+                      deviceType:(AgoraProctorDeviceType)deviceType
                            appId:(NSString *)appId
                            token:(NSString *)token;
 
@@ -99,11 +95,9 @@ NS_ASSUME_NONNULL_BEGIN
                         userRole:(AgoraProctorUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
-                        roomType:(AgoraProctorRoomType)roomType
+                      deviceType:(AgoraProctorDeviceType)deviceType
                            appId:(NSString *)appId
                            token:(NSString *)token
-                       startTime:(NSNumber * _Nullable)startTime
-                        duration:(NSNumber * _Nullable)duration
                           region:(AgoraProctorRegion)region
                     mediaOptions:(AgoraProctorMediaOptions * _Nullable)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties;
