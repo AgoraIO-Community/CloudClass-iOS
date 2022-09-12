@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Model translation
 @interface AgoraProctorSDK (Internal)
-+ (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraProctorLaunchConfig *)config;
-+ (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraProctorMediaOptions *)options;
+- (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraProctorLaunchConfig *)config;
+- (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraProctorMediaOptions *)options;
 @end
 
 NS_ASSUME_NONNULL_END

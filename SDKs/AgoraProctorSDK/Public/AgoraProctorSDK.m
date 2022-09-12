@@ -110,7 +110,7 @@
         [self.core setParameters:parameters];
     }
     
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraProctorSDK getPuppetLaunchConfig:self.config];
+    AgoraEduCorePuppetLaunchConfig *coreConfig = [self getPuppetLaunchConfig:self.config];
     
     __weak AgoraProctorSDK *weakSelf = self;
     

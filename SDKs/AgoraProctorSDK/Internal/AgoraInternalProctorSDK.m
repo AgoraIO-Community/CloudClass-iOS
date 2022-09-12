@@ -41,18 +41,29 @@
 @end
 
 @implementation AgoraProctorSDK (Internal)
-+ (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraProctorLaunchConfig *)config {
+- (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraProctorLaunchConfig *)config {
     AgoraEduCorePuppetMediaOptions *mediaOptions = [self getPuppetMediaOptions:config.mediaOptions];
     
     AgoraEduCorePuppetUserRole role = config.userRole;
     
     AgoraEduCorePuppetRoomType roomType = AgoraEduCorePuppetRoomTypeProctoring;
     
+    NSString * deviceTypeString = @"";
+    switch (config.deviceType) {
+        case AgoraProctorDeviceTypeMain:
+            deviceTypeString = @"main";
+            break;
+        case AgoraProctorDeviceTypeSub:
+            deviceTypeString = @"sub";
+            break;
+    }
+    NSString* userUuid = [NSString stringWithFormat:@"%@-%@",config.userUuid,deviceTypeString];
+    
     AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
                                                                                                 rtmToken:config.token
                                                                                                   region:config.region
                                                                                                 userName:config.userName
-                                                                                                userUuid:config.userUuid
+                                                                                                userUuid:userUuid
                                                                                                 userRole:role
                                                                                           userProperties:config.userProperties
                                                                                             mediaOptions:mediaOptions
@@ -64,7 +75,7 @@
     return launchConfig;
 }
 
-+ (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraProctorMediaOptions *)options {
+- (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraProctorMediaOptions *)options {
     AgoraEduCorePuppetVideoConfig *videoConfig = nil;
     if (options.videoEncoderConfig) {
         videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithDimensionWidth:options.videoEncoderConfig.dimensionWidth

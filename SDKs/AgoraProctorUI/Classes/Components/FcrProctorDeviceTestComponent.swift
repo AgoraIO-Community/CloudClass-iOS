@@ -29,23 +29,14 @@ import AgoraEduContext
     
     /**context**/
     private weak var delegate: FcrProctorDeviceTestComponentDelegate?
-    private let roomController: AgoraEduRoomContext
-    private let userController: AgoraEduUserContext
-    private let mediaController: AgoraEduMediaContext
-    private let streamController: AgoraEduStreamContext
+    private let contextPool: AgoraEduContextPool
     
     /**data**/
     private var currentFront: Bool = true
     
-    @objc public init(roomController: AgoraEduRoomContext,
-                      userController: AgoraEduUserContext,
-                      mediaController: AgoraEduMediaContext,
-                      streamController: AgoraEduStreamContext,
+    @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrProctorDeviceTestComponentDelegate?) {
-        self.roomController = roomController
-        self.userController = userController
-        self.mediaController = mediaController
-        self.streamController = streamController
+        self.contextPool = contextPool
         self.delegate = delegate
         
         super.init(nibName: nil,
@@ -60,7 +51,7 @@ import AgoraEduContext
         updateViewProperties()
         checkDeviceState()
         
-        roomController.registerRoomEventHandler(self)
+        contextPool.room.registerRoomEventHandler(self)
     }
     
     required init?(coder: NSCoder) {
@@ -87,7 +78,7 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
         titleLabel.sizeToFit()
         
         let greet = "fcr_device_greet".fcr_invigilator_localized()
-        let userName = userController.getLocalUserInfo().userName
+        let userName = contextPool.user.getLocalUserInfo().userName
         let finalGreet = greet.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                  with: userName)
         greetLabel.text = finalGreet
@@ -220,14 +211,14 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
 private extension FcrProctorDeviceTestComponent {
     @objc func onClickExitRoom() {
         let streamId = "0"
-        mediaController.stopRenderVideo(streamUuid: streamId)
+        contextPool.media.stopRenderVideo(streamUuid: streamId)
 
         self.delegate?.onDeviceTestExit()
     }
     
     @objc func onClickSwitchCamera() {
         let deviceType: AgoraEduContextSystemDevice = currentFront ? .backCamera : .frontCamera
-        guard mediaController.openLocalDevice(systemDevice: deviceType) == nil else {
+        guard contextPool.media.openLocalDevice(systemDevice: deviceType) == nil else {
             return
         }
         currentFront = !currentFront
@@ -235,21 +226,21 @@ private extension FcrProctorDeviceTestComponent {
     
     @objc func onClickEnterRoom() {
         AgoraLoading.loading()
-        roomController.joinRoom { [weak self] in
+        contextPool.room.joinRoom { [weak self] in
             guard let `self` = self else {
                 return
             }
             self.delegate?.onDeviceTestJoinExamSuccess()
         } failure: { error in
             AgoraLoading.hide()
-            // TODO: join fail
+            // TODO: join main room fail
         }
     }
     
     func checkDeviceState() {
-        let userId = userController.getLocalUserInfo().userUuid
+        let userId = contextPool.user.getLocalUserInfo().userUuid
         
-        guard mediaController.openLocalDevice(systemDevice: .frontCamera) == nil else {
+        guard contextPool.media.openLocalDevice(systemDevice: .frontCamera) == nil else {
             updateEnterable(false)
             return
         }
@@ -258,7 +249,7 @@ private extension FcrProctorDeviceTestComponent {
         renderConfig.mode = .hidden
         let streamId = "0"
         
-        let error = mediaController.startRenderVideo(view: renderView,
+        let error = contextPool.media.startRenderVideo(view: renderView,
                                                      renderConfig: renderConfig,
                                                      streamUuid: streamId)
         
@@ -299,8 +290,8 @@ private extension FcrProctorDeviceTestComponent {
 private extension FcrProctorDeviceTestComponent {
     func updateRoomInfo() {
         var state = ""
-        let roomInfo = roomController.getRoomInfo()
-        let classInfo = roomController.getClassInfo()
+        let roomInfo = contextPool.room.getRoomInfo()
+        let classInfo = contextPool.room.getClassInfo()
         switch classInfo.state {
         case .before:
             state = "fcr_device_state_will_start".fcr_invigilator_localized()

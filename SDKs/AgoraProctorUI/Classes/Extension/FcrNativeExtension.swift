@@ -76,6 +76,31 @@ extension String {
             return text
         }
     }
+    
+    func json() -> [String: Any]? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+
+        return data.dic()
+    }
+    
+    func toArr() -> [Any]? {
+        guard let data = self.data(using: .utf8) else {
+            return nil
+        }
+        
+        return data.toArr()
+    }
+    
+    func getUserIdPrefix() -> String? {
+        guard let firstIndex = self.firstIndex(of: "-") else {
+            return nil
+        }
+        let index = self.index(before: firstIndex)
+        let subString = self[...index]
+        return String(subString)
+    }
 }
 
 // 将 AgoraWidgetInfo.syncFrame 转化为 具体是显示在界面上的 frame
@@ -294,24 +319,6 @@ extension Dictionary where Key == String, Value == Any {
         
         return ValueTransform(enumValue: dic[lastKey],
                               result: Result.self)
-    }
-}
-
-extension String {
-    func json() -> [String: Any]? {
-        guard let data = self.data(using: .utf8) else {
-            return nil
-        }
-
-        return data.dic()
-    }
-    
-    func toArr() -> [Any]? {
-        guard let data = self.data(using: .utf8) else {
-            return nil
-        }
-        
-        return data.toArr()
     }
 }
 

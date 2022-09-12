@@ -18,16 +18,10 @@ import Masonry
 }
 
 @objc public class FcrProctorScene: UIViewController {
-    private lazy var deviceTest = FcrProctorDeviceTestComponent(roomController: contextPool.room,
-                                                                userController: contextPool.user,
-                                                                mediaController: contextPool.media,
-                                                                streamController: contextPool.stream,
+    private lazy var deviceTest = FcrProctorDeviceTestComponent(contextPool: contextPool,
                                                                 delegate: self)
     
-    private lazy var exam = FcrProctorExamComponent(roomController: contextPool.room,
-                                                    userController: contextPool.user,
-                                                    mediaController: contextPool.media,
-                                                    streamController: contextPool.stream,
+    private lazy var exam = FcrProctorExamComponent(contextPool: contextPool,
                                                     delegate: self)
     
     private let contextPool: AgoraEduContextPool
