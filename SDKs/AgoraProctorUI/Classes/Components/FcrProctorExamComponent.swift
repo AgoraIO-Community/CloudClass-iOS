@@ -13,19 +13,8 @@ import AgoraEduContext
 }
 
 @objc public class FcrProctorExamComponent: UIViewController {
-    /**views**/
-    private lazy var backgroundImageView = UIImageView()
-    private lazy var exitButton = UIButton()
-    private lazy var nameLabel = UILabel()
-    private lazy var leaveButton = UIButton()
-    private lazy var renderView = FcrProctorRenderView()
-    private lazy var switchCameraButton = UIButton()
-    // before
-    private lazy var startCountdown = FcrExamStartCountdownView()
-    // during
-    private lazy var duringCountdown = FcrExamDuringCountdownView()
-    // after
-    private lazy var endLabel = UILabel()
+    /**view**/
+    private lazy var contentView = FcrProctorExamComponentView()
     
     /**context**/
     private weak var delegate: FcrProctorExamComponentDelegate?
@@ -70,77 +59,26 @@ extension FcrProctorExamComponent: AgoraEduRoomHandler {
 // MARK: - AgoraUIContentContainer
 extension FcrProctorExamComponent: AgoraUIContentContainer {
     public func initViews() {
-        backgroundImageView.contentMode = .scaleAspectFill
+        view.addSubview(contentView)
         
-        exitButton.addTarget(self,
-                             action: #selector(onClickExitRoom),
-                             for: .touchUpInside)
-        leaveButton.addTarget(self,
-                              action: #selector(onClickExitRoom),
-                              for: .touchUpInside)
-
+        contentView.exitButton.addTarget(self,
+                                         action: #selector(onClickExitRoom),
+                                         for: .touchUpInside)
+        contentView.leaveButton.addTarget(self,
+                                          action: #selector(onClickExitRoom),
+                                          for: .touchUpInside)
+        
         let userName = contextPool.user.getLocalUserInfo().userName
-        nameLabel.text = userName
-        nameLabel.sizeToFit()
+        contentView.nameLabel.text = userName
         
-        switchCameraButton.addTarget(self,
-                                     action: #selector(onClickSwitchCamera),
-                                     for: .touchUpInside)
-        
-        view.addSubviews([exitButton,
-                          nameLabel,
-                          leaveButton,
-                          renderView,
-                          switchCameraButton,
-                          startCountdown,
-                          duringCountdown,
-                          endLabel])
-        
-        switchCameraButton.agora_visible = false
-        startCountdown.agora_visible = false
-        duringCountdown.agora_visible = false
-        endLabel.agora_visible = false
+        contentView.switchCameraButton.addTarget(self,
+                                                 action: #selector(onClickSwitchCamera),
+                                                 for: .touchUpInside)
     }
     
     public func initViewFrame() {
-        backgroundImageView.mas_makeConstraints { make in
-            make?.left.right().top().equalTo()(0)
-        }
-        
-        exitButton.mas_makeConstraints { make in
-            make?.top.equalTo()(42)
-            make?.left.equalTo()(16)
-            make?.width.height().equalTo()(40)
-        }
-        
-        nameLabel.mas_makeConstraints { make in
-            make?.centerX.equalTo()(0)
-            make?.centerY.equalTo()(exitButton.mas_centerY)
-        }
-        
-        renderView.mas_makeConstraints { make in
-            make?.top.equalTo()(nameLabel.mas_bottom)?.offset()(33)
-            make?.left.right().bottom().equalTo()(0)
-        }
-        
-        switchCameraButton.mas_makeConstraints { make in
-            make?.top.equalTo()(self.view)?.offset()(20)
-            make?.right.equalTo()(self.view)?.offset()(-20)
-            make?.width.height().equalTo()(70)
-        }
-        
-        leaveButton.mas_makeConstraints { make in
-            make?.centerX.equalTo()(0)
-            make?.width.mas_greaterThanOrEqualTo()(200)
-            make?.height.equalTo()(46)
-            make?.bottom.equalTo()(-40)
-        }
-        
-        endLabel.mas_makeConstraints { make in
-            make?.centerX.equalTo()(self)
-            make?.bottom.equalTo()(renderView.mas_bottom)
-            make?.width.equalTo()(200)
-            make?.height.equalTo()(48)
+        contentView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
         }
     }
     
@@ -148,41 +86,6 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
         let config = UIConfig.exam
         
         view.backgroundColor = config.backgroundColor
-        
-        backgroundImageView.image = config.backgroundImage
-        exitButton.setImage(config.exitButton.image,
-                            for: .normal)
-        exitButton.backgroundColor = config.exitButton.backgroundColor
-        exitButton.layer.cornerRadius = config.exitButton.cornerRadius
-        
-        nameLabel.font = config.nameLabel.font
-        nameLabel.textColor = config.nameLabel.color
-
-        leaveButton.backgroundColor = config.leaveButton.backgroundColor
-        leaveButton.layer.cornerRadius = config.leaveButton.cornerRadius
-        leaveButton.setTitleColorForAllStates(config.leaveButton.titleColor)
-        leaveButton.titleLabel?.font = config.leaveButton.titleFont
-        
-        let maskPath = UIBezierPath.init(roundedRect: CGRect(x: 0,
-                                                             y: 0,
-                                                             width: 200,
-                                                             height: 48),
-                                         byRoundingCorners: UIRectCorner(rawValue: UIRectCorner.topLeft.rawValue + UIRectCorner.topRight.rawValue),
-                                         cornerRadii: CGSize(width: config.endLabel.cornerRadius,
-                                                             height: config.endLabel.cornerRadius))
-        let maskLayer = CAShapeLayer.init()
-        maskLayer.frame = endLabel.bounds
-        maskLayer.path = maskPath.cgPath
-        endLabel.layer.mask = maskLayer
-        
-        endLabel.backgroundColor = config.endLabel.backgroundColor
-        endLabel.textColor = config.endLabel.textColor
-        endLabel.font = config.endLabel.textFont
-        
-        switchCameraButton.setImage(config.switchCamera.normalImage,
-                                    for: .normal)
-        switchCameraButton.setImage(config.switchCamera.selectedImage,
-                                    for: .highlighted)
     }
 }
 
@@ -203,27 +106,7 @@ extension FcrProctorExamComponent: AgoraEduGroupHandler {
 private extension FcrProctorExamComponent {
     func checkExamState() {
         let info = contextPool.room.getClassInfo()
-        switch info.state {
-        case .before:
-            startCountdown.agora_visible = true
-            duringCountdown.agora_visible = false
-            endLabel.agora_visible = false
-        case .during:
-            startCountdown.agora_visible = false
-            duringCountdown.agora_visible = true
-            endLabel.agora_visible = false
-            
-            duringCountdown.updateTimeInfo(startTime: info.startTime,
-                                           duration: info.duration)
-            duringCountdown.startTimer()
-        case .after:
-            startCountdown.agora_visible = false
-            duringCountdown.agora_visible = true
-            endLabel.agora_visible = true
-            duringCountdown.updateTimeInfo(startTime: info.startTime,
-                                           duration: info.duration)
-            duringCountdown.startTimer()
-        }
+        contentView.updateViewWithState(info.ui)
     }
     
     @objc func onClickSwitchCamera() {

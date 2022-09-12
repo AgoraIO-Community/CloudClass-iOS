@@ -7,3 +7,11 @@
 
 import AgoraEduContext
 
+extension AgoraEduContextClassInfo {
+    var ui: FcrExamExamStateInfo {
+        let info = FcrExamExamStateInfo(state: state,
+                                        startTime: startTime,
+                                        duration: duration)
+        return info
+    }
+}

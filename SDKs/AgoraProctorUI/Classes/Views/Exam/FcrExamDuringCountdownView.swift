@@ -14,7 +14,7 @@ class FcrExamDuringCountdownView: UIView {
     
     /**data**/
     private var timer: Timer?
-    private var timeInfo: FcrExamDuringTimeInfo?
+    private var timeInfo: FcrExamExamStateInfo?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,7 +38,7 @@ class FcrExamDuringCountdownView: UIView {
     
     func updateTimeInfo(startTime: Int64,
                         duration: Int64) {
-        timeInfo = FcrExamDuringTimeInfo(startTime: startTime,
+        timeInfo = FcrExamExamStateInfo(startTime: startTime,
                                          duration: duration * 1000)
     }
     

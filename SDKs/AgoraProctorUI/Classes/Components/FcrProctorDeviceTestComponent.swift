@@ -14,19 +14,8 @@ import AgoraEduContext
 }
 
 @objc public class FcrProctorDeviceTestComponent: UIViewController {
-    /**views**/
-    private lazy var backgroundImageView = UIImageView()
-    private lazy var exitButton = UIButton()
-    private lazy var titleLabel = UILabel()
-    private lazy var greetLabel = UILabel()
-    private lazy var stateLabel = UILabel()
-    private lazy var bottomView = UIView()
-    private lazy var enterButton = UIButton()
-    private lazy var renderView = FcrProctorRenderView()
-    private lazy var noAccessView = FcrDeviceTestNOAccessView()
-    private lazy var switchCameraButton = UIButton()
-    private lazy var switchCameraLabel = UILabel()
-    
+    /**view**/
+    private lazy var contentView = FcrProctorDeviceTestComponentView()
     /**context**/
     private weak var delegate: FcrProctorDeviceTestComponentDelegate?
     private let contextPool: AgoraEduContextPool
@@ -68,108 +57,36 @@ extension FcrProctorDeviceTestComponent: AgoraEduRoomHandler {
 // MARK: - AgoraUIContentContainer
 extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
     public func initViews() {
-        backgroundImageView.contentMode = .scaleAspectFill
+        view.addSubview(contentView)
         
-        exitButton.addTarget(self,
+        contentView.exitButton.addTarget(self,
                              action: #selector(onClickExitRoom),
                              for: .touchUpInside)
         
-        titleLabel.text = "fcr_device_device".fcr_invigilator_localized()
-        titleLabel.sizeToFit()
+        contentView.titleLabel.text = "fcr_device_device".fcr_invigilator_localized()
         
         let greet = "fcr_device_greet".fcr_invigilator_localized()
         let userName = contextPool.user.getLocalUserInfo().userName
         let finalGreet = greet.replacingOccurrences(of: String.agedu_localized_replacing_x(),
-                                                 with: userName)
-        greetLabel.text = finalGreet
-
+                                                    with: userName)
+        contentView.greetLabel.text = finalGreet
+        
         updateRoomInfo()
         
-        switchCameraButton.addTarget(self,
-                                     action: #selector(onClickSwitchCamera),
-                                     for: .touchUpInside)
-        
-        switchCameraLabel.text = "".fcr_invigilator_localized()
-        
-        enterButton.sizeToFit()
-        enterButton.setTitle("fcr_device_enter".fcr_invigilator_localized(),
-                             for: .normal)
-        enterButton.addTarget(self,
-                             action: #selector(onClickEnterRoom),
-                             for: .touchUpInside)
-        
-        view.addSubviews([backgroundImageView,
-                          exitButton,
-                          titleLabel,
-                          greetLabel,
-                          stateLabel,
-                          renderView,
-                          switchCameraButton,
-                          switchCameraLabel,
-                          bottomView,
-                          enterButton,
-                          noAccessView])
+        contentView.switchCameraButton.addTarget(self,
+                                                 action: #selector(onClickSwitchCamera),
+                                                 for: .touchUpInside)
+                
+        contentView.enterButton.setTitle("fcr_device_enter".fcr_invigilator_localized(),
+                                         for: .normal)
+        contentView.enterButton.addTarget(self,
+                                          action: #selector(onClickEnterRoom),
+                                          for: .touchUpInside)
     }
     
     public func initViewFrame() {
-        backgroundImageView.mas_makeConstraints { make in
+        contentView.mas_makeConstraints { make in
             make?.left.right().top().equalTo()(0)
-        }
-        
-        exitButton.mas_makeConstraints { make in
-            make?.top.equalTo()(42)
-            make?.left.equalTo()(16)
-            make?.width.height().equalTo()(40)
-        }
-        
-        titleLabel.mas_makeConstraints { make in
-            make?.centerX.equalTo()(0)
-            make?.centerY.equalTo()(exitButton.mas_centerY)
-        }
-        
-        greetLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(exitButton.mas_bottom)?.offset()(30)
-            make?.left.equalTo()(30)
-            make?.right.mas_greaterThanOrEqualTo()(-30)
-        }
-        
-        stateLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(greetLabel.mas_bottom)?.offset()(11)
-            make?.left.equalTo()(greetLabel.mas_left)
-            make?.right.mas_greaterThanOrEqualTo()(-30)
-        }
-        
-        renderView.mas_makeConstraints { make in
-            make?.top.equalTo()(stateLabel.mas_bottom)?.offset()(33)
-            make?.left.right().bottom().equalTo()(0)
-        }
-        
-        switchCameraButton.mas_makeConstraints { make in
-            make?.centerX.equalTo()(self)
-            make?.width.height().equalTo()(70)
-            make?.bottom.equalTo()(-156)
-        }
-        
-        switchCameraLabel.mas_makeConstraints { make in
-            make?.centerX.equalTo()(self)
-            make?.top.equalTo()(switchCameraButton.mas_bottom)?.offset()(12)
-        }
-        
-        bottomView.mas_makeConstraints { make in
-            make?.left.right().bottom().equalTo()(0)
-            make?.height.equalTo()(211)
-        }
-        
-        enterButton.mas_makeConstraints { make in
-            make?.centerX.equalTo()(0)
-            make?.width.mas_greaterThanOrEqualTo()(200)
-            make?.height.equalTo()(46)
-            make?.bottom.equalTo()(-40)
-        }
-        
-        noAccessView.mas_makeConstraints { make in
-            make?.top.equalTo()(renderView.mas_top)?.offset()(148)
-            make?.left.right().bottom().equalTo()(0)
         }
     }
     
@@ -177,33 +94,6 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
         let config = UIConfig.deviceTest
         
         view.backgroundColor = config.backgroundColor
-        
-        backgroundImageView.image = config.backgroundImage
-        exitButton.setImage(config.exitButton.image,
-                            for: .normal)
-        exitButton.backgroundColor = config.exitButton.backgroundColor
-        exitButton.layer.cornerRadius = config.exitButton.cornerRadius
-        
-        greetLabel.font = config.greetLabel.font
-        greetLabel.textColor = config.greetLabel.color
-        
-        stateLabel.font = config.stateLabel.font
-        stateLabel.textColor = config.stateLabel.color
-        
-        titleLabel.font = config.titleLabel.font
-        titleLabel.textColor = config.titleLabel.color
-        
-        enterButton.backgroundColor = config.enterButton.backgroundColor
-        enterButton.layer.cornerRadius = config.enterButton.cornerRadius
-        enterButton.setTitleColorForAllStates(config.enterButton.titleColor)
-        enterButton.titleLabel?.font = config.enterButton.titleFont
-        
-        switchCameraButton.setImage(config.switchCamera.normalImage,
-                                    for: .normal)
-        switchCameraButton.setImage(config.switchCamera.selectedImage,
-                                    for: .highlighted)
-        switchCameraLabel.textColor = config.switchCamera.labelColor
-        switchCameraLabel.font = config.switchCamera.labelFont
     }
 }
 
@@ -233,7 +123,7 @@ private extension FcrProctorDeviceTestComponent {
             self.delegate?.onDeviceTestJoinExamSuccess()
         } failure: { error in
             AgoraLoading.hide()
-            // TODO: join main room fail
+            // TODO: ui, join main room fail
         }
     }
     
@@ -241,7 +131,7 @@ private extension FcrProctorDeviceTestComponent {
         let userId = contextPool.user.getLocalUserInfo().userUuid
         
         guard contextPool.media.openLocalDevice(systemDevice: .frontCamera) == nil else {
-            updateEnterable(false)
+            contentView.updateEnterable(false)
             return
         }
         
@@ -249,39 +139,15 @@ private extension FcrProctorDeviceTestComponent {
         renderConfig.mode = .hidden
         let streamId = "0"
         
-        let error = contextPool.media.startRenderVideo(view: renderView,
-                                                     renderConfig: renderConfig,
-                                                     streamUuid: streamId)
+        let error = contextPool.media.startRenderVideo(view: contentView.renderView,
+                                                       renderConfig: renderConfig,
+                                                       streamUuid: streamId)
         
         guard error == nil else {
-            updateEnterable(false)
+            contentView.updateEnterable(false)
             return
         }
-        updateEnterable(true)
-    }
-    
-    func updateEnterable(_ able: Bool) {
-        if able {
-            noAccessView.agora_visible = false
-            switchCameraButton.agora_visible = true
-            switchCameraLabel.agora_visible = true
-            
-            enterButton.isUserInteractionEnabled = true
-            enterButton.alpha = 1
-            enterButton.mas_updateConstraints { make in
-                make?.bottom.equalTo()(-40)
-            }
-        } else {
-            noAccessView.agora_visible = true
-            switchCameraButton.agora_visible = false
-            switchCameraLabel.agora_visible = false
-            
-            enterButton.isUserInteractionEnabled = false
-            enterButton.alpha = 0.5
-            enterButton.mas_updateConstraints { make in
-                make?.bottom.equalTo()(-209)
-            }
-        }
+        contentView.updateEnterable(true)
     }
 }
 
@@ -302,6 +168,6 @@ private extension FcrProctorDeviceTestComponent {
         }
         let finalState = state.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                     with: roomInfo.roomName)
-        stateLabel.text = finalState
+        contentView.stateLabel.text = finalState
     }
 }

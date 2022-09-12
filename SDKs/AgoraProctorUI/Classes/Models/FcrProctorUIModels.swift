@@ -7,9 +7,8 @@
 
 import AgoraEduContext
 
-typealias FcrProctorExamState = AgoraEduContextClassState
-
-struct FcrExamDuringTimeInfo {
+struct FcrExamExamStateInfo {
+    var state: FcrProctorUIExamState
     var startTime: Int64
     var duration: Int64
 }
