@@ -6,6 +6,7 @@
 //
 
 import AgoraUIBaseViews
+import SDWebImage
 
 class FcrDeviceTestNOAccessView: UIView {
     private lazy var titleLabel = UILabel()
@@ -25,6 +26,11 @@ class FcrDeviceTestNOAccessView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setAvartarImage(_ imageUrl: String) {
+        let url = URL(string: imageUrl)
+        avatarImageView.sd_setImage(with: url)
     }
     
     override func layoutSubviews() {

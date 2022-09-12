@@ -39,8 +39,8 @@ import AgoraEduContext
         initViews()
         initViewFrame()
         updateViewProperties()
-        checkExamState()
         
+        checkExamState()
         localSubRonomCheck()
     }
     
@@ -53,6 +53,51 @@ import AgoraEduContext
 extension FcrProctorExamComponent: AgoraEduRoomHandler {
     public func onClassStateUpdated(state: AgoraEduContextClassState) {
         checkExamState()
+    }
+}
+
+// MARK: - AgoraEduGroupHandler
+extension FcrProctorExamComponent: AgoraEduGroupHandler {
+    public func onSubRoomListAdded(subRoomList: [AgoraEduContextSubRoomInfo]) {
+        // TODO: 分组名规则
+        guard let userIdPrefix = contextPool.user.getLocalUserInfo().userUuid.getUserIdPrefix(),
+              let info = subRoomList.first(where: {$0.subRoomName == userIdPrefix}) else {
+            // TODO: ui,失败
+            return
+        }
+        
+        joinSubRoom(subRoomId: info.subRoomUuid)
+    }
+    
+    // TODO: temp
+    public func onUserListInvitedToSubRoom(userList: Array<String>,
+                                    subRoomUuid: String,
+                                    operatorUser: AgoraEduContextUserInfo?) {
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
+        guard userList.contains(localUserId),
+              let subRoomList = contextPool.group.getSubRoomList(),
+              let subRoomInfo = subRoomList.first(where: {$0.subRoomUuid == subRoomUuid}) else {
+            return
+        }
+        
+        contextPool.group.userListAcceptInvitationToSubRoom(userList: [localUserId],
+                                                            subRoomUuid: subRoomUuid,
+                                                            success: nil,
+                                                            failure: nil)
+    }
+    
+    // TODO: temp
+    public func onUserListAddedToSubRoom(userList: [String],
+                                         subRoomUuid: String,
+                                         operatorUser: AgoraEduContextUserInfo?) {
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        
+        guard userList.contains(localUserId) else {
+            return
+        }
+
+        joinSubRoom(subRoomId: subRoomUuid)
     }
 }
 
@@ -86,19 +131,6 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
         let config = UIConfig.exam
         
         view.backgroundColor = config.backgroundColor
-    }
-}
-
-extension FcrProctorExamComponent: AgoraEduGroupHandler {
-    public func onSubRoomListAdded(subRoomList: [AgoraEduContextSubRoomInfo]) {
-        // TODO: 分组名规则
-        guard let userIdPrefix = contextPool.user.getLocalUserInfo().userUuid.getUserIdPrefix(),
-              let info = subRoomList.first(where: {$0.subRoomName == userIdPrefix}) else {
-            // TODO: ui,失败
-            return
-        }
-        
-        joinSubRoom(subRoomId: info.subRoomUuid)
     }
 }
 
@@ -146,31 +178,22 @@ private extension FcrProctorExamComponent {
     
     func localSubRonomCheck() {
         // TODO: 检查自己是否有小房间
-        guard let userIdPrefix = contextPool.user.getLocalUserInfo().userUuid.getUserIdPrefix() else {
+        let localUserId = contextPool.user.getLocalUserInfo().userUuid
+        guard let userIdPrefix = localUserId.getUserIdPrefix() else {
             return
         }
         
-        guard let subRoomList = contextPool.group.getSubRoomList() else {
-            return
-        }
-        var localSubRoomId: String?
-        
-        // TODO: 分组name规则
-        for subRoom in subRoomList {
-            guard subRoom.subRoomName == userIdPrefix else {
-                continue
-            }
-            localSubRoomId = subRoom.subRoomName
-            break
-        }
+        var localSubRoomId = getUserSubroomId(userIdPrefix: userIdPrefix)
         
         if let `localSubRoomId` = localSubRoomId {
             joinSubRoom(subRoomId: localSubRoomId)
         } else {
             // TODO: 当前context不满足直接添加
+            // TODO: 分组name规则
             let config = AgoraEduContextSubRoomCreateConfig(subRoomName: userIdPrefix,
-                                                            invitationUserList: nil,
+                                                            invitationUserList: [localUserId],
                                                             subRoomProperties: nil)
+            // TODO: 重试机制
             contextPool.group.addSubRoomList(configs: [config]) {
                 
             } failure: { error in
@@ -188,9 +211,25 @@ private extension FcrProctorExamComponent {
         
         subRoom = localSubRoom
         localSubRoom.joinSubRoom(success: {
-            
+            AgoraLoading.hide()
         }, failure: { error in
+            AgoraLoading.hide()
             // TODO: ui,失败
         })
+    }
+    
+    func getUserSubroomId(userIdPrefix: String) -> String? {
+        var subRoomId: String?
+        if let subRoomList = contextPool.group.getSubRoomList() {
+            for subRoom in subRoomList {
+                guard let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
+                      userList.contains(where: {$0.contains(userIdPrefix)}) else {
+                    continue
+                }
+                subRoomId = subRoom.subRoomName
+                break
+            }
+        }
+        return subRoomId
     }
 }

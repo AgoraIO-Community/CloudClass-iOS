@@ -8,3 +8,8 @@
 import AgoraEduContext
 
 typealias FcrProctorUIExamState = AgoraEduContextClassState
+
+enum FcrProctorUIDeviceType: String {
+    case main = "main"
+    case sub = "sub"
+}

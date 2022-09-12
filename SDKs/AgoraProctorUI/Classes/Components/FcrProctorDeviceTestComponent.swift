@@ -38,7 +38,7 @@ import AgoraEduContext
         initViews()
         initViewFrame()
         updateViewProperties()
-        checkDeviceState()
+        initViewData()
         
         contextPool.room.registerRoomEventHandler(self)
     }
@@ -51,6 +51,10 @@ import AgoraEduContext
 extension FcrProctorDeviceTestComponent: AgoraEduRoomHandler {
     public func onClassStateUpdated(state: AgoraEduContextClassState) {
         updateRoomInfo()
+    }
+    
+    public func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
+        delegate?.onDeviceTestJoinExamSuccess()
     }
 }
 
@@ -120,34 +124,41 @@ private extension FcrProctorDeviceTestComponent {
             guard let `self` = self else {
                 return
             }
-            self.delegate?.onDeviceTestJoinExamSuccess()
+            
         } failure: { error in
             AgoraLoading.hide()
             // TODO: ui, join main room fail
         }
     }
     
-    func checkDeviceState() {
+    func initViewData() {
+        // camera check
         let userId = contextPool.user.getLocalUserInfo().userUuid
-        
-        guard contextPool.media.openLocalDevice(systemDevice: .frontCamera) == nil else {
-            contentView.updateEnterable(false)
-            return
-        }
         
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         let streamId = "0"
         
-        let error = contextPool.media.startRenderVideo(view: contentView.renderView,
-                                                       renderConfig: renderConfig,
-                                                       streamUuid: streamId)
-        
-        guard error == nil else {
+        if contextPool.media.openLocalDevice(systemDevice: .frontCamera) != nil {
             contentView.updateEnterable(false)
+        } else if let error = contextPool.media.startRenderVideo(view: contentView.renderView,
+                                                                 renderConfig: renderConfig,
+                                                                 streamUuid: streamId) {
+            contentView.updateEnterable(false)
+        } else {
+            contentView.updateEnterable(true)
+        }
+        
+        // avatar
+        guard let userIdPrefix = userId.getUserIdPrefix() else {
             return
         }
-        contentView.updateEnterable(true)
+        
+        let mainUserId = userIdPrefix.joinUserId(.main)
+        if let props = contextPool.user.getUserProperties(userUuid: mainUserId),
+        let avatarUrl = props["avatar"] as? String {
+            contentView.noAccessView.setAvartarImage(avatarUrl)
+        }
     }
 }
 

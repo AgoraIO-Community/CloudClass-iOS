@@ -17,7 +17,7 @@ class FcrProctorDeviceTestComponentView: UIView {
     private lazy var bottomView = UIView()
     private(set) lazy var enterButton = UIButton()
     private(set) lazy var renderView = FcrProctorRenderView()
-    private lazy var noAccessView = FcrDeviceTestNOAccessView()
+    private(set) lazy var noAccessView = FcrDeviceTestNOAccessView()
     private(set) lazy var switchCameraButton = UIButton()
     private lazy var switchCameraLabel = UILabel()
     

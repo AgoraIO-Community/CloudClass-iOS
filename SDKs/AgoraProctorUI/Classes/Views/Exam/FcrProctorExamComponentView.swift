@@ -33,14 +33,16 @@ class FcrProctorExamComponentView: UIView {
             duringCountdown.agora_visible = true
             endLabel.agora_visible = false
             
-            duringCountdown.updateTimeInfo(startTime: info.startTime,
+            duringCountdown.updateTimeInfo(state: .during,
+                                           startTime: info.startTime,
                                            duration: info.duration)
             duringCountdown.startTimer()
         case .after:
             startCountdown.agora_visible = false
             duringCountdown.agora_visible = true
             endLabel.agora_visible = true
-            duringCountdown.updateTimeInfo(startTime: info.startTime,
+            duringCountdown.updateTimeInfo(state: .after,
+                                           startTime: info.startTime,
                                            duration: info.duration)
             duringCountdown.startTimer()
         }

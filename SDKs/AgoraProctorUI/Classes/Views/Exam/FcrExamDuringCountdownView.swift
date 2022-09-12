@@ -36,10 +36,20 @@ class FcrExamDuringCountdownView: UIView {
         })
     }
     
-    func updateTimeInfo(startTime: Int64,
+    func stopTimer() {
+        guard timer != nil else {
+            return
+        }
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    func updateTimeInfo(state:FcrProctorUIExamState,
+                        startTime: Int64,
                         duration: Int64) {
-        timeInfo = FcrExamExamStateInfo(startTime: startTime,
-                                         duration: duration * 1000)
+        timeInfo = FcrExamExamStateInfo(state: state,
+                                        startTime: startTime,
+                                        duration: duration * 1000)
     }
     
     override func layoutSubviews() {
@@ -96,7 +106,10 @@ extension FcrExamDuringCountdownView: AgoraUIContentContainer {
 
 private extension FcrExamDuringCountdownView {
     func updateCountdownLabel() {
-        guard let info = timeInfo else {
+        guard let info = timeInfo,
+              info.state == .during else {
+            label.text = timeString(from: 0)
+            stopTimer()
             return
         }
         

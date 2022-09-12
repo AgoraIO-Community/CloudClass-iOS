@@ -101,6 +101,10 @@ extension String {
         let subString = self[...index]
         return String(subString)
     }
+    
+    func joinUserId(_ type: FcrProctorUIDeviceType) -> String {
+        return "\(self)-\(type.rawValue)"
+    }
 }
 
 // 将 AgoraWidgetInfo.syncFrame 转化为 具体是显示在界面上的 frame

@@ -19,6 +19,7 @@ Pod::Spec.new do |spec|
     spec.dependency "AgoraEduContext", ">=2.6.0"
     spec.dependency "Masonry"
     spec.dependency "SwifterSwift"
+    spec.dependency "SDWebImage"
     
     spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
     spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
