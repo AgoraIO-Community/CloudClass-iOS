@@ -55,7 +55,7 @@ extension String {
         return "{yyy}"
     }
     
-    func fcr_invigilator_localized() -> String {
+    func fcr_proctor_localized() -> String {
         guard let eduBundle = Bundle.agora_bundle("AgoraProctorUI") else {
             return ""
         }

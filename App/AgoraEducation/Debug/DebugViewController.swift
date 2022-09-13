@@ -16,8 +16,7 @@ import AgoraUIBaseViews
 
 class DebugViewController: UIViewController {
     /**data**/
-    private lazy var data = DebugDataHandler(delegate: self,
-                                             proctorSDK: proctorSDK)
+    private lazy var data = DebugDataHandler(delegate: self)
     /**view**/
     private lazy var debugView = DebugView(frame: .zero)
     
@@ -62,9 +61,11 @@ extension DebugViewController: DebugViewDelagate {
         
         AgoraLoading.loading()
         
-        let failureBlock: (Error) -> () = { (error) in
+        let failureBlock: (Error) -> () = { [weak self] (error) in
             AgoraLoading.hide()
-
+            
+            self?.proctorSDK = nil
+            
             let `error` = error as NSError
             
             if error.code == 30403100 {
@@ -88,15 +89,6 @@ extension DebugViewController: DebugViewDelagate {
             // UI mode
             agora_ui_mode = info.uiMode.edu
             agora_ui_language = info.uiLanguage.edu.string
-#if DEBUG
-            let sel1 = NSSelectorFromString("setLogConsoleState:");
-            AgoraClassroomSDK.perform(sel1,
-                                      with: 1)
-            
-            let sel2 = NSSelectorFromString("setLogConsoleState:");
-            AgoraProctorSDK.perform(sel2,
-                                    with: 1)
-#endif
             
             let roomType = info.roomType
             if let _ = roomType.edu,
@@ -104,6 +96,11 @@ extension DebugViewController: DebugViewDelagate {
                                                             appId: response.appId,
                                                             token: response.token,
                                                             userId: response.userId) {
+#if DEBUG
+            let sel1 = NSSelectorFromString("setLogConsoleState:");
+            AgoraClassroomSDK.perform(sel1,
+                                      with: 1)
+#endif
                 AgoraClassroomSDK.launch(launchConfig,
                                          success: launchSuccessBlock,
                                          failure: failureBlock)
@@ -116,6 +113,13 @@ extension DebugViewController: DebugViewDelagate {
                 let proSDK = AgoraProctorSDK(launchConfig,
                                              delegate: self)
                 self.proctorSDK = proSDK
+#if DEBUG
+                
+                let sel2 = NSSelectorFromString("setLogConsoleState:");
+                proSDK.perform(sel2,
+                               with: 1)
+#endif
+                self.data.updateProctorSDKEnviroment(proctorSDK: proSDK)
                 
                 proSDK.launch(launchSuccessBlock,
                               failure: failureBlock)
@@ -200,9 +204,9 @@ extension DebugViewController {
         let uiMode = data.getUIMode()
         let environment = data.getEnvironment()
         
-        let defaultList: [DataSourceType] = [.roomName(.none),
-                                             .userName(.none),
-                                             .roomType(.small),
+        let defaultList: [DataSourceType] = [.roomName(.value("aaaqqq")),
+                                             .userName(.value("aaaqqq")),
+                                             .roomType(.proctor),
                                              .roleType(.student),
                                              .im(.easemob),
                                              .deviceType(.sub),

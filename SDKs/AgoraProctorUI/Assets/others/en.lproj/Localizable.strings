@@ -15,6 +15,7 @@ fcr_device_enter = "Enter the examination room";
 fcr_device_switch = "Switch Camera";
 fcr_device_no_access_title = "No access to camera";
 fcr_device_no_access_content = "Allow  online proctoring  to access your camera in setting - privacy - Camera";
+fcr_device_join_fail = "Join exam unsuccessfully, Please retry";
 
 // Exam
 fcr_exam_leave_title = "Leave Exam";

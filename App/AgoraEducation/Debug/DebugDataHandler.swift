@@ -26,7 +26,6 @@ protocol DebugDataHandlerDelegate: NSObjectProtocol {
 
 class DebugDataHandler {
     private weak var delegate: DebugDataHandlerDelegate?
-    private weak var proctorSDK: AgoraProctorSDK?
     
     private let tokenBuilder = TokenBuilder()
     
@@ -36,19 +35,12 @@ class DebugDataHandler {
         }
     }
     
-    init(delegate: DebugDataHandlerDelegate?,
-         proctorSDK: AgoraProctorSDK?) {
+    init(delegate: DebugDataHandlerDelegate?) {
         self.delegate = delegate
-        self.proctorSDK = proctorSDK
     }
     
     func updateDataSourceList(_ list: [DataSourceType]) {
         self.dataSourceList = list
-        
-        if case .environment(let environment) = dataSourceList.valueOfType(.roomType) as? DataSourceType {
-            FcrEnvironment.shared.environment = environment.edu
-            updateProctorSDKEnviroment(environment.edu)
-        }
         
         if case .region(let region) = dataSourceList.valueOfType(.region) as? DataSourceType {
             FcrEnvironment.shared.region = region.env
@@ -56,6 +48,24 @@ class DebugDataHandler {
         
         if case .uiLanguage(let uiLanguage) = dataSourceList.valueOfType(.uiLanguage) as? DataSourceType {
             FcrLocalization.shared.setupNewLanguage(uiLanguage.edu)
+        }
+    }
+    
+    func updateProctorSDKEnviroment(proctorSDK: AgoraProctorSDK) {
+        guard case .environment(let environment) = dataSourceList.valueOfType(.environment) as? DataSourceType else {
+            return
+        }
+        let sel = NSSelectorFromString("setEnvironment:")
+        switch environment {
+        case .pro:
+            proctorSDK.perform(sel,
+                               with: 2)
+        case .pre:
+            proctorSDK.perform(sel,
+                               with: 1)
+        case .dev:
+            proctorSDK.perform(sel,
+                               with: 0)
         }
     }
 }
@@ -263,7 +273,6 @@ extension DebugDataHandler {
                                 appId: String,
                                 token: String,
                                 userId: String) -> AgoraProctorLaunchConfig {
-        
         let mediaOptions = debugInfo.proctorMediaOptions
 
         let launchConfig = AgoraProctorLaunchConfig(userName: debugInfo.userName,
@@ -588,25 +597,6 @@ private extension DebugDataHandler {
     
     func updateAllDataSource() {
         delegate?.onDataSourceNeedReload()
-    }
-    
-    func updateProctorSDKEnviroment(_ environment: FcrEnvironment.Environment) {
-        guard let `proctorSDK` = proctorSDK else {
-            return
-        }
-        
-        let sel = NSSelectorFromString("setEnvironment:")
-        switch environment {
-        case .pro:
-            proctorSDK.perform(sel,
-                               with: 2)
-        case .pre:
-            proctorSDK.perform(sel,
-                               with: 1)
-        case .dev:
-            proctorSDK.perform(sel,
-                               with: 0)
-        }
     }
     
     func checkDataSource() {

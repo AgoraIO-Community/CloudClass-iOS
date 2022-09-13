@@ -46,8 +46,8 @@ class FcrDeviceTestNOAccessView: UIView {
 
 extension FcrDeviceTestNOAccessView: AgoraUIContentContainer {
     func initViews() {
-        titleLabel.text = "fcr_device_no_access_title".fcr_invigilator_localized()
-        contentLabel.text = "fcr_device_no_access_content".fcr_invigilator_localized()
+        titleLabel.text = "fcr_device_no_access_title".fcr_proctor_localized()
+        contentLabel.text = "fcr_device_no_access_content".fcr_proctor_localized()
         contentLabel.numberOfLines = 0
         
         addSubviews([card,

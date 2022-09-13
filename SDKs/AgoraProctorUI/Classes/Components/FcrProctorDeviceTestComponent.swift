@@ -38,9 +38,10 @@ import AgoraEduContext
         initViews()
         initViewFrame()
         updateViewProperties()
-        initViewData()
         
         contextPool.room.registerRoomEventHandler(self)
+        
+        initViewData()
     }
     
     required init?(coder: NSCoder) {
@@ -67,9 +68,9 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
                              action: #selector(onClickExitRoom),
                              for: .touchUpInside)
         
-        contentView.titleLabel.text = "fcr_device_device".fcr_invigilator_localized()
+        contentView.titleLabel.text = "fcr_device_device".fcr_proctor_localized()
         
-        let greet = "fcr_device_greet".fcr_invigilator_localized()
+        let greet = "fcr_device_greet".fcr_proctor_localized()
         let userName = contextPool.user.getLocalUserInfo().userName
         let finalGreet = greet.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                     with: userName)
@@ -81,7 +82,7 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
                                                  action: #selector(onClickSwitchCamera),
                                                  for: .touchUpInside)
                 
-        contentView.enterButton.setTitle("fcr_device_enter".fcr_invigilator_localized(),
+        contentView.enterButton.setTitle("fcr_device_enter".fcr_proctor_localized(),
                                          for: .normal)
         contentView.enterButton.addTarget(self,
                                           action: #selector(onClickEnterRoom),
@@ -120,14 +121,9 @@ private extension FcrProctorDeviceTestComponent {
     
     @objc func onClickEnterRoom() {
         AgoraLoading.loading()
-        contextPool.room.joinRoom { [weak self] in
-            guard let `self` = self else {
-                return
-            }
-            
-        } failure: { error in
+        contextPool.room.joinRoom(success: nil) { error in
             AgoraLoading.hide()
-            // TODO: ui, join main room fail
+            AgoraToast.toast(message: "fcr_device_join_fail".fcr_proctor_localized())
         }
     }
     
@@ -171,9 +167,9 @@ private extension FcrProctorDeviceTestComponent {
         let classInfo = contextPool.room.getClassInfo()
         switch classInfo.state {
         case .before:
-            state = "fcr_device_state_will_start".fcr_invigilator_localized()
+            state = "fcr_device_state_will_start".fcr_proctor_localized()
         case .during:
-            state = "fcr_device_state_already_start".fcr_invigilator_localized()
+            state = "fcr_device_state_already_start".fcr_proctor_localized()
         default:
             return
         }

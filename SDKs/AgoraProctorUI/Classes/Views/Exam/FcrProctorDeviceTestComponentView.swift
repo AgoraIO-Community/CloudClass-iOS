@@ -29,7 +29,10 @@ class FcrProctorDeviceTestComponentView: UIView {
             
             enterButton.isUserInteractionEnabled = true
             enterButton.alpha = 1
-            enterButton.mas_updateConstraints { make in
+            enterButton.mas_remakeConstraints { make in
+                make?.centerX.equalTo()(0)
+                make?.width.mas_greaterThanOrEqualTo()(200)
+                make?.height.equalTo()(46)
                 make?.bottom.equalTo()(-40)
             }
         } else {
@@ -39,7 +42,10 @@ class FcrProctorDeviceTestComponentView: UIView {
             
             enterButton.isUserInteractionEnabled = false
             enterButton.alpha = 0.5
-            enterButton.mas_updateConstraints { make in
+            enterButton.mas_remakeConstraints { make in
+                make?.centerX.equalTo()(0)
+                make?.width.mas_greaterThanOrEqualTo()(200)
+                make?.height.equalTo()(46)
                 make?.bottom.equalTo()(-209)
             }
         }
@@ -52,10 +58,10 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
         
         titleLabel.sizeToFit()
         
-        switchCameraLabel.text = "fcr_device_switch".fcr_invigilator_localized()
+        switchCameraLabel.text = "fcr_device_switch".fcr_proctor_localized()
         
         enterButton.sizeToFit()
-        enterButton.setTitle("fcr_device_enter".fcr_invigilator_localized(),
+        enterButton.setTitle("fcr_device_enter".fcr_proctor_localized(),
                              for: .normal)
         
         addSubviews([backgroundImageView,

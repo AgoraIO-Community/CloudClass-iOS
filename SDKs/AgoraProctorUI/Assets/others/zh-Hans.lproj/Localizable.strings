@@ -15,6 +15,7 @@ fcr_device_enter = "正式进入考场";
 fcr_device_switch = "切换摄像头";
 fcr_device_no_access_title = "无法使用相机";
 fcr_device_no_access_content = "Allow  online proctoring  to access your camera in setting - privacy - Camera";
+fcr_device_join_fail = "加入考试失败，请重试";
 
 // Exam
 fcr_exam_leave_title = "下课确认";

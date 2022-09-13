@@ -36,7 +36,10 @@
     if (self) {
         self.config = config;
         self.delegate = delegate;
-        self.core = [[AgoraEduCorePuppet alloc] init];
+        
+        AgoraEduCorePuppetLaunchConfig *coreConfig = [self getPuppetLaunchConfig:self.config];
+        self.core = [[AgoraEduCorePuppet alloc] init:coreConfig
+                                             widgets:config.widgets.allValues];
     }
     
     return self;
@@ -55,11 +58,11 @@
 }
 
 - (void)setEnvironment:(NSNumber *)environment {
-    self.environment = environment;
+    _environment = environment;
 }
 
 - (void)setLogConsoleState:(NSNumber *)state {
-    self.consoleState = state;
+    _consoleState = state;
 }
 
 #pragma mark - FcrProctorSceneDelegate
@@ -110,13 +113,9 @@
         [self.core setParameters:parameters];
     }
     
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [self getPuppetLaunchConfig:self.config];
-    
     __weak AgoraProctorSDK *weakSelf = self;
     
-    [self.core launch:coreConfig
-              widgets:self.config.widgets.allValues
-              success:^(id<AgoraEduContextPool> pool) {
+    [self.core launch:^(id<AgoraEduContextPool> pool) {
         AgoraProctorSDK *strongSelf = weakSelf;
         
         if (!strongSelf) {
