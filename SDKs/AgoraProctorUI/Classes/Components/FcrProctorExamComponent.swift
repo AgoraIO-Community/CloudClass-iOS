@@ -14,7 +14,7 @@ import AgoraEduContext
 
 @objc public class FcrProctorExamComponent: UIViewController {
     /**view**/
-    private lazy var contentView = FcrProctorExamComponentView()
+    private lazy var contentView = FcrProctorExamComponentView(frame: .zero)
     
     /**context**/
     private weak var delegate: FcrProctorExamComponentDelegate?
@@ -39,6 +39,9 @@ import AgoraEduContext
         initViews()
         initViewFrame()
         updateViewProperties()
+        
+        contextPool.room.registerRoomEventHandler(self)
+        contextPool.group.registerGroupEventHandler(self)
         
         checkExamState()
         localSubRoomCheck()
@@ -82,6 +85,8 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
         
         let userName = contextPool.user.getLocalUserInfo().userName
         contentView.nameLabel.text = userName
+        let roomName = contextPool.room.getRoomInfo().roomName
+        contentView.beforeExamNameLabel.text = roomName
         
         contentView.switchCameraButton.addTarget(self,
                                                  action: #selector(onClickSwitchCamera),
@@ -172,8 +177,9 @@ private extension FcrProctorExamComponent {
         }
         
         subRoom = localSubRoom
-        localSubRoom.joinSubRoom(success: {
+        localSubRoom.joinSubRoom(success: { [weak self] in
             AgoraLoading.hide()
+            self?.checkExamState()
         }, failure: { [weak self] error in
             AgoraLoading.hide()
             AgoraToast.toast(message: "fcr_device_join_fail".fcr_proctor_localized())
@@ -188,7 +194,7 @@ private extension FcrProctorExamComponent {
                       userList.contains(where: {$0.contains(userIdPrefix)}) else {
                     continue
                 }
-                subRoomId = subRoom.subRoomName
+                subRoomId = subRoom.subRoomUuid
                 break
             }
         }

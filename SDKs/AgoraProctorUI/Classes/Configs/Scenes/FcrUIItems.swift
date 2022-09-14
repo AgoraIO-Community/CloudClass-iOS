@@ -73,7 +73,6 @@ struct FcrUIItemDeviceTestEnterButton: FcrUIItemProtocol {
     var enable: Bool     = true
     
     let backgroundColor: UIColor = FcrUIColorGroup.systemBrandColor
-    let cornerRadius             = FcrUIFrameGroup.buttonCornerRadius
     let titleFont:  UIFont       = FcrUIFontGroup.font16
     let titleColor: UIColor      = FcrUIColorGroup.textDarkContrastColor
 }
@@ -116,7 +115,6 @@ struct FcrUIItemExamLeaveButton: FcrUIItemProtocol {
     var enable: Bool     = true
     
     let backgroundColor: UIColor = FcrUIColorGroup.systemErrorColor
-    let cornerRadius: CGFloat    = FcrUIFrameGroup.buttonCornerRadius
     let titleFont:  UIFont       = FcrUIFontGroup.font16
     let titleColor: UIColor      = FcrUIColorGroup.textDarkContrastColor
 }

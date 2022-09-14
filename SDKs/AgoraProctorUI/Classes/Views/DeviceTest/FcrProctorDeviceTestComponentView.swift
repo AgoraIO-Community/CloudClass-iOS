@@ -14,41 +14,64 @@ class FcrProctorDeviceTestComponentView: UIView {
     private(set) lazy var titleLabel = UILabel()
     private(set) lazy var greetLabel = UILabel()
     private(set) lazy var stateLabel = UILabel()
-    private lazy var bottomView = UIView()
     private(set) lazy var enterButton = UIButton()
     private(set) lazy var renderView = FcrProctorRenderView()
     private(set) lazy var noAccessView = FcrDeviceTestNOAccessView()
     private(set) lazy var switchCameraButton = UIButton()
     private lazy var switchCameraLabel = UILabel()
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        initViews()
+        initViewFrame()
+        updateViewProperties()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func updateEnterable(_ able: Bool) {
-        if able {
-            noAccessView.agora_visible = false
-            switchCameraButton.agora_visible = true
-            switchCameraLabel.agora_visible = true
-            
-            enterButton.isUserInteractionEnabled = true
-            enterButton.alpha = 1
-            enterButton.mas_remakeConstraints { make in
-                make?.centerX.equalTo()(0)
-                make?.width.mas_greaterThanOrEqualTo()(200)
-                make?.height.equalTo()(46)
-                make?.bottom.equalTo()(-40)
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else {
+                return
             }
-        } else {
-            noAccessView.agora_visible = true
-            switchCameraButton.agora_visible = false
-            switchCameraLabel.agora_visible = false
-            
-            enterButton.isUserInteractionEnabled = false
-            enterButton.alpha = 0.5
-            enterButton.mas_remakeConstraints { make in
-                make?.centerX.equalTo()(0)
-                make?.width.mas_greaterThanOrEqualTo()(200)
-                make?.height.equalTo()(46)
-                make?.bottom.equalTo()(-209)
+            if able {
+                self.noAccessView.agora_visible = false
+                self.switchCameraButton.agora_visible = true
+                self.switchCameraLabel.agora_visible = true
+                
+                self.enterButton.isUserInteractionEnabled = true
+                self.enterButton.alpha = 1
+                self.enterButton.mas_remakeConstraints { make in
+                    make?.centerX.equalTo()(0)
+                    make?.width.mas_greaterThanOrEqualTo()(200)
+                    make?.height.equalTo()(46)
+                    make?.bottom.equalTo()(-40)
+                }
+            } else {
+                self.noAccessView.agora_visible = true
+                self.switchCameraButton.agora_visible = false
+                self.switchCameraLabel.agora_visible = false
+
+                self.enterButton.isUserInteractionEnabled = false
+                self.enterButton.alpha = 0.5
+                self.enterButton.mas_remakeConstraints { make in
+                    make?.centerX.equalTo()(0)
+                    make?.width.mas_greaterThanOrEqualTo()(200)
+                    make?.height.equalTo()(46)
+                    make?.bottom.equalTo()(-209)
+                }
             }
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        enterButton.layer.cornerRadius = enterButton.bounds.height / 2
+        enterButton.layer.masksToBounds = true
     }
 }
 
@@ -60,7 +83,6 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
         
         switchCameraLabel.text = "fcr_device_switch".fcr_proctor_localized()
         
-        enterButton.sizeToFit()
         enterButton.setTitle("fcr_device_enter".fcr_proctor_localized(),
                              for: .normal)
         
@@ -72,7 +94,6 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
                      renderView,
                      switchCameraButton,
                      switchCameraLabel,
-                     bottomView,
                      enterButton,
                      noAccessView])
     }
@@ -80,6 +101,7 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
     public func initViewFrame() {
         backgroundImageView.mas_makeConstraints { make in
             make?.left.right().top().equalTo()(0)
+            make?.height.equalTo()(262.5)
         }
         
         exitButton.mas_makeConstraints { make in
@@ -121,11 +143,6 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
             make?.top.equalTo()(switchCameraButton.mas_bottom)?.offset()(12)
         }
         
-        bottomView.mas_makeConstraints { make in
-            make?.left.right().bottom().equalTo()(0)
-            make?.height.equalTo()(211)
-        }
-        
         enterButton.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.width.mas_greaterThanOrEqualTo()(200)
@@ -160,7 +177,6 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
         titleLabel.textColor = config.titleLabel.color
         
         enterButton.backgroundColor = config.enterButton.backgroundColor
-        enterButton.layer.cornerRadius = config.enterButton.cornerRadius
         enterButton.setTitleColorForAllStates(config.enterButton.titleColor)
         enterButton.titleLabel?.font = config.enterButton.titleFont
         

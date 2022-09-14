@@ -11,7 +11,7 @@ struct FcrUIFrameGroup {
     // corner radius
     static let alertCornerRadius:        CGFloat = 12
     static let systemCornerRadius:       CGFloat = 14
-    static let buttonCornerRadius:       CGFloat = 32
+    static let renderCornerRadius:       CGFloat = 32
     static let card1CornerRadius:         CGFloat = 30
     static let card2CornerRadius:         CGFloat = 16
     

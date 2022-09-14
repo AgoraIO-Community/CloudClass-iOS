@@ -181,7 +181,7 @@ enum DataSourceRoleType: Int, CaseIterable {
     }
 }
 
-enum DataSourceDeviceType: CaseIterable {
+enum DataSourceDeviceType: String, CaseIterable {
     case main
     case sub
     

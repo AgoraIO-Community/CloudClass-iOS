@@ -109,7 +109,7 @@ extension DebugViewController: DebugViewDelagate {
                 let launchConfig = self.data.getProctorLaunchConfig(debugInfo: info,
                                                                      appId: response.appId,
                                                                      token: response.token,
-                                                                    userId: response.userId)
+                                                                    userId: info.userId)
                 let proSDK = AgoraProctorSDK(launchConfig,
                                              delegate: self)
                 self.proctorSDK = proSDK
@@ -127,7 +127,7 @@ extension DebugViewController: DebugViewDelagate {
         }
         
         data.requestToken(roomId: info.roomId,
-                          userId: info.userId,
+                          userId: "\(info.userId)-\(info.deviceType.rawValue)",
                           userRole: info.roleType.rawValue,
                           success: tokenSuccessBlock,
                           failure: failureBlock)

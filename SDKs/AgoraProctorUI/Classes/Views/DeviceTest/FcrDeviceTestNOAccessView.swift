@@ -28,6 +28,10 @@ class FcrDeviceTestNOAccessView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setUserName(_ name: String) {
+        avatarNameLabel.text = name.firstCharacterAsString
+    }
+    
     func setAvartarImage(_ imageUrl: String) {
         let url = URL(string: imageUrl)
         avatarImageView.sd_setImage(with: url)

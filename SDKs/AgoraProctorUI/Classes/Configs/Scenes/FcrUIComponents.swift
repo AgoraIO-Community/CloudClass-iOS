@@ -34,7 +34,7 @@ struct FcrUIComponentRender: FcrUIComponentProtocol {
     var enable: Bool             = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
     
-    let cornerRadius = FcrUIFrameGroup.buttonCornerRadius
+    let cornerRadius = FcrUIFrameGroup.renderCornerRadius
 }
 
 struct FcrUIComponentExam: FcrUIComponentProtocol {

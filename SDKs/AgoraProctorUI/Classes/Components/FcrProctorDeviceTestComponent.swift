@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 import AgoraEduContext
+import AVFoundation
 
 @objc public protocol FcrProctorDeviceTestComponentDelegate: NSObjectProtocol {
     func onDeviceTestJoinExamSuccess()
@@ -15,7 +16,7 @@ import AgoraEduContext
 
 @objc public class FcrProctorDeviceTestComponent: UIViewController {
     /**view**/
-    private lazy var contentView = FcrProctorDeviceTestComponentView()
+    private lazy var contentView = FcrProctorDeviceTestComponentView(frame: .zero)
     /**context**/
     private weak var delegate: FcrProctorDeviceTestComponentDelegate?
     private let contextPool: AgoraEduContextPool
@@ -41,11 +42,21 @@ import AgoraEduContext
         
         contextPool.room.registerRoomEventHandler(self)
         
-        initViewData()
+        checkCameraState()
+        setAvatarInfo()
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(applicationWillEnterForeground(_:)),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
 
@@ -91,7 +102,7 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
     
     public func initViewFrame() {
         contentView.mas_makeConstraints { make in
-            make?.left.right().top().equalTo()(0)
+            make?.left.right().top().bottom().equalTo()(0)
         }
     }
     
@@ -127,40 +138,21 @@ private extension FcrProctorDeviceTestComponent {
         }
     }
     
-    func initViewData() {
-        // camera check
-        let userId = contextPool.user.getLocalUserInfo().userUuid
-        
-        let renderConfig = AgoraEduContextRenderConfig()
-        renderConfig.mode = .hidden
-        let streamId = "0"
-        
-        if contextPool.media.openLocalDevice(systemDevice: .frontCamera) != nil {
-            contentView.updateEnterable(false)
-        } else if let error = contextPool.media.startRenderVideo(view: contentView.renderView,
-                                                                 renderConfig: renderConfig,
-                                                                 streamUuid: streamId) {
-            contentView.updateEnterable(false)
-        } else {
-            contentView.updateEnterable(true)
-        }
-        
+    func setAvatarInfo() {
         // avatar
-        guard let userIdPrefix = userId.getUserIdPrefix() else {
+        let userInfo = self.contextPool.user.getLocalUserInfo()
+        guard let userIdPrefix = userInfo.userUuid.getUserIdPrefix() else {
             return
         }
         
+        contentView.noAccessView.setUserName(userInfo.userName)
         let mainUserId = userIdPrefix.joinUserId(.main)
         if let props = contextPool.user.getUserProperties(userUuid: mainUserId),
         let avatarUrl = props["avatar"] as? String {
             contentView.noAccessView.setAvartarImage(avatarUrl)
         }
     }
-}
-
-
-// MARK: - private
-private extension FcrProctorDeviceTestComponent {
+    
     func updateRoomInfo() {
         var state = ""
         let roomInfo = contextPool.room.getRoomInfo()
@@ -176,5 +168,43 @@ private extension FcrProctorDeviceTestComponent {
         let finalState = state.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                     with: roomInfo.roomName)
         contentView.stateLabel.text = finalState
+    }
+    
+    func applicationDidEnterForeground(notification: NSNotification) {
+        checkCameraState()
+    }
+    
+    func checkCameraState() {
+        AVCaptureDevice.requestAccess(for: .video) { [weak self] auth in
+            guard let `self` = self else {
+                return
+            }
+            
+            guard auth else {
+                self.contentView.updateEnterable(false)
+                return
+            }
+            let userId = self.contextPool.user.getLocalUserInfo().userUuid
+            
+            let renderConfig = AgoraEduContextRenderConfig()
+            renderConfig.mode = .hidden
+            let streamId = "0"
+            
+            if self.contextPool.media.openLocalDevice(systemDevice: .frontCamera) == nil,
+               self.contextPool.media.startRenderVideo(view: self.contentView.renderView,
+                                                  renderConfig: renderConfig,
+                                                  streamUuid: streamId) == nil {
+                self.contentView.updateEnterable(true)
+            } else {
+                self.contentView.updateEnterable(false)
+            }
+        }
+    }
+}
+
+// MARK: - UIApplicationDelegate
+extension FcrProctorDeviceTestComponent: UIApplicationDelegate {
+    public func applicationWillEnterForeground(_ application: UIApplication) {
+        checkCameraState()
     }
 }
