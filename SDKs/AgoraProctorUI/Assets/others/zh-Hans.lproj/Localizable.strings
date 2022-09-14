@@ -18,7 +18,7 @@ fcr_device_no_access_content = "Allow  online proctoring  to access your camera 
 fcr_device_join_fail = "加入考试失败，请重试";
 
 // Exam
-fcr_exam_leave_title = "下课确认";
-fcr_exam_leave_warning = "是否确定要退出教室？";
+fcr_exam_leave_title = "Leave Exam";
+fcr_exam_leave_warning = "真的要退出考试吗？";
 fcr_exam_leave_cancel = "取消";
 fcr_exam_leave_sure = "确认";

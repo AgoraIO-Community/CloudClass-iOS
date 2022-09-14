@@ -45,6 +45,7 @@ import AgoraEduContext
         
         checkExamState()
         localSubRoomCheck()
+        startRender()
     }
     
     required init?(coder: NSCoder) {
@@ -184,6 +185,18 @@ private extension FcrProctorExamComponent {
             AgoraLoading.hide()
             AgoraToast.toast(message: "fcr_device_join_fail".fcr_proctor_localized())
         })
+    }
+    
+    func startRender() {
+        let userId = self.contextPool.user.getLocalUserInfo().userUuid
+        
+        let renderConfig = AgoraEduContextRenderConfig()
+        renderConfig.mode = .hidden
+        let streamId = "0"
+        
+        contextPool.media.startRenderVideo(view: self.contentView.renderView,
+                                           renderConfig: renderConfig,
+                                           streamUuid: streamId)
     }
     
     func getUserSubroomId(userIdPrefix: String) -> String? {
