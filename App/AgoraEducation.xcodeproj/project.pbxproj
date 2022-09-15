@@ -37,7 +37,9 @@
 		86D4896D277AE2750062F068 /* LoginModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D4896C277AE2750062F068 /* LoginModels.swift */; };
 		AB05CE9728C77387001239AD /* RoomCreateTableCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB05CE9528C77387001239AD /* RoomCreateTableCells.swift */; };
 		AB05CE9828C77387001239AD /* RoomCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB05CE9628C77387001239AD /* RoomCreateViewController.swift */; };
+		AB05CE9A28C89FAD001239AD /* RoomCreateTimeAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB05CE9928C89FAD001239AD /* RoomCreateTimeAlertController.swift */; };
 		AB07A337287C549D0072A29F /* FcrLogoffViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB07A336287C549D0072A29F /* FcrLogoffViewController.swift */; };
+		AB08496128D1812700214B68 /* RoomListJoinAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB08496028D1812700214B68 /* RoomListJoinAlertController.swift */; };
 		AB2AAFC5288A4BEE009D015C /* FcrOutsideClassBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2AAFC4288A4BEE009D015C /* FcrOutsideClassBaseController.swift */; };
 		AB4F69CF286D8BEE0012E6B3 /* FcrSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4F69CE286D8BEE0012E6B3 /* FcrSettingsViewController.swift */; };
 		AB4F69D1286D8C380012E6B3 /* FcrGeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4F69D0286D8C380012E6B3 /* FcrGeneralSettingsViewController.swift */; };
@@ -59,6 +61,8 @@
 		AB7FFD6526EA0DDD003A50B8 /* RoomInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */; };
 		AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */; };
 		AB7FFD6926EAFEF2003A50B8 /* RoomInfoOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */; };
+		AB80DBE628CB55320004E518 /* RoomItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB80DBE528CB55320004E518 /* RoomItemModel.swift */; };
+		AB82D3AA28D0B11A00ADFC84 /* RoomListShareAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB82D3A928D0B11A00ADFC84 /* RoomListShareAlertController.swift */; };
 		AB8AC745287FEB5000B57B58 /* FcrPrivacyTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8AC744287FEB5000B57B58 /* FcrPrivacyTermsViewController.swift */; };
 		AB8AC7472886D13600B57B58 /* FcrLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB8AC7462886D13600B57B58 /* FcrLocalization.swift */; };
 		ABB1D15D287C00A600395A13 /* LoginWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB1D15C287C00A600395A13 /* LoginWebViewController.swift */; };
@@ -148,7 +152,9 @@
 		A5BFF93D50503E0756F47D98 /* Pods-AgoraEducation.qarelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qarelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qarelease.xcconfig"; sourceTree = "<group>"; };
 		AB05CE9528C77387001239AD /* RoomCreateTableCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomCreateTableCells.swift; sourceTree = "<group>"; };
 		AB05CE9628C77387001239AD /* RoomCreateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomCreateViewController.swift; sourceTree = "<group>"; };
+		AB05CE9928C89FAD001239AD /* RoomCreateTimeAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomCreateTimeAlertController.swift; sourceTree = "<group>"; };
 		AB07A336287C549D0072A29F /* FcrLogoffViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrLogoffViewController.swift; sourceTree = "<group>"; };
+		AB08496028D1812700214B68 /* RoomListJoinAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomListJoinAlertController.swift; sourceTree = "<group>"; };
 		AB2AAFC4288A4BEE009D015C /* FcrOutsideClassBaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrOutsideClassBaseController.swift; sourceTree = "<group>"; };
 		AB4F69CE286D8BEE0012E6B3 /* FcrSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FcrSettingsViewController.swift; sourceTree = "<group>"; };
 		AB4F69D0286D8C380012E6B3 /* FcrGeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrGeneralSettingsViewController.swift; sourceTree = "<group>"; };
@@ -170,6 +176,8 @@
 		AB7FFD6426EA0DDD003A50B8 /* RoomInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoCell.swift; sourceTree = "<group>"; };
 		AB7FFD6626EA3962003A50B8 /* RoomInfoOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoOptionsView.swift; sourceTree = "<group>"; };
 		AB7FFD6826EAFEF2003A50B8 /* RoomInfoOptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomInfoOptionCell.swift; sourceTree = "<group>"; };
+		AB80DBE528CB55320004E518 /* RoomItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomItemModel.swift; sourceTree = "<group>"; };
+		AB82D3A928D0B11A00ADFC84 /* RoomListShareAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomListShareAlertController.swift; sourceTree = "<group>"; };
 		AB8AC744287FEB5000B57B58 /* FcrPrivacyTermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrPrivacyTermsViewController.swift; sourceTree = "<group>"; };
 		AB8AC7462886D13600B57B58 /* FcrLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrLocalization.swift; sourceTree = "<group>"; };
 		ABB1D15C287C00A600395A13 /* LoginWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWebViewController.swift; sourceTree = "<group>"; };
@@ -280,6 +288,7 @@
 			children = (
 				68362356262D30C20028F7F5 /* BaseLoginObject.swift */,
 				86D4896C277AE2750062F068 /* LoginModels.swift */,
+				AB80DBE528CB55320004E518 /* RoomItemModel.swift */,
 			);
 			path = Beans;
 			sourceTree = "<group>";
@@ -419,6 +428,7 @@
 			children = (
 				AB05CE9528C77387001239AD /* RoomCreateTableCells.swift */,
 				AB05CE9628C77387001239AD /* RoomCreateViewController.swift */,
+				AB05CE9928C89FAD001239AD /* RoomCreateTimeAlertController.swift */,
 			);
 			path = CreateRoom;
 			sourceTree = "<group>";
@@ -469,6 +479,8 @@
 				AB7B7B6B28C1D8A7001D327A /* RoomListViewController.swift */,
 				AB7B7B7028C1E151001D327A /* RoomListItemCell.swift */,
 				AB7B7B6E28C1E0B1001D327A /* RoomListTitleView.swift */,
+				AB82D3A928D0B11A00ADFC84 /* RoomListShareAlertController.swift */,
+				AB08496028D1812700214B68 /* RoomListJoinAlertController.swift */,
 			);
 			path = RoomList;
 			sourceTree = "<group>";
@@ -696,6 +708,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AB4F69E72874621F0012E6B3 /* FcrThemeViewController.swift in Sources */,
+				AB80DBE628CB55320004E518 /* RoomItemModel.swift in Sources */,
 				AB4F69E32872C2340012E6B3 /* FcrDisclaimerViewController.swift in Sources */,
 				688809E82629358800B5FB2A /* FcrNavigationController.swift in Sources */,
 				6818977D28A259C200681DD9 /* DebugCoursewares.swift in Sources */,
@@ -703,6 +716,8 @@
 				AB4F69DD286DC5D40012E6B3 /* FcrNavigatorCell.swift in Sources */,
 				AB7FFD6726EA3962003A50B8 /* RoomInfoOptionsView.swift in Sources */,
 				86D4896D277AE2750062F068 /* LoginModels.swift in Sources */,
+				AB82D3AA28D0B11A00ADFC84 /* RoomListShareAlertController.swift in Sources */,
+				AB05CE9A28C89FAD001239AD /* RoomCreateTimeAlertController.swift in Sources */,
 				AB4F69EA2876B3490012E6B3 /* FcrRequest.swift in Sources */,
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,
@@ -718,6 +733,7 @@
 				ABB1D15D287C00A600395A13 /* LoginWebViewController.swift in Sources */,
 				AB05CE9828C77387001239AD /* RoomCreateViewController.swift in Sources */,
 				AB2AAFC5288A4BEE009D015C /* FcrOutsideClassBaseController.swift in Sources */,
+				AB08496128D1812700214B68 /* RoomListJoinAlertController.swift in Sources */,
 				AB4F69D5286DBE140012E6B3 /* FcrNickNameViewController.swift in Sources */,
 				681528A6289CF10400EFD6F4 /* DebugDataHandler.swift in Sources */,
 				AB7B7B7128C1E151001D327A /* RoomListItemCell.swift in Sources */,

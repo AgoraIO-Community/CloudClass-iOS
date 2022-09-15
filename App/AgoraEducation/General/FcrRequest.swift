@@ -10,6 +10,71 @@ import UIKit
 import Armin
 
 class FcrOutsideClassAPI {
+    /** 查询课堂列表*/
+    static func fetchRoomDetail(roomUuid: String,
+                                onSuccess: (([String: Any]) -> Void)?,
+                                onFailure: ((String) -> Void)?) {
+        let companyId = FcrUserInfoPresenter.shared.companyId
+        let url = FcrEnvironment.shared.server + "/edu/companys/\(companyId)/v1/rooms/\(roomUuid)"
+        let event = ArRequestEvent(name: "fetch room detail")
+        let type = ArRequestType.http(.get,
+                                      url: url)
+        let task = ArRequestTask(event: event,
+                                 type: type,
+                                 header: ["Authorization": FcrUserInfoPresenter.shared.accessToken])
+        FcrRequest(task: task,
+                   onSuccess: onSuccess,
+                   onFailure: onFailure).sendRequest()
+    }
+    /** 查询课堂列表*/
+    static func fetchRoomList(nextId: String?,
+                              count: UInt,
+                              onSuccess: (([String: Any]) -> Void)?,
+                              onFailure: ((String) -> Void)?) {
+        let companyId = FcrUserInfoPresenter.shared.companyId
+        let url = FcrEnvironment.shared.server + "/edu/companys/\(companyId)/v1/rooms"
+        let event = ArRequestEvent(name: "fetch room list")
+        let type = ArRequestType.http(.get,
+                                      url: url)
+        var params: [String : Any] = ["count": count]
+        if let v = nextId {
+            params.updateValue(v, forKey: "nextId")
+        }
+        let task = ArRequestTask(event: event,
+                                 type: type,
+                                 header: ["Authorization": FcrUserInfoPresenter.shared.accessToken],
+                                 parameters: params)
+        FcrRequest(task: task,
+                   onSuccess: onSuccess,
+                   onFailure: onFailure).sendRequest()
+    }
+    /** 创建课堂*/
+    static func createClassRoom(roomName: String,
+                                roomType: Int,
+                                startTime: UInt,
+                                endTine: UInt,
+                                roomProperties: [String: Any]?,
+                                onSuccess: (([String: Any]) -> Void)?,
+                                onFailure: ((String) -> Void)?) {
+        let companyId = FcrUserInfoPresenter.shared.companyId
+        let url = FcrEnvironment.shared.server + "/edu/companys/\(companyId)/v1/rooms"
+        let event = ArRequestEvent(name: "Create ClassRoom")
+        let type = ArRequestType.http(.post,
+                                      url: url)
+        let params: [String : Any] = ["roomName": roomName,
+                                      "roomType": roomType,
+                                      "startTime": startTime,
+                                      "endTime": endTine,
+                                      "roomProperties": roomProperties ?? [:]]
+        let task = ArRequestTask(event: event,
+                                 type: type,
+                                 header: ["Authorization": FcrUserInfoPresenter.shared.accessToken],
+                                 parameters: params)
+        FcrRequest(task: task,
+                   onSuccess: onSuccess,
+                   onFailure: onFailure).sendRequest()
+    }
+    
     /** 获取用户基本信息*/
     static func fetchUserInfo(onSuccess: (([String: Any]) -> Void)?,
                               onFailure: ((String) -> Void)?) {
@@ -45,12 +110,12 @@ class FcrOutsideClassAPI {
     }
     /** 服务端buildToken
      */
-    static func buildToken(roomId: String,
+    static func buildToken(roomUuid: String,
                            userRole: Int,
                            userId: String,
                            onSuccess: (([String: Any]) -> Void)?,
                            onFailure: ((String) -> Void)?) {
-        let url = FcrEnvironment.shared.server + "/edu/v4/rooms/\(roomId)/roles/\(userRole)/users/\(userId)/token"
+        let url = FcrEnvironment.shared.server + "/edu/v4/rooms/\(roomUuid)/roles/\(userRole)/users/\(userId)/token"
         let event = ArRequestEvent(name: "FcrOutsideClassAPI buildToken")
         let type = ArRequestType.http(.get,
                                       url: url)
