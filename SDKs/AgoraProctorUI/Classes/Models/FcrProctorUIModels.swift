@@ -7,8 +7,11 @@
 
 import AgoraEduContext
 
-struct FcrExamExamStateInfo {
-    var state: FcrProctorUIExamState
+struct FcrProctorExamTimeInfo {
     var startTime: Int64
     var duration: Int64
+    
+    var valid: Bool {
+        return (startTime > 0) && (duration > 0)
+    }
 }

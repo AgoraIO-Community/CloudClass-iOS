@@ -23,3 +23,4 @@ fcr_room_tips_exam_not_started = "考试未开始";
 fcr_exam_prep_label_leave_exam = "真的要退出考试吗？";
 fcr_sub_room_button_stay = "留下";
 fcr_sub_room_button_leave = "退出";
+fcr_room_label_exam_over = "考试已结束";

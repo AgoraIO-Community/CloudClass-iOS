@@ -24,3 +24,4 @@ fcr_room_tips_exam_not_started = "Exam has not began";
 fcr_exam_prep_label_leave_exam = "Do you really want to leave the exam?";
 fcr_sub_room_button_stay = "Stay";
 fcr_sub_room_button_leave = "Leave";
+fcr_room_label_exam_over = "The exam is over";

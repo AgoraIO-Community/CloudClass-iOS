@@ -36,30 +36,30 @@ class FcrProctorExamComponentView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func updateViewWithState(_ info: FcrExamExamStateInfo) {
-        switch info.state {
+    func updateViewWithState(_ state: FcrProctorUIExamState) {
+        switch state {
         case .before:
             examNameLabel.agora_visible = true
             duringCountdown.agora_visible = false
             endLabel.agora_visible = false
-        case .during:
+        case .during(let countdown,
+                     let timeInfo):
             examNameLabel.agora_visible = false
             beforeExamCountdown.agora_visible = true
-            beforeExamCountdown.startTimer(5)
             duringCountdown.agora_visible = false
             endLabel.agora_visible = false
             
-            duringCountdown.updateTimeInfo(state: .during,
-                                           startTime: info.startTime,
-                                           duration: info.duration)
+            if countdown > 0 {
+                beforeExamCountdown.startTimer(countdown)
+            }
+            
+            duringCountdown.timeInfo = timeInfo
             duringCountdown.startTimer()
-        case .after:
+        case .after(let timeInfo):
             beforeExamCountdown.agora_visible = false
             duringCountdown.agora_visible = true
             endLabel.agora_visible = true
-            duringCountdown.updateTimeInfo(state: .after,
-                                           startTime: info.startTime,
-                                           duration: info.duration)
+            duringCountdown.timeInfo = timeInfo
             duringCountdown.startTimer()
         }
     }
@@ -88,6 +88,7 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
         beforeExamTipLabel.text = "fcr_room_tips_exam_not_started".fcr_proctor_localized()
         leaveButton.setTitle("fcr_exam_leave_title".fcr_proctor_localized(),
                              for: .normal)
+        endLabel.text = "fcr_room_label_exam_over".fcr_proctor_localized()
         
         addSubviews([backgroundImageView,
                      exitButton,

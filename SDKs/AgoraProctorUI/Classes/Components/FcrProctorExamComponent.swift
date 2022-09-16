@@ -43,9 +43,9 @@ import AgoraEduContext
         contextPool.room.registerRoomEventHandler(self)
         contextPool.group.registerGroupEventHandler(self)
         
-        checkExamState()
+        checkExamState(countdown: 0)
         localSubRoomCheck()
-        startRender()
+        startRenderLocalVideo()
     }
     
     required init?(coder: NSCoder) {
@@ -56,7 +56,7 @@ import AgoraEduContext
 // MARK: - AgoraEduRoomHandler
 extension FcrProctorExamComponent: AgoraEduRoomHandler {
     public func onClassStateUpdated(state: AgoraEduContextClassState) {
-        checkExamState()
+        checkExamState(countdown: 5)
     }
 }
 
@@ -109,9 +109,15 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
 
 // MARK: - private
 private extension FcrProctorExamComponent {
-    func checkExamState() {
-        let info = contextPool.room.getClassInfo()
-        contentView.updateViewWithState(info.ui)
+    func checkExamState(countdown: Int = 0) {
+        let classInfo = contextPool.room.getClassInfo()
+        let state = classInfo.toExamState(countdown: countdown)
+        contentView.updateViewWithState(state)
+        
+        guard classInfo.state == .after else {
+            return
+        }
+        stopRenderLocalVideo()
     }
     
     @objc func onClickSwitchCamera() {
@@ -180,23 +186,36 @@ private extension FcrProctorExamComponent {
         AgoraLoading.loading()
         localSubRoom.joinSubRoom(success: { [weak self] in
             AgoraLoading.hide()
-            self?.checkExamState()
         }, failure: { [weak self] error in
             AgoraLoading.hide()
             AgoraToast.toast(message: "fcr_room_tips_join_failed".fcr_proctor_localized())
         })
     }
     
-    func startRender() {
-        let userId = self.contextPool.user.getLocalUserInfo().userUuid
+    func startRenderLocalVideo() {
+        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let localStreamList = contextPool.stream.getStreamList(userUuid: userId)
+        
+        guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid else {
+            return
+        }
         
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
-        let streamId = "0"
         
         contextPool.media.startRenderVideo(view: self.contentView.renderView,
                                            renderConfig: renderConfig,
                                            streamUuid: streamId)
+    }
+    
+    func stopRenderLocalVideo() {
+        let userId = contextPool.user.getLocalUserInfo().userUuid
+        let localStreamList = contextPool.stream.getStreamList(userUuid: userId)
+        
+        guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid  else {
+            return
+        }
+        contextPool.media.stopRenderVideo(streamUuid: streamId)
     }
     
     func getUserSubroomId(userIdPrefix: String) -> String? {

@@ -8,10 +8,19 @@
 import AgoraEduContext
 
 extension AgoraEduContextClassInfo {
-    var ui: FcrExamExamStateInfo {
-        let info = FcrExamExamStateInfo(state: state,
-                                        startTime: startTime,
-                                        duration: duration)
-        return info
+    func toExamState(countdown: Int = 0) -> FcrProctorUIExamState {
+        switch state {
+        case .before:
+            return .before
+        case .during:
+            let timeInfo = FcrProctorExamTimeInfo(startTime: startTime,
+                                                  duration: duration)
+            return .during(countdown: countdown,
+                           timeInfo: timeInfo)
+        case .after:
+            let timeInfo = FcrProctorExamTimeInfo(startTime: startTime,
+                                                  duration: duration)
+            return .after(timeInfo: timeInfo)
+        }
     }
 }
