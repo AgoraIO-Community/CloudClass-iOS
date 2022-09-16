@@ -9,8 +9,7 @@
 // Device
 fcr_exam_prep_label_device_test = "Device Test";
 fcr_exam_prep_label_hello = "Hello，{xxx}!";
-fcr_exam_prep_label_upcoming = "{xxx} will start.";
-fcr_exam_prep_label_on_going = "{xxx} has began.";
+fcr_device_test_label_check_screen = "Please align you in the screen";
 fcr_sub_room_button_join_exam = "Join Exam";
 fcr_exam_prep_label_switch_camera = "Switch Camera";
 fcr_exam_prep_label_no_access_camera = "No access to camera";

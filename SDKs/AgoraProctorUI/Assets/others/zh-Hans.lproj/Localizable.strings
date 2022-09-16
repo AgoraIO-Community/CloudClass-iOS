@@ -9,8 +9,7 @@
 // Device
 fcr_exam_prep_label_device_test = "设备检测";
 fcr_exam_prep_label_hello = "你好，{xxx}!";
-fcr_exam_prep_label_upcoming = "{xxx}即将开始";
-fcr_exam_prep_label_on_going = "{xxx}已经开始";
+fcr_device_test_label_check_screen = "请将你置于画面中";
 fcr_sub_room_button_join_exam = "正式进入考场";
 fcr_exam_prep_label_switch_camera = "切换摄像头";
 fcr_exam_prep_label_no_access_camera = "获取不到摄像头";

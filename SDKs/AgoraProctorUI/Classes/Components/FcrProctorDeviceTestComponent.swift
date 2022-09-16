@@ -61,10 +61,6 @@ import AVFoundation
 }
 
 extension FcrProctorDeviceTestComponent: AgoraEduRoomHandler {
-    public func onClassStateUpdated(state: AgoraEduContextClassState) {
-        updateRoomInfo()
-    }
-    
     public func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         delegate?.onDeviceTestJoinExamSuccess()
     }
@@ -86,8 +82,6 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
         let finalGreet = greet.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                     with: userName)
         contentView.greetLabel.text = finalGreet
-        
-        updateRoomInfo()
         
         contentView.switchCameraButton.addTarget(self,
                                                  action: #selector(onClickSwitchCamera),
@@ -116,6 +110,8 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
 // MARK: - private
 private extension FcrProctorDeviceTestComponent {
     @objc func onClickExitRoom() {
+        contextPool.room.unregisterRoomEventHandler(self)
+        
         let streamId = "0"
         contextPool.media.stopRenderVideo(streamUuid: streamId)
 
@@ -153,23 +149,6 @@ private extension FcrProctorDeviceTestComponent {
         let avatarUrl = props["avatar"] as? String {
             contentView.noAccessView.setAvartarImage(avatarUrl)
         }
-    }
-    
-    func updateRoomInfo() {
-        var state = ""
-        let roomInfo = contextPool.room.getRoomInfo()
-        let classInfo = contextPool.room.getClassInfo()
-        switch classInfo.state {
-        case .before:
-            state = "fcr_exam_prep_label_upcoming".fcr_proctor_localized()
-        case .during:
-            state = "fcr_exam_prep_label_on_going".fcr_proctor_localized()
-        default:
-            return
-        }
-        let finalState = state.replacingOccurrences(of: String.agedu_localized_replacing_x(),
-                                                    with: roomInfo.roomName)
-        contentView.stateLabel.text = finalState
     }
     
     func applicationDidEnterForeground(notification: NSNotification) {

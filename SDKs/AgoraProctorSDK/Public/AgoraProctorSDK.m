@@ -121,6 +121,7 @@
         if (!strongSelf) {
             return;
         }
+        [FcrUIContext create];
         FcrProctorScene *scene = [[FcrProctorScene alloc] initWithContextPool:pool
                                                                      delegate:strongSelf];
         scene.modalPresentationStyle = UIModalPresentationFullScreen;

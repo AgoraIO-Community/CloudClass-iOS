@@ -68,6 +68,14 @@ struct FcrUIItemDeviceTestSwitchCamera: FcrUIItemProtocol {
     let labelFont: UIFont        = FcrUIFontGroup.font12
 }
 
+struct FcrUIItemDeviceTestBottomMask: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let startColor: UIColor    = .clear
+    let endColor: UIColor      = FcrUIColorGroup.systemBackgroundColor.withAlphaComponent(0.5)
+}
+
 struct FcrUIItemDeviceTestEnterButton: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true

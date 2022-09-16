@@ -27,12 +27,13 @@ struct FcrUIComponentDeviceTest: FcrUIComponentProtocol {
     let avatar          = FcrUIItemDeviceTestAvatar()
     let noAccess        = FcrUIItemDeviceTestNoAccess()
     let switchCamera    = FcrUIItemDeviceTestSwitchCamera()
+    let bottomMask      = FcrUIItemDeviceTestBottomMask()
 }
 
 struct FcrUIComponentRender: FcrUIComponentProtocol {
     var visible: Bool            = true
     var enable: Bool             = true
-    var backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
+    var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
     
     let cornerRadius = FcrUIFrameGroup.renderCornerRadius
 }

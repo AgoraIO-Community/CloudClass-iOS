@@ -14,6 +14,7 @@ class FcrProctorDeviceTestComponentView: UIView {
     private(set) lazy var titleLabel = UILabel()
     private(set) lazy var greetLabel = UILabel()
     private(set) lazy var stateLabel = UILabel()
+    private lazy var bottomView = UIView()
     private(set) lazy var enterButton = UIButton()
     private(set) lazy var renderView = FcrProctorRenderView()
     private(set) lazy var noAccessView = FcrDeviceTestNOAccessView()
@@ -72,6 +73,17 @@ class FcrProctorDeviceTestComponentView: UIView {
 
         enterButton.layer.cornerRadius = enterButton.bounds.height / 2
         enterButton.layer.masksToBounds = true
+        
+        let config = UIConfig.deviceTest.bottomMask
+        let bgLayer1 = CAGradientLayer()
+        bgLayer1.colors = [config.startColor.cgColor,
+                           config.endColor.cgColor]
+        bgLayer1.frame = bottomView.bounds
+        bgLayer1.startPoint = CGPoint(x: 0.5,
+                                      y: 0)
+        bgLayer1.endPoint = CGPoint(x: 0.5,
+                                    y: 1)
+        bottomView.layer.addSublayer(bgLayer1)
     }
 }
 
@@ -80,6 +92,8 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
         backgroundImageView.contentMode = .scaleAspectFill
         
         titleLabel.sizeToFit()
+        
+        stateLabel.text = "fcr_device_test_label_check_screen".fcr_proctor_localized()
         
         switchCameraLabel.text = "fcr_exam_prep_label_switch_camera".fcr_proctor_localized()
         
@@ -92,6 +106,7 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
                      greetLabel,
                      stateLabel,
                      renderView,
+                     bottomView,
                      switchCameraButton,
                      switchCameraLabel,
                      enterButton,
@@ -153,6 +168,11 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
         noAccessView.mas_makeConstraints { make in
             make?.top.equalTo()(renderView.mas_top)?.offset()(148)
             make?.left.right().bottom().equalTo()(0)
+        }
+        
+        bottomView.mas_makeConstraints { make in
+            make?.left.right().bottom().equalTo()(0)
+            make?.height.equalTo()(211)
         }
     }
     

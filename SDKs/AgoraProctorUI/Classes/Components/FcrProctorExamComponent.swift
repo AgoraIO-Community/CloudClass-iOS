@@ -45,7 +45,7 @@ import AgoraEduContext
         
         checkExamState(countdown: 0)
         localSubRoomCheck()
-        startRenderLocalVideo()
+        startRenderLocalVideo(streamController: contextPool.stream)
     }
     
     required init?(coder: NSCoder) {
@@ -57,6 +57,16 @@ import AgoraEduContext
 extension FcrProctorExamComponent: AgoraEduRoomHandler {
     public func onClassStateUpdated(state: AgoraEduContextClassState) {
         checkExamState(countdown: 5)
+    }
+}
+
+// MARK: - AgoraEduSubRoomHandler
+extension FcrProctorExamComponent: AgoraEduSubRoomHandler {
+    public func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
+        guard let subRoom = subRoom else {
+            return
+        }
+        startRenderLocalVideo(streamController: subRoom.stream)
     }
 }
 
@@ -132,7 +142,7 @@ private extension FcrProctorExamComponent {
         let roomState = contextPool.room.getClassInfo().state
         
         guard roomState != .after else {
-            delegate?.onExamExit()
+            exit()
             return
         }
         
@@ -143,8 +153,7 @@ private extension FcrProctorExamComponent {
         
         let leaveTitle = "fcr_sub_room_button_leave".fcr_proctor_localized()
         let leaveAction = FcrAlertModelAction(title: leaveTitle) { [weak self] in
-            self?.subRoom?.leaveSubRoom()
-            self?.delegate?.onExamExit()
+            self?.exit()
         }
         
         FcrAlertModel()
@@ -183,6 +192,9 @@ private extension FcrProctorExamComponent {
         }
         
         subRoom = localSubRoom
+        
+        localSubRoom.registerSubRoomEventHandler(self)
+        
         AgoraLoading.loading()
         localSubRoom.joinSubRoom(success: { [weak self] in
             AgoraLoading.hide()
@@ -192,13 +204,24 @@ private extension FcrProctorExamComponent {
         })
     }
     
-    func startRenderLocalVideo() {
+    func exit() {
+        contextPool.room.unregisterRoomEventHandler(self)
+        contextPool.group.unregisterGroupEventHandler(self)
+        
+        stopRenderLocalVideo()
+        
+        subRoom?.leaveSubRoom()
+        delegate?.onExamExit()
+    }
+    
+    func startRenderLocalVideo(streamController: AgoraEduStreamContext) {
         let userId = contextPool.user.getLocalUserInfo().userUuid
         let localStreamList = contextPool.stream.getStreamList(userUuid: userId)
-        
-        guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid else {
-            return
-        }
+
+//        guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid else {
+//            return
+//        }
+        let streamId = "0"
         
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
@@ -206,15 +229,19 @@ private extension FcrProctorExamComponent {
         contextPool.media.startRenderVideo(view: self.contentView.renderView,
                                            renderConfig: renderConfig,
                                            streamUuid: streamId)
+        contentView.renderView.updateViewProperties()
     }
     
     func stopRenderLocalVideo() {
         let userId = contextPool.user.getLocalUserInfo().userUuid
         let localStreamList = contextPool.stream.getStreamList(userUuid: userId)
+
+//        guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid  else {
+//            return
+//        }
         
-        guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid  else {
-            return
-        }
+        let streamId = "0"
+        
         contextPool.media.stopRenderVideo(streamUuid: streamId)
     }
     
