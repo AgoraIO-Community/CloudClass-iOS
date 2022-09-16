@@ -7,18 +7,19 @@
 */
 
 // Device
-fcr_device_device = "设备检测";
-fcr_device_greet = "Hello，{xxx}!";
-fcr_device_state_will_start = "{xxx}即将开始";
-fcr_device_state_already_start = "{xxx}已经开始";
-fcr_device_enter = "正式进入考场";
-fcr_device_switch = "切换摄像头";
-fcr_device_no_access_title = "无法使用相机";
-fcr_device_no_access_content = "Allow  online proctoring  to access your camera in setting - privacy - Camera";
-fcr_device_join_fail = "加入考试失败，请重试";
+fcr_exam_prep_label_device_test = "设备检测";
+fcr_exam_prep_label_hello = "你好，{xxx}!";
+fcr_exam_prep_label_upcoming = "{xxx}即将开始";
+fcr_exam_prep_label_on_going = "{xxx}已经开始";
+fcr_sub_room_button_join_exam = "正式进入考场";
+fcr_exam_prep_label_switch_camera = "切换摄像头";
+fcr_exam_prep_label_no_access_camera = "获取不到摄像头";
+fcr_exam_prep_label_allow_access_camera = "在设置-隐私-相机中允许在线监考访问您的摄像头";
+fcr_room_tips_join_failed = "加入考试失败，请重试";
 
 // Exam
-fcr_exam_leave_title = "Leave Exam";
-fcr_exam_leave_warning = "真的要退出考试吗？";
-fcr_exam_leave_cancel = "取消";
-fcr_exam_leave_sure = "确认";
+fcr_exam_leave_title = "离开考场";
+fcr_room_tips_exam_not_started = "考试未开始";
+fcr_exam_prep_label_leave_exam = "真的要退出考试吗？";
+fcr_sub_room_button_stay = "留下";
+fcr_sub_room_button_leave = "退出";

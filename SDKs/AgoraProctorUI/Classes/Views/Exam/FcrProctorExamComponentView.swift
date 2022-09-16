@@ -16,10 +16,9 @@ class FcrProctorExamComponentView: UIView {
     private(set) lazy var renderView = FcrProctorRenderView()
     private(set) lazy var switchCameraButton = UIButton()
     // before
-    // TODO: text set
-    private(set) lazy var beforeExamNameLabel = UILabel()
-    private(set) lazy var beforeExamLabel = UILabel()
-    private lazy var beforeExamCountdown = FcrExamStartCountdownView()
+    private(set) lazy var examNameLabel = UILabel()
+    private(set) lazy var beforeExamTipLabel = UILabel()
+    private lazy var beforeExamCountdown = FcrExamStartCountdownView(delegate: self)
     // during
     private lazy var duringCountdown = FcrExamDuringCountdownView()
     // after
@@ -40,12 +39,14 @@ class FcrProctorExamComponentView: UIView {
     func updateViewWithState(_ info: FcrExamExamStateInfo) {
         switch info.state {
         case .before:
-            beforeExamNameLabel.agora_visible = false
+            examNameLabel.agora_visible = true
             duringCountdown.agora_visible = false
             endLabel.agora_visible = false
         case .during:
-            beforeExamCountdown.agora_visible = false
-            duringCountdown.agora_visible = true
+            examNameLabel.agora_visible = false
+            beforeExamCountdown.agora_visible = true
+            beforeExamCountdown.startTimer(5)
+            duringCountdown.agora_visible = false
             endLabel.agora_visible = false
             
             duringCountdown.updateTimeInfo(state: .during,
@@ -70,31 +71,38 @@ class FcrProctorExamComponentView: UIView {
     }
 }
 
+// MARK: - FcrExamStartCountdownViewDelegate
+extension FcrProctorExamComponentView: FcrExamStartCountdownViewDelegate {
+    func onStartExamTimerStopped() {
+        beforeExamCountdown.agora_visible = false
+        duringCountdown.agora_visible = true
+    }
+}
+
 // MARK: - AgoraUIContentContainer
 extension FcrProctorExamComponentView: AgoraUIContentContainer {
     public func initViews() {
         backgroundImageView.contentMode = .scaleAspectFill
         
         nameLabel.sizeToFit()
-        
+        beforeExamTipLabel.text = "fcr_room_tips_exam_not_started".fcr_proctor_localized()
         leaveButton.setTitle("fcr_exam_leave_title".fcr_proctor_localized(),
                              for: .normal)
         
         addSubviews([backgroundImageView,
                      exitButton,
                      nameLabel,
-                     beforeExamNameLabel,
+                     examNameLabel,
                      leaveButton,
                      renderView,
-                     beforeExamLabel,
+                     beforeExamTipLabel,
                      beforeExamCountdown,
                      switchCameraButton,
                      duringCountdown,
                      endLabel])
         
-        beforeExamNameLabel.agora_visible = false
-        beforeExamLabel.agora_visible = false
-        switchCameraButton.agora_visible = false
+        examNameLabel.agora_visible = false
+        beforeExamTipLabel.agora_visible = false
         beforeExamCountdown.agora_visible = false
         duringCountdown.agora_visible = false
         endLabel.agora_visible = false
@@ -112,12 +120,17 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
             make?.width.height().equalTo()(40)
         }
         
-        beforeExamNameLabel.mas_makeConstraints { make in
+        examNameLabel.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.top.equalTo()(nameLabel.mas_bottom)?.offset()(28)
         }
         
-        beforeExamLabel.mas_makeConstraints { make in
+        nameLabel.mas_makeConstraints { make in
+            make?.centerX.equalTo()(0)
+            make?.centerY.equalTo()(exitButton.mas_centerY)
+        }
+        
+        beforeExamTipLabel.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.bottom.equalTo()(renderView.mas_bottom)?.offset()(-66.57)
             make?.width.equalTo()(100)
@@ -131,9 +144,11 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
             make?.height.equalTo()(148)
         }
         
-        nameLabel.mas_makeConstraints { make in
+        duringCountdown.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
-            make?.centerY.equalTo()(exitButton.mas_centerY)
+            make?.top.equalTo()(nameLabel.mas_bottom)?.offset()(28)
+            make?.height.equalTo()(24)
+            make?.width.mas_greaterThanOrEqualTo()(83)
         }
         
         renderView.mas_makeConstraints { make in
@@ -143,9 +158,9 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
         }
         
         switchCameraButton.mas_makeConstraints { make in
-            make?.top.equalTo()(self)?.offset()(20)
+            make?.top.equalTo()(renderView)?.offset()(20)
             make?.right.equalTo()(self)?.offset()(-20)
-            make?.width.height().equalTo()(70)
+            make?.width.height().equalTo()(50)
         }
         
         leaveButton.mas_makeConstraints { make in
@@ -180,6 +195,13 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
         leaveButton.backgroundColor = config.leaveButton.backgroundColor
         leaveButton.setTitleColorForAllStates(config.leaveButton.titleColor)
         leaveButton.titleLabel?.font = config.leaveButton.titleFont
+        
+        examNameLabel.textColor = config.examNameLabel.color
+        examNameLabel.font = config.examNameLabel.font
+        
+        beforeExamTipLabel.backgroundColor = config.beforeExamTipLabel.backgroundColor
+        beforeExamTipLabel.textColor = config.beforeExamTipLabel.color
+        beforeExamTipLabel.font = config.beforeExamTipLabel.font
         
         let maskPath = UIBezierPath.init(roundedRect: CGRect(x: 0,
                                                              y: 0,

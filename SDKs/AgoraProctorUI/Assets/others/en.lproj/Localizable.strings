@@ -7,18 +7,20 @@
 */
 
 // Device
-fcr_device_device = "Device Test";
-fcr_device_greet = "Hello，{xxx}!";
-fcr_device_state_will_start = "{xxx} will start.";
-fcr_device_state_already_start = "{xxx} has began.";
-fcr_device_enter = "Enter the examination room";
-fcr_device_switch = "Switch Camera";
-fcr_device_no_access_title = "No access to camera";
-fcr_device_no_access_content = "Allow  online proctoring  to access your camera in setting - privacy - Camera";
-fcr_device_join_fail = "Join exam unsuccessfully, Please retry";
+fcr_exam_prep_label_device_test = "Device Test";
+fcr_exam_prep_label_hello = "Hello，{xxx}!";
+fcr_exam_prep_label_upcoming = "{xxx} will start.";
+fcr_exam_prep_label_on_going = "{xxx} has began.";
+fcr_sub_room_button_join_exam = "Join Exam";
+fcr_exam_prep_label_switch_camera = "Switch Camera";
+fcr_exam_prep_label_no_access_camera = "No access to camera";
+fcr_exam_prep_label_allow_access_camera = "Allow online proctoring to access your camera in setting - privacy - Camera";
+// TODO
+fcr_room_tips_join_failed = "Join exam unsuccessfully, Please retry";
 
 // Exam
-fcr_exam_leave_title = "Leave Exam";
-fcr_exam_leave_warning = "Are you sure you want to quit the exam?";
-fcr_exam_leave_cancel = "Cancel";
-fcr_exam_leave_sure = "Sure";
+fcr_exam_leave_title = "Leave";
+fcr_room_tips_exam_not_started = "Exam has not began";
+fcr_exam_prep_label_leave_exam = "Do you really want to leave the exam?";
+fcr_sub_room_button_stay = "Stay";
+fcr_sub_room_button_leave = "Leave";

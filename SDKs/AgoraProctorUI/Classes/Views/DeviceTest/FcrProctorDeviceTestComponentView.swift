@@ -81,9 +81,9 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
         
         titleLabel.sizeToFit()
         
-        switchCameraLabel.text = "fcr_device_switch".fcr_proctor_localized()
+        switchCameraLabel.text = "fcr_exam_prep_label_switch_camera".fcr_proctor_localized()
         
-        enterButton.setTitle("fcr_device_enter".fcr_proctor_localized(),
+        enterButton.setTitle("fcr_sub_room_button_join_exam".fcr_proctor_localized(),
                              for: .normal)
         
         addSubviews([backgroundImageView,

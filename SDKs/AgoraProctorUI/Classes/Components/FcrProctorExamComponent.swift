@@ -87,7 +87,7 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
         let userName = contextPool.user.getLocalUserInfo().userName
         contentView.nameLabel.text = userName
         let roomName = contextPool.room.getRoomInfo().roomName
-        contentView.beforeExamNameLabel.text = roomName
+        contentView.examNameLabel.text = roomName
         
         contentView.switchCameraButton.addTarget(self,
                                                  action: #selector(onClickSwitchCamera),
@@ -130,19 +130,18 @@ private extension FcrProctorExamComponent {
             return
         }
         
-        let title = "fcr_exam_leave_title".fcr_proctor_localized()
-        let message = "fcr_exam_leave_warning".fcr_proctor_localized()
+        let message = "fcr_exam_prep_label_leave_exam".fcr_proctor_localized()
         
-        let cancelTitle = "fcr_exam_leave_cancel".fcr_proctor_localized()
+        let cancelTitle = "fcr_sub_room_button_stay".fcr_proctor_localized()
         let cancelAction = FcrAlertModelAction(title: cancelTitle)
         
-        let leaveTitle = "fcr_exam_leave_sure".fcr_proctor_localized()
+        let leaveTitle = "fcr_sub_room_button_leave".fcr_proctor_localized()
         let leaveAction = FcrAlertModelAction(title: leaveTitle) { [weak self] in
+            self?.subRoom?.leaveSubRoom()
             self?.delegate?.onExamExit()
         }
         
         FcrAlertModel()
-            .setTitle(title)
             .setMessage(message)
             .addAction(action: cancelAction)
             .addAction(action: leaveAction)
@@ -178,12 +177,13 @@ private extension FcrProctorExamComponent {
         }
         
         subRoom = localSubRoom
+        AgoraLoading.loading()
         localSubRoom.joinSubRoom(success: { [weak self] in
             AgoraLoading.hide()
             self?.checkExamState()
         }, failure: { [weak self] error in
             AgoraLoading.hide()
-            AgoraToast.toast(message: "fcr_device_join_fail".fcr_proctor_localized())
+            AgoraToast.toast(message: "fcr_room_tips_join_failed".fcr_proctor_localized())
         })
     }
     

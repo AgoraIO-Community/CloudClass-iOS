@@ -79,9 +79,9 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
                              action: #selector(onClickExitRoom),
                              for: .touchUpInside)
         
-        contentView.titleLabel.text = "fcr_device_device".fcr_proctor_localized()
+        contentView.titleLabel.text = "fcr_exam_prep_label_device_test".fcr_proctor_localized()
         
-        let greet = "fcr_device_greet".fcr_proctor_localized()
+        let greet = "fcr_exam_prep_label_hello".fcr_proctor_localized()
         let userName = contextPool.user.getLocalUserInfo().userName
         let finalGreet = greet.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                     with: userName)
@@ -93,7 +93,7 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
                                                  action: #selector(onClickSwitchCamera),
                                                  for: .touchUpInside)
                 
-        contentView.enterButton.setTitle("fcr_device_enter".fcr_proctor_localized(),
+        contentView.enterButton.setTitle("fcr_sub_room_button_join_exam".fcr_proctor_localized(),
                                          for: .normal)
         contentView.enterButton.addTarget(self,
                                           action: #selector(onClickEnterRoom),
@@ -132,9 +132,11 @@ private extension FcrProctorDeviceTestComponent {
     
     @objc func onClickEnterRoom() {
         AgoraLoading.loading()
-        contextPool.room.joinRoom(success: nil) { error in
+        contextPool.room.joinRoom {
             AgoraLoading.hide()
-            AgoraToast.toast(message: "fcr_device_join_fail".fcr_proctor_localized())
+        } failure: { error in
+            AgoraLoading.hide()
+            AgoraToast.toast(message: "fcr_room_tips_join_failed".fcr_proctor_localized())
         }
     }
     
@@ -159,9 +161,9 @@ private extension FcrProctorDeviceTestComponent {
         let classInfo = contextPool.room.getClassInfo()
         switch classInfo.state {
         case .before:
-            state = "fcr_device_state_will_start".fcr_proctor_localized()
+            state = "fcr_exam_prep_label_upcoming".fcr_proctor_localized()
         case .during:
-            state = "fcr_device_state_already_start".fcr_proctor_localized()
+            state = "fcr_exam_prep_label_on_going".fcr_proctor_localized()
         default:
             return
         }

@@ -81,6 +81,13 @@ private class FcrAlertModelController: UIViewController {
         
     private var titleLabel: UILabel!
     
+    private var buttonList = [UIButton]()
+    
+    // data
+    private let alertWidth: CGFloat = 315
+    private let sideGap: CGFloat = 15
+    private let buttonGap: CGFloat = 11
+    
     private lazy var messageLabel: UILabel = {
         let messageLabel = UILabel()
         messageLabel.text = model.message
@@ -89,9 +96,7 @@ private class FcrAlertModelController: UIViewController {
         messageLabel.textAlignment = .center
         return messageLabel
     }()
-    
-    private var hLine: UIView!
-    
+        
     private let buttonStartTag = 66788
     
     init(model: FcrAlertModel) {
@@ -132,18 +137,14 @@ extension FcrAlertModelController: AgoraUIContentContainer {
         titleLabel.numberOfLines = 1
         titleLabel.textAlignment = .center
         contentView.addSubview(titleLabel)
-        
-        hLine = UIView()
-        
-        contentView.addSubview(hLine)
-        
+                        
         contentView.addSubview(messageLabel)
     }
     
     func initViewFrame() {
         contentView.mas_makeConstraints { make in
-            make?.width.equalTo()(270)
-            make?.height.mas_greaterThanOrEqualTo()(100)
+            make?.width.equalTo()(315)
+            make?.height.mas_greaterThanOrEqualTo()(136)
             make?.height.mas_lessThanOrEqualTo()(300)
             make?.center.equalTo()(0)
         }
@@ -172,9 +173,7 @@ extension FcrAlertModelController: AgoraUIContentContainer {
         
         titleLabel.font = config.title.font
         titleLabel.textColor = config.title.color
-        
-        hLine.backgroundColor = config.sepLine.backgroundColor
-        
+                
         messageLabel.font = config.message.font
         messageLabel.textColor = config.message.normalColor
     }
@@ -183,107 +182,55 @@ extension FcrAlertModelController: AgoraUIContentContainer {
 private extension FcrAlertModelController {
     private func createActionButtons() {
         guard model.actions.count > 0 else {
-            hLine.mas_makeConstraints { make in
-                make?.left.right().equalTo()(0)
-                make?.height.equalTo()(1)
-                make?.top.equalTo()(messageLabel.mas_bottom)?.offset()(20)
-                make?.bottom.equalTo()(self.contentView)
-            }
             return
-        }
-        hLine.mas_makeConstraints { make in
-            make?.left.right().equalTo()(0)
-            make?.height.equalTo()(1)
-            make?.top.equalTo()(messageLabel.mas_bottom)?.offset()(20)
         }
         
         let config = UIConfig.alert.button
-        if model.actions.count == 1 {
-            let action = model.actions.first
-            let button = UIButton(type: .custom)
-            button.tag = buttonStartTag
+        let singleWidth: CGFloat = (alertWidth - sideGap * 2 + buttonGap) / CGFloat(model.actions.count) - buttonGap
+        
+        for (index, action) in model.actions.enumerated() {
+            var title: String? = nil
+            if model.actions.count > index {
+                title = model.actions[index].title
+            }
+            let button = generateButton(title: title,
+                                        index: index)
+            button.tag = buttonStartTag + index
             button.titleLabel?.font = config.font
-            button.setTitle(action?.title,
+            button.setTitle(title,
                             for: .normal)
-            button.setTitleColor(config.normalTitleColor,
-                                 for: .normal)
+            if index == model.actions.count - 1 {
+                button.backgroundColor = config.highlightBackgroundColor
+                button.setTitleColor(config.highlightTitleColor,
+                                     for: .normal)
+            } else {
+                button.backgroundColor = config.normalBackgroundColor
+                button.setTitleColor(config.normalTitleColor,
+                                     for: .normal)
+            }
+            
             button.addTarget(self,
                              action: #selector(onClickActionButton(_:)),
                              for: .touchUpInside)
+            buttonList.append(button)
             contentView.addSubview(button)
+            
+            let left = sideGap + CGFloat(index) * (singleWidth + buttonGap)
+            
+            let buttonHeight: CGFloat = 40
+            button.layer.cornerRadius = buttonHeight / 2
             button.mas_makeConstraints { make in
-                make?.top.equalTo()(hLine.mas_bottom)
-                make?.left.right().equalTo()(0)
-                make?.height.equalTo()(44)
-                make?.bottom.equalTo()(contentView.mas_bottom)
-            }
-        } else if model.actions.count == 2 {
-            makeTwoButtons(firstLabel: model.actions[0].title,
-                           secondLabel: model.actions[1].title)
-        } else {
-            var previous: UIView?
-            for (index, action) in model.actions.enumerated() {
-                let lastOne = (index == model.actions.count - 1)
-                let button = generateButton(title: action.title, index: index)
-                contentView.addSubview(button)
-                button.mas_makeConstraints { make in
-                    if let v = previous {
-                        make?.top.equalTo()(v.mas_bottom)
-                    } else {
-                        make?.top.equalTo()(hLine.mas_bottom)
-                    }
-                    make?.left.right().equalTo()(0)
-                    make?.height.equalTo()(44)
-                    if lastOne {
-                        make?.bottom.equalTo()(self.contentView)
-                    }
-                }
-                if lastOne == false {
-                    let line = UIView()
-                    line.backgroundColor = UIConfig.alert.sepLine.backgroundColor
-                    contentView.addSubview(line)
-                    previous = line
-                    line.mas_makeConstraints { make in
-                        make?.top.equalTo()(button.mas_bottom)
-                        make?.left.right().equalTo()(0)
-                        make?.height.equalTo()(1)
-                    }
-                }
+                make?.top.equalTo()(messageLabel.mas_bottom)?.offset()(31)
+                make?.left.equalTo()(left)
+                make?.height.equalTo()(40)
+                make?.width.equalTo()(singleWidth)
+                make?.bottom.equalTo()(contentView.mas_bottom)?.offset()(-14)
             }
         }
     }
     
-    func makeTwoButtons(firstLabel: String?,
-                        secondLabel: String?) {
-        let firstButton = generateButton(title: firstLabel, index: 0)
-        contentView.addSubview(firstButton)
-        firstButton.mas_makeConstraints { make in
-            make?.top.equalTo()(hLine.mas_bottom)
-            make?.left.equalTo()(0)
-            make?.right.equalTo()(contentView.mas_centerX)
-            make?.height.equalTo()(44)
-        }
-        let secondButton = generateButton(title: secondLabel, index: 1)
-        contentView.addSubview(secondButton)
-        secondButton.mas_makeConstraints { make in
-            make?.top.equalTo()(hLine.mas_bottom)
-            make?.right.equalTo()(0)
-            make?.left.equalTo()(contentView.mas_centerX)
-            make?.height.equalTo()(44)
-        }
-        let line = UIView()
-        line.backgroundColor = UIConfig.alert.sepLine.backgroundColor
-        contentView.addSubview(line)
-        line.mas_makeConstraints { make in
-            make?.top.equalTo()(hLine.mas_bottom)
-            make?.centerX.equalTo()(0)
-            make?.width.equalTo()(1)
-            make?.height.equalTo()(44)
-            make?.bottom.equalTo()(contentView.mas_bottom)
-        }
-    }
-    
-    func generateButton(title: String?, index: Int) -> UIButton {
+    func generateButton(title: String?,
+                        index: Int) -> UIButton {
         let config = UIConfig.alert.button
         
         let button = UIButton(type: .custom)

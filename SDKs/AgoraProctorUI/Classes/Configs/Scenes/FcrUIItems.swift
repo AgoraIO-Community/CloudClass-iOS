@@ -18,8 +18,8 @@ struct FcrUIItemDeviceTestExitButton: FcrUIItemProtocol {
     var enable: Bool     = true
     
     let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
-    let image = UIImage.fcr_named("exit")
-    let cornerRadius = FcrUIFrameGroup.systemCornerRadius
+    let image: UIImage?          = .fcr_named("fcr_exit")
+    let cornerRadius             = FcrUIFrameGroup.systemCornerRadius
 }
 
 struct FcrUIItemDeviceTestGreetLabel: FcrUIItemProtocol {
@@ -61,8 +61,8 @@ struct FcrUIItemDeviceTestSwitchCamera: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
-    let normalImage: UIImage?    = UIImage.fcr_named("fcr_switch_normal")
-    let selectedImage: UIImage?  = UIImage.fcr_named("fcr_switch_selected")
+    let normalImage: UIImage?    = .fcr_named("fcr_switch_normal")
+    let selectedImage: UIImage?  = .fcr_named("fcr_switch_selected")
     let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
     let labelColor: UIColor      = FcrUIColorGroup.textDarkContrastColor
     let labelFont: UIFont        = FcrUIFontGroup.font12
@@ -98,16 +98,33 @@ struct FcrUIItemExamExitButton: FcrUIItemProtocol {
     var enable: Bool     = true
     
     let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
-    let image = UIImage.fcr_named("exit")
-    let cornerRadius = FcrUIFrameGroup.systemCornerRadius
+    let image: UIImage?          = .fcr_named("fcr_exit")
+    let cornerRadius: CGFloat    = FcrUIFrameGroup.systemCornerRadius
 }
 
 struct FcrUIItemExamNameLabel: FcrUIItemProtocol {
     var visible: Bool    = true
     var enable: Bool     = true
     
-    let font:  UIFont = FcrUIFontGroup.font14
-    let color: UIColor = FcrUIColorGroup.textLevel1Color
+    let font:  UIFont   = FcrUIFontGroup.font16
+    let color: UIColor  = FcrUIColorGroup.textLevel1Color
+}
+
+struct FcrUIItemExamExamNameLabel: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let font:  UIFont   = FcrUIFontGroup.font16.bold
+    let color: UIColor  = FcrUIColorGroup.textLevel1Color
+}
+
+struct FcrUIItemExamBeforeExamTip: FcrUIItemProtocol {
+    var visible: Bool    = true
+    var enable: Bool     = true
+    
+    let backgroundColor: UIColor = FcrUIColorGroup.systemBrandColor
+    let font:  UIFont            = FcrUIFontGroup.font12
+    let color: UIColor           = FcrUIColorGroup.textDarkContrastColor
 }
 
 struct FcrUIItemExamLeaveButton: FcrUIItemProtocol {
@@ -172,25 +189,21 @@ struct FcrUIItemAlertMessage: FcrUIItemProtocol {
     
     let normalColor: UIColor     = FcrUIColorGroup.textLevel2Color
     let selectedColor: UIColor   = FcrUIColorGroup.textLevel1Color
-    let font: UIFont             = FcrUIFontGroup.font13
+    let font: UIFont             = FcrUIFontGroup.font14
 }
 
 struct FcrUIItemAlertButton: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let normalTitleColor: UIColor = FcrUIColorGroup.textEnabledColor
-    let font: UIFont              = FcrUIFontGroup.font17
+    let normalTitleColor: UIColor           = FcrUIColorGroup.textEnabledColor
+    let normalBackgroundColor: UIColor      = FcrUIColorGroup.buttonNormalColor
+    let highlightTitleColor: UIColor        = FcrUIColorGroup.textDarkContrastColor
+    let highlightBackgroundColor: UIColor   = FcrUIColorGroup.systemBrandColor
+    let font: UIFont                        = FcrUIFontGroup.font13
 }
 
 // MARK: - common
-struct FcrUIItemSepLine: FcrUIItemProtocol {
-    var visible: Bool = true
-    var enable: Bool  = true
-    
-    let backgroundColor: UIColor = FcrUIColorGroup.systemDividerColor
-}
-
 struct FcrUIItemShadow: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true

@@ -67,6 +67,8 @@ class FcrExamDuringCountdownView: UIView {
 // MARK: - AgoraUIContentContainer
 extension FcrExamDuringCountdownView: AgoraUIContentContainer {
     func initViews() {
+        label.sizeToFit()
+        
         addSubviews([backView,
                     frontView,
                      label])
@@ -74,13 +76,13 @@ extension FcrExamDuringCountdownView: AgoraUIContentContainer {
     
     func initViewFrame() {
         backView.mas_makeConstraints { make in
-            make?.left.top().bottom().equalTo()(self)
+            make?.left.centerY().equalTo()(self)
             make?.width.height().equalTo()(21)
         }
         
         frontView.mas_makeConstraints { make in
-            make?.top.bottom().equalTo()(self)
-            make?.left.equalTo()(3.75)
+            make?.centerY.equalTo()(self)
+            make?.center.equalTo()(backView)
             make?.width.height().equalTo()(13.5)
         }
         
@@ -94,7 +96,7 @@ extension FcrExamDuringCountdownView: AgoraUIContentContainer {
         let config = UIConfig.exam.duringCountDown
         
         backView.layer.borderWidth = config.dotBorderWidth
-        backView.backgroundColor = config.dotColor
+        backView.layer.borderColor = config.dotColor.cgColor
         
         frontView.backgroundColor = config.dotColor
         frontView.clipsToBounds = true

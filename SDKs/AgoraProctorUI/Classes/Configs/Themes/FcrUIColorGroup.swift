@@ -30,6 +30,13 @@ struct FcrUIColorGroup {
         }
     }
     
+    static var buttonNormalColor: UIColor {
+        switch UIMode {
+        case .agoraLight: return UIColor(hex: 0xF8F8F8)!
+        case .agoraDark: return UIColor(hex: 0xF8F8F8)!
+        }
+    }
+    
     static var componentBackgroundColor: UIColor {
         switch UIMode {
         case .agoraLight: return UIColor(hex: 0xFFFFFF)!

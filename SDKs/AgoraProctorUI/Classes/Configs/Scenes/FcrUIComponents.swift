@@ -18,7 +18,7 @@ struct FcrUIComponentDeviceTest: FcrUIComponentProtocol {
     var enable: Bool             = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
     
-    let backgroundImage = UIImage.fcr_named("background")
+    let backgroundImage = UIImage.fcr_named("fcr_background")
     let exitButton      = FcrUIItemDeviceTestExitButton()
     let greetLabel      = FcrUIItemDeviceTestGreetLabel()
     let stateLabel      = FcrUIItemDeviceTestStateLabel()
@@ -42,9 +42,11 @@ struct FcrUIComponentExam: FcrUIComponentProtocol {
     var enable: Bool  = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemBackgroundColor
     
-    let backgroundImage     = UIImage.fcr_named("background")
+    let backgroundImage     = UIImage.fcr_named("fcr_background")
     let exitButton          = FcrUIItemExamExitButton()
     let nameLabel           = FcrUIItemExamNameLabel()
+    let examNameLabel       = FcrUIItemExamExamNameLabel()
+    let beforeExamTipLabel  = FcrUIItemExamBeforeExamTip()
     let leaveButton         = FcrUIItemExamLeaveButton()
     let startCountDown      = FcrUIItemExamStartCountDown()
     let duringCountDown     = FcrUIItemExamDuringCountDown()
@@ -65,7 +67,6 @@ struct FcrUIComponentAlert: FcrUIComponentProtocol {
     let message = FcrUIItemAlertMessage()
     let button = FcrUIItemAlertButton()
     let shadow = FcrUIItemShadow()
-    let sepLine = FcrUIItemSepLine()
 }
 
 // MARK: - base

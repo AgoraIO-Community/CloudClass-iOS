@@ -7,13 +7,24 @@
 
 import AgoraUIBaseViews
 
+protocol FcrExamStartCountdownViewDelegate: NSObjectProtocol {
+    func onStartExamTimerStopped()
+}
+
 class FcrExamStartCountdownView: UIView {
     private lazy var bgImageView = UIImageView()
     private lazy var label = UILabel()
     private var timer: Timer?
     private var count = 0
     
-    override init(frame: CGRect) {
+    private weak var delagate: FcrExamStartCountdownViewDelegate?
+    
+    convenience init(delegate: FcrExamStartCountdownViewDelegate?) {
+        self.init(frame: .zero)
+        self.delagate = delegate
+    }
+    
+    private override init(frame: CGRect) {
         super.init(frame: frame)
         
         initViews()
@@ -32,7 +43,7 @@ class FcrExamStartCountdownView: UIView {
         count = total
         
         timer = Timer.scheduledTimer(withTimeInterval: 1,
-                                     repeats: false,
+                                     repeats: true,
                                      block: {[weak self] timer in
             guard let `self` = self else {
                 return
@@ -42,6 +53,7 @@ class FcrExamStartCountdownView: UIView {
             
             guard self.count > 0 else {
                 self.agora_visible = false
+                self.delagate?.onStartExamTimerStopped()
                 self.stopTimer()
                 return
             }

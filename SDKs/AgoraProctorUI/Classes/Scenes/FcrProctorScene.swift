@@ -18,8 +18,7 @@ import Masonry
 }
 
 @objc public class FcrProctorScene: UIViewController {
-    private lazy var deviceTest = FcrProctorDeviceTestComponent(contextPool: contextPool,
-                                                                delegate: self)
+    private var deviceTest: FcrProctorDeviceTestComponent?
     
     private lazy var exam = FcrProctorExamComponent(contextPool: contextPool,
                                                     delegate: self)
@@ -53,11 +52,13 @@ import Masonry
 extension FcrProctorScene: FcrProctorDeviceTestComponentDelegate,
                                 FcrProctorExamComponentDelegate {
     public func onDeviceTestJoinExamSuccess() {
-        deviceTest.removeFromParent()
-        deviceTest.view.removeFromSuperview()
+        deviceTest?.removeFromParent()
+        deviceTest?.view.removeFromSuperview()
         
-        addChildViewController(exam,
-                               toContainerView: view)
+        deviceTest = nil
+        
+        addChild(exam)
+        view.addSubview(exam.view)
 
         exam.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
@@ -69,6 +70,7 @@ extension FcrProctorScene: FcrProctorDeviceTestComponentDelegate,
     }
     
     public func onExamExit() {
+        contextPool.room.leaveRoom()
         exit()
     }
 }
@@ -80,12 +82,18 @@ extension FcrProctorScene: AgoraUIContentContainer {
             overrideUserInterfaceStyle = (agora_ui_mode == .agoraDark) ? .dark : .light
         }
         
-        view.backgroundColor = .black
-        addChildViewController(deviceTest,
-                               toContainerView: view)
+        let deviceTestComponent = FcrProctorDeviceTestComponent(contextPool: contextPool,
+                                                                delegate: self)
+        self.deviceTest = deviceTestComponent
+        
+        addChild(deviceTestComponent)
+        view.addSubview(deviceTestComponent.view)
     }
     
     public func initViewFrame() {
+        guard let deviceTest = deviceTest else {
+            return
+        }
         deviceTest.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
@@ -111,7 +119,6 @@ private extension FcrProctorScene {
             return
         }
         
-        contextPool.room.leaveRoom()
         agora_dismiss(animated: true,
                       completion: { [weak self] in
             guard let `self` = self else {
