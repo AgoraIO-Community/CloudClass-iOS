@@ -63,7 +63,7 @@ struct FcrUIItemDeviceTestSwitchCamera: FcrUIItemProtocol {
     
     let normalImage: UIImage?    = .fcr_named("fcr_switch_normal")
     let selectedImage: UIImage?  = .fcr_named("fcr_switch_selected")
-    let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
+    let backgroundColor: UIColor = FcrUIColorGroup.iconAlphaBackgroundColor
     let labelColor: UIColor      = FcrUIColorGroup.textDarkContrastColor
     let labelFont: UIFont        = FcrUIFontGroup.font12
 }
@@ -169,7 +169,7 @@ struct FcrUIItemExamSwitchCamera: FcrUIItemProtocol {
     
     let normalImage: UIImage?    = UIImage.fcr_named("fcr_switch_normal")
     let selectedImage: UIImage?  = UIImage.fcr_named("fcr_switch_selected")
-    let backgroundColor: UIColor = FcrUIColorGroup.iconBackgroundColor
+    let backgroundColor: UIColor = FcrUIColorGroup.iconAlphaBackgroundColor
 }
 
 struct FcrUIItemExamEndLabel: FcrUIItemProtocol {

@@ -74,6 +74,8 @@ class FcrProctorDeviceTestComponentView: UIView {
         enterButton.layer.cornerRadius = enterButton.bounds.height / 2
         enterButton.layer.masksToBounds = true
         
+        switchCameraButton.layer.cornerRadius = switchCameraButton.bounds.height / 2
+        
         let config = UIConfig.deviceTest.bottomMask
         let bgLayer1 = CAGradientLayer()
         bgLayer1.colors = [config.startColor.cgColor,
@@ -200,6 +202,7 @@ extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
         enterButton.setTitleColorForAllStates(config.enterButton.titleColor)
         enterButton.titleLabel?.font = config.enterButton.titleFont
         
+        switchCameraButton.backgroundColor = config.switchCamera.backgroundColor
         switchCameraButton.setImage(config.switchCamera.normalImage,
                                     for: .normal)
         switchCameraButton.setImage(config.switchCamera.selectedImage,

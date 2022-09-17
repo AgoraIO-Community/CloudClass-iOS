@@ -36,6 +36,18 @@ class FcrProctorExamComponentView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func animate() {
+        self.renderView.mas_makeConstraints { make in
+            make?.top.equalTo()(self.nameLabel.mas_bottom)?.offset()(67)
+            make?.left.right().equalTo()(0)
+            make?.bottom.equalTo()(-111)
+        }
+        
+        UIView.animate(withDuration: TimeInterval.agora_animation) {
+            self.layoutIfNeeded()
+        }
+    }
+    
     func updateViewWithState(_ state: FcrProctorUIExamState) {
         switch state {
         case .before:
@@ -68,6 +80,7 @@ class FcrProctorExamComponentView: UIView {
         super.layoutSubviews()
         
         leaveButton.layer.cornerRadius = leaveButton.bounds.height / 2
+        switchCameraButton.layer.cornerRadius = switchCameraButton.bounds.height / 2
     }
 }
 
@@ -153,9 +166,9 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
         }
         
         renderView.mas_makeConstraints { make in
-            make?.top.equalTo()(nameLabel.mas_bottom)?.offset()(67)
+            make?.top.equalTo()(self.nameLabel.mas_bottom)?.offset()(138)
             make?.left.right().equalTo()(0)
-            make?.bottom.equalTo()(-111)
+            make?.bottom.equalTo()(0)
         }
         
         switchCameraButton.mas_makeConstraints { make in
@@ -220,6 +233,7 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
         endLabel.textColor = config.endLabel.textColor
         endLabel.font = config.endLabel.textFont
         
+        switchCameraButton.backgroundColor = config.switchCamera.backgroundColor
         switchCameraButton.setImage(config.switchCamera.normalImage,
                                     for: .normal)
         switchCameraButton.setImage(config.switchCamera.selectedImage,

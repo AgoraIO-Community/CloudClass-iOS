@@ -76,6 +76,13 @@ struct FcrUIColorGroup {
         }
     }
     
+    static var iconAlphaBackgroundColor: UIColor {
+        switch UIMode {
+        case .agoraLight:   return UIColor(hex: 0x8A8A8A)!.withAlphaComponent(0.1)
+        case .agoraDark:    return UIColor(hex: 0x8A8A8A)!.withAlphaComponent(0.1)
+        }
+    }
+    
     // border
     static var componentBorderColor: UIColor {
         switch UIMode {

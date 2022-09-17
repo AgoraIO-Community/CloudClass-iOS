@@ -48,6 +48,11 @@ import AgoraEduContext
         startRenderLocalVideo(streamController: contextPool.stream)
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        contentView.animate()
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
