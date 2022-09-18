@@ -187,7 +187,7 @@ struct FcrUIItemAlertTitle: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let color: UIColor  = FcrUIColorGroup.textLevel1Color
+    let color: UIColor  = FcrUIColorGroup.textLightContrastColor
     let font: UIFont    = FcrUIFontGroup.font17
 }
 
@@ -195,8 +195,7 @@ struct FcrUIItemAlertMessage: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let normalColor: UIColor     = FcrUIColorGroup.textLevel2Color
-    let selectedColor: UIColor   = FcrUIColorGroup.textLevel1Color
+    let color: UIColor     = FcrUIColorGroup.textLightContrastColor
     let font: UIFont             = FcrUIFontGroup.font14
 }
 
@@ -204,7 +203,7 @@ struct FcrUIItemAlertButton: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let normalTitleColor: UIColor           = FcrUIColorGroup.textEnabledColor
+    let normalTitleColor: UIColor           = FcrUIColorGroup.textLightContrastColor
     let normalBackgroundColor: UIColor      = FcrUIColorGroup.buttonNormalColor
     let highlightTitleColor: UIColor        = FcrUIColorGroup.textDarkContrastColor
     let highlightBackgroundColor: UIColor   = FcrUIColorGroup.systemBrandColor

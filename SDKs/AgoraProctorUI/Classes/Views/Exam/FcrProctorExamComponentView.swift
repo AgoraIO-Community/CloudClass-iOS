@@ -52,11 +52,13 @@ class FcrProctorExamComponentView: UIView {
         switch state {
         case .before:
             examNameLabel.agora_visible = true
+            beforeExamTipLabel.agora_visible = true
             duringCountdown.agora_visible = false
             endLabel.agora_visible = false
         case .during(let countdown,
                      let timeInfo):
             examNameLabel.agora_visible = false
+            beforeExamTipLabel.agora_visible = false
             beforeExamCountdown.agora_visible = true
             duringCountdown.agora_visible = false
             endLabel.agora_visible = false
@@ -69,6 +71,7 @@ class FcrProctorExamComponentView: UIView {
             duringCountdown.startTimer()
         case .after(let timeInfo):
             beforeExamCountdown.agora_visible = false
+            beforeExamTipLabel.agora_visible = false
             duringCountdown.agora_visible = true
             endLabel.agora_visible = true
             duringCountdown.timeInfo = timeInfo
@@ -79,6 +82,8 @@ class FcrProctorExamComponentView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
+        beforeExamTipLabel.layer.cornerRadius = beforeExamTipLabel.bounds.height / 2
+        beforeExamTipLabel.layer.masksToBounds = true
         leaveButton.layer.cornerRadius = leaveButton.bounds.height / 2
         switchCameraButton.layer.cornerRadius = switchCameraButton.bounds.height / 2
     }
@@ -99,6 +104,7 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
         
         nameLabel.sizeToFit()
         beforeExamTipLabel.text = "fcr_room_tips_exam_not_started".fcr_proctor_localized()
+        beforeExamTipLabel.textAlignment = .center
         leaveButton.setTitle("fcr_exam_leave_title".fcr_proctor_localized(),
                              for: .normal)
         endLabel.text = "fcr_room_label_exam_over".fcr_proctor_localized()

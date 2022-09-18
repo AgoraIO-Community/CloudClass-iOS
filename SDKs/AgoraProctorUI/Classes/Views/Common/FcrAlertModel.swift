@@ -175,7 +175,7 @@ extension FcrAlertModelController: AgoraUIContentContainer {
         titleLabel.textColor = config.title.color
                 
         messageLabel.font = config.message.font
-        messageLabel.textColor = config.message.normalColor
+        messageLabel.textColor = config.message.color
     }
 }
 // MARK: - private

@@ -59,7 +59,7 @@ struct FcrUIComponentExam: FcrUIComponentProtocol {
 struct FcrUIComponentAlert: FcrUIComponentProtocol {
     var visible: Bool = true
     var enable: Bool = true
-    var backgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
+    var backgroundColor: UIColor = FcrUIColorGroup.componentBackgroundColor
     
     let cornerRadius: CGFloat = FcrUIFrameGroup.alertCornerRadius
     let sideSpacing: CGFloat = FcrUIFrameGroup.alertSideSpacing
