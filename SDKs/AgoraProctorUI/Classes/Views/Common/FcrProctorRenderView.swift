@@ -36,10 +36,5 @@ extension FcrProctorRenderView: AgoraUIContentContainer {
         
         backgroundColor = config.backgroundColor
         layer.cornerRadius = config.cornerRadius
-        
-        // TODO: subviews拿不到
-        for subView in subviews {
-            subView.layer.cornerRadius = config.cornerRadius
-        }
     }
 }
