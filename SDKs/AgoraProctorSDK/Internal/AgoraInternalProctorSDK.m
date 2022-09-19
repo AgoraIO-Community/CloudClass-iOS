@@ -48,7 +48,7 @@
     
     AgoraEduCorePuppetRoomType roomType = AgoraEduCorePuppetRoomTypeProctoring;
     
-    NSString * deviceTypeString = @"";
+    NSString *deviceTypeString = @"";
     switch (config.deviceType) {
         case AgoraProctorDeviceTypeMain:
             deviceTypeString = @"main";
@@ -57,7 +57,9 @@
             deviceTypeString = @"sub";
             break;
     }
-    NSString* userUuid = [NSString stringWithFormat:@"%@-%@",config.userUuid,deviceTypeString];
+    NSString *userUuid = [NSString stringWithFormat:@"%@-%@",
+                          config.userUuid,
+                          deviceTypeString];
     
     AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
                                                                                                 rtmToken:config.token
@@ -99,4 +101,3 @@
     return mediaOptions;
 }
 @end
-
