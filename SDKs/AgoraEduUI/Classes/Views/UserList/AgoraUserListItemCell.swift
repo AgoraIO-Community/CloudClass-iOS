@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import UIKit
 
 // 花名册上的 cell

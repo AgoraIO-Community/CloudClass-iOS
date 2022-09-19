@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import Masonry
 
 struct AgoraClassTimeInfo {

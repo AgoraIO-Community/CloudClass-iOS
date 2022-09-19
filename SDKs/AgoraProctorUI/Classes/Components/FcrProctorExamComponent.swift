@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 
 @objc public protocol FcrProctorExamComponentDelegate: NSObjectProtocol {
     func onExamExit()

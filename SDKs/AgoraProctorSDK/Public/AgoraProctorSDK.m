@@ -13,7 +13,6 @@
 # error "Invalid import"
 #endif
 
-#import <AgoraEduContext/AgoraEduContext-Swift.h>
 #import <AgoraProctorUI/AgoraProctorUI-Swift.h>
 #import "AgoraInternalProctorSDK.h"
 #import "AgoraProctorSDK.h"
