@@ -14,7 +14,6 @@ fcr_sub_room_button_join_exam = "Join Exam";
 fcr_exam_prep_label_switch_camera = "Switch Camera";
 fcr_exam_prep_label_no_access_camera = "No access to camera";
 fcr_exam_prep_label_allow_access_camera = "Allow online proctoring to access your camera in setting - privacy - Camera";
-// TODO
 fcr_room_tips_join_failed = "Join exam unsuccessfully, Please retry";
 
 // Exam
