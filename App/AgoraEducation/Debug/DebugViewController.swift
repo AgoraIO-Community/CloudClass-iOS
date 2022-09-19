@@ -94,9 +94,16 @@ extension DebugViewController: DebugViewDelagate {
                                       with: 1)
 #endif
             
-            AgoraClassroomSDK.launch(launchConfig,
-                                     success: launchSuccessBlock,
-                                     failure: failureBlock)
+            if launchConfig.roomType == .vocation { // 职教入口
+                AgoraClassroomSDK.vocationalLaunch(launchConfig,
+                                                   service: info.serviceType,
+                                                   success: launchSuccessBlock,
+                                                   failure: failureBlock)
+            } else { // 灵动课堂入口
+                AgoraClassroomSDK.launch(launchConfig,
+                                         success: launchSuccessBlock,
+                                         failure: failureBlock)
+            }
         }
         
         data.requestToken(roomId: info.roomId,
