@@ -194,6 +194,7 @@ public typealias AgoraEduContextFailure = (AgoraEduContextError) -> (Void)
     ///  - parameter success: 请求成功
     ///  - parameter failure: 请求失败，返回 ContextError
     @objc func addSubRoomList(configs: [AgoraEduContextSubRoomCreateConfig],
+                              isInvited: Bool,
                               success: AgoraEduContextSuccess?,
                               failure: AgoraEduContextFailure?)
     

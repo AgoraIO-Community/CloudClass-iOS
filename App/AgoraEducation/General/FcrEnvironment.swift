@@ -50,10 +50,12 @@ class FcrEnvironment {
         let saved = UserDefaults.standard.object(forKey: kRegion) as? String
         return Region(rawValue: saved ?? "CN") ?? Region.CN
     }()
+    
     var region: Region {
         set {
             _region = newValue
-            UserDefaults.standard.set(newValue.rawValue, forKey: kRegion)
+            UserDefaults.standard.set(newValue.rawValue,
+                                      forKey: kRegion)
             updateBaseURL()
         }
         get {

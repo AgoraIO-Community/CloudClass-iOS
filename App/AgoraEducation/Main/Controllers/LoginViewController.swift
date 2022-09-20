@@ -516,7 +516,6 @@ private extension LoginViewController {
 }
 
 // MARK: - AgoraEduClassroomDelegate
-
 extension LoginViewController: AgoraEduClassroomSDKDelegate {
     public func classroomSDK(_ classroom: AgoraClassroomSDK,
                              didExit reason: AgoraEduExitReason) {

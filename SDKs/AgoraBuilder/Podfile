@@ -53,13 +53,42 @@ def closeSourceLibs
   preRtc
 end
 
+def invigilatorLibs
+  # third libs
+  pod 'Protobuf', '3.17.0'
+  pod "CocoaLumberjack", '3.6.1'
+  pod 'AliyunOSSiOS',  '2.10.8'
+  pod 'Armin',  '1.1.0'
+  pod 'SSZipArchive', '2.4.2'
+  pod 'SwifterSwift', '5.2.0'
+  pod 'Masonry', '1.1.0'
+
+  # agora libs
+  pod 'AgoraRtm_iOS', '1.4.8'
+  pod 'AgoraMediaPlayer_iOS', '1.3.0'
+
+  # open source libs
+  pod 'AgoraInvigilatorSDK', :path => '../../AgoraInvigilatorSDK.podspec'
+  pod 'AgoraEduContext', :path => '../../AgoraEduContext.podspec'
+  pod 'AgoraInvigilatorUI', :path => '../../AgoraInvigilatorUI.podspec'
+
+  # close source libs
+  pod 'AgoraReport', :path => '../../../apaas-common-libs-ios/SDKs/AgoraReport/AgoraReport.podspec'
+  pod 'AgoraRx', :path => '../../../apaas-common-libs-ios/SDKs/AgoraRx/AgoraRx.podspec'
+	
+  # common libs
+  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
+  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'  
+
+  # rtc
+  preRtc
+end
+
 target 'AgoraBuilder' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  libVersion
-  openSourceLibs
-  closeSourceLibs
+  invigilatorLibs
 
   post_install do |installer|
      installer.pods_project.targets.each do |target|

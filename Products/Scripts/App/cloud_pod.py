@@ -35,6 +35,9 @@ SourcePodContent =  """
     pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
     pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
     
+    pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
+    pod 'AgoraProctorSDK', :path => '../AgoraProctorSDK.podspec'
+    
     # widgets
     pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets.podspec'
 
