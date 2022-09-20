@@ -18,7 +18,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
     
-    FcrNavigationController *nv = [[FcrNavigationController alloc] initWithRootViewController:[LoginViewController new]];
+    FcrNavigationController *nv = [[FcrNavigationController alloc] initWithRootViewController:[RoomListViewController new]];
     self.window.rootViewController = nv;
     [self.window makeKeyAndVisible];
     

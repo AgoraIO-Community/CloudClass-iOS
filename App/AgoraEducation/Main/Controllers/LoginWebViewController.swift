@@ -81,6 +81,28 @@ class LoginWebViewController: FcrOutsideClassBaseController {
         FcrUserInfoPresenter.shared.qaMode = true
         dismiss(animated: true)
     }
+    
+    func fetchUserInfo() {
+        AgoraLoading.loading()
+        FcrOutsideClassAPI.fetchUserInfo { rsp in
+            AgoraLoading.hide()
+            guard let data = rsp["data"] as? [String: Any] else {
+                return
+            }
+            if let companyId = data["companyId"] as? String {
+                FcrUserInfoPresenter.shared.companyId = companyId
+            }
+            if let companyName = data["companyName"] as? String {
+                FcrUserInfoPresenter.shared.nickName = companyName
+            }
+            self.dismiss(animated: true,
+                         completion: self.onComplete)
+        } onFailure: { str in
+            AgoraLoading.hide()
+            self.dismiss(animated: true,
+                         completion: self.onComplete)
+        }
+    }
 }
 // MARK: - WKNavigationDelegate
 extension LoginWebViewController: WKNavigationDelegate {
@@ -115,8 +137,8 @@ extension LoginWebViewController: WKNavigationDelegate {
                     FcrUserInfoPresenter.shared.refreshToken = refreshToken
                 }
             }
+            fetchUserInfo()
             decisionHandler(.cancel)
-            dismiss(animated: true, completion: onComplete)
         } else {
             decisionHandler(.allow)
         }
