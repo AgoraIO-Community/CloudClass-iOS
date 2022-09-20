@@ -70,7 +70,7 @@ def invigilatorLibs
   # open source libs
   pod 'AgoraProctorSDK', :path => '../../AgoraProctorSDK.podspec'
   pod 'AgoraEduContext', :path => '../../AgoraEduContext.podspec'
-  pod 'AgoraInvigilatorUI', :path => '../../AgoraInvigilatorUI.podspec'
+  pod 'AgoraProctorUI', :path => '../../AgoraProctorUI.podspec'
 
   # close source libs
   pod 'AgoraReport', :path => '../../../apaas-common-libs-ios/SDKs/AgoraReport/AgoraReport.podspec'
