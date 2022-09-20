@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AgoraInvigilatorSDK
+import AgoraProctorSDK
 
 class ViewController: UIViewController {
     override func viewDidLoad() {
@@ -14,28 +14,6 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         view.backgroundColor = .white
         view.isUserInteractionEnabled = true
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>,
-                               with event: UIEvent?) {
-        let userName = "010101"
-        let roomName = "010101"
-        let userId = "\(userName.md5())2"
-        let roomId = "\(roomName.md5())6"
-        
-        let config = AgoraInvigilatorLaunchConfig(userName: userName,
-                                                  userUuid: userId,
-                                                  userRole: .student,
-                                                  roomName: "aaaaaa",
-                                                  roomUuid: "aaaaaa",
-                                                  roomType: .proctor,
-                                                  appId: "aaaaaa",
-                                                  token: "aaaaaa")
-        AgoraInvigilatorSDK.launch(config) {
-            
-        } failure: { error in
-            
-        }
     }
 }
 
