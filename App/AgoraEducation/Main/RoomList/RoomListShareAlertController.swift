@@ -59,7 +59,7 @@ private extension RoomListShareAlertController {
         }
         let link = "com.agora?roomid=" + roomId
         UIPasteboard.general.string = link
-        AgoraToast.toast(message: link,
+        AgoraToast.toast(message: "fcr_sharelink_tips_roomid".ag_localized(),
                          type: .notice)
         dismiss(animated: true)
         complete?()

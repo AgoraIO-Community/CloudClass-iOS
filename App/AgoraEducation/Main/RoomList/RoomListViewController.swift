@@ -388,7 +388,7 @@ extension RoomListViewController: RoomListItemCellDelegate {
     func onClickCopy(at indexPath: IndexPath) {
         let item = dataSource[indexPath.row]
         UIPasteboard.general.string = item.roomId
-        AgoraToast.toast(message: item.roomId,
+        AgoraToast.toast(message: "fcr_sharelink_tips_roomid".ag_localized(),
                          type: .notice)
     }
 }
