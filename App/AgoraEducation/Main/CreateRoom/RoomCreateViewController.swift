@@ -93,7 +93,14 @@ class RoomCreateViewController: UIViewController {
         }
     }
     
-    private var selectedServiceType: AgoraEduServiceType?
+    private var selectedServiceType: AgoraEduServiceType? {
+        didSet {
+            guard selectedServiceType != oldValue else {
+                return
+            }
+            updateMoreSettings()
+        }
+    }
     
     private var selectDate = Date()
     
@@ -255,7 +262,8 @@ private extension RoomCreateViewController {
     }
     
     func updateMoreSettings() {
-        if selectedRoomType == .lecture {
+        if selectedRoomType == .lecture,
+           selectedServiceType == .fusion {
             if moreSettingSpread {
                 if playbackOn {
                     moreSettings = [.title, .playback, .linkInput]
@@ -360,8 +368,11 @@ extension RoomCreateViewController: UITableViewDelegate, UITableViewDataSource {
             case .title:
                 moreSettingSpread = true
             case .linkInput:
-                FcrInputAlertController.show(in: self) { str in
-                    
+                FcrInputAlertController.show(in: self,
+                                             text: playbackLink,
+                                             min: 1) { str in
+                    self.playbackLink = str
+                    self.tableView.reloadData()
                 }
             default: break
             }

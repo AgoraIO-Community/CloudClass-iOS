@@ -11,8 +11,14 @@ import UIKit
 class FcrInputAlertController: UIViewController {
     
     static func show(in viewController: UIViewController,
-                     complete: ((String?) -> Void)?) {
+                     text: String,
+                     max: UInt? = nil,
+                     min: UInt? = nil,
+                     complete: ((String) -> Void)?) {
         let vc = FcrInputAlertController()
+        vc.maxLenth = max
+        vc.minLenth = min
+        vc.textField.text = text
         vc.complete = complete
         vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = .crossDissolve
@@ -20,7 +26,7 @@ class FcrInputAlertController: UIViewController {
                                animated: true)
     }
     
-    private var complete: ((String?) -> Void)?
+    private var complete: ((String) -> Void)?
     
     private let contentView = UIView()
     
@@ -28,7 +34,13 @@ class FcrInputAlertController: UIViewController {
     
     private let submitButton = UIButton(type: .custom)
     
+    private let countLabel = UILabel()
+    
     private let infoLabel = UILabel()
+    
+    private var minLenth: UInt?
+    
+    private var maxLenth: UInt?
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -69,10 +81,6 @@ class FcrInputAlertController: UIViewController {
                                                object: nil)
     }
 }
-// MARK: - UITextField Call Back
-extension FcrInputAlertController: UITextFieldDelegate {
-    
-}
 // MARK: - Actions
 private extension FcrInputAlertController {
     @objc func onKeyBoardShow(_ sender: NSNotification) {
@@ -95,9 +103,16 @@ private extension FcrInputAlertController {
     }
     
     @objc func onClickSubmit(_ sender: UIButton) {
+        let text = textField.text ?? ""
+        if let max = maxLenth, text.count > max {
+            return
+        }
+        if let min = minLenth, text.count < min {
+            return
+        }
         textField.resignFirstResponder()
+        complete?(textField.text ?? "")
         dismiss(animated: true)
-        complete?(textField.text)
     }
 }
 // MARK: - Creations
@@ -117,9 +132,9 @@ private extension FcrInputAlertController {
                                                   width: 14,
                                                   height: 40))
         textField.leftViewMode = .always
-        textField.delegate = self
         textField.placeholder = "fcr_alert_input_ph".ag_localized()
         textField.backgroundColor = UIColor(hex: 0xF2F4F8)
+        textField.clearButtonMode = .always
         contentView.addSubview(textField)
         
         submitButton.layer.cornerRadius = 12
