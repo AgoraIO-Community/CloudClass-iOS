@@ -454,6 +454,9 @@ class RoomListEmptyCell: UITableViewCell {
             make?.top.equalTo()(89)
             make?.centerX.equalTo()(0)
         }
+        label.text = "fcr_room_list_empty".ag_localized()
+        label.textColor = UIColor(hex: 0xACABB0)
+        label.font = UIFont.systemFont(ofSize: 12)
         contentView.addSubview(label)
         label.mas_makeConstraints { make in
             make?.top.equalTo()(emptyImageView.mas_bottom)?.offset()(10)

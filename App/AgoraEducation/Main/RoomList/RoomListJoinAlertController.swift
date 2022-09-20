@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AgoraUIBaseViews
 
 private class JoinRoomTextField: UITextField {
     override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
@@ -84,7 +85,7 @@ private extension RoomListJoinAlertController {
         idTextField.text = inputModel?.roomId
         nameTextField.text = FcrUserInfoPresenter.shared.nickName
         
-        if inputModel?.roleType == .teacher {
+        if inputModel?.roleType == 0 {
             teacherButton.isSelected = true
             studentButton.isSelected = false
         } else {
@@ -100,13 +101,19 @@ private extension RoomListJoinAlertController {
     }
     
     @objc func onClickSubmmit(_ sender: UIButton) {
-        guard let roomId = idTextField.text,
-              let name = nameTextField.text,
-              let model = inputModel
+        guard let model = inputModel,
+              let roomId = idTextField.text,
+              roomId.count > 0
         else {
+            AgoraToast.toast(message: "fcr_joinroom_tips_roomid_empty".ag_localized(),
+                             type: .error)
             return
         }
-        guard roomId.count == 9 else {
+        guard let name = nameTextField.text,
+              name.count > 0
+        else {
+            AgoraToast.toast(message: "fcr_joinroom_tips_username_empty".ag_localized(),
+                             type: .error)
             return
         }
         FcrUserInfoPresenter.shared.nickName = name
@@ -134,7 +141,6 @@ extension RoomListJoinAlertController: UITextFieldDelegate {
         textField.endEditing(true)
         return true
     }
-    
 }
 // MARK: - Creations
 private extension RoomListJoinAlertController {
