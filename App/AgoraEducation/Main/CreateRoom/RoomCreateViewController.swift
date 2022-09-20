@@ -189,11 +189,16 @@ class RoomCreateViewController: UIViewController {
 // MARK: - Actions
 private extension RoomCreateViewController {
     @objc func onClickCancel(_ sender: UIButton) {
+        complete = nil
         dismiss(animated: true)
     }
     
     @objc func onClickCreate(_ sender: UIButton) {
-        guard let name = roomName else {
+        guard let name = roomName,
+              name.count > 0
+        else {
+            AgoraToast.toast(message: "fcr_create_label_roomname_empty".ag_localized(),
+                             type: .error)
             return
         }
         selectDate.second = 0
@@ -221,6 +226,7 @@ private extension RoomCreateViewController {
                                            roomProperties: roomProperties) { rsp in
             AgoraLoading.hide()
             self.complete?()
+            self.complete = nil
             self.dismiss(animated: true)
         } onFailure: { str in
             AgoraLoading.hide()

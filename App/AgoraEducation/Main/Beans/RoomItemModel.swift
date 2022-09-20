@@ -414,27 +414,14 @@ class RoomInputInfoModel {
     }
 }
 
-class RoomItemModel {
-    var roomName: String = ""
-    var roomId: String = ""
-    var roomType: UInt = 0
-    var roomState: UInt = 0
-    var startTime: UInt = 0
-    var endTime: UInt = 0
-    
-    init(roomName: String,
-         roomId: String,
-         roomType: UInt,
-         roomState: UInt,
-         startTime: UInt,
-         endTime: UInt) {
-        self.roomName = roomName
-        self.roomId = roomId
-        self.roomType = roomType
-        self.roomState = roomState
-        self.startTime = startTime
-        self.endTime = endTime
-    }
+struct RoomItemModel {
+    let roomName: String
+    let roomId: String
+    let roomType: UInt
+    let roomState: UInt
+    let startTime: UInt
+    let endTime: UInt
+    let roomProperties: [String: Any]?
     
     static func modelWith(dict: [String: Any]) -> RoomItemModel? {
         guard let roomName = dict["roomName"] as? String,
@@ -446,12 +433,14 @@ class RoomItemModel {
         else {
             return nil
         }
+        let roomProperties = dict["roomProperties"] as? [String: Any]
         let model = RoomItemModel(roomName: roomName,
                                   roomId: roomId,
                                   roomType: roomType,
                                   roomState: roomState,
                                   startTime: startTime,
-                                  endTime: endTime)
+                                  endTime: endTime,
+                                  roomProperties: roomProperties)
         return model
     }
     

@@ -67,6 +67,7 @@ class FcrInputAlertController: UIViewController {
             return
         }
         textField.resignFirstResponder()
+        complete = nil
         dismiss(animated: true)
     }
     
@@ -112,6 +113,7 @@ private extension FcrInputAlertController {
         }
         textField.resignFirstResponder()
         complete?(textField.text ?? "")
+        complete = nil
         dismiss(animated: true)
     }
 }

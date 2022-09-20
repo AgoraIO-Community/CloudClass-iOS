@@ -43,7 +43,8 @@ class RoomListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        setup()
         createViews()
         createConstrains()
     }
@@ -65,18 +66,10 @@ class RoomListViewController: UIViewController {
                          completion: nil)
             return
         }
-//         检查协议，检查登录
+        // 检查协议，检查登录
         FcrPrivacyTermsViewController.checkPrivacyTerms {
             LoginWebViewController.showLoginIfNot(complete: nil)
         }
-
-        FcrOutsideClassAPI.fetchUserInfo { rsp in
-
-        } onFailure: { str in
-
-        }
-
-
         fetchData()
     }
     
@@ -100,6 +93,24 @@ class RoomListViewController: UIViewController {
 }
 // MARK: - Private
 private extension RoomListViewController {
+    func setup() {
+        // setup agora loading
+        if let bundle = Bundle.agora_bundle("AgoraEduUI"),
+           let url = bundle.url(forResource: "img_loading",
+                                withExtension: "gif"),
+           let data = try? Data(contentsOf: url) {
+            AgoraLoading.setImageData(data)
+        }
+        
+        let noticeImage = UIImage(named: "toast_notice")!
+        let warningImage = UIImage(named: "toast_warning")!
+        let errorImage = UIImage(named: "toast_warning")!
+        
+        AgoraToast.setImages(noticeImage: noticeImage,
+                             warningImage: warningImage,
+                             errorImage: errorImage)
+    }
+    
     func fetchData() {
         FcrOutsideClassAPI.fetchRoomList(nextId: nil,
                                          count: 10) { dict in
@@ -148,6 +159,11 @@ private extension RoomListViewController {
             let endDate = Date(timeIntervalSince1970: Double(item.endTime) * 0.001)
             model.roomType = Int(item.roomType)
             model.roomName = item.roomName
+            if let roomProperties = item.roomProperties,
+               let service = roomProperties["serviceType"] as? Int,
+               let serviceType = AgoraEduServiceType(rawValue: service) {
+                model.serviceType = serviceType
+            }
             if now.compare(endDate) == .orderedDescending { // 课程过期
                 self.fetchData()
             } else {
