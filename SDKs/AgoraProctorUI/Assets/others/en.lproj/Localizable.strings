@@ -1,0 +1,25 @@
+/* 
+  Localizable.strings
+  AgoraEducation
+
+  Created by SRS on 2020/2/17.
+  Copyright © 2020 Agora. All rights reserved.
+*/
+
+// Device
+fcr_exam_prep_label_device_test = "Device Test";
+fcr_exam_prep_label_hello = "Hello，{xxx}!";
+fcr_device_test_label_check_screen = "Please align you in the screen";
+fcr_sub_room_button_join_exam = "Join Exam";
+fcr_exam_prep_label_switch_camera = "Switch Camera";
+fcr_exam_prep_label_no_access_camera = "No access to camera";
+fcr_exam_prep_label_allow_access_camera = "Allow online proctoring to access your camera in setting - privacy - Camera";
+fcr_room_tips_join_failed = "Join exam unsuccessfully, Please retry";
+
+// Exam
+fcr_exam_leave_title = "Leave";
+fcr_room_tips_exam_not_started = "Exam has not began";
+fcr_exam_prep_label_leave_exam = "Do you really want to leave the exam?";
+fcr_sub_room_button_stay = "Stay";
+fcr_sub_room_button_leave = "Leave";
+fcr_room_label_exam_over = "The exam is over";

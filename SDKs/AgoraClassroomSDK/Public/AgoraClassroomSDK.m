@@ -190,7 +190,11 @@ static AgoraClassroomSDK *manager = nil;
     }
     
     AgoraClassroomSDK *manager = [AgoraClassroomSDK share];
-    AgoraEduCorePuppet *core = [[AgoraEduCorePuppet alloc] init];
+    
+    AgoraEduCorePuppetLaunchConfig *coreConfig = [self getPuppetLaunchConfig:config];
+    AgoraEduCorePuppet *core = [[AgoraEduCorePuppet alloc] init:coreConfig
+                                                        widgets:config.widgets.allValues];
+    
     manager.core = core;
     
     // Log console
@@ -207,14 +211,9 @@ static AgoraClassroomSDK *manager = nil;
         [core setParameters:parameters];
     }
     
-    // Core config
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [AgoraClassroomSDK getPuppetLaunchConfig:config];
-    
     __weak AgoraClassroomSDK *weakManager = manager;
     
-    [core launch:coreConfig
-         widgets:config.widgets.allValues
-         success:success
+    [core launch:success
          failure:^(NSError * _Nonnull error) {
             
         weakManager.core = nil;

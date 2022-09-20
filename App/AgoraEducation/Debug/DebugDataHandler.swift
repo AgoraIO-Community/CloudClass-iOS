@@ -11,6 +11,7 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
+import AgoraProctorSDK
 import Foundation
 
 protocol DebugDataHandlerDelegate: NSObjectProtocol {
@@ -40,6 +41,32 @@ class DebugDataHandler {
     
     func updateDataSourceList(_ list: [DataSourceType]) {
         self.dataSourceList = list
+        
+        if case .region(let region) = dataSourceList.valueOfType(.region) as? DataSourceType {
+            FcrEnvironment.shared.region = region.env
+        }
+        
+        if case .uiLanguage(let uiLanguage) = dataSourceList.valueOfType(.uiLanguage) as? DataSourceType {
+            FcrLocalization.shared.setupNewLanguage(uiLanguage.edu)
+        }
+    }
+    
+    func updateProctorSDKEnviroment(proctorSDK: AgoraProctorSDK) {
+        guard case .environment(let environment) = dataSourceList.valueOfType(.environment) as? DataSourceType else {
+            return
+        }
+        let sel = NSSelectorFromString("setEnvironment:")
+        switch environment {
+        case .pro:
+            proctorSDK.perform(sel,
+                               with: 2)
+        case .pre:
+            proctorSDK.perform(sel,
+                               with: 1)
+        case .dev:
+            proctorSDK.perform(sel,
+                               with: 0)
+        }
     }
 }
 
@@ -72,25 +99,27 @@ extension DebugDataHandler {
     func getUIMode() -> DataSourceUIMode {
         return DataSourceUIMode(rawValue: FcrUserInfoPresenter.shared.theme) ?? .light
     }
-    
-    func getLaunchInfo() -> DebugLaunchInfo? {
+
+    func checkLaunchInfoValid() -> DebugLaunchInfo? {
         var roomName: String?
         var userName: String?
-        var roomType: AgoraEduRoomType?
-        var serviceType: AgoraEduServiceType = .livePremium
-        var roleType: AgoraEduUserRole?
-        var im: IMType?
+        var roomType: DataSourceRoomType?
+        var serviceType: DataSourceServiceType = .livePremium
+        var roleType: DataSourceRoleType?
+        var im: DataSourceIMType?
+        // proctor
+        var deviceType: DataSourceDeviceType = .main
         var duration: NSNumber?
         var encryptKey: String?
-        var encryptMode: AgoraEduMediaEncryptionMode?
+        var encryptMode: DataSourceEncryptMode?
         
         var startTime: NSNumber?
         
-        var mediaAuth: AgoraEduMediaAuthOption?
-        var region: AgoraEduRegion?
-        var uiMode: AgoraUIMode?
-        var uiLanguage: FcrSurpportLanguage?
-        var environment: FcrEnvironment.Environment?
+        var mediaAuth: DataSourceMediaAuth?
+        var region: DataSourceRegion?
+        var uiMode: DataSourceUIMode?
+        var uiLanguage: DataSourceUILanguage?
+        var environment: DataSourceEnvironment?
         
         for item in dataSourceList {
             switch item {
@@ -105,15 +134,15 @@ extension DebugDataHandler {
                 }
                 userName = value
             case .roomType(let dataSourceRoomType):
-                roomType = dataSourceRoomType.edu
+                roomType = (dataSourceRoomType != .unselected) ? dataSourceRoomType : nil
             case .serviceType(let dataSourceServiceType):
-                if let service = dataSourceServiceType.edu {
-                    serviceType = service
-                }
+                serviceType = dataSourceServiceType
             case .roleType(let dataSourceRoleType):
-                roleType = dataSourceRoleType.edu
+                roleType = (dataSourceRoleType != .unselected) ? dataSourceRoleType : nil
             case .im(let dataSourceIMType):
-                im = dataSourceIMType.edu
+                im = dataSourceIMType
+            case .deviceType(let dataSourceDeviceType):
+                deviceType = dataSourceDeviceType
             case .startTime(let dataSourceStartTime):
                 if case .value(let value) = dataSourceStartTime {
                     startTime = NSNumber(value: value)
@@ -127,17 +156,17 @@ extension DebugDataHandler {
                     encryptKey = value
                 }
             case .encryptMode(let dataSourceEncryptMode):
-                encryptMode = dataSourceEncryptMode.edu
+                encryptMode = dataSourceEncryptMode
             case .mediaAuth(let dataSourceMediaAuth):
-                mediaAuth = dataSourceMediaAuth.edu
+                mediaAuth = dataSourceMediaAuth
             case .uiMode(let dataSourceUIMode):
-                uiMode = dataSourceUIMode.edu
+                uiMode = dataSourceUIMode
             case .uiLanguage(let dataSourceUILanguage):
-                uiLanguage = dataSourceUILanguage.edu
+                uiLanguage = dataSourceUILanguage
             case .region(let dataSourceRegion):
-                region = dataSourceRegion.edu
+                region = dataSourceRegion
             case .environment(let dataSourceEnvironment):
-                environment = dataSourceEnvironment.edu
+                environment = dataSourceEnvironment
             }
         }
         
@@ -166,8 +195,9 @@ extension DebugDataHandler {
         case .oneToOne:   roomTag = 0
         case .small:      roomTag = 4
         case .lecture:    roomTag = 2
-        case .vocation:   roomTag = 2
-        @unknown default: fatalError()
+        case .vocational: roomTag = 2
+        case .proctor:    roomTag = 6
+        default:          return nil
         }
         
         let userId = "\(userName.md5())\(roleType.rawValue)"
@@ -180,6 +210,7 @@ extension DebugDataHandler {
                                serviceType: serviceType,
                                roleType: roleType,
                                im: im,
+                               deviceType: deviceType,
                                duration: duration,
                                encryptKey: encryptKey,
                                encryptMode: encryptMode,
@@ -191,23 +222,27 @@ extension DebugDataHandler {
                                environment: environment)
     }
     
-    func getLaunchConfig(debugInfo: DebugLaunchInfo,
-                         appId: String,
-                         token: String,
-                         userId: String) -> AgoraEduLaunchConfig {
-        let mediaOptions = debugInfo.mediaOptions
+    func getEduLaunchConfig(debugInfo: DebugLaunchInfo,
+                            appId: String,
+                            token: String,
+                            userId: String) -> AgoraEduLaunchConfig? {
+        guard let userRole = debugInfo.roleType.edu,
+        let roomType = debugInfo.roomType.edu else {
+            return nil
+        }
+        let mediaOptions = debugInfo.eduMediaOptions
         
         let launchConfig = AgoraEduLaunchConfig(userName: debugInfo.userName,
                                                 userUuid: userId,
-                                                userRole:debugInfo.roleType,
+                                                userRole: userRole,
                                                 roomName: debugInfo.roomName,
                                                 roomUuid: debugInfo.roomId,
-                                                roomType: debugInfo.roomType,
+                                                roomType: roomType,
                                                 appId: appId,
                                                 token: token,
                                                 startTime: debugInfo.startTime,
                                                 duration: debugInfo.duration,
-                                                region: debugInfo.region,
+                                                region: debugInfo.region.edu,
                                                 mediaOptions: mediaOptions,
                                                 userProperties: nil)
         
@@ -232,6 +267,28 @@ extension DebugDataHandler {
         }
         
         return launchConfig
+    }
+    
+    func getProctorLaunchConfig(debugInfo: DebugLaunchInfo,
+                                appId: String,
+                                token: String,
+                                userId: String) -> AgoraProctorLaunchConfig {
+        let mediaOptions = debugInfo.proctorMediaOptions
+
+        let launchConfig = AgoraProctorLaunchConfig(userName: debugInfo.userName,
+                                                    userUuid: userId,
+                                                    userRole: .student,
+                                                    roomName: debugInfo.roomName,
+                                                    roomUuid: debugInfo.roomId,
+                                                    deviceType: debugInfo.deviceType.edu,
+                                                    appId: appId,
+                                                    token: token,
+                                                    region: debugInfo.region.proctor,
+                                                    mediaOptions: mediaOptions,
+                                                    userProperties: nil)
+        
+        return launchConfig
+        
     }
     
     func buildToken(appId: String,
@@ -402,6 +459,20 @@ private extension DebugDataHandler {
             let action: OptionSelectedAction = { [weak self] index in
                 let im: DataSourceIMType = list[index]
                 let newValue = DataSourceType.im(im)
+                self?.updateDataSource(at: dataTypeIndex,
+                                       with: newValue)
+            }
+            let options: [(String, OptionSelectedAction)] = list.map({return ($0.viewText, action)})
+            let selectedIndex = list.firstIndex(where: {$0 == selected})
+            type = .option(options: options,
+                           placeholder: placeholder,
+                           text: selected.viewText,
+                           selectedIndex: selectedIndex ?? -1)
+        case .deviceType(let selected):
+            let list = DataSourceDeviceType.allCases
+            let action: OptionSelectedAction = { [weak self] index in
+                let deviceType: DataSourceDeviceType = list[index]
+                let newValue = DataSourceType.deviceType(deviceType)
                 self?.updateDataSource(at: dataTypeIndex,
                                        with: newValue)
             }
