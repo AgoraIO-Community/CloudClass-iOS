@@ -410,6 +410,6 @@ fileprivate extension Array where Element == AgoraRosterModel {
             }
         }
         coHosts.append(contentsOf: rest)
-        return coHostSort()
+        return coHosts
     }
 }
