@@ -102,7 +102,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduRoomHandler {
             .setMessage("fcr_room_class_over".agedu_localized())
             .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
                 self.exitDelegate?.exitScene(reason: .normal,
-                                                 type: .main)
+                                             type: .main)
             }))
             .show(in: self)
     }
@@ -119,7 +119,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
         let action = AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
             self.exitDelegate?.exitScene(reason: .kickOut,
-                                             type: .main)
+                                         type: .main)
         })
         
         let title = "fcr_user_local_kick_out_notice".agedu_localized()
@@ -516,9 +516,11 @@ private extension FcrRoomGlobalUIComponent {
         let localUserId = userController.getLocalUserInfo().userUuid
         
         for subRoom in subRoomList {
-            guard let list = groupController.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
-               list.contains(localUserId) else {
-               continue
+            let list = groupController.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid)
+            
+            guard let `list` = list,
+                  list.contains(localUserId) else {
+                continue
             }
         
             hasJoinedSubRoomId = subRoom.subRoomUuid
@@ -526,40 +528,5 @@ private extension FcrRoomGlobalUIComponent {
             delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoom.subRoomUuid)
             break
         }
-    }
-    
-    func showRewardAnimation() {
-        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward", withExtension: "gif"),
-              let data = try? Data(contentsOf: url) else {
-            return
-        }
-        let animatedImage = AGAnimatedImage(animatedGIFData: data)
-        let imageView = AGAnimatedImageView()
-        imageView.animatedImage = animatedImage
-        imageView.loopCompletionBlock = {[weak imageView] (loopCountRemaining) -> Void in
-            imageView?.removeFromSuperview()
-        }
-        if let window = UIApplication.shared.keyWindow {
-            window.addSubview(imageView)
-            imageView.mas_makeConstraints { make in
-                make?.center.equalTo()(0)
-                make?.width.equalTo()(AgoraFit.scale(238))
-                make?.height.equalTo()(AgoraFit.scale(238))
-            }
-        }
-        // sounds
-        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward",
-                                                      withExtension: "mp3") else {
-            return
-        }
-        
-        var soundId: SystemSoundID = 0;
-        AudioServicesCreateSystemSoundID(rewardUrl as CFURL,
-                                         &soundId);
-        AudioServicesAddSystemSoundCompletion(soundId, nil, nil, {
-            (soundId, clientData) -> Void in
-            AudioServicesDisposeSystemSoundID(soundId)
-        }, nil)
-        AudioServicesPlaySystemSound(soundId)
     }
 }
