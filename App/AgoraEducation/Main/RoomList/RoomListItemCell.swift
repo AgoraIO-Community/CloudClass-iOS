@@ -134,7 +134,7 @@ private extension RoomListItemCell {
         switch cellType {
         case .upcoming:
             cardView.alpha = 1
-            stateLabel.text = "Upcoming"
+            stateLabel.text = "fcr_room_list_upcoming".ag_localized()
             stateIcon.isHidden = true
             cardView.backgroundColor = UIColor(hex: 0x5765FF)
             shareButton.isHidden = false
@@ -161,7 +161,7 @@ private extension RoomListItemCell {
             }
         case .living:
             cardView.alpha = 1
-            stateLabel.text = "Live Now"
+            stateLabel.text = "fcr_room_list_live_now".ag_localized()
             stateIcon.isHidden = false
             cardView.backgroundColor = UIColor(hex: 0x5765FF)
             shareButton.isHidden = false
@@ -186,7 +186,7 @@ private extension RoomListItemCell {
             }
         case .closed:
             cardView.alpha = 0.5
-            stateLabel.text = "Closed"
+            stateLabel.text = "fcr_room_list_closed".ag_localized()
             stateIcon.isHidden = true
             cardView.backgroundColor = UIColor(hex: 0xF0F0F7)
             shareButton.isHidden = true

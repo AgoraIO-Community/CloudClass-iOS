@@ -157,21 +157,24 @@ private extension RoomListViewController {
         else {
             return
         }
+        AgoraLoading.loading()
         FcrOutsideClassAPI.buildToken(roomUuid: roomUuid,
                                       userRole: model.roleType.rawValue,
                                       userId: userUuid) { dict in
+            AgoraLoading.hide()
             guard let data = dict["data"] as? [String : Any] else {
                 fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
             }
             guard let token = data["token"] as? String,
-                  let appId = data["appId"] as? String,
-                  let userId = data["userUuid"] as? String else {
+                  let appId = data["appId"] as? String
+            else {
                 fatalError("TokenBuilder buildByServer can not find value, dict: \(dict)")
             }
             model.token = token
             model.appId = appId
             complete(model)
         } onFailure: { str in
+            AgoraLoading.hide()
             AgoraToast.toast(message: str,
                              type: .warning)
         }
@@ -190,9 +193,15 @@ private extension RoomListViewController {
         let userRole = model.roleType
         let roomType = model.roomType
         let region = getLaunchRegion()
+        var latencyLevel = AgoraEduLatencyLevel.ultraLow
+        if model.serviceType == .livePremium {
+            latencyLevel = .ultraLow
+        } else if model.serviceType == .liveStandard {
+            latencyLevel = .low
+        }
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: nil,
                                                 videoEncoderConfig: nil,
-                                                latencyLevel: .ultraLow,
+                                                latencyLevel: latencyLevel,
                                                 videoState: .on,
                                                 audioState: .on)
         let launchConfig = AgoraEduLaunchConfig(userName: userName,
@@ -208,17 +217,16 @@ private extension RoomListViewController {
                                                 region: region,
                                                 mediaOptions: mediaOptions,
                                                 userProperties: nil)
-        
         // MARK: 若对widgets需要添加或修改时，可获取launchConfig中默认配置的widgets进行操作并重新赋值给launchConfig
         var widgets = Dictionary<String,AgoraWidgetConfig>()
-        launchConfig.widgets.forEach { [unowned self] (k,v) in
+        launchConfig.widgets.forEach { (k,v) in
             if k == "AgoraCloudWidget" {
-//                v.extraInfo = ["publicCoursewares": self.inputParams.publicCoursewares()]
+                v.extraInfo = ["publicCoursewares": model.publicCoursewares()]
             }
             if k == "netlessBoard",
                v.extraInfo != nil {
                 var newExtra = v.extraInfo as! Dictionary<String, Any>
-//                newExtra["coursewareList"] = self.inputParams.publicCoursewares()
+                newExtra["coursewareList"] = model.publicCoursewares()
                 v.extraInfo = newExtra
             }
             widgets[k] = v
@@ -229,16 +237,24 @@ private extension RoomListViewController {
             launchConfig.widgets.removeValue(forKey: "easemobIM")
         }
         
-        if launchConfig.roomType == .vocation { // 职教入口
-//            AgoraClassroomSDK.vocationalLaunch(launchConfig,
-//                                               service: .livePremium,
-//                                               success: launchSuccessBlock,
-//                                               failure: failureBlock)
-        } else { // 灵动课堂入口
-            AgoraClassroomSDK.launch(launchConfig) {
-                
+        if let service = model.serviceType { // 职教入口
+            AgoraLoading.loading()
+            AgoraClassroomSDK.vocationalLaunch(launchConfig,
+                                               service: service) {
+                AgoraLoading.hide()
             } failure: { error in
-                
+                AgoraLoading.hide()
+                AgoraToast.toast(message: error.localizedDescription,
+                                 type: .error)
+            }
+        } else { // 灵动课堂入口
+            AgoraLoading.loading()
+            AgoraClassroomSDK.launch(launchConfig) {
+                AgoraLoading.hide()
+            } failure: { error in
+                AgoraLoading.hide()
+                AgoraToast.toast(message: error.localizedDescription,
+                                 type: .error)
             }
         }
     }
@@ -291,7 +307,7 @@ extension RoomListViewController: UITableViewDelegate, UITableViewDataSource {
         } else if section == kSectionRooms {
             return dataSource.count
         } else if section == kSectionEmpty {
-            return 1
+            return dataSource.count > 0 ? 0 : 1
         } else {
             return 0
         }
@@ -355,7 +371,12 @@ extension RoomListViewController: RoomListTitleViewDelegate {
     
     func onClickCreate() {
         RoomCreateViewController.showCreateRoom {
-            
+            self.noticeShow = true
+            self.tableView.reloadData()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                self.noticeShow = false
+                self.tableView.reloadData()
+            }
         }
     }
 }

@@ -63,16 +63,13 @@ class RoomBaseInfoCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        guard textField.text?.isEmpty == true else {
-            return
-        }
-        editIcon.isHidden = false
-        editInfoLabel.isHidden = false
+        editIcon.isHidden = !textField.isEmpty
+        editInfoLabel.isHidden = !textField.isEmpty
+        delegate?.onRoomNameChanged(text: textField.text ?? "")
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        delegate?.onRoomNameChanged(text: textField.text ?? "")
         return true
     }
     
@@ -243,12 +240,9 @@ class RoomSubTypeInfoCell: UITableViewCell {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         
-        cardView.backgroundColor = UIColor.white
+        cardView.backgroundColor = UIColor(red: 254, green: 254, blue: 255)
         contentView.addSubview(cardView)
         
-        iconView.backgroundColor = UIColor(hex: 0xD9D9D9)
-        iconView.layer.cornerRadius = 8
-        iconView.clipsToBounds = true
         cardView.addSubview(iconView)
         
         titleLabel.textColor = .black
@@ -272,15 +266,16 @@ class RoomSubTypeInfoCell: UITableViewCell {
             make?.right.equalTo()(-15)
         }
         iconView.mas_makeConstraints { make in
-            make?.left.top().equalTo()(16)
-            make?.width.height().equalTo()(16)
+            make?.left.equalTo()(16)
+            make?.centerY.equalTo()(0)
+            make?.width.height().equalTo()(22)
         }
         titleLabel.mas_makeConstraints { make in
-            make?.centerY.equalTo()(iconView)
+            make?.centerY.equalTo()(-10)
             make?.left.equalTo()(iconView.mas_right)?.offset()(8)
         }
         subTitleLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(titleLabel.mas_bottom)?.offset()(10)
+            make?.centerY.equalTo()(10)
             make?.left.equalTo()(titleLabel)
         }
         selectedView.mas_makeConstraints { make in
@@ -404,49 +399,6 @@ class RoomTimeInfoCell: UITableViewCell {
         endInfoLabel.mas_makeConstraints { make in
             make?.left.equalTo()(endTimeLabel.mas_right)?.offset()(8)
             make?.bottom.equalTo()(endTimeLabel)
-        }
-    }
-}
-// 房间更多信息
-class RoomMoreInfoCell: UITableViewCell {
-    
-    public var spred = false {
-        didSet {
-            
-        }
-    }
-    
-    private let cardView = UIView()
-    
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
-        selectionStyle = .none
-        createViews()
-        createConstrains()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func createViews() {
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
-        
-        cardView.backgroundColor = UIColor.white
-        cardView.layer.cornerRadius = 16
-        cardView.clipsToBounds = true
-        contentView.addSubview(cardView)
-    }
-    
-    private func createConstrains() {
-        cardView.mas_makeConstraints { make in
-            make?.top.equalTo()(10)
-            make?.left.equalTo()(15)
-            make?.right.equalTo()(-15)
-            make?.bottom.equalTo()(0)
         }
     }
 }

@@ -42,6 +42,10 @@ class RoomCreateTimeAlertController: UIViewController {
         
     private let contentView = UIView()
     
+    private let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+    
+    private let alertBg = UIImageView(image: UIImage(named: "fcr_alert_bg"))
+    
     private let titleLabel = UILabel()
     
     private let closeButton = UIButton(type: .custom)
@@ -165,6 +169,9 @@ private extension RoomCreateTimeAlertController {
         contentView.clipsToBounds = true
         view.addSubview(contentView)
         
+        contentView.addSubview(effectView)
+        contentView.addSubview(alertBg)
+        
         titleLabel.textColor = .black
         titleLabel.text = "fcr_create_select_start_time".ag_localized()
         titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
@@ -213,6 +220,12 @@ private extension RoomCreateTimeAlertController {
             make?.left.equalTo()(16)
             make?.right.bottom().equalTo()(-16)
             make?.height.equalTo()(354)
+        }
+        effectView.mas_makeConstraints { make in
+            make?.left.right().top().bottom().equalTo()(0)
+        }
+        alertBg.mas_makeConstraints { make in
+            make?.top.left().equalTo()(0)
         }
         titleLabel.mas_makeConstraints { make in
             make?.left.top().equalTo()(24)

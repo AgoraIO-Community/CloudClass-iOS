@@ -56,6 +56,10 @@ private extension AgoraEduServiceType {
 }
 
 class RoomCreateViewController: UIViewController {
+        
+    enum RoomCreateMoreSetting {
+        case title, security, playback, linkInput
+    }
     
     private let kSectionRoomType = 0
     private let kSectionRoomSubType = 1
@@ -71,7 +75,11 @@ class RoomCreateViewController: UIViewController {
     private let tableView = UITableView(frame: .zero,
                                         style: .plain)
     
+    private var complete: (() -> Void)?
+    
     private let roomTypes: [AgoraEduCoreRoomType] = [.small, .lecture, .oneToOne]
+    
+    private var moreSettings: [RoomCreateMoreSetting] = []
     
     private var roomName: String?
     
@@ -81,14 +89,30 @@ class RoomCreateViewController: UIViewController {
                 return
             }
             updateSubRoomType()
+            updateMoreSettings()
         }
     }
     
-    private var selectedSubRoomType: AgoraEduServiceType?
+    private var selectedServiceType: AgoraEduServiceType?
     
     private var selectDate = Date()
     
-    private var subRoomTypes = [AgoraEduServiceType]()
+    private var serviceTypes = [AgoraEduServiceType]()
+    
+    private var securityOn = false
+    
+    private var playbackOn = false
+    
+    private var playbackLink = "http://www.xxxxx.com/jkjkjkjkjkjjjkjkjkjkj..."
+    
+    private var moreSettingSpread = false {
+        didSet {
+            guard moreSettingSpread != oldValue else {
+                return
+            }
+            updateMoreSettings()
+        }
+    }
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -121,6 +145,7 @@ class RoomCreateViewController: UIViewController {
             return
         }
         let vc = RoomCreateViewController()
+        vc.complete = complete
         vc.modalPresentationStyle = .fullScreen
         root.present(vc, animated: true)
     }
@@ -164,17 +189,31 @@ private extension RoomCreateViewController {
         guard let name = roomName else {
             return
         }
-        AgoraLoading.loading()
         selectDate.second = 0
         selectDate.millisecond = 0
         let startTime = UInt(selectDate.timeIntervalSince1970)
         let endTime = startTime + 30*60
+        var roomProperties = [String: Any]()
+        if let servicetype = selectedServiceType {
+            if servicetype == .CDN, playbackOn {
+                roomProperties["servicetype"] = AgoraEduServiceType.hostingScene.rawValue
+                roomProperties["hostingScene"] = [
+                    "finishType": 0,
+                    "videoURL": playbackLink,
+                    "reserveVideoURL": ""
+                ]
+            } else {
+                roomProperties["servicetype"] = servicetype.rawValue
+            }
+        }
+        AgoraLoading.loading()
         FcrOutsideClassAPI.createClassRoom(roomName: name,
                                            roomType: selectedRoomType.rawValue,
                                            startTime: startTime * 1000,
                                            endTine: endTime * 1000,
-                                           roomProperties: nil) { rsp in
+                                           roomProperties: roomProperties) { rsp in
             AgoraLoading.hide()
+            self.complete?()
             self.dismiss(animated: true)
         } onFailure: { str in
             AgoraLoading.hide()
@@ -183,12 +222,26 @@ private extension RoomCreateViewController {
         }
     }
     
+    @objc func onClickSecurity(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        securityOn = sender.isSelected
+    }
+    
+    @objc func onClickPlayback(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        playbackOn = sender.isSelected
+        updateMoreSettings()
+    }
+    
     func updateSubRoomType() {
         if selectedRoomType == .lecture {
-            subRoomTypes = [.livePremium, .liveStandard, .fusion]
-            selectedSubRoomType = .livePremium
+            serviceTypes = [.livePremium, .liveStandard, .fusion]
+            if selectedServiceType == nil {
+                selectedServiceType = .livePremium
+            }
         } else {
-            subRoomTypes = []
+            serviceTypes = []
+            selectedServiceType = nil
         }
         tableView.reloadData()
     }
@@ -199,6 +252,23 @@ private extension RoomCreateViewController {
             self.selectDate = date
             self.tableView.reloadData()
         }
+    }
+    
+    func updateMoreSettings() {
+        if selectedRoomType == .lecture {
+            if moreSettingSpread {
+                if playbackOn {
+                    moreSettings = [.title, .playback, .linkInput]
+                } else {
+                    moreSettings = [.title, .playback]
+                }
+            } else {
+                moreSettings = [.title]
+            }
+        } else {
+            moreSettings = []
+        }
+        tableView.reloadData()
     }
 }
 // MARK: - RoomBaseInfoCell Call Back
@@ -218,11 +288,11 @@ extension RoomCreateViewController: UITableViewDelegate, UITableViewDataSource {
         if section == kSectionRoomType {
             return 1
         } else if section == kSectionRoomSubType {
-            return subRoomTypes.count
+            return serviceTypes.count
         } else if section == kSectionTime {
             return 1
         } else if section == kSectionMoreSetting {
-            return 1
+            return moreSettings.count
         } else {
             return 0
         }
@@ -237,22 +307,41 @@ extension RoomCreateViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else if indexPath.section == kSectionRoomSubType {
             let cell = tableView.dequeueReusableCell(withClass: RoomSubTypeInfoCell.self)
-            let subRoomType = subRoomTypes[indexPath.row]
+            let subRoomType = serviceTypes[indexPath.row]
             cell.iconView.image = subRoomType.icon()
             cell.titleLabel.text = subRoomType.title()
             cell.subTitleLabel.text = subRoomType.subTitle()
-            cell.aSelected = (subRoomType == selectedSubRoomType)
+            cell.aSelected = (subRoomType == selectedServiceType)
             return cell
         } else if indexPath.section == kSectionTime {
             let cell = tableView.dequeueReusableCell(withClass: RoomTimeInfoCell.self)
             cell.startDate = selectDate
             return cell
-        } else if indexPath.section == kSectionMoreSetting {
-            let cell = tableView.dequeueReusableCell(withClass: RoomMoreInfoCell.self)
-            return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withClass: RoomMoreInfoCell.self)
-            return cell
+            let type = moreSettings[indexPath.row]
+            if type == .title {
+                let cell = tableView.dequeueReusableCell(withClass: RoomMoreTitleCell.self)
+                cell.spred = moreSettingSpread
+                return cell
+            } else if type == .security {
+                let cell = tableView.dequeueReusableCell(withClass: RoomSecurityInfoCell.self)
+                cell.switchButton.isSelected = securityOn
+                cell.switchButton.addTarget(self,
+                                            action: #selector(onClickSecurity(_:)),
+                                            for: .touchUpInside)
+                return cell
+            } else if type == .playback {
+                let cell = tableView.dequeueReusableCell(withClass: RoomPlayBackInfoCell.self)
+                cell.switchButton.isSelected = playbackOn
+                cell.switchButton.addTarget(self,
+                                            action: #selector(onClickPlayback(_:)),
+                                            for: .touchUpInside)
+                return cell
+            } else {
+                let cell = tableView.dequeueReusableCell(withClass: RoomPlayBackInputCell.self)
+                cell.label.text = playbackLink
+                return cell
+            }
         }
     }
     
@@ -261,12 +350,20 @@ extension RoomCreateViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath,
                               animated: false)
         if indexPath.section == kSectionRoomSubType {
-            selectedSubRoomType = subRoomTypes[indexPath.row]
+            selectedServiceType = serviceTypes[indexPath.row]
             tableView.reloadData()
         } else if indexPath.section == kSectionTime {
             showTimeSelection()
         } else if indexPath.section == kSectionMoreSetting {
-            
+            let type = moreSettings[indexPath.row]
+            switch type {
+            case .title:
+                moreSettingSpread = true
+            case .linkInput:
+                
+                break
+            default: break
+            }
         }
     }
     
@@ -279,17 +376,23 @@ extension RoomCreateViewController: UITableViewDelegate, UITableViewDataSource {
         } else if indexPath.section == kSectionTime {
             return 94
         } else if indexPath.section == kSectionMoreSetting {
-            return 120
+            return 60
         } else {
             return 0
         }
     }
     
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        return (
-            indexPath.section == kSectionRoomSubType ||
-            indexPath.section == kSectionTime
-        )
+        var isEnabe = false
+        if indexPath.section == kSectionRoomSubType ||
+            indexPath.section == kSectionTime {
+            isEnabe = true
+        }
+        if indexPath.section == kSectionMoreSetting ||
+            indexPath.row == 0 {
+            isEnabe = true
+        }
+        return isEnabe
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -393,7 +496,10 @@ private extension RoomCreateViewController {
         tableView.register(cellWithClass: RoomBaseInfoCell.self)
         tableView.register(cellWithClass: RoomSubTypeInfoCell.self)
         tableView.register(cellWithClass: RoomTimeInfoCell.self)
-        tableView.register(cellWithClass: RoomMoreInfoCell.self)
+        tableView.register(cellWithClass: RoomMoreTitleCell.self)
+        tableView.register(cellWithClass: RoomSecurityInfoCell.self)
+        tableView.register(cellWithClass: RoomPlayBackInfoCell.self)
+        tableView.register(cellWithClass: RoomPlayBackInputCell.self)
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear

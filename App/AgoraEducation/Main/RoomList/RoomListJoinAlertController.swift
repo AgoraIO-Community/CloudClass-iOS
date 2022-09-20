@@ -21,6 +21,7 @@ class RoomListJoinAlertController: UIViewController {
                      complete: ((RoomInputInfoModel) -> Void)?) {
         let vc = RoomListJoinAlertController()
         vc.inputModel = inputModel
+        vc.complete = complete
         vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = .crossDissolve
         viewController.present(vc,
@@ -32,6 +33,8 @@ class RoomListJoinAlertController: UIViewController {
     private let contentView = UIView()
     
     private let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+    
+    private let alertBg = UIImageView(image: UIImage(named: "fcr_alert_bg"))
     
     private let titleLabel = UILabel()
     
@@ -66,6 +69,14 @@ class RoomListJoinAlertController: UIViewController {
         
         setup()
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>,
+                               with event: UIEvent?) {
+        super.touchesBegan(touches,
+                           with: event)
+        
+        UIApplication.shared.keyWindow?.endEditing(true)
+    }
 }
 // MARK: - Actions
 private extension RoomListJoinAlertController {
@@ -83,6 +94,7 @@ private extension RoomListJoinAlertController {
     }
     
     @objc func onClickCancel(_ sender: UIButton) {
+        UIApplication.shared.keyWindow?.endEditing(true)
         dismiss(animated: true)
         complete = nil
     }
@@ -92,7 +104,9 @@ private extension RoomListJoinAlertController {
               let name = nameTextField.text,
               let model = inputModel
         else {
-            
+            return
+        }
+        guard roomId.count == 9 else {
             return
         }
         FcrUserInfoPresenter.shared.nickName = name
@@ -114,6 +128,14 @@ private extension RoomListJoinAlertController {
         teacherButton.isSelected = false
     }
 }
+// MARK: - UITextField Call Bakc
+extension RoomListJoinAlertController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        return true
+    }
+    
+}
 // MARK: - Creations
 private extension RoomListJoinAlertController {
     func createViews() {
@@ -123,6 +145,7 @@ private extension RoomListJoinAlertController {
         view.addSubview(contentView)
         
         contentView.addSubview(effectView)
+        contentView.addSubview(alertBg)
         
         titleLabel.textColor = .black
         titleLabel.text = "fcr_room_join_title".ag_localized()
@@ -147,6 +170,8 @@ private extension RoomListJoinAlertController {
         idTextField.leftView = idTitleLabel
         idTextField.font = UIFont.boldSystemFont(ofSize: 15)
         idTextField.textColor = UIColor.black
+        idTextField.delegate = self
+        idTextField.returnKeyType = .done
         contentView.addSubview(idTextField)
         
         let nameTitleLabel = UILabel()
@@ -159,6 +184,8 @@ private extension RoomListJoinAlertController {
         nameTextField.leftView = nameTitleLabel
         nameTextField.font = UIFont.boldSystemFont(ofSize: 15)
         nameTextField.textColor = UIColor.black
+        nameTextField.delegate = self
+        nameTextField.returnKeyType = .done
         contentView.addSubview(nameTextField)
         
         roleTitleLabel.text = "fcr_room_join_room_role".ag_localized()
@@ -246,6 +273,9 @@ private extension RoomListJoinAlertController {
         }
         effectView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
+        }
+        alertBg.mas_makeConstraints { make in
+            make?.top.left().equalTo()(0)
         }
         titleLabel.mas_makeConstraints { make in
             make?.left.top().equalTo()(24)

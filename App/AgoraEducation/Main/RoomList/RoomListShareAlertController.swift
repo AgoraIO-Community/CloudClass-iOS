@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AgoraUIBaseViews
 
 class RoomListShareAlertController: UIViewController {
     
@@ -15,6 +16,7 @@ class RoomListShareAlertController: UIViewController {
                      complete: (() -> Void)?) {
         let vc = RoomListShareAlertController()
         vc.complete = complete
+        vc.roomId = roomId
         vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = .crossDissolve
         viewController.present(vc,
@@ -26,14 +28,20 @@ class RoomListShareAlertController: UIViewController {
     private let contentView = UIView()
     
     private let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
+    
+    private let alertBg = UIImageView(image: UIImage(named: "fcr_alert_bg"))
         
     private let copyLinkButton = UIButton(type: .custom)
     
+    private let copyTitleLabel = UILabel()
+    
     private let cancelButton = UIButton(type: .custom)
+    
+    private var roomId: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
         // Do any additional setup after loading the view.
         createViews()
         createConstrains()
@@ -46,7 +54,15 @@ private extension RoomListShareAlertController {
     }
     
     @objc func onClickCopyLink(_ sender: UIButton) {
-        
+        guard let roomId = roomId else {
+            return
+        }
+        let link = "com.agora?roomid=" + roomId
+        UIPasteboard.general.string = link
+        AgoraToast.toast(message: link,
+                         type: .notice)
+        dismiss(animated: true)
+        complete?()
     }
 }
 // MARK: - Creations
@@ -58,6 +74,19 @@ private extension RoomListShareAlertController {
         view.addSubview(contentView)
         
         contentView.addSubview(effectView)
+        contentView.addSubview(alertBg)
+        
+        copyLinkButton.setImage(UIImage(named: "fcr_room_list_copy_link"),
+                                for: .normal)
+        copyLinkButton.addTarget(self,
+                                 action: #selector(onClickCopyLink(_:)),
+                                 for: .touchUpInside)
+        contentView.addSubview(copyLinkButton)
+        
+        copyTitleLabel.font = UIFont.systemFont(ofSize: 12)
+        copyTitleLabel.textColor = UIColor.black
+        copyTitleLabel.text = "fcr_room_list_copy_link".ag_localized()
+        contentView.addSubview(copyTitleLabel)
         
         cancelButton.setTitle("fcr_alert_cancel".ag_localized(),
                               for: .normal)
@@ -81,6 +110,17 @@ private extension RoomListShareAlertController {
         }
         effectView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
+        }
+        alertBg.mas_makeConstraints { make in
+            make?.top.left().equalTo()(0)
+        }
+        copyLinkButton.mas_makeConstraints { make in
+            make?.top.equalTo()(35)
+            make?.left.equalTo()(28)
+        }
+        copyTitleLabel.mas_makeConstraints { make in
+            make?.centerX.equalTo()(copyLinkButton)
+            make?.top.equalTo()(copyLinkButton.mas_bottom)?.offset()(9)
         }
         cancelButton.mas_makeConstraints { make in
             make?.left.equalTo()(27)
