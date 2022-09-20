@@ -360,8 +360,9 @@ extension RoomCreateViewController: UITableViewDelegate, UITableViewDataSource {
             case .title:
                 moreSettingSpread = true
             case .linkInput:
-                
-                break
+                FcrInputAlertController.show(in: self) { str in
+                    
+                }
             default: break
             }
         }

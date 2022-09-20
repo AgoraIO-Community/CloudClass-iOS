@@ -66,6 +66,7 @@ fcr_alert_title = "Tips";
 fcr_alert_submit = "Confirm";
 fcr_alert_sure = "Sure";
 fcr_alert_cancel = "Cancel";
+fcr_alert_input_ph = "Please input...";
 fcr_settings_option_general_language_simplified = "简体中文";
 fcr_settings_option_general_language_traditional = "繁体中文";
 fcr_settings_option_general_language_english = "English";

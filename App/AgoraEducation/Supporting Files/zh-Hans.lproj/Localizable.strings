@@ -64,6 +64,7 @@ fcr_alert_title = "提示";
 fcr_alert_submit = "确认";
 fcr_alert_sure = "确认";
 fcr_alert_cancel = "取消";
+fcr_alert_input_ph = "请输入...";
 fcr_settings_option_general_language_simplified = "简体中文";
 fcr_settings_option_general_language_traditional = "繁体中文";
 fcr_settings_option_general_language_english = "English";

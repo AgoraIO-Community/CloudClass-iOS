@@ -84,7 +84,7 @@ private extension RoomListJoinAlertController {
         idTextField.text = inputModel?.roomId
         nameTextField.text = FcrUserInfoPresenter.shared.nickName
         
-        if inputModel?.roleType == .teacher {
+        if inputModel?.roleType == 0 {
             teacherButton.isSelected = true
             studentButton.isSelected = false
         } else {

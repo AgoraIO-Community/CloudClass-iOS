@@ -53,27 +53,27 @@ class RoomListViewController: UIViewController {
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        guard FcrUserInfoPresenter.shared.qaMode == false else {
-            let debugVC = DebugViewController()
-            debugVC.modalPresentationStyle = .fullScreen
-            self.present(debugVC,
-                         animated: true,
-                         completion: nil)
-            return
-        }
+//        guard FcrUserInfoPresenter.shared.qaMode == false else {
+//            let debugVC = DebugViewController()
+//            debugVC.modalPresentationStyle = .fullScreen
+//            self.present(debugVC,
+//                         animated: true,
+//                         completion: nil)
+//            return
+//        }
         // 检查协议，检查登录
-        FcrPrivacyTermsViewController.checkPrivacyTerms {
-            LoginWebViewController.showLoginIfNot(complete: nil)
-        }
-        
-        FcrOutsideClassAPI.fetchUserInfo { rsp in
-            
-        } onFailure: { str in
-                
-        }
-
-        
-        fetchData()
+//        FcrPrivacyTermsViewController.checkPrivacyTerms {
+//            LoginWebViewController.showLoginIfNot(complete: nil)
+//        }
+//
+//        FcrOutsideClassAPI.fetchUserInfo { rsp in
+//
+//        } onFailure: { str in
+//
+//        }
+//
+//
+//        fetchData()
     }
     
     @objc func onClickSetting(_ sender: UIButton) {
@@ -117,7 +117,11 @@ private extension RoomListViewController {
                                          inputModel: model) { model in
             self.fillupClassInfo(model: model) { model in
                 self.fillupTokenInfo(model: model) { model in
-                    self.startLaunchClassRoom(witn: model)
+                    if model.roomType == 6 {
+                        self.startLaunchProctorRoom(witn: model)
+                    } else {
+                        self.startLaunchClassRoom(witn: model)
+                    }
                 }
             }
         }
@@ -138,8 +142,10 @@ private extension RoomListViewController {
             }
             let now = Date()
             let endDate = Date(timeIntervalSince1970: Double(item.endTime) * 0.001)
+            model.roomType = Int(item.roomType)
+            model.roomName = item.roomName
             if now.compare(endDate) == .orderedDescending { // 课程过期
-                
+                self.fetchData()
             } else {
                 complete(model)
             }
@@ -159,7 +165,7 @@ private extension RoomListViewController {
         }
         AgoraLoading.loading()
         FcrOutsideClassAPI.buildToken(roomUuid: roomUuid,
-                                      userRole: model.roleType.rawValue,
+                                      userRole: model.roleType,
                                       userId: userUuid) { dict in
             AgoraLoading.hide()
             guard let data = dict["data"] as? [String : Any] else {
@@ -190,7 +196,7 @@ private extension RoomListViewController {
         else {
             return
         }
-        let userRole = model.roleType
+        let role = model.roleType
         let roomType = model.roomType
         let region = getLaunchRegion()
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
@@ -206,10 +212,10 @@ private extension RoomListViewController {
                                                 audioState: .on)
         let launchConfig = AgoraEduLaunchConfig(userName: userName,
                                                 userUuid: userUuid,
-                                                userRole: userRole,
+                                                userRole: AgoraEduUserRole(rawValue: role) ?? .student,
                                                 roomName: roomName,
                                                 roomUuid: roomUuid,
-                                                roomType: roomType,
+                                                roomType: AgoraEduRoomType(rawValue: roomType) ?? .oneToOne,
                                                 appId: appId,
                                                 token: token,
                                                 startTime: nil,
@@ -257,6 +263,12 @@ private extension RoomListViewController {
                                  type: .error)
             }
         }
+    }
+    
+    // 组装Launch参数并拉起监考房间
+    func startLaunchProctorRoom(witn model: RoomInputInfoModel) {
+        
+        
     }
     
     func getLaunchRegion() -> AgoraEduRegion {

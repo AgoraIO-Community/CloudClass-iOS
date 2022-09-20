@@ -17,8 +17,8 @@ class RoomInputInfoModel {
     var userName: String?
     var roomName: String?
     var roomId: String?
-    var roleType: AgoraEduUserRole = .student
-    var roomType: AgoraEduRoomType = .oneToOne
+    var roleType: Int = 2
+    var roomType: Int = 0
     var appId: String?
     var token: String?
     var serviceType: AgoraEduServiceType?
@@ -27,14 +27,14 @@ class RoomInputInfoModel {
         guard let userName = userName else {
             return nil
         }
-        return "\(userName.md5())\(roleType.rawValue)"
+        return "\(userName.md5())\(roleType)"
     }
     
     var roomUuid: String? {
         guard let roomName = roomName else {
             return nil
         }
-        return "\(roomName.md5())\(roomType.rawValue)"
+        return "\(roomName.md5())\(roleType)"
     }
     
     func publicCoursewares() -> Array<String> {
