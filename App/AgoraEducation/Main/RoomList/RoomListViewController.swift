@@ -13,6 +13,7 @@ import AgoraClassroomSDK_iOS
 import AgoraClassroomSDK
 #endif
 import AgoraUIBaseViews
+import AgoraProctorSDK
 
 class RoomListViewController: UIViewController {
     
@@ -36,6 +37,9 @@ class RoomListViewController: UIViewController {
     private let kTitleMin: CGFloat = 110
     
     private var noticeShow = false
+    
+    /**sdk**/
+    private var proctorSDK: AgoraProctorSDK?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,27 +57,27 @@ class RoomListViewController: UIViewController {
     
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        guard FcrUserInfoPresenter.shared.qaMode == false else {
-//            let debugVC = DebugViewController()
-//            debugVC.modalPresentationStyle = .fullScreen
-//            self.present(debugVC,
-//                         animated: true,
-//                         completion: nil)
-//            return
-//        }
-        // 检查协议，检查登录
-//        FcrPrivacyTermsViewController.checkPrivacyTerms {
-//            LoginWebViewController.showLoginIfNot(complete: nil)
-//        }
-//
-//        FcrOutsideClassAPI.fetchUserInfo { rsp in
-//
-//        } onFailure: { str in
-//
-//        }
-//
-//
-//        fetchData()
+        guard FcrUserInfoPresenter.shared.qaMode == false else {
+            let debugVC = DebugViewController()
+            debugVC.modalPresentationStyle = .fullScreen
+            self.present(debugVC,
+                         animated: true,
+                         completion: nil)
+            return
+        }
+//         检查协议，检查登录
+        FcrPrivacyTermsViewController.checkPrivacyTerms {
+            LoginWebViewController.showLoginIfNot(complete: nil)
+        }
+
+        FcrOutsideClassAPI.fetchUserInfo { rsp in
+
+        } onFailure: { str in
+
+        }
+
+
+        fetchData()
     }
     
     @objc func onClickSetting(_ sender: UIButton) {
@@ -164,9 +168,13 @@ private extension RoomListViewController {
             return
         }
         AgoraLoading.loading()
+        var finalUserId = userUuid
+        if model.roomType == 6 {
+            finalUserId = "\(userUuid)-sub"
+        }
         FcrOutsideClassAPI.buildToken(roomUuid: roomUuid,
                                       userRole: model.roleType,
-                                      userId: userUuid) { dict in
+                                      userId: finalUserId) { dict in
             AgoraLoading.hide()
             guard let data = dict["data"] as? [String : Any] else {
                 fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
@@ -267,8 +275,72 @@ private extension RoomListViewController {
     
     // 组装Launch参数并拉起监考房间
     func startLaunchProctorRoom(witn model: RoomInputInfoModel) {
+        guard let userName = model.userName,
+              let userUuid = model.userUuid,
+              let roomName = model.roomName,
+              let roomUuid = model.roomUuid,
+              let appId = model.appId,
+              let token = model.token
+        else {
+            return
+        }
+        var latencyLevel = AgoraProctorLatencyLevel.ultraLow
+        if model.serviceType == .livePremium {
+            latencyLevel = .ultraLow
+        } else if model.serviceType == .liveStandard {
+            latencyLevel = .low
+        }
+        let mediaOptions = AgoraProctorMediaOptions(encryptionConfig: nil,
+                                                videoEncoderConfig: nil,
+                                                latencyLevel: latencyLevel,
+                                                videoState: .on,
+                                                audioState: .on)
+        let launchConfig = AgoraProctorLaunchConfig(userName: userName,
+                                                    userUuid: userUuid,
+                                                    userRole: .student,
+                                                    roomName: roomName,
+                                                    roomUuid: roomUuid,
+                                                    deviceType: .sub,
+                                                    appId: appId,
+                                                    token: token,
+                                                    region: FcrEnvironment.shared.region.proctor,
+                                                    mediaOptions: mediaOptions,
+                                                    userProperties: nil)
         
+        let proSDK = AgoraProctorSDK(launchConfig,
+                                     delegate: self)
+        self.proctorSDK = proSDK
         
+        let sel = NSSelectorFromString("setEnvironment:")
+        switch FcrEnvironment.shared.environment {
+        case .pro:
+            proSDK.perform(sel,
+                           with: 2)
+        case .pre:
+            proSDK.perform(sel,
+                           with: 1)
+        case .dev:
+            proSDK.perform(sel,
+                           with: 0)
+        }
+        
+        proSDK.launch {
+            AgoraLoading.hide()
+        } failure: { [weak self] (error) in
+            AgoraLoading.hide()
+            
+            self?.proctorSDK = nil
+            
+            let `error` = error as NSError
+            
+            if error.code == 30403100 {
+                AgoraToast.toast(message: "login_kicked".ag_localized(),
+                                 type: .error)
+            } else {
+                AgoraToast.toast(message: error.localizedDescription,
+                                 type: .error)
+            }
+        }
     }
     
     func getLaunchRegion() -> AgoraEduRegion {
@@ -443,5 +515,20 @@ private extension RoomListViewController {
             make?.top.equalTo()(68)
             make?.right.equalTo()(-14)
         }
+    }
+}
+
+// MARK: - SDK delegate
+extension RoomListViewController: AgoraProctorSDKDelegate {
+    func proctorSDK(_ classroom: AgoraProctorSDK,
+                    didExit reason: AgoraProctorExitReason) {
+        switch reason {
+        case .kickOut:
+            AgoraToast.toast(message: "kick out")
+        default:
+            break
+        }
+        
+        self.proctorSDK = nil
     }
 }
