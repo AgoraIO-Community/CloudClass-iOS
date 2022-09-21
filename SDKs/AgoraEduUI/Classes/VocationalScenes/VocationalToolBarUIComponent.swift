@@ -7,7 +7,7 @@
 
 import UIKit
 import AgoraWidget
-import AgoraEduContext
+import AgoraEduCore
 import AgoraUIBaseViews
 
 // MARK: - VocationalToolBarUIController

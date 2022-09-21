@@ -5,7 +5,7 @@
 //  Created by LYY on 2022/9/5.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 
 enum FcrProctorUIExamState {
     case before

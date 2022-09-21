@@ -32,7 +32,7 @@
         self.dimensionHeight = 240;
         self.frameRate = 15;
         self.bitRate = 200;
-        self.mirrorMode = AgoraEduMirrorModeDisabled;
+        self.mirrorMode = AgoraEduCoreMirrorModeDisabled;
     }
     return self;
 }
@@ -85,9 +85,9 @@
                            token:(NSString *)token {
     AgoraEduMediaOptions *mediaOptions = [[AgoraEduMediaOptions alloc] initWithEncryptionConfig:nil
                                                                              videoEncoderConfig:nil
-                                                                                   latencyLevel:AgoraEduLatencyLevelUltraLow
-                                                                                     videoState:AgoraEduStreamStateOn
-                                                                                     audioState:AgoraEduStreamStateOn];
+                                                                                   latencyLevel:AgoraEduCoreLatencyLevelUltraLow
+                                                                                     videoState:AgoraEduCoreStreamStateOn
+                                                                                     audioState:AgoraEduCoreStreamStateOn];
     return [self initWithUserName:userName
                          userUuid:userUuid
                          userRole:userRole
@@ -98,7 +98,7 @@
                             token:token
                         startTime:nil
                          duration:nil
-                           region:AgoraEduRegionCN
+                           region:AgoraEduCoreRegionCN
                      mediaOptions:mediaOptions
                    userProperties:nil];
 }

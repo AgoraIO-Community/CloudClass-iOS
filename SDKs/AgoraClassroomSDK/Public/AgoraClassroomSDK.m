@@ -5,15 +5,7 @@
 //  Created by SRS on 2021/1/5.
 //
 
-#if __has_include(<AgoraEduCorePuppet/AgoraEduCoreWrapper.h>)
-#import <AgoraEduCorePuppet/AgoraEduCoreWrapper.h>
-#elif __has_include(<AgoraEduCore/AgoraEduCoreWrapper.h>)
-#import <AgoraEduCore/AgoraEduCoreWrapper.h>
-#else
-# error "Invalid import"
-#endif
-
-#import <AgoraEduContext/AgoraEduContext-Swift.h>
+#import <AgoraEduCore/AgoraEduCore-Swift.h>
 #import <AgoraWidgets/AgoraWidgets-Swift.h>
 #import <AgoraEduUI/AgoraEduUI-Swift.h>
 #import "AgoraInternalClassroom.h"
@@ -21,7 +13,7 @@
 #import "AgoraEduEnums.h"
 
 @interface AgoraClassroomSDK () <FcrUISceneDelegate>
-@property (nonatomic, strong) AgoraEduCorePuppet *core;
+@property (nonatomic, strong) AgoraEduCoreEngine *core;
 @property (nonatomic, strong) FcrUIScene *scene;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSNumber *environment;
@@ -191,9 +183,10 @@ static AgoraClassroomSDK *manager = nil;
     
     AgoraClassroomSDK *manager = [AgoraClassroomSDK share];
     
-    AgoraEduCorePuppetLaunchConfig *coreConfig = [self getPuppetLaunchConfig:config];
-    AgoraEduCorePuppet *core = [[AgoraEduCorePuppet alloc] init:coreConfig
-                                                        widgets:config.widgets.allValues];
+    AgoraEduCoreLaunchConfig *coreConfig = [self getCoreLaunchConfig:config];
+    
+    AgoraEduCoreEngine *core = [[AgoraEduCoreEngine alloc] initWithConfig:coreConfig
+                                                                  widgets:config.widgets.allValues];
     
     manager.core = core;
     
@@ -213,7 +206,7 @@ static AgoraClassroomSDK *manager = nil;
     
     __weak AgoraClassroomSDK *weakManager = manager;
     
-    [core launch:success
+    [core launchWithSuccess:success
          failure:^(NSError * _Nonnull error) {
             
         weakManager.core = nil;
@@ -252,21 +245,9 @@ static AgoraClassroomSDK *manager = nil;
 #pragma mark - FcrUISceneDelegate
 - (void)scene:(FcrUIScene *)scene
       didExit:(FcrUISceneExitReason)reason {
-    AgoraEduExitReason sdkReason = AgoraEduExitReasonNormal;
-    
-    switch (reason) {
-        case FcrUISceneExitReasonNormal:
-            sdkReason = AgoraEduExitReasonNormal;
-            break;
-        case FcrUISceneExitReasonKickOut:
-            sdkReason = AgoraEduExitReasonKickOut;
-        default:
-            break;
-    }
-    
     if ([_delegate respondsToSelector:@selector(classroomSDK:didExit:)]) {
         [self.delegate classroomSDK:self
-                            didExit:sdkReason];
+                            didExit:reason];
     }
     
     [self agoraRelease];

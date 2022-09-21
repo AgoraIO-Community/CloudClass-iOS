@@ -104,12 +104,12 @@ import UIKit
     ]
 
     /** 上台后音视频是否自动发流权限*/
-    let kMediaAuthOptions: [(AgoraEduMediaAuthOption, String)] = [
-        (.none, "login_auth_none".ag_localized()),
-        (.audio, "login_auth_audio".ag_localized()),
-        (.video, "login_auth_video".ag_localized()),
-        (.both, "login_auth_both".ag_localized())
-    ]
+//    let kMediaAuthOptions: [(AgoraEduMediaAuthOption, String)] = [
+//        (.none, "login_auth_none".ag_localized()),
+//        (.audio, "login_auth_audio".ag_localized()),
+//        (.video, "login_auth_video".ag_localized()),
+//        (.both, "login_auth_both".ag_localized())
+//    ]
 
     /** 服务类型可选项*/
     let kVocationalServiceOptions: [(AgoraEduServiceType, String)] = [
@@ -334,8 +334,8 @@ private extension LoginViewController {
             }
         }
         
-        let videoState: AgoraEduStreamState = (inputParams.mediaAuth == .video || inputParams.mediaAuth == .both) ? .on : .off
-        let audioState: AgoraEduStreamState = (inputParams.mediaAuth == .audio || inputParams.mediaAuth == .both) ? .on : .off
+        let videoState: AgoraEduStreamState = .off //(inputParams.mediaAuth == .video || inputParams.mediaAuth == .both) ? .on : .off
+        let audioState: AgoraEduStreamState = .off //(inputParams.mediaAuth == .audio || inputParams.mediaAuth == .both) ? .on : .off
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
                                                 videoEncoderConfig: nil,
                                                 latencyLevel: latencyLevel,

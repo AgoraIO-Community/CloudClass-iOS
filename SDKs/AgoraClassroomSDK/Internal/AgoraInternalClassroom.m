@@ -48,67 +48,71 @@
 @end
 
 @implementation AgoraClassroomSDK (Internal)
-+ (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraEduLaunchConfig *)config {
-    AgoraEduCorePuppetMediaOptions *mediaOptions = [self getPuppetMediaOptions:config.mediaOptions];
++ (AgoraEduCoreLaunchConfig *)getCoreLaunchConfig:(AgoraEduLaunchConfig *)config {
+    AgoraEduCoreMediaOptions *mediaOptions = [self getCoreMediaOptions:config.mediaOptions];
     
-    AgoraEduCorePuppetUserRole role = config.userRole;
+    AgoraEduCoreUserRole role = config.userRole;
     
-    AgoraEduCorePuppetRoomType roomType;
+    AgoraEduCoreRoomType roomType;
     
     switch (config.roomType) {
         case FcrUISceneTypeOneToOne:
-            roomType = AgoraEduCorePuppetRoomTypeOneToOne;
+            roomType = AgoraEduCoreRoomTypeOneToOne;
             break;
         case FcrUISceneTypeSmall:
-            roomType = AgoraEduCorePuppetRoomTypeSmall;
+            roomType = AgoraEduCoreRoomTypeSmall;
             break;
         case FcrUISceneTypeLecture:
-            roomType = AgoraEduCorePuppetRoomTypeLecture;
+            roomType = AgoraEduCoreRoomTypeLecture;
             break;
         case FcrUISceneTypeVocation:
-            roomType = AgoraEduCorePuppetRoomTypeLecture;
+            roomType = AgoraEduCoreRoomTypeLecture;
             break;
         default:
             break;
     }
     
-    AgoraEduCorePuppetLaunchConfig *launchConfig = [[AgoraEduCorePuppetLaunchConfig alloc] initWithAppId:config.appId
-                                                                                                rtmToken:config.token
-                                                                                                  region:config.region
-                                                                                                userName:config.userName
-                                                                                                userUuid:config.userUuid
-                                                                                                userRole:role
-                                                                                          userProperties:config.userProperties
-                                                                                            mediaOptions:mediaOptions
-                                                                                                roomName:config.roomName
-                                                                                                roomUuid:config.roomUuid
-                                                                                                roomType:roomType
-                                                                                               startTime:config.startTime
-                                                                                                duration:config.duration];
+    AgoraEduCoreLaunchConfig *launchConfig = [[AgoraEduCoreLaunchConfig alloc] initWithUserName:config.userName
+                                                                                       userUuid:config.userUuid
+                                                                                       userRole:role
+                                                                                 userProperties:config.userProperties
+                                                                                       roomName:config.roomName
+                                                                                       roomUuid:config.roomUuid
+                                                                                       roomType:roomType
+                                                                                      startTime:config.startTime
+                                                                                       duration:config.duration
+                                                                                          appId:config.appId
+                                                                                       rtmToken:config.token
+                                                                                         region:config.region
+                                                                                   mediaOptions:mediaOptions];
     return launchConfig;
 }
 
-+ (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraEduMediaOptions *)options {
-    AgoraEduCorePuppetVideoConfig *videoConfig = nil;
++ (AgoraEduCoreMediaOptions *)getCoreMediaOptions:(AgoraEduMediaOptions *)options {
+    AgoraEduCoreVideoConfig *videoConfig = nil;
+    
     if (options.videoEncoderConfig) {
-        videoConfig = [[AgoraEduCorePuppetVideoConfig alloc] initWithDimensionWidth:options.videoEncoderConfig.dimensionWidth
-                                                                    dimensionHeight:options.videoEncoderConfig.dimensionHeight
-                                                                          frameRate:options.videoEncoderConfig.frameRate
-                                                                            bitRate:options.videoEncoderConfig.bitRate
-                                                                         mirrorMode:options.videoEncoderConfig.mirrorMode];
+        videoConfig = [[AgoraEduCoreVideoConfig alloc] initWithDimensionWidth:options.videoEncoderConfig.dimensionWidth
+                                                              dimensionHeight:options.videoEncoderConfig.dimensionHeight
+                                                                    frameRate:options.videoEncoderConfig.frameRate
+                                                                      bitRate:options.videoEncoderConfig.bitRate
+                                                                   mirrorMode:options.videoEncoderConfig.mirrorMode];
     }
-    AgoraEduCorePuppetMediaEncryptionConfig *encryptionConfig = nil;
+    
+    AgoraEduCoreMediaEncryptionConfig *encryptionConfig = nil;
+    
     if (options.encryptionConfig) {
         NSString *key = options.encryptionConfig.key;
-        AgoraEduCorePuppetMediaEncryptionMode mode = options.encryptionConfig.mode;
-        encryptionConfig = [[AgoraEduCorePuppetMediaEncryptionConfig alloc] initWithKey:key
-                                                                                   mode:mode];
+        AgoraEduCoreMediaEncryptionMode mode = options.encryptionConfig.mode;
+        encryptionConfig = [[AgoraEduCoreMediaEncryptionConfig alloc] initWithKey:key
+                                                                             mode:mode];
     }
-    AgoraEduCorePuppetMediaOptions *mediaOptions = [[AgoraEduCorePuppetMediaOptions alloc] initWithEncryptionConfig:encryptionConfig
-                                                                                                        videoConfig:videoConfig
-                                                                                                       latencyLevel:options.latencyLevel
-                                                                                                         videoState:options.videoState
-                                                                                                         audioState:options.audioState];
+    
+    AgoraEduCoreMediaOptions *mediaOptions = [[AgoraEduCoreMediaOptions alloc] initWithEncryptionConfig:encryptionConfig
+                                                                                            videoConfig:videoConfig
+                                                                                           latencyLevel:options.latencyLevel
+                                                                                             videoState:options.videoState
+                                                                                             audioState:options.audioState];
     return mediaOptions;
 }
 @end

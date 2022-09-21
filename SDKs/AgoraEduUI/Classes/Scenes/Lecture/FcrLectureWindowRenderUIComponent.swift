@@ -5,7 +5,7 @@
 //  Created by Cavan on 2022/6/12.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 import UIKit
 
 class FcrLectureWindowRenderUIComponent: FcrTeacherWindowRenderUIComponent {

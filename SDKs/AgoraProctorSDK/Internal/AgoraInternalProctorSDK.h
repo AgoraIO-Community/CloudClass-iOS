@@ -6,14 +6,7 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-#if __has_include(<AgoraEduCorePuppet/AgoraEduCoreWrapper.h>)
-#import <AgoraEduCorePuppet/AgoraEduCoreWrapper.h>
-#elif __has_include(<AgoraEduCore/AgoraEduCoreWrapper.h>)
-#import <AgoraEduCore/AgoraEduCoreWrapper.h>
-#else
-# error "Invalid import"
-#endif
-
+#import <AgoraEduCore/AgoraEduCore-Swift.h>
 #import <Foundation/Foundation.h>
 #import "AgoraProctorSDK.h"
 #import "AgoraProctorObjects.h"
@@ -26,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Model translation
 @interface AgoraProctorSDK (Internal)
-- (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraProctorLaunchConfig *)config;
-- (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraProctorMediaOptions *)options;
+- (AgoraEduCoreLaunchConfig *)getCoreLaunchConfig:(AgoraProctorLaunchConfig *)config;
+- (AgoraEduCoreMediaOptions *)getCoretMediaOptions:(AgoraProctorMediaOptions *)options;
 @end
 
 NS_ASSUME_NONNULL_END
