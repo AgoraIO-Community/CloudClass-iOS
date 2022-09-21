@@ -121,8 +121,6 @@ private extension RoomListItemCell {
             typeLabel.text = "fcr_create_lecture_title".ag_localized()
         case .small:
             typeLabel.text = "fcr_create_small_title".ag_localized()
-        case .sub:
-            typeLabel.text = ""
         case .none:
             typeLabel.text = ""
         case .some(_):
