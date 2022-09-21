@@ -91,6 +91,55 @@ static AgoraClassroomSDK *manager = nil;
     } failure:failure];
 }
 
++ (void)vocationalLaunch:(AgoraEduLaunchConfig *)config
+                 service:(AgoraEduServiceType)serviceType
+                 success:(void (^)(void))success
+                 failure:(void (^)(NSError *))failure {
+    [self coreLaunchWithConfig:config
+                       success:^(id<AgoraEduContextPool> pool) {
+        if ([pool.room getRoomInfo].roomType != AgoraEduContextRoomTypeLecture) {
+            NSCAssert(true, @"vocational room type error");
+            return;
+        }
+        
+        FcrUIScene *scene = nil;
+        
+        if (serviceType == AgoraEduServiceTypeMixStreamCDN) {
+            VcrMixStreamCDNUIScene *vc = [[VcrMixStreamCDNUIScene alloc] initWithContextPool:pool
+                                                                                    delegate:manager];
+            scene = vc;
+        } else if (serviceType == AgoraEduServiceTypeHostingScene) {
+            VcrHostingUIScene *vc = [[VcrHostingUIScene alloc] initWithContextPool:pool
+                                                                          delegate:manager];
+            scene = vc;
+        } else {
+            VocationalCDNType cdnType = VocationalCDNTypeLiveStandard;
+            switch (serviceType) {
+                case AgoraEduServiceTypeCDN:
+                    cdnType = VocationalCDNTypeCDN;
+                    break;
+                case AgoraEduServiceTypeFusion:
+                    cdnType = VocationalCDNTypeFusion;
+                    break;
+                default:
+                    cdnType = VocationalCDNTypeLiveStandard;
+                    break;
+            }
+            
+            AgoraVocationalUIScene *vc = [[AgoraVocationalUIScene alloc] initWithContextPool:pool
+                                                                                    delegate:manager];
+            vc.cdnType = cdnType;
+            scene = vc;
+        }
+        
+        [FcrUIContext createWith:FcrUISceneTypeVocation];
+        [FcrWidgetUIContext createWith:FcrWidgetUISceneTypeVocation];
+        
+        [self presentUIScene:scene
+                     success:success];
+    } failure:failure];
+}
+
 + (void)setDelegate:(id<AgoraEduClassroomSDKDelegate> _Nullable)delegate {
     manager.delegate = delegate;
 }

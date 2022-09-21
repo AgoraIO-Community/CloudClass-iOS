@@ -57,6 +57,9 @@ BinaryPodContent = """
   pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
   
   pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets.podspec'
+  
+  pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
+  pod 'AgoraProctorSDK', :path => '../AgoraProctorSDK.podspec'
     
   pod 'AgoraUIBaseViews', :path => '../Products/AgoraUIBaseViews_Binary.podspec'
   pod 'AgoraEduCore', :path => '../Products/AgoraEduCore_Binary.podspec'

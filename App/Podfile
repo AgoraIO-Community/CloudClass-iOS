@@ -28,6 +28,9 @@ target 'AgoraEducation' do
   # open source libs
   pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
   pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
+    
+  pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
+  pod 'AgoraProctorSDK', :path => '../AgoraProctorSDK.podspec'
    
   pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
   pod 'AgoraProctorSDK', :path => '../AgoraProctorSDK.podspec'

@@ -74,6 +74,7 @@
                                                                                        rtmToken:config.token
                                                                                          region:config.region
                                                                                    mediaOptions:mediaOptions];
+    
     return launchConfig;
 }
 
@@ -105,4 +106,3 @@
     return mediaOptions;
 }
 @end
-

@@ -10,12 +10,12 @@ import UIKit
 
 protocol RoomBaseInfoCellDelegate: NSObjectProtocol {
     
-    func onClickInputRoomTitle()
+    func onRoomNameChanged(text: String)
 }
 // 房间基本信息：名称及班型
-class RoomBaseInfoCell: UITableViewCell {
+class RoomBaseInfoCell: UITableViewCell, UITextFieldDelegate {
     
-    public var delegate: RoomBaseInfoCellDelegate?
+    public weak var delegate: RoomBaseInfoCellDelegate?
     
     public var optionsView: UIView? {
         didSet {
@@ -26,7 +26,7 @@ class RoomBaseInfoCell: UITableViewCell {
                 if let view = optionsView {
                     cardView.addSubview(view)
                     view.mas_makeConstraints { make in
-                        make?.top.equalTo()(lineView.mas_bottom)?.offset()(20)
+                        make?.top.equalTo()(lineView.mas_bottom)
                         make?.left.right().equalTo()(0)
                         make?.bottom.equalTo()(-20)
                     }
@@ -35,19 +35,12 @@ class RoomBaseInfoCell: UITableViewCell {
         }
     }
     
-    public var dataSource = [String]()
-    
-    public var roomName: String? {
-        didSet {
-            if roomName != oldValue {
-                updateRoomName()
-            }
-        }
-    }
-    
     private let cardView = UIView()
     
-    private let inputButton = UIButton(type: .custom)
+    public let textFeild = UITextField(frame: .zero)
+    
+    private let editIcon = UIImageView(image: UIImage(named: "fcr_room_create_edit"))
+    private let editInfoLabel = UILabel()
     
     private let lineView = UIView()
     
@@ -55,7 +48,7 @@ class RoomBaseInfoCell: UITableViewCell {
                   reuseIdentifier: String?) {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
-        
+        selectionStyle = .none
         createViews()
         createConstrains()
     }
@@ -64,13 +57,20 @@ class RoomBaseInfoCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func updateRoomName() {
-        if let text = roomName {
-            inputButton.setTitle(text,
-                                 for: .normal)
-        } else {
-            
-        }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        editIcon.isHidden = true
+        editInfoLabel.isHidden = true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        editIcon.isHidden = !textField.isEmpty
+        editInfoLabel.isHidden = !textField.isEmpty
+        delegate?.onRoomNameChanged(text: textField.text ?? "")
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
     private func createViews() {
@@ -82,7 +82,18 @@ class RoomBaseInfoCell: UITableViewCell {
         cardView.clipsToBounds = true
         contentView.addSubview(cardView)
         
-        cardView.addSubview(inputButton)
+        cardView.addSubview(editIcon)
+        
+        editInfoLabel.textColor = UIColor(hex: 0xBDBEC6)
+        editInfoLabel.font = UIFont.systemFont(ofSize: 15)
+        editInfoLabel.text = "fcr_create_input_name".localized()
+        cardView.addSubview(editInfoLabel)
+        
+        textFeild.font = UIFont.boldSystemFont(ofSize: 15)
+        textFeild.textAlignment = .center
+        textFeild.returnKeyType = .done
+        textFeild.delegate = self
+        cardView.addSubview(textFeild)
         
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         cardView.addSubview(lineView)
@@ -94,16 +105,24 @@ class RoomBaseInfoCell: UITableViewCell {
             make?.left.equalTo()(15)
             make?.right.equalTo()(-15)
         }
-        inputButton.mas_makeConstraints { make in
+        editInfoLabel.mas_makeConstraints { make in
             make?.top.equalTo()(36)
-            make?.left.right().equalTo()(0)
+            make?.centerX.equalTo()(0)?.offset()(20)
             make?.height.equalTo()(44)
+        }
+        editIcon.mas_makeConstraints { make in
+            make?.centerY.equalTo()(editInfoLabel)
+            make?.right.equalTo()(editInfoLabel.mas_left)
+        }
+        textFeild.mas_makeConstraints { make in
+            make?.left.right().equalTo()(0)
+            make?.top.height().equalTo()(editInfoLabel)
         }
         lineView.mas_makeConstraints { make in
             make?.left.equalTo()(12)
             make?.right.equalTo()(-12)
             make?.height.equalTo()(1)
-            make?.bottom.equalTo()(inputButton)
+            make?.bottom.equalTo()(editInfoLabel)
         }
     }
 }
@@ -116,18 +135,14 @@ class RoomTypeInfoCell: UICollectionViewCell {
     
     public let subTitleLabel = UILabel()
     
-    public let selectedView = UIImageView()
+    public let selectedView = UIImageView(image: UIImage(named: "fcr_room_create_sel"))
     
     public var aSelected = false {
         didSet {
             guard aSelected != oldValue else {
                 return
             }
-            if aSelected {
-                
-            } else {
-                
-            }
+            selectedView.isHidden = !aSelected
         }
     }
     
@@ -136,7 +151,6 @@ class RoomTypeInfoCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        backgroundColor = .orange
         createViews()
         createConstrains()
     }
@@ -153,11 +167,16 @@ class RoomTypeInfoCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         
         titleLabel.textColor = UIColor.white
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        titleLabel.textAlignment = .center
         contentView.addSubview(titleLabel)
         
         subTitleLabel.textColor = UIColor.white
+        subTitleLabel.font = UIFont.systemFont(ofSize: 12)
+        subTitleLabel.textAlignment = .center
         contentView.addSubview(subTitleLabel)
         
+        selectedView.isHidden = true
         contentView.addSubview(selectedView)
     }
     
@@ -171,34 +190,44 @@ class RoomTypeInfoCell: UICollectionViewCell {
         }
         subTitleLabel.mas_makeConstraints { make in
             make?.top.equalTo()(titleLabel.mas_bottom)?.offset()(8)
+            make?.left.right().equalTo()(0)
         }
         selectedView.mas_makeConstraints { make in
             make?.width.height().equalTo()(30)
-            make?.top.equalTo()(-15)
-            make?.right.equalTo()(15)
+            make?.top.equalTo()(imageView)?.offset()(-8)
+            make?.right.equalTo()(imageView)?.offset()(8)
         }
     }
 }
 // 房间subType选项信息
 class RoomSubTypeInfoCell: UITableViewCell {
     
+    public let iconView = UIImageView()
+    
+    public let titleLabel = UILabel()
+    
+    public let subTitleLabel = UILabel()
+    
     private let cardView = UIView()
     
-    private let iconView = UIView()
-    
-    private let titleLabel = UILabel()
-    
-    private let infoLabel = UILabel()
-    
-    private let selectView = UIImageView()
+    private let selectedView = UIImageView(image: UIImage(named: "fcr_room_create_unsel"))
     
     private let lineView = UIView()
+    
+    public var aSelected = false {
+        didSet {
+            guard aSelected != oldValue else {
+                return
+            }
+            selectedView.image = aSelected ? UIImage(named: "fcr_room_create_sel") : UIImage(named: "fcr_room_create_unsel")
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle,
                   reuseIdentifier: String?) {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
-        
+        selectionStyle = .none
         createViews()
         createConstrains()
     }
@@ -211,19 +240,20 @@ class RoomSubTypeInfoCell: UITableViewCell {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
         
-        cardView.backgroundColor = UIColor.white
+        cardView.backgroundColor = UIColor(red: 254, green: 254, blue: 255)
         contentView.addSubview(cardView)
         
-        iconView.backgroundColor = UIColor(hex: 0xD9D9D9)
-        iconView.layer.cornerRadius = 8
-        iconView.clipsToBounds = true
         cardView.addSubview(iconView)
         
+        titleLabel.textColor = .black
+        titleLabel.font = UIFont.systemFont(ofSize: 13)
         cardView.addSubview(titleLabel)
         
-        cardView.addSubview(infoLabel)
+        subTitleLabel.textColor = UIColor(hex: 0x757575)
+        subTitleLabel.font = UIFont.systemFont(ofSize: 8)
+        cardView.addSubview(subTitleLabel)
         
-        cardView.addSubview(selectView)
+        cardView.addSubview(selectedView)
         
         lineView.backgroundColor = UIColor(hex: 0xEFEFEF)
         cardView.addSubview(lineView)
@@ -236,18 +266,19 @@ class RoomSubTypeInfoCell: UITableViewCell {
             make?.right.equalTo()(-15)
         }
         iconView.mas_makeConstraints { make in
-            make?.left.top().equalTo()(16)
-            make?.width.height().equalTo()(16)
+            make?.left.equalTo()(16)
+            make?.centerY.equalTo()(0)
+            make?.width.height().equalTo()(22)
         }
         titleLabel.mas_makeConstraints { make in
-            make?.centerY.equalTo()(iconView)
+            make?.centerY.equalTo()(-10)
             make?.left.equalTo()(iconView.mas_right)?.offset()(8)
         }
-        infoLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(titleLabel.mas_bottom)
+        subTitleLabel.mas_makeConstraints { make in
+            make?.centerY.equalTo()(10)
             make?.left.equalTo()(titleLabel)
         }
-        selectView.mas_makeConstraints { make in
+        selectedView.mas_makeConstraints { make in
             make?.centerY.equalTo()(0)
             make?.right.equalTo()(-16)
             make?.width.height().equalTo()(30)
@@ -271,15 +302,28 @@ class RoomTimeInfoCell: UITableViewCell {
     
     private let startTimeLabel = UILabel()
     
+    private let arrowIcon = UIImageView(image: UIImage(named: "fcr_room_create_time_arrow"))
+    
     private let endTimeLabel = UILabel()
     
     private let endInfoLabel = UILabel()
+    
+    public var startDate: Date? {
+        didSet {
+            guard let date = startDate else {
+                return
+            }
+            startTimeLabel.text = date.string(withFormat: "fcr_create_table_time_format".ag_localized())
+            let endDate = startDate?.addingTimeInterval(30*60)
+            endTimeLabel.text = endDate?.string(withFormat: "HH:mm")
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle,
                   reuseIdentifier: String?) {
         super.init(style: style,
                    reuseIdentifier: reuseIdentifier)
-        
+        selectionStyle = .none
         createViews()
         createConstrains()
     }
@@ -297,23 +341,30 @@ class RoomTimeInfoCell: UITableViewCell {
         cardView.clipsToBounds = true
         contentView.addSubview(cardView)
         
-        startTitleLabel.text = "Start Time"
+        startTitleLabel.text = "fcr_create_start_time".localized()
+        startTitleLabel.font = UIFont.systemFont(ofSize: 13)
         startTitleLabel.textColor = UIColor(hex: 0x757575)
         cardView.addSubview(startTitleLabel)
         
-        endTitleLabel.text = "End Time"
+        endTitleLabel.text = "fcr_create_end_time".localized()
+        endTitleLabel.font = UIFont.systemFont(ofSize: 13)
         endTitleLabel.textColor = UIColor(hex: 0x757575)
         cardView.addSubview(endTitleLabel)
         
         startTimeLabel.text = "Start Time"
+        startTimeLabel.font = UIFont.boldSystemFont(ofSize: 14)
         startTimeLabel.textColor = UIColor.black
         cardView.addSubview(startTimeLabel)
         
-        endTimeLabel.text = "End Time"
+        cardView.addSubview(arrowIcon)
+        
+        endTimeLabel.text = "fcr_create_end_time".localized()
+        endTimeLabel.font = UIFont.boldSystemFont(ofSize: 14)
         endTimeLabel.textColor = UIColor(hex: 0x757575)
         cardView.addSubview(endTimeLabel)
         
-        endInfoLabel.text = "End Time"
+        endInfoLabel.text = "fcr_create_end_time_info".localized()
+        endInfoLabel.font = UIFont.systemFont(ofSize: 10)
         endInfoLabel.textColor = UIColor(hex: 0x757575)
         cardView.addSubview(endInfoLabel)
     }
@@ -326,7 +377,7 @@ class RoomTimeInfoCell: UITableViewCell {
             make?.bottom.equalTo()(0)
         }
         startTitleLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(13)
+            make?.top.equalTo()(cardView)?.offset()(16)
             make?.left.equalTo()(21)
         }
         endTitleLabel.mas_makeConstraints { make in
@@ -337,60 +388,17 @@ class RoomTimeInfoCell: UITableViewCell {
             make?.left.equalTo()(startTitleLabel)
             make?.top.equalTo()(startTitleLabel.mas_bottom)?.offset()(12)
         }
+        arrowIcon.mas_makeConstraints { make in
+            make?.left.equalTo()(startTimeLabel.mas_right)?.offset()(5)
+            make?.centerY.equalTo()(startTimeLabel)
+        }
         endTimeLabel.mas_makeConstraints { make in
             make?.left.equalTo()(endTitleLabel)
             make?.centerY.equalTo()(startTimeLabel)
         }
         endInfoLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(endTimeLabel.mas_right)
+            make?.left.equalTo()(endTimeLabel.mas_right)?.offset()(8)
             make?.bottom.equalTo()(endTimeLabel)
-        }
-    }
-}
-// 房间时间信息
-class RoomMoreInfoCell: UITableViewCell {
-    
-    public var spred = false {
-        didSet {
-            
-        }
-    }
-    
-    private let cardView = UIView()
-    
-//    private let cardView = UIView()
-//
-//    private let cardView = UIView()
-    
-    override init(style: UITableViewCell.CellStyle,
-                  reuseIdentifier: String?) {
-        super.init(style: style,
-                   reuseIdentifier: reuseIdentifier)
-        
-        createViews()
-        createConstrains()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func createViews() {
-        backgroundColor = .clear
-        contentView.backgroundColor = .clear
-        
-        cardView.backgroundColor = UIColor.white
-        cardView.layer.cornerRadius = 16
-        cardView.clipsToBounds = true
-        contentView.addSubview(cardView)
-    }
-    
-    private func createConstrains() {
-        cardView.mas_makeConstraints { make in
-            make?.top.equalTo()(10)
-            make?.left.equalTo()(15)
-            make?.right.equalTo()(-15)
-            make?.bottom.equalTo()(0)
         }
     }
 }

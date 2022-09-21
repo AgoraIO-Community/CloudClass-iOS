@@ -309,7 +309,7 @@ import Foundation
     public let videoSourceType: AgoraEduContextVideoSourceType
     /// 流的音频源类型
     public let audioSourceType: AgoraEduContextAudioSourceType
-    /// 流的音频源状态
+    /// 流的视频源状态
     public let videoSourceState: AgoraEduContextMediaSourceState
     /// 流的音频源状态
     public let audioSourceState: AgoraEduContextMediaSourceState
