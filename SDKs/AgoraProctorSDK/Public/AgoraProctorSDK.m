@@ -5,20 +5,13 @@
 //  Created by SRS on 2021/1/5.
 //
 
-#if __has_include(<AgoraEduCorePuppet/AgoraEduCoreWrapper.h>)
-#import <AgoraEduCorePuppet/AgoraEduCoreWrapper.h>
-#elif __has_include(<AgoraEduCore/AgoraEduCoreWrapper.h>)
-#import <AgoraEduCore/AgoraEduCoreWrapper.h>
-#else
-# error "Invalid import"
-#endif
-
 #import <AgoraProctorUI/AgoraProctorUI-Swift.h>
+#import <AgoraEduCore/AgoraEduCore-Swift.h>
 #import "AgoraInternalProctorSDK.h"
 #import "AgoraProctorSDK.h"
 
 @interface AgoraProctorSDK () <FcrProctorSceneDelegate>
-@property (nonatomic, strong) AgoraEduCorePuppet *core;
+@property (nonatomic, strong) AgoraEduCoreEngine *core;
 @property (nonatomic, strong) FcrProctorScene *scene;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSNumber *environment;
@@ -36,9 +29,9 @@
         self.config = config;
         self.delegate = delegate;
         
-        AgoraEduCorePuppetLaunchConfig *coreConfig = [self getPuppetLaunchConfig:self.config];
-        self.core = [[AgoraEduCorePuppet alloc] init:coreConfig
-                                             widgets:config.widgets.allValues];
+        AgoraEduCoreLaunchConfig *coreConfig = [self getCoreLaunchConfig:self.config];
+        self.core = [[AgoraEduCoreEngine alloc] initWithConfig:coreConfig
+                                                       widgets:config.widgets.allValues];
     }
     
     return self;
@@ -80,8 +73,6 @@
     
     [self.delegate proctorSDK:self
                       didExit:sdkReason];
-    
-    [self agoraRelease];
 }
 
 #pragma mark - Public
@@ -104,19 +95,19 @@
         NSDictionary *parameters = @{@"console": console};
         [self.core setParameters:parameters];
     }
-    
+
     // Environment
     NSNumber *environment = self.environment;
     if (environment) {
         NSDictionary *parameters = @{@"environment": environment};
         [self.core setParameters:parameters];
     }
-    
+
     __weak AgoraProctorSDK *weakSelf = self;
     
-    [self.core launch:^(id<AgoraEduContextPool> pool) {
+    [self.core launchWithSuccess:^(id<AgoraEduContextPool> pool) {
         AgoraProctorSDK *strongSelf = weakSelf;
-        
+
         if (!strongSelf) {
             return;
         }
@@ -125,9 +116,9 @@
                                                                      delegate:strongSelf];
         scene.modalPresentationStyle = UIModalPresentationFullScreen;
         weakSelf.scene = scene;
-        
+
         UIViewController *topVC = [UIViewController agora_top_view_controller];
-        
+
         [topVC presentViewController:scene
                             animated:true
                           completion:^{
@@ -138,26 +129,12 @@
     } failure:failure];
 }
 
-- (void)exit {
+- (void)dealloc {
     [self.core exit];
     
     __weak AgoraProctorSDK *weakSelf = self;
     
     [self.scene dismissViewControllerAnimated:YES
-                                   completion:^{
-        AgoraProctorSDK *strongSelf = weakSelf;
-        
-        if (!strongSelf) {
-            return;
-        }
-        [strongSelf agoraRelease];
-    }];
-}
-
-#pragma mark - Private
-- (void)agoraRelease {
-    self.delegate = nil;
-    self.scene = nil;
-    self.core = nil;
+                                   completion:nil];
 }
 @end
