@@ -180,7 +180,7 @@ extension LoginViewController {
         #if !DEBUG
         // 检查协议，检查登录
         FcrPrivacyTermsViewController.checkPrivacyTerms {
-            LoginWebViewController.showLoginIfNot(complete: nil)
+            LoginStartViewController.showLoginIfNot(complete: nil)
         }
         #endif
     }
