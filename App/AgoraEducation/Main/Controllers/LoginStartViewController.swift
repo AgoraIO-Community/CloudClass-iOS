@@ -50,7 +50,6 @@ class LoginStartViewController: UIViewController {
                                                      animated: true)
     }
     
-    
     @objc func onClickStart() {
         AgoraLoading.loading()
         FcrOutsideClassAPI.getAuthWebPage { dict in
@@ -62,7 +61,8 @@ class LoginStartViewController: UIViewController {
             vc.modalPresentationStyle = .fullScreen
             vc.onComplete = self.onComplete
             vc.urlStr = redirectURL
-            self.navigationController?.pushViewController(vc, animated: true)
+            self.navigationController?.pushViewController(vc,
+                                                          animated: true)
         } onFailure: { msg in
             AgoraLoading.hide()
             AgoraToast.toast(message: msg,
