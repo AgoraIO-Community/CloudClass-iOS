@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AgoraInvigilatorUI
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
