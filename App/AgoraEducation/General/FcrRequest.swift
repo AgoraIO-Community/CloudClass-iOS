@@ -10,18 +10,22 @@ import UIKit
 import Armin
 
 class FcrOutsideClassAPI {
-    /** 查询课堂列表*/
-    static func fetchRoomDetail(roomUuid: String,
+    /** 查询课堂详情并获取token*/
+    static func fetchRoomDetail(roomId: String,
+                                companyId: String,
+                                role: Int,
                                 onSuccess: (([String: Any]) -> Void)?,
                                 onFailure: ((String) -> Void)?) {
-        let companyId = FcrUserInfoPresenter.shared.companyId
-        let url = FcrEnvironment.shared.server + "/edu/companys/\(companyId)/v1/rooms/\(roomUuid)"
+        let url = FcrEnvironment.shared.server + "/edu/companys/\(companyId)/v1/rooms"
         let event = ArRequestEvent(name: "fetch room detail")
-        let type = ArRequestType.http(.get,
+        let type = ArRequestType.http(.put,
                                       url: url)
+        let params: [String : Any] = ["roomId": roomId,
+                                      "role": role]
         let task = ArRequestTask(event: event,
                                  type: type,
-                                 header: ["Authorization": FcrUserInfoPresenter.shared.accessToken])
+                                 header: ["Authorization": FcrUserInfoPresenter.shared.accessToken],
+                                 parameters: params)
         FcrRequest(task: task,
                    onSuccess: onSuccess,
                    onFailure: onFailure).sendRequest()
