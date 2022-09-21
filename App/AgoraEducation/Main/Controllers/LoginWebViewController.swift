@@ -12,36 +12,11 @@ import UIKit
 
 class LoginWebViewController: FcrOutsideClassBaseController {
     
-    public static func showLoginIfNot(complete: (() -> Void)?) {
-        guard FcrUserInfoPresenter.shared.isLogin == false else {
-            complete?()
-            return
-        }
-        AgoraLoading.loading()
-        FcrOutsideClassAPI.getAuthWebPage { dict in
-            AgoraLoading.hide()
-            guard let redirectURL = dict["data"] as? String,
-                  let root = UIApplication.shared.keyWindow?.rootViewController
-            else {
-                return
-            }
-            let vc = LoginWebViewController()
-            vc.modalPresentationStyle = .fullScreen
-            vc.onComplete = complete
-            vc.urlStr = redirectURL
-            root.present(vc, animated: true)
-        } onFailure: { msg in
-            AgoraLoading.hide()
-            AgoraToast.toast(message: msg,
-                             type: .error)
-        }
-    }
-    
     private var webView = WKWebView()
     
-    private var urlStr: String?
+    public var urlStr: String?
     
-    private var onComplete: (() -> Void)?
+    public var onComplete: (() -> Void)?
     
     private var debugButton = UIButton(type: .custom)
     

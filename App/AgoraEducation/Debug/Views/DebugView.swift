@@ -271,6 +271,8 @@ extension DebugView: AgoraUIContentContainer {
         
         closeButton.mas_makeConstraints { make in
             make?.top.equalTo()(46)
+            make?.height.equalTo()(44)
+            make?.width.equalTo()(60)
             make?.right.equalTo()(-15)
         }
         

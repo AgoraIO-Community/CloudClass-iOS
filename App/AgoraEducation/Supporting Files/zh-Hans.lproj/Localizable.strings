@@ -6,10 +6,10 @@
   Copyright © 2020 Agora. All rights reserved.
 */
 fcr_room_list_title = "声网灵动课堂";
-fcr_room_list_create = "创建房间";
+fcr_room_list_create = "创建课堂";
 fcr_room_list_room_created = "你已经成功创建1个课程";
 fcr_room_list_join = "加入房间";
-fcr_room_list_rooms = "房间列表";
+fcr_room_list_rooms = "我的课程列表";
 fcr_room_list_enter = "进入";
 fcr_room_list_upcoming = "待开始";
 fcr_room_list_live_now = "进行中";
