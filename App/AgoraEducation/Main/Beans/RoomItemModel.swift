@@ -23,20 +23,6 @@ class RoomInputInfoModel {
     var token: String?
     var serviceType: AgoraEduServiceType?
     
-    var userUuid: String? {
-        guard let userName = userName else {
-            return nil
-        }
-        return "\(userName.md5())\(roleType)"
-    }
-    
-    var roomUuid: String? {
-        guard let roomName = roomName else {
-            return nil
-        }
-        return "\(roomName.md5())\(roleType)"
-    }
-    
     func publicCoursewares() -> Array<String> {
         let publicJson1 = """
         {

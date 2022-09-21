@@ -68,9 +68,10 @@ class RoomListViewController: UIViewController {
         }
         // 检查协议，检查登录
         FcrPrivacyTermsViewController.checkPrivacyTerms {
-            LoginWebViewController.showLoginIfNot(complete: nil)
+            LoginStartViewController.showLoginIfNot {
+                self.fetchData()
+            }
         }
-        fetchData()
     }
     
     @objc func onClickSetting(_ sender: UIButton) {
@@ -178,15 +179,13 @@ private extension RoomListViewController {
     
     func fillupTokenInfo(model: RoomInputInfoModel,
                          complete: @escaping (RoomInputInfoModel) -> Void) {
-        guard let roomUuid = model.roomUuid,
-              let userUuid = model.userUuid
-        else {
+        guard let roomUuid = model.roomId else {
             return
         }
         AgoraLoading.loading()
-        var finalUserId = userUuid
+        var finalUserId = FcrUserInfoPresenter.shared.companyId
         if model.roomType == 6 {
-            finalUserId = "\(userUuid)-sub"
+            finalUserId = "\(finalUserId)-sub"
         }
         FcrOutsideClassAPI.buildToken(roomUuid: roomUuid,
                                       userRole: model.roleType,
@@ -212,16 +211,14 @@ private extension RoomListViewController {
     // 组装Launch参数并拉起教室
     func startLaunchClassRoom(witn model: RoomInputInfoModel) {
         guard let userName = model.userName,
-              let userUuid = model.userUuid,
               let roomName = model.roomName,
-              let roomUuid = model.roomUuid,
+              let roomUuid = model.roomId,
               let appId = model.appId,
               let token = model.token
         else {
             return
         }
         let role = model.roleType
-        let roomType = model.roomType
         let region = getLaunchRegion()
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
         if model.serviceType == .livePremium {
@@ -229,17 +226,24 @@ private extension RoomListViewController {
         } else if model.serviceType == .liveStandard {
             latencyLevel = .low
         }
+        var roomType: AgoraEduRoomType
+        switch model.roomType {
+        case 0:   roomType = .oneToOne
+        case 2:   roomType = .lecture
+        case 4:   roomType = .small
+        default:  roomType = .small
+        }
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: nil,
                                                 videoEncoderConfig: nil,
                                                 latencyLevel: latencyLevel,
                                                 videoState: .on,
                                                 audioState: .on)
         let launchConfig = AgoraEduLaunchConfig(userName: userName,
-                                                userUuid: userUuid,
+                                                userUuid: FcrUserInfoPresenter.shared.companyId,
                                                 userRole: AgoraEduUserRole(rawValue: role) ?? .student,
                                                 roomName: roomName,
                                                 roomUuid: roomUuid,
-                                                roomType: AgoraEduRoomType(rawValue: roomType) ?? .oneToOne,
+                                                roomType: roomType,
                                                 appId: appId,
                                                 token: token,
                                                 startTime: nil,
@@ -292,9 +296,8 @@ private extension RoomListViewController {
     // 组装Launch参数并拉起监考房间
     func startLaunchProctorRoom(witn model: RoomInputInfoModel) {
         guard let userName = model.userName,
-              let userUuid = model.userUuid,
               let roomName = model.roomName,
-              let roomUuid = model.roomUuid,
+              let roomUuid = model.roomId,
               let appId = model.appId,
               let token = model.token
         else {
@@ -312,7 +315,7 @@ private extension RoomListViewController {
                                                 videoState: .on,
                                                 audioState: .on)
         let launchConfig = AgoraProctorLaunchConfig(userName: userName,
-                                                    userUuid: userUuid,
+                                                    userUuid: FcrUserInfoPresenter.shared.companyId,
                                                     userRole: .student,
                                                     roomName: roomName,
                                                     roomUuid: roomUuid,
@@ -463,6 +466,14 @@ extension RoomListViewController: UITableViewDelegate, UITableViewDataSource {
 }
 // MARK: - RoomListTitleViewDelegate
 extension RoomListViewController: RoomListTitleViewDelegate {
+    func onEnterDebugMode() {
+        FcrUserInfoPresenter.shared.qaMode = true
+        let debugVC = DebugViewController()
+        debugVC.modalPresentationStyle = .fullScreen
+        self.present(debugVC,
+                     animated: true,
+                     completion: nil)
+    }
     
     func onClickJoin() {
         let inputModel = RoomInputInfoModel()

@@ -74,7 +74,21 @@ class FcrOutsideClassAPI {
                    onSuccess: onSuccess,
                    onFailure: onFailure).sendRequest()
     }
-    
+    /** 用户注销*/
+    static func logoff(onSuccess: (([String: Any]) -> Void)?,
+                       onFailure: ((String) -> Void)?) {
+        let url = FcrEnvironment.shared.server + "/sso/v2/users/auth"
+        let event = ArRequestEvent(name: "FcrOutsideClassAPI buildToken")
+        let type = ArRequestType.http(.delete,
+                                      url: url)
+        let accessToken = FcrUserInfoPresenter.shared.accessToken
+        let task = ArRequestTask(event: event,
+                                 type: type,
+                                 header: ["Authorization": accessToken])
+        FcrRequest(task: task,
+                   onSuccess: onSuccess,
+                   onFailure: onFailure).sendRequest()
+    }
     /** 获取用户基本信息*/
     static func fetchUserInfo(onSuccess: (([String: Any]) -> Void)?,
                               onFailure: ((String) -> Void)?) {
@@ -153,7 +167,7 @@ class FcrOutsideClassAPI {
             onFailure?("")
             // 全token失效
             FcrUserInfoPresenter.shared.logout {
-                LoginWebViewController.showLoginIfNot(complete: nil)
+                LoginStartViewController.showLoginIfNot(complete: nil)
             }
             return
         }
@@ -215,7 +229,7 @@ fileprivate class FcrRequest {
                 }
             } else if code == 400 { // 全token失效
                 FcrUserInfoPresenter.shared.logout {
-                    LoginWebViewController.showLoginIfNot(complete: nil)
+                    LoginStartViewController.showLoginIfNot(complete: nil)
                 }
             } else {
                 self.onFailure?(error.localizedDescription)

@@ -26,7 +26,7 @@
 		6861691B26AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6861691926AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf */; };
 		6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68880999262825FC00B5FB2A /* LoginViewController.swift */; };
 		688809E82629358800B5FB2A /* FcrNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688809E72629358800B5FB2A /* FcrNavigationController.swift */; };
-		75D36FB810CB94F4AEF8D9A2 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		75D36FB810CB94F4AEF8D9A2 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
 		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
 		7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4CD23FA735700AF1B4F /* InfoPlist.strings */; };
@@ -42,6 +42,7 @@
 		AB08496128D1812700214B68 /* RoomListJoinAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB08496028D1812700214B68 /* RoomListJoinAlertController.swift */; };
 		AB08497128D5CCE100214B68 /* RoomCreateMoreInfoCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB08497028D5CCE100214B68 /* RoomCreateMoreInfoCells.swift */; };
 		AB08497328D963C400214B68 /* FcrInputAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB08497228D963C400214B68 /* FcrInputAlertController.swift */; };
+		AB0A2DD228DAEF6A0048FA3C /* LoginStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB0A2DD128DAEF6A0048FA3C /* LoginStartViewController.swift */; };
 		AB2AAFC5288A4BEE009D015C /* FcrOutsideClassBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2AAFC4288A4BEE009D015C /* FcrOutsideClassBaseController.swift */; };
 		AB4F69CF286D8BEE0012E6B3 /* FcrSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4F69CE286D8BEE0012E6B3 /* FcrSettingsViewController.swift */; };
 		AB4F69D1286D8C380012E6B3 /* FcrGeneralSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4F69D0286D8C380012E6B3 /* FcrGeneralSettingsViewController.swift */; };
@@ -159,6 +160,7 @@
 		AB08496028D1812700214B68 /* RoomListJoinAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomListJoinAlertController.swift; sourceTree = "<group>"; };
 		AB08497028D5CCE100214B68 /* RoomCreateMoreInfoCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomCreateMoreInfoCells.swift; sourceTree = "<group>"; };
 		AB08497228D963C400214B68 /* FcrInputAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrInputAlertController.swift; sourceTree = "<group>"; };
+		AB0A2DD128DAEF6A0048FA3C /* LoginStartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginStartViewController.swift; sourceTree = "<group>"; };
 		AB2AAFC4288A4BEE009D015C /* FcrOutsideClassBaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrOutsideClassBaseController.swift; sourceTree = "<group>"; };
 		AB4F69CE286D8BEE0012E6B3 /* FcrSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FcrSettingsViewController.swift; sourceTree = "<group>"; };
 		AB4F69D0286D8C380012E6B3 /* FcrGeneralSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrGeneralSettingsViewController.swift; sourceTree = "<group>"; };
@@ -193,7 +195,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75D36FB810CB94F4AEF8D9A2 /* BuildFile in Frameworks */,
+				75D36FB810CB94F4AEF8D9A2 /* (null) in Frameworks */,
 				8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */,
 				787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */,
 				489330F749FFF2263BE9EF78 /* Pods_AgoraEducation.framework in Frameworks */,
@@ -362,6 +364,7 @@
 				68880999262825FC00B5FB2A /* LoginViewController.swift */,
 				ABB1D15C287C00A600395A13 /* LoginWebViewController.swift */,
 				688809E72629358800B5FB2A /* FcrNavigationController.swift */,
+				AB0A2DD128DAEF6A0048FA3C /* LoginStartViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -725,6 +728,7 @@
 				AB08497128D5CCE100214B68 /* RoomCreateMoreInfoCells.swift in Sources */,
 				AB82D3AA28D0B11A00ADFC84 /* RoomListShareAlertController.swift in Sources */,
 				AB05CE9A28C89FAD001239AD /* RoomCreateTimeAlertController.swift in Sources */,
+				AB0A2DD228DAEF6A0048FA3C /* LoginStartViewController.swift in Sources */,
 				AB4F69EA2876B3490012E6B3 /* FcrRequest.swift in Sources */,
 				1A44BE7B22BF863000766274 /* AppDelegate.m in Sources */,
 				78DFB69925AEE20B00B01906 /* md5.cpp in Sources */,

@@ -12,6 +12,8 @@ protocol RoomListTitleViewDelegate: NSObjectProtocol {
     func onClickJoin()
     
     func onClickCreate()
+    
+    func onEnterDebugMode()
 }
 class RoomListTitleView: UIView {
     
@@ -28,6 +30,8 @@ class RoomListTitleView: UIView {
     private let joinButton = UIButton(type: .custom)
     
     private let createButton = UIButton(type: .custom)
+    
+    private var debugCount: Int = 0
     
     private var soildPercent: CGFloat = 0.0 {
         didSet {
@@ -75,6 +79,14 @@ class RoomListTitleView: UIView {
         delegate?.onClickCreate()
     }
     
+    @objc func onTouchDebug() {
+        guard debugCount >= 10 else {
+            debugCount += 1
+            return
+        }
+        delegate?.onEnterDebugMode()
+    }
+    
 }
 // MARK: - Creations
 private extension RoomListTitleView {
@@ -85,7 +97,10 @@ private extension RoomListTitleView {
         titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         titleLabel.textColor = UIColor.black
         titleLabel.text = "fcr_room_list_title".ag_localized()
+        titleLabel.isUserInteractionEnabled = true
         addSubview(titleLabel)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onTouchDebug))
+        titleLabel.addGestureRecognizer(tap)
         
         joinActionView.iconView.image = UIImage(named: "fcr_room_list_join")
         joinActionView.titleLabel.text = "fcr_room_list_join".ag_localized()

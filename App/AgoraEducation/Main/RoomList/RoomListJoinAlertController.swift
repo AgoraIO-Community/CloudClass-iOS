@@ -141,6 +141,18 @@ extension RoomListJoinAlertController: UITextFieldDelegate {
         textField.endEditing(true)
         return true
     }
+    
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard let text = textField.text else {
+            return true
+        }
+        if text.count > 50 && string.count != 0 {
+            return false
+        }
+        return true
+    }
 }
 // MARK: - Creations
 private extension RoomListJoinAlertController {
@@ -178,6 +190,7 @@ private extension RoomListJoinAlertController {
         idTextField.textColor = UIColor.black
         idTextField.delegate = self
         idTextField.returnKeyType = .done
+        idTextField.keyboardType = .numberPad
         contentView.addSubview(idTextField)
         
         let nameTitleLabel = UILabel()
