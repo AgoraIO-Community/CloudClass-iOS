@@ -31,12 +31,11 @@ SourcePodContent =  """
     pod 'AgoraRte', :path => '../../common-scene-sdk/iOS/AgoraRte.podspec'
 
     # open source libs
-    pod 'AgoraEduContext', :path => '../AgoraEduContext.podspec'
-    pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
     pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
+    pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
     
-    pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
     pod 'AgoraProctorSDK', :path => '../AgoraProctorSDK.podspec'
+    pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
     
     # widgets
     pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets.podspec'
@@ -52,8 +51,11 @@ end
 
 BinaryPodContent = """
   pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
-  pod 'AgoraEduContext', :path => '../AgoraEduContext.podspec'
   pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
+      
+  pod 'AgoraProctorSDK', :path => '../AgoraProctorSDK.podspec'
+  pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
+  
   pod 'AgoraWidgets', :path => '../../open-apaas-extapp-ios/AgoraWidgets.podspec'
     
   pod 'AgoraUIBaseViews', :path => '../Products/AgoraUIBaseViews_Binary.podspec'
