@@ -16,7 +16,7 @@ import AgoraUIBaseViews
 import AgoraProctorSDK
 
 class RoomListViewController: UIViewController {
-    
+    /**views**/
     private let kSectionTitle = 0
     private let kSectionNotice = 1
     private let kSectionRooms = 2
@@ -30,6 +30,7 @@ class RoomListViewController: UIViewController {
     
     let settingButton = UIButton(type: .custom)
     
+    /**data**/
     var dataSource = [RoomItemModel]()
     
     private let kTitleMax: CGFloat = 198
@@ -37,6 +38,12 @@ class RoomListViewController: UIViewController {
     private let kTitleMin: CGFloat = 110
     
     private var noticeShow = false
+    
+    private lazy var refreshAction = UIRefreshControl() // 下拉刷新
+    private var roomNextId: String?
+    private var isRefreshing = false // 下拉刷新
+    
+    private var isLoading = false // 上拉加载
     
     /**sdk**/
     private var proctorSDK: AgoraProctorSDK?
@@ -74,11 +81,38 @@ class RoomListViewController: UIViewController {
         }
     }
     
-    @objc func onClickSetting(_ sender: UIButton) {
-        let vc = FcrSettingsViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+    override func observeValue(forKeyPath keyPath: String?,
+                               of object: Any?,
+                               change: [NSKeyValueChangeKey : Any]?,
+                               context: UnsafeMutableRawPointer?) {
+        let offset = tableView.contentSize.height - tableView.frame.size.height + 100
+
+        guard let change = change,
+              let changeNew = change[.newKey] as? CGPoint,
+              let changeOld = change[.oldKey] as? CGPoint,
+              changeOld != changeNew,
+              keyPath == "contentOffset",
+              tableView.contentOffset.y > offset,
+              !isLoading else {
+            return
+        }
+        isLoading = true
+
+        loadUp()
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        isLoading = true
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        isLoading = false
+    }
+
     public override var shouldAutorotate: Bool {
         return true
     }
@@ -112,17 +146,26 @@ private extension RoomListViewController {
                              errorImage: errorImage)
     }
     
-    func fetchData() {
-        FcrOutsideClassAPI.fetchRoomList(nextId: nil,
-                                         count: 10) { dict in
-            guard let data = dict["data"] as? [String: Any],
+    func fetchData(nextId: String? = nil,
+                   onSuccess: (() -> Void)? = nil,
+                   onFailure: (() -> Void)? = nil) {
+        FcrOutsideClassAPI.fetchRoomList(nextId: nextId,
+                                         count: 10) { [weak self] dict in
+            guard let `self` = self,
+                  let data = dict["data"] as? [String: Any],
                   let list = data["list"] as? [Dictionary<String, Any>]
             else {
                 return
             }
+            
+            if let nextId = data["nextId"] as? String {
+                self.roomNextId = nextId
+            }
             self.dataSource = RoomItemModel.arrayWithDataList(list)
             self.tableView.reloadData()
+            onSuccess?()
         } onFailure: { str in
+            onFailure?()
             AgoraToast.toast(message: str,
                              type: .warning)
         }
@@ -149,7 +192,7 @@ private extension RoomListViewController {
             return
         }
         AgoraLoading.loading()
-        FcrOutsideClassAPI.fetchRoomDetail(roomUuid: roomId) { rsp in
+        FcrOutsideClassAPI.fetchRoomDetail(roomUuid: roomId) { [weak self] rsp in
             AgoraLoading.hide()
             guard let data = rsp["data"] as? [String: Any],
                   let item = RoomItemModel.modelWith(dict: data)
@@ -166,7 +209,7 @@ private extension RoomListViewController {
                 model.serviceType = serviceType
             }
             if now.compare(endDate) == .orderedDescending { // 课程过期
-                self.fetchData()
+                self?.fetchData()
             } else {
                 complete(model)
             }
@@ -370,6 +413,39 @@ private extension RoomListViewController {
         case .AP: return .AP
         }
     }
+    
+    // MARK: actions
+    @objc func refreshDown() {
+        guard !isRefreshing else {
+            return
+        }
+        isRefreshing = true
+        
+        fetchData { [weak self] in
+            self?.tableView.reloadData()
+            self?.isRefreshing = false
+            self?.refreshAction.endRefreshing()
+        } onFailure: { [weak self] in
+            self?.isRefreshing = false
+            self?.refreshAction.endRefreshing()
+        }
+    }
+    
+    @objc func loadUp() {
+        fetchData(nextId: roomNextId) { [weak self] in
+            self?.tableView.reloadData()
+            self?.isLoading = false
+        } onFailure: { [weak self] in
+            self?.isLoading = false
+        }
+    }
+    
+    @objc func onClickSetting(_ sender: UIButton) {
+        let vc = FcrSettingsViewController()
+        self.navigationController?.pushViewController(vc,
+                                                      animated: true)
+    }
+    
 }
 // MARK: - RoomListItemCell Call Back
 extension RoomListViewController: RoomListItemCellDelegate {
@@ -525,6 +601,18 @@ private extension RoomListViewController {
                                 action: #selector(onClickSetting(_:)),
                                 for: .touchUpInside)
         view.addSubview(settingButton)
+        
+        // 下拉刷新
+        refreshAction.addTarget(self,
+                                action: #selector(refreshDown),
+                                for: .valueChanged)
+        tableView.addSubview(refreshAction)
+        // 下拉加载
+        tableView.addObserver(self,
+                              forKeyPath: "contentOffset",
+                              options: [.new,
+                                        .old],
+                              context: nil)
     }
     
     func createConstrains() {
