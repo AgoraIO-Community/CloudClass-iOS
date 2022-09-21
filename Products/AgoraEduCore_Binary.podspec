@@ -13,6 +13,11 @@ Pod::Spec.new do |spec|
   spec.frameworks = 'AudioToolbox', 'Foundation', 'UIKit'
 
   spec.dependency "Protobuf"
+  spec.dependency "Armin", '>=1.1.0'
+  spec.dependency "AgoraLog"
+  spec.dependency "YYModel"
+  spec.dependency "AliyunOSSiOS"
+  spec.dependency "SSZipArchive"
 
   spec.swift_versions = ['5.0', '5.1', '5.2', '5.3', '5.4']
   

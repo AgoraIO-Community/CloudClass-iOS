@@ -5,7 +5,7 @@
 //  Created by Cavan on 2022/6/3.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 import AgoraWidget
 import UIKit
 

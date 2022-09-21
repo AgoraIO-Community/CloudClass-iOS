@@ -65,7 +65,7 @@ struct RoomInfoModel {
     
     var startTime: NSNumber?
     
-    var mediaAuth: AgoraEduMediaAuthOption = .both
+//    var mediaAuth: AgoraEduMediaAuthOption = .both
     
     /** 入参默认值 */
     static func defaultValue() -> RoomInfoModel {

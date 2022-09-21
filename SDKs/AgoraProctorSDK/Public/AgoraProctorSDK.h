@@ -5,7 +5,6 @@
 //  Created by SRS on 2021/1/5.
 //
 
-#import <AgoraWidget/AgoraWidget.h>
 #import <Foundation/Foundation.h>
 #import "AgoraProctorObjects.h"
 
@@ -23,8 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)launch:(void (^)(void))success
        failure:(void (^)(NSError *))failure;
-
-- (void)exit;
 
 - (NSString *)version;
 @end

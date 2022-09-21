@@ -267,15 +267,6 @@ enum DataSourceMediaAuth: CaseIterable {
         case .both:     return "debug_auth_both".ag_localized()
         }
     }
-    
-    var edu: AgoraEduMediaAuthOption {
-        switch self {
-        case .none:     return .none
-        case .audio:    return .audio
-        case .video:    return .video
-        case .both:     return .both
-        }
-    }
 }
 
 enum DataSourceUIMode: Int, CaseIterable {
