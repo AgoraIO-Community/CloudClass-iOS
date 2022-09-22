@@ -37,7 +37,6 @@ class RoomListViewController: UIViewController {
     private let kTitleMin: CGFloat = 110
     
     private var noticeShow = false
-    
     /**sdk**/
     private var proctorSDK: AgoraProctorSDK?
 
