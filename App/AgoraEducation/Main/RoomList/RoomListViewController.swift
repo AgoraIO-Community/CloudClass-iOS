@@ -38,13 +38,13 @@ class RoomListViewController: UIViewController {
     private let kTitleMin: CGFloat = 110
     
     private var noticeShow = false
-    
+
     private lazy var refreshAction = UIRefreshControl() // 下拉刷新
     private var roomNextId: String?
     private var isRefreshing = false // 下拉刷新
     
     private var isLoading = false // 上拉加载
-    
+
     /**sdk**/
     private var proctorSDK: AgoraProctorSDK?
 

@@ -232,6 +232,7 @@ fileprivate class FcrRequest {
                     self.onFailure?(msg)
                 }
             } else if code == 400 { // 全token失效
+                self.onFailure?("Access Denied")
                 FcrUserInfoPresenter.shared.logout {
                     LoginStartViewController.showLoginIfNot(complete: nil)
                 }

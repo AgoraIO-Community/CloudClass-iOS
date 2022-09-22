@@ -60,6 +60,10 @@ class RoomListJoinAlertController: UIViewController {
     private let cancelButton = UIButton(type: .custom)
     
     private var inputModel: RoomInputInfoModel?
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +71,7 @@ class RoomListJoinAlertController: UIViewController {
         // Do any additional setup after loading the view.
         createViews()
         createConstrains()
-        
+        registerNoti()
         setup()
     }
     
@@ -77,6 +81,17 @@ class RoomListJoinAlertController: UIViewController {
                            with: event)
         
         UIApplication.shared.keyWindow?.endEditing(true)
+    }
+    
+    func registerNoti() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onKeyBoardShow(_:)),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(onKeyBoardHide(_:)),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
 }
 // MARK: - Actions
@@ -128,11 +143,43 @@ private extension RoomListJoinAlertController {
     @objc func onClickTeacher(_ sender: UIButton) {
         sender.isSelected = true
         studentButton.isSelected = false
+        inputModel?.roleType = 2
     }
     
     @objc func onClickStudent(_ sender: UIButton) {
         sender.isSelected = true
         teacherButton.isSelected = false
+        inputModel?.roleType = 1
+    }
+    
+    @objc func onKeyBoardShow(_ sender: NSNotification) {
+        guard let userInfo = sender.userInfo,
+              let value = userInfo["UIKeyboardBoundsUserInfoKey"] as? NSValue
+        else {
+            return
+        }
+        let height = value.cgRectValue.size.height
+        var contentHeight: CGFloat = 446
+        if idTextField.isEditing {
+            contentHeight = idTextField.frame.maxY + height
+        } else if nameTextField.isEditing {
+            contentHeight = nameTextField.frame.maxY + height
+        }
+        contentView.mas_updateConstraints { make in
+            make?.height.equalTo()(contentHeight)
+        }
+        UIView.animate(withDuration: 0.2) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    @objc func onKeyBoardHide(_ sender: NSNotification) {
+        contentView.mas_updateConstraints { make in
+            make?.height.equalTo()(446)
+        }
+        UIView.animate(withDuration: 0.2) {
+            self.view.layoutIfNeeded()
+        }
     }
 }
 // MARK: - UITextField Call Bakc

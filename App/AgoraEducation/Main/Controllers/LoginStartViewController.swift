@@ -20,15 +20,20 @@ class LoginStartViewController: UIViewController {
         }
         let vc = LoginStartViewController()
         vc.onComplete = complete
-        let navi = UINavigationController(rootViewController: vc)
+        let navi = FcrNavigationController(rootViewController: vc)
         navi.modalPresentationStyle = .fullScreen
         navi.modalTransitionStyle = .crossDissolve
         root.present(navi, animated: true)
     }
+    private let logoView = UIImageView(image: UIImage(named: "fcr_login_logo_text_en"))
     
-    private let textView = UIImageView(image: UIImage(named: "fcr_room_list_login_text"))
+    private let imageView = UIImageView(image: UIImage(named: "fcr_login_center_afc"))
     
-    private let haloView = UIImageView(image: UIImage(named: "fcr_room_list_login_halo"))
+    private let textView = UIImageView(image: UIImage(named: "fcr_login_text_en"))
+    
+    private let haloView = UIImageView(image: UIImage(named: "fcr_login_halo"))
+    
+    private let afcView = UIImageView(image: UIImage(named: "fcr_login_corner_afc"))
     
     private let startButton = UIButton(type: .custom)
     
@@ -41,6 +46,7 @@ class LoginStartViewController: UIViewController {
         createViews()
         createConstrains()
         createAnimation()
+        localizedImage()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,6 +54,18 @@ class LoginStartViewController: UIViewController {
         
         navigationController?.setNavigationBarHidden(true,
                                                      animated: true)
+    }
+    
+    public override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return UIDevice.current.agora_is_pad ? .landscapeRight : .portrait
+    }
+
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return UIDevice.current.agora_is_pad ? .landscapeRight : .portrait
     }
     
     @objc func onClickStart() {
@@ -73,11 +91,13 @@ class LoginStartViewController: UIViewController {
 // MARK: - Creation
 private extension LoginStartViewController {
     func createViews() {
+        view.addSubview(imageView)
         view.addSubview(haloView)
-        
+        view.addSubview(logoView)
         view.addSubview(textView)
+        view.addSubview(afcView)
         
-        startButton.setBackgroundImage(UIImage(named: "fcr_room_list_get_start"),
+        startButton.setBackgroundImage(UIImage(named: "fcr_login_get_start"),
                                        for: .normal)
         startButton.addTarget(self,
                               action: #selector(onClickStart),
@@ -86,15 +106,27 @@ private extension LoginStartViewController {
     }
     
     func createConstrains() {
-        textView.mas_makeConstraints { make in
+        logoView.mas_makeConstraints { make in
+            make?.top.equalTo()(55)
+            make?.left.equalTo()(29)
+        }
+        imageView.mas_makeConstraints { make in
+            make?.top.equalTo()(logoView.mas_bottom)?.offset()(32)
             make?.left.equalTo()(32)
-            make?.centerY.equalTo()(0)
+        }
+        textView.mas_makeConstraints { make in
+            make?.top.equalTo()(imageView.mas_bottom)?.offset()(36)
+            make?.left.equalTo()(32)
         }
         startButton.mas_makeConstraints { make in
+            make?.top.equalTo()(textView.mas_bottom)?.offset()(33)
             make?.left.equalTo()(32)
-            make?.bottom.equalTo()(-163)
             make?.width.equalTo()(190)
             make?.height.equalTo()(52)
+        }
+        afcView.mas_makeConstraints { make in
+            make?.left.equalTo()(34)
+            make?.bottom.equalTo()(-30)
         }
     }
     
@@ -118,7 +150,18 @@ private extension LoginStartViewController {
         ]
         animation.duration = 24
         animation.repeatCount = MAXFLOAT
-        haloView.layer.add(animation, forKey: "com.agora.halo")
+        haloView.layer.add(animation,
+                           forKey: "com.agora.halo")
+    }
+    
+    func localizedImage() {
+        if FcrLocalization.shared.language == .zh_cn {
+            logoView.image = UIImage(named: "fcr_login_logo_text_zh")
+            textView.image = UIImage(named: "fcr_login_text_zh")
+        } else {
+            logoView.image = UIImage(named: "fcr_login_logo_text_en")
+            textView.image = UIImage(named: "fcr_login_text_en")
+        }
     }
 }
 

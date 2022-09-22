@@ -45,11 +45,26 @@ class FcrNickNameViewController: FcrOutsideClassBaseController {
     }
 }
 // MARK: - Creations
+extension FcrNickNameViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard let text = textField.text else {
+            return true
+        }
+        if text.count > 50 && string.count != 0 {
+            return false
+        }
+        return true
+    }
+}
+// MARK: - Creations
 private extension FcrNickNameViewController {
     func createViews() {
         textField.textColor = UIColor(hex: 0x191919)
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.clearButtonMode = .whileEditing
+        textField.delegate = self
         view.addSubview(textField)
         
         line.backgroundColor = UIColor(hex: 0xEEEEF7)
