@@ -86,7 +86,6 @@ class RoomListTitleView: UIView {
         }
         delegate?.onEnterDebugMode()
     }
-    
 }
 // MARK: - Creations
 private extension RoomListTitleView {

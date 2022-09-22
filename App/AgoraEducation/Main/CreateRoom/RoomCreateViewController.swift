@@ -110,7 +110,7 @@ class RoomCreateViewController: UIViewController {
     
     private var playbackOn = false
     
-    private var playbackLink = "http://www.xxxxx.com/jkjkjkjkjkjjjkjkjkjkj..."
+    private var playbackLink = "https://web-cdn.agora.io/website-files/images/apass.mp4"
     
     private var moreSettingSpread = false {
         didSet {
@@ -136,6 +136,7 @@ class RoomCreateViewController: UIViewController {
         view.delegate = self
         view.dataSource = self
         view.backgroundColor = .clear
+        view.showsHorizontalScrollIndicator = false
         view.register(cellWithClass: RoomTypeInfoCell.self)
         return view
     }()

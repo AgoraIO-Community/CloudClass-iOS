@@ -140,6 +140,7 @@ private extension RoomListItemCell {
             enterButton.backgroundColor = UIColor(hex: 0x357BF6)
             enterButton.setTitleColor(.white,
                                       for: .normal)
+            copyButton.isHidden = false
             shareButton.setImage(UIImage(named: "fcr_room_list_share_black"),
                                  for: .normal)
             copyButton.setImage(UIImage(named: "fcr_room_list_copy_black"),
@@ -167,6 +168,7 @@ private extension RoomListItemCell {
             enterButton.backgroundColor = .black
             shareButton.setImage(UIImage(named: "fcr_room_list_share_white"),
                                  for: .normal)
+            copyButton.isHidden = false
             copyButton.setImage(UIImage(named: "fcr_room_list_copy_white"),
                                 for: .normal)
             timeIcon.image = UIImage(named: "fcr_room_list_clock_white")
@@ -189,8 +191,7 @@ private extension RoomListItemCell {
             cardView.backgroundColor = UIColor(hex: 0xF0F0F7)
             shareButton.isHidden = true
             enterButton.isHidden = true
-            copyButton.setImage(UIImage(named: "fcr_room_list_copy_black"),
-                                for: .normal)
+            copyButton.isHidden = true
             timeIcon.image = UIImage(named: "fcr_room_list_clock_black")
             typeIcon.image = UIImage(named: "fcr_room_list_label_black")
             verticalLine.backgroundColor = .black

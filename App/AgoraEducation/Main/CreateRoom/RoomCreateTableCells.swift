@@ -73,6 +73,18 @@ class RoomBaseInfoCell: UITableViewCell, UITextFieldDelegate {
         return true
     }
     
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        guard let text = textField.text else {
+            return true
+        }
+        if text.count > 50 && string.count != 0 {
+            return false
+        }
+        return true
+    }
+    
     private func createViews() {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
