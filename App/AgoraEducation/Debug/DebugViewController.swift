@@ -204,10 +204,10 @@ extension DebugViewController {
         let uiMode = data.getUIMode()
         let environment = data.getEnvironment()
         
-        let defaultList: [DataSourceType] = [.roomName(.value("aaaqqq")),
-                                             .userName(.value("aaaqqq")),
-                                             .roomType(.proctor),
-                                             .roleType(.student),
+        let defaultList: [DataSourceType] = [.roomName(.none),
+                                             .userName(.none),
+                                             .roomType(.unselected),
+                                             .roleType(.unselected),
                                              .im(.easemob),
                                              .deviceType(.sub),
                                              .duration(.none),
