@@ -20,7 +20,7 @@ class LoginStartViewController: UIViewController {
         }
         let vc = LoginStartViewController()
         vc.onComplete = complete
-        let navi = UINavigationController(rootViewController: vc)
+        let navi = FcrNavigationController(rootViewController: vc)
         navi.modalPresentationStyle = .fullScreen
         navi.modalTransitionStyle = .crossDissolve
         root.present(navi, animated: true)
@@ -48,6 +48,18 @@ class LoginStartViewController: UIViewController {
         
         navigationController?.setNavigationBarHidden(true,
                                                      animated: true)
+    }
+    
+    public override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return UIDevice.current.agora_is_pad ? .landscapeRight : .portrait
+    }
+
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return UIDevice.current.agora_is_pad ? .landscapeRight : .portrait
     }
     
     @objc func onClickStart() {

@@ -128,11 +128,13 @@ private extension RoomListJoinAlertController {
     @objc func onClickTeacher(_ sender: UIButton) {
         sender.isSelected = true
         studentButton.isSelected = false
+        inputModel?.roleType = 2
     }
     
     @objc func onClickStudent(_ sender: UIButton) {
         sender.isSelected = true
         teacherButton.isSelected = false
+        inputModel?.roleType = 1
     }
 }
 // MARK: - UITextField Call Bakc
