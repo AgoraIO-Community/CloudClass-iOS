@@ -132,8 +132,6 @@
 - (void)dealloc {
     [self.core exit];
     
-    __weak AgoraProctorSDK *weakSelf = self;
-    
     [self.scene dismissViewControllerAnimated:YES
                                    completion:nil];
 }

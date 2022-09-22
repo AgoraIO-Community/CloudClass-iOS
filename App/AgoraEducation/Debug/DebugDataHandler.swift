@@ -189,19 +189,8 @@ extension DebugDataHandler {
             return nil
         }
         
-        var roomTag: Int
-        
-        switch roomType {
-        case .oneToOne:   roomTag = 0
-        case .small:      roomTag = 4
-        case .lecture:    roomTag = 2
-        case .vocational: roomTag = 2
-        case .proctor:    roomTag = 6
-        default:          return nil
-        }
-        
         let userId = "\(userName.md5())\(roleType.rawValue)"
-        let roomId = "\(roomName.md5())\(roomTag)"
+        let roomId = "\(roomName.md5())\(roomType.tag)"
         return DebugLaunchInfo(roomName: roomName,
                                roomId: roomId,
                                userName: userName,
