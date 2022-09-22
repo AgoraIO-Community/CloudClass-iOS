@@ -82,7 +82,7 @@ private extension RoomListShareAlertController {
         let version = "2.8.x"
         var baseURL = "https://solutions-apaas.agora.io/apaas/app/prod/"
         if FcrEnvironment.shared.environment != .pro {
-            baseURL = "https://solutions-apaas.agora.io/apaas/app/test/release-"
+            baseURL = "https://solutions-apaas.agora.io/apaas/app/test/"
         }
         return baseURL + version + "/index.html?sc=" + sc
     }
