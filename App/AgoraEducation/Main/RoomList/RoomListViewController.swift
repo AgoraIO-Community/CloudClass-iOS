@@ -85,32 +85,18 @@ class RoomListViewController: UIViewController {
                                of object: Any?,
                                change: [NSKeyValueChangeKey : Any]?,
                                context: UnsafeMutableRawPointer?) {
-        let offset = tableView.contentSize.height - tableView.frame.size.height + 100
+        let offset = tableView.contentSize.height - tableView.frame.size.height + 150
 
-        guard let change = change,
-              let changeNew = change[.newKey] as? CGPoint,
-              let changeOld = change[.oldKey] as? CGPoint,
+        guard offset > 0,
+              let changeNew = change?[.newKey] as? CGPoint,
+              let changeOld = change?[.oldKey] as? CGPoint,
               changeOld != changeNew,
               keyPath == "contentOffset",
-              tableView.contentOffset.y > offset,
-              !isLoading else {
+              tableView.contentOffset.y > offset else {
             return
         }
-        isLoading = true
 
-        loadUp()
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        
-        isLoading = true
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        isLoading = false
+        onPullLoadUp()
     }
 
     public override var shouldAutorotate: Bool {
@@ -147,8 +133,7 @@ private extension RoomListViewController {
     }
     
     func fetchData(nextId: String? = nil,
-                   onSuccess: (() -> Void)? = nil,
-                   onFailure: (() -> Void)? = nil) {
+                   onComplete: (() -> Void)? = nil) {
         FcrOutsideClassAPI.fetchRoomList(nextId: nextId,
                                          count: 10) { [weak self] dict in
             guard let `self` = self,
@@ -158,14 +143,20 @@ private extension RoomListViewController {
                 return
             }
             
-            if let nextId = data["nextId"] as? String {
-                self.roomNextId = nextId
+            if let nextIdFromData = data["nextId"] as? String {
+                self.roomNextId = nextIdFromData
             }
-            self.dataSource = RoomItemModel.arrayWithDataList(list)
+            
+            if let _ = nextId {
+                self.dataSource = self.dataSource + RoomItemModel.arrayWithDataList(list)
+            } else {
+                self.dataSource = RoomItemModel.arrayWithDataList(list)
+            }
+            
             self.tableView.reloadData()
-            onSuccess?()
+            onComplete?()
         } onFailure: { str in
-            onFailure?()
+            onComplete?()
             AgoraToast.toast(message: str,
                              type: .warning)
         }
@@ -196,7 +187,7 @@ private extension RoomListViewController {
         AgoraLoading.loading()
         FcrOutsideClassAPI.fetchRoomDetail(roomId: roomId,
                                            companyId: cid,
-                                           role: model.roleType) { rsp in
+                                           role: model.roleType) { [weak self] rsp in
             AgoraLoading.hide()
             guard let data = rsp["data"] as? [String: Any],
                   let token = data["token"] as? String,
@@ -392,27 +383,25 @@ private extension RoomListViewController {
     }
     
     // MARK: actions
-    @objc func refreshDown() {
+    @objc func onPullRefreshDown() {
         guard !isRefreshing else {
             return
         }
         isRefreshing = true
         
         fetchData { [weak self] in
-            self?.tableView.reloadData()
-            self?.isRefreshing = false
-            self?.refreshAction.endRefreshing()
-        } onFailure: { [weak self] in
             self?.isRefreshing = false
             self?.refreshAction.endRefreshing()
         }
     }
     
-    @objc func loadUp() {
+    @objc func onPullLoadUp() {
+        guard !isLoading else {
+            return
+        }
+        isLoading = true
+        
         fetchData(nextId: roomNextId) { [weak self] in
-            self?.tableView.reloadData()
-            self?.isLoading = false
-        } onFailure: { [weak self] in
             self?.isLoading = false
         }
     }
@@ -546,7 +535,6 @@ extension RoomListViewController: RoomListTitleViewDelegate {
 }
 // MARK: - Creations
 private extension RoomListViewController {
-    
     func createViews() {
         view.addSubview(backGroundView)
         
@@ -581,7 +569,7 @@ private extension RoomListViewController {
         
         // 下拉刷新
         refreshAction.addTarget(self,
-                                action: #selector(refreshDown),
+                                action: #selector(onPullRefreshDown),
                                 for: .valueChanged)
         tableView.addSubview(refreshAction)
         // 下拉加载

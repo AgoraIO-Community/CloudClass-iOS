@@ -112,6 +112,17 @@ enum DataSourceRoomType: CaseIterable {
         case .unselected:   return nil
         }
     }
+    
+    var tag: Int {
+        switch self {
+        case .oneToOne:     return 0
+        case .small:        return 4
+        case .lecture:      return 2
+        case .vocational:   return 2
+        case .proctor:      return 6
+        case .unselected:   return 4
+        }
+    }
 }
 
 enum DataSourceServiceType: CaseIterable {
