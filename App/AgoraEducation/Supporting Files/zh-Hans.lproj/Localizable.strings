@@ -57,6 +57,7 @@ fcr_create_more_security_detail = "水印";
 fcr_create_more_playback = "录像直播";
 fcr_create_label_roomname_empty = "房间名不能为空";
 fcr_create_tips_playback_link = "请输入录像地址";
+fcr_create_room_name_owner = "的课堂";
 
 OneToOneText = "一对一";
 SmallClassText = "互动小班课";

@@ -33,7 +33,14 @@ class RoomCreateTimeAlertController: UIViewController {
             guard let date = fromDate ?? Date() else {
                 return
             }
-            days = [date, date.tomorrow]
+            var temp = [Date]()
+            var day = date
+            temp.append(day)
+            for _ in 0..<7 {
+                day = day.tomorrow
+                temp.append(day)
+            }
+            days = temp
             pickerView.reloadAllComponents()
         }
     }
