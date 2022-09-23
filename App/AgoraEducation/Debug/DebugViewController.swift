@@ -126,8 +126,14 @@ extension DebugViewController: DebugViewDelagate {
             }
         }
         
+        var finalUserId = info.userId
+        
+        if info.roomType == .proctor {
+            finalUserId = "\(finalUserId)-\(info.deviceType.rawValue)"
+        }
+        
         data.requestToken(roomId: info.roomId,
-                          userId: "\(info.userId)-\(info.deviceType.rawValue)",
+                          userId: finalUserId,
                           userRole: info.roleType.rawValue,
                           success: tokenSuccessBlock,
                           failure: failureBlock)
