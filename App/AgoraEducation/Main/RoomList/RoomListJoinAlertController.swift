@@ -161,7 +161,7 @@ private extension RoomListJoinAlertController {
         let height = value.cgRectValue.size.height
         var contentHeight: CGFloat = 446
         if idTextField.isEditing {
-            contentHeight = idTextField.frame.maxY + height
+            contentHeight = idTextField.frame.maxY + height + 40
         } else if nameTextField.isEditing {
             contentHeight = nameTextField.frame.maxY + height
         }
@@ -195,10 +195,21 @@ extension RoomListJoinAlertController: UITextFieldDelegate {
         guard let text = textField.text else {
             return true
         }
-        if text.count > 50 && string.count != 0 {
-            return false
+        if textField == idTextField {
+            if text.count > 50 && string.count != 0 {
+                return false
+            }
+            let regex = "^[0-9]*$"
+            let format = NSPredicate(format: "SELF MATCHES %@" , regex).evaluate(with: string)
+            return format
+        } else if textField == nameTextField {
+            if text.count > 50 && string.count != 0 {
+                return false
+            }
+            return true
+        } else {
+            return true
         }
-        return true
     }
 }
 // MARK: - Creations

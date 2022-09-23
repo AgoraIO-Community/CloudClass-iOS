@@ -26,7 +26,7 @@ class FcrLanguageViewController: FcrOutsideClassBaseController {
     }
     
     func reloadRootViews() {
-        let navi = FcrNavigationController(rootViewController: LoginViewController())
+        let navi = FcrNavigationController(rootViewController: RoomListViewController())
         var viewControllers = navi.viewControllers
         viewControllers.append(FcrSettingsViewController())
         viewControllers.append(FcrGeneralSettingsViewController())

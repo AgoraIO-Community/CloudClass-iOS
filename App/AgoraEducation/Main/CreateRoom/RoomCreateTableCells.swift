@@ -35,9 +35,19 @@ class RoomBaseInfoCell: UITableViewCell, UITextFieldDelegate {
         }
     }
     
+    public var inputText: String? {
+        didSet {
+            guard inputText != oldValue else {
+                return
+            }
+            textFeild.text = inputText
+            textFieldDidEndEditing(textFeild)
+        }
+    }
+    
     private let cardView = UIView()
     
-    public let textFeild = UITextField(frame: .zero)
+    private let textFeild = UITextField(frame: .zero)
     
     private let editIcon = UIImageView(image: UIImage(named: "fcr_room_create_edit"))
     private let editInfoLabel = UILabel()
@@ -127,7 +137,8 @@ class RoomBaseInfoCell: UITableViewCell, UITextFieldDelegate {
             make?.right.equalTo()(editInfoLabel.mas_left)
         }
         textFeild.mas_makeConstraints { make in
-            make?.left.right().equalTo()(0)
+            make?.left.equalTo()(16)
+            make?.right.equalTo()(-16)
             make?.top.height().equalTo()(editInfoLabel)
         }
         lineView.mas_makeConstraints { make in

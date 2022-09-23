@@ -81,7 +81,7 @@ class RoomCreateViewController: UIViewController {
     
     private var moreSettings: [RoomCreateMoreSetting] = []
     
-    private var roomName: String?
+    private var roomName: String? = FcrUserInfoPresenter.shared.nickName + "fcr_create_room_name_owner".ag_localized()
     
     private var selectedRoomType: AgoraEduCoreRoomType = .small {
         didSet {
@@ -317,6 +317,7 @@ extension RoomCreateViewController: UITableViewDelegate, UITableViewDataSource {
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == kSectionRoomType {
             let cell = tableView.dequeueReusableCell(withClass: RoomBaseInfoCell.self)
+            cell.inputText = roomName
             cell.optionsView = collectionView
             cell.delegate = self
             return cell

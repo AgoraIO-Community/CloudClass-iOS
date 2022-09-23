@@ -234,8 +234,10 @@ private extension RoomListViewController {
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
         if model.serviceType == .livePremium {
             latencyLevel = .ultraLow
+            model.serviceType = nil
         } else if model.serviceType == .liveStandard {
             latencyLevel = .low
+            model.serviceType = nil
         }
         var roomType: AgoraEduRoomType
         switch model.roomType {
@@ -411,7 +413,6 @@ private extension RoomListViewController {
         self.navigationController?.pushViewController(vc,
                                                       animated: true)
     }
-    
 }
 // MARK: - RoomListItemCell Call Back
 extension RoomListViewController: RoomListItemCellDelegate {
@@ -504,7 +505,6 @@ extension RoomListViewController: UITableViewDelegate, UITableViewDataSource {
             return 0
         }
     }
-    
 }
 // MARK: - RoomListTitleViewDelegate
 extension RoomListViewController: RoomListTitleViewDelegate {

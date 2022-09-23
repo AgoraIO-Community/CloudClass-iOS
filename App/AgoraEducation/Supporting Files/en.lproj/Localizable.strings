@@ -57,6 +57,7 @@ fcr_create_more_security_detail = "Watermark";
 fcr_create_more_playback = "Live&Playback";
 fcr_create_label_roomname_empty = "The Room Name cannot  be empty";
 fcr_create_tips_playback_link = "Please input the url of the playback";
+fcr_create_room_name_owner = "'s Classroom";
 
 OneToOneText = "One to One Classroom";
 SmallClassText = "Small Classroom";
