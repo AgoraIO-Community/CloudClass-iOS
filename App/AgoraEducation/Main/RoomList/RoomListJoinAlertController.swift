@@ -143,13 +143,13 @@ private extension RoomListJoinAlertController {
     @objc func onClickTeacher(_ sender: UIButton) {
         sender.isSelected = true
         studentButton.isSelected = false
-        inputModel?.roleType = 2
+        inputModel?.roleType = 1
     }
     
     @objc func onClickStudent(_ sender: UIButton) {
         sender.isSelected = true
         teacherButton.isSelected = false
-        inputModel?.roleType = 1
+        inputModel?.roleType = 2
     }
     
     @objc func onKeyBoardShow(_ sender: NSNotification) {

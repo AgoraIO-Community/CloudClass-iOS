@@ -81,7 +81,7 @@ class LoginStartViewController: UIViewController {
             vc.urlStr = redirectURL
             self.navigationController?.pushViewController(vc,
                                                           animated: true)
-        } onFailure: { msg in
+        } onFailure: { code, msg in
             AgoraLoading.hide()
             AgoraToast.toast(message: msg,
                              type: .error)

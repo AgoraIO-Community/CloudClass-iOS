@@ -81,7 +81,7 @@ class RoomCreateViewController: UIViewController {
     
     private var moreSettings: [RoomCreateMoreSetting] = []
     
-    private var roomName: String? = FcrUserInfoPresenter.shared.nickName + "fcr_create_room_name_owner".ag_localized()
+    private var roomName: String?
     
     private var selectedRoomType: AgoraEduCoreRoomType = .small {
         didSet {
@@ -102,7 +102,7 @@ class RoomCreateViewController: UIViewController {
         }
     }
     
-    private var selectDate = Date()
+    private var selectDate: Date?
     
     private var serviceTypes = [AgoraEduServiceType]()
     
@@ -148,8 +148,7 @@ class RoomCreateViewController: UIViewController {
     private let cancelButton = UIButton(type: .custom)
     
     static func showCreateRoom(complete: (() -> Void)?) {
-        guard let root = UIApplication.shared.keyWindow?.rootViewController
-        else {
+        guard let root = UIApplication.shared.keyWindow?.rootViewController else {
             return
         }
         let vc = RoomCreateViewController()
@@ -160,9 +159,12 @@ class RoomCreateViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         view.backgroundColor = UIColor(hex: 0xF8FAFF)
+        if FcrUserInfoPresenter.shared.nickName.count > 0 {
+            roomName = FcrUserInfoPresenter.shared.nickName + "fcr_create_room_name_owner".ag_localized()
+        }
         createViews()
         createConstrains()
     }
@@ -202,9 +204,10 @@ private extension RoomCreateViewController {
                              type: .error)
             return
         }
-        selectDate.second = 0
-        selectDate.millisecond = 0
-        let startTime = UInt(selectDate.timeIntervalSince1970)
+        var date = selectDate ?? Date()
+        date.second = 0
+        date.millisecond = 0
+        let startTime = UInt(date.timeIntervalSince1970)
         let endTime = startTime + 30*60
         var roomProperties = [String: Any]()
         if let servicetype = selectedServiceType {
@@ -229,9 +232,9 @@ private extension RoomCreateViewController {
             self.complete?()
             self.complete = nil
             self.dismiss(animated: true)
-        } onFailure: { str in
+        } onFailure: { code, msg in
             AgoraLoading.hide()
-            AgoraToast.toast(message: str,
+            AgoraToast.toast(message: msg,
                              type: .error)
         }
     }

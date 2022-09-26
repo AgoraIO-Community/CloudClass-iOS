@@ -155,9 +155,9 @@ private extension RoomListViewController {
             
             self.tableView.reloadData()
             onComplete?()
-        } onFailure: { str in
+        } onFailure: { code, msg in
             onComplete?()
-            AgoraToast.toast(message: str,
+            AgoraToast.toast(message: msg,
                              type: .warning)
         }
     }
@@ -213,8 +213,9 @@ private extension RoomListViewController {
             } else {
                 complete(model)
             }
-        } onFailure: { str in
+        } onFailure: { code, msg in
             AgoraLoading.hide()
+            let str = (code == 404) ? "fcr_joinroom_tips_emptyid".ag_localized() : msg
             AgoraToast.toast(message: str,
                              type: .warning)
         }

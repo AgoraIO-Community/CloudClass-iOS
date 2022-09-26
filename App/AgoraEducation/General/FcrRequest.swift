@@ -15,7 +15,7 @@ class FcrOutsideClassAPI {
                                 companyId: String,
                                 role: Int,
                                 onSuccess: (([String: Any]) -> Void)?,
-                                onFailure: ((String) -> Void)?) {
+                                onFailure: ((Int, String) -> Void)?) {
         let url = FcrEnvironment.shared.server + "/edu/companys/\(companyId)/v1/rooms"
         let event = ArRequestEvent(name: "fetch room detail")
         let type = ArRequestType.http(.put,
@@ -34,7 +34,7 @@ class FcrOutsideClassAPI {
     static func fetchRoomList(nextId: String?,
                               count: UInt,
                               onSuccess: (([String: Any]) -> Void)?,
-                              onFailure: ((String) -> Void)?) {
+                              onFailure: ((Int, String) -> Void)?) {
         let companyId = FcrUserInfoPresenter.shared.companyId
         let url = FcrEnvironment.shared.server + "/edu/companys/\(companyId)/v1/rooms"
         let event = ArRequestEvent(name: "fetch room list")
@@ -59,7 +59,7 @@ class FcrOutsideClassAPI {
                                 endTine: UInt,
                                 roomProperties: [String: Any]?,
                                 onSuccess: (([String: Any]) -> Void)?,
-                                onFailure: ((String) -> Void)?) {
+                                onFailure: ((Int, String) -> Void)?) {
         let companyId = FcrUserInfoPresenter.shared.companyId
         let url = FcrEnvironment.shared.server + "/edu/companys/\(companyId)/v1/rooms"
         let event = ArRequestEvent(name: "Create ClassRoom")
@@ -80,7 +80,7 @@ class FcrOutsideClassAPI {
     }
     /** 用户注销*/
     static func logoff(onSuccess: (([String: Any]) -> Void)?,
-                       onFailure: ((String) -> Void)?) {
+                       onFailure: ((Int, String) -> Void)?) {
         let url = FcrEnvironment.shared.server + "/sso/v2/users/auth"
         let event = ArRequestEvent(name: "FcrOutsideClassAPI buildToken")
         let type = ArRequestType.http(.delete,
@@ -95,7 +95,7 @@ class FcrOutsideClassAPI {
     }
     /** 获取用户基本信息*/
     static func fetchUserInfo(onSuccess: (([String: Any]) -> Void)?,
-                              onFailure: ((String) -> Void)?) {
+                              onFailure: ((Int, String) -> Void)?) {
         let url = FcrEnvironment.shared.server + "/sso/v2/users/info"
         let event = ArRequestEvent(name: "FcrOutsideClassAPI buildToken")
         let type = ArRequestType.http(.get,
@@ -115,7 +115,7 @@ class FcrOutsideClassAPI {
                                userRole: Int,
                                userId: String,
                                onSuccess: (([String: Any]) -> Void)?,
-                               onFailure: ((String) -> Void)?) {
+                               onFailure: ((Int, String) -> Void)?) {
         let url = FcrEnvironment.shared.server + "/edu/v3/rooms/\(roomId)/roles/\(userRole)/users/\(userId)/token"
         let event = ArRequestEvent(name: "FcrOutsideClassAPI buildToken")
         let type = ArRequestType.http(.get,
@@ -132,7 +132,7 @@ class FcrOutsideClassAPI {
                            userRole: Int,
                            userId: String,
                            onSuccess: (([String: Any]) -> Void)?,
-                           onFailure: ((String) -> Void)?) {
+                           onFailure: ((Int, String) -> Void)?) {
         let url = FcrEnvironment.shared.server + "/edu/v4/rooms/\(roomUuid)/roles/\(userRole)/users/\(userId)/token"
         let event = ArRequestEvent(name: "FcrOutsideClassAPI buildToken")
         let type = ArRequestType.http(.get,
@@ -148,7 +148,7 @@ class FcrOutsideClassAPI {
     /** 从服务端获取授权地址
      */
     static func getAuthWebPage(onSuccess: (([String: Any]) -> Void)?,
-                               onFailure: ((String) -> Void)?) {
+                               onFailure: ((Int, String) -> Void)?) {
         let url = FcrEnvironment.shared.server + "/sso/v2/users/oauth/redirectUrl"
         let event = ArRequestEvent(name: "FcrOutsideClassAPI getAuthWebPage")
         let type = ArRequestType.http(.post,
@@ -165,10 +165,10 @@ class FcrOutsideClassAPI {
     /** 刷新access_token
      */
     static func refreshToken(onSuccess: (([String: Any]) -> Void)?,
-                             onFailure: ((String) -> Void)?) {
+                             onFailure: ((Int, String) -> Void)?) {
         let refreshToken = FcrUserInfoPresenter.shared.refreshToken
         if refreshToken.isEmpty {
-            onFailure?("")
+            onFailure?(0, "")
             // 全token失效
             FcrUserInfoPresenter.shared.logout {
                 LoginStartViewController.showLoginIfNot(complete: nil)
@@ -187,7 +187,7 @@ class FcrOutsideClassAPI {
                   let accessToken = data["accessToken"] as? String,
                   let refreshToken = data["refreshToken"] as? String
             else {
-                onFailure?("")
+                onFailure?(0, "")
                 return
             }
             FcrUserInfoPresenter.shared.accessToken = accessToken
@@ -205,11 +205,11 @@ fileprivate class FcrRequest {
     
     private var onSuccess: (([String: Any]) -> Void)?
     
-    private var onFailure: ((String) -> Void)?
+    private var onFailure: ((Int, String) -> Void)?
     
     init(task: ArRequestTask,
          onSuccess: (([String: Any]) -> Void)?,
-         onFailure: ((String) -> Void)?) {
+         onFailure: ((Int, String) -> Void)?) {
         self.task = task
         self.onSuccess = onSuccess
         self.onFailure = onFailure
@@ -228,16 +228,16 @@ fileprivate class FcrRequest {
                 FcrOutsideClassAPI.refreshToken { dict in
                     // 刷新token后重新发起请求
                     self.sendRequest()
-                } onFailure: { msg in
-                    self.onFailure?(msg)
+                } onFailure: { code, msg in
+                    self.onFailure?(code, msg)
                 }
             } else if code == 400 { // 全token失效
-                self.onFailure?("Access Denied")
+                self.onFailure?(0, "Access Denied")
                 FcrUserInfoPresenter.shared.logout {
                     LoginStartViewController.showLoginIfNot(complete: nil)
                 }
             } else {
-                self.onFailure?(error.localizedDescription)
+                self.onFailure?(code, error.localizedDescription)
             }
             return .resign
         })
