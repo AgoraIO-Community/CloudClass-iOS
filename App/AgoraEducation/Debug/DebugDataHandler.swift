@@ -315,7 +315,7 @@ extension DebugDataHandler {
                                                userId: userId,
                                                token: token)
             success(resp)
-        } onFailure: { msg in
+        } onFailure: { code, msg in
             let error = NSError.init(domain: msg, code: -1)
             failure(error)
         }

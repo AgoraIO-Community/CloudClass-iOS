@@ -269,7 +269,7 @@ private extension LoginViewController {
         }
         FcrOutsideClassAPI.fetchUserInfo { dict in
             
-        } onFailure: { msg in
+        } onFailure: { code, msg in
             
         }
     }
@@ -508,7 +508,7 @@ private extension LoginViewController {
                                                userId: userId,
                                                token: token)
             success(resp)
-        } onFailure: { msg in
+        } onFailure: { code, msg in
             let error = NSError.init(domain: msg, code: -1)
             failure(error)
         }

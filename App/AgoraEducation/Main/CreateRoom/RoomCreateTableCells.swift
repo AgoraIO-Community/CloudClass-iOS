@@ -333,12 +333,14 @@ class RoomTimeInfoCell: UITableViewCell {
     
     public var startDate: Date? {
         didSet {
-            guard let date = startDate else {
-                return
+            if let date = startDate {
+                startTimeLabel.text = date.string(withFormat: "fcr_create_table_time_format".ag_localized())
+                let endDate = date.addingTimeInterval(30*60)
+                endTimeLabel.text = endDate.string(withFormat: "HH:mm")
+            } else {
+                startTimeLabel.text = "fcr_create_current_time".ag_localized()
+                endTimeLabel.text = ""
             }
-            startTimeLabel.text = date.string(withFormat: "fcr_create_table_time_format".ag_localized())
-            let endDate = startDate?.addingTimeInterval(30*60)
-            endTimeLabel.text = endDate?.string(withFormat: "HH:mm")
         }
     }
     
@@ -418,6 +420,7 @@ class RoomTimeInfoCell: UITableViewCell {
         endTimeLabel.mas_makeConstraints { make in
             make?.left.equalTo()(endTitleLabel)
             make?.centerY.equalTo()(startTimeLabel)
+            make?.height.greaterThanOrEqualTo()(10)
         }
         endInfoLabel.mas_makeConstraints { make in
             make?.left.equalTo()(endTimeLabel.mas_right)?.offset()(8)

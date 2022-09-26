@@ -57,9 +57,9 @@ private extension FcrLogoffViewController {
             FcrUserInfoPresenter.shared.logout {
                 self.navigationController?.popToRootViewController(animated: true)
             }
-        } onFailure: { str in
+        } onFailure: { code, msg in
             AgoraLoading.hide()
-            AgoraToast.toast(message: str,
+            AgoraToast.toast(message: msg,
                              type: .error)
         }
     }
