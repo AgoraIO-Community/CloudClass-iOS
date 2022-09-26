@@ -375,20 +375,20 @@ private extension AgoraLectureUIManager {
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))
         }
+        let boardProportion: CGFloat = 9 / 16
+        let boardWidth: CGFloat = AgoraFit.scale(525)
+        let boardHeight = boardWidth * boardProportion
         boardController.view.mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(465))
-            make?.height.equalTo()(AgoraFit.scale(262))
+            make?.width.equalTo()(boardWidth)
+            make?.height.equalTo()(boardHeight)
         }
         screenSharingController.view.mas_makeConstraints { make in
-            make?.left.bottom().equalTo()(0)
-            make?.width.equalTo()(AgoraFit.scale(465))
-            make?.height.equalTo()(AgoraFit.scale(262))
+            make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         studentsRenderController.view.mas_makeConstraints { make in
             make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
-            make?.left.equalTo()(0)
-            make?.right.equalTo()(boardController.view.mas_right)
+            make?.left.right().equalTo()(boardController.view)
             make?.bottom.equalTo()(boardController.view.mas_top)?.offset()(AgoraFit.scale(-2))
         }
         teacherRenderController.view.mas_makeConstraints { make in
