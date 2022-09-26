@@ -13,7 +13,7 @@
 // room
 fcr_room_class_time_away = "距离上课还有：";
 fcr_room_class_started = "已上课：";
-fcr_room_class_over = "课程已结束：";
+fcr_room_class_over = "课程已结束";
 fcr_room_class_not_start = "课程未开始";
 fcr_room_class_end_warning = "课程还有{xxx}分钟结束";
 fcr_room_close_warning = "距离教室关闭还有{xxx}分钟";

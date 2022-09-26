@@ -220,6 +220,10 @@ extension AgoraSmallUIManager: AgoraToolCollectionUIControllerDelegate {
 // MARK: - AgoraChatUIControllerDelegate
 extension AgoraSmallUIManager: AgoraHandsListUIControllerDelegate {
     func updateHandsListRedLabel(_ count: Int) {
+        if count == 0,
+           ctrlView == handsListController.view {
+            ctrlView = nil
+        }
         toolBarController.updateHandsListCount(count)
     }
 }

@@ -236,9 +236,8 @@ extension AgoraToolBarUIController: UICollectionViewDelegate,
             cell.setImage(tool.cellImage())
             cell.redLabel.text = "\(handsListCount)"
             cell.redLabel.isHidden = (handsListCount == 0)
-            if handsListCount > 0  {
-                cell.aSelected = (selectedTool == tool)
-            }
+            let aSelected = (handsListCount > 0)
+            cell.aSelected = aSelected
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarItemCell.self,

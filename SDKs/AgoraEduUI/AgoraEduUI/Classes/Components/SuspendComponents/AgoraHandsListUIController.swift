@@ -84,6 +84,12 @@ extension AgoraHandsListUIController: AgoraEduUserHandler {
                          payload: [String : Any]?) {
         dataSource.removeAll(where: {$0.userUuid == userUuid})
     }
+    
+    func onRemoteUserLeft(user: AgoraEduContextUserInfo,
+                          operatorUser: AgoraEduContextUserInfo?,
+                          reason: AgoraEduContextUserLeaveReason) {
+        dataSource.removeAll(where: {$0.userUuid == user.userUuid})
+    }
 }
 // MARK: - HandsUpItemCellDelegate
 extension AgoraHandsListUIController: AgoraHandsUpItemCellDelegate {

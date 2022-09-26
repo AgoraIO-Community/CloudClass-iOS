@@ -17,7 +17,7 @@ class AgoraStudentsRenderUIController: UIViewController {
     private weak var delegate: AgoraRenderUIControllerDelegate?
     
     private let kItemGap: CGFloat = AgoraFit.scale(2)
-    private let kItemMaxCount: CGFloat = 4
+    private let kItemMaxCount: CGFloat = 5
         
     var collectionView: UICollectionView!    
     
@@ -358,7 +358,8 @@ extension AgoraStudentsRenderUIController: UICollectionViewDelegate,
                                layout collectionViewLayout: UICollectionViewLayout,
                                sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemWidth = (view.bounds.width + kItemGap) / kItemMaxCount - kItemGap
-        return CGSize(width: itemWidth, height: collectionView.bounds.height)
+        return CGSize(width: itemWidth,
+                      height: collectionView.bounds.height)
     }
     
     public func collectionView(_ collectionView: UICollectionView,
