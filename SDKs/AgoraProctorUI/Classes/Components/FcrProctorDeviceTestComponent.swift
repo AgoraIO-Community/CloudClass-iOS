@@ -14,7 +14,7 @@ import AVFoundation
     func onDeviceTestExit()
 }
 
-@objc public class FcrProctorDeviceTestComponent: UIViewController {
+class FcrProctorDeviceTestComponent: PtUIComponent {
     /**view**/
     private lazy var contentView = FcrProctorDeviceTestComponentView(frame: .zero)
     /**context**/

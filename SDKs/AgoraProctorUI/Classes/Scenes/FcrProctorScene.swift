@@ -17,7 +17,7 @@ import Masonry
     func onExit(reason: FcrUISceneExitReason)
 }
 
-@objc public class FcrProctorScene: UIViewController {
+@objc public class FcrProctorScene: UIViewController, PtAlert {
     private var deviceTest: FcrProctorDeviceTestComponent?
     
     private lazy var exam = FcrProctorExamComponent(contextPool: contextPool,

@@ -31,6 +31,35 @@ func ValueTransform<Result: RawRepresentable>(enumValue: Any?,
     }
 }
 
+protocol PtAlert where Self: UIViewController {
+    func showAlert(title: String,
+                   contentList: [String],
+                   actions: [AgoraAlertAction])
+}
+
+extension PtAlert {
+    func showAlert(title: String = "",
+                   contentList: [String],
+                   actions: [AgoraAlertAction]) {
+        let alert = UIConfig.alert
+        
+        let alertController = AgoraAlert()
+        
+        alertController.backgroundColor = alert.backgroundColor
+        alertController.lineColor = .clear
+        alertController.shadowColor = alert.shadow.color
+        alertController.titleColor = alert.title.color
+        alertController.buttonColor = alert.button.normalTitleColor
+        alertController.contentFont = alert.message.font
+        alertController.normalContentColor = alert.message.color
+        
+        alertController.show(title: title,
+                             contentList: contentList,
+                             actions: actions,
+                             in: self)
+    }
+}
+
 extension UIImage {
     class func fcr_named(_ named: String) -> UIImage? {
         let bundle = Bundle.AgoraProctorUI()
