@@ -134,7 +134,7 @@ private extension RoomListItemCell {
             cardView.alpha = 1
             stateLabel.text = "fcr_room_list_upcoming".ag_localized()
             stateIcon.isHidden = true
-            cardView.backgroundColor = UIColor(hex: 0x5765FF)
+            cardView.backgroundColor = UIColor(hex: 0xE4E6FF)
             shareButton.isHidden = false
             enterButton.isHidden = false
             enterButton.backgroundColor = UIColor(hex: 0x357BF6)
@@ -156,7 +156,7 @@ private extension RoomListItemCell {
             timeLabel.textColor = .black
             typeLabel.textColor = .black
             stateLabel.mas_updateConstraints { make in
-                make?.left.equalTo()(14)
+                make?.left.equalTo()(17)
             }
         case .living:
             cardView.alpha = 1
@@ -203,7 +203,7 @@ private extension RoomListItemCell {
             timeLabel.textColor = .black
             typeLabel.textColor = .black
             stateLabel.mas_updateConstraints { make in
-                make?.left.equalTo()(14)
+                make?.left.equalTo()(17)
             }
         default:
             break
@@ -300,7 +300,7 @@ private extension RoomListItemCell {
             make?.left.top().equalTo()(14)
         }
         stateLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(14)
+            make?.left.equalTo()(17)
             make?.centerY.equalTo()(stateIcon)
         }
         verticalLine.mas_makeConstraints { make in

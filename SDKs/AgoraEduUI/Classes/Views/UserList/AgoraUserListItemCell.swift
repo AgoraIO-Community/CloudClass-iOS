@@ -12,14 +12,14 @@ import UIKit
 // 花名册上的 cell
 protocol AgoraRosterItemCellDelegate: NSObjectProtocol {
     func onDidSelectFunction(_ fn: AgoraRosterFunction,
-                             at index: NSIndexPath)
+                             at index: IndexPath)
 }
 
 class AgoraUserListItemCell: UITableViewCell {
     
     weak var delegate: AgoraRosterItemCellDelegate?
     
-    var indexPath: NSIndexPath?
+    var indexPath: IndexPath?
     
     var supportFuncs: [AgoraRosterFunction]? {
         didSet {

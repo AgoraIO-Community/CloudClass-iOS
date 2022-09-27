@@ -13,6 +13,8 @@ protocol RoomListTitleViewDelegate: NSObjectProtocol {
     
     func onClickCreate()
     
+    func onClickSetting()
+    
     func onEnterDebugMode()
 }
 class RoomListTitleView: UIView {
@@ -30,6 +32,8 @@ class RoomListTitleView: UIView {
     private let joinButton = UIButton(type: .custom)
     
     private let createButton = UIButton(type: .custom)
+    
+    private let settingButton = UIButton(type: .custom)
     
     private var debugCount: Int = 0
     
@@ -86,6 +90,10 @@ class RoomListTitleView: UIView {
         }
         delegate?.onEnterDebugMode()
     }
+    
+    @objc func onClickSetting(_ sender: UIButton) {
+        delegate?.onClickSetting()
+    }
 }
 // MARK: - Creations
 private extension RoomListTitleView {
@@ -98,7 +106,8 @@ private extension RoomListTitleView {
         titleLabel.text = "fcr_room_list_title".ag_localized()
         titleLabel.isUserInteractionEnabled = true
         addSubview(titleLabel)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onTouchDebug))
+        let tap = UITapGestureRecognizer(target: self,
+                                         action: #selector(onTouchDebug))
         titleLabel.addGestureRecognizer(tap)
         
         joinActionView.iconView.image = UIImage(named: "fcr_room_list_join")
@@ -136,6 +145,13 @@ private extension RoomListTitleView {
                                action: #selector(onClickCreate(_:)),
                                for: .touchUpInside)
         addSubview(createButton)
+        
+        settingButton.setImage(UIImage(named: "fcr_room_list_setting"),
+                               for: .normal)
+        settingButton.addTarget(self,
+                                action: #selector(onClickSetting(_:)),
+                                for: .touchUpInside)
+        addSubview(settingButton)
     }
     
     func createConstrains() {
@@ -167,6 +183,10 @@ private extension RoomListTitleView {
             make?.left.equalTo()(joinButton.mas_right)?.offset()(12)
             make?.width.height().equalTo()(32)
             make?.centerY.equalTo()(titleLabel)
+        }
+        settingButton.mas_makeConstraints { make in
+            make?.centerY.equalTo()(titleLabel)
+            make?.right.equalTo()(-14)
         }
     }
 }

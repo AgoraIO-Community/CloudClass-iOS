@@ -27,9 +27,6 @@ class RoomListViewController: UIViewController {
     let tableView = UITableView(frame: .zero, style: .plain)
     
     let titleView = RoomListTitleView(frame: .zero)
-    
-    let settingButton = UIButton(type: .custom)
-    
     /**data**/
     var dataSource = [RoomItemModel]()
     
@@ -408,12 +405,6 @@ private extension RoomListViewController {
             self?.isLoading = false
         }
     }
-    
-    @objc func onClickSetting(_ sender: UIButton) {
-        let vc = FcrSettingsViewController()
-        self.navigationController?.pushViewController(vc,
-                                                      animated: true)
-    }
 }
 // MARK: - RoomListItemCell Call Back
 extension RoomListViewController: RoomListItemCellDelegate {
@@ -533,6 +524,12 @@ extension RoomListViewController: RoomListTitleViewDelegate {
             }
         }
     }
+    
+    func onClickSetting() {
+        let vc = FcrSettingsViewController()
+        self.navigationController?.pushViewController(vc,
+                                                      animated: true)
+    }
 }
 // MARK: - Creations
 private extension RoomListViewController {
@@ -560,14 +557,6 @@ private extension RoomListViewController {
         titleView.delegate = self
         titleView.clipsToBounds = true
         view.addSubview(titleView)
-        
-        settingButton.setImage(UIImage(named: "fcr_room_list_setting"),
-                               for: .normal)
-        settingButton.addTarget(self,
-                                action: #selector(onClickSetting(_:)),
-                                for: .touchUpInside)
-        view.addSubview(settingButton)
-        
         // 下拉刷新
         refreshAction.addTarget(self,
                                 action: #selector(onPullRefreshDown),
@@ -591,10 +580,6 @@ private extension RoomListViewController {
         titleView.mas_makeConstraints { make in
             make?.left.top().right().equalTo()(0)
             make?.height.equalTo()(kTitleMax)
-        }
-        settingButton.mas_makeConstraints { make in
-            make?.top.equalTo()(68)
-            make?.right.equalTo()(-14)
         }
     }
 }
