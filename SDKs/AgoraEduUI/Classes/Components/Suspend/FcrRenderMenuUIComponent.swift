@@ -130,7 +130,7 @@ class FcrRenderMenuUIComponent: FcrUIComponent {
             if showRoleType == .teacher {
                 temp = [.allOffStage]
             } else if showRoleType == .student {
-                temp = [.camera, .mic, .stage]
+                temp = [.camera, .mic, .auth , .stage]
             }
         default:
             break

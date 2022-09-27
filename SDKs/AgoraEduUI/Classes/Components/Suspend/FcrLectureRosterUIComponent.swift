@@ -54,6 +54,15 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
     override func update(model: AgoraRosterModel) {
         let isTeacher = (userController.getLocalUserInfo().userRole == .teacher)
         model.kickEnable = isTeacher
+        // 上下台操作
+        let coHosts = userController.getCoHostList()
+        var isCoHost = false
+        if let _ = coHosts?.first(where: {$0.userUuid == model.uuid}) {
+            isCoHost = true
+        }
+        if model.stageState.isOn != isCoHost {
+            model.stageState.isOn = isCoHost
+        }
         guard let stream = streamController.getStreamList(userUuid: model.uuid)?.first else {
             model.micState = (false, false, false)
             model.cameraState = (false, false, false)
@@ -150,8 +159,8 @@ private extension FcrLectureRosterUIComponent {
     func refreshData() {
         setupTeacherInfo(name: userController.getUserList(role: .teacher)?.first?.userName)
         userController.getUserList(roleList: [AgoraEduContextUserRole.student.rawValue],
-                                     pageIndex: 1,
-                                     pageSize: 20) { [weak self] students in
+                                   pageIndex: 1,
+                                   pageSize: 20) { [weak self] students in
             guard let `self` = self else {
                 return
             }
@@ -161,6 +170,8 @@ private extension FcrLectureRosterUIComponent {
                 temp.append(model)
             }
             self.dataSource = temp
+            let uuids = temp.map({$0.uuid})
+            self.update(by: uuids)
         } failure: { error in
             print(error)
         }
