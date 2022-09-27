@@ -196,7 +196,7 @@ struct FcrUIItemAlertMessage: FcrUIItemProtocol {
     var enable: Bool  = true
     
     let color: UIColor     = FcrUIColorGroup.textLightContrastColor
-    let font: UIFont             = FcrUIFontGroup.font14
+    let font: UIFont       = FcrUIFontGroup.font14
 }
 
 struct FcrUIItemAlertButton: FcrUIItemProtocol {

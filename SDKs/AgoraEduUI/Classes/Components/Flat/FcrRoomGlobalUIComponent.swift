@@ -97,14 +97,18 @@ extension FcrRoomGlobalUIComponent: AgoraEduRoomHandler {
     }
     
     func onRoomClosed() {
-        AgoraAlertModel()
-            .setTitle("fcr_room_class_over_notice".agedu_localized())
-            .setMessage("fcr_room_class_over".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.exitDelegate?.exitScene(reason: .normal,
-                                             type: .main)
-            }))
-            .show(in: self)
+        let title = "fcr_room_class_over_notice".agedu_localized()
+        let content = "fcr_room_class_over".agedu_localized()
+        let actionTitle = "fcr_room_class_leave_sure".agedu_localized()
+        
+        let action = AgoraAlertAction(title: actionTitle) { [weak self] _ in
+            self?.exitDelegate?.exitScene(reason: .normal,
+                                          type: .main)
+        }
+        
+        showAlert(title: title,
+                  contentList: [content],
+                  actions: [action])
     }
 }
 
@@ -117,19 +121,18 @@ extension FcrRoomGlobalUIComponent: AgoraEduSubRoomHandler {
 // MARK: - AgoraEduUserHandler
 extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
-        let action = AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-            self.exitDelegate?.exitScene(reason: .kickOut,
-                                         type: .main)
-        })
-        
         let title = "fcr_user_local_kick_out_notice".agedu_localized()
-        let message = "fcr_user_local_kick_out".agedu_localized()
+        let content = "fcr_user_local_kick_out".agedu_localized()
+        let actionTitle = "fcr_room_class_leave_sure".agedu_localized()
         
-        AgoraAlertModel()
-            .setTitle(title)
-            .setMessage(message)
-            .addAction(action: action)
-            .show(in: self)
+        let action = AgoraAlertAction(title: actionTitle) { [weak self] _ in
+            self?.exitDelegate?.exitScene(reason: .kickOut,
+                                          type: .main)
+        }
+        
+        showAlert(title: title,
+                  contentList: [content],
+                  actions: [action])
     }
     
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
@@ -253,20 +256,17 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         let laterAction = AgoraAlertAction(title: laterActionTitle)
         
         let joinActionTitle = "fcr_group_button_join".agedu_localized()
-        let joinAction = AgoraAlertAction(title: joinActionTitle,
-                                          action: { [weak self] in
+        
+        let joinAction = AgoraAlertAction(title: joinActionTitle) { [weak self] _ in
             self?.groupController.userListAcceptInvitationToSubRoom(userList: [localUserId],
                                                                      subRoomUuid: subRoomUuid,
                                                                      success: nil,
                                                                      failure: nil)
-        })
+        }
         
-        AgoraAlertModel()
-            .setTitle(title)
-            .setMessage(final)
-            .addAction(action: laterAction)
-            .addAction(action: joinAction)
-            .show(in: self)
+        showAlert(title: title,
+                  contentList: [final],
+                  actions: [laterAction, joinAction])
     }
     
     func onUserListAddedToSubRoom(userList: [String],
@@ -374,13 +374,14 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         
         isRequestingHelp = false
         
-        let confirmAction = AgoraAlertAction(title: "fcr_group_sure".agedu_localized(),
-                                             action: nil)
-        AgoraAlertModel()
-            .setTitle("fcr_group_help_title".agedu_localized())
-            .setMessage("fcr_group_help_teacher_busy_msg".agedu_localized())
-            .addAction(action: confirmAction)
-            .show(in: self)
+        let confirmAction = AgoraAlertAction(title: "fcr_group_sure".agedu_localized())
+        
+        let title = "fcr_group_help_title".agedu_localized()
+        let content = "fcr_group_help_teacher_busy_msg".agedu_localized()
+        
+        showAlert(title: title,
+                  contentList: [content],
+                  actions: [confirmAction])
     }
 }
 

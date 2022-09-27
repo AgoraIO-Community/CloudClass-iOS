@@ -28,7 +28,10 @@ protocol FcrUISceneExit: NSObjectProtocol {
                    type: FcrUISceneExitType)
 }
 
-@objc public class FcrUIScene: UIViewController, FcrUISceneExit, AgoraUIContentContainer {
+@objc public class FcrUIScene: UIViewController,
+                               AgoraUIContentContainer,
+                               FcrUISceneExit,
+                               FcrAlert {
     
     /** 容器视图，用来框出一块16：9的适配区域*/
     public var contentView: UIView = UIView()

@@ -82,7 +82,7 @@ import AgoraWidget
     // MARK: - Suspend components
     /** 设置界面 控制器*/
     private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
-                                                              subRoom: subRoom,
+                                                              isSubRoom: true,
                                                               exitDelegate: self)
     
     /** 聊天窗口 控制器*/
@@ -843,8 +843,9 @@ private extension FcrSubRoomUIScene {
 
             globalComponent.isRequestingHelp = true
 
-            let actionInvite = AgoraAlertAction(title: "fcr_group_invite".agedu_localized(),
-                                                action: { [weak self] in
+            let inviteActionTitle = "fcr_group_invite".agedu_localized()
+            
+            let actionInvite = AgoraAlertAction(title: inviteActionTitle) { [weak self] _ in
                 guard let `self` = self else {
                     return
                 }
@@ -855,17 +856,16 @@ private extension FcrSubRoomUIScene {
                                                                subRoomUuid: roomId,
                                                                success: nil,
                                                                failure: nil)
-            })
-
-            let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".agedu_localized(),
-                                                action: nil)
-
-            AgoraAlertModel()
-                .setTitle("fcr_group_help_title".agedu_localized())
-                .setMessage("fcr_group_help_content".agedu_localized())
-                .addAction(action: actionCancel)
-                .addAction(action: actionInvite)
-                .show(in: self)
+            }
+            
+            let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".agedu_localized())
+            
+            let title = "fcr_group_help_title".agedu_localized()
+            let content = "fcr_group_help_content".agedu_localized()
+            
+            showAlert(title: title,
+                      contentList: [content],
+                      actions: [actionCancel, actionInvite])
         }
     }
 }
