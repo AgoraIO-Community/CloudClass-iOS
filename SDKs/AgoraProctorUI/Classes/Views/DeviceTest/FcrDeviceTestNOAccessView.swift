@@ -12,8 +12,6 @@ class FcrDeviceTestNOAccessView: UIView {
     private lazy var titleLabel = UILabel()
     private lazy var contentLabel = UILabel()
     private lazy var card = UIView()
-    private lazy var avatarNameLabel = UILabel()
-    private lazy var avatarImageView = UIImageView()
     private lazy var imageView = UIImageView()
     
     override init(frame: CGRect) {
@@ -27,25 +25,6 @@ class FcrDeviceTestNOAccessView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func setUserName(_ name: String) {
-        avatarNameLabel.text = name.firstCharacterAsString
-    }
-    
-    func setAvartarImage(_ imageUrl: String) {
-        let url = URL(string: imageUrl)
-        avatarImageView.sd_setImage(with: url)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        avatarNameLabel.layer.cornerRadius = avatarNameLabel.frame.width / 2
-        avatarNameLabel.layer.masksToBounds = true
-        
-        avatarImageView.layer.cornerRadius = avatarImageView.frame.width / 2
-        avatarImageView.layer.masksToBounds = true
-    }
 }
 
 extension FcrDeviceTestNOAccessView: AgoraUIContentContainer {
@@ -57,9 +36,7 @@ extension FcrDeviceTestNOAccessView: AgoraUIContentContainer {
         addSubviews([card,
                      imageView,
                      titleLabel,
-                     contentLabel,
-                     avatarNameLabel,
-                     avatarImageView])
+                     contentLabel])
     }
     
     func initViewFrame() {
@@ -86,18 +63,6 @@ extension FcrDeviceTestNOAccessView: AgoraUIContentContainer {
             make?.top.equalTo()(titleLabel.mas_bottom)?.offset()(24)
             make?.right.equalTo()(card.mas_right)?.offset()(-20)
         }
-        
-        avatarNameLabel.mas_makeConstraints { make in
-            make?.centerX.equalTo()(self)
-            make?.top.equalTo()(self)
-            make?.width.height().equalTo()(100)
-        }
-        
-        avatarImageView.mas_makeConstraints { make in
-            make?.centerX.equalTo()(self)
-            make?.top.equalTo()(self)
-            make?.width.height().equalTo()(100)
-        }
     }
     
     func updateViewProperties() {
@@ -115,14 +80,6 @@ extension FcrDeviceTestNOAccessView: AgoraUIContentContainer {
         contentLabel.textColor = config.contentColor
         
         imageView.image = config.image
-        
-        let avatarConfig = UIConfig.deviceTest.avatar
-        
-        avatarNameLabel.backgroundColor = avatarConfig.backgroundColor
-        avatarNameLabel.textColor = avatarConfig.titleColor
-        avatarNameLabel.layer.borderColor = avatarConfig.borderColor.cgColor
-        avatarNameLabel.font = avatarConfig.titleFont
-        avatarNameLabel.layer.borderWidth = avatarConfig.borderWidth
     }
 }
 

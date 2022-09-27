@@ -11,7 +11,7 @@ import AudioToolbox
 import AVFoundation
 
 /** 托管课堂播放业务的控制器*/
-class VcrHostingPlayerUIComponent: UIViewController {
+class VcrHostingPlayerUIComponent: FcrUIComponent {
     
     private let roomController: AgoraEduRoomContext
     private let monitorController: AgoraEduMonitorContext
@@ -184,14 +184,18 @@ private extension VcrHostingPlayerUIComponent {
     }
     // 课程已结束，提示用户离开教室
     func notiClassIsOver() {
-        AgoraAlertModel()
-            .setTitle("fcr_room_class_over_notice".agedu_localized())
-            .setMessage("fcr_room_class_over".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitScene(reason: .normal,
-                                                 type: .main)
-            }))
-            .show(in: self)
+        let title = "fcr_room_class_over_notice".agedu_localized()
+        let content = "fcr_room_class_over".agedu_localized()
+        let actionTitle = "fcr_room_class_leave_sure".agedu_localized()
+        
+        let action = AgoraAlertAction(title: actionTitle) { [weak self] _ in
+            self?.roomDelegate?.exitScene(reason: .normal,
+                                          type: .main)
+        }
+        
+        showAlert(title: title,
+                  contentList: [content],
+                  actions: [action])
     }
     
     func setupAudioSession() {

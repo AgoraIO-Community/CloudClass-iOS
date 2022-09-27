@@ -510,7 +510,6 @@ enum AgoraBoardWidgetStepChangeType: Convertable {
     }
 }
 // courseware
-// 待定
 struct AgoraBoardWidgetCoursewareInfo: Convertable {
     var resourceUuid: String
     var resourceName: String
@@ -521,10 +520,6 @@ struct AgoraBoardWidgetCoursewareInfo: Convertable {
 
 struct AgoraBoardWidgetWhiteScene: Convertable {
     var name: String
-    var ppt: AgoraBoardWidgetWhitePptPage
-}
-
-struct AgoraBoardWidgetWhitePptPage: Convertable {
     /// 图片的 URL 地址。
     var src: String
     /// 图片的 URL 宽度。单位为像素。

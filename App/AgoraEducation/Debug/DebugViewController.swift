@@ -48,13 +48,13 @@ extension DebugViewController: DebugDataHandlerDelegate {
 // MARK: - View Delagate
 extension DebugViewController: DebugViewDelagate {
     // MARK: DebugViewDelagate
-    func didClickClose() {
+    func onClickClose() {
         FcrUserInfoPresenter.shared.qaMode = false
         dismiss(animated: true,
                 completion: nil)
     }
     
-    func didClickEnter() {
+    func onClickEnter() {
         guard let info = data.checkLaunchInfoValid() else {
             return
         }

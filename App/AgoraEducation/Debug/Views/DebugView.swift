@@ -9,8 +9,8 @@
 import AgoraUIBaseViews
 
 protocol DebugViewDelagate: NSObjectProtocol {
-    func didClickClose()
-    func didClickEnter()
+    func onClickClose()
+    func onClickEnter()
 }
 
 class DebugView: UIView {
@@ -97,12 +97,12 @@ class DebugView: UIView {
 
 // MARK: - private
 private extension DebugView {
-    @objc func didClickClose() {
-        delegate?.didClickClose()
+    @objc func onClickClose() {
+        delegate?.onClickClose()
     }
     
-    @objc func didClickEnter() {
-        delegate?.didClickEnter()
+    @objc func onClickEnter() {
+        delegate?.onClickEnter()
     }
     
     func showOptions(cell: DebugInfoCell,
@@ -212,13 +212,13 @@ extension DebugView: AgoraUIContentContainer {
         addSubview(logoImageView)
         
         closeButton.addTarget(self,
-                              action: #selector(didClickClose),
+                              action: #selector(onClickClose),
                               for: .touchUpInside)
         addSubview(closeButton)
         
         
         enterButton.addTarget(self,
-                              action: #selector(didClickEnter),
+                              action: #selector(onClickEnter),
                               for: .touchUpInside)
         addSubview(enterButton)
 

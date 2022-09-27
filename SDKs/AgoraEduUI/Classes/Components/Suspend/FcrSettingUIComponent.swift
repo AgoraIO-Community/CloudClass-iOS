@@ -12,7 +12,7 @@ import UIKit
 class FcrSettingUIComponent: FcrUIComponent {
     /**context*/
     private let mediaController: AgoraEduMediaContext
-    private let subRoom: AgoraEduSubRoomContext?
+    private let isSubRoom: Bool
     private weak var exitDelegate: FcrUISceneExit?
     
     // Views
@@ -22,10 +22,10 @@ class FcrSettingUIComponent: FcrUIComponent {
                                     height: 220)
             
     init(mediaController: AgoraEduMediaContext,
-         subRoom: AgoraEduSubRoomContext? = nil,
+         isSubRoom: Bool = false,
          exitDelegate: FcrUISceneExit? = nil) {
         self.mediaController = mediaController
-        self.subRoom = subRoom
+        self.isSubRoom = isSubRoom
         self.exitDelegate = exitDelegate
         
         super.init(nibName: nil,
@@ -150,27 +150,30 @@ private extension FcrSettingUIComponent {
     }
     
     @objc func onClickExitButton(_ sender: UIButton) {
-        if let sub = subRoom {
+        if isSubRoom {
             let title = "fcr_group_back_exit".agedu_localized()
             
             let backToMainRoomTitle = "fcr_group_back_to_main_room".agedu_localized()
-            let backToMainRoomAction = AgoraAlertAction(title: backToMainRoomTitle) { [weak self] in
-                self?.exitDelegate?.exitScene(reason: .normal,
-                                                  type: .sub)
-            }
-            
             let exitRoomTitle = "fcr_group_exit_room".agedu_localized()
-            let exitRoomAction = AgoraAlertAction(title: exitRoomTitle) { [weak self] in
-                self?.exitDelegate?.exitScene(reason: .normal,
-                                                 type: .main)
+            
+            let cancelTitle = "fcr_room_class_leave_cancel".agedu_localized()
+            let cancelAction = AgoraAlertAction(title: cancelTitle)
+            
+            let leaveTitle = "fcr_room_class_leave_sure".agedu_localized()
+            let leaveAction = AgoraAlertAction(title: leaveTitle) { [weak self] optionIndex in
+                switch optionIndex {
+                case 0:
+                    self?.exitDelegate?.exitScene(reason: .normal,
+                                                  type: .sub)
+                default:
+                    self?.exitDelegate?.exitScene(reason: .normal,
+                                                  type: .main)
+                }
             }
             
-            AgoraAlertModel()
-                .setTitle(title)
-                .setStyle(.Choice)
-                .addAction(action: backToMainRoomAction)
-                .addAction(action: exitRoomAction)
-                .show(in: self)
+            showAlert(title: title,
+                      contentList: [backToMainRoomTitle, exitRoomTitle],
+                      actions: [cancelAction, leaveAction])
         } else {
             let title = "fcr_room_class_leave_class_title".agedu_localized()
             let message = "fcr_room_exit_warning".agedu_localized()
@@ -179,17 +182,14 @@ private extension FcrSettingUIComponent {
             let cancelAction = AgoraAlertAction(title: cancelTitle)
             
             let leaveTitle = "fcr_room_class_leave_sure".agedu_localized()
-            let leaveAction = AgoraAlertAction(title: leaveTitle) { [weak self] in
+            let leaveAction = AgoraAlertAction(title: leaveTitle) { [weak self] _ in
                 self?.exitDelegate?.exitScene(reason: .normal,
-                                                  type: .main)
+                                              type: .main)
             }
             
-            AgoraAlertModel()
-                .setTitle(title)
-                .setMessage(message)
-                .addAction(action: cancelAction)
-                .addAction(action: leaveAction)
-                .show(in: self)
+            showAlert(title: title,
+                      contentList: [message],
+                      actions: [cancelAction, leaveAction])
         }
     }
 }

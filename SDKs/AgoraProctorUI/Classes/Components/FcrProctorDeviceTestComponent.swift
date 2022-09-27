@@ -14,7 +14,7 @@ import AVFoundation
     func onDeviceTestExit()
 }
 
-@objc public class FcrProctorDeviceTestComponent: UIViewController {
+class FcrProctorDeviceTestComponent: PtUIComponent {
     /**view**/
     private lazy var contentView = FcrProctorDeviceTestComponentView(frame: .zero)
     /**context**/
@@ -143,11 +143,11 @@ private extension FcrProctorDeviceTestComponent {
             return
         }
         
-        contentView.noAccessView.setUserName(userInfo.userName)
+        contentView.renderView.setUserName(userInfo.userName)
         let mainUserId = userIdPrefix.joinUserId(.main)
         if let props = contextPool.user.getUserProperties(userUuid: mainUserId),
         let avatarUrl = props["avatar"] as? String {
-            contentView.noAccessView.setAvartarImage(avatarUrl)
+            contentView.renderView.setAvartarImage(avatarUrl)
         }
     }
     

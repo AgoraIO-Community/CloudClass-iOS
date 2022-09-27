@@ -12,7 +12,7 @@ import AgoraEduCore
     func onExamExit()
 }
 
-@objc public class FcrProctorExamComponent: UIViewController {
+class FcrProctorExamComponent: PtUIComponent {
     /**view**/
     private lazy var contentView = FcrProctorExamComponentView(frame: .zero)
     
@@ -44,6 +44,7 @@ import AgoraEduCore
         contextPool.group.registerGroupEventHandler(self)
         
         checkExamState(countdown: 0)
+        setAvatarInfo()
         localSubRoomCheck()
     }
     
@@ -173,18 +174,30 @@ private extension FcrProctorExamComponent {
         let message = "fcr_exam_prep_label_leave_exam".fcr_proctor_localized()
         
         let cancelTitle = "fcr_sub_room_button_stay".fcr_proctor_localized()
-        let cancelAction = FcrAlertModelAction(title: cancelTitle)
+        let cancelAction = AgoraAlertAction(title: cancelTitle)
         
         let leaveTitle = "fcr_sub_room_button_leave".fcr_proctor_localized()
-        let leaveAction = FcrAlertModelAction(title: leaveTitle) { [weak self] in
+        let leaveAction = AgoraAlertAction(title: leaveTitle) { [weak self] _ in
             self?.exit()
         }
         
-        FcrAlertModel()
-            .setMessage(message)
-            .addAction(action: cancelAction)
-            .addAction(action: leaveAction)
-            .show(in: self)
+        showAlert(contentList: [message],
+                  actions: [cancelAction, leaveAction])
+    }
+    
+    func setAvatarInfo() {
+        // avatar
+        let userInfo = self.contextPool.user.getLocalUserInfo()
+        guard let userIdPrefix = userInfo.userUuid.getUserIdPrefix() else {
+            return
+        }
+        
+        contentView.renderView.setUserName(userInfo.userName)
+        let mainUserId = userIdPrefix.joinUserId(.main)
+        if let props = contextPool.user.getUserProperties(userUuid: mainUserId),
+        let avatarUrl = props["avatar"] as? String {
+            contentView.renderView.setAvartarImage(avatarUrl)
+        }
     }
     
     func localSubRoomCheck() {

@@ -24,7 +24,6 @@ struct FcrUIComponentDeviceTest: FcrUIComponentProtocol {
     let stateLabel      = FcrUIItemDeviceTestStateLabel()
     let titleLabel      = FcrUIItemDeviceTestTitleLabel()
     let enterButton     = FcrUIItemDeviceTestEnterButton()
-    let avatar          = FcrUIItemDeviceTestAvatar()
     let noAccess        = FcrUIItemDeviceTestNoAccess()
     let switchCamera    = FcrUIItemDeviceTestSwitchCamera()
     let bottomMask      = FcrUIItemDeviceTestBottomMask()
@@ -35,7 +34,8 @@ struct FcrUIComponentRender: FcrUIComponentProtocol {
     var enable: Bool             = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
     
-    let cornerRadius = FcrUIFrameGroup.renderCornerRadius
+    let cornerRadius: CGFloat   = FcrUIFrameGroup.renderCornerRadius
+    let avatar                  = FcrUIItemDeviceTestAvatar()
 }
 
 struct FcrUIComponentExam: FcrUIComponentProtocol {

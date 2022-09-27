@@ -15,7 +15,7 @@ import UIKit
  * 2. 花名册通用操作
  * 3. 提供数据源的增删改查方法
  */
-class FcrRosterUIComponent: UIViewController {
+class FcrRosterUIComponent: FcrUIComponent {
     
     public var suggestSize: CGSize {
         get {

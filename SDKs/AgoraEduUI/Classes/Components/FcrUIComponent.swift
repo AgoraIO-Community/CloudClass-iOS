@@ -11,7 +11,7 @@ protocol FcrUIComponentDataSource where Self: UIViewController {
     func componentNeedGrantedUserList() -> [String]
 }
 
-class FcrUIComponent: UIViewController {
+class FcrUIComponent: UIViewController, FcrAlert {
     deinit {
         #if DEBUG
         print("\(#function): \(self.classForCoder)")

@@ -150,11 +150,16 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
             make?.centerY.equalTo()(exitButton.mas_centerY)
         }
         
+        let beforeExamTipLabelSize = beforeExamTipLabel.calculateSize(font: UIConfig.exam.beforeExamTipLabel.font,
+                                                                      gap: 20,
+                                                                      minSize: CGSize(width: 100,
+                                                                                      height: 40))
+        
         beforeExamTipLabel.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.bottom.equalTo()(renderView.mas_bottom)?.offset()(-66.57)
-            make?.width.equalTo()(100)
-            make?.height.equalTo()(40)
+            make?.width.equalTo()(beforeExamTipLabelSize.width)
+            make?.height.equalTo()(beforeExamTipLabelSize.height)
         }
         
         beforeExamCountdown.mas_makeConstraints { make in
@@ -182,6 +187,11 @@ extension FcrProctorExamComponentView: AgoraUIContentContainer {
             make?.right.equalTo()(self)?.offset()(-20)
             make?.width.height().equalTo()(50)
         }
+        
+        switchCameraButton.imageView?.mas_makeConstraints({ make in
+            make?.centerX.centerY().equalTo()(switchCameraButton)
+            make?.width.height().equalTo()(40)
+        })
         
         leaveButton.mas_makeConstraints { make in
             make?.centerX.equalTo()(0)

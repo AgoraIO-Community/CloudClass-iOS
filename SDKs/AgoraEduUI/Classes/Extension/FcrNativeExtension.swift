@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 import AgoraWidget
+import UIKit
 
 func ValueTransform<Result>(value: Any?,
                             result: Result.Type) -> Result? {
@@ -28,6 +29,37 @@ func ValueTransform<Result: RawRepresentable>(enumValue: Any?,
         return value
     } else {
         return nil
+    }
+}
+
+protocol FcrAlert where Self: UIViewController {
+    func showAlert(title: String,
+                   contentList: [String],
+                   actions: [AgoraAlertAction])
+}
+
+extension FcrAlert {
+    func showAlert(title: String = "",
+                   contentList: [String],
+                   actions: [AgoraAlertAction]) {
+        let alert = UIConfig.alert
+        
+        let alertController = AgoraAlert()
+        
+        alertController.backgroundColor = alert.backgroundColor
+        alertController.lineColor = alert.sepLine.backgroundColor
+        alertController.shadowColor = alert.shadow.color
+        alertController.titleColor = alert.title.color
+        alertController.buttonColor = alert.button.normalTitleColor
+        alertController.normalContentColor = alert.message.normalColor
+        alertController.selectedContentColor = alert.message.selectedColor
+        alertController.unselectedOptionImage = alert.message.uncheckedImage
+        alertController.selectedOptionImage = alert.message.checkedImage
+        
+        alertController.show(title: title,
+                             contentList: contentList,
+                             actions: actions,
+                             in: self)
     }
 }
 
