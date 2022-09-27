@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 import SwifterSwift
+import UIKit
 
 func ValueTransform<Result>(value: Any?,
                             result: Result.Type) -> Result? {
@@ -383,27 +384,25 @@ extension Data {
     }
 }
 
-extension UICollectionViewFlowLayout {
-    func copyLayout() -> UICollectionViewFlowLayout {
-        let new = UICollectionViewFlowLayout()
-        
-        new.minimumLineSpacing = minimumLineSpacing
-        new.minimumInteritemSpacing = minimumInteritemSpacing
-        new.itemSize = itemSize
-        new.estimatedItemSize = estimatedItemSize
-        new.scrollDirection = scrollDirection
-        
-        new.headerReferenceSize = headerReferenceSize
-        new.footerReferenceSize = footerReferenceSize
-        new.sectionInset = sectionInset
-        
-        if #available(iOS 11.0, *) {
-            new.sectionInsetReference = sectionInsetReference
+extension UILabel {
+    func calculateSize(font: UIFont,
+                       gap: CGFloat = 0,
+                       minSize: CGSize = .zero,
+                       maxSize: CGSize = .zero) -> CGSize {
+        var finalSize = minSize
+        if let `text` = text {
+            let textSize = text.agora_size(font: font)
+            let sizeWithGap = CGSize(width: textSize.width + gap * 2,
+                                     height: textSize.height)
+            finalSize.width = (sizeWithGap.width > finalSize.width) ? sizeWithGap.width : finalSize.width
+            finalSize.height = (sizeWithGap.height > finalSize.height) ? sizeWithGap.height : finalSize.height
         }
         
-        new.sectionHeadersPinToVisibleBounds = sectionHeadersPinToVisibleBounds
-        new.sectionFootersPinToVisibleBounds = sectionFootersPinToVisibleBounds
+        if maxSize != .zero {
+            finalSize.width = (finalSize.width > maxSize.width) ? maxSize.width : finalSize.width
+            finalSize.height = (finalSize.height > maxSize.height) ? maxSize.height : finalSize.height
+        }
         
-        return new
+        return finalSize
     }
 }

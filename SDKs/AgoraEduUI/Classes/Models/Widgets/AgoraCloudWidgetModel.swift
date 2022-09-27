@@ -74,11 +74,7 @@ struct AgoraCloudWidgetCoursewareModel: Convertable {
 }
 
 struct AgoraCloudWidgetConvertedFile: Convertable {
-    public var name: String
-    public var ppt: AgoraCloudWidgetPptPage
-}
-
-struct AgoraCloudWidgetPptPage: Convertable {
+    var name: String
     /// 图片的 URL 地址。
     var src: String
     /// 图片的 URL 宽度。单位为像素。
@@ -87,13 +83,6 @@ struct AgoraCloudWidgetPptPage: Convertable {
     var height: Float
     /// 预览图片的 URL 地址
     var preview: String?
-    
-    func toBoard() -> AgoraBoardWidgetWhitePptPage {
-        return AgoraBoardWidgetWhitePptPage(src: src,
-                                            width: width,
-                                            height: height,
-                                            previewURL: preview)
-    }
 }
 
 extension String {
@@ -112,7 +101,10 @@ extension Array where Element == AgoraCloudWidgetConvertedFile {
         var boardArr = [AgoraBoardWidgetWhiteScene]()
         for item in self {
             let boardScene = AgoraBoardWidgetWhiteScene(name: item.name,
-                                                        ppt: item.ppt.toBoard())
+                                                        src: item.src,
+                                                        width: item.width,
+                                                        height: item.height,
+                                                        previewURL: item.preview)
             boardArr.append(boardScene)
         }
         return boardArr
