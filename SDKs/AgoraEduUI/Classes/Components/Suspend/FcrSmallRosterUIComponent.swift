@@ -187,7 +187,7 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             var list: Array<String> = self.boardUsers
-            var ifAdd = (model.authState.isOn &&
+            var ifAdd = (!model.authState.isOn &&
                          !list.contains(model.uuid))
             let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([model.uuid]) : .delete([model.uuid]))
             if let message = signal.toMessageString() {
