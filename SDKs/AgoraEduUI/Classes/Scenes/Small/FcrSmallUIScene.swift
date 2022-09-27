@@ -661,7 +661,7 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
         let reason: FcrUISceneExitReason = (isKickOut ? .kickOut : .normal)
         
         subRoom?.dismiss(reason: reason,
-                         animated: false)
+                         animated: true)
         
         for child in children {
             guard let vc = child as? AgoraUIActivity else {

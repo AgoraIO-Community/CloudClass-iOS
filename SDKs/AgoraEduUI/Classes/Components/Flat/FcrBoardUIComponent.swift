@@ -260,11 +260,11 @@ private extension FcrBoardUIComponent {
             AgoraToast.toast(message: "fcr_savecanvas_tips_save_successfully".agedu_localized(),
                              type: .notice)
         case .noAlbumAuth:
-            let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized(), action: nil)
-            AgoraAlertModel()
-                .setMessage("fcr_savecanvas_tips_save_failed_tips".agedu_localized())
-                .addAction(action: action)
-                .show(in: self)
+            let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized())
+            let content = "fcr_savecanvas_tips_save_failed_tips".agedu_localized()
+            
+            showAlert(contentList: [content],
+                      actions: [action])
         case .failureToSave:
             AgoraToast.toast(message: "fcr_savecanvas_tips_save_failed".agedu_localized(),
                              type: .error)

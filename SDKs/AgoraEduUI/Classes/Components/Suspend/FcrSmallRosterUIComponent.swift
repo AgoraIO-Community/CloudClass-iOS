@@ -228,34 +228,30 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
             }
             let kickTitle = "fcr_user_kick_out".agedu_localized()
             
-            let kickOnceTitle = "fcr_user_kick_out_once".agedu_localized()
-            let kickOnceAction = AgoraAlertAction(title: kickOnceTitle) { [weak self] in
+            let kickOnceOption = "fcr_user_kick_out_once".agedu_localized()
+            let kickForeverOption = "fcr_user_kick_out_forever".agedu_localized()
+            
+            let cancelActionTitle = "fcr_user_kick_out_cancel".agedu_localized()
+            let submitActionTitle = "fcr_user_kick_out_submit".agedu_localized()
+            
+            let cancelAction = AgoraAlertAction(title: cancelActionTitle)
+            
+            let submitAction = AgoraAlertAction(title: submitActionTitle) { [weak self] optionIndex in
                 guard let `self` = self else {
                     return
                 }
+                
+                let forever = (optionIndex == 1 ? true : false)
+                
                 self.userController.kickOutUser(userUuid: model.uuid,
-                                                forever: false,
-                                                success: nil,
-                                                failure: nil)
+                                                  forever: forever,
+                                                  success: nil,
+                                                  failure: nil)
             }
             
-            let kickForeverTitle = "fcr_user_kick_out_forever".agedu_localized()
-            let kickForeverAction = AgoraAlertAction(title: kickForeverTitle) { [weak self] in
-                guard let `self` = self else {
-                    return
-                }
-                self.userController.kickOutUser(userUuid: model.uuid,
-                                                forever: true,
-                                                success: nil,
-                                                failure: nil)
-            }
-            
-            AgoraAlertModel()
-                .setTitle(kickTitle)
-                .setStyle(.Choice)
-                .addAction(action: kickOnceAction)
-                .addAction(action: kickForeverAction)
-                .show(in: self)
+            showAlert(title: kickTitle,
+                      contentList: [kickOnceOption, kickForeverOption],
+                      actions: [cancelAction, submitAction])
             break
         case .reward:
             guard model.rewardEnable else {
