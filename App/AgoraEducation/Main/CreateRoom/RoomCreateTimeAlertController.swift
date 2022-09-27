@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AgoraUIBaseViews
 
 class RoomCreateTimeAlertController: UIViewController {
     
@@ -33,12 +34,18 @@ class RoomCreateTimeAlertController: UIViewController {
             guard let date = fromDate ?? Date() else {
                 return
             }
-            days = [date, date.tomorrow]
-            pickerView.reloadAllComponents()
+            var temp = [Date]()
+            var day = date
+            temp.append(day)
+            for _ in 0..<6 {
+                day = day.tomorrow
+                temp.append(day)
+            }
+            days = temp
+            pickerView.reloadComponent(kComponentDay)
+            currentDaySelected = true
         }
     }
-    
-    private var days = [Date]()
         
     private let contentView = UIView()
     
@@ -55,6 +62,55 @@ class RoomCreateTimeAlertController: UIViewController {
     private let cancelButton = UIButton(type: .custom)
     
     private let pickerView = UIPickerView(frame: .zero)
+    
+    private var days = [Date]()
+    
+    private var hours = [Int]()
+    
+    private var minutes = [Int]()
+    
+    private var currentDaySelected = false {
+        didSet {
+            guard currentDaySelected != oldValue else {
+                return
+            }
+            hours.removeAll()
+            var startHour = 0
+            if currentDaySelected {
+                startHour = fromDate?.hour ?? 0
+            }
+            var hour = 0
+            while hour < 24 {
+                if hour >= startHour {
+                    hours.append(hour)
+                }
+                hour += 1
+            }
+            pickerView.reloadComponent(kComponentHour)
+            currentHourSelected = currentDaySelected
+        }
+    }
+    
+    private var currentHourSelected = false {
+        didSet {
+            guard currentHourSelected != oldValue else {
+                return
+            }
+            minutes.removeAll()
+            var startMinutes = 0
+            if currentHourSelected {
+                startMinutes = fromDate?.minute ?? 0
+            }
+            var minute = 0
+            while minute <= 60 {
+                if minute >= startMinutes {
+                    minutes.append(minute)
+                }
+                minute += 5
+            }
+            pickerView.reloadComponent(kComponentMinute)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,11 +130,16 @@ private extension RoomCreateTimeAlertController {
     }
     
     @objc func onClickSubmmit(_ sender: UIButton) {
-        dismiss(animated: true)
         var date = days[pickerView.selectedRow(inComponent: kComponentDay)]
-        date.hour = pickerView.selectedRow(inComponent: kComponentHour)
-        date.minute = pickerView.selectedRow(inComponent: kComponentMinute)
+        date.hour = hours[pickerView.selectedRow(inComponent: kComponentHour)]
+        date.minute = minutes[pickerView.selectedRow(inComponent: kComponentMinute)]
+        guard date > Date() else {
+            AgoraToast.toast(message: "fcr_create_tips_starttime".ag_localized(),
+                             type: .warning)
+            return
+        }
         complete?(date)
+        dismiss(animated: true)
         complete = nil
     }
     
@@ -104,9 +165,9 @@ extension RoomCreateTimeAlertController: UIPickerViewDelegate,
         if component == kComponentDay {
             return days.count
         } else if component == kComponentHour {
-            return 24
+            return hours.count
         } else if component == kComponentMinute {
-            return 60
+            return minutes.count
         } else {
             return 0
         }
@@ -151,13 +212,39 @@ extension RoomCreateTimeAlertController: UIPickerViewDelegate,
                     forComponent component: Int) -> String? {
         if component == kComponentDay {
             let date = days[row]
-            return date.string(withFormat: "fcr_create_picker_time_format".ag_localized())
-        } else if component == kComponentHour ||
-            component == kComponentMinute {
+            if row == 0 {
+                return "fcr_create_picker_today".ag_localized()
+            } else {
+                return date.string(withFormat: "fcr_create_picker_time_format".ag_localized())
+            }
+        } else if component == kComponentHour {
+            let h = hours[row]
             return String(format: "%02d",
-                          row)
+                          h)
+        } else if component == kComponentMinute {
+            let m = minutes[row]
+            return String(format: "%02ld", m)
         } else {
             return nil
+        }
+    }
+    
+    func pickerView(_ pickerView: UIPickerView,
+                    didSelectRow row: Int,
+                    inComponent component: Int) {
+        if component == kComponentDay {
+            currentDaySelected = (row == 0)
+            pickerView.selectRow(0,
+                                 inComponent: kComponentHour,
+                                 animated: false)
+            pickerView.selectRow(0,
+                                 inComponent: kComponentMinute,
+                                 animated: false)
+        } else if component == kComponentHour {
+            currentHourSelected = (row == 0 && currentDaySelected)
+            pickerView.selectRow(0,
+                                 inComponent: kComponentMinute,
+                                 animated: false)
         }
     }
 }

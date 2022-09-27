@@ -68,12 +68,12 @@ class LoginWebViewController: FcrOutsideClassBaseController {
             if let companyId = data["companyId"] as? String {
                 FcrUserInfoPresenter.shared.companyId = companyId
             }
-            if let companyName = data["companyName"] as? String {
-                FcrUserInfoPresenter.shared.nickName = companyName
+            if let displayName = data["displayName"] as? String {
+                FcrUserInfoPresenter.shared.nickName = displayName
             }
             self.dismiss(animated: true,
                          completion: self.onComplete)
-        } onFailure: { str in
+        } onFailure: { code, msg in
             AgoraLoading.hide()
             self.dismiss(animated: true,
                          completion: self.onComplete)

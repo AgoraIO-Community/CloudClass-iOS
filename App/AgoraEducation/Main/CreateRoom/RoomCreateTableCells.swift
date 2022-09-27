@@ -35,9 +35,19 @@ class RoomBaseInfoCell: UITableViewCell, UITextFieldDelegate {
         }
     }
     
+    public var inputText: String? {
+        didSet {
+            guard inputText != oldValue else {
+                return
+            }
+            textFeild.text = inputText
+            textFieldDidEndEditing(textFeild)
+        }
+    }
+    
     private let cardView = UIView()
     
-    public let textFeild = UITextField(frame: .zero)
+    private let textFeild = UITextField(frame: .zero)
     
     private let editIcon = UIImageView(image: UIImage(named: "fcr_room_create_edit"))
     private let editInfoLabel = UILabel()
@@ -127,7 +137,8 @@ class RoomBaseInfoCell: UITableViewCell, UITextFieldDelegate {
             make?.right.equalTo()(editInfoLabel.mas_left)
         }
         textFeild.mas_makeConstraints { make in
-            make?.left.right().equalTo()(0)
+            make?.left.equalTo()(16)
+            make?.right.equalTo()(-16)
             make?.top.height().equalTo()(editInfoLabel)
         }
         lineView.mas_makeConstraints { make in
@@ -322,12 +333,14 @@ class RoomTimeInfoCell: UITableViewCell {
     
     public var startDate: Date? {
         didSet {
-            guard let date = startDate else {
-                return
+            if let date = startDate {
+                startTimeLabel.text = date.string(withFormat: "fcr_create_table_time_format".ag_localized())
+                let endDate = date.addingTimeInterval(30*60)
+                endTimeLabel.text = endDate.string(withFormat: "HH:mm")
+            } else {
+                startTimeLabel.text = "fcr_create_current_time".ag_localized()
+                endTimeLabel.text = ""
             }
-            startTimeLabel.text = date.string(withFormat: "fcr_create_table_time_format".ag_localized())
-            let endDate = startDate?.addingTimeInterval(30*60)
-            endTimeLabel.text = endDate?.string(withFormat: "HH:mm")
         }
     }
     
@@ -407,6 +420,7 @@ class RoomTimeInfoCell: UITableViewCell {
         endTimeLabel.mas_makeConstraints { make in
             make?.left.equalTo()(endTitleLabel)
             make?.centerY.equalTo()(startTimeLabel)
+            make?.height.greaterThanOrEqualTo()(10)
         }
         endInfoLabel.mas_makeConstraints { make in
             make?.left.equalTo()(endTimeLabel.mas_right)?.offset()(8)

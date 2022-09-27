@@ -27,9 +27,6 @@ class RoomListViewController: UIViewController {
     let tableView = UITableView(frame: .zero, style: .plain)
     
     let titleView = RoomListTitleView(frame: .zero)
-    
-    let settingButton = UIButton(type: .custom)
-    
     /**data**/
     var dataSource = [RoomItemModel]()
     
@@ -155,9 +152,9 @@ private extension RoomListViewController {
             
             self.tableView.reloadData()
             onComplete?()
-        } onFailure: { str in
+        } onFailure: { code, msg in
             onComplete?()
-            AgoraToast.toast(message: str,
+            AgoraToast.toast(message: msg,
                              type: .warning)
         }
     }
@@ -213,8 +210,9 @@ private extension RoomListViewController {
             } else {
                 complete(model)
             }
-        } onFailure: { str in
+        } onFailure: { code, msg in
             AgoraLoading.hide()
+            let str = (code == 404) ? "fcr_joinroom_tips_emptyid".ag_localized() : msg
             AgoraToast.toast(message: str,
                              type: .warning)
         }
@@ -234,8 +232,10 @@ private extension RoomListViewController {
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
         if model.serviceType == .livePremium {
             latencyLevel = .ultraLow
+            model.serviceType = nil
         } else if model.serviceType == .liveStandard {
             latencyLevel = .low
+            model.serviceType = nil
         }
         var roomType: AgoraEduRoomType
         switch model.roomType {
@@ -405,13 +405,6 @@ private extension RoomListViewController {
             self?.isLoading = false
         }
     }
-    
-    @objc func onClickSetting(_ sender: UIButton) {
-        let vc = FcrSettingsViewController()
-        self.navigationController?.pushViewController(vc,
-                                                      animated: true)
-    }
-    
 }
 // MARK: - RoomListItemCell Call Back
 extension RoomListViewController: RoomListItemCellDelegate {
@@ -504,7 +497,6 @@ extension RoomListViewController: UITableViewDelegate, UITableViewDataSource {
             return 0
         }
     }
-    
 }
 // MARK: - RoomListTitleViewDelegate
 extension RoomListViewController: RoomListTitleViewDelegate {
@@ -531,6 +523,12 @@ extension RoomListViewController: RoomListTitleViewDelegate {
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    func onClickSetting() {
+        let vc = FcrSettingsViewController()
+        self.navigationController?.pushViewController(vc,
+                                                      animated: true)
     }
 }
 // MARK: - Creations
@@ -559,14 +557,6 @@ private extension RoomListViewController {
         titleView.delegate = self
         titleView.clipsToBounds = true
         view.addSubview(titleView)
-        
-        settingButton.setImage(UIImage(named: "fcr_room_list_setting"),
-                               for: .normal)
-        settingButton.addTarget(self,
-                                action: #selector(onClickSetting(_:)),
-                                for: .touchUpInside)
-        view.addSubview(settingButton)
-        
         // 下拉刷新
         refreshAction.addTarget(self,
                                 action: #selector(onPullRefreshDown),
@@ -590,10 +580,6 @@ private extension RoomListViewController {
         titleView.mas_makeConstraints { make in
             make?.left.top().right().equalTo()(0)
             make?.height.equalTo()(kTitleMax)
-        }
-        settingButton.mas_makeConstraints { make in
-            make?.top.equalTo()(68)
-            make?.right.equalTo()(-14)
         }
     }
 }
