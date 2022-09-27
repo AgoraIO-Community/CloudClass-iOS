@@ -11,6 +11,7 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
+import AgoraProctorSDK
 import AgoraUIBaseViews
 
 class DebugViewController: UIViewController {
@@ -18,6 +19,9 @@ class DebugViewController: UIViewController {
     private lazy var data = DebugDataHandler(delegate: self)
     /**view**/
     private lazy var debugView = DebugView(frame: .zero)
+    
+    /**sdk**/
+    private var proctorSDK: AgoraProctorSDK?
 }
 
 // MARK: - Data Delagate
@@ -51,15 +55,17 @@ extension DebugViewController: DebugViewDelagate {
     }
     
     func didClickEnter() {
-        guard let info = data.getLaunchInfo() else {
+        guard let info = data.checkLaunchInfoValid() else {
             return
         }
         
         AgoraLoading.loading()
         
-        let failureBlock: (Error) -> () = { (error) in
+        let failureBlock: (Error) -> () = { [weak self] (error) in
             AgoraLoading.hide()
-
+            
+            self?.proctorSDK = nil
+            
             let `error` = error as NSError
             
             if error.code == 30403100 {
@@ -81,26 +87,53 @@ extension DebugViewController: DebugViewDelagate {
             }
             
             // UI mode
-            agora_ui_mode = info.uiMode
-            agora_ui_language = info.uiLanguage.string
+            agora_ui_mode = info.uiMode.edu
+            agora_ui_language = info.uiLanguage.edu.string
             
-            let launchConfig = self.data.getLaunchConfig(debugInfo: info,
-                                                         appId: response.appId,
-                                                         token: response.token,
-                                                         userId: response.userId)
+            let roomType = info.roomType
+            if let _ = roomType.edu,
+               let launchConfig = self.data.getEduLaunchConfig(debugInfo: info,
+                                                            appId: response.appId,
+                                                            token: response.token,
+                                                            userId: response.userId) {
 #if DEBUG
             let sel1 = NSSelectorFromString("setLogConsoleState:");
             AgoraClassroomSDK.perform(sel1,
                                       with: 1)
 #endif
-            
-            AgoraClassroomSDK.launch(launchConfig,
-                                     success: launchSuccessBlock,
-                                     failure: failureBlock)
+                AgoraClassroomSDK.launch(launchConfig,
+                                         success: launchSuccessBlock,
+                                         failure: failureBlock)
+            } else if roomType == .proctor,
+                      self.proctorSDK == nil {
+                let launchConfig = self.data.getProctorLaunchConfig(debugInfo: info,
+                                                                     appId: response.appId,
+                                                                     token: response.token,
+                                                                    userId: info.userId)
+                let proSDK = AgoraProctorSDK(launchConfig,
+                                             delegate: self)
+                self.proctorSDK = proSDK
+#if DEBUG
+                
+                let sel2 = NSSelectorFromString("setLogConsoleState:");
+                proSDK.perform(sel2,
+                               with: 1)
+#endif
+                self.data.updateProctorSDKEnviroment(proctorSDK: proSDK)
+                
+                proSDK.launch(launchSuccessBlock,
+                              failure: failureBlock)
+            }
+        }
+        
+        var finalUserId = info.userId
+        
+        if info.roomType == .proctor {
+            finalUserId = "\(finalUserId)-\(info.deviceType.rawValue)"
         }
         
         data.requestToken(roomId: info.roomId,
-                          userId: info.userId,
+                          userId: finalUserId,
                           userRole: info.roleType.rawValue,
                           success: tokenSuccessBlock,
                           failure: failureBlock)
@@ -182,6 +215,7 @@ extension DebugViewController {
                                              .roomType(.unselected),
                                              .roleType(.unselected),
                                              .im(.easemob),
+                                             .deviceType(.sub),
                                              .duration(.none),
                                              .encryptKey(.none),
                                              .encryptMode(.none),
@@ -193,5 +227,31 @@ extension DebugViewController {
                                              .environment(environment)]
         
         data.updateDataSourceList(defaultList)
+    }
+}
+
+// MARK: - SDK delegate
+extension DebugViewController: AgoraProctorSDKDelegate,
+                               AgoraEduClassroomSDKDelegate {
+    func proctorSDK(_ classroom: AgoraProctorSDK,
+                    didExit reason: AgoraProctorExitReason) {
+        switch reason {
+        case .kickOut:
+            AgoraToast.toast(message: "kick out")
+        default:
+            break
+        }
+        
+        self.proctorSDK = nil
+    }
+    
+    public func classroomSDK(_ classroom: AgoraClassroomSDK,
+                             didExit reason: AgoraEduExitReason) {
+        switch reason {
+        case .kickOut:
+            AgoraToast.toast(message: "kick out")
+        default:
+            break
+        }
     }
 }

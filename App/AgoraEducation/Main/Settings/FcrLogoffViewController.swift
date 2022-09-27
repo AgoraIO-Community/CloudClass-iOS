@@ -8,6 +8,7 @@
 
 import UIKit
 import AgoraEduUI
+import AgoraUIBaseViews
 
 class FcrLogoffViewController: FcrOutsideClassBaseController {
 
@@ -35,9 +36,7 @@ private extension FcrLogoffViewController {
                                                 preferredStyle: .alert)
         let submit = UIAlertAction(title: "fcr_alert_submit".ag_localized(),
                                    style: .default) { action in
-            FcrUserInfoPresenter.shared.logout {
-                self.navigationController?.popToRootViewController(animated: true)
-            }
+            self.logoffUser()
         }
         let cancel = UIAlertAction(title: "fcr_alert_cancel".ag_localized(),
                                    style: .default)
@@ -51,6 +50,19 @@ private extension FcrLogoffViewController {
         logoffButton.isEnabled = sender.isSelected
     }
     
+    func logoffUser() {
+        AgoraLoading.loading()
+        FcrOutsideClassAPI.logoff { dict in
+            AgoraLoading.hide()
+            FcrUserInfoPresenter.shared.logout {
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+        } onFailure: { code, msg in
+            AgoraLoading.hide()
+            AgoraToast.toast(message: msg,
+                             type: .error)
+        }
+    }
 }
 // MARK: - Creations
 private extension FcrLogoffViewController {

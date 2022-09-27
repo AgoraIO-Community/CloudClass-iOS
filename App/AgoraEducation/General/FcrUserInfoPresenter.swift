@@ -13,6 +13,7 @@ class FcrUserInfoPresenter {
     
     private let kAccessToken = "com.agora.accessToken"
     private let kRefreshToken = "com.agora.refreshToken"
+    private let kCompanyId = "com.agora.companyId"
     private let kNickName = "com.agora.nickname"
     private let kTheme = "com.agora.theme"
     private let kQAMode = "com.agora.qaMode"
@@ -30,6 +31,8 @@ class FcrUserInfoPresenter {
                                       forKey: self.kRefreshToken)
             UserDefaults.standard.set(nil,
                                       forKey: self.kNickName)
+            UserDefaults.standard.set(nil,
+                                      forKey: self.kCompanyId)
             complete?()
         }
     }
@@ -70,6 +73,16 @@ class FcrUserInfoPresenter {
         }
         get {
             let saved = UserDefaults.standard.object(forKey: kNickName) as? String
+            return saved ?? ""
+        }
+    }
+    // Theme
+    public var companyId: String {
+        set {
+            UserDefaults.standard.set(newValue, forKey: kCompanyId)
+        }
+        get {
+            let saved = UserDefaults.standard.object(forKey: kCompanyId) as? String
             return saved ?? ""
         }
     }

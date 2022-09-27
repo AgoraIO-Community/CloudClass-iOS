@@ -27,13 +27,18 @@ target 'AgoraEducation' do
  
   # open source libs
   pod 'AgoraClassroomSDK_iOS', :path => '../AgoraClassroomSDK_iOS.podspec'
-  pod 'AgoraEduContext', :path => '../AgoraEduContext.podspec'
   pod 'AgoraEduUI', :path => '../AgoraEduUI.podspec'
+    
+  pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
+  pod 'AgoraProctorSDK', :path => '../AgoraProctorSDK.podspec'
    
-  # open sources widgets and extApps
+  pod 'AgoraProctorUI', :path => '../AgoraProctorUI.podspec'
+  pod 'AgoraProctorSDK', :path => '../AgoraProctorSDK.podspec'
+
+  # open sources widgets
   pod 'AgoraWidgets', :path => '../../apaas-extapp-ios/AgoraWidgets.podspec'
    
   # close source libs
-  pod 'AgoraEduCore', '2.7.3'
+  pod 'AgoraEduCore', '2.8.0'
 end
    

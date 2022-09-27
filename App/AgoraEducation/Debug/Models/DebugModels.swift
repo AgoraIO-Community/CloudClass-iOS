@@ -11,6 +11,7 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
+import AgoraProctorSDK
 import Foundation
 import AgoraEduUI
 
@@ -82,9 +83,12 @@ enum DataSourceRoomType: CaseIterable {
     case small
     case lecture
     case vocational
+    case proctor
     
     static var allCases: [DataSourceRoomType] {
-        return FcrUISceneType.getList().toDebugList()
+        var list = FcrUISceneType.getList().toDebugList()
+        list.append(.proctor)
+        return list
     }
     
     var viewText: String {
@@ -93,6 +97,7 @@ enum DataSourceRoomType: CaseIterable {
         case .small:        return "debug_small".ag_localized()
         case .lecture:      return "debug_lecture".ag_localized()
         case .vocational:   return "debug_vocational_lecture".ag_localized()
+        case .proctor:      return "debug_proctor".ag_localized()
         case .unselected:   return ""
         }
     }
@@ -103,7 +108,19 @@ enum DataSourceRoomType: CaseIterable {
         case .small:        return .small
         case .lecture:      return .lecture
         case .vocational:   return .vocation
+        case .proctor:      return nil
         case .unselected:   return nil
+        }
+    }
+    
+    var tag: Int {
+        switch self {
+        case .oneToOne:     return 0
+        case .small:        return 4
+        case .lecture:      return 2
+        case .vocational:   return 2
+        case .proctor:      return 6
+        case .unselected:   return 4
         }
     }
 }
@@ -146,11 +163,11 @@ enum DataSourceServiceType: CaseIterable {
     }
 }
 
-enum DataSourceRoleType: CaseIterable {
+enum DataSourceRoleType: Int, CaseIterable {
     case unselected
-    case teacher
-    case student
-    case observer
+    case teacher = 1
+    case student = 2
+    case observer = 4
     
     static var allCases: [DataSourceRoleType] {
         return [.teacher, .student, .observer]
@@ -171,6 +188,25 @@ enum DataSourceRoleType: CaseIterable {
         case .student:      return .student
         case .observer:     return .observer
         case .unselected:   return nil
+        }
+    }
+}
+
+enum DataSourceDeviceType: String, CaseIterable {
+    case main
+    case sub
+    
+    var viewText: String {
+        switch self {
+        case .main:     return "debug_device_main".ag_localized()
+        case .sub:      return "debug_device_sub".ag_localized()
+        }
+    }
+    
+    var edu: AgoraProctorDeviceType {
+        switch self {
+        case .main:     return .main
+        case .sub:      return .sub
         }
     }
 }
@@ -217,6 +253,15 @@ enum DataSourceEncryptMode: CaseIterable {
         case .AES256GCM2:   return .AES256GCM2
         }
     }
+    
+    var proctor: AgoraProctorMediaEncryptionMode {
+        switch self {
+        case .none:         return .none
+        case .SM4128ECB:    return .SM4128ECB
+        case .AES128GCM2:   return .AES128GCM2
+        case .AES256GCM2:   return .AES256GCM2
+        }
+    }
 }
 
 enum DataSourceMediaAuth: CaseIterable {
@@ -231,15 +276,6 @@ enum DataSourceMediaAuth: CaseIterable {
         case .audio:    return "debug_auth_audio".ag_localized()
         case .video:    return "debug_auth_video".ag_localized()
         case .both:     return "debug_auth_both".ag_localized()
-        }
-    }
-    
-    var edu: AgoraEduMediaAuthOption {
-        switch self {
-        case .none:     return .none
-        case .audio:    return .audio
-        case .video:    return .video
-        case .both:     return .both
         }
     }
 }
@@ -301,6 +337,15 @@ enum DataSourceRegion:String, CaseIterable {
         }
     }
     
+    var proctor: AgoraProctorRegion {
+        switch self {
+        case .CN:   return .CN
+        case .NA:   return .NA
+        case .EU:   return .EU
+        case .AP:   return .AP
+        }
+    }
+    
     var env: FcrEnvironment.Region {
         switch self {
         case .CN:   return .CN
@@ -341,6 +386,7 @@ enum DataSourceType: Equatable {
     case serviceType(DataSourceServiceType)
     case roleType(DataSourceRoleType)
     case im(DataSourceIMType)
+    case deviceType(DataSourceDeviceType)
     case startTime(DataSourceStartTime)
     case duration(DataSourceDuration)
     case encryptKey(DataSourceEncryptKey)
@@ -352,7 +398,7 @@ enum DataSourceType: Equatable {
     case environment(DataSourceEnvironment)
     
     enum Key {
-        case roomName, userName, roomType, serviceType, roleType, im, startTime, duration, encryptKey, encryptMode, mediaAuth, uiMode, uiLanguage, region, environment
+        case roomName, userName, roomType, serviceType, roleType, im, deviceType, startTime, duration, encryptKey, encryptMode, mediaAuth, uiMode, uiLanguage, region, environment
     }
     
     var inKey: Key {
@@ -363,6 +409,7 @@ enum DataSourceType: Equatable {
         case .serviceType:  return .serviceType
         case .roleType:     return .roleType
         case .im:           return .im
+        case .deviceType:   return .deviceType
         case .startTime:    return .startTime
         case .duration:     return .duration
         case .encryptKey:   return .encryptKey
@@ -388,6 +435,7 @@ enum DataSourceType: Equatable {
         case .serviceType:   return "debug_class_service_type_title".ag_localized()
         case .roleType:      return "debug_title_role".ag_localized()
         case .im:            return "IM"
+        case .deviceType:    return "debug_device_type".ag_localized()
         case .startTime:     return "debug_startTime_title".ag_localized()
         case .duration:      return "debug_duration_title".ag_localized()
         case .encryptKey:    return "debug_encryptKey_title".ag_localized()
@@ -408,6 +456,7 @@ enum DataSourceType: Equatable {
         case .serviceType:   return "debug_service_type_holder".ag_localized()
         case .roleType:      return "debug_role_holder".ag_localized()
         case .im:            return "debug_service_type_holder".ag_localized()
+        case .deviceType:    return "debug_device_holder".ag_localized()
         case .startTime:     return ""
         case .duration:      return "debug_duration_holder".ag_localized()
         case .encryptKey:    return "debug_encryptKey_holder".ag_localized()
@@ -447,49 +496,85 @@ struct DebugLaunchInfo {
     var roomId: String
     var userName: String
     var userId: String
-    var roomType: AgoraEduRoomType
-    var serviceType: AgoraEduServiceType
-    var roleType: AgoraEduUserRole
-    var im: IMType
+    var roomType: DataSourceRoomType
+    var serviceType: DataSourceServiceType
+    var roleType: DataSourceRoleType
+    var im: DataSourceIMType
+    var deviceType: DataSourceDeviceType
     var duration: NSNumber?
     var encryptKey: String?
-    var encryptMode: AgoraEduMediaEncryptionMode
+    var encryptMode: DataSourceEncryptMode
     
     var startTime: NSNumber?
     
-    var mediaAuth: AgoraEduMediaAuthOption
-    var region: AgoraEduRegion
-    var uiMode: AgoraUIMode
-    var uiLanguage: FcrSurpportLanguage
-    var environment: FcrEnvironment.Environment
+    var mediaAuth: DataSourceMediaAuth
+    var region: DataSourceRegion
+    var uiMode: DataSourceUIMode
+    var uiLanguage: DataSourceUILanguage
+    var environment: DataSourceEnvironment
     
     var eduEncryptionConfig: AgoraEduMediaEncryptionConfig? {
-        let modeRawValue = encryptMode.rawValue
+        let modeRawValue = encryptMode.edu.rawValue
         guard (modeRawValue > 0 && modeRawValue <= 6),
               let key = encryptKey else {
             return nil
         }
-        let encryptionConfig = AgoraEduMediaEncryptionConfig(mode: encryptMode,
-                                                         key: key)
+        let encryptionConfig = AgoraEduMediaEncryptionConfig(mode: encryptMode.edu,
+                                                             key: key)
         return encryptionConfig
     }
     
-    var latencyLevel: AgoraEduLatencyLevel {
+    var proctorEncryptionConfig: AgoraProctorMediaEncryptionConfig? {
+        let modeRawValue = encryptMode.proctor.rawValue
+        guard (modeRawValue > 0 && modeRawValue <= 6),
+              let key = encryptKey else {
+            return nil
+        }
+        let encryptionConfig = AgoraProctorMediaEncryptionConfig(mode: encryptMode.proctor,
+                                                                 key: key)
+        return encryptionConfig
+    }
+    
+    var eduLatencyLevel: AgoraEduLatencyLevel {
         var latencyLevel = AgoraEduLatencyLevel.ultraLow
-        if roomType == .vocation,
+        if roomType == .vocational,
            serviceType == .liveStandard {
             latencyLevel = .low
         }
         return latencyLevel
     }
     
-    var mediaOptions: AgoraEduMediaOptions {
-        let latencyLevel = latencyLevel
+    var proctorLatencyLevel: AgoraProctorLatencyLevel {
+        var latencyLevel = AgoraProctorLatencyLevel.ultraLow
+        if roomType == .vocational,
+           serviceType == .liveStandard {
+            latencyLevel = .low
+        }
+        return latencyLevel
+    }
+    
+    var eduMediaOptions: AgoraEduMediaOptions {
+        let latencyLevel = eduLatencyLevel
         let encryptionConfig = eduEncryptionConfig
         
         let videoState: AgoraEduStreamState = (mediaAuth == .video || mediaAuth == .both) ? .on : .off
         let audioState: AgoraEduStreamState = (mediaAuth == .audio || mediaAuth == .both) ? .on : .off
         let mediaOptions = AgoraEduMediaOptions(encryptionConfig: encryptionConfig,
+                                                videoEncoderConfig: nil,
+                                                latencyLevel: latencyLevel,
+                                                videoState: videoState,
+                                                audioState: audioState)
+        
+        return mediaOptions
+    }
+    
+    var proctorMediaOptions: AgoraProctorMediaOptions {
+        let latencyLevel = proctorLatencyLevel
+        let encryptionConfig = proctorEncryptionConfig
+        
+        let videoState: AgoraProctorStreamState = (mediaAuth == .video || mediaAuth == .both) ? .on : .off
+        let audioState: AgoraProctorStreamState = (mediaAuth == .audio || mediaAuth == .both) ? .on : .off
+        let mediaOptions = AgoraProctorMediaOptions(encryptionConfig: encryptionConfig,
                                                 videoEncoderConfig: nil,
                                                 latencyLevel: latencyLevel,
                                                 videoState: videoState,

@@ -64,15 +64,15 @@ import Foundation
     // 子房间名
     public var subRoomName: String
     // 邀请加入子房间的用户 Id 列表，数组可以为空
-    public var invitationUserList: [String]?
+    public var userList: [String]?
     // 子房间自定义属性，可以为空
     public var subRoomProperties: [String: Any]?
-    
+
     public init(subRoomName: String,
-                invitationUserList: [String]?,
+                userList: [String]?,
                 subRoomProperties: [String: Any]?) {
         self.subRoomName = subRoomName
-        self.invitationUserList = invitationUserList
+        self.userList = userList
         self.subRoomProperties = subRoomProperties
     }
 }
@@ -309,7 +309,7 @@ import Foundation
     public let videoSourceType: AgoraEduContextVideoSourceType
     /// 流的音频源类型
     public let audioSourceType: AgoraEduContextAudioSourceType
-    /// 流的音频源状态
+    /// 流的视频源状态
     public let videoSourceState: AgoraEduContextMediaSourceState
     /// 流的音频源状态
     public let audioSourceState: AgoraEduContextMediaSourceState

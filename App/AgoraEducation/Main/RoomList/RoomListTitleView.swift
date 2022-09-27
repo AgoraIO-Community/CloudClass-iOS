@@ -12,6 +12,8 @@ protocol RoomListTitleViewDelegate: NSObjectProtocol {
     func onClickJoin()
     
     func onClickCreate()
+    
+    func onEnterDebugMode()
 }
 class RoomListTitleView: UIView {
     
@@ -29,6 +31,8 @@ class RoomListTitleView: UIView {
     
     private let createButton = UIButton(type: .custom)
     
+    private var debugCount: Int = 0
+    
     private var soildPercent: CGFloat = 0.0 {
         didSet {
             guard soildPercent != oldValue else {
@@ -37,11 +41,13 @@ class RoomListTitleView: UIView {
             cardView.alpha = soildPercent
             titleLabel.alpha = 1 - soildPercent
             if soildPercent < 0.6 {
+                titleLabel.isHidden = false
                 createButton.isHidden = true
                 joinButton.isHidden = true
                 joinActionView.isHidden = false
                 createActionView.isHidden = false
             } else {
+                titleLabel.isHidden = true
                 createButton.isHidden = false
                 joinButton.isHidden = false
                 joinActionView.isHidden = true
@@ -73,6 +79,13 @@ class RoomListTitleView: UIView {
         delegate?.onClickCreate()
     }
     
+    @objc func onTouchDebug() {
+        guard debugCount >= 10 else {
+            debugCount += 1
+            return
+        }
+        delegate?.onEnterDebugMode()
+    }
 }
 // MARK: - Creations
 private extension RoomListTitleView {
@@ -80,32 +93,45 @@ private extension RoomListTitleView {
         cardView.backgroundColor = .white
         addSubview(cardView)
         
-        titleLabel.font = UIFont.systemFont(ofSize: 20)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 20)
         titleLabel.textColor = UIColor.black
-        titleLabel.text = "Flexibleclassroom"
+        titleLabel.text = "fcr_room_list_title".ag_localized()
+        titleLabel.isUserInteractionEnabled = true
         addSubview(titleLabel)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onTouchDebug))
+        titleLabel.addGestureRecognizer(tap)
         
-        joinActionView.iconView.image = UIImage(named: "")
+        joinActionView.iconView.image = UIImage(named: "fcr_room_list_join")
+        joinActionView.titleLabel.text = "fcr_room_list_join".ag_localized()
         joinActionView.button.addTarget(self,
                                         action: #selector(onClickJoin(_:)),
                                         for: .touchUpInside)
-        joinActionView.backgroundColor = .black
         addSubview(joinActionView)
         
-        createActionView.iconView.image = UIImage(named: "")
+        createActionView.iconView.image = UIImage(named: "fcr_room_list_create")
+        createActionView.titleLabel.text = "fcr_room_list_create".ag_localized()
         createActionView.button.addTarget(self,
                                           action: #selector(onClickCreate(_:)),
                                           for: .touchUpInside)
-        createActionView.backgroundColor = .black
         addSubview(createActionView)
         
-        joinButton.backgroundColor = .black
+        joinButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        joinButton.setTitleColor(.black,
+                                 for: .normal)
+        joinButton.setBackgroundImage(UIImage(named: "fcr_room_list_action_bg"),
+                                      for: .normal)
+        
+        joinButton.setImage(UIImage(named: "fcr_room_list_join"),
+                            for: .normal)
         joinButton.addTarget(self,
                              action: #selector(onClickJoin(_:)),
                              for: .touchUpInside)
         addSubview(joinButton)
         
-        createButton.backgroundColor = .black
+        createButton.setBackgroundImage(UIImage(named: "fcr_room_list_action_bg"),
+                                        for: .normal)
+        createButton.setImage(UIImage(named: "fcr_room_list_create"),
+                              for: .normal)
         createButton.addTarget(self,
                                action: #selector(onClickCreate(_:)),
                                for: .touchUpInside)
@@ -147,15 +173,15 @@ private extension RoomListTitleView {
 
 private class RoomListActionView: UIView {
     
-    let contentView = UIImageView(image: UIImage())
+    private let contentView = UIImageView(image: UIImage(named: "fcr_room_list_start_button_bg"))
     
-    let iconBGView = UIImageView(image: UIImage())
+    private let iconBGView = UIImageView(image: UIImage(named: "fcr_room_list_action_bg"))
     
-    let iconView = UIImageView(image: UIImage())
+    public let iconView = UIImageView(image: UIImage())
     
-    let titleLabel = UILabel()
+    public let titleLabel = UILabel()
     
-    let button = UIButton(type: .custom)
+    public let button = UIButton(type: .custom)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -177,6 +203,9 @@ private class RoomListActionView: UIView {
         
         addSubview(button)
         
+        titleLabel.font = UIFont.systemFont(ofSize: 16)
+        titleLabel.textColor = .black
+        titleLabel.textAlignment = .center
         addSubview(titleLabel)
     }
     
@@ -190,7 +219,7 @@ private class RoomListActionView: UIView {
             make?.centerY.equalTo()(0)
         }
         iconView.mas_makeConstraints { make in
-            make?.center.equalTo()(iconView)
+            make?.center.equalTo()(iconBGView)
         }
         titleLabel.mas_makeConstraints { make in
             make?.left.equalTo()(iconView.mas_right)

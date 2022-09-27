@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 
 class VocationalTeacherRenderComponent: VocationalRenderMembersUIComponent {
     private let teacherIndex = 0

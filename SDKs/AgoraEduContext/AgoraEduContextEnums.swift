@@ -16,6 +16,8 @@ import Foundation
     case small         = 4
     /// 大班课
     case lecture       = 2
+    /// 监考
+    case proctor       = 6
 }
 
 /// 课堂状态

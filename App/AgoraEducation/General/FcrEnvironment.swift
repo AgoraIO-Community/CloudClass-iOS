@@ -12,6 +12,7 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
+import AgoraProctorSDK
 
 class FcrEnvironment {
     
@@ -28,6 +29,15 @@ class FcrEnvironment {
     
     enum Region: String {
         case CN, NA, EU, AP
+        
+        var proctor: AgoraProctorRegion {
+            switch self {
+            case .CN:   return .CN
+            case .NA:   return .NA
+            case .EU:   return .EU
+            case .AP:   return .AP
+            }
+        }
     }
     // environment
     private lazy var _environment: Environment = {
@@ -50,10 +60,12 @@ class FcrEnvironment {
         let saved = UserDefaults.standard.object(forKey: kRegion) as? String
         return Region(rawValue: saved ?? "CN") ?? Region.CN
     }()
+    
     var region: Region {
         set {
             _region = newValue
-            UserDefaults.standard.set(newValue.rawValue, forKey: kRegion)
+            UserDefaults.standard.set(newValue.rawValue,
+                                      forKey: kRegion)
             updateBaseURL()
         }
         get {

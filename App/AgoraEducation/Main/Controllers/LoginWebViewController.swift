@@ -12,36 +12,11 @@ import UIKit
 
 class LoginWebViewController: FcrOutsideClassBaseController {
     
-    public static func showLoginIfNot(complete: (() -> Void)?) {
-        guard FcrUserInfoPresenter.shared.isLogin == false else {
-            complete?()
-            return
-        }
-        AgoraLoading.loading()
-        FcrOutsideClassAPI.getAuthWebPage { dict in
-            AgoraLoading.hide()
-            guard let redirectURL = dict["data"] as? String,
-                  let root = UIApplication.shared.keyWindow?.rootViewController
-            else {
-                return
-            }
-            let vc = LoginWebViewController()
-            vc.modalPresentationStyle = .fullScreen
-            vc.onComplete = complete
-            vc.urlStr = redirectURL
-            root.present(vc, animated: true)
-        } onFailure: { msg in
-            AgoraLoading.hide()
-            AgoraToast.toast(message: msg,
-                             type: .error)
-        }
-    }
-    
     private var webView = WKWebView()
     
-    private var urlStr: String?
+    public var urlStr: String?
     
-    private var onComplete: (() -> Void)?
+    public var onComplete: (() -> Void)?
     
     private var debugButton = UIButton(type: .custom)
     
@@ -81,6 +56,28 @@ class LoginWebViewController: FcrOutsideClassBaseController {
         FcrUserInfoPresenter.shared.qaMode = true
         dismiss(animated: true)
     }
+    
+    func fetchUserInfo() {
+        AgoraLoading.loading()
+        FcrOutsideClassAPI.fetchUserInfo { rsp in
+            AgoraLoading.hide()
+            guard let data = rsp["data"] as? [String: Any] else {
+                return
+            }
+            if let companyId = data["companyId"] as? String {
+                FcrUserInfoPresenter.shared.companyId = companyId
+            }
+            if let displayName = data["displayName"] as? String {
+                FcrUserInfoPresenter.shared.nickName = displayName
+            }
+            self.dismiss(animated: true,
+                         completion: self.onComplete)
+        } onFailure: { code, msg in
+            AgoraLoading.hide()
+            self.dismiss(animated: true,
+                         completion: self.onComplete)
+        }
+    }
 }
 // MARK: - WKNavigationDelegate
 extension LoginWebViewController: WKNavigationDelegate {
@@ -115,8 +112,8 @@ extension LoginWebViewController: WKNavigationDelegate {
                     FcrUserInfoPresenter.shared.refreshToken = refreshToken
                 }
             }
+            fetchUserInfo()
             decisionHandler(.cancel)
-            dismiss(animated: true, completion: onComplete)
         } else {
             decisionHandler(.allow)
         }
