@@ -177,13 +177,18 @@ private extension RoomListViewController {
         guard let roomId = model.roomId else {
             return
         }
-        var cid = FcrUserInfoPresenter.shared.companyId
-        if model.roomType == 6 {
-            cid = "\(cid)-sub"
+        
+        let userId = FcrUserInfoPresenter.shared.companyId
+        var cid = userId
+        
+        if model.roomType == 6,
+           model.deviceType == .sub {
+            cid = "\(cid)-\(model.deviceType.str)"
         }
         AgoraLoading.loading()
         FcrOutsideClassAPI.fetchRoomDetail(roomId: roomId,
                                            companyId: cid,
+                                           userId: userId,
                                            role: model.roleType) { [weak self] rsp in
             AgoraLoading.hide()
             guard let data = rsp["data"] as? [String: Any],
