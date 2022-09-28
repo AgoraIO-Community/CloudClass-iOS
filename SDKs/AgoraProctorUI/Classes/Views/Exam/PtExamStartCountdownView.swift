@@ -11,7 +11,7 @@ protocol FcrExamStartCountdownViewDelegate: NSObjectProtocol {
     func onStartExamTimerStopped()
 }
 
-class FcrExamStartCountdownView: UIView {
+class PtExamStartCountdownView: UIView {
     private lazy var bgImageView = UIImageView()
     private lazy var label = UILabel()
     private var timer: Timer?
@@ -72,7 +72,7 @@ class FcrExamStartCountdownView: UIView {
 }
 
 // MARK: - AgoraUIContentContainer
-extension FcrExamStartCountdownView: AgoraUIContentContainer {
+extension PtExamStartCountdownView: AgoraUIContentContainer {
     func initViews() {
         addSubviews([bgImageView,
                      label])

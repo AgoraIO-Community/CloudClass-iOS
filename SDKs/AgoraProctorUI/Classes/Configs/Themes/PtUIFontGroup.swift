@@ -1,5 +1,5 @@
 //
-//  FcrUIFontGroup.swift
+//  PtUIFontGroup.swift
 //  AgoraEduUI
 //
 //  Created by Cavan on 2022/7/11.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct FcrUIFontGroup {
+struct PtUIFontGroup {
     static let font12: UIFont = .systemFont(ofSize: 12)
     static let font13: UIFont = .systemFont(ofSize: 13)
     static let font14: UIFont = .systemFont(ofSize: 14)
