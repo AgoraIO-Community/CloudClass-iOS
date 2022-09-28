@@ -8,7 +8,7 @@
 import AgoraUIBaseViews
 import SDWebImage
 
-class FcrDeviceTestNOAccessView: UIView {
+class PtDeviceTestNOAccessView: UIView {
     private lazy var titleLabel = UILabel()
     private lazy var contentLabel = UILabel()
     private lazy var card = UIView()
@@ -27,10 +27,10 @@ class FcrDeviceTestNOAccessView: UIView {
     }
 }
 
-extension FcrDeviceTestNOAccessView: AgoraUIContentContainer {
+extension PtDeviceTestNOAccessView: AgoraUIContentContainer {
     func initViews() {
-        titleLabel.text = "fcr_exam_prep_label_no_access_camera".fcr_proctor_localized()
-        contentLabel.text = "fcr_exam_prep_label_allow_access_camera".fcr_proctor_localized()
+        titleLabel.text = "pt_exam_prep_label_no_access_camera".pt_localized()
+        contentLabel.text = "pt_exam_prep_label_allow_access_camera".pt_localized()
         contentLabel.numberOfLines = 0
         
         addSubviews([card,

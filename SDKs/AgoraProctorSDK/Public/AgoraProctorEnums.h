@@ -11,9 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef FcrUISceneExitReason AgoraEduExitReason;
-
-
 typedef AgoraEduCoreUserRole AgoraProctorUserRole;
 
 typedef AgoraEduCoreLatencyLevel AgoraProctorLatencyLevel;

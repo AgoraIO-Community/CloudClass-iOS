@@ -10,9 +10,9 @@
 #import "AgoraInternalProctorSDK.h"
 #import "AgoraProctorSDK.h"
 
-@interface AgoraProctorSDK () <FcrProctorSceneDelegate>
+@interface AgoraProctorSDK () <PtUISceneDelegate>
 @property (nonatomic, strong) AgoraEduCoreEngine *core;
-@property (nonatomic, strong) FcrProctorScene *scene;
+@property (nonatomic, strong) PtUIScene *scene;
 @property (nonatomic, strong) NSNumber *consoleState;
 @property (nonatomic, strong) NSNumber *environment;
 
@@ -58,14 +58,14 @@
 }
 
 #pragma mark - FcrProctorSceneDelegate
-- (void)onExitWithReason:(enum FcrUISceneExitReason)reason {
+- (void)onExitWithReason:(enum PtUISceneExitReason)reason {
     AgoraProctorExitReason sdkReason = AgoraProctorExitReasonNormal;
     
     switch (reason) {
-        case FcrUISceneExitReasonNormal:
+        case PtUISceneExitReasonNormal:
             sdkReason = AgoraProctorExitReasonNormal;
             break;
-        case FcrUISceneExitReasonKickOut:
+        case PtUISceneExitReasonKickOut:
             sdkReason = AgoraProctorExitReasonKickOut;
         default:
             break;
@@ -95,30 +95,30 @@
         NSDictionary *parameters = @{@"console": console};
         [self.core setParameters:parameters];
     }
-
+    
     // Environment
     NSNumber *environment = self.environment;
     if (environment) {
         NSDictionary *parameters = @{@"environment": environment};
         [self.core setParameters:parameters];
     }
-
+    
     __weak AgoraProctorSDK *weakSelf = self;
     
     [self.core launchWithSuccess:^(id<AgoraEduContextPool> pool) {
         AgoraProctorSDK *strongSelf = weakSelf;
-
+        
         if (!strongSelf) {
             return;
         }
-        [FcrUIContext create];
-        FcrProctorScene *scene = [[FcrProctorScene alloc] initWithContextPool:pool
-                                                                     delegate:strongSelf];
+        [PtUIContext create];
+        PtUIScene *scene = [[PtUIScene alloc] initWithContextPool:pool
+                                                         delegate:strongSelf];
         scene.modalPresentationStyle = UIModalPresentationFullScreen;
         weakSelf.scene = scene;
-
+        
         UIViewController *topVC = [UIViewController agora_top_view_controller];
-
+        
         [topVC presentViewController:scene
                             animated:true
                           completion:^{

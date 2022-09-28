@@ -9,25 +9,21 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import Masonry
 
-@objc public enum FcrUISceneExitReason: Int {
-    case normal, kickOut
+@objc public protocol PtUISceneDelegate: NSObjectProtocol {
+    func onExit(reason: PtUISceneExitReason)
 }
 
-@objc public protocol FcrProctorSceneDelegate: NSObjectProtocol {
-    func onExit(reason: FcrUISceneExitReason)
-}
-
-@objc public class FcrProctorScene: UIViewController, PtAlert {
-    private var deviceTest: FcrProctorDeviceTestComponent?
+@objc public class PtUIScene: UIViewController, PtAlert {
+    private var deviceTest: PtDeviceTestUIComponent?
     
-    private lazy var exam = FcrProctorExamComponent(contextPool: contextPool,
-                                                    delegate: self)
+    private lazy var exam = PtExamUIComponent(contextPool: contextPool,
+                                              delegate: self)
     
     private let contextPool: AgoraEduContextPool
-    private weak var delegate: FcrProctorSceneDelegate?
+    private weak var delegate: PtUISceneDelegate?
     
     @objc public init(contextPool: AgoraEduContextPool,
-                      delegate: FcrProctorSceneDelegate?) {
+                      delegate: PtUISceneDelegate?) {
         self.contextPool = contextPool
         self.delegate = delegate
         
@@ -38,7 +34,7 @@ import Masonry
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,9 +44,9 @@ import Masonry
     }
 }
 
-// MARK: - FcrProctorDeviceTestComponentDelegate, FcrProctorExamComponentDelegate
-extension FcrProctorScene: FcrProctorDeviceTestComponentDelegate,
-                                FcrProctorExamComponentDelegate {
+// MARK: - PtDeviceTestUIComponentDelegate, PtExamUIComponentDelegate
+extension PtUIScene: PtDeviceTestUIComponentDelegate,
+                     PtExamUIComponentDelegate {
     public func onDeviceTestJoinExamSuccess() {
         deviceTest?.removeFromParent()
         deviceTest?.view.removeFromSuperview()
@@ -59,7 +55,7 @@ extension FcrProctorScene: FcrProctorDeviceTestComponentDelegate,
         
         addChild(exam)
         view.addSubview(exam.view)
-
+        
         exam.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
@@ -76,14 +72,14 @@ extension FcrProctorScene: FcrProctorDeviceTestComponentDelegate,
 }
 
 // MARK: - private
-extension FcrProctorScene: AgoraUIContentContainer {
+extension PtUIScene: AgoraUIContentContainer {
     public func initViews() {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = (agora_ui_mode == .agoraDark) ? .dark : .light
         }
         
-        let deviceTestComponent = FcrProctorDeviceTestComponent(contextPool: contextPool,
-                                                                delegate: self)
+        let deviceTestComponent = PtDeviceTestUIComponent(contextPool: contextPool,
+                                                          delegate: self)
         self.deviceTest = deviceTestComponent
         
         addChild(deviceTestComponent)
@@ -113,7 +109,7 @@ extension FcrProctorScene: AgoraUIContentContainer {
 }
 
 // MARK: - private
-private extension FcrProctorScene {
+private extension PtUIScene {
     func exit() {
         guard !isBeingDismissed else {
             return

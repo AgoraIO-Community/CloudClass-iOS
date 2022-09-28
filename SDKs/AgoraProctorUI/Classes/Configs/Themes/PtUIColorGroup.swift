@@ -1,5 +1,5 @@
 //
-//  FcrUIGroup.swift
+//  PtUIGroup.swift
 //  AgoraEduUI
 //
 //  Created by Cavan on 2022/7/7.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct FcrUIColorGroup {
+struct PtUIColorGroup {
     // MARK: - UI Config
     static var systemBackgroundColor: UIColor {
         switch UIMode {
@@ -105,8 +105,8 @@ struct FcrUIColorGroup {
         case .agoraDark:    return UIColor(hex: 0xFFFFFF)!.withAlphaComponent(0.60)
         }
     }
-
-
+    
+    
     // 不可用文本色
     static var textDisabledColor: UIColor {
         switch UIMode {
@@ -167,9 +167,9 @@ struct FcrUIColorGroup {
     
     static var labelShadowRadius: CGFloat = 2
     static var labelShadowOffset: CGSize = CGSize(width: 0,
-                                                        height: 1)
+                                                  height: 1)
     static var shadowOpacity: Float = 1
     static var containerShadowRadius: CGFloat = 8
     static var containerShadowOffset: CGSize = CGSize(width: 0,
-                                                       height: 2)
+                                                      height: 2)
 }

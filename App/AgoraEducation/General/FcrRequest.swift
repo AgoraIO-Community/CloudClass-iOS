@@ -13,6 +13,7 @@ class FcrOutsideClassAPI {
     /** 查询课堂详情并获取token*/
     static func fetchRoomDetail(roomId: String,
                                 companyId: String,
+                                userId: String,
                                 role: Int,
                                 onSuccess: (([String: Any]) -> Void)?,
                                 onFailure: ((Int, String) -> Void)?) {
@@ -21,6 +22,7 @@ class FcrOutsideClassAPI {
         let type = ArRequestType.http(.put,
                                       url: url)
         let params: [String : Any] = ["roomId": roomId,
+                                      "userUuid": userId,
                                       "role": role]
         let task = ArRequestTask(event: event,
                                  type: type,
