@@ -474,16 +474,14 @@ extension FcrRenderMenuUIComponent {
               let `model` = self.model else {
             return
         }
-        
-        var list: Array<String> = self.boardUsers
-
+        var list = self.boardUsers
         var ifAdd = false
         if model.authState == false,
            !list.contains(UUID) {
             // 授予白板权限
             ifAdd = true
         }
-        let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([UUID]) : .delete([UUID]))
+        let signal = AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([UUID]) : .delete([UUID]))
         if let message = signal.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)

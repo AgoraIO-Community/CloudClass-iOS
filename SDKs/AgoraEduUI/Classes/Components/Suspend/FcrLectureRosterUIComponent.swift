@@ -167,8 +167,6 @@ private extension FcrLectureRosterUIComponent {
                 temp.append(model)
             }
             self.dataSource = temp
-            let uuids = temp.map({$0.uuid})
-            self.update(by: uuids)
         } failure: { error in
             print(error)
         }
