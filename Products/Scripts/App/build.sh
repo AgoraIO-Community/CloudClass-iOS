@@ -1,6 +1,5 @@
 #!/bin/sh
 Mode=$1
-Envi=$2
 Project_Path="../../../App"
 Local_Path=`pwd`
 
