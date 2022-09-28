@@ -46,11 +46,20 @@ extension PtAlert {
         
         let alertController = AgoraAlert()
         
+        alertController.contentWidth = 315
         alertController.backgroundColor = alert.backgroundColor
         alertController.lineColor = .clear
         alertController.shadowColor = alert.shadow.color
         alertController.titleColor = alert.title.color
+        
         alertController.buttonColor = alert.button.normalTitleColor
+        alertController.buttonFont = alert.button.font
+        alertController.buttonCornerRadius = alert.cornerRadius
+        alertController.buttonSideGap = 11
+        alertController.buttonHeight = 40
+        alertController.buttonBottomGap = 14
+        alertController.buttonDivideGap = 15
+        
         alertController.contentFont = alert.message.font
         alertController.normalContentColor = alert.message.color
         
@@ -77,15 +86,15 @@ extension Bundle {
 }
 
 extension String {
-    static func agedu_localized_replacing_x() -> String {
+    static func pt_localized_replacing_x() -> String {
         return "{xxx}"
     }
     
-    static func agedu_localized_replacing_y() -> String {
+    static func pt_localized_replacing_y() -> String {
         return "{yyy}"
     }
     
-    func fcr_proctor_localized() -> String {
+    func pt_localized() -> String {
         guard let eduBundle = Bundle.agora_bundle("AgoraProctorUI") else {
             return ""
         }

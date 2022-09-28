@@ -95,11 +95,11 @@ extension PtDeviceTestView: AgoraUIContentContainer {
         
         titleLabel.sizeToFit()
         
-        stateLabel.text = "fcr_device_test_label_check_screen".fcr_proctor_localized()
+        stateLabel.text = "pt_device_test_label_check_screen".pt_localized()
         
-        switchCameraLabel.text = "fcr_exam_prep_label_switch_camera".fcr_proctor_localized()
+        switchCameraLabel.text = "pt_exam_prep_label_switch_camera".pt_localized()
         
-        enterButton.setTitle("fcr_sub_room_button_join_exam".fcr_proctor_localized(),
+        enterButton.setTitle("pt_sub_room_button_join_exam".pt_localized(),
                              for: .normal)
         
         addSubviews([backgroundImageView,

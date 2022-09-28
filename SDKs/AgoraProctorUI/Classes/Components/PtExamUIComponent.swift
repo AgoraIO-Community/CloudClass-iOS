@@ -171,13 +171,19 @@ private extension PtExamUIComponent {
             return
         }
         
-        let message = "fcr_exam_prep_label_leave_exam".fcr_proctor_localized()
+        let message = "pt_exam_prep_label_leave_exam".pt_localized()
         
-        let cancelTitle = "fcr_sub_room_button_stay".fcr_proctor_localized()
-        let cancelAction = AgoraAlertAction(title: cancelTitle)
+        let config = UIConfig.alert.button
         
-        let leaveTitle = "fcr_sub_room_button_leave".fcr_proctor_localized()
-        let leaveAction = AgoraAlertAction(title: leaveTitle) { [weak self] _ in
+        let cancelTitle = "pt_sub_room_button_stay".pt_localized()
+        let cancelAction = AgoraAlertAction(title: cancelTitle,
+                                            titleColor: config.normalTitleColor,
+                                            backgroundColor: config.normalBackgroundColor)
+        
+        let leaveTitle = "pt_sub_room_button_leave".pt_localized()
+        let leaveAction = AgoraAlertAction(title: leaveTitle,
+                                           titleColor: config.highlightTitleColor,
+                                           backgroundColor: config.highlightBackgroundColor) { [weak self] _ in
             self?.exit()
         }
         
@@ -239,7 +245,7 @@ private extension PtExamUIComponent {
             AgoraLoading.hide()
         }, failure: { [weak self] error in
             AgoraLoading.hide()
-            AgoraToast.toast(message: "fcr_room_tips_join_failed".fcr_proctor_localized())
+            AgoraToast.toast(message: "pt_room_tips_join_failed".pt_localized())
         })
     }
     

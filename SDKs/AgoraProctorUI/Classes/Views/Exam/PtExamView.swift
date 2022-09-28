@@ -103,11 +103,11 @@ extension PtExamView: AgoraUIContentContainer {
         backgroundImageView.contentMode = .scaleAspectFill
         
         nameLabel.sizeToFit()
-        beforeExamTipLabel.text = "fcr_room_tips_exam_not_started".fcr_proctor_localized()
+        beforeExamTipLabel.text = "pt_room_tips_exam_not_started".pt_localized()
         beforeExamTipLabel.textAlignment = .center
-        leaveButton.setTitle("fcr_exam_leave_title".fcr_proctor_localized(),
+        leaveButton.setTitle("pt_exam_leave_title".pt_localized(),
                              for: .normal)
-        endLabel.text = "fcr_room_label_exam_over".fcr_proctor_localized()
+        endLabel.text = "pt_room_label_exam_over".pt_localized()
         
         addSubviews([backgroundImageView,
                      exitButton,

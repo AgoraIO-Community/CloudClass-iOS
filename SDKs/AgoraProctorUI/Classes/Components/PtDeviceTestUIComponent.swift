@@ -75,11 +75,11 @@ extension PtDeviceTestUIComponent: AgoraUIContentContainer {
                                          action: #selector(onClickExitRoom),
                                          for: .touchUpInside)
         
-        contentView.titleLabel.text = "fcr_exam_prep_label_device_test".fcr_proctor_localized()
+        contentView.titleLabel.text = "pt_exam_prep_label_device_test".pt_localized()
         
-        let greet = "fcr_exam_prep_label_hello".fcr_proctor_localized()
+        let greet = "pt_exam_prep_label_hello".pt_localized()
         let userName = contextPool.user.getLocalUserInfo().userName
-        let finalGreet = greet.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+        let finalGreet = greet.replacingOccurrences(of: String.pt_localized_replacing_x(),
                                                     with: userName)
         contentView.greetLabel.text = finalGreet
         
@@ -87,7 +87,7 @@ extension PtDeviceTestUIComponent: AgoraUIContentContainer {
                                                  action: #selector(onClickSwitchCamera),
                                                  for: .touchUpInside)
         
-        contentView.enterButton.setTitle("fcr_sub_room_button_join_exam".fcr_proctor_localized(),
+        contentView.enterButton.setTitle("pt_sub_room_button_join_exam".pt_localized(),
                                          for: .normal)
         contentView.enterButton.addTarget(self,
                                           action: #selector(onClickEnterRoom),
@@ -132,7 +132,7 @@ private extension PtDeviceTestUIComponent {
             AgoraLoading.hide()
         } failure: { error in
             AgoraLoading.hide()
-            AgoraToast.toast(message: "fcr_room_tips_join_failed".fcr_proctor_localized())
+            AgoraToast.toast(message: "fcr_room_tips_join_failed".pt_localized())
         }
     }
     
