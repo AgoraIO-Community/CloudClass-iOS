@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 
-class FcrExamDuringCountdownView: UIView {
+class PtExamDuringCountdownView: UIView {
     private lazy var frontView = UIView(frame: .zero)
     private lazy var backView = UIView(frame: .zero)
     private(set) lazy var label = UILabel()
@@ -30,8 +30,8 @@ class FcrExamDuringCountdownView: UIView {
             return
         }
         timer = Timer.scheduledTimer(withTimeInterval: 1.0,
-                                          repeats: true,
-                                          block: { [weak self] t in
+                                     repeats: true,
+                                     block: { [weak self] t in
             self?.updateCountdownLabel()
         })
     }
@@ -57,12 +57,12 @@ class FcrExamDuringCountdownView: UIView {
 }
 
 // MARK: - AgoraUIContentContainer
-extension FcrExamDuringCountdownView: AgoraUIContentContainer {
+extension PtExamDuringCountdownView: AgoraUIContentContainer {
     func initViews() {
         label.sizeToFit()
         
         addSubviews([backView,
-                    frontView,
+                     frontView,
                      label])
     }
     
@@ -98,7 +98,7 @@ extension FcrExamDuringCountdownView: AgoraUIContentContainer {
     }
 }
 
-private extension FcrExamDuringCountdownView {
+private extension PtExamDuringCountdownView {
     func updateCountdownLabel() {
         guard let info = timeInfo,
               info.valid else {

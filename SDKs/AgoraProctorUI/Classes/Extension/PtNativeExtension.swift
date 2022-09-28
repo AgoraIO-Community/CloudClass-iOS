@@ -62,7 +62,7 @@ extension PtAlert {
 }
 
 extension UIImage {
-    class func fcr_named(_ named: String) -> UIImage? {
+    class func pt_named(_ named: String) -> UIImage? {
         let bundle = Bundle.AgoraProctorUI()
         return UIImage(named: named,
                        in: bundle,

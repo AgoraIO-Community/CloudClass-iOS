@@ -1,5 +1,5 @@
 //
-//  FcrProctorExamComponent.swift
+//  PtExamUIComponent.swift
 //  AgoraProctorUI
 //
 //  Created by LYY on 2022/9/1.
@@ -8,16 +8,16 @@
 import AgoraUIBaseViews
 import AgoraEduCore
 
-@objc public protocol FcrProctorExamComponentDelegate: NSObjectProtocol {
+@objc public protocol PtExamUIComponentDelegate: NSObjectProtocol {
     func onExamExit()
 }
 
-class FcrProctorExamComponent: PtUIComponent {
+class PtExamUIComponent: PtUIComponent {
     /**view**/
-    private lazy var contentView = FcrProctorExamComponentView(frame: .zero)
+    private lazy var contentView = PtExamView(frame: .zero)
     
     /**context**/
-    private weak var delegate: FcrProctorExamComponentDelegate?
+    private weak var delegate: PtExamUIComponentDelegate?
     private let contextPool: AgoraEduContextPool
     private var subRoom: AgoraEduSubRoomContext?
     
@@ -25,7 +25,7 @@ class FcrProctorExamComponent: PtUIComponent {
     private var currentFront: Bool = true
     
     @objc public init(contextPool: AgoraEduContextPool,
-                      delegate: FcrProctorExamComponentDelegate?) {
+                      delegate: PtExamUIComponentDelegate?) {
         self.contextPool = contextPool
         self.delegate = delegate
         
@@ -59,14 +59,14 @@ class FcrProctorExamComponent: PtUIComponent {
 }
 
 // MARK: - AgoraEduRoomHandler
-extension FcrProctorExamComponent: AgoraEduRoomHandler {
+extension PtExamUIComponent: AgoraEduRoomHandler {
     public func onClassStateUpdated(state: AgoraEduContextClassState) {
         checkExamState(countdown: 5)
     }
 }
 
 // MARK: - AgoraEduRoomHandler
-extension FcrProctorExamComponent: AgoraEduUserHandler {
+extension PtExamUIComponent: AgoraEduUserHandler {
     public func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                       operatorUser: AgoraEduContextUserInfo?) {
         // mostly happend when rtm reconnects successfully
@@ -81,14 +81,14 @@ extension FcrProctorExamComponent: AgoraEduUserHandler {
 }
 
 // MARK: - AgoraEduSubRoomHandler
-extension FcrProctorExamComponent: AgoraEduSubRoomHandler {
+extension PtExamUIComponent: AgoraEduSubRoomHandler {
     public func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         setupCohost()
     }
 }
 
 // MARK: - AgoraEduStreamHandler
-extension FcrProctorExamComponent: AgoraEduStreamHandler {
+extension PtExamUIComponent: AgoraEduStreamHandler {
     public func onStreamJoined(stream: AgoraEduContextStreamInfo,
                                operatorUser: AgoraEduContextUserInfo?) {
         startRenderLocalVideo()
@@ -96,7 +96,7 @@ extension FcrProctorExamComponent: AgoraEduStreamHandler {
 }
 
 // MARK: - AgoraEduGroupHandler
-extension FcrProctorExamComponent: AgoraEduGroupHandler {
+extension PtExamUIComponent: AgoraEduGroupHandler {
     public func onSubRoomListAdded(subRoomList: [AgoraEduContextSubRoomInfo]) {
         guard let userIdPrefix = contextPool.user.getLocalUserInfo().userUuid.getUserIdPrefix(),
               let info = subRoomList.first(where: {$0.subRoomName == userIdPrefix}) else {
@@ -108,7 +108,7 @@ extension FcrProctorExamComponent: AgoraEduGroupHandler {
 }
 
 // MARK: - AgoraUIContentContainer
-extension FcrProctorExamComponent: AgoraUIContentContainer {
+extension PtExamUIComponent: AgoraUIContentContainer {
     public func initViews() {
         view.addSubview(contentView)
         
@@ -143,7 +143,7 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
 }
 
 // MARK: - private
-private extension FcrProctorExamComponent {
+private extension PtExamUIComponent {
     func checkExamState(countdown: Int = 0) {
         let classInfo = contextPool.room.getClassInfo()
         let state = classInfo.toExamState(countdown: countdown)
@@ -195,7 +195,7 @@ private extension FcrProctorExamComponent {
         contentView.renderView.setUserName(userInfo.userName)
         let mainUserId = userIdPrefix.joinUserId(.main)
         if let props = contextPool.user.getUserProperties(userUuid: mainUserId),
-        let avatarUrl = props["avatar"] as? String {
+           let avatarUrl = props["avatar"] as? String {
             contentView.renderView.setAvartarImage(avatarUrl)
         }
     }
@@ -277,7 +277,7 @@ private extension FcrProctorExamComponent {
         }
         let userId = subRoom.user.getLocalUserInfo().userUuid
         let localStreamList = subRoom.stream.getStreamList(userUuid: userId)
-
+        
         guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid else {
             return
         }
@@ -294,7 +294,7 @@ private extension FcrProctorExamComponent {
     func stopRenderLocalVideo() {
         let userId = contextPool.user.getLocalUserInfo().userUuid
         let localStreamList = contextPool.stream.getStreamList(userUuid: userId)
-
+        
         guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid  else {
             return
         }

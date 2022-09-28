@@ -1,5 +1,5 @@
 //
-//  FcrProctorDeviceTestComponent.swift
+//  PtDeviceTestUIComponent.swift
 //  AgoraProctorUI
 //
 //  Created by LYY on 2022/9/6.
@@ -9,23 +9,23 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import AVFoundation
 
-@objc public protocol FcrProctorDeviceTestComponentDelegate: NSObjectProtocol {
+@objc public protocol PtDeviceTestUIComponentDelegate: NSObjectProtocol {
     func onDeviceTestJoinExamSuccess()
     func onDeviceTestExit()
 }
 
-class FcrProctorDeviceTestComponent: PtUIComponent {
+class PtDeviceTestUIComponent: PtUIComponent {
     /**view**/
-    private lazy var contentView = FcrProctorDeviceTestComponentView(frame: .zero)
+    private lazy var contentView = PtDeviceTestView(frame: .zero)
     /**context**/
-    private weak var delegate: FcrProctorDeviceTestComponentDelegate?
+    private weak var delegate: PtDeviceTestUIComponentDelegate?
     private let contextPool: AgoraEduContextPool
     
     /**data**/
     private var currentFront: Bool = true
     
     @objc public init(contextPool: AgoraEduContextPool,
-                      delegate: FcrProctorDeviceTestComponentDelegate?) {
+                      delegate: PtDeviceTestUIComponentDelegate?) {
         self.contextPool = contextPool
         self.delegate = delegate
         
@@ -60,20 +60,20 @@ class FcrProctorDeviceTestComponent: PtUIComponent {
     }
 }
 
-extension FcrProctorDeviceTestComponent: AgoraEduRoomHandler {
+extension PtDeviceTestUIComponent: AgoraEduRoomHandler {
     public func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         delegate?.onDeviceTestJoinExamSuccess()
     }
 }
 
 // MARK: - AgoraUIContentContainer
-extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
+extension PtDeviceTestUIComponent: AgoraUIContentContainer {
     public func initViews() {
         view.addSubview(contentView)
         
         contentView.exitButton.addTarget(self,
-                             action: #selector(onClickExitRoom),
-                             for: .touchUpInside)
+                                         action: #selector(onClickExitRoom),
+                                         for: .touchUpInside)
         
         contentView.titleLabel.text = "fcr_exam_prep_label_device_test".fcr_proctor_localized()
         
@@ -86,7 +86,7 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
         contentView.switchCameraButton.addTarget(self,
                                                  action: #selector(onClickSwitchCamera),
                                                  for: .touchUpInside)
-                
+        
         contentView.enterButton.setTitle("fcr_sub_room_button_join_exam".fcr_proctor_localized(),
                                          for: .normal)
         contentView.enterButton.addTarget(self,
@@ -108,13 +108,13 @@ extension FcrProctorDeviceTestComponent: AgoraUIContentContainer {
 }
 
 // MARK: - private
-private extension FcrProctorDeviceTestComponent {
+private extension PtDeviceTestUIComponent {
     @objc func onClickExitRoom() {
         contextPool.room.unregisterRoomEventHandler(self)
         
         let streamId = "0"
         contextPool.media.stopRenderVideo(streamUuid: streamId)
-
+        
         self.delegate?.onDeviceTestExit()
     }
     
@@ -146,7 +146,7 @@ private extension FcrProctorDeviceTestComponent {
         contentView.renderView.setUserName(userInfo.userName)
         let mainUserId = userIdPrefix.joinUserId(.main)
         if let props = contextPool.user.getUserProperties(userUuid: mainUserId),
-        let avatarUrl = props["avatar"] as? String {
+           let avatarUrl = props["avatar"] as? String {
             contentView.renderView.setAvartarImage(avatarUrl)
         }
     }
@@ -173,8 +173,8 @@ private extension FcrProctorDeviceTestComponent {
             
             if self.contextPool.media.openLocalDevice(systemDevice: .frontCamera) == nil,
                self.contextPool.media.startRenderVideo(view: self.contentView.renderView,
-                                                  renderConfig: renderConfig,
-                                                  streamUuid: streamId) == nil {
+                                                       renderConfig: renderConfig,
+                                                       streamUuid: streamId) == nil {
                 self.contentView.updateEnterable(true)
             } else {
                 self.contentView.updateEnterable(false)
@@ -184,7 +184,7 @@ private extension FcrProctorDeviceTestComponent {
 }
 
 // MARK: - UIApplicationDelegate
-extension FcrProctorDeviceTestComponent: UIApplicationDelegate {
+extension PtDeviceTestUIComponent: UIApplicationDelegate {
     public func applicationWillEnterForeground(_ application: UIApplication) {
         checkCameraState()
     }

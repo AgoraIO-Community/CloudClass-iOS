@@ -1,5 +1,5 @@
 //
-//  FcrProctorDeviceTestComponentView.swift
+//  PtDeviceTestUIComponentView.swift
 //  AgoraProctorUI
 //
 //  Created by DoubleCircle on 2022/9/12.
@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 
-class FcrProctorDeviceTestComponentView: UIView {
+class PtDeviceTestView: UIView {
     /**views**/
     private lazy var backgroundImageView = UIImageView()
     private(set) lazy var exitButton = UIButton()
@@ -16,8 +16,8 @@ class FcrProctorDeviceTestComponentView: UIView {
     private(set) lazy var stateLabel = UILabel()
     private lazy var bottomView = UIView()
     private(set) lazy var enterButton = UIButton()
-    private(set) lazy var renderView = FcrProctorRenderView()
-    private(set) lazy var noAccessView = FcrDeviceTestNOAccessView()
+    private(set) lazy var renderView = PtRenderView()
+    private(set) lazy var noAccessView = PtDeviceTestNOAccessView()
     private(set) lazy var switchCameraButton = UIButton()
     private lazy var switchCameraLabel = UILabel()
     
@@ -55,7 +55,7 @@ class FcrProctorDeviceTestComponentView: UIView {
                 self.noAccessView.agora_visible = true
                 self.switchCameraButton.agora_visible = false
                 self.switchCameraLabel.agora_visible = false
-
+                
                 self.enterButton.isUserInteractionEnabled = false
                 self.enterButton.alpha = 0.5
                 self.enterButton.mas_remakeConstraints { make in
@@ -70,7 +70,7 @@ class FcrProctorDeviceTestComponentView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        
         enterButton.layer.cornerRadius = enterButton.bounds.height / 2
         enterButton.layer.masksToBounds = true
         
@@ -89,7 +89,7 @@ class FcrProctorDeviceTestComponentView: UIView {
     }
 }
 
-extension FcrProctorDeviceTestComponentView: AgoraUIContentContainer {
+extension PtDeviceTestView: AgoraUIContentContainer {
     public func initViews() {
         backgroundImageView.contentMode = .scaleAspectFill
         
