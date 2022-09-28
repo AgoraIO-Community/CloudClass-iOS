@@ -48,6 +48,7 @@ class FcrRosterUIComponent: FcrUIComponent {
     /** 数据源*/
     public var dataSource = [AgoraRosterModel]() {
         didSet {
+            update(by: dataSource.map({$0.uuid}))
             tableView.reloadData()
         }
     }
