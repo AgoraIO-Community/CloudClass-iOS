@@ -217,8 +217,8 @@ private extension RoomListItemCell {
         let startDate = Date(timeIntervalSince1970: Double(item.startTime) * 0.001)
         let endDate = Date(timeIntervalSince1970: Double(item.endTime) * 0.001)
         let day = startDate.string(withFormat: "yyyy-MM-dd")
-        let startTime = startDate.string(withFormat: "hh:mm")
-        let endTime = endDate.string(withFormat: "hh:mm")
+        let startTime = startDate.string(withFormat: "HH:mm")
+        let endTime = endDate.string(withFormat: "HH:mm")
         timeLabel.text = "\(day)，\(startTime)-\(endTime)"
         let now = Date()
         if now.compare(startDate) == .orderedAscending {

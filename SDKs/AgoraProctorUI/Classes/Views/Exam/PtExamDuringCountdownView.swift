@@ -108,7 +108,7 @@ private extension PtExamDuringCountdownView {
         }
         
         let realTime = Int64(Date().timeIntervalSince1970 * 1000)
-        let countDown = info.startTime + info.duration - realTime
+        let countDown = info.startTime + info.duration * 1000 - realTime
         label.text = timeString(from: countDown)
     }
     
