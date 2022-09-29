@@ -61,9 +61,6 @@ do
     elif [[ ${FileName} =~ "AgoraEduUI" ]]
     then
         rm -fr ${Products_Path}/${FileName}
-    elif [[ ${FileName} =~ "AgoraEduContext" ]]
-    then
-        rm -fr ${Products_Path}/${FileName}
     elif [[ ${FileName} =~ "AgoraWidgets" ]]
     then
         rm -fr ${Products_Path}/${FileName}
@@ -75,3 +72,38 @@ do
         rm -fr ${Products_Path}/${FileName}
     fi
 done
+
+# delete useless dSYMs
+deleteDSYMs() {
+    dSYMs_Path=$1
+
+    Files=$(ls $dSYMs_Path)
+
+    for FileName in $Files
+    do
+        
+        if [[ ! ${FileName} =~ "Agora" ]]
+        then
+            echo $FileName
+            rm -fr $dSYMs_Path/$FileName
+        elif [[ ${FileName} =~ "AgoraWidgets" ]]
+        then
+            rm -fr $dSYMs_Path/$FileName
+        elif [[ ${FileName} =~ "AgoraLog" ]]
+        then
+            rm -fr $dSYMs_Path/$FileName
+        elif [[ ${FileName} =~ "AgoraClassroomSDK" ]]
+        then
+            rm -fr $dSYMs_Path/$FileName
+        elif [[ ${FileName} =~ "AgoraEduUI" ]]
+        then
+            rm -fr $dSYMs_Path/$FileName
+        elif [[ ${FileName} =~ "AgoraEduUI" ]]
+        then
+            rm -fr $dSYMs_Path/$FileName
+        fi
+    done
+}
+
+deleteDSYMs ${dSYMs_Simulator}
+deleteDSYMs ${dSYMs_iPhone}

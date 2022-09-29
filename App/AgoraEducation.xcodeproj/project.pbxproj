@@ -26,7 +26,7 @@
 		6861691B26AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 6861691926AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf */; };
 		6888099A262825FC00B5FB2A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68880999262825FC00B5FB2A /* LoginViewController.swift */; };
 		688809E82629358800B5FB2A /* FcrNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 688809E72629358800B5FB2A /* FcrNavigationController.swift */; };
-		75D36FB810CB94F4AEF8D9A2 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		75D36FB810CB94F4AEF8D9A2 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		7813B70223FA5A0300265830 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7813B6F623FA5A0300265830 /* LaunchScreen.storyboard */; };
 		7878B4C523FA72EE00AF1B4F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4C723FA72EE00AF1B4F /* Localizable.strings */; };
 		7878B4CB23FA735700AF1B4F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7878B4CD23FA735700AF1B4F /* InfoPlist.strings */; };
@@ -105,6 +105,7 @@
 		1AE0D0A622897ECD0092AC5E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2616FAB1271EC4530086397B /* TokenBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenBuilder.swift; sourceTree = "<group>"; };
 		3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.devrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.devrelease.xcconfig"; sourceTree = "<group>"; };
+		37B928C7F12A17713289F8D3 /* Pods-AgoraEducation.certificatec.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.certificatec.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.certificatec.xcconfig"; sourceTree = "<group>"; };
 		40B28313D80C71B4DA8D643D /* Pods-AgoraEducation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.debug.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.debug.xcconfig"; sourceTree = "<group>"; };
 		4EAA54960A24224AEAEC570D /* Pods-AgoraEducation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.release.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.release.xcconfig"; sourceTree = "<group>"; };
 		681528A3289CF0FB00EFD6F4 /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
@@ -118,6 +119,7 @@
 		6861691926AEB1B800E26F69 /* Agora_Privacy_Policy_cn.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = Agora_Privacy_Policy_cn.rtf; sourceTree = "<group>"; };
 		68880999262825FC00B5FB2A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		688809E72629358800B5FB2A /* FcrNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrNavigationController.swift; sourceTree = "<group>"; };
+		7710B25021320B9CCD7E9CE1 /* Pods-AgoraEducation.certificated.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.certificated.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.certificated.xcconfig"; sourceTree = "<group>"; };
 		78136271242C81ED00B7D1FE /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		78136273242C81FF00B7D1FE /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		78136274242C820700B7D1FE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -187,6 +189,8 @@
 		AB8AC744287FEB5000B57B58 /* FcrPrivacyTermsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrPrivacyTermsViewController.swift; sourceTree = "<group>"; };
 		AB8AC7462886D13600B57B58 /* FcrLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FcrLocalization.swift; sourceTree = "<group>"; };
 		ABB1D15C287C00A600395A13 /* LoginWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWebViewController.swift; sourceTree = "<group>"; };
+		C4C459442E746BCF4D5997C8 /* Pods-AgoraEducation.certificateb.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.certificateb.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.certificateb.xcconfig"; sourceTree = "<group>"; };
+		D07BBD028AA8C6FEF9294576 /* Pods-AgoraEducation.certificatea.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.certificatea.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.certificatea.xcconfig"; sourceTree = "<group>"; };
 		D58F6327530BE8AC6BB7A5A6 /* Pods-AgoraEducation.qatestnewrelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgoraEducation.qatestnewrelease.xcconfig"; path = "Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation.qatestnewrelease.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -195,7 +199,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75D36FB810CB94F4AEF8D9A2 /* (null) in Frameworks */,
+				75D36FB810CB94F4AEF8D9A2 /* BuildFile in Frameworks */,
 				8661A1A4270DA50E0047CB16 /* libz.tbd in Frameworks */,
 				787A004225D10FC10063456F /* AudioToolbox.framework in Frameworks */,
 				489330F749FFF2263BE9EF78 /* Pods_AgoraEducation.framework in Frameworks */,
@@ -426,6 +430,10 @@
 				3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */,
 				8CD382F7BF039504C1D49C53 /* Pods-AgoraEducation.qatestrelease.xcconfig */,
 				D58F6327530BE8AC6BB7A5A6 /* Pods-AgoraEducation.qatestnewrelease.xcconfig */,
+				D07BBD028AA8C6FEF9294576 /* Pods-AgoraEducation.certificatea.xcconfig */,
+				C4C459442E746BCF4D5997C8 /* Pods-AgoraEducation.certificateb.xcconfig */,
+				37B928C7F12A17713289F8D3 /* Pods-AgoraEducation.certificatec.xcconfig */,
+				7710B25021320B9CCD7E9CE1 /* Pods-AgoraEducation.certificated.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1147,7 +1155,7 @@
 			};
 			name = Release;
 		};
-		78515D3223FCCDCB0015B5EC /* DevRelease */ = {
+		7868EA4525DE8F4300D95021 /* CertificateC */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1201,165 +1209,11 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = DevRelease;
+			name = CertificateC;
 		};
-		78515D3323FCCDCB0015B5EC /* DevRelease */ = {
+		7868EA4625DE8F4300D95021 /* CertificateC */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3327573F8A98D9B63A402151 /* Pods-AgoraEducation.devrelease.xcconfig */;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = GM72UGLGZW;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/AgoraEducation",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"COCOAPODS=1",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraActionProcess/AgoraActionProcess.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/Whiteboard/Whiteboard.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYModel/YYModel.framework/Headers\"",
-					"\"${PODS_CONFIGURATION_BUILD_DIR}/dsBridge/dsBridge.framework/Headers\"",
-					"\"${PODS_ROOT}/Headers/Public\"",
-					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
-				);
-				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 2.7.0;
-				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducation;
-				PRODUCT_NAME = AgoraCloudClass;
-				PROVISIONING_PROFILE_SPECIFIER = App;
-				STRIP_STYLE = "non-global";
-				STRIP_SWIFT_SYMBOLS = NO;
-				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = DevRelease;
-		};
-		78515D3423FCCDCB0015B5EC /* DevRelease */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraCloudClass.app/AgoraCloudClass";
-			};
-			name = DevRelease;
-		};
-		78515D3523FCCDCB0015B5EC /* DevRelease */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = AgoraSmallClass;
-			};
-			name = DevRelease;
-		};
-		7868EA4525DE8F4300D95021 /* QATestNewRelease */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				MTL_FAST_MATH = YES;
-				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = QATestNewRelease;
-		};
-		7868EA4625DE8F4300D95021 /* QATestNewRelease */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D58F6327530BE8AC6BB7A5A6 /* Pods-AgoraEducation.qatestnewrelease.xcconfig */;
+			baseConfigurationReference = 37B928C7F12A17713289F8D3 /* Pods-AgoraEducation.certificatec.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
@@ -1416,9 +1270,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = QATestNewRelease;
+			name = CertificateC;
 		};
-		7868EA4725DE8F4300D95021 /* QATestNewRelease */ = {
+		7868EA4725DE8F4300D95021 /* CertificateC */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1435,9 +1289,9 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraCloudClass.app/AgoraCloudClass";
 			};
-			name = QATestNewRelease;
+			name = CertificateC;
 		};
-		7868EA4825DE8F4300D95021 /* QATestNewRelease */ = {
+		7868EA4825DE8F4300D95021 /* CertificateC */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1453,9 +1307,9 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = AgoraSmallClass;
 			};
-			name = QATestNewRelease;
+			name = CertificateC;
 		};
-		78AED04623C58E5D00A24DDB /* QARelease */ = {
+		78AED04623C58E5D00A24DDB /* CertificateA */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1509,11 +1363,11 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = QARelease;
+			name = CertificateA;
 		};
-		78AED04723C58E5D00A24DDB /* QARelease */ = {
+		78AED04723C58E5D00A24DDB /* CertificateA */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A5BFF93D50503E0756F47D98 /* Pods-AgoraEducation.qarelease.xcconfig */;
+			baseConfigurationReference = D07BBD028AA8C6FEF9294576 /* Pods-AgoraEducation.certificatea.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
@@ -1559,7 +1413,7 @@
 				);
 				MARKETING_VERSION = 2.7.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQA;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.CertificateA;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = AgoraLab2020;
 				STRIP_STYLE = "non-global";
@@ -1570,9 +1424,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = QARelease;
+			name = CertificateA;
 		};
-		78AED04823C58E5D00A24DDB /* QARelease */ = {
+		78AED04823C58E5D00A24DDB /* CertificateA */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1589,9 +1443,9 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraCloudClass.app/AgoraCloudClass";
 			};
-			name = QARelease;
+			name = CertificateA;
 		};
-		78AED04923C58E5D00A24DDB /* QARelease */ = {
+		78AED04923C58E5D00A24DDB /* CertificateA */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1607,9 +1461,9 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = AgoraSmallClass;
 			};
-			name = QARelease;
+			name = CertificateA;
 		};
-		78CFE1DC257DE5AD0044F3D5 /* QATestRelease */ = {
+		78CFE1DC257DE5AD0044F3D5 /* CertificateB */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1663,11 +1517,11 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
-			name = QATestRelease;
+			name = CertificateB;
 		};
-		78CFE1DD257DE5AD0044F3D5 /* QATestRelease */ = {
+		78CFE1DD257DE5AD0044F3D5 /* CertificateB */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8CD382F7BF039504C1D49C53 /* Pods-AgoraEducation.qatestrelease.xcconfig */;
+			baseConfigurationReference = C4C459442E746BCF4D5997C8 /* Pods-AgoraEducation.certificateb.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
@@ -1713,7 +1567,7 @@
 				);
 				MARKETING_VERSION = 2.7.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraEducationQATest;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.CertificateB;
 				PRODUCT_NAME = AgoraCloudClass;
 				PROVISIONING_PROFILE_SPECIFIER = AgoraTest2020;
 				STRIP_STYLE = "non-global";
@@ -1724,9 +1578,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = QATestRelease;
+			name = CertificateB;
 		};
-		78CFE1DE257DE5AD0044F3D5 /* QATestRelease */ = {
+		78CFE1DE257DE5AD0044F3D5 /* CertificateB */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1743,9 +1597,9 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraCloudClass.app/AgoraCloudClass";
 			};
-			name = QATestRelease;
+			name = CertificateB;
 		};
-		78CFE1DF257DE5AD0044F3D5 /* QATestRelease */ = {
+		78CFE1DF257DE5AD0044F3D5 /* CertificateB */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -1761,7 +1615,161 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = AgoraSmallClass;
 			};
-			name = QATestRelease;
+			name = CertificateB;
+		};
+		862C3F7828E41750002DEEBB /* CertificateD */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = CertificateD;
+		};
+		862C3F7928E41750002DEEBB /* CertificateD */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7710B25021320B9CCD7E9CE1 /* Pods-AgoraEducation.certificated.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 6;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = VN8672FRAP;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AgoraEducation",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AFNetworking/AFNetworking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraActionProcess/AgoraActionProcess.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraEduSDK/AgoraEduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraHandsUp/AgoraHandsUp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AgoraLog/AgoraLog.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AliyunOSSiOS/AliyunOSSiOS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaLumberjack/CocoaLumberjack.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/EduSDK/EduSDK.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Whiteboard/Whiteboard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/YYModel/YYModel.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/dsBridge/dsBridge.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
+				);
+				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 2.7.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.CertificateD;
+				PRODUCT_NAME = AgoraCloudClass;
+				PROVISIONING_PROFILE_SPECIFIER = AgoraQA2022D;
+				STRIP_STYLE = "non-global";
+				STRIP_SWIFT_SYMBOLS = NO;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = CertificateD;
+		};
+		862C3F7A28E41750002DEEBB /* CertificateD */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AgoraCloudClass.app/AgoraCloudClass";
+			};
+			name = CertificateD;
+		};
+		862C3F7B28E41750002DEEBB /* CertificateD */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = AgoraSmallClassUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraSmallClassUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AgoraSmallClass;
+			};
+			name = CertificateD;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1771,10 +1779,10 @@
 			buildConfigurations = (
 				1AE0D02E2283C5F40092AC5E /* Debug */,
 				1AE0D02F2283C5F40092AC5E /* Release */,
-				78515D3223FCCDCB0015B5EC /* DevRelease */,
-				78AED04623C58E5D00A24DDB /* QARelease */,
-				78CFE1DC257DE5AD0044F3D5 /* QATestRelease */,
-				7868EA4525DE8F4300D95021 /* QATestNewRelease */,
+				78AED04623C58E5D00A24DDB /* CertificateA */,
+				78CFE1DC257DE5AD0044F3D5 /* CertificateB */,
+				7868EA4525DE8F4300D95021 /* CertificateC */,
+				862C3F7828E41750002DEEBB /* CertificateD */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1784,10 +1792,10 @@
 			buildConfigurations = (
 				1AE0D0312283C5F40092AC5E /* Debug */,
 				1AE0D0322283C5F40092AC5E /* Release */,
-				78515D3323FCCDCB0015B5EC /* DevRelease */,
-				78AED04723C58E5D00A24DDB /* QARelease */,
-				78CFE1DD257DE5AD0044F3D5 /* QATestRelease */,
-				7868EA4625DE8F4300D95021 /* QATestNewRelease */,
+				78AED04723C58E5D00A24DDB /* CertificateA */,
+				78CFE1DD257DE5AD0044F3D5 /* CertificateB */,
+				7868EA4625DE8F4300D95021 /* CertificateC */,
+				862C3F7928E41750002DEEBB /* CertificateD */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1797,10 +1805,10 @@
 			buildConfigurations = (
 				1AE0D0342283C5F40092AC5E /* Debug */,
 				1AE0D0352283C5F40092AC5E /* Release */,
-				78515D3423FCCDCB0015B5EC /* DevRelease */,
-				78AED04823C58E5D00A24DDB /* QARelease */,
-				78CFE1DE257DE5AD0044F3D5 /* QATestRelease */,
-				7868EA4725DE8F4300D95021 /* QATestNewRelease */,
+				78AED04823C58E5D00A24DDB /* CertificateA */,
+				78CFE1DE257DE5AD0044F3D5 /* CertificateB */,
+				7868EA4725DE8F4300D95021 /* CertificateC */,
+				862C3F7A28E41750002DEEBB /* CertificateD */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1810,10 +1818,10 @@
 			buildConfigurations = (
 				1AE0D0372283C5F40092AC5E /* Debug */,
 				1AE0D0382283C5F40092AC5E /* Release */,
-				78515D3523FCCDCB0015B5EC /* DevRelease */,
-				78AED04923C58E5D00A24DDB /* QARelease */,
-				78CFE1DF257DE5AD0044F3D5 /* QATestRelease */,
-				7868EA4825DE8F4300D95021 /* QATestNewRelease */,
+				78AED04923C58E5D00A24DDB /* CertificateA */,
+				78CFE1DF257DE5AD0044F3D5 /* CertificateB */,
+				7868EA4825DE8F4300D95021 /* CertificateC */,
+				862C3F7B28E41750002DEEBB /* CertificateD */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
