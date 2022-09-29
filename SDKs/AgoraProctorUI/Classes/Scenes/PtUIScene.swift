@@ -37,6 +37,7 @@ import Masonry
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        UIApplication.shared.isIdleTimerDisabled = true
         
         initViews()
         initViewFrame()
