@@ -31,9 +31,4 @@ typedef NS_ENUM(NSInteger, AgoraProctorExitReason) {
     AgoraProctorExitReasonKickOut = 1
 };
 
-typedef NS_ENUM(NSInteger, AgoraProctorDeviceType) {
-    AgoraProctorDeviceTypeMain     = 0,
-    AgoraProctorDeviceTypeSub      = 1
-};
-
 NS_ASSUME_NONNULL_END

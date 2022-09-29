@@ -59,12 +59,15 @@ class PtExamView: UIView {
                      let timeInfo):
             examNameLabel.agora_visible = false
             beforeExamTipLabel.agora_visible = false
-            beforeExamCountdown.agora_visible = true
-            duringCountdown.agora_visible = false
             endLabel.agora_visible = false
             
             if countdown > 0 {
+                duringCountdown.agora_visible = false
+                beforeExamCountdown.agora_visible = true
                 beforeExamCountdown.startTimer(countdown)
+            } else {
+                beforeExamCountdown.agora_visible = false
+                duringCountdown.agora_visible = true
             }
             
             duringCountdown.timeInfo = timeInfo

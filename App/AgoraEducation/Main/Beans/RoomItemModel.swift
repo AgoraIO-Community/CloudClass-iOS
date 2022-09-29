@@ -20,7 +20,6 @@ class RoomInputInfoModel {
     var roomId: String?
     var roleType: Int = 2
     var roomType: Int = 0
-    var deviceType: AgoraProctorDeviceType = .sub
     var appId: String?
     var token: String?
     var serviceType: AgoraEduServiceType?
@@ -441,15 +440,5 @@ struct RoomItemModel {
             ary.append(model)
         }
         return ary
-    }
-}
-
-extension AgoraProctorDeviceType {
-    var str: String {
-        switch self {
-        case .main:       return "main"
-        case .sub:        return "sub"
-        @unknown default: return "sub"
-        }
     }
 }
