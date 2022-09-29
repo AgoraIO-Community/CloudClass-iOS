@@ -181,9 +181,8 @@ private extension RoomListViewController {
         let userId = FcrUserInfoPresenter.shared.companyId
         var cid = userId
         
-        if model.roomType == 6,
-           model.deviceType == .sub {
-            cid = "\(cid)-\(model.deviceType.str)"
+        if model.roomType == 6 {
+            cid = "\(cid)-sub"
         }
         AgoraLoading.loading()
         FcrOutsideClassAPI.fetchRoomDetail(roomId: roomId,
@@ -335,7 +334,6 @@ private extension RoomListViewController {
                                                     userRole: .student,
                                                     roomName: roomName,
                                                     roomUuid: roomUuid,
-                                                    deviceType: .sub,
                                                     appId: appId,
                                                     token: token,
                                                     region: FcrEnvironment.shared.region.proctor,

@@ -66,8 +66,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *roomName;
 // 全局唯一的教室id
 @property (nonatomic, copy) NSString *roomUuid;
-// 设备类型（主/副）
-@property (nonatomic, assign) AgoraProctorDeviceType deviceType;
 // 声网App Id
 @property (nonatomic, copy) NSString *appId;
 // 声网Token
@@ -86,7 +84,6 @@ NS_ASSUME_NONNULL_BEGIN
                         userRole:(AgoraProctorUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
-                      deviceType:(AgoraProctorDeviceType)deviceType
                            appId:(NSString *)appId
                            token:(NSString *)token;
 
@@ -95,7 +92,6 @@ NS_ASSUME_NONNULL_BEGIN
                         userRole:(AgoraProctorUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
-                      deviceType:(AgoraProctorDeviceType)deviceType
                            appId:(NSString *)appId
                            token:(NSString *)token
                           region:(AgoraProctorRegion)region

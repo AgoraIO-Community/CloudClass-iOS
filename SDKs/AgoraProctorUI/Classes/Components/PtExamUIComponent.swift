@@ -212,12 +212,13 @@ private extension PtExamUIComponent {
             return
         }
         
-        var localSubRoomId = getUserSubroomId(userIdPrefix: userIdPrefix)
+        let localSubRoomId = getUserSubroomId(userIdPrefix: userIdPrefix)
         
-        if let `localSubRoomId` = localSubRoomId {
+        if subRoomCheck(localSubRoomId) {
             joinSubRoom(localSubRoomId)
         } else {
             let config = AgoraEduContextSubRoomCreateConfig(subRoomName: userIdPrefix,
+                                                            subRoomId: localSubRoomId,
                                                             userList: [localUserId],
                                                             subRoomProperties: nil)
             contextPool.group.addSubRoomList(configs: [config],
@@ -308,18 +309,18 @@ private extension PtExamUIComponent {
         contextPool.media.stopRenderVideo(streamUuid: streamId)
     }
     
-    func getUserSubroomId(userIdPrefix: String) -> String? {
-        var subRoomId: String?
-        if let subRoomList = contextPool.group.getSubRoomList() {
-            for subRoom in subRoomList {
-                guard let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
-                      userList.contains(where: {$0.contains(userIdPrefix)}) else {
-                    continue
-                }
-                subRoomId = subRoom.subRoomUuid
-                break
-            }
+    func getUserSubroomId(userIdPrefix: String) -> String {
+        let roomId = contextPool.room.getRoomInfo().roomUuid
+        let localSubRoomId = "\(roomId)-\(userIdPrefix)".md5()
+        return localSubRoomId
+    }
+    
+    func subRoomCheck(_ subRoomId: String) -> Bool {
+        guard let list = contextPool.group.getSubRoomList() else {
+            return false
         }
-        return subRoomId
+        
+        return list.contains(where: {$0.subRoomUuid == subRoomId})
+        
     }
 }
