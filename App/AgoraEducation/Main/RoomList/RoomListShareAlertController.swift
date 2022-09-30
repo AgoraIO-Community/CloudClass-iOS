@@ -9,6 +9,31 @@
 import UIKit
 import AgoraUIBaseViews
 
+struct FcrShareLink {
+    public static func shareLinkWith(roomId: String) -> String {
+        let owner = FcrUserInfoPresenter.shared.nickName.urlEncoded
+        let room = roomId.urlEncoded
+        let dict = [
+            "owner": owner,
+            "roomId": room,
+            "region": FcrEnvironment.shared.region.rawValue
+        ]
+        let json = dict.jsonString()
+        let sc = json?.base64Encoded ?? ""
+//        var version = UIApplication.shared.version ?? ""
+//        var nums = version.split(separator: ".")
+//        nums.removeLast()
+//        nums.append("x")
+//        version = nums.joined(separator: ".")
+        let version = "2.8.x"
+        var baseURL = "https://solutions-apaas.agora.io/apaas/app/prod/"
+        if FcrEnvironment.shared.environment != .pro {
+            baseURL = "https://solutions-apaas.agora.io/apaas/app/test/release_"
+        }
+        let shareLink = baseURL + version + "/index.html/#/invite?sc=" + sc
+        return shareLink
+    }
+}
 class RoomListShareAlertController: UIViewController {
     
     static func show(in viewController: UIViewController,
@@ -57,35 +82,11 @@ private extension RoomListShareAlertController {
         guard let roomId = roomId else {
             return
         }
-        UIPasteboard.general.string = shareLinkWith(roomId: roomId)
+        UIPasteboard.general.string = FcrShareLink.shareLinkWith(roomId: roomId)
         AgoraToast.toast(message: "fcr_sharelink_tips_roomid".ag_localized(),
                          type: .notice)
         dismiss(animated: true)
         complete?()
-    }
-    
-    func shareLinkWith(roomId: String) -> String {
-        let owner = FcrUserInfoPresenter.shared.nickName.urlEncoded
-        let room = roomId.urlEncoded
-        let dict = [
-            "owner": owner,
-            "roomId": room,
-            "region": FcrEnvironment.shared.region.rawValue
-        ]
-        let json = dict.jsonString()
-        let sc = json?.base64Encoded ?? ""
-//        var version = UIApplication.shared.version ?? ""
-//        var nums = version.split(separator: ".")
-//        nums.removeLast()
-//        nums.append("x")
-//        version = nums.joined(separator: ".")
-        let version = "2.8.x"
-        var baseURL = "https://solutions-apaas.agora.io/apaas/app/prod/"
-        if FcrEnvironment.shared.environment != .pro {
-            baseURL = "https://solutions-apaas.agora.io/apaas/app/test/release_"
-        }
-        let shareLink = baseURL + version + "/index.html/#/invite?sc=" + sc
-        return shareLink
     }
 }
 // MARK: - Creations

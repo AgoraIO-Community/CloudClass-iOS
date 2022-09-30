@@ -76,8 +76,14 @@ import AgoraWidget
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
-    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
-                                                              exitDelegate: self)
+    private lazy var settingComponent: FcrSettingUIComponent = {
+        let vc = FcrSettingUIComponent(mediaController: contextPool.media,
+                                       widgetController: contextPool.widget,
+                                       delegate: self,
+                                       exitDelegate: self)
+        addChild(vc)
+        return vc
+    }()
     
     /** 聊天窗口 控制器*/
     private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,
@@ -328,7 +334,17 @@ import AgoraWidget
         updateRenderCollectionLayout()
     }
 }
-
+// MARK: - FcrSettingUIComponentDelegate
+extension FcrSmallUIScene: FcrSettingUIComponentDelegate {
+    func onShowShareView(_ view: UIView) {
+        ctrlView = nil
+        toolBarComponent.deselectAll()
+        self.view.addSubview(view)
+        view.mas_makeConstraints { make in
+            make?.top.left().bottom().right().equalTo()(0)
+        }
+    }
+}
 // MARK: - AgoraToolBarDelegate
 extension FcrSmallUIScene: FcrToolBarComponentDelegate {
     func toolsViewDidSelectTool(tool: FcrToolBarItemType,

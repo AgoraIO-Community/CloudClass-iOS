@@ -81,6 +81,7 @@ fcr_tool_box_count_down = "倒计时";
 fcr_tool_box_popup_quiz = "答题器";
 
 // Media
+fcr_inshare_button_share = "分享";
 fcr_media_camera = "摄像头";
 fcr_media_mic = "麦克风";
 fcr_media_camera_direction = "方向";

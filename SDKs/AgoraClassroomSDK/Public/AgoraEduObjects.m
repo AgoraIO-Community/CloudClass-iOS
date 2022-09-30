@@ -198,6 +198,11 @@
                                                                    widgetId:@"popupQuiz"];
     widgets[popupQuiz.widgetId] = popupQuiz;
     
+    // share link
+    AgoraWidgetConfig *shareLink = [[AgoraWidgetConfig alloc] initWithClass:[AgoraShareLinkWidget class]
+                                                                   widgetId:@"shareLink"];
+    widgets[shareLink.widgetId] = shareLink;
+    
     return widgets;
 }
 @end

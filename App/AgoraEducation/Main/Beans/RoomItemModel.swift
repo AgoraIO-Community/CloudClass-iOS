@@ -17,6 +17,7 @@ class RoomInputInfoModel {
     var userName: String?
     var roomName: String?
     var roomId: String?
+    /** 1. 老师， 2. 学生*/
     var roleType: Int = 2
     var roomType: Int = 0
     var appId: String?
@@ -407,6 +408,7 @@ struct RoomItemModel {
     let roomState: UInt
     let startTime: UInt
     let endTime: UInt
+    let creatorId: String
     let roomProperties: [String: Any]?
     
     static func modelWith(dict: [String: Any]) -> RoomItemModel? {
@@ -415,7 +417,8 @@ struct RoomItemModel {
               let roomType = dict["roomType"] as? UInt,
               let roomState = dict["roomState"] as? UInt,
               let startTime = dict["startTime"] as? UInt,
-              let endTime = dict["endTime"] as? UInt
+              let endTime = dict["endTime"] as? UInt,
+              let creatorId = dict["creatorId"] as? String
         else {
             return nil
         }
@@ -426,6 +429,7 @@ struct RoomItemModel {
                                   roomState: roomState,
                                   startTime: startTime,
                                   endTime: endTime,
+                                  creatorId: creatorId,
                                   roomProperties: roomProperties)
         return model
     }
