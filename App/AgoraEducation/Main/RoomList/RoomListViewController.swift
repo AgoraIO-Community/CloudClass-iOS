@@ -14,6 +14,7 @@ import AgoraClassroomSDK
 #endif
 import AgoraUIBaseViews
 import AgoraProctorSDK
+import AgoraWidgets
 
 class RoomListViewController: UIViewController {
     /**views**/
@@ -160,9 +161,8 @@ private extension RoomListViewController {
     }
     // 课程业务信息组装
     func fillupInputModel(_ model: RoomInputInfoModel) {
-        RoomListJoinAlertController.show(in: self,
-                                         inputModel: model) { model in
-            self.fillupClassInfo(model: model) { model in
+        self.fillupClassInfo(model: model) { model in
+            self.fillupTokenInfo(model: model) { model in
                 if model.roomType == 6 {
                     self.startLaunchProctorRoom(with: model)
                 } else {
@@ -177,24 +177,11 @@ private extension RoomListViewController {
         guard let roomId = model.roomId else {
             return
         }
-        
-        let userId = FcrUserInfoPresenter.shared.companyId
-        var cid = userId
-        
-        if model.roomType == 6 {
-            cid = "\(cid)-sub"
-        }
         AgoraLoading.loading()
-        FcrOutsideClassAPI.fetchRoomDetail(roomId: roomId,
-                                           companyId: cid,
-                                           userId: userId,
-                                           role: model.roleType) { [weak self] rsp in
+        FcrOutsideClassAPI.fetchRoomDetail(roomId: roomId) { [weak self] rsp in
             AgoraLoading.hide()
             guard let data = rsp["data"] as? [String: Any],
-                  let token = data["token"] as? String,
-                  let appId = data["appId"] as? String,
-                  let roomDetail = data["roomDetail"] as? [String: Any],
-                  let item = RoomItemModel.modelWith(dict: roomDetail)
+                  let item = RoomItemModel.modelWith(dict: data)
             else {
                 return
             }
@@ -202,8 +189,6 @@ private extension RoomListViewController {
             let endDate = Date(timeIntervalSince1970: Double(item.endTime) * 0.001)
             model.roomType = Int(item.roomType)
             model.roomName = item.roomName
-            model.token = token
-            model.appId = appId
             if let roomProperties = item.roomProperties,
                let service = roomProperties["serviceType"] as? Int,
                let serviceType = AgoraEduServiceType(rawValue: service) {
@@ -221,11 +206,43 @@ private extension RoomListViewController {
                              type: .warning)
         }
     }
+    
+    func fillupTokenInfo(model: RoomInputInfoModel,
+                         complete: @escaping (RoomInputInfoModel) -> Void) {
+        AgoraLoading.loading()
+        guard let roomUuid = model.roomId else {
+            return
+        }
+        var cid = FcrUserInfoPresenter.shared.companyId
+        if model.roomType == 6 {
+            cid = "\(cid)-sub"
+        }
+        FcrOutsideClassAPI.buildToken(roomUuid: roomUuid,
+                                      userRole: model.roleType,
+                                      userId: cid) { dict in
+            AgoraLoading.hide()
+            guard let data = dict["data"] as? [String : Any] else {
+                fatalError("TokenBuilder buildByServer can not find data, dict: \(dict)")
+            }
+            guard let token = data["token"] as? String,
+                  let appId = data["appId"] as? String else {
+                fatalError("TokenBuilder buildByServer can not find value, dict: \(dict)")
+            }
+            model.token = token
+            model.appId = appId
+            complete(model)
+        } onFailure: { code, msg in
+            AgoraLoading.hide()
+            AgoraToast.toast(message: msg,
+                             type: .warning)
+        }
+    }
+
     // 组装Launch参数并拉起教室
     func startLaunchClassRoom(with model: RoomInputInfoModel) {
         guard let userName = model.userName,
               let roomName = model.roomName,
-              let roomUuid = model.roomId,
+              let roomId = model.roomId,
               let appId = model.appId,
               let token = model.token
         else {
@@ -257,7 +274,7 @@ private extension RoomListViewController {
                                                 userUuid: FcrUserInfoPresenter.shared.companyId,
                                                 userRole: AgoraEduUserRole(rawValue: role) ?? .student,
                                                 roomName: roomName,
-                                                roomUuid: roomUuid,
+                                                roomUuid: roomId,
                                                 roomType: roomType,
                                                 appId: appId,
                                                 token: token,
@@ -278,8 +295,15 @@ private extension RoomListViewController {
                 newExtra["coursewareList"] = model.publicCoursewares()
                 v.extraInfo = newExtra
             }
+            if k == "shareLink" {
+                v.extraInfo = ["shareLink": FcrShareLink.shareLinkWith(roomId: roomId)]
+            }
             widgets[k] = v
         }
+        // share link
+        let shareLink = AgoraWidgetConfig(with: AgoraShareLinkWidget.self,
+                                          widgetId: "shareLink")
+        widgets[shareLink.widgetId] = shareLink
         launchConfig.widgets = widgets
         
         if region != .CN {
@@ -423,6 +447,13 @@ extension RoomListViewController: RoomListItemCellDelegate {
         let inputModel = RoomInputInfoModel()
         inputModel.roomId = item.roomId
         inputModel.roomName = item.roomName
+        inputModel.userName = FcrUserInfoPresenter.shared.nickName
+        let cid = FcrUserInfoPresenter.shared.companyId
+        if item.creatorId == cid {
+            inputModel.roleType = 2
+        } else {
+            inputModel.roleType = 1
+        }        
         fillupInputModel(inputModel)
     }
     
@@ -514,7 +545,10 @@ extension RoomListViewController: RoomListTitleViewDelegate {
     
     func onClickJoin() {
         let inputModel = RoomInputInfoModel()
-        fillupInputModel(inputModel)
+        RoomListJoinAlertController.show(in: self,
+                                         inputModel: inputModel) { model in
+            self.fillupInputModel(inputModel)
+        }
     }
     
     func onClickCreate() {

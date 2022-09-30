@@ -37,7 +37,9 @@ class FcrStreamWindowUIComponent: UIViewController {
     // dataSource index is equal to view.subViews index
     private(set) var dataSource = [FcrStreamWindowWidgetItem]() {
         didSet {
-            view.isHidden = (dataSource.count == 0)
+            if dataSource.count != oldValue.count {
+                view.isHidden = (dataSource.count == 0)
+            }
         }
     }
         

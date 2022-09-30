@@ -34,6 +34,7 @@ fcr_create_room = "Create Classroom";
 fcr_create_small_title = "Small Class";
 fcr_create_lecture_title = "Lecture Hall";
 fcr_create_onetoone_title = "1 on 1";
+pt_home_page_scene_option_online_proctoring = "Online Proctoring";
 fcr_create_small_detail = "Interactive";
 fcr_create_lecture_detail = "Broadcast";
 fcr_create_onetoone_detail = "Interactive";

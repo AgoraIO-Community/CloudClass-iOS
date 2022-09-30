@@ -19,7 +19,10 @@ import AgoraWidget
     
     /** 设置界面 控制器*/
     private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
+                                                              widgetController: contextPool.widget,
+                                                              delegate: self,
                                                               exitDelegate: self)
+    
     /** 举手列表 控制器（仅教师端）*/
     private lazy var handsListComponent = FcrHandsListUIComponent(userController: contextPool.user,
                                                                   delegate: self)
@@ -317,7 +320,17 @@ import AgoraWidget
         teacherRenderComponent.view.clipsToBounds = true
     }
 }
-
+// MARK: - FcrSettingUIComponentDelegate
+extension FcrLectureUIScene: FcrSettingUIComponentDelegate {
+    func onShowShareView(_ view: UIView) {
+        ctrlView = nil
+        toolBarComponent.deselectAll()
+        self.view.addSubview(view)
+        view.mas_makeConstraints { make in
+            make?.top.left().bottom().right().equalTo()(0)
+        }
+    }
+}
 // MARK: - AgoraBoardUIComponentDelegate
 extension FcrLectureUIScene: FcrBoardUIComponentDelegate {
     func onStageStateChanged(stageOn: Bool) {

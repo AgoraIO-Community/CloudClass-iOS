@@ -7,31 +7,49 @@
 
 import AgoraUIBaseViews
 import AgoraEduCore
+import AgoraWidget
 import UIKit
+
+protocol FcrSettingUIComponentDelegate: NSObjectProtocol {
+    func onShowShareView(_ view: UIView)
+}
 
 class FcrSettingUIComponent: FcrUIComponent {
     /**context*/
     private let mediaController: AgoraEduMediaContext
+    private let widgetController: AgoraEduWidgetContext
     private let isSubRoom: Bool
     private weak var exitDelegate: FcrUISceneExit?
+    private weak var delegate: FcrSettingUIComponentDelegate?
     
     // Views
     private lazy var contentView = FcrSettingsView()
     
+    private lazy var shareLinkWidget: AgoraBaseWidget? = {
+        guard let config = widgetController.getWidgetConfig(kShareLinkWidgetId) else {
+            return nil
+        }
+        return widgetController.create(config)
+    }()
+    
     public let suggestSize = CGSize(width: 201,
-                                    height: 220)
-            
+                                    height: 285)
+        
     init(mediaController: AgoraEduMediaContext,
+         widgetController: AgoraEduWidgetContext,
          isSubRoom: Bool = false,
+         delegate: FcrSettingUIComponentDelegate,
          exitDelegate: FcrUISceneExit? = nil) {
         self.mediaController = mediaController
+        self.widgetController = widgetController
         self.isSubRoom = isSubRoom
         self.exitDelegate = exitDelegate
+        self.delegate = delegate
         
         super.init(nibName: nil,
                    bundle: nil)
     }
-    
+        
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -105,6 +123,13 @@ class FcrSettingUIComponent: FcrUIComponent {
 
 // MARK: - FcrSettingsViewDelegate
 extension FcrSettingUIComponent: FcrSettingsViewDelegate {
+    func onClickShare() {
+        guard let view = shareLinkWidget?.view else {
+            return
+        }
+        delegate?.onShowShareView(view)
+    }
+    
     func onCameraSwitchIsOn(isOn: Bool) {
         switch isOn {
         case true:

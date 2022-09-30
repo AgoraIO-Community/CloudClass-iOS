@@ -36,8 +36,10 @@ import AgoraWidget
     /** 设置界面 控制器*/
     private lazy var settingViewController: FcrSettingUIComponent = {
         let vc = FcrSettingUIComponent(mediaController: contextPool.media,
+                                       widgetController: contextPool.widget,
+                                       delegate: self,
                                        exitDelegate: self)
-        self.addChild(vc)
+        addChild(vc)
         return vc
     }()
     /** 举手列表 控制器（仅教师端）*/
@@ -312,6 +314,17 @@ import AgoraWidget
     
     public override func updateViewProperties() {
         super.updateViewProperties()
+    }
+}
+// MARK: - FcrSettingUIComponentDelegate
+extension AgoraVocationalUIScene: FcrSettingUIComponentDelegate {
+    func onShowShareView(_ view: UIView) {
+        ctrlView = nil
+        toolBarController.deselectAll()
+        self.view.addSubview(view)
+        view.mas_makeConstraints { make in
+            make?.top.left().bottom().right().equalTo()(0)
+        }
     }
 }
 // MARK: - AgoraEduStreamHandler
