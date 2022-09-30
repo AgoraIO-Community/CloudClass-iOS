@@ -41,6 +41,7 @@ withWechatNotify {
                 string(name: 'open_widgets_extapps_branch', value: branches["open-apaas-extapp-ios"] ?: companionBranch),
                 string(name: 'rte_branch', value: branches["common-scene-sdk"] ?: companionBranch),
                 string(name: 'ci_branch', value: 'apaas_ios'),
+                string(name: 'certificate', value: '1'),
                 booleanParam(name: 'Package_Publish', value: false),
                 booleanParam(name: 'appstore', value: false)
             ]
