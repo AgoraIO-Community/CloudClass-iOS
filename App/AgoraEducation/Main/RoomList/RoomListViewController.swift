@@ -353,7 +353,6 @@ private extension RoomListViewController {
                                                     userRole: .student,
                                                     roomName: roomName,
                                                     roomUuid: roomUuid,
-                                                    deviceType: .sub,
                                                     appId: appId,
                                                     token: token,
                                                     region: FcrEnvironment.shared.region.proctor,
