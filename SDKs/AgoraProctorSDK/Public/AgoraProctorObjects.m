@@ -91,7 +91,6 @@
                          userRole:userRole
                          roomName:roomName
                          roomUuid:roomUuid
-                       deviceType:AgoraProctorDeviceTypeSub
                             appId:appId
                             token:token
                            region:AgoraEduCoreRegionCN
@@ -104,7 +103,6 @@
                         userRole:(AgoraProctorUserRole)userRole
                         roomName:(NSString *)roomName
                         roomUuid:(NSString *)roomUuid
-                      deviceType:(AgoraProctorDeviceType)deviceType
                            appId:(NSString *)appId
                            token:(NSString *)token
                           region:(AgoraProctorRegion)region
@@ -120,7 +118,6 @@
     
     self.appId = appId;
     self.token = token;
-    self.deviceType = deviceType;
     
     self.region = region;
     self.mediaOptions = mediaOptions;

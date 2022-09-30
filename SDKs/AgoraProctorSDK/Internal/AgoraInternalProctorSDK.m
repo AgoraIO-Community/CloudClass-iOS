@@ -48,21 +48,8 @@
     
     AgoraEduCoreRoomType roomType = AgoraEduCoreRoomTypeProctor;
     
-    NSString *deviceTypeString = @"";
-    
-    switch (config.deviceType) {
-        case AgoraProctorDeviceTypeMain:
-            deviceTypeString = @"main";
-            break;
-        case AgoraProctorDeviceTypeSub:
-            deviceTypeString = @"sub";
-            break;
-    }
-    
-    NSString *userUuid = [NSString stringWithFormat:@"%@-%@", config.userUuid, deviceTypeString];
-    
     AgoraEduCoreLaunchConfig *launchConfig = [[AgoraEduCoreLaunchConfig alloc] initWithUserName:config.userName
-                                                                                       userUuid:userUuid
+                                                                                       userUuid:config.userUuid
                                                                                        userRole:role
                                                                                  userProperties:config.userProperties
                                                                                        roomName:config.roomName

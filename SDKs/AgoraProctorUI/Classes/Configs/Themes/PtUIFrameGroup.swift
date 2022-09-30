@@ -1,5 +1,5 @@
 //
-//  FcrUIFrameGroup.swift
+//  PtUIFrameGroup.swift
 //  AgoraEduUI
 //
 //  Created by Cavan on 2022/7/11.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct FcrUIFrameGroup {
+struct PtUIFrameGroup {
     // corner radius
     static let alertCornerRadius:        CGFloat = 12
     static let systemCornerRadius:       CGFloat = 14
@@ -18,7 +18,7 @@ struct FcrUIFrameGroup {
     // border width
     static let dotBorderWidth:       CGFloat = 1.75
     static let highlightBorderWidth: CGFloat = 3
-
+    
     // alert side spacing
     static let alertSideSpacing:     CGFloat = 30
 }

@@ -7,6 +7,7 @@
 
 import AgoraUIBaseViews
 import SwifterSwift
+import CommonCrypto
 import UIKit
 
 func ValueTransform<Result>(value: Any?,
@@ -46,11 +47,20 @@ extension PtAlert {
         
         let alertController = AgoraAlert()
         
+        alertController.contentWidth = 315
         alertController.backgroundColor = alert.backgroundColor
         alertController.lineColor = .clear
         alertController.shadowColor = alert.shadow.color
         alertController.titleColor = alert.title.color
+        
         alertController.buttonColor = alert.button.normalTitleColor
+        alertController.buttonFont = alert.button.font
+        alertController.buttonCornerRadius = alert.cornerRadius
+        alertController.buttonSideGap = 11
+        alertController.buttonHeight = 40
+        alertController.buttonBottomGap = 14
+        alertController.buttonDivideGap = 15
+        
         alertController.contentFont = alert.message.font
         alertController.normalContentColor = alert.message.color
         
@@ -62,7 +72,7 @@ extension PtAlert {
 }
 
 extension UIImage {
-    class func fcr_named(_ named: String) -> UIImage? {
+    class func pt_named(_ named: String) -> UIImage? {
         let bundle = Bundle.AgoraProctorUI()
         return UIImage(named: named,
                        in: bundle,
@@ -77,15 +87,15 @@ extension Bundle {
 }
 
 extension String {
-    static func agedu_localized_replacing_x() -> String {
+    static func pt_localized_replacing_x() -> String {
         return "{xxx}"
     }
     
-    static func agedu_localized_replacing_y() -> String {
+    static func pt_localized_replacing_y() -> String {
         return "{yyy}"
     }
     
-    func fcr_proctor_localized() -> String {
+    func pt_localized() -> String {
         guard let eduBundle = Bundle.agora_bundle("AgoraProctorUI") else {
             return ""
         }
@@ -121,6 +131,23 @@ extension String {
         }
         
         return data.toArr()
+    }
+    
+    func md5() -> String {
+        let str = self.cString(using: String.Encoding.utf8)
+        let strLen = CUnsignedInt(self.lengthOfBytes(using: String.Encoding.utf8))
+        let digestLen = Int(CC_MD5_DIGEST_LENGTH)
+        let result = UnsafeMutablePointer<CUnsignedChar>.allocate(capacity: digestLen)
+        CC_MD5(str!, strLen, result)
+
+        let hash = NSMutableString()
+
+        for i in 0..<digestLen {
+            hash.appendFormat("%02x", result[i])
+        }
+
+        result.deallocate()
+        return hash as String
     }
     
     func getUserIdPrefix() -> String? {

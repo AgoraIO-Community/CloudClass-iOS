@@ -1,5 +1,5 @@
 //
-//  FcrProctorExamComponent.swift
+//  PtExamUIComponent.swift
 //  AgoraProctorUI
 //
 //  Created by LYY on 2022/9/1.
@@ -8,16 +8,16 @@
 import AgoraUIBaseViews
 import AgoraEduCore
 
-@objc public protocol FcrProctorExamComponentDelegate: NSObjectProtocol {
+@objc public protocol PtExamUIComponentDelegate: NSObjectProtocol {
     func onExamExit()
 }
 
-class FcrProctorExamComponent: PtUIComponent {
+class PtExamUIComponent: PtUIComponent {
     /**view**/
-    private lazy var contentView = FcrProctorExamComponentView(frame: .zero)
+    private lazy var contentView = PtExamView(frame: .zero)
     
     /**context**/
-    private weak var delegate: FcrProctorExamComponentDelegate?
+    private weak var delegate: PtExamUIComponentDelegate?
     private let contextPool: AgoraEduContextPool
     private var subRoom: AgoraEduSubRoomContext?
     
@@ -25,7 +25,7 @@ class FcrProctorExamComponent: PtUIComponent {
     private var currentFront: Bool = true
     
     @objc public init(contextPool: AgoraEduContextPool,
-                      delegate: FcrProctorExamComponentDelegate?) {
+                      delegate: PtExamUIComponentDelegate?) {
         self.contextPool = contextPool
         self.delegate = delegate
         
@@ -59,14 +59,14 @@ class FcrProctorExamComponent: PtUIComponent {
 }
 
 // MARK: - AgoraEduRoomHandler
-extension FcrProctorExamComponent: AgoraEduRoomHandler {
+extension PtExamUIComponent: AgoraEduRoomHandler {
     public func onClassStateUpdated(state: AgoraEduContextClassState) {
         checkExamState(countdown: 5)
     }
 }
 
 // MARK: - AgoraEduRoomHandler
-extension FcrProctorExamComponent: AgoraEduUserHandler {
+extension PtExamUIComponent: AgoraEduUserHandler {
     public func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                       operatorUser: AgoraEduContextUserInfo?) {
         // mostly happend when rtm reconnects successfully
@@ -81,14 +81,14 @@ extension FcrProctorExamComponent: AgoraEduUserHandler {
 }
 
 // MARK: - AgoraEduSubRoomHandler
-extension FcrProctorExamComponent: AgoraEduSubRoomHandler {
+extension PtExamUIComponent: AgoraEduSubRoomHandler {
     public func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         setupCohost()
     }
 }
 
 // MARK: - AgoraEduStreamHandler
-extension FcrProctorExamComponent: AgoraEduStreamHandler {
+extension PtExamUIComponent: AgoraEduStreamHandler {
     public func onStreamJoined(stream: AgoraEduContextStreamInfo,
                                operatorUser: AgoraEduContextUserInfo?) {
         startRenderLocalVideo()
@@ -96,7 +96,7 @@ extension FcrProctorExamComponent: AgoraEduStreamHandler {
 }
 
 // MARK: - AgoraEduGroupHandler
-extension FcrProctorExamComponent: AgoraEduGroupHandler {
+extension PtExamUIComponent: AgoraEduGroupHandler {
     public func onSubRoomListAdded(subRoomList: [AgoraEduContextSubRoomInfo]) {
         guard let userIdPrefix = contextPool.user.getLocalUserInfo().userUuid.getUserIdPrefix(),
               let info = subRoomList.first(where: {$0.subRoomName == userIdPrefix}) else {
@@ -108,7 +108,7 @@ extension FcrProctorExamComponent: AgoraEduGroupHandler {
 }
 
 // MARK: - AgoraUIContentContainer
-extension FcrProctorExamComponent: AgoraUIContentContainer {
+extension PtExamUIComponent: AgoraUIContentContainer {
     public func initViews() {
         view.addSubview(contentView)
         
@@ -143,7 +143,7 @@ extension FcrProctorExamComponent: AgoraUIContentContainer {
 }
 
 // MARK: - private
-private extension FcrProctorExamComponent {
+private extension PtExamUIComponent {
     func checkExamState(countdown: Int = 0) {
         let classInfo = contextPool.room.getClassInfo()
         let state = classInfo.toExamState(countdown: countdown)
@@ -171,13 +171,19 @@ private extension FcrProctorExamComponent {
             return
         }
         
-        let message = "fcr_exam_prep_label_leave_exam".fcr_proctor_localized()
+        let message = "pt_exam_prep_label_leave_exam".pt_localized()
         
-        let cancelTitle = "fcr_sub_room_button_stay".fcr_proctor_localized()
-        let cancelAction = AgoraAlertAction(title: cancelTitle)
+        let config = UIConfig.alert.button
         
-        let leaveTitle = "fcr_sub_room_button_leave".fcr_proctor_localized()
-        let leaveAction = AgoraAlertAction(title: leaveTitle) { [weak self] _ in
+        let cancelTitle = "pt_sub_room_button_stay".pt_localized()
+        let cancelAction = AgoraAlertAction(title: cancelTitle,
+                                            titleColor: config.normalTitleColor,
+                                            backgroundColor: config.normalBackgroundColor)
+        
+        let leaveTitle = "pt_sub_room_button_leave".pt_localized()
+        let leaveAction = AgoraAlertAction(title: leaveTitle,
+                                           titleColor: config.highlightTitleColor,
+                                           backgroundColor: config.highlightBackgroundColor) { [weak self] _ in
             self?.exit()
         }
         
@@ -195,7 +201,7 @@ private extension FcrProctorExamComponent {
         contentView.renderView.setUserName(userInfo.userName)
         let mainUserId = userIdPrefix.joinUserId(.main)
         if let props = contextPool.user.getUserProperties(userUuid: mainUserId),
-        let avatarUrl = props["avatar"] as? String {
+           let avatarUrl = props["avatar"] as? String {
             contentView.renderView.setAvartarImage(avatarUrl)
         }
     }
@@ -206,12 +212,13 @@ private extension FcrProctorExamComponent {
             return
         }
         
-        var localSubRoomId = getUserSubroomId(userIdPrefix: userIdPrefix)
+        let localSubRoomId = getUserSubroomId(userIdPrefix: userIdPrefix)
         
-        if let `localSubRoomId` = localSubRoomId {
+        if subRoomCheck(localSubRoomId) {
             joinSubRoom(localSubRoomId)
         } else {
             let config = AgoraEduContextSubRoomCreateConfig(subRoomName: userIdPrefix,
+                                                            subRoomId: localSubRoomId,
                                                             userList: [localUserId],
                                                             subRoomProperties: nil)
             contextPool.group.addSubRoomList(configs: [config],
@@ -239,7 +246,7 @@ private extension FcrProctorExamComponent {
             AgoraLoading.hide()
         }, failure: { [weak self] error in
             AgoraLoading.hide()
-            AgoraToast.toast(message: "fcr_room_tips_join_failed".fcr_proctor_localized())
+            AgoraToast.toast(message: "pt_room_tips_join_failed".pt_localized())
         })
     }
     
@@ -277,7 +284,7 @@ private extension FcrProctorExamComponent {
         }
         let userId = subRoom.user.getLocalUserInfo().userUuid
         let localStreamList = subRoom.stream.getStreamList(userUuid: userId)
-
+        
         guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid else {
             return
         }
@@ -294,7 +301,7 @@ private extension FcrProctorExamComponent {
     func stopRenderLocalVideo() {
         let userId = contextPool.user.getLocalUserInfo().userUuid
         let localStreamList = contextPool.stream.getStreamList(userUuid: userId)
-
+        
         guard let streamId = localStreamList?.first(where: {$0.videoSourceType == .camera})?.streamUuid  else {
             return
         }
@@ -302,18 +309,18 @@ private extension FcrProctorExamComponent {
         contextPool.media.stopRenderVideo(streamUuid: streamId)
     }
     
-    func getUserSubroomId(userIdPrefix: String) -> String? {
-        var subRoomId: String?
-        if let subRoomList = contextPool.group.getSubRoomList() {
-            for subRoom in subRoomList {
-                guard let userList = contextPool.group.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
-                      userList.contains(where: {$0.contains(userIdPrefix)}) else {
-                    continue
-                }
-                subRoomId = subRoom.subRoomUuid
-                break
-            }
+    func getUserSubroomId(userIdPrefix: String) -> String {
+        let roomId = contextPool.room.getRoomInfo().roomUuid
+        let localSubRoomId = "\(roomId)-\(userIdPrefix)".md5()
+        return localSubRoomId
+    }
+    
+    func subRoomCheck(_ subRoomId: String) -> Bool {
+        guard let list = contextPool.group.getSubRoomList() else {
+            return false
         }
-        return subRoomId
+        
+        return list.contains(where: {$0.subRoomUuid == subRoomId})
+        
     }
 }

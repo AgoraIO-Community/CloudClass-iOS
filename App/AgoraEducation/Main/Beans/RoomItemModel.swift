@@ -12,6 +12,7 @@ import AgoraClassroomSDK_iOS
 #else
 import AgoraClassroomSDK
 #endif
+import AgoraProctorSDK
 
 class RoomInputInfoModel {
     var userName: String?

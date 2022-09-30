@@ -202,13 +202,6 @@ enum DataSourceDeviceType: String, CaseIterable {
         case .sub:      return "debug_device_sub".ag_localized()
         }
     }
-    
-    var edu: AgoraProctorDeviceType {
-        switch self {
-        case .main:     return .main
-        case .sub:      return .sub
-        }
-    }
 }
 
 enum DataSourceIMType: CaseIterable {

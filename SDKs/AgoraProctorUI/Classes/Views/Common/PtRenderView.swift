@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 
-class FcrProctorRenderView: UIView {
+class PtRenderView: UIView {
     
     private lazy var avatarNameLabel = UILabel()
     private lazy var avatarImageView = UIImageView()
@@ -45,7 +45,7 @@ class FcrProctorRenderView: UIView {
 }
 
 // MARK: - AgoraUIContentContainer
-extension FcrProctorRenderView: AgoraUIContentContainer {
+extension PtRenderView: AgoraUIContentContainer {
     func initViews() {
         clipsToBounds = true
         avatarNameLabel.textAlignment = .center

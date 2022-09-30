@@ -1,5 +1,5 @@
 //
-//  FcrProctorExamComponentView.swift
+//  PtExamUIComponentView.swift
 //  AgoraProctorUI
 //
 //  Created by DoubleCircle on 2022/9/12.
@@ -7,20 +7,20 @@
 
 import AgoraUIBaseViews
 
-class FcrProctorExamComponentView: UIView {
+class PtExamView: UIView {
     /**views**/
     private lazy var backgroundImageView = UIImageView()
     private(set) lazy var exitButton = UIButton()
     private(set) lazy var nameLabel = UILabel()
     private(set) lazy var leaveButton = UIButton()
-    private(set) lazy var renderView = FcrProctorRenderView()
+    private(set) lazy var renderView = PtRenderView()
     private(set) lazy var switchCameraButton = UIButton()
     // before
     private(set) lazy var examNameLabel = UILabel()
     private(set) lazy var beforeExamTipLabel = UILabel()
-    private lazy var beforeExamCountdown = FcrExamStartCountdownView(delegate: self)
+    private lazy var beforeExamCountdown = PtExamStartCountdownView(delegate: self)
     // during
-    private lazy var duringCountdown = FcrExamDuringCountdownView()
+    private lazy var duringCountdown = PtExamDuringCountdownView()
     // after
     private lazy var endLabel = UILabel()
     
@@ -59,12 +59,15 @@ class FcrProctorExamComponentView: UIView {
                      let timeInfo):
             examNameLabel.agora_visible = false
             beforeExamTipLabel.agora_visible = false
-            beforeExamCountdown.agora_visible = true
-            duringCountdown.agora_visible = false
             endLabel.agora_visible = false
             
             if countdown > 0 {
+                duringCountdown.agora_visible = false
+                beforeExamCountdown.agora_visible = true
                 beforeExamCountdown.startTimer(countdown)
+            } else {
+                beforeExamCountdown.agora_visible = false
+                duringCountdown.agora_visible = true
             }
             
             duringCountdown.timeInfo = timeInfo
@@ -90,7 +93,7 @@ class FcrProctorExamComponentView: UIView {
 }
 
 // MARK: - FcrExamStartCountdownViewDelegate
-extension FcrProctorExamComponentView: FcrExamStartCountdownViewDelegate {
+extension PtExamView: FcrExamStartCountdownViewDelegate {
     func onStartExamTimerStopped() {
         beforeExamCountdown.agora_visible = false
         duringCountdown.agora_visible = true
@@ -98,16 +101,16 @@ extension FcrProctorExamComponentView: FcrExamStartCountdownViewDelegate {
 }
 
 // MARK: - AgoraUIContentContainer
-extension FcrProctorExamComponentView: AgoraUIContentContainer {
+extension PtExamView: AgoraUIContentContainer {
     public func initViews() {
         backgroundImageView.contentMode = .scaleAspectFill
         
         nameLabel.sizeToFit()
-        beforeExamTipLabel.text = "fcr_room_tips_exam_not_started".fcr_proctor_localized()
+        beforeExamTipLabel.text = "pt_room_tips_exam_not_started".pt_localized()
         beforeExamTipLabel.textAlignment = .center
-        leaveButton.setTitle("fcr_exam_leave_title".fcr_proctor_localized(),
+        leaveButton.setTitle("pt_exam_leave_title".pt_localized(),
                              for: .normal)
-        endLabel.text = "fcr_room_label_exam_over".fcr_proctor_localized()
+        endLabel.text = "pt_room_label_exam_over".pt_localized()
         
         addSubviews([backgroundImageView,
                      exitButton,

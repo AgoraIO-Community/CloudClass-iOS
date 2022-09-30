@@ -10,12 +10,14 @@
 	<dict>
 		<key>io.agora.AgoraEducation</key>
 		<string>App</string>
-		<key>io.agora.AgoraEducationQA</key>
+		<key>io.agora.CertificateA</key>
 		<string>AgoraLab2020</string>
-		<key>io.agora.AgoraEducationQATest</key>
+		<key>io.agora.CertificateB</key>
 		<string>AgoraTest2020</string>
 		<key>io.agora.WayangQA</key>
 		<string>AgoraQA2022C</string>
+		<key>io.agora.CertificateD</key>
+		<string>AgoraQA2022D</string>
 	</dict>
 </dict>
 </plist>

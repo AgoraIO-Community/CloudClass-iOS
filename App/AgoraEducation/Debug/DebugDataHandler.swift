@@ -269,7 +269,6 @@ extension DebugDataHandler {
                                                     userRole: .student,
                                                     roomName: debugInfo.roomName,
                                                     roomUuid: debugInfo.roomId,
-                                                    deviceType: debugInfo.deviceType.edu,
                                                     appId: appId,
                                                     token: token,
                                                     region: debugInfo.region.proctor,

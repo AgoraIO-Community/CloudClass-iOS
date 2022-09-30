@@ -11,9 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef FcrUISceneExitReason AgoraEduExitReason;
-
-
 typedef AgoraEduCoreUserRole AgoraProctorUserRole;
 
 typedef AgoraEduCoreLatencyLevel AgoraProctorLatencyLevel;
@@ -32,11 +29,6 @@ typedef NS_ENUM(NSInteger, AgoraProctorExitReason) {
     AgoraProctorExitReasonNormal = 0,
     // 被踢出
     AgoraProctorExitReasonKickOut = 1
-};
-
-typedef NS_ENUM(NSInteger, AgoraProctorDeviceType) {
-    AgoraProctorDeviceTypeMain     = 0,
-    AgoraProctorDeviceTypeSub      = 1
 };
 
 NS_ASSUME_NONNULL_END

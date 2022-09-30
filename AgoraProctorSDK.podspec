@@ -15,7 +15,8 @@ Pod::Spec.new do |spec|
     spec.dependency "AgoraProctorUI", "1.0.0"
     
     # close source libs
-    spec.dependency "AgoraEduCore", ">=2.7.2"
+    spec.dependency "AgoraWidget", ">=2.8.0"
+    spec.dependency "AgoraEduCore", ">=2.8.0"
   
     spec.frameworks = "AudioToolbox", "Foundation", "UIKit"
   
