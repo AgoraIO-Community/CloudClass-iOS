@@ -18,14 +18,10 @@ import AgoraWidget
                                                                      streamController: contextPool.stream)
     
     /** 设置界面 控制器*/
-    private lazy var settingComponent: FcrSettingUIComponent = {
-        let vc = FcrSettingUIComponent(mediaController: contextPool.media,
-                                       widgetController: contextPool.widget,
-                                       delegate: self,
-                                       exitDelegate: self)
-        addChild(vc)
-        return vc
-    }()
+    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
+                                                              widgetController: contextPool.widget,
+                                                              delegate: self,
+                                                              exitDelegate: self)
     
     /** 举手列表 控制器（仅教师端）*/
     private lazy var handsListComponent = FcrHandsListUIComponent(userController: contextPool.user,

@@ -14,6 +14,7 @@ import AgoraClassroomSDK
 #endif
 import AgoraUIBaseViews
 import AgoraProctorSDK
+import AgoraWidgets
 
 class RoomListViewController: UIViewController {
     /**views**/
@@ -299,6 +300,10 @@ private extension RoomListViewController {
             }
             widgets[k] = v
         }
+        // share link
+        let shareLink = AgoraWidgetConfig(with: AgoraShareLinkWidget.self,
+                                          widgetId: "shareLink")
+        widgets[shareLink.widgetId] = shareLink
         launchConfig.widgets = widgets
         
         if region != .CN {

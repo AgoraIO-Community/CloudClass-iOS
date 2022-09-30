@@ -76,14 +76,10 @@ import AgoraWidget
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
-    private lazy var settingComponent: FcrSettingUIComponent = {
-        let vc = FcrSettingUIComponent(mediaController: contextPool.media,
-                                       widgetController: contextPool.widget,
-                                       delegate: self,
-                                       exitDelegate: self)
-        addChild(vc)
-        return vc
-    }()
+    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
+                                                              widgetController: contextPool.widget,
+                                                              delegate: self,
+                                                              exitDelegate: self)
     
     /** 聊天窗口 控制器*/
     private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,

@@ -30,14 +30,10 @@ import UIKit
                                                           delegate: self)
     
     /** 设置界面 控制器*/
-    private lazy var settingComponent: FcrSettingUIComponent = {
-        let vc = FcrSettingUIComponent(mediaController: contextPool.media,
-                                       widgetController: contextPool.widget,
-                                       delegate: self,
-                                       exitDelegate: self)
-        addChild(vc)
-        return vc
-    }()
+    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
+                                                              widgetController: contextPool.widget,
+                                                              delegate: self,
+                                                              exitDelegate: self)
     
     /** 状态栏 控制器*/
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
