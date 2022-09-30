@@ -18,7 +18,8 @@ import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
     "apaas-common-libs-ios": "ssh://git@git.agoralab.co/aduc/apaas-common-libs-ios.git",
     "cloudclass-ios": "ssh://git@git.agoralab.co/aduc/cloudclass-ios.git",
     "open-apaas-extapp-ios": "ssh://git@git.agoralab.co/aduc/open-apaas-extapp-ios.git",
-    "common-scene-sdk": "ssh://git@git.agoralab.co/aduc/common-scene-sdk.git"
+    "common-scene-sdk": "ssh://git@git.agoralab.co/aduc/common-scene-sdk.git",
+    "open-flexible-classroom-ios": "ssh://git@git.agoralab.co/aduc/open-flexible-classroom-ios.git"
 ]
 
 withWechatNotify {
@@ -36,6 +37,7 @@ withWechatNotify {
 
             def buildParams = [
                 string(name: 'build_branch', value: branches["cloudclass-ios"] ?: companionBranch),
+                string(name: 'open_fcr_app_branch', value: branches["open-flexible-classroom-ios"] ?: companionBranch),
                 string(name: 'open_cloud_class_branch', value: branches["open-cloudclass-ios"] ?: companionBranch),
                 string(name: 'common_libs_branch', value: branches["apaas-common-libs-ios"] ?: companionBranch),
                 string(name: 'open_widgets_extapps_branch', value: branches["open-apaas-extapp-ios"] ?: companionBranch),

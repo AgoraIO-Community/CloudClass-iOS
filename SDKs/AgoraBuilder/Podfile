@@ -36,11 +36,7 @@ def openSourceLibs
   # open source libs
   pod 'AgoraClassroomSDK_iOS', :path => '../../AgoraClassroomSDK_iOS.podspec'
   pod 'AgoraEduUI', :path => '../../AgoraEduUI.podspec'
-  pod 'AgoraProctorSDK', :path => '../../AgoraProctorSDK.podspec'
-  pod 'AgoraProctorUI', :path => '../../AgoraProctorUI.podspec'
   pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/AgoraWidgets.podspec'
-  pod 'AgoraProctorSDK', :path => '../../AgoraProctorSDK.podspec'
-  pod 'AgoraProctorUI', :path => '../../AgoraProctorUI.podspec'
 end
 
 def closeSourceLibs
