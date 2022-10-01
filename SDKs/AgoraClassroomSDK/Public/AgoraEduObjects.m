@@ -197,7 +197,6 @@
     AgoraWidgetConfig *popupQuiz = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPopupQuizWidget class]
                                                                    widgetId:@"popupQuiz"];
     widgets[popupQuiz.widgetId] = popupQuiz;
-    
     return widgets;
 }
 @end

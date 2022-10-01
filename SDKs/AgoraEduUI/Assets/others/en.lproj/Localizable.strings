@@ -76,6 +76,7 @@ fcr_tool_box_count_down = "Countdown";
 fcr_tool_box_popup_quiz = "Pop-up Quiz";
 
 // Media
+fcr_inshare_button_share = "Share";
 fcr_media_camera = "Camera";
 fcr_media_mic = "Microphone";
 fcr_media_camera_direction = "Direction";
