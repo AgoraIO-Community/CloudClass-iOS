@@ -202,13 +202,18 @@ private extension FcrRoomStateUIComponent {
     
     func timeString(from interval: Int64) -> String {
         let time = interval > 0 ? (interval / 1000) : 0
-        let minuteInt = time / 60
-        let secondInt = time % 60
+        let hourInt = time / 3600
+        let minuteInt = time % 3600 / 60
+        let secondInt = time % 3600 % 60
         
         let minuteString = NSString(format: "%02d", minuteInt) as String
         let secondString = NSString(format: "%02d", secondInt) as String
-        
-        return "\(minuteString):\(secondString)"
+        if hourInt == 0 {
+            return "\(minuteString):\(secondString)"
+        } else {
+            let hourString = NSString(format: "%02d", hourInt) as String
+            return "\(hourString):\(minuteString):\(secondString)"
+        }
     }
 }
 
