@@ -168,15 +168,15 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             if model.stageState.isOn {
-                userController.addCoHost(userUuid: model.uuid) { [weak self] in
-                    model.stageState.isOn = true
+                userController.removeCoHost(userUuid: model.uuid) { [weak self] in
+                    model.stageState.isOn = false
                     self?.reloadTableView()
                 } failure: { contextError in
                     
                 }
             } else {
-                userController.removeCoHost(userUuid: model.uuid) { [weak self] in
-                    model.stageState.isOn = false
+                userController.addCoHost(userUuid: model.uuid) { [weak self] in
+                    model.stageState.isOn = true
                     self?.reloadTableView()
                 } failure: { contextError in
                     
