@@ -115,6 +115,13 @@ import AgoraWidget
     
     private var isJoinedRoom = false
     
+    private lazy var watermarkWidget: AgoraBaseWidget? = {
+        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+            return nil
+        }
+        return contextPool.widget.create(config)
+    }()
+    
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
         super.init(sceneType: .lecture,
@@ -146,6 +153,13 @@ import AgoraWidget
             self?.exitScene(reason: .normal)
         }
         contextPool.stream.registerStreamEventHandler(self)
+        
+        if let watermark = watermarkWidget?.view {
+            view.addSubview(watermark)
+            watermark.mas_makeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(0)
+            }
+        }
     }
     
     public override func viewWillAppear(_ animated: Bool) {
