@@ -12,6 +12,7 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = '10.0'
   spec.frameworks = 'AudioToolbox', 'Foundation', 'UIKit'
 
+  spec.dependency "AgoraWidget"
   spec.dependency "Protobuf"
   spec.dependency "Armin", '>=1.1.0'
   spec.dependency "AgoraLog"

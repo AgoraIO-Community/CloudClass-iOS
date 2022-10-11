@@ -54,7 +54,7 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
             showScrollButtons()
             
             delegate?.renderUIComponent(self,
-                                         didDataSouceCountUpdated: dataSource.count)
+                                        didDataSouceCountUpdated: dataSource.count)
         }
     }
     
@@ -393,8 +393,8 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
         nextButton.layer.cornerRadius = config.moveButton.cornerRadius
         nextButton.backgroundColor = config.moveButton.backgroundColor
     }
-    
 }
+
 // MARK: - Private
 private extension FcrWindowRenderUIComponent {
     func showScrollButtons() {
@@ -551,6 +551,10 @@ extension FcrWindowRenderUIComponent: UICollectionViewDataSource, UICollectionVi
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
         guard let `cell` = cell as? FcrWindowRenderCell else {
+            return
+        }
+        
+        guard indexPath.item < dataSource.count else {
             return
         }
         
