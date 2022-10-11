@@ -14,10 +14,10 @@ import AgoraWidget
 @objc public class VcrHostingUIScene: FcrUIScene {
 
     /** 房间状态 控制器*/
-    private lazy var stateController = FcrRoomStateUIComponent(roomController: contextPool.room,
-                                                               userController: contextPool.user,
-                                                               monitorController: contextPool.monitor,
-                                                               groupController: contextPool.group) 
+    private lazy var stateController = VocationalRoomStateUIComponent(roomController: contextPool.room,
+                                                                      userController: contextPool.user,
+                                                                      monitorController: contextPool.monitor,
+                                                                      groupController: contextPool.group)
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalController = FcrRoomGlobalUIComponent(roomController: contextPool.room,
                                                                  userController: contextPool.user,
@@ -75,13 +75,14 @@ import AgoraWidget
         if let watermark = watermarkWidget?.view {
             view.addSubview(watermark)
             watermark.mas_makeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(0)
+                make?.left.right().top().bottom().equalTo()(contentView)
             }
         }
     }
         
     public override func initViews() {
         super.initViews()
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         

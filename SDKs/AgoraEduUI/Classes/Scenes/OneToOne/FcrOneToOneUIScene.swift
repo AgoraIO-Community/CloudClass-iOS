@@ -139,7 +139,7 @@ import UIKit
         if let watermark = watermarkWidget?.view {
             view.addSubview(watermark)
             watermark.mas_makeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(0)
+                make?.left.right().top().bottom().equalTo()(contentView)
             }
         }
     }
