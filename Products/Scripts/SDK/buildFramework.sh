@@ -33,3 +33,32 @@ echo "${Color} ======${SDK_Name} Start======== ${Res}"
 ./buildExecution.sh ${SDKs_Path}/AgoraBuilder ${SDK_Name} Release
 
 errorExit ${SDK_Name} $?
+
+# delete useless files
+IsContains(){
+    ContainingLibs=("AgoraWidgets.framework")
+    [[ ${ContainingLibs[@]/$1/} != ${ContainingLibs[@]} ]];echo $?
+}
+Files=$(ls ${Products_Path})
+
+dSYMs_iPhone_folder="dSYMs_iPhone"
+dSYMs_Simulator_folder="dSYMs_Simulator"
+
+for FileName in ${Files}
+do
+    if [[ $dSYMs_iPhone_folder =~ $FileName ]]; then
+        echo dsym_ip
+    elif [[ $dSYMs_Simulator_folder =~ $FileName ]]; then
+        echo dsym_simu
+    else
+        result=`IsContains $FileName`
+
+        if [ $result != 0 ]; then
+            rm -fr ${Products_Path}/${FileName}
+            echo $Products_Path/dSYMs_iPhone/${FileName}.dSYM
+            rm -fr $Products_Path/dSYMs_iPhone/${FileName}.dSYM
+            rm -fr $Products_Path/dSYMs_Simulator/${FileName}.dSYM
+        fi
+    fi
+done
+

@@ -21,6 +21,16 @@ Pod::Spec.new do |spec|
   spec.xcconfig             = { "BUILD_LIBRARY_FOR_DISTRIBUTION" => "YES" }
   spec.pod_target_xcconfig  = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
   spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
+
+    # open source libs
+    spec.dependency "AgoraEduUI"
+
+    # open sources widgets
+    spec.dependency "AgoraWidgets/Binary"
+    
+    # close source libs
+    spec.dependency "AgoraEduCore/Binary"
+    spec.dependency "AgoraWidget/Binary"
   
   spec.subspec "Source" do |ss|
     ss.source_files  = "SDKs/AgoraClassroomSDK/**/*.{swift,h,m}"

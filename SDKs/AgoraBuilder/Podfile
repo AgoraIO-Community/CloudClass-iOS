@@ -22,13 +22,13 @@ end
 
 def preRtc
   pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-#  pod 'AgoraRte/Binary', :path => '../../../common-scene-sdk/AgoraRte.podspec'
+#  pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/AgoraRte.podspec'
   pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"
 end
 
 def reRtc
   pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-  #pod 'AgoraRte/ReRtc', :path => '../../../common-scene-sdk/AgoraRte.podspec'
+  pod 'AgoraRte/ReRtc', :path => '../../../common-scene-sdk/AgoraRte.podspec'
   pod 'AgoraRtcKit', :path => '../../../common-scene-sdk/ReRtc/AgoraRtcKit_Binary.podspec'  
 end
 

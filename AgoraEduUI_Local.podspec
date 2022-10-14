@@ -13,9 +13,9 @@ Pod::Spec.new do |spec|
 
   spec.source              = { :git => "git@github.com:AgoraIO-Community/CloudClass-iOS.git", :tag => "AgoraEduUI_v" + "#{spec.version.to_s}" }
   
-  spec.dependency "AgoraUIBaseViews", ">=2.8.0"
-  spec.dependency "AgoraEduCore", ">=2.8.0"
-  spec.dependency "AgoraWidget", ">=2.8.0"
+  spec.dependency "AgoraUIBaseViews/Binary"
+  spec.dependency "AgoraEduCore/Binary"
+  spec.dependency "AgoraWidget/Binary"
   spec.dependency "SwifterSwift"
   spec.dependency "Masonry"
   
