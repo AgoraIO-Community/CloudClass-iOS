@@ -36,7 +36,7 @@ errorExit ${SDK_Name} $?
 
 # delete useless files
 IsContains(){
-    ContainingLibs=("AgoraWidgets.framework")
+    ContainingLibs=("AgoraEduUI.framework" "AgoraEduClassroomSDK_iOS.framework")
     [[ ${ContainingLibs[@]/$1/} != ${ContainingLibs[@]} ]];echo $?
 }
 Files=$(ls ${Products_Path})
