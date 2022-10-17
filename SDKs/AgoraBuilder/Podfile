@@ -22,14 +22,12 @@ end
 
 def preRtc
   pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-#  pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/AgoraRte.podspec'
   pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"
 end
 
 def reRtc
   pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-  pod 'AgoraRte/ReRtc', :path => '../../../common-scene-sdk/AgoraRte.podspec'
-  pod 'AgoraRtcKit', :path => '../../../common-scene-sdk/ReRtc/AgoraRtcKit_Binary.podspec'  
+  pod 'AgoraRtcKit', :path => '../../../common-scene-sdk/ReRtc/AgoraRtcKit_Binary.podspec'
 end
 
 target 'AgoraBuilder' do
@@ -39,7 +37,8 @@ target 'AgoraBuilder' do
   thirdLibs
   # open source libs
   pod 'AgoraClassroomSDK_iOS/Source', :path => '../../AgoraClassroomSDK_iOS_Local.podspec'
-  pod 'AgoraEduUI/Source', :path => '../../AgoraEduUI_Local.podspec'
+  pod 'AgoraEduUI/Binary', :path => '../../AgoraEduUI_Local.podspec'
+  pod 'AgoraEduUI/Resource', :path => '../../AgoraEduUI_Local.podspec'
   pod 'AgoraWidgets/Binary', :path => '../../../open-apaas-extapp-ios/AgoraWidgets_Local.podspec'
   
   # common libs
