@@ -16,7 +16,7 @@ def libVersion
   # agora libs
   pod 'AgoraRtm_iOS', '1.4.8'
   pod 'AgoraMediaPlayer_iOS', '1.3.0'
-  pod 'Whiteboard', '2.16.45'
+  pod 'Whiteboard', '2.16.39'
   pod 'Agora_Chat_iOS', '1.0.6'
 end
 
