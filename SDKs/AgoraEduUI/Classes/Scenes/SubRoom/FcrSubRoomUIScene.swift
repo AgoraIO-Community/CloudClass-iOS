@@ -214,6 +214,14 @@ import AgoraWidget
                  completion: (() -> Void)? = nil) {
         subRoom.leaveSubRoom()
         
+        for child in children {
+            guard let vc = child as? AgoraUIActivity else {
+                continue
+            }
+            
+            vc.viewWillInactive()
+        }
+        
         agora_dismiss(animated: flag) { [weak self] in
             guard let `self` = self else {
                 return
