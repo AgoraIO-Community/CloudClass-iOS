@@ -23,7 +23,7 @@ Pod::Spec.new do |spec|
   spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
 
     # open source libs
-    spec.dependency "AgoraEduUI"
+    spec.dependency "AgoraEduUI/Binary"
 
     # open sources widgets
     spec.dependency "AgoraWidgets/Binary"
@@ -41,7 +41,7 @@ Pod::Spec.new do |spec|
   
   spec.subspec "Binary" do |ss|
     ss.vendored_frameworks = [
-      "Libs/*.framework"
+      "Products/Libs/**/*.framework"
     ]
   end
 
