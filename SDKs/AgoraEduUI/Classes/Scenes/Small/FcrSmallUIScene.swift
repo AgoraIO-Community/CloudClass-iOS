@@ -158,8 +158,12 @@ import AgoraWidget
         
         if let watermark = watermarkWidget?.view {
             view.addSubview(watermark)
+            
             watermark.mas_makeConstraints { make in
-                make?.left.right().top().bottom().equalTo()(contentView)
+                make?.top.equalTo()(boardComponent.view.mas_top)
+                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
+                make?.left.equalTo()(contentView.mas_left)
+                make?.right.equalTo()(contentView.mas_right)
             }
         }
     }
