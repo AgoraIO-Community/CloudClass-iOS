@@ -127,6 +127,13 @@ import AgoraWidget
     private var isJoinedRoom = false
     private var curStageOn = true
     
+    private lazy var watermarkWidget: AgoraBaseWidget? = {
+        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+            return nil
+        }
+        return contextPool.widget.create(config)
+    }()
+    
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
          subDelegate: FcrUISceneDelegate?,
@@ -165,6 +172,17 @@ import AgoraWidget
             AgoraLoading.hide()
             self?.exitScene(reason: .normal,
                             type: .sub)
+        }
+        
+        if let watermark = watermarkWidget?.view {
+            view.addSubview(watermark)
+            
+            watermark.mas_makeConstraints { make in
+                make?.top.equalTo()(boardComponent.view.mas_top)
+                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
+                make?.left.equalTo()(contentView.mas_left)
+                make?.right.equalTo()(contentView.mas_right)
+            }
         }
     }
     
