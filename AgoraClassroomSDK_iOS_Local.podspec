@@ -24,11 +24,9 @@ Pod::Spec.new do |spec|
 
     # open source libs
     spec.dependency "AgoraEduUI/Binary"
-    spec.dependency "AgoraEduUI/Resources"
 
     # open sources widgets
     spec.dependency "AgoraWidgets/Binary"
-    spec.dependency "AgoraWidgets/Resources"
     
     # close source libs
     spec.dependency "AgoraEduCore/Binary"

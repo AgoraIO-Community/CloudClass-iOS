@@ -7,6 +7,7 @@ SDK_Name=$1
 SDKs_Path="../../../SDKs"
 Products_Root_Path="../../Libs"
 Products_Path="$Products_Root_Path/$SDK_Name"
+Builder_Path="${SDKs_Path}/AgoraBuilder"
 
 if [ ! -d $Products_Root_Path ];then
     mkdir $Products_Root_Path
@@ -27,10 +28,34 @@ errorExit() {
     echo "${SDK_Name} build success"
 }
 
+podContentReplace() {
+    podfilePath="$Builder_Path/Podfile"
+    
+    startText="use_frameworks!"
+    endText="post_install do |installer|"
+
+    startIndex=`grep -n "$startText" $podfilePath | cut -d ":" -f 1`
+    endIndex=`grep -n "$endText" $podfilePath | cut -d ":" -f 1`
+
+    deleteStartIndex=$[$startIndex+1]
+    deleteEndIndex=$[$endIndex-1]
+
+    if [ $deleteEndIndex -gt $deleteStartIndex ];then
+        sed -i "" "${deleteStartIndex},${deleteEndIndex}d" $podfilePath
+    fi
+    
+    replace="${startText}\n"
+    sed -i "" "s/${startText}/${replace}/g" $podfilePath
+
+    sed -i "" "${startIndex}r ${SDK_Name}_Pod.txt" $podfilePath
+}
+
 echo "${Color} ======${SDK_Name} Start======== ${Res}"
 
+podContentReplace
+
 # current path is under Products/Scripts/SDK
-./buildExecution.sh ${SDKs_Path}/AgoraBuilder ${SDK_Name} Release
+./buildExecution.sh $Builder_Path ${SDK_Name} Release
 
 errorExit ${SDK_Name} $?
 
