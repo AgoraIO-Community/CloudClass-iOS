@@ -4,6 +4,7 @@ Res='\033[0m'
 
 SDK_Name=$1
 
+Current_Path=`pwd`
 SDKs_Path="../../../SDKs"
 Products_Root_Path="../../Libs"
 Products_Path="$Products_Root_Path/$SDK_Name"
@@ -40,7 +41,7 @@ podContentReplace() {
     deleteStartIndex=$[$startIndex+1]
     deleteEndIndex=$[$endIndex-1]
 
-    if [ $deleteEndIndex -gt $deleteStartIndex ];then
+    if [ $deleteEndIndex -ge $deleteStartIndex ];then
         sed -i "" "${deleteStartIndex},${deleteEndIndex}d" $podfilePath
     fi
     
@@ -50,9 +51,40 @@ podContentReplace() {
     sed -i "" "${startIndex}r ${SDK_Name}_Pod.txt" $podfilePath
 }
 
+dependencyCheck() {
+    cd $Builder_Path
+    
+    cat Podfile | while read rows
+    do
+        if [[ $rows != *"/Binary"* ]];then
+            continue
+        fi
+    
+        # remove space
+        line=`echo $rows | sed s/[[:space:]]//g`
+        
+        libName=`echo $line | sed "s:pod\'\(.*\)\/Binary.*:\1:g"`
+        repoPath=`echo $line | sed "s:.*\:path=>\'\(.*\)\/$libName.*\':\1:g"`
+
+        dependencyPath="$repoPath/Products/Libs/$libName/$libName.framework"
+        
+        # call buildframework of dependency
+        if [ ! -f $dependencyPath ]; then
+            cd $repoPath/Products/Scripts/SDK
+            sh buildframework.sh $libName
+            cd $Current_Path
+        fi
+    done
+    
+    cd $Current_Path
+    podContentReplace
+}
+
 echo "${Color} ======${SDK_Name} Start======== ${Res}"
 
 podContentReplace
+
+dependencyCheck
 
 # current path is under Products/Scripts/SDK
 ./buildExecution.sh $Builder_Path ${SDK_Name} Release

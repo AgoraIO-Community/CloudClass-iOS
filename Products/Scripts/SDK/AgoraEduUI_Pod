@@ -1,6 +1,6 @@
   thirdLibs
   # open source libs
-  pod 'AgoraEduUI/Source', :path => '../../AgoraEduUI_Local.podspec'
+  pod 'AgoraEduUI/Build', :path => '../../AgoraEduUI_Local.podspec'
   pod 'AgoraWidgets/Binary', :path => '../../../open-apaas-extapp-ios/AgoraWidgets_Local.podspec'
   
   # common libs

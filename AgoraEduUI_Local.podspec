@@ -13,9 +13,6 @@ Pod::Spec.new do |spec|
 
   spec.source              = { :git => "git@github.com:AgoraIO-Community/CloudClass-iOS.git", :tag => "AgoraEduUI_v" + "#{spec.version.to_s}" }
   
-  spec.dependency "AgoraUIBaseViews/Binary"
-  spec.dependency "AgoraEduCore/Binary"
-  spec.dependency "AgoraWidget/Binary"
   spec.dependency "SwifterSwift"
   spec.dependency "Masonry"
   
@@ -31,12 +28,29 @@ Pod::Spec.new do |spec|
     ss.resource_bundles = {
       "AgoraEduUI" => ["SDKs/AgoraEduUI/Assets/**/*.{xcassets,strings,gif,mp3}"]
     }
+
+    ss.dependency "AgoraUIBaseViews/Source"
+    ss.dependency "AgoraEduCore/Source"
+    ss.dependency "AgoraWidget/Source"
+  end
+
+  spec.subspec 'Build' do |ss|   
+    ss.source_files        = "SDKs/AgoraWidget/**/*.{h,m,swift}"
+    ss.public_header_files = "SDKs/AgoraWidget/**/*.h"
+
+    ss.dependency "AgoraUIBaseViews/Binary"
+    ss.dependency "AgoraEduCore/Binary"
+    ss.dependency "AgoraWidget/Binary"
   end
   
   spec.subspec "Binary" do |ss|
     ss.vendored_frameworks = [
       "Products/Libs/AgoraEduUI/*.framework"
     ]
+
+    ss.dependency "AgoraUIBaseViews/Binary"
+    ss.dependency "AgoraEduCore/Binary"
+    ss.dependency "AgoraWidget/Binary"
   end
 
   spec.default_subspec = "Source"
