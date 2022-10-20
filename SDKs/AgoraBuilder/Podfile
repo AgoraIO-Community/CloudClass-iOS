@@ -20,20 +20,21 @@ def thirdLibs
   pod 'Agora_Chat_iOS', '1.0.6'
 end
 
-def preRtc
-  pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-  pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"
-end
-
-def reRtc
-  pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-  pod 'AgoraRtcKit', :path => '../../../common-scene-sdk/ReRtc/AgoraRtcKit_Binary.podspec'
-end
-
 target 'AgoraBuilder' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
+  thirdLibs
+  # open source libs
+  pod 'AgoraEduUI/Build', :path => '../../AgoraEduUI_Local.podspec'
+  pod 'AgoraWidgets/Binary', :path => '../../../open-apaas-extapp-ios/AgoraWidgets_Local.podspec'
+  
+  # common libs
+  pod 'AgoraWidget/Binary', :path => '../../../apaas-common-libs-ios/AgoraWidget_Local.podspec'
+  pod 'AgoraUIBaseViews/Binary', :path => '../../../apaas-common-libs-ios/AgoraUIBaseViews_Local.podspec'
 
+  #close libs
+  pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
+  pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"
   post_install do |installer|
      installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|

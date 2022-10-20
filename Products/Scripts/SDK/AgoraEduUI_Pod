@@ -7,5 +7,6 @@
   pod 'AgoraWidget/Binary', :path => '../../../apaas-common-libs-ios/AgoraWidget_Local.podspec'
   pod 'AgoraUIBaseViews/Binary', :path => '../../../apaas-common-libs-ios/AgoraUIBaseViews_Local.podspec'
 
-  # rtc
-  preRtc
+  #close libs
+  pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
+  pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"

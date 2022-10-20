@@ -57,7 +57,6 @@ dependencyCheck() {
 
     cat Podfile | while read rows
     do
-        echo $rows
         if [[ $rows != *"/Binary"* ]];then
             continue
         fi
