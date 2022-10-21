@@ -7,7 +7,8 @@ Mode=$3
 cd $Root_Path
 
 # xcodebuild output path
-Product_Path="Build/product"
+Build_Path="Build"
+Product_Path="$Build_Path/product"
 Derived_Data_Path=$Product_Path/derived_data
 iOS_Product_Path=$Product_Path/ios
 iPhone_Product_Path=$iOS_Product_Path/iphone
@@ -20,11 +21,12 @@ Simulator_dSYM_Path="$Lib_Path/dSYMs_Simulator/"
 iPhone_dSYM_Path="$Lib_Path/dSYMs_iPhone/"
 
 # prepare
-rm -rf $Derived_Data_Path
-rm -rf $iOS_Product_Path
+rm -rf $Build_Path
 rm -rf $Simulator_dSYM_Path
 rm -rf $iPhone_dSYM_Path
 
+mkdir $Build_Path
+mkdir $Product_Path
 mkdir $Derived_Data_Path
 mkdir $iOS_Product_Path
 mkdir $iPhone_Product_Path
