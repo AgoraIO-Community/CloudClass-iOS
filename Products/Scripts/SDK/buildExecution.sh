@@ -87,15 +87,15 @@ cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/${SDK_Name}/${SDK_Name}
 handleEveryFramework() {
     Current_SDK_Name=$1
 
-    iPhone_Modules_Path="$iPhone_Product_Path/$SDK_Name.framework/Modules/${SDK_Name}.swiftmodule/."
-    Simulator_Modules_Path="$Simulator_Product_Path/$SDK_Name.framework/Modules/${SDK_Name}.swiftmodule/."
+    iPhone_Modules_Path="$iPhone_Product_Path/$Current_SDK_Name.framework/Modules/${Current_SDK_Name}.swiftmodule/."
+    Simulator_Modules_Path="$Simulator_Product_Path/$Current_SDK_Name.framework/Modules/${Current_SDK_Name}.swiftmodule/."
 
     # merge
     if [ -d $Simulator_Modules_Path ]; then
         cp -r $Simulator_Modules_Path $iPhone_Modules_Path
     fi
 
-    Swift_Header=$SDK_Name.framework/Headers/$SDK_Name-Swift.h
+    Swift_Header=$Current_SDK_Name.framework/Headers/$Current_SDK_Name-Swift.h
     Simulator_Swift_Header=$Simulator_Product_Path/$Swift_Header
     iPhone_Swift_Header=$iPhone_Product_Path/$Swift_Header
 
@@ -104,10 +104,10 @@ handleEveryFramework() {
         cat < $Simulator_Swift_Header >> $iPhone_Swift_Header
     fi
 
-    cp -r $iPhone_Product_Path/$SDK_Name.framework $Universal_Product_Path
-    lipo -create $iPhone_Product_Path/$SDK_Name.framework/$SDK_Name $Simulator_Product_Path/$SDK_Name.framework/$SDK_Name -output $Universal_Product_Path/$SDK_Name.framework/$SDK_Name
+    cp -r $iPhone_Product_Path/$Current_SDK_Name.framework $Universal_Product_Path
+    lipo -create $iPhone_Product_Path/$Current_SDK_Name.framework/$Current_SDK_Name $Simulator_Product_Path/$Current_SDK_Name.framework/$Current_SDK_Name -output $Universal_Product_Path/$Current_SDK_Name.framework/$Current_SDK_Name
 
-    cp -r $Universal_Product_Path/$SDK_Name.framework $Lib_Path
+    cp -r $Universal_Product_Path/$Current_SDK_Name.framework $Lib_Path
 }
 
 Files=$(ls $iPhone_Product_Path)
