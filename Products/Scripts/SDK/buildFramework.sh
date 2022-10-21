@@ -124,10 +124,8 @@ dSYMs_Simulator_folder="dSYMs_Simulator"
 
 for FileName in ${Files}
 do
-    if [[ $dSYMs_iPhone_folder =~ $FileName ]]; then
-        echo dsym_ip
-    elif [[ $dSYMs_Simulator_folder =~ $FileName ]]; then
-        echo dsym_simu
+    if [[ $dSYMs_iPhone_folder =~ $FileName && $dSYMs_Simulator_folder =~ $FileName ]]; then
+       continue
     else
         result=`IsContains $FileName`
 

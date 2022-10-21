@@ -85,8 +85,7 @@ cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/${SDK_Name}/${SDK_Name}
 
 #parameters 1: SDK Name
 handleEveryFramework() {
-    SDK_Name=$1
-    echo `pwd`
+    Current_SDK_Name=$1
 
     iPhone_Modules_Path="$iPhone_Product_Path/$SDK_Name.framework/Modules/${SDK_Name}.swiftmodule/."
     Simulator_Modules_Path="$Simulator_Product_Path/$SDK_Name.framework/Modules/${SDK_Name}.swiftmodule/."
@@ -117,8 +116,8 @@ for FileName in $Files
 do
     if [[ $FileName =~ ".framework" ]]
     then
-        SDK_Name=${FileName%.*}
-        echo "SDK_Name $SDK_Name"
-        handleEveryFramework $SDK_Name
+        Current_SDK_Name=${FileName%.*}
+        echo "Current_SDK_Name $Current_SDK_Name"
+        handleEveryFramework $Current_SDK_Name
     fi
-done
+done || exit 1
