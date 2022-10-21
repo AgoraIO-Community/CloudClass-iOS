@@ -30,6 +30,7 @@ errorExit() {
 
 podContentReplace() {
     podfilePath="$Builder_Path/Podfile"
+    podContentPath="$Current_Path/${SDK_Name}_Pod"
 
     startText="use_frameworks!"
     endText="post_install do |installer|"
@@ -46,8 +47,6 @@ podContentReplace() {
     
     replace="${startText}\n"
     sed -i "" "s/${startText}/${replace}/g" $podfilePath
-
-    podContentPath=$Current_Path/${SDK_Name}_Pod
 
     sed -i "" "${startIndex}r ${podContentPath}" $podfilePath
 }
@@ -69,7 +68,6 @@ dependencyCheck() {
 
         repoAbsolutePath=$Builder_Path/$repoPath
 
-        echo "$SDK_Name dependency repo:$repoAbsolutePath"
         dependencyPath="$repoAbsolutePath/Products/Libs/$libName/$libName.framework"
 
         # dependency check
@@ -79,26 +77,30 @@ dependencyCheck() {
         
         # call buildframework
         echo "dependencyPath: $dependencyPath not found"
-        echo "$SDK_Name call build: $libName"
-
+        
         dependencySDKPath="$repoAbsolutePath/Products/Scripts/SDK"
         if [ ! -d $dependencySDKPath ]; then
             pwd
             echo "dependencySDKPath not found: $dependencySDKPath"
             exit
         fi
-
-       sh $dependencySDKPath/buildframework.sh $libName
+        
+        echo "$SDK_Name call build: $libName"
+        sh $dependencySDKPath/buildframework.sh $libName
 
         if [ $? -ne 0 ];then
-            exit
+            exit 1
         fi
 
         cd $Current_Path
     done
+    
+    if [ $? -ne 0 ]; then
+        exit 1
+    fi
 
-   cd $Current_Path
-   podContentReplace
+    cd $Current_Path
+    podContentReplace
 }
 
 echo "${Color} ======${SDK_Name} Start======== ${Res}"
@@ -106,6 +108,10 @@ echo "${Color} ======${SDK_Name} Start======== ${Res}"
 podContentReplace
 
 dependencyCheck
+
+if [ $? -ne 0 ]; then
+    errorExit 1
+fi
 
 # # current path is under Products/Scripts/SDK
 $Current_Path/buildExecution.sh $Builder_Path ${SDK_Name} Release
