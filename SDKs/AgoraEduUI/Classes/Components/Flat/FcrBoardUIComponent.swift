@@ -236,9 +236,9 @@ private extension FcrBoardUIComponent {
                                                             replace: data.replace,
                                                             cycle: data.cycle)
         case .pause:
-            break
+            contextError = mediaController.pauseAudioMixing()
         case .resume:
-            break
+            contextError = mediaController.resumeAudioMixing()
         case .stop:
             contextError = mediaController.stopAudioMixing()
         case .setPosition(let position):

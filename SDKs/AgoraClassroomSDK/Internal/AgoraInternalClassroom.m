@@ -82,7 +82,7 @@
                                                                                       startTime:config.startTime
                                                                                        duration:config.duration
                                                                                           appId:config.appId
-                                                                                       rtmToken:config.token
+                                                                                          token:config.token
                                                                                          region:config.region
                                                                                    mediaOptions:mediaOptions];
     return launchConfig;
@@ -116,4 +116,3 @@
     return mediaOptions;
 }
 @end
-
