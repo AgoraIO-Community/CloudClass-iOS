@@ -25,8 +25,8 @@ Pod::Spec.new do |spec|
 
   spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
-  spec.pod_target_xcconfig  = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
-  spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
+  spec.pod_target_xcconfig  = { "VALID_ARCHS" => "arm64 x86_64" }
+  spec.user_target_xcconfig = { "VALID_ARCHS" => "arm64 x86_64" }
   spec.xcconfig             = { "BUILD_LIBRARY_FOR_DISTRIBUTION" => "YES" }
 
   spec.source_files  = "SDKs/AgoraClassroomSDK/**/*.{swift,h,m}"
