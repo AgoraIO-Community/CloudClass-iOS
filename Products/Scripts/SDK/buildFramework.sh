@@ -119,7 +119,7 @@ $Current_Path/buildExecution.sh $Builder_Path ${SDK_Name} Release
 errorExit $?
 
 # delete useless files
-IsContains(){
+IsContains() {
     ContainingLibs=("AgoraEduUI.framework" "AgoraClassroomSDK_iOS.framework")
     [[ ${ContainingLibs[@]/$1/} != ${ContainingLibs[@]} ]];echo $?
 }
