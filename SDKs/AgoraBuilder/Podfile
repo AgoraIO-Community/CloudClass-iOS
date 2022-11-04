@@ -2,7 +2,7 @@
 
   platform :ios, '10.0'
 
-def libVersion
+def thirdLibs
   # third libs
   pod 'Protobuf', '3.17.0'
   pod "CocoaLumberjack", '3.6.1'
@@ -20,46 +20,22 @@ def libVersion
   pod 'Agora_Chat_iOS', '1.0.6'
 end
 
-def preRtc
-  pod 'AgoraEduCore/PreRtc', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-  pod 'AgoraRte/PreRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
-  pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"
-end
-
-def reRtc
-  pod 'AgoraEduCore/ReRtc', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-  pod 'AgoraRte/ReRtc', :path => '../../../common-scene-sdk/iOS/AgoraRte.podspec'
-  pod 'AgoraRtcKit', :path => '../../../common-scene-sdk/iOS/ReRtc/AgoraRtcKit_Binary.podspec'  
-end
-
-def openSourceLibs
-  # open source libs
-  pod 'AgoraClassroomSDK_iOS', :path => '../../AgoraClassroomSDK_iOS.podspec'
-  pod 'AgoraEduUI', :path => '../../AgoraEduUI.podspec'
-  pod 'AgoraWidgets', :path => '../../../open-apaas-extapp-ios/AgoraWidgets.podspec'
-end
-
-def closeSourceLibs
-  # close source libs
-  pod 'AgoraReport', :path => '../../../apaas-common-libs-ios/SDKs/AgoraReport/AgoraReport.podspec'
-  pod 'AgoraRx', :path => '../../../apaas-common-libs-ios/SDKs/AgoraRx/AgoraRx.podspec'
-	
-  # common libs
-  pod 'AgoraWidget', :path => '../../../apaas-common-libs-ios/SDKs/AgoraWidget/AgoraWidget_Local.podspec'
-  pod 'AgoraUIBaseViews', :path => '../../../apaas-common-libs-ios/SDKs/AgoraUIBaseViews/AgoraUIBaseViews_Local.podspec'  
-
-  # rtc
-  preRtc
-end
-
 target 'AgoraBuilder' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
+  thirdLibs
+  # open source libs
+  pod 'AgoraClassroomSDK_iOS/Build', :path => '../../AgoraClassroomSDK_iOS_Local.podspec'
+  pod 'AgoraEduUI/Binary', :path => '../../AgoraEduUI_Local.podspec'
+  pod 'AgoraWidgets/Binary', :path => '../../../open-apaas-extapp-ios/AgoraWidgets_Local.podspec'
+  
+  # common libs
+  pod 'AgoraWidget/Binary', :path => '../../../apaas-common-libs-ios/AgoraWidget_Local.podspec'
+  pod 'AgoraUIBaseViews/Binary', :path => '../../../apaas-common-libs-ios/AgoraUIBaseViews_Local.podspec'
 
-  libVersion
-  openSourceLibs
-  closeSourceLibs
-
+  #close libs
+  pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
+  pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"
   post_install do |installer|
      installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|

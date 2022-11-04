@@ -1,118 +1,146 @@
-Root_Path=$1
-SDK_Name=$2
-Scheme_Name=$SDK_Name
-Mode=$3
-Product_Path="Build/product"
-Frameworks_Path="../../Products/Libs/"
-Simulator_dSYM_Path="../../Products/Libs/dSYMs_Simulator/"
-iPhone_dSYM_Path="../../Products/Libs/dSYMs_iPhone/"
+#!/bin/bash
+Color='\033[1;36m'
+Res='\033[0m'
 
-Derived_Data_Path=$Product_Path/derived_data
-iOS_Product_Path=$Product_Path/ios
-iPhone_Product_Path=$iOS_Product_Path/iphone
-Simulator_Product_Path=$iOS_Product_Path/simulator
-Universal_Product_Path=$iOS_Product_Path/universal
+SDK_Name=$1
 
-cd $Root_Path
+Current_Path=$(cd "$(dirname "$0")";pwd)
+SDKs_Path="$Current_Path/../../../SDKs"
+Products_Root_Path="$Current_Path/../../Libs"
+Products_Path="$Products_Root_Path/$SDK_Name"
+Builder_Path="${SDKs_Path}/AgoraBuilder"
 
-# prepare
-rm -rf $iPhone_Product_Path/*
-rm -rf $Simulator_Product_Path/*
-rm -rf $Universal_Product_Path/*
-rm -rf $Derived_Data_Path/*
+if [ ! -d $Products_Root_Path ];then
+    mkdir $Products_Root_Path
+fi
 
-mkdir $Derived_Data_Path
+rm -rf ${Products_Path}
+mkdir ${Products_Path}
 
-# parameter 1: os
-buildFunc() {
-    OS=$1
+errorExit() {
+    Build_Result=$1
 
-    OS_TYPE=""
-    TARGET_FILE=""
-    PROJECT_TYPE=""
-    ARC=""
-
-    if [ ! -f "Podfile" ];then
-        TARGET_FILE=AgoraBuilder.xcodeproj
-        PROJECT_TYPE="-project"
-    else
-        TARGET_FILE=AgoraBuilder.xcworkspace
-        PROJECT_TYPE="-workspace"
-        pod install --repo-update
+    if [ $Build_Result != 0 ]; then
+        echo "${Color} ======${SDK_Name} Fails======== ${Res}"
+        exit -1
     fi
 
-    if [ "${OS}" = "iphoneos" ];then
-        OS_TYPE="iphoneos"
-        ARC="-arch armv7 -arch arm64"
-    else
-        OS_TYPE="iphonesimulator"
-        ARC="-arch x86_64"
-    fi  
+    echo "${Color} ======${SDK_Name} Succeeds======== ${Res}"
+}
 
-    xcodebuild -quiet clean ${PROJECT_TYPE} ${TARGET_FILE}\
-    -scheme ${Scheme_Name} 
+podContentReplace() {
+    podfilePath="$Builder_Path/Podfile"
+    podContentPath="$Current_Path/${SDK_Name}_Pod"
+
+    startText="use_frameworks!"
+    endText="post_install do |installer|"
+
+    startIndex=`grep -n "$startText" $podfilePath | cut -d ":" -f 1`
+    endIndex=`grep -n "$endText" $podfilePath | cut -d ":" -f 1`
+
+    deleteStartIndex=$[$startIndex+1]
+    deleteEndIndex=$[$endIndex-1]
+
+    if [ $deleteEndIndex -ge $deleteStartIndex ];then
+        sed -i "" "${deleteStartIndex},${deleteEndIndex}d" $podfilePath
+    fi
     
-    xcodebuild -quiet ${PROJECT_TYPE} ${TARGET_FILE}\
-    -scheme ${Scheme_Name}\
-    -sdk ${OS_TYPE}\
-    -configuration ${Mode}\
-    ${ARC}\
-    -derivedDataPath $Derived_Data_Path || exit 1
+    replace="${startText}\n"
+    sed -i "" "s/${startText}/${replace}/g" $podfilePath
+
+    sed -i "" "${startIndex}r ${podContentPath}" $podfilePath
 }
 
-# compile
-# simulator
-rm -rf $Derived_Data_Path/*
-buildFunc "iphonesimulator"
-cp -r $Derived_Data_Path/Build/Products/Release-iphonesimulator/*.framework $Simulator_Product_Path
-cp -r $Derived_Data_Path/Build/Products/Release-iphonesimulator/*/*.framework $Simulator_Product_Path
-cp -r $Derived_Data_Path/Build/Products/Release-iphonesimulator/*.dSYM $Simulator_dSYM_Path
-cp -r $Derived_Data_Path/Build/Products/Release-iphonesimulator/*/*.dSYM $Simulator_dSYM_Path
+dependencyCheck() {
+    cd $Builder_Path
 
-# iphone
-rm -rf $Derived_Data_Path/*
-buildFunc "iphoneos"
-cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/*.framework $iPhone_Product_Path
-cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/*/*.framework $iPhone_Product_Path
-cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/*.dSYM $iPhone_dSYM_Path
-cp -r $Derived_Data_Path/Build/Products/Release-iphoneos/*/*.dSYM $iPhone_dSYM_Path
+    cat Podfile | while read rows
+    do
+        if [[ $rows != *"/Binary"* ]];then
+            continue
+        fi
 
-#parameters 1: SDK Name
-handleEveryFramework() {
-    SDK_Name=$1
-    echo `pwd`
+        # remove space
+        line=`echo $rows | sed s/[[:space:]]//g`
+        
+        libName=`echo $line | sed "s:pod\'\(.*\)\/Binary.*:\1:g"`
+        repoPath=`echo $line | sed "s:.*\:path=>\'\(.*\)\/$libName.*\':\1:g"`
 
-    iPhone_Modules_Path="$iPhone_Product_Path/$SDK_Name.framework/Modules/${SDK_Name}.swiftmodule/."
-    Simulator_Modules_Path="$Simulator_Product_Path/$SDK_Name.framework/Modules/${SDK_Name}.swiftmodule/."
+        repoAbsolutePath=$Builder_Path/$repoPath
 
-    # merge
-    if [ -d $Simulator_Modules_Path ]; then
-        cp -r $Simulator_Modules_Path $iPhone_Modules_Path
+        dependencyPath="$repoAbsolutePath/Products/Libs/$libName/$libName.framework"
+
+        # dependency check
+        if [ -d $dependencyPath ]; then
+            continue
+        fi
+        
+        # call buildframework
+        echo "dependencyPath: $dependencyPath not found"
+        
+        dependencySDKPath="$repoAbsolutePath/Products/Scripts/SDK"
+        if [ ! -d $dependencySDKPath ]; then
+            pwd
+            echo "dependencySDKPath not found: $dependencySDKPath"
+            exit
+        fi
+        
+        echo "$SDK_Name call build: $libName"
+        sh $dependencySDKPath/buildframework.sh $libName
+
+        if [ $? -ne 0 ];then
+            exit 1
+        fi
+
+        cd $Current_Path
+    done
+    
+    if [ $? -ne 0 ]; then
+        exit 1
     fi
 
-    Swift_Header=$SDK_Name.framework/Headers/$SDK_Name-Swift.h
-    Simulator_Swift_Header=$Simulator_Product_Path/$Swift_Header
-    iPhone_Swift_Header=$iPhone_Product_Path/$Swift_Header
-
-    if [ -f $Simulator_Swift_Header ]; then
-        echo "merge swift header"
-        cat < $Simulator_Swift_Header >> $iPhone_Swift_Header
-    fi
-
-    cp -r $iPhone_Product_Path/$SDK_Name.framework $Universal_Product_Path
-    lipo -create $iPhone_Product_Path/$SDK_Name.framework/$SDK_Name $Simulator_Product_Path/$SDK_Name.framework/$SDK_Name -output $Universal_Product_Path/$SDK_Name.framework/$SDK_Name
-
-    cp -r $Universal_Product_Path/$SDK_Name.framework $Frameworks_Path
+    cd $Current_Path
+    podContentReplace
 }
 
-Files=$(ls $iPhone_Product_Path)
+echo "${Color} ======${SDK_Name} Start======== ${Res}"
 
-for FileName in $Files
+podContentReplace
+
+dependencyCheck
+
+if [ $? -ne 0 ]; then
+    errorExit 1
+fi
+
+# # current path is under Products/Scripts/SDK
+$Current_Path/buildExecution.sh $Builder_Path ${SDK_Name} Release
+
+errorExit $?
+
+# delete useless files
+IsContains() {
+    ContainingLibs=("AgoraEduUI.framework" "AgoraClassroomSDK_iOS.framework")
+    [[ ${ContainingLibs[@]/$1/} != ${ContainingLibs[@]} ]];echo $?
+}
+Files=$(ls ${Products_Path})
+
+dSYMs_iPhone_folder="dSYMs_iPhone"
+dSYMs_Simulator_folder="dSYMs_Simulator"
+
+for FileName in ${Files}
 do
-    if [[ $FileName =~ ".framework" ]]
-    then
-        SDK_Name=${FileName%.*}
-        echo "SDK_Name $SDK_Name"
-        handleEveryFramework $SDK_Name
+    if [[ $dSYMs_iPhone_folder =~ $FileName || $dSYMs_Simulator_folder =~ $FileName ]]; then
+       continue
+    else
+        result=`IsContains $FileName`
+
+        if [ $result != 0 ]; then
+            rm -fr ${Products_Path}/${FileName}
+            echo $Products_Path/dSYMs_iPhone/${FileName}.dSYM
+            rm -fr $Products_Path/dSYMs_iPhone/${FileName}.dSYM
+            rm -fr $Products_Path/dSYMs_Simulator/${FileName}.dSYM
+        fi
     fi
 done
+
