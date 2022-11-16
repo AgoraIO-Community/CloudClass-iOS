@@ -36,7 +36,7 @@ target 'AgoraBuilder' do
   pod 'AgoraWidget/Binary', :path => '../../../apaas-common-libs-ios/AgoraWidget_Local.podspec'
   pod 'AgoraUIBaseViews/Binary', :path => '../../../apaas-common-libs-ios/AgoraUIBaseViews_Local.podspec'
 
-  #close libs
+  # close libs
   pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
   
   post_install do |installer|
