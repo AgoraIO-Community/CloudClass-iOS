@@ -1,4 +1,6 @@
+  
   thirdLibs
+  
   # open source libs
   pod 'AgoraClassroomSDK_iOS/Build', :path => '../../AgoraClassroomSDK_iOS_Local.podspec'
   pod 'AgoraEduUI/Binary', :path => '../../AgoraEduUI_Local.podspec'
@@ -8,6 +10,5 @@
   pod 'AgoraWidget/Binary', :path => '../../../apaas-common-libs-ios/AgoraWidget_Local.podspec'
   pod 'AgoraUIBaseViews/Binary', :path => '../../../apaas-common-libs-ios/AgoraUIBaseViews_Local.podspec'
 
-  #close libs
+  # close libs
   pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-  pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"
