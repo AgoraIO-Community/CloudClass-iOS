@@ -83,6 +83,7 @@ import AgoraWidget
     /** 设置界面 控制器*/
     private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
                                                               widgetController: contextPool.widget,
+                                                              isSubRoom: true,
                                                               delegate: self,
                                                               exitDelegate: self)
     
