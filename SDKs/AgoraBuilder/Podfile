@@ -6,14 +6,15 @@ def thirdLibs
   # third libs
   pod 'Protobuf', '3.17.0'
   pod "CocoaLumberjack", '3.6.1'
-  pod 'AliyunOSSiOS',  '2.10.8'
-  pod 'Armin',  '1.1.0'
+  pod 'AliyunOSSiOS', '2.10.8'
+  pod 'Armin', '1.1.0'
   pod 'SSZipArchive', '2.4.2'
   pod 'SwifterSwift', '5.2.0'
   pod 'Masonry', '1.1.0'
   pod 'SDWebImage', '5.12.0'
 
   # agora libs
+  pod 'AgoraRtcEngine_iOS/RtcBasic', '3.6.2'
   pod 'AgoraRtm_iOS', '1.4.8'
   pod 'AgoraMediaPlayer_iOS', '1.3.0'
   pod 'Whiteboard', '2.16.46'
@@ -23,7 +24,9 @@ end
 target 'AgoraBuilder' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
+  
   thirdLibs
+  
   # open source libs
   pod 'AgoraClassroomSDK_iOS/Build', :path => '../../AgoraClassroomSDK_iOS_Local.podspec'
   pod 'AgoraEduUI/Binary', :path => '../../AgoraEduUI_Local.podspec'
@@ -35,7 +38,7 @@ target 'AgoraBuilder' do
 
   #close libs
   pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'
-  pod "AgoraRtcEngine_iOS/RtcBasic", "3.6.2"
+  
   post_install do |installer|
      installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
