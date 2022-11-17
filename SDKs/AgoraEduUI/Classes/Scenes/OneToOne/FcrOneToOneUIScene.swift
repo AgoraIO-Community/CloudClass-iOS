@@ -295,14 +295,6 @@ import UIKit
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
-        classToolsComponent.view.mas_makeConstraints { [weak self] make in
-            guard let `self` = self else {
-                return
-            }
-            
-            make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
-        }
-        
         toolBarComponent.view.mas_remakeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
@@ -328,6 +320,14 @@ import UIKit
                 make?.centerX.equalTo()(self.toolBarComponent.view.mas_centerX)
                 make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
+            }
+            
+            classToolsComponent.view.mas_makeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
             }
         }
         

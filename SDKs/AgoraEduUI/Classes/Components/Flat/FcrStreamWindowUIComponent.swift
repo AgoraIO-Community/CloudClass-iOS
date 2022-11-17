@@ -326,7 +326,9 @@ private extension FcrStreamWindowUIComponent {
         guard let widget = dataSource.first(where: {$0.widgetId == widgetObjectId})?.widget else {
             return
         }
+        
         let frame = syncFrame.rectInView(view)
+        
         if animation {
             UIView.animate(withDuration: TimeInterval.agora_animation,
                            delay: 0,
@@ -345,6 +347,7 @@ private extension FcrStreamWindowUIComponent {
                           itemIndex: Int,
                           animation: Bool = false) {
         var syncFrame = widgetController.getWidgetSyncFrame(widgetId)
+        
         if syncFrame.width == 0,
            syncFrame.height == 0 {
             syncFrame = AgoraWidgetFrame(x: 0,
@@ -353,14 +356,20 @@ private extension FcrStreamWindowUIComponent {
                                          width: 1,
                                          height: 1)
         }
+        
         let rect = syncFrame.rectInView(view)
+        
         if animation,
            let originationFrame = delegate?.onNeedWindowRenderViewFrameOnTopWindow(userId: userId) {
+            
             let topWindow = UIWindow.agora_top_window()
+            
             topWindow.addSubview(widgetView)
             widgetView.frame = originationFrame
+            
             let destinationFrame = view.convert(rect,
                                                 to: topWindow)
+            
             UIView.animate(withDuration: TimeInterval.agora_animation,
                            delay: 0,
                            options: .curveEaseOut) {
@@ -492,11 +501,13 @@ private extension FcrStreamWindowUIComponent {
     func createViewData(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewData {
         var boardPrivilege: Bool = false
         let userId = stream.owner.userUuid
+        
         if let userList = componentDataSource?.componentNeedGrantedUserList(),
            userList.contains(userId),
            stream.owner.userRole != .teacher  {
             boardPrivilege = true
         }
+        
         let rewardCount = userController.getUserRewardCount(userUuid: userId)
         let data = FcrWindowRenderViewData.create(stream: stream,
                                                   rewardCount: rewardCount,
