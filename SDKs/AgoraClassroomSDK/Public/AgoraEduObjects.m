@@ -158,11 +158,6 @@
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     
-    // RTM IM Widget
-    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc] initWithClass:[AgoraChatRtmWidget class]
-                                                             widgetId:@"AgoraChatWidget"];
-    widgets[rtm.widgetId] = rtm;
-
     // CountdownTimer Widget
     AgoraWidgetConfig *countdownTimer = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownTimerWidget class]
                                                                         widgetId:@"countdownTimer"];
