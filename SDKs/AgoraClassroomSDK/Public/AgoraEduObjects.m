@@ -141,12 +141,13 @@
 - (NSMutableDictionary<NSString *, AgoraWidgetConfig *> *)baseWidgets {
     // Register widgets
     NSMutableDictionary<NSString *, AgoraWidgetConfig *> *widgets = [NSMutableDictionary dictionary];
-    // TODO: replace rtm to im (chat)
+    
+    // Hyphenate IM Widget
     AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[AgoraChatEasemobWidget class]
                                                               widgetId:@"easemobIM"];
     widgets[chat.widgetId] = chat;
     
-    // AgoraWhiteboardWidget
+    // Whiteboard Widget
     AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[FcrBoardWidget class]
                                                                           widgetId:@"netlessBoard"];
     
@@ -162,7 +163,6 @@
                                                              widgetId:@"AgoraChatWidget"];
     widgets[rtm.widgetId] = rtm;
 
-    
     // CountdownTimer Widget
     AgoraWidgetConfig *countdownTimer = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownTimerWidget class]
                                                                         widgetId:@"countdownTimer"];
@@ -193,10 +193,11 @@
                                                                widgetId:@"AgoraCloudWidget"];
     widgets[cloud.widgetId] = cloud;
     
-    // PopupQuiz Selector
+    // PopupQuiz Selector Widget
     AgoraWidgetConfig *popupQuiz = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPopupQuizWidget class]
                                                                    widgetId:@"popupQuiz"];
     widgets[popupQuiz.widgetId] = popupQuiz;
+    
     return widgets;
 }
 @end
