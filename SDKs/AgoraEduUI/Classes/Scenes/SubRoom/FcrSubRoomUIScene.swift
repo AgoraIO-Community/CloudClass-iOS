@@ -892,8 +892,15 @@ private extension FcrSubRoomUIScene {
                 
                 self.contextPool.group.inviteUserListToSubRoom(userList: [teacherUserId],
                                                                subRoomUuid: roomId,
-                                                               success: nil,
-                                                               failure: nil)
+                                                               success: nil) { error in
+                    // other student has invited teacher
+                    guard error.code == 30409601 else {
+                        return
+                    }
+                    
+                    AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
+                                     type: .warning)
+                }
             }
             
             let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".agedu_localized())
