@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import AudioToolbox
 import AgoraWidget
 
@@ -82,7 +82,9 @@ import AgoraWidget
     // MARK: - Suspend components
     /** 设置界面 控制器*/
     private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
-                                                              subRoom: subRoom,
+                                                              widgetController: contextPool.widget,
+                                                              isSubRoom: true,
+                                                              delegate: self,
                                                               exitDelegate: self)
     
     /** 聊天窗口 控制器*/
@@ -98,9 +100,9 @@ import AgoraWidget
                                                                             delegate: self)
     
     /** 花名册 控制器*/
-    private lazy var nameRollComponent = FcrSmallRosterUIComponent(userController: contextPool.user,
-                                                                   streamController: contextPool.stream,
-                                                                   widgetController: contextPool.widget)
+    private lazy var nameRollComponent = FcrSmallRosterUIComponent(userController: subRoom.user,
+                                                                   streamController: subRoom.stream,
+                                                                   widgetController: subRoom.widget)
     
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuComponent = FcrRenderMenuUIComponent(userController: subRoom.user,
@@ -125,6 +127,13 @@ import AgoraWidget
     
     private var isJoinedRoom = false
     private var curStageOn = true
+    
+    private lazy var watermarkWidget: AgoraBaseWidget? = {
+        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+            return nil
+        }
+        return contextPool.widget.create(config)
+    }()
     
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
@@ -164,6 +173,17 @@ import AgoraWidget
             AgoraLoading.hide()
             self?.exitScene(reason: .normal,
                             type: .sub)
+        }
+        
+        if let watermark = watermarkWidget?.view {
+            view.addSubview(watermark)
+            
+            watermark.mas_makeConstraints { make in
+                make?.top.equalTo()(boardComponent.view.mas_top)
+                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
+                make?.left.equalTo()(contentView.mas_left)
+                make?.right.equalTo()(contentView.mas_right)
+            }
         }
     }
     
@@ -212,6 +232,14 @@ import AgoraWidget
                  animated flag: Bool,
                  completion: (() -> Void)? = nil) {
         subRoom.leaveSubRoom()
+        
+        for child in children {
+            guard let vc = child as? AgoraUIActivity else {
+                continue
+            }
+            
+            vc.viewWillInactive()
+        }
         
         agora_dismiss(animated: flag) { [weak self] in
             guard let `self` = self else {
@@ -427,7 +455,17 @@ extension FcrSubRoomUIScene: FcrWindowRenderUIComponentDelegate {
         }
     }
 }
-
+// MARK: - FcrSettingUIComponentDelegate
+extension FcrSubRoomUIScene: FcrSettingUIComponentDelegate {
+    func onShowShareView(_ view: UIView) {
+        ctrlView = nil
+        toolBarComponent.deselectAll()
+        self.view.addSubview(view)
+        view.mas_makeConstraints { make in
+            make?.top.left().bottom().right().equalTo()(0)
+        }
+    }
+}
 // MARK: - AgoraBoardUIComponentDelegate
 extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
     func onStageStateChanged(stageOn: Bool) {
@@ -843,8 +881,9 @@ private extension FcrSubRoomUIScene {
 
             globalComponent.isRequestingHelp = true
 
-            let actionInvite = AgoraAlertAction(title: "fcr_group_invite".agedu_localized(),
-                                                action: { [weak self] in
+            let inviteActionTitle = "fcr_group_invite".agedu_localized()
+            
+            let actionInvite = AgoraAlertAction(title: inviteActionTitle) { [weak self] _ in
                 guard let `self` = self else {
                     return
                 }
@@ -853,19 +892,25 @@ private extension FcrSubRoomUIScene {
                 
                 self.contextPool.group.inviteUserListToSubRoom(userList: [teacherUserId],
                                                                subRoomUuid: roomId,
-                                                               success: nil,
-                                                               failure: nil)
-            })
-
-            let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".agedu_localized(),
-                                                action: nil)
-
-            AgoraAlertModel()
-                .setTitle("fcr_group_help_title".agedu_localized())
-                .setMessage("fcr_group_help_content".agedu_localized())
-                .addAction(action: actionCancel)
-                .addAction(action: actionInvite)
-                .show(in: self)
+                                                               success: nil) { error in
+                    // other student has invited teacher
+                    guard error.code == 30409601 else {
+                        return
+                    }
+                    
+                    AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
+                                     type: .warning)
+                }
+            }
+            
+            let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".agedu_localized())
+            
+            let title = "fcr_group_help_title".agedu_localized()
+            let content = "fcr_group_help_content".agedu_localized()
+            
+            showAlert(title: title,
+                      contentList: [content],
+                      actions: [actionCancel, actionInvite])
         }
     }
 }

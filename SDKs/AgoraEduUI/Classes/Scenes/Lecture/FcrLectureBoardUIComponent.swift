@@ -5,7 +5,7 @@
 //  Created by DoubleCircle on 2022/6/17.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 
 class FcrLectureBoardUIComponent: FcrBoardUIComponent {
     override func onViewWillActive() {

@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import AgoraWidget
 import UIKit
 
@@ -28,7 +28,10 @@ protocol FcrUISceneExit: NSObjectProtocol {
                    type: FcrUISceneExitType)
 }
 
-@objc public class FcrUIScene: UIViewController, FcrUISceneExit, AgoraUIContentContainer {
+@objc public class FcrUIScene: UIViewController,
+                               AgoraUIContentContainer,
+                               FcrUISceneExit,
+                               FcrAlert {
     
     /** 容器视图，用来框出一块16：9的适配区域*/
     public var contentView: UIView = UIView()
@@ -79,6 +82,7 @@ protocol FcrUISceneExit: NSObjectProtocol {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        UIApplication.shared.isIdleTimerDisabled = true
         
         initViews()
         initViewFrame()

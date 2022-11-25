@@ -5,7 +5,7 @@
 //  Created by DoubleCircle on 2022/2/10.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 import SwifterSwift
 import AgoraWidget
 import UIKit

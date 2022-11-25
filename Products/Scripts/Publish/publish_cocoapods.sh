@@ -27,6 +27,7 @@ fi
 
 echo "$SDK_Name version: $SDK_Version"
 Target_Branch=release/${SDK_Version}
+
 # current branch check
 Current_Branch=`git rev-parse --abbrev-ref HEAD`
 if [[ ${Current_Branch} != ${Target_Branch} ]]; then
@@ -50,9 +51,6 @@ if [[ -n ${Tag_Check_Cmd} ]]; then
 fi
 
 # push tag
-git tag -d ${Tag}
-git push origin :refs/tags/${Tag}
-
 git tag ${Tag}
 git push origin ${Tag}
 git push originGithub ${Tag}

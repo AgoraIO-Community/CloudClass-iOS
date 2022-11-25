@@ -6,10 +6,10 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import Masonry
 
-class VocationalRoomStateUIComponent: UIViewController {
+class VocationalRoomStateUIComponent: FcrUIComponent {
     /** SDK环境*/
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
@@ -138,17 +138,23 @@ extension VocationalRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivi
 
 // MARK: - Private
 private extension VocationalRoomStateUIComponent {
-    
     @objc func onClickExit(_ sender: UIButton) {
-        AgoraAlertModel()
-            .setTitle("fcr_room_class_leave_class_title".agedu_localized())
-            .setMessage("fcr_room_exit_warning".agedu_localized())
-            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_cancel".agedu_localized(), action:nil))
-            .addAction(action: AgoraAlertAction(title: "fcr_room_class_leave_sure".agedu_localized(), action: {
-                self.roomDelegate?.exitScene(reason: .normal,
-                                                 type: .main)
-            }))
-            .show(in: self)
+        let title = "fcr_room_class_leave_class_title".agedu_localized()
+        let content = "fcr_room_exit_warning".agedu_localized()
+        
+        let cancelActionTitle = "fcr_room_class_leave_cancel".agedu_localized()
+        let leaveActionTitle = "fcr_room_class_leave_sure".agedu_localized()
+        
+        let cancelAction = AgoraAlertAction(title: cancelActionTitle)
+        
+        let leaveAction = AgoraAlertAction(title: leaveActionTitle) { [weak self] _ in
+            self?.roomDelegate?.exitScene(reason: .normal,
+                                          type: .main)
+        }
+        
+        showAlert(title: title,
+                  contentList: [content],
+                  actions: [cancelAction, leaveAction])
     }
     
     @objc func updateTimeVisual() {
@@ -206,13 +212,15 @@ private extension VocationalRoomStateUIComponent {
     
     func timeString(from interval: Int64) -> String {
         let time = interval > 0 ? (interval / 1000) : 0
-        let minuteInt = time / 60
+        let hourInt = time / 3600
+        let minuteInt = time % 3600 / 60
         let secondInt = time % 60
         
+        let hourString = NSString(format: "%02d", hourInt) as String
         let minuteString = NSString(format: "%02d", minuteInt) as String
         let secondString = NSString(format: "%02d", secondInt) as String
         
-        return "\(minuteString):\(secondString)"
+        return "\(hourString):\(minuteString):\(secondString)"
     }
 }
 

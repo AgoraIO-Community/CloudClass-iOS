@@ -5,7 +5,7 @@
 //  Created by Jonathan on 2022/8/8.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 import SwifterSwift
 import AgoraWidget
 import UIKit
@@ -15,7 +15,7 @@ import UIKit
  * 2. 花名册通用操作
  * 3. 提供数据源的增删改查方法
  */
-class FcrRosterUIComponent: UIViewController {
+class FcrRosterUIComponent: FcrUIComponent {
     
     public var suggestSize: CGSize {
         get {
@@ -48,6 +48,7 @@ class FcrRosterUIComponent: UIViewController {
     /** 数据源*/
     public var dataSource = [AgoraRosterModel]() {
         didSet {
+            update(by: dataSource.map({$0.uuid}))
             tableView.reloadData()
         }
     }
@@ -319,7 +320,7 @@ private extension FcrRosterUIComponent {
 // MARK: - PaintingNameRollItemCellDelegate
 extension FcrRosterUIComponent: AgoraRosterItemCellDelegate {
     func onDidSelectFunction(_ fn: AgoraRosterFunction,
-                             at index: NSIndexPath) {
+                             at index: IndexPath) {
         let model = dataSource[index.row]
         onExcuteFunc(fn,
                      to: model)
@@ -338,8 +339,7 @@ extension FcrRosterUIComponent: UITableViewDelegate,
         let cell = tableView.dequeueReusableCell(withClass: AgoraUserListItemCell.self)
         cell.supportFuncs = self.supportFuncs
         cell.itemModel = self.dataSource[indexPath.row]
-        cell.indexPath = NSIndexPath(row: indexPath.row,
-                                     section: indexPath.section)
+        cell.indexPath = indexPath
         cell.delegate = self
         return cell
     }

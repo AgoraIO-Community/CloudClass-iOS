@@ -5,7 +5,7 @@
 //  Created by Cavan on 2021/10/16.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 
 let kFrontCameraStr = "front"
 let kBackCameraStr = "back"

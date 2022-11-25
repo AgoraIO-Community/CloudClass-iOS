@@ -5,7 +5,7 @@
 //  Created by Jonathan on 2022/8/8.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 import SwifterSwift
 import AgoraWidget
 import UIKit
@@ -54,6 +54,15 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
     override func update(model: AgoraRosterModel) {
         let isTeacher = (userController.getLocalUserInfo().userRole == .teacher)
         model.kickEnable = isTeacher
+        // 上下台操作
+        let coHosts = userController.getCoHostList()
+        var isCoHost = false
+        if let _ = coHosts?.first(where: {$0.userUuid == model.uuid}) {
+            isCoHost = true
+        }
+        if model.stageState.isOn != isCoHost {
+            model.stageState.isOn = isCoHost
+        }
         guard let stream = streamController.getStreamList(userUuid: model.uuid)?.first else {
             model.micState = (false, false, false)
             model.cameraState = (false, false, false)
@@ -107,36 +116,33 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
             guard model.kickEnable else {
                 return
             }
+            
             let kickTitle = "fcr_user_kick_out".agedu_localized()
             
-            let kickOnceTitle = "fcr_user_kick_out_once".agedu_localized()
-            let kickOnceAction = AgoraAlertAction(title: kickOnceTitle) { [weak self] in
+            let kickOnceOption = "fcr_user_kick_out_once".agedu_localized()
+            let kickForeverOption = "fcr_user_kick_out_forever".agedu_localized()
+            
+            let cancelActionTitle = "fcr_user_kick_out_cancel".agedu_localized()
+            let submitActionTitle = "fcr_user_kick_out_submit".agedu_localized()
+            
+            let cancelAction = AgoraAlertAction(title: cancelActionTitle)
+            
+            let submitAction = AgoraAlertAction(title: submitActionTitle) { [weak self] optionIndex in
                 guard let `self` = self else {
                     return
                 }
+                
+                let forever = (optionIndex == 1 ? true : false)
+                
                 self.userController.kickOutUser(userUuid: model.uuid,
-                                                  forever: false,
+                                                  forever: forever,
                                                   success: nil,
                                                   failure: nil)
             }
             
-            let kickForeverTitle = "fcr_user_kick_out_forever".agedu_localized()
-            let kickForeverAction = AgoraAlertAction(title: kickForeverTitle) { [weak self] in
-                guard let `self` = self else {
-                    return
-                }
-                self.userController.kickOutUser(userUuid: model.uuid,
-                                                  forever: true,
-                                                  success: nil,
-                                                  failure: nil)
-            }
-            
-            AgoraAlertModel()
-                .setTitle(kickTitle)
-                .setStyle(.Choice)
-                .addAction(action: kickOnceAction)
-                .addAction(action: kickForeverAction)
-                .show(in: self)
+            showAlert(title: kickTitle,
+                      contentList: [kickOnceOption, kickForeverOption],
+                      actions: [cancelAction, submitAction])
             break
         default:
             break
@@ -150,8 +156,8 @@ private extension FcrLectureRosterUIComponent {
     func refreshData() {
         setupTeacherInfo(name: userController.getUserList(role: .teacher)?.first?.userName)
         userController.getUserList(roleList: [AgoraEduContextUserRole.student.rawValue],
-                                     pageIndex: 1,
-                                     pageSize: 20) { [weak self] students in
+                                   pageIndex: 1,
+                                   pageSize: 20) { [weak self] students in
             guard let `self` = self else {
                 return
             }

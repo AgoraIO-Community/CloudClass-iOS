@@ -32,7 +32,7 @@
         self.dimensionHeight = 240;
         self.frameRate = 15;
         self.bitRate = 200;
-        self.mirrorMode = AgoraEduMirrorModeDisabled;
+        self.mirrorMode = AgoraEduCoreMirrorModeDisabled;
     }
     return self;
 }
@@ -85,9 +85,9 @@
                            token:(NSString *)token {
     AgoraEduMediaOptions *mediaOptions = [[AgoraEduMediaOptions alloc] initWithEncryptionConfig:nil
                                                                              videoEncoderConfig:nil
-                                                                                   latencyLevel:AgoraEduLatencyLevelUltraLow
-                                                                                     videoState:AgoraEduStreamStateOn
-                                                                                     audioState:AgoraEduStreamStateOn];
+                                                                                   latencyLevel:AgoraEduCoreLatencyLevelUltraLow
+                                                                                     videoState:AgoraEduCoreStreamStateOn
+                                                                                     audioState:AgoraEduCoreStreamStateOn];
     return [self initWithUserName:userName
                          userUuid:userUuid
                          userRole:userRole
@@ -98,7 +98,7 @@
                             token:token
                         startTime:nil
                          duration:nil
-                           region:AgoraEduRegionCN
+                           region:AgoraEduCoreRegionCN
                      mediaOptions:mediaOptions
                    userProperties:nil];
 }
@@ -141,12 +141,13 @@
 - (NSMutableDictionary<NSString *, AgoraWidgetConfig *> *)baseWidgets {
     // Register widgets
     NSMutableDictionary<NSString *, AgoraWidgetConfig *> *widgets = [NSMutableDictionary dictionary];
-    // TODO: replace rtm to im (chat)
+    
+    // Hyphenate IM Widget
     AgoraWidgetConfig *chat = [[AgoraWidgetConfig alloc] initWithClass:[AgoraChatEasemobWidget class]
                                                               widgetId:@"easemobIM"];
     widgets[chat.widgetId] = chat;
     
-    // AgoraWhiteboardWidget
+    // Whiteboard Widget
     AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[FcrBoardWidget class]
                                                                           widgetId:@"netlessBoard"];
     
@@ -156,12 +157,6 @@
     whiteboardConfig.extraInfo = @{@"coursewareDirectory": courseFolder};
     
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
-    
-    // RTM IM Widget
-    AgoraWidgetConfig *rtm = [[AgoraWidgetConfig alloc] initWithClass:[AgoraChatRtmWidget class]
-                                                             widgetId:@"AgoraChatWidget"];
-    widgets[rtm.widgetId] = rtm;
-
     
     // CountdownTimer Widget
     AgoraWidgetConfig *countdownTimer = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCountdownTimerWidget class]
@@ -193,7 +188,7 @@
                                                                widgetId:@"AgoraCloudWidget"];
     widgets[cloud.widgetId] = cloud;
     
-    // PopupQuiz Selector
+    // PopupQuiz Selector Widget
     AgoraWidgetConfig *popupQuiz = [[AgoraWidgetConfig alloc] initWithClass:[AgoraPopupQuizWidget class]
                                                                    widgetId:@"popupQuiz"];
     widgets[popupQuiz.widgetId] = popupQuiz;

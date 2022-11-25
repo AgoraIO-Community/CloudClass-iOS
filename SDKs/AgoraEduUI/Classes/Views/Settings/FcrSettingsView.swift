@@ -11,9 +11,16 @@ import UIKit
 protocol FcrSettingsViewDelegate: NSObjectProtocol {
     func onCameraButtonIsSelected(isFront: Bool)
     func onCameraSwitchIsOn(isOn: Bool)
+    func onClickShare()
 }
 
 class FcrSettingsView: UIView {
+    // share link
+    private let shareLinkButton = UIButton(type: .custom)
+    private let shareTitleLabel = UILabel()
+    private let shareArrowImage = UIImageView(image: UIImage.agedu_named("fcr_setting_arrow"))
+    private let shareLinkLine = UIView()
+        
     // Camera
     private let cameraLabel = UILabel(frame: .zero)
     private let cameraDirectionLabel = UILabel(frame: .zero)
@@ -75,6 +82,15 @@ class FcrSettingsView: UIView {
 extension FcrSettingsView: AgoraUIContentContainer {
     func initViews() {
         let config = UIConfig.setting
+        // share link
+        shareLinkButton.addTarget(self,
+                                  action: #selector(onClickShare(_:)),
+                                  for: .touchUpInside)
+        addSubview(shareLinkButton)
+        shareLinkButton.addSubview(shareTitleLabel)
+        shareLinkButton.addSubview(shareArrowImage)
+        shareLinkButton.addSubview(shareLinkLine)
+        
         // Camera
         addSubview(cameraLabel)
         addSubview(cameraSwitch)
@@ -134,9 +150,29 @@ extension FcrSettingsView: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
+        // share link
+        shareLinkButton.mas_makeConstraints { make in
+            make?.top.left().right().equalTo()(0)
+            make?.height.equalTo()(44)
+        }
+        shareTitleLabel.mas_makeConstraints { make in
+            make?.left.equalTo()(15)
+            make?.centerY.equalTo()(0)
+        }
+        shareArrowImage.mas_makeConstraints { make in
+            make?.right.equalTo()(-15)
+            make?.centerY.equalTo()(0)
+        }
+        shareLinkLine.mas_makeConstraints { make in
+            make?.bottom.equalTo()(0)
+            make?.left.equalTo()(16)
+            make?.right.equalTo()(-16)
+            make?.height.equalTo()(1)
+        }
         // Camera
         cameraLabel.mas_makeConstraints { make in
-            make?.top.left().equalTo()(16)
+            make?.top.equalTo()(shareLinkButton.mas_bottom)?.offset()(16)
+            make?.left.equalTo()(16)
         }
         
         cameraSwitch.mas_makeConstraints { make in
@@ -218,7 +254,12 @@ extension FcrSettingsView: AgoraUIContentContainer {
     
     func updateViewProperties() {
         let config = UIConfig.setting
+        // share link
+        shareTitleLabel.text = "fcr_inshare_button_share".agedu_localized()
+        shareTitleLabel.textColor = config.camera.title.color
+        shareTitleLabel.font = config.camera.title.font
         
+        shareLinkLine.backgroundColor = FcrUIColorGroup.systemDividerColor
         // Camera
         cameraLabel.text = "fcr_media_camera".agedu_localized()
         cameraLabel.textColor = config.camera.title.color
@@ -316,5 +357,9 @@ private extension FcrSettingsView {
                             isFront: false)
         
         delegate?.onCameraButtonIsSelected(isFront: false)
+    }
+    
+    @objc private func onClickShare(_ sender: UIButton) {
+        delegate?.onClickShare()
     }
 }

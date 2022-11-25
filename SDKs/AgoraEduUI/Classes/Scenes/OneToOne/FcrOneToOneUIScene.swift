@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import AgoraWidget
 import Masonry
 import UIKit
@@ -30,12 +30,10 @@ import UIKit
                                                           delegate: self)
     
     /** 设置界面 控制器*/
-    private lazy var settingComponent: FcrSettingUIComponent = {
-        let vc = FcrSettingUIComponent(mediaController: contextPool.media,
-                                       exitDelegate: self)
-        self.addChild(vc)
-        return vc
-    }()
+    private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
+                                                              widgetController: contextPool.widget,
+                                                              delegate: self,
+                                                              exitDelegate: self)
     
     /** 状态栏 控制器*/
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
@@ -100,6 +98,13 @@ import UIKit
     
     private var fileWriter = FcrUIFileWriter()
     
+    private lazy var watermarkWidget: AgoraBaseWidget? = {
+        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+            return nil
+        }
+        return contextPool.widget.create(config)
+    }()
+    
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
         super.init(sceneType: .oneToOne,
@@ -129,6 +134,17 @@ import UIKit
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
+        }
+        
+        if let watermark = watermarkWidget?.view {
+            view.addSubview(watermark)
+            
+            watermark.mas_makeConstraints { make in
+                make?.top.equalTo()(boardComponent.view.mas_top)
+                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
+                make?.left.equalTo()(contentView.mas_left)
+                make?.right.equalTo()(contentView.mas_right)
+            }
         }
     }
     
@@ -279,14 +295,6 @@ import UIKit
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
-        classToolsComponent.view.mas_makeConstraints { [weak self] make in
-            guard let `self` = self else {
-                return
-            }
-            
-            make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
-        }
-        
         toolBarComponent.view.mas_remakeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
@@ -313,6 +321,14 @@ import UIKit
                 make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
+            
+            classToolsComponent.view.mas_makeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
+            }
         }
         
         updateRenderLayout()
@@ -324,7 +340,17 @@ import UIKit
         view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
     }
 }
-
+// MARK: - FcrSettingUIComponentDelegate
+extension FcrOneToOneUIScene: FcrSettingUIComponentDelegate {
+    func onShowShareView(_ view: UIView) {
+        ctrlView = nil
+        toolBarComponent.deselectAll()
+        self.view.addSubview(view)
+        view.mas_makeConstraints { make in
+            make?.top.left().bottom().right().equalTo()(0)
+        }
+    }
+}
 // MARK: - AgoraBoardUIComponentDelegate
 extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
     func onStageStateChanged(stageOn: Bool) {

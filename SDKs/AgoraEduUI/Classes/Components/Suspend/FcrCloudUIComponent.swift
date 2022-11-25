@@ -5,7 +5,7 @@
 //  Created by DoubleCircle on 2022/2/4.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 import AgoraWidget
 
 protocol FcrCloudUIComponentDelegate: NSObjectProtocol {

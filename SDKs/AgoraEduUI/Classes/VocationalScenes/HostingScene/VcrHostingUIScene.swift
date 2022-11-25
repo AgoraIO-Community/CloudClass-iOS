@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import AudioToolbox
 import AgoraWidget
 
@@ -14,10 +14,10 @@ import AgoraWidget
 @objc public class VcrHostingUIScene: FcrUIScene {
 
     /** 房间状态 控制器*/
-    private lazy var stateController = FcrRoomStateUIComponent(roomController: contextPool.room,
-                                                               userController: contextPool.user,
-                                                               monitorController: contextPool.monitor,
-                                                               groupController: contextPool.group) 
+    private lazy var stateController = VocationalRoomStateUIComponent(roomController: contextPool.room,
+                                                                      userController: contextPool.user,
+                                                                      monitorController: contextPool.monitor,
+                                                                      groupController: contextPool.group)
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalController = FcrRoomGlobalUIComponent(roomController: contextPool.room,
                                                                  userController: contextPool.user,
@@ -34,6 +34,13 @@ import AgoraWidget
                                                          widgetController: contextPool.widget)
     
     private var isJoinedRoom = false
+    
+    private lazy var watermarkWidget: AgoraBaseWidget? = {
+        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+            return nil
+        }
+        return contextPool.widget.create(config)
+    }()
         
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
@@ -64,10 +71,18 @@ import AgoraWidget
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
         }
+        
+        if let watermark = watermarkWidget?.view {
+            view.addSubview(watermark)
+            watermark.mas_makeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(contentView)
+            }
+        }
     }
         
     public override func initViews() {
         super.initViews()
+        stateController.roomDelegate = self
         addChild(stateController)
         contentView.addSubview(stateController.view)
         

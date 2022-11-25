@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import AudioToolbox
 import AgoraWidget
 
@@ -36,8 +36,10 @@ import AgoraWidget
     /** 设置界面 控制器*/
     private lazy var settingViewController: FcrSettingUIComponent = {
         let vc = FcrSettingUIComponent(mediaController: contextPool.media,
+                                       widgetController: contextPool.widget,
+                                       delegate: self,
                                        exitDelegate: self)
-        self.addChild(vc)
+        addChild(vc)
         return vc
     }()
     /** 举手列表 控制器（仅教师端）*/
@@ -113,6 +115,13 @@ import AgoraWidget
     
     private var isJoinedRoom = false
     
+    private lazy var watermarkWidget: AgoraBaseWidget? = {
+        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+            return nil
+        }
+        return contextPool.widget.create(config)
+    }()
+    
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
         super.init(sceneType: .lecture,
@@ -144,6 +153,13 @@ import AgoraWidget
             self?.exitScene(reason: .normal)
         }
         contextPool.stream.registerStreamEventHandler(self)
+        
+        if let watermark = watermarkWidget?.view {
+            view.addSubview(watermark)
+            watermark.mas_makeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(contentView)
+            }
+        }
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -312,6 +328,17 @@ import AgoraWidget
     
     public override func updateViewProperties() {
         super.updateViewProperties()
+    }
+}
+// MARK: - FcrSettingUIComponentDelegate
+extension AgoraVocationalUIScene: FcrSettingUIComponentDelegate {
+    func onShowShareView(_ view: UIView) {
+        ctrlView = nil
+        toolBarController.deselectAll()
+        self.view.addSubview(view)
+        view.mas_makeConstraints { make in
+            make?.top.left().bottom().right().equalTo()(0)
+        }
     }
 }
 // MARK: - AgoraEduStreamHandler

@@ -5,7 +5,7 @@
 //  Created by HeZhengQing on 2021/9/28.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 import AgoraWidget
 import Masonry
 import UIKit
@@ -130,7 +130,7 @@ class FcrRenderMenuUIComponent: FcrUIComponent {
             if showRoleType == .teacher {
                 temp = [.allOffStage]
             } else if showRoleType == .student {
-                temp = [.camera, .mic, .stage]
+                temp = [.camera, .mic, .auth , .stage]
             }
         default:
             break
@@ -474,16 +474,14 @@ extension FcrRenderMenuUIComponent {
               let `model` = self.model else {
             return
         }
-        
-        var list: Array<String> = self.boardUsers
-
+        var list = self.boardUsers
         var ifAdd = false
         if model.authState == false,
            !list.contains(UUID) {
             // 授予白板权限
             ifAdd = true
         }
-        let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([UUID]) : .delete([UUID]))
+        let signal = AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([UUID]) : .delete([UUID]))
         if let message = signal.toMessageString() {
             widgetController.sendMessage(toWidget: kBoardWidgetId,
                                          message: message)

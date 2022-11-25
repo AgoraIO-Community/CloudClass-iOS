@@ -1,0 +1,13 @@
+  
+  thirdLibs
+  
+  # open source libs
+  pod 'AgoraEduUI/Build', :path => '../../AgoraEduUI_Local.podspec'
+  pod 'AgoraWidgets/Binary', :path => '../../../open-apaas-extapp-ios/AgoraWidgets_Local.podspec'
+  
+  # common libs
+  pod 'AgoraWidget/Binary', :path => '../../../apaas-common-libs-ios/AgoraWidget_Local.podspec'
+  pod 'AgoraUIBaseViews/Binary', :path => '../../../apaas-common-libs-ios/AgoraUIBaseViews_Local.podspec'
+
+  # close libs
+  pod 'AgoraEduCore/Binary', :path => '../../../cloudclass-ios/AgoraEduCore_Local.podspec'

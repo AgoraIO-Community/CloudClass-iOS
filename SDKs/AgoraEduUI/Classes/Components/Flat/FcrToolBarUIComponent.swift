@@ -7,7 +7,7 @@
 
 import UIKit
 import AgoraWidget
-import AgoraEduContext
+import AgoraEduCore
 import AgoraUIBaseViews
 
 // MARK: - Protocol
@@ -359,6 +359,7 @@ extension FcrToolBarUIComponent: UICollectionViewDelegate,
             let touchable = !teacherInLocalSubRoom()
             let image = touchable ? tool.unselectedImage : tool.disabledImage
             cell.iconView.image = image
+            cell.aSelected = false
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarItemCell.self,

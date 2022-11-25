@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import AudioToolbox
 import AgoraWidget
 
@@ -19,7 +19,10 @@ import AgoraWidget
     
     /** 设置界面 控制器*/
     private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
+                                                              widgetController: contextPool.widget,
+                                                              delegate: self,
                                                               exitDelegate: self)
+    
     /** 举手列表 控制器（仅教师端）*/
     private lazy var handsListComponent = FcrHandsListUIComponent(userController: contextPool.user,
                                                                   delegate: self)
@@ -104,6 +107,13 @@ import AgoraWidget
     
     private var isJoinedRoom = false
     
+    private lazy var watermarkWidget: AgoraBaseWidget? = {
+        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+            return nil
+        }
+        return contextPool.widget.create(config)
+    }()
+    
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
         super.init(sceneType: .lecture,
@@ -132,6 +142,17 @@ import AgoraWidget
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
+        }
+        
+        if let watermark = watermarkWidget?.view {
+            view.addSubview(watermark)
+            
+            watermark.mas_makeConstraints { make in
+                make?.top.equalTo()(boardComponent.view.mas_top)
+                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
+                make?.left.equalTo()(contentView.mas_left)
+                make?.right.equalTo()(contentView.mas_right)
+            }
         }
     }
     
@@ -317,7 +338,17 @@ import AgoraWidget
         teacherRenderComponent.view.clipsToBounds = true
     }
 }
-
+// MARK: - FcrSettingUIComponentDelegate
+extension FcrLectureUIScene: FcrSettingUIComponentDelegate {
+    func onShowShareView(_ view: UIView) {
+        ctrlView = nil
+        toolBarComponent.deselectAll()
+        self.view.addSubview(view)
+        view.mas_makeConstraints { make in
+            make?.top.left().bottom().right().equalTo()(0)
+        }
+    }
+}
 // MARK: - AgoraBoardUIComponentDelegate
 extension FcrLectureUIScene: FcrBoardUIComponentDelegate {
     func onStageStateChanged(stageOn: Bool) {

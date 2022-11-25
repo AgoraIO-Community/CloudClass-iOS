@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import AudioToolbox
 import AgoraWidget
 
@@ -32,6 +32,13 @@ import AgoraWidget
                                                          widgetController: contextPool.widget)
     
     private var isJoinedRoom = false
+    
+    private lazy var watermarkWidget: AgoraBaseWidget? = {
+        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+            return nil
+        }
+        return contextPool.widget.create(config)
+    }()
         
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
@@ -61,6 +68,13 @@ import AgoraWidget
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
+        }
+        
+        if let watermark = watermarkWidget?.view {
+            view.addSubview(watermark)
+            watermark.mas_makeConstraints { make in
+                make?.left.right().top().bottom().equalTo()(contentView)
+            }
         }
     }
     

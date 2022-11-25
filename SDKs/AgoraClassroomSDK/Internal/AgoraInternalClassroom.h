@@ -6,14 +6,7 @@
 //  Copyright © 2021 Agora. All rights reserved.
 //
 
-#if __has_include(<AgoraEduCorePuppet/AgoraEduCoreWrapper.h>)
-#import <AgoraEduCorePuppet/AgoraEduCoreWrapper.h>
-#elif __has_include(<AgoraEduCore/AgoraEduCoreWrapper.h>)
-#import <AgoraEduCore/AgoraEduCoreWrapper.h>
-#else
-# error "Invalid import"
-#endif
-
+#import <AgoraEduCore/AgoraEduCore-Swift.h>
 #import <Foundation/Foundation.h>
 #import "AgoraClassroomSDK.h"
 #import "AgoraEduObjects.h"
@@ -26,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Model translation
 @interface AgoraClassroomSDK (Internal)
-+ (AgoraEduCorePuppetLaunchConfig *)getPuppetLaunchConfig:(AgoraEduLaunchConfig *)config;
-+ (AgoraEduCorePuppetMediaOptions *)getPuppetMediaOptions:(AgoraEduMediaOptions *)options;
++ (AgoraEduCoreLaunchConfig *)getCoreLaunchConfig:(AgoraEduLaunchConfig *)config;
++ (AgoraEduCoreMediaOptions *)getCoreMediaOptions:(AgoraEduMediaOptions *)options;
 @end
 
 NS_ASSUME_NONNULL_END

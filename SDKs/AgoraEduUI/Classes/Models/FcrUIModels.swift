@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import AgoraEduContext
+import AgoraEduCore
 import AgoraWidget
 
 // MARK: - Render
@@ -199,10 +199,12 @@ class FcrStreamWindowWidgetItem {
     var zIndex: Int
     
     init(widgetId: String,
+         streamId: String?,
          type: ItemType,
          data: FcrWindowRenderViewData,
          zIndex: Int) {
         self.widgetId = widgetId
+        self.streamId = streamId
         self.type = type
         self.data = data
         self.zIndex = zIndex
@@ -242,6 +244,7 @@ class FcrStreamWindowWidgetItem {
         let type: ItemType = ((stream.videoSourceType == .camera) ? .camera : .screen)
         
         let item = FcrStreamWindowWidgetItem(widgetId: widgetId,
+                                             streamId: stream.streamUuid,
                                              type: type,
                                              data: data,
                                              zIndex: zIndex)

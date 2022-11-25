@@ -5,7 +5,7 @@
 //  Created by Cavan on 2022/6/17.
 //
 
-import AgoraEduContext
+import AgoraEduCore
 import AgoraUIBaseViews
 import AgoraWidget
 import UIKit
@@ -111,6 +111,14 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
                       operatorUser: AgoraEduContextUserInfo?) {
         mediaController.stopPlayAudio(roomUuid: roomId,
                                       streamUuid: stream.streamUuid)
+        guard userController.getLocalUserInfo().userRole == .teacher ||
+                userController.getLocalUserInfo().userRole == .assistant,
+              stream.owner.userRole == .student
+        else {
+            // 本地用户是老师或者助教，需要移除widget
+            return
+        }
+        removeWidgetWith(stream: stream)
     }
     
     public func createWidgetWith(stream: AgoraEduContextStreamInfo,
@@ -129,6 +137,16 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
                                          syncFrame: syncFrame,
                                          success: nil,
                                          failure: nil)
+    }
+    
+    public func removeWidgetWith(stream: AgoraEduContextStreamInfo) {
+        guard let config = widgetController.getWidgetConfig(WindowWidgetId) else {
+            return
+        }
+        let streamId = stream.streamUuid
+        let widgetId = "\(WindowWidgetId)-\(streamId)"
+        config.widgetId = widgetId
+        widgetController.setWidgetInactive(widgetId, isRemove: true, success: nil)
     }
     
     override func onAddedRenderWidget(widgetView: UIView) {
