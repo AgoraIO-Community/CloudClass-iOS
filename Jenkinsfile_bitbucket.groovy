@@ -36,12 +36,13 @@ withWechatNotify {
             abortPreviousRunningBuilds(companionPrInfo)
 
             def buildParams = [
-                string(name: 'build_branch', value: branches["cloudclass-ios"] ?: companionBranch),
                 string(name: 'open_fcr_app_branch', value: branches["open-flexible-classroom-ios"] ?: companionBranch),
-                string(name: 'open_cloud_class_branch', value: branches["open-cloudclass-ios"] ?: companionBranch),
-                string(name: 'common_libs_branch', value: branches["apaas-common-libs-ios"] ?: companionBranch),
-                string(name: 'open_widgets_extapps_branch', value: branches["open-apaas-extapp-ios"] ?: companionBranch),
+                string(name: 'open_classroom_branch', value: branches["open-cloudclass-ios"] ?: companionBranch),
+                string(name: 'open_proctor_branch', value: 'release/1.0.0'),
+                string(name: 'open_widgets_branch', value: branches["open-apaas-extapp-ios"] ?: companionBranch),
+                string(name: 'edu_core_branch', value: branches["cloudclass-ios"] ?: companionBranch),
                 string(name: 'rte_branch', value: branches["common-scene-sdk"] ?: companionBranch),
+                string(name: 'common_libs_branch', value: branches["apaas-common-libs-ios"] ?: companionBranch),
                 string(name: 'ci_branch', value: 'apaas_ios'),
                 string(name: 'certificate', value: '0'),
                 booleanParam(name: 'Package_Publish', value: false),
