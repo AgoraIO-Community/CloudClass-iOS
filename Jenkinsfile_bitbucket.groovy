@@ -44,7 +44,7 @@ withWechatNotify {
                 string(name: 'rte_branch', value: branches["common-scene-sdk"] ?: companionBranch),
                 string(name: 'common_libs_branch', value: branches["apaas-common-libs-ios"] ?: companionBranch),
                 string(name: 'ci_branch', value: 'apaas_ios'),
-                string(name: 'certificate', value: ‘0’),
+                string(name: 'certificate', value: '0'),
                 booleanParam(name: 'Package_Publish', value: false),
                 booleanParam(name: 'appstore', value: false)
             ]
