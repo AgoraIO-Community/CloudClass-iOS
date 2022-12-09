@@ -28,8 +28,10 @@ import AgoraWidget
     
     /** 音频流 控制器（自身不包含UI）*/
     private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
-                                                                streamController: contextPool.stream,
-                                                                mediaController: contextPool.media)
+                                                                streamController: subRoom.stream,
+                                                                mediaController: contextPool.media,
+                                                                subRoom: subRoom)
+    
     /** 房间状态 控制器*/
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                               userController: subRoom.user,
