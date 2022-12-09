@@ -74,41 +74,6 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
         studentView?.agora_visible = UIConfig.studentVideo.visible
     }
     
-    override func onDidAddItem(_ item: FcrWindowRenderViewState) {
-        super.onDidAddItem(item)
-        
-        guard let data = item.data,
-              data.audioState.isBoth else {
-            return
-        }
-        
-        startPlayAudio(streamId: data.streamId)
-    }
-    
-    override func onDidUpdateItem(_ item: FcrWindowRenderViewState) {
-        super.onDidUpdateItem(item)
-        
-        guard let data = item.data else {
-            return
-        }
-        
-        if data.audioState.isBoth {
-            startPlayAudio(streamId: data.streamId)
-        } else {
-            stopPlayAudio(streamId: data.streamId)
-        }
-    }
-    
-    override func onDidDeleteItem(_ item: FcrWindowRenderViewState) {
-        super.onDidDeleteItem(item)
-        
-        guard let data = item.data else {
-            return
-        }
-        
-        stopPlayAudio(streamId: data.streamId)
-    }
-    
     override func onWillDisplayItem(_ item: FcrWindowRenderViewState,
                                     renderView: FcrWindowRenderVideoView) {
         super.onWillDisplayItem(item,
@@ -214,18 +179,6 @@ private extension FcrOneToOneWindowRenderUIComponent {
 }
 
 private extension FcrOneToOneWindowRenderUIComponent {
-    func startPlayAudio(streamId: String) {
-        let roomId = roomController.getRoomInfo().roomUuid
-        mediaController.startPlayAudio(roomUuid: roomId,
-                                         streamUuid: streamId)
-    }
-    
-    func stopPlayAudio(streamId: String) {
-        let roomId = roomController.getRoomInfo().roomUuid
-        mediaController.stopPlayAudio(roomUuid: roomId,
-                                        streamUuid: streamId)
-    }
-    
     func startRenderVideo(streamId: String,
                           view: FcrWindowRenderVideoView) {
         let renderConfig = AgoraEduContextRenderConfig()

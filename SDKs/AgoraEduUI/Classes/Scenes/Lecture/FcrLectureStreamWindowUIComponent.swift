@@ -90,13 +90,6 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
     
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        if stream.hasAudio {
-            mediaController.startPlayAudio(roomUuid: roomId,
-                                           streamUuid: stream.streamUuid)
-        } else {
-            mediaController.stopPlayAudio(roomUuid: roomId,
-                                          streamUuid: stream.streamUuid)
-        }
         guard userController.getLocalUserInfo().userRole == .teacher ||
                 userController.getLocalUserInfo().userRole == .assistant,
               stream.owner.userRole == .student
@@ -109,8 +102,6 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        mediaController.stopPlayAudio(roomUuid: roomId,
-                                      streamUuid: stream.streamUuid)
         guard userController.getLocalUserInfo().userRole == .teacher ||
                 userController.getLocalUserInfo().userRole == .assistant,
               stream.owner.userRole == .student

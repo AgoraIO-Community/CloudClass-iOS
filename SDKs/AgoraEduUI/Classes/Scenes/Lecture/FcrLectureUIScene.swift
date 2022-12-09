@@ -13,6 +13,19 @@ import AgoraWidget
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class FcrLectureUIScene: FcrUIScene {
+    /** 全局状态 控制器（自身不包含UI）*/
+    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                userController: contextPool.user,
+                                                                monitorController: contextPool.monitor,
+                                                                streamController: contextPool.stream,
+                                                                groupController: contextPool.group,
+                                                                exitDelegate: self)
+    
+    /** 音频流 控制器（自身不包含UI）*/
+    private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
+                                                                streamController: contextPool.stream,
+                                                                mediaController: contextPool.media)
+    
     /** 花名册 控制器 （教师端）*/
     private lazy var nameRollComponent = FcrLectureRosterUIComponent(userController: contextPool.user,
                                                                      streamController: contextPool.stream)
@@ -26,6 +39,7 @@ import AgoraWidget
     /** 举手列表 控制器（仅教师端）*/
     private lazy var handsListComponent = FcrHandsListUIComponent(userController: contextPool.user,
                                                                   delegate: self)
+    
     /** 视窗菜单 控制器（仅教师端）*/
     private lazy var renderMenuComponent = FcrRenderMenuUIComponent(userController: contextPool.user,
                                                                     streamController: contextPool.stream,
@@ -35,22 +49,18 @@ import AgoraWidget
     /** 工具栏*/
     private lazy var toolBarComponent = FcrToolBarUIComponent(userController: contextPool.user,
                                                               delegate: self)
+    
     /** 房间状态 控制器*/
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
                                                               monitorController: contextPool.monitor,
                                                               groupController: contextPool.group)
-    /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
-                                                                userController: contextPool.user,
-                                                                monitorController: contextPool.monitor,
-                                                                streamController: contextPool.stream,
-                                                                groupController: contextPool.group,
-                                                                exitDelegate: self)
+  
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateComponent = FcrClassStateUIComponent(roomController: contextPool.room,
                                                                     widgetController: contextPool.widget,
                                                                     delegate: self)
+    
     /** 老师渲染 控制器*/
     private lazy var teacherRenderComponent = FcrLectureWindowRenderUIComponent(roomController: contextPool.room,
                                                                                 userController: contextPool.user,
@@ -60,6 +70,7 @@ import AgoraWidget
                                                                                 dataSource: [FcrWindowRenderViewState.none],
                                                                                 reverseItem: false,
                                                                                 delegate: self)
+    
     /** 白板 控制器*/
     private lazy var boardComponent = FcrLectureBoardUIComponent(roomController: contextPool.room,
                                                                  userController: contextPool.user,
@@ -176,7 +187,6 @@ import AgoraWidget
         
         var componentList: [UIViewController] = [stateComponent,
                                                  settingComponent,
-                                                 globalComponent,
                                                  boardComponent,
                                                  teacherRenderComponent,
                                                  webViewComponent,
@@ -185,7 +195,9 @@ import AgoraWidget
                                                  classToolsComponent,
                                                  toolBarComponent,
                                                  toolCollectionComponent,
-                                                 chatComponent]
+                                                 chatComponent,
+                                                 audioComponent,
+                                                 globalComponent]
 
         switch userRole {
         case .teacher:
@@ -216,7 +228,8 @@ import AgoraWidget
                 continue
             }
             
-            if [globalComponent].contains(component) {
+            if [globalComponent,
+                audioComponent].contains(component) {
                 component.viewDidLoad()
                 continue
             }
