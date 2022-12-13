@@ -88,7 +88,7 @@ extension AgoraEduContextMediaStreamType {
 
 extension AgoraEduContextStreamInfo {
     func toEmptyStream() -> AgoraEduContextStreamInfo {
-        let videoSourceType: AgoraEduContextVideoSourceType = (self.videoSourceType == .screen) ? .screen : .none
+        let videoSourceType: AgoraEduContextVideoSourceType = (self.videoSourceType == .screenSharing) ? .screenSharing : .none
         let emptyStream = AgoraEduContextStreamInfo(streamUuid: self.streamUuid,
                                                     streamName: self.streamName,
                                                     streamType: .none,
@@ -100,14 +100,12 @@ extension AgoraEduContextStreamInfo {
         return emptyStream
     }
     
-    
-    
     var hasAudio: Bool {
         guard streamType.hasAudio else {
             return false
         }
         
-        return (audioSourceType == .mic)
+        return (audioSourceType != .none)
     }
 }
 

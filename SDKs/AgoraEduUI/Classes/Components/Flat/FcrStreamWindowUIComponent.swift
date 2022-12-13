@@ -250,7 +250,7 @@ private extension FcrStreamWindowUIComponent {
             return nil
         }
         
-        if stream.videoSourceType == .screen,
+        if stream.videoSourceType == .screenSharing,
            !UIConfig.screenShare.enable {
             return nil
         }
@@ -262,7 +262,7 @@ private extension FcrStreamWindowUIComponent {
         let widget = widgetController.create(config)
         // zIndex
         var zIndex = widget.getZIndex()
-        if stream.videoSourceType == .screen {
+        if stream.videoSourceType == .screenSharing {
             zIndex = 0
         }
         // Board privilege
