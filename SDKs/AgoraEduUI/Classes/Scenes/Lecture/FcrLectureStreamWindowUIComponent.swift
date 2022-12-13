@@ -78,40 +78,11 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
     
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-<<<<<<< Updated upstream
-        if stream.hasAudio {
-            mediaController.startPlayAudio(roomUuid: roomId,
-                                           streamUuid: stream.streamUuid)
-        } else {
-            mediaController.stopPlayAudio(roomUuid: roomId,
-                                          streamUuid: stream.streamUuid)
-        }
-        guard userController.getLocalUserInfo().userRole == .teacher ||
-                userController.getLocalUserInfo().userRole == .assistant,
-              stream.owner.userRole == .student
-        else {
-            // 本地用户是老师或者助教，需要同步widget
-            return
-        }
-=======
->>>>>>> Stashed changes
         createWidgetWith(stream: stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-<<<<<<< Updated upstream
-        mediaController.stopPlayAudio(roomUuid: roomId,
-                                      streamUuid: stream.streamUuid)
-        guard userController.getLocalUserInfo().userRole == .teacher ||
-                userController.getLocalUserInfo().userRole == .assistant,
-              stream.owner.userRole == .student
-        else {
-            // 本地用户是老师或者助教，需要移除widget
-            return
-        }
-=======
->>>>>>> Stashed changes
         removeWidgetWith(stream: stream)
     }
     
