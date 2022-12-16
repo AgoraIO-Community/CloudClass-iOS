@@ -14,6 +14,20 @@ import AgoraWidget
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class FcrSmallUIScene: FcrUIScene {
     // MARK: - Flat components
+    /** 全局状态 控制器（自身不包含UI）*/
+    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                userController: contextPool.user,
+                                                                monitorController: contextPool.monitor,
+                                                                streamController: contextPool.stream,
+                                                                groupController: contextPool.group,
+                                                                delegate: self,
+                                                                exitDelegate: self)
+    
+    /** 音频流 控制器（自身不包含UI）*/
+    private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
+                                                                streamController: contextPool.stream,
+                                                                mediaController: contextPool.media)
+    
     /** 房间状态 控制器*/
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
@@ -65,14 +79,7 @@ import AgoraWidget
                                                                     widgetController: contextPool.widget,
                                                                     delegate: self)
     
-    /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
-                                                                userController: contextPool.user,
-                                                                monitorController: contextPool.monitor,
-                                                                streamController: contextPool.stream,
-                                                                groupController: contextPool.group,
-                                                                delegate: self,
-                                                                exitDelegate: self)
+  
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
@@ -102,7 +109,6 @@ import AgoraWidget
                                                                     streamController: contextPool.stream,
                                                                     widgetController: contextPool.widget,
                                                                     delegate: self)
-    
     
     /** 举手列表 控制器（仅老师端）*/
     private lazy var handsListComponent = FcrHandsListUIComponent(userController: contextPool.user,
@@ -198,7 +204,6 @@ import AgoraWidget
         
         var componentList: [UIViewController] = [stateComponent,
                                                  settingComponent,
-                                                 globalComponent,
                                                  boardComponent,
                                                  renderComponent,
                                                  webViewComponent,
@@ -207,7 +212,9 @@ import AgoraWidget
                                                  classToolsComponent,
                                                  toolBarComponent,
                                                  toolCollectionComponent,
-                                                 chatComponent]
+                                                 chatComponent,
+                                                 audioComponent,
+                                                 globalComponent]
         
         switch userRole {
         case .teacher:
@@ -240,7 +247,8 @@ import AgoraWidget
                 continue
             }
             
-            if component == globalComponent {
+            if [globalComponent,
+                audioComponent].contains(component) {
                 component.viewDidLoad()
                 continue
             }
