@@ -195,7 +195,7 @@ extension VocationalWindowUIComponent: AgoraWidgetMessageObserver {
                                     renderInfo: renderInfo,
                                     widget: item.object,
                                     zIndex: renderInfo.zIndex ?? 1)
-            case .screen:
+            case .screenSharing:
                 addScreenSharingInfo(stream: stream,
                                      renderInfo: renderInfo,
                                      widget: item.object)
@@ -361,7 +361,7 @@ private extension VocationalWindowUIComponent {
                                 renderInfo: renderInfo,
                                 widget: item.object,
                                 zIndex: zIndex)
-        case .screen:
+        case .screenSharing:
             addScreenSharingInfo(stream: stream,
                                  renderInfo: renderInfo,
                                  widget: item.object)
@@ -493,7 +493,7 @@ private extension VocationalWindowUIComponent {
     
     func updateCameraRenderInfo(_ stream: AgoraEduContextStreamInfo) {
         let widgetId = stream.streamUuid.makeWidgetId()
-        guard stream.videoSourceType != .screen,
+        guard stream.videoSourceType != .screenSharing,
               let type = modelDic[widgetId],
               case AgoraStreamWindowType.video(var renderInfo) = type else {
             return

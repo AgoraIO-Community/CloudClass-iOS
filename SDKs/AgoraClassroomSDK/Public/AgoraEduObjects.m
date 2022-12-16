@@ -151,11 +151,6 @@
     AgoraWidgetConfig *whiteboardConfig = [[AgoraWidgetConfig alloc] initWithClass:[FcrBoardWidget class]
                                                                           widgetId:@"netlessBoard"];
     
-    NSString *courseFolder = [NSString stringWithFormat:@"%@/%@", NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
-                                                                                                      NSUserDomainMask,
-                                                                                                      YES)[0], @"AgoraDownload"];
-    whiteboardConfig.extraInfo = @{@"coursewareDirectory": courseFolder};
-    
     widgets[whiteboardConfig.widgetId] = whiteboardConfig;
     
     // CountdownTimer Widget
