@@ -78,11 +78,23 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
     
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
+        let role = userController.getLocalUserInfo().userRole
+        
+        guard role == .teacher || role == .assistant else {
+            return
+        }
+        
         createWidgetWith(stream: stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
+        let role = userController.getLocalUserInfo().userRole
+        
+        guard role == .teacher || role == .assistant else {
+            return
+        }
+        
         removeWidgetWith(stream: stream)
     }
     
