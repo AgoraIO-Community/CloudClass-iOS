@@ -178,7 +178,6 @@ import UIKit
         
         var componentList: [UIViewController] = [stateComponent,
                                                  settingComponent,
-                                                 globalComponent,
                                                  boardComponent,
                                                  renderComponent,
                                                  webViewComponent,
@@ -186,7 +185,9 @@ import UIKit
                                                  classToolsComponent,
                                                  toolBarComponent,
                                                  toolCollectionComponent,
-                                                 chatComponent]
+                                                 chatComponent,
+                                                 audioComponent,
+                                                 globalComponent]
         
         switch userRole {
         case .teacher:
