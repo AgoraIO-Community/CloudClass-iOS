@@ -484,11 +484,13 @@ private extension FcrWindowRenderUIComponent {
     
     @objc func onDrag(_ sender: UIPanGestureRecognizer) {
         let point = sender.location(in: collectionView)
-//        guard let indexPath = collectionView.indexPathForItem(at: point),
-//              let cell = collectionView.cellForItem(at: indexPath)
-//        else {
-//            return
-//        }
+        
+        guard let indexPath = collectionView.indexPathForItem(at: point),
+              let cell = collectionView.cellForItem(at: indexPath)
+        else {
+            return
+        }
+        
         let item = dataSource[0]
         switch sender.state {
         case .began:
