@@ -514,8 +514,12 @@ struct AgoraBoardWidgetCoursewareInfo: Convertable {
     var resourceUuid: String
     var resourceName: String
     var resourceUrl: String
+    var taskUuid: String?
+    var prefix: String?
+    
     var scenes: [AgoraBoardWidgetWhiteScene]?
     var convert: Bool?
+    var ext: String
 }
 
 struct AgoraBoardWidgetWhiteScene: Convertable {
