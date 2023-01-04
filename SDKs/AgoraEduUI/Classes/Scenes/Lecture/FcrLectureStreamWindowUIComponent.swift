@@ -49,8 +49,7 @@ extension FcrLectureStreamWindowUIComponentDelegate {
 }
 
 class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
-    
-    public var actionDelegate: FcrLectureStreamWindowUIComponentDelegate?
+    public weak var actionDelegate: FcrLectureStreamWindowUIComponentDelegate?
     
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
