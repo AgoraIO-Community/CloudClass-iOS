@@ -242,6 +242,8 @@ import AgoraWidget
             toolBarComponent.updateTools([.setting,
                                           .roster,
                                           .handsList])
+            
+            teacherRenderComponent.dragDelegate = self
         case .student:
             toolBarComponent.updateTools([.setting,
                                           .waveHands])
@@ -520,7 +522,9 @@ extension FcrLectureUIScene: FcrLectureStreamWindowUIComponentDelegate {
             }
         }
     }
-    
+}
+
+extension FcrLectureUIScene: FcrWindowRenderUIComponentDragDelegate {
     func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
                         starDrag item: FcrStreamWindowWidgetItem,
                         location: CGPoint) {
@@ -566,6 +570,7 @@ extension FcrLectureUIScene: FcrLectureStreamWindowUIComponentDelegate {
         }
     }
 }
+
 // MARK: - AgoraRenderMenuUIComponentDelegate
 extension FcrLectureUIScene: FcrRenderMenuUIComponentDelegate {
     func onMenuUserLeft() {
