@@ -17,6 +17,21 @@ import AgoraWidget
 /// 用以处理全局状态和子控制器之间的交互关系
 @objc public class FcrSubRoomUIScene: FcrUIScene {
     // MARK: - Flat components
+    /** 全局状态 控制器（自身不包含UI）*/
+    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                userController: subRoom.user,
+                                                                monitorController: contextPool.monitor,
+                                                                streamController: subRoom.stream,
+                                                                groupController: contextPool.group,
+                                                                subRoom: subRoom,
+                                                                exitDelegate: self)
+    
+    /** 音频流 控制器（自身不包含UI）*/
+    private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
+                                                                streamController: subRoom.stream,
+                                                                mediaController: contextPool.media,
+                                                                subRoom: subRoom)
+    
     /** 房间状态 控制器*/
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                               userController: subRoom.user,
@@ -69,15 +84,6 @@ import AgoraWidget
                                                                     monitorController: contextPool.monitor,
                                                                     widgetController: subRoom.widget,
                                                                     subRoom: subRoom)
-    
-    /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
-                                                                userController: subRoom.user,
-                                                                monitorController: contextPool.monitor,
-                                                                streamController: subRoom.stream,
-                                                                groupController: contextPool.group,
-                                                                subRoom: subRoom,
-                                                                exitDelegate: self)
     
     // MARK: - Suspend components
     /** 设置界面 控制器*/
@@ -250,7 +256,6 @@ import AgoraWidget
                                  didExit: reason)
             
             completion?()
-            
         }
     }
     
@@ -262,7 +267,6 @@ import AgoraWidget
 
         var componentList: [UIViewController] = [stateComponent,
                                                  settingComponent,
-                                                 globalComponent,
                                                  boardComponent,
                                                  renderComponent,
                                                  webViewComponent,
@@ -271,7 +275,9 @@ import AgoraWidget
                                                  classToolsComponent,
                                                  toolBarComponent,
                                                  toolCollectionComponent,
-                                                 chatComponent]
+                                                 chatComponent,
+                                                 audioComponent,
+                                                 globalComponent]
 
         switch userRole {
         case .teacher:
@@ -301,7 +307,8 @@ import AgoraWidget
                 continue
             }
 
-            if component == globalComponent {
+            if [globalComponent,
+                audioComponent].contains(component) {
                 component.viewDidLoad()
                 continue
             }

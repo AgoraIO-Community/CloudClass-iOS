@@ -12,6 +12,19 @@ import Masonry
 import UIKit
 
 @objc public class FcrOneToOneUIScene: FcrUIScene {
+    /** 全局状态 控制器（自身不包含UI）*/
+    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
+                                                                userController: contextPool.user,
+                                                                monitorController: contextPool.monitor,
+                                                                streamController: contextPool.stream,
+                                                                groupController: contextPool.group,
+                                                                exitDelegate: self)
+    
+    /** 音频流 控制器（自身不包含UI）*/
+    private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
+                                                                streamController: contextPool.stream,
+                                                                mediaController: contextPool.media)
+    
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateComponent = FcrClassStateUIComponent(roomController: contextPool.room,
                                                                     widgetController: contextPool.widget,
@@ -40,13 +53,7 @@ import UIKit
                                                               userController: contextPool.user,
                                                               monitorController: contextPool.monitor,
                                                               groupController: contextPool.group)
-    /** 全局状态 控制器（自身不包含UI）*/
-    private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
-                                                                userController: contextPool.user,
-                                                                monitorController: contextPool.monitor,
-                                                                streamController: contextPool.stream,
-                                                                groupController: contextPool.group,
-                                                                exitDelegate: self)
+   
     /** 工具栏*/
     private lazy var toolBarComponent = FcrToolBarUIComponent(userController: contextPool.user,
                                                               delegate: self)
@@ -64,6 +71,7 @@ import UIKit
     private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
                                                               widgetController: contextPool.widget)
+    
     /** 白板 控制器*/
     private lazy var boardComponent = FcrBoardUIComponent(roomController: contextPool.room,
                                                           userController: contextPool.user,
@@ -75,11 +83,13 @@ import UIKit
     private lazy var toolCollectionComponent = FcrToolCollectionUIComponent(userController: contextPool.user,
                                                                             widgetController: contextPool.widget,
                                                                             delegate: self)
+    
     /** 聊天 控制器*/
     private lazy var chatComponent = FcrChatUIComponent(roomController: contextPool.room,
                                                         userController: contextPool.user,
                                                         widgetController: contextPool.widget,
                                                         delegate: self)
+    
     /** 教具 控制器*/
     private lazy var classToolsComponent = FcrClassToolsUIComponent(roomController: contextPool.room,
                                                                     userController: contextPool.user,
@@ -168,7 +178,6 @@ import UIKit
         
         var componentList: [UIViewController] = [stateComponent,
                                                  settingComponent,
-                                                 globalComponent,
                                                  boardComponent,
                                                  renderComponent,
                                                  webViewComponent,
@@ -176,7 +185,9 @@ import UIKit
                                                  classToolsComponent,
                                                  toolBarComponent,
                                                  toolCollectionComponent,
-                                                 chatComponent]
+                                                 chatComponent,
+                                                 audioComponent,
+                                                 globalComponent]
         
         switch userRole {
         case .teacher:
@@ -208,8 +219,9 @@ import UIKit
                 continue
             }
             
-            if component == globalComponent {
-                globalComponent.viewDidLoad()
+            if [globalComponent,
+                audioComponent].contains(component) {
+                component.viewDidLoad()
                 continue
             }
             

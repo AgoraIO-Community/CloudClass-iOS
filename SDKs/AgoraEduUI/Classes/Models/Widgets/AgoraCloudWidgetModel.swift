@@ -9,12 +9,12 @@
 enum AgoraCloudWidgetSignal: Convertable {
     case openCourseware(AgoraCloudWidgetCoursewareModel)
     case CloseCloud
-    
+
     private enum CodingKeys: CodingKey {
         case openCourseware
         case CloseCloud
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -32,10 +32,10 @@ enum AgoraCloudWidgetSignal: Convertable {
             )
         }
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+
         switch self {
         case .CloseCloud:
             try container.encodeNil(forKey: .CloseCloud)
@@ -44,7 +44,7 @@ enum AgoraCloudWidgetSignal: Convertable {
                                  forKey: .openCourseware)
         }
     }
-    
+
     func toMessageString() -> String? {
         guard let dic = self.toDictionary(),
            let str = dic.jsonString() else {
@@ -59,16 +59,22 @@ struct AgoraCloudWidgetCoursewareModel: Convertable {
     var resourceUuid: String
     var resourceName: String
     var resourceUrl: String
+    var taskUuid: String?
+    var prefix: String?
+    
     var ext: String
     var scenes: [AgoraCloudWidgetConvertedFile]?
     var convert: Bool?
-    
+
     func toBoard() -> AgoraBoardWidgetCoursewareInfo {
         let info = AgoraBoardWidgetCoursewareInfo(resourceUuid: self.resourceUuid,
                                                   resourceName: self.resourceName,
                                                   resourceUrl: self.resourceUrl,
+                                                  taskUuid: self.taskUuid,
+                                                  prefix: self.prefix,
                                                   scenes: self.scenes?.toBoard(),
-                                                  convert: self.convert)
+                                                  convert: self.convert,
+                                                  ext: self.ext)
         return info
     }
 }
@@ -91,7 +97,7 @@ extension String {
               let signal = try AgoraCloudWidgetSignal.decode(dic) else {
                   return nil
               }
-        
+
         return signal
     }
 }

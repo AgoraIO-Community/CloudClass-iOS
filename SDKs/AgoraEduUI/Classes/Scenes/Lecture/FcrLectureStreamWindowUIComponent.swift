@@ -49,8 +49,7 @@ extension FcrLectureStreamWindowUIComponentDelegate {
 }
 
 class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
-    
-    public var actionDelegate: FcrLectureStreamWindowUIComponentDelegate?
+    public weak var actionDelegate: FcrLectureStreamWindowUIComponentDelegate?
     
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
@@ -76,48 +75,25 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func onStreamUpdated(stream: AgoraEduContextStreamInfo,
-                                  operatorUser: AgoraEduContextUserInfo?) {
-        super.onStreamUpdated(stream: stream,
-                              operatorUser: operatorUser)
-        guard stream.hasAudio else {
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
+                        operatorUser: AgoraEduContextUserInfo?) {
+        let role = userController.getLocalUserInfo().userRole
+        
+        guard role == .teacher || role == .assistant else {
             return
         }
         
-        mediaController.startPlayAudio(roomUuid: roomId,
-                                       streamUuid: stream.streamUuid)
-    }
-    
-    func onStreamJoined(stream: AgoraEduContextStreamInfo,
-                        operatorUser: AgoraEduContextUserInfo?) {
-        if stream.hasAudio {
-            mediaController.startPlayAudio(roomUuid: roomId,
-                                           streamUuid: stream.streamUuid)
-        } else {
-            mediaController.stopPlayAudio(roomUuid: roomId,
-                                          streamUuid: stream.streamUuid)
-        }
-        guard userController.getLocalUserInfo().userRole == .teacher ||
-                userController.getLocalUserInfo().userRole == .assistant,
-              stream.owner.userRole == .student
-        else {
-            // 本地用户是老师或者助教，需要同步widget
-            return
-        }
         createWidgetWith(stream: stream)
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        mediaController.stopPlayAudio(roomUuid: roomId,
-                                      streamUuid: stream.streamUuid)
-        guard userController.getLocalUserInfo().userRole == .teacher ||
-                userController.getLocalUserInfo().userRole == .assistant,
-              stream.owner.userRole == .student
-        else {
-            // 本地用户是老师或者助教，需要移除widget
+        let role = userController.getLocalUserInfo().userRole
+        
+        guard role == .teacher || role == .assistant else {
             return
         }
+        
         removeWidgetWith(stream: stream)
     }
     
@@ -151,30 +127,36 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
     
     override func onAddedRenderWidget(widgetView: UIView) {
         super.onAddedRenderWidget(widgetView: widgetView)
-        guard userController.getLocalUserInfo().userRole == .teacher ||
-                userController.getLocalUserInfo().userRole == .assistant
+        
+        let localUserRole = userController.getLocalUserInfo().userRole
+        
+        guard localUserRole == .teacher ||
+                localUserRole == .assistant
         else {
             // 本地用户是老师或者助教，可以操作widget
             return
         }
+        
         let drag = UIPanGestureRecognizer(target: self,
                                           action:#selector(onDrag(_:)))
+        
         let tap = UITapGestureRecognizer(target: self,
                                          action: #selector(onTap(_:)))
         tap.delegate = self
         tap.numberOfTouchesRequired = 1
+        
         let doubleTap = UITapGestureRecognizer(target: self,
                                                action: #selector(onDoubleTap(_:)))
         doubleTap.delegate = self
         doubleTap.numberOfTouchesRequired = 2
         tap.require(toFail: doubleTap)
+        
         widgetView.addGestureRecognizers([drag, tap, doubleTap])
     }
-    
 }
+
 // MARK: - Teacher Create Widget
 private extension FcrLectureStreamWindowUIComponent {
-    
     func widgetInitialPosition() ->  AgoraWidgetFrame {
         let count = CGFloat(dataSource.count)
         let x = (count + 1) * AgoraFit.scale(5)
@@ -194,7 +176,9 @@ private extension FcrLectureStreamWindowUIComponent {
         else {
             return
         }
+        
         let point = sender.location(in: view)
+        
         switch sender.state {
         case .began:
             actionDelegate?.onStreamWindow(self,
@@ -208,6 +192,7 @@ private extension FcrLectureStreamWindowUIComponent {
             if let rect = actionDelegate?.onStreamWindow(self,
                                                          didEndDrag: item,
                                                          location: point) {
+                
                 widgetController.updateWidgetSyncFrame(rect.syncFrameInView(view),
                                                        widgetId: item.widgetId,
                                                        success: nil)
@@ -227,6 +212,7 @@ private extension FcrLectureStreamWindowUIComponent {
         else {
             return
         }
+        
         actionDelegate?.onStreamWindow(self,
                                        didPressUser: item.data.userId,
                                        view: widgetView)
