@@ -548,14 +548,16 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
                                               userList: [String]) {
         for (index, item) in renderComponent.coHost.dataSource.enumerated() {
             guard var data = item.data,
-                  userList.contains(data.userId) else {
-                      continue
-                  }
+                  userList.contains(data.userId)
+            else {
+                continue
+            }
 
             guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
-                  user.userRole != .teacher else {
-                      continue
-                  }
+                  user.userRole != .teacher
+            else {
+                continue
+            }
 
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
@@ -578,9 +580,10 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
             }
 
             guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
-                  user.userRole != .teacher else {
-                      continue
-                  }
+                  user.userRole != .teacher
+            else {
+                continue
+            }
 
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
@@ -642,9 +645,10 @@ extension FcrSubRoomUIScene: FcrStreamWindowUIComponentDelegate {
 
     func onWillStartRenderVideoStream(streamId: String) {
         guard let item = renderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
 
         let new = FcrWindowRenderViewState.create(isHide: true,
                                                   data: data)
@@ -655,9 +659,10 @@ extension FcrSubRoomUIScene: FcrStreamWindowUIComponentDelegate {
 
     func onDidStopRenderVideoStream(streamId: String) {
         guard let item = renderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
 
         let new = FcrWindowRenderViewState.create(isHide: false,
                                                   data: data)

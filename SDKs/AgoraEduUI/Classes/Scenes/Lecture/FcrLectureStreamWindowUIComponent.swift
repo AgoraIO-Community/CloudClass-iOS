@@ -151,7 +151,11 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
         doubleTap.numberOfTouchesRequired = 2
         tap.require(toFail: doubleTap)
         
-        widgetView.addGestureRecognizers([drag, tap, doubleTap])
+        let recognizers = [drag,
+                           tap,
+                           doubleTap]
+        
+        widgetView.addGestureRecognizers(recognizers)
     }
 }
 
