@@ -105,7 +105,7 @@ extension AgoraEduContextStreamInfo {
             return false
         }
         
-        return (audioSourceType != .none)
+        return (audioSourceState == .open )
     }
 }
 
