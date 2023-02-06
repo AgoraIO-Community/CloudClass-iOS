@@ -8,34 +8,34 @@
 import AgoraEduCore
 import UIKit
 
-protocol FcrWindowRenderUIComponentDragDelegate: NSObjectProtocol {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           starDrag item: FcrWindowRenderViewState,
+protocol FcrTachedStreamWindowUIComponentDragDelegate: NSObjectProtocol {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           starDrag item: FcrTachedWindowRenderViewState,
                            location: CGPoint)
     
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           dragging item: FcrWindowRenderViewState,
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           dragging item: FcrTachedWindowRenderViewState,
                            to location: CGPoint)
     
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didEndDrag item: FcrWindowRenderViewState,
+    func renderUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           didEndDrag item: FcrTachedWindowRenderViewState,
                            location: CGPoint)
 }
 
-extension FcrWindowRenderUIComponentDragDelegate {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           starDrag item: FcrWindowRenderViewState,
+extension FcrTachedStreamWindowUIComponentDragDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           starDrag item: FcrTachedWindowRenderViewState,
                            location: CGPoint) {}
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           dragging item: FcrWindowRenderViewState,
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           dragging item: FcrTachedWindowRenderViewState,
                            to location: CGPoint) {}
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didEndDrag item: FcrWindowRenderViewState,
+    func renderUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           didEndDrag item: FcrTachedWindowRenderViewState,
                            location: CGPoint) {}
 }
 
-class FcrLectureWindowRenderUIComponent: FcrTeacherWindowRenderUIComponent {
-    weak var dragDelegate: FcrWindowRenderUIComponentDragDelegate? {
+class FcrLectureTachedWindowUIComponent: FcrTeacherTachedWindowUIComponent {
+    weak var dragDelegate: FcrTachedStreamWindowUIComponentDragDelegate? {
         didSet {
             view.removeGestureRecognizers()
             
@@ -86,11 +86,11 @@ class FcrLectureWindowRenderUIComponent: FcrTeacherWindowRenderUIComponent {
         let item = dataSource[0]
         switch sender.state {
         case .began:
-            dragDelegate?.renderUIComponent(self,
+            dragDelegate?.tachedStreamWindowUIComponent(self,
                                             starDrag: item,
                                             location: point)
         case .changed:
-            dragDelegate?.renderUIComponent(self,
+            dragDelegate?.tachedStreamWindowUIComponent(self,
                                             dragging: item,
                                             to: point)
         case .recognized: fallthrough

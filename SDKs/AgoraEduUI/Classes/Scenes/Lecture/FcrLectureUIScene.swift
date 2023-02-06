@@ -9,10 +9,11 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import AudioToolbox
 import AgoraWidget
+import UIKit
 
 /// 房间控制器:
 /// 用以处理全局状态和子控制器之间的交互关系
-@objc public class FcrLectureUIScene: FcrUIScene {
+@objc public class FcrLectureUIScene: FcrUIScene, AgoraEduStreamHandler {
     /** 全局状态 控制器（自身不包含UI）*/
     private lazy var globalComponent = FcrRoomGlobalUIComponent(roomController: contextPool.room,
                                                                 userController: contextPool.user,
@@ -62,12 +63,12 @@ import AgoraWidget
                                                                     delegate: self)
     
     /** 老师渲染 控制器*/
-    private lazy var teacherRenderComponent = FcrLectureWindowRenderUIComponent(roomController: contextPool.room,
+    private lazy var teacherRenderComponent = FcrLectureTachedWindowUIComponent(roomController: contextPool.room,
                                                                                 userController: contextPool.user,
                                                                                 streamController: contextPool.stream,
                                                                                 mediaController: contextPool.media,
                                                                                 widgetController: contextPool.widget,
-                                                                                dataSource: [FcrWindowRenderViewState.none],
+                                                                                dataSource: [FcrTachedWindowRenderViewState.none],
                                                                                 reverseItem: false,
                                                                                 delegate: self)
     
@@ -415,8 +416,8 @@ extension FcrLectureUIScene: FcrBoardUIComponentDelegate {
     }
 }
 
-// MARK: - FcrStreamWindowUIComponentDelegate
-extension FcrLectureUIScene: FcrStreamWindowUIComponentDelegate {
+// MARK: - FcrDetachedStreamWindowUIComponentDelegate
+extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
     func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
         guard let renderView = teacherRenderComponent.getRenderView(userId: userId) else {
             return nil
@@ -434,7 +435,7 @@ extension FcrLectureUIScene: FcrStreamWindowUIComponentDelegate {
         else {
             return
         }
-        let new = FcrWindowRenderViewState.create(isHide: true,
+        let new = FcrTachedWindowRenderViewState.create(isHide: true,
                                                   data: data)
         teacherRenderComponent.updateItem(new,
                                           animation: false)
@@ -446,7 +447,7 @@ extension FcrLectureUIScene: FcrStreamWindowUIComponentDelegate {
         else {
             return
         }
-        let new = FcrWindowRenderViewState.create(isHide: false,
+        let new = FcrTachedWindowRenderViewState.create(isHide: false,
                                                   data: data)
         teacherRenderComponent.updateItem(new,
                                           animation: false)
@@ -491,6 +492,7 @@ extension FcrLectureUIScene: FcrToolBarComponentDelegate {
         ctrlView = nil
     }
 }
+
 // MARK: - FcrLectureStreamWindowUIComponentDelegate
 extension FcrLectureUIScene: FcrLectureStreamWindowUIComponentDelegate {
     func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
@@ -524,19 +526,20 @@ extension FcrLectureUIScene: FcrLectureStreamWindowUIComponentDelegate {
     }
 }
 
-extension FcrLectureUIScene: FcrWindowRenderUIComponentDragDelegate {
+extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDragDelegate {
     func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        starDrag item: FcrStreamWindowWidgetItem,
+                        starDrag item: FcrDetachedStreamWindowWidgetItem,
+                        view: UIView,
                         location: CGPoint) {
         let windowArea = FcrRectEffectArea(areaRect: windowComponent.view.frame,
-                                           initSize: item.widget?.view.size ?? .zero,
+                                           initSize: view.size,
                                            zoomMinSize: CGSize(width: 100, height: 100))
         let teacherArea = FcrRectEffectArea(areaRect: teacherRenderComponent.view.frame,
                                             initSize: teacherRenderComponent.view.frame.size,
                                             zoomMinSize: nil)
         let point = component.view.convert(location,
                                            to: rectEffectView)
-        let rect = component.view.convert(item.widget?.view.frame ?? .zero,
+        let rect = component.view.convert(view.frame,
                                           to: rectEffectView)
         if contextPool.user.getUserInfo(userUuid: item.data.userId)?.userRole == .teacher {
             rectEffectView.startEffect(with: [windowArea, teacherArea],
@@ -550,7 +553,7 @@ extension FcrLectureUIScene: FcrWindowRenderUIComponentDragDelegate {
     }
     
     func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        dragging item: FcrStreamWindowWidgetItem,
+                        dragging item: FcrDetachedStreamWindowWidgetItem,
                         to location: CGPoint) {
         let point = component.view.convert(location,
                                            to: rectEffectView)
@@ -558,7 +561,7 @@ extension FcrLectureUIScene: FcrWindowRenderUIComponentDragDelegate {
     }
     
     func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        didEndDrag item: FcrStreamWindowWidgetItem,
+                        didEndDrag item: FcrDetachedStreamWindowWidgetItem,
                         location: CGPoint) -> CGRect? {
         let point = component.view.convert(location,
                                            to: rectEffectView)
@@ -580,9 +583,9 @@ extension FcrLectureUIScene: FcrRenderMenuUIComponentDelegate {
 }
 
 // MARK: - FcrWindowRenderUIComponentDelegate
-extension FcrLectureUIScene: FcrWindowRenderUIComponentDelegate {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didPressItem item: FcrWindowRenderViewState,
+extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           didPressItem item: FcrTachedWindowRenderViewState,
                            view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
               let data = item.data else {
@@ -625,8 +628,8 @@ extension FcrLectureUIScene: FcrWindowRenderUIComponentDelegate {
         }
     }
     
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           starDrag item: FcrWindowRenderViewState,
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           starDrag item: FcrTachedWindowRenderViewState,
                            location: CGPoint) {
         let windowArea = FcrRectEffectArea(areaRect: windowComponent.view.frame,
                                            initSize: CGSize(width: 200, height: 160),
@@ -643,16 +646,16 @@ extension FcrLectureUIScene: FcrWindowRenderUIComponentDelegate {
                                    at: point)
     }
     
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           dragging item: FcrWindowRenderViewState,
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           dragging item: FcrTachedWindowRenderViewState,
                            to location: CGPoint) {
         let point = component.view.convert(location,
                                            to: rectEffectView)
         rectEffectView.setDropPoint(point)
     }
     
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didEndDrag item: FcrWindowRenderViewState,
+    func renderUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           didEndDrag item: FcrTachedWindowRenderViewState,
                            location: CGPoint) {
         let point = component.view.convert(location,
                                            to: rectEffectView)

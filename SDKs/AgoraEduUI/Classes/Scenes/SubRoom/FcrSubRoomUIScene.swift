@@ -58,7 +58,7 @@ import AgoraWidget
                                                           delegate: self)
     
     /** 大窗 控制器*/
-    private lazy var windowComponent = FcrStreamWindowUIComponent(roomController: contextPool.room,
+    private lazy var windowComponent = FcrDetachedStreamWindowUIComponent(roomController: contextPool.room,
                                                                   userController: subRoom.user,
                                                                   streamController: subRoom.stream,
                                                                   mediaController: contextPool.media,
@@ -416,9 +416,9 @@ import AgoraWidget
 }
 
 // MARK: - FcrWindowRenderUIComponentDelegate
-extension FcrSubRoomUIScene: FcrWindowRenderUIComponentDelegate {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didPressItem item: FcrWindowRenderViewState,
+extension FcrSubRoomUIScene: FcrTachedStreamWindowUIComponentDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           didPressItem item: FcrTachedWindowRenderViewState,
                            view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
               let data = item.data else {
@@ -562,7 +562,7 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
 
-            let new = FcrWindowRenderViewState.create(isHide: item.isHide,
+            let new = FcrTachedWindowRenderViewState.create(isHide: item.isHide,
                                                       data: data)
 
             renderComponent.coHost.updateItem(new,
@@ -630,8 +630,8 @@ extension FcrSubRoomUIScene: FcrToolBarComponentDelegate {
     }
 }
 
-// MARK: - FcrStreamWindowUIComponentDelegate
-extension FcrSubRoomUIScene: FcrStreamWindowUIComponentDelegate {
+// MARK: - FcrDetachedStreamWindowUIComponentDelegate
+extension FcrSubRoomUIScene: FcrDetachedStreamWindowUIComponentDelegate {
     func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
         guard let renderView = renderComponent.getRenderView(userId: userId) else {
             return nil
@@ -650,7 +650,7 @@ extension FcrSubRoomUIScene: FcrStreamWindowUIComponentDelegate {
             return
         }
 
-        let new = FcrWindowRenderViewState.create(isHide: true,
+        let new = FcrTachedWindowRenderViewState.create(isHide: true,
                                                   data: data)
 
         renderComponent.updateItem(new,
@@ -664,7 +664,7 @@ extension FcrSubRoomUIScene: FcrStreamWindowUIComponentDelegate {
             return
         }
 
-        let new = FcrWindowRenderViewState.create(isHide: false,
+        let new = FcrTachedWindowRenderViewState.create(isHide: false,
                                                   data: data)
 
         renderComponent.updateItem(new,

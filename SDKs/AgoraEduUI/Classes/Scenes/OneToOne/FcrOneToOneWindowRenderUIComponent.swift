@@ -9,7 +9,7 @@ import AgoraEduCore
 import AgoraWidget
 import UIKit
 
-class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
+class FcrOneToOneWindowRenderUIComponent: FcrTachedStreamWindowUIComponent {
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext
@@ -26,10 +26,10 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
          mediaController: AgoraEduMediaContext,
          streamController: AgoraEduStreamContext,
          widgetController: AgoraEduWidgetContext,
-         delegate: FcrWindowRenderUIComponentDelegate? = nil,
+         delegate: FcrTachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
-        let dataSource = [FcrWindowRenderViewState.none,
-                          FcrWindowRenderViewState.none]
+        let dataSource = [FcrTachedWindowRenderViewState.none,
+                          FcrTachedWindowRenderViewState.none]
         
         self.roomController = roomController
         self.userController = userController
@@ -74,7 +74,7 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
         studentView?.agora_visible = UIConfig.studentVideo.visible
     }
     
-    override func onWillDisplayItem(_ item: FcrWindowRenderViewState,
+    override func onWillDisplayItem(_ item: FcrTachedWindowRenderViewState,
                                     renderView: FcrWindowRenderVideoView) {
         super.onWillDisplayItem(item,
                                 renderView: renderView)
@@ -96,7 +96,7 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
         }
     }
     
-    override func onDidEndDisplayingItem(_ item: FcrWindowRenderViewState,
+    override func onDidEndDisplayingItem(_ item: FcrTachedWindowRenderViewState,
                                          renderView: FcrWindowRenderVideoView) {
         super.onDidEndDisplayingItem(item,
                                      renderView: renderView)
@@ -152,7 +152,7 @@ private extension FcrOneToOneWindowRenderUIComponent {
                    index: studentItemIndex)
     }
     
-    func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
+    func createItem(with stream: AgoraEduContextStreamInfo) -> FcrTachedWindowRenderViewState {
         var boardPrivilege: Bool = false
         
         let userId = stream.owner.userUuid
@@ -165,13 +165,13 @@ private extension FcrOneToOneWindowRenderUIComponent {
         
         let rewardCount = userController.getUserRewardCount(userUuid: userId)
         
-        let data = FcrWindowRenderViewData.create(stream: stream,
+        let data = FcrStreamWindowViewData.create(stream: stream,
                                                   rewardCount: rewardCount,
                                                   boardPrivilege: boardPrivilege)
         
         let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
         
-        let item = FcrWindowRenderViewState.create(isHide: isActive,
+        let item = FcrTachedWindowRenderViewState.create(isHide: isActive,
                                                    data: data)
         
         return item

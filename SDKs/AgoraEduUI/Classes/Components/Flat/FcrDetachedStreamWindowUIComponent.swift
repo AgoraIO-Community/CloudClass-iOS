@@ -1,5 +1,5 @@
 //
-//  FcrStreamWindowUIController.swift
+//  FcrDetachedStreamWindowUIController.swift
 //  AgoraEduUI
 //
 //  Created by Cavan on 2022/6/15.
@@ -9,13 +9,13 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import AgoraWidget
 
-protocol FcrStreamWindowUIComponentDelegate: NSObjectProtocol {
+protocol FcrDetachedStreamWindowUIComponentDelegate: NSObjectProtocol {
     func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect?
     func onWillStartRenderVideoStream(streamId: String)
     func onDidStopRenderVideoStream(streamId: String)
 }
 
-class FcrStreamWindowUIComponent: UIViewController {
+class FcrDetachedStreamWindowUIComponent: UIViewController {
     public let roomController: AgoraEduRoomContext
     public let userController: AgoraEduUserContext
     public let streamController: AgoraEduStreamContext
@@ -31,11 +31,11 @@ class FcrStreamWindowUIComponent: UIViewController {
             return roomController.getRoomInfo().roomUuid
         }
     }
-    // For lecture
-    private weak var delegate: FcrStreamWindowUIComponentDelegate?
-
+    
+    private weak var delegate: FcrDetachedStreamWindowUIComponentDelegate?
+    
     // dataSource index is equal to view.subViews index
-    private(set) var dataSource = [FcrStreamWindowWidgetItem]() {
+    private(set) var dataSource = [FcrDetachedStreamWindowWidgetItem]() {
         didSet {
             guard dataSource.count != oldValue.count else {
                 return
@@ -45,6 +45,9 @@ class FcrStreamWindowUIComponent: UIViewController {
         }
     }
     
+    private(set) var renderViews = [String: FcrWindowRenderView]() // Key: streamId
+    private(set) var widgets = [String: AgoraBaseWidget]()         // Key: widget object Id
+    
     private weak var componentDataSource: FcrUIComponentDataSource?
     
     init(roomController: AgoraEduRoomContext,
@@ -53,7 +56,7 @@ class FcrStreamWindowUIComponent: UIViewController {
          mediaController: AgoraEduMediaContext,
          widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrStreamWindowUIComponentDelegate? = nil,
+         delegate: FcrDetachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
         self.roomController = roomController
         self.userController = userController
@@ -96,7 +99,7 @@ class FcrStreamWindowUIComponent: UIViewController {
     }
 }
 
-extension FcrStreamWindowUIComponent: AgoraUIActivity {
+extension FcrDetachedStreamWindowUIComponent: AgoraUIActivity {
     func viewWillActive() {
         widgetController.add(self)
         userController.registerUserEventHandler(self)
@@ -121,14 +124,18 @@ extension FcrStreamWindowUIComponent: AgoraUIActivity {
 }
 
 // MARK: - Public Item
-extension FcrStreamWindowUIComponent {
-    func updateItemData(_ data: FcrWindowRenderViewData,
+extension FcrDetachedStreamWindowUIComponent {
+    func updateItemData(_ data: FcrStreamWindowViewData,
                         index: Int) {
         var item = dataSource[index]
         
-        guard item.data != data,
-              let renderView = item.renderView
-        else {
+        let prevData = item.data
+        
+        guard prevData != data else {
+            return
+        }
+        
+        guard let renderView = renderViews[item.data.streamId] else {
             return
         }
         
@@ -136,9 +143,11 @@ extension FcrStreamWindowUIComponent {
         
         updateRenderView(renderView,
                          data: data)
+        
+        dataSource[index] = item
     }
     
-    func onWillDisplayItem(_ item: FcrStreamWindowWidgetItem,
+    func onWillDisplayItem(_ item: FcrDetachedStreamWindowWidgetItem,
                            renderView: FcrWindowRenderVideoView) {
         let renderConfig = AgoraEduContextRenderConfig()
         
@@ -161,7 +170,7 @@ extension FcrStreamWindowUIComponent {
                                          streamUuid: streamId)
     }
     
-    func onDidEndDisplayingItem(_ item: FcrStreamWindowWidgetItem) {
+    func onDidEndDisplayingItem(_ item: FcrDetachedStreamWindowWidgetItem) {
         let streamId = item.data.streamId
         
         mediaController.stopRenderVideo(roomUuid: roomId,
@@ -172,28 +181,28 @@ extension FcrStreamWindowUIComponent {
 }
 
 // MARK: - Private Item
-private extension FcrStreamWindowUIComponent {
-    func addItem(_ item: FcrStreamWindowWidgetItem,
+private extension FcrDetachedStreamWindowUIComponent {
+    func addItem(_ item: FcrDetachedStreamWindowWidgetItem,
                  animation: Bool = true) {
-        let syncFrame = widgetController.getStreamWidgetSyncFrame(item.widgetId)
+        let syncFrame = widgetController.getStreamWidgetSyncFrame(item.widgetObjectId)
         
         addItem(item,
                 syncFrame: syncFrame,
                 animation: animation)
     }
     
-    func addItem(_ item: FcrStreamWindowWidgetItem,
+    func addItem(_ item: FcrDetachedStreamWindowWidgetItem,
                  syncFrame: AgoraWidgetFrame,
                  animation: Bool = true) {
-        guard dataSource.contains(where: {$0.widgetId == item.widgetId}) == false else {
+        guard dataSource.contains(where: {$0.widgetObjectId == item.widgetObjectId}) == false else {
+            return
+        }
+        
+        guard let widget = widgets[item.widgetObjectId] else {
             return
         }
         
         dataSource.append(item)
-        
-        guard let widget = item.widget else {
-            return
-        }
         
         // FcrWindowRenderView
         let renderView = createRenderView()
@@ -204,7 +213,7 @@ private extension FcrStreamWindowUIComponent {
             make?.right.left().top().bottom().equalTo()(0)
         }
         
-        item.renderView = renderView
+        renderViews[item.data.streamId] = renderView
         
         if item.type == .camera {
             updateRenderView(renderView,
@@ -217,10 +226,7 @@ private extension FcrStreamWindowUIComponent {
         // Frame & Animation
         let itemIndex = (dataSource.count - 1)
         
-        
-        
         addItemViewFrame(widgetView: widget.view,
-                         widgetId: item.widgetId,
                          userId: item.data.userId,
                          zIndex: item.zIndex,
                          itemIndex: itemIndex,
@@ -229,25 +235,28 @@ private extension FcrStreamWindowUIComponent {
         
         // Observe widget event
         widgetController.add(self,
-                             widgetId: item.widgetId)
+                             widgetId: item.widgetObjectId)
         
         widgetController.addObserver(forWidgetSyncFrame: self,
-                                     widgetId: item.widgetId)
+                                     widgetId: item.widgetObjectId)
         
         onAddedRenderWidget(widgetView: widget.view)
     }
     
-    func removeItem(_ widgetId: String,
+    func removeItem(_ widgetObjectId: String,
                     animation: Bool = true) {
-        guard let item = dataSource.first(where: {$0.widgetId == widgetId}) else {
+        guard let index = dataSource.firstItemIndex(widgetObjectId: widgetObjectId),
+              let widget = widgets[widgetObjectId]
+        else {
             return
         }
         
-        dataSource.removeAll(where: {$0.widgetId == widgetId})
+        // FcrWindowWidgetItem
+        let item = dataSource[index]
+        dataSource.remove(at: index)
         
-        guard let widget = item.widget else {
-            return
-        }
+        // Widget
+        widgets.removeValue(forKey: item.widgetObjectId)
         
         // Frame & Animation
         deleteViewFrame(widgetView: widget.view,
@@ -261,22 +270,26 @@ private extension FcrStreamWindowUIComponent {
             self.onDidEndDisplayingItem(item)
         }
         
+        // RenderView
+        renderViews.removeValue(forKey: item.data.streamId)
+        
         // Cancel observe widget event
         widgetController.remove(self,
-                                widgetId: item.widgetId)
+                                widgetId: item.widgetObjectId)
         
         widgetController.removeObserver(forWidgetSyncFrame: self,
-                                        widgetId: item.widgetId)
+                                        widgetId: item.widgetObjectId)
     }
     
-    func createItem(widgetId: String) -> FcrStreamWindowWidgetItem? {
+    func createItem(widgetObjectId: String) -> FcrDetachedStreamWindowWidgetItem? {
         guard UIConfig.streamWindow.enable,
-              widgetId.hasPrefix(WindowWidgetId),
-              dataSource.firstItem(widgetId: widgetId) == nil,
+              widgetObjectId.hasPrefix(WindowWidgetId),
+              dataSource.firstItem(widgetObjectId: widgetObjectId) == nil,
               let config = widgetController.getWidgetConfig(WindowWidgetId),
-              let streamId = widgetId.splitStreamId(),
+              let streamId = widgetObjectId.splitStreamId(),
               let streamList = streamController.getAllStreamList(),
-              let stream = streamList.first(where: {$0.streamUuid == streamId}) else {
+              let stream = streamList.first(where: {$0.streamUuid == streamId})
+        else {
             return nil
         }
         
@@ -289,8 +302,9 @@ private extension FcrStreamWindowUIComponent {
         let userId = stream.owner.userUuid
         
         // Widget object
-        config.widgetId = widgetId
+        config.widgetId = widgetObjectId
         let widget = widgetController.create(config)
+        widgets[widgetObjectId] = widget
         
         // zIndex
         var zIndex = widget.getZIndex()
@@ -305,12 +319,11 @@ private extension FcrStreamWindowUIComponent {
         // Reward
         let reward = userController.getUserRewardCount(userUuid: userId)
         
-        let item = FcrStreamWindowWidgetItem.create(widgetId: widgetId,
-                                                    stream: stream,
-                                                    rewardCount: reward,
-                                                    boardPrivilege: boardPrivilege,
-                                                    zIndex: zIndex)
-        item.widget = widget
+        let item = FcrDetachedStreamWindowWidgetItem.create(widgetObjectId: widgetObjectId,
+                                                            stream: stream,
+                                                            rewardCount: reward,
+                                                            boardPrivilege: boardPrivilege,
+                                                            zIndex: zIndex)
         
         return item
     }
@@ -319,7 +332,7 @@ private extension FcrStreamWindowUIComponent {
                              index: Int) {
         var item = dataSource[index]
         
-        guard let widget = item.widget else {
+        guard let widget = widgets[item.widgetObjectId] else {
             return
         }
         
@@ -339,8 +352,8 @@ private extension FcrStreamWindowUIComponent {
             return
         }
         
-        for widgetId in list {
-            guard let item = createItem(widgetId: widgetId) else {
+        for widgetObjectId in list {
+            guard let item = createItem(widgetObjectId: widgetObjectId) else {
                 continue
             }
             
@@ -353,18 +366,18 @@ private extension FcrStreamWindowUIComponent {
         let array = dataSource
         
         for item in array {
-            removeItem(item.widgetId,
+            removeItem(item.widgetObjectId,
                        animation: false)
         }
     }
 }
 
 // MARK: - UI
-private extension FcrStreamWindowUIComponent {
+private extension FcrDetachedStreamWindowUIComponent {
     func updateFrame(widgetObjectId: String,
                      syncFrame: AgoraWidgetFrame,
                      animation: Bool = false) {
-        guard let widget = dataSource.first(where: {$0.widgetId == widgetObjectId})?.widget else {
+        guard let widget = widgets[widgetObjectId] else {
             return
         }
         
@@ -380,9 +393,8 @@ private extension FcrStreamWindowUIComponent {
             widget.view.frame = frame
         }
     }
-        
+    
     func addItemViewFrame(widgetView: UIView,
-                          widgetId: String,
                           userId: String,
                           zIndex: Int,
                           itemIndex: Int,
@@ -393,7 +405,7 @@ private extension FcrStreamWindowUIComponent {
         let originationFrame = delegate?.onNeedWindowRenderViewFrameOnTopWindow(userId: userId)
         
         if let `originationFrame` = originationFrame,
-            animation {
+           animation {
             
             let topWindow = UIWindow.agora_top_window()
             
@@ -465,7 +477,7 @@ private extension FcrStreamWindowUIComponent {
     }
     
     func updateRenderView(_ renderView: FcrWindowRenderView,
-                          data: FcrWindowRenderViewData) {
+                          data: FcrStreamWindowViewData) {
         renderView.nameLabel.agora_visible = true
         renderView.micView.agora_visible = true
         renderView.nameLabel.agora_visible = true
@@ -539,14 +551,14 @@ private extension FcrStreamWindowUIComponent {
         return renderView
     }
     
-    func createViewData(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewData {
+    func createViewData(with stream: AgoraEduContextStreamInfo) -> FcrStreamWindowViewData {
         let userId = stream.owner.userUuid
         
         let boardPrivilege = hasBoardPrivilega(userId: userId)
         
         let rewardCount = userController.getUserRewardCount(userUuid: userId)
         
-        let data = FcrWindowRenderViewData.create(stream: stream,
+        let data = FcrStreamWindowViewData.create(stream: stream,
                                                   rewardCount: rewardCount,
                                                   boardPrivilege: boardPrivilege)
         return data
@@ -562,22 +574,22 @@ private extension FcrStreamWindowUIComponent {
 }
 
 // MARK: - AgoraEduRoomHandler
-extension FcrStreamWindowUIComponent: AgoraEduRoomHandler {
+extension FcrDetachedStreamWindowUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
     }
 }
 
-extension FcrStreamWindowUIComponent: AgoraEduSubRoomHandler {
+extension FcrDetachedStreamWindowUIComponent: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         viewWillActive()
     }
 }
 
 // MARK: - AgoraWidgetActivityObserver
-extension FcrStreamWindowUIComponent: AgoraWidgetActivityObserver {
+extension FcrDetachedStreamWindowUIComponent: AgoraWidgetActivityObserver {
     public func onWidgetActive(_ widgetId: String) {
-        guard let item = createItem(widgetId: widgetId) else {
+        guard let item = createItem(widgetObjectId: widgetId) else {
             return
         }
         
@@ -588,7 +600,7 @@ extension FcrStreamWindowUIComponent: AgoraWidgetActivityObserver {
     }
     
     public func onWidgetInactive(_ widgetId: String) {
-        guard let item = dataSource.firstItem(widgetId: widgetId) else {
+        guard let item = dataSource.firstItem(widgetObjectId: widgetId) else {
             return
         }
         
@@ -600,16 +612,17 @@ extension FcrStreamWindowUIComponent: AgoraWidgetActivityObserver {
 }
 
 // MARK: - AgoraWidgetMessageObserver
-extension FcrStreamWindowUIComponent: AgoraWidgetMessageObserver {
+extension FcrDetachedStreamWindowUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
         guard let json = message.json(),
               let zIndex = json.keyPath("zIndex",
-                                        result: Int.self) else {
+                                        result: Int.self)
+        else {
             return
         }
         
-        guard let index = dataSource.firstItemIndex(widgetId: widgetId) else {
+        guard let index = dataSource.firstItemIndex(widgetObjectId: widgetId) else {
             return
         }
         
@@ -625,11 +638,11 @@ extension FcrStreamWindowUIComponent: AgoraWidgetMessageObserver {
 }
 
 // MARK: - AgoraWidgetSyncFrameObserver
-extension FcrStreamWindowUIComponent: AgoraWidgetSyncFrameObserver {
+extension FcrDetachedStreamWindowUIComponent: AgoraWidgetSyncFrameObserver {
     func onWidgetSyncFrameUpdated(_ syncFrame: AgoraWidgetFrame,
                                   widgetId: String,
                                   operatorUser: AgoraWidgetUserInfo?) {
-        guard let item = dataSource.firstItem(widgetId: widgetId) else {
+        guard let item = dataSource.firstItem(widgetObjectId: widgetId) else {
             return
         }
         
@@ -640,7 +653,7 @@ extension FcrStreamWindowUIComponent: AgoraWidgetSyncFrameObserver {
 }
 
 // MARK: - AgoraEduStreamHandler
-extension FcrStreamWindowUIComponent: AgoraEduStreamHandler {
+extension FcrDetachedStreamWindowUIComponent: AgoraEduStreamHandler {
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
         guard let index = dataSource.firstItemIndex(streamId: stream.streamUuid) else {
@@ -655,10 +668,10 @@ extension FcrStreamWindowUIComponent: AgoraEduStreamHandler {
 }
 
 // MARK: - AgoraEduMediaHandler
-extension FcrStreamWindowUIComponent: AgoraEduMediaHandler {
+extension FcrDetachedStreamWindowUIComponent: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
                          streamUuid: String) {
-        guard let renderView = dataSource.first(where: {$0.streamId == streamUuid})?.renderView else {
+        guard let renderView = renderViews[streamUuid] else {
             return
         }
         
@@ -667,12 +680,12 @@ extension FcrStreamWindowUIComponent: AgoraEduMediaHandler {
     }
 }
 
-extension FcrStreamWindowUIComponent: AgoraEduUserHandler {
+extension FcrDetachedStreamWindowUIComponent: AgoraEduUserHandler {
     func onUserHandsWave(userUuid: String,
                          duration: Int,
                          payload: [String : Any]?) {
         guard let item = dataSource.firstCameraItem(userId: userUuid),
-              let renderView = item.renderView
+              let renderView = renderViews[item.data.streamId]
         else {
             return
         }
@@ -683,7 +696,7 @@ extension FcrStreamWindowUIComponent: AgoraEduUserHandler {
     func onUserHandsDown(userUuid: String,
                          payload: [String : Any]?) {
         guard let item = dataSource.firstCameraItem(userId: userUuid),
-              let renderView = item.renderView
+              let renderView = renderViews[item.data.streamId]
         else {
             return
         }
@@ -703,21 +716,23 @@ extension FcrStreamWindowUIComponent: AgoraEduUserHandler {
         item.data.reward = FcrRewardViewData.create(count: rewardCount,
                                                     isHidden: false)
         
+        dataSource[index] = item
+        
         updateItemData(item.data,
                        index: index)
     }
 }
 
-fileprivate extension Array where Element == FcrStreamWindowWidgetItem {
-    func firstItemIndex(widgetId: String) -> Int? {
-        return firstIndex(where: {return $0.widgetId == widgetId})
+fileprivate extension Array where Element == FcrDetachedStreamWindowWidgetItem {
+    func firstItemIndex(widgetObjectId: String) -> Int? {
+        return firstIndex(where: {return $0.widgetObjectId == widgetObjectId})
     }
     
-    func firstItem(widgetId: String) -> FcrStreamWindowWidgetItem? {
-        return first(where: {return $0.widgetId == widgetId})
+    func firstItem(widgetObjectId: String) -> FcrDetachedStreamWindowWidgetItem? {
+        return first(where: {return $0.widgetObjectId == widgetObjectId})
     }
     
-    func firstCameraItem(userId: String) -> FcrStreamWindowWidgetItem? {
+    func firstCameraItem(userId: String) -> FcrDetachedStreamWindowWidgetItem? {
         let item = first { item in
             guard item.type == .camera else {
                 return false
@@ -741,7 +756,7 @@ fileprivate extension Array where Element == FcrStreamWindowWidgetItem {
         return index
     }
     
-    func firstItem(streamId: String) -> FcrStreamWindowWidgetItem? {
+    func firstItem(streamId: String) -> FcrDetachedStreamWindowWidgetItem? {
         return first(where: {return $0.data.streamId == streamId})
     }
     
@@ -749,7 +764,7 @@ fileprivate extension Array where Element == FcrStreamWindowWidgetItem {
         return firstIndex(where: {return $0.data.streamId == streamId})
     }
     
-    mutating func insertItem(_ item: FcrStreamWindowWidgetItem) -> Int {
+    mutating func insertItem(_ item: FcrDetachedStreamWindowWidgetItem) -> Int {
         var insertIndex = 0
         
         for (index, element) in self.enumerated() where item.zIndex >= element.zIndex  {

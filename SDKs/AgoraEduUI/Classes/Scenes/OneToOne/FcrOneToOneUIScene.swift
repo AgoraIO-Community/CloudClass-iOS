@@ -96,7 +96,7 @@ import UIKit
                                                                     monitorController: contextPool.monitor,
                                                                     widgetController: contextPool.widget)
     /** 大窗 控制器*/
-    private lazy var windowComponent = FcrStreamWindowUIComponent(roomController: contextPool.room,
+    private lazy var windowComponent = FcrDetachedStreamWindowUIComponent(roomController: contextPool.room,
                                                                   userController: contextPool.user,
                                                                   streamController: contextPool.stream,
                                                                   mediaController: contextPool.media,
@@ -411,7 +411,7 @@ extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
             
-            let new = FcrWindowRenderViewState.create(isHide: item.isHide,
+            let new = FcrTachedWindowRenderViewState.create(isHide: item.isHide,
                                                       data: data)
             
             renderComponent.updateItem(new,
@@ -443,7 +443,7 @@ extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
 }
 
 // MARK: - AgoraWindowUIComponentDelegate
-extension FcrOneToOneUIScene: FcrStreamWindowUIComponentDelegate {
+extension FcrOneToOneUIScene: FcrDetachedStreamWindowUIComponentDelegate {
     func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
         guard let renderView = renderComponent.getRenderView(userId: userId) else {
             return nil
@@ -461,7 +461,7 @@ extension FcrOneToOneUIScene: FcrStreamWindowUIComponentDelegate {
                   return
               }
         
-        let new = FcrWindowRenderViewState.create(isHide: true,
+        let new = FcrTachedWindowRenderViewState.create(isHide: true,
                                                   data: data)
         
         renderComponent.updateItem(new,
@@ -474,7 +474,7 @@ extension FcrOneToOneUIScene: FcrStreamWindowUIComponentDelegate {
                   return
               }
         
-        let new = FcrWindowRenderViewState.create(isHide: false,
+        let new = FcrTachedWindowRenderViewState.create(isHide: false,
                                                   data: data)
         
         renderComponent.updateItem(new,
@@ -634,9 +634,9 @@ extension FcrOneToOneUIScene: FcrToolCollectionUIComponentDelegate {
 }
 
 // MARK: - FcrWindowRenderUIComponentDelegate
-extension FcrOneToOneUIScene: FcrWindowRenderUIComponentDelegate {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didPressItem item: FcrWindowRenderViewState,
+extension FcrOneToOneUIScene: FcrTachedStreamWindowUIComponentDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           didPressItem item: FcrTachedWindowRenderViewState,
                            view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
               let data = item.data else {

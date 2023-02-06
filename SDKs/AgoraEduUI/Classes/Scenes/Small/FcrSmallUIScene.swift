@@ -56,7 +56,7 @@ import AgoraWidget
                                                               widgetController: contextPool.widget)
     
     /** 大窗 控制器*/
-    private lazy var windowComponent = FcrStreamWindowUIComponent(roomController: contextPool.room,
+    private lazy var windowComponent = FcrDetachedStreamWindowUIComponent(roomController: contextPool.room,
                                                                   userController: contextPool.user,
                                                                   streamController: contextPool.stream,
                                                                   mediaController: contextPool.media,
@@ -146,6 +146,11 @@ import AgoraWidget
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        if self.contextPool.user.getLocalUserInfo().userRole != .observer {
+            self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            self.contextPool.media.openLocalDevice(systemDevice: .mic)
+        }
+        
         contextPool.room.joinRoom { [weak self] in
             AgoraLoading.hide()
             guard let `self` = self else {
@@ -153,10 +158,7 @@ import AgoraWidget
             }
             self.isJoinedRoom = true
             
-            if self.contextPool.user.getLocalUserInfo().userRole != .observer {
-                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
-                self.contextPool.media.openLocalDevice(systemDevice: .mic)
-            }
+            
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
@@ -403,8 +405,8 @@ extension FcrSmallUIScene: FcrToolBarComponentDelegate {
     }
 }
 
-// MARK: - FcrStreamWindowUIComponentDelegate
-extension FcrSmallUIScene: FcrStreamWindowUIComponentDelegate {
+// MARK: - FcrDetachedStreamWindowUIComponentDelegate
+extension FcrSmallUIScene: FcrDetachedStreamWindowUIComponentDelegate {
     func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
         guard let renderView = renderComponent.getRenderView(userId: userId) else {
             return nil
@@ -422,7 +424,7 @@ extension FcrSmallUIScene: FcrStreamWindowUIComponentDelegate {
                   return
               }
         
-        let new = FcrWindowRenderViewState.create(isHide: true,
+        let new = FcrTachedWindowRenderViewState.create(isHide: true,
                                                   data: data)
         
         renderComponent.updateItem(new,
@@ -435,7 +437,7 @@ extension FcrSmallUIScene: FcrStreamWindowUIComponentDelegate {
                   return
               }
         
-        let new = FcrWindowRenderViewState.create(isHide: false,
+        let new = FcrTachedWindowRenderViewState.create(isHide: false,
                                                   data: data)
         
         renderComponent.updateItem(new,
@@ -583,9 +585,9 @@ extension FcrSmallUIScene: FcrChatUIComponentDelegate {
 }
 
 // MARK: - FcrWindowRenderUIComponentDelegate
-extension FcrSmallUIScene: FcrWindowRenderUIComponentDelegate {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didPressItem item: FcrWindowRenderViewState,
+extension FcrSmallUIScene: FcrTachedStreamWindowUIComponentDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                           didPressItem item: FcrTachedWindowRenderViewState,
                            view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
               let data = item.data else {
@@ -787,7 +789,7 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
             
-            let new = FcrWindowRenderViewState.create(isHide: item.isHide,
+            let new = FcrTachedWindowRenderViewState.create(isHide: item.isHide,
                                                       data: data)
             
             renderComponent.coHost.updateItem(new,
