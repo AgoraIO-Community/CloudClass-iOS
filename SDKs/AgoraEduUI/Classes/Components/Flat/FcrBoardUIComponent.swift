@@ -10,16 +10,11 @@ import AgoraWidget
 
 protocol FcrBoardUIComponentDelegate: NSObjectProtocol {
     func onBoardActiveStateChanged(isActive: Bool)
-    func onStageStateChanged(stageOn: Bool)
     func onBoardGrantedUserListRemoved(userList: [String])
     func onBoardGrantedUserListAdded(userList: [String])
 }
 
 extension FcrBoardUIComponentDelegate {
-    func onStageStateChanged(stageOn: Bool) {
-        
-    }
-    
     func onBoardGrantedUserListRemoved(userList: [String]) {
         
     }
@@ -129,9 +124,9 @@ class FcrBoardUIComponent: FcrUIComponent {
             delegate?.onBoardActiveStateChanged(isActive: false)
             return
         }
+        
         delegate?.onBoardActiveStateChanged(isActive: true)
         
-        setUp()
         joinBoardWidget()
     }
     
@@ -213,18 +208,6 @@ private extension FcrBoardUIComponent {
         boardWidget = nil
         widgetController.remove(self,
                                 widgetId: kBoardWidgetId)
-    }
-    
-    func setUp() {
-        guard let stageState = roomProperties?["stage"] as? Int else {
-            return
-        }
-        
-        if stageState == 1 {
-            delegate?.onStageStateChanged(stageOn: true)
-        } else {
-            delegate?.onStageStateChanged(stageOn: false)
-        }
     }
     
     func handleAudioMixing(_ type: AgoraBoardWidgetAudioMixingRequestType) {
@@ -318,25 +301,6 @@ extension FcrBoardUIComponent: AgoraWidgetActivityObserver {
 extension FcrBoardUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         onViewWillActive()
-    }
-    
-    func onRoomPropertiesUpdated(changedProperties: [String : Any],
-                                 cause: [String : Any]?,
-                                 operatorUser: AgoraEduContextUserInfo?) {
-        guard let stageState = roomProperties?["stage"] as? Int else {
-            return
-        }
-        if stageState == 1 {
-            delegate?.onStageStateChanged(stageOn: true)
-        } else {
-            delegate?.onStageStateChanged(stageOn: false)
-        }
-    }
-    
-    func onRoomPropertiesDeleted(keyPaths: [String],
-                                 cause: [String : Any]?,
-                                 operatorUser: AgoraEduContextUserInfo?) {
-        
     }
 }
 

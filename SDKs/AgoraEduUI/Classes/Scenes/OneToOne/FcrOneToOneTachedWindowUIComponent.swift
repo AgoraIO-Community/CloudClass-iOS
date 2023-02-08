@@ -9,7 +9,7 @@ import AgoraEduCore
 import AgoraWidget
 import UIKit
 
-class FcrOneToOneWindowRenderUIComponent: FcrTachedStreamWindowUIComponent {
+class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext
@@ -111,7 +111,7 @@ class FcrOneToOneWindowRenderUIComponent: FcrTachedStreamWindowUIComponent {
     }
 }
 
-private extension FcrOneToOneWindowRenderUIComponent {
+private extension FcrOneToOneTachedWindowUIComponent {
     func updateItemOfTeacher() {
         guard let teacher = userController.getUserList(role: .teacher)?.first else {
             return
@@ -178,7 +178,7 @@ private extension FcrOneToOneWindowRenderUIComponent {
     }
 }
 
-private extension FcrOneToOneWindowRenderUIComponent {
+private extension FcrOneToOneTachedWindowUIComponent {
     func startRenderVideo(streamId: String,
                           view: FcrWindowRenderVideoView) {
         let renderConfig = AgoraEduContextRenderConfig()
@@ -195,14 +195,14 @@ private extension FcrOneToOneWindowRenderUIComponent {
     }
 }
 
-extension FcrOneToOneWindowRenderUIComponent: AgoraEduRoomHandler {
+extension FcrOneToOneTachedWindowUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         updateItemOfTeacher()
         updateItemOfStudent()
     }
 }
 
-extension FcrOneToOneWindowRenderUIComponent: AgoraEduUserHandler {
+extension FcrOneToOneTachedWindowUIComponent: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         switch user.userRole {
         case .teacher:
@@ -238,7 +238,7 @@ extension FcrOneToOneWindowRenderUIComponent: AgoraEduUserHandler {
     }
 }
 
-extension FcrOneToOneWindowRenderUIComponent: AgoraEduStreamHandler {
+extension FcrOneToOneTachedWindowUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
         switch stream.owner.userRole {
@@ -264,7 +264,7 @@ extension FcrOneToOneWindowRenderUIComponent: AgoraEduStreamHandler {
     }
 }
 
-extension FcrOneToOneWindowRenderUIComponent: AgoraEduMediaHandler {
+extension FcrOneToOneTachedWindowUIComponent: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
                          streamUuid: String) {
         updateVolume(streamId: streamUuid,

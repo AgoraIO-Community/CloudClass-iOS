@@ -7,6 +7,15 @@
 
 import AgoraUIBaseViews
 
+// MARK: - Layout
+struct FcrAreaViewType: OptionSet {
+    let rawValue: Int
+    
+    static let none = FcrAreaViewType(rawValue: 1 << 0)
+    static let stage = FcrAreaViewType(rawValue: 1 << 1)
+    static let videoGallery = FcrAreaViewType(rawValue: 1 << 2)
+}
+
 // MARK: - Stream window
 enum FcrStreamWindowMediaViewState {
     case none(UIImage)

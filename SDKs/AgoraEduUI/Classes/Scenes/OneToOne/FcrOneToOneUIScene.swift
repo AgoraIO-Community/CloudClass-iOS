@@ -59,7 +59,7 @@ import UIKit
                                                               delegate: self)
     
     /** 渲染 控制器*/
-    private lazy var renderComponent = FcrOneToOneWindowRenderUIComponent(roomController: contextPool.room,
+    private lazy var renderComponent = FcrOneToOneTachedWindowUIComponent(roomController: contextPool.room,
                                                                           userController: contextPool.user,
                                                                           mediaController: contextPool.media,
                                                                           streamController: contextPool.stream,
@@ -97,14 +97,12 @@ import UIKit
                                                                     widgetController: contextPool.widget)
     /** 大窗 控制器*/
     private lazy var windowComponent = FcrDetachedStreamWindowUIComponent(roomController: contextPool.room,
-                                                                  userController: contextPool.user,
-                                                                  streamController: contextPool.stream,
-                                                                  mediaController: contextPool.media,
-                                                                  widgetController: contextPool.widget,
-                                                                  delegate: self,
-                                                                  componentDataSource: self)
-    
-    private var isJoinedRoom = false
+                                                                          userController: contextPool.user,
+                                                                          streamController: contextPool.stream,
+                                                                          mediaController: contextPool.media,
+                                                                          widgetController: contextPool.widget,
+                                                                          delegate: self,
+                                                                          componentDataSource: self)
     
     private var fileWriter = FcrUIFileWriter()
     
@@ -129,18 +127,13 @@ import UIKit
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        contextPool.room.joinRoom { [weak self] in
+        if contextPool.user.getLocalUserInfo().userRole != .observer {
+            contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            contextPool.media.openLocalDevice(systemDevice: .mic)
+        }
+        
+        contextPool.room.joinRoom {
             AgoraLoading.hide()
-            guard let `self` = self else {
-                return
-            }
-            self.isJoinedRoom = true
-            
-            // 打开本地音视频设备
-            if self.contextPool.user.getLocalUserInfo().userRole != .observer {
-                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
-                self.contextPool.media.openLocalDevice(systemDevice: .mic)
-            }
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
@@ -156,13 +149,8 @@ import UIKit
                 make?.right.equalTo()(contentView.mas_right)
             }
         }
-    }
-    
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if isJoinedRoom == false {
-            AgoraLoading.loading()
-        }
+        
+        AgoraLoading.loading(in: view)
     }
     
     public override func didClickCtrlMaskView() {
@@ -363,12 +351,9 @@ extension FcrOneToOneUIScene: FcrSettingUIComponentDelegate {
         }
     }
 }
+
 // MARK: - AgoraBoardUIComponentDelegate
 extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
-    func onStageStateChanged(stageOn: Bool) {
-        
-    }
-    
     func onBoardActiveStateChanged(isActive: Bool) {
         toolCollectionComponent.updateBoardActiveState(isActive: isActive)
     }

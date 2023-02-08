@@ -24,6 +24,7 @@ import AgoraWidget
                                                                 streamController: subRoom.stream,
                                                                 groupController: contextPool.group,
                                                                 subRoom: subRoom,
+                                                                delegate: self,
                                                                 exitDelegate: self)
     
     /** 音频流 控制器（自身不包含UI）*/
@@ -40,7 +41,7 @@ import AgoraWidget
                                                               subRoom: subRoom)
     
     /** 视窗渲染 控制器*/
-    private lazy var renderComponent = FcrSmallWindowRenderUIComponent(roomController: contextPool.room,
+    private lazy var renderComponent = FcrSmallTachedWindowUIComponent(roomController: contextPool.room,
                                                                        userController: subRoom.user,
                                                                        streamController: subRoom.stream,
                                                                        mediaController: contextPool.media,
@@ -58,14 +59,14 @@ import AgoraWidget
                                                           delegate: self)
     
     /** 大窗 控制器*/
-    private lazy var windowComponent = FcrDetachedStreamWindowUIComponent(roomController: contextPool.room,
-                                                                  userController: subRoom.user,
-                                                                  streamController: subRoom.stream,
-                                                                  mediaController: contextPool.media,
-                                                                  widgetController: subRoom.widget,
-                                                                  subRoom: subRoom,
-                                                                  delegate: self,
-                                                                  componentDataSource: self)
+    private lazy var windowComponent = FcrDetachedStreamWindowExUIComponent(roomController: contextPool.room,
+                                                                            userController: subRoom.user,
+                                                                            streamController: subRoom.stream,
+                                                                            mediaController: contextPool.media,
+                                                                            widgetController: subRoom.widget,
+                                                                            subRoom: subRoom,
+                                                                            delegate: self,
+                                                                            componentDataSource: self)
     
     /** 外部链接 控制器*/
     private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
@@ -131,7 +132,6 @@ import AgoraWidget
     
     private var subRoom: AgoraEduSubRoomContext
     
-    private var isJoinedRoom = false
     private var curStageOn = true
     
     private lazy var watermarkWidget: AgoraBaseWidget? = {
@@ -161,6 +161,13 @@ import AgoraWidget
         
         updateRenderCollectionLayout()
         
+        view.agora_visible = UIConfig.breakoutRoom.visible
+        
+        if subRoom.user.getLocalUserInfo().userRole == .teacher {
+            contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            contextPool.media.openLocalDevice(systemDevice: .mic)
+        }
+        
         subRoom.joinSubRoom { [weak self] in
             AgoraLoading.hide()
             
@@ -168,13 +175,7 @@ import AgoraWidget
                 return
             }
             
-            self.isJoinedRoom = true
-            self.view.agora_visible = UIConfig.breakoutRoom.visible
             
-            if self.subRoom.user.getLocalUserInfo().userRole == .teacher {
-                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
-                self.contextPool.media.openLocalDevice(systemDevice: .mic)
-            }
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal,
@@ -191,17 +192,13 @@ import AgoraWidget
                 make?.right.equalTo()(contentView.mas_right)
             }
         }
-    }
-    
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if isJoinedRoom == false {
-            let subRoomName = subRoom.getSubRoomInfo().subRoomName
-            let message = "fcr_group_joining".agedu_localized().replacingOccurrences(of: String.agedu_localized_replacing_x(),
-                                                                                     with: subRoomName)
-            
-            AgoraLoading.loading(message: message)
-        }
+        
+        let subRoomName = subRoom.getSubRoomInfo().subRoomName
+        let message = "fcr_group_joining".agedu_localized().replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                                                                                 with: subRoomName)
+        
+        AgoraLoading.loading(in: view,
+                             message: message)
     }
     
     public override func didClickCtrlMaskView() {
@@ -264,7 +261,7 @@ import AgoraWidget
         super.initViews()
         
         let userRole = contextPool.user.getLocalUserInfo().userRole
-
+        
         var componentList: [UIViewController] = [stateComponent,
                                                  settingComponent,
                                                  boardComponent,
@@ -278,14 +275,14 @@ import AgoraWidget
                                                  chatComponent,
                                                  audioComponent,
                                                  globalComponent]
-
+        
         switch userRole {
         case .teacher:
             let teacherList = [cloudComponent,
                                renderMenuComponent,
                                handsListComponent]
             componentList.append(contentsOf: teacherList)
-
+            
             cloudComponent.view.agora_visible = false
             renderMenuComponent.view.agora_visible = false
         case .student:
@@ -296,29 +293,29 @@ import AgoraWidget
             componentList.removeAll([toolCollectionComponent,
                                      nameRollComponent])
         }
-
+        
         for component in componentList {
             addChild(component)
-
+            
             if [settingComponent,
                 handsListComponent,
                 nameRollComponent,
                 chatComponent].contains(component) {
                 continue
             }
-
+            
             if [globalComponent,
                 audioComponent].contains(component) {
                 component.viewDidLoad()
                 continue
             }
-
+            
             contentView.addSubview(component.view)
         }
-
+        
         // special
         boardComponent.view.clipsToBounds = true
-
+        
         switch userRole {
         case .teacher:
             toolBarComponent.updateTools([.setting,
@@ -340,17 +337,17 @@ import AgoraWidget
     public override func initViewFrame() {
         super.initViewFrame()
         let userRole = contextPool.user.getLocalUserInfo().userRole
-
+        
         stateComponent.view.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(UIDevice.current.agora_is_pad ? 20 : 14)
         }
-
+        
         boardComponent.view.mas_makeConstraints { make in
             make?.height.equalTo()(AgoraFit.scale(307))
             make?.left.right().bottom().equalTo()(0)
         }
-
+        
         renderComponent.view.mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
@@ -360,7 +357,7 @@ import AgoraWidget
             make?.top.equalTo()(self.stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
             make?.bottom.equalTo()(self.boardComponent.view.mas_top)?.offset()(AgoraFit.scale(-1))
         }
-
+        
         toolBarComponent.view.mas_remakeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
@@ -374,7 +371,7 @@ import AgoraWidget
             make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
             make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
         }
-
+        
         if userRole != .observer {
             toolCollectionComponent.view.mas_makeConstraints { [weak self] make in
                 guard let `self` = self else {
@@ -388,7 +385,7 @@ import AgoraWidget
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
         }
-
+        
         webViewComponent.view.mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
@@ -396,7 +393,7 @@ import AgoraWidget
             
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
-
+        
         windowComponent.view.mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
@@ -404,7 +401,7 @@ import AgoraWidget
             
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
-
+        
         classToolsComponent.view.mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
@@ -413,74 +410,13 @@ import AgoraWidget
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
     }
-}
-
-// MARK: - FcrWindowRenderUIComponentDelegate
-extension FcrSubRoomUIScene: FcrTachedStreamWindowUIComponentDelegate {
-    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didPressItem item: FcrTachedWindowRenderViewState,
-                           view: UIView) {
-        guard contextPool.user.getLocalUserInfo().userRole == .teacher,
-              let data = item.data else {
-                  return
-              }
-
-        let rect = view.convert(view.bounds,
-                                to: contentView)
-        let centerX = rect.center.x - contentView.width / 2
-
-        let userId = data.userId
-
-        var role = AgoraEduContextUserRole.student
-        
-        if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
-           teacehr.userUuid == userId {
-            role = .teacher
-        }
-
-        if let menuId = renderMenuComponent.userId,
-           menuId == userId {
-            // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
-            renderMenuComponent.dismissView()
-        } else {
-            // 1. 当前menu的userId不为点击的userId，切换用户
-            // 2. 当前不存在menu，显示
-            renderMenuComponent.show(roomType: .small,
-                                     userUuid: userId,
-                                     showRoleType: role)
-            
-            renderMenuComponent.view.mas_remakeConstraints { [weak self] make in
-                guard let `self` = self else {
-                    return
-                }
-                
-                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
-                make?.centerX.equalTo()(view.mas_centerX)
-                make?.height.equalTo()(30)
-                make?.width.equalTo()(self.renderMenuComponent.menuWidth)
-            }
-        }
-    }
-}
-// MARK: - FcrSettingUIComponentDelegate
-extension FcrSubRoomUIScene: FcrSettingUIComponentDelegate {
-    func onShowShareView(_ view: UIView) {
-        ctrlView = nil
-        toolBarComponent.deselectAll()
-        self.view.addSubview(view)
-        view.mas_makeConstraints { make in
-            make?.top.left().bottom().right().equalTo()(0)
-        }
-    }
-}
-// MARK: - AgoraBoardUIComponentDelegate
-extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
-    func onStageStateChanged(stageOn: Bool) {
-        guard curStageOn != stageOn else {
+    
+    func showStageArea(show: Bool) {
+        guard curStageOn != show else {
             return
         }
         
-        curStageOn = stageOn
+        curStageOn = show
         
         if curStageOn {
             renderComponent.view.agora_visible = true
@@ -489,7 +425,7 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
             }
-
+            
             renderComponent.view.mas_remakeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
@@ -514,14 +450,77 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
                 make?.left.right().equalTo()(0)
             }
         }
-
+        
         boardComponent.updateBoardRatio()
     }
+}
 
+// MARK: - FcrWindowRenderUIComponentDelegate
+extension FcrSubRoomUIScene: FcrTachedStreamWindowUIComponentDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher,
+              let data = item.data else {
+                  return
+              }
+        
+        let rect = view.convert(view.bounds,
+                                to: contentView)
+        let centerX = rect.center.x - contentView.width / 2
+        
+        let userId = data.userId
+        
+        var role = AgoraEduContextUserRole.student
+        
+        if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
+           teacehr.userUuid == userId {
+            role = .teacher
+        }
+        
+        if let menuId = renderMenuComponent.userId,
+           menuId == userId {
+            // 若当前已存在menu，且当前menu的userId为点击的userId，menu切换状态
+            renderMenuComponent.dismissView()
+        } else {
+            // 1. 当前menu的userId不为点击的userId，切换用户
+            // 2. 当前不存在menu，显示
+            renderMenuComponent.show(roomType: .small,
+                                     userUuid: userId,
+                                     showRoleType: role)
+            
+            renderMenuComponent.view.mas_remakeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                make?.bottom.equalTo()(view.mas_bottom)?.offset()(1)
+                make?.centerX.equalTo()(view.mas_centerX)
+                make?.height.equalTo()(30)
+                make?.width.equalTo()(self.renderMenuComponent.menuWidth)
+            }
+        }
+    }
+}
+
+// MARK: - FcrSettingUIComponentDelegate
+extension FcrSubRoomUIScene: FcrSettingUIComponentDelegate {
+    func onShowShareView(_ view: UIView) {
+        ctrlView = nil
+        toolBarComponent.deselectAll()
+        self.view.addSubview(view)
+        view.mas_makeConstraints { make in
+            make?.top.left().bottom().right().equalTo()(0)
+        }
+    }
+}
+
+// MARK: - AgoraBoardUIComponentDelegate
+extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
     func onBoardActiveStateChanged(isActive: Bool) {
         toolCollectionComponent.updateBoardActiveState(isActive: isActive)
     }
-
+    
     func onBoardGrantedUserListAdded(userList: [String]) {
         updateWindowRenderItemBoardPrivilege(true,
                                              userList: userList)
@@ -532,7 +531,7 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
         webViewComponent.onBoardPrivilegeListChaned(true,
                                                     userList: userList)
     }
-
+    
     func onBoardGrantedUserListRemoved(userList: [String]) {
         updateWindowRenderItemBoardPrivilege(false,
                                              userList: userList)
@@ -543,7 +542,7 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
         webViewComponent.onBoardPrivilegeListChaned(false,
                                                     userList: userList)
     }
-
+    
     func updateWindowRenderItemBoardPrivilege(_ privilege: Bool,
                                               userList: [String]) {
         for (index, item) in renderComponent.coHost.dataSource.enumerated() {
@@ -552,42 +551,42 @@ extension FcrSubRoomUIScene: FcrBoardUIComponentDelegate {
             else {
                 continue
             }
-
+            
             guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
                   user.userRole != .teacher
             else {
                 continue
             }
-
+            
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
-
+            
             let new = FcrTachedWindowRenderViewState.create(isHide: item.isHide,
-                                                      data: data)
-
+                                                            data: data)
+            
             renderComponent.coHost.updateItem(new,
                                               index: index)
         }
     }
-
+    
     func updateStreamWindowItemBoardPrivilege(_ privilege: Bool,
                                               userList: [String]) {
         for (index, item) in windowComponent.dataSource.enumerated() {
             var data = item.data
-
+            
             guard userList.contains(data.userId) else {
                 continue
             }
-
+            
             guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
                   user.userRole != .teacher
             else {
                 continue
             }
-
+            
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
-
+            
             windowComponent.updateItemData(data,
                                            index: index)
         }
@@ -624,7 +623,7 @@ extension FcrSubRoomUIScene: FcrToolBarComponentDelegate {
         }
         ctrlViewAnimationFromView(selectView)
     }
-
+    
     func toolsViewDidDeselectTool(tool: FcrToolBarItemType) {
         ctrlView = nil
     }
@@ -636,37 +635,37 @@ extension FcrSubRoomUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         guard let renderView = renderComponent.getRenderView(userId: userId) else {
             return nil
         }
-
+        
         let frame = renderView.convert(renderView.frame,
                                        to: UIWindow.agora_top_window())
-
+        
         return frame
     }
-
+    
     func onWillStartRenderVideoStream(streamId: String) {
         guard let item = renderComponent.getItem(streamId: streamId),
               let data = item.data
         else {
             return
         }
-
+        
         let new = FcrTachedWindowRenderViewState.create(isHide: true,
-                                                  data: data)
-
+                                                        data: data)
+        
         renderComponent.updateItem(new,
                                    animation: false)
     }
-
+    
     func onDidStopRenderVideoStream(streamId: String) {
         guard let item = renderComponent.getItem(streamId: streamId),
               let data = item.data
         else {
             return
         }
-
+        
         let new = FcrTachedWindowRenderViewState.create(isHide: false,
-                                                  data: data)
-
+                                                        data: data)
+        
         renderComponent.updateItem(new,
                                    animation: false)
     }
@@ -691,7 +690,7 @@ extension FcrSubRoomUIScene: FcrToolCollectionUIComponentDelegate {
             guard let `self` = self else {
                 return
             }
-
+            
             if appear {
                 self.toolBarComponent.view.mas_remakeConstraints { [weak self] make in
                     guard let `self` = self else {
@@ -722,15 +721,14 @@ extension FcrSubRoomUIScene: FcrToolCollectionUIComponentDelegate {
                 }
             }
         }, completion: nil)
-
     }
-
+    
     func toolCollectionDidSelectCell(view: UIView) {
         toolBarComponent.deselectAll()
         ctrlView = view
         ctrlViewAnimationFromView(toolCollectionComponent.view)
     }
-
+    
     func toolCollectionCellNeedSpread(_ spread: Bool) {
         if spread {
             toolCollectionComponent.view.mas_remakeConstraints { [weak self] make in
@@ -759,11 +757,11 @@ extension FcrSubRoomUIScene: FcrToolCollectionUIComponentDelegate {
             }
         }
     }
-
+    
     func toolCollectionDidDeselectCell() {
         ctrlView = nil
     }
-
+    
     func toolCollectionDidSelectTeachingAid(type: AgoraTeachingAidType) {
         // 选择插件（答题器、投票器...）
         ctrlView = nil
@@ -827,45 +825,62 @@ extension FcrSubRoomUIScene: FcrUIComponentDataSource {
     }
 }
 
+// MARK: - FcrRoomGlobalUIComponentDelegate
+extension FcrSubRoomUIScene: FcrRoomGlobalUIComponentDelegate {
+    func onAreaUpdated(type: FcrAreaViewType) {
+        if type.contains(.videoGallery) {
+            windowComponent.startPreviewLocalVideo()
+        } else {
+            windowComponent.stopPreviewLocalVideo()
+        }
+        
+        if type.contains(.stage) {
+            showStageArea(show: true)
+        } else {
+            showStageArea(show: false)
+        }
+    }
+}
+
 // MARK: - Private
 private extension FcrSubRoomUIScene {
     func updateRenderCollectionLayout() {
         view.layoutIfNeeded()
         let kItemGap: CGFloat = 2
-
+        
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-
+        
         let itemWidth = (renderComponent.view.bounds.width + kItemGap) / 7.0 - kItemGap
-
+        
         layout.itemSize = CGSize(width: itemWidth,
                                  height: renderComponent.view.bounds.height)
         layout.minimumLineSpacing = kItemGap
         renderComponent.updateLayout(layout)
     }
-
+    
     func teacherInRoom() -> FcrTeacherInRoomType {
         let group = contextPool.group
         let mainUser = contextPool.user
         let subUser = subRoom.user
-
+        
         guard let mainTeacher = mainUser.getUserList(role: .teacher)?.first else {
             return .none
         }
-
+        
         let localSubTeacher = subUser.getUserList(role: .teacher)?.first
-
+        
         guard localSubTeacher == nil else {
             return .localSub
         }
-
+        
         guard let subRoomList = group.getSubRoomList() else {
             return .none
         }
-
+        
         let localUserId = subUser.getLocalUserInfo().userUuid
         let teacherId = mainTeacher.userUuid
-
+        
         for item in subRoomList {
             if let userList = group.getUserListFromSubRoom(subRoomUuid: item.subRoomUuid),
                userList.contains(teacherId),
@@ -873,10 +888,10 @@ private extension FcrSubRoomUIScene {
                 return .otherSub
             }
         }
-
+        
         return .none
     }
-
+    
     func toolsViewDidSelectHelp() {
         switch teacherInRoom() {
         case .localSub:
@@ -887,12 +902,13 @@ private extension FcrSubRoomUIScene {
                              type: .warning)
         default:
             guard let userList = contextPool.user.getUserList(role: .teacher),
-                  let teacherUserId = userList.first?.userUuid else {
-                      break
-                  }
-
+                  let teacherUserId = userList.first?.userUuid
+            else {
+                break
+            }
+            
             globalComponent.isRequestingHelp = true
-
+            
             let inviteActionTitle = "fcr_group_invite".agedu_localized()
             
             let actionInvite = AgoraAlertAction(title: inviteActionTitle) { [weak self] _ in

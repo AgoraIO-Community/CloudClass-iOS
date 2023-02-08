@@ -10,28 +10,28 @@ import UIKit
 
 protocol FcrTachedStreamWindowUIComponentDragDelegate: NSObjectProtocol {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           starDrag item: FcrTachedWindowRenderViewState,
-                           location: CGPoint)
+                                       starDrag item: FcrTachedWindowRenderViewState,
+                                       location: CGPoint)
     
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           dragging item: FcrTachedWindowRenderViewState,
-                           to location: CGPoint)
+                                       dragging item: FcrTachedWindowRenderViewState,
+                                       to location: CGPoint)
     
-    func renderUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didEndDrag item: FcrTachedWindowRenderViewState,
-                           location: CGPoint)
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didEndDrag item: FcrTachedWindowRenderViewState,
+                                       location: CGPoint)
 }
 
 extension FcrTachedStreamWindowUIComponentDragDelegate {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           starDrag item: FcrTachedWindowRenderViewState,
-                           location: CGPoint) {}
+                                       starDrag item: FcrTachedWindowRenderViewState,
+                                       location: CGPoint) {}
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           dragging item: FcrTachedWindowRenderViewState,
-                           to location: CGPoint) {}
-    func renderUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didEndDrag item: FcrTachedWindowRenderViewState,
-                           location: CGPoint) {}
+                                       dragging item: FcrTachedWindowRenderViewState,
+                                       to location: CGPoint) {}
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didEndDrag item: FcrTachedWindowRenderViewState,
+                                       location: CGPoint) {}
 }
 
 class FcrLectureTachedWindowUIComponent: FcrTeacherTachedWindowUIComponent {
@@ -87,17 +87,17 @@ class FcrLectureTachedWindowUIComponent: FcrTeacherTachedWindowUIComponent {
         switch sender.state {
         case .began:
             dragDelegate?.tachedStreamWindowUIComponent(self,
-                                            starDrag: item,
-                                            location: point)
+                                                        starDrag: item,
+                                                        location: point)
         case .changed:
             dragDelegate?.tachedStreamWindowUIComponent(self,
-                                            dragging: item,
-                                            to: point)
+                                                        dragging: item,
+                                                        to: point)
         case .recognized: fallthrough
         case .ended:
-            dragDelegate?.renderUIComponent(self,
-                                            didEndDrag: item,
-                                            location: point)
+            dragDelegate?.tachedStreamWindowUIComponent(self,
+                                                        didEndDrag: item,
+                                                        location: point)
             break
         default:
             break

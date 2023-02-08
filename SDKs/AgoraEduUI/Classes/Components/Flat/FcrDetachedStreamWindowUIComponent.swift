@@ -19,9 +19,9 @@ class FcrDetachedStreamWindowUIComponent: UIViewController {
     public let roomController: AgoraEduRoomContext
     public let userController: AgoraEduUserContext
     public let streamController: AgoraEduStreamContext
-    private(set) var mediaController: AgoraEduMediaContext
+    public let mediaController: AgoraEduMediaContext
     public let widgetController: AgoraEduWidgetContext
-    public var subRoom: AgoraEduSubRoomContext?
+    public let subRoom: AgoraEduSubRoomContext?
     
     // For lecture
     internal var roomId: String {
@@ -191,9 +191,9 @@ private extension FcrDetachedStreamWindowUIComponent {
                 animation: animation)
     }
     
-    func addItem(_ item: FcrDetachedStreamWindowWidgetItem,
-                 syncFrame: AgoraWidgetFrame,
-                 animation: Bool = true) {
+    internal func addItem(_ item: FcrDetachedStreamWindowWidgetItem,
+                          syncFrame: AgoraWidgetFrame,
+                          animation: Bool = true) {
         guard dataSource.contains(where: {$0.widgetObjectId == item.widgetObjectId}) == false else {
             return
         }
@@ -243,8 +243,8 @@ private extension FcrDetachedStreamWindowUIComponent {
         onAddedRenderWidget(widgetView: widget.view)
     }
     
-    func removeItem(_ widgetObjectId: String,
-                    animation: Bool = true) {
+    internal func removeItem(_ widgetObjectId: String,
+                             animation: Bool = true) {
         guard let index = dataSource.firstItemIndex(widgetObjectId: widgetObjectId),
               let widget = widgets[widgetObjectId]
         else {
@@ -282,13 +282,23 @@ private extension FcrDetachedStreamWindowUIComponent {
     }
     
     func createItem(widgetObjectId: String) -> FcrDetachedStreamWindowWidgetItem? {
+        guard let streamId = widgetObjectId.splitStreamId(),
+              let streamList = streamController.getAllStreamList(),
+              let stream = streamList.first(where: {$0.streamUuid == streamId})
+        else {
+            return nil
+        }
+        
+        return createItem(widgetObjectId: widgetObjectId,
+                          stream: stream)
+    }
+    
+    internal func createItem(widgetObjectId: String,
+                             stream: AgoraEduContextStreamInfo) -> FcrDetachedStreamWindowWidgetItem? {
         guard UIConfig.streamWindow.enable,
               widgetObjectId.hasPrefix(WindowWidgetId),
               dataSource.firstItem(widgetObjectId: widgetObjectId) == nil,
-              let config = widgetController.getWidgetConfig(WindowWidgetId),
-              let streamId = widgetObjectId.splitStreamId(),
-              let streamList = streamController.getAllStreamList(),
-              let stream = streamList.first(where: {$0.streamUuid == streamId})
+              let config = widgetController.getWidgetConfig(WindowWidgetId)
         else {
             return nil
         }

@@ -9,7 +9,7 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import Foundation
 
-class FcrSmallWindowRenderUIComponent: UIViewController {
+class FcrSmallTachedWindowUIComponent: UIViewController {
     let coHost: FcrCoHostTachedWindowUIComponent
     let teacher: FcrTeacherTachedWindowUIComponent
     
@@ -95,7 +95,7 @@ class FcrSmallWindowRenderUIComponent: UIViewController {
     }
 }
 
-extension FcrSmallWindowRenderUIComponent: AgoraUIContentContainer, AgoraUIActivity {
+extension FcrSmallTachedWindowUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
         addChild(coHost)
         addChild(teacher)
@@ -136,7 +136,7 @@ extension FcrSmallWindowRenderUIComponent: AgoraUIContentContainer, AgoraUIActiv
     }
 }
 
-private extension FcrSmallWindowRenderUIComponent {
+private extension FcrSmallTachedWindowUIComponent {
     func updateViewFrame() {
         let coHostCount = CGFloat(coHost.dataSource.count)
         let teacherCount = CGFloat(teacher.dataSource.count)
@@ -170,17 +170,17 @@ private extension FcrSmallWindowRenderUIComponent {
     }
 }
 
-extension FcrSmallWindowRenderUIComponent: FcrTachedStreamWindowUIComponentDelegate {
+extension FcrSmallTachedWindowUIComponent: FcrTachedStreamWindowUIComponentDelegate {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didDataSouceCountUpdated count: Int) {
+                                       didDataSouceCountUpdated count: Int) {
         updateViewFrame()
     }
     
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didPressItem item: FcrTachedWindowRenderViewState,
-                           view: UIView) {
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {
         delegate?.tachedStreamWindowUIComponent(component,
-                                    didPressItem: item,
-                                    view: view)
+                                                didPressItem: item,
+                                                view: view)
     }
 }
