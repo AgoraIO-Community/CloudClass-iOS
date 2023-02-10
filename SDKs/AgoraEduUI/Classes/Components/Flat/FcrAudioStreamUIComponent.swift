@@ -57,6 +57,7 @@ class FcrAudioStreamUIComponent: FcrUIComponent {
         }
         
         streamController.registerStreamEventHandler(self)
+        userController.registerUserEventHandler(self)
     }
 }
 
@@ -165,5 +166,20 @@ extension FcrAudioStreamUIComponent: AgoraEduStreamHandler {
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
         stopPlayAudioStream(stream: stream)
+    }
+}
+
+extension FcrAudioStreamUIComponent: AgoraEduUserHandler {
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        for user in userList {
+            guard let streams = streamController.getStreamList(userUuid: user.userUuid) else {
+                continue
+            }
+            
+            for stream in streams {
+                stopPlayAudioStream(stream: stream)
+            }
+        }
     }
 }
