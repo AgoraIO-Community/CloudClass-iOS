@@ -23,7 +23,9 @@ import UIKit
     /** 音频流 控制器（自身不包含UI）*/
     private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
                                                                 streamController: contextPool.stream,
-                                                                mediaController: contextPool.media)
+                                                                userController: contextPool.user,
+                                                                mediaController: contextPool.media,
+                                                                subscribeAll: true)
     
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateComponent = FcrClassStateUIComponent(roomController: contextPool.room,

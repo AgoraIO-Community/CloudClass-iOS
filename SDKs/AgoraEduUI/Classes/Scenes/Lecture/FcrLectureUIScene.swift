@@ -26,6 +26,7 @@ import UIKit
     /** 音频流 控制器（自身不包含UI）*/
     private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
                                                                 streamController: contextPool.stream,
+                                                                userController: contextPool.user,
                                                                 mediaController: contextPool.media)
     
     /** 花名册 控制器 （教师端）*/

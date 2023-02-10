@@ -76,8 +76,9 @@ class FcrCoHostTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
                                 view: renderView)
             }
         case .hide(let data):
-            stopRenderVideo(streamId: data.streamId,
-                            view: renderView)
+            break
+//            stopRenderVideo(streamId: data.streamId,
+//                            view: renderView)
         default:
             break
         }
@@ -181,7 +182,7 @@ private extension FcrCoHostTachedWindowUIComponent {
         let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
         
         let item = FcrTachedWindowRenderViewState.create(isHide: isActive,
-                                                   data: data)
+                                                         data: data)
         
         return item
     }

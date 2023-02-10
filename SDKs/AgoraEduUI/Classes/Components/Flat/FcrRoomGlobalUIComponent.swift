@@ -47,6 +47,8 @@ class FcrRoomGlobalUIComponent: FcrUIComponent {
     public weak var exitDelegate: FcrUISceneExit?
     private weak var delegate: FcrRoomGlobalUIComponentDelegate?
     
+    private(set) var area = FcrAreaViewType.none
+    
     private let areaKey = "area"
     
     private var localStream: AgoraEduContextStreamInfo?
@@ -582,11 +584,14 @@ private extension FcrRoomGlobalUIComponent {
     // MARK: - Area
     func areaChanged(with roomProperties: [String: Any]) {
         guard let areaInt = ValueTransform(value: roomProperties[areaKey],
-                                             result: Int.self) else {
+                                           result: Int.self)
+        else {
             return
         }
         
         let area = FcrAreaViewType(rawValue: areaInt)
+        
+        self.area = area
         
         delegate?.onAreaUpdated(type: area)
     }

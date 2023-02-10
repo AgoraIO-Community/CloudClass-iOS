@@ -11,9 +11,9 @@ import AgoraUIBaseViews
 struct FcrAreaViewType: OptionSet {
     let rawValue: Int
     
-    static let none = FcrAreaViewType(rawValue: 1 << 0)
-    static let stage = FcrAreaViewType(rawValue: 1 << 1)
-    static let videoGallery = FcrAreaViewType(rawValue: 1 << 2)
+    static let none         = FcrAreaViewType(rawValue: 0)
+    static let stage        = FcrAreaViewType(rawValue: 1 << 0)
+    static let videoGallery = FcrAreaViewType(rawValue: 1 << 1)
 }
 
 // MARK: - Stream window

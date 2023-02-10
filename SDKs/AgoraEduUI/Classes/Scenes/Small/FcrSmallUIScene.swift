@@ -25,6 +25,7 @@ import AgoraWidget
     /** 音频流 控制器（自身不包含UI）*/
     private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
                                                                 streamController: contextPool.stream,
+                                                                userController: contextPool.user,
                                                                 mediaController: contextPool.media)
     
     /** 房间状态 控制器*/
@@ -119,8 +120,6 @@ import AgoraWidget
     
     private var subRoom: FcrSubRoomUIScene?
     
-    private var curStageOn = true
-    
     private lazy var watermarkWidget: AgoraBaseWidget? = {
         guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
             return nil
@@ -180,8 +179,8 @@ import AgoraWidget
         
         var componentList: [UIViewController] = [stateComponent,
                                                  settingComponent,
-                                                 boardComponent,
                                                  renderComponent,
+                                                 boardComponent,
                                                  webViewComponent,
                                                  windowComponent,
                                                  nameRollComponent,
@@ -333,13 +332,7 @@ import AgoraWidget
     }
     
     func showStageArea(show: Bool) {
-        guard curStageOn != show else {
-            return
-        }
-        
-        curStageOn = show
-        
-        if curStageOn {
+        if show {
             renderComponent.view.agora_visible = true
             boardComponent.view.mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
@@ -427,12 +420,13 @@ extension FcrSmallUIScene: FcrDetachedStreamWindowUIComponentDelegate {
     
     func onWillStartRenderVideoStream(streamId: String) {
         guard let item = renderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
         let new = FcrTachedWindowRenderViewState.create(isHide: true,
-                                                  data: data)
+                                                        data: data)
         
         renderComponent.updateItem(new,
                                    animation: false)
@@ -440,12 +434,13 @@ extension FcrSmallUIScene: FcrDetachedStreamWindowUIComponentDelegate {
     
     func onDidStopRenderVideoStream(streamId: String) {
         guard let item = renderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
         let new = FcrTachedWindowRenderViewState.create(isHide: false,
-                                                  data: data)
+                                                        data: data)
         
         renderComponent.updateItem(new,
                                    animation: false)
@@ -683,8 +678,11 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
         
         if type.contains(.stage) {
             showStageArea(show: true)
+            renderComponent.viewWillActive()
+            
         } else {
             showStageArea(show: false)
+            renderComponent.viewWillInactive()
         }
     }
     
@@ -729,6 +727,11 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
         
         for child in children {
             guard let vc = child as? AgoraUIActivity else {
+                continue
+            }
+            
+            if let component = vc as? FcrRoomGlobalUIComponent,
+               globalComponent.area.contains(.videoGallery) {
                 continue
             }
             

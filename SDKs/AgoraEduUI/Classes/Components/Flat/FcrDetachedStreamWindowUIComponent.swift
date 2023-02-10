@@ -194,7 +194,10 @@ private extension FcrDetachedStreamWindowUIComponent {
     internal func addItem(_ item: FcrDetachedStreamWindowWidgetItem,
                           syncFrame: AgoraWidgetFrame,
                           animation: Bool = true) {
-        guard dataSource.contains(where: {$0.widgetObjectId == item.widgetObjectId}) == false else {
+        if let _ = getItem(widgetObjectId: item.widgetObjectId) {
+            updateFrame(widgetObjectId: item.widgetObjectId,
+                        syncFrame: syncFrame,
+                        animation: true)
             return
         }
         
@@ -281,6 +284,10 @@ private extension FcrDetachedStreamWindowUIComponent {
                                         widgetId: item.widgetObjectId)
     }
     
+    internal func getItem(widgetObjectId: String) -> FcrDetachedStreamWindowWidgetItem? {
+        return dataSource.firstItem(widgetObjectId: widgetObjectId)
+    }
+    
     func createItem(widgetObjectId: String) -> FcrDetachedStreamWindowWidgetItem? {
         guard let streamId = widgetObjectId.splitStreamId(),
               let streamList = streamController.getAllStreamList(),
@@ -296,10 +303,16 @@ private extension FcrDetachedStreamWindowUIComponent {
     internal func createItem(widgetObjectId: String,
                              stream: AgoraEduContextStreamInfo) -> FcrDetachedStreamWindowWidgetItem? {
         guard UIConfig.streamWindow.enable,
-              widgetObjectId.hasPrefix(WindowWidgetId),
-              dataSource.firstItem(widgetObjectId: widgetObjectId) == nil,
-              let config = widgetController.getWidgetConfig(WindowWidgetId)
+              widgetObjectId.hasPrefix(WindowWidgetId)
         else {
+            return nil
+        }
+        
+        if let item = getItem(widgetObjectId: widgetObjectId) {
+            return item
+        }
+        
+        guard let config = widgetController.getWidgetConfig(WindowWidgetId) else {
             return nil
         }
         
@@ -384,9 +397,9 @@ private extension FcrDetachedStreamWindowUIComponent {
 
 // MARK: - UI
 private extension FcrDetachedStreamWindowUIComponent {
-    func updateFrame(widgetObjectId: String,
-                     syncFrame: AgoraWidgetFrame,
-                     animation: Bool = false) {
+    internal func updateFrame(widgetObjectId: String,
+                              syncFrame: AgoraWidgetFrame,
+                              animation: Bool = false) {
         guard let widget = widgets[widgetObjectId] else {
             return
         }
@@ -610,7 +623,7 @@ extension FcrDetachedStreamWindowUIComponent: AgoraWidgetActivityObserver {
     }
     
     public func onWidgetInactive(_ widgetId: String) {
-        guard let item = dataSource.firstItem(widgetObjectId: widgetId) else {
+        guard let item = getItem(widgetObjectId: widgetId) else {
             return
         }
         

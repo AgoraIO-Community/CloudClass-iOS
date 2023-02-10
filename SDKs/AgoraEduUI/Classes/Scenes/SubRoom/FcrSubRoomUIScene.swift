@@ -30,6 +30,7 @@ import AgoraWidget
     /** 音频流 控制器（自身不包含UI）*/
     private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
                                                                 streamController: subRoom.stream,
+                                                                userController: subRoom.user,
                                                                 mediaController: contextPool.media,
                                                                 subRoom: subRoom)
     
@@ -131,8 +132,6 @@ import AgoraWidget
     private weak var mainDelegate: AgoraEduUISubManagerCallback?
     
     private var subRoom: AgoraEduSubRoomContext
-    
-    private var curStageOn = true
     
     private lazy var watermarkWidget: AgoraBaseWidget? = {
         guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
@@ -412,13 +411,7 @@ import AgoraWidget
     }
     
     func showStageArea(show: Bool) {
-        guard curStageOn != show else {
-            return
-        }
-        
-        curStageOn = show
-        
-        if curStageOn {
+        if show {
             renderComponent.view.agora_visible = true
             
             boardComponent.view.mas_remakeConstraints { make in

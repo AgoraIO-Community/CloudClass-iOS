@@ -89,8 +89,9 @@ class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
                                 view: renderView)
             }
         case .hide(let data):
-            stopRenderVideo(streamId: data.streamId,
-                            view: renderView)
+            break
+//            stopRenderVideo(streamId: data.streamId,
+//                            view: renderView)
         default:
             break
         }
