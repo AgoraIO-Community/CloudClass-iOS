@@ -99,7 +99,7 @@ import UIKit
                                                               userController: contextPool.user,
                                                               widgetController: contextPool.widget)
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
+    private lazy var cloudComponent = FcrCloudDriveUIComponent(roomController: contextPool.room,
                                                           widgetController: contextPool.widget,
                                                           userController: contextPool.user,
                                                           delegate: self)
@@ -317,6 +317,16 @@ import UIKit
             make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
         }
         
+        if userRole == .teacher {
+            cloudComponent.view.mas_makeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
+            }
+        }
+        
         if userRole != .observer {
             toolCollectionComponent.view.mas_makeConstraints { [weak self] make in
                 guard let `self` = self else {
@@ -456,11 +466,15 @@ extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
 }
 
 // MARK: - AgoraCloudUIComponentDelegate
-extension FcrLectureUIScene: FcrCloudUIComponentDelegate {
-    func onOpenAlfCourseware(urlString: String,
-                             resourceId: String) {
-        webViewComponent.openWebView(urlString: urlString,
-                                     resourceId: resourceId)
+extension FcrLectureUIScene: FcrCloudDriveUIComponentDelegate {
+    func onSelectedFile(fileJson: [String: Any],
+                        fileExt: String) {
+        switch fileExt {
+        case "alf":
+            webViewComponent.openWebView(fileJson: fileJson)
+        default:
+            break
+        }
     }
 }
 
@@ -731,16 +745,7 @@ extension FcrLectureUIScene: FcrToolCollectionUIComponentDelegate {
         ctrlView = nil
         switch type {
         case .cloudStorage:
-            if !cloudComponent.view.agora_visible {
-                cloudComponent.view.mas_makeConstraints { [weak self] make in
-                    guard let `self` = self else {
-                        return
-                    }
-                    
-                    make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
-                }
-            }
-            cloudComponent.view.agora_visible = !cloudComponent.view.agora_visible
+            cloudComponent.show()
         case .saveBoard:
             boardComponent.saveBoard()
         case .vote:

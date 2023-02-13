@@ -39,10 +39,10 @@ import UIKit
                                                                     delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
-                                                          widgetController: contextPool.widget,
-                                                          userController: contextPool.user,
-                                                          delegate: self)
+    private lazy var cloudComponent = FcrCloudDriveUIComponent(roomController: contextPool.room,
+                                                               widgetController: contextPool.widget,
+                                                               userController: contextPool.user,
+                                                               delegate: self)
     
     /** 设置界面 控制器*/
     private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
@@ -470,11 +470,15 @@ extension FcrOneToOneUIScene: FcrDetachedStreamWindowUIComponentDelegate {
 }
 
 // MARK: - AgoraCloudUIComponentDelegate
-extension FcrOneToOneUIScene: FcrCloudUIComponentDelegate {
-    func onOpenAlfCourseware(urlString: String,
-                             resourceId: String) {
-        webViewComponent.openWebView(urlString: urlString,
-                                     resourceId: resourceId)
+extension FcrOneToOneUIScene: FcrCloudDriveUIComponentDelegate {
+    func onSelectedFile(fileJson: [String: Any],
+                        fileExt: String) {
+        switch fileExt {
+        case "alf":
+            webViewComponent.openWebView(fileJson: fileJson)
+        default:
+            break
+        }
     }
 }
 

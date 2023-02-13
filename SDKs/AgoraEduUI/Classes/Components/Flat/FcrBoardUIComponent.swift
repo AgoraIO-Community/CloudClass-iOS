@@ -32,7 +32,7 @@ class FcrBoardUIComponent: FcrUIComponent {
         }
     }
     
-    var localGranted = false {
+   var localGranted = false {
         didSet {
             guard localGranted != oldValue else {
                 return
@@ -55,24 +55,15 @@ class FcrBoardUIComponent: FcrUIComponent {
     
     var subRoom: AgoraEduSubRoomContext?
     
-    private var roomProperties: [String: Any]? {
-        get {
-            guard let subRoom = subRoom else {
-                return roomController.getRoomProperties()
-            }
-            
-            return subRoom.getSubRoomProperties()
-        }
-    }
-    private var boardWidget: AgoraBaseWidget?
     private(set) weak var delegate: FcrBoardUIComponentDelegate?
+    private var widget: AgoraBaseWidget?
     
     /** Data */
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
          widgetController: AgoraEduWidgetContext,
          mediaController: AgoraEduMediaContext,
-        subRoom: AgoraEduSubRoomContext? = nil,
+         subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrBoardUIComponentDelegate? = nil) {
         self.roomController = roomController
         self.userController = userController
@@ -120,14 +111,14 @@ class FcrBoardUIComponent: FcrUIComponent {
         mediaController.registerMediaEventHandler(self)
         widgetController.add(self)
         
-        guard widgetController.getWidgetActivity(kBoardWidgetId) else {
+        guard widgetController.getWidgetActivity(BoardWidgetId) else {
             delegate?.onBoardActiveStateChanged(isActive: false)
             return
         }
         
         delegate?.onBoardActiveStateChanged(isActive: true)
         
-        joinBoardWidget()
+        initBoardWidget()
     }
     
     func onGrantedUsersChanged(oldList: Array<String>,
@@ -155,6 +146,17 @@ class FcrBoardUIComponent: FcrUIComponent {
         
         deinitBoardWidget()
     }
+    
+    func openFile(_ fileJson: [String: Any]) {
+        let messageJson = ["openFile": fileJson]
+        
+        guard let message = messageJson.jsonString() else {
+            return
+        }
+        
+        widgetController.sendMessage(toWidget: BoardWidgetId,
+                                     message: message)
+    }
 }
 
 // MARK: - AgoraUIActivity
@@ -174,14 +176,15 @@ private extension FcrBoardUIComponent {
         guard let message = signal.toMessageString() else {
             return
         }
-        widgetController.sendMessage(toWidget: kBoardWidgetId,
+        widgetController.sendMessage(toWidget: BoardWidgetId,
                                      message: message)
     }
     
-    func joinBoardWidget() {
+    func initBoardWidget() {
         guard UIConfig.netlessBoard.enable,
-              let boardConfig = widgetController.getWidgetConfig(kBoardWidgetId),
-              self.boardWidget == nil else {
+              let boardConfig = widgetController.getWidgetConfig(BoardWidgetId),
+              self.widget == nil
+        else {
             return
         }
         
@@ -194,20 +197,21 @@ private extension FcrBoardUIComponent {
         widget.view.layer.borderWidth = config.borderWidth
         
         view.addSubview(widget.view)
-        boardWidget = widget
-
+        
         widget.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
+        
+        self.widget = widget
         
         sendSignal(.joinBoard)
     }
     
     func deinitBoardWidget() {
-        boardWidget?.view.removeFromSuperview()
-        boardWidget = nil
+        widget?.view.removeFromSuperview()
+        widget = nil
         widgetController.remove(self,
-                                widgetId: kBoardWidgetId)
+                                widgetId: BoardWidgetId)
     }
     
     func handleAudioMixing(_ type: AgoraBoardWidgetAudioMixingRequestType) {
@@ -259,7 +263,7 @@ private extension FcrBoardUIComponent {
 extension FcrBoardUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kBoardWidgetId,
+        guard widgetId == BoardWidgetId,
               let signal = message.toBoardSignal() else {
             return
         }
@@ -279,16 +283,16 @@ extension FcrBoardUIComponent: AgoraWidgetMessageObserver {
 
 extension FcrBoardUIComponent: AgoraWidgetActivityObserver {
     func onWidgetActive(_ widgetId: String) {
-        guard widgetId == kBoardWidgetId else {
+        guard widgetId == BoardWidgetId else {
             return
         }
         delegate?.onBoardActiveStateChanged(isActive: true)
         
-        joinBoardWidget()
+        initBoardWidget()
     }
     
     func onWidgetInactive(_ widgetId: String) {
-        guard widgetId == kBoardWidgetId else {
+        guard widgetId == BoardWidgetId else {
             return
         }
         delegate?.onBoardActiveStateChanged(isActive: false)

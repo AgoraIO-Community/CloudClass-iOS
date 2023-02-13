@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 
-// MARK: - Layout
+// MARK: - Area
 struct FcrAreaViewType: OptionSet {
     let rawValue: Int
     

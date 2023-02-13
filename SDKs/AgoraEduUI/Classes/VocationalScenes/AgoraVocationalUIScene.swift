@@ -99,7 +99,7 @@ import AgoraWidget
                                                                      mediaController: contextPool.media,
                                                                      widgetController: contextPool.widget)
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudController = FcrCloudUIComponent(roomController: contextPool.room,
+    private lazy var cloudController = FcrCloudDriveUIComponent(roomController: contextPool.room,
                                                            widgetController: contextPool.widget,
                                                            userController: contextPool.user,
                                                            delegate: nil)

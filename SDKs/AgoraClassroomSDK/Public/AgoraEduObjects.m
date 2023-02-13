@@ -178,9 +178,9 @@
                                                                      widgetId:@"mediaPlayer"];
     widgets[mediaPlayer.widgetId] = mediaPlayer;
     
-    // Cloud Widget
-    AgoraWidgetConfig *cloud = [[AgoraWidgetConfig alloc] initWithClass:[AgoraCloudWidget class]
-                                                               widgetId:@"AgoraCloudWidget"];
+    // Cloud Drive Widget
+    AgoraWidgetConfig *cloud = [[AgoraWidgetConfig alloc] initWithClass:[FcrCloudDriveWidget class]
+                                                               widgetId:@"cloudDrive"];
     widgets[cloud.widgetId] = cloud;
     
     // PopupQuiz Selector Widget

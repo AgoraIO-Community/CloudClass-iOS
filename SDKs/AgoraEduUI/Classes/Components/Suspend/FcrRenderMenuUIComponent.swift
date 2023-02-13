@@ -104,7 +104,7 @@ class FcrRenderMenuUIComponent: FcrUIComponent {
         streamController.registerStreamEventHandler(self)
         userController.registerUserEventHandler(self)
         widgetController.add(self,
-                             widgetId: kBoardWidgetId)
+                             widgetId: BoardWidgetId)
     }
     
     func show(roomType: AgoraEduContextRoomType,
@@ -483,7 +483,7 @@ extension FcrRenderMenuUIComponent {
         }
         let signal = AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([UUID]) : .delete([UUID]))
         if let message = signal.toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
+            widgetController.sendMessage(toWidget: BoardWidgetId,
                                          message: message)
         }
     }
@@ -550,7 +550,7 @@ extension FcrRenderMenuUIComponent: AgoraEduStreamHandler {
 extension FcrRenderMenuUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kBoardWidgetId,
+        guard widgetId == BoardWidgetId,
               let signal = message.toBoardSignal() else {
                   return
               }

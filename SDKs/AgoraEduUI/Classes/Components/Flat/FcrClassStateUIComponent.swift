@@ -68,7 +68,7 @@ class FcrClassStateUIComponent: FcrUIComponent {
         
         roomController.registerRoomEventHandler(self)
         widgetController.add(self,
-                             widgetId: kBoardWidgetId)
+                             widgetId: BoardWidgetId)
     }
 }
 
@@ -123,7 +123,7 @@ extension FcrClassStateUIComponent: AgoraEduRoomHandler {
 extension FcrClassStateUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kBoardWidgetId,
+        guard widgetId == BoardWidgetId,
               let signal = message.toBoardSignal() else {
             return
         }

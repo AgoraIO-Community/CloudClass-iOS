@@ -113,7 +113,7 @@ import AgoraWidget
                                                                   delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
+    private lazy var cloudComponent = FcrCloudDriveUIComponent(roomController: contextPool.room,
                                                           widgetController: contextPool.widget,
                                                           userController: contextPool.user,
                                                           delegate: self)
@@ -448,11 +448,16 @@ extension FcrSmallUIScene: FcrDetachedStreamWindowUIComponentDelegate {
 }
 
 // MARK: - AgoraCloudUIComponentDelegate
-extension FcrSmallUIScene: FcrCloudUIComponentDelegate {
-    func onOpenAlfCourseware(urlString: String,
-                             resourceId: String) {
-        webViewComponent.openWebView(urlString: urlString,
-                                     resourceId: resourceId)
+extension FcrSmallUIScene: FcrCloudDriveUIComponentDelegate {
+    func onSelectedFile(fileJson: [String: Any],
+                        fileExt: String) {
+        switch fileExt {
+        case "alf":
+            webViewComponent.openWebView(fileJson: fileJson)
+        default:
+            boardComponent.openFile(fileJson)
+            break
+        }
     }
 }
 

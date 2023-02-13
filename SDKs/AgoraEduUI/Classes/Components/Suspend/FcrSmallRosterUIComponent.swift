@@ -58,7 +58,7 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                    bundle: nil)
         
         widgetController.add(self,
-                             widgetId: kBoardWidgetId)
+                             widgetId: BoardWidgetId)
     }
     
     required init?(coder: NSCoder) {
@@ -191,7 +191,7 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                          !list.contains(model.uuid))
             let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([model.uuid]) : .delete([model.uuid]))
             if let message = signal.toMessageString() {
-                widgetController.sendMessage(toWidget: kBoardWidgetId,
+                widgetController.sendMessage(toWidget: BoardWidgetId,
                                              message: message)
             }
         case .camera:
@@ -307,7 +307,7 @@ private extension FcrSmallRosterUIComponent {
 extension FcrSmallRosterUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kBoardWidgetId,
+        guard widgetId == BoardWidgetId,
               let signal = message.toBoardSignal() else {
             return
         }
