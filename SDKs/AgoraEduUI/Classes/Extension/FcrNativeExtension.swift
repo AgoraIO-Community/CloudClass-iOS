@@ -71,7 +71,7 @@ extension Bundle {
 }
 
 extension UIImage {
-    class func edu_ui_named(_ named: String) -> UIImage? {
+    class func edu_ui_image(_ named: String) -> UIImage? {
         let bundle = Bundle.edu_ui_bundle()
         return UIImage(named: named,
                        in: bundle,

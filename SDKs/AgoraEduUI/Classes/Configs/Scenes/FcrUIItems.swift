@@ -65,8 +65,8 @@ struct FcrUIItemAlertMessage: FcrUIItemProtocol {
     let selectedColor: UIColor  = FcrUIColorGroup.textLevel1Color
     let font: UIFont    = FcrUIFontGroup.font13
     
-    let checkedImage: UIImage?   = .edu_ui_named("ic_alert_checked")
-    let uncheckedImage: UIImage? = .edu_ui_named("ic_alert_unchecked")
+    let checkedImage: UIImage?   = .edu_ui_image("ic_alert_checked")
+    let uncheckedImage: UIImage? = .edu_ui_image("ic_alert_unchecked")
 }
 
 struct FcrUIItemAlertButton: FcrUIItemProtocol {
@@ -83,10 +83,10 @@ struct FcrUIItemStateBarNetworkState: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let goodImage: UIImage?         = .edu_ui_named("ic_network_good")
-    let unknownImage: UIImage?      = .edu_ui_named("ic_network_unknown")
-    let badImage: UIImage?          = .edu_ui_named("ic_network_bad")
-    let disconnectedImage: UIImage? = .edu_ui_named("ic_network_down")
+    let goodImage: UIImage?         = .edu_ui_image("ic_network_good")
+    let unknownImage: UIImage?      = .edu_ui_image("ic_network_unknown")
+    let badImage: UIImage?          = .edu_ui_image("ic_network_bad")
+    let disconnectedImage: UIImage? = .edu_ui_image("ic_network_down")
 }
 
 struct FcrUIItemStateBarRoomName: FcrUIItemProtocol {
@@ -135,69 +135,69 @@ struct FcrUIItemNetlessBoardMouse: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let unselectedImage: UIImage? = .edu_ui_named("toolcollection_unselecetd_clicker")
-    let selectedImage: UIImage?   = .edu_ui_named("toolcollection_selected_clicker")
+    let unselectedImage: UIImage? = .edu_ui_image("toolcollection_unselecetd_clicker")
+    let selectedImage: UIImage?   = .edu_ui_image("toolcollection_selected_clicker")
 }
 
 struct FcrUIItemNetlessBoardSelector: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let unselectedImage: UIImage? = .edu_ui_named("toolcollection_unselecetd_area")
-    let selectedImage: UIImage?   = .edu_ui_named("toolcollection_selected_area")
+    let unselectedImage: UIImage? = .edu_ui_image("toolcollection_unselecetd_area")
+    let selectedImage: UIImage?   = .edu_ui_image("toolcollection_selected_area")
 }
 
 struct FcrUIItemNetlessBoardPaint: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let unselectedImage: UIImage? = .edu_ui_named("toolcollection_unselecetd_paint")
-    let selectedImage: UIImage?   = .edu_ui_named("toolcollection_selected_paint")
+    let unselectedImage: UIImage? = .edu_ui_image("toolcollection_unselecetd_paint")
+    let selectedImage: UIImage?   = .edu_ui_image("toolcollection_selected_paint")
 }
 
 struct FcrUIItemNetlessBoardText: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_text")
+    let image: UIImage? = .edu_ui_image("toolcollection_text")
 }
 
 struct FcrUIItemNetlessBoardEraser: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let unselectedImage: UIImage? = .edu_ui_named("toolcollection_unselecetd_rubber")
-    let selectedImage: UIImage?   = .edu_ui_named("toolcollection_selected_rubber")
+    let unselectedImage: UIImage? = .edu_ui_image("toolcollection_unselecetd_rubber")
+    let selectedImage: UIImage?   = .edu_ui_image("toolcollection_selected_rubber")
 }
 
 struct FcrUIItemNetlessBoardClear: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let enabledImage: UIImage? = .edu_ui_named("toolcollection_enabled_clear")
+    let enabledImage: UIImage? = .edu_ui_image("toolcollection_enabled_clear")
 }
 
 struct FcrUIItemNetlessBoardSave: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage?    =  .edu_ui_named("toolcollection_enabled_save")
+    let image: UIImage?    =  .edu_ui_image("toolcollection_enabled_save")
 }
 
 struct FcrUIItemNetlessBoardPrev: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let enabledImage: UIImage?  = .edu_ui_named("toolcollection_enabled_pre")
-    let disabledImage: UIImage? = .edu_ui_named("toolcollection_disabled_pre")
+    let enabledImage: UIImage?  = .edu_ui_image("toolcollection_enabled_pre")
+    let disabledImage: UIImage? = .edu_ui_image("toolcollection_disabled_pre")
 }
 
 struct FcrUIItemNetlessBoardNext: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let enabledImage: UIImage?  = .edu_ui_named("toolcollection_enabled_next")
-    let disabledImage: UIImage? = .edu_ui_named("toolcollection_disabled_next")
+    let enabledImage: UIImage?  = .edu_ui_image("toolcollection_enabled_next")
+    let disabledImage: UIImage? = .edu_ui_image("toolcollection_disabled_next")
 }
 
 // sub for paint
@@ -205,63 +205,63 @@ struct FcrUIItemNetlessBoardPencil: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_pencil")
+    let image: UIImage? = .edu_ui_image("toolcollection_pencil")
 }
 
 struct FcrUIItemNetlessBoardLine: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_line")
+    let image: UIImage? = .edu_ui_image("toolcollection_line")
 }
 
 struct FcrUIItemNetlessBoardRect: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_rect")
+    let image: UIImage? = .edu_ui_image("toolcollection_rect")
 }
 
 struct FcrUIItemNetlessBoardCircle: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_circle")
+    let image: UIImage? = .edu_ui_image("toolcollection_circle")
 }
 
 struct FcrUIItemNetlessBoardPentagram: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_pentagram")
+    let image: UIImage? = .edu_ui_image("toolcollection_pentagram")
 }
 
 struct FcrUIItemNetlessBoardRhombus: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_rhombus")
+    let image: UIImage? = .edu_ui_image("toolcollection_rhombus")
 }
 
 struct FcrUIItemNetlessBoardArrow: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage?   = .edu_ui_named("toolcollection_arrow")
+    let image: UIImage?   = .edu_ui_image("toolcollection_arrow")
 }
 
 struct FcrUIItemNetlessBoardTriangle: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_triangle")
+    let image: UIImage? = .edu_ui_image("toolcollection_triangle")
 }
 
 struct FcrUIItemNetlessBoardLineWidth: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("toolcollection_width")
+    let image: UIImage? = .edu_ui_image("toolcollection_width")
 }
 
 struct FcrUIItemNetlessBoardTextSize: FcrUIItemProtocol {
@@ -354,7 +354,7 @@ struct FcrUIItemToolBarCell: FcrUIItemProtocol {
     var enable: Bool    = true
     
     let cornerRadius: CGFloat   = FcrUIFrameGroup.roundContainerCornerRadius
-    let normalImage: UIImage?   = .edu_ui_named("toolbar_unselected_bg")
+    let normalImage: UIImage?   = .edu_ui_image("toolbar_unselected_bg")
     let selectedColor: UIColor  = FcrUIColorGroup.systemBrandColor
     
     let shadow: FcrUIItemShadow = FcrUIItemShadow()
@@ -364,16 +364,16 @@ struct FcrUIItemToolBarSetting: FcrUIItemProtocol {
     var visible: Bool   = true
     var enable: Bool    = true
     
-    let normalImage: UIImage? = .edu_ui_named("toolbar_unselected_setting")
-    let selectedImage: UIImage? = .edu_ui_named("toolbar_selected_setting")
+    let normalImage: UIImage? = .edu_ui_image("toolbar_unselected_setting")
+    let selectedImage: UIImage? = .edu_ui_image("toolbar_selected_setting")
 }
 
 struct FcrUIItemToolBarMessage: FcrUIItemProtocol {
     var visible: Bool   = true
     var enable: Bool    = true
     
-    let normalImage: UIImage?   = .edu_ui_named("toolbar_unselected_message")
-    let selectedImage: UIImage? = .edu_ui_named("toolbar_selected_message")
+    let normalImage: UIImage?   = .edu_ui_image("toolbar_unselected_message")
+    let selectedImage: UIImage? = .edu_ui_image("toolbar_selected_message")
     
     let dotColor: UIColor = FcrUIColorGroup.systemErrorColor
 }
@@ -382,8 +382,8 @@ struct FcrUIItemToolBarHandsList: FcrUIItemProtocol {
     var visible: Bool   = true
     var enable: Bool    = true
     
-    let normalImage: UIImage?   = .edu_ui_named("toolbar_unselected_hands_list")
-    let selectedImage: UIImage? = .edu_ui_named("toolbar_selected_hands_list")
+    let normalImage: UIImage?   = .edu_ui_image("toolbar_unselected_hands_list")
+    let selectedImage: UIImage? = .edu_ui_image("toolbar_selected_hands_list")
     
     let label: FcrUIItemToolBarHandsListLabel = FcrUIItemToolBarHandsListLabel()
 }
@@ -402,8 +402,8 @@ struct FcrUIItemBreakoutRoomHelp: FcrUIItemProtocol {
     var visible: Bool   = true
     var enable: Bool    = true
     
-    let enabledImage: UIImage?  = .edu_ui_named("toolbar_enabled_help")
-    let disabledImage: UIImage? = .edu_ui_named("toolbar_disabled_help")
+    let enabledImage: UIImage?  = .edu_ui_image("toolbar_enabled_help")
+    let disabledImage: UIImage? = .edu_ui_image("toolbar_disabled_help")
 }
 
 // MARK: - video
@@ -418,47 +418,47 @@ struct FcrUIItemTeacherVideoOffStage: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("member_stage_off")
+    let image: UIImage? = .edu_ui_image("member_stage_off")
 }
 
 struct FcrUIItemStudentVideoOffStage: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage? = .edu_ui_named("member_stage_on")
+    let image: UIImage? = .edu_ui_image("member_stage_on")
 }
 
 struct FcrUIItemStudentVideoCamera: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let onImage: UIImage?        = .edu_ui_named("member_camera_on")
-    let offImage: UIImage?       = .edu_ui_named("member_camera_off")
-    let forbiddenImage: UIImage? = .edu_ui_named("member_camera_forbidden")
+    let onImage: UIImage?        = .edu_ui_image("member_camera_on")
+    let offImage: UIImage?       = .edu_ui_image("member_camera_off")
+    let forbiddenImage: UIImage? = .edu_ui_image("member_camera_forbidden")
 }
 
 struct FcrUIItemStudentVideoMicrophone: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool = true
     
-    let onImage: UIImage?        = .edu_ui_named("member_mic_on")
-    let offImage: UIImage?       = .edu_ui_named("member_mic_off")
-    let forbiddenImage: UIImage? = .edu_ui_named("member_mic_forbidden")
+    let onImage: UIImage?        = .edu_ui_image("member_mic_on")
+    let offImage: UIImage?       = .edu_ui_image("member_mic_off")
+    let forbiddenImage: UIImage? = .edu_ui_image("member_mic_forbidden")
 }
 
 struct FcrUIItemStudentVideoBoardAuthorization: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let onImage: UIImage?     = .edu_ui_named("member_boardauth_on")
-    let offImage: UIImage?    = .edu_ui_named("member_boardauth_off")
+    let onImage: UIImage?     = .edu_ui_image("member_boardauth_on")
+    let offImage: UIImage?    = .edu_ui_image("member_boardauth_off")
 }
 
 struct FcrUIItemStudentVideoReward: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage?       = .edu_ui_named("member_reward")
+    let image: UIImage?       = .edu_ui_image("member_reward")
 }
 
 struct FcrUIItemStudentVideoMoveButton: FcrUIItemProtocol {
@@ -467,8 +467,8 @@ struct FcrUIItemStudentVideoMoveButton: FcrUIItemProtocol {
     
     let cornerRadius: CGFloat    = FcrUIFrameGroup.windowCornerRadius
     let backgroundColor: UIColor = .black.withAlphaComponent(0.3)
-    let prevImage: UIImage?      = .edu_ui_named("window_arrow_prev")
-    let nextImage: UIImage?      = .edu_ui_named("window_arrow_next")
+    let prevImage: UIImage?      = .edu_ui_image("window_arrow_prev")
+    let nextImage: UIImage?      = .edu_ui_image("window_arrow_next")
 }
 
 struct FcrUIItemStudentVideoWaveHands: FcrUIItemProtocol {
@@ -496,17 +496,17 @@ struct FcrUIItemVideoMask: FcrUIItemProtocol {
     var enable: Bool  = true
     
     let backgroundColor: UIColor        = FcrUIColorGroup.systemBackgroundColor
-    let noUserImage: UIImage?           = .edu_ui_named("window_no_user")
-    let cameraOffImage: UIImage?        = .edu_ui_named("window_device_off")
-    let cameraForbiddenImage: UIImage?  = .edu_ui_named("window_device_forbidden")
+    let noUserImage: UIImage?           = .edu_ui_image("window_no_user")
+    let cameraOffImage: UIImage?        = .edu_ui_image("window_device_off")
+    let cameraForbiddenImage: UIImage?  = .edu_ui_image("window_device_forbidden")
     
-    let micOnImage: UIImage?            = .edu_ui_named("window_mic_on")
-    let micForbiddenImage: UIImage?     = .edu_ui_named("window_mic_forbidden")
-    let micOffImage: UIImage?           = .edu_ui_named("window_mic_off")
-    let micVolumeImage: UIImage?        = .edu_ui_named("window_mic_volume")
+    let micOnImage: UIImage?            = .edu_ui_image("window_mic_on")
+    let micForbiddenImage: UIImage?     = .edu_ui_image("window_mic_forbidden")
+    let micOffImage: UIImage?           = .edu_ui_image("window_mic_off")
+    let micVolumeImage: UIImage?        = .edu_ui_image("window_mic_volume")
     
-    let boardAuthWindowImage: UIImage?  = .edu_ui_named("window_board_auth")
-    let rewardImage: UIImage?           = .edu_ui_named("window_reward")
+    let boardAuthWindowImage: UIImage?  = .edu_ui_image("window_board_auth")
+    let rewardImage: UIImage?           = .edu_ui_image("window_reward")
 }
 
 struct FcrUIItemVideoLabel: FcrUIItemProtocol {
@@ -549,41 +549,41 @@ struct FcrUIItemRosterStage: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let onImage: UIImage?   = .edu_ui_named("member_stage_on")
-    let offImage: UIImage?  = .edu_ui_named("member_stage_off")
+    let onImage: UIImage?   = .edu_ui_image("member_stage_on")
+    let offImage: UIImage?  = .edu_ui_image("member_stage_off")
 }
 
 struct FcrUIItemRosterBoardAuthorization: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let onImage: UIImage?   = .edu_ui_named("member_boardauth_on")
-    let offImage: UIImage?  = .edu_ui_named("member_boardauth_off")
+    let onImage: UIImage?   = .edu_ui_image("member_boardauth_on")
+    let offImage: UIImage?  = .edu_ui_image("member_boardauth_off")
 }
 
 struct FcrUIItemRosterCamera: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let onImage: UIImage?        = .edu_ui_named("member_camera_on")
-    let offImage: UIImage?       = .edu_ui_named("member_camera_off")
-    let forbiddenImage: UIImage? = .edu_ui_named("member_camera_forbidden")
+    let onImage: UIImage?        = .edu_ui_image("member_camera_on")
+    let offImage: UIImage?       = .edu_ui_image("member_camera_off")
+    let forbiddenImage: UIImage? = .edu_ui_image("member_camera_forbidden")
 }
 
 struct FcrUIItemRosterMicrophone: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let onImage: UIImage?        = .edu_ui_named("member_mic_on")
-    let offImage: UIImage?       = .edu_ui_named("member_mic_off")
-    let forbiddenImage: UIImage? = .edu_ui_named("member_mic_forbidden")
+    let onImage: UIImage?        = .edu_ui_image("member_mic_on")
+    let offImage: UIImage?       = .edu_ui_image("member_mic_off")
+    let forbiddenImage: UIImage? = .edu_ui_image("member_mic_forbidden")
 }
 
 struct FcrUIItemRosterReward: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage?    = .edu_ui_named("member_reward")
+    let image: UIImage?    = .edu_ui_image("member_reward")
     let font: UIFont = FcrUIFontGroup.font13
     let textColor: UIColor = FcrUIColorGroup.textDisabledColor
 }
@@ -592,7 +592,7 @@ struct FcrUIItemRosterKickOut: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool  = true
     
-    let image: UIImage?    = .edu_ui_named("ic_nameroll_kick")
+    let image: UIImage?    = .edu_ui_image("ic_nameroll_kick")
 }
 
 // MARK: - hands list

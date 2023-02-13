@@ -136,7 +136,7 @@ extension VcrMixStreamCDNRenderUIComponent: AgoraEduRoomHandler {
 // VcrMixStreamCDNEmptyView
 class VcrMixStreamCDNEmptyView: UIView {
     
-    let imageView = UIImageView(image: UIImage.edu_ui_named("window_no_user"))
+    let imageView = UIImageView(image: UIImage.edu_ui_image("window_no_user"))
     
     let label = UILabel()
     

@@ -71,7 +71,7 @@ extension VocationalRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivi
     func initViews() {
         view.addSubview(stateView)
         
-        leaveButton.setImage(UIImage.edu_ui_named("ic_func_leave_room"),
+        leaveButton.setImage(UIImage.edu_ui_image("ic_func_leave_room"),
                              for: .normal)
         leaveButton.addTarget(self,
                               action: #selector(onClickExit(_:)),
@@ -269,13 +269,13 @@ extension VocationalRoomStateUIComponent: AgoraEduMonitorHandler {
         
         switch quality {
         case .unknown:
-            image = UIImage.edu_ui_named("ic_network_unknow")
+            image = UIImage.edu_ui_image("ic_network_unknow")
         case .good:
-            image = UIImage.edu_ui_named("ic_network_good")
+            image = UIImage.edu_ui_image("ic_network_good")
         case .bad:
-            image = UIImage.edu_ui_named("ic_network_bad")
+            image = UIImage.edu_ui_image("ic_network_bad")
         case .down:
-            image = UIImage.edu_ui_named("ic_network_down")
+            image = UIImage.edu_ui_image("ic_network_down")
             
             let message = "fcr_monitor_network_disconnected".edu_ui_localized()
             AgoraToast.toast(message: message,

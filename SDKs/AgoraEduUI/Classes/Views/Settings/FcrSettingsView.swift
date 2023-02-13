@@ -18,7 +18,7 @@ class FcrSettingsView: UIView {
     // share link
     private let shareLinkButton = UIButton(type: .custom)
     private let shareTitleLabel = UILabel()
-    private let shareArrowImage = UIImageView(image: UIImage.edu_ui_named("fcr_setting_arrow"))
+    private let shareArrowImage = UIImageView(image: UIImage.edu_ui_image("fcr_setting_arrow"))
     private let shareLinkLine = UIView()
         
     // Camera
