@@ -184,9 +184,9 @@ private extension VcrHostingPlayerUIComponent {
     }
     // 课程已结束，提示用户离开教室
     func notiClassIsOver() {
-        let title = "fcr_room_class_over_notice".agedu_localized()
-        let content = "fcr_room_class_over".agedu_localized()
-        let actionTitle = "fcr_room_class_leave_sure".agedu_localized()
+        let title = "fcr_room_class_over_notice".edu_ui_localized()
+        let content = "fcr_room_class_over".edu_ui_localized()
+        let actionTitle = "fcr_room_class_leave_sure".edu_ui_localized()
         
         let action = AgoraAlertAction(title: actionTitle) { [weak self] _ in
             self?.roomDelegate?.exitScene(reason: .normal,

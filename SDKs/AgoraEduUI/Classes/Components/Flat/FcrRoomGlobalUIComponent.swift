@@ -120,9 +120,9 @@ extension FcrRoomGlobalUIComponent: AgoraEduRoomHandler {
     }
     
     func onRoomClosed() {
-        let title = "fcr_room_class_over_notice".agedu_localized()
-        let content = "fcr_room_class_over".agedu_localized()
-        let actionTitle = "fcr_room_class_leave_sure".agedu_localized()
+        let title = "fcr_room_class_over_notice".edu_ui_localized()
+        let content = "fcr_room_class_over".edu_ui_localized()
+        let actionTitle = "fcr_room_class_leave_sure".edu_ui_localized()
         
         let action = AgoraAlertAction(title: actionTitle) { [weak self] _ in
             self?.exitDelegate?.exitScene(reason: .normal,
@@ -156,9 +156,9 @@ extension FcrRoomGlobalUIComponent: AgoraEduSubRoomHandler {
 // MARK: - AgoraEduUserHandler
 extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
     func onLocalUserKickedOut() {
-        let title = "fcr_user_local_kick_out_notice".agedu_localized()
-        let content = "fcr_user_local_kick_out".agedu_localized()
-        let actionTitle = "fcr_room_class_leave_sure".agedu_localized()
+        let title = "fcr_user_local_kick_out_notice".edu_ui_localized()
+        let content = "fcr_user_local_kick_out".edu_ui_localized()
+        let actionTitle = "fcr_room_class_leave_sure".edu_ui_localized()
         
         let action = AgoraAlertAction(title: actionTitle) { [weak self] _ in
             self?.exitDelegate?.exitScene(reason: .kickOut,
@@ -182,7 +182,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
         }
         
         // 老师邀请你上台了，与大家积极互动吧
-        let message = "fcr_user_local_start_co_hosting".agedu_localized()
+        let message = "fcr_user_local_start_co_hosting".edu_ui_localized()
         
         AgoraToast.toast(message: message,
                          type: .notice)
@@ -198,7 +198,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
         }
         
         // 你离开讲台了，暂时无法与大家互动
-        let message = "fcr_user_local_stop_co_hosting".agedu_localized()
+        let message = "fcr_user_local_stop_co_hosting".edu_ui_localized()
         
         AgoraToast.toast(message: message,
                          type: .error)
@@ -208,8 +208,8 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
         // 祝贺**获得奖励
-        let message = "fcr_user_congratulation".agedu_localized()
-        let final = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+        let message = "fcr_user_congratulation".edu_ui_localized()
+        let final = message.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                  with: user.userName)
         AgoraToast.toast(message: final,
                          type: .notice)
@@ -226,7 +226,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduMonitorHandler {
             // 踢出
             AgoraLoading.hide()
             
-            let message = "fcr_monitor_login_remote_device".agedu_localized()
+            let message = "fcr_monitor_login_remote_device".edu_ui_localized()
             
             AgoraToast.toast(message: message,
                              type: .error)
@@ -234,14 +234,14 @@ extension FcrRoomGlobalUIComponent: AgoraEduMonitorHandler {
             self.exitDelegate?.exitScene(reason: .kickOut,
                                          type: .main)
         case .connecting:
-            let message = "fcr_room_loading".agedu_localized()
+            let message = "fcr_room_loading".edu_ui_localized()
             AgoraLoading.loading(message: message)
         case .disconnected, .reconnecting:
-            let toastMessage = "fcr_monitor_network_disconnected".agedu_localized()
+            let toastMessage = "fcr_monitor_network_disconnected".edu_ui_localized()
             AgoraToast.toast(message: toastMessage,
                              type: .error)
             
-            let loadingMessage = "fcr_monitor_network_reconnecting".agedu_localized()
+            let loadingMessage = "fcr_monitor_network_reconnecting".edu_ui_localized()
             AgoraLoading.loading(message: loadingMessage)
         case .connected:
             AgoraLoading.hide()
@@ -251,7 +251,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduMonitorHandler {
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
         switch quality {
         case .bad:
-            let toastMessage = "fcr_monitor_network_poor".agedu_localized()
+            let toastMessage = "fcr_monitor_network_poor".edu_ui_localized()
             AgoraToast.toast(message: toastMessage,
                              type: .error)
         default:
@@ -267,7 +267,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
               subRoom == nil else {
             return
         }
-        AgoraToast.toast(message: "fcr_group_close_group".agedu_localized(),
+        AgoraToast.toast(message: "fcr_group_close_group".edu_ui_localized(),
                          type: .warning)
     }
     
@@ -282,15 +282,15 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
             return
         }
         
-        var message = "fcr_group_invitation".agedu_localized()
-        let final = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+        var message = "fcr_group_invitation".edu_ui_localized()
+        let final = message.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                  with: subRoomInfo.subRoomName)
-        let title = "fcr_group_join".agedu_localized()
+        let title = "fcr_group_join".edu_ui_localized()
         
-        let laterActionTitle = "fcr_group_button_later".agedu_localized()
+        let laterActionTitle = "fcr_group_button_later".edu_ui_localized()
         let laterAction = AgoraAlertAction(title: laterActionTitle)
         
-        let joinActionTitle = "fcr_group_button_join".agedu_localized()
+        let joinActionTitle = "fcr_group_button_join".edu_ui_localized()
         
         let joinAction = AgoraAlertAction(title: joinActionTitle) { [weak self] _ in
             self?.groupController.userListAcceptInvitationToSubRoom(userList: [localUserId],
@@ -327,12 +327,12 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
                 return
             }
             
-            let message = "fcr_group_enter_group".agedu_localized()
+            let message = "fcr_group_enter_group".edu_ui_localized()
             
-            var temp = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+            var temp = message.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                      with: roleString)
             
-            var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
+            var final = temp.replacingOccurrences(of: String.edu_ui_localized_replacing_y(),
                                                   with: userInfo.userName)
             
             AgoraToast.toast(message: final,
@@ -367,12 +367,12 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
                 return
             }
             
-            let message = "fcr_group_exit_group".agedu_localized()
+            let message = "fcr_group_exit_group".edu_ui_localized()
             
-            var temp = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+            var temp = message.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                      with: roleString)
             
-            var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
+            var final = temp.replacingOccurrences(of: String.edu_ui_localized_replacing_y(),
                                                   with: userInfo.userName)
             
             AgoraToast.toast(message: final,
@@ -424,10 +424,10 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         
         isRequestingHelp = false
         
-        let confirmAction = AgoraAlertAction(title: "fcr_group_sure".agedu_localized())
+        let confirmAction = AgoraAlertAction(title: "fcr_group_sure".edu_ui_localized())
         
-        let title = "fcr_group_help_title".agedu_localized()
-        let content = "fcr_group_help_teacher_busy_msg".agedu_localized()
+        let title = "fcr_group_help_title".edu_ui_localized()
+        let content = "fcr_group_help_teacher_busy_msg".edu_ui_localized()
         
         showAlert(title: title,
                   contentList: [content],
@@ -474,12 +474,12 @@ extension FcrRoomGlobalUIComponent: AgoraEduStreamHandler {
         
         if localStream.streamType.hasAudio != stream.streamType.hasAudio {
             if stream.streamType.hasAudio {
-                let message = "fcr_stream_start_audio".agedu_localized()
+                let message = "fcr_stream_start_audio".edu_ui_localized()
                 
                 AgoraToast.toast(message: message,
                                  type: .notice)
             } else {
-                let message = "fcr_stream_stop_audio".agedu_localized()
+                let message = "fcr_stream_stop_audio".edu_ui_localized()
                 
                 AgoraToast.toast(message: message,
                                  type: .error)
@@ -488,12 +488,12 @@ extension FcrRoomGlobalUIComponent: AgoraEduStreamHandler {
         
         if localStream.streamType.hasVideo != stream.streamType.hasVideo {
             if stream.streamType.hasVideo {
-                let message = "fcr_stream_start_video".agedu_localized()
+                let message = "fcr_stream_start_video".edu_ui_localized()
                 
                 AgoraToast.toast(message: message,
                                  type: .notice)
             } else {
-                let message = "fcr_stream_stop_video".agedu_localized()
+                let message = "fcr_stream_stop_video".edu_ui_localized()
                 
                 AgoraToast.toast(message: message,
                                  type: .error)
@@ -519,7 +519,7 @@ private extension FcrRoomGlobalUIComponent {
     }
     
     func showReward() {
-        guard let url = Bundle.agoraEduUI().url(forResource: "img_reward",
+        guard let url = Bundle.edu_ui_bundle().url(forResource: "img_reward",
                                                 withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             return
@@ -542,7 +542,7 @@ private extension FcrRoomGlobalUIComponent {
         }
         
         // sounds
-        guard let rewardUrl = Bundle.agoraEduUI().url(forResource: "sound_reward",
+        guard let rewardUrl = Bundle.edu_ui_bundle().url(forResource: "sound_reward",
                                                       withExtension: "mp3") else {
             return
         }

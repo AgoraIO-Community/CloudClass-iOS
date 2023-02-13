@@ -75,7 +75,7 @@ class FcrClassStateUIComponent: FcrUIComponent {
 // MARK: - AgoraUIContentContainer
 extension FcrClassStateUIComponent: AgoraUIContentContainer {
     func initViews() {
-        startButton.setTitle("fcr_room_start_class".agedu_localized(),
+        startButton.setTitle("fcr_room_start_class".edu_ui_localized(),
                              for: .normal)
         startButton.addTarget(self,
                               action: #selector(onClickStart(_:)),

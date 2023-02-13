@@ -193,7 +193,7 @@ import AgoraWidget
         }
         
         let subRoomName = subRoom.getSubRoomInfo().subRoomName
-        let message = "fcr_group_joining".agedu_localized().replacingOccurrences(of: String.agedu_localized_replacing_x(),
+        let message = "fcr_group_joining".edu_ui_localized().replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                                                  with: subRoomName)
         
         AgoraLoading.loading(in: view,
@@ -892,10 +892,10 @@ private extension FcrSubRoomUIScene {
     func toolsViewDidSelectHelp() {
         switch teacherInRoom() {
         case .localSub:
-            AgoraToast.toast(message: "fcr_group_teacher_exist_hint".agedu_localized(),
+            AgoraToast.toast(message: "fcr_group_teacher_exist_hint".edu_ui_localized(),
                              type: .warning)
         case .otherSub:
-            AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
+            AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".edu_ui_localized(),
                              type: .warning)
         default:
             guard let userList = contextPool.user.getUserList(role: .teacher),
@@ -906,7 +906,7 @@ private extension FcrSubRoomUIScene {
             
             globalComponent.isRequestingHelp = true
             
-            let inviteActionTitle = "fcr_group_invite".agedu_localized()
+            let inviteActionTitle = "fcr_group_invite".edu_ui_localized()
             
             let actionInvite = AgoraAlertAction(title: inviteActionTitle) { [weak self] _ in
                 guard let `self` = self else {
@@ -923,15 +923,15 @@ private extension FcrSubRoomUIScene {
                         return
                     }
                     
-                    AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
+                    AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".edu_ui_localized(),
                                      type: .warning)
                 }
             }
             
-            let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".agedu_localized())
+            let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".edu_ui_localized())
             
-            let title = "fcr_group_help_title".agedu_localized()
-            let content = "fcr_group_help_content".agedu_localized()
+            let title = "fcr_group_help_title".edu_ui_localized()
+            let content = "fcr_group_help_content".edu_ui_localized()
             
             showAlert(title: title,
                       contentList: [content],

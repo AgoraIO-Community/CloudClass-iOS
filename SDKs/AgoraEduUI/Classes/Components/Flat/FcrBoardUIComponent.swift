@@ -43,7 +43,7 @@ class FcrBoardUIComponent: FcrUIComponent {
             let msgKey = localGranted ? "fcr_netless_board_granted" : "fcr_netless_board_ungranted"
             let type: AgoraToastType = localGranted ? .notice : .error
             
-            AgoraToast.toast(message: msgKey.agedu_localized(),
+            AgoraToast.toast(message: msgKey.edu_ui_localized(),
                              type: type)
         }
     }
@@ -121,9 +121,10 @@ class FcrBoardUIComponent: FcrUIComponent {
         initBoardWidget()
     }
     
-    func onGrantedUsersChanged(oldList: Array<String>,
-                               newList: Array<String>) {
+    func onGrantedUsersChanged(oldList: [String],
+                               newList: [String]) {
         let localUser = userController.getLocalUserInfo()
+        
         if localUser.userRole == .teacher {
             localGranted = true
         } else {
@@ -203,8 +204,6 @@ private extension FcrBoardUIComponent {
         }
         
         self.widget = widget
-        
-        sendSignal(.joinBoard)
     }
     
     func deinitBoardWidget() {
@@ -244,16 +243,16 @@ private extension FcrBoardUIComponent {
     func handlePhotoNoAuth(_ result: FcrBoardWidgetSnapshotResult) {
         switch result {
         case .savedToAlbum:
-            AgoraToast.toast(message: "fcr_savecanvas_tips_save_successfully".agedu_localized(),
+            AgoraToast.toast(message: "fcr_savecanvas_tips_save_successfully".edu_ui_localized(),
                              type: .notice)
         case .noAlbumAuth:
-            let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized())
-            let content = "fcr_savecanvas_tips_save_failed_tips".agedu_localized()
+            let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".edu_ui_localized())
+            let content = "fcr_savecanvas_tips_save_failed_tips".edu_ui_localized()
             
             showAlert(contentList: [content],
                       actions: [action])
         case .failureToSave:
-            AgoraToast.toast(message: "fcr_savecanvas_tips_save_failed".agedu_localized(),
+            AgoraToast.toast(message: "fcr_savecanvas_tips_save_failed".edu_ui_localized(),
                              type: .error)
         }
     }

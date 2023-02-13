@@ -46,11 +46,11 @@ class AgoraRenderMemberMicView: UIView {
 private extension AgoraRenderMemberMicView {
     func createViews() {
         imageView = UIImageView()
-        imageView.image = UIImage.agedu_named("ic_mic_status_off")
+        imageView.image = UIImage.edu_ui_named("ic_mic_status_off")
         addSubview(imageView)
         
         animaView = UIImageView()
-        animaView.image = UIImage.agedu_named("ic_mic_status_volume")
+        animaView.image = UIImage.edu_ui_named("ic_mic_status_volume")
         animaView.isHidden  = true
         addSubview(animaView)
         

@@ -176,15 +176,15 @@ private extension FcrSettingUIComponent {
     
     @objc func onClickExitButton(_ sender: UIButton) {
         if isSubRoom {
-            let title = "fcr_group_back_exit".agedu_localized()
+            let title = "fcr_group_back_exit".edu_ui_localized()
             
-            let backToMainRoomTitle = "fcr_group_back_to_main_room".agedu_localized()
-            let exitRoomTitle = "fcr_group_exit_room".agedu_localized()
+            let backToMainRoomTitle = "fcr_group_back_to_main_room".edu_ui_localized()
+            let exitRoomTitle = "fcr_group_exit_room".edu_ui_localized()
             
-            let cancelTitle = "fcr_room_class_leave_cancel".agedu_localized()
+            let cancelTitle = "fcr_room_class_leave_cancel".edu_ui_localized()
             let cancelAction = AgoraAlertAction(title: cancelTitle)
             
-            let leaveTitle = "fcr_room_class_leave_sure".agedu_localized()
+            let leaveTitle = "fcr_room_class_leave_sure".edu_ui_localized()
             let leaveAction = AgoraAlertAction(title: leaveTitle) { [weak self] optionIndex in
                 switch optionIndex {
                 case 0:
@@ -200,13 +200,13 @@ private extension FcrSettingUIComponent {
                       contentList: [backToMainRoomTitle, exitRoomTitle],
                       actions: [cancelAction, leaveAction])
         } else {
-            let title = "fcr_room_class_leave_class_title".agedu_localized()
-            let message = "fcr_room_exit_warning".agedu_localized()
+            let title = "fcr_room_class_leave_class_title".edu_ui_localized()
+            let message = "fcr_room_exit_warning".edu_ui_localized()
             
-            let cancelTitle = "fcr_room_class_leave_cancel".agedu_localized()
+            let cancelTitle = "fcr_room_class_leave_cancel".edu_ui_localized()
             let cancelAction = AgoraAlertAction(title: cancelTitle)
             
-            let leaveTitle = "fcr_room_class_leave_sure".agedu_localized()
+            let leaveTitle = "fcr_room_class_leave_sure".edu_ui_localized()
             let leaveAction = AgoraAlertAction(title: leaveTitle) { [weak self] _ in
                 self?.exitDelegate?.exitScene(reason: .normal,
                                               type: .main)

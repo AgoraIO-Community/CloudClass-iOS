@@ -97,19 +97,19 @@ class FcrRosterUIComponent: FcrUIComponent {
     func initViews() {
         view.addSubview(contentView)
         
-        titleLabel.text = "fcr_user_list".agedu_localized()
+        titleLabel.text = "fcr_user_list".edu_ui_localized()
         contentView.addSubview(titleLabel)
         contentView.addSubview(teacherInfoView)
         contentView.addSubview(topSepLine)
         contentView.addSubview(bottomSepLine)
         
-        teacherTitleLabel.text = "fcr_user_list_teacher_name".agedu_localized()
+        teacherTitleLabel.text = "fcr_user_list_teacher_name".edu_ui_localized()
         contentView.addSubview(teacherTitleLabel)
         
         contentView.addSubview(teacherNameLabel)
         
         studentTitleLabel.textAlignment = .left
-        studentTitleLabel.text = "fcr_user_list_student_name".agedu_localized()
+        studentTitleLabel.text = "fcr_user_list_student_name".edu_ui_localized()
         contentView.addSubview(studentTitleLabel)
         
         itemTitlesView.axis = .horizontal

@@ -34,8 +34,8 @@ extension AgoraEduContextUserRole {
     var stringValue: String? {
         var stringValue = ""
         switch self {
-        case .teacher:  stringValue = "fcr_role_teacher".agedu_localized()
-        case .student:  stringValue = "fcr_role_student".agedu_localized()
+        case .teacher:  stringValue = "fcr_role_teacher".edu_ui_localized()
+        case .student:  stringValue = "fcr_role_student".edu_ui_localized()
         default:        return nil
         }
         guard !UIDevice.current.agora_is_chinese_language else {
