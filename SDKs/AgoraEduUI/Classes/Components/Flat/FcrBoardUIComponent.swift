@@ -76,7 +76,7 @@ class FcrBoardUIComponent: FcrUIComponent {
         super.init(nibName: nil,
                    bundle: nil)
     }
-    
+        
     func saveBoard() {
         sendSignal(.saveBoard)
     }
@@ -118,7 +118,7 @@ class FcrBoardUIComponent: FcrUIComponent {
         
         delegate?.onBoardActiveStateChanged(isActive: true)
         
-        initBoardWidget()
+        initWidget()
     }
     
     func onGrantedUsersChanged(oldList: [String],
@@ -145,7 +145,7 @@ class FcrBoardUIComponent: FcrUIComponent {
         
         widgetController.remove(self)
         
-        deinitBoardWidget()
+        deinitWidget()
     }
     
     func openFile(_ fileJson: [String: Any]) {
@@ -181,7 +181,7 @@ private extension FcrBoardUIComponent {
                                      message: message)
     }
     
-    func initBoardWidget() {
+    func initWidget() {
         guard UIConfig.netlessBoard.enable,
               let boardConfig = widgetController.getWidgetConfig(BoardWidgetId),
               self.widget == nil
@@ -204,9 +204,11 @@ private extension FcrBoardUIComponent {
         }
         
         self.widget = widget
+        
+        sendSignal(.joinBoard)
     }
     
-    func deinitBoardWidget() {
+    func deinitWidget() {
         widget?.view.removeFromSuperview()
         widget = nil
         widgetController.remove(self,
@@ -287,7 +289,7 @@ extension FcrBoardUIComponent: AgoraWidgetActivityObserver {
         }
         delegate?.onBoardActiveStateChanged(isActive: true)
         
-        initBoardWidget()
+        initWidget()
     }
     
     func onWidgetInactive(_ widgetId: String) {
@@ -296,7 +298,7 @@ extension FcrBoardUIComponent: AgoraWidgetActivityObserver {
         }
         delegate?.onBoardActiveStateChanged(isActive: false)
         
-        deinitBoardWidget()
+        deinitWidget()
     }
 }
 
@@ -325,7 +327,7 @@ extension FcrBoardUIComponent: AgoraEduSubRoomHandler {
     }
     
     func onSubRoomClosed() {
-        deinitBoardWidget()
+        deinitWidget()
     }
 }
 

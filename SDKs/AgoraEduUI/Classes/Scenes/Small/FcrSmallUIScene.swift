@@ -332,14 +332,14 @@ import AgoraWidget
     }
     
     func showStageArea(show: Bool) {
+        renderComponent.view.agora_visible = show
+        
         if show {
-            renderComponent.view.agora_visible = true
             boardComponent.view.mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
             }
         } else {
-            renderComponent.view.agora_visible = false
             boardComponent.view.mas_remakeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
@@ -351,9 +351,8 @@ import AgoraWidget
             }
         }
         
-        boardComponent.updateBoardRatio()
-        
         contentView.layoutIfNeeded()
+        boardComponent.updateBoardRatio()
     }
 }
 

@@ -411,28 +411,14 @@ import AgoraWidget
     }
     
     func showStageArea(show: Bool) {
+        renderComponent.view.agora_visible = show
+        
         if show {
-            renderComponent.view.agora_visible = true
-            
             boardComponent.view.mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
             }
-            
-            renderComponent.view.mas_remakeConstraints { [weak self] make in
-                guard let `self` = self else {
-                    return
-                }
-                
-                make?.left.right().equalTo()(0)
-                make?.top.equalTo()(self.stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-                make?.bottom.equalTo()(self.boardComponent.view.mas_top)?.offset()(AgoraFit.scale(-1))
-            }
-            
-            updateRenderCollectionLayout()
         } else {
-            renderComponent.view.agora_visible = false
-            
             boardComponent.view.mas_remakeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
@@ -444,6 +430,7 @@ import AgoraWidget
             }
         }
         
+        contentView.layoutIfNeeded()
         boardComponent.updateBoardRatio()
     }
 }
@@ -454,9 +441,10 @@ extension FcrSubRoomUIScene: FcrTachedStreamWindowUIComponentDelegate {
                                        didPressItem item: FcrTachedWindowRenderViewState,
                                        view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
         let rect = view.convert(view.bounds,
                                 to: contentView)
