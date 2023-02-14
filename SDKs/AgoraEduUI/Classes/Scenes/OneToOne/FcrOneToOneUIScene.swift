@@ -473,6 +473,7 @@ extension FcrOneToOneUIScene: FcrCloudDriveUIComponentDelegate {
         case "alf":
             webViewComponent.openWebView(fileJson: fileJson)
         default:
+            boardComponent.openFile(fileJson)
             break
         }
     }
