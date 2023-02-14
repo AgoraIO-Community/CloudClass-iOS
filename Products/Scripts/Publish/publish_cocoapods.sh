@@ -18,7 +18,7 @@ if [[ ! -f $Podspec_Path ]]; then
 fi
 
 # get version
-SDK_Version=`grep "spec.version\s*=\s*\"\d.\d.\d\"" ${Podspec_Path} | sed -r 's/.*"(.+)".*/\1/'`
+SDK_Version=`grep "spec.version\s*=\s*\"*\"" ${Podspec_Path} | sed -r 's/.*"(.+)".*/\1/'`
 echo $Podspec_Path
 if [[ -z $SDK_Version ]]; then
     echo "Get version unsuccessfully"
