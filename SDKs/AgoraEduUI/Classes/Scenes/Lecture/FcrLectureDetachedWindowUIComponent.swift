@@ -50,7 +50,7 @@ extension FcrLectureDetachedWindowUIComponentDelegate {
     }
 }
 
-class FcrLectureDetachedWindowUIComponent: FcrDetachedStreamWindowExUIComponent {
+class FcrLectureDetachedWindowUIComponent: FcrDetachedStreamWindowUIComponent {
     public weak var actionDelegate: FcrLectureDetachedWindowUIComponentDelegate?
     
     init(roomController: AgoraEduRoomContext,
@@ -77,7 +77,7 @@ class FcrLectureDetachedWindowUIComponent: FcrDetachedStreamWindowExUIComponent 
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func onStreamJoined(stream: AgoraEduContextStreamInfo,
+    func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
         let role = userController.getLocalUserInfo().userRole
         

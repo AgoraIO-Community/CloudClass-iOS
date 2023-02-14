@@ -131,14 +131,9 @@ import AgoraWidget
     
     private weak var mainDelegate: AgoraEduUISubManagerCallback?
     
-    private var subRoom: AgoraEduSubRoomContext
+    private lazy var watermarkComponent = FcrWatermarkUIComponent(widgetController: contextPool.widget)
     
-    private lazy var watermarkWidget: AgoraBaseWidget? = {
-        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
-            return nil
-        }
-        return contextPool.widget.create(config)
-    }()
+    private var subRoom: AgoraEduSubRoomContext
     
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
@@ -169,32 +164,15 @@ import AgoraWidget
         
         subRoom.joinSubRoom { [weak self] in
             AgoraLoading.hide()
-            
-            guard let `self` = self else {
-                return
-            }
-            
-            
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal,
                             type: .sub)
         }
         
-        if let watermark = watermarkWidget?.view {
-            view.addSubview(watermark)
-            
-            watermark.mas_makeConstraints { make in
-                make?.top.equalTo()(boardComponent.view.mas_top)
-                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
-                make?.left.equalTo()(contentView.mas_left)
-                make?.right.equalTo()(contentView.mas_right)
-            }
-        }
-        
         let subRoomName = subRoom.getSubRoomInfo().subRoomName
         let message = "fcr_group_joining".edu_ui_localized().replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
-                                                                                 with: subRoomName)
+                                                                                  with: subRoomName)
         
         AgoraLoading.loading(in: view,
                              message: message)
@@ -272,6 +250,7 @@ import AgoraWidget
                                                  toolBarComponent,
                                                  toolCollectionComponent,
                                                  chatComponent,
+                                                 watermarkComponent,
                                                  audioComponent,
                                                  globalComponent]
         
@@ -407,6 +386,17 @@ import AgoraWidget
             }
             
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
+        }
+        
+        watermarkComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
+            }
+            
+            make?.top.equalTo()(self.boardComponent.view.mas_top)
+            make?.bottom.equalTo()(self.boardComponent.view.mas_bottom)
+            make?.left.equalTo()(self.contentView.mas_left)
+            make?.right.equalTo()(self.contentView.mas_right)
         }
     }
     
@@ -821,8 +811,10 @@ extension FcrSubRoomUIScene: FcrRoomGlobalUIComponentDelegate {
         
         if type.contains(.stage) {
             showStageArea(show: true)
+            renderComponent.viewWillActive()
         } else {
             showStageArea(show: false)
+            renderComponent.viewWillInactive()
         }
     }
 }

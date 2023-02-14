@@ -20,7 +20,6 @@ import UIKit
                                                                 monitorController: contextPool.monitor,
                                                                 streamController: contextPool.stream,
                                                                 groupController: contextPool.group,
-                                                                delegate: self,
                                                                 exitDelegate: self)
     
     /** 音频流 控制器（自身不包含UI）*/
@@ -87,13 +86,13 @@ import UIKit
                                                                             delegate: self)
     /** 大窗 控制器*/
     private lazy var windowComponent = FcrLectureDetachedWindowUIComponent(roomController: contextPool.room,
-                                                                         userController: contextPool.user,
-                                                                         streamController: contextPool.stream,
-                                                                         mediaController: contextPool.media,
-                                                                         widgetController: contextPool.widget,
-                                                                         delegate: self,
-                                                                         componentDataSource: self,
-                                                                         actionDelegate: self)
+                                                                           userController: contextPool.user,
+                                                                           streamController: contextPool.stream,
+                                                                           mediaController: contextPool.media,
+                                                                           widgetController: contextPool.widget,
+                                                                           delegate: self,
+                                                                           componentDataSource: self,
+                                                                           actionDelegate: self)
     /** 外部链接 控制器*/
     private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
@@ -119,14 +118,7 @@ import UIKit
         return view
     }()
     
-    private var isJoinedRoom = false
-    
-    private lazy var watermarkWidget: AgoraBaseWidget? = {
-        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
-            return nil
-        }
-        return contextPool.widget.create(config)
-    }()
+    private lazy var watermarkComponent = FcrWatermarkUIComponent(widgetController: contextPool.widget)
     
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
@@ -142,41 +134,23 @@ import UIKit
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        if contextPool.user.getLocalUserInfo().userRole == .teacher {
+            contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            contextPool.media.openLocalDevice(systemDevice: .mic)
+        }
+        
         contextPool.room.joinRoom { [weak self] in
-            AgoraLoading.hide()
             guard let `self` = self else {
                 return
             }
-            self.isJoinedRoom = true
             
-            if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
-                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
-                self.contextPool.media.openLocalDevice(systemDevice: .mic)
-            }
-            
-            self.windowComponent.startPreviewLocalVideo()
+            AgoraLoading.hide()
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
         }
         
-        if let watermark = watermarkWidget?.view {
-            view.addSubview(watermark)
-            
-            watermark.mas_makeConstraints { make in
-                make?.top.equalTo()(boardComponent.view.mas_top)
-                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
-                make?.left.equalTo()(contentView.mas_left)
-                make?.right.equalTo()(contentView.mas_right)
-            }
-        }
-    }
-    
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if isJoinedRoom == false {
-            AgoraLoading.loading()
-        }
+        AgoraLoading.loading(in: view)
     }
     
     public override func didClickCtrlMaskView() {
@@ -201,6 +175,7 @@ import UIKit
                                                  toolBarComponent,
                                                  toolCollectionComponent,
                                                  chatComponent,
+                                                 watermarkComponent,
                                                  audioComponent,
                                                  globalComponent]
 
@@ -359,6 +334,17 @@ import UIKit
             make?.bottom.equalTo()(0)
         }
         
+        watermarkComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
+            }
+            
+            make?.top.equalTo()(self.boardComponent.view.mas_top)
+            make?.bottom.equalTo()(self.boardComponent.view.mas_bottom)
+            make?.left.equalTo()(self.contentView.mas_left)
+            make?.right.equalTo()(self.contentView.mas_right)
+        }
+        
         updateRenderLayout()
     }
     
@@ -368,6 +354,7 @@ import UIKit
         teacherRenderComponent.view.clipsToBounds = true
     }
 }
+
 // MARK: - FcrSettingUIComponentDelegate
 extension FcrLectureUIScene: FcrSettingUIComponentDelegate {
     func onShowShareView(_ view: UIView) {
@@ -414,9 +401,10 @@ extension FcrLectureUIScene: FcrBoardUIComponentDelegate {
             }
             
             guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
-                  user.userRole != .teacher else {
-                      continue
-                  }
+                  user.userRole != .teacher
+            else {
+                continue
+            }
             
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
@@ -446,6 +434,7 @@ extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         else {
             return
         }
+        
         let new = FcrTachedWindowRenderViewState.create(isHide: true,
                                                   data: data)
         teacherRenderComponent.updateItem(new,
@@ -458,6 +447,7 @@ extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         else {
             return
         }
+        
         let new = FcrTachedWindowRenderViewState.create(isHide: false,
                                                   data: data)
         teacherRenderComponent.updateItem(new,
@@ -600,12 +590,13 @@ extension FcrLectureUIScene: FcrRenderMenuUIComponentDelegate {
 // MARK: - FcrWindowRenderUIComponentDelegate
 extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didPressItem item: FcrTachedWindowRenderViewState,
-                           view: UIView) {
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
         let rect = view.convert(view.bounds,
                                 to: contentView)
@@ -644,8 +635,8 @@ extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
     }
     
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           starDrag item: FcrTachedWindowRenderViewState,
-                           location: CGPoint) {
+                                       starDrag item: FcrTachedWindowRenderViewState,
+                                       location: CGPoint) {
         let windowArea = FcrRectEffectArea(areaRect: windowComponent.view.frame,
                                            initSize: CGSize(width: 200, height: 160),
                                            zoomMinSize: CGSize(width: 100, height: 100))
@@ -662,28 +653,30 @@ extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
     }
     
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           dragging item: FcrTachedWindowRenderViewState,
-                           to location: CGPoint) {
+                                       dragging item: FcrTachedWindowRenderViewState,
+                                       to location: CGPoint) {
         let point = component.view.convert(location,
                                            to: rectEffectView)
         rectEffectView.setDropPoint(point)
     }
     
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didEndDrag item: FcrTachedWindowRenderViewState,
-                           location: CGPoint) {
+                                       didEndDrag item: FcrTachedWindowRenderViewState,
+                                       location: CGPoint) {
         let point = component.view.convert(location,
                                            to: rectEffectView)
         rectEffectView.setDropPoint(point)
         rectEffectView.stopEffect()
+        
         guard let data = item.data,
               let stream = self.contextPool.stream.getStreamList(userUuid: data.userId)?.first
         else {
             return
         }
+        
         let rect = rectEffectView.getDropRectInView(windowComponent.view)
-        self.windowComponent.createWidgetWith(stream: stream,
-                                              at: rect)
+        windowComponent.createWidgetWith(stream: stream,
+                                         at: rect)
     }
 }
 
@@ -822,16 +815,6 @@ extension FcrLectureUIScene: FcrClassStateUIComponentDelegate {
             make?.left.equalTo()(self.contentView)?.offset()(left)
             make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
             make?.size.equalTo()(self.classStateComponent.suggestSize)
-        }
-    }
-}
-
-extension FcrLectureUIScene: FcrRoomGlobalUIComponentDelegate {
-    func onAreaUpdated(type: FcrAreaViewType) {
-        if type.contains(.videoGallery) {
-            windowComponent.startPreviewLocalVideo()
-        } else {
-            windowComponent.stopPreviewLocalVideo()
         }
     }
 }

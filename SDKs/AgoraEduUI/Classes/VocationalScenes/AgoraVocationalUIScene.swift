@@ -116,7 +116,7 @@ import AgoraWidget
     private var isJoinedRoom = false
     
     private lazy var watermarkWidget: AgoraBaseWidget? = {
-        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+        guard let config = contextPool.widget.getWidgetConfig(WatermarkWidgetId) else {
             return nil
         }
         return contextPool.widget.create(config)
