@@ -593,6 +593,10 @@ private extension FcrRoomGlobalUIComponent {
         
         self.area = area
         
+        if area.contains(.videoGallery) {
+            AgoraToast.toast(message: "fcr_expansion_screen_tips_teacher_watching")
+        }
+        
         delegate?.onAreaUpdated(type: area)
     }
     

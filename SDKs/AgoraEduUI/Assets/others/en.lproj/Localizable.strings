@@ -126,11 +126,9 @@ fcr_group_back_exit = "Exit";
 fcr_group_back_to_main_room = "Return to main session";
 fcr_group_exit_room = "Leave the room";
 
-// alert
-fcr_alert_sure = "Confirm";
-fcr_alert_cancel = "Cancel";
-
 // Record
 fcr_record_recording = "Recording...";
 // vocational
 fcr_vocational_teacher_absent = "The teacher is not in the classroom";
+
+fcr_expansion_screen_tips_teacher_watching = "The teacher is viewing your video screen";
