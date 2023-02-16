@@ -588,9 +588,10 @@ extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
                            didPressItem item: FcrTachedWindowRenderViewState,
                            view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
         let rect = view.convert(view.bounds,
                                 to: contentView)
