@@ -179,9 +179,9 @@ private extension FcrCoHostTachedWindowUIComponent {
                                                   rewardCount: rewardCount,
                                                   boardPrivilege: boardPrivilege)
         
-        let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
+        let hide = getItemIsHidden(streamId: stream.streamUuid)
         
-        let item = FcrTachedWindowRenderViewState.create(isHide: isActive,
+        let item = FcrTachedWindowRenderViewState.create(isHide: hide,
                                                          data: data)
         
         return item
@@ -193,6 +193,15 @@ private extension FcrCoHostTachedWindowUIComponent {
         }
         
         return streamList.first(where: {$0.videoSourceType == .camera})
+    }
+    
+    func getItemIsHidden(streamId: String) -> Bool {
+        guard let `delegate` = delegate else {
+            return false
+        }
+        
+        return delegate.tachedStreamWindowUIComponent(self,
+                                                      shouldItemIsHide: streamId)
     }
 }
 

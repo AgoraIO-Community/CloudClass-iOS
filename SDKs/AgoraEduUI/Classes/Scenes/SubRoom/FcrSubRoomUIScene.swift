@@ -494,6 +494,15 @@ extension FcrSubRoomUIScene: FcrTachedStreamWindowUIComponentDelegate {
             }
         }
     }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        if let _ = windowComponent.dataSource.firstItem(streamId: streamId) {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 // MARK: - FcrSettingUIComponentDelegate

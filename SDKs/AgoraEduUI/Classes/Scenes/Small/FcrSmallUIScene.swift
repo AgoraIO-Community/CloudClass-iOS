@@ -590,8 +590,8 @@ extension FcrSmallUIScene: FcrChatUIComponentDelegate {
 // MARK: - FcrWindowRenderUIComponentDelegate
 extension FcrSmallUIScene: FcrTachedStreamWindowUIComponentDelegate {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didPressItem item: FcrTachedWindowRenderViewState,
-                           view: UIView) {
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
               let data = item.data
         else {
@@ -633,6 +633,15 @@ extension FcrSmallUIScene: FcrTachedStreamWindowUIComponentDelegate {
             }
         }
     }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        if let _ = windowComponent.dataSource.firstItem(streamId: streamId) {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 // MARK: - AgoraRenderMenuUIComponentDelegate
@@ -670,6 +679,11 @@ extension FcrSmallUIScene: FcrClassStateUIComponentDelegate {
 // MARK: - FcrRoomGlobalUIComponentDelegate
 extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
     func onAreaUpdated(type: FcrAreaViewType) {
+        if !type.contains(.stage) {
+            showStageArea(show: false)
+            renderComponent.viewWillInactive()
+        }
+        
         if type.contains(.videoGallery) {
             windowComponent.startPreviewLocalVideo()
         } else {
@@ -679,10 +693,8 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
         if type.contains(.stage) {
             showStageArea(show: true)
             renderComponent.viewWillActive()
-            
         } else {
-            showStageArea(show: false)
-            renderComponent.viewWillInactive()
+            
         }
     }
     

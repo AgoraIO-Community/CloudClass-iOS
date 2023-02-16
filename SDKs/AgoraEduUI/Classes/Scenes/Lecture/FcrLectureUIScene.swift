@@ -20,7 +20,6 @@ import UIKit
                                                                 monitorController: contextPool.monitor,
                                                                 streamController: contextPool.stream,
                                                                 groupController: contextPool.group,
-                                                                delegate: self,
                                                                 exitDelegate: self)
     
     /** 音频流 控制器（自身不包含UI）*/
@@ -153,8 +152,6 @@ import UIKit
                 self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
                 self.contextPool.media.openLocalDevice(systemDevice: .mic)
             }
-            
-            self.windowComponent.startPreviewLocalVideo()
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
@@ -436,8 +433,9 @@ extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         else {
             return
         }
+        
         let new = FcrTachedWindowRenderViewState.create(isHide: true,
-                                                  data: data)
+                                                        data: data)
         teacherRenderComponent.updateItem(new,
                                           animation: false)
     }
@@ -448,8 +446,9 @@ extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         else {
             return
         }
+        
         let new = FcrTachedWindowRenderViewState.create(isHide: false,
-                                                  data: data)
+                                                        data: data)
         teacherRenderComponent.updateItem(new,
                                           animation: false)
     }
@@ -630,8 +629,17 @@ extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
     }
     
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           starDrag item: FcrTachedWindowRenderViewState,
-                           location: CGPoint) {
+                                       shouldItemIsHide streamId: String) -> Bool {
+        if let _ = windowComponent.dataSource.firstItem(streamId: streamId) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       starDrag item: FcrTachedWindowRenderViewState,
+                                       location: CGPoint) {
         let windowArea = FcrRectEffectArea(areaRect: windowComponent.view.frame,
                                            initSize: CGSize(width: 200, height: 160),
                                            zoomMinSize: CGSize(width: 100, height: 100))
@@ -648,16 +656,16 @@ extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
     }
     
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           dragging item: FcrTachedWindowRenderViewState,
-                           to location: CGPoint) {
+                                       dragging item: FcrTachedWindowRenderViewState,
+                                       to location: CGPoint) {
         let point = component.view.convert(location,
                                            to: rectEffectView)
         rectEffectView.setDropPoint(point)
     }
     
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didEndDrag item: FcrTachedWindowRenderViewState,
-                           location: CGPoint) {
+                                       didEndDrag item: FcrTachedWindowRenderViewState,
+                                       location: CGPoint) {
         let point = component.view.convert(location,
                                            to: rectEffectView)
         rectEffectView.setDropPoint(point)
@@ -817,16 +825,6 @@ extension FcrLectureUIScene: FcrClassStateUIComponentDelegate {
             make?.left.equalTo()(self.contentView)?.offset()(left)
             make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
             make?.size.equalTo()(self.classStateComponent.suggestSize)
-        }
-    }
-}
-
-extension FcrLectureUIScene: FcrRoomGlobalUIComponentDelegate {
-    func onAreaUpdated(type: FcrAreaViewType) {
-        if type.contains(.videoGallery) {
-            windowComponent.startPreviewLocalVideo()
-        } else {
-            windowComponent.stopPreviewLocalVideo()
         }
     }
 }

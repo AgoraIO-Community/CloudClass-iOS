@@ -183,4 +183,10 @@ extension FcrSmallTachedWindowUIComponent: FcrTachedStreamWindowUIComponentDeleg
                                                 didPressItem: item,
                                                 view: view)
     }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        return delegate?.tachedStreamWindowUIComponent(component,
+                                                       shouldItemIsHide: streamId) ?? false
+    }
 }

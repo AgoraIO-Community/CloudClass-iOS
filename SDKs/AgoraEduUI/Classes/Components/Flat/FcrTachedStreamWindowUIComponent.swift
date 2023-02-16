@@ -15,6 +15,9 @@ protocol FcrTachedStreamWindowUIComponentDelegate: NSObjectProtocol {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
                                        didPressItem item: FcrTachedWindowRenderViewState,
                                        view: UIView)
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool
 }
 
 extension FcrTachedStreamWindowUIComponentDelegate {
@@ -24,6 +27,11 @@ extension FcrTachedStreamWindowUIComponentDelegate {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
                                        didPressItem item: FcrTachedWindowRenderViewState,
                                        view: UIView) {}
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        return true
+    }
 }
 
 class FcrTachedStreamWindowUIComponent: FcrUIComponent, AgoraUIContentContainer {

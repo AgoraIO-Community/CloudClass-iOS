@@ -47,6 +47,7 @@ class FcrDetachedStreamWindowUIComponent: UIViewController {
     
     private(set) var renderViews = [String: FcrWindowRenderView]() // Key: streamId
     private(set) var widgets = [String: AgoraBaseWidget]()         // Key: widget object Id
+    private(set) var syncFrames = [String: AgoraWidgetFrame]()     // Key: widget object Id
     
     private weak var componentDataSource: FcrUIComponentDataSource?
     
@@ -92,6 +93,22 @@ class FcrDetachedStreamWindowUIComponent: UIViewController {
         }
         
         mediaController.registerMediaEventHandler(self)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        for item in dataSource {
+            guard let frame = syncFrames[item.widgetObjectId] else {
+                continue
+            }
+            
+            updateFrame(widgetObjectId: item.widgetObjectId,
+                        syncFrame: frame,
+                        animation: false)
+        }
+        
+        print("----+++ frame: \(view.frame)")
     }
     
     public func onAddedRenderWidget(widgetView: UIView) {
@@ -164,6 +181,7 @@ extension FcrDetachedStreamWindowUIComponent {
         
         delegate?.onWillStartRenderVideoStream(streamId: streamId)
         
+        print("____startRenderVideo:\(self.classForCoder))")
         mediaController.startRenderVideo(roomUuid: roomId,
                                          view: renderView,
                                          renderConfig: renderConfig,
@@ -226,8 +244,10 @@ private extension FcrDetachedStreamWindowUIComponent {
         onWillDisplayItem(item,
                           renderView: renderView.videoView)
         
-        // Frame & Animation
+        // init Frame & Animation
         let itemIndex = (dataSource.count - 1)
+        
+        syncFrames[item.widgetObjectId] = syncFrame
         
         addItemViewFrame(widgetView: widget.view,
                          userId: item.data.userId,
@@ -262,6 +282,8 @@ private extension FcrDetachedStreamWindowUIComponent {
         widgets.removeValue(forKey: item.widgetObjectId)
         
         // Frame & Animation
+        syncFrames.removeValue(forKey: item.widgetObjectId)
+        
         deleteViewFrame(widgetView: widget.view,
                         userId: item.data.userId,
                         animation: animation) { [weak self] in
@@ -405,6 +427,8 @@ private extension FcrDetachedStreamWindowUIComponent {
         }
         
         let frame = syncFrame.rectInView(view)
+        
+        syncFrames[widgetObjectId] = syncFrame
         
         if animation {
             UIView.animate(withDuration: TimeInterval.agora_animation,
@@ -779,7 +803,7 @@ fileprivate extension Array where Element == FcrDetachedStreamWindowWidgetItem {
         return index
     }
     
-    func firstItem(streamId: String) -> FcrDetachedStreamWindowWidgetItem? {
+    internal func firstItem(streamId: String) -> FcrDetachedStreamWindowWidgetItem? {
         return first(where: {return $0.data.streamId == streamId})
     }
     
