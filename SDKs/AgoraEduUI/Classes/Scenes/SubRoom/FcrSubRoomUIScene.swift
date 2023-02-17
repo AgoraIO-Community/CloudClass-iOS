@@ -46,7 +46,6 @@ import AgoraWidget
                                                                        userController: subRoom.user,
                                                                        streamController: subRoom.stream,
                                                                        mediaController: contextPool.media,
-                                                                       widgetController: subRoom.widget,
                                                                        subRoom: subRoom,
                                                                        delegate: self,
                                                                        componentDataSource: self)

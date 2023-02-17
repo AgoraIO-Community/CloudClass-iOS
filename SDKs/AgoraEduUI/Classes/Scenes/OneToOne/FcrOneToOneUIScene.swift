@@ -65,7 +65,6 @@ import UIKit
                                                                           userController: contextPool.user,
                                                                           mediaController: contextPool.media,
                                                                           streamController: contextPool.stream,
-                                                                          widgetController: contextPool.widget,
                                                                           delegate: self,
                                                                           componentDataSource: self)
                                                                           

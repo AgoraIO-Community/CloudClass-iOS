@@ -39,7 +39,6 @@ import AgoraWidget
                                                                        userController: contextPool.user,
                                                                        streamController: contextPool.stream,
                                                                        mediaController: contextPool.media,
-                                                                       widgetController: contextPool.widget,
                                                                        delegate: self,
                                                                        componentDataSource: self)
     

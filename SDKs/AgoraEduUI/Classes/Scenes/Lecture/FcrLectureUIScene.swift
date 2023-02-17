@@ -68,7 +68,6 @@ import UIKit
                                                                                 userController: contextPool.user,
                                                                                 streamController: contextPool.stream,
                                                                                 mediaController: contextPool.media,
-                                                                                widgetController: contextPool.widget,
                                                                                 dataSource: [FcrTachedWindowRenderViewState.none],
                                                                                 reverseItem: false,
                                                                                 delegate: self)

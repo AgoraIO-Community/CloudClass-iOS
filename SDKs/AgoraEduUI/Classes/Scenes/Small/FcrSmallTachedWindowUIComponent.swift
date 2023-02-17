@@ -19,7 +19,6 @@ class FcrSmallTachedWindowUIComponent: UIViewController {
          userController: AgoraEduUserContext,
          streamController: AgoraEduStreamContext,
          mediaController: AgoraEduMediaContext,
-         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrTachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
@@ -27,7 +26,6 @@ class FcrSmallTachedWindowUIComponent: UIViewController {
                                                        userController: userController,
                                                        streamController: streamController,
                                                        mediaController: mediaController,
-                                                       widgetController: widgetController,
                                                        subRoom: subRoom,
                                                        componentDataSource: componentDataSource)
         
@@ -35,7 +33,6 @@ class FcrSmallTachedWindowUIComponent: UIViewController {
                                                          userController: userController,
                                                          streamController: streamController,
                                                          mediaController: mediaController,
-                                                         widgetController: widgetController,
                                                          subRoom: subRoom)
         
         super.init(nibName: nil,

@@ -14,7 +14,6 @@ class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
     private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext
     private let streamController: AgoraEduStreamContext
-    private let widgetController: AgoraEduWidgetContext
     
     private let teacherItemIndex = 0
     private let studentItemIndex = 1
@@ -25,7 +24,6 @@ class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
          userController: AgoraEduUserContext,
          mediaController: AgoraEduMediaContext,
          streamController: AgoraEduStreamContext,
-         widgetController: AgoraEduWidgetContext,
          delegate: FcrTachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
         let dataSource = [FcrTachedWindowRenderViewState.none,
@@ -35,7 +33,6 @@ class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
         self.userController = userController
         self.mediaController = mediaController
         self.streamController = streamController
-        self.widgetController = widgetController
         
         self.componentDataSource = componentDataSource
         
