@@ -73,8 +73,6 @@ class FcrTeacherTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
             }
         case .hide(let data):
             break
-//            stopRenderVideo(streamId: data.streamId,
-//                            view: renderView)
         default:
             break
         }

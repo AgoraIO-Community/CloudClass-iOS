@@ -198,6 +198,14 @@ private extension FcrCoHostTachedWindowUIComponent {
         return delegate.tachedStreamWindowUIComponent(self,
                                                       shouldItemIsHide: streamId)
     }
+    
+    func coHostListContainer(user: AgoraEduContextUserInfo) -> Bool {
+        guard let list = userController.getCoHostList() else {
+            return false
+        }
+        
+        return list.contains(where: {$0.userUuid == user.userUuid})
+    }
 }
 
 private extension FcrCoHostTachedWindowUIComponent {    
@@ -277,20 +285,28 @@ extension FcrCoHostTachedWindowUIComponent: AgoraEduUserHandler {
 extension FcrCoHostTachedWindowUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.owner.userRole == .student else {
+        let owner = stream.owner
+        
+        guard owner.userRole == .student,
+              coHostListContainer(user: owner)
+        else {
             return
         }
         
-        addItemOfCoHost(by: stream.owner)
+        addItemOfCoHost(by: owner)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.owner.userRole == .student else {
+        let owner = stream.owner
+        
+        guard stream.owner.userRole == .student,
+              coHostListContainer(user: owner)
+        else {
             return
         }
         
-        updateItemOfCoHost(by: stream.owner)
+        updateItemOfCoHost(by: owner)
     }
 }
 
