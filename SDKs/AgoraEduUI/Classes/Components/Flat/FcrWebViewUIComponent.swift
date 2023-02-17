@@ -47,15 +47,26 @@ class FcrWebViewUIComponent: FcrUIComponent {
                    bundle: nil)
     }
     
-    public func openWebView(urlString: String,
-                            resourceId: String) {
+    func openWebView(fileJson: [String: Any]) {
+        guard let resourceUrl = ValueTransform(value: fileJson["resourceUrl"],
+                                       result: String.self),
+              let resourceId = ValueTransform(value: fileJson["resourceUuid"],
+                                              result: String.self)
+        else {
+            return
+        }
+        
         let widgetId = resourceId.makeWidgetId()
+        
         guard widgetArray.firstItem(widgetId: widgetId) == nil else {
             return
         }
+        
         let zIndex = (currentMaxZIndex + 1)
+        
         currentMaxZIndex += 1
-        let properties: [String: Any] = ["webViewUrl": urlString,
+        
+        let properties: [String: Any] = ["webViewUrl": resourceUrl,
                                           zIndexKey: zIndex]
         
         let defaultSyncFrame = defaultSyncFrame()

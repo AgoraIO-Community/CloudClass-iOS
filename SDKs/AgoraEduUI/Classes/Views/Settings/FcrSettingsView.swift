@@ -18,7 +18,7 @@ class FcrSettingsView: UIView {
     // share link
     private let shareLinkButton = UIButton(type: .custom)
     private let shareTitleLabel = UILabel()
-    private let shareArrowImage = UIImageView(image: UIImage.agedu_named("fcr_setting_arrow"))
+    private let shareArrowImage = UIImageView(image: UIImage.edu_ui_image("fcr_setting_arrow"))
     private let shareLinkLine = UIView()
         
     // Camera
@@ -255,28 +255,28 @@ extension FcrSettingsView: AgoraUIContentContainer {
     func updateViewProperties() {
         let config = UIConfig.setting
         // share link
-        shareTitleLabel.text = "fcr_inshare_button_share".agedu_localized()
+        shareTitleLabel.text = "fcr_inshare_button_share".edu_ui_localized()
         shareTitleLabel.textColor = config.camera.title.color
         shareTitleLabel.font = config.camera.title.font
         
         shareLinkLine.backgroundColor = FcrUIColorGroup.systemDividerColor
         // Camera
-        cameraLabel.text = "fcr_media_camera".agedu_localized()
+        cameraLabel.text = "fcr_media_camera".edu_ui_localized()
         cameraLabel.textColor = config.camera.title.color
         cameraLabel.font = config.camera.title.font
         
-        cameraDirectionLabel.text = "fcr_media_camera_direction".agedu_localized()
+        cameraDirectionLabel.text = "fcr_media_camera_direction".edu_ui_localized()
         cameraDirectionLabel.textColor = config.camera.direction.titleColor
         cameraDirectionLabel.font = config.camera.direction.font
         
         cameraSwitch.onTintColor = config.camera.tintColor
         
         frontCameraButton.titleLabel?.font = config.camera.direction.font
-        frontCameraButton.setTitle("fcr_media_camera_direction_front".agedu_localized(),
+        frontCameraButton.setTitle("fcr_media_camera_direction_front".edu_ui_localized(),
                                    for: .normal)
         
         backCameraButton.titleLabel?.font = config.camera.direction.font
-        backCameraButton.setTitle("fcr_media_camera_direction_back".agedu_localized(),
+        backCameraButton.setTitle("fcr_media_camera_direction_back".edu_ui_localized(),
                                for: .normal)
         
         for button in [frontCameraButton, backCameraButton] {
@@ -305,21 +305,21 @@ extension FcrSettingsView: AgoraUIContentContainer {
         
         // Mic
         micLabel.textColor = config.microphone.title.color
-        micLabel.text = "fcr_media_mic".agedu_localized()
+        micLabel.text = "fcr_media_mic".edu_ui_localized()
         micLabel.font = config.microphone.title.font
         
         micSwitch.onTintColor = config.microphone.tintColor
         
         // Speaker
         speakerLabel.textColor = config.speaker.title.color
-        speakerLabel.text = "fcr_media_speaker".agedu_localized()
+        speakerLabel.text = "fcr_media_speaker".edu_ui_localized()
         speakerLabel.font = config.speaker.title.font
         
         speakerSwitch.onTintColor = config.speaker.tintColor
         
         // Exit
         exitButton.titleLabel?.font = config.exit.titleFont
-        exitButton.setTitle("fcr_room_leave_room".agedu_localized(),
+        exitButton.setTitle("fcr_room_leave_room".edu_ui_localized(),
                             for: .normal)
         exitButton.backgroundColor = config.exit.backgroundColor
         exitButton.layer.cornerRadius = config.exit.cornerRadius

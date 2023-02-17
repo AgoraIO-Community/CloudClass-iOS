@@ -136,7 +136,7 @@ extension VcrMixStreamCDNRenderUIComponent: AgoraEduRoomHandler {
 // VcrMixStreamCDNEmptyView
 class VcrMixStreamCDNEmptyView: UIView {
     
-    let imageView = UIImageView(image: UIImage.agedu_named("window_no_user"))
+    let imageView = UIImageView(image: UIImage.edu_ui_image("window_no_user"))
     
     let label = UILabel()
     
@@ -155,7 +155,7 @@ class VcrMixStreamCDNEmptyView: UIView {
         backgroundColor = .white
         addSubview(imageView)
         
-        label.text = "fcr_vocational_teacher_absent".agedu_localized()
+        label.text = "fcr_vocational_teacher_absent".edu_ui_localized()
         label.font = FcrUIFontGroup.font12
         label.textColor = FcrUIColorGroup.textLevel2Color
         addSubview(label)

@@ -85,22 +85,22 @@ import UIKit
                                                                             delegate: self)
     /** 大窗 控制器*/
     private lazy var windowComponent = FcrLectureDetachedWindowUIComponent(roomController: contextPool.room,
-                                                                         userController: contextPool.user,
-                                                                         streamController: contextPool.stream,
-                                                                         mediaController: contextPool.media,
-                                                                         widgetController: contextPool.widget,
-                                                                         delegate: self,
-                                                                         componentDataSource: self,
-                                                                         actionDelegate: self)
+                                                                           userController: contextPool.user,
+                                                                           streamController: contextPool.stream,
+                                                                           mediaController: contextPool.media,
+                                                                           widgetController: contextPool.widget,
+                                                                           delegate: self,
+                                                                           componentDataSource: self,
+                                                                           actionDelegate: self)
     /** 外部链接 控制器*/
     private lazy var webViewComponent = FcrWebViewUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
                                                               widgetController: contextPool.widget)
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
-                                                          widgetController: contextPool.widget,
-                                                          userController: contextPool.user,
-                                                          delegate: self)
+    private lazy var cloudComponent = FcrCloudDriveUIComponent(roomController: contextPool.room,
+                                                               widgetController: contextPool.widget,
+                                                               userController: contextPool.user,
+                                                               delegate: self)
     /** 教具 控制器*/
     private lazy var classToolsComponent = FcrClassToolsUIComponent(roomController: contextPool.room,
                                                                     userController: contextPool.user,
@@ -117,14 +117,7 @@ import UIKit
         return view
     }()
     
-    private var isJoinedRoom = false
-    
-    private lazy var watermarkWidget: AgoraBaseWidget? = {
-        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
-            return nil
-        }
-        return contextPool.widget.create(config)
-    }()
+    private lazy var watermarkComponent = FcrWatermarkUIComponent(widgetController: contextPool.widget)
     
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
@@ -140,39 +133,23 @@ import UIKit
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        if contextPool.user.getLocalUserInfo().userRole == .teacher {
+            contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            contextPool.media.openLocalDevice(systemDevice: .mic)
+        }
+        
         contextPool.room.joinRoom { [weak self] in
-            AgoraLoading.hide()
             guard let `self` = self else {
                 return
             }
-            self.isJoinedRoom = true
             
-            if self.contextPool.user.getLocalUserInfo().userRole == .teacher {
-                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
-                self.contextPool.media.openLocalDevice(systemDevice: .mic)
-            }
+            AgoraLoading.hide()
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
         }
         
-        if let watermark = watermarkWidget?.view {
-            view.addSubview(watermark)
-            
-            watermark.mas_makeConstraints { make in
-                make?.top.equalTo()(boardComponent.view.mas_top)
-                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
-                make?.left.equalTo()(contentView.mas_left)
-                make?.right.equalTo()(contentView.mas_right)
-            }
-        }
-    }
-    
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if isJoinedRoom == false {
-            AgoraLoading.loading()
-        }
+        AgoraLoading.loading(in: view)
     }
     
     public override func didClickCtrlMaskView() {
@@ -197,6 +174,7 @@ import UIKit
                                                  toolBarComponent,
                                                  toolCollectionComponent,
                                                  chatComponent,
+                                                 watermarkComponent,
                                                  audioComponent,
                                                  globalComponent]
 
@@ -313,6 +291,16 @@ import UIKit
             make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
         }
         
+        if userRole == .teacher {
+            cloudComponent.view.mas_makeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
+            }
+        }
+        
         if userRole != .observer {
             toolCollectionComponent.view.mas_makeConstraints { [weak self] make in
                 guard let `self` = self else {
@@ -345,6 +333,17 @@ import UIKit
             make?.bottom.equalTo()(0)
         }
         
+        watermarkComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
+            }
+            
+            make?.top.equalTo()(self.boardComponent.view.mas_top)
+            make?.bottom.equalTo()(self.boardComponent.view.mas_bottom)
+            make?.left.equalTo()(self.contentView.mas_left)
+            make?.right.equalTo()(self.contentView.mas_right)
+        }
+        
         updateRenderLayout()
     }
     
@@ -354,6 +353,7 @@ import UIKit
         teacherRenderComponent.view.clipsToBounds = true
     }
 }
+
 // MARK: - FcrSettingUIComponentDelegate
 extension FcrLectureUIScene: FcrSettingUIComponentDelegate {
     func onShowShareView(_ view: UIView) {
@@ -400,9 +400,10 @@ extension FcrLectureUIScene: FcrBoardUIComponentDelegate {
             }
             
             guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
-                  user.userRole != .teacher else {
-                      continue
-                  }
+                  user.userRole != .teacher
+            else {
+                continue
+            }
             
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
@@ -454,11 +455,16 @@ extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
 }
 
 // MARK: - AgoraCloudUIComponentDelegate
-extension FcrLectureUIScene: FcrCloudUIComponentDelegate {
-    func onOpenAlfCourseware(urlString: String,
-                             resourceId: String) {
-        webViewComponent.openWebView(urlString: urlString,
-                                     resourceId: resourceId)
+extension FcrLectureUIScene: FcrCloudDriveUIComponentDelegate {
+    func onSelectedFile(fileJson: [String: Any],
+                        fileExt: String) {
+        switch fileExt {
+        case "alf":
+            webViewComponent.openWebView(fileJson: fileJson)
+        default:
+            boardComponent.openFile(fileJson)
+            break
+        }
     }
 }
 
@@ -584,8 +590,8 @@ extension FcrLectureUIScene: FcrRenderMenuUIComponentDelegate {
 // MARK: - FcrWindowRenderUIComponentDelegate
 extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didPressItem item: FcrTachedWindowRenderViewState,
-                           view: UIView) {
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
               let data = item.data
         else {
@@ -670,14 +676,16 @@ extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
                                            to: rectEffectView)
         rectEffectView.setDropPoint(point)
         rectEffectView.stopEffect()
+        
         guard let data = item.data,
               let stream = self.contextPool.stream.getStreamList(userUuid: data.userId)?.first
         else {
             return
         }
+        
         let rect = rectEffectView.getDropRectInView(windowComponent.view)
-        self.windowComponent.createWidgetWith(stream: stream,
-                                              at: rect)
+        windowComponent.createWidgetWith(stream: stream,
+                                         at: rect)
     }
 }
 
@@ -739,16 +747,7 @@ extension FcrLectureUIScene: FcrToolCollectionUIComponentDelegate {
         ctrlView = nil
         switch type {
         case .cloudStorage:
-            if !cloudComponent.view.agora_visible {
-                cloudComponent.view.mas_makeConstraints { [weak self] make in
-                    guard let `self` = self else {
-                        return
-                    }
-                    
-                    make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
-                }
-            }
-            cloudComponent.view.agora_visible = !cloudComponent.view.agora_visible
+            cloudComponent.show()
         case .saveBoard:
             boardComponent.saveBoard()
         case .vote:

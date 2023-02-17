@@ -8,17 +8,26 @@
 import AgoraEduCore
 import AgoraWidget
 
-protocol FcrCloudUIComponentDelegate: NSObjectProtocol {
-    func onOpenAlfCourseware(urlString: String,
-                             resourceId: String)
+protocol FcrCloudDriveUIComponentDelegate: NSObjectProtocol {
+    func onSelectedFile(fileJson: [String: Any],
+                        fileExt: String)
 }
 
-class FcrCloudUIComponent: FcrUIComponent {
-    private var cloudWidget: AgoraBaseWidget?
+class FcrCloudDriveUIComponent: FcrUIComponent {
+    private var widget: AgoraBaseWidget?
     
-    private weak var delegate: FcrCloudUIComponentDelegate?
+    private weak var delegate: FcrCloudDriveUIComponentDelegate?
     
-    private var widgetSize: CGSize!
+    private var widgetSize: CGSize {
+        switch roomController.getRoomInfo().roomType {
+        case .lecture:
+            return CGSize(width: 360,
+                          height: 214)
+        default:
+            return CGSize(width: 435,
+                          height: 253)
+        }
+    }
     
     /**context**/
     private let subRoom: AgoraEduSubRoomContext?
@@ -30,7 +39,7 @@ class FcrCloudUIComponent: FcrUIComponent {
          widgetController: AgoraEduWidgetContext,
          userController: AgoraEduUserContext,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrCloudUIComponentDelegate?) {
+         delegate: FcrCloudDriveUIComponentDelegate?) {
         self.roomController = roomController
         self.widgetController = widgetController
         self.userController = userController
@@ -40,7 +49,6 @@ class FcrCloudUIComponent: FcrUIComponent {
         super.init(nibName: nil,
                    bundle: nil)
         
-        initData()
         view.backgroundColor = .clear
         
         if let `subRoom` = subRoom {
@@ -57,54 +65,60 @@ class FcrCloudUIComponent: FcrUIComponent {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func show() {
+        view.isHidden = false
+    }
+    
+    func hide() {
+        view.isHidden = true
+    }
 }
 
 // MARK: - AgoraEduRoomHandler
-extension FcrCloudUIComponent: AgoraEduRoomHandler {
+extension FcrCloudDriveUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         initWidget()
     }
 }
 
 // MARK: - AgoraEduSubRoomHandler
-extension FcrCloudUIComponent: AgoraEduSubRoomHandler {
+extension FcrCloudDriveUIComponent: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         initWidget()
     }
 }
 
 // MARK: - AgoraWidgetMessageObserver
-extension FcrCloudUIComponent: AgoraWidgetMessageObserver {
+extension FcrCloudDriveUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kCloudWidgetId,
-              let signal = message.toCloudSignal() else {
+        guard widgetId == CloudDriveWidgetId,
+              let json = message.json()
+        else {
             return
         }
-        switch signal {
-        case .openCourseware(let courseware):
-            if courseware.ext == "alf" {
-                delegate?.onOpenAlfCourseware(urlString: courseware.resourceUrl,
-                                              resourceId: courseware.resourceUuid)
-                break
-            }
-            if let message = AgoraBoardWidgetSignal.openCourseware(courseware.toBoard()).toMessageString() {
-                widgetController.sendMessage(toWidget: kBoardWidgetId,
-                                             message: message)
-            }
-        case .CloseCloud:
-            view.isHidden = true
-        default:
-            break
+        
+        // Selected file
+        if let fileJson = ValueTransform(value: json["selectedFile"],
+                                         result: [String: Any].self),
+            let ext = ValueTransform(value: fileJson["ext"],
+                                     result: String.self) {
+            delegate?.onSelectedFile(fileJson: fileJson,
+                                     fileExt: ext)
+            
+        // Close cloud drive
+        } else if let _ = json["close"] {
+            hide()
         }
     }
 }
 
 // MARK: - private
-extension FcrCloudUIComponent {
-    @objc func didDragTab(_ sender: UIPanGestureRecognizer) {
+extension FcrCloudDriveUIComponent {
+    @objc func onDrag(_ sender: UIPanGestureRecognizer) {
         guard sender.state == .changed,
-              let targetView = cloudWidget?.view else {
+              let targetView = widget?.view else {
             return
         }
         
@@ -134,37 +148,25 @@ extension FcrCloudUIComponent {
                               in: view)
     }
     
-    func initData() {
-        switch roomController.getRoomInfo().roomType {
-        case .oneToOne:
-            widgetSize = CGSize(width: 435,
-                                height: 253)
-        case .lecture:
-            widgetSize = CGSize(width: 360,
-                                height: 214)
-        default:
-            widgetSize = CGSize(width: 435,
-                                height: 253)
-        }
-    }
-    
     func initWidget() {
         guard UIConfig.cloudStorage.enable,
               userController.getLocalUserInfo().userRole == .teacher,
-              let cloudConfig = widgetController.getWidgetConfig(kCloudWidgetId) else {
+              let cloudConfig = widgetController.getWidgetConfig(CloudDriveWidgetId) else {
             return
         }
         
         let cloudWidget = widgetController.create(cloudConfig)
         widgetController.add(self,
-                             widgetId: kCloudWidgetId)
+                             widgetId: CloudDriveWidgetId)
         view.isUserInteractionEnabled = true
         view.addSubview(cloudWidget.view)
-        self.cloudWidget = cloudWidget
+        self.widget = cloudWidget
         
         let gesture = UIPanGestureRecognizer(target: self,
-                                             action: #selector(didDragTab(_:)))
+                                             action: #selector(onDrag(_:)))
+        
         cloudWidget.view.addGestureRecognizer(gesture)
+        
         cloudWidget.view.mas_makeConstraints { make in
             make?.center.equalTo()(view)
             make?.width.equalTo()(widgetSize.width)

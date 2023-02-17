@@ -27,7 +27,7 @@ class FcrWaveHandsDelayView: UIView {
     
     private lazy var bgView: UIImageView = {
         let name = "toolbar_selected_bg"
-        let image = UIImage.agedu_named(name)
+        let image = UIImage.edu_ui_image(name)
         return UIImageView(image: image)
     }()
     

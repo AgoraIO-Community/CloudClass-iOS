@@ -68,14 +68,14 @@ class FcrClassStateUIComponent: FcrUIComponent {
         
         roomController.registerRoomEventHandler(self)
         widgetController.add(self,
-                             widgetId: kBoardWidgetId)
+                             widgetId: BoardWidgetId)
     }
 }
 
 // MARK: - AgoraUIContentContainer
 extension FcrClassStateUIComponent: AgoraUIContentContainer {
     func initViews() {
-        startButton.setTitle("fcr_room_start_class".agedu_localized(),
+        startButton.setTitle("fcr_room_start_class".edu_ui_localized(),
                              for: .normal)
         startButton.addTarget(self,
                               action: #selector(onClickStart(_:)),
@@ -123,7 +123,7 @@ extension FcrClassStateUIComponent: AgoraEduRoomHandler {
 extension FcrClassStateUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kBoardWidgetId,
+        guard widgetId == BoardWidgetId,
               let signal = message.toBoardSignal() else {
             return
         }

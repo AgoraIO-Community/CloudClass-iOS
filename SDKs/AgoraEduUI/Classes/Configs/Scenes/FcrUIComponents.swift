@@ -24,9 +24,9 @@ struct FcrUIComponentToast: FcrUIComponentProtocol {
     let warningBackgroundColor: UIColor = FcrUIColorGroup.systemWarningColor
     let errorBackgroundColor: UIColor = FcrUIColorGroup.systemErrorColor
     
-    let noticeImage  = UIImage.agedu_named("toast_notice")
-    let warningImage = UIImage.agedu_named("toast_warning")
-    let errorImage = UIImage.agedu_named("toast_warning")
+    let noticeImage  = UIImage.edu_ui_image("toast_notice")
+    let warningImage = UIImage.edu_ui_image("toast_warning")
+    let errorImage = UIImage.edu_ui_image("toast_warning")
     
     let label = FcrUIItemToastLabel()
     let shadow = FcrUIItemShadow()
@@ -52,7 +52,7 @@ struct FcrUIComponentLoading: FcrUIComponentProtocol {
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
     
-    let gifUrl: URL? = Bundle.agoraEduUI().url(forResource: "img_loading",
+    let gifUrl: URL? = Bundle.edu_ui_bundle().url(forResource: "img_loading",
                                                  withExtension: "gif")
     
     let message = FcrUIItemLoadingMessage()
@@ -125,8 +125,8 @@ struct FcrUIComponentRaiseHand: FcrUIComponentProtocol {
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemBrandColor
     
-    var normalImage: UIImage?            = .agedu_named("toolbar_unselected_wave_hands")
-    var popOverImage: UIImage?           = .agedu_named("toolbar_handsup_remind_popover")
+    var normalImage: UIImage?            = .edu_ui_image("toolbar_unselected_wave_hands")
+    var popOverImage: UIImage?           = .edu_ui_image("toolbar_handsup_remind_popover")
     
     /**ui**/
     let delayView = FcrUIItemRaiseHandDelayView()
@@ -220,8 +220,8 @@ struct FcrUIComponentRoster: FcrUIComponentProtocol {
     var kickOut                     = FcrUIItemRosterKickOut()
     
     // ui
-    var normalImage: UIImage?   = .agedu_named("toolbar_unselected_roster")
-    var selectedImage: UIImage? = .agedu_named("toolbar_selected_roster")
+    var normalImage: UIImage?   = .edu_ui_image("toolbar_unselected_roster")
+    var selectedImage: UIImage? = .edu_ui_image("toolbar_selected_roster")
     
     let cellBackgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
     let titleBackgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
@@ -239,7 +239,7 @@ struct FcrUIComponentRecord: FcrUIComponentProtocol {
     var enable: Bool = true
     var backgroundColor: UIColor = .clear
     
-    var image: UIImage?    =  .agedu_named("ic_toolbox_record")
+    var image: UIImage?    =  .edu_ui_image("ic_toolbox_record")
     var recordingState     = FcrUIItemStateBarRecordingState()
 }
 
@@ -251,8 +251,8 @@ struct FcrUIComponentHandsList: FcrUIComponentProtocol {
     
     let cornerRadius: CGFloat = FcrUIFrameGroup.alertCornerRadius
     
-    let onImage: UIImage?     =  .agedu_named("ic_handsup_on_stage")
-    let offImage: UIImage?    =  .agedu_named("ic_handsup_off_stage")
+    let onImage: UIImage?     =  .edu_ui_image("ic_handsup_on_stage")
+    let offImage: UIImage?    =  .edu_ui_image("ic_handsup_off_stage")
     
     let label  = FcrUIItemHandsListLabel()
     let sepLine = FcrUIItemSepLine()
@@ -317,7 +317,7 @@ struct FcrUIComponentPopupQuiz: FcrUIComponentProtocol {
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
     
-    var image: UIImage?  =  .agedu_named("ic_toolbox_answer")
+    var image: UIImage?  =  .edu_ui_image("ic_toolbox_answer")
 }
 
 struct FcrUIComponentCounter: FcrUIComponentProtocol {
@@ -325,7 +325,7 @@ struct FcrUIComponentCounter: FcrUIComponentProtocol {
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
     
-    var image: UIImage?    =  .agedu_named("ic_toolbox_clock")
+    var image: UIImage?    =  .edu_ui_image("ic_toolbox_clock")
 }
 
 struct FcrUIComponentPoll: FcrUIComponentProtocol {
@@ -333,7 +333,7 @@ struct FcrUIComponentPoll: FcrUIComponentProtocol {
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
     
-    var image: UIImage?          =  .agedu_named("ic_toolbox_vote")
+    var image: UIImage?          =  .edu_ui_image("ic_toolbox_vote")
 }
 
 struct FcrUIComponentCloudStorage: FcrUIComponentProtocol {
@@ -341,7 +341,7 @@ struct FcrUIComponentCloudStorage: FcrUIComponentProtocol {
     var enable: Bool = true
     var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
     
-    var image: UIImage? =  .agedu_named("toolcollection_enabled_cloud")
+    var image: UIImage? =  .edu_ui_image("toolcollection_enabled_cloud")
 }
 
 struct FcrUIComponentScreenShare: FcrUIComponentProtocol {

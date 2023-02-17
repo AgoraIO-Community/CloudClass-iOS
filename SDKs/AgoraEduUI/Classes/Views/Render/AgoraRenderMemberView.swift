@@ -14,7 +14,7 @@ class AgoraRenderMaskView: UIView {
         super.init(frame: frame)
         
         backgroundColor = FcrUIColorGroup.systemBackgroundColor
-        imageView.image = UIImage.agedu_named("window_no_user")
+        imageView.image = UIImage.edu_ui_image("window_no_user")
         layer.cornerRadius = FcrUIFrameGroup.windowCornerRadius
         layer.borderWidth = FcrUIFrameGroup.borderWidth
         layer.borderColor = FcrUIColorGroup.systemDividerColor.cgColor
@@ -144,7 +144,7 @@ class AgoraRenderMemberCell: UICollectionViewCell {
         contentView.backgroundColor = .clear
         videoMaskView.layer.cornerRadius = FcrUIFrameGroup.windowCornerRadius
         videoMaskView.clipsToBounds = true
-        videoMaskView.imageView.image = UIImage.agedu_named("window_no_user")
+        videoMaskView.imageView.image = UIImage.edu_ui_image("window_no_user")
         contentView.addSubview(videoMaskView)
         videoMaskView.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)

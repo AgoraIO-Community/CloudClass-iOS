@@ -71,7 +71,7 @@ extension VocationalRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivi
     func initViews() {
         view.addSubview(stateView)
         
-        leaveButton.setImage(UIImage.agedu_named("ic_func_leave_room"),
+        leaveButton.setImage(UIImage.edu_ui_image("ic_func_leave_room"),
                              for: .normal)
         leaveButton.addTarget(self,
                               action: #selector(onClickExit(_:)),
@@ -99,10 +99,10 @@ extension VocationalRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivi
         
         var roomTitle: String
         switch roomController.getRoomInfo().roomType {
-        case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".agedu_localized()
-        case .small:        roomTitle = "fcr_room_small_title".agedu_localized()
-        case .lecture:      roomTitle = "fcr_room_lecture_title".agedu_localized()
-        @unknown default:   roomTitle = "fcr_room_small_title".agedu_localized()
+        case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".edu_ui_localized()
+        case .small:        roomTitle = "fcr_room_small_title".edu_ui_localized()
+        case .lecture:      roomTitle = "fcr_room_lecture_title".edu_ui_localized()
+        @unknown default:   roomTitle = "fcr_room_small_title".edu_ui_localized()
         }
         stateView.titleLabel.text = roomTitle
         
@@ -139,11 +139,11 @@ extension VocationalRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivi
 // MARK: - Private
 private extension VocationalRoomStateUIComponent {
     @objc func onClickExit(_ sender: UIButton) {
-        let title = "fcr_room_class_leave_class_title".agedu_localized()
-        let content = "fcr_room_exit_warning".agedu_localized()
+        let title = "fcr_room_class_leave_class_title".edu_ui_localized()
+        let content = "fcr_room_exit_warning".edu_ui_localized()
         
-        let cancelActionTitle = "fcr_room_class_leave_cancel".agedu_localized()
-        let leaveActionTitle = "fcr_room_class_leave_sure".agedu_localized()
+        let cancelActionTitle = "fcr_room_class_leave_cancel".edu_ui_localized()
+        let leaveActionTitle = "fcr_room_class_leave_sure".edu_ui_localized()
         
         let cancelAction = AgoraAlertAction(title: cancelActionTitle)
         
@@ -167,16 +167,16 @@ private extension VocationalRoomStateUIComponent {
         case .before:
             stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
             if info.startTime == 0 {
-                stateView.timeLabel.text = "fcr_room_class_not_start".agedu_localized()
+                stateView.timeLabel.text = "fcr_room_class_not_start".edu_ui_localized()
             } else {
                 let time = info.startTime - realTime
-                let text = "fcr_room_class_time_away".agedu_localized()
+                let text = "fcr_room_class_time_away".edu_ui_localized()
                 stateView.timeLabel.text = text + timeString(from: time)
             }
         case .after:
             stateView.timeLabel.textColor = FcrUIColorGroup.systemErrorColor
             let time = realTime - info.startTime
-            let text = "fcr_room_class_over".agedu_localized()
+            let text = "fcr_room_class_over".edu_ui_localized()
             stateView.timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
@@ -184,26 +184,26 @@ private extension VocationalRoomStateUIComponent {
                 let minNum = Int(info.closeDelay / 60)
                 let strMid = "\(minNum)"
                 
-                let str = "fcr_room_close_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                let str = "fcr_room_close_warning".edu_ui_localized()
+                let final = str.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                      with: strMid)
                 AgoraToast.toast(message: final)
             } else if countDown == 60 {
-                let str = "fcr_room_close_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                let str = "fcr_room_close_warning".edu_ui_localized()
+                let final = str.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                      with: "1")
                 AgoraToast.toast(message: final)
             }
         case .during:
             stateView.timeLabel.textColor = FcrUIColorGroup.textLevel3Color
             let time = realTime - info.startTime
-            let text = "fcr_room_class_started".agedu_localized()
+            let text = "fcr_room_class_started".edu_ui_localized()
             stateView.timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
             if countDown == 5 * 60 + info.closeDelay {
-                let str = "fcr_room_class_end_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                let str = "fcr_room_class_end_warning".edu_ui_localized()
+                let final = str.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                      with: "5")
                 AgoraToast.toast(message: final)
             }
@@ -269,15 +269,15 @@ extension VocationalRoomStateUIComponent: AgoraEduMonitorHandler {
         
         switch quality {
         case .unknown:
-            image = UIImage.agedu_named("ic_network_unknow")
+            image = UIImage.edu_ui_image("ic_network_unknow")
         case .good:
-            image = UIImage.agedu_named("ic_network_good")
+            image = UIImage.edu_ui_image("ic_network_good")
         case .bad:
-            image = UIImage.agedu_named("ic_network_bad")
+            image = UIImage.edu_ui_image("ic_network_bad")
         case .down:
-            image = UIImage.agedu_named("ic_network_down")
+            image = UIImage.edu_ui_image("ic_network_down")
             
-            let message = "fcr_monitor_network_disconnected".agedu_localized()
+            let message = "fcr_monitor_network_disconnected".edu_ui_localized()
             AgoraToast.toast(message: message,
                              type: .error)
         default:

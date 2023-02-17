@@ -39,10 +39,10 @@ import UIKit
                                                                     delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
-                                                          widgetController: contextPool.widget,
-                                                          userController: contextPool.user,
-                                                          delegate: self)
+    private lazy var cloudComponent = FcrCloudDriveUIComponent(roomController: contextPool.room,
+                                                               widgetController: contextPool.widget,
+                                                               userController: contextPool.user,
+                                                               delegate: self)
     
     /** 设置界面 控制器*/
     private lazy var settingComponent = FcrSettingUIComponent(mediaController: contextPool.media,
@@ -105,15 +105,10 @@ import UIKit
                                                                           delegate: self,
                                                                           componentDataSource: self)
     
+    private lazy var watermarkComponent = FcrWatermarkUIComponent(widgetController: contextPool.widget)
+    
     private var fileWriter = FcrUIFileWriter()
-    
-    private lazy var watermarkWidget: AgoraBaseWidget? = {
-        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
-            return nil
-        }
-        return contextPool.widget.create(config)
-    }()
-    
+        
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
         super.init(sceneType: .oneToOne,
@@ -140,17 +135,6 @@ import UIKit
             self?.exitScene(reason: .normal)
         }
         
-        if let watermark = watermarkWidget?.view {
-            view.addSubview(watermark)
-            
-            watermark.mas_makeConstraints { make in
-                make?.top.equalTo()(boardComponent.view.mas_top)
-                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
-                make?.left.equalTo()(contentView.mas_left)
-                make?.right.equalTo()(contentView.mas_right)
-            }
-        }
-        
         AgoraLoading.loading(in: view)
     }
     
@@ -175,6 +159,7 @@ import UIKit
                                                  toolBarComponent,
                                                  toolCollectionComponent,
                                                  chatComponent,
+                                                 watermarkComponent,
                                                  audioComponent,
                                                  globalComponent]
         
@@ -332,15 +317,21 @@ import UIKit
             }
         }
         
+        watermarkComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
+            }
+            
+            make?.top.equalTo()(self.boardComponent.view.mas_top)
+            make?.bottom.equalTo()(self.boardComponent.view.mas_bottom)
+            make?.left.equalTo()(self.contentView.mas_left)
+            make?.right.equalTo()(self.contentView.mas_right)
+        }
+        
         updateRenderLayout()
     }
-    
-    public override func updateViewProperties() {
-        super.updateViewProperties()
-        
-        view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
-    }
 }
+
 // MARK: - FcrSettingUIComponentDelegate
 extension FcrOneToOneUIScene: FcrSettingUIComponentDelegate {
     func onShowShareView(_ view: UIView) {
@@ -417,9 +408,10 @@ extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
             }
             
             guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
-                  user.userRole != .teacher else {
-                      continue
-                  }
+                  user.userRole != .teacher
+            else {
+                continue
+            }
             
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
@@ -473,11 +465,16 @@ extension FcrOneToOneUIScene: FcrDetachedStreamWindowUIComponentDelegate {
 }
 
 // MARK: - AgoraCloudUIComponentDelegate
-extension FcrOneToOneUIScene: FcrCloudUIComponentDelegate {
-    func onOpenAlfCourseware(urlString: String,
-                             resourceId: String) {
-        webViewComponent.openWebView(urlString: urlString,
-                                     resourceId: resourceId)
+extension FcrOneToOneUIScene: FcrCloudDriveUIComponentDelegate {
+    func onSelectedFile(fileJson: [String: Any],
+                        fileExt: String) {
+        switch fileExt {
+        case "alf":
+            webViewComponent.openWebView(fileJson: fileJson)
+        default:
+            boardComponent.openFile(fileJson)
+            break
+        }
     }
 }
 
@@ -636,6 +633,7 @@ extension FcrOneToOneUIScene: FcrTachedStreamWindowUIComponentDelegate {
         
         let rect = view.convert(view.bounds,
                                 to: contentView)
+        
         let centerX = rect.center.x - contentView.width / 2
         
         let userId = data.userId
@@ -657,11 +655,14 @@ extension FcrOneToOneUIScene: FcrTachedStreamWindowUIComponentDelegate {
             renderMenuComponent.show(roomType: .oneToOne,
                                      userUuid: userId,
                                      showRoleType: role)
-            renderMenuComponent.view.mas_remakeConstraints { [weak self, weak view] make in
+            
+            renderMenuComponent.view.mas_remakeConstraints { [weak self,
+                                                              weak view] make in
                 guard let `self` = self,
-                      let `view` = view else {
-                          return
-                      }
+                      let `view` = view
+                else {
+                    return
+                }
                 
                 make?.bottom.equalTo()(view.mas_bottom)?.offset()(-5)
                 make?.centerX.equalTo()(centerX)

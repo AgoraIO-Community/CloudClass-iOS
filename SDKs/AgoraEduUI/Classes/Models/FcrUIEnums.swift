@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 
-// MARK: - Layout
+// MARK: - Area
 struct FcrAreaViewType: OptionSet {
     let rawValue: Int
     
@@ -187,12 +187,12 @@ enum AgoraTeachingAidType {
     
     func cellText() -> String? {
         switch self {
-        case .cloudStorage:     return "fcr_tool_box_cloud_storage".agedu_localized()
-        case .saveBoard:        return "toolbox_save_borad".agedu_localized()
-        case .record:           return "fcr_tool_box_record_class".agedu_localized()
-        case .vote:             return "fcr_tool_box_poll".agedu_localized()
-        case .countDown:        return "fcr_tool_box_count_down".agedu_localized()
-        case .answerSheet:      return "fcr_tool_box_popup_quiz".agedu_localized()
+        case .cloudStorage:     return "fcr_tool_box_cloud_storage".edu_ui_localized()
+        case .saveBoard:        return "toolbox_save_borad".edu_ui_localized()
+        case .record:           return "fcr_tool_box_record_class".edu_ui_localized()
+        case .vote:             return "fcr_tool_box_poll".edu_ui_localized()
+        case .countDown:        return "fcr_tool_box_count_down".edu_ui_localized()
+        case .answerSheet:      return "fcr_tool_box_popup_quiz".edu_ui_localized()
         default:                return nil
         }
     }
@@ -205,12 +205,12 @@ enum AgoraRosterFunction: Int {
     
     func title() -> String {
         switch self {
-        case .stage:    return "fcr_user_list_stage".agedu_localized()
-        case .auth:     return "fcr_user_list_auth".agedu_localized()
-        case .camera:   return "fcr_user_list_video".agedu_localized()
-        case .mic:      return "fcr_user_list_audio".agedu_localized()
-        case .reward:   return "fcr_user_list_reward".agedu_localized()
-        case .kick:     return "fcr_user_list_ban".agedu_localized()
+        case .stage:    return "fcr_user_list_stage".edu_ui_localized()
+        case .auth:     return "fcr_user_list_auth".edu_ui_localized()
+        case .camera:   return "fcr_user_list_video".edu_ui_localized()
+        case .mic:      return "fcr_user_list_audio".edu_ui_localized()
+        case .reward:   return "fcr_user_list_reward".edu_ui_localized()
+        case .kick:     return "fcr_user_list_ban".edu_ui_localized()
         default:        return ""
         }
     }

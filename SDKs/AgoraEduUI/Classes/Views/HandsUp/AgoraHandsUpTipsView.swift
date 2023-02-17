@@ -33,7 +33,7 @@ extension AgoraHandsUpTipsView:AgoraUIContentContainer {
         addSubview(imageView)
         
         label = UILabel()
-        label.text = "fcr_user_hands".agedu_localized()
+        label.text = "fcr_user_hands".edu_ui_localized()
         label.textAlignment = .center
         addSubview(label)
     }

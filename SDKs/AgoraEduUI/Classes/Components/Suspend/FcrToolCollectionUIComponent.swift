@@ -110,7 +110,7 @@ class FcrToolCollectionUIComponent: FcrUIComponent {
                    bundle: nil)
         
         widgetController.add(self,
-                             widgetId: kBoardWidgetId)
+                             widgetId: BoardWidgetId)
         
         self.delegate = delegate
         
@@ -240,7 +240,7 @@ extension FcrToolCollectionUIComponent: AgoraWidgetActivityObserver,
     
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kBoardWidgetId,
+        guard widgetId == BoardWidgetId,
               let signal = message.toBoardSignal() else {
             return
         }
@@ -281,7 +281,7 @@ extension FcrToolCollectionUIComponent: AgoraMainToolsViewDelegate,
             }
             if let boardSignal = signal,
                let message = boardSignal.toMessageString() {
-                widgetController.sendMessage(toWidget: kBoardWidgetId,
+                widgetController.sendMessage(toWidget: BoardWidgetId,
                                              message: message)
             }
         }
@@ -374,7 +374,7 @@ private extension FcrToolCollectionUIComponent {
         
         if let boardSignal = signal,
            let message = boardSignal.toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
+            widgetController.sendMessage(toWidget: BoardWidgetId,
                                          message: message)
         }
     }
@@ -448,7 +448,7 @@ private extension FcrToolCollectionUIComponent {
     func updateWidgetTool() {
         if let type = currentMainTool.widgetType,
            let message = AgoraBoardWidgetSignal.changeAssistantType(.tool(type)).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
+            widgetController.sendMessage(toWidget: BoardWidgetId,
                                          message: message)
         }
     }
@@ -458,7 +458,7 @@ private extension FcrToolCollectionUIComponent {
                                               color: subToolsView.currentColor.toColorArr())
         
         if let message = AgoraBoardWidgetSignal.changeAssistantType(.text(textInfo)).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
+            widgetController.sendMessage(toWidget: BoardWidgetId,
                                          message: message)
         }
     }
@@ -468,7 +468,7 @@ private extension FcrToolCollectionUIComponent {
                                                 width: subToolsView.curLineWidth.value,
                                                 color: subToolsView.currentColor.toColorArr())
         if let message = AgoraBoardWidgetSignal.changeAssistantType(.shape(shapeInfo)).toMessageString() {
-            widgetController.sendMessage(toWidget: kBoardWidgetId,
+            widgetController.sendMessage(toWidget: BoardWidgetId,
                                          message: message)
         }
     }

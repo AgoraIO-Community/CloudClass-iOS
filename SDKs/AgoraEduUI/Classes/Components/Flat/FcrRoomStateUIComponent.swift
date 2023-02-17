@@ -75,16 +75,16 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
         view.addSubview(stateView)
         
-        let recordingTitle = "fcr_record_recording".agedu_localized()
+        let recordingTitle = "fcr_record_recording".edu_ui_localized()
         stateView.recordingLabel.text = recordingTitle
         
         var roomTitle: String
         
         switch roomController.getRoomInfo().roomType {
-        case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".agedu_localized()
-        case .small:        roomTitle = "fcr_room_small_title".agedu_localized()
-        case .lecture:      roomTitle = "fcr_room_lecture_title".agedu_localized()
-        @unknown default:   roomTitle = "fcr_room_small_title".agedu_localized()
+        case .oneToOne:     roomTitle = "fcr_room_one_to_one_title".edu_ui_localized()
+        case .small:        roomTitle = "fcr_room_small_title".edu_ui_localized()
+        case .lecture:      roomTitle = "fcr_room_lecture_title".edu_ui_localized()
+        @unknown default:   roomTitle = "fcr_room_small_title".edu_ui_localized()
         }
         
         stateView.titleLabel.text = roomTitle
@@ -157,16 +157,16 @@ private extension FcrRoomStateUIComponent {
         case .before:
             stateView.timeLabel.textColor = FcrUIColorGroup.textLevel2Color
             if info.startTime == 0 {
-                stateView.timeLabel.text = "fcr_room_class_not_start".agedu_localized()
+                stateView.timeLabel.text = "fcr_room_class_not_start".edu_ui_localized()
             } else {
                 let time = info.startTime - realTime
-                let text = "fcr_room_class_time_away".agedu_localized()
+                let text = "fcr_room_class_time_away".edu_ui_localized()
                 stateView.timeLabel.text = text + timeString(from: time)
             }
         case .after:
             stateView.timeLabel.textColor = FcrUIColorGroup.systemErrorColor
             let time = realTime - info.startTime
-            let text = "fcr_room_class_over".agedu_localized()
+            let text = "fcr_room_class_over".edu_ui_localized()
             stateView.timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
@@ -174,26 +174,26 @@ private extension FcrRoomStateUIComponent {
                 let minNum = Int(info.closeDelay / 60)
                 let strMid = "\(minNum)"
                 
-                let str = "fcr_room_close_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                let str = "fcr_room_close_warning".edu_ui_localized()
+                let final = str.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                      with: strMid)
                 AgoraToast.toast(message: final)
             } else if countDown == 60 {
-                let str = "fcr_room_close_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                let str = "fcr_room_close_warning".edu_ui_localized()
+                let final = str.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                      with: "1")
                 AgoraToast.toast(message: final)
             }
         case .during:
             stateView.timeLabel.textColor = FcrUIColorGroup.textLevel2Color
             let time = realTime - info.startTime
-            let text = "fcr_room_class_started".agedu_localized()
+            let text = "fcr_room_class_started".edu_ui_localized()
             stateView.timeLabel.text = text + timeString(from: time)
             // 事件
             let countDown = info.closeDelay + info.duration - time
             if countDown == 5 * 60 + info.closeDelay {
-                let str = "fcr_room_class_end_warning".agedu_localized()
-                let final = str.replacingOccurrences(of: String.agedu_localized_replacing_x(),
+                let str = "fcr_room_class_end_warning".edu_ui_localized()
+                let final = str.replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
                                                      with: "5")
                 AgoraToast.toast(message: final)
             }

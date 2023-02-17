@@ -63,31 +63,32 @@ extension FcrAlert {
     }
 }
 
+// MARK: - Bundle
+extension Bundle {
+    class func edu_ui_bundle() -> Bundle {
+        return Bundle.agora_bundle("AgoraEduUI") ?? Bundle.main
+    }
+}
+
 extension UIImage {
-    class func agedu_named(_ named: String) -> UIImage? {
-        let bundle = Bundle.agoraEduUI()
+    class func edu_ui_image(_ named: String) -> UIImage? {
+        let bundle = Bundle.edu_ui_bundle()
         return UIImage(named: named,
                        in: bundle,
                        compatibleWith: nil)
     }
 }
 
-extension Bundle {
-    class func agoraEduUI() -> Bundle {
-        return Bundle.agora_bundle("AgoraEduUI") ?? Bundle.main
-    }
-}
-
 extension String {
-    static func agedu_localized_replacing_x() -> String {
+    static func edu_ui_localized_replacing_x() -> String {
         return "{xxx}"
     }
     
-    static func agedu_localized_replacing_y() -> String {
+    static func edu_ui_localized_replacing_y() -> String {
         return "{yyy}"
     }
     
-    func agedu_localized() -> String {
+    func edu_ui_localized() -> String {
         guard let eduBundle = Bundle.agora_bundle("AgoraEduUI") else {
             return ""
         }

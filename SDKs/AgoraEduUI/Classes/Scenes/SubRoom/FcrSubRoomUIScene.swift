@@ -122,7 +122,7 @@ import AgoraWidget
                                                                   delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
+    private lazy var cloudComponent = FcrCloudDriveUIComponent(roomController: contextPool.room,
                                                           widgetController: subRoom.widget,
                                                           userController: subRoom.user,
                                                           subRoom: subRoom,
@@ -130,14 +130,9 @@ import AgoraWidget
     
     private weak var mainDelegate: AgoraEduUISubManagerCallback?
     
-    private var subRoom: AgoraEduSubRoomContext
+    private lazy var watermarkComponent = FcrWatermarkUIComponent(widgetController: contextPool.widget)
     
-    private lazy var watermarkWidget: AgoraBaseWidget? = {
-        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
-            return nil
-        }
-        return contextPool.widget.create(config)
-    }()
+    private var subRoom: AgoraEduSubRoomContext
     
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
@@ -168,32 +163,15 @@ import AgoraWidget
         
         subRoom.joinSubRoom { [weak self] in
             AgoraLoading.hide()
-            
-            guard let `self` = self else {
-                return
-            }
-            
-            
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal,
                             type: .sub)
         }
         
-        if let watermark = watermarkWidget?.view {
-            view.addSubview(watermark)
-            
-            watermark.mas_makeConstraints { make in
-                make?.top.equalTo()(boardComponent.view.mas_top)
-                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
-                make?.left.equalTo()(contentView.mas_left)
-                make?.right.equalTo()(contentView.mas_right)
-            }
-        }
-        
         let subRoomName = subRoom.getSubRoomInfo().subRoomName
-        let message = "fcr_group_joining".agedu_localized().replacingOccurrences(of: String.agedu_localized_replacing_x(),
-                                                                                 with: subRoomName)
+        let message = "fcr_group_joining".edu_ui_localized().replacingOccurrences(of: String.edu_ui_localized_replacing_x(),
+                                                                                  with: subRoomName)
         
         AgoraLoading.loading(in: view,
                              message: message)
@@ -271,6 +249,7 @@ import AgoraWidget
                                                  toolBarComponent,
                                                  toolCollectionComponent,
                                                  chatComponent,
+                                                 watermarkComponent,
                                                  audioComponent,
                                                  globalComponent]
         
@@ -407,31 +386,28 @@ import AgoraWidget
             
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
+        
+        watermarkComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
+            }
+            
+            make?.top.equalTo()(self.boardComponent.view.mas_top)
+            make?.bottom.equalTo()(self.boardComponent.view.mas_bottom)
+            make?.left.equalTo()(self.contentView.mas_left)
+            make?.right.equalTo()(self.contentView.mas_right)
+        }
     }
     
     func showStageArea(show: Bool) {
+        renderComponent.view.agora_visible = show
+        
         if show {
-            renderComponent.view.agora_visible = true
-            
             boardComponent.view.mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
             }
-            
-            renderComponent.view.mas_remakeConstraints { [weak self] make in
-                guard let `self` = self else {
-                    return
-                }
-                
-                make?.left.right().equalTo()(0)
-                make?.top.equalTo()(self.stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-                make?.bottom.equalTo()(self.boardComponent.view.mas_top)?.offset()(AgoraFit.scale(-1))
-            }
-            
-            updateRenderCollectionLayout()
         } else {
-            renderComponent.view.agora_visible = false
-            
             boardComponent.view.mas_remakeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
@@ -443,6 +419,7 @@ import AgoraWidget
             }
         }
         
+        contentView.layoutIfNeeded()
         boardComponent.updateBoardRatio()
     }
 }
@@ -453,9 +430,10 @@ extension FcrSubRoomUIScene: FcrTachedStreamWindowUIComponentDelegate {
                                        didPressItem item: FcrTachedWindowRenderViewState,
                                        view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
         let rect = view.convert(view.bounds,
                                 to: contentView)
@@ -673,11 +651,16 @@ extension FcrSubRoomUIScene: FcrDetachedStreamWindowUIComponentDelegate {
 }
 
 // MARK: - AgoraCloudUIComponentDelegate
-extension FcrSubRoomUIScene: FcrCloudUIComponentDelegate {
-    func onOpenAlfCourseware(urlString: String,
-                             resourceId: String) {
-        webViewComponent.openWebView(urlString: urlString,
-                                     resourceId: resourceId)
+extension FcrSubRoomUIScene: FcrCloudDriveUIComponentDelegate {
+    func onSelectedFile(fileJson: [String: Any],
+                        fileExt: String) {
+        switch fileExt {
+        case "alf":
+            webViewComponent.openWebView(fileJson: fileJson)
+        default:
+            boardComponent.openFile(fileJson)
+            break
+        }
     }
 }
 
@@ -837,8 +820,10 @@ extension FcrSubRoomUIScene: FcrRoomGlobalUIComponentDelegate {
         
         if type.contains(.stage) {
             showStageArea(show: true)
+            renderComponent.viewWillActive()
         } else {
             showStageArea(show: false)
+            renderComponent.viewWillInactive()
         }
     }
 }
@@ -896,10 +881,10 @@ private extension FcrSubRoomUIScene {
     func toolsViewDidSelectHelp() {
         switch teacherInRoom() {
         case .localSub:
-            AgoraToast.toast(message: "fcr_group_teacher_exist_hint".agedu_localized(),
+            AgoraToast.toast(message: "fcr_group_teacher_exist_hint".edu_ui_localized(),
                              type: .warning)
         case .otherSub:
-            AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
+            AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".edu_ui_localized(),
                              type: .warning)
         default:
             guard let userList = contextPool.user.getUserList(role: .teacher),
@@ -910,7 +895,7 @@ private extension FcrSubRoomUIScene {
             
             globalComponent.isRequestingHelp = true
             
-            let inviteActionTitle = "fcr_group_invite".agedu_localized()
+            let inviteActionTitle = "fcr_group_invite".edu_ui_localized()
             
             let actionInvite = AgoraAlertAction(title: inviteActionTitle) { [weak self] _ in
                 guard let `self` = self else {
@@ -927,15 +912,15 @@ private extension FcrSubRoomUIScene {
                         return
                     }
                     
-                    AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".agedu_localized(),
+                    AgoraToast.toast(message: "fcr_group_teacher_is_helping_others_msg".edu_ui_localized(),
                                      type: .warning)
                 }
             }
             
-            let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".agedu_localized())
+            let actionCancel = AgoraAlertAction(title: "fcr_group_cancel".edu_ui_localized())
             
-            let title = "fcr_group_help_title".agedu_localized()
-            let content = "fcr_group_help_content".agedu_localized()
+            let title = "fcr_group_help_title".edu_ui_localized()
+            let content = "fcr_group_help_content".edu_ui_localized()
             
             showAlert(title: title,
                       contentList: [content],

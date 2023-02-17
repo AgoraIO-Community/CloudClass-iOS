@@ -117,13 +117,13 @@ class FcrLectureRosterUIComponent: FcrRosterUIComponent {
                 return
             }
             
-            let kickTitle = "fcr_user_kick_out".agedu_localized()
+            let kickTitle = "fcr_user_kick_out".edu_ui_localized()
             
-            let kickOnceOption = "fcr_user_kick_out_once".agedu_localized()
-            let kickForeverOption = "fcr_user_kick_out_forever".agedu_localized()
+            let kickOnceOption = "fcr_user_kick_out_once".edu_ui_localized()
+            let kickForeverOption = "fcr_user_kick_out_forever".edu_ui_localized()
             
-            let cancelActionTitle = "fcr_user_kick_out_cancel".agedu_localized()
-            let submitActionTitle = "fcr_user_kick_out_submit".agedu_localized()
+            let cancelActionTitle = "fcr_user_kick_out_cancel".edu_ui_localized()
+            let submitActionTitle = "fcr_user_kick_out_submit".edu_ui_localized()
             
             let cancelAction = AgoraAlertAction(title: cancelActionTitle)
             

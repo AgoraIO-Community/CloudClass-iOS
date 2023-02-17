@@ -55,23 +55,18 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
     private func addLocalItem() {
         localWidgetObjectId = getLocalWidgetObjectId()
         
-        guard let objectId = localWidgetObjectId else {
-            return
-        }
-        
-        guard let stream = getLocalCameraStream() else {
-            return
-        }
-        
-        guard let item = createItem(widgetObjectId: objectId,
+        guard let objectId = localWidgetObjectId,
+              let stream = getLocalCameraStream(),
+              let item = createItem(widgetObjectId: objectId,
                                     stream: stream)
         else {
+            localStreamWindowState = .none
             return
         }
         
         let frame = getLocalPreviewFrame()
         
-        let message = "fcr_expansion_screen_tips_teacher_watching".agedu_localized()
+        let message = "fcr_expansion_screen_tips_teacher_watching".edu_ui_localized()
         
         AgoraToast.toast(message: message)
         
@@ -101,14 +96,9 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
         return stream
     }
     
-    private func coHostListContainLocalUser() -> Bool {
+    private func coHostListContainLocalUser(_ userList: [AgoraEduContextUserInfo]) -> Bool {
         let localUserId = userController.getLocalUserInfo().userUuid
-        
-        guard let list = userController.getCoHostList() else {
-            return false
-        }
-        
-        return list.contains(where: {$0.userUuid == localUserId})
+        return userList.contains(where: {$0.userUuid == localUserId})
     }
     
     private func getLocalPreviewFrame() -> AgoraWidgetFrame {
@@ -144,41 +134,41 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
     private var localStreamWindowState: DetachedLocalStreamWindowState = .none {
         didSet {
             switch localStreamWindowState {
-            case .none:
-                removeLocalItem()
-            case .localPreview:
-                addLocalItem()
             case .active:
-                // super class handle this case
+                // super class handles this case
                 guard let widgetId = localWidgetObjectId else {
                     return
                 }
-            
                 super.onWidgetActive(widgetId)
+            case .localPreview:
+                addLocalItem()
+            case .none:
+                removeLocalItem()
             }
         }
     }
     
     func updateLocalStreamWindowState() {
-        // Active stream window widget
+        // 1. active stream window widget on this component
         if localStreamWidgetIsActive {
             localStreamWindowState = .active
             return
         }
         
-        if localStreamWidgetIsActive == false {
+        // 2. stream window on tached window ui component
+        if let list = userController.getCoHostList(),
+           coHostListContainLocalUser(list) {
+            localStreamWindowState = .none
+            return
+        }
+        
+        // 3. local preview stream window widget on this component
+        if isStartPreview {
+            localStreamWindowState = .localPreview
             
-            //
-            if coHostListContainLocalUser() {
-                localStreamWindowState = .none
-                return
-            }
-            
-            if isStartPreview {
-                localStreamWindowState = .localPreview
-            } else {
-                localStreamWindowState = .none
-            }
+        // 4. none
+        } else {
+            localStreamWindowState = .none
         }
     }
     
@@ -212,11 +202,19 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
     
     func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
                                  operatorUser: AgoraEduContextUserInfo?) {
+        guard coHostListContainLocalUser(userList) else {
+            return
+        }
+        
         updateLocalStreamWindowState()
     }
     
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
-                                        operatorUser: AgoraEduContextUserInfo?) {
+                               operatorUser: AgoraEduContextUserInfo?) {
+        guard coHostListContainLocalUser(userList) else {
+            return
+        }
+        
         updateLocalStreamWindowState()
     }
 }

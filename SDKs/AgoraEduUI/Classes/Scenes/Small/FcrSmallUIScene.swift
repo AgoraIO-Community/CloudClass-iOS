@@ -112,19 +112,14 @@ import AgoraWidget
                                                                   delegate: self)
     
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudComponent = FcrCloudUIComponent(roomController: contextPool.room,
+    private lazy var cloudComponent = FcrCloudDriveUIComponent(roomController: contextPool.room,
                                                           widgetController: contextPool.widget,
                                                           userController: contextPool.user,
                                                           delegate: self)
     
-    private var subRoom: FcrSubRoomUIScene?
+    private lazy var watermarkComponent = FcrWatermarkUIComponent(widgetController: contextPool.widget)
     
-    private lazy var watermarkWidget: AgoraBaseWidget? = {
-        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
-            return nil
-        }
-        return contextPool.widget.create(config)
-    }()
+    private var subRoom: FcrSubRoomUIScene?
     
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
@@ -149,17 +144,6 @@ import AgoraWidget
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
-        }
-        
-        if let watermark = watermarkWidget?.view {
-            view.addSubview(watermark)
-            
-            watermark.mas_makeConstraints { make in
-                make?.top.equalTo()(boardComponent.view.mas_top)
-                make?.bottom.equalTo()(boardComponent.view.mas_bottom)
-                make?.left.equalTo()(contentView.mas_left)
-                make?.right.equalTo()(contentView.mas_right)
-            }
         }
         
         AgoraLoading.loading(in: view)
@@ -187,6 +171,7 @@ import AgoraWidget
                                                  toolBarComponent,
                                                  toolCollectionComponent,
                                                  chatComponent,
+                                                 watermarkComponent,
                                                  audioComponent,
                                                  globalComponent]
         
@@ -327,18 +312,29 @@ import AgoraWidget
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
+        watermarkComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
+            }
+            
+            make?.top.equalTo()(self.boardComponent.view.mas_top)
+            make?.bottom.equalTo()(self.boardComponent.view.mas_bottom)
+            make?.left.equalTo()(self.contentView.mas_left)
+            make?.right.equalTo()(self.contentView.mas_right)
+        }
+        
         updateRenderCollectionLayout()
     }
     
     func showStageArea(show: Bool) {
+        renderComponent.view.agora_visible = show
+        
         if show {
-            renderComponent.view.agora_visible = true
             boardComponent.view.mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
             }
         } else {
-            renderComponent.view.agora_visible = false
             boardComponent.view.mas_remakeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
@@ -350,9 +346,8 @@ import AgoraWidget
             }
         }
         
-        boardComponent.updateBoardRatio()
-        
         contentView.layoutIfNeeded()
+        boardComponent.updateBoardRatio()
     }
 }
 
@@ -447,11 +442,16 @@ extension FcrSmallUIScene: FcrDetachedStreamWindowUIComponentDelegate {
 }
 
 // MARK: - AgoraCloudUIComponentDelegate
-extension FcrSmallUIScene: FcrCloudUIComponentDelegate {
-    func onOpenAlfCourseware(urlString: String,
-                             resourceId: String) {
-        webViewComponent.openWebView(urlString: urlString,
-                                     resourceId: resourceId)
+extension FcrSmallUIScene: FcrCloudDriveUIComponentDelegate {
+    func onSelectedFile(fileJson: [String: Any],
+                        fileExt: String) {
+        switch fileExt {
+        case "alf":
+            webViewComponent.openWebView(fileJson: fileJson)
+        default:
+            boardComponent.openFile(fileJson)
+            break
+        }
     }
 }
 

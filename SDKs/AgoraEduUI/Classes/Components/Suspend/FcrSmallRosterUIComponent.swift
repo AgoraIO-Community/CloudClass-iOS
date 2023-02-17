@@ -19,7 +19,7 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
     /** 轮播 仅教师端*/
     private lazy var carouselTitleLabel: UILabel = {
         let label = UILabel(frame: .zero)
-        label.text = "fcr_user_list_carousel_setting".agedu_localized()
+        label.text = "fcr_user_list_carousel_setting".edu_ui_localized()
         return label
     }()
     private lazy var carouselSwitch: UISwitch = {
@@ -58,7 +58,7 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                    bundle: nil)
         
         widgetController.add(self,
-                             widgetId: kBoardWidgetId)
+                             widgetId: BoardWidgetId)
     }
     
     required init?(coder: NSCoder) {
@@ -191,7 +191,7 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
                          !list.contains(model.uuid))
             let signal =  AgoraBoardWidgetSignal.updateGrantedUsers(ifAdd ? .add([model.uuid]) : .delete([model.uuid]))
             if let message = signal.toMessageString() {
-                widgetController.sendMessage(toWidget: kBoardWidgetId,
+                widgetController.sendMessage(toWidget: BoardWidgetId,
                                              message: message)
             }
         case .camera:
@@ -226,13 +226,13 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
             guard model.kickEnable else {
                 return
             }
-            let kickTitle = "fcr_user_kick_out".agedu_localized()
+            let kickTitle = "fcr_user_kick_out".edu_ui_localized()
             
-            let kickOnceOption = "fcr_user_kick_out_once".agedu_localized()
-            let kickForeverOption = "fcr_user_kick_out_forever".agedu_localized()
+            let kickOnceOption = "fcr_user_kick_out_once".edu_ui_localized()
+            let kickForeverOption = "fcr_user_kick_out_forever".edu_ui_localized()
             
-            let cancelActionTitle = "fcr_user_kick_out_cancel".agedu_localized()
-            let submitActionTitle = "fcr_user_kick_out_submit".agedu_localized()
+            let cancelActionTitle = "fcr_user_kick_out_cancel".edu_ui_localized()
+            let submitActionTitle = "fcr_user_kick_out_submit".edu_ui_localized()
             
             let cancelAction = AgoraAlertAction(title: cancelActionTitle)
             
@@ -307,7 +307,7 @@ private extension FcrSmallRosterUIComponent {
 extension FcrSmallRosterUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kBoardWidgetId,
+        guard widgetId == BoardWidgetId,
               let signal = message.toBoardSignal() else {
             return
         }

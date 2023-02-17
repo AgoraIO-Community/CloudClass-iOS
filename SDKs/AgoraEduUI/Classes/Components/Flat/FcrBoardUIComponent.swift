@@ -32,7 +32,7 @@ class FcrBoardUIComponent: FcrUIComponent {
         }
     }
     
-    var localGranted = false {
+   var localGranted = false {
         didSet {
             guard localGranted != oldValue else {
                 return
@@ -43,7 +43,7 @@ class FcrBoardUIComponent: FcrUIComponent {
             let msgKey = localGranted ? "fcr_netless_board_granted" : "fcr_netless_board_ungranted"
             let type: AgoraToastType = localGranted ? .notice : .error
             
-            AgoraToast.toast(message: msgKey.agedu_localized(),
+            AgoraToast.toast(message: msgKey.edu_ui_localized(),
                              type: type)
         }
     }
@@ -55,24 +55,15 @@ class FcrBoardUIComponent: FcrUIComponent {
     
     var subRoom: AgoraEduSubRoomContext?
     
-    private var roomProperties: [String: Any]? {
-        get {
-            guard let subRoom = subRoom else {
-                return roomController.getRoomProperties()
-            }
-            
-            return subRoom.getSubRoomProperties()
-        }
-    }
-    private var boardWidget: AgoraBaseWidget?
     private(set) weak var delegate: FcrBoardUIComponentDelegate?
+    private var widget: AgoraBaseWidget?
     
     /** Data */
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
          widgetController: AgoraEduWidgetContext,
          mediaController: AgoraEduMediaContext,
-        subRoom: AgoraEduSubRoomContext? = nil,
+         subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrBoardUIComponentDelegate? = nil) {
         self.roomController = roomController
         self.userController = userController
@@ -85,7 +76,7 @@ class FcrBoardUIComponent: FcrUIComponent {
         super.init(nibName: nil,
                    bundle: nil)
     }
-    
+        
     func saveBoard() {
         sendSignal(.saveBoard)
     }
@@ -120,19 +111,20 @@ class FcrBoardUIComponent: FcrUIComponent {
         mediaController.registerMediaEventHandler(self)
         widgetController.add(self)
         
-        guard widgetController.getWidgetActivity(kBoardWidgetId) else {
+        guard widgetController.getWidgetActivity(BoardWidgetId) else {
             delegate?.onBoardActiveStateChanged(isActive: false)
             return
         }
         
         delegate?.onBoardActiveStateChanged(isActive: true)
         
-        joinBoardWidget()
+        initWidget()
     }
     
-    func onGrantedUsersChanged(oldList: Array<String>,
-                               newList: Array<String>) {
+    func onGrantedUsersChanged(oldList: [String],
+                               newList: [String]) {
         let localUser = userController.getLocalUserInfo()
+        
         if localUser.userRole == .teacher {
             localGranted = true
         } else {
@@ -153,7 +145,18 @@ class FcrBoardUIComponent: FcrUIComponent {
         
         widgetController.remove(self)
         
-        deinitBoardWidget()
+        deinitWidget()
+    }
+    
+    func openFile(_ fileJson: [String: Any]) {
+        let messageJson = ["openFile": fileJson]
+        
+        guard let message = messageJson.jsonString() else {
+            return
+        }
+        
+        widgetController.sendMessage(toWidget: BoardWidgetId,
+                                     message: message)
     }
 }
 
@@ -174,14 +177,15 @@ private extension FcrBoardUIComponent {
         guard let message = signal.toMessageString() else {
             return
         }
-        widgetController.sendMessage(toWidget: kBoardWidgetId,
+        widgetController.sendMessage(toWidget: BoardWidgetId,
                                      message: message)
     }
     
-    func joinBoardWidget() {
+    func initWidget() {
         guard UIConfig.netlessBoard.enable,
-              let boardConfig = widgetController.getWidgetConfig(kBoardWidgetId),
-              self.boardWidget == nil else {
+              let boardConfig = widgetController.getWidgetConfig(BoardWidgetId),
+              self.widget == nil
+        else {
             return
         }
         
@@ -194,20 +198,21 @@ private extension FcrBoardUIComponent {
         widget.view.layer.borderWidth = config.borderWidth
         
         view.addSubview(widget.view)
-        boardWidget = widget
-
+        
         widget.view.mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         
+        self.widget = widget
+        
         sendSignal(.joinBoard)
     }
     
-    func deinitBoardWidget() {
-        boardWidget?.view.removeFromSuperview()
-        boardWidget = nil
+    func deinitWidget() {
+        widget?.view.removeFromSuperview()
+        widget = nil
         widgetController.remove(self,
-                                widgetId: kBoardWidgetId)
+                                widgetId: BoardWidgetId)
     }
     
     func handleAudioMixing(_ type: AgoraBoardWidgetAudioMixingRequestType) {
@@ -240,16 +245,16 @@ private extension FcrBoardUIComponent {
     func handlePhotoNoAuth(_ result: FcrBoardWidgetSnapshotResult) {
         switch result {
         case .savedToAlbum:
-            AgoraToast.toast(message: "fcr_savecanvas_tips_save_successfully".agedu_localized(),
+            AgoraToast.toast(message: "fcr_savecanvas_tips_save_successfully".edu_ui_localized(),
                              type: .notice)
         case .noAlbumAuth:
-            let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".agedu_localized())
-            let content = "fcr_savecanvas_tips_save_failed_tips".agedu_localized()
+            let action = AgoraAlertAction(title: "fcr_savecanvas_tips_save_failed_sure".edu_ui_localized())
+            let content = "fcr_savecanvas_tips_save_failed_tips".edu_ui_localized()
             
             showAlert(contentList: [content],
                       actions: [action])
         case .failureToSave:
-            AgoraToast.toast(message: "fcr_savecanvas_tips_save_failed".agedu_localized(),
+            AgoraToast.toast(message: "fcr_savecanvas_tips_save_failed".edu_ui_localized(),
                              type: .error)
         }
     }
@@ -259,7 +264,7 @@ private extension FcrBoardUIComponent {
 extension FcrBoardUIComponent: AgoraWidgetMessageObserver {
     func onMessageReceived(_ message: String,
                            widgetId: String) {
-        guard widgetId == kBoardWidgetId,
+        guard widgetId == BoardWidgetId,
               let signal = message.toBoardSignal() else {
             return
         }
@@ -279,21 +284,21 @@ extension FcrBoardUIComponent: AgoraWidgetMessageObserver {
 
 extension FcrBoardUIComponent: AgoraWidgetActivityObserver {
     func onWidgetActive(_ widgetId: String) {
-        guard widgetId == kBoardWidgetId else {
+        guard widgetId == BoardWidgetId else {
             return
         }
         delegate?.onBoardActiveStateChanged(isActive: true)
         
-        joinBoardWidget()
+        initWidget()
     }
     
     func onWidgetInactive(_ widgetId: String) {
-        guard widgetId == kBoardWidgetId else {
+        guard widgetId == BoardWidgetId else {
             return
         }
         delegate?.onBoardActiveStateChanged(isActive: false)
         
-        deinitBoardWidget()
+        deinitWidget()
     }
 }
 
@@ -322,7 +327,7 @@ extension FcrBoardUIComponent: AgoraEduSubRoomHandler {
     }
     
     func onSubRoomClosed() {
-        deinitBoardWidget()
+        deinitWidget()
     }
 }
 

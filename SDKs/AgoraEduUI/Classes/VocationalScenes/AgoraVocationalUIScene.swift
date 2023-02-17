@@ -99,7 +99,7 @@ import AgoraWidget
                                                                      mediaController: contextPool.media,
                                                                      widgetController: contextPool.widget)
     /** 云盘 控制器（仅教师端）*/
-    private lazy var cloudController = FcrCloudUIComponent(roomController: contextPool.room,
+    private lazy var cloudController = FcrCloudDriveUIComponent(roomController: contextPool.room,
                                                            widgetController: contextPool.widget,
                                                            userController: contextPool.user,
                                                            delegate: nil)
@@ -116,7 +116,7 @@ import AgoraWidget
     private var isJoinedRoom = false
     
     private lazy var watermarkWidget: AgoraBaseWidget? = {
-        guard let config = contextPool.widget.getWidgetConfig(kWatermarkWidgetId) else {
+        guard let config = contextPool.widget.getWidgetConfig(WatermarkWidgetId) else {
             return nil
         }
         return contextPool.widget.create(config)
