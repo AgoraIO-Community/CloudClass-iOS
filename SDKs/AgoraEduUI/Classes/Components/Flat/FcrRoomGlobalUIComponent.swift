@@ -181,7 +181,6 @@ extension FcrRoomGlobalUIComponent: AgoraEduUserHandler {
             return
         }
         
-        // 老师邀请你上台了，与大家积极互动吧
         let message = "fcr_user_local_start_co_hosting".edu_ui_localized()
         
         AgoraToast.toast(message: message,

@@ -107,8 +107,6 @@ class FcrDetachedStreamWindowUIComponent: UIViewController {
                         syncFrame: frame,
                         animation: false)
         }
-        
-        print("----+++ frame: \(view.frame)")
     }
     
     public func onAddedRenderWidget(widgetView: UIView) {
