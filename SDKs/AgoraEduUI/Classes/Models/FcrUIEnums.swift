@@ -1,33 +1,23 @@
 //
 //  FcrUIEnums.swift
-//  AgoraClassroomSDK_iOS
+//  AgoraEduUI
 //
 //  Created by Cavan on 2022/4/26.
 //
 
 import AgoraUIBaseViews
 
-// MARK: - Render
-enum AgoraRenderUserRole {
-    case teacher, student
-}
-
-enum AgoraRenderUserState {
-    case normal, none, window
+// MARK: - Layout
+struct FcrAreaViewType: OptionSet {
+    let rawValue: Int
     
-    var image: UIImage? {
-        switch self {
-        case .none:   return UIConfig.studentVideo.mask.noUserImage
-        default:      return nil
-        }
-    }
+    static let none         = FcrAreaViewType(rawValue: 0)
+    static let stage        = FcrAreaViewType(rawValue: 1 << 0)
+    static let videoGallery = FcrAreaViewType(rawValue: 1 << 1)
 }
 
-enum AgoraRenderMediaState {
-    case normal, deviceOff, streamForbidden
-}
-
-enum FcrWindowRenderMediaViewState {
+// MARK: - Stream window
+enum FcrStreamWindowMediaViewState {
     case none(UIImage)
     case hasStreamPublishPrivilege(UIImage)
     case mediaSourceOpen(UIImage)
@@ -49,13 +39,13 @@ enum FcrWindowRenderMediaViewState {
         }
     }
     
-    static func ==(left: FcrWindowRenderMediaViewState,
-                   right: FcrWindowRenderMediaViewState) -> Bool {
+    static func ==(left: FcrStreamWindowMediaViewState,
+                   right: FcrStreamWindowMediaViewState) -> Bool {
         return (left.intValue == right.intValue)
     }
     
-    static func !=(left: FcrWindowRenderMediaViewState,
-                   right: FcrWindowRenderMediaViewState) -> Bool {
+    static func !=(left: FcrStreamWindowMediaViewState,
+                   right: FcrStreamWindowMediaViewState) -> Bool {
         return (left.intValue != right.intValue)
     }
 }
@@ -90,8 +80,8 @@ enum FcrBoardPrivilegeViewState {
     }
 }
 
-enum FcrWindowRenderViewState {
-    case none, show(FcrWindowRenderViewData), hide(FcrWindowRenderViewData)
+enum FcrTachedWindowRenderViewState {
+    case none, show(FcrStreamWindowViewData), hide(FcrStreamWindowViewData)
     
     var isNone: Bool {
         switch self {
@@ -100,7 +90,7 @@ enum FcrWindowRenderViewState {
         }
     }
     
-    var data: FcrWindowRenderViewData? {
+    var data: FcrStreamWindowViewData? {
         switch self {
         case .show(let data): return data
         case .hide(let data): return data
@@ -131,7 +121,7 @@ enum FcrWindowRenderViewState {
     }
     
     static func create(isHide: Bool,
-                       data: FcrWindowRenderViewData) -> FcrWindowRenderViewState {
+                       data: FcrStreamWindowViewData) -> FcrTachedWindowRenderViewState {
         if isHide {
             return .hide(data)
         } else {
@@ -139,38 +129,23 @@ enum FcrWindowRenderViewState {
         }
     }
     
-    static func ==(left: FcrWindowRenderViewState,
-                   right: FcrWindowRenderViewState) -> Bool {
+    static func ==(left: FcrTachedWindowRenderViewState,
+                   right: FcrTachedWindowRenderViewState) -> Bool {
         guard left.intValue == right.intValue else {
             return false
         }
         
         guard let leftData = left.data,
               let rightData = right.data else {
-            return false
-        }
+                  return false
+              }
         
         return (leftData == rightData)
     }
     
-    static func !=(left: FcrWindowRenderViewState,
-                   right: FcrWindowRenderViewState) -> Bool {
+    static func !=(left: FcrTachedWindowRenderViewState,
+                   right: FcrTachedWindowRenderViewState) -> Bool {
         return !(left == right)
-    }
-}
-
-// MARK: - StreamWindow
-enum AgoraStreamWindowType: Equatable {
-    case video(cameraInfo: AgoraStreamWindowCameraInfo)
-    case screen(sharingInfo: AgoraStreamWindowSharingInfo)
-    
-    static func == (lhs: Self,
-                    rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-        case (let .video(_), let .video(_)):   return true
-        case (let .screen(_), let .screen(_)): return true
-        default:                               return false
-        }
     }
 }
 
@@ -374,4 +349,8 @@ enum AgoraBoardToolMainType: Int, CaseIterable {
         case .clear, .pre ,.next:                      return false
         }
     }
+}
+
+enum FcrTeacherInRoomType {
+    case none, main, localSub, otherSub
 }

@@ -9,33 +9,30 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import Foundation
 
-class FcrSmallWindowRenderUIComponent: UIViewController {
-    let coHost: FcrCoHostWindowRenderUIComponent
-    let teacher: FcrTeacherWindowRenderUIComponent
+class FcrSmallTachedWindowUIComponent: UIViewController {
+    let coHost: FcrCoHostTachedWindowUIComponent
+    let teacher: FcrTeacherTachedWindowUIComponent
     
-    private weak var delegate: FcrWindowRenderUIComponentDelegate?
+    private weak var delegate: FcrTachedStreamWindowUIComponentDelegate?
     
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
          streamController: AgoraEduStreamContext,
          mediaController: AgoraEduMediaContext,
-         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrWindowRenderUIComponentDelegate? = nil,
+         delegate: FcrTachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
-        self.coHost = FcrCoHostWindowRenderUIComponent(roomController: roomController,
+        self.coHost = FcrCoHostTachedWindowUIComponent(roomController: roomController,
                                                        userController: userController,
                                                        streamController: streamController,
                                                        mediaController: mediaController,
-                                                       widgetController: widgetController,
                                                        subRoom: subRoom,
                                                        componentDataSource: componentDataSource)
         
-        self.teacher = FcrTeacherWindowRenderUIComponent(roomController: roomController,
+        self.teacher = FcrTeacherTachedWindowUIComponent(roomController: roomController,
                                                          userController: userController,
                                                          streamController: streamController,
                                                          mediaController: mediaController,
-                                                         widgetController: widgetController,
                                                          subRoom: subRoom)
         
         super.init(nibName: nil,
@@ -76,7 +73,7 @@ class FcrSmallWindowRenderUIComponent: UIViewController {
         return nil
     }
     
-    func getItem(streamId: String) -> FcrWindowRenderViewState? {
+    func getItem(streamId: String) -> FcrTachedWindowRenderViewState? {
         if let item = teacher.getItem(streamId: streamId) {
             return item
         } else if let item = coHost.getItem(streamId: streamId) {
@@ -86,7 +83,7 @@ class FcrSmallWindowRenderUIComponent: UIViewController {
         return nil
     }
     
-    func updateItem(_ item: FcrWindowRenderViewState,
+    func updateItem(_ item: FcrTachedWindowRenderViewState,
                     animation: Bool = true) {
         teacher.updateItem(item,
                            animation: animation)
@@ -95,7 +92,7 @@ class FcrSmallWindowRenderUIComponent: UIViewController {
     }
 }
 
-extension FcrSmallWindowRenderUIComponent: AgoraUIContentContainer, AgoraUIActivity {
+extension FcrSmallTachedWindowUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     func initViews() {
         addChild(coHost)
         addChild(teacher)
@@ -136,7 +133,7 @@ extension FcrSmallWindowRenderUIComponent: AgoraUIContentContainer, AgoraUIActiv
     }
 }
 
-private extension FcrSmallWindowRenderUIComponent {
+private extension FcrSmallTachedWindowUIComponent {
     func updateViewFrame() {
         let coHostCount = CGFloat(coHost.dataSource.count)
         let teacherCount = CGFloat(teacher.dataSource.count)
@@ -170,17 +167,23 @@ private extension FcrSmallWindowRenderUIComponent {
     }
 }
 
-extension FcrSmallWindowRenderUIComponent: FcrWindowRenderUIComponentDelegate {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didDataSouceCountUpdated count: Int) {
+extension FcrSmallTachedWindowUIComponent: FcrTachedStreamWindowUIComponentDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didDataSouceCountUpdated count: Int) {
         updateViewFrame()
     }
     
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didPressItem item: FcrWindowRenderViewState,
-                           view: UIView) {
-        delegate?.renderUIComponent(component,
-                                    didPressItem: item,
-                                    view: view)
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {
+        delegate?.tachedStreamWindowUIComponent(component,
+                                                didPressItem: item,
+                                                view: view)
+    }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        return delegate?.tachedStreamWindowUIComponent(component,
+                                                       shouldItemIsHide: streamId) ?? false
     }
 }

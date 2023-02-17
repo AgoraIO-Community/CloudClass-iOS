@@ -23,7 +23,9 @@ import UIKit
     /** 音频流 控制器（自身不包含UI）*/
     private lazy var audioComponent = FcrAudioStreamUIComponent(roomController: contextPool.room,
                                                                 streamController: contextPool.stream,
-                                                                mediaController: contextPool.media)
+                                                                userController: contextPool.user,
+                                                                mediaController: contextPool.media,
+                                                                subscribeAll: true)
     
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateComponent = FcrClassStateUIComponent(roomController: contextPool.room,
@@ -59,11 +61,10 @@ import UIKit
                                                               delegate: self)
     
     /** 渲染 控制器*/
-    private lazy var renderComponent = FcrOneToOneWindowRenderUIComponent(roomController: contextPool.room,
+    private lazy var renderComponent = FcrOneToOneTachedWindowUIComponent(roomController: contextPool.room,
                                                                           userController: contextPool.user,
                                                                           mediaController: contextPool.media,
                                                                           streamController: contextPool.stream,
-                                                                          widgetController: contextPool.widget,
                                                                           delegate: self,
                                                                           componentDataSource: self)
                                                                           
@@ -96,15 +97,13 @@ import UIKit
                                                                     monitorController: contextPool.monitor,
                                                                     widgetController: contextPool.widget)
     /** 大窗 控制器*/
-    private lazy var windowComponent = FcrStreamWindowUIComponent(roomController: contextPool.room,
-                                                                  userController: contextPool.user,
-                                                                  streamController: contextPool.stream,
-                                                                  mediaController: contextPool.media,
-                                                                  widgetController: contextPool.widget,
-                                                                  delegate: self,
-                                                                  componentDataSource: self)
-    
-    private var isJoinedRoom = false
+    private lazy var windowComponent = FcrDetachedStreamWindowUIComponent(roomController: contextPool.room,
+                                                                          userController: contextPool.user,
+                                                                          streamController: contextPool.stream,
+                                                                          mediaController: contextPool.media,
+                                                                          widgetController: contextPool.widget,
+                                                                          delegate: self,
+                                                                          componentDataSource: self)
     
     private var fileWriter = FcrUIFileWriter()
     
@@ -129,18 +128,13 @@ import UIKit
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        contextPool.room.joinRoom { [weak self] in
+        if contextPool.user.getLocalUserInfo().userRole != .observer {
+            contextPool.media.openLocalDevice(systemDevice: .frontCamera)
+            contextPool.media.openLocalDevice(systemDevice: .mic)
+        }
+        
+        contextPool.room.joinRoom {
             AgoraLoading.hide()
-            guard let `self` = self else {
-                return
-            }
-            self.isJoinedRoom = true
-            
-            // 打开本地音视频设备
-            if self.contextPool.user.getLocalUserInfo().userRole != .observer {
-                self.contextPool.media.openLocalDevice(systemDevice: .frontCamera)
-                self.contextPool.media.openLocalDevice(systemDevice: .mic)
-            }
         } failure: { [weak self] error in
             AgoraLoading.hide()
             self?.exitScene(reason: .normal)
@@ -156,13 +150,8 @@ import UIKit
                 make?.right.equalTo()(contentView.mas_right)
             }
         }
-    }
-    
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if isJoinedRoom == false {
-            AgoraLoading.loading()
-        }
+        
+        AgoraLoading.loading(in: view)
     }
     
     public override func didClickCtrlMaskView() {
@@ -363,12 +352,9 @@ extension FcrOneToOneUIScene: FcrSettingUIComponentDelegate {
         }
     }
 }
+
 // MARK: - AgoraBoardUIComponentDelegate
 extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
-    func onStageStateChanged(stageOn: Bool) {
-        
-    }
-    
     func onBoardActiveStateChanged(isActive: Bool) {
         toolCollectionComponent.updateBoardActiveState(isActive: isActive)
     }
@@ -399,20 +385,22 @@ extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
                                               userList: [String]) {
         for (index, item) in renderComponent.dataSource.enumerated() {
             guard var data = item.data,
-                  userList.contains(data.userId) else {
-                      continue
-                  }
+                  userList.contains(data.userId)
+            else {
+                continue
+            }
             
             guard let user = contextPool.user.getUserInfo(userUuid: data.userId),
-                  user.userRole != .teacher else {
-                      continue
-                  }
+                  user.userRole != .teacher
+            else {
+                continue
+            }
             
             let privilege = FcrBoardPrivilegeViewState.create(privilege)
             data.boardPrivilege = privilege
             
-            let new = FcrWindowRenderViewState.create(isHide: item.isHide,
-                                                      data: data)
+            let new = FcrTachedWindowRenderViewState.create(isHide: item.isHide,
+                                                            data: data)
             
             renderComponent.updateItem(new,
                                        index: index)
@@ -443,7 +431,7 @@ extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
 }
 
 // MARK: - AgoraWindowUIComponentDelegate
-extension FcrOneToOneUIScene: FcrStreamWindowUIComponentDelegate {
+extension FcrOneToOneUIScene: FcrDetachedStreamWindowUIComponentDelegate {
     func onNeedWindowRenderViewFrameOnTopWindow(userId: String) -> CGRect? {
         guard let renderView = renderComponent.getRenderView(userId: userId) else {
             return nil
@@ -457,12 +445,13 @@ extension FcrOneToOneUIScene: FcrStreamWindowUIComponentDelegate {
     
     func onWillStartRenderVideoStream(streamId: String) {
         guard let item = renderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
-        let new = FcrWindowRenderViewState.create(isHide: true,
-                                                  data: data)
+        let new = FcrTachedWindowRenderViewState.create(isHide: true,
+                                                        data: data)
         
         renderComponent.updateItem(new,
                                    animation: false)
@@ -470,12 +459,13 @@ extension FcrOneToOneUIScene: FcrStreamWindowUIComponentDelegate {
     
     func onDidStopRenderVideoStream(streamId: String) {
         guard let item = renderComponent.getItem(streamId: streamId),
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
-        let new = FcrWindowRenderViewState.create(isHide: false,
-                                                  data: data)
+        let new = FcrTachedWindowRenderViewState.create(isHide: false,
+                                                        data: data)
         
         renderComponent.updateItem(new,
                                    animation: false)
@@ -634,14 +624,15 @@ extension FcrOneToOneUIScene: FcrToolCollectionUIComponentDelegate {
 }
 
 // MARK: - FcrWindowRenderUIComponentDelegate
-extension FcrOneToOneUIScene: FcrWindowRenderUIComponentDelegate {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didPressItem item: FcrWindowRenderViewState,
-                           view: UIView) {
+extension FcrOneToOneUIScene: FcrTachedStreamWindowUIComponentDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
-              let data = item.data else {
-                  return
-              }
+              let data = item.data
+        else {
+            return
+        }
         
         let rect = view.convert(view.bounds,
                                 to: contentView)
@@ -650,6 +641,7 @@ extension FcrOneToOneUIScene: FcrWindowRenderUIComponentDelegate {
         let userId = data.userId
         
         var role = AgoraEduContextUserRole.student
+        
         if let teacehr = contextPool.user.getUserList(role: .teacher)?.first,
            teacehr.userUuid == userId {
             role = .teacher
@@ -676,6 +668,15 @@ extension FcrOneToOneUIScene: FcrWindowRenderUIComponentDelegate {
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(self.renderMenuComponent.menuWidth)
             }
+        }
+    }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        if let _ = windowComponent.dataSource.firstItem(streamId: streamId) {
+            return true
+        } else {
+            return false
         }
     }
 }

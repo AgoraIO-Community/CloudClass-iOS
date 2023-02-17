@@ -11,8 +11,10 @@ import AgoraEduCore
 class FcrAudioStreamUIComponent: FcrUIComponent {
     private let roomController: AgoraEduRoomContext
     private let streamController: AgoraEduStreamContext
+    private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext
-    private var subRoom: AgoraEduSubRoomContext?
+    private let subRoom: AgoraEduSubRoomContext?
+    private let subscribeAll: Bool
     
     private var roomId: String {
         if let `subRoom` = subRoom {
@@ -24,13 +26,18 @@ class FcrAudioStreamUIComponent: FcrUIComponent {
     
     init(roomController: AgoraEduRoomContext,
          streamController: AgoraEduStreamContext,
+         userController: AgoraEduUserContext,
          mediaController: AgoraEduMediaContext,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         subscribeAll: Bool = false) {
         self.roomController = roomController
         self.streamController = streamController
+        self.userController = userController
         self.mediaController = mediaController
         
         self.subRoom = subRoom
+        
+        self.subscribeAll = subscribeAll
         
         super.init(nibName: nil,
                    bundle: nil)
@@ -50,6 +57,7 @@ class FcrAudioStreamUIComponent: FcrUIComponent {
         }
         
         streamController.registerStreamEventHandler(self)
+        userController.registerUserEventHandler(self)
     }
 }
 
@@ -70,8 +78,11 @@ private extension FcrAudioStreamUIComponent {
         }
         
         for stream in list {
-            mediaController.startPlayAudio(roomUuid: roomId,
-                                           streamUuid: stream.streamUuid)
+            guard stream.hasAudio else {
+                continue
+            }
+            
+            startPlayAudioStream(stream: stream)
         }
     }
     
@@ -81,9 +92,43 @@ private extension FcrAudioStreamUIComponent {
         }
         
         for stream in list {
-            mediaController.stopPlayAudio(roomUuid: roomId,
-                                          streamUuid: stream.streamUuid)
+            stopPlayAudioStream(stream: stream)
         }
+    }
+    
+    func startPlayAudioStream(stream: AgoraEduContextStreamInfo) {
+        if subscribeAll {
+            mediaController.startPlayAudio(roomUuid: roomId,
+                                           streamUuid: stream.streamUuid)
+            return
+        }
+        
+        let condition1 = stream.owner.userRole == .teacher
+        let condition2 = streamOwnerIsCoHost(stream: stream)
+        
+        guard condition1 || condition2 else {
+            return
+        }
+        
+        mediaController.startPlayAudio(roomUuid: roomId,
+                                       streamUuid: stream.streamUuid)
+    }
+    
+    func stopPlayAudioStream(stream: AgoraEduContextStreamInfo) {
+        mediaController.stopPlayAudio(roomUuid: roomId,
+                                      streamUuid: stream.streamUuid)
+    }
+    
+    func streamOwnerIsCoHost(stream: AgoraEduContextStreamInfo) -> Bool {
+        guard let list = userController.getCoHostList() else {
+            return false
+        }
+        
+        guard let _ = list.firstIndex(where: {$0.userUuid == stream.owner.userUuid}) else {
+            return false
+        }
+        
+        return true
     }
 }
 
@@ -106,24 +151,35 @@ extension FcrAudioStreamUIComponent: AgoraEduStreamHandler {
             return
         }
         
-        mediaController.startPlayAudio(roomUuid: roomId,
-                                       streamUuid: stream.streamUuid)
+        startPlayAudioStream(stream: stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
         if stream.hasAudio {
-            mediaController.startPlayAudio(roomUuid: roomId,
-                                           streamUuid: stream.streamUuid)
+            startPlayAudioStream(stream: stream)
         } else {
-            mediaController.stopPlayAudio(roomUuid: roomId,
-                                          streamUuid: stream.streamUuid)
+            stopPlayAudioStream(stream: stream)
         }
     }
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        mediaController.stopPlayAudio(roomUuid: roomId,
-                                      streamUuid: stream.streamUuid)
+        stopPlayAudioStream(stream: stream)
+    }
+}
+
+extension FcrAudioStreamUIComponent: AgoraEduUserHandler {
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        for user in userList {
+            guard let streams = streamController.getStreamList(userUuid: user.userUuid) else {
+                continue
+            }
+            
+            for stream in streams {
+                stopPlayAudioStream(stream: stream)
+            }
+        }
     }
 }

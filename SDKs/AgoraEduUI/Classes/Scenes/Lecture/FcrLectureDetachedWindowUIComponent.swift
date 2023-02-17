@@ -5,51 +5,53 @@
 //  Created by Cavan on 2022/6/17.
 //
 
-import AgoraEduCore
 import AgoraUIBaseViews
+import AgoraEduCore
 import AgoraWidget
 import UIKit
 
-protocol FcrLectureStreamWindowUIComponentDelegate: NSObjectProtocol {
-    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+protocol FcrLectureDetachedWindowUIComponentDelegate: NSObjectProtocol {
+    func onStreamWindow(_ component: FcrLectureDetachedWindowUIComponent,
                         didPressUser uuid: String,
                         view: UIView)
     
-    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        starDrag item: FcrStreamWindowWidgetItem,
+    func onStreamWindow(_ component: FcrLectureDetachedWindowUIComponent,
+                        starDrag item: FcrDetachedStreamWindowWidgetItem,
+                        view: UIView,
                         location: CGPoint)
     
-    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        dragging item: FcrStreamWindowWidgetItem,
+    func onStreamWindow(_ component: FcrLectureDetachedWindowUIComponent,
+                        dragging item: FcrDetachedStreamWindowWidgetItem,
                         to location: CGPoint)
     
-    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        didEndDrag item: FcrStreamWindowWidgetItem,
+    func onStreamWindow(_ component: FcrLectureDetachedWindowUIComponent,
+                        didEndDrag item: FcrDetachedStreamWindowWidgetItem,
                         location: CGPoint) -> CGRect?
 }
 
-extension FcrLectureStreamWindowUIComponentDelegate {
-    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
+extension FcrLectureDetachedWindowUIComponentDelegate {
+    func onStreamWindow(_ component: FcrLectureDetachedWindowUIComponent,
                         didPressUser uuid: String,
                         view: UIView) {}
     
-    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        starDrag item: FcrStreamWindowWidgetItem,
+    func onStreamWindow(_ component: FcrLectureDetachedWindowUIComponent,
+                        starDrag item: FcrDetachedStreamWindowWidgetItem,
+                        view: UIView,
                         location: CGPoint) {}
     
-    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        dragging item: FcrStreamWindowWidgetItem,
+    func onStreamWindow(_ component: FcrLectureDetachedWindowUIComponent,
+                        dragging item: FcrDetachedStreamWindowWidgetItem,
                         to location: CGPoint) {}
     
-    func onStreamWindow(_ component: FcrLectureStreamWindowUIComponent,
-                        didEndDrag item: FcrStreamWindowWidgetItem,
+    func onStreamWindow(_ component: FcrLectureDetachedWindowUIComponent,
+                        didEndDrag item: FcrDetachedStreamWindowWidgetItem,
                         location: CGPoint)  -> CGRect? {
         return nil
     }
 }
 
-class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
-    public weak var actionDelegate: FcrLectureStreamWindowUIComponentDelegate?
+class FcrLectureDetachedWindowUIComponent: FcrDetachedStreamWindowUIComponent {
+    public weak var actionDelegate: FcrLectureDetachedWindowUIComponentDelegate?
     
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
@@ -57,9 +59,9 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
          mediaController: AgoraEduMediaContext,
          widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrStreamWindowUIComponentDelegate? = nil,
+         delegate: FcrDetachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil,
-         actionDelegate: FcrLectureStreamWindowUIComponentDelegate? = nil) {
+         actionDelegate: FcrLectureDetachedWindowUIComponentDelegate? = nil) {
         super.init(roomController: roomController,
                    userController: userController,
                    streamController: streamController,
@@ -151,12 +153,16 @@ class FcrLectureStreamWindowUIComponent: FcrStreamWindowUIComponent {
         doubleTap.numberOfTouchesRequired = 2
         tap.require(toFail: doubleTap)
         
-        widgetView.addGestureRecognizers([drag, tap, doubleTap])
+        let recognizers = [drag,
+                           tap,
+                           doubleTap]
+        
+        widgetView.addGestureRecognizers(recognizers)
     }
 }
 
 // MARK: - Teacher Create Widget
-private extension FcrLectureStreamWindowUIComponent {
+private extension FcrLectureDetachedWindowUIComponent {
     func widgetInitialPosition() ->  AgoraWidgetFrame {
         let count = CGFloat(dataSource.count)
         let x = (count + 1) * AgoraFit.scale(5)
@@ -172,7 +178,8 @@ private extension FcrLectureStreamWindowUIComponent {
     
     @objc func onDrag(_ sender: UIPanGestureRecognizer) {
         guard let widgetView = sender.view,
-              let item = dataSource.first(where: {$0.widget?.view == widgetView})
+              let widget = widgets.values.first(where: {$0.view == widgetView}),
+              let item = dataSource.first(where: {$0.widgetObjectId == widget.info.widgetId})
         else {
             return
         }
@@ -183,6 +190,7 @@ private extension FcrLectureStreamWindowUIComponent {
         case .began:
             actionDelegate?.onStreamWindow(self,
                                            starDrag: item,
+                                           view: widgetView,
                                            location: point)
         case .changed:
             actionDelegate?.onStreamWindow(self,
@@ -194,10 +202,10 @@ private extension FcrLectureStreamWindowUIComponent {
                                                          location: point) {
                 
                 widgetController.updateWidgetSyncFrame(rect.syncFrameInView(view),
-                                                       widgetId: item.widgetId,
+                                                       widgetId: item.widgetObjectId,
                                                        success: nil)
             } else {
-                widgetController.setWidgetInactive(item.widgetId,
+                widgetController.setWidgetInactive(item.widgetObjectId,
                                                    isRemove: true,
                                                    success: nil)
             }
@@ -208,7 +216,8 @@ private extension FcrLectureStreamWindowUIComponent {
     
     @objc func onTap(_ sender: UITapGestureRecognizer) {
         guard let widgetView = sender.view,
-              let item = dataSource.first(where: {$0.widget?.view == widgetView})
+              let widget = widgets.values.first(where: {$0.view == widgetView}),
+              let item = dataSource.first(where: {$0.widgetObjectId == widget.info.widgetId})
         else {
             return
         }
@@ -223,7 +232,7 @@ private extension FcrLectureStreamWindowUIComponent {
     }
 }
 
-extension FcrLectureStreamWindowUIComponent: UIGestureRecognizerDelegate {
+extension FcrLectureDetachedWindowUIComponent: UIGestureRecognizerDelegate {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
                                   shouldReceive event: UIEvent) -> Bool {
         guard let view = gestureRecognizer.view as? AgoraBaseUIContainer else {

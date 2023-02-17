@@ -9,12 +9,11 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import Foundation
 
-class FcrCoHostWindowRenderUIComponent: FcrWindowRenderUIComponent {
+class FcrCoHostTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let streamController: AgoraEduStreamContext
     private let mediaController: AgoraEduMediaContext
-    private let widgetController: AgoraEduWidgetContext
     private let subRoom: AgoraEduSubRoomContext?
 
     private var roomId: String {
@@ -31,15 +30,13 @@ class FcrCoHostWindowRenderUIComponent: FcrWindowRenderUIComponent {
          userController: AgoraEduUserContext,
          streamController: AgoraEduStreamContext,
          mediaController: AgoraEduMediaContext,
-         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
-         delegate: FcrWindowRenderUIComponentDelegate? = nil,
+         delegate: FcrTachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
         self.roomController = roomController
         self.userController = userController
         self.streamController = streamController
         self.mediaController = mediaController
-        self.widgetController = widgetController
         self.subRoom = subRoom
         self.componentDataSource = componentDataSource
         
@@ -61,7 +58,7 @@ class FcrCoHostWindowRenderUIComponent: FcrWindowRenderUIComponent {
         }
     }
         
-    override func onWillDisplayItem(_ item: FcrWindowRenderViewState,
+    override func onWillDisplayItem(_ item: FcrTachedWindowRenderViewState,
                                     renderView: FcrWindowRenderVideoView) {
         super.onWillDisplayItem(item,
                                 renderView: renderView)
@@ -76,14 +73,13 @@ class FcrCoHostWindowRenderUIComponent: FcrWindowRenderUIComponent {
                                 view: renderView)
             }
         case .hide(let data):
-            stopRenderVideo(streamId: data.streamId,
-                            view: renderView)
+            break
         default:
             break
         }
     }
     
-    override func onDidEndDisplayingItem(_ item: FcrWindowRenderViewState,
+    override func onDidEndDisplayingItem(_ item: FcrTachedWindowRenderViewState,
                                          renderView: FcrWindowRenderVideoView) {
         super.onDidEndDisplayingItem(item,
                                      renderView: renderView)
@@ -98,7 +94,7 @@ class FcrCoHostWindowRenderUIComponent: FcrWindowRenderUIComponent {
     }
 }
 
-extension FcrCoHostWindowRenderUIComponent: AgoraUIActivity {
+extension FcrCoHostTachedWindowUIComponent: AgoraUIActivity {
     func viewWillActive() {
         addItemsOfCoHost()
         
@@ -117,7 +113,7 @@ extension FcrCoHostWindowRenderUIComponent: AgoraUIActivity {
 }
 
 // MARK: - Item
-private extension FcrCoHostWindowRenderUIComponent {
+private extension FcrCoHostTachedWindowUIComponent {
     func addItemsOfCoHost() {
         guard let list = userController.getCoHostList() else {
             return
@@ -162,7 +158,7 @@ private extension FcrCoHostWindowRenderUIComponent {
         deleteItem(of: user.userUuid)
     }
     
-    func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
+    func createItem(with stream: AgoraEduContextStreamInfo) -> FcrTachedWindowRenderViewState {
         var boardPrivilege: Bool = false
         
         let userId = stream.owner.userUuid
@@ -174,14 +170,14 @@ private extension FcrCoHostWindowRenderUIComponent {
         
         let rewardCount = userController.getUserRewardCount(userUuid: userId)
         
-        let data = FcrWindowRenderViewData.create(stream: stream,
+        let data = FcrStreamWindowViewData.create(stream: stream,
                                                   rewardCount: rewardCount,
                                                   boardPrivilege: boardPrivilege)
         
-        let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
+        let hide = getItemIsHidden(streamId: stream.streamUuid)
         
-        let item = FcrWindowRenderViewState.create(isHide: isActive,
-                                                   data: data)
+        let item = FcrTachedWindowRenderViewState.create(isHide: hide,
+                                                         data: data)
         
         return item
     }
@@ -193,9 +189,18 @@ private extension FcrCoHostWindowRenderUIComponent {
         
         return streamList.first(where: {$0.videoSourceType == .camera})
     }
+    
+    func getItemIsHidden(streamId: String) -> Bool {
+        guard let `delegate` = delegate else {
+            return false
+        }
+        
+        return delegate.tachedStreamWindowUIComponent(self,
+                                                      shouldItemIsHide: streamId)
+    }
 }
 
-private extension FcrCoHostWindowRenderUIComponent {    
+private extension FcrCoHostTachedWindowUIComponent {    
     func startRenderVideo(streamId: String,
                           view: FcrWindowRenderVideoView) {
         view.renderingStream = streamId
@@ -216,19 +221,19 @@ private extension FcrCoHostWindowRenderUIComponent {
     }
 }
 
-extension FcrCoHostWindowRenderUIComponent: AgoraEduRoomHandler {
+extension FcrCoHostTachedWindowUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
     }
 }
 
-extension FcrCoHostWindowRenderUIComponent: AgoraEduSubRoomHandler {
+extension FcrCoHostTachedWindowUIComponent: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
         viewWillActive()
     }
 }
 
-extension FcrCoHostWindowRenderUIComponent: AgoraEduUserHandler {
+extension FcrCoHostTachedWindowUIComponent: AgoraEduUserHandler {
     func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
                                operatorUser: AgoraEduContextUserInfo?) {
         for user in userList {
@@ -269,7 +274,7 @@ extension FcrCoHostWindowRenderUIComponent: AgoraEduUserHandler {
     }
 }
 
-extension FcrCoHostWindowRenderUIComponent: AgoraEduStreamHandler {
+extension FcrCoHostTachedWindowUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
         guard stream.owner.userRole == .student else {
@@ -289,7 +294,7 @@ extension FcrCoHostWindowRenderUIComponent: AgoraEduStreamHandler {
     }
 }
 
-extension FcrCoHostWindowRenderUIComponent: AgoraEduMediaHandler {
+extension FcrCoHostTachedWindowUIComponent: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
                          streamUuid: String) {
         updateVolume(streamId: streamUuid,

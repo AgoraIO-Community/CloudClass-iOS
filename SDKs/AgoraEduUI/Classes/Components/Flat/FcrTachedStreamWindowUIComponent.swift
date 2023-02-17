@@ -8,37 +8,45 @@
 import AgoraUIBaseViews
 import UIKit
 
-protocol FcrWindowRenderUIComponentDelegate: NSObjectProtocol {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didDataSouceCountUpdated count: Int)
+protocol FcrTachedStreamWindowUIComponentDelegate: NSObjectProtocol {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didDataSouceCountUpdated count: Int)
     
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                           didPressItem item: FcrWindowRenderViewState,
-                           view: UIView)
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView)
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool
 }
 
-extension FcrWindowRenderUIComponentDelegate {
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                            didDataSouceCountUpdated count: Int) {}
+extension FcrTachedStreamWindowUIComponentDelegate {
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didDataSouceCountUpdated count: Int) {}
     
-    func renderUIComponent(_ component: FcrWindowRenderUIComponent,
-                            didPressItem item: FcrWindowRenderViewState,
-                            view: UIView) {}
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {}
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        return true
+    }
 }
 
-class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
+class FcrTachedStreamWindowUIComponent: FcrUIComponent, AgoraUIContentContainer {
     // Data
-    private(set) var dataSource: [FcrWindowRenderViewState] {
+    private(set) var dataSource: [FcrTachedWindowRenderViewState] {
         didSet {
             showScrollButtons()
             
-            delegate?.renderUIComponent(self,
-                                        didDataSouceCountUpdated: dataSource.count)
+            delegate?.tachedStreamWindowUIComponent(self,
+                                                    didDataSouceCountUpdated: dataSource.count)
         }
     }
     
     // backup for `onDidEndDisplaying`
-    private var deletedBackup = [Int: FcrWindowRenderViewState]()
+    private var deletedBackup = [Int: FcrTachedWindowRenderViewState]()
     
     private let maxShowItemCount: Int
     private let reverseItem: Bool
@@ -50,17 +58,17 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
     
     let collectionView: UICollectionView
     
-    weak var delegate: FcrWindowRenderUIComponentDelegate?
+    weak var delegate: FcrTachedStreamWindowUIComponentDelegate?
     
-    init(dataSource: [FcrWindowRenderViewState]? = nil,
+    init(dataSource: [FcrTachedWindowRenderViewState]? = nil,
          layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout(),
          maxShowItemCount: Int = Int.max,
          reverseItem: Bool = false,
-         delegate: FcrWindowRenderUIComponentDelegate? = nil) {
+         delegate: FcrTachedStreamWindowUIComponentDelegate? = nil) {
         if let source = dataSource {
             self.dataSource = source
         } else {
-            self.dataSource = [FcrWindowRenderViewState]()
+            self.dataSource = [FcrTachedWindowRenderViewState]()
         }
         
         self.layout = layout
@@ -187,19 +195,19 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
     }
     
     // Item operation
-    func getItem(userId: String) -> FcrWindowRenderViewState? {
+    func getItem(userId: String) -> FcrTachedWindowRenderViewState? {
         let item = dataSource.firstItem(userId: userId)
         
         return item
     }
     
-    func getItem(streamId: String) -> FcrWindowRenderViewState? {
+    func getItem(streamId: String) -> FcrTachedWindowRenderViewState? {
         let item = dataSource.firstItem(streamId: streamId)
         
         return item
     }
     
-    func addItem(_ item: FcrWindowRenderViewState) {
+    func addItem(_ item: FcrTachedWindowRenderViewState) {
         if let data = item.data,
            let index = dataSource.firstItemIndex(userId: data.userId) {
             
@@ -220,10 +228,11 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
         }
     }
     
-    func updateItem(_ item: FcrWindowRenderViewState,
+    func updateItem(_ item: FcrTachedWindowRenderViewState,
                     animation: Bool = true) {
         guard let data = item.data,
-              let index = dataSource.firstItemIndex(userId: data.userId) else {
+              let index = dataSource.firstItemIndex(userId: data.userId)
+        else {
             return
         }
         
@@ -232,7 +241,7 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
                    animation: animation)
     }
     
-    func updateItem(_ item: FcrWindowRenderViewState,
+    func updateItem(_ item: FcrTachedWindowRenderViewState,
                     index: Int,
                     animation: Bool = true) {
         let prevItem = dataSource[index]
@@ -289,24 +298,24 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
         onDidDeleteItem(item)
     }
     
-    func onDidAddItem(_ item: FcrWindowRenderViewState) {
+    func onDidAddItem(_ item: FcrTachedWindowRenderViewState) {
         
     }
     
-    func onDidUpdateItem(_ item: FcrWindowRenderViewState) {
+    func onDidUpdateItem(_ item: FcrTachedWindowRenderViewState) {
         
     }
     
-    func onDidDeleteItem(_ item: FcrWindowRenderViewState) {
+    func onDidDeleteItem(_ item: FcrTachedWindowRenderViewState) {
         
     }
     
-    func onWillDisplayItem(_ item: FcrWindowRenderViewState,
+    func onWillDisplayItem(_ item: FcrTachedWindowRenderViewState,
                            renderView: FcrWindowRenderVideoView) {
         
     }
     
-    func onDidEndDisplayingItem(_ item: FcrWindowRenderViewState,
+    func onDidEndDisplayingItem(_ item: FcrTachedWindowRenderViewState,
                                 renderView: FcrWindowRenderVideoView) {
         
     }
@@ -371,7 +380,7 @@ class FcrWindowRenderUIComponent: FcrUIComponent, AgoraUIContentContainer {
 }
 
 // MARK: - Private
-private extension FcrWindowRenderUIComponent {
+private extension FcrTachedStreamWindowUIComponent {
     func showScrollButtons() {
         let isHidden = (dataSource.count <= maxShowItemCount)
         
@@ -380,7 +389,7 @@ private extension FcrWindowRenderUIComponent {
     }
     
     func updateCell(_ cell: FcrWindowRenderCell,
-                    with item: FcrWindowRenderViewState) {
+                    with item: FcrTachedWindowRenderViewState) {
         switch item {
         case .none:
             cell.noneView.agora_visible = true
@@ -411,7 +420,7 @@ private extension FcrWindowRenderUIComponent {
     }
     
     func updateRenderView(_ renderView: FcrWindowRenderView,
-                          data: FcrWindowRenderViewData) {
+                          data: FcrStreamWindowViewData) {
         renderView.nameLabel.text = data.userName
         
         renderView.videoView.isHidden = !(data.videoState.isBoth)
@@ -459,7 +468,7 @@ private extension FcrWindowRenderUIComponent {
 }
 
 // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
-extension FcrWindowRenderUIComponent: UICollectionViewDataSource, UICollectionViewDelegate {
+extension FcrTachedStreamWindowUIComponent: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         return dataSource.count
@@ -489,9 +498,9 @@ extension FcrWindowRenderUIComponent: UICollectionViewDataSource, UICollectionVi
         
         let item = dataSource[indexPath.item]
         
-        delegate?.renderUIComponent(self,
-                                     didPressItem: item,
-                                     view: cell)
+        delegate?.tachedStreamWindowUIComponent(self,
+                                                didPressItem: item,
+                                                view: cell)
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -526,7 +535,7 @@ extension FcrWindowRenderUIComponent: UICollectionViewDataSource, UICollectionVi
             return
         }
         
-        var item: FcrWindowRenderViewState
+        var item: FcrTachedWindowRenderViewState
         
         if let state = deletedBackup[indexPath.item] {
             item = state
@@ -545,12 +554,13 @@ extension FcrWindowRenderUIComponent: UICollectionViewDataSource, UICollectionVi
 }
 
 // MARK: - Actions
-extension FcrWindowRenderUIComponent {
+extension FcrTachedStreamWindowUIComponent {
     @objc func onClickPrev(_ sender: UIButton) {
         let indexs = collectionView.indexPathsForVisibleItems
         
         guard let min = indexs.min(),
-              min.item > 0 else {
+              min.item > 0
+        else {
             return
         }
         
@@ -575,7 +585,8 @@ extension FcrWindowRenderUIComponent {
         let indexs = collectionView.indexPathsForVisibleItems
         
         guard let max = indexs.max(),
-              max.item < dataSource.count - 1 else {
+              max.item < dataSource.count - 1
+        else {
             return
         }
         
@@ -597,7 +608,7 @@ extension FcrWindowRenderUIComponent {
     }
 }
 
-fileprivate extension Array where Element == FcrWindowRenderViewState {
+fileprivate extension Array where Element == FcrTachedWindowRenderViewState {
     func firstItemIndex(userId: String) -> Int? {
         let index = firstIndex { (element) in
             guard let data = element.data else {
@@ -622,7 +633,7 @@ fileprivate extension Array where Element == FcrWindowRenderViewState {
         return index
     }
     
-    func firstItem(userId: String) -> FcrWindowRenderViewState? {
+    func firstItem(userId: String) -> FcrTachedWindowRenderViewState? {
         let item = first { (element) -> Bool in
             guard let data = element.data else {
                 return false
@@ -634,7 +645,7 @@ fileprivate extension Array where Element == FcrWindowRenderViewState {
         return item
     }
     
-    func firstItem(streamId: String) -> FcrWindowRenderViewState? {
+    func firstItem(streamId: String) -> FcrTachedWindowRenderViewState? {
         let item = first { (element) -> Bool in
             guard let data = element.data else {
                 return false

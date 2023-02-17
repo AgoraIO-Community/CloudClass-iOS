@@ -9,12 +9,11 @@ import AgoraEduCore
 import AgoraWidget
 import UIKit
 
-class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
+class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
     private let roomController: AgoraEduRoomContext
     private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext
     private let streamController: AgoraEduStreamContext
-    private let widgetController: AgoraEduWidgetContext
     
     private let teacherItemIndex = 0
     private let studentItemIndex = 1
@@ -25,17 +24,15 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
          userController: AgoraEduUserContext,
          mediaController: AgoraEduMediaContext,
          streamController: AgoraEduStreamContext,
-         widgetController: AgoraEduWidgetContext,
-         delegate: FcrWindowRenderUIComponentDelegate? = nil,
+         delegate: FcrTachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
-        let dataSource = [FcrWindowRenderViewState.none,
-                          FcrWindowRenderViewState.none]
+        let dataSource = [FcrTachedWindowRenderViewState.none,
+                          FcrTachedWindowRenderViewState.none]
         
         self.roomController = roomController
         self.userController = userController
         self.mediaController = mediaController
         self.streamController = streamController
-        self.widgetController = widgetController
         
         self.componentDataSource = componentDataSource
         
@@ -74,7 +71,7 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
         studentView?.agora_visible = UIConfig.studentVideo.visible
     }
     
-    override func onWillDisplayItem(_ item: FcrWindowRenderViewState,
+    override func onWillDisplayItem(_ item: FcrTachedWindowRenderViewState,
                                     renderView: FcrWindowRenderVideoView) {
         super.onWillDisplayItem(item,
                                 renderView: renderView)
@@ -89,14 +86,15 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
                                 view: renderView)
             }
         case .hide(let data):
-            stopRenderVideo(streamId: data.streamId,
-                            view: renderView)
+            break
+//            stopRenderVideo(streamId: data.streamId,
+//                            view: renderView)
         default:
             break
         }
     }
     
-    override func onDidEndDisplayingItem(_ item: FcrWindowRenderViewState,
+    override func onDidEndDisplayingItem(_ item: FcrTachedWindowRenderViewState,
                                          renderView: FcrWindowRenderVideoView) {
         super.onDidEndDisplayingItem(item,
                                      renderView: renderView)
@@ -111,7 +109,7 @@ class FcrOneToOneWindowRenderUIComponent: FcrWindowRenderUIComponent {
     }
 }
 
-private extension FcrOneToOneWindowRenderUIComponent {
+private extension FcrOneToOneTachedWindowUIComponent {
     func updateItemOfTeacher() {
         guard let teacher = userController.getUserList(role: .teacher)?.first else {
             return
@@ -152,7 +150,7 @@ private extension FcrOneToOneWindowRenderUIComponent {
                    index: studentItemIndex)
     }
     
-    func createItem(with stream: AgoraEduContextStreamInfo) -> FcrWindowRenderViewState {
+    func createItem(with stream: AgoraEduContextStreamInfo) -> FcrTachedWindowRenderViewState {
         var boardPrivilege: Bool = false
         
         let userId = stream.owner.userUuid
@@ -165,20 +163,29 @@ private extension FcrOneToOneWindowRenderUIComponent {
         
         let rewardCount = userController.getUserRewardCount(userUuid: userId)
         
-        let data = FcrWindowRenderViewData.create(stream: stream,
+        let data = FcrStreamWindowViewData.create(stream: stream,
                                                   rewardCount: rewardCount,
                                                   boardPrivilege: boardPrivilege)
         
-        let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
+        let hide = getItemIsHidden(streamId: stream.streamUuid)
         
-        let item = FcrWindowRenderViewState.create(isHide: isActive,
-                                                   data: data)
+        let item = FcrTachedWindowRenderViewState.create(isHide: hide,
+                                                         data: data)
         
         return item
     }
+    
+    func getItemIsHidden(streamId: String) -> Bool {
+        guard let `delegate` = delegate else {
+            return false
+        }
+        
+        return delegate.tachedStreamWindowUIComponent(self,
+                                                      shouldItemIsHide: streamId)
+    }
 }
 
-private extension FcrOneToOneWindowRenderUIComponent {
+private extension FcrOneToOneTachedWindowUIComponent {
     func startRenderVideo(streamId: String,
                           view: FcrWindowRenderVideoView) {
         let renderConfig = AgoraEduContextRenderConfig()
@@ -195,14 +202,14 @@ private extension FcrOneToOneWindowRenderUIComponent {
     }
 }
 
-extension FcrOneToOneWindowRenderUIComponent: AgoraEduRoomHandler {
+extension FcrOneToOneTachedWindowUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         updateItemOfTeacher()
         updateItemOfStudent()
     }
 }
 
-extension FcrOneToOneWindowRenderUIComponent: AgoraEduUserHandler {
+extension FcrOneToOneTachedWindowUIComponent: AgoraEduUserHandler {
     func onRemoteUserJoined(user: AgoraEduContextUserInfo) {
         switch user.userRole {
         case .teacher:
@@ -238,7 +245,7 @@ extension FcrOneToOneWindowRenderUIComponent: AgoraEduUserHandler {
     }
 }
 
-extension FcrOneToOneWindowRenderUIComponent: AgoraEduStreamHandler {
+extension FcrOneToOneTachedWindowUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
         switch stream.owner.userRole {
@@ -264,7 +271,7 @@ extension FcrOneToOneWindowRenderUIComponent: AgoraEduStreamHandler {
     }
 }
 
-extension FcrOneToOneWindowRenderUIComponent: AgoraEduMediaHandler {
+extension FcrOneToOneTachedWindowUIComponent: AgoraEduMediaHandler {
     func onVolumeUpdated(volume: Int,
                          streamUuid: String) {
         updateVolume(streamId: streamUuid,

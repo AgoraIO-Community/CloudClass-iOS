@@ -10,9 +10,27 @@ import AgoraEduCore
 import AudioToolbox
 
 protocol FcrRoomGlobalUIComponentDelegate: NSObjectProtocol {
+    func onAreaUpdated(type: FcrAreaViewType)
+    
     func onLocalUserAddedToSubRoom(subRoomId: String)
+    
     func onLocalUserRemovedFromSubRoom(subRoomId: String,
                                        isKickOut: Bool)
+}
+
+extension FcrRoomGlobalUIComponentDelegate {
+    func onAreaUpdated(type: FcrAreaViewType) {
+        
+    }
+    
+    func onLocalUserAddedToSubRoom(subRoomId: String) {
+        
+    }
+    
+    func onLocalUserRemovedFromSubRoom(subRoomId: String,
+                                       isKickOut: Bool) {
+        
+    }
 }
 
 // 作为全局状态监听，展示toast，动图等，自身不包含UI
@@ -28,6 +46,10 @@ class FcrRoomGlobalUIComponent: FcrUIComponent {
     // data
     public weak var exitDelegate: FcrUISceneExit?
     private weak var delegate: FcrRoomGlobalUIComponentDelegate?
+    
+    private(set) var area = FcrAreaViewType.none
+    
+    private let areaKey = "area"
     
     private var localStream: AgoraEduContextStreamInfo?
     private var hasJoinedSubRoomId: String?
@@ -94,6 +116,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
         viewWillActive()
         checkNeedJoinSubRoom()
+        ifAreaChanged()
     }
     
     func onRoomClosed() {
@@ -109,6 +132,18 @@ extension FcrRoomGlobalUIComponent: AgoraEduRoomHandler {
         showAlert(title: title,
                   contentList: [content],
                   actions: [action])
+    }
+    
+    func onRoomPropertiesUpdated(changedProperties: [String : Any],
+                                 cause: [String : Any]?,
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        let keys = changedProperties.keys
+        
+        guard keys.contains(areaKey) else {
+            return
+        }
+        
+        ifAreaChanged()
     }
 }
 
@@ -236,7 +271,7 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
                          type: .warning)
     }
     
-    func onUserListInvitedToSubRoom(userList: Array<String>,
+    func onUserListInvitedToSubRoom(userList: [String],
                                     subRoomUuid: String,
                                     operatorUser: AgoraEduContextUserInfo?) {
         let localUserId = userController.getLocalUserInfo().userUuid
@@ -287,14 +322,19 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         
         for userId in userList {
             guard let userInfo = userController.getUserInfo(userUuid: userId),
-                  let roleString = userInfo.userRole.stringValue else {
-                      return
-                  }
+                  let roleString = userInfo.userRole.stringValue
+            else {
+                return
+            }
+            
             let message = "fcr_group_enter_group".agedu_localized()
+            
             var temp = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                      with: roleString)
+            
             var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
                                                   with: userInfo.userName)
+            
             AgoraToast.toast(message: final,
                              type: .notice)
         }
@@ -313,21 +353,28 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         }
         
         guard hasJoinedSubRoomId == subRoomUuid,
-              let _ = subRoom else {
+              let _ = subRoom
+        else {
             return
         }
         
         let userIdList = userList.map({return $0.userUuid})
+        
         for userId in userIdList {
             guard let userInfo = userController.getUserInfo(userUuid: userId),
-                  let roleString = userInfo.userRole.stringValue else {
-                      return
-                  }
+                  let roleString = userInfo.userRole.stringValue
+            else {
+                return
+            }
+            
             let message = "fcr_group_exit_group".agedu_localized()
+            
             var temp = message.replacingOccurrences(of: String.agedu_localized_replacing_x(),
                                                      with: roleString)
+            
             var final = temp.replacingOccurrences(of: String.agedu_localized_replacing_y(),
                                                   with: userInfo.userName)
+            
             AgoraToast.toast(message: final,
                              type: .warning)
         }
@@ -338,8 +385,9 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         
         for subRoom in subRoomList {
             guard let list = groupController.getUserListFromSubRoom(subRoomUuid: subRoom.subRoomUuid),
-               list.contains(localUserId) else {
-               continue
+                  list.contains(localUserId)
+            else {
+                continue
             }
         
             hasJoinedSubRoomId = subRoom.subRoomUuid
@@ -353,7 +401,8 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         let list = subRoomList.map( {$0.subRoomUuid} )
         
         guard let hasJoined = hasJoinedSubRoomId,
-              list.contains(hasJoined) else {
+              list.contains(hasJoined)
+        else {
             return
         }
         
@@ -368,7 +417,8 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
                                      operatorUser: AgoraEduContextUserInfo?) {
         guard isRequestingHelp,
               let teacherUserId = userController.getUserList(role: .teacher)?.first?.userUuid,
-              userList.contains(teacherUserId) else {
+              userList.contains(teacherUserId)
+        else {
             return
         }
         
@@ -529,5 +579,36 @@ private extension FcrRoomGlobalUIComponent {
             delegate?.onLocalUserAddedToSubRoom(subRoomId: subRoom.subRoomUuid)
             break
         }
+    }
+    
+    // MARK: - Area
+    func areaChanged(with roomProperties: [String: Any]) {
+        guard let areaInt = ValueTransform(value: roomProperties[areaKey],
+                                           result: Int.self)
+        else {
+            return
+        }
+        
+        let area = FcrAreaViewType(rawValue: areaInt)
+        
+        self.area = area
+        
+        delegate?.onAreaUpdated(type: area)
+    }
+    
+    func ifAreaChanged() {
+        var roomProperties: [String: Any]?
+        
+        if let `subRoom` = subRoom {
+            roomProperties = subRoom.getSubRoomProperties()
+        } else {
+            roomProperties = roomController.getRoomProperties()
+        }
+        
+        guard let properties = roomProperties else {
+            return
+        }
+        
+        areaChanged(with: properties)
     }
 }

@@ -32,6 +32,17 @@ protocol FcrUISceneExit: NSObjectProtocol {
                                AgoraUIContentContainer,
                                FcrUISceneExit,
                                FcrAlert {
+    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .landscapeRight
+    }
+    
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .landscapeRight
+    }
+    
+    public override var shouldAutorotate: Bool {
+        return true
+    }
     
     /** 容器视图，用来框出一块16：9的适配区域*/
     public var contentView: UIView = UIView()
@@ -89,7 +100,7 @@ protocol FcrUISceneExit: NSObjectProtocol {
         updateViewProperties()
     }
     
-    // MARK: AgoraUIContentContainer
+    // MARK: - AgoraUIContentContainer
     public func initViews() {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = (agora_ui_mode == .agoraDark) ? .dark : .light
@@ -146,8 +157,10 @@ protocol FcrUISceneExit: NSObjectProtocol {
            let data = try? Data(contentsOf: url) {
             AgoraLoading.setImageData(data)
         }
+        
         AgoraLoading.setMessage(color: loadingComponent.message.color,
                                 font: loadingComponent.message.font)
+        
         AgoraLoading.setBackgroundColor(loadingComponent.backgroundColor)
 
         let toastComponent = UIConfig.toast
@@ -157,10 +170,35 @@ protocol FcrUISceneExit: NSObjectProtocol {
                              errorImage: toastComponent.errorImage)
     }
     
+    @objc public func exitScene(reason: FcrUISceneExitReason,
+                                type: FcrUISceneExitType = .main) {
+        switch type {
+        case .main:
+            guard !isBeingDismissed else {
+                return
+            }
+            
+            contextPool.room.leaveRoom()
+            
+            agora_dismiss(animated: true) { [weak self] in
+                guard let `self` = self else {
+                    return
+                }
+                
+                self.delegate?.scene(self,
+                                     didExit: reason)
+            }
+        default:
+            break
+        }
+    }
+    
+    // MARK: - Popover
     @objc private func onClickCtrlMaskView(_ sender: UITapGestureRecognizer) {
         ctrlView = nil
         didClickCtrlMaskView()
     }
+    
     /** mask空白区域被点击时子类的处理*/
     public func didClickCtrlMaskView() {
         // for override
@@ -210,42 +248,6 @@ protocol FcrUISceneExit: NSObjectProtocol {
         UIView.animate(withDuration: TimeInterval.agora_animation) {
             animaView.transform = .identity
             animaView.alpha = 1
-        }
-    }
-    
-    public override var shouldAutorotate: Bool {
-        return true
-    }
-    
-    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .landscapeRight
-    }
-    
-    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .landscapeRight
-    }
-    
-    @objc public func exitScene(reason: FcrUISceneExitReason,
-                                type: FcrUISceneExitType = .main) {
-        switch type {
-        case .main:
-            guard !isBeingDismissed else {
-                return
-            }
-            
-            contextPool.room.leaveRoom()
-            
-            agora_dismiss(animated: true) { [weak self] in
-                guard let `self` = self else {
-                    return
-                }
-                
-                self.delegate?.scene(self,
-                                     didExit: reason)
-                
-            }
-        default:
-            break
         }
     }
 }
