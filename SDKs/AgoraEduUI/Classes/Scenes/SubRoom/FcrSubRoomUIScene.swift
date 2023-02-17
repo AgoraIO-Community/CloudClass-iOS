@@ -46,7 +46,6 @@ import AgoraWidget
                                                                        userController: subRoom.user,
                                                                        streamController: subRoom.stream,
                                                                        mediaController: contextPool.media,
-                                                                       widgetController: subRoom.widget,
                                                                        subRoom: subRoom,
                                                                        delegate: self,
                                                                        componentDataSource: self)
@@ -470,6 +469,15 @@ extension FcrSubRoomUIScene: FcrTachedStreamWindowUIComponentDelegate {
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(self.renderMenuComponent.menuWidth)
             }
+        }
+    }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        if let _ = windowComponent.dataSource.firstItem(streamId: streamId) {
+            return true
+        } else {
+            return false
         }
     }
 }

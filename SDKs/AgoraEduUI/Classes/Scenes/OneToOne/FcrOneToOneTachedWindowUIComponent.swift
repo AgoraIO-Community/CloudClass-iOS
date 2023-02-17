@@ -14,7 +14,6 @@ class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
     private let userController: AgoraEduUserContext
     private let mediaController: AgoraEduMediaContext
     private let streamController: AgoraEduStreamContext
-    private let widgetController: AgoraEduWidgetContext
     
     private let teacherItemIndex = 0
     private let studentItemIndex = 1
@@ -25,7 +24,6 @@ class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
          userController: AgoraEduUserContext,
          mediaController: AgoraEduMediaContext,
          streamController: AgoraEduStreamContext,
-         widgetController: AgoraEduWidgetContext,
          delegate: FcrTachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
         let dataSource = [FcrTachedWindowRenderViewState.none,
@@ -35,7 +33,6 @@ class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
         self.userController = userController
         self.mediaController = mediaController
         self.streamController = streamController
-        self.widgetController = widgetController
         
         self.componentDataSource = componentDataSource
         
@@ -170,12 +167,21 @@ private extension FcrOneToOneTachedWindowUIComponent {
                                                   rewardCount: rewardCount,
                                                   boardPrivilege: boardPrivilege)
         
-        let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
+        let hide = getItemIsHidden(streamId: stream.streamUuid)
         
-        let item = FcrTachedWindowRenderViewState.create(isHide: isActive,
-                                                   data: data)
+        let item = FcrTachedWindowRenderViewState.create(isHide: hide,
+                                                         data: data)
         
         return item
+    }
+    
+    func getItemIsHidden(streamId: String) -> Bool {
+        guard let `delegate` = delegate else {
+            return false
+        }
+        
+        return delegate.tachedStreamWindowUIComponent(self,
+                                                      shouldItemIsHide: streamId)
     }
 }
 

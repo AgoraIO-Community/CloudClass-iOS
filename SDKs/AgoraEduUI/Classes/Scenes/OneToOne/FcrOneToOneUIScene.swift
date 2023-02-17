@@ -65,7 +65,6 @@ import UIKit
                                                                           userController: contextPool.user,
                                                                           mediaController: contextPool.media,
                                                                           streamController: contextPool.stream,
-                                                                          widgetController: contextPool.widget,
                                                                           delegate: self,
                                                                           componentDataSource: self)
                                                                           
@@ -392,7 +391,7 @@ extension FcrOneToOneUIScene: FcrBoardUIComponentDelegate {
             data.boardPrivilege = privilege
             
             let new = FcrTachedWindowRenderViewState.create(isHide: item.isHide,
-                                                      data: data)
+                                                            data: data)
             
             renderComponent.updateItem(new,
                                        index: index)
@@ -444,7 +443,7 @@ extension FcrOneToOneUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         }
         
         let new = FcrTachedWindowRenderViewState.create(isHide: true,
-                                                  data: data)
+                                                        data: data)
         
         renderComponent.updateItem(new,
                                    animation: false)
@@ -458,7 +457,7 @@ extension FcrOneToOneUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         }
         
         let new = FcrTachedWindowRenderViewState.create(isHide: false,
-                                                  data: data)
+                                                        data: data)
         
         renderComponent.updateItem(new,
                                    animation: false)
@@ -624,8 +623,8 @@ extension FcrOneToOneUIScene: FcrToolCollectionUIComponentDelegate {
 // MARK: - FcrWindowRenderUIComponentDelegate
 extension FcrOneToOneUIScene: FcrTachedStreamWindowUIComponentDelegate {
     func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
-                           didPressItem item: FcrTachedWindowRenderViewState,
-                           view: UIView) {
+                                       didPressItem item: FcrTachedWindowRenderViewState,
+                                       view: UIView) {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher,
               let data = item.data
         else {
@@ -670,6 +669,15 @@ extension FcrOneToOneUIScene: FcrTachedStreamWindowUIComponentDelegate {
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(self.renderMenuComponent.menuWidth)
             }
+        }
+    }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        if let _ = windowComponent.dataSource.firstItem(streamId: streamId) {
+            return true
+        } else {
+            return false
         }
     }
 }

@@ -68,7 +68,6 @@ import UIKit
                                                                                 userController: contextPool.user,
                                                                                 streamController: contextPool.stream,
                                                                                 mediaController: contextPool.media,
-                                                                                widgetController: contextPool.widget,
                                                                                 dataSource: [FcrTachedWindowRenderViewState.none],
                                                                                 reverseItem: false,
                                                                                 delegate: self)
@@ -99,9 +98,9 @@ import UIKit
                                                               widgetController: contextPool.widget)
     /** 云盘 控制器（仅教师端）*/
     private lazy var cloudComponent = FcrCloudDriveUIComponent(roomController: contextPool.room,
-                                                          widgetController: contextPool.widget,
-                                                          userController: contextPool.user,
-                                                          delegate: self)
+                                                               widgetController: contextPool.widget,
+                                                               userController: contextPool.user,
+                                                               delegate: self)
     /** 教具 控制器*/
     private lazy var classToolsComponent = FcrClassToolsUIComponent(roomController: contextPool.room,
                                                                     userController: contextPool.user,
@@ -436,7 +435,7 @@ extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         }
         
         let new = FcrTachedWindowRenderViewState.create(isHide: true,
-                                                  data: data)
+                                                        data: data)
         teacherRenderComponent.updateItem(new,
                                           animation: false)
     }
@@ -449,7 +448,7 @@ extension FcrLectureUIScene: FcrDetachedStreamWindowUIComponentDelegate {
         }
         
         let new = FcrTachedWindowRenderViewState.create(isHide: false,
-                                                  data: data)
+                                                        data: data)
         teacherRenderComponent.updateItem(new,
                                           animation: false)
     }
@@ -632,6 +631,15 @@ extension FcrLectureUIScene: FcrTachedStreamWindowUIComponentDelegate {
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(self.renderMenuComponent.menuWidth)
             }
+        }
+    }
+    
+    func tachedStreamWindowUIComponent(_ component: FcrTachedStreamWindowUIComponent,
+                                       shouldItemIsHide streamId: String) -> Bool {
+        if let _ = windowComponent.dataSource.firstItem(streamId: streamId) {
+            return true
+        } else {
+            return false
         }
     }
     

@@ -14,7 +14,6 @@ class FcrCoHostTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
     private let userController: AgoraEduUserContext
     private let streamController: AgoraEduStreamContext
     private let mediaController: AgoraEduMediaContext
-    private let widgetController: AgoraEduWidgetContext
     private let subRoom: AgoraEduSubRoomContext?
 
     private var roomId: String {
@@ -31,7 +30,6 @@ class FcrCoHostTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
          userController: AgoraEduUserContext,
          streamController: AgoraEduStreamContext,
          mediaController: AgoraEduMediaContext,
-         widgetController: AgoraEduWidgetContext,
          subRoom: AgoraEduSubRoomContext? = nil,
          delegate: FcrTachedStreamWindowUIComponentDelegate? = nil,
          componentDataSource: FcrUIComponentDataSource? = nil) {
@@ -39,7 +37,6 @@ class FcrCoHostTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
         self.userController = userController
         self.streamController = streamController
         self.mediaController = mediaController
-        self.widgetController = widgetController
         self.subRoom = subRoom
         self.componentDataSource = componentDataSource
         
@@ -77,8 +74,6 @@ class FcrCoHostTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
             }
         case .hide(let data):
             break
-//            stopRenderVideo(streamId: data.streamId,
-//                            view: renderView)
         default:
             break
         }
@@ -179,9 +174,9 @@ private extension FcrCoHostTachedWindowUIComponent {
                                                   rewardCount: rewardCount,
                                                   boardPrivilege: boardPrivilege)
         
-        let isActive = widgetController.streamWindowWidgetIsActive(of: stream)
+        let hide = getItemIsHidden(streamId: stream.streamUuid)
         
-        let item = FcrTachedWindowRenderViewState.create(isHide: isActive,
+        let item = FcrTachedWindowRenderViewState.create(isHide: hide,
                                                          data: data)
         
         return item
@@ -193,6 +188,15 @@ private extension FcrCoHostTachedWindowUIComponent {
         }
         
         return streamList.first(where: {$0.videoSourceType == .camera})
+    }
+    
+    func getItemIsHidden(streamId: String) -> Bool {
+        guard let `delegate` = delegate else {
+            return false
+        }
+        
+        return delegate.tachedStreamWindowUIComponent(self,
+                                                      shouldItemIsHide: streamId)
     }
 }
 

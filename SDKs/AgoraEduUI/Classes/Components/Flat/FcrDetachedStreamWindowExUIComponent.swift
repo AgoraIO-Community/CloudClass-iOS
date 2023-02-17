@@ -9,45 +9,53 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import AgoraWidget
 
+fileprivate enum DetachedLocalStreamWindowState {
+    case none, localPreview, active
+}
+
 class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
-    private var isStartPreview = false
-    
-    private var localPreviewObjectId: String? {
-        guard let stream = getLocalCameraStream() else {
-            return nil
+    private var isStartPreview = false {
+        didSet {
+            updateLocalStreamWindowState()
         }
-        
-        let widgetObjectId = WindowWidgetId + "-" + stream.streamUuid
-        
-        return widgetObjectId
     }
     
-    private var localPreviewWidgetIsActive: Bool {
-        guard let objectId = localPreviewObjectId else {
+    private var localStreamWidgetIsActive: Bool {
+        guard let objectId = localWidgetObjectId else {
             return false
         }
         
         return widgetController.getWidgetActivity(objectId)
     }
     
+    private var localWidgetObjectId: String?
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        guard let widgetId = localWidgetObjectId else {
+            return
+        }
+        
+        let syncFrame = getLocalPreviewFrame()
+        
+        updateFrame(widgetObjectId: widgetId,
+                    syncFrame: syncFrame,
+                    animation: false)
+    }
+    
     func startPreviewLocalVideo() {
         isStartPreview = true
-        
-        addLocalPreviewItem()
     }
     
     func stopPreviewLocalVideo() {
         isStartPreview = false
-        
-        removeLocalPreviewItem()
     }
     
-    private func addLocalPreviewItem() {
-        guard localPreviewWidgetIsActive == false else {
-            return
-        }
+    private func addLocalItem() {
+        localWidgetObjectId = getLocalWidgetObjectId()
         
-        guard let objectId = localPreviewObjectId else {
+        guard let objectId = localWidgetObjectId else {
             return
         }
         
@@ -63,20 +71,22 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
         
         let frame = getLocalPreviewFrame()
         
+        let message = "fcr_expansion_screen_tips_teacher_watching".edu_ui_localized()
+        
+        AgoraToast.toast(message: message)
+        
         addItem(item,
                 syncFrame: frame)
     }
     
-    private func removeLocalPreviewItem() {
-        guard localPreviewWidgetIsActive == false else {
-            return
-        }
-        
-        guard let objectId = localPreviewObjectId else {
+    private func removeLocalItem() {
+        guard let objectId = localWidgetObjectId else {
             return
         }
         
         removeItem(objectId)
+        
+        localWidgetObjectId = nil
     }
     
     private func getLocalCameraStream() -> AgoraEduContextStreamInfo? {
@@ -89,6 +99,16 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
         }
         
         return stream
+    }
+    
+    private func coHostListContainLocalUser() -> Bool {
+        let localUserId = userController.getLocalUserInfo().userUuid
+        
+        guard let list = userController.getCoHostList() else {
+            return false
+        }
+        
+        return list.contains(where: {$0.userUuid == localUserId})
     }
     
     private func getLocalPreviewFrame() -> AgoraWidgetFrame {
@@ -111,16 +131,69 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
         return syncFrame
     }
     
+    private func getLocalWidgetObjectId() -> String? {
+        guard let stream = getLocalCameraStream() else {
+            return nil
+        }
+        
+        let widgetObjectId = WindowWidgetId + "-" + stream.streamUuid
+        
+        return widgetObjectId
+    }
+    
+    private var localStreamWindowState: DetachedLocalStreamWindowState = .none {
+        didSet {
+            switch localStreamWindowState {
+            case .none:
+                removeLocalItem()
+            case .localPreview:
+                addLocalItem()
+            case .active:
+                // super class handle this case
+                guard let widgetId = localWidgetObjectId else {
+                    return
+                }
+            
+                super.onWidgetActive(widgetId)
+            }
+        }
+    }
+    
+    func updateLocalStreamWindowState() {
+        // Active stream window widget
+        if localStreamWidgetIsActive {
+            localStreamWindowState = .active
+            return
+        }
+        
+        if localStreamWidgetIsActive == false {
+            
+            //
+            if coHostListContainLocalUser() {
+                localStreamWindowState = .none
+                return
+            }
+            
+            if isStartPreview {
+                localStreamWindowState = .localPreview
+            } else {
+                localStreamWindowState = .none
+            }
+        }
+    }
+    
+    // MARK: - Edu core callback
+    override func onWidgetActive(_ widgetId: String) {
+        if widgetId == localWidgetObjectId {
+            updateLocalStreamWindowState()
+        } else {
+            super.onWidgetActive(widgetId)
+        }
+    }
+    
     override func onWidgetInactive(_ widgetId: String) {
-        if widgetId == localPreviewObjectId,
-           localPreviewWidgetIsActive == false,
-           isStartPreview {
-            
-            let frame = getLocalPreviewFrame()
-            
-            updateFrame(widgetObjectId: widgetId,
-                        syncFrame: frame,
-                        animation: true)
+        if widgetId == localWidgetObjectId {
+            updateLocalStreamWindowState()
         } else {
             super.onWidgetInactive(widgetId)
         }
@@ -130,13 +203,20 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
                         operatorUser: AgoraEduContextUserInfo?) {
         let localUserId = userController.getLocalUserInfo().userUuid
         
-        guard stream.owner.userUuid == localUserId,
-              localPreviewWidgetIsActive == false,
-              isStartPreview
-        else {
+        guard stream.owner.userUuid == localUserId else {
             return
         }
         
-        addLocalPreviewItem()
+        updateLocalStreamWindowState()
+    }
+    
+    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
+                                 operatorUser: AgoraEduContextUserInfo?) {
+        updateLocalStreamWindowState()
+    }
+    
+    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
+                                        operatorUser: AgoraEduContextUserInfo?) {
+        updateLocalStreamWindowState()
     }
 }
