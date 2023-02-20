@@ -179,7 +179,6 @@ extension FcrDetachedStreamWindowUIComponent {
         
         delegate?.onWillStartRenderVideoStream(streamId: streamId)
         
-        print("____startRenderVideo:\(self.classForCoder))")
         mediaController.startRenderVideo(roomUuid: roomId,
                                          view: renderView,
                                          renderConfig: renderConfig,
@@ -247,7 +246,8 @@ private extension FcrDetachedStreamWindowUIComponent {
         
         syncFrames[item.widgetObjectId] = syncFrame
         
-        addItemViewFrame(widgetView: widget.view,
+        addItemViewFrame(widgetObjectId: item.widgetObjectId,
+                         widgetView: widget.view,
                          userId: item.data.userId,
                          zIndex: item.zIndex,
                          itemIndex: itemIndex,
@@ -439,7 +439,8 @@ private extension FcrDetachedStreamWindowUIComponent {
         }
     }
     
-    func addItemViewFrame(widgetView: UIView,
+    func addItemViewFrame(widgetObjectId: String,
+                          widgetView: UIView,
                           userId: String,
                           zIndex: Int,
                           itemIndex: Int,
@@ -465,13 +466,20 @@ private extension FcrDetachedStreamWindowUIComponent {
                            delay: 0,
                            options: .curveEaseOut) {
                 widgetView.frame = destinationFrame
-            } completion: { isFinish in
+            } completion: { [weak self] isFinish in
                 guard isFinish else {
                     return
                 }
                 
+                guard let `self` = self,
+                      // Avoid item was removed after animation
+                      let index = self.dataSource.firstItemIndex(widgetObjectId: widgetObjectId)
+                else {
+                    return
+                }
+                
                 self.updateItemHierarchy(zIndex,
-                                         index: itemIndex)
+                                         index: index)
                 
                 widgetView.frame = rect
             }
@@ -666,6 +674,8 @@ extension FcrDetachedStreamWindowUIComponent: AgoraWidgetMessageObserver {
         else {
             return
         }
+        
+        dataSource.first
         
         guard let index = dataSource.firstItemIndex(widgetObjectId: widgetId) else {
             return
