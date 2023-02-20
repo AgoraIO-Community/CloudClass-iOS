@@ -675,8 +675,6 @@ extension FcrDetachedStreamWindowUIComponent: AgoraWidgetMessageObserver {
             return
         }
         
-        dataSource.first
-        
         guard let index = dataSource.firstItemIndex(widgetObjectId: widgetId) else {
             return
         }
