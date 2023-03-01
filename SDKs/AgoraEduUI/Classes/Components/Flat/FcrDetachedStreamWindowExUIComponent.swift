@@ -108,8 +108,8 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
         let rightSpace: CGFloat = 64
         let bottomSpace: CGFloat = 16
         
-        let x = view.bounds.size.width - width - rightSpace
-        let y = view.bounds.size.height - height - bottomSpace
+        let x: CGFloat = view.bounds.size.width - width - rightSpace
+        let y: CGFloat = view.bounds.size.height - height - bottomSpace
         
         let frame = CGRect(x: x,
                            y: y,
@@ -149,20 +149,20 @@ class FcrDetachedStreamWindowExUIComponent: FcrDetachedStreamWindowUIComponent {
     }
     
     func updateLocalStreamWindowState() {
-        // 1. active stream window widget on this component
+        // 1. active stream window displaying widget on this component
         if localStreamWidgetIsActive {
             localStreamWindowState = .active
             return
         }
         
-        // 2. stream window on tached window ui component
+        // 2. stream window displaying on tached window ui component
         if let list = userController.getCoHostList(),
            coHostListContainLocalUser(list) {
             localStreamWindowState = .none
             return
         }
         
-        // 3. local preview stream window widget on this component
+        // 3. local preview stream window widget displaying on this component
         if isStartPreview {
             localStreamWindowState = .localPreview
             
