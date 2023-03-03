@@ -1,0 +1,7 @@
+  pod 'AgoraUIBaseViews/Binary',     :path => '../../../AgoraUIBaseViews_Local.podspec'  
+  pod 'AgoraWidgets/Binary',         :path => '../../../AgoraWidgets_Local.podspec'
+  pod 'AgoraWidget/Binary',   	   :path => '../../../AgoraWidget_Local.podspec'  
+  pod 'AgoraEduCore/Binary',         :path => '../../../AgoraEduCore_Local.podspec'
+  pod 'AgoraEduUI/Binary',           :path => '../../../AgoraEduUI_Local.podspec'
+
+  pod 'AgoraClassroomSDK_iOS/Build', :path => '../../../AgoraClassroomSDK_iOS_Local.podspec'

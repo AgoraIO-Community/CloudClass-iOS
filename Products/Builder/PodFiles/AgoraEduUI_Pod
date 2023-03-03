@@ -1,0 +1,8 @@
+  pod 'SwifterSwift', '5.2.0'
+  pod 'Masonry', '1.1.0'  
+
+  pod 'AgoraUIBaseViews/Binary',  :path => '../../../AgoraUIBaseViews_Local.podspec'
+  pod 'AgoraEduCore/Binary',      :path => '../../../AgoraEduCore_Local.podspec'  
+  pod 'AgoraWidget/Binary',       :path => '../../../AgoraWidget_Local.podspec'
+  
+  pod 'AgoraEduUI/Build',         :path => '../../../AgoraEduUI_Local.podspec'
