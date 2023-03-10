@@ -20,40 +20,12 @@ Dep_Array=(AgoraWidgets
 cd $(dirname $0)
 echo pwd: `pwd`
 
-# import 
-. ../../../../apaas-cicd-ios/Products/Scripts/Other/v1/operation_print.sh
-
 # parameters
 Repo_Name=$1
 
-startPrint "${Repo_Name} Download Dependency Libs"
-
-parameterCheckPrint ${Repo_Name}
-
 # path
-Root_Path="../../.."
+CICD_Repo_Path=../../../../apaas-cicd-ios
+CICD_Products_Path=${CICD_Repo_Path}/Products
+CICD_Scripts_Path=${CICD_Products_Path}/Scripts
 
-for SDK_URL in ${Dep_Array_URL[*]} 
-do
-    echo ${SDK_URL}
-    python3 ${WORKSPACE}/artifactory_utils.py --action=download_file --file=${SDK_URL}
-done
-
-errorPrint $? "${Repo_Name} Download Dependency Libs"
-
-echo Dependency Libs
-
-ls
-
-for SDK in ${Dep_Array[*]}
-do
-    Zip_File=${SDK}*.zip
-
-    # move
-    mv -f ./${Zip_File}  ${Root_Path}/
-
-    # unzip
-    ${Root_Path}/../apaas-cicd-ios/Products/Scripts/SDK/Build/v1/unzip.sh ${SDK} ${Repo_Name}
-done
-
-endPrint $? "${Repo_Name} Download Dependency Libs"
+${CICD_Scripts_Path}/SDK/Build/v1/dependency.sh ${Dep_Array_URL} ${Dep_Array} ${Repo_Name}
