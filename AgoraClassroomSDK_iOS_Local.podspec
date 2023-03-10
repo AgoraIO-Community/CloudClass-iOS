@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
-  spec.name         = 'AgoraClassroomSDK_iOS'
-  spec.version      = '2.8.20'
-  spec.summary      = 'Education scene SDK'
+  spec.name         = "AgoraClassroomSDK_iOS"
+  spec.version      = "2.8.20"
+  spec.summary      = "Education scene SDK"
 
   spec.description  = "Education scene binary SDK "
 
