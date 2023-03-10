@@ -286,6 +286,14 @@ import AgoraWidget
                 make?.bottom.equalTo()(self.boardComponent.view)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
+            
+            classToolsComponent.view.mas_makeConstraints { [weak self] make in
+                guard let `self` = self else {
+                    return
+                }
+                
+                make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
+            }
         }
         
         webViewComponent.view.mas_makeConstraints { [weak self] make in
@@ -297,14 +305,6 @@ import AgoraWidget
         }
         
         windowComponent.view.mas_makeConstraints { [weak self] make in
-            guard let `self` = self else {
-                return
-            }
-            
-            make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
-        }
-        
-        classToolsComponent.view.mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
             }
