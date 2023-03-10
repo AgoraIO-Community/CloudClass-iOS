@@ -92,7 +92,7 @@ export all_proxy=http://10.80.1.174:1080
 
 # difference
 Repo_Name="open-cloudclass-ios"
-SDK_Array=(AgoraEduUI AgoraClassroomSDK)
+SDK_Array=(AgoraEduUI AgoraClassroomSDK_iOS)
 
 # import
 . ../apaas-cicd-ios/Products/Scripts/Other/v1/operation_print.sh
