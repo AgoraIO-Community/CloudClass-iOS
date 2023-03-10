@@ -28,4 +28,4 @@ CICD_Repo_Path=../../../../apaas-cicd-ios
 CICD_Products_Path=${CICD_Repo_Path}/Products
 CICD_Scripts_Path=${CICD_Products_Path}/Scripts
 
-${CICD_Scripts_Path}/SDK/Build/v1/dependency.sh ${Dep_Array_URL} ${Dep_Array} ${Repo_Name}
+${CICD_Scripts_Path}/SDK/Build/v1/dependency.sh "${Dep_Array_URL[*]}" "${Dep_Array[*]}" ${Repo_Name}
