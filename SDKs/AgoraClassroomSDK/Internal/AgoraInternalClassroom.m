@@ -97,6 +97,8 @@
                                                                     frameRate:options.videoEncoderConfig.frameRate
                                                                       bitRate:options.videoEncoderConfig.bitRate
                                                                    mirrorMode:options.videoEncoderConfig.mirrorMode];
+        
+        videoConfig.outputOrientationMode = options.videoEncoderConfig.outputOrientationMode;
     }
     
     AgoraEduCoreMediaEncryptionConfig *encryptionConfig = nil;

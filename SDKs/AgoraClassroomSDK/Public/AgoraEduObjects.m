@@ -48,6 +48,7 @@
         self.frameRate = frameRate;
         self.bitRate = bitRate;
         self.mirrorMode = mirrorMode;
+        self.outputOrientationMode = AgoraEduCoreVideoOutputOrientationModeFixedLandScape;
     }
     return self;
 }
