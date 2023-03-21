@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSUInteger frameRate;
 @property (nonatomic, assign) NSUInteger bitRate;
 @property (nonatomic, assign) AgoraEduMirrorMode mirrorMode;
+@property (nonatomic, assign) AgoraEduVideoOutputOrientationMode outputOrientationMode;
 
 - (instancetype)initWithDimensionWidth:(NSUInteger)dimensionWidth
                        dimensionHeight:(NSUInteger)dimensionHeight

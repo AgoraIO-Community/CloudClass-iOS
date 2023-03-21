@@ -27,6 +27,8 @@ typedef AgoraEduCoreRegion AgoraEduRegion;
 
 typedef AgoraEduCoreMediaEncryptionMode AgoraEduMediaEncryptionMode;
 
+typedef AgoraEduCoreVideoOutputOrientationMode AgoraEduVideoOutputOrientationMode;
+
 typedef NS_ENUM(NSInteger, AgoraEduServiceType) {
     AgoraEduServiceTypeLivePremium,
     AgoraEduServiceTypeLiveStandard,
