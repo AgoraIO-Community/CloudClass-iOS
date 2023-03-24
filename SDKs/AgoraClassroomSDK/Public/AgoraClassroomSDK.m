@@ -245,11 +245,13 @@ static AgoraClassroomSDK *manager = nil;
 #pragma mark - FcrUISceneDelegate
 - (void)scene:(FcrUIScene *)scene
       didExit:(FcrUISceneExitReason)reason {
-    if ([_delegate respondsToSelector:@selector(classroomSDK:didExit:)]) {
-        [self.delegate classroomSDK:self
-                            didExit:reason];
-    }
+    id<AgoraEduClassroomSDKDelegate> delegate = self.delegate;
     
     [self agoraRelease];
+    
+    if ([delegate respondsToSelector:@selector(classroomSDK:didExit:)]) {
+        [delegate classroomSDK:self
+                       didExit:reason];
+    }
 }
 @end
