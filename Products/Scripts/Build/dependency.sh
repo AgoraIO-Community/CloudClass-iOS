@@ -6,10 +6,18 @@
 # EduCore
 # UIBaseViews
 # Widget
-Dep_Array_URL=("https://artifactory-api.bj2.agoralab.co/artifactory/AD_repo/Widgets_iOS/cavan/20230303/ios/AgoraWidgets_2.8.20_12.zip"
-               "https://artifactory-api.bj2.agoralab.co/artifactory/AD_repo/aPaaS/iOS/AgoraEduCore/Flex/dev/AgoraEduCore_2.8.30.zip"
-               "https://artifactory.agoralab.co/artifactory/AD_repo/apaas_common_libs_ios/cavan/20230302/ios/AgoraUIBaseViews_2.8.0_82.zip"
-               "https://artifactory.agoralab.co/artifactory/AD_repo/apaas_common_libs_ios/cavan/20230302/ios/AgoraWidget_2.8.0_82.zip")
+
+Artifactory_iOS_URL="https://artifactory.agoralab.co/artifactory/AD_repo/aPaaS/iOS"
+
+AgoraWidgets_URL="${Artifactory_iOS_URL}/AgoraWidgets/Flex/dev/AgoraWidgets_2.8.30.zip"
+AgoraEduCore_URL="${Artifactory_iOS_URL}/AgoraEduCore/release_2.8.21/dev/AgoraEduCore_2.8.21.zip"
+AgoraUIBaseViews_URL="${Artifactory_iOS_URL}/AgoraUIBaseViews/Flex/dev/AgoraUIBaseViews_2.8.0.zip"
+AgoraWidget_URL="${Artifactory_iOS_URL}/AgoraWidget/Flex/dev/AgoraWidget_2.8.0.zip"
+
+Dep_Array_URL=("${AgoraWidgets_URL}"
+               "${AgoraEduCore_URL}"
+               "${AgoraUIBaseViews_URL}"
+               "${AgoraWidget_URL}")
 
 Dep_Array=(AgoraWidgets 
            AgoraEduCore
