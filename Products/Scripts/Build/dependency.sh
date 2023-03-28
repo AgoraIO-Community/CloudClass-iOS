@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Difference
 # Dependency libs
@@ -6,7 +6,6 @@
 # EduCore
 # UIBaseViews
 # Widget
-
 Artifactory_iOS_URL="https://artifactory.agoralab.co/artifactory/AD_repo/aPaaS/iOS"
 
 AgoraWidgets_URL="${Artifactory_iOS_URL}/AgoraWidgets/Flex/dev/AgoraWidgets_2.8.30.zip"
