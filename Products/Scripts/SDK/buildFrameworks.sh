@@ -1,4 +1,8 @@
 #!/bin/bash
+# cd this file path
+cd $(dirname $0)
+echo pwd: `pwd`
+
 Color='\033[1;36m'
 Res='\033[0m'
 
@@ -36,12 +40,12 @@ buildItem() {
     SDK_Name=$1
     
     echo "${Color} ======${SDK_Name} Start======== ${Res}"
-    ./buildFramework.sh ${SDKs_Path}/${SDK_Name} ${SDK_Name} Release
+    ./buildFramework.sh ${SDKs_Path}/AgoraBuilder ${SDK_Name} Release
 
     errorExit ${SDK_Name} $?
 }
 
-SDK_Name="AgoraClassroomSDK"
+SDK_Name="AgoraClassroomSDK_iOS"
 
 buildItem ${SDK_Name}
 
@@ -60,3 +64,14 @@ do
         rm -fr ${Products_Path}/${FileName}
     fi
 done
+
+iPhone_Path=${SDKs_Path}/AgoraBuilder/Build/product/derived_data/Build/Products/Release-iphoneos
+
+cp -r ${iPhone_Path}/AgoraEduUI/AgoraEduUI.bundle ${Products_Path}
+cp -r ${iPhone_Path}/AgoraWidgets/AgoraWidgets.bundle ${Products_Path}
+
+# mkdir ${Products_Path}/EduUIResources
+# mkdir ${Products_Path}/WidgetsResources
+
+# cp -r ${SDKs_Path}/AgoraEduUI/AgoraEduUI/Assets/* ${Products_Path}/EduUIResources
+# cp -r ../../../../open-apaas-extapp-ios/AgoraWidgets/AgoraResources/* ${Products_Path}/WidgetsResources

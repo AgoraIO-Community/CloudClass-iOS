@@ -376,6 +376,7 @@
 				1AE0D0022283C5F20092AC5E /* Resources */,
 				9CCF3ABB7D45F972FD1E62D9 /* [CP] Embed Pods Frameworks */,
 				68A5E3F02636770B00E3C37E /* Write Publish Date */,
+				349A70958DBBF92652A30EB2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -503,6 +504,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		349A70958DBBF92652A30EB2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AgoraEducation/Pods-AgoraEducation-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		68A5E3F02636770B00E3C37E /* Write Publish Date */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

@@ -19,4 +19,8 @@ Pod::Spec.new do |spec|
   spec.vendored_frameworks = [
     "Libs/*.framework"
   ]
+
+  spec.resources = [
+    "Libs/*.bundle"
+  ]
 end

@@ -15,6 +15,7 @@ Products/Libs/dSYMs_iPhone/
 Package
 XCBuildData
 *.zip
+*.bundle
 
 ## Various settings
 *.pbxuser
