@@ -43,7 +43,7 @@ buildFunc() {
 
     if [ "${OS}" = "iphoneos" ];then
         OS_TYPE="iphoneos"
-        ARC="-arch armv7 -arch arm64"
+        ARC="-arch arm64"
     else
         OS_TYPE="iphonesimulator"
         ARC="-arch x86_64"
