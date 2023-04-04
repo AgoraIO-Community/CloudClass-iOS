@@ -18,7 +18,13 @@ extension UIImage {
 
 extension Bundle {
     class func agoraEduUI() -> Bundle {
-        return Bundle.ag_compentsBundleNamed("AgoraEduUI") ?? Bundle.main
+        if let path = Bundle.main.path(forResource: "AgoraEduUI",
+                                       ofType: "bundle"),
+            let bundle = Bundle(path: path) {
+            return bundle
+        } else {
+            return Bundle.main
+        }
     }
 }
 
@@ -28,7 +34,8 @@ extension String {
     }
     
     func agedu_localized() -> String {
-        let bundle = Bundle.ag_compentsBundleNamed("AgoraEduUI") ?? Bundle.main
+        let bundle = Bundle.agoraEduUI()
+        
         return NSLocalizedString(self,
                                  bundle: bundle,
                                  comment: "")

@@ -173,10 +173,8 @@ class AgoraRenderMemberView: UIView {
     private var rewardLabel: UILabel!
     /** 举手动画视图*/
     private lazy var waveView: FLAnimatedImageView =  {
-        guard let bundle = Bundle.agora_bundle(object: self,
-                                               resource: "AgoraEduUI"),
-              let url = bundle.url(forResource: "img_hands_wave",
-                                   withExtension: "gif"),
+        guard let url = Bundle.agoraEduUI().url(forResource: "img_hands_wave",
+                                                withExtension: "gif"),
               let data = try? Data(contentsOf: url) else {
             fatalError()
         }
