@@ -820,7 +820,7 @@
 					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
 				);
 				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -838,6 +838,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = Debug;
 		};
@@ -882,7 +883,7 @@
 					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
 				);
 				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -899,6 +900,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = Release;
 		};
@@ -1073,7 +1075,7 @@
 					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
 				);
 				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1090,6 +1092,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = DevRelease;
 		};
@@ -1227,7 +1230,7 @@
 					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
 				);
 				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1244,6 +1247,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = QATestNewRelease;
 		};
@@ -1381,7 +1385,7 @@
 					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
 				);
 				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1398,6 +1402,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = QARelease;
 		};
@@ -1535,7 +1540,7 @@
 					"\"${PODS_ROOT}/Headers/Public/OpenSSL-Universal\"",
 				);
 				INFOPLIST_FILE = "AgoraEducation/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1552,6 +1557,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "AgoraEducation/Supporting Files/AgoraEducation-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = QATestRelease;
 		};

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -150,6 +150,7 @@
 				7874817B25A884A30022329D /* Sources */,
 				7874817C25A884A30022329D /* Frameworks */,
 				7874817D25A884A30022329D /* Resources */,
+				2D556F01FAC8F714CF468A0A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -205,6 +206,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2D556F01FAC8F714CF468A0A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraClassroomSDK/Pods-AgoraClassroomSDK-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AgoraClassroomSDK/Pods-AgoraClassroomSDK-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AgoraClassroomSDK/Pods-AgoraClassroomSDK-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		5CD7F354D76558C26646E3AB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -380,13 +398,13 @@
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = AgoraClassroomSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACH_O_TYPE = mh_dylib;
+				MACH_O_TYPE = staticlib;
 				MARKETING_VERSION = 2.1.0;
 				MODULEMAP_FILE = AgoraClassroomSDK/AgoraClassroomSDK.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraClassroomSDK;
@@ -397,6 +415,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = Debug;
 		};
@@ -419,13 +438,13 @@
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = AgoraClassroomSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACH_O_TYPE = mh_dylib;
+				MACH_O_TYPE = staticlib;
 				MARKETING_VERSION = 2.1.0;
 				MODULEMAP_FILE = AgoraClassroomSDK/AgoraClassroomSDK.modulemap;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.AgoraClassroomSDK;
@@ -435,6 +454,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 x86_64";
 			};
 			name = Release;
 		};
