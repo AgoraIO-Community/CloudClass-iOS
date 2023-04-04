@@ -22,6 +22,7 @@ Pod::Spec.new do |spec|
 
   spec.frameworks = "AudioToolbox", "Foundation", "UIKit"
 
+  spec.static_framework = true
   spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.pod_target_xcconfig  = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
