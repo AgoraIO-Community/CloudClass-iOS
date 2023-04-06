@@ -18,7 +18,7 @@ def libVersion
   # agora libs
   pod 'AgoraRtm_iOS', '1.4.8'
   pod 'Whiteboard', '2.16.17'
-  pod 'AgoraRtcEngine_iOS', '3.6.2'
+  pod 'AgoraRtcEngine_iOS/RtcBasic', '3.7.2'
   pod 'HyphenateChat', '3.8.6'
 end
 
