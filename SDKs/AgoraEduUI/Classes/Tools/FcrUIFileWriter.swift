@@ -7,15 +7,14 @@
 
 import UIKit
 
-class FcrUIFileWriter: NSObject {
-    override init() {
-        super.init()
+class FcrUIFileWriter {
+    init() {
         removeFolder(path: folder())
         createFolder(path: folder())
     }
     
-    var byteLimit: Int64 = 0
-    var writeLength: Int64 = 0
+    var byteLimit: UInt64 = 0
+    var writeLength: UInt64 = 0
     var handle: FileHandle?
     var queue = DispatchQueue(label: "io.agora.ui.file.thread")
     
@@ -37,7 +36,7 @@ class FcrUIFileWriter: NSObject {
         
         if byteLimit != 0 {
             if byteLimit > writeLength {
-                writeLength += Int64(data.length)
+                writeLength += UInt64(data.length)
             } else {
                 return
             }

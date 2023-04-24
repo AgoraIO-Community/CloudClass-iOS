@@ -107,8 +107,6 @@ import UIKit
     
     private lazy var watermarkComponent = FcrWatermarkUIComponent(widgetController: contextPool.widget)
     
-    private var fileWriter = FcrUIFileWriter()
-        
     @objc public init(contextPool: AgoraEduContextPool,
                       delegate: FcrUISceneDelegate?) {
         super.init(sceneType: .oneToOne,
