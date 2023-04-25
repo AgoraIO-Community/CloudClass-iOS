@@ -22,7 +22,7 @@ class FcrUIAudioRawDataTester: NSObject, FcrAudioRawDataObserver {
     }
     
     func startTest() {
-        startTestAudioData(position: .record)
+//        startTestAudioData(position: .record)
 //        startTestAudioData(position: .beforeMixed)
 //        startTestAudioData(position: .mixed)
 //
@@ -78,25 +78,18 @@ class FcrUIAudioRawDataTester: NSObject, FcrAudioRawDataObserver {
     }
     
     func onAudioRawDataRecorded(data: FcrAudioRawData) {
-        print(">>>>>>>>>>>>>>> onAudioRawDataRecorded, \(data.sampleRate), \(data.channels)")
-        
         recordWriter.write(data: data.buffer,
                            to: "record_audio_rawdata.pcm")
     }
     
-    // sample rate: 44.1k, channels: 2
     func onAudioRawDataBeforeMixed(data: FcrAudioRawData,
                                    streamUuid: NSString,
-                                   sceneId: NSString) {
-//        print(">>>>>>>>>>>>>>> onAudioRawDataBeforeMixed, \(data.sampleRate), \(data.channels)")
-        
+                                   roomUuid: NSString) {
         beforeMixedWriter.write(data: data.buffer,
-                                to: "before_mixed_audio_rawdata_\(streamUuid)_\(sceneId).pcm")
+                                to: "before_mixed_audio_rawdata_\(streamUuid)_\(roomUuid).pcm")
     }
     
     func onAudioRawDataMixed(data: FcrAudioRawData) {
-//        print(">>>>>>>>>>>>>>> onAudioRawDataMixed, \(data.sampleRate), \(data.channels)")
-        
         mixedWriter.write(data: data.buffer,
                           to: "mixed_audio_rawdata.pcm")
     }
