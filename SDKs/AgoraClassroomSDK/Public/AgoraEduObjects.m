@@ -57,7 +57,7 @@
 
 @implementation AgoraEduMediaOptions
 - (instancetype)initWithEncryptionConfig:(AgoraEduMediaEncryptionConfig * _Nullable)encryptionConfig
-                      videoEncoderConfig:(AgoraEduVideoEncoderConfig *)videoEncoderConfig
+                      videoEncoderConfig:(AgoraEduVideoEncoderConfig * _Nullable)videoEncoderConfig
                             latencyLevel:(AgoraEduLatencyLevel)latencyLevel
                               videoState:(AgoraEduStreamState)videoState
                               audioState:(AgoraEduStreamState)audioState {
