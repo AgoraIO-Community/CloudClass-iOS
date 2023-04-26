@@ -179,6 +179,9 @@ extension FcrDetachedStreamWindowUIComponent {
         
         delegate?.onWillStartRenderVideoStream(streamId: streamId)
         
+        streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
+                                                            level: .high)
+        
         mediaController.startRenderVideo(roomUuid: roomId,
                                          view: renderView,
                                          renderConfig: renderConfig,

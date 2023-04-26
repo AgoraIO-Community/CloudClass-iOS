@@ -33,6 +33,7 @@
         self.frameRate = 15;
         self.bitRate = 200;
         self.mirrorMode = AgoraEduCoreMirrorModeDisabled;
+        self.outputOrientationMode = AgoraEduCoreVideoOutputOrientationModeFixedLandScape;
     }
     return self;
 }
@@ -56,15 +57,22 @@
 
 @implementation AgoraEduMediaOptions
 - (instancetype)initWithEncryptionConfig:(AgoraEduMediaEncryptionConfig * _Nullable)encryptionConfig
-                      videoEncoderConfig:(AgoraEduVideoEncoderConfig * _Nullable)videoEncoderConfig
+                      videoEncoderConfig:(AgoraEduVideoEncoderConfig *)videoEncoderConfig
                             latencyLevel:(AgoraEduLatencyLevel)latencyLevel
                               videoState:(AgoraEduStreamState)videoState
                               audioState:(AgoraEduStreamState)audioState {
     self = [super init];
     
     if (self) {
+        if (videoEncoderConfig != nil) {
+            self.videoEncoderConfig = videoEncoderConfig;
+        } else {
+            AgoraEduVideoEncoderConfig *videoConfig = [[AgoraEduVideoEncoderConfig alloc] init];
+            
+            self.videoEncoderConfig = videoConfig;
+        }
+        
         self.encryptionConfig = encryptionConfig;
-        self.videoEncoderConfig = videoEncoderConfig;
         self.latencyLevel = latencyLevel;
         self.videoState = videoState;
         self.audioState = audioState;
