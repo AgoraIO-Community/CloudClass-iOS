@@ -174,6 +174,9 @@ private extension FcrTeacherTachedWindowUIComponent {
 private extension FcrTeacherTachedWindowUIComponent {
     func startRenderVideo(streamId: String,
                           view: FcrWindowRenderVideoView) {
+        streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
+                                                            level: .low)
+        
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         

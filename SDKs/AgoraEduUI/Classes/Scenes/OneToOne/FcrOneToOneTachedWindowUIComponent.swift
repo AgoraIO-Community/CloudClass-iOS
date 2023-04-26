@@ -87,8 +87,6 @@ class FcrOneToOneTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
             }
         case .hide(let data):
             break
-//            stopRenderVideo(streamId: data.streamId,
-//                            view: renderView)
         default:
             break
         }
@@ -188,12 +186,15 @@ private extension FcrOneToOneTachedWindowUIComponent {
 private extension FcrOneToOneTachedWindowUIComponent {
     func startRenderVideo(streamId: String,
                           view: FcrWindowRenderVideoView) {
+        streamController.setRemoteVideoStreamSubscribeLevel(streamUuid: streamId,
+                                                            level: .low)
+        
         let renderConfig = AgoraEduContextRenderConfig()
         renderConfig.mode = .hidden
         
         mediaController.startRenderVideo(view: view,
-                                           renderConfig: renderConfig,
-                                           streamUuid: streamId)
+                                         renderConfig: renderConfig,
+                                         streamUuid: streamId)
     }
     
     func stopRenderVideo(streamId: String,

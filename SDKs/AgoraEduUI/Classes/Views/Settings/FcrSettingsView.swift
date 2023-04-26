@@ -11,15 +11,15 @@ import UIKit
 protocol FcrSettingsViewDelegate: NSObjectProtocol {
     func onCameraButtonIsSelected(isFront: Bool)
     func onCameraSwitchIsOn(isOn: Bool)
-    func onClickShare()
 }
 
 class FcrSettingsView: UIView {
-    // share link
-    private let shareLinkButton = UIButton(type: .custom)
-    private let shareTitleLabel = UILabel()
-    private let shareArrowImage = UIImageView(image: UIImage.edu_ui_image("fcr_setting_arrow"))
-    private let shareLinkLine = UIView()
+    // Sharing link
+    let sharingLinkButton = UIButton(type: .custom)
+    private let sharingTitleLabel = UILabel()
+    private let sharingArrowImage = UIImageView()
+    private let sharingLinkLine = UIView()
+    private var hasShareingLink: Bool
         
     // Camera
     private let cameraLabel = UILabel(frame: .zero)
@@ -45,8 +45,11 @@ class FcrSettingsView: UIView {
     
     weak var delegate: FcrSettingsViewDelegate?
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(hasShareingLink: Bool) {
+        self.hasShareingLink = hasShareingLink
+        
+        super.init(frame: .zero)
+        
         initViews()
         initViewFrame()
         updateViewProperties()
@@ -80,16 +83,22 @@ class FcrSettingsView: UIView {
 }
 
 extension FcrSettingsView: AgoraUIContentContainer {
+    func initSharingLinkViews() {
+        guard hasShareingLink else {
+            return
+        }
+        
+        addSubview(sharingLinkButton)
+        sharingLinkButton.addSubview(sharingTitleLabel)
+        sharingLinkButton.addSubview(sharingArrowImage)
+        sharingLinkButton.addSubview(sharingLinkLine)
+    }
+    
     func initViews() {
         let config = UIConfig.setting
-        // share link
-        shareLinkButton.addTarget(self,
-                                  action: #selector(onClickShare(_:)),
-                                  for: .touchUpInside)
-        addSubview(shareLinkButton)
-        shareLinkButton.addSubview(shareTitleLabel)
-        shareLinkButton.addSubview(shareArrowImage)
-        shareLinkButton.addSubview(shareLinkLine)
+        
+        // Sharing link
+        initSharingLinkViews()
         
         // Camera
         addSubview(cameraLabel)
@@ -149,29 +158,46 @@ extension FcrSettingsView: AgoraUIContentContainer {
         exitButton.agora_visible = config.exit.visible
     }
     
-    func initViewFrame() {
-        // share link
-        shareLinkButton.mas_makeConstraints { make in
+    func initSharingLinkViewsFrame() {
+        guard hasShareingLink else {
+            return
+        }
+        
+        sharingLinkButton.mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(44)
         }
-        shareTitleLabel.mas_makeConstraints { make in
+        
+        sharingTitleLabel.mas_makeConstraints { make in
             make?.left.equalTo()(15)
             make?.centerY.equalTo()(0)
         }
-        shareArrowImage.mas_makeConstraints { make in
+        
+        sharingArrowImage.mas_makeConstraints { make in
             make?.right.equalTo()(-15)
             make?.centerY.equalTo()(0)
         }
-        shareLinkLine.mas_makeConstraints { make in
+        
+        sharingLinkLine.mas_makeConstraints { make in
             make?.bottom.equalTo()(0)
             make?.left.equalTo()(16)
             make?.right.equalTo()(-16)
             make?.height.equalTo()(1)
         }
+    }
+    
+    func initViewFrame() {
+        // Sharing link
+        initSharingLinkViewsFrame()
+        
         // Camera
-        cameraLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(shareLinkButton.mas_bottom)?.offset()(16)
+        cameraLabel.mas_makeConstraints { [unowned self] make in
+            if self.hasShareingLink {
+                make?.top.equalTo()(sharingLinkButton.mas_bottom)?.offset()(16)
+            } else {
+                make?.top.equalTo()(self.mas_top)?.offset()(16)
+            }
+            
             make?.left.equalTo()(16)
         }
         
@@ -252,14 +278,26 @@ extension FcrSettingsView: AgoraUIContentContainer {
                                                     y: 0.75)
     }
     
+    func updateSharingLinkViewProperties() {
+        guard hasShareingLink else {
+            return
+        }
+        
+        let config = UIConfig.setting
+        
+        sharingTitleLabel.text = "fcr_inshare_button_share".edu_ui_localized()
+        sharingTitleLabel.textColor = config.camera.title.color
+        sharingTitleLabel.font = config.camera.title.font
+        sharingLinkLine.backgroundColor = FcrUIColorGroup.systemDividerColor
+        sharingArrowImage.image = UIImage.edu_ui_image("fcr_setting_arrow")
+    }
+    
     func updateViewProperties() {
         let config = UIConfig.setting
-        // share link
-        shareTitleLabel.text = "fcr_inshare_button_share".edu_ui_localized()
-        shareTitleLabel.textColor = config.camera.title.color
-        shareTitleLabel.font = config.camera.title.font
         
-        shareLinkLine.backgroundColor = FcrUIColorGroup.systemDividerColor
+        // Sharing link
+        updateSharingLinkViewProperties()
+        
         // Camera
         cameraLabel.text = "fcr_media_camera".edu_ui_localized()
         cameraLabel.textColor = config.camera.title.color
@@ -277,7 +315,7 @@ extension FcrSettingsView: AgoraUIContentContainer {
         
         backCameraButton.titleLabel?.font = config.camera.direction.font
         backCameraButton.setTitle("fcr_media_camera_direction_back".edu_ui_localized(),
-                               for: .normal)
+                                  for: .normal)
         
         for button in [frontCameraButton, backCameraButton] {
             button.setTitleColor(config.camera.direction.selectedLabelColor,
@@ -288,9 +326,9 @@ extension FcrSettingsView: AgoraUIContentContainer {
                                            size: CGSize(width: 1,
                                                         height: 1))
             let selectedColorImage = UIImage(color: config.camera.direction.selectedBackgroundColor,
-                                           size: CGSize(width: 1,
-                                                        height: 1))
-                                           
+                                             size: CGSize(width: 1,
+                                                          height: 1))
+            
             button.setBackgroundImage(normalColorImage,
                                       for: .normal)
             button.setBackgroundImage(selectedColorImage,
@@ -357,9 +395,5 @@ private extension FcrSettingsView {
                             isFront: false)
         
         delegate?.onCameraButtonIsSelected(isFront: false)
-    }
-    
-    @objc private func onClickShare(_ sender: UIButton) {
-        delegate?.onClickShare()
     }
 }
