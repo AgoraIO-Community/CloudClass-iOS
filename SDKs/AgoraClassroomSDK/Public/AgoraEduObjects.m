@@ -179,7 +179,7 @@
     
     // WebView Widget
     AgoraWidgetConfig *webView = [[AgoraWidgetConfig alloc] initWithClass:[AgoraWebViewWidget class]
-                                                                widgetId:@"webView"];
+                                                                 widgetId:@"webView"];
     widgets[webView.widgetId] = webView;
     
     // Media Player Widget
