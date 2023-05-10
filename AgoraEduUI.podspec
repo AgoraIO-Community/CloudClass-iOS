@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   spec.source_files        = "SDKs/AgoraEduUI/Classes/**/*.{h,m,swift}"
   
   spec.dependency "AgoraUIBaseViews", ">=2.8.0"
-  spec.dependency "AgoraEduCore", ">=2.8.20"
+  spec.dependency "AgoraEduCore", ">=2.8.30"
   spec.dependency "AgoraWidget", ">=2.8.0"
   spec.dependency "SwifterSwift"
   spec.dependency "Masonry"
