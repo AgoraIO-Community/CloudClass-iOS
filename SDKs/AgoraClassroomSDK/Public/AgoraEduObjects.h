@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
                        startTime:(NSNumber * _Nullable)startTime
                         duration:(NSNumber * _Nullable)duration
                           region:(AgoraEduRegion)region
-                    mediaOptions:(AgoraEduMediaOptions * _Nullable)mediaOptions
+                    mediaOptions:(AgoraEduMediaOptions *)mediaOptions
                   userProperties:(NSDictionary * _Nullable)userProperties;
 @end
 
