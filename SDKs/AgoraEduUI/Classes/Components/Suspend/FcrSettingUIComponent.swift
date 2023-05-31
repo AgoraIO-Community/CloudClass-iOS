@@ -15,25 +15,42 @@ protocol FcrSettingUIComponentDelegate: NSObjectProtocol {
 }
 
 class FcrSettingUIComponent: FcrUIComponent {
-    /**context*/
     private let mediaController: AgoraEduMediaContext
     private let widgetController: AgoraEduWidgetContext
     private let isSubRoom: Bool
     private weak var exitDelegate: FcrUISceneExit?
     private weak var delegate: FcrSettingUIComponentDelegate?
     
-    // Views
-    private lazy var contentView = FcrSettingsView()
+    private lazy var contentView = FcrSettingsView(hasShareingLink: isRegisterSharingLink)
     
-    private lazy var shareLinkWidget: AgoraBaseWidget? = {
-        guard let config = widgetController.getWidgetConfig(kShareLinkWidgetId) else {
+    private lazy var sharingLinkWidget: AgoraBaseWidget? = {
+        guard let config = widgetController.getWidgetConfig(SharingLinkWidgetId) else {
             return nil
         }
         return widgetController.create(config)
     }()
     
-    public let suggestSize = CGSize(width: 201,
-                                    height: 285)
+    private var isRegisterSharingLink: Bool {
+        if let _ = widgetController.getWidgetConfig(SharingLinkWidgetId) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    public var suggestSize: CGSize {
+        let sharingLinkItemHeight: CGFloat = 44
+        let contentViewWidth: CGFloat = 201
+        let contentViewHeight: CGFloat = 241
+        
+        if isRegisterSharingLink {
+            return  CGSize(width: contentViewWidth,
+                           height: (contentViewHeight + sharingLinkItemHeight))
+        } else {
+            return  CGSize(width: contentViewWidth,
+                           height: contentViewHeight)
+        }
+    }
         
     init(mediaController: AgoraEduMediaContext,
          widgetController: AgoraEduWidgetContext,
@@ -94,6 +111,10 @@ class FcrSettingUIComponent: FcrUIComponent {
         contentView.exitButton.addTarget(self,
                                          action: #selector(onClickExitButton(_:)),
                                          for: .touchUpInside)
+        
+        contentView.sharingLinkButton.addTarget(self,
+                                                action: #selector(onClickSharingLink(_:)),
+                                                for: .touchUpInside)
     }
     
     func initViewFrame() {
@@ -123,13 +144,6 @@ class FcrSettingUIComponent: FcrUIComponent {
 
 // MARK: - FcrSettingsViewDelegate
 extension FcrSettingUIComponent: FcrSettingsViewDelegate {
-    func onClickShare() {
-        guard let view = shareLinkWidget?.view else {
-            return
-        }
-        delegate?.onShowShareView(view)
-    }
-    
     func onCameraSwitchIsOn(isOn: Bool) {
         switch isOn {
         case true:
@@ -158,6 +172,13 @@ extension FcrSettingUIComponent: FcrSettingsViewDelegate {
 
 // MARK: - Actions
 private extension FcrSettingUIComponent {
+    @objc func onClickSharingLink(_ sender: UISwitch) {
+        guard let view = sharingLinkWidget?.view else {
+            return
+        }
+        delegate?.onShowShareView(view)
+    }
+    
     @objc func onClickMicSwitch(_ sender: UISwitch) {
         if sender.isOn {
             mediaController.openLocalDevice(systemDevice: .mic)

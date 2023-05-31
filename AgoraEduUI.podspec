@@ -9,13 +9,14 @@ Pod::Spec.new do |spec|
   spec.module_name  = "AgoraEduUI"
 
   spec.ios.deployment_target = "10.0"
+  spec.swift_versions        = ["5.0", "5.1", "5.2", "5.3", "5.4"]
 
   spec.source              = { :git => "git@github.com:AgoraIO-Community/CloudClass-iOS.git", :tag => "AgoraEduUI_v" + "#{spec.version.to_s}" }
   spec.public_header_files = "SDKs/AgoraEduUI/Classes/**/*.h"
   spec.source_files        = "SDKs/AgoraEduUI/Classes/**/*.{h,m,swift}"
   
   spec.dependency "AgoraUIBaseViews", ">=2.8.0"
-  spec.dependency "AgoraEduCore", ">=2.8.20"
+  spec.dependency "AgoraEduCore", ">=2.8.30"
   spec.dependency "AgoraWidget", ">=2.8.0"
   spec.dependency "SwifterSwift"
   spec.dependency "Masonry"

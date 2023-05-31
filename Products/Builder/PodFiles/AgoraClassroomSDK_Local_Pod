@@ -1,0 +1,18 @@
+  pod 'Protobuf',          '3.17.0'  
+  
+  # agora libs
+  pod 'AgoraRtcEngine_iOS/RtcBasic', '3.7.2'
+  pod 'AgoraRtm_iOS', '1.4.8'
+  pod 'AgoraLog', '1.0.2'
+  pod 'Armin', '1.1.0'
+
+  pod 'AgoraUIBaseViews/Source',     :path => '../../../../apaas-common-libs-ios/AgoraUIBaseViews_Local.podspec'  
+  pod 'AgoraWidgets/Source',         :path => '../../../../open-apaas-extapp-ios/AgoraWidgets_Local.podspec'
+  pod 'AgoraWidget/Source',   	     :path => '../../../../apaas-common-libs-ios/AgoraWidget_Local.podspec'  
+  pod 'AgoraEduCore/Source',         :path => '../../../../cloudclass-ios/AgoraEduCore_Local.podspec'
+  pod 'AgoraEduUI/Source',           :path => '../../../../open-cloudclass-ios/AgoraEduUI_Local.podspec'
+  pod 'AgoraReport/Source',   	     :path => '../../../../apaas-common-libs-ios/AgoraReport_Local.podspec'
+  pod 'AgoraRte/Source',      	     :path => '../../../../common-scene-sdk/AgoraRte_Local.podspec'
+  pod 'AgoraRx/Source',       	     :path => '../../../../apaas-common-libs-ios/AgoraRx_Local.podspec'
+
+  pod 'AgoraClassroomSDK_iOS/Build', :path => '../../../AgoraClassroomSDK_iOS_Local.podspec'
