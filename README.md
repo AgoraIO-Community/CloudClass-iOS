@@ -1,5 +1,7 @@
 > *其他语言版本：[简体中文](README.zh.md)*
 
+## This version only for ASIA Region
+
 This page introduces how to run the iOS sample project.
 ## Prerequisites 
 
