@@ -1,0 +1,1 @@
+# This version only for ASIA Region
