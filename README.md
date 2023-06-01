@@ -1,1 +1,1 @@
-# This version only for ASIA Region
+# This version only for Global Region
