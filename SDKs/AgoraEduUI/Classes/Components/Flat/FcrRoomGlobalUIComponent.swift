@@ -346,7 +346,13 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
         for event in userList where event.userUuid == localUserId {
             hasJoinedSubRoomId = nil
             
+            if let operatorUser = event.operatorUser,
+                operatorUser.userUuid == localUserId {
+                return
+            }
+            
             let isKickOut = (event.reason == .kickOut)
+            
             delegate?.onLocalUserRemovedFromSubRoom(subRoomId: subRoomUuid,
                                                     isKickOut: isKickOut)
         }
