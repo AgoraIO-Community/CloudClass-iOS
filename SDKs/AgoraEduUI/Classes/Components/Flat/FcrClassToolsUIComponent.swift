@@ -210,6 +210,8 @@ private extension FcrClassToolsUIComponent {
         if userController.getLocalUserInfo().userRole == .observer {
             widgetController.sendMessage(toWidget: widgetId,
                                          message: "hideSubmit")
+            
+            widget.view.isUserInteractionEnabled = false
         }
         
         view.addSubview(widget.view)
