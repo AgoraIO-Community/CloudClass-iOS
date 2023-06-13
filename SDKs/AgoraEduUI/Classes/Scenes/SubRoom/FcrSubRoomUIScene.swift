@@ -186,20 +186,12 @@ import AgoraWidget
         
         switch type {
         case .main:
-            group.removeUserListFromSubRoom(userList: [userId],
-                                            subRoomUuid: roomId,
-                                            success: { [weak self] in
-                guard let `self` = self else {
-                    return
-                }
-                
-                guard let `delegate` = self.delegate as? FcrUISubSceneDelegate else {
-                   return
-                }
-                
-                delegate.scene(self,
-                               willExitMainRoom: reason)
-            }, failure: nil)
+            guard let `delegate` = self.delegate as? FcrUISubSceneDelegate else {
+               return
+            }
+            
+            delegate.scene(self,
+                           willExitMainRoom: reason)
         case .sub:
             group.removeUserListFromSubRoom(userList: [userId],
                                             subRoomUuid: roomId,
