@@ -194,8 +194,7 @@ import UIKit
             break
         case .observer:
             componentList.removeAll([toolCollectionComponent,
-                                     nameRollComponent,
-                                     classToolsComponent])
+                                     nameRollComponent])
         }
         
         for component in componentList {
@@ -313,14 +312,14 @@ import UIKit
                 make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
-            
-            classToolsComponent.view.mas_makeConstraints { [weak self] make in
-                guard let `self` = self else {
-                    return
-                }
-                
-                make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
+        }
+        
+        classToolsComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
             }
+            
+            make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
         chatComponent.view.mas_makeConstraints { [weak self] make in
