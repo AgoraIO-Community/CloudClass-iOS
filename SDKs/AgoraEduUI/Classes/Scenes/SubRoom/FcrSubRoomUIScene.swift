@@ -10,11 +10,11 @@ import AgoraEduCore
 import AudioToolbox
 import AgoraWidget
 
-@objc public protocol AgoraEduUISubManagerCallback: NSObjectProtocol {
-    func subNeedExitAllRooms(reason: FcrUISceneExitReason)
+@objc public protocol FcrUISubSceneDelegate: FcrUISceneDelegate {
+    func scene(_ scene: FcrUIScene,
+               willExitMainRoom reason: FcrUISceneExitReason)
 }
-/// 房间控制器:
-/// 用以处理全局状态和子控制器之间的交互关系
+
 @objc public class FcrSubRoomUIScene: FcrUIScene {
     // MARK: - Flat components
     /** 全局状态 控制器（自身不包含UI）*/
@@ -128,21 +128,17 @@ import AgoraWidget
                                                           subRoom: subRoom,
                                                           delegate: self)
     
-    private weak var mainDelegate: AgoraEduUISubManagerCallback?
-    
     private lazy var watermarkComponent = FcrWatermarkUIComponent(widgetController: contextPool.widget)
     
     private var subRoom: AgoraEduSubRoomContext
     
     init(contextPool: AgoraEduContextPool,
          subRoom: AgoraEduSubRoomContext,
-         subDelegate: FcrUISceneDelegate?,
-         mainDelegate: AgoraEduUISubManagerCallback?) {
+         delegate: FcrUISubSceneDelegate?) {
         self.subRoom = subRoom
-        self.mainDelegate = mainDelegate
         super.init(sceneType: .small,
                    contextPool: contextPool,
-                   delegate: subDelegate)
+                   delegate: delegate)
     }
     
     required init?(coder: NSCoder) {
@@ -197,13 +193,24 @@ import AgoraWidget
                     return
                 }
                 
-                self.mainDelegate?.subNeedExitAllRooms(reason: reason)
+                guard let `delegate` = self.delegate as? FcrUISubSceneDelegate else {
+                   return
+                }
+                
+                delegate.scene(self,
+                               willExitMainRoom: reason)
             }, failure: nil)
         case .sub:
             group.removeUserListFromSubRoom(userList: [userId],
                                             subRoomUuid: roomId,
-                                            success: nil,
-                                            failure: nil)
+                                            success:{ [weak self] in
+                guard let `self` = self else {
+                    return
+                }
+                
+                self.delegate?.scene(self,
+                                     didExit: .normal)
+            }, failure: nil)
         }
     }
     
@@ -224,9 +231,6 @@ import AgoraWidget
             guard let `self` = self else {
                 return
             }
-            
-            self.delegate?.scene(self,
-                                 didExit: reason)
             
             completion?()
         }

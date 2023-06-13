@@ -718,8 +718,7 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
         
         let vc = FcrSubRoomUIScene(contextPool: contextPool,
                                    subRoom: subRoom,
-                                   subDelegate: self,
-                                   mainDelegate: self)
+                                   delegate: self)
         
         vc.modalPresentationStyle = .fullScreen
         
@@ -733,23 +732,7 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
                                        isKickOut: Bool) {
         let reason: FcrUISceneExitReason = (isKickOut ? .kickOut : .normal)
         
-        subRoom?.dismiss(reason: reason,
-                         animated: true)
-        
-        for child in children {
-            guard let vc = child as? AgoraUIActivity else {
-                continue
-            }
-            
-            if let component = vc as? FcrRoomGlobalUIComponent,
-               globalComponent.area.contains(.videoGallery) {
-                continue
-            }
-            
-            vc.viewWillActive()
-        }
-        
-        self.subRoom = nil
+        onlyExitSubRoom(reason: reason)
     }
 }
 
@@ -839,15 +822,14 @@ extension FcrSmallUIScene: FcrUIComponentDataSource {
 }
 
 // MARK: - FcrUISceneDelegate
-extension FcrSmallUIScene: FcrUISceneDelegate {
-    public func scene(_ manager: FcrUIScene,
+extension FcrSmallUIScene: FcrUISubSceneDelegate {
+    public func scene(_ scene: FcrUIScene,
                       didExit reason: FcrUISceneExitReason) {
+        onlyExitSubRoom(reason: reason)
     }
-}
-
-// MARK: - AgoraEduUISubManagerCallBack
-extension FcrSmallUIScene: AgoraEduUISubManagerCallback {
-    public func subNeedExitAllRooms(reason: FcrUISceneExitReason) {
+    
+    public func scene(_ scene: FcrUIScene,
+                      willExitMainRoom reason: FcrUISceneExitReason) {
         subRoom?.dismiss(reason: reason,
                          animated: false,
                          completion: { [weak self] in
@@ -873,5 +855,25 @@ private extension FcrSmallUIScene {
                                  height: renderComponent.view.bounds.height)
         layout.minimumLineSpacing = kItemGap
         renderComponent.updateLayout(layout)
+    }
+    
+    func onlyExitSubRoom(reason: FcrUISceneExitReason) {
+        subRoom?.dismiss(reason: reason,
+                         animated: true)
+        
+        for child in children {
+            guard let vc = child as? AgoraUIActivity else {
+                continue
+            }
+            
+            if let component = vc as? FcrRoomGlobalUIComponent,
+               globalComponent.area.contains(.videoGallery) {
+                continue
+            }
+            
+            vc.viewWillActive()
+        }
+        
+        self.subRoom = nil
     }
 }
