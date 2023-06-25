@@ -175,8 +175,7 @@ import UIKit
         case .assistant:
             break
         case .observer:
-            componentList.removeAll([toolCollectionComponent,
-                                     classToolsComponent])
+            componentList.removeAll([toolCollectionComponent])
         }
         
         for component in componentList {
@@ -305,14 +304,14 @@ import UIKit
                 make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
-            
-            classToolsComponent.view.mas_makeConstraints { [weak self] make in
-                guard let `self` = self else {
-                    return
-                }
-                
-                make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
+        }
+        
+        classToolsComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
             }
+            
+            make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
         watermarkComponent.view.mas_makeConstraints { [weak self] make in

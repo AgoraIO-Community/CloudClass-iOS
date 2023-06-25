@@ -9,8 +9,6 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import AgoraWidget
 
-/// 房间控制器:
-/// 用以处理全局状态和子控制器之间的交互关系
 @objc public class FcrSmallUIScene: FcrUIScene {
     // MARK: - Flat components
     /** 全局状态 控制器（自身不包含UI）*/
@@ -192,8 +190,7 @@ import AgoraWidget
             break
         case .observer:
             componentList.removeAll([toolCollectionComponent,
-                                     nameRollComponent,
-                                     classToolsComponent])
+                                     nameRollComponent])
         }
         
         for component in componentList {
@@ -286,14 +283,14 @@ import AgoraWidget
                 make?.bottom.equalTo()(self.boardComponent.view)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
-            
-            classToolsComponent.view.mas_makeConstraints { [weak self] make in
-                guard let `self` = self else {
-                    return
-                }
-                
-                make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
+        }
+        
+        classToolsComponent.view.mas_makeConstraints { [weak self] make in
+            guard let `self` = self else {
+                return
             }
+            
+            make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
         webViewComponent.view.mas_makeConstraints { [weak self] make in
@@ -718,8 +715,7 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
         
         let vc = FcrSubRoomUIScene(contextPool: contextPool,
                                    subRoom: subRoom,
-                                   subDelegate: self,
-                                   mainDelegate: self)
+                                   delegate: self)
         
         vc.modalPresentationStyle = .fullScreen
         
@@ -733,23 +729,7 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
                                        isKickOut: Bool) {
         let reason: FcrUISceneExitReason = (isKickOut ? .kickOut : .normal)
         
-        subRoom?.dismiss(reason: reason,
-                         animated: true)
-        
-        for child in children {
-            guard let vc = child as? AgoraUIActivity else {
-                continue
-            }
-            
-            if let component = vc as? FcrRoomGlobalUIComponent,
-               globalComponent.area.contains(.videoGallery) {
-                continue
-            }
-            
-            vc.viewWillActive()
-        }
-        
-        self.subRoom = nil
+        onlyExitSubRoom(reason: reason)
     }
 }
 
@@ -839,15 +819,14 @@ extension FcrSmallUIScene: FcrUIComponentDataSource {
 }
 
 // MARK: - FcrUISceneDelegate
-extension FcrSmallUIScene: FcrUISceneDelegate {
-    public func scene(_ manager: FcrUIScene,
+extension FcrSmallUIScene: FcrUISubSceneDelegate {
+    public func scene(_ scene: FcrUIScene,
                       didExit reason: FcrUISceneExitReason) {
+        onlyExitSubRoom(reason: reason)
     }
-}
-
-// MARK: - AgoraEduUISubManagerCallBack
-extension FcrSmallUIScene: AgoraEduUISubManagerCallback {
-    public func subNeedExitAllRooms(reason: FcrUISceneExitReason) {
+    
+    public func scene(_ scene: FcrUIScene,
+                      willExitMainRoom reason: FcrUISceneExitReason) {
         subRoom?.dismiss(reason: reason,
                          animated: false,
                          completion: { [weak self] in
@@ -873,5 +852,25 @@ private extension FcrSmallUIScene {
                                  height: renderComponent.view.bounds.height)
         layout.minimumLineSpacing = kItemGap
         renderComponent.updateLayout(layout)
+    }
+    
+    func onlyExitSubRoom(reason: FcrUISceneExitReason) {
+        subRoom?.dismiss(reason: reason,
+                         animated: true)
+        
+        for child in children {
+            guard let vc = child as? AgoraUIActivity else {
+                continue
+            }
+            
+            if let component = vc as? FcrRoomGlobalUIComponent,
+               globalComponent.area.contains(.videoGallery) {
+                continue
+            }
+            
+            vc.viewWillActive()
+        }
+        
+        self.subRoom = nil
     }
 }

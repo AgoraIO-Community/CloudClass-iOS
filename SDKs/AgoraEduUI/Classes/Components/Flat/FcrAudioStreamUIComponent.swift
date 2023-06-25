@@ -55,19 +55,22 @@ class FcrAudioStreamUIComponent: FcrUIComponent {
         } else {
             roomController.registerRoomEventHandler(self)
         }
-        
-        streamController.registerStreamEventHandler(self)
-        userController.registerUserEventHandler(self)
     }
 }
 
 extension FcrAudioStreamUIComponent: AgoraUIActivity {
     func viewWillActive() {
         startPlayAllAudioStream()
+        
+        streamController.registerStreamEventHandler(self)
+        userController.registerUserEventHandler(self)
     }
     
     func viewWillInactive() {
         stopPlayAllAudioStream()
+        
+        streamController.unregisterStreamEventHandler(self)
+        userController.unregisterUserEventHandler(self)
     }
 }
 
@@ -134,13 +137,13 @@ private extension FcrAudioStreamUIComponent {
 
 extension FcrAudioStreamUIComponent: AgoraEduSubRoomHandler {
     func onJoinSubRoomSuccess(roomInfo: AgoraEduContextSubRoomInfo) {
-        startPlayAllAudioStream()
+        viewWillActive()
     }
 }
 
 extension FcrAudioStreamUIComponent: AgoraEduRoomHandler {
     func onJoinRoomSuccess(roomInfo: AgoraEduContextRoomInfo) {
-        startPlayAllAudioStream()
+        viewWillActive()
     }
 }
 
