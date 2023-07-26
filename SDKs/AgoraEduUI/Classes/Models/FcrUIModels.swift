@@ -114,6 +114,15 @@ struct FcrStreamWindowViewData {
     }
     
     private static func createVideoViewState(stream: AgoraEduContextStreamInfo) -> FcrStreamWindowMediaViewState {
+        let fake = AgoraEduContextStreamInfo(streamUuid: stream.streamUuid,
+                                             streamName: stream.streamName,
+                                             streamType: stream.streamType,
+                                             videoSourceType: stream.videoSourceType,
+                                             audioSourceType: stream.audioSourceType,
+                                             videoSourceState: .error,
+                                             audioSourceState: stream.audioSourceState,
+                                             owner: stream.owner)
+        
         let maskConfig = UIConfig.studentVideo.mask
         let sourceOffImage = maskConfig.cameraOffImage!
         

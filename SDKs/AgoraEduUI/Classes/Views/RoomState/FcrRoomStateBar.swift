@@ -13,10 +13,10 @@ fileprivate class FcrNetStateButton: UIButton {
         super.layoutSubviews()
         imageView?.frame = CGRect(x: 10,
                                   y: 0,
-                                  width: 14,
+                                  width: bounds.height,
                                   height: bounds.height)
         
-        let x: CGFloat = 27
+        let x: CGFloat = 10 + bounds.height + 3
         let width = bounds.width - x
         
         titleLabel?.frame = CGRect(x: x,
