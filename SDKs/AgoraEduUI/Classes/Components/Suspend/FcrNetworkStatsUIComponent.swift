@@ -26,6 +26,8 @@ class FcrNetworkStatsUIComponent: FcrUIComponent,
      
     private let roomId: String
     
+    private var lastQuality = AgoraEduContextNetworkQuality.good
+    
     init(roomId: String,
          monitorController: AgoraEduMonitorContext) {
         self.roomId = roomId
@@ -65,8 +67,6 @@ class FcrNetworkStatsUIComponent: FcrUIComponent,
         
         packetLossRateTxLabel.text = "--"
         packetLossRateRxLabel.text = "--"
-        
-        updateTitleLabel(with: .good)
     }
     
     func initViewFrame() {
@@ -158,6 +158,8 @@ class FcrNetworkStatsUIComponent: FcrUIComponent,
         
         packetLossRateTxLabel.textColor = config.packetLossRateValue.textColor
         packetLossRateRxLabel.textColor = config.packetLossRateValue.textColor
+        
+        updateTitleLabel(with: lastQuality)
     }
     
     func viewWillActive() {
@@ -169,6 +171,8 @@ class FcrNetworkStatsUIComponent: FcrUIComponent,
     }
     
     private func updateTitleLabel(with quality: AgoraEduContextNetworkQuality) {
+        lastQuality = quality
+        
         let config = UIConfig.networkStats.title
         
         var text: String
@@ -195,11 +199,14 @@ class FcrNetworkStatsUIComponent: FcrUIComponent,
 
 extension FcrNetworkStatsUIComponent: AgoraEduMonitorHandler {
     func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
-        guard state == .disconnected || state == .reconnecting else {
-            return
+        switch state {
+        case .reconnecting, .disconnected:
+            updateTitleLabel(with: .down)
+        case .connected:
+            updateTitleLabel(with: .good)
+        default:
+            break
         }
-        
-        updateTitleLabel(with: .down)
     }
     
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
