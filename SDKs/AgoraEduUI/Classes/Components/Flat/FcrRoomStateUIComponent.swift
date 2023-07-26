@@ -319,11 +319,14 @@ extension FcrRoomStateUIComponent: AgoraEduGroupHandler {
 // MARK: - AgoraEduMonitorHandler
 extension FcrRoomStateUIComponent: AgoraEduMonitorHandler {
     func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
-        guard state == .disconnected || state == .reconnecting else {
-            return
+        switch state {
+        case .reconnecting, .disconnected:
+            updateStateView(with: .down)
+        case .connected:
+            updateStateView(with: .good)
+        default:
+            break
         }
-        
-        updateStateView(with: .bad)
     }
     
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
