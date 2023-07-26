@@ -56,7 +56,11 @@ import UIKit
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
                                                               monitorController: contextPool.monitor,
-                                                              groupController: contextPool.group)
+                                                              groupController: contextPool.group,
+                                                              delegate: self)
+    
+    private lazy var networkStatsComponent = FcrNetworkStatsUIComponent(roomId: contextPool.room.getRoomInfo().roomUuid,
+                                                                        monitorController: contextPool.monitor)
   
     /** 课堂状态 控制器（仅教师端）*/
     private lazy var classStateComponent = FcrClassStateUIComponent(roomController: contextPool.room,
@@ -802,7 +806,7 @@ extension FcrLectureUIScene: FcrToolCollectionUIComponentDelegate {
     }
 }
 
-// MARK: - AgoraClassStateUIComponentDelegate
+// MARK: - FcrClassStateUIComponentDelegate
 extension FcrLectureUIScene: FcrClassStateUIComponentDelegate {
     func onShowStartClass() {
         guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
@@ -824,6 +828,21 @@ extension FcrLectureUIScene: FcrClassStateUIComponentDelegate {
             make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
             make?.size.equalTo()(self.classStateComponent.suggestSize)
         }
+    }
+}
+
+// MARK: - FcrRoomStateUIComponentDelegate
+extension FcrLectureUIScene: FcrRoomStateUIComponentDelegate {
+    func onPressedNetworkState() {
+        ctrlView = nil
+        
+        networkStatsComponent.view.frame = CGRect(x: 0,
+                                                  y: 0,
+                                                  width: 130,
+                                                  height: 136)
+        
+        showPopover(contentView: networkStatsComponent.view,
+                    fromView: stateComponent.stateView.netStateView)
     }
 }
 

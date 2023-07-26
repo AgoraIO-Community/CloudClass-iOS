@@ -39,7 +39,11 @@ import AgoraWidget
                                                               userController: subRoom.user,
                                                               monitorController: contextPool.monitor,
                                                               groupController: contextPool.group,
-                                                              subRoom: subRoom)
+                                                              subRoom: subRoom,
+                                                              delegate: self)
+    
+    private lazy var networkStatsComponent = FcrNetworkStatsUIComponent(roomId: subRoom.getSubRoomInfo().subRoomUuid,
+                                                                        monitorController: contextPool.monitor)
     
     /** 视窗渲染 控制器*/
     private lazy var renderComponent = FcrSmallTachedWindowUIComponent(roomController: contextPool.room,
@@ -821,6 +825,21 @@ extension FcrSubRoomUIScene: FcrRoomGlobalUIComponentDelegate {
             showStageArea(show: false)
             renderComponent.viewWillInactive()
         }
+    }
+}
+
+// MARK: - FcrRoomStateUIComponentDelegate
+extension FcrSubRoomUIScene: FcrRoomStateUIComponentDelegate {
+    func onPressedNetworkState() {
+        ctrlView = nil
+        
+        networkStatsComponent.view.frame = CGRect(x: 0,
+                                                  y: 0,
+                                                  width: 130,
+                                                  height: 136)
+        
+        showPopover(contentView: networkStatsComponent.view,
+                    fromView: stateComponent.stateView.netStateView)
     }
 }
 

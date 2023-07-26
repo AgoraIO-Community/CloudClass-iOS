@@ -50,7 +50,9 @@ protocol FcrUISceneExit: NSObjectProtocol {
     var popover = AgoraPopover(options: [.type(.down),
                                          .blackOverlayColor(UIColor.clear),
                                          .cornerRadius(5.0),
-                                         .arrowSize(CGSize(width: 8, height: 4))])
+                                         .arrowSize(CGSize.zero),
+                                         .arrowPointerOffset(CGPoint(x: 0, y: 3))])
+       
     
     weak var delegate: FcrUISceneDelegate?
     
@@ -150,6 +152,13 @@ protocol FcrUISceneExit: NSObjectProtocol {
     }
     
     public func updateViewProperties() {
+        let shadow = FcrUIItemShadow()
+
+        popover.layer.shadowColor = shadow.color
+        popover.layer.shadowOffset = shadow.offset
+        popover.layer.shadowOpacity = shadow.opacity
+        popover.layer.shadowRadius = shadow.radius
+        
         view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
         
         contentView.borderWidth = FcrUIFrameGroup.borderWidth
@@ -260,5 +269,7 @@ protocol FcrUISceneExit: NSObjectProtocol {
                      fromView: UIView) {
         popover.show(contentView,
                      fromView: fromView)
+        
+        popover.layer.masksToBounds = false
     }
 }
