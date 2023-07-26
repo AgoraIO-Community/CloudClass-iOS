@@ -8,7 +8,9 @@
 import AgoraUIBaseViews
 import AgoraEduCore
 
-class FcrNetworkStatsUIComponent: FcrUIComponent, AgoraUIContentContainer {
+class FcrNetworkStatsUIComponent: FcrUIComponent,
+                                  AgoraUIContentContainer,
+                                  AgoraUIActivity {
     private let titleLabel = UILabel()
     private let lineView = UIView()
     private let latencyTitleLabel = UILabel()
@@ -20,9 +22,13 @@ class FcrNetworkStatsUIComponent: FcrUIComponent, AgoraUIContentContainer {
     private let packetLossRateTxLabel = UILabel()
     private let packetLossRateRxLabel = UILabel()
     
-    private var monitor: AgoraEduMonitorContext
+    private let monitor: AgoraEduMonitorContext
+     
+    private let roomId: String
     
-    init(monitorController: AgoraEduMonitorContext) {
+    init(roomId: String,
+         monitorController: AgoraEduMonitorContext) {
+        self.roomId = roomId
         self.monitor = monitorController
         
         super.init(nibName: nil,
@@ -154,6 +160,14 @@ class FcrNetworkStatsUIComponent: FcrUIComponent, AgoraUIContentContainer {
         packetLossRateRxLabel.textColor = config.packetLossRateValue.textColor
     }
     
+    func viewWillActive() {
+        monitor.registerMonitorEventHandler(self)
+    }
+    
+    func viewWillInactive() {
+        monitor.unregisterMonitorEventHandler(self)
+    }
+    
     private func updateTitleLabel(with quality: AgoraEduContextNetworkQuality) {
         let config = UIConfig.networkStats.title
         
@@ -194,6 +208,10 @@ extension FcrNetworkStatsUIComponent: AgoraEduMonitorHandler {
     
     func onMediaPacketStatsUpdated(roomUuid: String,
                                    stats: FcrMediaPacketStats) {
+        guard roomUuid == roomId else {
+            return
+        }
+        
         latencyValueLabel.text = "\(stats.lastMileDelay)ms"
         packetLossRateTxLabel.text = "\(stats.txPacketLossRate)%"
         packetLossRateRxLabel.text = "\(stats.rxPacketLossRate)%"
