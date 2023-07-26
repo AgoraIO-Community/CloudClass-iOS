@@ -49,8 +49,9 @@ protocol FcrUISceneExit: NSObjectProtocol {
     
     var popover = AgoraPopover(options: [.type(.down),
                                          .blackOverlayColor(UIColor.clear),
-                                         .cornerRadius(5.0),
+                                         .cornerRadius(10.0),
                                          .arrowSize(CGSize.zero),
+                                         .strokeColor(.black),
                                          .arrowPointerOffset(CGPoint(x: 0, y: 3))])
        
     
@@ -123,6 +124,8 @@ protocol FcrUISceneExit: NSObjectProtocol {
         ctrlMaskView.addGestureRecognizer(tap)
         
         view.addSubview(ctrlMaskView)
+        
+        popover.layer.masksToBounds = false
     }
     
     public func initViewFrame() {
@@ -158,6 +161,10 @@ protocol FcrUISceneExit: NSObjectProtocol {
         popover.layer.shadowOffset = shadow.offset
         popover.layer.shadowOpacity = shadow.opacity
         popover.layer.shadowRadius = shadow.radius
+        
+        popover.backgroundColor = .clear
+        popover.strokeColor = .clear
+        popover.borderColor = .clear
         
         view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
         
@@ -270,6 +277,6 @@ protocol FcrUISceneExit: NSObjectProtocol {
         popover.show(contentView,
                      fromView: fromView)
         
-        popover.layer.masksToBounds = false
+       
     }
 }

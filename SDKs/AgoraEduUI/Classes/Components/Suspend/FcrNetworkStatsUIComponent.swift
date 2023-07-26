@@ -135,6 +135,8 @@ class FcrNetworkStatsUIComponent: FcrUIComponent,
     func updateViewProperties() {
         let config = UIConfig.networkStats
         
+        view.backgroundColor = config.backgroundColor
+        
         titleLabel.font = config.title.font
         
         lineView.backgroundColor = config.sepLine.backgroundColor
