@@ -77,7 +77,6 @@ struct FcrUIItemAlertButton: FcrUIItemProtocol {
     let font: UIFont              = FcrUIFontGroup.font17
 }
 
-
 // MARK: - state bar
 struct FcrUIItemStateBarNetworkState: FcrUIItemProtocol {
     var visible: Bool = true
@@ -86,7 +85,13 @@ struct FcrUIItemStateBarNetworkState: FcrUIItemProtocol {
     let goodImage: UIImage?         = .edu_ui_image("ic_network_good")
     let unknownImage: UIImage?      = .edu_ui_image("ic_network_unknown")
     let badImage: UIImage?          = .edu_ui_image("ic_network_bad")
-    let disconnectedImage: UIImage? = .edu_ui_image("ic_network_down")
+    let downImage: UIImage?         = .edu_ui_image("ic_network_down")
+    
+    let goodColor: UIColor          = FcrUIColorGroup.systemSafeColor
+    let badColor: UIColor           = FcrUIColorGroup.systemWarningColor
+    let downColor: UIColor          = FcrUIColorGroup.systemErrorColor
+    
+    let textFont: UIFont            = FcrUIFontGroup.font9
 }
 
 struct FcrUIItemStateBarRoomName: FcrUIItemProtocol {
@@ -641,4 +646,50 @@ struct FcrUIItemAgoraChatPicture: FcrUIItemProtocol {
     
     let textColor = FcrUIColorGroup.textContrastColor
     let font = FcrUIFontGroup.font13
+}
+
+// MARK: - Network stats
+struct FcrUIItemNetworkStatsTitle: FcrUIItemProtocol {
+    var visible: Bool = true
+    var enable: Bool  = true
+    
+    let goodColor: UIColor          = FcrUIColorGroup.systemSafeColor
+    let badColor: UIColor           = FcrUIColorGroup.systemWarningColor
+    let downColor: UIColor          = FcrUIColorGroup.systemErrorColor
+    
+    let font = FcrUIFontGroup.font12
+}
+
+struct FcrUIItemNetworkStatsLatencyTitle: FcrUIItemProtocol {
+    var visible: Bool = true
+    var enable: Bool  = true
+    
+    let textColor: UIColor = FcrUIColorGroup.textLevel2Color
+    let font = FcrUIFontGroup.font12
+}
+
+struct FcrUIItemNetworkStatsLatencyValue: FcrUIItemProtocol {
+    var visible: Bool = true
+    var enable: Bool  = true
+    
+    let textColor: UIColor = FcrUIColorGroup.textLevel1Color
+    let font = FcrUIFontGroup.font12
+}
+
+struct FcrUIItemNetworkStatsPacketLossRateTitle: FcrUIItemProtocol {
+    var visible: Bool = true
+    var enable: Bool  = true
+    
+    let textColor: UIColor = FcrUIColorGroup.textLevel2Color
+    let font = FcrUIFontGroup.font12
+}
+
+struct FcrUIItemNetworkStatsPacketLossRateValue: FcrUIItemProtocol {
+    var visible: Bool = true
+    var enable: Bool  = true
+    
+    let textColor: UIColor = FcrUIColorGroup.textLevel1Color
+    let font = FcrUIFontGroup.font12
+    let txImage = UIImage.edu_ui_image("fcr_sendnetwork")
+    let rxImage = UIImage.edu_ui_image("fcr_receivenetwork")
 }

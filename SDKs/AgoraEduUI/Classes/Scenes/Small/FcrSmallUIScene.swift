@@ -30,7 +30,10 @@ import AgoraWidget
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
                                                               monitorController: contextPool.monitor,
-                                                              groupController: contextPool.group)
+                                                              groupController: contextPool.group,
+                                                              delegate: self)
+    
+    private lazy var networkStatsComponent = FcrNetworkStatsUIComponent(monitorController: contextPool.monitor)
     
     /** 视窗渲染 控制器*/
     private lazy var renderComponent = FcrSmallTachedWindowUIComponent(roomController: contextPool.room,
@@ -565,7 +568,21 @@ extension FcrSmallUIScene: FcrToolCollectionUIComponentDelegate {
     }
 }
 
-// MARK: - AgoraChatUIComponentDelegate
+extension FcrSmallUIScene: FcrRoomStateUIComponentDelegate {
+    func onPressedNetworkState() {
+        ctrlView = nil
+        
+        networkStatsComponent.view.frame = CGRect(x: 0,
+                                                  y: 0,
+                                                  width: 130,
+                                                  height: 136)
+        
+        showPopover(contentView: networkStatsComponent.view,
+                    fromView: stateComponent.stateView.netStateView)
+    }
+}
+
+// MARK: - FcrHandsListUIComponentDelegate
 extension FcrSmallUIScene: FcrHandsListUIComponentDelegate {
     func updateHandsListRedLabel(_ count: Int) {
         if count == 0,
@@ -576,7 +593,7 @@ extension FcrSmallUIScene: FcrHandsListUIComponentDelegate {
     }
 }
 
-// MARK: - AgoraChatUIComponentDelegate
+// MARK: - FcrChatUIComponentDelegate
 extension FcrSmallUIScene: FcrChatUIComponentDelegate {
     func updateChatRedDot(isShow: Bool) {
         toolBarComponent.updateChatRedDot(isShow: isShow)

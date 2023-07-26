@@ -8,15 +8,32 @@
 import AgoraUIBaseViews
 import Masonry
 
-class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
-    
+fileprivate class FcrNetStateButton: UIButton {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imageView?.frame = CGRect(x: 10,
+                                  y: 0,
+                                  width: 14,
+                                  height: bounds.height)
+        
+        let x: CGFloat = 27
+        let width = bounds.width - x
+        
+        titleLabel?.frame = CGRect(x: x,
+                                   y: 0,
+                                   width: width,
+                                   height: bounds.height)
+    }
+}
+
+class FcrRoomStateBar: UIView, AgoraUIContentContainer {
     private var sepLine = UIView()
     
-    lazy var netStateView = UIImageView()
-    lazy var recordingStateView = UIView()
-    lazy var recordingLabel = UILabel()
-    lazy var timeLabel = UILabel()
-    lazy var titleLabel = UILabel()
+    private(set) lazy var netStateView: UIButton = FcrNetStateButton()
+    private(set) lazy var recordingStateView = UIView()
+    private(set) lazy var recordingLabel = UILabel()
+    private(set) lazy var timeLabel = UILabel()
+    private(set) lazy var titleLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,12 +58,13 @@ class AgoraRoomStateBar: UIView, AgoraUIContentContainer {
     func initViewFrame() {
         netStateView.mas_makeConstraints { make in
             if #available(iOS 11.0, *) {
-                make?.left.equalTo()(self.mas_safeAreaLayoutGuideLeft)?.offset()(10)
+                make?.left.equalTo()(self.mas_safeAreaLayoutGuideLeft)?.offset()(0)
             } else {
-                make?.left.equalTo()(self)?.offset()(10)
+                make?.left.equalTo()(self)?.offset()(0)
             }
-            make?.width.height().equalTo()(20)
-            make?.centerY.equalTo()(netStateView.superview)
+            make?.top.equalTo()(0)
+            make?.bottom.equalTo()(0)
+            make?.width.equalTo()(100)
         }
         
         timeLabel.mas_makeConstraints { make in

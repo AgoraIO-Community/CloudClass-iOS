@@ -131,6 +131,13 @@ fcr_group_back_exit = "退出";
 fcr_group_back_to_main_room = "回到大房间";
 fcr_group_exit_room = "离开教室";
 
+// Network
+fcr_network_label_network_quality_excellent = "良好";
+fcr_network_label_network_quality_bad = "较差";
+fcr_network_label_network_quality_down = "网络已断开";
+fcr_network_label_network_latency = "网络延迟";
+fcr_network_label_network_packet_loss_rate = "丢包率";
+
 // Record
 fcr_record_recording = "录制中...";
 

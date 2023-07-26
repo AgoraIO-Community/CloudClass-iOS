@@ -126,6 +126,13 @@ fcr_group_back_exit = "Exit";
 fcr_group_back_to_main_room = "Return to main session";
 fcr_group_exit_room = "Leave the room";
 
+// Network
+fcr_network_label_network_quality_excellent = "Good";
+fcr_network_label_network_quality_bad = "Bad";
+fcr_network_label_network_quality_down = "Disconnect";
+fcr_network_label_network_latency = "Latency";
+fcr_network_label_network_packet_loss_rate = "Loss";
+
 // Record
 fcr_record_recording = "Recording...";
 // vocational

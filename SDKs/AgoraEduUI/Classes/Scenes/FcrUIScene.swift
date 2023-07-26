@@ -47,6 +47,11 @@ protocol FcrUISceneExit: NSObjectProtocol {
     /** 容器视图，用来框出一块16：9的适配区域*/
     public var contentView: UIView = UIView()
     
+    var popover = AgoraPopover(options: [.type(.down),
+                                         .blackOverlayColor(UIColor.clear),
+                                         .cornerRadius(5.0),
+                                         .arrowSize(CGSize(width: 8, height: 4))])
+    
     weak var delegate: FcrUISceneDelegate?
     
     let contextPool: AgoraEduContextPool
@@ -249,5 +254,11 @@ protocol FcrUISceneExit: NSObjectProtocol {
             animaView.transform = .identity
             animaView.alpha = 1
         }
+    }
+    
+    func showPopover(contentView: UIView,
+                     fromView: UIView) {
+        popover.show(contentView,
+                     fromView: fromView)
     }
 }
