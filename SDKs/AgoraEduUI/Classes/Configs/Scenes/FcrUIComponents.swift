@@ -366,7 +366,7 @@ struct FcrUIComponentAgoraChat: FcrUIComponentProtocol {
 struct FcrUIComponentNetworkStats: FcrUIItemProtocol {
     var visible: Bool = true
     var enable: Bool = true
-    var backgroundColor: UIColor = FcrUIColorGroup.systemForegroundColor
+    var backgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
     
     let sepLine = FcrUIItemSepLine()
     let title = FcrUIItemNetworkStatsTitle()
