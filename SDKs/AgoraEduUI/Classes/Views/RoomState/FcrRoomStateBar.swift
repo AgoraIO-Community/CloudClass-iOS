@@ -64,7 +64,7 @@ class FcrRoomStateBar: UIView, AgoraUIContentContainer {
             }
             make?.top.equalTo()(0)
             make?.bottom.equalTo()(0)
-            make?.width.equalTo()(100)
+            make?.width.equalTo()(130)
         }
         
         timeLabel.mas_makeConstraints { make in
