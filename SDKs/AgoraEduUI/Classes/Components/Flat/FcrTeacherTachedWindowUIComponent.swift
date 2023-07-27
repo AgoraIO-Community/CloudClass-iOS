@@ -243,6 +243,15 @@ extension FcrTeacherTachedWindowUIComponent: AgoraEduStreamHandler {
         
         updateItemOfTeacher(stream.owner)
     }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operatorUser: AgoraEduContextUserInfo?) {
+        guard stream.owner.userRole == .teacher else {
+            return
+        }
+        
+        deleteItemOfTeacher(stream.owner)
+    }
 }
 
 extension FcrTeacherTachedWindowUIComponent: AgoraEduMediaHandler {
