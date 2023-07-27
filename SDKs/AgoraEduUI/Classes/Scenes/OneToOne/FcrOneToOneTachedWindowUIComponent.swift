@@ -270,6 +270,18 @@ extension FcrOneToOneTachedWindowUIComponent: AgoraEduStreamHandler {
             break
         }
     }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operatorUser: AgoraEduContextUserInfo?) {
+        switch stream.owner.userRole {
+        case .teacher:
+            deleteItemOfTeacher()
+        case .student:
+            deleteItemOfStudent()
+        default:
+            break
+        }
+    }
 }
 
 extension FcrOneToOneTachedWindowUIComponent: AgoraEduMediaHandler {
