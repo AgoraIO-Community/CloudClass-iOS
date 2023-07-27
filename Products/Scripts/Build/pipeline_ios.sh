@@ -37,7 +37,7 @@ do
   errorPrint $? "${SDK} build"
   
   # publish
-  if [ "${Package_Publish}" = true ]; then
+  if [ "${Package_Publish}" = true ] || [[ "${Branch_Name}" =~ "release" ]]; then
     ${CICD_Pack_Path}/v1/package.sh ${SDK} ${Repo_Name}
 
     errorPrint $? "${SDK} package"
