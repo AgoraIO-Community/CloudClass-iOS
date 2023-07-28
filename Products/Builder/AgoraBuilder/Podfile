@@ -9,5 +9,21 @@ target 'AgoraBuilder' do
   #ContentStartIndex
   
   #ContentEndIndex
+  
+  low_version_target_names = ["Armin", "YYModel", "Masonry", "NTLBridge", "CocoaLumberjack", "AliyunOSSiOS"]
+  
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+          config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        end
+        
+        if low_version_target_names.include?(target.name)
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '10.0'
+        end
+      end
+    end
+  end
 end
 
