@@ -829,6 +829,14 @@ extension FcrLectureUIScene: FcrClassStateUIComponentDelegate {
             make?.size.equalTo()(self.classStateComponent.suggestSize)
         }
     }
+    
+    func onHideStartClass() {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+            return
+        }
+        
+        classStateComponent.view.agora_visible = false
+    }
 }
 
 // MARK: - FcrRoomStateUIComponentDelegate
