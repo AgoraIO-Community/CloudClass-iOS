@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AgoraEduMediaOptions : NSObject
 @property (nonatomic, strong, nullable) AgoraEduMediaEncryptionConfig *encryptionConfig;
 // 分辨率配置属性
-@property (nonatomic, strong, nullable) AgoraEduVideoEncoderConfig *videoEncoderConfig;
+@property (nonatomic, strong) AgoraEduVideoEncoderConfig *videoEncoderConfig;
 // RTC观众延时级别,默认lowlatency（极速直播）
 @property (nonatomic, assign) AgoraEduLatencyLevel latencyLevel;
 // 学生上麦默认打开/关闭视频
@@ -80,7 +80,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 区域
 @property (nonatomic, assign) AgoraEduRegion region;
 // 媒体选项
-@property (nonatomic, strong, nullable) AgoraEduMediaOptions *mediaOptions;
+@property (nonatomic, strong) AgoraEduMediaOptions *mediaOptions;
 // 用户自定属性
 @property (nonatomic, copy, nullable) NSDictionary<NSString *, id> *userProperties;
 // widgets
