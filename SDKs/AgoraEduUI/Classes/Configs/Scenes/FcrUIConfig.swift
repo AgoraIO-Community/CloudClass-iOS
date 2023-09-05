@@ -11,6 +11,7 @@ protocol FcrUIConfig {
     /**Scene Builder Set**/
     // main
     var stateBar: FcrUIComponentStateBar { get }
+    var networkStats: FcrUIComponentNetworkStats { get }
     var teacherVideo: FcrUIComponentTeacherVideo { get }
     var studentVideo: FcrUIComponentStudentVideo { get }
     var breakoutRoom: FcrUIComponentBreakoutRoom { get }

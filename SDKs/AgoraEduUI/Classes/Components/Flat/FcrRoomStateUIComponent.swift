@@ -9,6 +9,10 @@ import AgoraUIBaseViews
 import AgoraEduCore
 import Masonry
 
+protocol FcrRoomStateUIComponentDelegate: NSObjectProtocol {
+    func onPressedNetworkState()
+}
+
 struct AgoraClassTimeInfo {
     var state: AgoraEduContextClassState
     var startTime: Int64
@@ -25,23 +29,27 @@ class FcrRoomStateUIComponent: FcrUIComponent {
     private let subRoom: AgoraEduSubRoomContext?
     
     /** 状态栏*/
-    private var stateView = AgoraRoomStateBar(frame: .zero)
+    let stateView = FcrRoomStateBar(frame: .zero)
     
     /** 房间计时器*/
     private var timer: Timer?
     /** 房间时间信息*/
     private var timeInfo: AgoraClassTimeInfo?
     
+    weak var delegate: FcrRoomStateUIComponentDelegate?
+    
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
          monitorController: AgoraEduMonitorContext,
          groupController: AgoraEduGroupContext,
-         subRoom: AgoraEduSubRoomContext? = nil) {
+         subRoom: AgoraEduSubRoomContext? = nil,
+         delegate: FcrRoomStateUIComponentDelegate? = nil) {
         self.roomController = roomController
         self.userController = userController
         self.monitorController = monitorController
         self.groupController = groupController
         self.subRoom = subRoom
+        self.delegate = delegate
         
         super.init(nibName: nil,
                    bundle: nil)
@@ -94,6 +102,10 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         } else {
             stateView.titleLabel.text = roomController.getRoomInfo().roomName
         }
+        
+        stateView.netStateView.addTarget(self,
+                                         action: #selector(onPressedNetworkStateView),
+                                         for: .touchUpInside)
     }
     
     func initViewFrame() {
@@ -109,11 +121,14 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
         view.agora_visible = config.visible
         
         stateView.netStateView.agora_enable = config.networkState.enable
-        stateView.netStateView.image = config.networkState.disconnectedImage
+        
+        stateView.netStateView.titleLabel?.font = config.networkState.textFont
         
         stateView.timeLabel.agora_enable = config.scheduleTime.enable
         
         stateView.titleLabel.agora_enable = config.roomName.enable
+        
+        updateStateView(with: .good)
         
         let recodingIsVisible: Bool = (roomController.getRecordingState() == .started)
         
@@ -216,6 +231,44 @@ private extension FcrRoomStateUIComponent {
             return "\(hourString):\(minuteString):\(secondString)"
         }
     }
+    
+    @objc func onPressedNetworkStateView() {
+        delegate?.onPressedNetworkState()
+    }
+    
+    func updateStateView(with quality: AgoraEduContextNetworkQuality) {
+        let config = UIConfig.stateBar.networkState
+        
+        var image: UIImage?
+        var text: String
+        var color: UIColor
+        
+        switch quality {
+        case .good:
+            image = config.goodImage
+            text = "fcr_network_label_network_quality_excellent".edu_ui_localized()
+            color = config.goodColor
+        case .bad:
+            image = config.badImage
+            text = "fcr_network_label_network_quality_bad".edu_ui_localized()
+            color = config.badColor
+        case .down:
+            image = config.downImage
+            text = "fcr_network_label_network_quality_down".edu_ui_localized()
+            color = config.downColor
+        default:
+            return
+        }
+        
+        stateView.netStateView.setImage(image,
+                                        for: .normal)
+        
+        stateView.netStateView.setTitle(text,
+                                        for: .normal)
+        
+        stateView.netStateView.setTitleColor(color,
+                                             for: .normal)
+    }
 }
 
 // MARK: - AgoraEduRoomHandler
@@ -266,34 +319,17 @@ extension FcrRoomStateUIComponent: AgoraEduGroupHandler {
 // MARK: - AgoraEduMonitorHandler
 extension FcrRoomStateUIComponent: AgoraEduMonitorHandler {
     func onLocalConnectionUpdated(state: AgoraEduContextConnectionState) {
-        var image: UIImage?
         switch state {
-        case .disconnected, .reconnecting:
-            image = UIConfig.stateBar.networkState.disconnectedImage
+        case .reconnecting, .disconnected:
+            updateStateView(with: .down)
+        case .connected:
+            updateStateView(with: .good)
         default:
-            return
+            break
         }
-        stateView.netStateView.image = image
     }
     
     func onLocalNetworkQualityUpdated(quality: AgoraEduContextNetworkQuality) {
-        let networkConfig = UIConfig.stateBar.networkState
-        
-        var image: UIImage?
-        
-        switch quality {
-        case .unknown:
-            image = networkConfig.unknownImage
-        case .good:
-            image = networkConfig.goodImage
-        case .bad:
-            image = networkConfig.badImage
-        case .down:
-            image = networkConfig.disconnectedImage
-        default:
-            return
-        }
-        
-        stateView.netStateView.image = image
+        updateStateView(with: quality)
     }
 }

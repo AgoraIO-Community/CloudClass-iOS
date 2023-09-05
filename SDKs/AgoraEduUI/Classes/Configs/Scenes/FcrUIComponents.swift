@@ -361,3 +361,19 @@ struct FcrUIComponentAgoraChat: FcrUIComponentProtocol {
     
     let shadow = FcrUIItemShadow()
 }
+
+// Network stats
+struct FcrUIComponentNetworkStats: FcrUIItemProtocol {
+    var visible: Bool = true
+    var enable: Bool = true
+    var backgroundColor: UIColor = FcrUIColorGroup.systemComponentColor
+    
+    let sepLine = FcrUIItemSepLine()
+    let title = FcrUIItemNetworkStatsTitle()
+    let latencyTitle = FcrUIItemNetworkStatsLatencyTitle()
+    let latencyValue = FcrUIItemNetworkStatsLatencyValue()
+    let packetLossRateTitle = FcrUIItemNetworkStatsPacketLossRateTitle()
+    let packetLossRateValue = FcrUIItemNetworkStatsPacketLossRateValue()
+    
+    let shadow = FcrUIItemShadow()
+}

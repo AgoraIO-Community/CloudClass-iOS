@@ -7,6 +7,7 @@
 
 struct FcrLectureUIConfig: FcrUIConfig {
     let stateBar        = FcrUIComponentStateBar()
+    let networkStats    = FcrUIComponentNetworkStats()
     let teacherVideo    = FcrUIComponentTeacherVideo()
     let studentVideo    = FcrUIComponentStudentVideo()
     let breakoutRoom    = FcrUIComponentBreakoutRoom()

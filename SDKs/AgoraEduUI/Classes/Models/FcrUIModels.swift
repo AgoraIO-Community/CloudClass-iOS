@@ -17,7 +17,7 @@ struct FcrRewardViewData {
     
     static func create(count: Int,
                        isHidden: Bool) -> FcrRewardViewData {
-        let rewardImage = UIConfig.studentVideo.mask.rewardImage!
+        let rewardImage = UIConfig.studentVideo.mask.rewardImage ?? UIImage()
         let countString = "x\(count)"
         
         let data = FcrRewardViewData(count: countString,
@@ -115,7 +115,7 @@ struct FcrStreamWindowViewData {
     
     private static func createVideoViewState(stream: AgoraEduContextStreamInfo) -> FcrStreamWindowMediaViewState {
         let maskConfig = UIConfig.studentVideo.mask
-        let sourceOffImage = maskConfig.cameraOffImage!
+        let sourceOffImage = maskConfig.cameraOffImage ?? UIImage()
         
         var videoState = FcrStreamWindowMediaViewState.none(sourceOffImage)
         
@@ -149,7 +149,7 @@ struct FcrStreamWindowViewData {
     
     private static func createAudioViewState(stream: AgoraEduContextStreamInfo) -> FcrStreamWindowMediaViewState {
         let config = UIConfig.studentVideo.mask
-        let sourceOffImage = config.micOffImage!
+        let sourceOffImage = config.micOffImage ?? UIImage()
         
         var audioState = FcrStreamWindowMediaViewState.none(sourceOffImage)
         
@@ -173,7 +173,7 @@ struct FcrStreamWindowViewData {
             audioState = FcrStreamWindowMediaViewState.mediaSourceOpen(noPrivilegeImage)
             // both
         case 3:
-            let image = config.micOnImage!
+            let image = config.micOnImage ?? UIImage()
             audioState = FcrStreamWindowMediaViewState.both(image)
         default:
             break

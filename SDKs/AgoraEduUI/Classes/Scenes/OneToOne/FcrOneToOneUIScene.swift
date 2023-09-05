@@ -54,7 +54,11 @@ import UIKit
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
                                                               monitorController: contextPool.monitor,
-                                                              groupController: contextPool.group)
+                                                              groupController: contextPool.group,
+                                                              delegate: self)
+    
+    private lazy var networkStatsComponent = FcrNetworkStatsUIComponent(roomId: contextPool.room.getRoomInfo().roomUuid,
+                                                                        monitorController: contextPool.monitor)
    
     /** 工具栏*/
     private lazy var toolBarComponent = FcrToolBarUIComponent(userController: contextPool.user,
@@ -709,6 +713,21 @@ extension FcrOneToOneUIScene: FcrClassStateUIComponentDelegate {
             make?.bottom.equalTo()(contentView)?.offset()(bottom)
             make?.size.equalTo()(classStateComponent.suggestSize)
         }
+    }
+}
+
+// MARK: - FcrRoomStateUIComponentDelegate
+extension FcrOneToOneUIScene: FcrRoomStateUIComponentDelegate {
+    func onPressedNetworkState() {
+        ctrlView = nil
+        
+        networkStatsComponent.view.frame = CGRect(x: 0,
+                                                  y: 0,
+                                                  width: 130,
+                                                  height: 136)
+        
+        showPopover(contentView: networkStatsComponent.view,
+                    fromView: stateComponent.stateView.netStateView)
     }
 }
 

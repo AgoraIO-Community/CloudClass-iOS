@@ -30,7 +30,11 @@ import AgoraWidget
     private lazy var stateComponent = FcrRoomStateUIComponent(roomController: contextPool.room,
                                                               userController: contextPool.user,
                                                               monitorController: contextPool.monitor,
-                                                              groupController: contextPool.group)
+                                                              groupController: contextPool.group,
+                                                              delegate: self)
+    
+    private lazy var networkStatsComponent = FcrNetworkStatsUIComponent(roomId: contextPool.room.getRoomInfo().roomUuid,
+                                                                        monitorController: contextPool.monitor)
     
     /** 视窗渲染 控制器*/
     private lazy var renderComponent = FcrSmallTachedWindowUIComponent(roomController: contextPool.room,
@@ -230,6 +234,7 @@ import AgoraWidget
             toolBarComponent.updateTools([.setting,
                                           .message])
         }
+        
     }
     
     public override func initViewFrame() {
@@ -565,7 +570,7 @@ extension FcrSmallUIScene: FcrToolCollectionUIComponentDelegate {
     }
 }
 
-// MARK: - AgoraChatUIComponentDelegate
+// MARK: - FcrHandsListUIComponentDelegate
 extension FcrSmallUIScene: FcrHandsListUIComponentDelegate {
     func updateHandsListRedLabel(_ count: Int) {
         if count == 0,
@@ -576,7 +581,7 @@ extension FcrSmallUIScene: FcrHandsListUIComponentDelegate {
     }
 }
 
-// MARK: - AgoraChatUIComponentDelegate
+// MARK: - FcrChatUIComponentDelegate
 extension FcrSmallUIScene: FcrChatUIComponentDelegate {
     func updateChatRedDot(isShow: Bool) {
         toolBarComponent.updateChatRedDot(isShow: isShow)
@@ -709,6 +714,8 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
             vc.viewWillInactive()
         }
         
+        networkStatsComponent.viewWillInactive()
+        
         presentedViewController?.dismiss(animated: false)
         
         self.ctrlView = nil
@@ -811,6 +818,21 @@ extension FcrSmallUIScene: FcrBoardUIComponentDelegate {
     }
 }
 
+// MARK: - FcrRoomStateUIComponentDelegate
+extension FcrSmallUIScene: FcrRoomStateUIComponentDelegate {
+    func onPressedNetworkState() {
+        ctrlView = nil
+        
+        networkStatsComponent.view.frame = CGRect(x: 0,
+                                                  y: 0,
+                                                  width: 130,
+                                                  height: 136)
+        
+        showPopover(contentView: networkStatsComponent.view,
+                    fromView: stateComponent.stateView.netStateView)
+    }
+}
+
 // MARK: - FcrUIcomponentDataSource
 extension FcrSmallUIScene: FcrUIComponentDataSource {
     func componentNeedGrantedUserList() -> [String] {
@@ -870,6 +892,8 @@ private extension FcrSmallUIScene {
             
             vc.viewWillActive()
         }
+        
+        networkStatsComponent.viewWillActive()
         
         self.subRoom = nil
     }

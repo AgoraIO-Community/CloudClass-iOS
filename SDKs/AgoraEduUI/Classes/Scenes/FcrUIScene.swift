@@ -47,6 +47,14 @@ protocol FcrUISceneExit: NSObjectProtocol {
     /** 容器视图，用来框出一块16：9的适配区域*/
     public var contentView: UIView = UIView()
     
+    var popover = AgoraPopover(options: [.type(.down),
+                                         .blackOverlayColor(UIColor.clear),
+                                         .cornerRadius(10.0),
+                                         .arrowSize(CGSize.zero),
+                                         .strokeColor(.black),
+                                         .arrowPointerOffset(CGPoint(x: 0, y: 3))])
+       
+    
     weak var delegate: FcrUISceneDelegate?
     
     let contextPool: AgoraEduContextPool
@@ -116,6 +124,8 @@ protocol FcrUISceneExit: NSObjectProtocol {
         ctrlMaskView.addGestureRecognizer(tap)
         
         view.addSubview(ctrlMaskView)
+        
+        popover.layer.masksToBounds = false
     }
     
     public func initViewFrame() {
@@ -145,6 +155,17 @@ protocol FcrUISceneExit: NSObjectProtocol {
     }
     
     public func updateViewProperties() {
+        let shadow = FcrUIItemShadow()
+
+        popover.layer.shadowColor = shadow.color
+        popover.layer.shadowOffset = shadow.offset
+        popover.layer.shadowOpacity = shadow.opacity
+        popover.layer.shadowRadius = shadow.radius
+        
+        popover.backgroundColor = .clear
+        popover.strokeColor = .clear
+        popover.borderColor = .clear
+        
         view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
         
         contentView.borderWidth = FcrUIFrameGroup.borderWidth
@@ -249,5 +270,13 @@ protocol FcrUISceneExit: NSObjectProtocol {
             animaView.transform = .identity
             animaView.alpha = 1
         }
+    }
+    
+    func showPopover(contentView: UIView,
+                     fromView: UIView) {
+        popover.show(contentView,
+                     fromView: fromView)
+        
+       
     }
 }
