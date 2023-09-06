@@ -13,6 +13,7 @@ import UIKit
 
 protocol FcrClassStateUIComponentDelegate: NSObjectProtocol {
     func onShowStartClass()
+    func onHideStartClass()
 }
 
 class FcrClassStateUIComponent: FcrUIComponent {
@@ -116,6 +117,14 @@ extension FcrClassStateUIComponent: AgoraEduRoomHandler {
         if roomController.getClassInfo().state == .before {
             delegate?.onShowStartClass()
         }
+    }
+    
+    func onClassStateUpdated(state: AgoraEduContextClassState) {
+        guard state != .before else {
+            return
+        }
+        
+        delegate?.onHideStartClass()
     }
 }
 

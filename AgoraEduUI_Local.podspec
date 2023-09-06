@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraEduUI"
-  spec.version      = "2.8.60"
+  spec.version      = "2.8.70"
   spec.summary      = "Agora Edu UI"
   spec.description  = "Agora Edu UI SDK"
   spec.homepage     = "https://docs.agora.io/en/agora-class/landing-page?platform=iOS"

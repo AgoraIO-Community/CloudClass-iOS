@@ -581,8 +581,15 @@ extension AgoraVocationalUIScene: FcrClassStateUIComponentDelegate {
             make?.size.equalTo()(classStateController.suggestSize)
         }
     }
+    
+    func onHideStartClass() {
+        guard contextPool.user.getLocalUserInfo().userRole == .teacher else {
+            return
+        }
+        
+        classStateController.view.agora_visible = false
+    }
 }
-
 
 private extension AgoraVocationalUIScene {
     func updateRenderLayout() {

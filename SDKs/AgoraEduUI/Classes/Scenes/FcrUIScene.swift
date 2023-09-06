@@ -6,6 +6,7 @@
 //
 
 import AgoraUIBaseViews
+import SwifterSwift
 import AgoraEduCore
 import AgoraWidget
 import UIKit
@@ -168,7 +169,7 @@ protocol FcrUISceneExit: NSObjectProtocol {
         
         view.backgroundColor = FcrUIColorGroup.systemBackgroundColor
         
-        contentView.borderWidth = FcrUIFrameGroup.borderWidth
+        contentView.layer.borderWidth = FcrUIFrameGroup.borderWidth
         contentView.layer.borderColor = FcrUIColorGroup.systemDividerColor.cgColor
         contentView.backgroundColor = FcrUIColorGroup.systemForegroundColor
         

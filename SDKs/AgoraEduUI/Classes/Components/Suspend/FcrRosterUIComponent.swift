@@ -6,7 +6,6 @@
 //
 
 import AgoraEduCore
-import SwifterSwift
 import AgoraWidget
 import UIKit
 

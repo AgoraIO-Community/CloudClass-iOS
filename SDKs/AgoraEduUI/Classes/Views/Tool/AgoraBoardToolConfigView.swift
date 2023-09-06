@@ -5,7 +5,6 @@
 //  Created by DoubleCircle on 2022/2/10.
 //
 
-import SwifterSwift
 import AgoraWidget
 import UIKit
 
