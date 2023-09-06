@@ -165,6 +165,7 @@ extension FcrDetachedStreamWindowUIComponent {
     func onWillDisplayItem(_ item: FcrDetachedStreamWindowWidgetItem,
                            renderView: FcrWindowRenderVideoView) {
         let renderConfig = AgoraEduContextRenderConfig()
+        renderConfig.mode = .fit
         
         switch item.type {
         case .camera:
