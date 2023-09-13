@@ -228,7 +228,8 @@ extension FcrTeacherTachedWindowUIComponent: AgoraEduUserHandler {
 extension FcrTeacherTachedWindowUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.owner.userRole == .teacher else {
+        guard stream.owner.userRole == .teacher,
+              stream.videoSourceType == .camera else {
             return
         }
         
@@ -237,7 +238,8 @@ extension FcrTeacherTachedWindowUIComponent: AgoraEduStreamHandler {
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.owner.userRole == .teacher else {
+        guard stream.owner.userRole == .teacher,
+              stream.videoSourceType == .camera else {
             return
         }
         
@@ -246,7 +248,8 @@ extension FcrTeacherTachedWindowUIComponent: AgoraEduStreamHandler {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
-        guard stream.owner.userRole == .teacher else {
+        guard stream.owner.userRole == .teacher,
+              stream.videoSourceType == .camera else {
             return
         }
         
