@@ -249,6 +249,10 @@ extension FcrOneToOneTachedWindowUIComponent: AgoraEduUserHandler {
 extension FcrOneToOneTachedWindowUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
+        guard stream.videoSourceType == .camera else {
+            return
+        }
+        
         switch stream.owner.userRole {
         case .teacher:
             updateItemOfTeacher()
@@ -261,6 +265,10 @@ extension FcrOneToOneTachedWindowUIComponent: AgoraEduStreamHandler {
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
+        guard stream.videoSourceType == .camera else {
+            return
+        }
+        
         switch stream.owner.userRole {
         case .teacher:
             updateItemOfTeacher()
@@ -273,6 +281,10 @@ extension FcrOneToOneTachedWindowUIComponent: AgoraEduStreamHandler {
     
     func onStreamLeft(stream: AgoraEduContextStreamInfo,
                       operatorUser: AgoraEduContextUserInfo?) {
+        guard stream.videoSourceType == .camera else {
+            return
+        }
+        
         switch stream.owner.userRole {
         case .teacher:
             deleteItemOfTeacher()
