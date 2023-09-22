@@ -54,8 +54,6 @@ class FcrRoomGlobalUIComponent: FcrUIComponent {
     private var localStream: AgoraEduContextStreamInfo?
     private var hasJoinedSubRoomId: String?
     
-    var isRequestingHelp: Bool = false
-    
     init(roomController: AgoraEduRoomContext,
          userController: AgoraEduUserContext,
          monitorController: AgoraEduMonitorContext,
@@ -420,14 +418,12 @@ extension FcrRoomGlobalUIComponent: AgoraEduGroupHandler {
     func onUserListRejectedToSubRoom(userList: [String],
                                      subRoomUuid: String,
                                      operatorUser: AgoraEduContextUserInfo?) {
-        guard isRequestingHelp,
-              let teacherUserId = userController.getUserList(role: .teacher)?.first?.userUuid,
-              userList.contains(teacherUserId)
+        guard let _ = subRoom,
+              let `operatorUser` = operatorUser,
+              operatorUser.userRole == .teacher
         else {
             return
         }
-        
-        isRequestingHelp = false
         
         let confirmAction = AgoraAlertAction(title: "fcr_group_sure".edu_ui_localized())
         

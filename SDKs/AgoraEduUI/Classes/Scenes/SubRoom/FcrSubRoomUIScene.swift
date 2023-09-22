@@ -908,8 +908,6 @@ private extension FcrSubRoomUIScene {
                 break
             }
             
-            globalComponent.isRequestingHelp = true
-            
             let inviteActionTitle = "fcr_group_invite".edu_ui_localized()
             
             let actionInvite = AgoraAlertAction(title: inviteActionTitle) { [weak self] _ in
