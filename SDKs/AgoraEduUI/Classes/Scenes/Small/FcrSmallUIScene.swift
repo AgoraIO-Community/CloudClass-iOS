@@ -708,6 +708,9 @@ extension FcrSmallUIScene: FcrRoomGlobalUIComponentDelegate {
     }
     
     func onLocalUserAddedToSubRoom(subRoomId: String) {
+        onlyExitSubRoom(reason: .normal,
+                        animated: false)
+        
         guard UIConfig.breakoutRoom.enable,
               let subRoom = contextPool.group.createSubRoomObject(subRoomUuid: subRoomId)
         else {
@@ -884,9 +887,10 @@ private extension FcrSmallUIScene {
         renderComponent.updateLayout(layout)
     }
     
-    func onlyExitSubRoom(reason: FcrUISceneExitReason) {
+    func onlyExitSubRoom(reason: FcrUISceneExitReason,
+                         animated: Bool = true) {
         subRoom?.dismiss(reason: reason,
-                         animated: true)
+                         animated: animated)
         
         for child in children {
             guard let vc = child as? AgoraUIActivity else {
