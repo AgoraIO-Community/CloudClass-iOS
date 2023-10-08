@@ -77,7 +77,7 @@ class FcrDetachedStreamWindowUIComponent: UIViewController {
     }
     
     deinit {
-        // Edge case:
+        // Case:
         // During the animated movement of the view, if the view controller gets destroyed,
         // it results in the widget view remaining on the top window and unable to be removed.
         for item in widgets.values {
