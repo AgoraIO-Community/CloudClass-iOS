@@ -77,6 +77,13 @@ class FcrDetachedStreamWindowUIComponent: UIViewController {
     }
     
     deinit {
+        // Edge case:
+        // During the animated movement of the view, if the view controller gets destroyed,
+        // it results in the widget view remaining on the top window and unable to be removed.
+        for item in widgets.values {
+            item.view.removeFromSuperview()
+        }
+        
         print("\(#function): \(self.classForCoder)")
     }
     
@@ -273,6 +280,7 @@ private extension FcrDetachedStreamWindowUIComponent {
         dataSource.remove(at: index)
         
         // Widget
+        widget.view.removeFromSuperview()
         widgets.removeValue(forKey: item.widgetObjectId)
         
         // Frame & Animation
@@ -471,12 +479,13 @@ private extension FcrDetachedStreamWindowUIComponent {
                       // Avoid item was removed after animation
                       let index = self.dataSource.firstItemIndex(widgetObjectId: widgetObjectId)
                 else {
+                    widgetView.removeFromSuperview()
                     return
                 }
                 
                 self.updateItemHierarchy(zIndex,
                                          index: index)
-                
+
                 widgetView.frame = rect
             }
         } else {
