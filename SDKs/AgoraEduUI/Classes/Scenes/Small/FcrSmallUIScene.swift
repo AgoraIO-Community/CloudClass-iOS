@@ -889,8 +889,12 @@ private extension FcrSmallUIScene {
     
     func onlyExitSubRoom(reason: FcrUISceneExitReason,
                          animated: Bool = true) {
-        subRoom?.dismiss(reason: reason,
-                         animated: animated)
+        guard let `subRoom` = subRoom else {
+            return
+        }
+        
+        subRoom.dismiss(reason: reason,
+                        animated: animated)
         
         for child in children {
             guard let vc = child as? AgoraUIActivity else {
