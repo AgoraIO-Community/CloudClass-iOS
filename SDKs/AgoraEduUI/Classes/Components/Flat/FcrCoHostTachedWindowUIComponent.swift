@@ -155,6 +155,10 @@ private extension FcrCoHostTachedWindowUIComponent {
     }
     
     func deleteItemOfCoHost(by user: AgoraEduContextUserInfo) {
+        if let renderView = getRenderView(userId: user.userUuid) {
+            renderView.stopWaving()
+        }
+        
         deleteItem(of: user.userUuid)
     }
     
