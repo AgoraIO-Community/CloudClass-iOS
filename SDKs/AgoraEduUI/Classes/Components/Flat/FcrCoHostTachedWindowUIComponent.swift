@@ -96,7 +96,7 @@ class FcrCoHostTachedWindowUIComponent: FcrTachedStreamWindowUIComponent {
 
 extension FcrCoHostTachedWindowUIComponent: AgoraUIActivity {
     func viewWillActive() {
-        addItemsOfCoHost()
+        addItems()
         
         userController.registerUserEventHandler(self)
         streamController.registerStreamEventHandler(self)
@@ -104,7 +104,7 @@ extension FcrCoHostTachedWindowUIComponent: AgoraUIActivity {
     }
     
     func viewWillInactive() {
-        deleteItemsOfCoHost()
+        deleteItems()
         
         userController.unregisterUserEventHandler(self)
         streamController.unregisterStreamEventHandler(self)
@@ -114,18 +114,8 @@ extension FcrCoHostTachedWindowUIComponent: AgoraUIActivity {
 
 // MARK: - Item
 private extension FcrCoHostTachedWindowUIComponent {
-    func addItemsOfCoHost() {
-        guard let list = userController.getCoHostList() else {
-            return
-        }
-        
-        for user in list {
-            addItemOfCoHost(by: user)
-        }
-    }
-    
-    func addItemOfCoHost(by user: AgoraEduContextUserInfo) {
-        guard let stream = firstCameraStream(of: user) else {
+    func addItemByStream(_ stream: AgoraEduContextStreamInfo) {
+        guard stream.isCoHostCameraStream else {
             return
         }
         
@@ -134,8 +124,8 @@ private extension FcrCoHostTachedWindowUIComponent {
         addItem(item)
     }
     
-    func updateItemOfCoHost(by user: AgoraEduContextUserInfo) {
-        guard let stream = firstCameraStream(of: user) else {
+    func updateItemByStream(_ stream: AgoraEduContextStreamInfo) {
+        guard stream.isCoHostCameraStream else {
             return
         }
         
@@ -144,22 +134,32 @@ private extension FcrCoHostTachedWindowUIComponent {
         updateItem(item)
     }
     
-    func deleteItemsOfCoHost() {
-        guard let list = userController.getCoHostList() else {
+    func deleteItemByStream(_ stream: AgoraEduContextStreamInfo) {
+        guard stream.isCoHostCameraStream else {
             return
         }
         
-        for user in list {
-            deleteItemOfCoHost(by: user)
+        deleteItem(of: stream.owner.userUuid)
+    }
+    
+    func addItems() {
+        guard let list = streamController.getAllStreamList() else {
+            return
+        }
+        
+        for stream in list {
+            addItemByStream(stream)
         }
     }
     
-    func deleteItemOfCoHost(by user: AgoraEduContextUserInfo) {
-        if let renderView = getRenderView(userId: user.userUuid) {
-            renderView.stopWaving()
+    func deleteItems() {
+        for item in dataSource {
+            guard let userId = item.data?.userId else {
+                continue
+            }
+            
+            deleteItem(of: userId)
         }
-        
-        deleteItem(of: user.userUuid)
     }
     
     func createItem(with stream: AgoraEduContextStreamInfo) -> FcrTachedWindowRenderViewState {
@@ -184,14 +184,6 @@ private extension FcrCoHostTachedWindowUIComponent {
                                                          data: data)
         
         return item
-    }
-    
-    func firstCameraStream(of user: AgoraEduContextUserInfo) -> AgoraEduContextStreamInfo? {
-        guard let streamList = streamController.getStreamList(userUuid: user.userUuid) else {
-            return nil
-        }
-        
-        return streamList.first(where: {$0.videoSourceType == .camera})
     }
     
     func getItemIsHidden(streamId: String) -> Bool {
@@ -247,20 +239,6 @@ extension FcrCoHostTachedWindowUIComponent: AgoraEduSubRoomHandler {
 }
 
 extension FcrCoHostTachedWindowUIComponent: AgoraEduUserHandler {
-    func onCoHostUserListAdded(userList: [AgoraEduContextUserInfo],
-                               operatorUser: AgoraEduContextUserInfo?) {
-        for user in userList {
-            addItemOfCoHost(by: user)
-        }
-    }
-    
-    func onCoHostUserListRemoved(userList: [AgoraEduContextUserInfo],
-                                 operatorUser: AgoraEduContextUserInfo?) {
-        for user in userList {
-            deleteItemOfCoHost(by: user)
-        }
-    }
-    
     func onUserHandsWave(userUuid: String,
                          duration: Int,
                          payload: [String: Any]?) {
@@ -283,35 +261,25 @@ extension FcrCoHostTachedWindowUIComponent: AgoraEduUserHandler {
     func onUserRewarded(user: AgoraEduContextUserInfo,
                         rewardCount: Int,
                         operatorUser: AgoraEduContextUserInfo?) {
-        updateItemOfCoHost(by: user)
+        guard let list = streamController.getStreamList(userUuid: user.userUuid) else {
+            return
+        }
+        
+        for stream in list {
+            addItemByStream(stream)
+        }
     }
 }
 
 extension FcrCoHostTachedWindowUIComponent: AgoraEduStreamHandler {
     func onStreamJoined(stream: AgoraEduContextStreamInfo,
                         operatorUser: AgoraEduContextUserInfo?) {
-        let owner = stream.owner
-        
-        guard owner.userRole == .student,
-              coHostListContainer(user: owner)
-        else {
-            return
-        }
-        
-        addItemOfCoHost(by: owner)
+        addItemByStream(stream)
     }
     
     func onStreamUpdated(stream: AgoraEduContextStreamInfo,
                          operatorUser: AgoraEduContextUserInfo?) {
-        let owner = stream.owner
-        
-        guard stream.owner.userRole == .student,
-              coHostListContainer(user: owner)
-        else {
-            return
-        }
-        
-        updateItemOfCoHost(by: owner)
+        updateItemByStream(stream)
     }
 }
 
@@ -320,5 +288,15 @@ extension FcrCoHostTachedWindowUIComponent: AgoraEduMediaHandler {
                          streamUuid: String) {
         updateVolume(streamId: streamUuid,
                      volume: volume)
+    }
+}
+
+fileprivate extension AgoraEduContextStreamInfo {
+    var isCoHostCameraStream: Bool {
+        if owner.userRole != .teacher && videoSourceType == .camera {
+            return true
+        } else {
+            return false
+        }
     }
 }
