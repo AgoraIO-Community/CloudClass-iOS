@@ -281,6 +281,11 @@ extension FcrCoHostTachedWindowUIComponent: AgoraEduStreamHandler {
                          operatorUser: AgoraEduContextUserInfo?) {
         updateItemByStream(stream)
     }
+    
+    func onStreamLeft(stream: AgoraEduContextStreamInfo,
+                      operatorUser: AgoraEduContextUserInfo?) {
+        deleteItemByStream(stream)
+    }
 }
 
 extension FcrCoHostTachedWindowUIComponent: AgoraEduMediaHandler {
