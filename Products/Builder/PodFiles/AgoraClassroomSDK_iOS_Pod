@@ -1,4 +1,8 @@
-  pod 'Protobuf',          '3.17.0'  
+  # agora libs
+  pod 'AgoraRtcEngine_iOS/RtcBasic', '3.7.2'
+  pod 'AgoraRtm_iOS',                '1.5.1'
+  pod 'AgoraLog',                    '1.0.2'
+  pod 'Armin',                       '1.1.0'
   
   pod 'AgoraUIBaseViews/Binary',     :path => '../../../AgoraUIBaseViews_Local.podspec'  
   pod 'AgoraWidgets/Binary',         :path => '../../../AgoraWidgets_Local.podspec'
