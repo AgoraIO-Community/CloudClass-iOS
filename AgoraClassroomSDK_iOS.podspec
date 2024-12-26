@@ -17,12 +17,6 @@ Pod::Spec.new do |spec|
   # open sources widgets
   spec.dependency "AgoraWidgets", "~> 2.8.105"
   
-  # close source libs
-  spec.dependency "AgoraEduCore", "~> 2.8.105"
-  spec.dependency "AgoraWidget",  "~>2.8.0"
-
-  spec.frameworks = "AudioToolbox", "Foundation", "UIKit"
-
   spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.pod_target_xcconfig  = { "VALID_ARCHS" => "arm64 armv7 x86_64" }
