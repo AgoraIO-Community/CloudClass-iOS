@@ -11,16 +11,19 @@ Artifactory_iOS_URL="https://artifactory.agoralab.co/artifactory/AD_repo/aPaaS/i
 AgoraWidgets_URL="${Artifactory_iOS_URL}/AgoraWidgets/release_2.8.105/dev/AgoraWidgets_2.8.105.zip"
 AgoraEduCore_URL="${Artifactory_iOS_URL}/AgoraEduCore/release_2.8.105/dev/AgoraEduCore_2.8.105.zip"
 AgoraUIBaseViews_URL="${Artifactory_iOS_URL}/AgoraUIBaseViews/release_2.8.105/dev/AgoraUIBaseViews_2.8.101.zip"
+AgoraFoundation_URL="${Artifactory_iOS_URL}/AgoraFoundation/feature_3.4.0_rx/dev/AgoraFoundation_3.4.0_dev.zip"
 AgoraWidget_URL="${Artifactory_iOS_URL}/AgoraWidget/release_2.8.105/dev/AgoraWidget_2.8.0.zip"
 
 Dep_Array_URL=("${AgoraWidgets_URL}"
                "${AgoraEduCore_URL}"
                "${AgoraUIBaseViews_URL}"
+               "${AgoraFoundation_URL}"
                "${AgoraWidget_URL}")
 
 Dep_Array=(AgoraWidgets 
            AgoraEduCore
            AgoraUIBaseViews 
+           AgoraFoundation_URL
            AgoraWidget)
 
 # cd this file path
