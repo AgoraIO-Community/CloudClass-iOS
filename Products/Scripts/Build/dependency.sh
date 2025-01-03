@@ -23,7 +23,7 @@ Dep_Array_URL=("${AgoraWidgets_URL}"
 Dep_Array=(AgoraWidgets 
            AgoraEduCore
            AgoraUIBaseViews 
-           AgoraFoundations
+           AgoraFoundation
            AgoraWidget)
 
 # cd this file path
