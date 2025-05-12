@@ -46,8 +46,6 @@ class VocationalToolBarUIComponent: UIViewController {
         
     private var collectionView: UICollectionView!
     
-    private var waveHandsCell: FcrToolBarWaveHandsCell?
-    
     /** 画笔图片*/
     private var brushImage = UIConfig.netlessBoard.mouse.unselectedImage
     /** 画笔颜色*/
@@ -287,14 +285,13 @@ extension VocationalToolBarUIComponent: UICollectionViewDelegate,
             cell.redDot.isHidden = !messageRemind
             return cell
         } else if tool == .waveHands {
-            let cell = waveHandsCell ?? collectionView.dequeueReusableCell(withClass: FcrToolBarWaveHandsCell.self,
-                                                                         for: indexPath)
+            let cell =  collectionView.dequeueReusableCell(withClass: FcrToolBarWaveHandsCell.self,
+                                                           for: indexPath)
             let image = tool.unselectedImage
             cell.iconView.image = image
-            if waveHandsCell == nil {
-                waveHandsCell = cell
-                waveHandsCell?.delegate = self
-                waveHandsCell?.duration = handsupDuration
+            if let cell = cell as? FcrToolBarWaveHandsCell {
+                cell.delegate = self
+                cell.duration = handsupDuration
             }
             return cell
         } else if tool == .handsList {
