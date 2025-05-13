@@ -8,22 +8,22 @@
 # Widget
 Artifactory_iOS_URL="https://artifactory.agoralab.co/artifactory/AD_repo/aPaaS/iOS"
 
-AgoraWidgets_URL="${Artifactory_iOS_URL}/AgoraWidgets/release_2.8.105/dev/AgoraWidgets_2.8.105.zip"
-AgoraEduCore_URL="${Artifactory_iOS_URL}/AgoraEduCore/release_2.8.105/dev/AgoraEduCore_2.8.105.zip"
-AgoraUIBaseViews_URL="${Artifactory_iOS_URL}/AgoraUIBaseViews/release_2.8.105/dev/AgoraUIBaseViews_2.8.101.zip"
-AgoraFoundation_URL="${Artifactory_iOS_URL}/AgoraFoundation/feature_3.4.0_rx/dev/AgoraFoundation_3.4.0_dev.zip"
-AgoraWidget_URL="${Artifactory_iOS_URL}/AgoraWidget/release_2.8.105/dev/AgoraWidget_2.8.0.zip"
+Version="2.8.110"
+Branch="release_${Version}"
+
+AgoraWidgets_URL="${Artifactory_iOS_URL}/AgoraWidgets/${Branch}/dev/AgoraWidgets_${Version}.zip"
+AgoraEduCore_URL="${Artifactory_iOS_URL}/AgoraEduCore/${Branch}/dev/AgoraEduCore_${Version}.zip"
+AgoraUIBaseViews_URL="${Artifactory_iOS_URL}/AgoraUIBaseViews/${Branch}/dev/AgoraUIBaseViews_${Version}.zip"
+AgoraWidget_URL="${Artifactory_iOS_URL}/AgoraWidget/${Branch}/dev/AgoraWidget_${Version}.zip"
 
 Dep_Array_URL=("${AgoraWidgets_URL}"
                "${AgoraEduCore_URL}"
                "${AgoraUIBaseViews_URL}"
-               "${AgoraFoundation_URL}"
                "${AgoraWidget_URL}")
 
 Dep_Array=(AgoraWidgets 
            AgoraEduCore
            AgoraUIBaseViews 
-           AgoraFoundation
            AgoraWidget)
 
 # cd this file path

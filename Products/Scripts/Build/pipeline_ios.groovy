@@ -57,4 +57,4 @@ def doPublish(buildVariables) {
     sh "rm -rf *.zip || true"
 }
 
-pipelineLoad(this, "apaas-classroom-ios", "build", "ios", "shadow")
+pipelineLoad(this, "apaas-classroom-ios", "build", "ios", "shadow && mac")
