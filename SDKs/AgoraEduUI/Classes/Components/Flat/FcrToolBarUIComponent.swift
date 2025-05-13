@@ -335,9 +335,7 @@ extension FcrToolBarUIComponent: UICollectionViewDelegate,
                                                            for: indexPath)
             let image = tool.unselectedImage
             cell.iconView.image = image
-            if let cell = cell as? FcrToolBarWaveHandsCell {
-                cell.delegate = self
-            }
+            cell.delegate = self
             return cell
         } else if tool == .handsList {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarHandsListCell.self,

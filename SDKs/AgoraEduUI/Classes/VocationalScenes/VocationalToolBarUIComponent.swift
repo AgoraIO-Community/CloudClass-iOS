@@ -289,10 +289,8 @@ extension VocationalToolBarUIComponent: UICollectionViewDelegate,
                                                            for: indexPath)
             let image = tool.unselectedImage
             cell.iconView.image = image
-            if let cell = cell as? FcrToolBarWaveHandsCell {
-                cell.delegate = self
-                cell.duration = handsupDuration
-            }
+            cell.delegate = self
+            cell.duration = handsupDuration
             return cell
         } else if tool == .handsList {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarHandsListCell.self,
