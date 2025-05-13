@@ -1,6 +1,5 @@
   # agora libs
   pod 'AgoraUIBaseViews/Binary',     :path => '../../../AgoraUIBaseViews_Local.podspec'  
-  pod 'AgoraFoundation/Binary',   :path => '../../../AgoraFoundation_Local.podspec'
   pod 'AgoraWidgets/Binary',         :path => '../../../AgoraWidgets_Local.podspec'
   pod 'AgoraWidget/Binary',   	     :path => '../../../AgoraWidget_Local.podspec'  
   pod 'AgoraEduCore/Binary',         :path => '../../../AgoraEduCore_Local.podspec'
