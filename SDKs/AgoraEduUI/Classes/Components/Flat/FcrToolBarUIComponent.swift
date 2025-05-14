@@ -44,8 +44,6 @@ class FcrToolBarUIComponent: FcrUIComponent {
         
     private var collectionView: UICollectionView!
     
-    private var waveHandsCell: FcrToolBarWaveHandsCell?
-
     /** 消息提醒*/
     private var messageRemind = false
     /** 举手列表人数*/
@@ -333,14 +331,11 @@ extension FcrToolBarUIComponent: UICollectionViewDelegate,
             cell.redDot.isHidden = !messageRemind
             return cell
         } else if tool == .waveHands {
-            let cell = waveHandsCell ?? collectionView.dequeueReusableCell(withClass: FcrToolBarWaveHandsCell.self,
-                                                                         for: indexPath)
+            let cell =  collectionView.dequeueReusableCell(withClass: FcrToolBarWaveHandsCell.self,
+                                                           for: indexPath)
             let image = tool.unselectedImage
             cell.iconView.image = image
-            if waveHandsCell == nil {
-                waveHandsCell = cell
-                waveHandsCell?.delegate = self
-            }
+            cell.delegate = self
             return cell
         } else if tool == .handsList {
             let cell = collectionView.dequeueReusableCell(withClass: AgoraToolBarHandsListCell.self,
