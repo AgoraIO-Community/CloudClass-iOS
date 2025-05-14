@@ -19,13 +19,11 @@ AgoraWidget_URL="${Artifactory_iOS_URL}/AgoraWidget/${Branch}/dev/AgoraWidget_${
 Dep_Array_URL=("${AgoraWidgets_URL}"
                "${AgoraEduCore_URL}"
                "${AgoraUIBaseViews_URL}"
-               "${AgoraFoundation_URL}"
                "${AgoraWidget_URL}")
 
 Dep_Array=(AgoraWidgets 
            AgoraEduCore
            AgoraUIBaseViews 
-           AgoraFoundation
            AgoraWidget)
 
 # cd this file path
