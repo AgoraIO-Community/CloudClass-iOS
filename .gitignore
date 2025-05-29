@@ -11,6 +11,7 @@ Podfile.lock
 Pods
 Products/App/
 Products/Libs
+Products/Builder/AgoraBuilder
 Package
 XCBuildData
 *.zip

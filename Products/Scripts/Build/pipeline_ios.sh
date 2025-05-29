@@ -26,6 +26,10 @@ CICD_Build_Path="${CICD_Scripts_Path}/SDK/Build"
 CICD_Pack_Path="${CICD_Scripts_Path}/SDK/Pack"
 CICD_Upload_Path="${CICD_Scripts_Path}/SDK/Upload"
 
+# Copy AgoraBuilder Xcode Project
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+"${SCRIPT_DIR}/copy_agora_builder.sh"
+
 # dependency
 ./Products/Scripts/Build/dependency.sh ${Repo_Name}
 
