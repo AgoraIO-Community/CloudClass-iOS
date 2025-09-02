@@ -70,63 +70,63 @@ class FcrNetworkStatsUIComponent: FcrUIComponent,
     }
     
     func initViewFrame() {
-        titleLabel.mas_makeConstraints { make in
+        titleLabel.agora_mas_makeConstraints { make in
             make?.top.equalTo()(12)
             make?.left.right().equalTo()(0)
             make?.height.equalTo()(12)
         }
         
-        lineView.mas_makeConstraints { make in
+        lineView.agora_mas_makeConstraints { make in
             make?.top.equalTo()(36)
             make?.left.right().equalTo()(0)
             make?.height.equalTo()(1)
         }
         
-        latencyTitleLabel.mas_makeConstraints { make in
+        latencyTitleLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(10)
-            make?.top.equalTo()(lineView.mas_bottom)?.offset()(12)
+            make?.top.equalTo()(lineView.agora_mas_bottom)?.offset()(12)
             make?.height.equalTo()(12)
             make?.width.equalTo()(100)
         }
         
-        latencyValueLabel.mas_makeConstraints { make in
+        latencyValueLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(63)
-            make?.top.equalTo()(lineView.mas_bottom)?.offset()(12)
+            make?.top.equalTo()(lineView.agora_mas_bottom)?.offset()(12)
             make?.height.equalTo()(12)
             make?.right.equalTo()(0)
         }
         
-        packetLossRateTitleLabel.mas_makeConstraints { make in
+        packetLossRateTitleLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(10)
-            make?.top.equalTo()(latencyTitleLabel.mas_bottom)?.offset()(18)
+            make?.top.equalTo()(latencyTitleLabel.agora_mas_bottom)?.offset()(18)
             make?.height.equalTo()(12)
             make?.width.equalTo()(50)
         }
         
-        packetLossRateTxImageView.mas_makeConstraints { make in
+        packetLossRateTxImageView.agora_mas_makeConstraints { make in
             make?.left.equalTo()(63)
-            make?.top.equalTo()(latencyTitleLabel.mas_bottom)?.offset()(18)
+            make?.top.equalTo()(latencyTitleLabel.agora_mas_bottom)?.offset()(18)
             make?.height.equalTo()(18)
             make?.width.equalTo()(18)
         }
         
-        packetLossRateRxImageView.mas_makeConstraints { make in
+        packetLossRateRxImageView.agora_mas_makeConstraints { make in
             make?.left.equalTo()(63)
-            make?.top.equalTo()(packetLossRateTxImageView.mas_bottom)?.offset()(10)
+            make?.top.equalTo()(packetLossRateTxImageView.agora_mas_bottom)?.offset()(10)
             make?.height.equalTo()(18)
             make?.width.equalTo()(18)
         }
         
-        packetLossRateTxLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(packetLossRateTxImageView.mas_right)?.offset()(7)
-            make?.top.equalTo()(latencyTitleLabel.mas_bottom)?.offset()(18)
+        packetLossRateTxLabel.agora_mas_makeConstraints { make in
+            make?.left.equalTo()(packetLossRateTxImageView.agora_mas_right)?.offset()(7)
+            make?.top.equalTo()(latencyTitleLabel.agora_mas_bottom)?.offset()(18)
             make?.height.equalTo()(18)
             make?.right.equalTo()(0)
         }
         
-        packetLossRateRxLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(packetLossRateTxImageView.mas_right)?.offset()(7)
-            make?.top.equalTo()(packetLossRateTxImageView.mas_bottom)?.offset()(10)
+        packetLossRateRxLabel.agora_mas_makeConstraints { make in
+            make?.left.equalTo()(packetLossRateTxImageView.agora_mas_right)?.offset()(7)
+            make?.top.equalTo()(packetLossRateTxImageView.agora_mas_bottom)?.offset()(10)
             make?.height.equalTo()(18)
             make?.right.equalTo()(0)
         }

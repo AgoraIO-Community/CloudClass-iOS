@@ -105,10 +105,10 @@ extension FcrWaveHandsDelayView: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        bgView.mas_makeConstraints { make in
+        bgView.agora_mas_makeConstraints { make in
             make?.center.equalTo()(0)
         }
-        delayLabel.mas_makeConstraints { make in
+        delayLabel.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(self)
         }
     }

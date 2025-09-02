@@ -230,7 +230,7 @@ private extension FcrDetachedStreamWindowUIComponent {
         
         widget.view.addSubview(renderView)
         
-        renderView.mas_makeConstraints { make in
+        renderView.agora_mas_makeConstraints { make in
             make?.right.left().top().bottom().equalTo()(0)
         }
         

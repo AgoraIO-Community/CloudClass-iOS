@@ -156,7 +156,7 @@ import AgoraWidget
         
         if let watermark = watermarkWidget?.view {
             view.addSubview(watermark)
-            watermark.mas_makeConstraints { make in
+            watermark.agora_mas_makeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(contentView)
             }
         }
@@ -272,54 +272,54 @@ import AgoraWidget
         
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
-        stateController.view.mas_makeConstraints { make in
+        stateController.view.agora_mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(14))
         }
-        windowController.view.mas_makeConstraints { make in
+        windowController.view.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
-        teacherRenderController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+        teacherRenderController.view.agora_mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view.agora_mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.right.equalTo()(0)
             make?.width.equalTo()(AgoraFit.scale(170))
             make?.height.equalTo()(AgoraFit.scale(112))
         }
-        boardController.view.mas_makeConstraints { make in
+        boardController.view.agora_mas_makeConstraints { make in
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(teacherRenderController.view.mas_left)?.offset()(AgoraFit.scale(-2))
-            make?.top.equalTo()(self.stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+            make?.right.equalTo()(teacherRenderController.view.agora_mas_left)?.offset()(AgoraFit.scale(-2))
+            make?.top.equalTo()(self.stateController.view.agora_mas_bottom)?.offset()(AgoraFit.scale(2))
         }
         if userRole == .teacher {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
-                make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+            self.toolBarController.view.agora_mas_remakeConstraints { make in
+                make?.right.equalTo()(self.boardController.view.agora_mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                make?.bottom.equalTo()(self.toolCollectionController.view.agora_mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
             }
         } else {
-            self.toolBarController.view.mas_remakeConstraints { make in
-                make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
-                make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+            self.toolBarController.view.agora_mas_remakeConstraints { make in
+                make?.right.equalTo()(self.boardController.view.agora_mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                make?.bottom.equalTo()(self.boardController.agora_mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.equalTo()(self.toolBarController.suggestSize.width)
                 make?.height.equalTo()(self.toolBarController.suggestSize.height)
             }
         }
         if userRole != .observer {
-            toolCollectionController.view.mas_makeConstraints { make in
-                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+            toolCollectionController.view.agora_mas_makeConstraints { make in
+                make?.centerX.equalTo()(self.toolBarController.view.agora_mas_centerX)
                 make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
         }
         
-        chatController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(teacherRenderController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+        chatController.view.agora_mas_makeConstraints { make in
+            make?.top.equalTo()(teacherRenderController.view.agora_mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.right().equalTo()(teacherRenderController.view)
             make?.bottom.equalTo()(0)
         }
         
-        classToolsController.view.mas_makeConstraints { make in
+        classToolsController.view.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(boardController.view)
         }
         
@@ -336,7 +336,7 @@ extension AgoraVocationalUIScene: FcrSettingUIComponentDelegate {
         ctrlView = nil
         toolBarController.deselectAll()
         self.view.addSubview(view)
-        view.mas_makeConstraints { make in
+        view.agora_mas_makeConstraints { make in
             make?.top.left().bottom().right().equalTo()(0)
         }
     }
@@ -464,9 +464,9 @@ extension AgoraVocationalUIScene: AgoraRenderUIComponentDelegate {
             renderMenuController.show(roomType: .lecture,
                                       userUuid: userId,
                                       showRoleType: role)
-            renderMenuController.view.mas_remakeConstraints { make in
-                make?.top.equalTo()(view.mas_bottom)?.offset()(1)
-                make?.centerX.equalTo()(view.mas_centerX)
+            renderMenuController.view.agora_mas_remakeConstraints { make in
+                make?.top.equalTo()(view.agora_mas_bottom)?.offset()(1)
+                make?.centerX.equalTo()(view.agora_mas_centerX)
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(renderMenuController.menuWidth)
             }
@@ -496,15 +496,15 @@ extension AgoraVocationalUIScene: FcrToolCollectionUIComponentDelegate {
     
     func toolCollectionCellNeedSpread(_ spread: Bool) {
         if spread {
-            toolCollectionController.view.mas_remakeConstraints { make in
-                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+            toolCollectionController.view.agora_mas_remakeConstraints { make in
+                make?.centerX.equalTo()(self.toolBarController.view.agora_mas_centerX)
                 make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.equalTo()(toolCollectionController.suggestLength)
                 make?.height.equalTo()(toolCollectionController.suggestSpreadHeight)
             }
         } else {
-            toolCollectionController.view.mas_remakeConstraints { make in
-                make?.centerX.equalTo()(self.toolBarController.view.mas_centerX)
+            toolCollectionController.view.agora_mas_remakeConstraints { make in
+                make?.centerX.equalTo()(self.toolBarController.view.agora_mas_centerX)
                 make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                 make?.width.height().equalTo()(toolCollectionController.suggestLength)
             }
@@ -521,7 +521,7 @@ extension AgoraVocationalUIScene: FcrToolCollectionUIComponentDelegate {
         switch type {
         case .cloudStorage:
             if !cloudController.view.agora_visible {
-                cloudController.view.mas_remakeConstraints { make in
+                cloudController.view.agora_mas_remakeConstraints { make in
                     make?.left.right().top().bottom().equalTo()(boardController.view)
                 }
             }
@@ -547,16 +547,16 @@ extension AgoraVocationalUIScene: FcrToolCollectionUIComponentDelegate {
             }
             
             if appear {
-                self.toolBarController.view.mas_remakeConstraints { make in
-                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
-                    make?.bottom.equalTo()(self.toolCollectionController.view.mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                self.toolBarController.view.agora_mas_remakeConstraints { make in
+                    make?.right.equalTo()(self.boardController.view.agora_mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                    make?.bottom.equalTo()(self.toolCollectionController.view.agora_mas_top)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
                     make?.width.equalTo()(self.toolBarController.suggestSize.width)
                     make?.height.equalTo()(self.toolBarController.suggestSize.height)
                 }
             } else {
-                self.toolBarController.view.mas_remakeConstraints { make in
-                    make?.right.equalTo()(self.boardController.view.mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
-                    make?.bottom.equalTo()(self.boardController.mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
+                self.toolBarController.view.agora_mas_remakeConstraints { make in
+                    make?.right.equalTo()(self.boardController.view.agora_mas_right)?.offset()(UIDevice.current.agora_is_pad ? -15 : -12)
+                    make?.bottom.equalTo()(self.boardController.agora_mas_bottomLayoutGuideBottom)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
                     make?.width.equalTo()(self.toolBarController.suggestSize.width)
                     make?.height.equalTo()(self.toolBarController.suggestSize.height)
                 }
@@ -575,7 +575,7 @@ extension AgoraVocationalUIScene: FcrClassStateUIComponentDelegate {
         contentView.addSubview(classStateController.view)
         
         let left: CGFloat = UIDevice.current.agora_is_pad ? 198 : 192
-        classStateController.view.mas_makeConstraints { make in
+        classStateController.view.agora_mas_makeConstraints { make in
             make?.left.equalTo()(contentView)?.offset()(left)
             make?.bottom.equalTo()(contentView)?.offset()(UIDevice.current.agora_is_pad ? -20 : -15)
             make?.size.equalTo()(classStateController.suggestSize)

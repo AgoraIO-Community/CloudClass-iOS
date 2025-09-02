@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import Masonry
+
 import UIKit
 
 class AgoraToolCollectionToolCell: UICollectionViewCell, AgoraUIContentContainer {
@@ -50,7 +50,7 @@ class AgoraToolCollectionToolCell: UICollectionViewCell, AgoraUIContentContainer
     }
     
     func initViewFrame() {
-        imageView.mas_makeConstraints { make in
+        imageView.agora_mas_makeConstraints { make in
             make?.center.equalTo()(self)
             make?.width.height().equalTo()(UIDevice.current.agora_is_pad ? 34 : 30)
         }
@@ -103,7 +103,7 @@ class AgoraBoardTextSizeItemCell: UICollectionViewCell {
         sizeView.image = image
         sizeView.contentMode = .scaleAspectFill
         addSubview(sizeView)
-        sizeView.mas_makeConstraints { make in
+        sizeView.agora_mas_makeConstraints { make in
             make?.center.equalTo()(sizeView.superview)
             make?.width.height().equalTo()(sizeView.superview)
         }
@@ -159,7 +159,7 @@ class AgoraBoardLineWidthCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        sizeView.mas_makeConstraints { make in
+        sizeView.agora_mas_makeConstraints { make in
             make?.center.equalTo()(sizeView.superview)
             make?.width.height().equalTo()(14)
         }
@@ -219,12 +219,12 @@ class AgoraBoardColorItemCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        backView.mas_makeConstraints { make in
+        backView.agora_mas_makeConstraints { make in
             make?.center.equalTo()(backView.superview)
             make?.width.height().equalTo()(20)
         }
         
-        frontView.mas_makeConstraints { make in
+        frontView.agora_mas_makeConstraints { make in
             make?.center.equalTo()(frontView.superview)
             make?.width.height().equalTo()(14)
         }

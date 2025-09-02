@@ -118,7 +118,7 @@ class FcrSettingUIComponent: FcrUIComponent {
     }
     
     func initViewFrame() {
-        contentView.mas_makeConstraints { make in
+        contentView.agora_mas_makeConstraints { make in
             make?.width.equalTo()(201)
             make?.height.equalTo()(220)
             make?.left.right().top().bottom().equalTo()(0)

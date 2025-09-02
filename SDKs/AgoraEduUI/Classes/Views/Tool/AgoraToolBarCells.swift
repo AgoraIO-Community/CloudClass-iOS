@@ -22,7 +22,7 @@ class AgoraToolBarRedDotCell: AgoraToolBarItemCell {
         redDot.clipsToBounds = true
         self.addSubview(redDot)
         
-        redDot.mas_makeConstraints { make in
+        redDot.agora_mas_makeConstraints { make in
             make?.width.height().equalTo()(4)
             make?.top.equalTo()(5)
             make?.right.equalTo()(-5)
@@ -70,10 +70,10 @@ class AgoraToolBarItemCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        bgView.mas_makeConstraints { make in
+        bgView.agora_mas_makeConstraints { make in
             make?.center.width().height().equalTo()(contentView)
         }
-        iconView.mas_makeConstraints { make in
+        iconView.agora_mas_makeConstraints { make in
             make?.center.equalTo()(0)
             make?.width.height().equalTo()(22)
         }
@@ -218,10 +218,10 @@ class FcrToolBarWaveHandsCell: AgoraToolBarItemCell {
     
     override func initViewFrame() {
         super.initViewFrame()
-        backgroudView.mas_makeConstraints { make in
+        backgroudView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(iconView)
         }
-        delayLabel.mas_makeConstraints { make in
+        delayLabel.agora_mas_makeConstraints { make in
             make?.center.equalTo()(0)
         }
     }
@@ -265,7 +265,7 @@ class AgoraToolBarHandsListCell: AgoraToolBarItemCell {
     
     override func initViewFrame() {
         super.initViewFrame()
-        redLabel.mas_makeConstraints { make in
+        redLabel.agora_mas_makeConstraints { make in
             make?.width.height().equalTo()(8)
             make?.top.equalTo()(0)
             make?.right.equalTo()(0)
@@ -324,7 +324,7 @@ class AgoraToolCollectionCell: UIView {
         imageView.tintColor = color
         addSubview(imageView)
         
-        imageView.mas_remakeConstraints { make in
+        imageView.agora_mas_remakeConstraints { make in
             make?.center.equalTo()(0)
             make?.width.height().equalTo()(22)
         }
@@ -336,13 +336,13 @@ class AgoraToolCollectionCell: UIView {
             fontLabel.text = "\(font)"
             colorView.backgroundColor = color
             
-            colorView.mas_remakeConstraints { make in
+            colorView.agora_mas_remakeConstraints { make in
                 make?.width.height().equalTo()(AgoraFit.scale(3))
                 make?.bottom.equalTo()(AgoraFit.scale(-5))
                 make?.right.equalTo()(AgoraFit.scale(-5))
             }
             
-            fontLabel.mas_remakeConstraints { make in
+            fontLabel.agora_mas_remakeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(0)
             }
         }

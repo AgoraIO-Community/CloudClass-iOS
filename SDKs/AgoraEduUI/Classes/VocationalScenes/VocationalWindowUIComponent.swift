@@ -427,7 +427,7 @@ private extension VocationalWindowUIComponent {
         
         widget.view.addSubview(renderView)
         
-        renderView.mas_makeConstraints { make in
+        renderView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         
@@ -451,7 +451,7 @@ private extension VocationalWindowUIComponent {
             let oldRect = view.convert(rect,
                                        from: targetSuperView)
             
-            widget.view.mas_remakeConstraints { make in
+            widget.view.agora_mas_remakeConstraints { make in
                 make?.left.equalTo()(oldRect.minX)
                 make?.top.equalTo()(oldRect.minY)
                 make?.width.equalTo()(oldRect.width)
@@ -486,7 +486,7 @@ private extension VocationalWindowUIComponent {
         handleVideoZIndex(zIndex: 0,
                           widget: widget)
         
-        widget.view.mas_makeConstraints { make in
+        widget.view.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
     }
@@ -627,7 +627,7 @@ private extension VocationalWindowUIComponent {
         let newRect = view.convert(rect,
                                    from: targetSuperView)
         
-        widget.view.mas_remakeConstraints { make in
+        widget.view.agora_mas_remakeConstraints { make in
             make?.left.equalTo()(newRect.minX)
             make?.top.equalTo()(newRect.minY)
             make?.width.equalTo()(newRect.width)
@@ -645,7 +645,7 @@ private extension VocationalWindowUIComponent {
     
     func handleSyncFrame(widget: AgoraBaseWidget,
                          frame: CGRect) {
-        widget.view.mas_remakeConstraints { make in
+        widget.view.agora_mas_remakeConstraints { make in
             make?.left.equalTo()(frame.minX)
             make?.top.equalTo()(frame.minY)
             make?.width.equalTo()(frame.width)

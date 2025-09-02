@@ -57,7 +57,7 @@ class VcrMixStreamCDNRenderUIComponent: UIViewController {
         view.layer.addSublayer(playerLayer)
         view.addSubview(placeHolderView)
         updateViewProperties()
-        placeHolderView.mas_makeConstraints { make in
+        placeHolderView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         
@@ -162,13 +162,13 @@ class VcrMixStreamCDNEmptyView: UIView {
     }
     
     func createConstrains() {
-        imageView.mas_makeConstraints { make in
+        imageView.agora_mas_makeConstraints { make in
             make?.width.height().equalTo()(100)
             make?.centerX.equalTo()(0)
             make?.centerY.equalTo()(-35)
         }
-        label.mas_makeConstraints { make in
-            make?.top.equalTo()(imageView.mas_bottom)?.offset()(4)
+        label.agora_mas_makeConstraints { make in
+            make?.top.equalTo()(imageView.agora_mas_bottom)?.offset()(4)
             make?.centerX.equalTo()(0)
         }
     }

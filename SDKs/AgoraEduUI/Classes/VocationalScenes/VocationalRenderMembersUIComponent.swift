@@ -233,7 +233,7 @@ class VocationalRenderMembersUIComponent: UIViewController {
         let collectionLength = (singleLength + kItemGap) * f_count - kItemGap
         
         if collectionView.width != studentWidth {
-            collectionView.mas_remakeConstraints { make in
+            collectionView.agora_mas_remakeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(contentView)
                 make?.width.equalTo()(studentWidth)
             }
@@ -343,12 +343,12 @@ class VocationalRenderMembersUIComponent: UIViewController {
     }
     
     func initViewFrame() {
-        contentView.mas_makeConstraints { make in
+        contentView.agora_mas_makeConstraints { make in
             make?.centerX.equalTo()(0)
             make?.top.equalTo()(0)
             make?.bottom.equalTo()(0)
         }
-        collectionView.mas_makeConstraints { make in
+        collectionView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         
@@ -361,11 +361,11 @@ class VocationalRenderMembersUIComponent: UIViewController {
             return
         }
         
-        leftButton.mas_makeConstraints { make in
+        leftButton.agora_mas_makeConstraints { make in
             make?.left.top().bottom().equalTo()(collectionView)
             make?.width.equalTo()(24)
         }
-        rightButton.mas_makeConstraints { make in
+        rightButton.agora_mas_makeConstraints { make in
             make?.right.top().bottom().equalTo()(collectionView)
             make?.width.equalTo()(24)
         }
@@ -407,7 +407,7 @@ extension VocationalRenderMembersUIComponent: UICollectionViewDataSource, UIColl
         cell.contentView.removeSubviews()
         cell.contentView.addSubview(view)
         
-        view.mas_makeConstraints { make in
+        view.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         

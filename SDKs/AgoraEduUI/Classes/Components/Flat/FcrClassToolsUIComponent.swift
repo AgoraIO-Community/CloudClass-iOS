@@ -287,7 +287,7 @@ private extension FcrClassToolsUIComponent {
         view.bringSubviewToFront(targetView)
         view.layoutIfNeeded()
         
-        targetView.mas_remakeConstraints { make in
+        targetView.agora_mas_remakeConstraints { make in
             make?.left.equalTo()(frame.origin.x)
             make?.top.equalTo()(frame.origin.y)
             make?.width.equalTo()(size.width)
