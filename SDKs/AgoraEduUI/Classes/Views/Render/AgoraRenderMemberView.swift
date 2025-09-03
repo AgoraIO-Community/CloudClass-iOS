@@ -20,8 +20,8 @@ class AgoraRenderMaskView: UIView {
         layer.borderColor = FcrUIColorGroup.systemDividerColor.cgColor
         
         addSubview(imageView)
-        imageView.mas_makeConstraints { make in
-            make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.38)
+        imageView.agora_mas_makeConstraints { make in
+            make?.width.height().equalTo()(self.agora_mas_height)?.multipliedBy()(0.38)
             make?.center.equalTo()(0)
         }
     }
@@ -52,8 +52,8 @@ class AgoraRenderMemberView: UIView {
         v.animatedImage = animatedImage
         
         self.addSubview(v)
-        v.mas_makeConstraints { make in
-            make?.width.height().equalTo()(self.mas_height)
+        v.agora_mas_makeConstraints { make in
+            make?.width.height().equalTo()(self.agora_mas_height)
             make?.centerX.bottom().equalTo()(0)
         }
         return v
@@ -115,20 +115,20 @@ private extension AgoraRenderMemberView {
     }
     
     func createConstraint() {
-        videoView.mas_makeConstraints { make in
+        videoView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom()?.equalTo()(0)
         }
-        videoMaskView.mas_makeConstraints { make in
+        videoMaskView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom()?.equalTo()(0)
         }
-        micView.mas_makeConstraints { make in
+        micView.agora_mas_makeConstraints { make in
             make?.left.equalTo()(2)
             make?.bottom.equalTo()(-2)
             make?.width.height().equalTo()(16)
         }
-        nameLabel.mas_makeConstraints { make in
+        nameLabel.agora_mas_makeConstraints { make in
             make?.centerY.equalTo()(micView)
-            make?.left.equalTo()(micView.mas_right)?.offset()(2)
+            make?.left.equalTo()(micView.agora_mas_right)?.offset()(2)
             make?.right.lessThanOrEqualTo()(0)
         }
     }
@@ -146,7 +146,7 @@ class AgoraRenderMemberCell: UICollectionViewCell {
         videoMaskView.clipsToBounds = true
         videoMaskView.imageView.image = UIImage.edu_ui_image("window_no_user")
         contentView.addSubview(videoMaskView)
-        videoMaskView.mas_makeConstraints { make in
+        videoMaskView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
     }

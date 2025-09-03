@@ -100,14 +100,14 @@ class FcrSmallRosterUIComponent: FcrRosterUIComponent {
         super.initViewFrame()
         
         if userController.getLocalUserInfo().userRole == .teacher {
-            carouselSwitch.mas_makeConstraints { make in
-                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
+            carouselSwitch.agora_mas_makeConstraints { make in
+                make?.centerY.equalTo()(teacherNameLabel.agora_mas_centerY)
                 make?.right.equalTo()(-10)
                 make?.height.equalTo()(30)
             }
-            carouselTitleLabel.mas_makeConstraints { make in
-                make?.centerY.equalTo()(teacherNameLabel.mas_centerY)
-                make?.right.equalTo()(carouselSwitch.mas_left)
+            carouselTitleLabel.agora_mas_makeConstraints { make in
+                make?.centerY.equalTo()(teacherNameLabel.agora_mas_centerY)
+                make?.right.equalTo()(carouselSwitch.agora_mas_left)
                 make?.height.equalTo()(30)
             }
         }

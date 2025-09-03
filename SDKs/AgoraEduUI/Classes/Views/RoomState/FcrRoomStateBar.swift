@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import Masonry
+
 
 fileprivate class FcrNetStateButton: UIButton {
     override func layoutSubviews() {
@@ -56,9 +56,9 @@ class FcrRoomStateBar: UIView, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        netStateView.mas_makeConstraints { make in
+        netStateView.agora_mas_makeConstraints { make in
             if #available(iOS 11.0, *) {
-                make?.left.equalTo()(self.mas_safeAreaLayoutGuideLeft)?.offset()(0)
+                make?.left.equalTo()(self.agora_mas_safeAreaLayoutGuideLeft)?.offset()(0)
             } else {
                 make?.left.equalTo()(self)?.offset()(0)
             }
@@ -67,41 +67,41 @@ class FcrRoomStateBar: UIView, AgoraUIContentContainer {
             make?.width.equalTo()(130)
         }
         
-        timeLabel.mas_makeConstraints { make in
+        timeLabel.agora_mas_makeConstraints { make in
             make?.top.bottom().equalTo()(0)
             make?.width.greaterThanOrEqualTo()(60)
             
             let right: CGFloat = (UIDevice.current.agora_is_pad ? -12 : -6)
             
             if #available(iOS 11.0, *) {
-                make?.right.equalTo()(self.mas_safeAreaLayoutGuideRight)?.offset()(right)
+                make?.right.equalTo()(self.agora_mas_safeAreaLayoutGuideRight)?.offset()(right)
             } else {
                 make?.right.equalTo()(self)?.offset()(right)
             }
         }
         
-        sepLine.mas_makeConstraints { make in
-            make?.right.equalTo()(timeLabel.mas_left)?.offset()(-8)
+        sepLine.agora_mas_makeConstraints { make in
+            make?.right.equalTo()(timeLabel.agora_mas_left)?.offset()(-8)
             make?.width.equalTo()(1)
             make?.height.equalTo()(6)
             make?.centerY.equalTo()(sepLine.superview)
         }
         
-        titleLabel.mas_makeConstraints { make in
-            make?.right.equalTo()(sepLine.mas_left)?.offset()(-8)
+        titleLabel.agora_mas_makeConstraints { make in
+            make?.right.equalTo()(sepLine.agora_mas_left)?.offset()(-8)
             make?.top.bottom().equalTo()(0)
         }
         
-        recordingLabel.mas_makeConstraints { make in
-            make?.right.equalTo()(titleLabel.mas_left)?.offset()(-10)
+        recordingLabel.agora_mas_makeConstraints { make in
+            make?.right.equalTo()(titleLabel.agora_mas_left)?.offset()(-10)
             make?.top.equalTo()(0)
             make?.bottom.equalTo()(0)
         }
         
-        recordingStateView.mas_makeConstraints { make in
+        recordingStateView.agora_mas_makeConstraints { make in
             make?.centerY.equalTo()(0)
             make?.width.height().equalTo()(6)
-            make?.right.equalTo()(recordingLabel.mas_left)?.offset()(-10)
+            make?.right.equalTo()(recordingLabel.agora_mas_left)?.offset()(-10)
         }
     }
     

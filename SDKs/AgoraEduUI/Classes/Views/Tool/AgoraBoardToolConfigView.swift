@@ -373,18 +373,18 @@ extension AgoraBoardToolConfigView: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        contentView.mas_makeConstraints { make in
+        contentView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(contentView.superview)
         }
-        colorCollectionView.mas_makeConstraints { make in
+        colorCollectionView.agora_mas_makeConstraints { make in
             make?.left.right().bottom().equalTo()(colorCollectionView.superview)
             make?.height.equalTo()(colorCollectionHeight)
         }
-        bottomLine.mas_makeConstraints { make in
+        bottomLine.agora_mas_makeConstraints { make in
             make?.left.equalTo()(AgoraFit.scale(10))
             make?.right.equalTo()(AgoraFit.scale(-10))
             make?.height.equalTo()(1)
-            make?.bottom.equalTo()(self.colorCollectionView.mas_top)
+            make?.bottom.equalTo()(self.colorCollectionView.agora_mas_top)
         }
     }
     
@@ -412,23 +412,23 @@ extension AgoraBoardToolConfigView: AgoraUIContentContainer {
 private extension AgoraBoardToolConfigView {
     func updateConstrains() {
         if isCurrentPaint {
-            subPaintCollectionView.mas_remakeConstraints { make in
+            subPaintCollectionView.agora_mas_remakeConstraints { make in
                 make?.left.right().top().equalTo()(subPaintCollectionView.superview)
                 make?.height.equalTo()(toolCollectionHeight)
             }
-            topLine.mas_remakeConstraints { make in
+            topLine.agora_mas_remakeConstraints { make in
                 make?.left.equalTo()(AgoraFit.scale(10))
                 make?.right.equalTo()(AgoraFit.scale(-10))
                 make?.height.equalTo()(1)
-                make?.top.equalTo()(self.subPaintCollectionView.mas_bottom)
+                make?.top.equalTo()(self.subPaintCollectionView.agora_mas_bottom)
             }
-            lineWidthCollectionView.mas_remakeConstraints { make in
+            lineWidthCollectionView.agora_mas_remakeConstraints { make in
                 make?.left.right().equalTo()(lineWidthCollectionView.superview)
                 make?.top.equalTo()(topLine)
                 make?.height.equalTo()(lineCollectionHeight)
             }
         } else {
-            textSizecollectionView.mas_remakeConstraints { make in
+            textSizecollectionView.agora_mas_remakeConstraints { make in
                 make?.left.right().top().equalTo()(textSizecollectionView.superview)
                 make?.height.equalTo()(textCollectionHeight)
             }

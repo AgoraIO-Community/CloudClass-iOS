@@ -7,7 +7,7 @@
 
 import AgoraEduCore
 import AgoraWidget
-import Masonry
+
 import UIKit
 
 protocol FcrRenderMenuUIComponentDelegate: NSObjectProtocol {
@@ -234,11 +234,11 @@ class FcrRenderMenuUIComponent: FcrUIComponent {
     }
     
     func initViewFrame() {
-        contentView.mas_makeConstraints { make in
+        contentView.agora_mas_makeConstraints { make in
             make?.left.equalTo()(10)
             make?.right.equalTo()(10)
-            make?.top.equalTo()(contentView.superview?.mas_top)?.offset()(1)
-            make?.bottom.equalTo()(contentView.superview?.mas_bottom)?.offset()(-1)
+            make?.top.equalTo()(contentView.superview?.agora_mas_top)?.offset()(1)
+            make?.bottom.equalTo()(contentView.superview?.agora_mas_bottom)?.offset()(-1)
         }
     }
     
@@ -355,11 +355,11 @@ private extension FcrRenderMenuUIComponent {
         menuWidth =  CGFloat(items.count) * 22 + CGFloat(items.count + 1) * 10
         let stackWidth = CGFloat(items.count) * 22 + CGFloat(items.count - 1) * 10
         
-        self.contentView.mas_remakeConstraints { make in
+        self.contentView.agora_mas_remakeConstraints { make in
             make?.width.equalTo()(stackWidth)
             make?.centerX.equalTo()(contentView.superview)
-            make?.top.equalTo()(contentView.superview?.mas_top)?.offset()(1)
-            make?.bottom.equalTo()(contentView.superview?.mas_bottom)?.offset()(-1)
+            make?.top.equalTo()(contentView.superview?.agora_mas_top)?.offset()(1)
+            make?.bottom.equalTo()(contentView.superview?.agora_mas_bottom)?.offset()(-1)
         }
     }
     

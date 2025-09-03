@@ -39,7 +39,7 @@ class FcrWatermarkUIComponent: UIViewController {
         
         view.addSubview(widget.view)
         
-        widget.view.mas_makeConstraints { make in
+        widget.view.agora_mas_makeConstraints { make in
             make?.top.bottom().left().right().equalTo()(self.view)
         }
         

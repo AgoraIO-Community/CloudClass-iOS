@@ -108,13 +108,13 @@ extension FcrSmallTachedWindowUIComponent: AgoraUIContentContainer, AgoraUIActiv
     }
     
     func initViewFrame() {
-        coHost.view.mas_makeConstraints { make in
+        coHost.view.agora_mas_makeConstraints { make in
             make?.left.top().right().bottom().equalTo()(0)
         }
         
-        teacher.view.mas_makeConstraints { make in
+        teacher.view.agora_mas_makeConstraints { make in
             make?.left.top().bottom().equalTo()(0)
-            make?.right.equalTo()(coHost.view.mas_left)?.equalTo()(0)
+            make?.right.equalTo()(coHost.view.agora_mas_left)?.equalTo()(0)
         }
     }
     
@@ -151,14 +151,14 @@ private extension FcrSmallTachedWindowUIComponent {
         
         let coHostLeft = (itemWidth + itemLineSpacing) * teacherCount + firstItemX
         
-        coHost.view.mas_remakeConstraints { make in
+        coHost.view.agora_mas_remakeConstraints { make in
             make?.top.right().bottom().equalTo()(0)
             make?.left.equalTo()(coHostLeft)
         }
         
-        teacher.view.mas_remakeConstraints { make in
+        teacher.view.agora_mas_remakeConstraints { make in
             make?.left.top().bottom().equalTo()(0)
-            make?.right.equalTo()(coHost.view.mas_left)?.equalTo()(-itemLineSpacing)
+            make?.right.equalTo()(coHost.view.agora_mas_left)?.equalTo()(-itemLineSpacing)
         }
         
         UIView.animate(withDuration: TimeInterval.agora_animation) {

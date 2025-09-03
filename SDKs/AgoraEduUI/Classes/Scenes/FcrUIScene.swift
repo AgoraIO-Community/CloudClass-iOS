@@ -137,20 +137,20 @@ protocol FcrUISceneExit: NSObjectProtocol {
                          UIScreen.main.bounds.height)
         
         if (width / height) > (667.0 / 375.0) {
-            contentView.mas_makeConstraints { make in
+            contentView.agora_mas_makeConstraints { make in
                 make?.center.equalTo()(contentView.superview)
                 make?.height.equalTo()(height)
                 make?.width.equalTo()(height * 16.0 / 9.0)
             }
         } else {
-            contentView.mas_makeConstraints { make in
+            contentView.agora_mas_makeConstraints { make in
                 make?.center.equalTo()(contentView.superview)
                 make?.width.equalTo()(width)
                 make?.height.equalTo()(width * 9.0 / 16.0)
             }
         }
         
-        ctrlMaskView.mas_makeConstraints { make in
+        ctrlMaskView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(self.view)
         }
     }

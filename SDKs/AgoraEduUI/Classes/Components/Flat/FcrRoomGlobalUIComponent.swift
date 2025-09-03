@@ -535,7 +535,7 @@ private extension FcrRoomGlobalUIComponent {
         
         if let window = UIApplication.shared.keyWindow {
             window.addSubview(imageView)
-            imageView.mas_makeConstraints { make in
+            imageView.agora_mas_makeConstraints { make in
                 make?.center.equalTo()(0)
                 make?.width.equalTo()(AgoraFit.scale(238))
                 make?.height.equalTo()(AgoraFit.scale(238))

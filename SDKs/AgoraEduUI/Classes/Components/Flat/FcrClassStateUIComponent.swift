@@ -8,7 +8,7 @@
 import AgoraUIBaseViews
 import AgoraEduCore
 import AgoraWidget
-import Masonry
+
 import UIKit
 
 protocol FcrClassStateUIComponentDelegate: NSObjectProtocol {
@@ -85,7 +85,7 @@ extension FcrClassStateUIComponent: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        startButton.mas_makeConstraints { make in
+        startButton.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
     }
