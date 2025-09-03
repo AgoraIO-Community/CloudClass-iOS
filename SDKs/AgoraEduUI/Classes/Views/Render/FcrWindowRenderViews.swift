@@ -30,15 +30,15 @@ class FcrWindowRenderRewardView: UIView, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        imageView.mas_makeConstraints { make in
+        imageView.agora_mas_makeConstraints { make in
             make?.left.top().bottom().equalTo()(0)
-            make?.width.equalTo()(self.mas_width)?.multipliedBy()(0.5)
+            make?.width.equalTo()(self.agora_mas_width)?.multipliedBy()(0.5)
         }
         
-        label.mas_makeConstraints { make in
+        label.agora_mas_makeConstraints { make in
             make?.top.bottom().equalTo()(0)
             make?.right.equalTo()(-2)
-            make?.width.equalTo()(self.mas_width)?.multipliedBy()(0.5)
+            make?.width.equalTo()(self.agora_mas_width)?.multipliedBy()(0.5)
         }
     }
     
@@ -74,8 +74,8 @@ class FcrWindowRenderNoneView: UIView, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        imageView.mas_makeConstraints { make in
-            make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.53)
+        imageView.agora_mas_makeConstraints { make in
+            make?.width.height().equalTo()(self.agora_mas_height)?.multipliedBy()(0.53)
             make?.center.equalTo()(0)
         }
     }
@@ -138,11 +138,11 @@ class FcrWindowRenderMicView: UIView, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        imageView.mas_makeConstraints { make in
+        imageView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         
-        animaView.mas_makeConstraints { make in
+        animaView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
     }
@@ -281,41 +281,41 @@ extension FcrWindowRenderView: AgoraUIContentContainer {
     
     func initViewFrame() {
         let borderWidth = UIConfig.studentVideo.cell.borderWidth
-        videoView.mas_makeConstraints { make in
+        videoView.agora_mas_makeConstraints { make in
             make?.center.equalTo()(0)
             make?.width.height().equalTo()(self)?.offset()(-borderWidth)
         }
         
-        videoMaskView.mas_makeConstraints { make in
-            make?.width.height().equalTo()(self.mas_height)?.multipliedBy()(0.53)
+        videoMaskView.agora_mas_makeConstraints { make in
+            make?.width.height().equalTo()(self.agora_mas_height)?.multipliedBy()(0.53)
             make?.center.equalTo()(0)
         }
         
-        micView.mas_makeConstraints { make in
+        micView.agora_mas_makeConstraints { make in
             make?.left.equalTo()(2)
             make?.bottom.equalTo()(-2)
             make?.width.height().equalTo()(16)
         }
         
-        nameLabel.mas_makeConstraints { make in
+        nameLabel.agora_mas_makeConstraints { make in
             make?.centerY.equalTo()(micView)
-            make?.left.equalTo()(micView.mas_right)?.offset()(2)
+            make?.left.equalTo()(micView.agora_mas_right)?.offset()(2)
             make?.right.lessThanOrEqualTo()(0)
         }
         
-        waveView.mas_makeConstraints { make in
-            make?.width.height().equalTo()(self.mas_height)
+        waveView.agora_mas_makeConstraints { make in
+            make?.width.height().equalTo()(self.agora_mas_height)
             make?.centerX.bottom().equalTo()(0)
         }
         
-        rewardView.mas_makeConstraints { make in
+        rewardView.agora_mas_makeConstraints { make in
             make?.right.equalTo()(-2)
             make?.top.equalTo()(5)
             make?.width.equalTo()(32)
             make?.height.equalTo()(16)
         }
         
-        boardPrivilegeView.mas_makeConstraints { make in
+        boardPrivilegeView.agora_mas_makeConstraints { make in
             make?.right.bottom().equalTo()(-2)
             make?.width.equalTo()(16)
             make?.height.equalTo()(18)
@@ -369,11 +369,11 @@ class FcrWindowRenderCell: UICollectionViewCell, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        noneView.mas_makeConstraints { make in
+        noneView.agora_mas_makeConstraints { make in
             make?.right.left().top().bottom().equalTo()(0)
         }
         
-        renderView.mas_makeConstraints { make in
+        renderView.agora_mas_makeConstraints { make in
             make?.right.left().top().bottom().equalTo()(0)
         }
     }

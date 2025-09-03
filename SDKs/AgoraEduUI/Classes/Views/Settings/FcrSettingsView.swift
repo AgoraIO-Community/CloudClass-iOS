@@ -163,22 +163,22 @@ extension FcrSettingsView: AgoraUIContentContainer {
             return
         }
         
-        sharingLinkButton.mas_makeConstraints { make in
+        sharingLinkButton.agora_mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(44)
         }
         
-        sharingTitleLabel.mas_makeConstraints { make in
+        sharingTitleLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(15)
             make?.centerY.equalTo()(0)
         }
         
-        sharingArrowImage.mas_makeConstraints { make in
+        sharingArrowImage.agora_mas_makeConstraints { make in
             make?.right.equalTo()(-15)
             make?.centerY.equalTo()(0)
         }
         
-        sharingLinkLine.mas_makeConstraints { make in
+        sharingLinkLine.agora_mas_makeConstraints { make in
             make?.bottom.equalTo()(0)
             make?.left.equalTo()(16)
             make?.right.equalTo()(-16)
@@ -191,56 +191,56 @@ extension FcrSettingsView: AgoraUIContentContainer {
         initSharingLinkViewsFrame()
         
         // Camera
-        cameraLabel.mas_makeConstraints { [unowned self] make in
+        cameraLabel.agora_mas_makeConstraints { [unowned self] make in
             if self.hasShareingLink {
-                make?.top.equalTo()(sharingLinkButton.mas_bottom)?.offset()(16)
+                make?.top.equalTo()(sharingLinkButton.agora_mas_bottom)?.offset()(16)
             } else {
-                make?.top.equalTo()(self.mas_top)?.offset()(16)
+                make?.top.equalTo()(self.agora_mas_top)?.offset()(16)
             }
             
             make?.left.equalTo()(16)
         }
         
-        cameraSwitch.mas_makeConstraints { make in
+        cameraSwitch.agora_mas_makeConstraints { make in
             make?.right.equalTo()(-16)
             make?.width.equalTo()(40)
             make?.height.equalTo()(20)
             make?.centerY.equalTo()(cameraLabel)?.offset()(-5)
         }
         
-        cameraDirectionLabel.mas_makeConstraints { make in
+        cameraDirectionLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(cameraLabel)
-            make?.top.equalTo()(cameraLabel.mas_bottom)?.offset()(20)
+            make?.top.equalTo()(cameraLabel.agora_mas_bottom)?.offset()(20)
         }
         
-        frontCameraButton.mas_makeConstraints { make in
+        frontCameraButton.agora_mas_makeConstraints { make in
             make?.width.equalTo()(40)
             make?.height.equalTo()(22)
-            make?.right.equalTo()(backCameraButton.mas_left)?.offset()(-5)
+            make?.right.equalTo()(backCameraButton.agora_mas_left)?.offset()(-5)
             make?.centerY.equalTo()(backCameraButton)
         }
 
-        backCameraButton.mas_makeConstraints { make in
+        backCameraButton.agora_mas_makeConstraints { make in
             make?.width.equalTo()(40)
             make?.height.equalTo()(22)
             make?.right.equalTo()(cameraSwitch)
             make?.centerY.equalTo()(cameraDirectionLabel)
         }
         
-        sepLine.mas_makeConstraints { make in
-            make?.top.equalTo()(cameraDirectionLabel.mas_bottom)?.offset()(17)
+        sepLine.agora_mas_makeConstraints { make in
+            make?.top.equalTo()(cameraDirectionLabel.agora_mas_bottom)?.offset()(17)
             make?.left.equalTo()(16)
             make?.right.equalTo()(-16)
             make?.height.equalTo()(1)
         }
         
         // Mic
-        micLabel.mas_makeConstraints { make in
+        micLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(cameraLabel)
-            make?.top.equalTo()(sepLine.mas_bottom)?.offset()(16)
+            make?.top.equalTo()(sepLine.agora_mas_bottom)?.offset()(16)
         }
         
-        micSwitch.mas_makeConstraints { make in
+        micSwitch.agora_mas_makeConstraints { make in
             make?.right.equalTo()(-16)
             make?.width.equalTo()(40)
             make?.height.equalTo()(20)
@@ -248,12 +248,12 @@ extension FcrSettingsView: AgoraUIContentContainer {
         }
         
         // Speaker
-        speakerLabel.mas_makeConstraints { make in
+        speakerLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(cameraLabel)
-            make?.top.equalTo()(micLabel.mas_bottom)?.offset()(18)
+            make?.top.equalTo()(micLabel.agora_mas_bottom)?.offset()(18)
         }
         
-        speakerSwitch.mas_makeConstraints { make in
+        speakerSwitch.agora_mas_makeConstraints { make in
             make?.right.equalTo()(-16)
             make?.width.equalTo()(40)
             make?.height.equalTo()(20)
@@ -261,7 +261,7 @@ extension FcrSettingsView: AgoraUIContentContainer {
         }
         
         // Exit
-        exitButton.mas_makeConstraints { make in
+        exitButton.agora_mas_makeConstraints { make in
             make?.left.equalTo()(15)
             make?.right.equalTo()(-15)
             make?.height.equalTo()(30)

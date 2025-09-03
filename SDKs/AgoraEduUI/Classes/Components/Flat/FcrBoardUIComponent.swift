@@ -199,7 +199,7 @@ private extension FcrBoardUIComponent {
         
         view.addSubview(widget.view)
         
-        widget.view.mas_makeConstraints { make in
+        widget.view.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         

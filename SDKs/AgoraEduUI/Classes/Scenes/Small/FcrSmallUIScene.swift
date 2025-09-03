@@ -241,28 +241,28 @@ import AgoraWidget
         super.initViewFrame()
         let userRole = contextPool.user.getLocalUserInfo().userRole
         
-        stateComponent.view.mas_makeConstraints { make in
+        stateComponent.view.agora_mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(UIDevice.current.agora_is_pad ? 20 : 14)
         }
         
-        boardComponent.view.mas_makeConstraints { make in
+        boardComponent.view.agora_mas_makeConstraints { make in
             make?.height.equalTo()(AgoraFit.scale(307))
             make?.left.right().bottom().equalTo()(0)
             make?.bottom.equalTo()(0)
         }
         
-        renderComponent.view.mas_makeConstraints { [weak self] make in
+        renderComponent.view.agora_mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
             }
             
             make?.left.right().equalTo()(0)
-            make?.top.equalTo()(self.stateComponent.view.mas_bottom)?.offset()(2)
-            make?.bottom.equalTo()(self.boardComponent.view.mas_top)?.offset()(-2)
+            make?.top.equalTo()(self.stateComponent.view.agora_mas_bottom)?.offset()(2)
+            make?.bottom.equalTo()(self.boardComponent.view.agora_mas_top)?.offset()(-2)
         }
         
-        toolBarComponent.view.mas_remakeConstraints { [weak self] make in
+        toolBarComponent.view.agora_mas_remakeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
             }
@@ -270,27 +270,27 @@ import AgoraWidget
             let right = CGFloat(UIDevice.current.agora_is_pad ? -15 : -12)
             let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
             
-            make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(right)
-            make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(bottom)
+            make?.right.equalTo()(self.boardComponent.view.agora_mas_right)?.offset()(right)
+            make?.bottom.equalTo()(self.boardComponent.agora_mas_bottomLayoutGuideBottom)?.offset()(bottom)
             make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
             make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
         }
         
         if userRole != .observer {
-            toolCollectionComponent.view.mas_makeConstraints { [weak self] make in
+            toolCollectionComponent.view.agora_mas_makeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
                 }
                 
                 let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
                 
-                make?.centerX.equalTo()(self.toolBarComponent.view.mas_centerX)
+                make?.centerX.equalTo()(self.toolBarComponent.view.agora_mas_centerX)
                 make?.bottom.equalTo()(self.boardComponent.view)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
         }
         
-        classToolsComponent.view.mas_makeConstraints { [weak self] make in
+        classToolsComponent.view.agora_mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
             }
@@ -298,7 +298,7 @@ import AgoraWidget
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
-        webViewComponent.view.mas_makeConstraints { [weak self] make in
+        webViewComponent.view.agora_mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
             }
@@ -306,7 +306,7 @@ import AgoraWidget
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
-        windowComponent.view.mas_makeConstraints { [weak self] make in
+        windowComponent.view.agora_mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
             }
@@ -314,15 +314,15 @@ import AgoraWidget
             make?.left.right().top().bottom().equalTo()(self.boardComponent.view)
         }
         
-        watermarkComponent.view.mas_makeConstraints { [weak self] make in
+        watermarkComponent.view.agora_mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
             }
             
-            make?.top.equalTo()(self.boardComponent.view.mas_top)
-            make?.bottom.equalTo()(self.boardComponent.view.mas_bottom)
-            make?.left.equalTo()(self.contentView.mas_left)
-            make?.right.equalTo()(self.contentView.mas_right)
+            make?.top.equalTo()(self.boardComponent.view.agora_mas_top)
+            make?.bottom.equalTo()(self.boardComponent.view.agora_mas_bottom)
+            make?.left.equalTo()(self.contentView.agora_mas_left)
+            make?.right.equalTo()(self.contentView.agora_mas_right)
         }
         
         updateRenderCollectionLayout()
@@ -332,18 +332,18 @@ import AgoraWidget
         renderComponent.view.agora_visible = show
         
         if show {
-            boardComponent.view.mas_remakeConstraints { make in
+            boardComponent.view.agora_mas_remakeConstraints { make in
                 make?.height.equalTo()(AgoraFit.scale(307))
                 make?.left.right().bottom().equalTo()(0)
             }
         } else {
-            boardComponent.view.mas_remakeConstraints { [weak self] make in
+            boardComponent.view.agora_mas_remakeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
                 }
                 
-                make?.top.equalTo()(self.stateComponent.view.mas_bottom)?.offset()(AgoraFit.scale(1))
-                make?.bottom.equalTo()(self.contentView.mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.top.equalTo()(self.stateComponent.view.agora_mas_bottom)?.offset()(AgoraFit.scale(1))
+                make?.bottom.equalTo()(self.contentView.agora_mas_bottom)?.offset()(AgoraFit.scale(1))
                 make?.left.right().equalTo()(0)
             }
         }
@@ -359,7 +359,7 @@ extension FcrSmallUIScene: FcrSettingUIComponentDelegate {
         ctrlView = nil
         toolBarComponent.deselectAll()
         self.view.addSubview(view)
-        view.mas_makeConstraints { make in
+        view.agora_mas_makeConstraints { make in
             make?.top.left().bottom().right().equalTo()(0)
         }
     }
@@ -467,27 +467,27 @@ extension FcrSmallUIScene: FcrToolCollectionUIComponentDelegate {
     
     func toolCollectionCellNeedSpread(_ spread: Bool) {
         if spread {
-            toolCollectionComponent.view.mas_remakeConstraints { [weak self] make in
+            toolCollectionComponent.view.agora_mas_remakeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
                 }
                 
                 let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
                 
-                make?.centerX.equalTo()(self.toolBarComponent.view.mas_centerX)
+                make?.centerX.equalTo()(self.toolBarComponent.view.agora_mas_centerX)
                 make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
                 make?.width.equalTo()(self.toolCollectionComponent.suggestLength)
                 make?.height.equalTo()(self.toolCollectionComponent.suggestSpreadHeight)
             }
         } else {
-            toolCollectionComponent.view.mas_remakeConstraints { [weak self] make in
+            toolCollectionComponent.view.agora_mas_remakeConstraints { [weak self] make in
                 guard let `self` = self else {
                     return
                 }
                 
                 let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
                 
-                make?.centerX.equalTo()(self.toolBarComponent.view.mas_centerX)
+                make?.centerX.equalTo()(self.toolBarComponent.view.agora_mas_centerX)
                 make?.bottom.equalTo()(self.contentView)?.offset()(bottom)
                 make?.width.height().equalTo()(self.toolCollectionComponent.suggestLength)
             }
@@ -505,7 +505,7 @@ extension FcrSmallUIScene: FcrToolCollectionUIComponentDelegate {
         switch type {
         case .cloudStorage:
             if !cloudComponent.view.agora_visible {
-                cloudComponent.view.mas_remakeConstraints { [weak self] make in
+                cloudComponent.view.agora_mas_remakeConstraints { [weak self] make in
                     guard let `self` = self else {
                         return
                     }
@@ -538,7 +538,7 @@ extension FcrSmallUIScene: FcrToolCollectionUIComponentDelegate {
             }
             
             if appear {
-                self.toolBarComponent.view.mas_remakeConstraints { [weak self] make in
+                self.toolBarComponent.view.agora_mas_remakeConstraints { [weak self] make in
                     guard let `self` = self else {
                         return
                     }
@@ -546,13 +546,13 @@ extension FcrSmallUIScene: FcrToolCollectionUIComponentDelegate {
                     let right = CGFloat(UIDevice.current.agora_is_pad ? -15 : -12)
                     let bottom = CGFloat(UIDevice.current.agora_is_pad ? -15 : -12)
                     
-                    make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(right)
-                    make?.bottom.equalTo()(self.toolCollectionComponent.view.mas_top)?.offset()(bottom)
+                    make?.right.equalTo()(self.boardComponent.view.agora_mas_right)?.offset()(right)
+                    make?.bottom.equalTo()(self.toolCollectionComponent.view.agora_mas_top)?.offset()(bottom)
                     make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
                     make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
                 }
             } else {
-                self.toolBarComponent.view.mas_remakeConstraints { [weak self] make in
+                self.toolBarComponent.view.agora_mas_remakeConstraints { [weak self] make in
                     guard let `self` = self else {
                         return
                     }
@@ -560,8 +560,8 @@ extension FcrSmallUIScene: FcrToolCollectionUIComponentDelegate {
                     let right = CGFloat(UIDevice.current.agora_is_pad ? -15 : -12)
                     let bottom = CGFloat(UIDevice.current.agora_is_pad ? -20 : -15)
                     
-                    make?.right.equalTo()(self.boardComponent.view.mas_right)?.offset()(right)
-                    make?.bottom.equalTo()(self.boardComponent.mas_bottomLayoutGuideBottom)?.offset()(bottom)
+                    make?.right.equalTo()(self.boardComponent.view.agora_mas_right)?.offset()(right)
+                    make?.bottom.equalTo()(self.boardComponent.agora_mas_bottomLayoutGuideBottom)?.offset()(bottom)
                     make?.width.equalTo()(self.toolBarComponent.suggestSize.width)
                     make?.height.equalTo()(self.toolBarComponent.suggestSize.height)
                 }
@@ -621,13 +621,13 @@ extension FcrSmallUIScene: FcrTachedStreamWindowUIComponentDelegate {
             renderMenuComponent.show(roomType: .small,
                                      userUuid: userId,
                                      showRoleType: role)
-            renderMenuComponent.view.mas_remakeConstraints { [weak self, weak view] make in
+            renderMenuComponent.view.agora_mas_remakeConstraints { [weak self, weak view] make in
                 guard let `self` = self,
                       let `view` = view else {
                     return
                 }
                 
-                make?.top.equalTo()(view.mas_bottom)?.offset()(2)
+                make?.top.equalTo()(view.agora_mas_bottom)?.offset()(2)
                 make?.centerX.equalTo()(centerX)
                 make?.height.equalTo()(30)
                 make?.width.equalTo()(self.renderMenuComponent.menuWidth)
@@ -663,7 +663,7 @@ extension FcrSmallUIScene: FcrClassStateUIComponentDelegate {
         
         let left: CGFloat = UIDevice.current.agora_is_pad ? 198 : 192
         
-        classStateComponent.view.mas_makeConstraints { [weak self] make in
+        classStateComponent.view.agora_mas_makeConstraints { [weak self] make in
             guard let `self` = self else {
                 return
             }

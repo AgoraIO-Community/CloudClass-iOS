@@ -74,14 +74,14 @@ extension AgoraHandsUpItemCell: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        nameLabel.mas_makeConstraints { make in
+        nameLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(15)
             make?.centerY.equalTo()(nameLabel.superview)
         }
-        stateButton.mas_makeConstraints { make in
+        stateButton.agora_mas_makeConstraints { make in
             make?.right.equalTo()(-15)
             make?.centerY.equalTo()(self)
-            make?.width.height().equalTo()(self.mas_height)
+            make?.width.height().equalTo()(self.agora_mas_height)
         }
     }
     

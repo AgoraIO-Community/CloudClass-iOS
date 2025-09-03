@@ -6,7 +6,7 @@
 //
 
 import AgoraUIBaseViews
-import Masonry
+
 import UIKit
 
 protocol AgoraMainToolsViewDelegate: NSObjectProtocol {
@@ -177,9 +177,6 @@ extension AgoraMainToolsView: UICollectionViewDelegate,
     
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.dequeueReusableCell(withClass: AgoraToolCollectionToolCell.self,
-                                                      for: indexPath)
-        
         if collectionView == boardToolsView,
            indexPath.item < mainBoardTools.count {
            let tool = mainBoardTools[indexPath.item]
@@ -225,29 +222,29 @@ extension AgoraMainToolsView: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        contentView.mas_makeConstraints { make in
+        contentView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(contentView.superview)
         }
         
         if containAids {
-            teachingAidsView.mas_makeConstraints { make in
+            teachingAidsView.agora_mas_makeConstraints { make in
                 make?.left.right().top().equalTo()(self)
                 make?.height.equalTo()(aidsHeight)
             }
             
-            sepLine.mas_makeConstraints { make in
-                make?.top.equalTo()(teachingAidsView.mas_bottom)
+            sepLine.agora_mas_makeConstraints { make in
+                make?.top.equalTo()(teachingAidsView.agora_mas_bottom)
                 make?.left.equalTo()(16)
                 make?.right.equalTo()(-16)
                 make?.height.equalTo()(1)
             }
             
-            boardToolsView.mas_makeConstraints { make in
+            boardToolsView.agora_mas_makeConstraints { make in
                 make?.left.right().bottom().equalTo()(self)
-                make?.top.equalTo()(self.sepLine.mas_bottom)
+                make?.top.equalTo()(self.sepLine.agora_mas_bottom)
             }
         } else {
-            boardToolsView.mas_makeConstraints { make in
+            boardToolsView.agora_mas_makeConstraints { make in
                 make?.top.left().right().bottom().equalTo()(self)
             }
         }
@@ -281,7 +278,7 @@ private extension AgoraMainToolsView {
             return
         }
         sepLine.agora_visible = (teachingAidsList.count > 0)
-        teachingAidsView.mas_remakeConstraints { make in
+        teachingAidsView.agora_mas_remakeConstraints { make in
             make?.left.equalTo()(self)?.offset()(AgoraFit.scale(8))
             make?.right.equalTo()(self)?.offset()(AgoraFit.scale(-8))
             make?.height.equalTo()(aidsHeight)

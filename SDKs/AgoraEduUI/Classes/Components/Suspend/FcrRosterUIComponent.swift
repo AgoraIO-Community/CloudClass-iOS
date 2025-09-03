@@ -130,50 +130,50 @@ class FcrRosterUIComponent: FcrUIComponent {
     }
     
     func initViewFrame() {
-        contentView.mas_makeConstraints { make in
+        contentView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(contentView.superview)
         }
-        titleLabel.mas_makeConstraints { make in
+        titleLabel.agora_mas_makeConstraints { make in
             make?.top.equalTo()(titleLabel.superview)
             make?.left.equalTo()(16)
             make?.height.equalTo()(30)
         }
-        teacherInfoView.mas_makeConstraints { make in
-            make?.top.equalTo()(titleLabel.mas_bottom)
+        teacherInfoView.agora_mas_makeConstraints { make in
+            make?.top.equalTo()(titleLabel.agora_mas_bottom)
             make?.left.right().equalTo()(teacherInfoView.superview)
             make?.height.equalTo()(30)
         }
-        topSepLine.mas_makeConstraints { make in
+        topSepLine.agora_mas_makeConstraints { make in
             make?.top.left().right().equalTo()(teacherInfoView)
             make?.height.equalTo()(1)
         }
-        bottomSepLine.mas_makeConstraints { make in
+        bottomSepLine.agora_mas_makeConstraints { make in
             make?.bottom.left().right().equalTo()(teacherInfoView)
             make?.height.equalTo()(1)
         }
-        teacherTitleLabel.mas_makeConstraints { make in
+        teacherTitleLabel.agora_mas_makeConstraints { make in
             make?.left.equalTo()(16)
             make?.top.bottom().equalTo()(teacherInfoView)
         }
-        teacherNameLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(teacherTitleLabel.mas_right)?.offset()(6)
+        teacherNameLabel.agora_mas_makeConstraints { make in
+            make?.left.equalTo()(teacherTitleLabel.agora_mas_right)?.offset()(6)
             make?.top.bottom().equalTo()(teacherInfoView)
         }
-        studentTitleLabel.mas_makeConstraints { make in
-            make?.top.equalTo()(teacherInfoView.mas_bottom)
+        studentTitleLabel.agora_mas_makeConstraints { make in
+            make?.top.equalTo()(teacherInfoView.agora_mas_bottom)
             make?.left.equalTo()(16)
             make?.height.equalTo()(30)
             make?.width.equalTo()(80)
         }
-        itemTitlesView.mas_makeConstraints { make in
+        itemTitlesView.agora_mas_makeConstraints { make in
             make?.top.equalTo()(studentTitleLabel)
-            make?.left.equalTo()(studentTitleLabel.mas_right)
+            make?.left.equalTo()(studentTitleLabel.agora_mas_right)
             make?.right.equalTo()(0)
             make?.height.equalTo()(studentTitleLabel)
         }
-        tableView.mas_makeConstraints { make in
+        tableView.agora_mas_makeConstraints { make in
             make?.left.right().bottom().equalTo()(tableView.superview)
-            make?.top.equalTo()(studentTitleLabel.mas_bottom)
+            make?.top.equalTo()(studentTitleLabel.agora_mas_bottom)
         }
     }
     

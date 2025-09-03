@@ -7,7 +7,7 @@
 
 import AgoraEduCore
 import AgoraWidget
-import Masonry
+
 import UIKit
 
 protocol FcrChatUIComponentDelegate: NSObjectProtocol {
@@ -160,7 +160,7 @@ private extension FcrChatUIComponent {
         
         view.addSubview(widget.view)
         
-        widget.view.mas_makeConstraints { make in
+        widget.view.agora_mas_makeConstraints { make in
             make?.top.left().right().bottom().equalTo()(0)
         }
     }
