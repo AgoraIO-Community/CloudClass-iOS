@@ -72,7 +72,7 @@ import AgoraWidget
         
         if let watermark = watermarkWidget?.view {
             view.addSubview(watermark)
-            watermark.mas_makeConstraints { make in
+            watermark.agora_mas_makeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(contentView)
             }
         }
@@ -106,19 +106,19 @@ import AgoraWidget
     
     public override func initViewFrame() {
         super.initViewFrame()
-        stateController.view.mas_makeConstraints { make in
+        stateController.view.agora_mas_makeConstraints { make in
             make?.top.left().right().equalTo()(0)
             make?.height.equalTo()(AgoraFit.scale(34))
         }
-        chatController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+        chatController.view.agora_mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view.agora_mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.width.equalTo()(AgoraFit.scale(170))
             make?.right.bottom().equalTo()(0)
         }
-        renderController.view.mas_makeConstraints { make in
-            make?.top.equalTo()(stateController.view.mas_bottom)?.offset()(AgoraFit.scale(2))
+        renderController.view.agora_mas_makeConstraints { make in
+            make?.top.equalTo()(stateController.view.agora_mas_bottom)?.offset()(AgoraFit.scale(2))
             make?.left.bottom().equalTo()(0)
-            make?.right.equalTo()(chatController.view.mas_left)?.offset()(-2)
+            make?.right.equalTo()(chatController.view.agora_mas_left)?.offset()(-2)
         }
     }
 }

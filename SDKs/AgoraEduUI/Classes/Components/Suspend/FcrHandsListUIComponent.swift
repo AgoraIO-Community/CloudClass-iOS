@@ -8,7 +8,7 @@
 
 import AgoraEduCore
 import AgoraUIBaseViews
-import Masonry
+
 
 protocol FcrHandsListUIComponentDelegate: NSObjectProtocol {
     func updateHandsListRedLabel(_ count: Int)
@@ -166,7 +166,7 @@ extension FcrHandsListUIComponent: AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        tableView.mas_makeConstraints { make in
+        tableView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(view)
         }
     }

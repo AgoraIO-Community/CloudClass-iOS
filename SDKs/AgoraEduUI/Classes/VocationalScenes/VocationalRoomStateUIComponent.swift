@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 import AgoraEduCore
-import Masonry
+
 
 class VocationalRoomStateUIComponent: FcrUIComponent {
     /** SDK环境*/
@@ -80,10 +80,10 @@ extension VocationalRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivi
     }
     
     func initViewFrame() {
-        stateView.mas_remakeConstraints { make in
+        stateView.agora_mas_remakeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
-        leaveButton.mas_makeConstraints { make in
+        leaveButton.agora_mas_makeConstraints { make in
             make?.top.bottom().equalTo()(0)
             make?.width.equalTo()(44)
             make?.centerY.right().equalTo()(0)
@@ -316,27 +316,27 @@ class VocationalRoomStateBar: UIView, AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        netStateView.mas_makeConstraints { make in
+        netStateView.agora_mas_makeConstraints { make in
             if #available(iOS 11.0, *) {
-                make?.left.equalTo()(self.mas_safeAreaLayoutGuideLeft)?.offset()(10)
+                make?.left.equalTo()(self.agora_mas_safeAreaLayoutGuideLeft)?.offset()(10)
             } else {
                 make?.left.equalTo()(self)?.offset()(10)
             }
             make?.width.height().equalTo()(20)
             make?.centerY.equalTo()(netStateView.superview)
         }
-        sepLine.mas_makeConstraints { make in
+        sepLine.agora_mas_makeConstraints { make in
             make?.width.equalTo()(1)
             make?.height.equalTo()(AgoraFit.scale(16))
             make?.center.equalTo()(0)
         }
-        timeLabel.mas_makeConstraints { make in
-            make?.left.equalTo()(sepLine.mas_right)?.offset()(8)
+        timeLabel.agora_mas_makeConstraints { make in
+            make?.left.equalTo()(sepLine.agora_mas_right)?.offset()(8)
             make?.top.bottom().equalTo()(0)
             make?.width.greaterThanOrEqualTo()(60)
         }
-        titleLabel.mas_makeConstraints { make in
-            make?.right.equalTo()(sepLine.mas_left)?.offset()(-8)
+        titleLabel.agora_mas_makeConstraints { make in
+            make?.right.equalTo()(sepLine.agora_mas_left)?.offset()(-8)
             make?.top.bottom().equalTo()(0)
         }
     }

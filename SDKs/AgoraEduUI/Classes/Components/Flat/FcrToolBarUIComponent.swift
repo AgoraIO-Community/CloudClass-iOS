@@ -64,8 +64,8 @@ class FcrToolBarUIComponent: FcrUIComponent {
         if let index = self.dataSource.firstIndex(of: .waveHands) {
             let cell = self.collectionView.cellForItem(at: IndexPath(row: index,
                                                                      section: 0))
-            v.mas_makeConstraints { make in
-                make?.right.equalTo()(self.view.mas_left)?.offset()(-8)
+            v.agora_mas_makeConstraints { make in
+                make?.right.equalTo()(self.view.agora_mas_left)?.offset()(-8)
                 make?.centerY.equalTo()(cell)
             }
         }
@@ -165,7 +165,7 @@ extension FcrToolBarUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     }
     
     func initViewFrame() {
-        collectionView.mas_remakeConstraints { make in
+        collectionView.agora_mas_remakeConstraints { make in
             make?.top.bottom().equalTo()(0)
             make?.left.equalTo()(kGap / 2)
             make?.right.equalTo()(-kGap / 2)
@@ -258,7 +258,7 @@ private extension FcrToolBarUIComponent {
         }
         
         let count = CGFloat(self.dataSource.count)
-        collectionView.mas_remakeConstraints { make in
+        collectionView.agora_mas_remakeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
             make?.height.equalTo()((kButtonLength + kGap) * count - kGap)
         }

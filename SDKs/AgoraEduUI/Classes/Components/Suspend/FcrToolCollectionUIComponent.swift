@@ -180,30 +180,30 @@ class FcrToolCollectionUIComponent: FcrUIComponent {
     func initViewFrame() {
         if currentMainTool == .paint ||
             currentMainTool == .text {
-            contentView.mas_remakeConstraints { make in
+            contentView.agora_mas_remakeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(0)
             }
-            subCell.mas_remakeConstraints { make in
+            subCell.agora_mas_remakeConstraints { make in
                 make?.top.equalTo()(4)
                 make?.centerX.equalTo()(0)
                 make?.width.height().equalTo()(suggestLength)
             }
-            sepLine.mas_remakeConstraints { make in
-                make?.centerY.equalTo()(self.view.mas_centerY)
-                make?.centerX.equalTo()(self.view.mas_centerX)
+            sepLine.agora_mas_remakeConstraints { make in
+                make?.centerY.equalTo()(self.view.agora_mas_centerY)
+                make?.centerX.equalTo()(self.view.agora_mas_centerX)
                 make?.width.equalTo()(20)
                 make?.height.equalTo()(1)
             }
-            mainCell.mas_remakeConstraints { make in
+            mainCell.agora_mas_remakeConstraints { make in
                 make?.bottom.equalTo()(-4)
                 make?.centerX.equalTo()(0)
                 make?.width.height().equalTo()(suggestLength)
             }
         } else {
-            contentView.mas_remakeConstraints { make in
+            contentView.agora_mas_remakeConstraints { make in
                 make?.left.right().top().bottom().equalTo()(0)
             }
-            mainCell.mas_remakeConstraints { make in
+            mainCell.agora_mas_remakeConstraints { make in
                 make?.centerX.centerY().equalTo()(0)
                 make?.width.height().equalTo()(suggestLength)
             }

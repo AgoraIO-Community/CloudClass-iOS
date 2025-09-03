@@ -7,7 +7,7 @@
 
 import AgoraUIBaseViews
 import AgoraEduCore
-import Masonry
+
 
 protocol FcrRoomStateUIComponentDelegate: NSObjectProtocol {
     func onPressedNetworkState()
@@ -109,7 +109,7 @@ extension FcrRoomStateUIComponent: AgoraUIContentContainer, AgoraUIActivity {
     }
     
     func initViewFrame() {
-        stateView.mas_remakeConstraints { make in
+        stateView.agora_mas_remakeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
     }

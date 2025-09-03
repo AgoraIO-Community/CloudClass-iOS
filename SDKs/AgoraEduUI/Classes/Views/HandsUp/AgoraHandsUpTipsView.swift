@@ -39,14 +39,14 @@ extension AgoraHandsUpTipsView:AgoraUIContentContainer {
     }
     
     func initViewFrame() {
-        label.mas_makeConstraints { make in
+        label.agora_mas_makeConstraints { make in
             make?.left.equalTo()(12)
             make?.right.equalTo()(-10)
             make?.height.equalTo()(24)
             make?.top.equalTo()(20)
             make?.bottom.equalTo()(-20)
         }
-        imageView.mas_makeConstraints { make in
+        imageView.agora_mas_makeConstraints { make in
             make?.left.equalTo()(label)?.offset()(-5)
             make?.right.equalTo()(label)?.offset()(15)
             make?.top.equalTo()(label)?.offset()(-2)

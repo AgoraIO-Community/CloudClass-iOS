@@ -167,12 +167,12 @@ class FcrTachedStreamWindowUIComponent: FcrUIComponent, AgoraUIContentContainer 
                                                              y: 1)
             }
             
-            prevButton.mas_makeConstraints { make in
+            prevButton.agora_mas_makeConstraints { make in
                 make?.left.top().bottom().equalTo()(0)
                 make?.width.equalTo()(buttonWidth)
             }
             
-            nextButton.mas_makeConstraints { make in
+            nextButton.agora_mas_makeConstraints { make in
                 make?.right.top().bottom().equalTo()(0)
                 make?.width.equalTo()(buttonWidth)
             }
@@ -182,12 +182,12 @@ class FcrTachedStreamWindowUIComponent: FcrUIComponent, AgoraUIContentContainer 
                                                              y: -1)
             }
             
-            prevButton.mas_makeConstraints { make in
+            prevButton.agora_mas_makeConstraints { make in
                 make?.top.left().right().equalTo()(0)
                 make?.height.equalTo()(buttonHeight)
             }
             
-            nextButton.mas_makeConstraints { make in
+            nextButton.agora_mas_makeConstraints { make in
                 make?.bottom.left().right().equalTo()(0)
                 make?.height.equalTo()(buttonHeight)
             }
@@ -350,7 +350,7 @@ class FcrTachedStreamWindowUIComponent: FcrUIComponent, AgoraUIContentContainer 
     }
     
     func initViewFrame() {
-        collectionView.mas_makeConstraints { make in
+        collectionView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
     }

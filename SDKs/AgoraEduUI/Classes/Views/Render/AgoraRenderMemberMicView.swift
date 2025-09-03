@@ -63,10 +63,10 @@ private extension AgoraRenderMemberMicView {
     }
     
     func createConstraint() {
-        imageView.mas_makeConstraints { make in
+        imageView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
-        animaView.mas_makeConstraints { make in
+        animaView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
     }

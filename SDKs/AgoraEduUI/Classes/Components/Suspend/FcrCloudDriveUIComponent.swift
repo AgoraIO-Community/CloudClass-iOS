@@ -136,7 +136,7 @@ extension FcrCloudDriveUIComponent {
         var finalTop = (transTop >= 0) ? transTop : 0
         finalTop = (finalTop + viewHeight <= view.height) ? finalTop : (view.height - viewHeight)
         
-        targetView.mas_remakeConstraints { make in
+        targetView.agora_mas_remakeConstraints { make in
             make?.left.equalTo()(finalLeft)
             make?.top.equalTo()(finalTop)
             
@@ -167,7 +167,7 @@ extension FcrCloudDriveUIComponent {
         
         cloudWidget.view.addGestureRecognizer(gesture)
         
-        cloudWidget.view.mas_makeConstraints { make in
+        cloudWidget.view.agora_mas_makeConstraints { make in
             make?.center.equalTo()(view)
             make?.width.equalTo()(widgetSize.width)
             make?.height.equalTo()(widgetSize.height)

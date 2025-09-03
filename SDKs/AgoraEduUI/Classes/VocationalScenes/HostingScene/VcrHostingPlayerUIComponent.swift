@@ -86,7 +86,7 @@ class VcrHostingPlayerUIComponent: FcrUIComponent {
         view.layer.addSublayer(playerLayer)
         view.addSubview(placeHolderView)
         updateViewProperties()
-        placeHolderView.mas_makeConstraints { make in
+        placeHolderView.agora_mas_makeConstraints { make in
             make?.left.right().top().bottom().equalTo()(0)
         }
         setupNotifications()

@@ -343,7 +343,7 @@ private extension FcrWebViewUIComponent {
         }
         let frame = syncFrame.rectInView(view)
 
-        widget.view.mas_remakeConstraints { make in
+        widget.view.agora_mas_remakeConstraints { make in
             make?.left.equalTo()(frame.minX)
             make?.top.equalTo()(frame.minY)
             make?.width.equalTo()(frame.width)
@@ -503,7 +503,7 @@ private extension FcrWebViewUIComponent {
             
             var finalTop = (transTop >= 0) ? transTop : 0
             finalTop = (finalTop + viewHeight <= view.height) ? finalTop : (view.height - viewHeight)
-            targetView.mas_updateConstraints { make in
+            targetView.agora_mas_updateConstraints { make in
                 make?.left.equalTo()(finalLeft)
                 make?.top.equalTo()(finalTop)
             }
