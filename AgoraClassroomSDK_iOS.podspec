@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AgoraClassroomSDK_iOS"
-  spec.version      = "2.8.123"
+  spec.version      = "2.8.123-hello"
   spec.summary      = "Education scene SDK"
   spec.description  = "Agora Classroom SDK"
   spec.homepage     = "https://docs.agora.io/en/agora-class/landing-page?platform=iOS"
@@ -12,10 +12,10 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target = "10.0"
   
   # open source libs
-  spec.dependency "AgoraEduUI", "~>2.8.123"
+  spec.dependency "AgoraEduUI", "~>2.8.123-hello"
   
   # open sources widgets
-  spec.dependency "AgoraWidgets", "~>2.8.123"
+  spec.dependency "AgoraWidgets", "~>2.8.123-hello"
   
   spec.pod_target_xcconfig  = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
   spec.user_target_xcconfig = { "EXCLUDED_ARCHS[sdk=iphonesimulator*]" => "arm64", "DEFINES_MODULE" => "YES" }
