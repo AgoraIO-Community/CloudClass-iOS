@@ -8,7 +8,7 @@
 # Widget
 Artifactory_iOS_URL="https://artifactory.agoralab.co/artifactory/AD_repo/aPaaS/iOS"
 
-Version="2.8.123-hello"
+Version="2.8.124"
 Branch="release_${Version}"
 
 AgoraWidgets_URL="${Artifactory_iOS_URL}/AgoraWidgets/${Branch}/dev/AgoraWidgets_${Version}.zip"
