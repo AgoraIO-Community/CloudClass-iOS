@@ -67,7 +67,7 @@ protocol FcrUISceneExit: NSObjectProtocol {
     /** 弹出显示的控制widget视图*/
     public weak var ctrlView: UIView? {
         willSet {
-            UIApplication.shared.windows[0].endEditing(true)
+            UIWindow.agora_top_window()?.endEditing(true)
             if let view = ctrlView {
                 ctrlView?.removeFromSuperview()
                 ctrlMaskView.isHidden = true

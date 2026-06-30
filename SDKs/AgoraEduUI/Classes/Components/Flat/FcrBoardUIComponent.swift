@@ -7,6 +7,7 @@
 
 import AgoraEduCore
 import AgoraWidget
+import AgoraUIBaseViews
 
 protocol FcrBoardUIComponentDelegate: NSObjectProtocol {
     func onBoardActiveStateChanged(isActive: Bool)
@@ -103,7 +104,7 @@ class FcrBoardUIComponent: FcrUIComponent {
     
     override func touchesBegan(_ touches: Set<UITouch>,
                                with event: UIEvent?) {
-        UIApplication.shared.windows[0].endEditing(true)
+        UIWindow.agora_top_window()?.endEditing(true)
     }
     
     // for subVC

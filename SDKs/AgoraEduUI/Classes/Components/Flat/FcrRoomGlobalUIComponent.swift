@@ -533,7 +533,7 @@ private extension FcrRoomGlobalUIComponent {
             imageView?.removeFromSuperview()
         }
         
-        if let window = UIApplication.shared.keyWindow {
+        if let window = UIWindow.agora_top_window() {
             window.addSubview(imageView)
             imageView.agora_mas_makeConstraints { make in
                 make?.center.equalTo()(0)

@@ -430,8 +430,12 @@ extension FcrOneToOneUIScene: FcrDetachedStreamWindowUIComponentDelegate {
             return nil
         }
         
+        guard let topWindow = UIWindow.agora_top_window() else {
+            return nil
+        }
+        
         let frame = renderView.convert(renderView.frame,
-                                       to: UIWindow.agora_top_window())
+                                       to: topWindow)
         
         return frame
     }
