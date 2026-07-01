@@ -457,7 +457,10 @@ private extension FcrDetachedStreamWindowUIComponent {
         if let `originationFrame` = originationFrame,
            animation {
             
-            let topWindow = UIWindow.agora_top_window()
+            guard let topWindow = UIWindow.agora_top_window() else {
+                widgetView.frame = rect
+                return
+            }
             
             topWindow.addSubview(widgetView)
             
@@ -505,7 +508,10 @@ private extension FcrDetachedStreamWindowUIComponent {
         if let `destinationFrame` = destinationFrame,
            animation {
             
-            let topWindow = UIWindow.agora_top_window()
+            guard let topWindow = UIWindow.agora_top_window() else {
+                completion()
+                return
+            }
             
             let originationFrame = view.convert(widgetView.frame,
                                                 to: topWindow)
