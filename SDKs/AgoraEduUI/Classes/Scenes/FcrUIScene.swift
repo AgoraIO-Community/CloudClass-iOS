@@ -202,13 +202,14 @@ protocol FcrUISceneExit: NSObjectProtocol {
             
             contextPool.room.leaveRoom()
             
-            agora_dismiss(animated: true) { [weak self] in
-                guard let `self` = self else {
-                    return
+            agora_dismiss(animated: true) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                    guard let self = self else {
+                        return
+                    }
+                    self.delegate?.scene(self,
+                                         didExit: reason)
                 }
-                
-                self.delegate?.scene(self,
-                                     didExit: reason)
             }
         default:
             break
