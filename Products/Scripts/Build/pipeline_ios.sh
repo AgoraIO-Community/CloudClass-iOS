@@ -10,7 +10,7 @@ echo short_version: $short_version
 echo BUILD_NUMBER: ${BUILD_NUMBER}
 echo Branch_Name: ${open_cloudclass_ios_branch}
 
-export all_proxy=http://10.80.1.174:1080
+export all_proxy=http://10.10.114.55:1080
 
 # difference
 Repo_Name="open-cloudclass-ios"
